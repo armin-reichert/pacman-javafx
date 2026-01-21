@@ -12,6 +12,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
@@ -56,8 +57,8 @@ import static de.amr.pacmanfx.model.StandardGameVariant.*;
  */
 public class PacManGames3dApp extends Application {
 
-    private static final float ASPECT_RATIO = 1.6f; // 16:10 aspect ratio
-    private static final float USED_HEIGHT_FRACTION = 0.8f;  // 80% of screen height
+    private static final float ASPECT_RATIO    = 1.6f; // 16:10
+    private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
     private static final Map<String, Class<? extends GameUI_Config>> UI_CONFIG_MAP = Map.of(
         ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig.class,
@@ -67,7 +68,7 @@ public class PacManGames3dApp extends Application {
         ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_UIConfig.class
     );
 
-    private static final List<CommonDashboardID> DASHBOARD_IDS = List.of(
+    private static final List<CommonDashboardID> DASHBOARD_IDs = List.of(
         CommonDashboardID.GENERAL,
         CommonDashboardID.GAME_CONTROL,
         CommonDashboardID.SETTINGS_3D,
@@ -85,33 +86,41 @@ public class PacManGames3dApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         final double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
-        final int height = (int) Math.round(USED_HEIGHT_FRACTION * screenHeight);
-        final int width  = Math.round(ASPECT_RATIO * height);
-        final var xxlMapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
-        final String useBuilder = getParameters().getNamed().getOrDefault("use_builder", "true");
+        final double height = Math.floor(HEIGHT_FRACTION * screenHeight);
+        final double width  = Math.floor(ASPECT_RATIO * height);
         try {
-            ui = Boolean.parseBoolean(useBuilder)
-                ? createUI_WithBuilder(primaryStage, width, height, xxlMapSelector)
-                : createUI_WithoutBuilder(primaryStage, width, height, xxlMapSelector);
-
+            final boolean useBuilder = Boolean.parseBoolean(getParameters().getNamed().getOrDefault("use_builder", "true"));
+            // Common map selector used by Pac-Man XXL and Ms. Pac-Man XXL
+            final var xxlMapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
+            if (useBuilder) {
+                createUI_WithBuilder(primaryStage, width, height, xxlMapSelector);
+            } else {
+                createUI_WithoutBuilder(primaryStage, width, height, xxlMapSelector);
+            }
             final Dashboard dashboard = ui.views().playView().dashboard();
+
+            // Add Joypad controller section
             dashboard.addSection(
                 TengenMsPacMan_DashboardID.JOYPAD,
                 new DashboardSectionJoypad(dashboard),
                 TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
                 false);
 
-            dashboard.findSection(CommonDashboardID.CUSTOM_MAPS).ifPresent(section -> {
-                final var sectionCustomMaps = (DashboardSectionCustomMaps) section;
-                sectionCustomMaps.setCustomDirWatchDog(ui.customDirWatchdog());
-                sectionCustomMaps.setMapEditFunction(mapFile -> ui.editWorldMap(mapFile));
-            });
+            // Configure custom map section table
+            dashboard.findSection(CommonDashboardID.CUSTOM_MAPS)
+                .filter(DashboardSectionCustomMaps.class::isInstance)
+                .map(DashboardSectionCustomMaps.class::cast)
+                .ifPresent(section -> {
+                    section.setCustomDirWatchDog(ui.customDirWatchdog());
+                    section.setMapEditFunction(mapFile -> ui.editWorldMap(mapFile));
+                });
+
             ui.customDirWatchdog().addEventListener(xxlMapSelector);
             ui.show();
         }
         catch (RuntimeException x) {
-            Logger.error(x);
             Logger.error("An error occurred starting the game.");
+            Logger.error(x);
             Platform.exit();
         }
     }
@@ -123,7 +132,7 @@ public class PacManGames3dApp extends Application {
         }
     }
 
-    private GameUI createUI_WithoutBuilder(
+    private void createUI_WithoutBuilder(
         Stage stage,
         double sceneWidth,
         double sceneHeight,
@@ -137,7 +146,7 @@ public class PacManGames3dApp extends Application {
         registerGameWithTests(ARCADE_PACMAN_XXL,    new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(ARCADE_PACMAN_XXL)));
         registerGameWithTests(ARCADE_MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(ARCADE_MS_PACMAN_XXL)));
 
-        final var ui = new GameUI_Implementation(UI_CONFIG_MAP, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
+        ui = new GameUI_Implementation(UI_CONFIG_MAP, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
 
         final StartPagesCarousel startPages = ui.views().startPagesView();
         startPages.addStartPage(new ArcadePacMan_StartPage());
@@ -149,12 +158,10 @@ public class PacManGames3dApp extends Application {
         startPages.setSelectedIndex(0);
 
         final Dashboard dashboard = ui.views().playView().dashboard();
-        dashboard.addCommonSections(ui, DASHBOARD_IDS);
-
-        return ui;
+        dashboard.addCommonSections(ui, DASHBOARD_IDs);
     }
 
-    private GameUI createUI_WithBuilder(
+    private void createUI_WithBuilder(
         Stage stage,
         double sceneWidth,
         double sceneHeight,
@@ -162,7 +169,7 @@ public class PacManGames3dApp extends Application {
     {
         Logger.info("Creating UI with builder");
 
-        return GameUI_Builder.create(stage, sceneWidth, sceneHeight)
+        ui = GameUI_Builder.create(stage, sceneWidth, sceneHeight)
             .game(
                 ARCADE_PACMAN.name(),
                 ArcadePacMan_GameModel.class,
@@ -206,19 +213,18 @@ public class PacManGames3dApp extends Application {
                 PacManXXL_StartPage.class,
                 ARCADE_PACMAN_XXL.name(), ARCADE_MS_PACMAN_XXL.name())
 
-            .dashboard(DASHBOARD_IDS.toArray(CommonDashboardID[]::new))
-
+            .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
             .build();
     }
 
-    private void addTestStates(Game game) {
-        game.control().stateMachine().addState(new LevelShortTestState());
-        game.control().stateMachine().addState(new LevelMediumTestState());
-        game.control().stateMachine().addState(new CutScenesTestState());
+    private void addTestStates(StateMachine<Game> gameControl) {
+        gameControl.addState(new LevelShortTestState());
+        gameControl.addState(new LevelMediumTestState());
+        gameControl.addState(new CutScenesTestState());
     }
 
     private void registerGameWithTests(StandardGameVariant variant, Game game) {
-        addTestStates(game);
+        addTestStates(game.control().stateMachine());
         THE_GAME_BOX.registerGame(variant.name(), game);
     }
 
