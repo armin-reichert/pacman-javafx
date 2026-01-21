@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl.StateName;
-import de.amr.pacmanfx.model.StandardGameVariant;
+import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
@@ -122,7 +122,7 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            boolean isArcadeGame = StandardGameVariant.isArcadeGameName(ui.context().gameVariantName());
+            boolean isArcadeGame = GameVariant.isArcadeGameName(ui.context().gameVariantName());
             boolean isPlayScene2D = ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D);
             return isArcadeGame && isPlayScene2D;
         }

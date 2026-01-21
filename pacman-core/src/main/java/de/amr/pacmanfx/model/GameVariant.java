@@ -6,10 +6,12 @@ package de.amr.pacmanfx.model;
 
 import java.util.stream.Stream;
 
+import static java.util.Objects.requireNonNull;
+
 /**
- * Standard game variants. String value ({@link StandardGameVariant#name()} is uses in map keys etc.
+ * Standard game variants. String value ({@link GameVariant#name()} is uses in map keys etc.
  */
-public enum StandardGameVariant {
+public enum GameVariant {
     ARCADE_PACMAN,
     ARCADE_MS_PACMAN,
     ARCADE_PACMAN_XXL,
@@ -17,8 +19,9 @@ public enum StandardGameVariant {
     TENGEN_MS_PACMAN;
 
     public static boolean isArcadeGameName(String variantName) {
+        requireNonNull(variantName);
         return Stream.of(ARCADE_PACMAN, ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN, ARCADE_MS_PACMAN_XXL)
-            .map(StandardGameVariant::name)
+            .map(GameVariant::name)
             .anyMatch(name -> name.equals(variantName));
     }
 }

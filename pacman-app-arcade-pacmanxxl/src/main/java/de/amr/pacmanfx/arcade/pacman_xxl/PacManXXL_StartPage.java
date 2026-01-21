@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.model.StandardGameVariant;
+import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.ArcadePalette;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_StartPage;
@@ -54,7 +54,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
 
     private GameUI ui;
 
-    private ChangeListener<StandardGameVariant> gameVariantNameListener;
+    private ChangeListener<GameVariant> gameVariantNameListener;
     private ChangeListener<Boolean> cutScenesEnabledListener;
     private ChangeListener<Boolean> play3DListener;
 
@@ -104,7 +104,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
 
     @Override
     public void onEnterStartPage(GameUI ui) {
-        final StandardGameVariant selectedGameVariant = menu.entryGameVariant().value();
+        final GameVariant selectedGameVariant = menu.entryGameVariant().value();
         switch (selectedGameVariant) {
             case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> ui.context().selectGameByName(selectedGameVariant.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariant);

@@ -17,7 +17,7 @@ import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import static de.amr.pacmanfx.model.StandardGameVariant.TENGEN_MS_PACMAN;
+import static de.amr.pacmanfx.model.GameVariant.TENGEN_MS_PACMAN;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_ASPECT;
 
 public class TengenMsPacMan_App extends Application {

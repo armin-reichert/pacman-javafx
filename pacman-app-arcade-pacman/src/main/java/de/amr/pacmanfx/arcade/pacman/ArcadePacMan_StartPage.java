@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.pacmanfx.model.StandardGameVariant;
+import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.layout.FlyerStartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -28,6 +28,6 @@ public class ArcadePacMan_StartPage extends FlyerStartPage {
     public void onEnterStartPage(GameUI ui) {
         flyer.selectPage(0);
         ui.voicePlayer().play(VOICE);
-        ui.context().gameVariantNameProperty().set(StandardGameVariant.ARCADE_PACMAN.name());
+        ui.context().gameVariantNameProperty().set(GameVariant.ARCADE_PACMAN.name());
     }
 }

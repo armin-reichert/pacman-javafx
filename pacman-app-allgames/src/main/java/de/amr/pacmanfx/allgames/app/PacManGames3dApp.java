@@ -14,7 +14,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.StandardGameVariant;
+import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
-import static de.amr.pacmanfx.model.StandardGameVariant.*;
+import static de.amr.pacmanfx.model.GameVariant.*;
 
 /**
  * Application containing all game variants, the 3D play scenes, the map editor etc.
@@ -206,12 +206,12 @@ public class PacManGames3dApp extends Application {
         gameControl.addState(new CutScenesTestState());
     }
 
-    private void registerGameWithTests(StandardGameVariant variant, Game game) {
+    private void registerGameWithTests(GameVariant variant, Game game) {
         addTestStates(game.control().stateMachine());
         THE_GAME_BOX.registerGame(variant.name(), game);
     }
 
-    private File highScoreFile(StandardGameVariant variant) {
+    private File highScoreFile(GameVariant variant) {
         return THE_GAME_BOX.highScoreFile(variant.name());
     }
 

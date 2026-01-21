@@ -2,7 +2,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.StandardGameVariant;
+import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +20,7 @@ public class TestEatingFood {
 
     @BeforeAll
     static void setup() {
-        final String variantName = StandardGameVariant.ARCADE_PACMAN.name();
+        final String variantName = GameVariant.ARCADE_PACMAN.name();
         final File highScoreFile = new File("");
         THE_GAME_BOX.registerGame(variantName, new ArcadePacMan_GameModel(THE_GAME_BOX, highScoreFile));
         THE_GAME_BOX.gameVariantNameProperty().set(variantName);

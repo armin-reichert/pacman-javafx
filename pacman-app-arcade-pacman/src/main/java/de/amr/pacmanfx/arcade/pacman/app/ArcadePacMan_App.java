@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.StandardGameVariant;
+import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
@@ -29,7 +29,7 @@ import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 
 public class ArcadePacMan_App extends Application {
 
-    private static final String NAME_OF_THE_GAME = StandardGameVariant.ARCADE_PACMAN.name();
+    private static final String NAME_OF_THE_GAME = GameVariant.ARCADE_PACMAN.name();
 
     private static final float ASPECT_RATIO    = 1.2f; // 12:10 aspect ratio
     private static final float HEIGHT_FRACTION = 0.8f;  // 80% of available height
