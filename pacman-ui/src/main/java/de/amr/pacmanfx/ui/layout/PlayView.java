@@ -430,7 +430,7 @@ public class PlayView extends StackPane implements GameUI_View {
             if (ui.currentGameSceneConfig().sceneDecorationRequested(gameScene)) {
                 // Decorated game scene scaled-down to give space for the decoration
                 gameScene2D.scalingProperty().bind(canvasDecorator.scalingProperty().map(
-                        scaling -> Math.min(scaling.doubleValue(), ui.preferences().getFloat("scene2d.max_scaling"))));
+                        scaling -> Math.min(scaling.doubleValue(), ui.userPrefs().getFloat("scene2d.max_scaling"))));
                 canvasDecorator.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
                 canvasDecorator.resizeTo(parentScene.getWidth(), parentScene.getHeight());
                 canvasDecorator.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::paintBackground));

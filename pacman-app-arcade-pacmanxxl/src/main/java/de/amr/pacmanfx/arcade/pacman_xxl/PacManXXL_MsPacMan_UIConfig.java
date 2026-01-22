@@ -33,7 +33,6 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
@@ -60,14 +59,9 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
 
     private static final ResourceManager ARCADE_MS_PACMAN_RESOURCES = () -> ArcadeMsPacMan_UIConfig.class;
 
-    private final PreferencesManager prefs;
     private final AssetMap assets = new AssetMap();
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
     private final SoundManager soundManager = new SoundManager();
-
-    public PacManXXL_MsPacMan_UIConfig(PreferencesManager prefs) {
-        this.prefs = requireNonNull(prefs);
-    }
 
     @Override
     public void init() {
@@ -175,13 +169,13 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D        ignored -> new Arcade_BootScene2D_Renderer(prefs, gameScene2D, canvas, spriteSheet(), spriteRegionForArcadeBootScene());
-            case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(this, prefs, gameScene2D, canvas);
-            case ArcadeMsPacMan_StartScene ignored -> new ArcadeMsPacMan_StartScene_Renderer(prefs, gameScene2D, canvas);
-            case Arcade_PlayScene2D        ignored -> new Arcade_PlayScene2D_Renderer(prefs, gameScene2D, canvas, spriteSheet());
-            case ArcadeMsPacMan_CutScene1  ignored -> new ArcadeMsPacMan_CutScene1_Renderer(this, prefs, gameScene2D, canvas);
-            case ArcadeMsPacMan_CutScene2  ignored -> new ArcadeMsPacMan_CutScene2_Renderer(this, prefs, gameScene2D, canvas);
-            case ArcadeMsPacMan_CutScene3  ignored -> new ArcadeMsPacMan_CutScene3_Renderer(this, prefs, gameScene2D, canvas);
+            case Arcade_BootScene2D        ignored -> new Arcade_BootScene2D_Renderer(userPrefs(), gameScene2D, canvas, spriteSheet(), spriteRegionForArcadeBootScene());
+            case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(this, userPrefs(), gameScene2D, canvas);
+            case ArcadeMsPacMan_StartScene ignored -> new ArcadeMsPacMan_StartScene_Renderer(userPrefs(), gameScene2D, canvas);
+            case Arcade_PlayScene2D        ignored -> new Arcade_PlayScene2D_Renderer(userPrefs(), gameScene2D, canvas, spriteSheet());
+            case ArcadeMsPacMan_CutScene1  ignored -> new ArcadeMsPacMan_CutScene1_Renderer(this, userPrefs(), gameScene2D, canvas);
+            case ArcadeMsPacMan_CutScene2  ignored -> new ArcadeMsPacMan_CutScene2_Renderer(this, userPrefs(), gameScene2D, canvas);
+            case ArcadeMsPacMan_CutScene3  ignored -> new ArcadeMsPacMan_CutScene3_Renderer(this, userPrefs(), gameScene2D, canvas);
             default -> throw new IllegalStateException("Unexpected value: " + gameScene2D);
         };
         return gameScene2D.adaptRenderer(renderer);
@@ -253,7 +247,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
     @Override
     public MsPacManBody createLivesCounterShape3D() {
         return PacManModel3DRepository.instance().createMsPacManBody(
-            prefs.getFloat("3d.lives_counter.shape_size"),
+            userPrefs().getFloat("3d.lives_counter.shape_size"),
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate"),

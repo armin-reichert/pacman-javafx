@@ -38,6 +38,7 @@ import org.tinylog.Logger;
 
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
@@ -59,7 +60,6 @@ public final class GameUI_Implementation implements GameUI {
     private final GameClock clock = new GameClock();
     private final DirectoryWatchdog customDirWatchdog;
     private final ActionBindingsManager globalActionBindings = new GlobalActionBindings();
-    private final GameUI_PreferencesManager prefs = new GameUI_PreferencesManager();
     private final GameUI_ConfigManager uiConfigManager;
     private final GameUI_ViewManager viewManager;
     private final Stage stage;
@@ -75,13 +75,13 @@ public final class GameUI_Implementation implements GameUI {
     private StringBinding titleBinding;
 
     public GameUI_Implementation(
-        Map<String, Class<? extends GameUI_Config>> uiConfigMap,
+        Map<String, Supplier<? extends GameUI_Config>> uiConfigFactories,
         GameContext context,
         Stage stage,
         double sceneWidth,
         double sceneHeight)
     {
-        requireNonNull(uiConfigMap);
+        requireNonNull(uiConfigFactories);
         requireNonNull(context);
         requireNonNull(stage);
         requireNonNegative(sceneWidth);
@@ -93,7 +93,7 @@ public final class GameUI_Implementation implements GameUI {
         clock.setPausableAction(this::simulateAndUpdateGameScene);
         clock.setPermanentAction(this::render);
 
-        uiConfigManager = new GameUI_ConfigManager(uiConfigMap, prefs);
+        uiConfigManager = new GameUI_ConfigManager(uiConfigFactories);
         customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
         scene = new Scene(layoutPane, sceneWidth, sceneHeight);
         pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
@@ -107,8 +107,8 @@ public final class GameUI_Implementation implements GameUI {
         // Trigger loading of 3D models used by all game variants
         PacManModel3DRepository.instance();
 
-        PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
-        PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
+        PROPERTY_3D_WALL_HEIGHT.set(userPrefs().getFloat("3d.obstacle.base_height"));
+        PROPERTY_3D_WALL_OPACITY.set(userPrefs().getFloat("3d.obstacle.opacity"));
     }
 
     private void setupStage() {
@@ -257,8 +257,8 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public PreferencesManager preferences() {
-        return prefs;
+    public PreferencesManager userPrefs() {
+        return GameUI_PreferencesManager.INSTANCE;
     }
 
     @Override

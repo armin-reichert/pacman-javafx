@@ -34,8 +34,8 @@ public class PacManXXL_App extends Application {
 
         ui = GameUI_Builder
             .create(primaryStage, sceneSize.getWidth(), sceneSize.getHeight())
-            .game(PACMAN_GAME, PacManXXL_PacMan_GameModel.class, mapSelector, PacManXXL_PacMan_UIConfig.class)
-            .game(MSPACMAN_GAME, PacManXXL_MsPacMan_GameModel.class, mapSelector, PacManXXL_MsPacMan_UIConfig.class)
+            .game(PACMAN_GAME, PacManXXL_PacMan_GameModel.class, mapSelector, PacManXXL_PacMan_UIConfig::new)
+            .game(MSPACMAN_GAME, PacManXXL_MsPacMan_GameModel.class, mapSelector, PacManXXL_MsPacMan_UIConfig::new)
             .dashboard(
                 CommonDashboardID.README,
                 CommonDashboardID.GENERAL,

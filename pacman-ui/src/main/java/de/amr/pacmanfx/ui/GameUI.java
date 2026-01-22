@@ -154,7 +154,7 @@ public interface GameUI extends Translator {
     /**
      * @return the UI preferences (stored permanently in platform-specific way)
      */
-    PreferencesManager preferences();
+    PreferencesManager userPrefs();
 
     /**
      * @return voice player if this UI. Only one voice at a time can be played.

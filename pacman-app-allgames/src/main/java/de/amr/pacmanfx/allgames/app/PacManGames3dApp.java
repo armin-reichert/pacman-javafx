@@ -41,6 +41,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.GameBox.highScoreFile;
 import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
@@ -62,12 +63,12 @@ public class PacManGames3dApp extends Application {
     private static final float ASPECT_RATIO    = 1.6f; // 16:10
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
-    private static final Map<String, Class<? extends GameUI_Config>> UI_CONFIG_MAP = Map.of(
-        ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig.class,
-        ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig.class,
-        TENGEN_MS_PACMAN.name(),     TengenMsPacMan_UIConfig.class,
-        ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_UIConfig.class,
-        ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_UIConfig.class
+    private static final Map<String, Supplier<? extends GameUI_Config>> UI_CONFIG_MAP = Map.of(
+        ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new,
+        ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig::new,
+        TENGEN_MS_PACMAN.name(),     TengenMsPacMan_UIConfig::new,
+        ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_UIConfig::new,
+        ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_UIConfig::new
     );
 
     private static final List<CommonDashboardID> DASHBOARD_IDs = List.of(
@@ -134,11 +135,11 @@ public class PacManGames3dApp extends Application {
     private void createUI_UsingBuilder(Stage stage, Dimension2D sceneSize, PacManXXL_MapSelector xxlMapSelector) {
         ui = GameUI_Builder
             .create(stage, sceneSize.getWidth(), sceneSize.getHeight())
-            .game(ARCADE_PACMAN.name(), ArcadePacMan_GameModel.class, ArcadePacMan_UIConfig.class)
-            .game(ARCADE_MS_PACMAN.name(), ArcadeMsPacMan_GameModel.class, ArcadeMsPacMan_UIConfig.class)
-            .game(TENGEN_MS_PACMAN.name(), TengenMsPacMan_GameModel.class, TengenMsPacMan_UIConfig.class)
-            .game(ARCADE_PACMAN_XXL.name(), PacManXXL_PacMan_GameModel.class, xxlMapSelector, PacManXXL_PacMan_UIConfig.class)
-            .game(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_GameModel.class, xxlMapSelector, PacManXXL_MsPacMan_UIConfig.class)
+            .game(ARCADE_PACMAN.name(), ArcadePacMan_GameModel.class, ArcadePacMan_UIConfig::new)
+            .game(ARCADE_MS_PACMAN.name(), ArcadeMsPacMan_GameModel.class, ArcadeMsPacMan_UIConfig::new)
+            .game(TENGEN_MS_PACMAN.name(), TengenMsPacMan_GameModel.class, TengenMsPacMan_UIConfig::new)
+            .game(ARCADE_PACMAN_XXL.name(), PacManXXL_PacMan_GameModel.class, xxlMapSelector, PacManXXL_PacMan_UIConfig::new)
+            .game(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_GameModel.class, xxlMapSelector, PacManXXL_MsPacMan_UIConfig::new)
             .startPage(ArcadePacMan_StartPage.class, ARCADE_PACMAN.name())
             .startPage(ArcadeMsPacMan_StartPage.class, ARCADE_MS_PACMAN.name())
             .startPage(TengenMsPacMan_StartPage.class, TENGEN_MS_PACMAN.name())

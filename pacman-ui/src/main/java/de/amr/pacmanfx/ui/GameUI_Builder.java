@@ -18,6 +18,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.*;
+import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static java.util.Objects.requireNonNull;
@@ -26,7 +27,7 @@ public class GameUI_Builder {
 
     private static class GameConfiguration {
         Class<?> gameModelClass;
-        Class<? extends GameUI_Config> uiConfigClass;
+        Supplier<? extends GameUI_Config> uiConfigFactory;
         WorldMapSelector mapSelector;
     }
 
@@ -63,17 +64,17 @@ public class GameUI_Builder {
     public GameUI_Builder game(
         String variant,
         Class<? extends Game> gameModelClass,
-        Class<? extends GameUI_Config> uiConfigClass)
+        Supplier<? extends GameUI_Config> uiConfigFactory)
     {
         validateGameVariantKey(variant);
         if (gameModelClass == null) {
-            error("Game model class for variant %s may not be null".formatted(variant));
+            error("Game model class for game variant '%s' is null".formatted(variant));
         }
-        if (uiConfigClass == null) {
-            error("Game UI configuration class for variant %s may not be null".formatted(variant));
+        if (uiConfigFactory == null) {
+            error("Game UI configuration factory for game variant '%s' is null".formatted(variant));
         }
         configuration(variant).gameModelClass = gameModelClass;
-        configuration(variant).uiConfigClass = uiConfigClass;
+        configuration(variant).uiConfigFactory = uiConfigFactory;
         return this;
     }
 
@@ -81,20 +82,20 @@ public class GameUI_Builder {
         String variant,
         Class<? extends Game> gameModelClass,
         WorldMapSelector mapSelector,
-        Class<? extends GameUI_Config> uiConfigClass)
+        Supplier<? extends GameUI_Config> uiConfigFactory)
     {
         validateGameVariantKey(variant);
         if (gameModelClass == null) {
-            error("Game model class for variant %s may not be null".formatted(variant));
+            error("Game model class for game variant '%s' is null".formatted(variant));
         }
-        if (uiConfigClass == null) {
-            error("Game UI configuration class for variant %s may not be null".formatted(variant));
+        if (uiConfigFactory == null) {
+            error("Game UI configuration factory for game variant '%s' is null".formatted(variant));
         }
         if (mapSelector == null) {
             error("Map selector for variant %s may not be null".formatted(variant));
         }
         configuration(variant).gameModelClass = gameModelClass;
-        configuration(variant).uiConfigClass = uiConfigClass;
+        configuration(variant).uiConfigFactory = uiConfigFactory;
         configuration(variant).mapSelector = mapSelector;
         return this;
     }
@@ -124,10 +125,9 @@ public class GameUI_Builder {
     public GameUI build() {
         validateConfiguration();
 
-        //TODO this is crap
-        Map<String, Class<? extends GameUI_Config>> uiConfigMap = new HashMap<>();
-        configByGameVariant.forEach((gameVariant, config) -> uiConfigMap.put(gameVariant, config.uiConfigClass));
-        var ui = new GameUI_Implementation(uiConfigMap, THE_GAME_BOX, stage, mainSceneWidth, mainSceneHeight);
+        final Map<String, Supplier<? extends GameUI_Config>> uiConfigFactories = new HashMap<>();
+        configByGameVariant.forEach((gameVariant, config) -> uiConfigFactories.put(gameVariant, config.uiConfigFactory));
+        var ui = new GameUI_Implementation(uiConfigFactories, THE_GAME_BOX, stage, mainSceneWidth, mainSceneHeight);
 
         configByGameVariant.forEach((gameVariant, config) -> {
             File highScoreFile = GameBox.highScoreFile(gameVariant);

@@ -75,7 +75,7 @@ public class ArcadePacMan_App extends Application {
         THE_GAME_BOX.registerGame(NAME_OF_THE_GAME, game);
 
         ui = new GameUI_Implementation(
-            Map.of(NAME_OF_THE_GAME, ArcadePacMan_UIConfig.class),
+            Map.of(NAME_OF_THE_GAME, ArcadePacMan_UIConfig::new),
             THE_GAME_BOX,
             stage,
             size.getWidth(), size.getHeight());
@@ -92,7 +92,7 @@ public class ArcadePacMan_App extends Application {
     private void createUI_WithBuilder(Stage stage, Dimension2D size) {
         ui = GameUI_Builder
             .create(stage, size.getWidth(), size.getHeight())
-            .game(NAME_OF_THE_GAME, ArcadePacMan_GameModel.class, ArcadePacMan_UIConfig.class)
+            .game(NAME_OF_THE_GAME, ArcadePacMan_GameModel.class, ArcadePacMan_UIConfig::new)
             .startPage(ArcadePacMan_StartPage.class, NAME_OF_THE_GAME)
             .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
             .build();

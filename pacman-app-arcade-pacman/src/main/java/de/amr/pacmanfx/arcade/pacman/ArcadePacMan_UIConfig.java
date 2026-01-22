@@ -18,6 +18,7 @@ import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameScene_Config;
 import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.GameUI_PreferencesManager;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
@@ -28,7 +29,6 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacBody;
 import de.amr.pacmanfx.uilib.model3D.PacMan3D;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
@@ -68,13 +68,11 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         Color.valueOf(WORLD_MAP_COLOR_SCHEME.door()), Color.TRANSPARENT // door color change
     );
 
-    private final PreferencesManager prefs;
     private final AssetMap assets = new AssetMap();
     private final SoundManager soundManager = new SoundManager();
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
 
-    public ArcadePacMan_UIConfig(PreferencesManager prefs) {
-        this.prefs = requireNonNull(prefs);
+    public ArcadePacMan_UIConfig() {
     }
 
     @Override
@@ -186,6 +184,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
         requireNonNull(canvas);
         requireNonNull(gameScene2D);
+        final GameUI_PreferencesManager prefs = GameUI_PreferencesManager.INSTANCE;
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
             case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(prefs, gameScene2D, canvas, spriteSheet(), spriteRegionForArcadeBootScene());
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(this, prefs, gameScene2D, canvas);
@@ -275,7 +274,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     @Override
     public PacBody createLivesCounterShape3D() {
         return PacManModel3DRepository.instance().createPacBody(
-            prefs.getFloat("3d.lives_counter.shape_size"),
+            GameUI_PreferencesManager.INSTANCE.getFloat("3d.lives_counter.shape_size"),
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate")

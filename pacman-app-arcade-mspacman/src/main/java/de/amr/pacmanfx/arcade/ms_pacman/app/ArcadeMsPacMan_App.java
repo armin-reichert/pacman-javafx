@@ -28,10 +28,9 @@ public class ArcadeMsPacMan_App extends Application {
     @Override
     public void start(Stage primaryStage) {
         final Dimension2D screenSize = Ufx.computeSceneSize(ASPECT_RATIO, HEIGHT_FRACTION);
-
         ui = GameUI_Builder
             .create(primaryStage, screenSize.getWidth(), screenSize.getHeight())
-            .game(NAME_OF_THE_GAME, ArcadeMsPacMan_GameModel.class, ArcadeMsPacMan_UIConfig.class)
+            .game(NAME_OF_THE_GAME, ArcadeMsPacMan_GameModel.class, ArcadeMsPacMan_UIConfig::new)
             .startPage(ArcadeMsPacMan_StartPage.class, NAME_OF_THE_GAME)
             .dashboard(
                 CommonDashboardID.GENERAL,
@@ -43,7 +42,6 @@ public class ArcadeMsPacMan_App extends Application {
                 CommonDashboardID.KEYS_LOCAL,
                 CommonDashboardID.ABOUT)
             .build();
-
         ui.show();
     }
 

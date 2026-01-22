@@ -11,9 +11,11 @@ import javafx.scene.text.FontWeight;
 
 import static de.amr.pacmanfx.Globals.TS;
 
-public class GameUI_PreferencesManager extends PreferencesManager {
+public final class GameUI_PreferencesManager extends PreferencesManager {
 
-    public GameUI_PreferencesManager() {
+    public static final GameUI_PreferencesManager INSTANCE = new GameUI_PreferencesManager();
+
+    private GameUI_PreferencesManager() {
         super(GameUI_PreferencesManager.class);
     }
 
