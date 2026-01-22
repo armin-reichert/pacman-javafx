@@ -38,6 +38,7 @@ import javafx.geometry.Dimension2D;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -118,22 +119,11 @@ public class PacManGames3dApp extends Application {
         Dimension2D sceneSize,
         PacManXXL_MapSelector xxlMapSelector)
     {
-        Logger.info("Creating UI without builder");
+        Logger.info("Creating UI without builder using API");
 
-        registerGameWithTestStates(ARCADE_PACMAN,
-            new ArcadePacMan_GameModel(THE_GAME_BOX, highScoreFile(ARCADE_PACMAN.name())));
-
-        registerGameWithTestStates(ARCADE_MS_PACMAN,
-            new ArcadeMsPacMan_GameModel(THE_GAME_BOX, highScoreFile(ARCADE_MS_PACMAN.name())));
-
-        registerGameWithTestStates(TENGEN_MS_PACMAN,
-            new TengenMsPacMan_GameModel(highScoreFile(TENGEN_MS_PACMAN.name())));
-
-        registerGameWithTestStates(ARCADE_PACMAN_XXL,
-            new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(ARCADE_PACMAN_XXL.name())));
-
-        registerGameWithTestStates(ARCADE_MS_PACMAN_XXL,
-            new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(ARCADE_MS_PACMAN_XXL.name())));
+        for (GameVariant variant : GameVariant.values()) {
+            registerGameWithTestStates(variant, xxlMapSelector);
+        }
 
         ui = new GameUI_Implementation(UI_CONFIG_MAP, THE_GAME_BOX, stage, sceneSize.getWidth(), sceneSize.getHeight());
 
@@ -192,6 +182,18 @@ public class PacManGames3dApp extends Application {
 
             .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
             .build();
+    }
+
+    private void registerGameWithTestStates(GameVariant gameVariant, PacManXXL_MapSelector xxlMapSelector) {
+        final File highScoreFile = highScoreFile(gameVariant.name());
+        final Game game = switch (gameVariant) {
+            case ARCADE_PACMAN -> new ArcadePacMan_GameModel(THE_GAME_BOX, highScoreFile);
+            case ARCADE_MS_PACMAN -> new ArcadeMsPacMan_GameModel(THE_GAME_BOX, highScoreFile);
+            case TENGEN_MS_PACMAN -> new TengenMsPacMan_GameModel(highScoreFile);
+            case ARCADE_PACMAN_XXL -> new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile);
+            case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile);
+        };
+        registerGameWithTestStates(gameVariant, game);
     }
 
     private void registerGameWithTestStates(GameVariant variant, Game game) {
