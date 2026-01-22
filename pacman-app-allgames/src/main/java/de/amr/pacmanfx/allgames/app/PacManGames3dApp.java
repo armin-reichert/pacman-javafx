@@ -93,11 +93,12 @@ public class PacManGames3dApp extends Application {
             // Common map selector used by Pac-Man XXL and Ms. Pac-Man XXL
             final var xxlMapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
             if (useBuilder) {
-                createUI_WithBuilder(primaryStage, sceneSize, xxlMapSelector);
+                createUI_UsingBuilder(primaryStage, sceneSize, xxlMapSelector);
             } else {
                 createUI(primaryStage, sceneSize, xxlMapSelector);
             }
             configureDashboard();
+            Logger.info("UI created {} builder", useBuilder ? "using" : "without");
             ui.customDirWatchdog().addEventListener(xxlMapSelector);
             ui.show();
         }
@@ -114,72 +115,34 @@ public class PacManGames3dApp extends Application {
         }
     }
 
-    private void createUI(
-        Stage stage,
-        Dimension2D sceneSize,
-        PacManXXL_MapSelector xxlMapSelector)
-    {
-        Logger.info("Creating UI without builder using API");
-
+    private void createUI(Stage stage, Dimension2D sceneSize, PacManXXL_MapSelector xxlMapSelector) {
         for (GameVariant variant : GameVariant.values()) {
             registerGameWithTestStates(variant, xxlMapSelector);
         }
-
         ui = new GameUI_Implementation(UI_CONFIG_MAP, THE_GAME_BOX, stage, sceneSize.getWidth(), sceneSize.getHeight());
-
         final StartPagesCarousel startPages = ui.views().startPagesView();
         startPages.addStartPage(new ArcadePacMan_StartPage());
         startPages.addStartPage(new ArcadeMsPacMan_StartPage());
         startPages.addStartPage(new TengenMsPacMan_StartPage());
         startPages.addStartPage(new PacManXXL_StartPage());
-
         startPages.startPages().forEach(startPage -> startPage.init(ui));
         startPages.setSelectedIndex(0);
-
         final Dashboard dashboard = ui.views().playView().dashboard();
         dashboard.addCommonSections(ui, DASHBOARD_IDs);
     }
 
-    private void createUI_WithBuilder(
-        Stage stage,
-        Dimension2D sceneSize,
-        PacManXXL_MapSelector xxlMapSelector)
-    {
-        Logger.info("Creating UI with builder");
-
-        ui = GameUI_Builder.create(stage, sceneSize.getWidth(), sceneSize.getHeight())
-            .game(
-                ARCADE_PACMAN.name(),
-                ArcadePacMan_GameModel.class,
-                ArcadePacMan_UIConfig.class)
-
-            .game(
-                ARCADE_MS_PACMAN.name(),
-                ArcadeMsPacMan_GameModel.class,
-                ArcadeMsPacMan_UIConfig.class)
-
-            .game(
-                TENGEN_MS_PACMAN.name(),
-                TengenMsPacMan_GameModel.class,
-                TengenMsPacMan_UIConfig.class)
-
-            .game(
-                ARCADE_PACMAN_XXL.name(),
-                PacManXXL_PacMan_GameModel.class,
-                xxlMapSelector,
-                PacManXXL_PacMan_UIConfig.class)
-
-            .game(
-                ARCADE_MS_PACMAN_XXL.name(),
-                PacManXXL_MsPacMan_GameModel.class,
-                xxlMapSelector,
-                PacManXXL_MsPacMan_UIConfig.class)
-
+    private void createUI_UsingBuilder(Stage stage, Dimension2D sceneSize, PacManXXL_MapSelector xxlMapSelector) {
+        ui = GameUI_Builder
+            .create(stage, sceneSize.getWidth(), sceneSize.getHeight())
+            .game(ARCADE_PACMAN.name(), ArcadePacMan_GameModel.class, ArcadePacMan_UIConfig.class)
+            .game(ARCADE_MS_PACMAN.name(), ArcadeMsPacMan_GameModel.class, ArcadeMsPacMan_UIConfig.class)
+            .game(TENGEN_MS_PACMAN.name(), TengenMsPacMan_GameModel.class, TengenMsPacMan_UIConfig.class)
+            .game(ARCADE_PACMAN_XXL.name(), PacManXXL_PacMan_GameModel.class, xxlMapSelector, PacManXXL_PacMan_UIConfig.class)
+            .game(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_GameModel.class, xxlMapSelector, PacManXXL_MsPacMan_UIConfig.class)
             .startPage(ArcadePacMan_StartPage.class, ARCADE_PACMAN.name())
             .startPage(ArcadeMsPacMan_StartPage.class, ARCADE_MS_PACMAN.name())
             .startPage(TengenMsPacMan_StartPage.class, TENGEN_MS_PACMAN.name())
             .startPage(PacManXXL_StartPage.class, ARCADE_PACMAN_XXL.name(), ARCADE_MS_PACMAN_XXL.name())
-
             .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
             .build();
     }
@@ -193,15 +156,11 @@ public class PacManGames3dApp extends Application {
             case ARCADE_PACMAN_XXL -> new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile);
             case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile);
         };
-        registerGameWithTestStates(gameVariant, game);
-    }
-
-    private void registerGameWithTestStates(GameVariant variant, Game game) {
         final StateMachine<Game> gameStateMachine = game.control().stateMachine();
         gameStateMachine.addState(new LevelShortTestState());
         gameStateMachine.addState(new LevelMediumTestState());
         gameStateMachine.addState(new CutScenesTestState());
-        THE_GAME_BOX.registerGame(variant.name(), game);
+        THE_GAME_BOX.registerGame(gameVariant.name(), game);
     }
 
     private void configureDashboard() {
