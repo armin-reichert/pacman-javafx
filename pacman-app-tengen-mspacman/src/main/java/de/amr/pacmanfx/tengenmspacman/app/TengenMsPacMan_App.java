@@ -13,8 +13,9 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
+import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
-import javafx.stage.Screen;
+import javafx.geometry.Dimension2D;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.model.GameVariant.TENGEN_MS_PACMAN;
@@ -31,12 +32,10 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final double availableHeight = Screen.getPrimary().getVisualBounds().getHeight();
-        final double height = Math.floor(HEIGHT_FRACTION * availableHeight);
-        final double width  = Math.round(ASPECT_RATIO * height);
+        final Dimension2D sceneSize = Ufx.computeSceneSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         ui = GameUI_Builder
-            .create(primaryStage, width, height)
+            .create(primaryStage, sceneSize.getWidth(), sceneSize.getHeight())
             .game(NAME_OF_THE_GAME, TengenMsPacMan_GameModel.class, TengenMsPacMan_UIConfig.class)
             .startPage(TengenMsPacMan_StartPage.class, NAME_OF_THE_GAME)
             .dashboard(

@@ -15,10 +15,10 @@ import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
+import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Dimension2D;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -49,24 +49,17 @@ public class ArcadePacMan_App extends Application {
 
     private GameUI ui;
 
-    private Dimension2D sceneSize() {
-        final double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
-        final double height = Math.floor(HEIGHT_FRACTION * screenHeight);
-        final double width  = Math.floor(ASPECT_RATIO * height);
-        return new Dimension2D(width, height);
-    }
-
     @Override
     public void start(Stage primaryStage) {
+        final Dimension2D sceneSize = Ufx.computeSceneSize(ASPECT_RATIO, HEIGHT_FRACTION);
         try {
             final boolean useBuilder = Boolean.parseBoolean(getParameters().getNamed().getOrDefault("use_builder", "true"));
-            if (useBuilder) createUI_WithBuilder(primaryStage, sceneSize());
-            else            createUI(primaryStage, sceneSize());
+            if (useBuilder) createUI_WithBuilder(primaryStage,sceneSize);
+            else            createUI(primaryStage, sceneSize);
             ui.show();
         }
         catch (RuntimeException x) {
-            Logger.error("An error occurred while UI creation.");
-            Logger.error(x);
+            Logger.error(x, "An error occurred while UI creation.");
             Platform.exit();
         }
     }

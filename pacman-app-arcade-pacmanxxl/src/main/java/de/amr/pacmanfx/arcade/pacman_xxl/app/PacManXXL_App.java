@@ -12,8 +12,9 @@ import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardSectionCustomMaps;
+import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
-import javafx.stage.Screen;
+import javafx.geometry.Dimension2D;
 import javafx.stage.Stage;
 
 public class PacManXXL_App extends Application {
@@ -28,13 +29,11 @@ public class PacManXXL_App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final double availableHeight = Screen.getPrimary().getVisualBounds().getHeight();
-        final double height = Math.floor(HEIGHT_FRACTION * availableHeight);
-        final double width  = Math.floor(ASPECT_RATIO * height);
+        final Dimension2D sceneSize = Ufx.computeSceneSize(ASPECT_RATIO, HEIGHT_FRACTION);
         final var mapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
 
         ui = GameUI_Builder
-            .create(primaryStage, width, height)
+            .create(primaryStage, sceneSize.getWidth(), sceneSize.getHeight())
             .game(PACMAN_GAME, PacManXXL_PacMan_GameModel.class, mapSelector, PacManXXL_PacMan_UIConfig.class)
             .game(MSPACMAN_GAME, PacManXXL_MsPacMan_GameModel.class, mapSelector, PacManXXL_MsPacMan_UIConfig.class)
             .dashboard(
