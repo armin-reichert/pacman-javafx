@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -24,6 +25,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import org.tinylog.Logger;
 
 import java.io.PrintWriter;
@@ -49,6 +51,13 @@ public interface Ufx {
 
     BackgroundSize FILL_PAGE_SIZE  = new BackgroundSize(1.0, 1.0, true, true, false, true);
     BackgroundSize FIT_HEIGHT_SIZE = new BackgroundSize(BackgroundSize.AUTO, 1.0, false, true, true, false);
+
+    static Dimension2D computeSceneSize(double aspectRatio, double heightFraction) {
+        final double availableHeight = Screen.getPrimary().getVisualBounds().getHeight();
+        final double height = Math.floor(heightFraction * availableHeight);
+        final double width = Math.floor(aspectRatio * height);
+        return new Dimension2D(width, height);
+    }
 
     /**
      * Starts the JavaFX application specified by the given class. In case an exception is thrown,
