@@ -25,7 +25,6 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_Das
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
-import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
@@ -40,8 +39,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.GameBox.highScoreFile;
 import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
@@ -62,14 +59,6 @@ public class PacManGames3dApp extends Application {
 
     private static final float ASPECT_RATIO    = 1.6f; // 16:10
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
-
-    private static final Map<String, Supplier<? extends GameUI_Config>> UI_CONFIG_MAP = Map.of(
-        ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new,
-        ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig::new,
-        TENGEN_MS_PACMAN.name(),     TengenMsPacMan_UIConfig::new,
-        ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_UIConfig::new,
-        ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_UIConfig::new
-    );
 
     private static final List<CommonDashboardID> DASHBOARD_IDs = List.of(
         CommonDashboardID.GENERAL,
@@ -112,7 +101,14 @@ public class PacManGames3dApp extends Application {
                 for (GameVariant variant : GameVariant.values()) {
                     registerGameWithTestStates(variant, xxlMapSelector);
                 }
-                ui = new GameUI_Implementation(UI_CONFIG_MAP, THE_GAME_BOX, primaryStage, sceneSize.getWidth(), sceneSize.getHeight());
+                ui = new GameUI_Implementation(THE_GAME_BOX, primaryStage, sceneSize.getWidth(), sceneSize.getHeight());
+
+                ui.configFactory().addFactory(ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new);
+                ui.configFactory().addFactory(ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig::new);
+                ui.configFactory().addFactory(TENGEN_MS_PACMAN.name(),     TengenMsPacMan_UIConfig::new);
+                ui.configFactory().addFactory(ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_UIConfig::new);
+                ui.configFactory().addFactory(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_UIConfig::new);
+
                 final StartPagesCarousel startPages = ui.views().startPagesView();
                 startPages.addStartPage(new ArcadePacMan_StartPage());
                 startPages.addStartPage(new ArcadeMsPacMan_StartPage());

@@ -125,9 +125,7 @@ public class GameUI_Builder {
     public GameUI build() {
         validateConfiguration();
 
-        final Map<String, Supplier<? extends GameUI_Config>> uiConfigFactories = new HashMap<>();
-        configByGameVariant.forEach((gameVariant, config) -> uiConfigFactories.put(gameVariant, config.uiConfigFactory));
-        var ui = new GameUI_Implementation(uiConfigFactories, THE_GAME_BOX, stage, mainSceneWidth, mainSceneHeight);
+        var ui = new GameUI_Implementation(THE_GAME_BOX, stage, mainSceneWidth, mainSceneHeight);
 
         configByGameVariant.forEach((gameVariant, config) -> {
             File highScoreFile = GameBox.highScoreFile(gameVariant);
@@ -138,6 +136,8 @@ public class GameUI_Builder {
             game.control().stateMachine().addState(new CutScenesTestState());
             THE_GAME_BOX.registerGame(gameVariant, game);
         });
+
+        configByGameVariant.forEach((gameVariant, config) -> ui.configFactory().addFactory(gameVariant, config.uiConfigFactory));
 
         for (StartPageConfiguration config : startPageConfigs) {
             GameUI_StartPage startPage = createStartPage(config.gameVariants.getFirst(), config.startPageClass);

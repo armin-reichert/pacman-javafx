@@ -36,9 +36,7 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
-import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
@@ -74,14 +72,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private StringBinding titleBinding;
 
-    public GameUI_Implementation(
-        Map<String, Supplier<? extends GameUI_Config>> uiConfigFactories,
-        GameContext context,
-        Stage stage,
-        double sceneWidth,
-        double sceneHeight)
-    {
-        requireNonNull(uiConfigFactories);
+    public GameUI_Implementation(GameContext context, Stage stage, double sceneWidth, double sceneHeight) {
         requireNonNull(context);
         requireNonNull(stage);
         requireNonNegative(sceneWidth);
@@ -93,7 +84,7 @@ public final class GameUI_Implementation implements GameUI {
         clock.setPausableAction(this::simulateAndUpdateGameScene);
         clock.setPermanentAction(this::render);
 
-        uiConfigManager = new GameUI_ConfigManager(uiConfigFactories);
+        uiConfigManager = new GameUI_ConfigManager();
         customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
         scene = new Scene(layoutPane, sceneWidth, sceneHeight);
         pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
@@ -315,6 +306,11 @@ public final class GameUI_Implementation implements GameUI {
         stopGame();
         flashMessageView.stop();
         customDirWatchdog.dispose();
+    }
+
+    @Override
+    public GameUI_ConfigManager uiConfigManager() {
+        return uiConfigManager;
     }
 
     @Override

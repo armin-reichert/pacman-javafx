@@ -15,14 +15,15 @@ import static java.util.Objects.requireNonNull;
 
 public class GameUI_ConfigManager {
 
-    private final Map<String, Supplier<? extends GameUI_Config>> factories;
+    private final Map<String, Supplier<? extends GameUI_Config>> factories = new HashMap<>();
     private final Map<String, GameUI_Config> uiConfigCache = new HashMap<>();
 
-    public GameUI_ConfigManager(Map<String, Supplier<? extends GameUI_Config>> factories) {
-        this.factories = requireNonNull(factories);
-        for (var factory : factories.values()) {
-            requireNonNull(factory);
-        }
+    public GameUI_ConfigManager() {}
+
+    public void addFactory(String gameVariantName, Supplier<? extends GameUI_Config> factory) {
+        requireNonNull(gameVariantName);
+        requireNonNull(factory);
+        factories.put(gameVariantName, factory);
     }
 
     public GameUI_Config getOrCreate(String variantName) {

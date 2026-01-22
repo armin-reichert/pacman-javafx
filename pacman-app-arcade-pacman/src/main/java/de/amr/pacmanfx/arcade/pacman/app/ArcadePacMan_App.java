@@ -24,7 +24,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 
@@ -74,11 +73,8 @@ public class ArcadePacMan_App extends Application {
         final Game game = new ArcadePacMan_GameModel(THE_GAME_BOX, highScoreFile);
         THE_GAME_BOX.registerGame(NAME_OF_THE_GAME, game);
 
-        ui = new GameUI_Implementation(
-            Map.of(NAME_OF_THE_GAME, ArcadePacMan_UIConfig::new),
-            THE_GAME_BOX,
-            stage,
-            size.getWidth(), size.getHeight());
+        ui = new GameUI_Implementation(THE_GAME_BOX, stage, size.getWidth(), size.getHeight());
+        ui.configFactory().addFactory(NAME_OF_THE_GAME, ArcadePacMan_UIConfig::new);
 
         final StartPagesCarousel startPagesView = ui.views().startPagesView();
         final ArcadePacMan_StartPage startPage = new ArcadePacMan_StartPage();
