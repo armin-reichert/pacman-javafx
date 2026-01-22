@@ -212,7 +212,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private File highScoreFile(GameVariant variant) {
-        return THE_GAME_BOX.highScoreFile(variant.name());
+        return GameBox.highScoreFile(variant.name());
     }
 
     private void configureDashboard() {

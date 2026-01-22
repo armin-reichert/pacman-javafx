@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Contains the games. Each game variant is represented by an instance of a game model (see {@link Game}).
+ * Container for the playable games. Each game variant is represented by an instance of its game model (see {@link Game}).
  */
 public class GameBox implements GameContext, CoinMechanism {
 
@@ -40,13 +40,18 @@ public class GameBox implements GameContext, CoinMechanism {
      */
     public static final File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
 
-    private static final String HIGHSCORE_FILE_PATTERN = "highscore-%s.xml";
+    private static final String HIGHSCORE_FILE_NAME_PATTERN = "highscore-%s.xml";
 
     private static final boolean DIRECTORY_CHECK_OK = initUserDirectories();
 
     private final Map<String, Game> gamesByVariantName = new HashMap<>();
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
+
+    public static File highScoreFile(String gameVariant) {
+        requireNonNull(gameVariant);
+        return new File(HOME_DIR, highScoreFileName(gameVariant));
+    }
 
     public GameBox() {
         if (!DIRECTORY_CHECK_OK) {
@@ -66,12 +71,13 @@ public class GameBox implements GameContext, CoinMechanism {
                     "Game variant name '%s' does not match required syntax '%s'"
                             .formatted(variantName, GAME_VARIANT_NAME_PATTERN));
         }
-        final Game previousGameWithThisName = gamesByVariantName.putIfAbsent(variantName, game);
-        if (previousGameWithThisName != null) {
-            Logger.warn("Game ({}) was already registered for variant {}",
-                    previousGameWithThisName.getClass().getName(), variantName);
+        final Game previousGame = gamesByVariantName.putIfAbsent(variantName, game);
+        if (previousGame != null) {
+            Logger.warn("Game ({}) was already registered for variant {}", previousGame.getClass().getName(), variantName);
         }
     }
+
+    // GameContext implementation
 
     @Override
     public boolean hasGameWithName(String name) {
@@ -91,12 +97,10 @@ public class GameBox implements GameContext, CoinMechanism {
         if (gamesByVariantName.containsKey(variantName)) {
             return (T) gamesByVariantName.get(variantName);
         }
-        String errorMessage = "Game variant named '%s' has not been registered!".formatted(variantName);
+        final String errorMessage = "Game variant named '%s' has not been registered!".formatted(variantName);
         Logger.error(errorMessage);
         throw new IllegalArgumentException(errorMessage);
     }
-
-    // GameContext implementation
 
     @Override
     public <G extends Game> G currentGame() {
@@ -118,14 +122,14 @@ public class GameBox implements GameContext, CoinMechanism {
 
     // other stuff
 
-    public File highScoreFile(String gameVariant) {
-        return new File(HOME_DIR, HIGHSCORE_FILE_PATTERN.formatted(gameVariant).toLowerCase());
+    private static String highScoreFileName(String gameVariant) {
+        return HIGHSCORE_FILE_NAME_PATTERN.formatted(gameVariant).toLowerCase();
     }
 
     private static boolean initUserDirectories() {
-        String homeDirDesc = "Home directory";
-        String customMapDirDesc = "Custom map directory";
-        boolean success = ensureDirExistsAndWritable(HOME_DIR, homeDirDesc);
+        final String homeDirDesc = "Home directory";
+        final String customMapDirDesc = "Custom map directory";
+        final boolean success = ensureDirExistsAndWritable(HOME_DIR, homeDirDesc);
         if (success) {
             return ensureDirExistsAndWritable(CUSTOM_MAP_DIR, customMapDirDesc);
         }

@@ -130,7 +130,7 @@ public class GameUI_Builder {
         var ui = new GameUI_Implementation(uiConfigMap, THE_GAME_BOX, stage, mainSceneWidth, mainSceneHeight);
 
         configByGameVariant.forEach((gameVariant, config) -> {
-            File highScoreFile = THE_GAME_BOX.highScoreFile(gameVariant);
+            File highScoreFile = GameBox.highScoreFile(gameVariant);
             Game game = createGame(config.gameModelClass, config.mapSelector, highScoreFile);
             //TODO make configurable
             game.control().stateMachine().addState(new LevelShortTestState());
