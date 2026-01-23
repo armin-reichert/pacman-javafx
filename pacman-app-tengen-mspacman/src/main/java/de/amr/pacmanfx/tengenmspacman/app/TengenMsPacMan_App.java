@@ -40,7 +40,7 @@ public class TengenMsPacMan_App extends Application {
         final Dimension2D sceneSize = Ufx.computeSceneSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         ui = GameUI_Builder
-            .create(primaryStage, sceneSize.getWidth(), sceneSize.getHeight())
+            .createUI(primaryStage, sceneSize.getWidth(), sceneSize.getHeight())
             .game(NAME_OF_THE_GAME, () -> new TengenMsPacMan_GameModel(HIGH_SCORE_FILE), TengenMsPacMan_UIConfig::new)
             .startPage(TengenMsPacMan_StartPage::new)
             .dashboard(

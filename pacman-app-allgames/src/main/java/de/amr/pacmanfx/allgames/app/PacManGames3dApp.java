@@ -84,7 +84,7 @@ public class PacManGames3dApp extends Application {
             final var xxlMapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
             if (useBuilder) {
                 ui = GameUI_Builder
-                    .create(primaryStage, sceneSize.getWidth(), sceneSize.getHeight())
+                    .createUI(primaryStage, sceneSize.getWidth(), sceneSize.getHeight())
 
                     .game(ARCADE_PACMAN.name(),
                         () -> new ArcadePacMan_GameModel(THE_GAME_BOX, highScoreFile(ARCADE_PACMAN)),

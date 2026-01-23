@@ -88,7 +88,7 @@ public class ArcadePacMan_App extends Application {
 
     private void createUI_WithBuilder(Stage stage, Dimension2D size) {
         ui = GameUI_Builder
-            .create(stage, size.getWidth(), size.getHeight())
+            .createUI(stage, size.getWidth(), size.getHeight())
             .game(NAME_OF_THE_GAME, () -> new ArcadePacMan_GameModel(THE_GAME_BOX, HIGH_SCORE_FILE), ArcadePacMan_UIConfig::new)
             .startPage(ArcadePacMan_StartPage::new)
             .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
