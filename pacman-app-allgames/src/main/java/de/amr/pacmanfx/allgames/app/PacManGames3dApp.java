@@ -116,6 +116,7 @@ public class PacManGames3dApp extends Application {
                 startPages.addStartPage(new PacManXXL_StartPage());
                 startPages.startPages().forEach(startPage -> startPage.init(ui));
                 startPages.setSelectedIndex(0);
+
                 final Dashboard dashboard = ui.views().playView().dashboard();
                 dashboard.addCommonSections(ui, DASHBOARD_IDs);
             }

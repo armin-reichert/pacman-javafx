@@ -203,6 +203,9 @@ public interface GameUI extends Translator {
 
     // Config
 
+    /**
+     * @return the UI configuration manager
+     */
     GameUI_ConfigManager uiConfigManager();
 
     /**
