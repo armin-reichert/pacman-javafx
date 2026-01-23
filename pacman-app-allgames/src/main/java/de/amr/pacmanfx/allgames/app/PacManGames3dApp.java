@@ -80,15 +80,15 @@ public class PacManGames3dApp extends Application {
         final Dimension2D sceneSize = Ufx.computeSceneSize(ASPECT_RATIO, HEIGHT_FRACTION);
         try {
             final boolean useBuilder = Boolean.parseBoolean(getParameters().getNamed().getOrDefault("use_builder", "true"));
-            // Common map selector used by Pac-Man XXL and Ms. Pac-Man XXL
+            // Shared map selector used by Pac-Man XXL and Ms. Pac-Man XXL
             final var xxlMapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
             if (useBuilder) {
                 ui = GameUI_Builder
                     .create(primaryStage, sceneSize.getWidth(), sceneSize.getHeight())
-                    .game(ARCADE_PACMAN.name(), ArcadePacMan_GameModel.class, ArcadePacMan_UIConfig::new)
-                    .game(ARCADE_MS_PACMAN.name(), ArcadeMsPacMan_GameModel.class, ArcadeMsPacMan_UIConfig::new)
-                    .game(TENGEN_MS_PACMAN.name(), TengenMsPacMan_GameModel.class, TengenMsPacMan_UIConfig::new)
-                    .game(ARCADE_PACMAN_XXL.name(), PacManXXL_PacMan_GameModel.class, xxlMapSelector, PacManXXL_PacMan_UIConfig::new)
+                    .game(ARCADE_PACMAN.name(),        ArcadePacMan_GameModel.class, ArcadePacMan_UIConfig::new)
+                    .game(ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_GameModel.class, ArcadeMsPacMan_UIConfig::new)
+                    .game(TENGEN_MS_PACMAN.name(),     TengenMsPacMan_GameModel.class, TengenMsPacMan_UIConfig::new)
+                    .game(ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_GameModel.class, xxlMapSelector, PacManXXL_PacMan_UIConfig::new)
                     .game(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_GameModel.class, xxlMapSelector, PacManXXL_MsPacMan_UIConfig::new)
                     .startPage(ArcadePacMan_StartPage.class, ARCADE_PACMAN.name())
                     .startPage(ArcadeMsPacMan_StartPage.class, ARCADE_MS_PACMAN.name())

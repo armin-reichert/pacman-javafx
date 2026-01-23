@@ -66,7 +66,7 @@ public class GameUI_Builder {
         Class<? extends Game> gameModelClass,
         Supplier<? extends GameUI_Config> uiConfigFactory)
     {
-        validateGameVariantKey(variant);
+        validateGameVariantName(variant);
         if (gameModelClass == null) {
             error("Game model class for game variant '%s' is null".formatted(variant));
         }
@@ -84,7 +84,7 @@ public class GameUI_Builder {
         WorldMapSelector mapSelector,
         Supplier<? extends GameUI_Config> uiConfigFactory)
     {
-        validateGameVariantKey(variant);
+        validateGameVariantName(variant);
         if (gameModelClass == null) {
             error("Game model class for game variant '%s' is null".formatted(variant));
         }
@@ -212,15 +212,15 @@ public class GameUI_Builder {
         }
     }
 
-    private void validateGameVariantKey(String key) {
-        if (key == null) {
-            error("Game variant key must not be null");
+    private void validateGameVariantName(String name) {
+        if (name == null) {
+            error("Game variant name must not be null");
         }
-        if (key.isBlank()) {
-            error("Game variant key must not be a blank string");
+        if (name.isBlank()) {
+            error("Game variant name must not be blank");
         }
-        if (!GameBox.GAME_VARIANT_NAME_PATTERN.matcher(key).matches()) {
-            error("Game variant key '%s' does not match pattern '%s'".formatted(key, GameBox.GAME_VARIANT_NAME_PATTERN));
+        if (!GameBox.GAME_VARIANT_NAME_PATTERN.matcher(name).matches()) {
+            error("Game variant name '%s' does not match pattern '%s'".formatted(name, GameBox.GAME_VARIANT_NAME_PATTERN));
         }
     }
 
