@@ -47,7 +47,7 @@ public class PacManXXL_App extends Application {
                 CommonDashboardID.KEYS_GLOBAL,
                 CommonDashboardID.KEYS_LOCAL,
                 CommonDashboardID.ABOUT)
-            .startPage(PacManXXL_StartPage.class, PACMAN_GAME)
+            .startPage(PacManXXL_StartPage::new)
             .build();
 
         final Dashboard dashboard = ui.views().playView().dashboard();

@@ -31,7 +31,7 @@ public class ArcadeMsPacMan_App extends Application {
         ui = GameUI_Builder
             .create(primaryStage, screenSize.getWidth(), screenSize.getHeight())
             .game(NAME_OF_THE_GAME, ArcadeMsPacMan_GameModel.class, ArcadeMsPacMan_UIConfig::new)
-            .startPage(ArcadeMsPacMan_StartPage.class, NAME_OF_THE_GAME)
+            .startPage(ArcadeMsPacMan_StartPage::new)
             .dashboard(
                 CommonDashboardID.GENERAL,
                 CommonDashboardID.GAME_CONTROL,

@@ -32,12 +32,10 @@ public class GameUI_Builder {
     }
 
     private static class StartPageConfiguration {
-        Class<?> startPageClass;
-        List<String> gameVariants;
+        Supplier<? extends GameUI_StartPage> startPageFactory;
     }
 
     public static GameUI_Builder create(Stage stage, double width, double height) {
-        Logger.info("JavaFX runtime: {}", System.getProperty("javafx.runtime.version"));
         return new GameUI_Builder(stage, width, height);
     }
 
@@ -100,17 +98,13 @@ public class GameUI_Builder {
         return this;
     }
 
-    public GameUI_Builder startPage(Class<?> startPageClass, String... gameVariants) {
-        if (startPageClass == null) {
-            error("Start page class must not be null");
+    public GameUI_Builder startPage(Supplier<? extends GameUI_StartPage> startPageFactory) {
+        if (startPageFactory == null) {
+            error("Start page factory must not be null");
         }
-        if (gameVariants == null) {
-            error("Game variants list must not be null");
-        }
-        var config = new StartPageConfiguration();
-        config.startPageClass = startPageClass;
-        config.gameVariants = List.of(gameVariants);
-        startPageConfigs.add(config);
+        var startPageConfig = new StartPageConfiguration();
+        startPageConfig.startPageFactory = startPageFactory;
+        startPageConfigs.add(startPageConfig);
         return this;
     }
 
@@ -139,31 +133,24 @@ public class GameUI_Builder {
 
         configByGameVariant.forEach((gameVariant, config) -> ui.configFactory().addFactory(gameVariant, config.uiConfigFactory));
 
-        for (StartPageConfiguration config : startPageConfigs) {
-            GameUI_StartPage startPage = createStartPage(config.gameVariants.getFirst(), config.startPageClass);
-            ui.views().startPagesView().addStartPage(startPage);
-            startPage.init(ui);
+        for (StartPageConfiguration startPageConfig : startPageConfigs) {
+            GameUI_StartPage startPage = createStartPage(startPageConfig.startPageFactory);
+            if (startPage != null) {
+                ui.views().startPagesView().addStartPage(startPage);
+                startPage.init(ui);
+            }
         }
 
         ui.views().playView().dashboard().addCommonSections(ui, dashboardIDs);
         return ui;
     }
 
-    private GameUI_StartPage createStartPage(String gameVariant, Class<?> startPageClass) {
-        // first try: XYZ_StartPage(String gameVariantName)
+    private GameUI_StartPage createStartPage(Supplier<? extends GameUI_StartPage> startPageFactory) {
         try {
-            return (GameUI_StartPage) startPageClass.getDeclaredConstructor(String.class).newInstance(gameVariant);
-        } catch (NoSuchMethodException x) {
-            // 2nd try: default constructor
-            try {
-                return (GameUI_StartPage) startPageClass.getDeclaredConstructor().newInstance();
-            } catch (Exception xx) {
-                error("Could not create start page from class '%s'".formatted(startPageClass.getSimpleName()), xx);
-                throw new IllegalStateException(xx);
-            }
+            return startPageFactory.get();
         } catch (Exception x) {
-            error("Could not create start page from class '%s'".formatted(startPageClass.getSimpleName()), x);
-            throw new IllegalStateException(x);
+            error("Could not create start page");
+            return null;
         }
     }
 
@@ -222,10 +209,6 @@ public class GameUI_Builder {
         if (!GameBox.GAME_VARIANT_NAME_PATTERN.matcher(name).matches()) {
             error("Game variant name '%s' does not match pattern '%s'".formatted(name, GameBox.GAME_VARIANT_NAME_PATTERN));
         }
-    }
-
-    private void error(String message, Throwable x) {
-        throw new RuntimeException("UI building failed: %s".formatted(message), x);
     }
 
     private void error(String message) {

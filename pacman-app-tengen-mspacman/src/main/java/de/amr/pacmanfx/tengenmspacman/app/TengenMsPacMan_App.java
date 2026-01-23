@@ -37,7 +37,7 @@ public class TengenMsPacMan_App extends Application {
         ui = GameUI_Builder
             .create(primaryStage, sceneSize.getWidth(), sceneSize.getHeight())
             .game(NAME_OF_THE_GAME, TengenMsPacMan_GameModel.class, TengenMsPacMan_UIConfig::new)
-            .startPage(TengenMsPacMan_StartPage.class, NAME_OF_THE_GAME)
+            .startPage(TengenMsPacMan_StartPage::new)
             .dashboard(
                 CommonDashboardID.GENERAL,
                 CommonDashboardID.GAME_CONTROL,

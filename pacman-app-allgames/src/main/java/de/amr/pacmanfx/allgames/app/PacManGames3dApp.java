@@ -90,10 +90,10 @@ public class PacManGames3dApp extends Application {
                     .game(TENGEN_MS_PACMAN.name(),     TengenMsPacMan_GameModel.class, TengenMsPacMan_UIConfig::new)
                     .game(ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_GameModel.class, xxlMapSelector, PacManXXL_PacMan_UIConfig::new)
                     .game(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_GameModel.class, xxlMapSelector, PacManXXL_MsPacMan_UIConfig::new)
-                    .startPage(ArcadePacMan_StartPage.class, ARCADE_PACMAN.name())
-                    .startPage(ArcadeMsPacMan_StartPage.class, ARCADE_MS_PACMAN.name())
-                    .startPage(TengenMsPacMan_StartPage.class, TENGEN_MS_PACMAN.name())
-                    .startPage(PacManXXL_StartPage.class, ARCADE_PACMAN_XXL.name(), ARCADE_MS_PACMAN_XXL.name())
+                    .startPage(ArcadePacMan_StartPage::new)
+                    .startPage(ArcadeMsPacMan_StartPage::new)
+                    .startPage(TengenMsPacMan_StartPage::new)
+                    .startPage(PacManXXL_StartPage::new)
                     .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
                     .build();
             }
