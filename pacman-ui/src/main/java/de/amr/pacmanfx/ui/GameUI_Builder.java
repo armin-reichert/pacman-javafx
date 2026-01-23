@@ -28,10 +28,6 @@ public class GameUI_Builder {
         WorldMapSelector mapSelector;
     }
 
-    private static class StartPageConfiguration {
-        Supplier<? extends GameUI_StartPage> startPageFactory;
-    }
-
     public static GameUI_Builder create(Stage stage, double width, double height) {
         return new GameUI_Builder(stage, width, height);
     }
@@ -40,7 +36,7 @@ public class GameUI_Builder {
     private final double mainSceneWidth;
     private final double mainSceneHeight;
     private final Map<String, GameConfiguration> configByGameVariant = new LinkedHashMap<>();
-    private final List<StartPageConfiguration> startPageConfigs = new ArrayList<>();
+    private final List<Supplier<? extends GameUI_StartPage>> startPageFactories = new ArrayList<>();
     private List<CommonDashboardID> dashboardIDs = List.of();
 
     private GameUI_Builder(Stage stage, double width, double height) {
@@ -87,9 +83,7 @@ public class GameUI_Builder {
         if (startPageFactory == null) {
             error("Start page factory must not be null");
         }
-        var startPageConfig = new StartPageConfiguration();
-        startPageConfig.startPageFactory = startPageFactory;
-        startPageConfigs.add(startPageConfig);
+        startPageFactories.add(startPageFactory);
         return this;
     }
 
@@ -117,8 +111,8 @@ public class GameUI_Builder {
 
         configByGameVariant.forEach((gameVariant, config) -> ui.uiConfigManager().addFactory(gameVariant, config.uiConfigFactory));
 
-        for (StartPageConfiguration startPageConfig : startPageConfigs) {
-            GameUI_StartPage startPage = createStartPage(startPageConfig.startPageFactory);
+        for (var factory : startPageFactories) {
+            GameUI_StartPage startPage = factory.get();
             if (startPage != null) {
                 ui.views().startPagesView().addStartPage(startPage);
                 startPage.init(ui);
@@ -127,15 +121,6 @@ public class GameUI_Builder {
 
         ui.views().playView().dashboard().addCommonSections(ui, dashboardIDs);
         return ui;
-    }
-
-    private GameUI_StartPage createStartPage(Supplier<? extends GameUI_StartPage> startPageFactory) {
-        try {
-            return startPageFactory.get();
-        } catch (Exception x) {
-            error("Could not create start page");
-            return null;
-        }
     }
 
     private void validateConfiguration() {
