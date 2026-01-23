@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengenmspacman.app;
 
-import de.amr.pacmanfx.GameBox;
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
@@ -31,7 +31,7 @@ public class TengenMsPacMan_App extends Application {
     private static final float ASPECT_RATIO    = NES_ASPECT; // 32:30
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
 
-    private static final File HIGH_SCORE_FILE = GameBox.highScoreFile(NAME_OF_THE_GAME);
+    private static final File HIGH_SCORE_FILE = GameContext.highScoreFile(NAME_OF_THE_GAME);
 
     private GameUI ui;
 

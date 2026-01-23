@@ -6,7 +6,6 @@ package de.amr.pacmanfx;
 
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameVariant;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -41,22 +40,11 @@ public class GameBox implements GameContext, CoinMechanism {
      */
     public static final File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
 
-    private static final String HIGHSCORE_FILE_NAME_PATTERN = "highscore-%s.xml";
-
     private static final boolean DIRECTORY_CHECK_OK = initUserDirectories();
 
     private final Map<String, Game> gamesByVariantName = new HashMap<>();
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
-
-    public static File highScoreFile(String gameVariantName) {
-        requireNonNull(gameVariantName);
-        return new File(HOME_DIR, highScoreFileName(gameVariantName));
-    }
-
-    public static File highScoreFile(GameVariant gameVariant) {
-        return highScoreFile(gameVariant.name());
-    }
 
     public GameBox() {
         if (!DIRECTORY_CHECK_OK) {
@@ -126,10 +114,6 @@ public class GameBox implements GameContext, CoinMechanism {
     public IntegerProperty numCoinsProperty() { return numCoins; }
 
     // other stuff
-
-    private static String highScoreFileName(String gameVariant) {
-        return HIGHSCORE_FILE_NAME_PATTERN.formatted(gameVariant).toLowerCase();
-    }
 
     private static boolean initUserDirectories() {
         final String homeDirDesc = "Home directory";

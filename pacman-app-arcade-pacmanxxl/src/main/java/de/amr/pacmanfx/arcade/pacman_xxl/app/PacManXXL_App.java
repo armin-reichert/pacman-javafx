@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
 import de.amr.pacmanfx.GameBox;
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.GameUI;
@@ -29,8 +30,8 @@ public class PacManXXL_App extends Application {
     private static final String PACMAN_GAME   = GameVariant.ARCADE_PACMAN_XXL.name();
     private static final String MS_PACMAN_GAME = GameVariant.ARCADE_MS_PACMAN_XXL.name();
 
-    private static final File HIGH_SCORE_FILE_PACMAN_XXL = GameBox.highScoreFile(PACMAN_GAME);
-    private static final File HIGH_SCORE_FILE_MS_PACMAN_XXL = GameBox.highScoreFile(MS_PACMAN_GAME);
+    private static final File HIGH_SCORE_FILE_PACMAN_XXL = GameContext.highScoreFile(PACMAN_GAME);
+    private static final File HIGH_SCORE_FILE_MS_PACMAN_XXL = GameContext.highScoreFile(MS_PACMAN_GAME);
 
     private GameUI ui;
 

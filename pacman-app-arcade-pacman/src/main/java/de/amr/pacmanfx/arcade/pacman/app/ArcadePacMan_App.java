@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.app;
 
-import de.amr.pacmanfx.GameBox;
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
@@ -46,7 +46,7 @@ public class ArcadePacMan_App extends Application {
         CommonDashboardID.ABOUT
     );
 
-    private static final File HIGH_SCORE_FILE = GameBox.highScoreFile(NAME_OF_THE_GAME);
+    private static final File HIGH_SCORE_FILE = GameContext.highScoreFile(NAME_OF_THE_GAME);
 
     private GameUI ui;
 

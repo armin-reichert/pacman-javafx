@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.app;
 
-import de.amr.pacmanfx.GameBox;
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
@@ -28,7 +28,7 @@ public class ArcadeMsPacMan_App extends Application {
     private static final float ASPECT_RATIO    = 1.2f; // 12:10
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
-    private static final File HIGH_SCORE_FILE = GameBox.highScoreFile(NAME_OF_THE_GAME);
+    private static final File HIGH_SCORE_FILE = GameContext.highScoreFile(NAME_OF_THE_GAME);
 
     private GameUI ui;
 

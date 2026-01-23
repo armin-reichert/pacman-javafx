@@ -40,7 +40,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.List;
 
-import static de.amr.pacmanfx.GameBox.highScoreFile;
+import static de.amr.pacmanfx.GameContext.highScoreFile;
 import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.model.GameVariant.*;
 

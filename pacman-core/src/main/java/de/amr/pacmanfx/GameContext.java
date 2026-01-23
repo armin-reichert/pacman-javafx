@@ -6,7 +6,10 @@ package de.amr.pacmanfx;
 
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameVariant;
 import javafx.beans.property.StringProperty;
+
+import java.io.File;
 
 import static java.util.Objects.requireNonNull;
 
@@ -19,6 +22,16 @@ import static java.util.Objects.requireNonNull;
  * registry of available game variants.
  */
 public interface GameContext {
+
+    static File highScoreFile(String gameVariantName) {
+        requireNonNull(gameVariantName);
+        final String fileName = "highscore-%s.xml".formatted(gameVariantName).toLowerCase();
+        return new File(GameBox.HOME_DIR, fileName);
+    }
+
+    static File highScoreFile(GameVariant gameVariant) {
+        return highScoreFile(gameVariant.name());
+    }
 
     /**
      * The property holding the name (identifier) of the currently selected game variant.
