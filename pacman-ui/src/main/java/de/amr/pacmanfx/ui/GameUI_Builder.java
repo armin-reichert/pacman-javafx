@@ -58,26 +58,9 @@ public class GameUI_Builder {
 
     public GameUI_Builder game(
         String variant,
-        Supplier<? extends AbstractGameModel> gameModeFactory,
-        Supplier<? extends GameUI_Config> uiConfigFactory)
-    {
-        validateGameVariantName(variant);
-        if (gameModeFactory == null) {
-            error("Game model factory for game variant '%s' is null".formatted(variant));
-        }
-        if (uiConfigFactory == null) {
-            error("Game UI configuration factory for game variant '%s' is null".formatted(variant));
-        }
-        configuration(variant).gameModelFactory = gameModeFactory;
-        configuration(variant).uiConfigFactory = uiConfigFactory;
-        return this;
-    }
-
-    public GameUI_Builder game(
-        String variant,
         Supplier<? extends AbstractGameModel> gameModelFactory,
-        WorldMapSelector mapSelector,
-        Supplier<? extends GameUI_Config> uiConfigFactory)
+        Supplier<? extends GameUI_Config> uiConfigFactory,
+        WorldMapSelector optionalMapSelector)
     {
         validateGameVariantName(variant);
         if (gameModelFactory == null) {
@@ -86,13 +69,18 @@ public class GameUI_Builder {
         if (uiConfigFactory == null) {
             error("Game UI configuration factory for game variant '%s' is null".formatted(variant));
         }
-        if (mapSelector == null) {
-            error("Map selector for variant %s may not be null".formatted(variant));
-        }
         configuration(variant).gameModelFactory = gameModelFactory;
         configuration(variant).uiConfigFactory = uiConfigFactory;
-        configuration(variant).mapSelector = mapSelector;
+        configuration(variant).mapSelector = optionalMapSelector;
         return this;
+    }
+
+    public GameUI_Builder game(
+        String variant,
+        Supplier<? extends AbstractGameModel> gameModelFactory,
+        Supplier<? extends GameUI_Config> uiConfigFactory)
+    {
+        return game(variant, gameModelFactory, uiConfigFactory, null);
     }
 
     public GameUI_Builder startPage(Supplier<? extends GameUI_StartPage> startPageFactory) {

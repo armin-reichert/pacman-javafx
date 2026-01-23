@@ -6,6 +6,7 @@ package de.amr.pacmanfx;
 
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameVariant;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -48,9 +49,13 @@ public class GameBox implements GameContext, CoinMechanism {
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
-    public static File highScoreFile(String gameVariant) {
-        requireNonNull(gameVariant);
-        return new File(HOME_DIR, highScoreFileName(gameVariant));
+    public static File highScoreFile(String gameVariantName) {
+        requireNonNull(gameVariantName);
+        return new File(HOME_DIR, highScoreFileName(gameVariantName));
+    }
+
+    public static File highScoreFile(GameVariant gameVariant) {
+        return highScoreFile(gameVariant.name());
     }
 
     public GameBox() {
