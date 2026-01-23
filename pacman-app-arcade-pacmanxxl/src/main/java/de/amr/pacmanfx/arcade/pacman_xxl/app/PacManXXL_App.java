@@ -27,11 +27,8 @@ public class PacManXXL_App extends Application {
     private static final double ASPECT_RATIO    = 1.6;
     private static final double HEIGHT_FRACTION = 0.8;
 
-    private static final String PACMAN_GAME   = GameVariant.ARCADE_PACMAN_XXL.name();
-    private static final String MS_PACMAN_GAME = GameVariant.ARCADE_MS_PACMAN_XXL.name();
-
-    private static final File HIGH_SCORE_FILE_PACMAN_XXL = GameContext.highScoreFile(PACMAN_GAME);
-    private static final File HIGH_SCORE_FILE_MS_PACMAN_XXL = GameContext.highScoreFile(MS_PACMAN_GAME);
+    private static final File HIGH_SCORE_FILE_PACMAN_XXL = GameContext.highScoreFile(GameVariant.ARCADE_PACMAN_XXL);
+    private static final File HIGH_SCORE_FILE_MS_PACMAN_XXL = GameContext.highScoreFile(GameVariant.ARCADE_MS_PACMAN_XXL);
 
     private GameUI ui;
 
@@ -42,10 +39,10 @@ public class PacManXXL_App extends Application {
 
         ui = GameUI_Builder
             .newUI(primaryStage, sceneSize.getWidth(), sceneSize.getHeight())
-            .game(PACMAN_GAME,
+            .game(GameVariant.ARCADE_PACMAN_XXL,
                 () -> new PacManXXL_PacMan_GameModel(THE_GAME_BOX, mapSelector, HIGH_SCORE_FILE_PACMAN_XXL),
                 PacManXXL_PacMan_UIConfig::new)
-            .game(MS_PACMAN_GAME,
+            .game(GameVariant.ARCADE_MS_PACMAN_XXL,
                 () -> new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, mapSelector, HIGH_SCORE_FILE_MS_PACMAN_XXL),
                 PacManXXL_MsPacMan_UIConfig::new)
             .dashboard(

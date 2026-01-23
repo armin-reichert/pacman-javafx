@@ -23,12 +23,10 @@ import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 
 public class ArcadeMsPacMan_App extends Application {
 
-    private static final String NAME_OF_THE_GAME = GameVariant.ARCADE_MS_PACMAN.name();
-
     private static final float ASPECT_RATIO    = 1.2f; // 12:10
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
-    private static final File HIGH_SCORE_FILE = GameContext.highScoreFile(NAME_OF_THE_GAME);
+    private static final File HIGH_SCORE_FILE = GameContext.highScoreFile(GameVariant.ARCADE_MS_PACMAN);
 
     private GameUI ui;
 
@@ -37,7 +35,7 @@ public class ArcadeMsPacMan_App extends Application {
         final Dimension2D screenSize = Ufx.computeSceneSize(ASPECT_RATIO, HEIGHT_FRACTION);
         ui = GameUI_Builder
             .newUI(primaryStage, screenSize.getWidth(), screenSize.getHeight())
-            .game(NAME_OF_THE_GAME, () -> new ArcadeMsPacMan_GameModel(THE_GAME_BOX, HIGH_SCORE_FILE), ArcadeMsPacMan_UIConfig::new)
+            .game(GameVariant.ARCADE_MS_PACMAN, () -> new ArcadeMsPacMan_GameModel(THE_GAME_BOX, HIGH_SCORE_FILE), ArcadeMsPacMan_UIConfig::new)
             .startPage(ArcadeMsPacMan_StartPage::new)
             .dashboard(
                 CommonDashboardID.GENERAL,

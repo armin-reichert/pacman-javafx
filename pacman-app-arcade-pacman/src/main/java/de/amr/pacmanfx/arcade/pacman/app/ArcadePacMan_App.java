@@ -29,8 +29,6 @@ import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 
 public class ArcadePacMan_App extends Application {
 
-    private static final String NAME_OF_THE_GAME = GameVariant.ARCADE_PACMAN.name();
-
     private static final float ASPECT_RATIO    = 1.2f; // 12:10 aspect ratio
     private static final float HEIGHT_FRACTION = 0.8f;  // 80% of available height
 
@@ -46,7 +44,7 @@ public class ArcadePacMan_App extends Application {
         CommonDashboardID.ABOUT
     );
 
-    private static final File HIGH_SCORE_FILE = GameContext.highScoreFile(NAME_OF_THE_GAME);
+    private static final File HIGH_SCORE_FILE = GameContext.highScoreFile(GameVariant.ARCADE_MS_PACMAN);
 
     private GameUI ui;
 
@@ -72,10 +70,10 @@ public class ArcadePacMan_App extends Application {
 
     private void createUI(Stage stage, Dimension2D size) {
         final Game game = new ArcadePacMan_GameModel(THE_GAME_BOX, HIGH_SCORE_FILE);
-        THE_GAME_BOX.registerGame(NAME_OF_THE_GAME, game);
+        THE_GAME_BOX.registerGame(GameVariant.ARCADE_MS_PACMAN.name(), game);
 
         ui = new GameUI_Implementation(THE_GAME_BOX, stage, size.getWidth(), size.getHeight());
-        ui.uiConfigManager().addFactory(NAME_OF_THE_GAME, ArcadePacMan_UIConfig::new);
+        ui.uiConfigManager().addFactory(GameVariant.ARCADE_MS_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
         final StartPagesCarousel startPagesView = ui.views().startPagesView();
         final ArcadePacMan_StartPage startPage = new ArcadePacMan_StartPage();
@@ -89,7 +87,7 @@ public class ArcadePacMan_App extends Application {
     private void createUI_WithBuilder(Stage stage, Dimension2D size) {
         ui = GameUI_Builder
             .newUI(stage, size.getWidth(), size.getHeight())
-            .game(NAME_OF_THE_GAME, () -> new ArcadePacMan_GameModel(THE_GAME_BOX, HIGH_SCORE_FILE), ArcadePacMan_UIConfig::new)
+            .game(GameVariant.ARCADE_MS_PACMAN, () -> new ArcadePacMan_GameModel(THE_GAME_BOX, HIGH_SCORE_FILE), ArcadePacMan_UIConfig::new)
             .startPage(ArcadePacMan_StartPage::new)
             .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
             .build();

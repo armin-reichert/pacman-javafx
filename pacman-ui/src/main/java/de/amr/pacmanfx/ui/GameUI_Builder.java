@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui;
 import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
@@ -53,30 +54,38 @@ public class GameUI_Builder {
     }
 
     public GameUI_Builder game(
-        String variant,
+        String variantName,
         Supplier<? extends AbstractGameModel> gameModelFactory,
         Supplier<? extends GameUI_Config> uiConfigFactory,
         WorldMapSelector optionalMapSelector)
     {
-        validateGameVariantName(variant);
+        validateGameVariantName(variantName);
         if (gameModelFactory == null) {
-            error("Game model factory for game variant '%s' is null".formatted(variant));
+            error("Game model factory for game variant '%s' is null".formatted(variantName));
         }
         if (uiConfigFactory == null) {
-            error("Game UI configuration factory for game variant '%s' is null".formatted(variant));
+            error("Game UI configuration factory for game variant '%s' is null".formatted(variantName));
         }
-        configuration(variant).gameModelFactory = gameModelFactory;
-        configuration(variant).uiConfigFactory = uiConfigFactory;
-        configuration(variant).mapSelector = optionalMapSelector;
+        configuration(variantName).gameModelFactory = gameModelFactory;
+        configuration(variantName).uiConfigFactory = uiConfigFactory;
+        configuration(variantName).mapSelector = optionalMapSelector;
         return this;
     }
 
     public GameUI_Builder game(
-        String variant,
+        String variantName,
         Supplier<? extends AbstractGameModel> gameModelFactory,
         Supplier<? extends GameUI_Config> uiConfigFactory)
     {
-        return game(variant, gameModelFactory, uiConfigFactory, null);
+        return game(variantName, gameModelFactory, uiConfigFactory, null);
+    }
+
+    public GameUI_Builder game(
+        GameVariant variant,
+        Supplier<? extends AbstractGameModel> gameModelFactory,
+        Supplier<? extends GameUI_Config> uiConfigFactory)
+    {
+        return game(variant.name(), gameModelFactory, uiConfigFactory, null);
     }
 
     public GameUI_Builder startPage(Supplier<? extends GameUI_StartPage> startPageFactory) {
