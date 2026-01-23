@@ -74,7 +74,7 @@ public class ArcadePacMan_App extends Application {
         THE_GAME_BOX.registerGame(NAME_OF_THE_GAME, game);
 
         ui = new GameUI_Implementation(THE_GAME_BOX, stage, size.getWidth(), size.getHeight());
-        ui.configFactory().addFactory(NAME_OF_THE_GAME, ArcadePacMan_UIConfig::new);
+        ui.uiConfigManager().addFactory(NAME_OF_THE_GAME, ArcadePacMan_UIConfig::new);
 
         final StartPagesCarousel startPagesView = ui.views().startPagesView();
         final ArcadePacMan_StartPage startPage = new ArcadePacMan_StartPage();

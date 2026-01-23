@@ -131,7 +131,7 @@ public class GameUI_Builder {
             THE_GAME_BOX.registerGame(gameVariant, game);
         });
 
-        configByGameVariant.forEach((gameVariant, config) -> ui.configFactory().addFactory(gameVariant, config.uiConfigFactory));
+        configByGameVariant.forEach((gameVariant, config) -> ui.uiConfigManager().addFactory(gameVariant, config.uiConfigFactory));
 
         for (StartPageConfiguration startPageConfig : startPageConfigs) {
             GameUI_StartPage startPage = createStartPage(startPageConfig.startPageFactory);

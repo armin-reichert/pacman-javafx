@@ -109,7 +109,7 @@ public class PlayView extends StackPane implements GameUI_View {
     private void handleGameVariantChange(String oldName, String newName) {
         if (oldName != null) {
             ui.context().gameByVariantName(oldName).removeGameEventListener(this);
-            ui.configFactory().dispose(oldName);
+            ui.uiConfigManager().dispose(oldName);
         }
         if (newName != null) {
             final Game game = ui.context().gameByVariantName(newName);

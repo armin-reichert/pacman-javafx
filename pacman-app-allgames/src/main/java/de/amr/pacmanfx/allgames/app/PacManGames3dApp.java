@@ -103,11 +103,11 @@ public class PacManGames3dApp extends Application {
                 }
                 ui = new GameUI_Implementation(THE_GAME_BOX, primaryStage, sceneSize.getWidth(), sceneSize.getHeight());
 
-                ui.configFactory().addFactory(ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new);
-                ui.configFactory().addFactory(ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig::new);
-                ui.configFactory().addFactory(TENGEN_MS_PACMAN.name(),     TengenMsPacMan_UIConfig::new);
-                ui.configFactory().addFactory(ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_UIConfig::new);
-                ui.configFactory().addFactory(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_UIConfig::new);
+                ui.uiConfigManager().addFactory(ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new);
+                ui.uiConfigManager().addFactory(ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig::new);
+                ui.uiConfigManager().addFactory(TENGEN_MS_PACMAN.name(),     TengenMsPacMan_UIConfig::new);
+                ui.uiConfigManager().addFactory(ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_UIConfig::new);
+                ui.uiConfigManager().addFactory(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_UIConfig::new);
 
                 final StartPagesCarousel startPages = ui.views().startPagesView();
                 startPages.addStartPage(new ArcadePacMan_StartPage());

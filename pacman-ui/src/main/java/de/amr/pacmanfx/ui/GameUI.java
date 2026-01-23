@@ -156,8 +156,6 @@ public interface GameUI extends Translator {
      */
     PreferencesManager userPrefs();
 
-    GameUI_ConfigManager uiConfigManager();
-
     /**
      * @return voice player if this UI. Only one voice at a time can be played.
      */
@@ -205,7 +203,7 @@ public interface GameUI extends Translator {
 
     // Config
 
-    GameUI_ConfigManager configFactory();
+    GameUI_ConfigManager uiConfigManager();
 
     /**
      * @param gameVariantName name of game variant
