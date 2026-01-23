@@ -28,7 +28,7 @@ public class GameUI_Builder {
         WorldMapSelector mapSelector;
     }
 
-    public static GameUI_Builder createUI(Stage stage, double width, double height) {
+    public static GameUI_Builder newUI(Stage stage, double width, double height) {
         return new GameUI_Builder(stage, width, height);
     }
 
