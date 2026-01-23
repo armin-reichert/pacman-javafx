@@ -85,11 +85,27 @@ public class PacManGames3dApp extends Application {
             if (useBuilder) {
                 ui = GameUI_Builder
                     .create(primaryStage, sceneSize.getWidth(), sceneSize.getHeight())
-                    .game(ARCADE_PACMAN.name(),        ArcadePacMan_GameModel.class, ArcadePacMan_UIConfig::new)
-                    .game(ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_GameModel.class, ArcadeMsPacMan_UIConfig::new)
-                    .game(TENGEN_MS_PACMAN.name(),     TengenMsPacMan_GameModel.class, TengenMsPacMan_UIConfig::new)
-                    .game(ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_GameModel.class, xxlMapSelector, PacManXXL_PacMan_UIConfig::new)
-                    .game(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_GameModel.class, xxlMapSelector, PacManXXL_MsPacMan_UIConfig::new)
+
+                    .game(ARCADE_PACMAN.name(),
+                        () -> new ArcadePacMan_GameModel(THE_GAME_BOX, highScoreFile(ARCADE_PACMAN.name())),
+                        ArcadePacMan_UIConfig::new)
+
+                    .game(ARCADE_MS_PACMAN.name(),
+                        () ->new ArcadeMsPacMan_GameModel(THE_GAME_BOX, highScoreFile(ARCADE_MS_PACMAN.name())),
+                        ArcadeMsPacMan_UIConfig::new)
+
+                    .game(TENGEN_MS_PACMAN.name(),
+                        () -> new TengenMsPacMan_GameModel(highScoreFile(TENGEN_MS_PACMAN.name())),
+                        TengenMsPacMan_UIConfig::new)
+
+                    .game(ARCADE_PACMAN_XXL.name(),
+                        () -> new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(ARCADE_PACMAN_XXL.name())),
+                        PacManXXL_PacMan_UIConfig::new)
+
+                    .game(ARCADE_MS_PACMAN_XXL.name(),
+                        () -> new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(ARCADE_MS_PACMAN_XXL.name())),
+                        PacManXXL_MsPacMan_UIConfig::new)
+
                     .startPage(ArcadePacMan_StartPage::new)
                     .startPage(ArcadeMsPacMan_StartPage::new)
                     .startPage(TengenMsPacMan_StartPage::new)

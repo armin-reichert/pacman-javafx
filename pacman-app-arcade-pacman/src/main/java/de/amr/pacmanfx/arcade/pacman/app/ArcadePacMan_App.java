@@ -46,6 +46,8 @@ public class ArcadePacMan_App extends Application {
         CommonDashboardID.ABOUT
     );
 
+    private static final File HIGH_SCORE_FILE = GameBox.highScoreFile(NAME_OF_THE_GAME);
+
     private GameUI ui;
 
     @Override
@@ -69,8 +71,7 @@ public class ArcadePacMan_App extends Application {
     }
 
     private void createUI(Stage stage, Dimension2D size) {
-        final File highScoreFile = GameBox.highScoreFile(NAME_OF_THE_GAME);
-        final Game game = new ArcadePacMan_GameModel(THE_GAME_BOX, highScoreFile);
+        final Game game = new ArcadePacMan_GameModel(THE_GAME_BOX, HIGH_SCORE_FILE);
         THE_GAME_BOX.registerGame(NAME_OF_THE_GAME, game);
 
         ui = new GameUI_Implementation(THE_GAME_BOX, stage, size.getWidth(), size.getHeight());
@@ -88,7 +89,7 @@ public class ArcadePacMan_App extends Application {
     private void createUI_WithBuilder(Stage stage, Dimension2D size) {
         ui = GameUI_Builder
             .create(stage, size.getWidth(), size.getHeight())
-            .game(NAME_OF_THE_GAME, ArcadePacMan_GameModel.class, ArcadePacMan_UIConfig::new)
+            .game(NAME_OF_THE_GAME, () -> new ArcadePacMan_GameModel(THE_GAME_BOX, HIGH_SCORE_FILE), ArcadePacMan_UIConfig::new)
             .startPage(ArcadePacMan_StartPage::new)
             .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
             .build();

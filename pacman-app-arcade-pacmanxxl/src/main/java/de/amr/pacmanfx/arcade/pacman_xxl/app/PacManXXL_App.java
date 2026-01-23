@@ -17,13 +17,20 @@ import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.stage.Stage;
 
+import java.io.File;
+
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
+
 public class PacManXXL_App extends Application {
 
-    public static final double ASPECT_RATIO    = 1.6;
-    public static final double HEIGHT_FRACTION = 0.8;
+    private static final double ASPECT_RATIO    = 1.6;
+    private static final double HEIGHT_FRACTION = 0.8;
 
-    public static final String PACMAN_GAME   = GameVariant.ARCADE_PACMAN_XXL.name();
-    public static final String MSPACMAN_GAME = GameVariant.ARCADE_MS_PACMAN_XXL.name();
+    private static final String PACMAN_GAME   = GameVariant.ARCADE_PACMAN_XXL.name();
+    private static final String MS_PACMAN_GAME = GameVariant.ARCADE_MS_PACMAN_XXL.name();
+
+    private static final File HIGH_SCORE_FILE_PACMAN_XXL = GameBox.highScoreFile(PACMAN_GAME);
+    private static final File HIGH_SCORE_FILE_MS_PACMAN_XXL = GameBox.highScoreFile(MS_PACMAN_GAME);
 
     private GameUI ui;
 
@@ -34,8 +41,12 @@ public class PacManXXL_App extends Application {
 
         ui = GameUI_Builder
             .create(primaryStage, sceneSize.getWidth(), sceneSize.getHeight())
-            .game(PACMAN_GAME, PacManXXL_PacMan_GameModel.class, mapSelector, PacManXXL_PacMan_UIConfig::new)
-            .game(MSPACMAN_GAME, PacManXXL_MsPacMan_GameModel.class, mapSelector, PacManXXL_MsPacMan_UIConfig::new)
+            .game(PACMAN_GAME,
+                () -> new PacManXXL_PacMan_GameModel(THE_GAME_BOX, mapSelector, HIGH_SCORE_FILE_PACMAN_XXL),
+                PacManXXL_PacMan_UIConfig::new)
+            .game(MS_PACMAN_GAME,
+                () -> new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, mapSelector, HIGH_SCORE_FILE_MS_PACMAN_XXL),
+                PacManXXL_MsPacMan_UIConfig::new)
             .dashboard(
                 CommonDashboardID.README,
                 CommonDashboardID.GENERAL,

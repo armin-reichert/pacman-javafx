@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengenmspacman.app;
 
+import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
@@ -18,6 +19,8 @@ import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.stage.Stage;
 
+import java.io.File;
+
 import static de.amr.pacmanfx.model.GameVariant.TENGEN_MS_PACMAN;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_ASPECT;
 
@@ -28,6 +31,8 @@ public class TengenMsPacMan_App extends Application {
     private static final float ASPECT_RATIO    = NES_ASPECT; // 32:30
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
 
+    private static final File HIGH_SCORE_FILE = GameBox.highScoreFile(NAME_OF_THE_GAME);
+
     private GameUI ui;
 
     @Override
@@ -36,7 +41,7 @@ public class TengenMsPacMan_App extends Application {
 
         ui = GameUI_Builder
             .create(primaryStage, sceneSize.getWidth(), sceneSize.getHeight())
-            .game(NAME_OF_THE_GAME, TengenMsPacMan_GameModel.class, TengenMsPacMan_UIConfig::new)
+            .game(NAME_OF_THE_GAME, () -> new TengenMsPacMan_GameModel(HIGH_SCORE_FILE), TengenMsPacMan_UIConfig::new)
             .startPage(TengenMsPacMan_StartPage::new)
             .dashboard(
                 CommonDashboardID.GENERAL,

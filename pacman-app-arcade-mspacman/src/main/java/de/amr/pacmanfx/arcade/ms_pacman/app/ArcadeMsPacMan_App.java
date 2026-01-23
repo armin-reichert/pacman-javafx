@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.app;
 
+import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
@@ -16,12 +17,18 @@ import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.stage.Stage;
 
+import java.io.File;
+
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
+
 public class ArcadeMsPacMan_App extends Application {
 
     private static final String NAME_OF_THE_GAME = GameVariant.ARCADE_MS_PACMAN.name();
 
     private static final float ASPECT_RATIO    = 1.2f; // 12:10
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
+
+    private static final File HIGH_SCORE_FILE = GameBox.highScoreFile(NAME_OF_THE_GAME);
 
     private GameUI ui;
 
@@ -30,7 +37,7 @@ public class ArcadeMsPacMan_App extends Application {
         final Dimension2D screenSize = Ufx.computeSceneSize(ASPECT_RATIO, HEIGHT_FRACTION);
         ui = GameUI_Builder
             .create(primaryStage, screenSize.getWidth(), screenSize.getHeight())
-            .game(NAME_OF_THE_GAME, ArcadeMsPacMan_GameModel.class, ArcadeMsPacMan_UIConfig::new)
+            .game(NAME_OF_THE_GAME, () -> new ArcadeMsPacMan_GameModel(THE_GAME_BOX, HIGH_SCORE_FILE), ArcadeMsPacMan_UIConfig::new)
             .startPage(ArcadeMsPacMan_StartPage::new)
             .dashboard(
                 CommonDashboardID.GENERAL,

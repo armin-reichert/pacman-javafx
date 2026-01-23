@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
@@ -14,9 +13,7 @@ import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import javafx.stage.Stage;
-import org.tinylog.Logger;
 
-import java.io.File;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -26,7 +23,7 @@ import static java.util.Objects.requireNonNull;
 public class GameUI_Builder {
 
     private static class GameConfiguration {
-        Class<?> gameModelClass;
+        Supplier<? extends AbstractGameModel> gameModelFactory;
         Supplier<? extends GameUI_Config> uiConfigFactory;
         WorldMapSelector mapSelector;
     }
@@ -61,30 +58,30 @@ public class GameUI_Builder {
 
     public GameUI_Builder game(
         String variant,
-        Class<? extends Game> gameModelClass,
+        Supplier<? extends AbstractGameModel> gameModeFactory,
         Supplier<? extends GameUI_Config> uiConfigFactory)
     {
         validateGameVariantName(variant);
-        if (gameModelClass == null) {
-            error("Game model class for game variant '%s' is null".formatted(variant));
+        if (gameModeFactory == null) {
+            error("Game model factory for game variant '%s' is null".formatted(variant));
         }
         if (uiConfigFactory == null) {
             error("Game UI configuration factory for game variant '%s' is null".formatted(variant));
         }
-        configuration(variant).gameModelClass = gameModelClass;
+        configuration(variant).gameModelFactory = gameModeFactory;
         configuration(variant).uiConfigFactory = uiConfigFactory;
         return this;
     }
 
     public GameUI_Builder game(
         String variant,
-        Class<? extends Game> gameModelClass,
+        Supplier<? extends AbstractGameModel> gameModelFactory,
         WorldMapSelector mapSelector,
         Supplier<? extends GameUI_Config> uiConfigFactory)
     {
         validateGameVariantName(variant);
-        if (gameModelClass == null) {
-            error("Game model class for game variant '%s' is null".formatted(variant));
+        if (gameModelFactory == null) {
+            error("Game model factory for game variant '%s' is null".formatted(variant));
         }
         if (uiConfigFactory == null) {
             error("Game UI configuration factory for game variant '%s' is null".formatted(variant));
@@ -92,7 +89,7 @@ public class GameUI_Builder {
         if (mapSelector == null) {
             error("Map selector for variant %s may not be null".formatted(variant));
         }
-        configuration(variant).gameModelClass = gameModelClass;
+        configuration(variant).gameModelFactory = gameModelFactory;
         configuration(variant).uiConfigFactory = uiConfigFactory;
         configuration(variant).mapSelector = mapSelector;
         return this;
@@ -122,8 +119,7 @@ public class GameUI_Builder {
         var ui = new GameUI_Implementation(THE_GAME_BOX, stage, mainSceneWidth, mainSceneHeight);
 
         configByGameVariant.forEach((gameVariant, config) -> {
-            File highScoreFile = GameBox.highScoreFile(gameVariant);
-            Game game = createGame(config.gameModelClass, config.mapSelector, highScoreFile);
+            Game game = config.gameModelFactory.get();
             //TODO make configurable
             game.control().stateMachine().addState(new LevelShortTestState());
             game.control().stateMachine().addState(new LevelMediumTestState());
@@ -152,39 +148,6 @@ public class GameUI_Builder {
             error("Could not create start page");
             return null;
         }
-    }
-
-    private AbstractGameModel createGame(Class<?> modelClass, WorldMapSelector mapSelector, File highScoreFile) {
-        AbstractGameModel game = null;
-        try {
-            if (mapSelector != null) {
-                game = (AbstractGameModel) modelClass
-                    .getDeclaredConstructor(CoinMechanism.class, WorldMapSelector.class, File.class)
-                    .newInstance(THE_GAME_BOX, mapSelector, highScoreFile);
-            }
-            else {
-                game = (AbstractGameModel) modelClass
-                    .getDeclaredConstructor(CoinMechanism.class, File.class)
-                    .newInstance(THE_GAME_BOX, highScoreFile);
-            }
-        } catch (Exception x) {
-            Logger.info("1st try: Could not create game model '{}'", modelClass.getSimpleName());
-        }
-        if (game == null) {
-            try {
-                game = (AbstractGameModel) modelClass
-                    .getDeclaredConstructor(File.class)
-                    .newInstance(highScoreFile);
-            } catch (Exception x) {
-                Logger.info("2nd try: Could not create game model '{}'", modelClass.getSimpleName());
-                Logger.info(x);
-            }
-        }
-        if (game != null) {
-            Logger.info("Game model '{} created", modelClass.getSimpleName());
-            return game;
-        }
-        throw new RuntimeException("Giving up: Could not create game model '%s'".formatted(modelClass.getSimpleName()));
     }
 
     private void validateConfiguration() {

@@ -25,7 +25,6 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
     private static final int[] DEMO_LEVEL_NUMBERS = { 1, 3, 6, 10, 14, 18 };
 
-    // Warning: Constructor signature is used via reflection by GameUI_Builder, do not change!
     public PacManXXL_PacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector, File highScoreFile) {
         super(coinMechanism, mapSelector, highScoreFile);
         // Demo level map could be a custom map, so use generic auto-steering that also can cope with dead-ends:
