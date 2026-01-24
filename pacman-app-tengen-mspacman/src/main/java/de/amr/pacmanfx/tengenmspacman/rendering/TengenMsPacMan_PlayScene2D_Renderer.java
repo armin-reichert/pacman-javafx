@@ -9,12 +9,13 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.ConfigKey;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_PlayScene2D;
 import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
+import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
@@ -99,36 +100,42 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
     @Override
     public void draw(GameScene2D scene) {
         clearCanvas();
-        scene.context().currentGame().optGameLevel().ifPresent(level -> {
-            configureRenderInfo(scene, level.worldMap());
+        if (!(scene instanceof TengenMsPacMan_PlayScene2D playScene2D)) {
+            return;
+        }
+        final Game game = playScene2D.context().currentGame();
+        final long tick = playScene2D.ui().clock().tickCount();
+        game.optGameLevel().ifPresent(level -> {
+            final WorldMap worldMap = level.worldMap();
+            configureRenderInfo(playScene2D, worldMap, tick);
             configureActorZOrder(level);
             ctx.getCanvas().setClip(clipRect);
             ctx.save();
             ctx.translate(scaled(CONTENT_INDENT), 0);
             levelRenderer.drawLevel(level, renderInfo);
-            levelRenderer.drawDoor(level.worldMap()); // ghosts appear under door, so draw door over again
+            levelRenderer.drawDoor(worldMap); // ghosts appear under door, so draw door over again
             actorsInZOrder.forEach(actorRenderer::drawActor);
             ctx.restore();
-            if (scene.debugInfoVisible()) {
+            if (playScene2D.debugInfoVisible()) {
                 ctx.getCanvas().setClip(null); // also show normally clipped region (to see how Pac-Man travels through portals)
-                debugRenderer.draw(scene);
+                debugRenderer.draw(playScene2D);
             }
         });
     }
 
-    private void configureRenderInfo(GameScene2D scene, WorldMap worldMap) {
-        final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
-        final long tick = playScene.ui().clock().tickCount();
-
+    private void configureRenderInfo(TengenMsPacMan_PlayScene2D playScene2D, WorldMap worldMap, long tick) {
         renderInfo.clear();
         // this is needed for drawing animated maze with different images:
         renderInfo.put(CommonRenderInfoKey.TICK, tick);
-        renderInfo.put(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY, worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY));
-        if (playScene.levelCompletedAnimation() != null && playScene.isMazeHighlighted()) {
-            renderInfo.put(CommonRenderInfoKey.MAP_BRIGHT, true);
-            renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, playScene.levelCompletedAnimation().flashingIndex());
+        renderInfo.put(ConfigKey.MAP_CATEGORY, worldMap.getConfigValue(ConfigKey.MAP_CATEGORY));
+
+        final LevelCompletedAnimation completedAnimation = playScene2D.levelCompletedAnimation();
+        if (completedAnimation != null) {
+            renderInfo.put(CommonRenderInfoKey.MAP_BRIGHT, completedAnimation.flashingState().isHighlighted());
+            renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, completedAnimation.flashingState().flashingIndex());
         } else {
             renderInfo.put(CommonRenderInfoKey.MAP_BRIGHT, false);
+            renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, -1);
         }
     }
 

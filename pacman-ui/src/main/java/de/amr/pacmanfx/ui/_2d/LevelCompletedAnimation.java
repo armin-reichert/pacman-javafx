@@ -30,17 +30,48 @@ import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
  */
 public class LevelCompletedAnimation {
 
+    public class FlashingState {
+        private boolean flashing;
+        private int flashingIndex;
+        private final BooleanProperty highlighted = new SimpleBooleanProperty(false);
+
+        private void setHighlighted(boolean value) {
+            highlighted.set(value);
+        }
+
+        private void reset() {
+            flashing = false;
+            flashingIndex = 0;
+            setHighlighted(false);
+        }
+
+        private void advanceFlashingIndex(int max) {
+            if (flashingIndex + 1 < max) flashingIndex++;
+        }
+
+        public boolean isHighlighted() {
+            return highlighted.get();
+        }
+
+        public boolean isFlashing() {
+            return flashingAnimation != null && flashingAnimation.getStatus() == Animation.Status.RUNNING;
+        }
+
+        public int flashingIndex() {
+            return flashingIndex;
+        }
+    }
+
     public static final int DEFAULT_SINGLE_FLASH_MILLIS = 333;
     public static final double GHOSTS_HIDING_DELAY = 1.5;
 
-    private final BooleanProperty highlighted = new SimpleBooleanProperty(false);
+    private final FlashingState flashingState = new FlashingState();
 
     private final int singleFlashMillis;
     private final Runnable onFinished;
 
     private Animation animation;
     private Timeline flashingAnimation;
-    private int flashingIndex;
 
     public LevelCompletedAnimation(Runnable onFinished) {
         this(DEFAULT_SINGLE_FLASH_MILLIS, onFinished);
@@ -51,6 +82,10 @@ public class LevelCompletedAnimation {
         this.onFinished = onFinished;
     }
 
+    public FlashingState flashingState() {
+        return flashingState;
+    }
+
     public void play(GameLevel level) {
         if (animation == null) {
             createAnimation(level);
@@ -58,26 +93,12 @@ public class LevelCompletedAnimation {
         animation.playFromStart();
     }
 
-    public boolean isHighlighted() {
-        return highlighted.get();
-    }
-
-    public boolean isFlashing() {
-        return flashingAnimation != null && flashingAnimation.getStatus() == Animation.Status.RUNNING;
-    }
-
-    public int flashingIndex() {
-        return flashingIndex;
-    }
-
     private Timeline createFlashing(int numFlashes) {
         var flashing = new Timeline(
-            new KeyFrame(Duration.ZERO, _ -> flashingIndex = 0),
-            new KeyFrame(Duration.millis(singleFlashMillis * 0.25), _ -> highlighted.set(true)),
-            new KeyFrame(Duration.millis(singleFlashMillis * 0.75), _ -> highlighted.set(false)),
-            new KeyFrame(Duration.millis(singleFlashMillis), _ -> {
-                if (flashingIndex + 1 < numFlashes) flashingIndex++;
-            })
+            new KeyFrame(Duration.ZERO,                             _ -> flashingState.reset()),
+            new KeyFrame(Duration.millis(singleFlashMillis * 0.25), _ -> flashingState.setHighlighted(true)),
+            new KeyFrame(Duration.millis(singleFlashMillis * 0.75), _ -> flashingState.setHighlighted(false)),
+            new KeyFrame(Duration.millis(singleFlashMillis),        _ -> flashingState.advanceFlashingIndex(numFlashes))
         );
         flashing.setCycleCount(numFlashes);
         return flashing;

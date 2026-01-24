@@ -78,16 +78,20 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
         });
     }
 
-    private RenderInfo buildRenderInfo(GameLevel level, LevelCompletedAnimation levelCompletedAnimation) {
-        final boolean bright = levelCompletedAnimation != null && levelCompletedAnimation.isHighlighted();
-        final boolean flashing = levelCompletedAnimation != null && levelCompletedAnimation.isFlashing();
+    private RenderInfo buildRenderInfo(GameLevel level, LevelCompletedAnimation completedAnimation) {
+        final var info = new RenderInfo();
         final boolean energizerOn = level.blinking().state() == Pulse.State.ON;
         final boolean allPelletsEaten = level.worldMap().foodLayer().uneatenFoodCount() == 0;
-        final var info = new RenderInfo();
         info.put(CommonRenderInfoKey.ENERGIZER_ON, energizerOn);
         info.put(CommonRenderInfoKey.MAP_EMPTY, allPelletsEaten);
-        info.put(CommonRenderInfoKey.MAP_BRIGHT, bright);
-        info.put(CommonRenderInfoKey.MAP_FLASHING, flashing);
+        if (completedAnimation != null) {
+            final LevelCompletedAnimation.FlashingState state = completedAnimation.flashingState();
+            info.put(CommonRenderInfoKey.MAP_BRIGHT, state.isHighlighted());
+            info.put(CommonRenderInfoKey.MAP_FLASHING, state.isFlashing());
+        } else {
+            info.put(CommonRenderInfoKey.MAP_BRIGHT, false);
+            info.put(CommonRenderInfoKey.MAP_FLASHING, false);
+        }
         return info;
     }
 

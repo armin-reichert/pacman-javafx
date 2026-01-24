@@ -100,10 +100,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         return levelCompletedAnimation;
     }
 
-    public boolean isMazeHighlighted() {
-        return levelCompletedAnimation != null && levelCompletedAnimation.isHighlighted();
-    }
-
     public double canvasHeightUnscaled() {
         return canvasHeightUnscaled.get();
     }
