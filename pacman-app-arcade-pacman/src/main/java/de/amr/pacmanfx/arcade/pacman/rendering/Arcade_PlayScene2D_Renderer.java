@@ -85,9 +85,10 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
         info.put(CommonRenderInfoKey.ENERGIZER_ON, energizerOn);
         info.put(CommonRenderInfoKey.MAP_EMPTY, allPelletsEaten);
         if (completedAnimation != null) {
-            final LevelCompletedAnimation.FlashingState state = completedAnimation.flashingState();
-            info.put(CommonRenderInfoKey.MAP_BRIGHT, state.isHighlighted());
-            info.put(CommonRenderInfoKey.MAP_FLASHING, state.isFlashing());
+            completedAnimation.flashingState().ifPresent(state -> {
+                info.put(CommonRenderInfoKey.MAP_BRIGHT, state.isHighlighted());
+                info.put(CommonRenderInfoKey.MAP_FLASHING, state.isFlashing());
+            });
         } else {
             info.put(CommonRenderInfoKey.MAP_BRIGHT, false);
             info.put(CommonRenderInfoKey.MAP_FLASHING, false);

@@ -131,8 +131,10 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
 
         final LevelCompletedAnimation completedAnimation = playScene2D.levelCompletedAnimation();
         if (completedAnimation != null) {
-            renderInfo.put(CommonRenderInfoKey.MAP_BRIGHT, completedAnimation.flashingState().isHighlighted());
-            renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, completedAnimation.flashingState().flashingIndex());
+            completedAnimation.flashingState().ifPresent(state -> {
+                renderInfo.put(CommonRenderInfoKey.MAP_BRIGHT, state.isHighlighted());
+                renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, state.flashingIndex());
+            });
         } else {
             renderInfo.put(CommonRenderInfoKey.MAP_BRIGHT, false);
             renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, -1);
