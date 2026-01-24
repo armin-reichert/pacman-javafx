@@ -6,8 +6,6 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.SequentialTransition;
@@ -17,7 +15,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Animation played when level is complete. Consists of the following steps:
@@ -31,40 +28,34 @@ import static java.util.Objects.requireNonNull;
  * After each flashing cycle, the flashing index is incremented. This is used by the Tengen play scene renderer to
  * draw a different map color for each flashing cycle (only for the non-ARCADE maps starting at level 28)
  */
-public class LevelCompletedAnimation extends RegisteredAnimation {
+public class LevelCompletedAnimation {
 
+    public static final int DEFAULT_SINGLE_FLASH_MILLIS = 333;
     public static final double GHOSTS_HIDING_DELAY = 1.5;
 
-    private final GameLevel gameLevel;
     private final BooleanProperty highlighted = new SimpleBooleanProperty(false);
+
+    private final int singleFlashMillis;
+    private final Runnable onFinished;
+
+    private Animation animation;
     private Timeline flashingAnimation;
-    private int singleFlashMillis;
     private int flashingIndex;
 
-    public LevelCompletedAnimation(AnimationRegistry animationRegistry, GameLevel gameLevel) {
-        super(animationRegistry, "Level_Completed");
-        this.gameLevel = requireNonNull(gameLevel);
-        singleFlashMillis = 333;
+    public LevelCompletedAnimation(Runnable onFinished) {
+        this(DEFAULT_SINGLE_FLASH_MILLIS, onFinished);
     }
 
-    @Override
-    protected Animation createAnimationFX() {
-        final int numFlashes = gameLevel.numFlashes();
-        flashingAnimation = new Timeline(
-            new KeyFrame(Duration.ZERO, _ -> flashingIndex = 0),
-            new KeyFrame(Duration.millis(singleFlashMillis * 0.25), _ -> highlighted.set(true)),
-            new KeyFrame(Duration.millis(singleFlashMillis * 0.75), _ -> highlighted.set(false)),
-            new KeyFrame(Duration.millis(singleFlashMillis), _ -> nextFlashingIndex(numFlashes))
-        );
-        flashingAnimation.setCycleCount(numFlashes);
-        final Animation hideGhostsAfterDelay = pauseSec(GHOSTS_HIDING_DELAY, () -> gameLevel.ghosts().forEach(Ghost::hide));
-        return numFlashes > 0
-            ? new SequentialTransition(hideGhostsAfterDelay, pauseSec(0.5), flashingAnimation, pauseSec(1))
-            : new SequentialTransition(hideGhostsAfterDelay, pauseSec(1.5));
+    public LevelCompletedAnimation(int singleFlashMillis, Runnable onFinished) {
+        this.singleFlashMillis = singleFlashMillis;
+        this.onFinished = onFinished;
     }
 
-    private void nextFlashingIndex(int numFlashes) {
-        if (flashingIndex + 1 < numFlashes) flashingIndex++;
+    public void play(GameLevel level) {
+        if (animation == null) {
+            createAnimation(level);
+        }
+        animation.playFromStart();
     }
 
     public boolean isHighlighted() {
@@ -75,12 +66,32 @@ public class LevelCompletedAnimation extends RegisteredAnimation {
         return flashingAnimation != null && flashingAnimation.getStatus() == Animation.Status.RUNNING;
     }
 
-    public void setSingleFlashMillis(int singleFlashMillis) {
-        this.singleFlashMillis = singleFlashMillis;
-        invalidate();
-    }
-
     public int flashingIndex() {
         return flashingIndex;
+    }
+
+    private Timeline createFlashing(int numFlashes) {
+        var flashing = new Timeline(
+            new KeyFrame(Duration.ZERO, _ -> flashingIndex = 0),
+            new KeyFrame(Duration.millis(singleFlashMillis * 0.25), _ -> highlighted.set(true)),
+            new KeyFrame(Duration.millis(singleFlashMillis * 0.75), _ -> highlighted.set(false)),
+            new KeyFrame(Duration.millis(singleFlashMillis), _ -> {
+                if (flashingIndex + 1 < numFlashes) flashingIndex++;
+            })
+        );
+        flashing.setCycleCount(numFlashes);
+        return flashing;
+    }
+
+    private void createAnimation(GameLevel level) {
+        final int numFlashes = level.numFlashes();
+        flashingAnimation = createFlashing(numFlashes);
+        final Animation hideGhostsAfterDelay = pauseSec(GHOSTS_HIDING_DELAY, () -> level.ghosts().forEach(Ghost::hide));
+        animation = numFlashes > 0
+            ? new SequentialTransition(hideGhostsAfterDelay, pauseSec(0.5), flashingAnimation, pauseSec(1))
+            : new SequentialTransition(hideGhostsAfterDelay, pauseSec(1.5));
+        if (onFinished != null) {
+            animation.setOnFinished(_ -> onFinished.run());
+        }
     }
 }

@@ -13,7 +13,6 @@ import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -32,7 +31,6 @@ public abstract class GameScene2D implements GameScene {
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
 
     protected final ActionBindingsManager actionBindings;
-    protected final AnimationRegistry animationRegistry;
 
     protected GameContext context;
     protected GameUI ui;
@@ -40,13 +38,11 @@ public abstract class GameScene2D implements GameScene {
 
     protected GameScene2D() {
         actionBindings = new DefaultActionBindingsManager();
-        animationRegistry = new AnimationRegistry();
     }
 
     @Override
     public void dispose() {
         actionBindings.dispose();
-        animationRegistry.dispose();
     }
 
     @Override

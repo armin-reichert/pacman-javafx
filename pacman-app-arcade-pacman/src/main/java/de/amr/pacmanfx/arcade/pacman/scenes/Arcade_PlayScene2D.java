@@ -55,12 +55,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    protected void doEnd(Game game) {
-        if (levelCompletedAnimation != null) {
-            levelCompletedAnimation.dispose();
-            levelCompletedAnimation = null;
-        }
-    }
+    protected void doEnd(Game game) {}
 
     @Override
     public void update(Game game) {
@@ -148,15 +143,14 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
-        final Game game = e.game();
         if (e.newState() == GameState.LEVEL_COMPLETE) {
             soundManager().stopAll();
-            playLevelCompletedAnimation(game, game.level());
+            playLevelCompletedAnimation(e.game(), e.game().level());
         }
         else if (e.newState() == GameState.GAME_OVER) {
             soundManager().stopAll();
             soundManager().play(SoundID.GAME_OVER);
-            game.hud().credit(true);
+            e.game().hud().credit(true);
         }
     }
 
@@ -289,9 +283,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     private void playLevelCompletedAnimation(Game game, GameLevel level) {
-        levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry, level);
-        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(_ -> game.control().terminateCurrentGameState());
-        levelCompletedAnimation.playFromStart();
+        levelCompletedAnimation = new LevelCompletedAnimation(() -> game.control().terminateCurrentGameState());
+        levelCompletedAnimation.play(level);
     }
 
     private void resetAnimations(GameLevel level) {
