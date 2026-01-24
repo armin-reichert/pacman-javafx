@@ -14,8 +14,8 @@ import javafx.util.Duration;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.uilib.animation.AnimationSupport.doNow;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
+import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSecThen;
 
 /**
  * Animation played when level is complete. Consists of the following steps:
@@ -38,7 +38,6 @@ public class LevelCompletedAnimation {
     }
 
     public static final int DEFAULT_SINGLE_FLASH_MILLIS = 333;
-    public static final double GHOSTS_HIDING_DELAY = 1.5;
 
     private static class FlashingAnimation implements FlashingState {
 
@@ -112,22 +111,25 @@ public class LevelCompletedAnimation {
     }
 
     private void createAnimation(GameLevel level) {
+        final Animation hideGhosts = pauseSecThen(1.5, () -> hideGhosts(level));
         if (level.numFlashes() > 0) {
             flashingAnimation = new FlashingAnimation(level.numFlashes(), singleFlashMillis);
             animation = new SequentialTransition(
-                doNow(() -> level.ghosts().forEach(Ghost::hide)),
+                hideGhosts,
                 pauseSec(0.5),
                 flashingAnimation.timeline,
-                pauseSec(1));
+                pauseSec(1)
+            );
         }
         else {
-            animation = new SequentialTransition(
-                doNow(() -> level.ghosts().forEach(Ghost::hide)),
-                pauseSec(1.5));
+            animation = new SequentialTransition(hideGhosts, pauseSec(1.5));
         }
-        animation.setDelay(Duration.seconds(GHOSTS_HIDING_DELAY));
         if (onFinished != null) {
             animation.setOnFinished(_ -> onFinished.run());
         }
+    }
+
+    private void hideGhosts(GameLevel level) {
+        level.ghosts().forEach(Ghost::hide);
     }
 }

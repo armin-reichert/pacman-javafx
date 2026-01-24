@@ -27,6 +27,7 @@ import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.uilib.animation.AnimationSupport;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.assets.Translator;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
@@ -62,7 +63,6 @@ import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.doNow;
-import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -673,7 +673,7 @@ public abstract class PlayScene3D implements GameScene {
     protected void eatPellet3D(Shape3D pellet3D) {
         // remove after small delay for better visualization
         if (pellet3D.getParent() instanceof Group group) {
-            pauseSec(0.05, () -> group.getChildren().remove(pellet3D)).play();
+            AnimationSupport.pauseSecThen(0.05, () -> group.getChildren().remove(pellet3D)).play();
         }
     }
 

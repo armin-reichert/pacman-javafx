@@ -42,7 +42,7 @@ public interface AnimationSupport {
      * @param action       code to run
      * @return pause transition
      */
-    static PauseTransition pauseSec(double seconds, Runnable action) {
+    static PauseTransition pauseSecThen(double seconds, Runnable action) {
         requireNonNull(action);
         var pause = new PauseTransition(Duration.seconds(seconds));
         pause.setOnFinished(e -> action.run());

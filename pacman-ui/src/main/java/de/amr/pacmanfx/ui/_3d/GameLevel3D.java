@@ -61,8 +61,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
 import static de.amr.pacmanfx.uilib.Ufx.defaultPhongMaterial;
-import static de.amr.pacmanfx.uilib.animation.AnimationSupport.doNow;
-import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
+import static de.amr.pacmanfx.uilib.animation.AnimationSupport.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -117,7 +116,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     private int wall3DCount;
 
-    private Animation wallsMovingUpAndDown(int numFlashes) {
+    private Animation wallsSwinging(int numFlashes) {
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }
@@ -143,15 +142,15 @@ public class GameLevel3D extends Group implements Disposable {
         protected Animation createAnimationFX() {
             return new SequentialTransition(
                 //doNow(() -> sometimesLevelCompleteMessage(level.number())),
-                pauseSec(0.5, () -> level.ghosts().forEach(Ghost::hide)),
-                wallsMovingUpAndDown(level.numFlashes()),
-                pauseSec(0.5, () -> level.pac().hide()),
+                pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),
+                wallsSwinging(level.numFlashes()),
+                pauseSecThen(0.5, () -> level.pac().hide()),
                 pauseSec(0.5),
                 levelSpinningAroundAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
-                pauseSec(0.5, () -> uiConfig.soundManager().play(SoundID.LEVEL_COMPLETE)),
+                pauseSecThen(0.5, () -> uiConfig.soundManager().play(SoundID.LEVEL_COMPLETE)),
                 pauseSec(0.5),
                 wallsAndHouseDisappearing(),
-                pauseSec(1.0, () -> uiConfig.soundManager().play(SoundID.LEVEL_CHANGED))
+                pauseSecThen(1.0, () -> uiConfig.soundManager().play(SoundID.LEVEL_CHANGED))
             );
         }
 
@@ -191,10 +190,10 @@ public class GameLevel3D extends Group implements Disposable {
         @Override
         protected Animation createAnimationFX() {
             return new SequentialTransition(
-                pauseSec(0.5, () -> level.ghosts().forEach(Ghost::hide)),
+                pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),
                 pauseSec(0.5),
-                wallsMovingUpAndDown(level.numFlashes()),
-                pauseSec(0.5, () -> level.pac().hide())
+                wallsSwinging(level.numFlashes()),
+                pauseSecThen(0.5, () -> level.pac().hide())
             );
         }
     }
@@ -773,7 +772,7 @@ public class GameLevel3D extends Group implements Disposable {
             : levelCompletedFullAnimation;
 
         var animation = new SequentialTransition(
-            pauseSec(2, () -> {
+            pauseSecThen(2, () -> {
                 perspectiveIDProperty.unbind();
                 perspectiveIDProperty.set(PerspectiveID.TOTAL);
                 wallBaseHeightProperty.unbind();

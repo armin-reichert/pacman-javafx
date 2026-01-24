@@ -6,13 +6,12 @@ package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationSupport;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.*;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-
-import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 
 public class PacMan3D extends PacBase3D {
 
@@ -51,7 +50,7 @@ public class PacMan3D extends PacBase3D {
 
                 return new SequentialTransition(
                     new ParallelTransition(spinning, new SequentialTransition(shrinking, expanding), sinking),
-                    pauseSec(1.0, () -> {
+                    AnimationSupport.pauseSecThen(1.0, () -> {
                         setVisible(false);
                         setScaleX(1.0);
                         setScaleY(1.0);
