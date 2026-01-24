@@ -106,7 +106,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
     public void onEnterStartPage(GameUI ui) {
         final GameVariant selectedGameVariant = menu.entryGameVariant().value();
         switch (selectedGameVariant) {
-            case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> ui.context().selectGameByName(selectedGameVariant.name());
+            case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> ui.context().setGameVariantName(selectedGameVariant.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariant);
         }
         menu.init(ui);
@@ -133,7 +133,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
     private void updateMenuBinding(Stage stage) {
         removeMenuBinding();
 
-        gameVariantNameListener = (_, _, newVariant) -> ui.context().selectGameByName(newVariant.name());
+        gameVariantNameListener = (_, _, newVariant) -> ui.context().setGameVariantName(newVariant.name());
         menu.entryGameVariant().valueProperty().addListener(gameVariantNameListener);
 
         play3DListener = (_, _, play3D) -> GameUI.PROPERTY_3D_ENABLED.set(play3D);

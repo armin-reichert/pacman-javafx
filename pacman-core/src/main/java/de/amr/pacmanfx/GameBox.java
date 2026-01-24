@@ -73,7 +73,7 @@ public class GameBox implements GameContext, CoinMechanism {
     // GameContext implementation
 
     @Override
-    public boolean hasGameWithName(String name) {
+    public boolean isGameRegistered(String name) {
         requireNonNull(name);
         return gamesByVariantName.containsKey(name);
     }

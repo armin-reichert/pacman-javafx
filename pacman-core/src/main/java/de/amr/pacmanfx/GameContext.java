@@ -41,6 +41,24 @@ public interface GameContext {
     StringProperty gameVariantNameProperty();
 
     /**
+     * Selects the game variant with the given name.
+     * <p>
+     * If no game with the specified name exists, an {@link IllegalArgumentException} is thrown.
+     *
+     * @param name the name of the game variant to select (must not be {@code null})
+     * @throws IllegalArgumentException if no game with the given name is registered
+     */
+    default void setGameVariantName(String name) {
+        requireNonNull(name);
+        if (isGameRegistered(name)) {
+            gameVariantNameProperty().set(name);
+        }
+        else {
+            throw new IllegalArgumentException("Game with name '" + name + "' not found");
+        }
+    }
+
+    /**
      * Returns the name (identifier) of the currently selected game variant.
      *
      * @return the current game variant name
@@ -50,30 +68,12 @@ public interface GameContext {
     }
 
     /**
-     * Selects the game variant with the given name.
-     * <p>
-     * If no game with the specified name exists, an {@link IllegalArgumentException} is thrown.
-     *
-     * @param name the name of the game variant to select (must not be {@code null})
-     * @throws IllegalArgumentException if no game with the given name is registered
-     */
-    default void selectGameByName(String name) {
-        requireNonNull(name);
-        if (hasGameWithName(name)) {
-            gameVariantNameProperty().set(name);
-        }
-        else {
-            throw new IllegalArgumentException("Game with name '" + name + "' not found");
-        }
-    }
-
-    /**
      * Checks whether a game variant with the given name is registered.
      *
      * @param name the game variant name to check
      * @return {@code true} if a game with that name exists, {@code false} otherwise
      */
-    boolean hasGameWithName(String name);
+    boolean isGameRegistered(String name);
 
     /**
      * Returns the game model associated with the specified variant name.
