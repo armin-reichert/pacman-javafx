@@ -34,7 +34,7 @@ public class PacManXXL_App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final Dimension2D sceneSize = Ufx.computeSceneSize(ASPECT_RATIO, HEIGHT_FRACTION);
+        final Dimension2D sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         final var mapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
 
         ui = GameUI_Builder

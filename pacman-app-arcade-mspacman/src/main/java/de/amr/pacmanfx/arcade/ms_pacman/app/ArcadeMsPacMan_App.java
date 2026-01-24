@@ -32,7 +32,7 @@ public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final Dimension2D screenSize = Ufx.computeSceneSize(ASPECT_RATIO, HEIGHT_FRACTION);
+        final Dimension2D screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         ui = GameUI_Builder
             .newUI(primaryStage, screenSize.getWidth(), screenSize.getHeight())
             .game(GameVariant.ARCADE_MS_PACMAN, () -> new ArcadeMsPacMan_GameModel(THE_GAME_BOX, HIGH_SCORE_FILE), ArcadeMsPacMan_UIConfig::new)

@@ -35,7 +35,7 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final Dimension2D sceneSize = Ufx.computeSceneSize(ASPECT_RATIO, HEIGHT_FRACTION);
+        final Dimension2D sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         ui = GameUI_Builder
             .newUI(primaryStage, sceneSize.getWidth(), sceneSize.getHeight())

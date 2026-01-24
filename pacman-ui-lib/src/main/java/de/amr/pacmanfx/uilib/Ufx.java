@@ -52,7 +52,15 @@ public interface Ufx {
     BackgroundSize FILL_PAGE_SIZE  = new BackgroundSize(1.0, 1.0, true, true, false, true);
     BackgroundSize FIT_HEIGHT_SIZE = new BackgroundSize(BackgroundSize.AUTO, 1.0, false, true, true, false);
 
-    static Dimension2D computeSceneSize(double aspectRatio, double heightFraction) {
+    /**
+     * Computes the size of the screen section that uses a given fraction of the free screen space and has the given
+     * aspect ratio.
+     *
+     * @param aspectRatio aspect ratio of screen section e.g. 16:10
+     * @param heightFraction fraction of available screen height to use
+     * @return width, height of screen section
+     */
+    static Dimension2D computeScreenSectionSize(double aspectRatio, double heightFraction) {
         final double availableHeight = Screen.getPrimary().getVisualBounds().getHeight();
         final double height = Math.floor(heightFraction * availableHeight);
         final double width = Math.floor(aspectRatio * height);
