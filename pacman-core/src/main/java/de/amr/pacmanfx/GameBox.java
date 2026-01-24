@@ -27,7 +27,7 @@ public class GameBox implements GameContext, CoinMechanism {
     /**
      * Game variant names must match this pattern (e.g. "MS_PACMAN_2024").
      */
-    public static final Pattern GAME_VARIANT_NAME_PATTERN = Pattern.compile("[a-zA-Z][a-zA-Z_0-9]*");
+    public static final Pattern GAME_VARIANT_NAME_PATTERN = Pattern.compile("[A-Z][A-Z_0-9]*");
 
     /**
      * Directory under which the user specific files are stored.
