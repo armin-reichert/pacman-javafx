@@ -17,7 +17,7 @@ public class TengenMsPacMan_BootScene_Renderer extends GameScene2D_Renderer {
 
     public TengenMsPacMan_BootScene_Renderer(GameUI_Config uiConfig, PreferencesManager prefs, GameScene2D scene, Canvas canvas) {
         super(canvas);
-        actorRenderer = GameScene2D_Renderer.adaptRenderer((TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
+        actorRenderer = scene.adaptRenderer((TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
         createDefaultDebugInfoRenderer(prefs, scene, canvas);
     }
 

@@ -74,9 +74,9 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
     public TengenMsPacMan_PlayScene2D_Renderer(GameUI_Config uiConfig, PreferencesManager prefs, GameScene2D scene, Canvas canvas) {
         super(canvas);
 
-        levelRenderer = (TengenMsPacMan_GameLevelRenderer) adaptRenderer(uiConfig.createGameLevelRenderer(canvas), scene);
-        actorRenderer = (TengenMsPacMan_ActorRenderer) adaptRenderer(uiConfig.createActorRenderer(canvas), scene);
-        debugRenderer = adaptRenderer(new PlaySceneDebugInfoRenderer(prefs, canvas), scene);
+        levelRenderer = scene.adaptRenderer((TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas));
+        actorRenderer = scene.adaptRenderer((TengenMsPacMan_ActorRenderer)     uiConfig.createActorRenderer(canvas));
+        debugRenderer = scene.adaptRenderer(new PlaySceneDebugInfoRenderer(prefs, canvas));
 
         // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are centered
         // horizontally and 2 tiles on each side are clipped.

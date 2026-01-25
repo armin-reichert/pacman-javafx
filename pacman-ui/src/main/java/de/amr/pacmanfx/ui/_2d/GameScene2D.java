@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -64,6 +65,12 @@ public abstract class GameScene2D implements GameScene {
      */
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
+    }
+
+    public <T extends Renderer> T adaptRenderer(T renderer) {
+        renderer.backgroundColorProperty().bind(backgroundProperty());
+        renderer.scalingProperty().bind(scalingProperty());
+        return renderer;
     }
 
     /**
@@ -153,9 +160,5 @@ public abstract class GameScene2D implements GameScene {
      */
     public Vector2i unscaledSize() {
         return Globals.ARCADE_MAP_SIZE_IN_PIXELS;
-    }
-
-    public  <T extends Renderer> T adaptRenderer(T renderer) {
-        return GameScene2D_Renderer.adaptRenderer(renderer, this);
     }
 }

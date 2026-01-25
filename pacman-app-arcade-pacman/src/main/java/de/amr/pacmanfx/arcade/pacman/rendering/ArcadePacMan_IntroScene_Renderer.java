@@ -36,18 +36,15 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
 
     public ArcadePacMan_IntroScene_Renderer(GameUI_Config uiConfig, PreferencesManager prefs, GameScene2D scene, Canvas canvas) {
         super(canvas);
-
-        actorRenderer = adaptRenderer((ArcadePacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
-
-        debugRenderer = adaptRenderer(new BaseDebugInfoRenderer(prefs, canvas) {
+        actorRenderer = scene.adaptRenderer((ArcadePacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
+        debugRenderer = scene.adaptRenderer(new BaseDebugInfoRenderer(prefs, canvas) {
             @Override
             public void draw(GameScene2D scene) {
                 ArcadePacMan_IntroScene introScene = (ArcadePacMan_IntroScene) scene;
                 super.draw(scene);
                 ctx.fillText("Scene timer %d".formatted(introScene.state().timer().tickCount()), 0, scaled(5 * TS));
             }
-        }, scene);
-
+        });
         energizerSprite = spriteSheet().sprite(SpriteID.ENERGIZER);
         setImageSmoothing(true);
     }

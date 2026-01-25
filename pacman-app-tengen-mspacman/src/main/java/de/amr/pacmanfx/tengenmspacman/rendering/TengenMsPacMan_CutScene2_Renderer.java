@@ -17,7 +17,7 @@ public class TengenMsPacMan_CutScene2_Renderer extends GameScene2D_Renderer {
 
     public TengenMsPacMan_CutScene2_Renderer(GameUI_Config uiConfig, PreferencesManager prefs, GameScene2D scene, Canvas canvas) {
         super(canvas);
-        actorRenderer = adaptRenderer((TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
+        actorRenderer = scene.adaptRenderer((TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
         createDefaultDebugInfoRenderer(prefs, scene, canvas);
     }
 

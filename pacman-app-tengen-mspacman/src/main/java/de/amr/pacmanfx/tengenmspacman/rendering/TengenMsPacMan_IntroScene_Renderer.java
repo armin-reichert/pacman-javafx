@@ -33,7 +33,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
         requireNonNull(uiConfig);
         requireNonNull(prefs);
         requireNonNull(scene);
-        actorRenderer = GameScene2D_Renderer.adaptRenderer(uiConfig.createActorRenderer(canvas), scene);
+        actorRenderer = scene.adaptRenderer(uiConfig.createActorRenderer(canvas));
         createDefaultDebugInfoRenderer(prefs, scene, canvas);
     }
 
