@@ -29,7 +29,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
     public static final String HIGH_SCORE_TEXT = "HIGH SCORE";
 
     private static final Color SCORE_TEXT_COLOR = ARCADE_WHITE;
-    private static final Color SCORE_TEXT_COLOR_DISABLED = Color.RED;
+    private static final Color SCORE_TEXT_COLOR_DISABLED = Color.GRAY;
 
     public ArcadeMsPacMan_HeadsUpDisplayRenderer(Canvas canvas) {
         super(canvas);

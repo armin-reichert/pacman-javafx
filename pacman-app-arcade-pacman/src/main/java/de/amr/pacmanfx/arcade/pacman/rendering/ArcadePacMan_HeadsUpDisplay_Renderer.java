@@ -30,7 +30,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
     public static final String CREDIT_TEXT_PATTERN = "CREDIT %2d";
 
     private static final Color SCORE_TEXT_COLOR = ARCADE_WHITE;
-    private static final Color SCORE_TEXT_COLOR_DISABLED = Color.RED;
+    private static final Color SCORE_TEXT_COLOR_DISABLED = Color.GRAY;
 
     public ArcadePacMan_HeadsUpDisplay_Renderer(Canvas canvas) {
         super(canvas);

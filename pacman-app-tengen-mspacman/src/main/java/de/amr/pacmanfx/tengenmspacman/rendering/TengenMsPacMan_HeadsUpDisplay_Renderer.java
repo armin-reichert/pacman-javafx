@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
 public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer implements SpriteRenderer, HeadsUpDisplay_Renderer {
 
     private static final Color SCORE_TEXT_COLOR = nesColor(0x20);
-    private static final Color SCORE_TEXT_COLOR_DISABLED = nesColor(0x16);
+    private static final Color SCORE_TEXT_COLOR_DISABLED = nesColor(0x10);
 
     public static final float LEVEL_COUNTER_POS_LEFT = TS(2);
     public static final float LEVEL_COUNTER_POS_RIGHT = TS(28);
