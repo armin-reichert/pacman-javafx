@@ -10,7 +10,6 @@ import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene.SceneStat
 import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -28,13 +27,12 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
 
     private final ActorRenderer actorRenderer;
 
-    public TengenMsPacMan_IntroScene_Renderer(GameUI_Config uiConfig, PreferencesManager prefs, GameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_IntroScene_Renderer(GameUI_Config uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
         requireNonNull(uiConfig);
-        requireNonNull(prefs);
         requireNonNull(scene);
         actorRenderer = scene.adaptRenderer(uiConfig.createActorRenderer(canvas));
-        createDefaultDebugInfoRenderer(prefs, scene, canvas);
+        createDefaultDebugInfoRenderer(scene, canvas);
     }
 
     @Override

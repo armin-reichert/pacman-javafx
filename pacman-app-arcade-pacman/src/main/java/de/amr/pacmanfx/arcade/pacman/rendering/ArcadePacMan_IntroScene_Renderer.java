@@ -11,7 +11,6 @@ import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -34,10 +33,10 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
     private final ArcadePacMan_ActorRenderer actorRenderer;
     private final RectShort energizerSprite;
 
-    public ArcadePacMan_IntroScene_Renderer(GameUI_Config uiConfig, PreferencesManager prefs, GameScene2D scene, Canvas canvas) {
+    public ArcadePacMan_IntroScene_Renderer(GameUI_Config uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
         actorRenderer = scene.adaptRenderer((ArcadePacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
-        debugRenderer = scene.adaptRenderer(new BaseDebugInfoRenderer(prefs, canvas) {
+        debugRenderer = scene.adaptRenderer(new BaseDebugInfoRenderer(canvas) {
             @Override
             public void draw(GameScene2D scene) {
                 ArcadePacMan_IntroScene introScene = (ArcadePacMan_IntroScene) scene;

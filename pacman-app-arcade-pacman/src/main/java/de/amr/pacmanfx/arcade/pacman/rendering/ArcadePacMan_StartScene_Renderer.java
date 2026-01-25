@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -14,9 +13,9 @@ import static de.amr.pacmanfx.ui.ArcadePalette.*;
 
 public class ArcadePacMan_StartScene_Renderer extends GameScene2D_Renderer {
 
-    public ArcadePacMan_StartScene_Renderer(PreferencesManager prefs, GameScene2D scene, Canvas canvas) {
+    public ArcadePacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
-        createDefaultDebugInfoRenderer(prefs, scene, canvas);
+        createDefaultDebugInfoRenderer(scene, canvas);
     }
 
     public void draw(GameScene2D scene) {

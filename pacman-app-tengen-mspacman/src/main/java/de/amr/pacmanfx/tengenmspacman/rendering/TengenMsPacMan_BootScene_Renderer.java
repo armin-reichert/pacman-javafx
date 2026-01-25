@@ -4,7 +4,6 @@ import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_BootScene;
 import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
@@ -15,10 +14,10 @@ public class TengenMsPacMan_BootScene_Renderer extends GameScene2D_Renderer {
 
     private final TengenMsPacMan_ActorRenderer actorRenderer;
 
-    public TengenMsPacMan_BootScene_Renderer(GameUI_Config uiConfig, PreferencesManager prefs, GameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_BootScene_Renderer(GameUI_Config uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
         actorRenderer = scene.adaptRenderer((TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
-        createDefaultDebugInfoRenderer(prefs, scene, canvas);
+        createDefaultDebugInfoRenderer(scene, canvas);
     }
 
     @Override

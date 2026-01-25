@@ -184,15 +184,14 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
         requireNonNull(canvas);
         requireNonNull(gameScene2D);
-        final GameUI_PreferencesManager prefs = GameUI_PreferencesManager.INSTANCE;
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(prefs, gameScene2D, canvas, spriteSheet(), spriteRegionForArcadeBootScene());
-            case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(this, prefs, gameScene2D, canvas);
-            case ArcadePacMan_StartScene ignored -> new ArcadePacMan_StartScene_Renderer(prefs, gameScene2D, canvas);
-            case Arcade_PlayScene2D ignored      -> new Arcade_PlayScene2D_Renderer(prefs, gameScene2D, canvas, spriteSheet());
-            case ArcadePacMan_CutScene1 ignored  -> new ArcadePacMan_CutScene1_Renderer(prefs, gameScene2D, canvas);
-            case ArcadePacMan_CutScene2 ignored  -> new ArcadePacMan_CutScene2_Renderer(prefs, gameScene2D, canvas);
-            case ArcadePacMan_CutScene3 ignored  -> new ArcadePacMan_CutScene3_Renderer(prefs, gameScene2D, canvas);
+            case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet(), spriteRegionForArcadeBootScene());
+            case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(this, gameScene2D, canvas);
+            case ArcadePacMan_StartScene ignored -> new ArcadePacMan_StartScene_Renderer(gameScene2D, canvas);
+            case Arcade_PlayScene2D ignored      -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, spriteSheet());
+            case ArcadePacMan_CutScene1 ignored  -> new ArcadePacMan_CutScene1_Renderer(gameScene2D, canvas);
+            case ArcadePacMan_CutScene2 ignored  -> new ArcadePacMan_CutScene2_Renderer(gameScene2D, canvas);
+            case ArcadePacMan_CutScene3 ignored  -> new ArcadePacMan_CutScene3_Renderer(gameScene2D, canvas);
             default -> throw new IllegalStateException("Illegal game scene: " + gameScene2D);
         };
         return gameScene2D.adaptRenderer(renderer);

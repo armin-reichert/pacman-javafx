@@ -14,9 +14,9 @@ import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_RED;
 
 public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
 
-    public ArcadeMsPacMan_StartScene_Renderer(PreferencesManager prefs, GameScene2D scene, Canvas canvas) {
+    public ArcadeMsPacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
-        createDefaultDebugInfoRenderer(prefs, scene, canvas);
+        createDefaultDebugInfoRenderer(scene, canvas);
     }
 
     @Override

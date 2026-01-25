@@ -277,15 +277,15 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case TengenMsPacMan_BootScene ignored -> new TengenMsPacMan_BootScene_Renderer(this, userPrefs(), gameScene2D, canvas);
-            case TengenMsPacMan_IntroScene ignored -> new TengenMsPacMan_IntroScene_Renderer(this, userPrefs(), gameScene2D, canvas);
-            case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(userPrefs(), gameScene2D, canvas);
-            case TengenMsPacMan_PlayScene2D ignored -> new TengenMsPacMan_PlayScene2D_Renderer(this, userPrefs(), gameScene2D, canvas);
-            case TengenMsPacMan_CreditsScene ignored -> new TengenMsPacMan_CreditsScene_Renderer(userPrefs(), gameScene2D, canvas);
-            case TengenMsPacMan_CutScene1 ignored -> new TengenMsPacMan_CutScene1_Renderer(this, userPrefs(), gameScene2D, canvas);
-            case TengenMsPacMan_CutScene2 ignored -> new TengenMsPacMan_CutScene2_Renderer(this, userPrefs(), gameScene2D, canvas);
-            case TengenMsPacMan_CutScene3 ignored -> new TengenMsPacMan_CutScene3_Renderer(this, userPrefs(), gameScene2D, canvas);
-            case TengenMsPacMan_CutScene4 ignored -> new TengenMsPacMan_CutScene4_Renderer(this, userPrefs(), gameScene2D, canvas);
+            case TengenMsPacMan_BootScene ignored -> new TengenMsPacMan_BootScene_Renderer(this, gameScene2D, canvas);
+            case TengenMsPacMan_IntroScene ignored -> new TengenMsPacMan_IntroScene_Renderer(this, gameScene2D, canvas);
+            case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(gameScene2D, canvas);
+            case TengenMsPacMan_PlayScene2D ignored -> new TengenMsPacMan_PlayScene2D_Renderer(this, gameScene2D, canvas);
+            case TengenMsPacMan_CreditsScene ignored -> new TengenMsPacMan_CreditsScene_Renderer(gameScene2D, canvas);
+            case TengenMsPacMan_CutScene1 ignored -> new TengenMsPacMan_CutScene1_Renderer(this, gameScene2D, canvas);
+            case TengenMsPacMan_CutScene2 ignored -> new TengenMsPacMan_CutScene2_Renderer(this, gameScene2D, canvas);
+            case TengenMsPacMan_CutScene3 ignored -> new TengenMsPacMan_CutScene3_Renderer(this, gameScene2D, canvas);
+            case TengenMsPacMan_CutScene4 ignored -> new TengenMsPacMan_CutScene4_Renderer(this, gameScene2D, canvas);
             default -> throw new IllegalStateException("Unexpected value: " + gameScene2D);
         };
         return gameScene2D.adaptRenderer(renderer);
