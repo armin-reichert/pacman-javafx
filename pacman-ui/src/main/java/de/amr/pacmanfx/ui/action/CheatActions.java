@@ -24,7 +24,7 @@ public final class CheatActions {
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
             if (game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
-                game.cheatUsedProperty().set(true);
+                game.raiseCheatFlag();
             }
             game.addLives(3);
             ui.showFlashMessage(ui.translate("cheat_add_lives", ui.context().currentGame().lifeCount()));
@@ -39,7 +39,7 @@ public final class CheatActions {
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
             if (game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
-                game.cheatUsedProperty().set(true);
+                game.raiseCheatFlag();
             }
             game.level().worldMap().foodLayer().eatPellets();
             ui.currentConfig().soundManager().pause(SoundID.PAC_MAN_MUNCHING); //TODO check this
@@ -60,7 +60,7 @@ public final class CheatActions {
             final Game game = ui.context().currentGame();
             game.optGameLevel().ifPresent(level -> {
                 if (!game.level().isDemoLevel()) {
-                    game.cheatUsedProperty().set(true);
+                    game.raiseCheatFlag();
                 }
                 final List<Ghost> vulnerableGhosts = level.ghosts(FRIGHTENED, HUNTING_PAC).toList();
                 if (!vulnerableGhosts.isEmpty()) {
@@ -84,7 +84,7 @@ public final class CheatActions {
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
             if (game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
-                game.cheatUsedProperty().set(true);
+                game.raiseCheatFlag();
             }
             game.control().enterStateNamed(GameControl.StateName.LEVEL_COMPLETE.name());
         }
@@ -104,7 +104,7 @@ public final class CheatActions {
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
             if (game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
-                game.cheatUsedProperty().set(true);
+                game.raiseCheatFlag();
             }
             toggle(game.usingAutopilotProperty());
             boolean usingAutopilot = game.usingAutopilot();
@@ -118,7 +118,7 @@ public final class CheatActions {
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
             if (game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
-                game.cheatUsedProperty().set(true);
+                game.raiseCheatFlag();
             }
             toggle(game.immuneProperty());
             boolean immunityOn = game.immuneProperty().get();

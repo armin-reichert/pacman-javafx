@@ -176,7 +176,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     @Override
     public void boot() {
         setInitialLifeCount(3);
-        cheatUsedProperty().set(false);
+        clearCheatFlag();
         immuneProperty().set(false);
         usingAutopilotProperty().set(false);
         prepareNewGame();

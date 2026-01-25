@@ -220,7 +220,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
             @Override
             public void onExit(Game game) {
                 game.clearLevelMessage();
-                game.cheatUsedProperty().set(false);
+                game.clearCheatFlag();
             }
         },
 

@@ -72,9 +72,9 @@ public abstract class AbstractGameModel implements Game {
         score.pointsProperty().addListener((_, oldScore, newScore)
             -> handleScoreChange(oldScore.intValue(), newScore.intValue()));
 
-        cheatUsedProperty().addListener((_, _, cheated) -> {
-            if (cheated) {
-                handleCheatUsed();
+        cheatUsedProperty().addListener((_, _, cheatDetected) -> {
+            if (cheatDetected) {
+                handleCheatDetected();
             }
         });
     }
@@ -382,7 +382,7 @@ public abstract class AbstractGameModel implements Game {
         }
     }
 
-    protected void handleCheatUsed() {
+    protected void handleCheatDetected() {
         highScore.setEnabled(false);
     }
 
@@ -546,13 +546,15 @@ public abstract class AbstractGameModel implements Game {
     protected void clearCheatingProperties() {
         immuneProperty().set(false);
         usingAutopilotProperty().set(false);
-        cheatUsedProperty().set(false);
+        clearCheatFlag();
     }
 
     protected void updateCheatingProperties(GameLevel level) {
         level.pac().immuneProperty().bind(immuneProperty());
         level.pac().usingAutopilotProperty().bind(usingAutopilotProperty());
-        cheatUsedProperty().set(immune() || usingAutopilot());
+        if (immune() || usingAutopilot()) {
+            raiseCheatFlag();
+        }
     }
 
     // ScoreManager

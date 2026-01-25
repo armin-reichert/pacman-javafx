@@ -137,10 +137,15 @@ public interface Game extends LevelCounter {
     void setCutScenesEnabled(boolean enabled);
 
     // Cheating
+
     BooleanProperty cheatUsedProperty();
 
-    default boolean cheatUsed() {
-        return cheatUsedProperty().get();
+    default void raiseCheatFlag() {
+        cheatUsedProperty().set(true);
+    }
+
+    default void clearCheatFlag() {
+        cheatUsedProperty().set(false);
     }
 
     BooleanProperty immuneProperty();
