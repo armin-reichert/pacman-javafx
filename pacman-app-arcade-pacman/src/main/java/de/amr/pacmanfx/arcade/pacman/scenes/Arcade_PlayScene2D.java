@@ -40,12 +40,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
     //TODO fix volume in audio file
     public static final float SIREN_VOLUME = 0.33f;
 
-    private LevelCompletedAnimation levelCompletedAnimation;
     private long lastMunchingSoundPlayedTick;
+    private LevelCompletedAnimation levelCompletedAnimation;
 
     public Arcade_PlayScene2D() {}
 
-    public Optional<LevelCompletedAnimation> levelCompletedAnimation() {
+    public Optional<LevelCompletedAnimation> optLevelCompletedAnimation() {
         return Optional.ofNullable(levelCompletedAnimation);
     }
 
@@ -145,7 +145,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public void onGameStateChange(GameStateChangeEvent e) {
         if (e.newState() == GameState.LEVEL_COMPLETE) {
             soundManager().stopAll();
-            playLevelCompletedAnimation(e.game(), e.game().level());
+            playLevelCompletedAnimation(e.game().level());
         }
         else if (e.newState() == GameState.GAME_OVER) {
             soundManager().stopAll();
@@ -282,9 +282,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
         soundManager().playSiren(sirenNumber, SIREN_VOLUME);
     }
 
-    private void playLevelCompletedAnimation(Game game, GameLevel level) {
-        levelCompletedAnimation = new LevelCompletedAnimation(() -> game.control().terminateCurrentGameState());
-        levelCompletedAnimation.play(level);
+    private void playLevelCompletedAnimation(GameLevel level) {
+        levelCompletedAnimation = new LevelCompletedAnimation(level,
+            () -> level.game().control().terminateCurrentGameState());
+        levelCompletedAnimation.play();
     }
 
     private void resetAnimations(GameLevel level) {

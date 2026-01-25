@@ -81,7 +81,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
                 .forEach(tile -> fillSquareAtTileCenter(tile, 4));
             // Over-paint eaten or dark-blinking energizer tiles
             foodLayer.energizerTiles().stream()
-                .filter(tile -> !info.getBoolean(CommonRenderInfoKey.ENERGIZER_ON) || foodLayer.hasEatenFoodAtTile(tile))
+                .filter(tile -> !info.getBoolean(CommonRenderInfoKey.ENERGIZER_VISIBLE) || foodLayer.hasEatenFoodAtTile(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx.restore();

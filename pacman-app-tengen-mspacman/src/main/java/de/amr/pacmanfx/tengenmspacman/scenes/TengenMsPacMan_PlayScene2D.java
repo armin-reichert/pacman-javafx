@@ -96,16 +96,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             dynamicCamera.updateRange(level.worldMap())));
     }
 
-    public LevelCompletedAnimation levelCompletedAnimation() {
-        return levelCompletedAnimation;
-    }
-
     public double canvasHeightUnscaled() {
         return canvasHeightUnscaled.get();
     }
 
     public PlayScene2DCamera dynamicCamera() {
         return dynamicCamera;
+    }
+
+    public Optional<LevelCompletedAnimation> optLevelCompletedAnimation() {
+        return Optional.ofNullable(levelCompletedAnimation);
     }
 
     @Override
@@ -279,7 +279,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         switch (e.newState()) {
             case GameState.LEVEL_COMPLETE -> {
                 soundManager().stopAll();
-                playLevelCompleteAnimation(e.game(), e.game().level());
+                playLevelCompleteAnimation(e.game().level());
             }
             case GameState.GAME_OVER -> {
                 soundManager().stopAll();
@@ -390,9 +390,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         hud.levelNumber(game.mapCategory() != MapCategory.ARCADE);
     }
 
-    private void playLevelCompleteAnimation(Game game, GameLevel level) {
-        levelCompletedAnimation = new LevelCompletedAnimation(() -> game.control().terminateCurrentGameState());
-        levelCompletedAnimation.play(level);
+    private void playLevelCompleteAnimation(GameLevel level) {
+        levelCompletedAnimation = new LevelCompletedAnimation(level,
+            () -> level.game().control().terminateCurrentGameState());
+        levelCompletedAnimation.play();
     }
 
     private void startGameOverMessageAnimation(GameLevelMessage message) {

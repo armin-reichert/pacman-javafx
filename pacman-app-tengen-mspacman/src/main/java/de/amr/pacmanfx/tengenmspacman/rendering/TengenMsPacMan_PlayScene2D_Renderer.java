@@ -128,17 +128,12 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
         // this is needed for drawing animated maze with different images:
         renderInfo.put(CommonRenderInfoKey.TICK, tick);
         renderInfo.put(ConfigKey.MAP_CATEGORY, worldMap.getConfigValue(ConfigKey.MAP_CATEGORY));
-
-        final LevelCompletedAnimation completedAnimation = playScene2D.levelCompletedAnimation();
-        if (completedAnimation != null) {
-            completedAnimation.flashingState().ifPresent(state -> {
-                renderInfo.put(CommonRenderInfoKey.MAP_BRIGHT, state.isHighlighted());
-                renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, state.flashingIndex());
-            });
-        } else {
-            renderInfo.put(CommonRenderInfoKey.MAP_BRIGHT, false);
-            renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, -1);
-        }
+        renderInfo.put(CommonRenderInfoKey.MAP_BRIGHT, false);
+        renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, -1);
+        playScene2D.optLevelCompletedAnimation().flatMap(LevelCompletedAnimation::flashingState).ifPresent(flashingState -> {
+            renderInfo.put(CommonRenderInfoKey.MAP_BRIGHT, flashingState.isHighlighted());
+            renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, flashingState.flashingIndex());
+        });
     }
 
     private void configureActorZOrder(GameLevel level) {

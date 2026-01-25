@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSecThen;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Animation played when level is complete. Consists of the following steps:
@@ -84,17 +85,19 @@ public class LevelCompletedAnimation {
         }
     }
 
+    private final GameLevel level;
     private final int singleFlashMillis;
     private final Runnable onFinished;
 
     private FlashingAnimation flashingAnimation;
     private Animation animation;
 
-    public LevelCompletedAnimation(Runnable onFinished) {
-        this(DEFAULT_SINGLE_FLASH_MILLIS, onFinished);
+    public LevelCompletedAnimation(GameLevel level, Runnable onFinished) {
+        this(level, DEFAULT_SINGLE_FLASH_MILLIS, onFinished);
     }
 
-    public LevelCompletedAnimation(int singleFlashMillis, Runnable onFinished) {
+    public LevelCompletedAnimation(GameLevel level, int singleFlashMillis, Runnable onFinished) {
+        this.level = requireNonNull(level);
         this.singleFlashMillis = singleFlashMillis;
         this.onFinished = onFinished;
     }
@@ -103,14 +106,14 @@ public class LevelCompletedAnimation {
         return Optional.ofNullable(flashingAnimation);
     }
 
-    public void play(GameLevel level) {
+    public void play() {
         if (animation == null) {
-            createAnimation(level);
+            createAnimation();
         }
         animation.playFromStart();
     }
 
-    private void createAnimation(GameLevel level) {
+    private void createAnimation() {
         final Animation hideGhosts = pauseSecThen(1.5, () -> hideGhosts(level));
         if (level.numFlashes() > 0) {
             flashingAnimation = new FlashingAnimation(level.numFlashes(), singleFlashMillis);

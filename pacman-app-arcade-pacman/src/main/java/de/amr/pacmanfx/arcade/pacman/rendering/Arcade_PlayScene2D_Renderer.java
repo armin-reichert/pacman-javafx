@@ -13,8 +13,8 @@ import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 
@@ -64,35 +64,30 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
         // Level creation happens by handling a game event after the play scene has been activated. Therefore,
         // the game level is not yet existing for the first two ticks after this scene got active.
         game.optGameLevel().ifPresent(level -> {
-            final RenderInfo info = buildRenderInfo(level, playScene.levelCompletedAnimation().orElse(null));
-
+            final RenderInfo info = createRenderInfo(level, playScene);
             levelRenderer.applyLevelSettings(level, info);
             levelRenderer.drawLevel(level, info);
-
             updateActorZOrder(level);
             actorsInZOrder.forEach(actorRenderer::drawActor);
-
             if (scene.debugInfoVisible()) {
                 debugRenderer.draw(scene);
             }
         });
     }
 
-    private RenderInfo buildRenderInfo(GameLevel level, LevelCompletedAnimation completedAnimation) {
+    private RenderInfo createRenderInfo(GameLevel level, Arcade_PlayScene2D playScene2D) {
         final var info = new RenderInfo();
-        final boolean energizerOn = level.blinking().state() == Pulse.State.ON;
-        final boolean allPelletsEaten = level.worldMap().foodLayer().uneatenFoodCount() == 0;
-        info.put(CommonRenderInfoKey.ENERGIZER_ON, energizerOn);
-        info.put(CommonRenderInfoKey.MAP_EMPTY, allPelletsEaten);
-        if (completedAnimation != null) {
-            completedAnimation.flashingState().ifPresent(state -> {
-                info.put(CommonRenderInfoKey.MAP_BRIGHT, state.isHighlighted());
-                info.put(CommonRenderInfoKey.MAP_FLASHING, state.isFlashing());
-            });
-        } else {
-            info.put(CommonRenderInfoKey.MAP_BRIGHT, false);
-            info.put(CommonRenderInfoKey.MAP_FLASHING, false);
-        }
+        final boolean energizerVisible = level.blinking().state() == Pulse.State.ON;
+        final boolean mapIsEmpty = level.worldMap().foodLayer().uneatenFoodCount() == 0;
+        info.put(CommonRenderInfoKey.ENERGIZER_VISIBLE, energizerVisible);
+        info.put(CommonRenderInfoKey.MAP_EMPTY, mapIsEmpty);
+        info.put(CommonRenderInfoKey.MAP_BRIGHT, false);
+        info.put(CommonRenderInfoKey.MAP_FLASHING, false);
+        playScene2D.optLevelCompletedAnimation().flatMap(LevelCompletedAnimation::flashingState).ifPresent(flashingState -> {
+            info.put(CommonRenderInfoKey.MAP_BRIGHT,   flashingState.isHighlighted());
+            info.put(CommonRenderInfoKey.MAP_FLASHING, flashingState.isFlashing());
+
+        });
         return info;
     }
 

@@ -2,7 +2,7 @@ package de.amr.pacmanfx.uilib.rendering;
 
 public interface CommonRenderInfoKey {
 
-    String ENERGIZER_ON = "blinking";
+    String ENERGIZER_VISIBLE = "blinking";
     String MAP_BRIGHT = "bright";
     String MAP_EMPTY = "empty";
     String MAP_FLASHING = "flashing";
