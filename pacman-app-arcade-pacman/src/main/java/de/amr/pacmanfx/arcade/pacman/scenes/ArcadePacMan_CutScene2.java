@@ -28,7 +28,8 @@ import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimatio
  */
 public class ArcadePacMan_CutScene2 extends GameScene2D {
 
-    public enum NailDressState {
+    // ordinal value corresponds to animation frame
+    private enum NailDressAnimationFrame {
         NAIL, STRETCHED_S, STRETCHED_M, STRETCHED_L, RAPTURED
     }
 
@@ -92,7 +93,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         switch (tick) {
             case ANIMATION_START -> {
                 soundManager().play(SoundID.INTERMISSION_2);
-                setNailDressState(NailDressState.NAIL);
+                setNailDressAnimation(NailDressAnimationFrame.NAIL);
             }
             case ANIMATION_START + 25 -> {
                 pacMan.placeAtTile(28, 20);
@@ -113,15 +114,15 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 blinky.setSpeed(0.09f);
                 blinkyAnimation(Ghost.AnimationID.GHOST_NORMAL).setFrameTicks(32);
             }
-            case ANIMATION_START + 198 -> setNailDressState(NailDressState.STRETCHED_S);
-            case ANIMATION_START + 230 -> setNailDressState(NailDressState.STRETCHED_M);
-            case ANIMATION_START + 262 -> setNailDressState(NailDressState.STRETCHED_L);
+            case ANIMATION_START + 198 -> setNailDressAnimation(NailDressAnimationFrame.STRETCHED_S);
+            case ANIMATION_START + 230 -> setNailDressAnimation(NailDressAnimationFrame.STRETCHED_M);
+            case ANIMATION_START + 262 -> setNailDressAnimation(NailDressAnimationFrame.STRETCHED_L);
             case ANIMATION_START + 296 -> {
                 blinky.setSpeed(0);
                 blinky.stopAnimation();
             }
             case ANIMATION_START + 360 -> {
-                setNailDressState(NailDressState.RAPTURED);
+                setNailDressAnimation(NailDressAnimationFrame.RAPTURED);
                 blinky.setX(blinky.x() - 4);
                 blinky.selectAnimation(BLINKY_DAMAGED);
             }
@@ -136,14 +137,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky.move();
     }
 
-    private void setNailDressState(NailDressState state) {
-        switch (state) {
-            case NAIL -> nailDressAnimation.setFrameIndex(0);
-            case STRETCHED_S -> nailDressAnimation.setFrameIndex(1);
-            case STRETCHED_M -> nailDressAnimation.setFrameIndex(2);
-            case STRETCHED_L -> nailDressAnimation.setFrameIndex(3);
-            case RAPTURED -> nailDressAnimation.setFrameIndex(4);
-        }
+    private void setNailDressAnimation(NailDressAnimationFrame animationFrame) {
+        nailDressAnimation.setFrameIndex(animationFrame.ordinal());
     }
 
     private SpriteAnimation blinkyAnimation(Object animationID) {
