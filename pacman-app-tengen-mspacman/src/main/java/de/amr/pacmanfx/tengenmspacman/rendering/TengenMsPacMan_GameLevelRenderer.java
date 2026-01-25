@@ -207,10 +207,12 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
             overPaintSize, overPaintSize);
     }
 
-    private void configureHighlightedMazeRenderInfo(RenderInfo info, GameLevel gameLevel, int frame) {
+    private void configureHighlightedMazeRenderInfo(RenderInfo info, GameLevel gameLevel, int flashingIndex) {
         final WorldMap worldMap = gameLevel.worldMap();
         final MapImageSet mapImageSet = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_SPRITE_SET);
-        final ColorSchemedImage flashingMazeSprite = mapImageSet.flashingMapImages().get(frame);
+        // Just to be safe:
+        final int imageIndex = Math.clamp(flashingIndex, 0, mapImageSet.flashingMapImages().size() - 1);
+        final ColorSchemedImage flashingMazeSprite = mapImageSet.flashingMapImages().get(imageIndex);
         info.put(CommonRenderInfoKey.MAZE_IMAGE, flashingMazeSprite.spriteSheetImage());
         info.put(CommonRenderInfoKey.MAZE_SPRITE, flashingMazeSprite.sprite());
     }

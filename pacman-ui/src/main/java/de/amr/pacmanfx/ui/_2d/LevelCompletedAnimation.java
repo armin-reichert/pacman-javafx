@@ -59,30 +59,16 @@ public class LevelCompletedAnimation {
 
         private final Timeline timeline;
         private boolean highlighted;
-        private int cycle;
+        private int index;
 
         private FlashingAnimation(int numFlashes, long singleFlashMillis) {
             timeline = new Timeline(
-                    new KeyFrame(Duration.ZERO,                             _ -> reset()),
-                    new KeyFrame(Duration.millis(singleFlashMillis * 0.25), _ -> setHighlighted(true)),
-                    new KeyFrame(Duration.millis(singleFlashMillis * 0.75), _ -> setHighlighted(false)),
-                    new KeyFrame(Duration.millis(singleFlashMillis),        _ -> enterNextCycle(numFlashes))
+                new KeyFrame(Duration.ZERO,                             _ -> highlighted = false),
+                new KeyFrame(Duration.millis(singleFlashMillis * 0.25), _ -> highlighted = true),
+                new KeyFrame(Duration.millis(singleFlashMillis * 0.75), _ -> highlighted = false),
+                new KeyFrame(Duration.millis(singleFlashMillis * 1.00), _ -> ++index)
             );
             timeline.setCycleCount(numFlashes);
-        }
-
-        private void reset() {
-            setHighlighted(false);
-        }
-
-        private void setHighlighted(boolean value) {
-            highlighted = value;
-        }
-
-        private void enterNextCycle(int max) {
-            if (cycle + 1 < max) {
-                cycle++;
-            }
         }
 
         @Override
@@ -97,7 +83,7 @@ public class LevelCompletedAnimation {
 
         @Override
         public int flashingIndex() {
-            return cycle;
+            return index;
         }
     }
 
