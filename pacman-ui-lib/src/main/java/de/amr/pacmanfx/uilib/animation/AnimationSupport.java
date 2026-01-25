@@ -12,6 +12,12 @@ import javafx.util.Duration;
 import static java.util.Objects.requireNonNull;
 
 public interface AnimationSupport {
+
+    /**
+     * Executes the given action immediately when played in a SequentialTransition.
+     * @param action code to run
+     * @return empty transition
+     */
     static Transition doNow(Runnable action) {
         requireNonNull(action);
         var transition = new Transition() {
