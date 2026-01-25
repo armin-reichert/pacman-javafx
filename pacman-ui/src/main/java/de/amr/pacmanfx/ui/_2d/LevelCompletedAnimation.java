@@ -72,7 +72,6 @@ public class LevelCompletedAnimation {
         }
 
         private void reset() {
-            cycle = 0;
             setHighlighted(false);
         }
 
@@ -81,7 +80,9 @@ public class LevelCompletedAnimation {
         }
 
         private void enterNextCycle(int max) {
-            if (cycle + 1 < max) cycle++;
+            if (cycle + 1 < max) {
+                cycle++;
+            }
         }
 
         @Override
