@@ -9,6 +9,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -39,12 +40,10 @@ public class CanvasDecorationPane extends StackPane {
     private static final int PADDING_Y = 15;
 
     private static Border createRoundedBorder(Paint strokeColor, double borderWidth, double cornerRadius) {
-        return new Border(
-            new BorderStroke(
-                strokeColor,
-                BorderStrokeStyle.SOLID,
-                new CornerRadii(cornerRadius),
-                new BorderWidths(borderWidth)));
+        final var stroke = new BorderStroke(strokeColor, BorderStrokeStyle.SOLID,
+            new CornerRadii(cornerRadius),
+            new BorderWidths(borderWidth));
+        return new Border(stroke);
     }
 
     private final ObjectProperty<Color> borderColor = new SimpleObjectProperty<>(Color.LIGHTBLUE);
@@ -56,47 +55,37 @@ public class CanvasDecorationPane extends StackPane {
         }
     };
 
-    private final DoubleProperty unscaledCanvasWidth = new SimpleDoubleProperty(500) {
-        @Override
-        protected void invalidated() {
-            updateLayout();
-        }
-    };
-
-    private final DoubleProperty unscaledCanvasHeight = new SimpleDoubleProperty(400) {
-        @Override
-        protected void invalidated() {
-            updateLayout();
-        }
-    };
+    private final ObjectProperty<Dimension2D> unscaledCanvasSize = new SimpleObjectProperty<>(new Dimension2D(500, 400));
 
     private Canvas canvas;
     private double minScaling = 1.0;
 
     public CanvasDecorationPane() {
+        unscaledCanvasSize.addListener((_, _, _) -> updateLayout());
+
         clipProperty().bind(Bindings.createObjectBinding(() -> {
                 final double arcDiameter = ROUNDED_RECT_ARC_DIAMETER * scaling();
                 final var rect = new Rectangle(scaledWidth(), scaledHeight());
                 rect.setArcHeight(arcDiameter);
                 rect.setArcWidth(arcDiameter);
                 return rect;
-            }, scaling, unscaledCanvasWidth, unscaledCanvasHeight)
+            }, scaling, unscaledCanvasSize)
         );
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
                 final double proposedBorderWidth = Math.ceil(scaledHeight() / BORDER_WIDTH_RATIO);
                 final double borderWidth = Math.max(ROUNDED_RECT_MIN_BORDER_WIDTH, proposedBorderWidth);
                 final double cornerRadius = Math.ceil(ROUNDED_RECT_CORNER_RADIUS * scaling());
-                return createRoundedBorder(borderColor(), borderWidth, cornerRadius);
-            }, borderColor, scaling, unscaledCanvasWidth, unscaledCanvasHeight)
+                return createRoundedBorder(borderColor.get(), borderWidth, cornerRadius);
+            }, borderColor, scaling, unscaledCanvasSize)
         );
     }
 
     public void setCanvas(Canvas canvas) {
         this.canvas = requireNonNull(canvas);
         getChildren().setAll(canvas);
-        canvas.widthProperty() .bind(scaling.multiply(unscaledCanvasWidth));
-        canvas.heightProperty().bind(scaling.multiply(unscaledCanvasHeight));
+        canvas.widthProperty() .bind(scaling.multiply(unscaledCanvasSize.get().getWidth()));
+        canvas.heightProperty().bind(scaling.multiply(unscaledCanvasSize.get().getHeight()));
     }
 
     public void updateLayout() {
@@ -121,28 +110,20 @@ public class CanvasDecorationPane extends StackPane {
         setPrefSize(width, height);
     }
 
-    public int unscaledCanvasWidth() {
-        return (int) unscaledCanvasWidth.get();
-    }
-
     public int scaledWidth() {
-        return (int) ((unscaledCanvasWidth() + PADDING_X) * scaling());
-    }
-
-    public int unscaledCanvasHeight() {
-        return (int) unscaledCanvasHeight.get();
+        return (int) ((unscaledCanvasSize.get().getWidth() + PADDING_X) * scaling());
     }
 
     public int scaledHeight() {
-        return (int) ((unscaledCanvasHeight() + PADDING_Y) * scaling());
+        return (int) ((unscaledCanvasSize.get().getHeight() + PADDING_Y) * scaling());
     }
 
     public void resizeTo(double width, double height) {
         final double realWidth  = SCALING_X * width;
         final double realHeight = SCALING_Y * height;
-        double newScaling = realHeight / unscaledCanvasHeight();
-        if (newScaling * unscaledCanvasWidth() > realWidth) {
-            newScaling = realWidth / unscaledCanvasWidth();
+        double newScaling = realHeight / unscaledCanvasSize.get().getHeight();
+        if (newScaling * unscaledCanvasSize.get().getWidth() > realWidth) {
+            newScaling = realWidth / unscaledCanvasSize.get().getWidth();
         }
         doLayout(newScaling, false);
         Logger.debug("Canvas container resized to width={} height={}", getWidth(), getHeight());
@@ -163,12 +144,7 @@ public class CanvasDecorationPane extends StackPane {
     }
 
     public void setUnscaledCanvasSize(double width, double height) {
-        unscaledCanvasWidth.set(width);
-        unscaledCanvasHeight.set(height);
-    }
-
-    public Color borderColor() {
-        return borderColor.get();
+        unscaledCanvasSize.set(new Dimension2D(width, height));
     }
 
     public void setBorderColor(Color color) {
