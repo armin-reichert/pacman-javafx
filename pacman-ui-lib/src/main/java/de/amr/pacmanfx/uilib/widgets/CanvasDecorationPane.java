@@ -32,12 +32,15 @@ public class CanvasDecorationPane extends StackPane {
     private static final float SCALING_X = 0.85f;
     private static final float SCALING_Y = 0.93f;
 
-    private static final int ROUNDED_RECT_ARC_DIAMETER = 26;
-    private static final int ROUNDED_RECT_CORNER_RADIUS = 10;
-    private static final int ROUNDED_RECT_MIN_BORDER_WIDTH = 5;
-    private static final double BORDER_WIDTH_RATIO = 55.0;
-    private static final int PADDING_X = 25;
-    private static final int PADDING_Y = 15;
+    // Padding between canvas and rounded frame
+    private static final int PADDING_X = 20;
+    private static final int PADDING_Y = 20;
+
+    private static final int    FRAME_ARC_DIAMETER = 26;
+    private static final int    FRAME_CORNER_RADIUS = 10;
+    private static final int    FRAME_MIN_BORDER_WIDTH = 5;
+    private static final double FRAME_BORDER_WIDTH_RATIO = 55.0;
+    private static final Color  FRAME_DEFAULT_BORDER_COLOR = Color.WHITE;
 
     private static Border createRoundedBorder(Paint strokeColor, double borderWidth, double cornerRadius) {
         final var stroke = new BorderStroke(strokeColor, BorderStrokeStyle.SOLID,
@@ -46,7 +49,7 @@ public class CanvasDecorationPane extends StackPane {
         return new Border(stroke);
     }
 
-    private final ObjectProperty<Color> borderColor = new SimpleObjectProperty<>(Color.LIGHTBLUE);
+    private final ObjectProperty<Color> borderColor = new SimpleObjectProperty<>(FRAME_DEFAULT_BORDER_COLOR);
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0) {
         @Override
@@ -64,7 +67,7 @@ public class CanvasDecorationPane extends StackPane {
         unscaledCanvasSize.addListener((_, _, _) -> updateLayout());
 
         clipProperty().bind(Bindings.createObjectBinding(() -> {
-                final double arcDiameter = ROUNDED_RECT_ARC_DIAMETER * scaling();
+                final double arcDiameter = FRAME_ARC_DIAMETER * scaling();
                 final Dimension2D scaledSize = computeScaledCanvasSize();
                 final var rect = new Rectangle(scaledSize.getWidth(), scaledSize.getHeight());
                 rect.setArcHeight(arcDiameter);
@@ -75,9 +78,9 @@ public class CanvasDecorationPane extends StackPane {
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
                 final Dimension2D scaledSize = computeScaledCanvasSize();
-                final double proposedBorderWidth = Math.ceil(scaledSize.getHeight() / BORDER_WIDTH_RATIO);
-                final double borderWidth = Math.max(ROUNDED_RECT_MIN_BORDER_WIDTH, proposedBorderWidth);
-                final double cornerRadius = Math.ceil(ROUNDED_RECT_CORNER_RADIUS * scaling());
+                final double proposedBorderWidth = Math.ceil(scaledSize.getHeight() / FRAME_BORDER_WIDTH_RATIO);
+                final double borderWidth = Math.max(FRAME_MIN_BORDER_WIDTH, proposedBorderWidth);
+                final double cornerRadius = Math.ceil(FRAME_CORNER_RADIUS * scaling());
                 return createRoundedBorder(borderColor.get(), borderWidth, cornerRadius);
             }, borderColor, scaling, unscaledCanvasSize)
         );
