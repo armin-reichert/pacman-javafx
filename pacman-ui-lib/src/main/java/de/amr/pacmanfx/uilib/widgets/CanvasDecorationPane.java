@@ -65,7 +65,8 @@ public class CanvasDecorationPane extends StackPane {
 
         clipProperty().bind(Bindings.createObjectBinding(() -> {
                 final double arcDiameter = ROUNDED_RECT_ARC_DIAMETER * scaling();
-                final var rect = new Rectangle(scaledWidth(), scaledHeight());
+                final Dimension2D scaledSize = computeScaledCanvasSize();
+                final var rect = new Rectangle(scaledSize.getWidth(), scaledSize.getHeight());
                 rect.setArcHeight(arcDiameter);
                 rect.setArcWidth(arcDiameter);
                 return rect;
@@ -73,12 +74,19 @@ public class CanvasDecorationPane extends StackPane {
         );
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
-                final double proposedBorderWidth = Math.ceil(scaledHeight() / BORDER_WIDTH_RATIO);
+                final Dimension2D scaledSize = computeScaledCanvasSize();
+                final double proposedBorderWidth = Math.ceil(scaledSize.getHeight() / BORDER_WIDTH_RATIO);
                 final double borderWidth = Math.max(ROUNDED_RECT_MIN_BORDER_WIDTH, proposedBorderWidth);
                 final double cornerRadius = Math.ceil(ROUNDED_RECT_CORNER_RADIUS * scaling());
                 return createRoundedBorder(borderColor.get(), borderWidth, cornerRadius);
             }, borderColor, scaling, unscaledCanvasSize)
         );
+    }
+
+    private Dimension2D computeScaledCanvasSize() {
+        final double s = scaling();
+        final Dimension2D size = unscaledCanvasSize.getValue();
+        return new Dimension2D(s * (size.getWidth() + PADDING_X), s * (size.getHeight() + PADDING_Y));
     }
 
     public void setCanvas(Canvas canvas) {
@@ -103,19 +111,10 @@ public class CanvasDecorationPane extends StackPane {
         }
         scaling.set(newScaling);
 
-        final double width = scaledWidth();
-        final double height = scaledHeight();
-        setMinSize(width, height);
-        setMaxSize(width, height);
-        setPrefSize(width, height);
-    }
-
-    public int scaledWidth() {
-        return (int) ((unscaledCanvasSize.get().getWidth() + PADDING_X) * scaling());
-    }
-
-    public int scaledHeight() {
-        return (int) ((unscaledCanvasSize.get().getHeight() + PADDING_Y) * scaling());
+        final Dimension2D scaledSize = computeScaledCanvasSize();
+        setMinSize(scaledSize.getWidth(),  scaledSize.getHeight());
+        setMaxSize(scaledSize.getWidth(),  scaledSize.getHeight());
+        setPrefSize(scaledSize.getWidth(), scaledSize.getHeight());
     }
 
     public void resizeTo(double width, double height) {
