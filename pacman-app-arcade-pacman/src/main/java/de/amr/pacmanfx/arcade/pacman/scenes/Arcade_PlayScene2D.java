@@ -6,8 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
-import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.event.GameStateChangeEvent;
+import de.amr.pacmanfx.eventng.*;
 import de.amr.pacmanfx.lib.fsm.StateMachine.State;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
@@ -104,36 +103,36 @@ public class Arcade_PlayScene2D extends GameScene2D {
     // Game event handlers
 
     @Override
-    public void onBonusActivated(GameEvent e) {
+    public void onBonusActivated(BonusActivatedEvent e) {
         // This is the sound in Ms. Pac-Man when the bonus wanders the maze. In Pac-Man, this is a no-op.
         soundManager().loop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
-    public void onBonusEaten(GameEvent e) {
+    public void onBonusEaten(BonusEatenEvent e) {
         soundManager().stop(SoundID.BONUS_ACTIVE);
         soundManager().play(SoundID.BONUS_EATEN);
     }
 
     @Override
-    public void onBonusExpires(GameEvent e) {
+    public void onBonusExpired(BonusExpiredEvent e) {
         soundManager().stop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
-    public void onCreditAdded(GameEvent e) {
+    public void onCreditAdded(CreditAddedEvent e) {
         soundManager().play(SoundID.COIN_INSERTED);
     }
 
     @Override
-    public void onGameContinues(GameEvent e) {
-        final Game game = e.game();
+    public void onGameContinues(GameContinuedEvent e) {
+        final Game game = context.currentGame();
         game.optGameLevel().ifPresent(this::resetAnimations);
     }
 
     @Override
-    public void onGameStarts(GameEvent e) {
-        final Game game = e.game();
+    public void onGameStarts(GameStartedEvent e) {
+        final Game game = context.currentGame();
         final boolean silent = game.optGameLevel().isPresent() && game.level().isDemoLevel()
             || game.control().state() instanceof TestState;
         if (!silent) {
@@ -145,39 +144,39 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public void onGameStateChange(GameStateChangeEvent e) {
         if (e.newState() == GameState.LEVEL_COMPLETE) {
             soundManager().stopAll();
-            playLevelCompletedAnimation(e.game().level());
+            playLevelCompletedAnimation(context.currentGame().level());
         }
         else if (e.newState() == GameState.GAME_OVER) {
             soundManager().stopAll();
             soundManager().play(SoundID.GAME_OVER);
-            e.game().hud().credit(true);
+            context.currentGame().hud().credit(true);
         }
     }
 
     @Override
-    public void onGhostEaten(GameEvent e) {
+    public void onGhostEaten(GhostEatenEvent e) {
         soundManager().play(SoundID.GHOST_EATEN);
     }
 
     @Override
-    public void onLevelCreated(GameEvent e) {
-        e.game().optGameLevel().ifPresent(this::acceptGameLevel);
+    public void onLevelCreated(LevelCreatedEvent e) {
+        context.currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
     }
 
     @Override
-    public void onPacDead(GameEvent e) {
+    public void onPacDead(PacDeadEvent e) {
         // Trigger end of game state PACMAN_DYING after dying animation has finished
-        e.game().control().terminateCurrentGameState();
+        context.currentGame().control().terminateCurrentGameState();
     }
 
     @Override
-    public void onPacDying(GameEvent e) {
+    public void onPacDying(PacDyingEvent e) {
         soundManager().stopSiren();
         soundManager().play(SoundID.PAC_MAN_DEATH);
     }
 
     @Override
-    public void onPacFindsFood(GameEvent e) {
+    public void onPacFindsFood(PacFoundFoodEvent e) {
         final long now = ui.clock().tickCount();
         final long passed = now - lastMunchingSoundPlayedTick;
         final byte minDelay = ui.currentConfig().munchingSoundDelay();
@@ -189,18 +188,18 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onPacPowerBegins(GameEvent e) {
+    public void onPacGetsPower(PacGetsPowerEvent e) {
         soundManager().stopSiren();
         soundManager().loop(SoundID.PAC_MAN_POWER);
     }
 
     @Override
-    public void onPacPowerEnds(GameEvent e) {
+    public void onPacLostPower(PacLostPowerEvent e) {
         soundManager().stop(SoundID.PAC_MAN_POWER);
     }
 
     @Override
-    public void onSpecialScoreReached(GameEvent e) {
+    public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
         soundManager().play(SoundID.EXTRA_LIFE);
     }
 

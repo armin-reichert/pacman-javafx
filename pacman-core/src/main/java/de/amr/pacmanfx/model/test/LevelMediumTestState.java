@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.test;
 
-import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.eventng.StopAllSoundsEvent;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.*;
@@ -37,7 +37,7 @@ public class LevelMediumTestState implements StateMachine.State<Game>, TestState
         message.setPosition(gameLevel.worldMap().terrainLayer().messageCenterPosition());
         gameLevel.setMessage(message);
         game.hud().show();
-        game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
+        game.publishGameEvent(new StopAllSoundsEvent());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class LevelMediumTestState implements StateMachine.State<Game>, TestState
         game.updateHunting(level);
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
-                game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
+                game.publishGameEvent(new StopAllSoundsEvent());
                 game.control().enterStateNamed(GameControl.StateName.INTRO.name());
             } else {
                 timer().restartSeconds(TEST_DURATION_SEC);

@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 import de.amr.pacmanfx.arcade.ms_pacman.model.actors.*;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
-import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.eventng.BonusActivatedEvent;
 import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.*;
@@ -314,7 +314,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
         }
 
         level.setBonus(bonus);
-        publishGameEvent(GameEvent.Type.BONUS_ACTIVATED, bonus.tile());
+        publishGameEvent(new BonusActivatedEvent(bonus));
     }
 
     protected int bonusValue(byte symbolCode) {

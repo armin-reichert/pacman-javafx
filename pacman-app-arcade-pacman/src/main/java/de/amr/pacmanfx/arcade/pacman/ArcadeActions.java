@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
-import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.eventng.CreditAddedEvent;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameUI;
@@ -33,7 +33,7 @@ public interface ArcadeActions {
                 if (game.control().state() != SETTING_OPTIONS_FOR_START) {
                     game.control().enterState(SETTING_OPTIONS_FOR_START);
                 }
-                game.publishGameEvent(GameEvent.Type.CREDIT_ADDED);
+                game.publishGameEvent(new CreditAddedEvent(1));
             }
         }
 

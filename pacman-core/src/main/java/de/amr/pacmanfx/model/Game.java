@@ -4,9 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.eventng.GameEventListenerNG;
+import de.amr.pacmanfx.eventng.GameEventNG;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
@@ -101,11 +100,11 @@ public interface Game extends LevelCounter {
     boolean hasGhostBeenKilled();
 
     // Game event manager
-    void addGameEventListener(GameEventListener listener);
-    void removeGameEventListener(GameEventListener listener);
-    void publishGameEvent(GameEvent event);
-    void publishGameEvent(GameEvent.Type type);
-    void publishGameEvent(GameEvent.Type type, Vector2i tile);
+    void addGameEventListener(GameEventListenerNG listener);
+    void removeGameEventListener(GameEventListenerNG listener);
+    void publishGameEvent(GameEventNG event);
+    //void publishGameEvent(GameEvent.Type type);
+    //void publishGameEvent(GameEvent.Type type, Vector2i tile);
 
     // Game event handling
     void onLevelCompleted();

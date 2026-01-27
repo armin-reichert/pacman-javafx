@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.eventng.CreditAddedEvent;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -29,7 +29,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     public void update(Game game) {}
 
     @Override
-    public void onCreditAdded(GameEvent e) {
+    public void onCreditAdded(CreditAddedEvent e) {
         soundManager().play(SoundID.COIN_INSERTED);
     }
 }

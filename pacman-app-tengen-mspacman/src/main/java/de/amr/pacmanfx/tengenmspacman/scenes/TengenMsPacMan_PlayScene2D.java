@@ -4,8 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
-import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.event.GameStateChangeEvent;
+import de.amr.pacmanfx.eventng.*;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
@@ -223,7 +222,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onGameStarts(GameEvent e) {
+    public void onGameStarts(GameStartedEvent e) {
         final Game game = context().currentGame();
         StateMachine.State<Game> state = game.control().state();
         boolean shutUp = game.level().isDemoLevel() || state instanceof TestState;
@@ -233,7 +232,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onGameContinues(GameEvent e) {
+    public void onGameContinues(GameContinuedEvent e) {
         TengenMsPacMan_GameModel game = context().currentGame();
         game.optGameLevel().ifPresent(level -> {
             resetAnimations(level);
@@ -256,12 +255,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onLevelCreated(GameEvent e) {
+    public void onLevelCreated(LevelCreatedEvent e) {
         initForGameLevel(ui.context().currentGame().level());
     }
 
     @Override
-    public void onLevelStarts(GameEvent e) {
+    public void onLevelStarts(LevelStartedEvent e) {
         TengenMsPacMan_GameModel game = context().currentGame();
         dynamicCamera.enterIntroMode();
         game.optGameLevel().ifPresent(this::resetAnimations);
@@ -279,7 +278,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         switch (e.newState()) {
             case GameState.LEVEL_COMPLETE -> {
                 soundManager().stopAll();
-                playLevelCompleteAnimation(e.game().level());
+                playLevelCompleteAnimation(context.currentGame().level());
             }
             case GameState.GAME_OVER -> {
                 soundManager().stopAll();
@@ -292,57 +291,57 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onBonusActivated(GameEvent e) {
+    public void onBonusActivated(BonusActivatedEvent e) {
         soundManager().loop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
-    public void onBonusEaten(GameEvent e) {
+    public void onBonusEaten(BonusEatenEvent e) {
         soundManager().stop(SoundID.BONUS_ACTIVE);
         soundManager().play(SoundID.BONUS_EATEN);
     }
 
     @Override
-    public void onBonusExpires(GameEvent e) {
+    public void onBonusExpired(BonusExpiredEvent e) {
         soundManager().stop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
-    public void onSpecialScoreReached(GameEvent e) {
+    public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
         soundManager().play(SoundID.EXTRA_LIFE);
     }
 
     @Override
-    public void onGhostEaten(GameEvent e) {
+    public void onGhostEaten(GhostEatenEvent e) {
         soundManager().play(SoundID.GHOST_EATEN);
     }
 
     @Override
-    public void onPacDead(GameEvent e) {
+    public void onPacDead(PacDeadEvent e) {
         context().currentGame().control().terminateCurrentGameState();
     }
 
     @Override
-    public void onPacDying(GameEvent e) {
+    public void onPacDying(PacDyingEvent e) {
         dynamicCamera.enterManualMode();
         soundManager().play(SoundID.PAC_MAN_DEATH);
     }
 
     @Override
-    public void onPacFindsFood(GameEvent e) {
+    public void onPacFindsFood(PacFoundFoodEvent e) {
         if (!soundManager().isPlaying(SoundID.PAC_MAN_MUNCHING)) {
             soundManager().play(SoundID.PAC_MAN_MUNCHING);
         }
     }
 
     @Override
-    public void onPacPowerBegins(GameEvent e) {
+    public void onPacGetsPower(PacGetsPowerEvent e) {
         soundManager().stopSiren();
         soundManager().loop(SoundID.PAC_MAN_POWER);
     }
 
     @Override
-    public void onPacPowerEnds(GameEvent e) {
+    public void onPacLostPower(PacLostPowerEvent e) {
         soundManager().stop(SoundID.PAC_MAN_POWER);
     }
 

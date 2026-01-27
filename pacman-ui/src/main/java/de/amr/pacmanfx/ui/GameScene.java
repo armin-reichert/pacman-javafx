@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.event.GameEventListener;
+import de.amr.pacmanfx.eventng.GameEventListenerNG;
+import de.amr.pacmanfx.eventng.StopAllSoundsEvent;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
@@ -19,7 +19,7 @@ import java.util.Optional;
 /**
  * Common interface of all game scenes (2D and 3D).
  */
-public interface GameScene extends GameEventListener, Disposable {
+public interface GameScene extends GameEventListenerNG, Disposable {
 
     /**
      * @return the game UI
@@ -74,7 +74,7 @@ public interface GameScene extends GameEventListener, Disposable {
     default void onScroll(ScrollEvent scrollEvent) {}
 
     @Override
-    default void onStopAllSounds(GameEvent event) {
+    default void onStopAllSounds(StopAllSoundsEvent e) {
         soundManager().stopAll();
     }
 

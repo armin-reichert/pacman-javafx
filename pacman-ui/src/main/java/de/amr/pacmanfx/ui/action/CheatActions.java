@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.eventng.PacFoundFoodEvent;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -38,12 +38,12 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
-            if (game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
+            game.optGameLevel().ifPresent(level -> {
+                level.worldMap().foodLayer().eatPellets();
+                ui.currentConfig().soundManager().pause(SoundID.PAC_MAN_MUNCHING); //TODO check this
                 game.raiseCheatFlag();
-            }
-            game.level().worldMap().foodLayer().eatPellets();
-            ui.currentConfig().soundManager().pause(SoundID.PAC_MAN_MUNCHING); //TODO check this
-            game.publishGameEvent(GameEvent.Type.PAC_FOUND_FOOD);
+                game.publishGameEvent(new PacFoundFoodEvent(level.pac(), null));
+            });
         }
 
         @Override

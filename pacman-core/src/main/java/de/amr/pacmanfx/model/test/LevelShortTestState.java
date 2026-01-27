@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.eventng.BonusEatenEvent;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.*;
@@ -55,15 +55,19 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
             game.activateNextBonus(game.level());
         }
         else if (timer.atSecond(START + 5)) {
-            game.level().optBonus().ifPresent(bonus -> bonus.setEatenSeconds(2));
-            game.publishGameEvent(GameEvent.Type.BONUS_EATEN);
+            game.level().optBonus().ifPresent(bonus -> {
+                bonus.setEatenSeconds(2);
+                game.publishGameEvent(new BonusEatenEvent(bonus));
+            });
         }
         else if (timer.atSecond(START + 6)) {
             game.activateNextBonus(game.level());
         }
         else if (timer.atSecond(START + 8)) {
-            game.level().optBonus().ifPresent(bonus -> bonus.setEatenSeconds(2));
-            game.publishGameEvent(GameEvent.Type.BONUS_EATEN);
+            game.level().optBonus().ifPresent(bonus -> {
+                bonus.setEatenSeconds(2);
+                game.publishGameEvent(new BonusEatenEvent(bonus));
+            });
         }
         else if (timer.atSecond(START + 9)) {
             game.level().hidePacAndGhosts();

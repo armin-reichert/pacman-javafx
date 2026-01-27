@@ -6,14 +6,13 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.eventng.UnspecifiedChangeEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -103,9 +102,9 @@ public abstract class GameScene2D implements GameScene {
     }
 
     @Override
-    public void onUnspecifiedChange(GameEvent event) {
+    public void onUnspecifiedChange(UnspecifiedChangeEvent event) {
         // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
-        ui.views().playView().updateGameScene(event.game(), true);
+        ui.views().playView().updateGameScene(context.currentGame(), true);
     }
 
     @Override

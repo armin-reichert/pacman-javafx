@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.arcade.pacman.model.actors.*;
-import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.eventng.BonusActivatedEvent;
 import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.*;
@@ -245,7 +245,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdibleSeconds(randomFloat(9, 10));
         level.setBonus(bonus);
-        publishGameEvent(GameEvent.Type.BONUS_ACTIVATED, bonusTile);
+        publishGameEvent(new BonusActivatedEvent(bonus));
     }
 
     protected int bonusValue(byte symbolCode) {

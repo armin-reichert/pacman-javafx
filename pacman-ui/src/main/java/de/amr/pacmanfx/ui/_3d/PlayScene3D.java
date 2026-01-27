@@ -5,8 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.event.GameStateChangeEvent;
+import de.amr.pacmanfx.eventng.*;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -324,24 +323,24 @@ public abstract class PlayScene3D implements GameScene {
     // Game event handlers
 
     @Override
-    public void onBonusActivated(GameEvent event) {
+    public void onBonusActivated(BonusActivatedEvent event) {
         if (gameLevel3D == null) {
             Logger.error("No game level3D exists!");
             return;
         }
-        event.game().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> {
+        context.currentGame().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> {
             gameLevel3D.updateBonus3D(bonus);
             soundManager().loop(SoundID.BONUS_ACTIVE);
         });
     }
 
     @Override
-    public void onBonusEaten(GameEvent event) {
+    public void onBonusEaten(BonusEatenEvent event) {
         if (gameLevel3D == null) {
             Logger.error("No game level3D exists!");
             return;
         }
-        event.game().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(_ -> {
+        context.currentGame().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(_ -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
             soundManager().stop(SoundID.BONUS_ACTIVE);
             soundManager().play(SoundID.BONUS_EATEN);
@@ -349,12 +348,12 @@ public abstract class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void onBonusExpires(GameEvent event) {
+    public void onBonusExpired(BonusExpiredEvent event) {
         if (gameLevel3D == null) {
             Logger.error("No game level3D exists!");
             return;
         }
-        event.game().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(_ -> {
+        context.currentGame().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(_ -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
             soundManager().stop(SoundID.BONUS_ACTIVE);
         });
@@ -362,7 +361,7 @@ public abstract class PlayScene3D implements GameScene {
 
     @Override
     public void onGameStateChange(GameStateChangeEvent changeEvent) {
-        final Game game = changeEvent.game();
+        final Game game = context.currentGame();
         final StateMachine.State<Game> newState = changeEvent.newState();
         if (newState instanceof TestState) {
             game.optGameLevel().ifPresent(level -> {
@@ -403,16 +402,16 @@ public abstract class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void onGameContinues(GameEvent event) {
-        final Game game = event.game();
+    public void onGameContinues(GameContinuedEvent event) {
+        final Game game = context.currentGame();
         if (gameLevel3D != null) {
             game.optGameLevel().ifPresent(this::showReadyMessage);
         }
     }
 
     @Override
-    public void onGameStarts(GameEvent event) {
-        final Game game = event.game();
+    public void onGameStarts(GameStartedEvent event) {
+        final Game game = context.currentGame();
         final StateMachine.State<Game> state = game.control().state();
         final boolean silent = game.level().isDemoLevel() || state instanceof TestState;
         if (!silent) {
@@ -421,19 +420,19 @@ public abstract class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void onGhostEaten(GameEvent event) {
+    public void onGhostEaten(GhostEatenEvent event) {
         soundManager().play(SoundID.GHOST_EATEN);
     }
 
 
     @Override
-    public void onLevelCreated(GameEvent event) {
-        event.game().optGameLevel().ifPresent(this::replaceGameLevel3D);
+    public void onLevelCreated(LevelCreatedEvent event) {
+        context.currentGame().optGameLevel().ifPresent(this::replaceGameLevel3D);
     }
 
     @Override
-    public void onLevelStarts(GameEvent event) {
-        final Game game = event.game();
+    public void onLevelStarts(LevelStartedEvent event) {
+        final Game game = context.currentGame();
         if (game.optGameLevel().isEmpty()) {
             Logger.error("No game level exists on level start? WTF!");
             return;
@@ -460,7 +459,7 @@ public abstract class PlayScene3D implements GameScene {
     private long lastMunchingSoundPlayedTick;
 
     @Override
-    public void onPacFindsFood(GameEvent event) {
+    public void onPacFindsFood(PacFoundFoodEvent event) {
         if (event.tile() == null) {
             // When cheat "eat all pellets" has been used, no tile is present in the event.
             gameLevel3D.pellets3D().forEach(this::eatPellet3D);
@@ -488,8 +487,8 @@ public abstract class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void onPacPowerBegins(GameEvent event) {
-        final Game game = event.game();
+    public void onPacGetsPower(PacGetsPowerEvent e) {
+        final Game game = context.currentGame();
         soundManager().stopSiren();
         if (!game.isLevelCompleted()) {
             gameLevel3D.pac3D().setMovementPowerMode(true);
@@ -499,21 +498,21 @@ public abstract class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void onPacPowerEnds(GameEvent event) {
+    public void onPacLostPower(PacLostPowerEvent e) {
         gameLevel3D.pac3D().setMovementPowerMode(false);
         gameLevel3D.stopWallColorFlashing();
         soundManager().stop(SoundID.PAC_MAN_POWER);
     }
 
     @Override
-    public void onSpecialScoreReached(GameEvent event) {
+    public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
         soundManager().play(SoundID.EXTRA_LIFE);
     }
 
     @Override
-    public void onUnspecifiedChange(GameEvent event) {
+    public void onUnspecifiedChange(UnspecifiedChangeEvent event) {
         // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
-        ui.views().playView().updateGameScene(event.game(), true);
+        ui.views().playView().updateGameScene(context.currentGame(), true);
     }
 
     // protected

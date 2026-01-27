@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.eventng.LevelCreatedEvent;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
@@ -51,6 +51,6 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         gateKeeper.setLevelNumber(levelNumber);
 
         levelProperty().set(level);
-        publishGameEvent(GameEvent.Type.LEVEL_CREATED);
+        publishGameEvent(new LevelCreatedEvent(level));
     }
 }

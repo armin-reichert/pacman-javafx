@@ -4,9 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.event.GameStateChangeEvent;
+import de.amr.pacmanfx.eventng.*;
 import de.amr.pacmanfx.lib.Pulse;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.*;
@@ -83,7 +81,7 @@ public abstract class AbstractGameModel implements Game {
         this.gameControl = requireNonNull(gameControl);
         gameControl.stateMachine().setContext(this);
         gameControl.stateMachine().addStateChangeListener(
-            (oldState, newState) -> publishGameEvent(new GameStateChangeEvent(this, oldState, newState)));
+            (oldState, newState) -> publishGameEvent(new GameStateChangeEvent(oldState, newState)));
     }
 
     public BooleanProperty collisionCheckedTwiceProperty() {
@@ -281,7 +279,7 @@ public abstract class AbstractGameModel implements Game {
         level.pac().optAnimationManager().ifPresent(AnimationManager::play);
         level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
 
-        publishGameEvent(GameEvent.Type.HUNTING_PHASE_STARTED);
+        publishGameEvent(new HuntingPhaseStartedEvent(level.huntingTimer().phaseIndex()));
     }
 
     @Override
@@ -312,10 +310,10 @@ public abstract class AbstractGameModel implements Game {
 
     // GameEventManager implementation
 
-    private final Set<GameEventListener> eventListeners = new HashSet<>();
+    private final Set<GameEventListenerNG> eventListeners = new HashSet<>();
 
     @Override
-    public void addGameEventListener(GameEventListener listener) {
+    public void addGameEventListener(GameEventListenerNG listener) {
         requireNonNull(listener);
         if (!eventListeners.contains(listener)) {
             eventListeners.add(listener);
@@ -324,7 +322,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public void removeGameEventListener(GameEventListener listener) {
+    public void removeGameEventListener(GameEventListenerNG listener) {
         requireNonNull(listener);
         boolean removed = eventListeners.remove(listener);
         if (removed) {
@@ -335,22 +333,10 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public void publishGameEvent(GameEvent event) {
+    public void publishGameEvent(GameEventNG event) {
         requireNonNull(event);
         Logger.trace("Publish game event: {}", event);
         eventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
-    }
-
-    @Override
-    public void publishGameEvent(GameEvent.Type type) {
-        requireNonNull(type);
-        publishGameEvent(new GameEvent(this, type));
-    }
-
-    @Override
-    public void publishGameEvent(GameEvent.Type type, Vector2i tile) {
-        requireNonNull(type);
-        publishGameEvent(new GameEvent(this, type, tile));
     }
 
     // other stuff
@@ -378,7 +364,7 @@ public abstract class AbstractGameModel implements Game {
         }
         if (simStep.extraLifeWon) {
             addLives(1);
-            publishGameEvent(new GameEvent(this, GameEvent.Type.SPECIAL_SCORE_REACHED));
+            publishGameEvent(new SpecialScoreReachedEvent(newScore));
         }
     }
 
@@ -461,7 +447,7 @@ public abstract class AbstractGameModel implements Game {
                 activateNextBonus(level);
                 simStep.bonusIndex = level.currentBonusIndex();
             }
-            publishGameEvent(GameEvent.Type.PAC_FOUND_FOOD, simStep.foodTile);
+            publishGameEvent(new PacFoundFoodEvent(pac, simStep.foodTile));
         }
     }
 
@@ -530,7 +516,7 @@ public abstract class AbstractGameModel implements Game {
             pac.powerTimer().doTick();
             if (pac.isPowerFadingStarting(level)) {
                 simStep.pacStartsLosingPower = true;
-                publishGameEvent(GameEvent.Type.PAC_STARTS_LOSING_POWER);
+                publishGameEvent(new PacStartsLosingPowerEvent());
             } else if (pac.powerTimer().hasExpired()) {
                 simStep.pacLostPower = true;
                 pac.powerTimer().stop();
@@ -538,7 +524,7 @@ public abstract class AbstractGameModel implements Game {
                 level.energizerVictims().clear();
                 level.huntingTimer().start();
                 level.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-                publishGameEvent(GameEvent.Type.PAC_LOST_POWER);
+                publishGameEvent(new PacLostPowerEvent());
             }
         }
     }

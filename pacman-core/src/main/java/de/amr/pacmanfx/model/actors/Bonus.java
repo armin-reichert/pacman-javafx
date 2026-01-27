@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.eventng.BonusExpiredEvent;
 import de.amr.pacmanfx.lib.Pulse;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Direction;
@@ -108,13 +108,13 @@ public class Bonus extends MovingActor {
                 }
                 if (timer.hasExpired() || reachedExit) {
                     setInactive();
-                    game.publishGameEvent(GameEvent.Type.BONUS_EXPIRED, tile());
+                    game.publishGameEvent(new BonusExpiredEvent(this));
                 }
             }
             case EATEN -> {
                 if (timer.hasExpired()) {
                     setInactive();
-                    game.publishGameEvent(GameEvent.Type.BONUS_EXPIRED, tile());
+                    game.publishGameEvent(new BonusExpiredEvent(this));
                 }
             }
             case INACTIVE -> {}

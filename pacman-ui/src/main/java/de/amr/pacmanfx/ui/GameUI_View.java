@@ -4,13 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.event.GameEventListener;
+import de.amr.pacmanfx.eventng.GameEventListenerNG;
 import javafx.scene.Node;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public interface GameUI_View extends GameEventListener {
+public interface GameUI_View extends GameEventListenerNG {
     /**
      * @return the action bindings manager for this view
      */

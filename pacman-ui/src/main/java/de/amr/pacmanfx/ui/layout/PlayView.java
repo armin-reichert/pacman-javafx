@@ -4,7 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.eventng.GameEventNG;
+import de.amr.pacmanfx.eventng.GameStateChangeEvent;
+import de.amr.pacmanfx.eventng.LevelCreatedEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
@@ -213,11 +215,11 @@ public class PlayView extends StackPane implements GameUI_View {
     // GameEventListener
 
     @Override
-    public void onGameEvent(GameEvent gameEvent) {
-        final Game game = gameEvent.game();
+    public void onGameEvent(GameEventNG gameEvent) {
+        final Game game = ui.context().currentGame();
         final StateMachine.State<Game> gameState = game.control().state();
-        switch (gameEvent.type()) {
-            case LEVEL_CREATED -> {
+        switch (gameEvent) {
+            case LevelCreatedEvent _ -> {
                 final GameLevel level = game.level();
                 final GameUI_Config uiConfig = ui.currentConfig();
 
@@ -230,11 +232,12 @@ public class PlayView extends StackPane implements GameUI_View {
                 // size of game scene might have changed, so re-embed
                 optGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
             }
-            case GAME_STATE_CHANGED -> {
+            case GameStateChangeEvent _ -> {
                 if (gameState.matches(GameControl.StateName.LEVEL_COMPLETE)) {
                     miniView.slideOut();
                 }
             }
+            default -> {}
         }
         updateGameScene(ui.context().currentGame(), false);
 

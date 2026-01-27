@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
-import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.eventng.*;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.*;
@@ -126,7 +126,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
                 Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
                 level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
                 simStep.pacGotPower = true;
-                publishGameEvent(GameEvent.Type.PAC_GETS_POWER);
+                publishGameEvent(new PacGetsPowerEvent());
             }
         }
     }
@@ -179,7 +179,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             pac.setSpeed(0);
             pac.setDead(true);
             level.ghosts().forEach(ghost -> ghost.onPacKilled(level));
-            publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
+            publishGameEvent(new StopAllSoundsEvent());
         }
         else if (tick == Arcade_GameController.TICK_PACMAN_DYING_HIDE_GHOSTS) {
             level.ghosts().forEach(Ghost::hide);
@@ -190,14 +190,14 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
         else if (tick == Arcade_GameController.TICK_PACMAN_DYING_START_ANIMATION) {
             pac.optAnimationManager().ifPresent(AnimationManager::play);
-            publishGameEvent(GameEvent.Type.PAC_DYING, pac.tile());
+            publishGameEvent(new PacDyingEvent(pac));
         }
         else if (tick == Arcade_GameController.TICK_PACMAN_DYING_HIDE_PAC) {
             pac.hide();
             level.optBonus().ifPresent(Bonus::setInactive); //TODO check this
         }
         else if (tick == Arcade_GameController.TICK_PACMAN_DYING_PAC_DEAD) {
-            publishGameEvent(GameEvent.Type.PAC_DEAD);
+            publishGameEvent(new PacDeadEvent(pac));
         }
         else {
             level.blinking().tick();
@@ -222,17 +222,15 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             scorePoints(level, allGhostsInLevelKilledPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", allGhostsInLevelKilledPoints, level.number());
         }
+        level.pac().hide();
+        level.ghosts().forEach(Ghost::stopAnimation);
+        publishGameEvent(new GhostEatenEvent(ghost));
     }
 
     @Override
     public void updateEatingGhost(long tick) {
         final GameLevel level = level();
-        if (tick == 1) {
-            level.pac().hide();
-            level.ghosts().forEach(Ghost::stopAnimation);
-            publishGameEvent(GameEvent.Type.GHOST_EATEN);
-        }
-        else if (tick < Arcade_GameController.TICK_EATING_GHOST_COMPLETE) {
+        if (tick < Arcade_GameController.TICK_EATING_GHOST_COMPLETE) {
             level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                 .forEach(ghost -> ghost.tick(this));
             level.blinking().tick();
@@ -293,7 +291,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             prepareNewGame();
             clearLevelCounter();
             buildNormalLevel(1);
-            publishGameEvent(GameEvent.Type.GAME_STARTED);
+            publishGameEvent(new GameStartedEvent());
         }
         else if (tick == 2) {
             startLevel();
@@ -316,7 +314,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level.showPacAndGhosts();
         }
         else if (tick == 60) {
-            publishGameEvent(GameEvent.Type.GAME_CONTINUED);
+            publishGameEvent(new GameContinuedEvent());
         }
         else if (tick == Arcade_GameController.TICK_RESUME_HUNTING) {
             control().enterState(GameState.HUNTING);
@@ -334,7 +332,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         scorePoints(level, bonus.points());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
         bonus.setEatenSeconds(BONUS_EATEN_SECONDS);
-        publishGameEvent(GameEvent.Type.BONUS_EATEN);
+        publishGameEvent(new BonusEatenEvent(bonus));
     }
 
     protected int cutSceneNumberAfter(int levelNumber) {
@@ -355,7 +353,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         gateKeeper.setLevelNumber(levelNumber);
 
         levelProperty().set(level);
-        publishGameEvent(GameEvent.Type.LEVEL_CREATED);
+        publishGameEvent(new LevelCreatedEvent(level));
     }
 
     @Override
@@ -372,7 +370,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         gateKeeper.setLevelNumber(levelNumber);
 
         levelProperty().set(level);
-        publishGameEvent(GameEvent.Type.LEVEL_CREATED);
+        publishGameEvent(new LevelCreatedEvent(level));
     }
 
     @Override
@@ -410,7 +408,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
-        publishGameEvent(GameEvent.Type.LEVEL_STARTED);
+        publishGameEvent(new LevelStartedEvent(level));
     }
 
     @Override

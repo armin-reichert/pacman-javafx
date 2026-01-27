@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.test;
 
-import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.eventng.UnspecifiedChangeEvent;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
@@ -40,7 +40,7 @@ public class CutScenesTestState implements StateMachine.State<Game>, TestState {
                 testedCutSceneNumber += 1;
                 timer.restartIndefinitely();
                 //TODO find another solution and get rid of this event type
-                game.publishGameEvent(GameEvent.Type.UNSPECIFIED_CHANGE);
+                game.publishGameEvent(new UnspecifiedChangeEvent("Cut Scene Test"));
             } else {
                 game.control().enterStateNamed(GameControl.StateName.INTRO.name());
             }

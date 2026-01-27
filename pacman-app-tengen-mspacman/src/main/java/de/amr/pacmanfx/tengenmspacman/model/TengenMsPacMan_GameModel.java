@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengenmspacman.model;
 
-import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.eventng.*;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2f;
@@ -301,7 +301,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         if (tick == 1) {
             prepareNewGame();
             buildNormalLevel(startLevelNumber);
-            publishGameEvent(GameEvent.Type.GAME_STARTED);
+            publishGameEvent(new GameStartedEvent());
         }
         else if (tick == TICK_SHOW_READY) {
             startLevel();
@@ -321,7 +321,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
             final GameLevel level = level();
             level.getReadyToPlay();
             level.showPacAndGhosts();
-            publishGameEvent(GameEvent.Type.GAME_CONTINUED);
+            publishGameEvent(new GameContinuedEvent());
         } else if (tick == TICK_RESUME_HUNTING) {
             control().enterState(HUNTING);
         }
@@ -348,7 +348,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
-        publishGameEvent(GameEvent.Type.LEVEL_STARTED);
+        publishGameEvent(new LevelStartedEvent(level));
     }
 
     @Override
@@ -504,7 +504,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         gateKeeper.setLevelNumber(levelNumber);
 
         levelProperty().set(level);
-        publishGameEvent(GameEvent.Type.LEVEL_CREATED);
+        publishGameEvent(new LevelCreatedEvent(level));
     }
 
     @Override
@@ -520,7 +520,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         gateKeeper.setLevelNumber(1);
 
         levelProperty().set(level);
-        publishGameEvent(GameEvent.Type.LEVEL_CREATED);
+        publishGameEvent(new LevelCreatedEvent(level));
     }
 
     @Override
@@ -598,7 +598,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
-        publishGameEvent(GameEvent.Type.BONUS_ACTIVATED, bonus.tile());
+        publishGameEvent(new BonusActivatedEvent(bonus));
     }
 
     @Override
@@ -630,7 +630,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
                 Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
                 level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
                 simStep.pacGotPower = true;
-                publishGameEvent(GameEvent.Type.PAC_GETS_POWER);
+                publishGameEvent(new PacGetsPowerEvent());
             }
         }
     }
@@ -640,7 +640,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         scorePoints(level, bonus.points());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
         bonus.setEatenSeconds(BONUS_EATEN_SECONDS);
-        publishGameEvent(GameEvent.Type.BONUS_EATEN);
+        publishGameEvent(new BonusEatenEvent(bonus));
     }
 
     @Override
@@ -660,7 +660,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
             pac.stopAnimation();
 
             level.ghosts().forEach(ghost -> ghost.onPacKilled(level));
-            publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
+            publishGameEvent(new StopAllSoundsEvent());
         }
         else if (tick == TICK_PACMAN_DYING_HIDE_GHOSTS) {
             level.ghosts().forEach(Ghost::hide);
@@ -671,7 +671,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         }
         else if (tick == TICK_PACMAN_DYING_START_PAC_ANIMATION) {
             pac.optAnimationManager().ifPresent(AnimationManager::play);
-            publishGameEvent(GameEvent.Type.PAC_DYING, pac.tile());
+            publishGameEvent(new PacDyingEvent(pac));
         }
         else if (tick == TICK_PACMAN_DYING_HIDE_PAC) {
             pac.hide();
@@ -679,7 +679,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
             level.optBonus().ifPresent(Bonus::setInactive);
         }
         else if (tick == TICK_PACMAN_DYING_PAC_DEAD) {
-            publishGameEvent(GameEvent.Type.PAC_DEAD);
+            publishGameEvent(new PacDeadEvent(pac));
         }
         else {
             level.blinking().tick();
@@ -697,17 +697,15 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         ghost.selectAnimationAt(Ghost.AnimationID.GHOST_POINTS, killedSoFar);
         scorePoints(level, points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
+        level.pac().hide();
+        level.ghosts().forEach(Ghost::stopAnimation);
+        publishGameEvent(new GhostEatenEvent(ghost));
     }
 
     @Override
     public void updateEatingGhost(long tick) {
         final GameLevel level = level();
-        if (tick == 1) {
-            level.pac().hide();
-            level.ghosts().forEach(Ghost::stopAnimation);
-            publishGameEvent(GameEvent.Type.GHOST_EATEN);
-        }
-        else if (tick < TICK_EATING_GHOST_COMPLETE) {
+        if (tick < TICK_EATING_GHOST_COMPLETE) {
             level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                     .forEach(ghost -> ghost.tick(this));
             level.blinking().tick();
