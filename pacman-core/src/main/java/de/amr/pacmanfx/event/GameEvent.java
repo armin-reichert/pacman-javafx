@@ -23,8 +23,5 @@ public sealed interface GameEvent permits
     PacStartsLosingPowerEvent,
     SpecialScoreReachedEvent,
     StopAllSoundsEvent,
-    UnspecifiedChangeEvent {
-
-    // Optional: common methods (e.g., source object, timestamp)
-    // Object source();
-}
+    UnspecifiedChangeEvent
+{}

@@ -8,31 +8,35 @@ import org.tinylog.Logger;
 
 public interface GameEventListener {
 
+    /**
+     * Central event dispatcher. Implementors can override this for common handling
+     * or override specific methods for targeted reactions.
+     */
     default void onGameEvent(GameEvent event) {
         switch (event) {
-            case BonusActivatedEvent e          -> onBonusActivated(e);
-            case BonusEatenEvent e              -> onBonusEaten(e);
-            case BonusExpiredEvent e            -> onBonusExpired(e);
-            case CreditAddedEvent e             -> onCreditAdded(e);
-            case GameContinuedEvent e           -> onGameContinues(e);
-            case GameStartedEvent e             -> onGameStarts(e);
-            case GameStateChangeEvent e         -> onGameStateChange(e);
-            case GhostEatenEvent e              -> onGhostEaten(e);
-            case GhostEntersHouseEvent e        -> onGhostEntersHouse(e);
-            case GhostStartsReturningHomeEvent e-> onGhostStartsReturningHome(e);
-            case HuntingPhaseStartedEvent e     -> onHuntingPhaseStarted(e);
-            case IntermissionStartedEvent e     -> onIntermissionStarted(e);
-            case LevelCreatedEvent e            -> onLevelCreated(e);
-            case LevelStartedEvent e            -> onLevelStarts(e);
-            case PacDeadEvent e                 -> onPacDead(e);
-            case PacDyingEvent e                -> onPacDying(e);
-            case PacFoundFoodEvent e            -> onPacFindsFood(e);
-            case PacGetsPowerEvent e            -> onPacGetsPower(e);
-            case PacLostPowerEvent e            -> onPacLostPower(e);
-            case PacStartsLosingPowerEvent e    -> onPacStartsLosingPower(e);
-            case SpecialScoreReachedEvent e     -> onSpecialScoreReached(e);
-            case StopAllSoundsEvent e           -> onStopAllSounds(e);
-            case UnspecifiedChangeEvent e       -> onUnspecifiedChange(e);
+            case BonusActivatedEvent e           -> onBonusActivated(e);
+            case BonusEatenEvent e               -> onBonusEaten(e);
+            case BonusExpiredEvent e             -> onBonusExpired(e);
+            case CreditAddedEvent e              -> onCreditAdded(e);
+            case GameContinuedEvent e            -> onGameContinues(e);
+            case GameStartedEvent e              -> onGameStarts(e);
+            case GameStateChangeEvent e          -> onGameStateChange(e);
+            case GhostEatenEvent e               -> onGhostEaten(e);
+            case GhostEntersHouseEvent e         -> onGhostEntersHouse(e);
+            case GhostStartsReturningHomeEvent e -> onGhostStartsReturningHome(e);
+            case HuntingPhaseStartedEvent e      -> onHuntingPhaseStarted(e);
+            case IntermissionStartedEvent e      -> onIntermissionStarted(e);
+            case LevelCreatedEvent e             -> onLevelCreated(e);
+            case LevelStartedEvent e             -> onLevelStarts(e);
+            case PacDeadEvent e                  -> onPacDead(e);
+            case PacDyingEvent e                 -> onPacDying(e);
+            case PacFoundFoodEvent e             -> onPacFindsFood(e);
+            case PacGetsPowerEvent e             -> onPacGetsPower(e);
+            case PacLostPowerEvent e             -> onPacLostPower(e);
+            case PacStartsLosingPowerEvent e     -> onPacStartsLosingPower(e);
+            case SpecialScoreReachedEvent e      -> onSpecialScoreReached(e);
+            case StopAllSoundsEvent e            -> onStopAllSounds(e);
+            case UnspecifiedChangeEvent e        -> onUnspecifiedChange(e);
         }
     }
 
