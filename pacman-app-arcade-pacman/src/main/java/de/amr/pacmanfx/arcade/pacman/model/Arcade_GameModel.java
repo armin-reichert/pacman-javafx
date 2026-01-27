@@ -90,6 +90,15 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         setGameControl(new Arcade_GameController());
     }
 
+    protected int cutSceneNumberAfterLevel(int levelNumber) {
+        return switch (levelNumber) {
+            case 2 -> 1; // after level #2, play cut scene #1
+            case 5 -> 2;
+            case 9, 13, 17 -> 3;
+            default -> 0;
+        };
+    }
+
     public abstract LevelData levelData(int levelNumber);
 
     @Override
@@ -334,19 +343,15 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         publishGameEvent(new BonusEatenEvent(bonus));
     }
 
-    protected int cutSceneNumberAfter(int levelNumber) {
-        return switch (levelNumber) {
-            case 2 -> 1; // after level #2, play cut scene #1
-            case 5 -> 2;
-            case 9, 13, 17 -> 3;
-            default -> 0;
-        };
+    @Override
+    public int lastCutSceneNumber() {
+        return 3;
     }
 
     @Override
     public void buildNormalLevel(int levelNumber) {
         final GameLevel level = createLevel(levelNumber, false);
-        level.setCutSceneNumber(cutSceneNumberAfter(levelNumber));
+        level.setCutSceneNumber(cutSceneNumberAfterLevel(levelNumber));
         setLevelCounterEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);

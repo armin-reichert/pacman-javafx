@@ -133,6 +133,7 @@ public interface Game extends LevelCounter {
     // Cut scenes
     boolean cutScenesEnabled();
     void setCutScenesEnabled(boolean enabled);
+    int lastCutSceneNumber();
 
     // Cheating
 

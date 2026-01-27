@@ -415,6 +415,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     }
 
     @Override
+    public int lastCutSceneNumber() {
+        return 4;
+    }
+
+    @Override
     protected void setGhostStartPosition(Ghost ghost, Vector2i tile) {
         if (tile != null) {
             // Ghosts inside house sit at bottom of house

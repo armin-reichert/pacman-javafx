@@ -34,8 +34,7 @@ public class CutScenesTestState implements StateMachine.State<Game>, TestState {
     @Override
     public void onUpdate(Game game) {
         if (timer.hasExpired()) {
-            int lastCutSceneNumber = game.lastLevelNumber() == 32 ? 4 : 3; //TODO hack to detected Tengen, need API
-            if (testedCutSceneNumber < lastCutSceneNumber) {
+            if (testedCutSceneNumber < game.lastCutSceneNumber()) {
                 testedCutSceneNumber += 1;
                 timer.restartIndefinitely();
                 //TODO find another solution and get rid of this event type

@@ -20,7 +20,7 @@ public sealed interface GameEvent permits
     LevelStartedEvent,
     PacDeadEvent,
     PacDyingEvent,
-        PacEatsFoodEvent,
+    PacEatsFoodEvent,
     PacGetsPowerEvent,
     PacLostPowerEvent,
     PacStartsLosingPowerEvent,
