@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.lib.math.Vector2i;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2026 Armin Reichert (MIT License) See file LICENSE in repository root directory for details.
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 

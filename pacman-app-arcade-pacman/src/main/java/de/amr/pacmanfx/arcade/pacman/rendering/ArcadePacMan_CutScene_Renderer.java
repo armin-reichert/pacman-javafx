@@ -1,14 +1,12 @@
 /*
-Copyright (c) 2021-2026 Armin Reichert (MIT License)
-See file LICENSE in repository root directory for details.
-*/
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 

@@ -18,6 +18,10 @@ javafx {
 }
 
 /*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+/*
 application {
     mainModule = "de.amr.pacmanfx.tengenmspacman"
     mainClass = "de.amr.pacmanfx.tengenmspacman.app.Main"

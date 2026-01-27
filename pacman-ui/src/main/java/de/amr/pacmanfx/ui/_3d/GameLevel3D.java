@@ -1,7 +1,6 @@
 /*
-Copyright (c) 2021-2026 Armin Reichert (MIT License)
-See file LICENSE in repository root directory for details.
-*/
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
@@ -23,7 +22,6 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecycling;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.assets.Translator;
 import de.amr.pacmanfx.uilib.model3D.*;

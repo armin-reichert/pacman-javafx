@@ -1,7 +1,6 @@
 /*
-Copyright (c) 2021-2026 Armin Reichert (MIT License)
-See file LICENSE in repository root directory for details.
-*/
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.GameBox;
@@ -16,7 +15,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.Region;
 import org.tinylog.Logger;
 
 import java.io.File;

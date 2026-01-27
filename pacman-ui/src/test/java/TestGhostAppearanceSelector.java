@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.model3D.GhostAppearance;
 import de.amr.pacmanfx.uilib.model3D.MutableGhost3D;

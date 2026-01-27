@@ -25,6 +25,10 @@ javafx {
 }
 
 /*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+/*
 application {
     mainModule = "de.amr.pacmanfx.arcade.pacman"
     mainClass = "de.amr.pacmanfx.arcade.pacman.app.Main"

@@ -1,14 +1,16 @@
 /*
-Copyright (c) 2021-2026 Armin Reichert (MIT License)
-See file LICENSE in repository root directory for details.
-*/
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
 package de.amr.pacmanfx.mapeditor.rendering;
 
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.model.world.*;
+import de.amr.pacmanfx.model.world.Obstacle;
+import de.amr.pacmanfx.model.world.ObstacleSegment;
+import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapRenderer;

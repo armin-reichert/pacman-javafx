@@ -1,13 +1,15 @@
 /*
-Copyright (c) 2021-2026 Armin Reichert (MIT License)
-See file LICENSE in repository root directory for details.
-*/
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.MovingActor;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengenmspacman.scenes.Stork;
