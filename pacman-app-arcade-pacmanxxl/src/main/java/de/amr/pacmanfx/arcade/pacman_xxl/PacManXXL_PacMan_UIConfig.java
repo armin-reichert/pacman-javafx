@@ -19,6 +19,7 @@ import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameScene_Config;
 import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.GameUI_PreferencesManager;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
@@ -236,7 +237,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
     @Override
     public PacBody createLivesCounterShape3D() {
         return PacManModel3DRepository.INSTANCE.createPacBody(
-            userPrefs().getFloat("3d.lives_counter.shape_size"),
+            GameUI_PreferencesManager.instance().getFloat("3d.lives_counter.shape_size"),
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate")

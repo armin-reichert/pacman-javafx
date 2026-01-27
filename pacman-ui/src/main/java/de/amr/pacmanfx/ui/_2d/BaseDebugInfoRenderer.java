@@ -13,7 +13,6 @@ import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI_PreferencesManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -28,9 +27,9 @@ public class BaseDebugInfoRenderer extends GameScene2D_Renderer {
 
     public BaseDebugInfoRenderer(Canvas canvas) {
         super(canvas);
-        debugTextFill   = GameUI_PreferencesManager.INSTANCE.getColor("debug_text.fill");
-        debugTextStroke = GameUI_PreferencesManager.INSTANCE.getColor("debug_text.stroke");
-        debugTextFont   = GameUI_PreferencesManager.INSTANCE.getFont("debug_text.font");
+        debugTextFill   = GameUI_PreferencesManager.instance().getColor("debug_text.fill");
+        debugTextStroke = GameUI_PreferencesManager.instance().getColor("debug_text.stroke");
+        debugTextFont   = GameUI_PreferencesManager.instance().getFont("debug_text.font");
     }
 
     @Override

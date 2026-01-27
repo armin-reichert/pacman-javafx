@@ -16,7 +16,6 @@ import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.Translator;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
@@ -95,8 +94,8 @@ public final class GameUI_Implementation implements GameUI {
         setupBindings();
         setupStage();
 
-        PROPERTY_3D_WALL_HEIGHT.set(userPrefs().getFloat("3d.obstacle.base_height"));
-        PROPERTY_3D_WALL_OPACITY.set(userPrefs().getFloat("3d.obstacle.opacity"));
+        PROPERTY_3D_WALL_HEIGHT.set(GameUI_PreferencesManager.instance().getFloat("3d.obstacle.base_height"));
+        PROPERTY_3D_WALL_OPACITY.set(GameUI_PreferencesManager.instance().getFloat("3d.obstacle.opacity"));
 
         // Load 3D models
         final var ignored = PacManModel3DRepository.INSTANCE;
@@ -245,11 +244,6 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public Stage stage() {
         return stage;
-    }
-
-    @Override
-    public PreferencesManager userPrefs() {
-        return GameUI_PreferencesManager.INSTANCE;
     }
 
     @Override

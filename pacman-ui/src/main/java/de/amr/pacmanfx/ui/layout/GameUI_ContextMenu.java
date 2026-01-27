@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_PreferencesManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.beans.property.BooleanProperty;
@@ -55,7 +56,7 @@ public class GameUI_ContextMenu extends ContextMenu {
     }
 
     public MenuItem addTitleItem(String itemText) {
-        final PreferencesManager prefs = ui.userPrefs();
+        final PreferencesManager prefs = GameUI_PreferencesManager.instance();
         final Font font = prefs.getFont("context_menu.title.font");
         final Color fillColor = prefs.getColor("context_menu.title.fill");
         final var text = new Text(itemText);

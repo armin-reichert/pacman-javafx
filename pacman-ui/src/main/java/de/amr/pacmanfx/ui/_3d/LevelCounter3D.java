@@ -7,9 +7,9 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.GameUI_PreferencesManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -29,19 +29,17 @@ import static java.util.Objects.requireNonNull;
 public class LevelCounter3D extends Group implements Disposable {
 
     private final GameUI_Config uiConfig;
-    private final PreferencesManager prefs;
     private final AnimationRegistry animationRegistry;
     private RegisteredAnimation spinningAnimation;
 
-    public LevelCounter3D(AnimationRegistry animationRegistry, GameUI_Config uiConfig, PreferencesManager prefs) {
+    public LevelCounter3D(AnimationRegistry animationRegistry, GameUI_Config uiConfig) {
         this.animationRegistry = requireNonNull(animationRegistry);
         this.uiConfig = requireNonNull(uiConfig);
-        this.prefs = requireNonNull(prefs);
     }
 
     public void update(Game game) {
         getChildren().clear();
-        float cubeSize = prefs.getFloat("3d.level_counter.symbol_size");
+        float cubeSize = GameUI_PreferencesManager.instance().getFloat("3d.level_counter.symbol_size");
         for (int i = 0; i < game.levelCounterSymbols().size(); ++i) {
             Byte symbol = game.levelCounterSymbols().get(i);
             Image symbolImage = uiConfig.bonusSymbolImage(symbol);

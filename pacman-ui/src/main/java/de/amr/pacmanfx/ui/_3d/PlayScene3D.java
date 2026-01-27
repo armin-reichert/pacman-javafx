@@ -569,7 +569,7 @@ public abstract class PlayScene3D implements GameScene {
     }
 
     protected GameLevel3D createGameLevel3D(GameLevel level) {
-        return new GameLevel3D(ui.currentConfig(), ui.userPrefs(), ui, level);
+        return new GameLevel3D(ui.currentConfig(), ui, level);
     }
 
     protected void replaceGameLevel3D(GameLevel level) {

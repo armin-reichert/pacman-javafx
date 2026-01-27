@@ -13,7 +13,14 @@ import static de.amr.pacmanfx.Globals.TS;
 
 public final class GameUI_PreferencesManager extends PreferencesManager {
 
-    public static final GameUI_PreferencesManager INSTANCE = new GameUI_PreferencesManager();
+    // Initialization-on-Demand Holder Idiom
+    private static class Holder {
+        static final GameUI_PreferencesManager INSTANCE = new GameUI_PreferencesManager();
+    }
+
+    public static GameUI_PreferencesManager instance() {
+        return Holder.INSTANCE;
+    }
 
     private GameUI_PreferencesManager() {
         super(GameUI_PreferencesManager.class);

@@ -45,10 +45,6 @@ public interface GameUI_Config extends Disposable {
         soundManager().dispose();
     }
 
-    default GameUI_PreferencesManager userPrefs() {
-        return GameUI_PreferencesManager.INSTANCE;
-    }
-
     /**
      * @return the game variant specific asset map
      */
