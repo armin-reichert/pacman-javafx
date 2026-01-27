@@ -15,8 +15,8 @@ public class TengenMsPacMan_StartPage extends FlyerStartPage {
     private static final Media VOICE = LOCAL_RESOURCES.loadMedia("sound/flyer-text.mp3");
 
     public TengenMsPacMan_StartPage() {
-        super(
-            "Ms. Pac-Man (Tengen)",
+        setTitle("Ms. Pac-Man (Tengen)");
+        flyer.setImages(
             LOCAL_RESOURCES.loadImage("graphics/flyer-page-1.png"),
             LOCAL_RESOURCES.loadImage("graphics/flyer-page-2.png")
         );

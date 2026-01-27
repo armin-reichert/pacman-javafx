@@ -10,7 +10,6 @@ import de.amr.pacmanfx.uilib.widgets.FancyButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
@@ -36,13 +35,11 @@ public abstract class FlyerStartPage extends StackPane implements GameUI_StartPa
     }
 
     protected final Flyer flyer;
-    protected final String title;
+    protected String title;
     protected Node startButton;
 
-    protected FlyerStartPage(String title, Image... flyerImages) {
-        this.title = requireNonNull(title);
-        this.flyer = new Flyer(requireNonNull(flyerImages));
-
+    protected FlyerStartPage() {
+        this.flyer = new Flyer();
         getChildren().add(flyer);
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
@@ -59,6 +56,14 @@ public abstract class FlyerStartPage extends StackPane implements GameUI_StartPa
                 flyer.prevFlyerPage();
             }
         });
+    }
+
+    public Flyer flyer() {
+        return flyer;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void init(GameUI ui) {

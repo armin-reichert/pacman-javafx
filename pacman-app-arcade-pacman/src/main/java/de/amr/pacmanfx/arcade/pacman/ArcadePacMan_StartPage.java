@@ -15,8 +15,8 @@ public class ArcadePacMan_StartPage extends FlyerStartPage {
     private static final Media VOICE = LOCAL_RESOURCES.loadMedia("sound/flyer-text.mp3");
 
     public ArcadePacMan_StartPage() {
-        super(
-            "Pac-Man (Arcade)",
+        setTitle("Pac-Man (Arcade)");
+        flyer().setImages(
             LOCAL_RESOURCES.loadImage("graphics/flyer-page-1.jpg"),
             LOCAL_RESOURCES.loadImage("graphics/flyer-page-2.jpg"),
             LOCAL_RESOURCES.loadImage("graphics/flyer-page-3.jpg")

@@ -13,18 +13,20 @@ public class Flyer extends StackPane {
 
     public enum LayoutMode { FILL, FIT_HEIGHT }
 
-    private final Image[] images;
-    private final LayoutMode[] layoutModes;
+    private LayoutMode[] layoutModes = new LayoutMode[0];
+    private Image[] images;
     private int index;
 
-    public Flyer(Image... images) {
+    public Flyer() {
+    }
+
+    public void setImages(Image... images) {
         if (images.length == 0) {
-            throw new IllegalArgumentException("No flyer images sepecified");
+            throw new IllegalArgumentException("No flyer images specified");
         }
-        this.images = images;
-        this.layoutModes = new LayoutMode[images.length];
+        this.images = Arrays.copyOf(images, images.length);
+        layoutModes = new LayoutMode[images.length];
         Arrays.fill(layoutModes, LayoutMode.FIT_HEIGHT);
-        selectPage(0);
     }
 
     private void fill(Image image) {
