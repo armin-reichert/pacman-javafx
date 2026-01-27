@@ -19,7 +19,7 @@ public class Stork extends Actor {
     public static class StorkAnimations extends SpriteAnimationManager<SpriteID> {
 
         public StorkAnimations() {
-            super(ArcadeMsPacMan_SpriteSheet.INSTANCE);
+            super(ArcadeMsPacMan_SpriteSheet.instance());
         }
 
         @Override

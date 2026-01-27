@@ -21,7 +21,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2D_Renderer imp
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return ArcadeMsPacMan_SpriteSheet.INSTANCE;
+        return ArcadeMsPacMan_SpriteSheet.instance();
     }
 
     @Override

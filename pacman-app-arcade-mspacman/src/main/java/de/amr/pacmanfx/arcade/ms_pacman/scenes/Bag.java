@@ -21,7 +21,7 @@ public class Bag extends Actor {
     public static class BagAnimations extends SpriteAnimationManager<SpriteID> {
 
         public BagAnimations() {
-            super(ArcadeMsPacMan_SpriteSheet.INSTANCE);
+            super(ArcadeMsPacMan_SpriteSheet.instance());
         }
 
         @Override

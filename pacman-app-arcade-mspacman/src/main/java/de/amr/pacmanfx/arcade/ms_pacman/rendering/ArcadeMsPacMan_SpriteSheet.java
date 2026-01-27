@@ -18,12 +18,18 @@ import static de.amr.pacmanfx.lib.math.RectShort.rect;
 
 public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
+    private static class Holder {
+        static final ArcadeMsPacMan_SpriteSheet INSTANCE = new ArcadeMsPacMan_SpriteSheet();
+    }
+
+    public static ArcadeMsPacMan_SpriteSheet instance() {
+        return Holder.INSTANCE;
+    }
+
     private static final String SPRITESHEET_PNG = "graphics/mspacman_spritesheet.png";
 
     // Map images are located left and sprites right of this x position
     private static final int HORIZONTAL_SPLIT_X = 456;
-
-    public static final ArcadeMsPacMan_SpriteSheet INSTANCE = new ArcadeMsPacMan_SpriteSheet();
 
     private final SpriteMap<SpriteID> spriteMap = new SpriteMap<>(SpriteID.class);
     private final Image image;

@@ -154,7 +154,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return ArcadeMsPacMan_SpriteSheet.INSTANCE;
+        return ArcadeMsPacMan_SpriteSheet.instance();
     }
 
     @Override

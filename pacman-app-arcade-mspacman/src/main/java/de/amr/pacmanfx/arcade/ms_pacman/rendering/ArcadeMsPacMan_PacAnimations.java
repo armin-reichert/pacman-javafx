@@ -18,7 +18,7 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationManager<SpriteI
     public enum AnimationID { PAC_MAN_MUNCHING }
 
     public ArcadeMsPacMan_PacAnimations() {
-        super(ArcadeMsPacMan_SpriteSheet.INSTANCE);
+        super(ArcadeMsPacMan_SpriteSheet.instance());
     }
 
     @Override
