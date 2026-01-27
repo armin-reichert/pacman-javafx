@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.buildAnimation;
 public class TengenMsPacMan_PacAnimations extends SpriteAnimationManager<SpriteID> {
 
     public TengenMsPacMan_PacAnimations() {
-        super(TengenMsPacMan_SpriteSheet.INSTANCE);
+        super(TengenMsPacMan_SpriteSheet.instance());
     }
 
     @Override

@@ -24,7 +24,7 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationManager<Sprit
     private final byte personality;
 
     public TengenMsPacMan_GhostAnimations(byte personality) {
-        super(TengenMsPacMan_SpriteSheet.INSTANCE);
+        super(TengenMsPacMan_SpriteSheet.instance());
         this.personality = requireValidGhostPersonality(personality);
     }
 

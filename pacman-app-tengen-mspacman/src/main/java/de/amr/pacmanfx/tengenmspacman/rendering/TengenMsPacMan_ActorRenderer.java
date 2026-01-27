@@ -30,7 +30,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return TengenMsPacMan_SpriteSheet.INSTANCE;
+        return TengenMsPacMan_SpriteSheet.instance();
     }
 
     @Override

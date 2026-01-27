@@ -22,6 +22,14 @@ import static de.amr.pacmanfx.lib.math.RectShort.rect;
  */
 public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMapsSpriteSheet.MapID> {
 
+    private static class Holder {
+        static final NonArcadeMapsSpriteSheet INSTANCE = new NonArcadeMapsSpriteSheet();
+    }
+
+    public static NonArcadeMapsSpriteSheet instance() {
+        return Holder.INSTANCE;
+    }
+
     // Map IDs as they appear in the sprite sheet (row by row)
     public enum MapID {
         MAP1, MAP2, MAP3, MAP4, MAP5, MAP6, MAP7, MAP8,
@@ -30,8 +38,6 @@ public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMaps
         MAP25_BIG, MAP26_BIG, MAP27, MAP28_MINI, MAP29, MAP30_MINI, MAP31, MAP32_ANIMATED, MAP33_BIG,
         MAP34_MINI, MAP35_MINI, MAP36_MINI, MAP37_MINI
     }
-
-    public static final NonArcadeMapsSpriteSheet INSTANCE = new NonArcadeMapsSpriteSheet();
 
     private final SpriteMap<MapID> spriteMap = new SpriteMap<>(MapID.class);
     private final Image image;

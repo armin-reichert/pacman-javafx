@@ -88,7 +88,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     public void doInit(Game game) {
         final var tengenGame = (TengenMsPacMan_GameModel) game;
         final GameUI_Config uiConfig = ui.currentConfig();
-        final var spriteSheet = TengenMsPacMan_SpriteSheet.INSTANCE;
+        final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
         final var hud = (TengenMsPacMan_HeadsUpDisplay) game.hud();
         if (tengenGame.mapCategory() == MapCategory.ARCADE) {

@@ -17,12 +17,18 @@ import static de.amr.pacmanfx.tengenmspacman.rendering.SpriteID.*;
 
 public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
+    private static class Holder {
+        static final TengenMsPacMan_SpriteSheet INSTANCE = new TengenMsPacMan_SpriteSheet();
+    }
+
+    public static TengenMsPacMan_SpriteSheet instance() {
+        return Holder.INSTANCE;
+    }
+
     // Bonus symbols/values: x-position, width, y-delta
     private static final int[] BONUS_X  = {8, 24, 40, 56, 76, 96, 118, 140, 162, 182, 204, 230, 250, 272};
     private static final int[] BONUS_W  = {16, 15, 16, 18, 18, 20, 18, 18, 18, 18, 18, 18, 18, 18};
     private static final int[] BONUS_DY = {3, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-    public static final TengenMsPacMan_SpriteSheet INSTANCE = new TengenMsPacMan_SpriteSheet();
 
     public RectShort digitSprite(int digit) {
         return sprite(switch (digit) {

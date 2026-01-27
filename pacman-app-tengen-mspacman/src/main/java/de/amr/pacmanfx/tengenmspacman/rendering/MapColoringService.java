@@ -24,7 +24,11 @@ import java.util.List;
  */
 public class MapColoringService {
 
-    public static MapColoringService INSTANCE = new MapColoringService();
+    private static class Holder {
+        static MapColoringService INSTANCE = new MapColoringService();
+    }
+
+    public static MapColoringService instance() { return Holder.INSTANCE; }
 
     private MapColoringService() {}
 

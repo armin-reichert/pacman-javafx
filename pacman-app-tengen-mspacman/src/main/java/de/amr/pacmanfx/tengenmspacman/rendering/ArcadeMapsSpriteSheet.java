@@ -15,6 +15,14 @@ import static de.amr.pacmanfx.Globals.TS;
 
 public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSpriteSheet.MapID> {
 
+    private static class Holder {
+        static final ArcadeMapsSpriteSheet INSTANCE = new ArcadeMapsSpriteSheet();
+    }
+
+    public static ArcadeMapsSpriteSheet instance() {
+        return Holder.INSTANCE;
+    }
+
     public enum MapID {
         MAP1, MAP2, MAP3, MAP4, MAP5, MAP6, MAP7, MAP8, MAP9
     }
@@ -26,8 +34,6 @@ public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSprite
     private static RectShort spriteAtCell(int row, int col) {
         return new RectShort(col * MAP_SPRITE_WIDTH, row * MAP_SPRITE_HEIGHT, MAP_SPRITE_WIDTH, MAP_SPRITE_HEIGHT);
     }
-
-    public static final ArcadeMapsSpriteSheet INSTANCE = new ArcadeMapsSpriteSheet();
 
     private final Image image;
     private final SpriteMap<MapID> spriteMap = new SpriteMap<>(MapID.class);

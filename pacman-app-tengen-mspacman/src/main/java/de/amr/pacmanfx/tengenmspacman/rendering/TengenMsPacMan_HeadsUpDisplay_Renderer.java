@@ -46,7 +46,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return TengenMsPacMan_SpriteSheet.INSTANCE;
+        return TengenMsPacMan_SpriteSheet.instance();
     }
 
     @Override

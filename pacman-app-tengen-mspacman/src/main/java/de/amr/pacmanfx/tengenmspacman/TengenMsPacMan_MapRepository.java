@@ -20,7 +20,11 @@ import java.util.List;
  */
 public class TengenMsPacMan_MapRepository {
 
-    public static final TengenMsPacMan_MapRepository INSTANCE = new TengenMsPacMan_MapRepository();
+    private static class Holder {
+        static final TengenMsPacMan_MapRepository INSTANCE = new TengenMsPacMan_MapRepository();
+    }
+
+    public static TengenMsPacMan_MapRepository instance() { return Holder.INSTANCE; }
 
     private TengenMsPacMan_MapRepository() {}
 
@@ -77,13 +81,13 @@ public class TengenMsPacMan_MapRepository {
             default -> throw new IllegalArgumentException("Illegal Arcade map number: " + mapNumber);
         };
 
-        final RectShort mazeSprite = ArcadeMapsSpriteSheet.INSTANCE.sprite(mapID);
-        final var coloredMaze = new ColorSchemedImage(ArcadeMapsSpriteSheet.INSTANCE.sourceImage(), mazeSprite, colorScheme);
+        final RectShort mazeSprite = ArcadeMapsSpriteSheet.instance().sprite(mapID);
+        final var coloredMaze = new ColorSchemedImage(ArcadeMapsSpriteSheet.instance().sourceImage(), mazeSprite, colorScheme);
 
         //TODO: Handle case when color scheme is already black & white
-        final List<ColorSchemedImage> flashingMazes = MapColoringService.INSTANCE.createFlashingMapImages(
+        final List<ColorSchemedImage> flashingMazes = MapColoringService.instance().createFlashingMapImages(
                 MapCategory.ARCADE, mapID,
-                ArcadeMapsSpriteSheet.INSTANCE, mazeSprite,
+                ArcadeMapsSpriteSheet.instance(), mazeSprite,
                 colorScheme, NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK,
                 false, flashCount);
 
@@ -113,9 +117,9 @@ public class TengenMsPacMan_MapRepository {
             default -> throw new IllegalArgumentException("Illegal MINI map number: " + mapNumber);
         };
 
-        return MapColoringService.INSTANCE.createMazeSet(
+        return MapColoringService.instance().createMazeSet(
                 MapCategory.MINI, mapID,
-                NonArcadeMapsSpriteSheet.INSTANCE, NonArcadeMapsSpriteSheet.INSTANCE.sprite(mapID),
+                NonArcadeMapsSpriteSheet.instance(), NonArcadeMapsSpriteSheet.instance().sprite(mapID),
                 originalColorScheme, requestedColorScheme,
                 randomFlashColors, flashCount
         );
@@ -154,9 +158,9 @@ public class TengenMsPacMan_MapRepository {
             default -> null;
         };
 
-        return MapColoringService.INSTANCE.createMazeSet(
+        return MapColoringService.instance().createMazeSet(
                 MapCategory.BIG, mapID,
-                NonArcadeMapsSpriteSheet.INSTANCE, NonArcadeMapsSpriteSheet.INSTANCE.sprite(mapID),
+                NonArcadeMapsSpriteSheet.instance(), NonArcadeMapsSpriteSheet.instance().sprite(mapID),
                 originalColorScheme, requestedColorScheme,
                 randomFlashColors, flashCount
         );
@@ -169,15 +173,15 @@ public class TengenMsPacMan_MapRepository {
             boolean randomFlashColors) {
 
         final RectShort mazeSprite = mapID == NonArcadeMapsSpriteSheet.MapID.MAP32_ANIMATED
-                ? NonArcadeMapsSpriteSheet.INSTANCE.sprites(mapID)[0]
-                : NonArcadeMapsSpriteSheet.INSTANCE.sprite(mapID);
+                ? NonArcadeMapsSpriteSheet.instance().sprites(mapID)[0]
+                : NonArcadeMapsSpriteSheet.instance().sprite(mapID);
 
         final NES_ColorScheme original = colorSchemeOfNonArcadeMap(mapID);
         final NES_ColorScheme requested = optionalRandomColorScheme == null ? original : optionalRandomColorScheme;
 
-        return MapColoringService.INSTANCE.createMazeSet(
+        return MapColoringService.instance().createMazeSet(
                 MapCategory.STRANGE, mapID,
-                NonArcadeMapsSpriteSheet.INSTANCE, mazeSprite,
+                NonArcadeMapsSpriteSheet.instance(), mazeSprite,
                 original, requested,
                 randomFlashColors, flashCount
         );

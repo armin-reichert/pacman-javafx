@@ -268,7 +268,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return TengenMsPacMan_SpriteSheet.INSTANCE;
+        return TengenMsPacMan_SpriteSheet.instance();
     }
 
     @Override

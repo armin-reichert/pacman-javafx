@@ -19,7 +19,7 @@ public class Bag extends Actor {
     public static class BagAnimations extends SpriteAnimationManager<SpriteID> {
 
         public BagAnimations() {
-            super(TengenMsPacMan_SpriteSheet.INSTANCE);
+            super(TengenMsPacMan_SpriteSheet.instance());
         }
 
         @Override

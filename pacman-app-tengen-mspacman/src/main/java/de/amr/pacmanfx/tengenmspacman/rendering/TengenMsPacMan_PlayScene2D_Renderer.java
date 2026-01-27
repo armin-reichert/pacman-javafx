@@ -88,7 +88,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return TengenMsPacMan_SpriteSheet.INSTANCE;
+        return TengenMsPacMan_SpriteSheet.instance();
     }
 
     @Override

@@ -46,7 +46,7 @@ public class Clapperboard extends Actor {
     }
 
     public Optional<RectShort> sprite() {
-        RectShort[] sprites = TengenMsPacMan_SpriteSheet.INSTANCE.sprites(SpriteID.CLAPPERBOARD);
+        RectShort[] sprites = TengenMsPacMan_SpriteSheet.instance().sprites(SpriteID.CLAPPERBOARD);
         return switch (state) {
             case HIDDEN -> Optional.empty();
             case WIDE_OPEN -> Optional.of(sprites[0]);
