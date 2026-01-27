@@ -16,7 +16,7 @@ public class ArcadePacMan_StartPage extends FlyerStartPage {
 
     public ArcadePacMan_StartPage() {
         setTitle("Pac-Man (Arcade)");
-        flyer().setImages(
+        flyer.setImages(
             LOCAL_RESOURCES.loadImage("graphics/flyer-page-1.jpg"),
             LOCAL_RESOURCES.loadImage("graphics/flyer-page-2.jpg"),
             LOCAL_RESOURCES.loadImage("graphics/flyer-page-3.jpg")
