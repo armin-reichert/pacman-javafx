@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.eventng.*;
+import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.Pulse;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.*;
@@ -310,10 +310,10 @@ public abstract class AbstractGameModel implements Game {
 
     // GameEventManager implementation
 
-    private final Set<GameEventListenerNG> eventListeners = new HashSet<>();
+    private final Set<GameEventListener> eventListeners = new HashSet<>();
 
     @Override
-    public void addGameEventListener(GameEventListenerNG listener) {
+    public void addGameEventListener(GameEventListener listener) {
         requireNonNull(listener);
         if (!eventListeners.contains(listener)) {
             eventListeners.add(listener);
@@ -322,7 +322,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public void removeGameEventListener(GameEventListenerNG listener) {
+    public void removeGameEventListener(GameEventListener listener) {
         requireNonNull(listener);
         boolean removed = eventListeners.remove(listener);
         if (removed) {
@@ -333,7 +333,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public void publishGameEvent(GameEventNG event) {
+    public void publishGameEvent(GameEvent event) {
         requireNonNull(event);
         Logger.trace("Publish game event: {}", event);
         eventListeners.forEach(subscriber -> subscriber.onGameEvent(event));

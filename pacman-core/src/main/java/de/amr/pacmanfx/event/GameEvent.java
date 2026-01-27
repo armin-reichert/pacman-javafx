@@ -1,6 +1,6 @@
-package de.amr.pacmanfx.eventng;
+package de.amr.pacmanfx.event;
 
-public sealed interface GameEventNG permits
+public sealed interface GameEvent permits
     BonusActivatedEvent,
     BonusEatenEvent,
     BonusExpiredEvent,

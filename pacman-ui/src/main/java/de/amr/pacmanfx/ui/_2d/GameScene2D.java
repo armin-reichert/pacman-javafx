@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.eventng.UnspecifiedChangeEvent;
+import de.amr.pacmanfx.event.UnspecifiedChangeEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.ActionBindingsManager;

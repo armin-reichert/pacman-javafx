@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.eventng.GameEventNG;
-import de.amr.pacmanfx.eventng.GameStateChangeEvent;
-import de.amr.pacmanfx.eventng.LevelCreatedEvent;
+import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.event.GameStateChangeEvent;
+import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
@@ -215,7 +215,7 @@ public class PlayView extends StackPane implements GameUI_View {
     // GameEventListener
 
     @Override
-    public void onGameEvent(GameEventNG gameEvent) {
+    public void onGameEvent(GameEvent gameEvent) {
         final Game game = ui.context().currentGame();
         final StateMachine.State<Game> gameState = game.control().state();
         switch (gameEvent) {

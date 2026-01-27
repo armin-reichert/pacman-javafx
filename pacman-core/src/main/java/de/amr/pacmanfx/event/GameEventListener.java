@@ -1,10 +1,10 @@
-package de.amr.pacmanfx.eventng;
+package de.amr.pacmanfx.event;
 
 import org.tinylog.Logger;
 
-public interface GameEventListenerNG {
+public interface GameEventListener {
 
-    default void onGameEvent(GameEventNG event) {
+    default void onGameEvent(GameEvent event) {
         switch (event) {
             case BonusActivatedEvent e          -> onBonusActivated(e);
             case BonusEatenEvent e              -> onBonusEaten(e);
