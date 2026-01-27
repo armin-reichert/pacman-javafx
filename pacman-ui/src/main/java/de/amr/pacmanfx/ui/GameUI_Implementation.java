@@ -95,11 +95,11 @@ public final class GameUI_Implementation implements GameUI {
         setupBindings();
         setupStage();
 
-        // Trigger loading of 3D models used by all game variants
-        PacManModel3DRepository.instance();
-
         PROPERTY_3D_WALL_HEIGHT.set(userPrefs().getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(userPrefs().getFloat("3d.obstacle.opacity"));
+
+        // Load 3D models
+        final var ignored = PacManModel3DRepository.INSTANCE;
     }
 
     private void setupStage() {

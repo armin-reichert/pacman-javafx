@@ -12,7 +12,8 @@ import org.tinylog.Logger;
 
 import java.net.URL;
 
-public class PacManModel3DRepository implements Disposable {
+public enum PacManModel3DRepository implements Disposable {
+    INSTANCE;
 
     private static final String MESH_ID_PAC_MAN_EYES   = "PacMan.Eyes";
     private static final String MESH_ID_PAC_MAN_HEAD   = "PacMan.Head";
@@ -24,20 +25,11 @@ public class PacManModel3DRepository implements Disposable {
 
     private static final String MESH_ID_PELLET         = "Pellet";
 
-    private static PacManModel3DRepository instance;
-
-    public static PacManModel3DRepository instance() {
-        if (instance == null) {
-            instance = new PacManModel3DRepository();
-        }
-        return instance;
-    }
-
     private final Model3D model3D_PacMan;
     private final Model3D model3D_Ghost;
     private final Model3D model3D_Pellet;
 
-    private PacManModel3DRepository() {
+    PacManModel3DRepository() {
         model3D_PacMan = loadModel("/de/amr/pacmanfx/uilib/model3D/pacman.obj");
         model3D_Ghost  = loadModel("/de/amr/pacmanfx/uilib/model3D/ghost.obj");
         model3D_Pellet = loadModel("/de/amr/pacmanfx/uilib/model3D/pellet.obj");

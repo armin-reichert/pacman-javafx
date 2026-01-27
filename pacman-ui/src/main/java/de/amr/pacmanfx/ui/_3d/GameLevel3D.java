@@ -307,9 +307,9 @@ public class GameLevel3D extends Group implements Disposable {
         colorScheme = createWorldMapColorScheme();
 
         createMaterials();
-        ghostDressMeshViews  = createGhostComponentMeshViews(PacManModel3DRepository.instance().ghostDressMesh());
-        ghostPupilsMeshViews = createGhostComponentMeshViews(PacManModel3DRepository.instance().ghostPupilsMesh());
-        ghostEyesMeshViews   = createGhostComponentMeshViews(PacManModel3DRepository.instance().ghostEyeballsMesh());
+        ghostDressMeshViews  = createGhostComponentMeshViews(PacManModel3DRepository.INSTANCE.ghostDressMesh());
+        ghostPupilsMeshViews = createGhostComponentMeshViews(PacManModel3DRepository.INSTANCE.ghostPupilsMesh());
+        ghostEyesMeshViews   = createGhostComponentMeshViews(PacManModel3DRepository.INSTANCE.ghostEyeballsMesh());
 
         createLevelCounter3D();
         createLivesCounter3D();
@@ -558,7 +558,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     private void createPellets3D() {
         float radius = prefs.getFloat("3d.pellet.radius");
-        Mesh mesh = PacManModel3DRepository.instance().pelletMesh();
+        Mesh mesh = PacManModel3DRepository.INSTANCE.pelletMesh();
         var prototype = new MeshView(mesh);
         Bounds bounds = prototype.getBoundsInLocal();
         double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
