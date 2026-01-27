@@ -334,10 +334,10 @@ public class TileMapEditorUI {
             if (inputEnabled()) onKeyPressed(keyEvent);
         });
 
-        propertyEditorsVisibleProperty().addListener((py, ov, visible) ->
+        propertyEditorsVisibleProperty().addListener((_, _, visible) ->
             contentPane.setLeft(visible ? propertyEditorsPane : null));
 
-        editModeProperty().addListener((py, ov, newEditMode) -> {
+        editModeProperty().addListener((_, _, newEditMode) -> {
             messageDisplay().clearMessage();
             showEditHelpText();
             switch (newEditMode) {
@@ -554,7 +554,7 @@ public class TileMapEditorUI {
 
         var dropHintButton = new Button(translated("image_drop_hint"));
         dropHintButton.setFont(FONT_DROP_HINT);
-        dropHintButton.setOnAction(ae -> new Action_OpenTemplateCreateMap(this).execute());
+        dropHintButton.setOnAction(_ -> new Action_OpenTemplateCreateMap(this).execute());
         dropHintButton.disableProperty().bind(editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         templateImageDropTarget = new BorderPane(dropHintButton);
@@ -562,7 +562,7 @@ public class TileMapEditorUI {
 
         var stackPane = new StackPane(spTemplateImage, templateImageDropTarget);
         tabTemplateImage = new Tab(translated("tab_template_image"), stackPane);
-        editor.templateImageProperty().addListener((py, ov, image) -> {
+        editor.templateImageProperty().addListener((_, ov, image) -> {
             Logger.info("Template image changed from {} to {}", ov, image);
             stackPane.getChildren().remove(templateImageDropTarget);
             if (image == null) {
@@ -632,7 +632,7 @@ public class TileMapEditorUI {
         text.setMouseTransparent(true);
 
         //TODO There is still an issue: While the mouse is pressed inside the 3D view, the unfocused text is displayed!
-        preview3D.subScene().focusedProperty().addListener((py, ov, focused) ->
+        preview3D.subScene().focusedProperty().addListener((_, _, focused) ->
             text.setText(translated(focused ? "preview3D.navigation_hint" : "preview3D.navigation_hint.no_focus")));
 
         StackPane.setAlignment(text, Pos.TOP_CENTER);
@@ -739,7 +739,7 @@ public class TileMapEditorUI {
             Tooltip tooltip = new Tooltip(translated("editmode_label.tooltip"));
             tooltip.setShowDelay(Duration.millis(50));
             tooltip.setFont(FONT_TOOL_TIPS);
-            setOnMouseClicked(e -> new Action_SelectNextEditMode(TileMapEditorUI.this).execute());
+            setOnMouseClicked(_ -> new Action_SelectNextEditMode(TileMapEditorUI.this).execute());
             setTooltip(tooltip);
 
             textProperty().bind(Bindings.createStringBinding(() ->
@@ -796,7 +796,7 @@ public class TileMapEditorUI {
         requireNonNull(title);
         requireNonNull(worldMap);
         var menuItem = new MenuItem(title);
-        menuItem.setOnAction(e -> afterCheckForUnsavedChanges(() -> editor.setCurrentWorldMap(new WorldMap(worldMap))));
+        menuItem.setOnAction(_ -> afterCheckForUnsavedChanges(() -> editor.setCurrentWorldMap(new WorldMap(worldMap))));
         return menuItem;
     }
 

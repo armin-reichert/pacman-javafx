@@ -369,10 +369,10 @@ public class EditCanvas extends Canvas {
     public void onKeyPressed(KeyEvent keyEvent) {
         boolean control = keyEvent.isControlDown();
         switch (keyEvent.getCode()) {
-            case LEFT  -> moveCursor(Direction.LEFT, tile -> true);
-            case RIGHT -> moveCursor(Direction.RIGHT, tile -> true);
-            case UP    -> moveCursor(Direction.UP, tile -> true);
-            case DOWN  -> moveCursor(Direction.DOWN, tile -> true);
+            case LEFT  -> moveCursor(Direction.LEFT, _ -> true);
+            case RIGHT -> moveCursor(Direction.RIGHT, _ -> true);
+            case UP    -> moveCursor(Direction.UP, _ -> true);
+            case DOWN  -> moveCursor(Direction.DOWN, _ -> true);
             case SPACE -> {
                 if (control) {
                     new Action_SelectNextPaletteEntry(ui).execute();
@@ -491,28 +491,28 @@ public class EditCanvas extends Canvas {
         Vector2i tile = tileAt(menuEvent.getX(), menuEvent.getY());
 
         var miCarveTunnel = new MenuItem(translated("menu.edit.carve_tunnel"));
-        miCarveTunnel.setOnAction(actionEvent -> new Action_CarveTunnel(editor, tile).execute());
+        miCarveTunnel.setOnAction(_ -> new Action_CarveTunnel(editor, tile).execute());
 
         var miPlaceHouse = new MenuItem(translated("menu.edit.place_house"));
-        miPlaceHouse.setOnAction(actionEvent -> new Action_MoveArcadeHouse(editor, tile).execute());
+        miPlaceHouse.setOnAction(_ -> new Action_MoveArcadeHouse(editor, tile).execute());
 
         var miClearFoodAroundHouse = new MenuItem(translated("menu.edit.clear_food_around_house"));
-        miClearFoodAroundHouse.setOnAction(actionEvent -> new Action_ClearFoodAroundHouse(editor, worldMap()).execute());
+        miClearFoodAroundHouse.setOnAction(_ -> new Action_ClearFoodAroundHouse(editor, worldMap()).execute());
 
         var miInsertRow = new MenuItem(translated("menu.edit.insert_row"));
-        miInsertRow.setOnAction(actionEvent -> {
+        miInsertRow.setOnAction(_ -> {
             int rowIndex = tileAt(menuEvent.getX(), menuEvent.getY()).y();
             editor.setCurrentWorldMap(worldMap().insertRowBeforeIndex(rowIndex));
         });
 
         var miDeleteRow = new MenuItem(translated("menu.edit.delete_row"));
-        miDeleteRow.setOnAction(actionEvent -> {
+        miDeleteRow.setOnAction(_ -> {
             int rowIndex = tileAt(menuEvent.getX(), menuEvent.getY()).y();
             editor.setCurrentWorldMap(worldMap().deleteRowAtIndex(rowIndex));
         });
 
         var miFloodWithPellets = new MenuItem(translated("menu.edit.flood_with_pellets"));
-        miFloodWithPellets.setOnAction(actionEvent -> new Action_FloodWithPellets(editor, tile).execute());
+        miFloodWithPellets.setOnAction(_ -> new Action_FloodWithPellets(editor, tile).execute());
         miFloodWithPellets.setDisable(!EditorUtil.canPlaceFoodAtTile(worldMap(), tile));
 
         contextMenu.getItems().setAll(
