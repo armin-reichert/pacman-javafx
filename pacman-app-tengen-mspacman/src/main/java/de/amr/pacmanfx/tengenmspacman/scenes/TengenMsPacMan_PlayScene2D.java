@@ -327,7 +327,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onPacFindsFood(PacFoundFoodEvent e) {
+    public void onPacEatsFood(PacEatsFoodEvent e) {
         if (!soundManager().isPlaying(SoundID.PAC_MAN_MUNCHING)) {
             soundManager().play(SoundID.PAC_MAN_MUNCHING);
         }

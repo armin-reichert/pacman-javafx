@@ -33,7 +33,7 @@ public final class Globals {
      * In Japan, he is portrayed as kimagure, meaning “a fickle, moody, or uneven temper”.
      * Perhaps not surprisingly, Inky is the least predictable of the ghosts. Sometimes he chases Pac-Man aggressively
      * like Blinky; other times he jumps ahead of Pac-Man as Pinky would. He might even wander off like Clyde on occasion!
-     * In fact, Inky may be the most dangerous ghost of all due to his erratic behavior.
+     * In fact, Inky may be the most dangerous ghost of eatsAll due to his erratic behavior.
      * Bashful is not a very good translation of kimagure, and misleads the player to assume Inky will shy away
      * from Pac-Man when he gets close which is not always the case.
      */

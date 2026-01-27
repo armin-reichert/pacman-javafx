@@ -175,7 +175,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onPacFindsFood(PacFoundFoodEvent e) {
+    public void onPacEatsFood(PacEatsFoodEvent e) {
         final long now = ui.clock().tickCount();
         final long passed = now - lastMunchingSoundPlayedTick;
         final byte minDelay = ui.currentConfig().munchingSoundDelay();

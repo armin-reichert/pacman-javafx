@@ -3,12 +3,11 @@
  */
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.event.PacFoundFoodEvent;
+import de.amr.pacmanfx.event.PacEatsFoodEvent;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.sound.SoundID;
 
 import java.util.List;
 
@@ -39,9 +38,8 @@ public final class CheatActions {
             final Game game = ui.context().currentGame();
             game.optGameLevel().ifPresent(level -> {
                 level.worldMap().foodLayer().eatPellets();
-                ui.currentConfig().soundManager().pause(SoundID.PAC_MAN_MUNCHING); //TODO check this
                 game.raiseCheatFlag();
-                game.publishGameEvent(new PacFoundFoodEvent(level.pac(), null));
+                game.publishGameEvent(new PacEatsFoodEvent(level.pac(), true));
             });
         }
 

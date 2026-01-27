@@ -254,13 +254,13 @@ public class GameLevel3D extends Group implements Disposable {
             ghostLight.setTranslateZ(-25);
             ghostLight.setLightOn(true);
             currentGhostID = ghostID;
-            Logger.info("Ghost light passed to ghost {}", currentGhostID);
+            Logger.debug("Ghost light passed to ghost {}", currentGhostID);
         }
 
         @Override
         protected Animation createAnimationFX() {
             var timeline = new Timeline(new KeyFrame(Duration.millis(3000), _ -> {
-                Logger.info("Try to pass light from ghost {} to next", currentGhostID);
+                Logger.debug("Try to pass light from ghost {} to next", currentGhostID);
                 // find the next hunting ghost, if exists, pass light to him
                 byte candidate = nextGhostID(currentGhostID);
                 while (candidate != currentGhostID) {
@@ -880,7 +880,7 @@ public class GameLevel3D extends Group implements Disposable {
         disposed = true;
 
         animationRegistry.stopAllAnimations();
-        Logger.info("Stopped all managed animations");
+        Logger.info("Stopped eatsAll managed animations");
 
         if (wallColorFlashingAnimation != null) {
             wallColorFlashingAnimation.dispose();
@@ -899,7 +899,7 @@ public class GameLevel3D extends Group implements Disposable {
             ghostLightAnimation = null;
         }
 
-        // Dispose all remaining animations
+        // Dispose eatsAll remaining animations
         animationRegistry.dispose();
 
         PROPERTY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
@@ -916,7 +916,7 @@ public class GameLevel3D extends Group implements Disposable {
         wallOpacityProperty.unbind();
 
         getChildren().clear();
-        Logger.info("Removed all nodes under game level");
+        Logger.info("Removed eatsAll nodes under game level");
 
         if (ambientLight != null) {
             ambientLight.colorProperty().unbind();
@@ -942,7 +942,7 @@ public class GameLevel3D extends Group implements Disposable {
         if (particleGroupsContainer != null) {
             particleGroupsContainer.getChildren().clear();
             particleGroupsContainer = null;
-            Logger.info("Removed all particle groups");
+            Logger.info("Removed eatsAll particle groups");
         }
         if (floor3D != null) {
             floor3D.translateXProperty().unbind();

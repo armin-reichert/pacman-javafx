@@ -44,7 +44,7 @@ import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.model.GameVariant.*;
 
 /**
- * Application containing all game variants, the 3D play scenes, the map editor etc.
+ * Application containing eatsAll game variants, the 3D play scenes, the map editor etc.
  * ("All you can f** ähm play").
  * <p>
  * Command-line arguments:

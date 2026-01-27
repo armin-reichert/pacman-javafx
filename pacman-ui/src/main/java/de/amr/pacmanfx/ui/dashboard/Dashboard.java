@@ -149,7 +149,7 @@ public class Dashboard extends VBox {
     }
 
     /**
-     * Adds all dashboard sections defined by the given ID. The README info box is automatically inserted at the first position.
+     * Adds eatsAll dashboard sections defined by the given ID. The README info box is automatically inserted at the first position.
      *
      * @param translator translator for localized text keys
      * @param ids list of dashboard section IDs

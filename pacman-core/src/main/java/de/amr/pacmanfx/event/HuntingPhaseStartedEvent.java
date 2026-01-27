@@ -4,4 +4,6 @@
 
 package de.amr.pacmanfx.event;
 
-public record HuntingPhaseStartedEvent(int phaseIndex) implements GameEvent {}
+import de.amr.pacmanfx.model.HuntingPhase;
+
+public record HuntingPhaseStartedEvent(int phaseIndex, HuntingPhase phase) implements GameEvent {}

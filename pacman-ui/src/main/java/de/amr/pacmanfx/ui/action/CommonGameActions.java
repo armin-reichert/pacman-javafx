@@ -23,7 +23,7 @@ import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 /**
- * Common actions for all game variants.
+ * Common actions for eatsAll game variants.
  * <p>
  * For each action there must exist an entry in the {@code localized_texts} resource bundle
  * of the form {@code key=localized_action_name} where {@code key=action.name()} !

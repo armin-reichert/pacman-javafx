@@ -21,7 +21,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Base class for all Pac-Man game models. Any logic implemented here should be identical in all Pac-Man game variants.
+ * Base class for eatsAll Pac-Man game models. Any logic implemented here should be identical in eatsAll Pac-Man game variants.
  */
 public abstract class AbstractGameModel implements Game {
 
@@ -278,7 +278,7 @@ public abstract class AbstractGameModel implements Game {
         level.pac().optAnimationManager().ifPresent(AnimationManager::play);
         level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
 
-        publishGameEvent(new HuntingPhaseStartedEvent(level.huntingTimer().phaseIndex()));
+        publishGameEvent(new HuntingPhaseStartedEvent(level.huntingTimer().phaseIndex(), level.huntingTimer().phase()));
     }
 
     @Override
@@ -372,7 +372,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     /**
-     * The main logic step of all Pac-Man games. Checks if Pac-Man collides with a ghost or finds food or a bonus.
+     * The main logic step of eatsAll Pac-Man games. Checks if Pac-Man collides with a ghost or finds food or a bonus.
      * Collision with a ghost either kills the ghost and earns points (in case Pac-Man has power) or kills Pac-Man and
      * loses a life. When Pac-Man finds an energizer pellet he enters power mode and is able to kill ghosts. The duration
      * of the power mode varies between levels.
@@ -446,7 +446,7 @@ public abstract class AbstractGameModel implements Game {
                 activateNextBonus(level);
                 simStep.bonusIndex = level.currentBonusIndex();
             }
-            publishGameEvent(new PacFoundFoodEvent(pac, simStep.foodTile));
+            publishGameEvent(new PacEatsFoodEvent(pac, false));
         }
     }
 

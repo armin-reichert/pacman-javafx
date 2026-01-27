@@ -33,7 +33,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
     public enum GameState implements State<Game> {
 
         /**
-         * Corresponds to the screen showing all these random symbols from the Arcade video memory.
+         * Corresponds to the screen showing eatsAll these random symbols from the Arcade video memory.
          */
         BOOT {
             // "Das muss das Boot abkönnen!"

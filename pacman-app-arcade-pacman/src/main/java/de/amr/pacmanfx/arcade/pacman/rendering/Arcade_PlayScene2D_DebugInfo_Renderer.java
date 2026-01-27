@@ -45,7 +45,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
         if (gameContext.currentGame().optGameLevel().isPresent()) {
             final GameLevel gameLevel = gameContext.currentGame().level();
 
-            // assuming all ghosts have the same set of special terrain tiles
+            // assuming eatsAll ghosts have the same set of special terrain tiles
             gameLevel.ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
                 double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
                 ctx.setFill(Color.RED);

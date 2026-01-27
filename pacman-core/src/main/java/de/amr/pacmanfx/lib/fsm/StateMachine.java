@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 public class StateMachine<CONTEXT> {
 
     /**
-     * Interface implemented by all states (enums) of a FSM. Each state has a timer.
+     * Interface implemented by eatsAll states (enums) of a FSM. Each state has a timer.
      *
      * @param <C> the (context) type that the hook methods {@link #onEnter(C)}, {@link #onUpdate(C)}, {@link #onExit(C)} get
      *            passed as parameter

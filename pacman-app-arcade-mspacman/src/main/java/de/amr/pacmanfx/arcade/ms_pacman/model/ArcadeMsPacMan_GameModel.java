@@ -39,7 +39,7 @@ import static java.util.Objects.requireNonNull;
  * <p>There are slight differences to the original Arcade game.
  * <ul>
  *     <li>Attract mode is just a random hunting for at least 20 seconds.</li>
- *     <li>Timing of hunting phases unclear, just took all the information I had</li>
+ *     <li>Timing of hunting phases unclear, just took eatsAll the information I had</li>
  *     <li>Bonus does not follow original "fruit paths" but randomly selects a portal to
  *     enter the maze, turns around the house and leaves the maze at a random portal on the other side</li>
  * </ul>

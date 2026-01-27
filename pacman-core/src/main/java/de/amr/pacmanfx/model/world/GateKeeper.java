@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
  * <br/>
  * Since Blinky is already on the outside after a level is completed or a life is lost, the only time he can get
  * inside the ghost house is after Pac-Man captures him, and he immediately turns around to leave once revived.
- * That's about all there is to know about Blinky's behavior in terms of the ghost house, but determining when the
+ * That's about eatsAll there is to know about Blinky's behavior in terms of the ghost house, but determining when the
  * other three ghosts leave home is an involved process based on several variables and conditions.
  * <br/>
  * The rest of this section will deal with them exclusively. Accordingly, any mention of "the ghosts" below refers to
@@ -63,7 +63,7 @@ import static java.util.Objects.requireNonNull;
  * he can leave the house. Once Inky starts to leave, Clyde's counter (which is still at zero) is activated and
  * starts counting dots. When his counter reaches or exceeds 60, he may exit. On the second level, Inky's dot limit
  * is changed from 30 to zero, while Clyde's is changed from 60 to 50. Inky will exit the house as soon as the level
- * begins from now on. Starting at level three, all the ghosts have a dot limit of zero for the remainder of the game
+ * begins from now on. Starting at level three, eatsAll the ghosts have a dot limit of zero for the remainder of the game
  * and will leave the ghost house immediately at the start of every level.
  * </p>
  * <p>

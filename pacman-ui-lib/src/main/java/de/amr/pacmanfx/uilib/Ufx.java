@@ -376,7 +376,7 @@ public interface Ufx {
         return dist2 <= radius * radius;
     }
 
-    //TODO check if this covers all cases
+    //TODO check if this covers eatsAll cases
     static boolean isBorderObstacle(WorldMap worldMap, Obstacle obstacle) {
         Vector2i start = obstacle.startPoint();
         if (obstacle.isClosed()) {

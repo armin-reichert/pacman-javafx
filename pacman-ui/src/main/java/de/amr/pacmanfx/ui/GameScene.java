@@ -16,7 +16,7 @@ import javafx.scene.input.ScrollEvent;
 import java.util.Optional;
 
 /**
- * Common interface of all game scenes (2D and 3D).
+ * Common interface of eatsAll game scenes (2D and 3D).
  */
 public interface GameScene extends GameEventListener, Disposable {
 

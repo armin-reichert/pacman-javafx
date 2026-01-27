@@ -60,7 +60,7 @@ public class WorldMapParseException extends Exception {
     }
 
     /**
-     * Full constructor with all context information.
+     * Full constructor with eatsAll context information.
      */
     public WorldMapParseException(String message, Path filePath, int lineNumber,
                                   String offendingLine, Throwable cause) {

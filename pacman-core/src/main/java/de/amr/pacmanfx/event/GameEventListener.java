@@ -29,7 +29,7 @@ public interface GameEventListener {
             case LevelStartedEvent e             -> onLevelStarts(e);
             case PacDeadEvent e                  -> onPacDead(e);
             case PacDyingEvent e                 -> onPacDying(e);
-            case PacFoundFoodEvent e             -> onPacFindsFood(e);
+            case PacEatsFoodEvent e              -> onPacEatsFood(e);
             case PacGetsPowerEvent e             -> onPacGetsPower(e);
             case PacLostPowerEvent e             -> onPacLostPower(e);
             case PacStartsLosingPowerEvent e     -> onPacStartsLosingPower(e);
@@ -60,7 +60,7 @@ public interface GameEventListener {
     default void onLevelStarts(LevelStartedEvent e) {}
     default void onPacDead(PacDeadEvent e) {}
     default void onPacDying(PacDyingEvent e) {}
-    default void onPacFindsFood(PacFoundFoodEvent e) {}
+    default void onPacEatsFood(PacEatsFoodEvent e) {}
     default void onPacGetsPower(PacGetsPowerEvent e) {}
     default void onPacLostPower(PacLostPowerEvent e) {}
     default void onPacStartsLosingPower(PacStartsLosingPowerEvent e) {}

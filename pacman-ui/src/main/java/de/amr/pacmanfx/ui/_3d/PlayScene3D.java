@@ -64,7 +64,7 @@ import static de.amr.pacmanfx.uilib.animation.AnimationSupport.doNow;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Common 3D play scene base class for all game variants.
+ * Common 3D play scene base class for eatsAll game variants.
  */
 public abstract class PlayScene3D implements GameScene {
 
@@ -458,18 +458,18 @@ public abstract class PlayScene3D implements GameScene {
     private long lastMunchingSoundPlayedTick;
 
     @Override
-    public void onPacFindsFood(PacFoundFoodEvent event) {
-        if (event.tile() == null) {
-            // When cheat "eat all pellets" has been used, no tile is present in the event.
+    public void onPacEatsFood(PacEatsFoodEvent e) {
+        final Vector2i tile = e.pac().tile();
+        if (e.eatsAll()) {
             gameLevel3D.pellets3D().forEach(this::eatPellet3D);
         } else {
             final Energizer3D energizer3D = gameLevel3D.energizers3D().stream()
-                .filter(e3D -> event.tile().equals(e3D.tile())).findFirst().orElse(null);
+                .filter(e3D -> tile.equals(e3D.tile())).findFirst().orElse(null);
             if (energizer3D != null) {
                 energizer3D.onEaten();
             } else {
                 gameLevel3D.pellets3D().stream()
-                    .filter(pellet3D -> event.tile().equals(pellet3D.getUserData()))
+                    .filter(pellet3D -> tile.equals(pellet3D.getUserData()))
                     .findFirst()
                     .ifPresent(this::eatPellet3D);
             }

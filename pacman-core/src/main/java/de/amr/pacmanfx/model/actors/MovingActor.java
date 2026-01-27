@@ -24,7 +24,7 @@ import static de.amr.pacmanfx.lib.math.Direction.UP;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Base class for all actors which know how to move through a level's world.
+ * Base class for eatsAll actors which know how to move through a level's world.
  */
 public abstract class MovingActor extends Actor {
 
