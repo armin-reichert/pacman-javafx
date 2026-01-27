@@ -97,7 +97,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return ArcadePacMan_SpriteSheet.INSTANCE;
+        return ArcadePacMan_SpriteSheet.instance();
     }
 
     @Override

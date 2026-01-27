@@ -22,7 +22,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return ArcadePacMan_SpriteSheet.INSTANCE;
+        return ArcadePacMan_SpriteSheet.instance();
     }
 
     @Override

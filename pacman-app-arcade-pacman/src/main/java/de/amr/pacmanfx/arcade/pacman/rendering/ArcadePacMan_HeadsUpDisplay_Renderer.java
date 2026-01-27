@@ -38,7 +38,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return ArcadePacMan_SpriteSheet.INSTANCE;
+        return ArcadePacMan_SpriteSheet.instance();
     }
 
     @Override

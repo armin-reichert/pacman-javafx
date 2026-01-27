@@ -24,7 +24,7 @@ public abstract class ArcadePacMan_CutScene_Renderer extends GameScene2D_Rendere
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return ArcadePacMan_SpriteSheet.INSTANCE;
+        return ArcadePacMan_SpriteSheet.instance();
     }
 
     @Override

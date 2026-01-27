@@ -50,7 +50,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return ArcadePacMan_SpriteSheet.INSTANCE;
+        return ArcadePacMan_SpriteSheet.instance();
     }
 
     @Override

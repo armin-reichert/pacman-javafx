@@ -31,7 +31,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return ArcadePacMan_SpriteSheet.INSTANCE;
+        return ArcadePacMan_SpriteSheet.instance();
     }
 
     @Override
