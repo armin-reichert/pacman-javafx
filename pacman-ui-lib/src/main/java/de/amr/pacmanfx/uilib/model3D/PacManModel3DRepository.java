@@ -12,8 +12,16 @@ import org.tinylog.Logger;
 
 import java.net.URL;
 
-public enum PacManModel3DRepository implements Disposable {
-    INSTANCE;
+public class PacManModel3DRepository implements Disposable {
+
+    // Initialization-on-Demand Holder Idiom
+    private static class Holder {
+        static final PacManModel3DRepository INSTANCE = new PacManModel3DRepository();
+    }
+
+    public static PacManModel3DRepository instance() {
+        return Holder.INSTANCE;
+    }
 
     private static final String MESH_ID_PAC_MAN_EYES   = "PacMan.Eyes";
     private static final String MESH_ID_PAC_MAN_HEAD   = "PacMan.Head";

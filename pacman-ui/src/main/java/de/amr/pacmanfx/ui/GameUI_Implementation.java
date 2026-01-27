@@ -98,7 +98,7 @@ public final class GameUI_Implementation implements GameUI {
         PROPERTY_3D_WALL_OPACITY.set(GameUI_PreferencesManager.instance().getFloat("3d.obstacle.opacity"));
 
         // Load 3D models
-        final var ignored = PacManModel3DRepository.INSTANCE;
+        final var ignored = PacManModel3DRepository.instance();
     }
 
     private void setupStage() {
