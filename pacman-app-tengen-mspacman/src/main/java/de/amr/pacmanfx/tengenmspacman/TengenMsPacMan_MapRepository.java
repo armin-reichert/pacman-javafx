@@ -29,10 +29,10 @@ public class TengenMsPacMan_MapRepository {
 
     /*
      * API to access the maze images stored in files {@code non_arcade_mazes.png} and {@code arcade_mazes.png}.
-     * These files contain the images for eatsAll mazes used in the different map categories, but only in the colors
+     * These files contain the images for all mazes used in the different map categories, but only in the colors
      * used by the STRANGE maps through levels 1-32 (for levels 28-31, random color schemes are used.)
      * <p>The MINI and BIG maps use different color schemes.
-     * <p>Because the map images do not cover eatsAll required map/color-scheme combinations, an image cache is provided where
+     * <p>Because the map images do not cover all required map/color-scheme combinations, an image cache is provided where
      * the recolored maze images are stored.
      */
     public MapImageSet createMazeSpriteSet(WorldMap worldMap, int flashCount) {

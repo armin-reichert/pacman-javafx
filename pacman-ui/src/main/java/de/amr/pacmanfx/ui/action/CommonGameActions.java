@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameScene_Config.CommonSceneID;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_View;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
@@ -23,7 +24,7 @@ import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 /**
- * Common actions for eatsAll game variants.
+ * Common actions for all game variants.
  * <p>
  * For each action there must exist an entry in the {@code localized_texts} resource bundle
  * of the form {@code key=localized_action_name} where {@code key=action.name()} !
@@ -65,8 +66,8 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.views().currentView() == ui.views().playView()
-                || ui.views().currentView() == ui.views().startPagesView();
+            final GameUI_View currentView = ui.views().currentView();
+            return currentView == ui.views().playView() || currentView == ui.views().startPagesView();
         }
     };
 

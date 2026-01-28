@@ -13,7 +13,7 @@ public class Blinky extends de.amr.pacmanfx.arcade.pacman.model.actors.Blinky {
 
     /**
      * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
-     * the original intention had been to randomize the scatter target of *eatsAll* ghosts but because of a bug,
+     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
      * only the scatter target of Blinky and Pinky would have been affected. Who knows?
      *
      * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.

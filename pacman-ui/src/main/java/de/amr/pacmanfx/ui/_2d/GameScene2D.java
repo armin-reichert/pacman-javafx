@@ -21,7 +21,7 @@ import org.tinylog.Logger;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Base class of eatsAll 2D scenes.
+ * Base class of all 2D scenes.
  */
 public abstract class GameScene2D implements GameScene {
 

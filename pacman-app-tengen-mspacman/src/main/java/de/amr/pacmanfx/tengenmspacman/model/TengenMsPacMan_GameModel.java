@@ -235,7 +235,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
             /* see https://tcrf.net/Ms._Pac-Man_(NES,_Tengen):
             Humorously, instead of adding a check to disable multiple extra lives,
             the "Arcade" maze set sets the remaining 3 extra life scores to over 970,000 points,
-            a score normally unachievable without cheat codes, since eatsAll maze sets end after 32 stages.
+            a score normally unachievable without cheat codes, since all maze sets end after 32 stages.
             This was most likely done to simulate the Arcade game only giving one extra life per game.
             */
             setExtraLifeScores(10_000, 970_000, 980_000, 990_000);
@@ -807,7 +807,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         return speedUnitsToPixels(units);
     }
 
-    // TODO: do they eatsAll have the same base speed? Unclear from disassembly data.
+    // TODO: do they all have the same base speed? Unclear from disassembly data.
     public float ghostBaseSpeedInLevel(int levelNumber) {
         int units = 0x20; // default: 32
         if (inClosedRange(levelNumber, 1, 4)) {

@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Base class for eatsAll game actors like Pac-Man, the ghosts and the bonus entities.
+ * Base class for all game actors like Pac-Man, the ghosts and the bonus entities.
  * <p>
  * Each actor has a position, velocity, acceleration and visibility property.
  * </p>
@@ -36,7 +36,7 @@ public class Actor {
     private ObjectProperty<Vector2f> acceleration;
 
     /**
-     * Resets eatsAll properties of this actor thingy to their default state. Note: actor is invisible by default!
+     * Resets all properties of this actor thingy to their default state. Note: actor is invisible by default!
      */
     public void reset() {
         setVisible(DEFAULT_VISIBILITY);

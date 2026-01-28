@@ -85,7 +85,7 @@ public class WorldMapLayer {
     }
 
     /**
-     * @return stream of eatsAll tiles of this map (row-by-row)
+     * @return stream of all tiles of this map (row-by-row)
      */
     public Stream<Vector2i> tiles() {
         return IntStream.range(0, numCols() * numRows()).mapToObj(this::tileAtIndex);
@@ -147,7 +147,7 @@ public class WorldMapLayer {
 
     /**
      * @param content value to search for
-     * @return stream of eatsAll tiles of this map with given content (row-by-row)
+     * @return stream of all tiles of this map with given content (row-by-row)
      */
     public Stream<Vector2i> tilesContaining(byte content) {
         return tiles().filter(tile -> content(tile) == content);

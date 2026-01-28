@@ -14,7 +14,7 @@ import javafx.beans.property.IntegerProperty;
 import java.util.Optional;
 
 /**
- * Common interface for eatsAll Pac-Man game models.
+ * Common interface for all Pac-Man game models.
  * <p>
  *
  * @see <a href="https://pacman.holenet.info">Jamey Pittman: The Pac-Man Dossier</a>

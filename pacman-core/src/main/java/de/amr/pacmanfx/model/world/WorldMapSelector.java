@@ -27,13 +27,13 @@ public interface WorldMapSelector {
     }
 
     /**
-     * Loads eatsAll user-defined maps (XXL games only).
+     * Loads all user-defined maps (XXL games only).
      * @throws IOException if map loading fails
      */
     default void loadCustomMaps() throws IOException, WorldMapParseException {}
 
     /**
-     * Loads eatsAll map prototypes, built-in and user-defined maps.
+     * Loads all map prototypes, built-in and user-defined maps.
      * @throws IOException if map loading fails
      */
     void loadMapPrototypes() throws IOException, WorldMapParseException;

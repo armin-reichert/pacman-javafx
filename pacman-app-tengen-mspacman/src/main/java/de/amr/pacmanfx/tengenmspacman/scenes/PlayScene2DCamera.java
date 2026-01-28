@@ -45,9 +45,9 @@ public class PlayScene2DCamera extends ParallelCamera {
         final int mapHeightTiles = worldMap.terrainLayer().numRows();
         final int spannedTiles = mapHeightTiles - 26;
         final int topPosition = switch (mapHeightTiles) {
-            case 30 -> -3;     // eatsAll MINI maps
-            case 35, 36 -> -6; // one STRANGE, eatsAll ARCADE maps
-            case 42 -> -9;     // eatsAll BIG maps
+            case 30 -> -3;     // all MINI maps
+            case 35, 36 -> -6; // one STRANGE, all ARCADE maps
+            case 42 -> -9;     // all BIG maps
             default -> {
                 Logger.warn("Unexpected map height (tiles): {}", mapHeightTiles);
                 yield 0;

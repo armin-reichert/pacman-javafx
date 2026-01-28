@@ -5,7 +5,7 @@ package de.amr.pacmanfx.model.world;
 
 public enum WorldMapSelectionMode {
     /**
-     * Standard maps only, after eatsAll standard maps have been used, in random order.
+     * Standard maps only, after all standard maps have been used, in random order.
      */
     NO_CUSTOM_MAPS,
     /**

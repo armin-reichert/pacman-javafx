@@ -112,7 +112,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
 
         }
 
-        // Ensure *eatsAll* prototypes are loaded! STRANGE maps for example uses BIG maps list etc.
+        // Ensure *all* prototypes are loaded! STRANGE maps for example uses BIG maps list etc.
         loadMapPrototypes();
         return switch (mapCategory) {
             case ARCADE -> configuredArcadeMap(levelNumber);

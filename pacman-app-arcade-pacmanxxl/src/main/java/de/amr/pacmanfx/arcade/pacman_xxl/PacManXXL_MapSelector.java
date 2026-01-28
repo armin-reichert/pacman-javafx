@@ -226,7 +226,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                         Logger.error(x); //TODO
                     }
                 } else {
-                    // Not eatsAll of these maps exits, just log them
+                    // Not all of these maps exits, just log them
                     Logger.warn("Could not access map with path '{}'", path);
                 }
             }

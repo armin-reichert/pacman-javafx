@@ -880,7 +880,7 @@ public class GameLevel3D extends Group implements Disposable {
         disposed = true;
 
         animationRegistry.stopAllAnimations();
-        Logger.info("Stopped eatsAll managed animations");
+        Logger.info("Stopped all managed animations");
 
         if (wallColorFlashingAnimation != null) {
             wallColorFlashingAnimation.dispose();
@@ -899,7 +899,7 @@ public class GameLevel3D extends Group implements Disposable {
             ghostLightAnimation = null;
         }
 
-        // Dispose eatsAll remaining animations
+        // Dispose all remaining animations
         animationRegistry.dispose();
 
         PROPERTY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
@@ -916,7 +916,7 @@ public class GameLevel3D extends Group implements Disposable {
         wallOpacityProperty.unbind();
 
         getChildren().clear();
-        Logger.info("Removed eatsAll nodes under game level");
+        Logger.info("Removed all nodes under game level");
 
         if (ambientLight != null) {
             ambientLight.colorProperty().unbind();
@@ -942,7 +942,7 @@ public class GameLevel3D extends Group implements Disposable {
         if (particleGroupsContainer != null) {
             particleGroupsContainer.getChildren().clear();
             particleGroupsContainer = null;
-            Logger.info("Removed eatsAll particle groups");
+            Logger.info("Removed all particle groups");
         }
         if (floor3D != null) {
             floor3D.translateXProperty().unbind();

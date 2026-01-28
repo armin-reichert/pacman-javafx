@@ -228,7 +228,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         level.incrementGhostKillCount();
         if (level.ghostKillCount() == 16) {
             scorePoints(level, allGhostsInLevelKilledPoints);
-            Logger.info("Scored {} points for killing eatsAll ghosts in level {}", allGhostsInLevelKilledPoints, level.number());
+            Logger.info("Scored {} points for killing all ghosts in level {}", allGhostsInLevelKilledPoints, level.number());
         }
         level.pac().hide();
         level.ghosts().forEach(Ghost::stopAnimation);

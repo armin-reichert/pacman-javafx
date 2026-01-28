@@ -64,7 +64,7 @@ import static de.amr.pacmanfx.uilib.animation.AnimationSupport.doNow;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Common 3D play scene base class for eatsAll game variants.
+ * Common 3D play scene base class for all game variants.
  */
 public abstract class PlayScene3D implements GameScene {
 

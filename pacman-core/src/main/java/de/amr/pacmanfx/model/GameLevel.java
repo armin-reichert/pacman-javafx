@@ -278,7 +278,7 @@ public class GameLevel {
 
     /**
      * @param states a list of ghost states
-     * @return if no states are specified, eatsAll ghosts are returned. Otherwise, eatsAll ghosts that have any of the specified
+     * @return if no states are specified, all ghosts are returned. Otherwise, all ghosts that have any of the specified
      * states are returned.
      */
     public Stream<Ghost> ghosts(GhostState... states) {
