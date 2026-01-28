@@ -18,7 +18,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends GameScene2D_Renderer i
 
     public TengenMsPacMan_CreditsScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
-        createDefaultDebugInfoRenderer(scene, canvas);
+        createDefaultDebugInfoRenderer(scene.ui(), scene, canvas);
     }
 
     @Override

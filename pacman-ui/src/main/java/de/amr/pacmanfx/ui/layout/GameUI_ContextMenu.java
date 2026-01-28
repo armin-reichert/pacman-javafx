@@ -55,9 +55,8 @@ public class GameUI_ContextMenu extends ContextMenu {
     }
 
     public MenuItem addTitleItem(String itemText) {
-        final PreferencesManager prefs = GlobalPreferencesManager.instance();
-        final Font font = prefs.getFont("context_menu.title.font");
-        final Color fillColor = prefs.getColor("context_menu.title.fill");
+        final Font font = ui.prefs().getFont("context_menu.title.font");
+        final Color fillColor = ui.prefs().getColor("context_menu.title.fill");
         final var text = new Text(itemText);
         text.setFont(font);
         text.setFill(fillColor);

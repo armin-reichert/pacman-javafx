@@ -152,6 +152,7 @@ public interface GameUI extends Translator {
 
     SoundManager soundManager();
 
+    GlobalPreferencesManager prefs();
     /**
      * @return voice player if this UI. Only one voice at a time can be played.
      */

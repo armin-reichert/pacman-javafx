@@ -20,7 +20,10 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.GameSceneConfig;
+import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
@@ -161,7 +164,7 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     }
 
     @Override
-    public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
+    public GameScene2D_Renderer createGameSceneRenderer(GameUI ui, Canvas canvas, GameScene2D gameScene2D) {
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
             case Arcade_BootScene2D        ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet(), spriteRegionForArcadeBootScene());
             case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(this, gameScene2D, canvas);
@@ -239,9 +242,9 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     }
 
     @Override
-    public MsPacManBody createLivesCounterShape3D() {
+    public MsPacManBody createLivesCounterShape3D(double size) {
         return PacManModel3DRepository.instance().createMsPacManBody(
-            GlobalPreferencesManager.instance().getFloat("3d.lives_counter.shape_size"),
+            size,
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate"),

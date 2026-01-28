@@ -43,7 +43,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
         final UIConfig uiConfig = scene.ui().currentConfig();
         levelRenderer = scene.adaptRenderer(uiConfig.createGameLevelRenderer(canvas));
         actorRenderer = scene.adaptRenderer(uiConfig.createActorRenderer(canvas));
-        debugRenderer = scene.adaptRenderer(new Arcade_PlayScene2D_DebugInfo_Renderer(canvas));
+        debugRenderer = scene.adaptRenderer(new Arcade_PlayScene2D_DebugInfo_Renderer(scene.ui(), canvas));
     }
 
     @Override

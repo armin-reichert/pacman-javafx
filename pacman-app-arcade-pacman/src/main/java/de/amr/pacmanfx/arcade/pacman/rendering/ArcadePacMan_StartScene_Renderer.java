@@ -14,7 +14,7 @@ public class ArcadePacMan_StartScene_Renderer extends GameScene2D_Renderer {
 
     public ArcadePacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
-        createDefaultDebugInfoRenderer(scene, canvas);
+        createDefaultDebugInfoRenderer(scene.ui(), scene, canvas);
     }
 
     public void draw(GameScene2D scene) {

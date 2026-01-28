@@ -87,15 +87,17 @@ public interface UIConfig extends Disposable {
 
     /**
      * @param canvas the canvas where the 2D scene gets rendered
-     * @return a new renderer for the game scene
-     */
-    GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D);
-
-    /**
-     * @param canvas the canvas where the 2D scene gets rendered
      * @return a new renderer for a game level
      */
     GameLevelRenderer createGameLevelRenderer(Canvas canvas);
+
+    /**
+     * @param ui the game UI
+     * @param canvas the canvas where the 2D scene gets rendered
+     * @param gameScene2D the game scene to be rendered
+     * @return a new renderer for the game scene
+     */
+    GameScene2D_Renderer createGameSceneRenderer(GameUI ui, Canvas canvas, GameScene2D gameScene2D);
 
     /**
      * @param canvas canvas
@@ -137,7 +139,7 @@ public interface UIConfig extends Disposable {
     /**
      * @return 3D representation of a lives counter
      */
-    Node createLivesCounterShape3D();
+    Node createLivesCounterShape3D(double size);
 
     /**
      * @param killedIndex index in sequence of killed ghosts

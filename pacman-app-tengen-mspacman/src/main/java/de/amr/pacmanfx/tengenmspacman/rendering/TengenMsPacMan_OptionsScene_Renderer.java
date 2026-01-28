@@ -34,7 +34,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends GameScene2D_Renderer
     public TengenMsPacMan_OptionsScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
         requireNonNull(scene);
-        createDefaultDebugInfoRenderer(scene, canvas);
+        createDefaultDebugInfoRenderer(scene.ui(), scene, canvas);
     }
 
     @Override

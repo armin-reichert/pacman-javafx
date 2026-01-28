@@ -171,7 +171,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, GameSceneConfig {
     }
 
     @Override
-    public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
+    public GameScene2D_Renderer createGameSceneRenderer(GameUI ui, Canvas canvas, GameScene2D gameScene2D) {
         requireNonNull(canvas);
         requireNonNull(gameScene2D);
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
@@ -261,9 +261,9 @@ public class ArcadePacMan_UIConfig implements UIConfig, GameSceneConfig {
     }
 
     @Override
-    public PacBody createLivesCounterShape3D() {
+    public PacBody createLivesCounterShape3D(double size) {
         return PacManModel3DRepository.instance().createPacBody(
-            GlobalPreferencesManager.instance().getFloat("3d.lives_counter.shape_size"),
+            size,
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate")

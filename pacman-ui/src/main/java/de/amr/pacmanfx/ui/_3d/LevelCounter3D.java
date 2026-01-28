@@ -5,8 +5,8 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.ui.GlobalPreferencesManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.Animation;
@@ -36,9 +36,9 @@ public class LevelCounter3D extends Group implements Disposable {
         this.uiConfig = requireNonNull(uiConfig);
     }
 
-    public void update(Game game) {
+    public void update(GameUI ui, Game game) {
         getChildren().clear();
-        float cubeSize = GlobalPreferencesManager.instance().getFloat("3d.level_counter.symbol_size");
+        float cubeSize = ui.prefs().getFloat("3d.level_counter.symbol_size");
         for (int i = 0; i < game.levelCounterSymbols().size(); ++i) {
             Byte symbol = game.levelCounterSymbols().get(i);
             Image symbolImage = uiConfig.bonusSymbolImage(symbol);

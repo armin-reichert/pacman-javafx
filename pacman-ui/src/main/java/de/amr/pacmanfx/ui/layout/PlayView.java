@@ -407,7 +407,7 @@ public class PlayView extends StackPane implements View {
         gameScene2D.setCanvas(canvas);
         gameScene2D.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
 
-        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, gameScene2D);
+        sceneRenderer = ui.currentConfig().createGameSceneRenderer(ui, canvas, gameScene2D);
         hudRenderer = ui.currentConfig().createHUDRenderer(canvas, gameScene2D); // may return null!
     }
 
@@ -430,7 +430,7 @@ public class PlayView extends StackPane implements View {
             Vector2i gameSceneSizePx = gameScene2D.unscaledSize();
             double aspect = (double) gameSceneSizePx.x() / gameSceneSizePx.y();
             if (ui.currentGameSceneConfig().sceneDecorationRequested(gameScene)) {
-                final float maxScaling = GlobalPreferencesManager.instance().getFloat("scene2d.max_scaling");
+                final float maxScaling = ui.prefs().getFloat("scene2d.max_scaling");
                 // Decorated game scene scaled-down to give space for the decoration
                 gameScene2D.scalingProperty().bind(canvasDecorator.scalingProperty().map(
                         scaling -> Math.min(scaling.doubleValue(), maxScaling)));

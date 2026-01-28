@@ -17,7 +17,6 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.ui.GlobalPreferencesManager;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecycling;
@@ -311,7 +310,7 @@ public class GameLevel3D extends Group implements Disposable {
 
         createLevelCounter3D();
         createLivesCounter3D();
-        createPac3D(GlobalPreferencesManager.instance().getFloat("3d.pac.size"));
+        createPac3D(ui.prefs().getFloat("3d.pac.size"));
         ghosts3D = level.ghosts().map(this::createMutatingGhost3D).toList();
         createMaze3D();
         createPellets3D();
@@ -403,7 +402,7 @@ public class GameLevel3D extends Group implements Disposable {
             ghostDressMeshViews[ghost.personality()],
             ghostPupilsMeshViews[ghost.personality()],
             ghostEyesMeshViews[ghost.personality()],
-            GlobalPreferencesManager.instance().getFloat("3d.ghost.size"),
+            ui.prefs().getFloat("3d.ghost.size"),
             level.numFlashes()
         );
         mutatingGhost3D.visibleProperty().bind(Bindings.createBooleanBinding(
@@ -424,12 +423,13 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private void createLivesCounter3D() {
-        int capacity = GlobalPreferencesManager.instance().getInt("3d.lives_counter.capacity");
-        Color pillarColor = GlobalPreferencesManager.instance().getColor("3d.lives_counter.pillar_color");
-        Color plateColor = GlobalPreferencesManager.instance().getColor("3d.lives_counter.plate_color");
+        final double shapeSize = ui.prefs().getFloat("3d.lives_counter.shape_size");
+        final int capacity = ui.prefs().getInt("3d.lives_counter.capacity");
+        final Color pillarColor = ui.prefs().getColor("3d.lives_counter.pillar_color");
+        final Color plateColor = ui.prefs().getColor("3d.lives_counter.plate_color");
         livesCounterShapes = new Node[capacity];
         for (int i = 0; i < livesCounterShapes.length; ++i) {
-            livesCounterShapes[i] = uiConfig.createLivesCounterShape3D();
+            livesCounterShapes[i] = uiConfig.createLivesCounterShape3D(shapeSize);
         }
         livesCounter3D = new LivesCounter3D(animationRegistry, livesCounterShapes);
         livesCounter3D.setTranslateX(2 * TS);
@@ -443,7 +443,7 @@ public class GameLevel3D extends Group implements Disposable {
         levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
         levelCounter3D.setTranslateX(TS * (worldMap.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
-        levelCounter3D.setTranslateZ(-GlobalPreferencesManager.instance().getFloat("3d.level_counter.elevation"));
+        levelCounter3D.setTranslateZ(-ui.prefs().getFloat("3d.level_counter.elevation"));
     }
 
     private void createAmbientLight() {
@@ -474,8 +474,8 @@ public class GameLevel3D extends Group implements Disposable {
 
         createFloor3D();
 
-        float wallThickness = GlobalPreferencesManager.instance().getFloat("3d.obstacle.wall_thickness");
-        float cornerRadius = GlobalPreferencesManager.instance().getFloat("3d.obstacle.corner_radius");
+        float wallThickness = ui.prefs().getFloat("3d.obstacle.wall_thickness");
+        float cornerRadius = ui.prefs().getFloat("3d.obstacle.corner_radius");
         wall3DCount = 0;
         var stopWatch = new StopWatch();
         Optional<House> optionalHouse = level.worldMap().terrainLayer().optHouse();
@@ -505,23 +505,23 @@ public class GameLevel3D extends Group implements Disposable {
                 animationRegistry,
                 house,
                 ghostRevivalPositions,
-                GlobalPreferencesManager.instance().getFloat("3d.house.base_height"),
-                GlobalPreferencesManager.instance().getFloat("3d.house.wall_thickness"),
-                GlobalPreferencesManager.instance().getFloat("3d.house.opacity")
+                ui.prefs().getFloat("3d.house.base_height"),
+                ui.prefs().getFloat("3d.house.wall_thickness"),
+                ui.prefs().getFloat("3d.house.opacity")
             );
             house3D.setWallBaseColor(Color.valueOf(colorScheme.wallFill()));
             house3D.setWallTopColor(Color.valueOf(colorScheme.wallStroke()));
             house3D.setDoorColor(Color.valueOf(colorScheme.door()));
-            house3D.wallBaseHeightProperty().set(GlobalPreferencesManager.instance().getFloat("3d.house.base_height"));
+            house3D.wallBaseHeightProperty().set(ui.prefs().getFloat("3d.house.base_height"));
             house3D.openProperty().addListener(this::handleHouseOpenChange);
-            house3D.setDoorSensitivity(GlobalPreferencesManager.instance().getFloat("3d.house.sensitivity"));
+            house3D.setDoorSensitivity(ui.prefs().getFloat("3d.house.sensitivity"));
             maze3D.getChildren().add(house3D);
         });
     }
 
     private void createFloor3D() {
-        float padding   = GlobalPreferencesManager.instance().getFloat("3d.floor.padding");
-        float thickness = GlobalPreferencesManager.instance().getFloat("3d.floor.thickness");
+        float padding   = ui.prefs().getFloat("3d.floor.padding");
+        float thickness = ui.prefs().getFloat("3d.floor.thickness");
         Vector2i worldSizePx = level.worldMap().terrainLayer().sizeInPixel();
         float sizeX = worldSizePx.x() + 2 * padding;
         float sizeY = worldSizePx.y();
@@ -555,7 +555,7 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private void createPellets3D() {
-        float radius = GlobalPreferencesManager.instance().getFloat("3d.pellet.radius");
+        float radius = ui.prefs().getFloat("3d.pellet.radius");
         Mesh mesh = PacManModel3DRepository.instance().pelletMesh();
         var prototype = new MeshView(mesh);
         Bounds bounds = prototype.getBoundsInLocal();
@@ -583,9 +583,9 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private void createEnergizers3D() {
-        float radius     = GlobalPreferencesManager.instance().getFloat("3d.energizer.radius");
-        float minScaling = GlobalPreferencesManager.instance().getFloat("3d.energizer.scaling.min");
-        float maxScaling = GlobalPreferencesManager.instance().getFloat("3d.energizer.scaling.max");
+        float radius     = ui.prefs().getFloat("3d.energizer.radius");
+        float minScaling = ui.prefs().getFloat("3d.energizer.scaling.min");
+        float maxScaling = ui.prefs().getFloat("3d.energizer.scaling.max");
         House house = level.worldMap().terrainLayer().optHouse().orElseThrow();
         Vector2i[] ghostRevivalTiles = {
             house.ghostRevivalTile(RED_GHOST_SHADOW),
@@ -707,7 +707,7 @@ public class GameLevel3D extends Group implements Disposable {
     public void onStartingGame() {
         energizers3D().forEach(Energizer3D::stopPumping);
         if (levelCounter3D != null) {
-            levelCounter3D.update(level.game());
+            levelCounter3D.update(ui, level.game());
         }
     }
 
@@ -820,15 +820,15 @@ public class GameLevel3D extends Group implements Disposable {
             bonus3D.dispose();
         }
         bonus3D = new Bonus3D(animationRegistry, bonus,
-            uiConfig.bonusSymbolImage(bonus.symbol()), GlobalPreferencesManager.instance().getFloat("3d.bonus.symbol.width"),
-            uiConfig.bonusValueImage(bonus.symbol()), GlobalPreferencesManager.instance().getFloat("3d.bonus.points.width"));
+            uiConfig.bonusSymbolImage(bonus.symbol()), ui.prefs().getFloat("3d.bonus.symbol.width"),
+            uiConfig.bonusValueImage(bonus.symbol()), ui.prefs().getFloat("3d.bonus.points.width"));
         getChildren().add(bonus3D);
         bonus3D.showEdible();
     }
 
     public void updateLevelCounter3D() {
         if (levelCounter3D != null) {
-            levelCounter3D.update(level.game());
+            levelCounter3D.update(ui, level.game());
         }
     }
 

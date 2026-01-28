@@ -43,7 +43,7 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
         this.spriteSheet = requireNonNull(spriteSheet);
         this.spriteRegion = requireNonNull(spriteRegion);
 
-        createDefaultDebugInfoRenderer(scene, canvas);
+        createDefaultDebugInfoRenderer(scene.ui(), scene, canvas);
     }
 
     @Override

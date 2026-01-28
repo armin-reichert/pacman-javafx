@@ -12,16 +12,7 @@ import static de.amr.pacmanfx.Globals.TS;
 
 public final class GlobalPreferencesManager extends PreferencesManager {
 
-    // Initialization-on-Demand Holder Idiom
-    private static class Holder {
-        static final GlobalPreferencesManager INSTANCE = new GlobalPreferencesManager();
-    }
-
-    public static GlobalPreferencesManager instance() {
-        return Holder.INSTANCE;
-    }
-
-    private GlobalPreferencesManager() {
+    public GlobalPreferencesManager() {
         super(GlobalPreferencesManager.class);
     }
 

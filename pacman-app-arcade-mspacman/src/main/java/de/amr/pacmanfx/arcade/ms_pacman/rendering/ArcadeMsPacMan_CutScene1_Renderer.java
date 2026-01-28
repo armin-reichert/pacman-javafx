@@ -18,7 +18,7 @@ public class ArcadeMsPacMan_CutScene1_Renderer extends GameScene2D_Renderer {
     public ArcadeMsPacMan_CutScene1_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
         actorRenderer = scene.adaptRenderer((ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
-        createDefaultDebugInfoRenderer(scene, canvas);
+        createDefaultDebugInfoRenderer(scene.ui(), scene, canvas);
     }
 
     public void draw(GameScene2D scene) {

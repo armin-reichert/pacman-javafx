@@ -56,6 +56,7 @@ public final class GameUI_Implementation implements GameUI {
     private final GameContext context;
     private final GameClock clock = new GameClock();
     private final DirectoryWatchdog customDirWatchdog;
+    private final GlobalPreferencesManager preferencesManager = new GlobalPreferencesManager();
     private final ActionBindingsManager globalActionBindings = new GlobalActionBindings();
     private final UIConfigManager uiConfigManager;
     private final ViewManager viewManager;
@@ -98,8 +99,8 @@ public final class GameUI_Implementation implements GameUI {
         setupBindings();
         setupStage();
 
-        PROPERTY_3D_WALL_HEIGHT.set(GlobalPreferencesManager.instance().getFloat("3d.obstacle.base_height"));
-        PROPERTY_3D_WALL_OPACITY.set(GlobalPreferencesManager.instance().getFloat("3d.obstacle.opacity"));
+        PROPERTY_3D_WALL_HEIGHT.set(prefs().getFloat("3d.obstacle.base_height"));
+        PROPERTY_3D_WALL_OPACITY.set(prefs().getFloat("3d.obstacle.opacity"));
 
         // Load 3D models
         final var ignored = PacManModel3DRepository.instance();
@@ -226,18 +227,13 @@ public final class GameUI_Implementation implements GameUI {
     // GameUI interface
 
     @Override
-    public ResourceBundle localizedTexts() {
-        return GameUI.LOCALIZED_TEXTS;
-    }
-
-    @Override
-    public DirectoryWatchdog customDirWatchdog() {
-        return customDirWatchdog;
-    }
-
-    @Override
     public GameClock clock() {
         return clock;
+    }
+
+    @Override
+    public UIConfig config(String gameVariantName) {
+        return uiConfigManager.getOrCreate(gameVariantName);
     }
 
     @Override
@@ -246,21 +242,39 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public Stage stage() {
-        return stage;
+    public boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID) {
+        final GameScene currentGameScene = views().playView().optGameScene().orElse(null);
+        return currentGameScene != null && currentGameSceneConfig().gameSceneHasID(currentGameScene, sceneID);
     }
 
     @Override
-    public void showFlashMessage(Duration duration, String message, Object... args) {
-        flashMessageView.showMessage(String.format(message, args), duration.toSeconds());
+    @SuppressWarnings("unchecked")
+    public <T extends UIConfig> T currentConfig() {
+        final String gameVariantName = context.gameVariantName();
+        if (gameVariantName == null) {
+            throw new IllegalStateException("Cannot access UI configuration: no game variant is selected");
+        }
+        return (T) config(context.gameVariantName());
     }
 
     @Override
-    public void stopGame() {
-        views().playView().optGameScene().ifPresent(gameScene -> gameScene.end(context().currentGame()));
-        soundManager.stopAll();
-        clock.stop();
-        clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+    public GameSceneConfig currentGameSceneConfig() {
+        return currentConfig();
+    }
+
+    @Override
+    public DirectoryWatchdog customDirWatchdog() {
+        return customDirWatchdog;
+    }
+
+    @Override
+    public ResourceBundle localizedTexts() {
+        return GameUI.LOCALIZED_TEXTS;
+    }
+
+    @Override
+    public GlobalPreferencesManager prefs() {
+        return preferencesManager;
     }
 
     @Override
@@ -299,8 +313,47 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
+    public void showEditorView() {
+        if (!context.currentGame().isPlaying() || clock.isPaused()) {
+            stopGame();
+            views().selectEditorView();
+            return;
+        }
+        Logger.info("Editor cannot be opened while game is playing");
+    }
+
+    @Override
+    public void showFlashMessage(Duration duration, String message, Object... args) {
+        flashMessageView.showMessage(String.format(message, args), duration.toSeconds());
+    }
+
+    @Override
+    public void showPlayView() {
+        views().selectPlayView();
+    }
+
+    @Override
+    public void showStartView() {
+        stopGame();
+        views().selectStartView();
+    }
+
+    @Override
     public SoundManager soundManager() {
         return soundManager;
+    }
+
+    @Override
+    public Stage stage() {
+        return stage;
+    }
+
+    @Override
+    public void stopGame() {
+        views().playView().optGameScene().ifPresent(gameScene -> gameScene.end(context().currentGame()));
+        soundManager.stopAll();
+        clock.stop();
+        clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
     }
 
     @Override
@@ -317,60 +370,13 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public VoicePlayer voicePlayer() {
-        return voicePlayer;
-    }
-
-    @Override
     public ViewManager views() {
         return viewManager;
     }
 
     @Override
-    public void showEditorView() {
-        if (!context.currentGame().isPlaying() || clock.isPaused()) {
-            stopGame();
-            views().selectEditorView();
-            return;
-        }
-        Logger.info("Editor cannot be opened while game is playing");
-    }
-
-    @Override
-    public void showPlayView() {
-        views().selectPlayView();
-    }
-
-    @Override
-    public void showStartView() {
-        stopGame();
-        views().selectStartView();
-    }
-
-    @Override
-    public boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID) {
-        final GameScene currentGameScene = views().playView().optGameScene().orElse(null);
-        return currentGameScene != null && currentGameSceneConfig().gameSceneHasID(currentGameScene, sceneID);
-    }
-
-    @Override
-    public UIConfig config(String gameVariantName) {
-        return uiConfigManager.getOrCreate(gameVariantName);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends UIConfig> T currentConfig() {
-        final String gameVariantName = context.gameVariantName();
-        if (gameVariantName == null) {
-            throw new IllegalStateException("Cannot access UI configuration: no game variant is selected");
-        }
-        return (T) config(context.gameVariantName());
-    }
-
-    @Override
-    public GameSceneConfig currentGameSceneConfig() {
-        return currentConfig();
+    public VoicePlayer voicePlayer() {
+        return voicePlayer;
     }
 
     // private stuff

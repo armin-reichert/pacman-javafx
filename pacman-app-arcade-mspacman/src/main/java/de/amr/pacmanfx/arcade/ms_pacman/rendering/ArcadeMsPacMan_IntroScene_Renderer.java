@@ -30,7 +30,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer {
     public ArcadeMsPacMan_IntroScene_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
         actorRenderer = scene.adaptRenderer(uiConfig.createActorRenderer(canvas));
-        createDefaultDebugInfoRenderer(scene, canvas);
+        createDefaultDebugInfoRenderer(scene.ui(), scene, canvas);
     }
 
     public void draw(GameScene2D scene) {

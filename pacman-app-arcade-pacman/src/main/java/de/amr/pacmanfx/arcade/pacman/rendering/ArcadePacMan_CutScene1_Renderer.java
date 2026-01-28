@@ -14,7 +14,7 @@ public class ArcadePacMan_CutScene1_Renderer extends ArcadePacMan_CutScene_Rende
 
     public ArcadePacMan_CutScene1_Renderer(GameScene2D scene, Canvas canvas) {
         super(scene, canvas);
-        debugRenderer = scene.adaptRenderer(new BaseDebugInfoRenderer(canvas) {
+        debugRenderer = scene.adaptRenderer(new BaseDebugInfoRenderer(scene.ui(), canvas) {
             @Override
             public void draw(GameScene2D scene) {
                 super.draw(scene);

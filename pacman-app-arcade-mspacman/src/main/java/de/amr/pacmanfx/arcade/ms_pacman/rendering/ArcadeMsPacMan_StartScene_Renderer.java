@@ -19,7 +19,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2D_Renderer imp
 
     public ArcadeMsPacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
-        createDefaultDebugInfoRenderer(scene, canvas);
+        createDefaultDebugInfoRenderer(scene.ui(), scene, canvas);
     }
 
     @Override
