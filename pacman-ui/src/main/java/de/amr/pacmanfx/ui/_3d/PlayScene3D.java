@@ -460,7 +460,7 @@ public abstract class PlayScene3D implements GameScene {
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
         final Vector2i tile = e.pac().tile();
-        if (e.eatsAll()) {
+        if (e.allPellets()) {
             gameLevel3D.pellets3D().forEach(this::eatPellet3D);
         } else {
             final Energizer3D energizer3D = gameLevel3D.energizers3D().stream()
