@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.CoinMechanism;
@@ -18,7 +19,6 @@ import javafx.scene.control.Spinner;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_ENTER_NEXT_LEVEL;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_RESTART_INTRO;
 
@@ -43,7 +43,7 @@ public class DashboardSectionGameControl extends DashboardSection {
 
     @Override
     public void init(GameUI ui) {
-        spinnerCredit            = addIntSpinner("Credit", 0, CoinMechanism.MAX_COINS, THE_GAME_BOX.numCoinsProperty());
+        spinnerCredit            = addIntSpinner("Credit", 0, CoinMechanism.MAX_COINS, GameBox.instance().numCoinsProperty());
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
@@ -58,7 +58,7 @@ public class DashboardSectionGameControl extends DashboardSection {
         setAction(ui, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], TestActions.ACTION_CUT_SCENES_TEST);
         setAction(ui, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
 
-        cbCollisionCheckedTwice.setOnAction(e -> {
+        cbCollisionCheckedTwice.setOnAction(_ -> {
             final AbstractGameModel game = ui.context().currentGame();
             game.setCollisionCheckedTwice(cbCollisionCheckedTwice.isSelected());
         });

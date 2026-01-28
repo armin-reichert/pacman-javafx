@@ -9,8 +9,6 @@ public final class Globals {
 
     private Globals() {}
 
-    public static final GameBox THE_GAME_BOX = new GameBox();
-
     /**
      * The red ghost's character is aptly described as that of a shadow and is best-known as “Blinky”.
      * In Japan, his character is represented by the word oikake, which means “to run down or pursue”.

@@ -40,7 +40,6 @@ import java.io.File;
 import java.util.List;
 
 import static de.amr.pacmanfx.GameContext.highScoreFile;
-import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.model.GameVariant.*;
 
 /**
@@ -86,11 +85,11 @@ public class PacManGames3dApp extends Application {
                     .newUI(primaryStage, sceneSize.getWidth(), sceneSize.getHeight())
 
                     .game(ARCADE_PACMAN,
-                        () -> new ArcadePacMan_GameModel(THE_GAME_BOX, highScoreFile(ARCADE_PACMAN)),
+                        () -> new ArcadePacMan_GameModel(GameBox.instance(), highScoreFile(ARCADE_PACMAN)),
                         ArcadePacMan_UIConfig::new)
 
                     .game(ARCADE_MS_PACMAN,
-                        () ->new ArcadeMsPacMan_GameModel(THE_GAME_BOX, highScoreFile(ARCADE_MS_PACMAN)),
+                        () ->new ArcadeMsPacMan_GameModel(GameBox.instance(), highScoreFile(ARCADE_MS_PACMAN)),
                         ArcadeMsPacMan_UIConfig::new)
 
                     .game(TENGEN_MS_PACMAN,
@@ -98,11 +97,11 @@ public class PacManGames3dApp extends Application {
                         TengenMsPacMan_UIConfig::new)
 
                     .game(ARCADE_PACMAN_XXL,
-                        () -> new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(ARCADE_PACMAN_XXL)),
+                        () -> new PacManXXL_PacMan_GameModel(GameBox.instance(), xxlMapSelector, highScoreFile(ARCADE_PACMAN_XXL)),
                         PacManXXL_PacMan_UIConfig::new)
 
                     .game(ARCADE_MS_PACMAN_XXL,
-                        () -> new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(ARCADE_MS_PACMAN_XXL)),
+                        () -> new PacManXXL_MsPacMan_GameModel(GameBox.instance(), xxlMapSelector, highScoreFile(ARCADE_MS_PACMAN_XXL)),
                         PacManXXL_MsPacMan_UIConfig::new)
 
                     .startPage(ArcadePacMan_StartPage::new)
@@ -116,7 +115,7 @@ public class PacManGames3dApp extends Application {
                 for (GameVariant variant : GameVariant.values()) {
                     registerGameWithTestStates(variant, xxlMapSelector);
                 }
-                ui = new GameUI_Implementation(THE_GAME_BOX, primaryStage, sceneSize.getWidth(), sceneSize.getHeight());
+                ui = new GameUI_Implementation(GameBox.instance(), primaryStage, sceneSize.getWidth(), sceneSize.getHeight());
 
                 ui.uiConfigManager().addFactory(ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new);
                 ui.uiConfigManager().addFactory(ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig::new);
@@ -156,17 +155,17 @@ public class PacManGames3dApp extends Application {
     private void registerGameWithTestStates(GameVariant gameVariant, PacManXXL_MapSelector xxlMapSelector) {
         final File highScoreFile = highScoreFile(gameVariant);
         final Game game = switch (gameVariant) {
-            case ARCADE_PACMAN -> new ArcadePacMan_GameModel(THE_GAME_BOX, highScoreFile);
-            case ARCADE_MS_PACMAN -> new ArcadeMsPacMan_GameModel(THE_GAME_BOX, highScoreFile);
+            case ARCADE_PACMAN -> new ArcadePacMan_GameModel(GameBox.instance(), highScoreFile);
+            case ARCADE_MS_PACMAN -> new ArcadeMsPacMan_GameModel(GameBox.instance(), highScoreFile);
             case TENGEN_MS_PACMAN -> new TengenMsPacMan_GameModel(highScoreFile);
-            case ARCADE_PACMAN_XXL -> new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile);
-            case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile);
+            case ARCADE_PACMAN_XXL -> new PacManXXL_PacMan_GameModel(GameBox.instance(), xxlMapSelector, highScoreFile);
+            case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(GameBox.instance(), xxlMapSelector, highScoreFile);
         };
         final StateMachine<Game> gameStateMachine = game.control().stateMachine();
         gameStateMachine.addState(new LevelShortTestState());
         gameStateMachine.addState(new LevelMediumTestState());
         gameStateMachine.addState(new CutScenesTestState());
-        THE_GAME_BOX.registerGame(gameVariant.name(), game);
+        GameBox.instance().registerGame(gameVariant.name(), game);
     }
 
     private void configureDashboard() {

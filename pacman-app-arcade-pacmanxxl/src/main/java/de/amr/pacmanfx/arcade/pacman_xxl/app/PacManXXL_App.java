@@ -19,8 +19,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
-
 public class PacManXXL_App extends Application {
 
     private static final double ASPECT_RATIO    = 1.6;
@@ -39,10 +37,10 @@ public class PacManXXL_App extends Application {
         ui = GameUI_Builder
             .newUI(primaryStage, sceneSize.getWidth(), sceneSize.getHeight())
             .game(GameVariant.ARCADE_PACMAN_XXL,
-                () -> new PacManXXL_PacMan_GameModel(THE_GAME_BOX, mapSelector, HIGH_SCORE_FILE_PACMAN_XXL),
+                () -> new PacManXXL_PacMan_GameModel(GameBox.instance(), mapSelector, HIGH_SCORE_FILE_PACMAN_XXL),
                 PacManXXL_PacMan_UIConfig::new)
             .game(GameVariant.ARCADE_MS_PACMAN_XXL,
-                () -> new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, mapSelector, HIGH_SCORE_FILE_MS_PACMAN_XXL),
+                () -> new PacManXXL_MsPacMan_GameModel(GameBox.instance(), mapSelector, HIGH_SCORE_FILE_MS_PACMAN_XXL),
                 PacManXXL_MsPacMan_UIConfig::new)
             .dashboard(
                 CommonDashboardID.README,

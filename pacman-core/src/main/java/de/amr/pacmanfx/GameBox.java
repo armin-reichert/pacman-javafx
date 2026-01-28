@@ -23,6 +23,14 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameBox implements GameContext, CoinMechanism {
 
+    private static class Holder {
+        static final GameBox INSTANCE = new GameBox();
+    }
+
+    public static GameBox instance() {
+        return Holder.INSTANCE;
+    }
+
     /**
      * Game variant names must match this pattern (e.g. "MS_PACMAN_2024").
      */

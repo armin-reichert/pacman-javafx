@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman.app;
 
+import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
@@ -23,8 +24,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
-
-import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 
 public class ArcadePacMan_App extends Application {
 
@@ -68,10 +67,10 @@ public class ArcadePacMan_App extends Application {
     }
 
     private void createUI(Stage stage, Dimension2D size) {
-        final Game game = new ArcadePacMan_GameModel(THE_GAME_BOX, HIGH_SCORE_FILE);
-        THE_GAME_BOX.registerGame(GameVariant.ARCADE_MS_PACMAN.name(), game);
+        final Game game = new ArcadePacMan_GameModel(GameBox.instance(), HIGH_SCORE_FILE);
+        GameBox.instance().registerGame(GameVariant.ARCADE_MS_PACMAN.name(), game);
 
-        ui = new GameUI_Implementation(THE_GAME_BOX, stage, size.getWidth(), size.getHeight());
+        ui = new GameUI_Implementation(GameBox.instance(), stage, size.getWidth(), size.getHeight());
         ui.uiConfigManager().addFactory(GameVariant.ARCADE_MS_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
         final StartPagesCarousel startPagesView = ui.views().startPagesView();
@@ -86,7 +85,7 @@ public class ArcadePacMan_App extends Application {
     private void createUI_WithBuilder(Stage stage, Dimension2D size) {
         ui = GameUI_Builder
             .newUI(stage, size.getWidth(), size.getHeight())
-            .game(GameVariant.ARCADE_MS_PACMAN, () -> new ArcadePacMan_GameModel(THE_GAME_BOX, HIGH_SCORE_FILE), ArcadePacMan_UIConfig::new)
+            .game(GameVariant.ARCADE_MS_PACMAN, () -> new ArcadePacMan_GameModel(GameBox.instance(), HIGH_SCORE_FILE), ArcadePacMan_UIConfig::new)
             .startPage(ArcadePacMan_StartPage::new)
             .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
             .build();

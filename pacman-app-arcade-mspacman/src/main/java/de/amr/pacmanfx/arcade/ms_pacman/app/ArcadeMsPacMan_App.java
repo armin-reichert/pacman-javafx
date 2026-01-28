@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.app;
 
+import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
@@ -18,8 +19,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
-
 public class ArcadeMsPacMan_App extends Application {
 
     private static final float ASPECT_RATIO    = 1.2f; // 12:10
@@ -34,7 +33,7 @@ public class ArcadeMsPacMan_App extends Application {
         final Dimension2D screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         ui = GameUI_Builder
             .newUI(primaryStage, screenSize.getWidth(), screenSize.getHeight())
-            .game(GameVariant.ARCADE_MS_PACMAN, () -> new ArcadeMsPacMan_GameModel(THE_GAME_BOX, HIGH_SCORE_FILE), ArcadeMsPacMan_UIConfig::new)
+            .game(GameVariant.ARCADE_MS_PACMAN, () -> new ArcadeMsPacMan_GameModel(GameBox.instance(), HIGH_SCORE_FILE), ArcadeMsPacMan_UIConfig::new)
             .startPage(ArcadeMsPacMan_StartPage::new)
             .dashboard(
                 CommonDashboardID.GENERAL,

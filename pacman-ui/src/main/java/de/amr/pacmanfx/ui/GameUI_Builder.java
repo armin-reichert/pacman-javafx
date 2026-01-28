@@ -17,7 +17,6 @@ import javafx.stage.Stage;
 import java.util.*;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static java.util.Objects.requireNonNull;
 
 public class GameUI_Builder {
@@ -106,7 +105,7 @@ public class GameUI_Builder {
     public GameUI build() {
         validateConfiguration();
 
-        var ui = new GameUI_Implementation(THE_GAME_BOX, stage, mainSceneWidth, mainSceneHeight);
+        var ui = new GameUI_Implementation(GameBox.instance(), stage, mainSceneWidth, mainSceneHeight);
 
         configByGameVariant.forEach((gameVariant, config) -> {
             Game game = config.gameModelFactory.get();
@@ -114,7 +113,7 @@ public class GameUI_Builder {
             game.control().stateMachine().addState(new LevelShortTestState());
             game.control().stateMachine().addState(new LevelMediumTestState());
             game.control().stateMachine().addState(new CutScenesTestState());
-            THE_GAME_BOX.registerGame(gameVariant, game);
+            GameBox.instance().registerGame(gameVariant, game);
         });
 
         configByGameVariant.forEach((gameVariant, config) -> ui.uiConfigManager().addFactory(gameVariant, config.uiConfigFactory));
