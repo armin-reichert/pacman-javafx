@@ -461,7 +461,7 @@ public abstract class PlayScene3D implements GameScene {
     public void onPacEatsFood(PacEatsFoodEvent e) {
         final Vector2i tile = e.pac().tile();
         if (e.allPellets()) {
-            gameLevel3D.pellets3D().forEach(this::eatPellet3D);
+            eatAllPellets3D();
         } else {
             final Energizer3D energizer3D = gameLevel3D.energizers3D().stream()
                 .filter(e3D -> tile.equals(e3D.tile())).findFirst().orElse(null);
@@ -666,6 +666,14 @@ public abstract class PlayScene3D implements GameScene {
             }),
             fadeInEffect
         ).play();
+    }
+
+    protected void eatAllPellets3D() {
+        gameLevel3D.pellets3D().forEach(pellet3D -> {
+            if (pellet3D.getParent() instanceof Group group) {
+                group.getChildren().remove(pellet3D);
+            }
+        });
     }
 
     protected void eatPellet3D(Shape3D pellet3D) {
