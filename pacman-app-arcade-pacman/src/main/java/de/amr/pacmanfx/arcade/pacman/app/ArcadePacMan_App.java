@@ -28,7 +28,7 @@ import java.util.List;
 public class ArcadePacMan_App extends Application {
 
     private static final float ASPECT_RATIO    = 1.2f; // 12:10 aspect ratio
-    private static final float HEIGHT_FRACTION = 0.8f;  // 80% of available height
+    private static final float HEIGHT_FRACTION = 0.8f; // 80% of available height
 
     private static final List<CommonDashboardID> DASHBOARD_IDs = List.of(
         CommonDashboardID.GENERAL,

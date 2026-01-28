@@ -21,10 +21,14 @@ import de.amr.pacmanfx.tengenmspacman.model.actors.Pinky;
 import de.amr.pacmanfx.tengenmspacman.model.actors.Sue;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
-import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.GameSceneConfig;
+import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.action.ActionBinding;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -52,7 +56,6 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameController.GameState.*;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static java.util.Objects.requireNonNull;
 
@@ -69,10 +72,10 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
 
     public static final Set<ActionBinding> STEERING_BINDINGS = Set.of(
-        new ActionBinding(ACTION_STEER_UP,    JOYPAD.key(JoypadButton.UP),    control(KeyCode.UP)),
-        new ActionBinding(ACTION_STEER_DOWN,  JOYPAD.key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
-        new ActionBinding(ACTION_STEER_LEFT,  JOYPAD.key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
-        new ActionBinding(ACTION_STEER_RIGHT, JOYPAD.key(JoypadButton.RIGHT), control(KeyCode.RIGHT))
+        new ActionBinding(CommonGameActions.ACTION_STEER_UP,    JOYPAD.key(JoypadButton.UP),    control(KeyCode.UP)),
+        new ActionBinding(CommonGameActions.ACTION_STEER_DOWN,  JOYPAD.key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
+        new ActionBinding(CommonGameActions.ACTION_STEER_LEFT,  JOYPAD.key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
+        new ActionBinding(CommonGameActions.ACTION_STEER_RIGHT, JOYPAD.key(JoypadButton.RIGHT), control(KeyCode.RIGHT))
     );
 
     public static final Set<ActionBinding> ACTION_BINDINGS = Set.of(
