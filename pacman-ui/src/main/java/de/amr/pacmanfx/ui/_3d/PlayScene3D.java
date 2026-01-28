@@ -173,7 +173,7 @@ public abstract class PlayScene3D implements GameScene {
     }
 
     @Override
-    public GameContext context() {
+    public GameContext gameContext() {
         return context;
     }
 
@@ -280,7 +280,7 @@ public abstract class PlayScene3D implements GameScene {
 
     @Override
     public void onSwitch_2D_3D(GameScene scene2D) {
-        final Game game = context().currentGame();
+        final Game game = gameContext().currentGame();
         if (game.optGameLevel().isEmpty()) {
             return;
         }
@@ -594,7 +594,7 @@ public abstract class PlayScene3D implements GameScene {
     protected void updateCamera() {
         PerspectiveID id = perspectiveID.get();
         if (id != null && perspectivesByID.containsKey(id)) {
-            perspectivesByID.get(id).update(camera, context());
+            perspectivesByID.get(id).update(camera, gameContext());
         } else {
             Logger.error("No perspective with ID '{}' exists", id);
         }

@@ -90,7 +90,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
         subScene.heightProperty().addListener((_, _, _) -> updateScaling());
 
-        scalingProperty().addListener((_, _, _) -> context().currentGame().optGameLevel().ifPresent(level ->
+        scalingProperty().addListener((_, _, _) -> gameContext().currentGame().optGameLevel().ifPresent(level ->
             dynamicCamera.updateRange(level.worldMap())));
     }
 
@@ -217,12 +217,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public Vector2i unscaledSize() {
-        return context().currentGame().optGameLevel().map(level -> level.worldMap().terrainLayer().sizeInPixel()).orElse(NES_SIZE_PX);
+        return gameContext().currentGame().optGameLevel().map(level -> level.worldMap().terrainLayer().sizeInPixel()).orElse(NES_SIZE_PX);
     }
 
     @Override
     public void onGameStarts(GameStartedEvent e) {
-        final Game game = context().currentGame();
+        final Game game = gameContext().currentGame();
         StateMachine.State<Game> state = game.control().state();
         boolean shutUp = game.level().isDemoLevel() || state instanceof TestState;
         if (!shutUp) {
@@ -232,7 +232,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinues(GameContinuedEvent e) {
-        TengenMsPacMan_GameModel game = context().currentGame();
+        TengenMsPacMan_GameModel game = gameContext().currentGame();
         game.optGameLevel().ifPresent(level -> {
             resetAnimations(level);
             game.showLevelMessage(GameLevelMessageType.READY);
@@ -241,7 +241,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     private void resetAnimations(GameLevel level) {
-        final TengenMsPacMan_GameModel game = context().currentGame();
+        final TengenMsPacMan_GameModel game = gameContext().currentGame();
         level.pac().optAnimationManager().ifPresent(animationManager -> {
             animationManager.select(game.isBoosterActive()
                 ? TengenMsPacMan_AnimationID.ANIM_MS_PAC_MAN_BOOSTER : Pac.AnimationID.PAC_MUNCHING);
@@ -260,7 +260,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelStarts(LevelStartedEvent e) {
-        TengenMsPacMan_GameModel game = context().currentGame();
+        TengenMsPacMan_GameModel game = gameContext().currentGame();
         dynamicCamera.enterIntroMode();
         game.optGameLevel().ifPresent(this::resetAnimations);
     }
@@ -268,7 +268,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void onSwitch_3D_2D(GameScene scene3D) {
         // Switch might occur just during the few ticks when level is not yet available!
-        context().currentGame().optGameLevel().ifPresent(this::initForGameLevel);
+        gameContext().currentGame().optGameLevel().ifPresent(this::initForGameLevel);
         dynamicCamera.enterTrackingMode();
     }
 
@@ -277,13 +277,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         switch (e.newState()) {
             case GameState.LEVEL_COMPLETE -> {
                 ui.soundManager().stopAll();
-                playLevelCompleteAnimation(context.currentGame().level());
+                playLevelCompleteAnimation(gameContext.currentGame().level());
             }
             case GameState.GAME_OVER -> {
                 ui.soundManager().stopAll();
                 dynamicCamera.enterManualMode();
                 dynamicCamera.setToTopPosition();
-                context().currentGame().level().optMessage().ifPresent(this::startGameOverMessageAnimation);
+                gameContext().currentGame().level().optMessage().ifPresent(this::startGameOverMessageAnimation);
             }
             default -> {}
         }
@@ -317,7 +317,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacDead(PacDeadEvent e) {
-        context().currentGame().control().terminateCurrentGameState();
+        gameContext().currentGame().control().terminateCurrentGameState();
     }
 
     @Override
@@ -374,12 +374,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     //TODO fix volume in audio file
     private void selectAndPlaySiren() {
         final float volume = 0.33f;
-        final int sirenNumber = selectSirenNumber(context().currentGame().level().huntingTimer().phaseIndex());
+        final int sirenNumber = selectSirenNumber(gameContext().currentGame().level().huntingTimer().phaseIndex());
         ui.soundManager().playSiren(sirenNumber, volume);
     }
 
     private void updateHUD(GameLevel level) {
-        final TengenMsPacMan_GameModel game = context().currentGame();
+        final TengenMsPacMan_GameModel game = gameContext().currentGame();
         final TengenMsPacMan_HeadsUpDisplay hud = game.hud();
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
         final boolean oneExtra = game.control().state() == GameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();

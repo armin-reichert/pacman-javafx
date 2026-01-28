@@ -269,7 +269,7 @@ public class PlayView extends StackPane implements View {
         }
 
         if (intendedGameScene instanceof GameScene2D gameScene2D) {
-            gameScene2D.setContext(ui.context());
+            gameScene2D.setGameContext(ui.context());
             gameScene2D.setUI(ui);
         }
         else if (intendedGameScene instanceof PlayScene3D playScene3D) {

@@ -70,7 +70,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
      */
     @Override
     public Vector2i unscaledSize() {
-        return context().currentGame().optGameLevel().map(GameLevel::worldMap).map(WorldMap::terrainLayer)
+        return gameContext().currentGame().optGameLevel().map(GameLevel::worldMap).map(WorldMap::terrainLayer)
             .map(TerrainLayer::sizeInPixel).orElse(ARCADE_MAP_SIZE_IN_PIXELS);
     }
 
@@ -95,7 +95,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onSwitch_3D_2D(GameScene scene3D) {
-        context().currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
+        gameContext().currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
         Logger.info("2D scene {} entered from 3D scene {}", getClass().getSimpleName(), scene3D.getClass().getSimpleName());
     }
 
@@ -125,13 +125,13 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinues(GameContinuedEvent e) {
-        final Game game = context.currentGame();
+        final Game game = gameContext.currentGame();
         game.optGameLevel().ifPresent(this::resetAnimations);
     }
 
     @Override
     public void onGameStarts(GameStartedEvent e) {
-        final Game game = context.currentGame();
+        final Game game = gameContext.currentGame();
         final boolean silent = game.optGameLevel().isPresent() && game.level().isDemoLevel()
             || game.control().state() instanceof TestState;
         if (!silent) {
@@ -143,12 +143,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public void onGameStateChange(GameStateChangeEvent e) {
         if (e.newState() == GameState.LEVEL_COMPLETE) {
             ui.soundManager().stopAll();
-            playLevelCompletedAnimation(context.currentGame().level());
+            playLevelCompletedAnimation(gameContext.currentGame().level());
         }
         else if (e.newState() == GameState.GAME_OVER) {
             ui.soundManager().stopAll();
             ui.soundManager().play(SoundID.GAME_OVER);
-            context.currentGame().hud().credit(true);
+            gameContext.currentGame().hud().credit(true);
         }
     }
 
@@ -159,13 +159,13 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent e) {
-        context.currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
+        gameContext.currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
     }
 
     @Override
     public void onPacDead(PacDeadEvent e) {
         // Trigger end of game state PACMAN_DYING after dying animation has finished
-        context.currentGame().control().terminateCurrentGameState();
+        gameContext.currentGame().control().terminateCurrentGameState();
     }
 
     @Override

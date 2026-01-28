@@ -57,7 +57,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
         if (!(scene instanceof Arcade_PlayScene2D playScene)) {
             return;
         }
-        final Game game = scene.context().currentGame();
+        final Game game = scene.gameContext().currentGame();
         // Level creation happens by handling a game event after the play scene has been activated. Therefore,
         // the game level is not yet existing for the first two ticks after this scene got active.
         game.optGameLevel().ifPresent(level -> {

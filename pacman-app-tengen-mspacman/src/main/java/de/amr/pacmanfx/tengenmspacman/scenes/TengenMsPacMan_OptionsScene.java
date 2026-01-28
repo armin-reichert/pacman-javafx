@@ -108,7 +108,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     @Override
     public Vector2i unscaledSize() { return NES_SIZE_PX; }
 
-    private TengenMsPacMan_GameModel tengenGame() { return context().currentGame(); }
+    private TengenMsPacMan_GameModel tengenGame() { return gameContext().currentGame(); }
     
     private void optionValueChanged() {
         ui.soundManager().play("audio.option.value_changed");

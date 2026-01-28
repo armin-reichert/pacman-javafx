@@ -31,7 +31,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected final ActionBindingsManager actionBindings;
 
-    protected GameContext context;
+    protected GameContext gameContext;
     protected GameUI ui;
     protected Canvas canvas;
 
@@ -45,16 +45,16 @@ public abstract class GameScene2D implements GameScene {
     }
 
     @Override
-    public GameContext context() {
-        return context;
+    public GameContext gameContext() {
+        return gameContext;
     }
 
     /**
      * Associates the global game context with this scene.
      * @param context the game context
      */
-    public void setContext(GameContext context) {
-        this.context = requireNonNull(context);
+    public void setGameContext(GameContext context) {
+        this.gameContext = requireNonNull(context);
     }
 
     /**
@@ -103,7 +103,7 @@ public abstract class GameScene2D implements GameScene {
     @Override
     public void onUnspecifiedChange(UnspecifiedChangeEvent event) {
         // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
-        ui.views().playView().updateGameScene(context.currentGame(), true);
+        ui.views().playView().updateGameScene(gameContext.currentGame(), true);
     }
 
     @Override
