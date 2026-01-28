@@ -25,9 +25,8 @@ public interface ArcadeActions {
             final Game game = ui.context().currentGame();
             final CoinMechanism coinMechanism = ui.context().coinMechanism();
             if (coinMechanism.numCoins() < CoinMechanism.MAX_COINS) {
-                final SoundManager soundManager = ui.currentConfig().soundManager();
                 coinMechanism.insertCoin();
-                soundManager.setEnabled(true);
+                ui.soundManager().setEnabled(true);
                 ui.voicePlayer().stop();
                 if (game.control().state() != SETTING_OPTIONS_FOR_START) {
                     game.control().enterState(SETTING_OPTIONS_FOR_START);

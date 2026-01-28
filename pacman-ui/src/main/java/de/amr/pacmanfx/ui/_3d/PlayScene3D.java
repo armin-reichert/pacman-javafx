@@ -244,7 +244,7 @@ public abstract class PlayScene3D implements GameScene {
 
     @Override
     public void end(Game game) {
-        soundManager().stopAll();
+        ui.soundManager().stopAll();
         if (gameLevel3D != null) {
             gameLevel3D.dispose();
             gameLevel3D = null;
@@ -269,7 +269,7 @@ public abstract class PlayScene3D implements GameScene {
         gameLevel3D.update();
         updateCamera();
         updateHUD(game);
-        soundManager().setEnabled(!game.level().isDemoLevel());
+        ui.soundManager().setEnabled(!game.level().isDemoLevel());
         updateSound(game.level());
     }
 
@@ -309,7 +309,7 @@ public abstract class PlayScene3D implements GameScene {
 
         if (state.matches(StateName.HUNTING)) {
             if (level.pac().powerTimer().isRunning()) {
-                soundManager().loop(SoundID.PAC_MAN_POWER);
+                ui.soundManager().loop(SoundID.PAC_MAN_POWER);
             }
             gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
         }
@@ -329,7 +329,7 @@ public abstract class PlayScene3D implements GameScene {
         }
         context.currentGame().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> {
             gameLevel3D.updateBonus3D(bonus);
-            soundManager().loop(SoundID.BONUS_ACTIVE);
+            ui.soundManager().loop(SoundID.BONUS_ACTIVE);
         });
     }
 
@@ -341,8 +341,8 @@ public abstract class PlayScene3D implements GameScene {
         }
         context.currentGame().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(_ -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
-            soundManager().stop(SoundID.BONUS_ACTIVE);
-            soundManager().play(SoundID.BONUS_EATEN);
+            ui.soundManager().stop(SoundID.BONUS_ACTIVE);
+            ui.soundManager().play(SoundID.BONUS_EATEN);
         });
     }
 
@@ -354,7 +354,7 @@ public abstract class PlayScene3D implements GameScene {
         }
         context.currentGame().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(_ -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
-            soundManager().stop(SoundID.BONUS_ACTIVE);
+            ui.soundManager().stop(SoundID.BONUS_ACTIVE);
         });
     }
 
@@ -414,13 +414,13 @@ public abstract class PlayScene3D implements GameScene {
         final StateMachine.State<Game> state = game.control().state();
         final boolean silent = game.level().isDemoLevel() || state instanceof TestState;
         if (!silent) {
-            soundManager().play(SoundID.GAME_READY);
+            ui.soundManager().play(SoundID.GAME_READY);
         }
     }
 
     @Override
     public void onGhostEaten(GhostEatenEvent event) {
-        soundManager().play(SoundID.GHOST_EATEN);
+        ui.soundManager().play(SoundID.GHOST_EATEN);
     }
 
 
@@ -479,7 +479,7 @@ public abstract class PlayScene3D implements GameScene {
             Logger.debug("Pac found food, tick={} passed since last time={}", now, passed);
             byte minDelay = ui.currentConfig().munchingSoundDelay();
             if (passed > minDelay  || minDelay == 0) {
-                soundManager().play(SoundID.PAC_MAN_MUNCHING);
+                ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
                 lastMunchingSoundPlayedTick = now;
             }
         }
@@ -488,10 +488,10 @@ public abstract class PlayScene3D implements GameScene {
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
         final Game game = context.currentGame();
-        soundManager().stopSiren();
+        ui.soundManager().stopSiren();
         if (!game.isLevelCompleted()) {
             gameLevel3D.pac3D().setMovementPowerMode(true);
-            soundManager().loop(SoundID.PAC_MAN_POWER);
+            ui.soundManager().loop(SoundID.PAC_MAN_POWER);
             gameLevel3D.playWallColorFlashing();
         }
     }
@@ -500,12 +500,12 @@ public abstract class PlayScene3D implements GameScene {
     public void onPacLostPower(PacLostPowerEvent e) {
         gameLevel3D.pac3D().setMovementPowerMode(false);
         gameLevel3D.stopWallColorFlashing();
-        soundManager().stop(SoundID.PAC_MAN_POWER);
+        ui.soundManager().stop(SoundID.PAC_MAN_POWER);
     }
 
     @Override
     public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
-        soundManager().play(SoundID.EXTRA_LIFE);
+        ui.soundManager().play(SoundID.EXTRA_LIFE);
     }
 
     @Override
@@ -567,7 +567,7 @@ public abstract class PlayScene3D implements GameScene {
     }
 
     protected GameLevel3D createGameLevel3D(GameLevel level) {
-        return new GameLevel3D(ui.currentConfig(), ui, level);
+        return new GameLevel3D(ui, ui.currentConfig(), level);
     }
 
     protected void replaceGameLevel3D(GameLevel level) {
@@ -619,7 +619,7 @@ public abstract class PlayScene3D implements GameScene {
             // siren numbers are 1..4, hunting phase index = 0..7
             final int huntingPhase = level.huntingTimer().phaseIndex();
             final int sirenNumber = 1 + huntingPhase / 2;
-            soundManager().playSiren(sirenNumber, SIREN_VOLUME); // TODO change sound file volume?
+            ui.soundManager().playSiren(sirenNumber, SIREN_VOLUME); // TODO change sound file volume?
         }
     }
 
@@ -627,16 +627,16 @@ public abstract class PlayScene3D implements GameScene {
         boolean returningHome = pac.isAlive() && ghosts.anyMatch(ghost ->
             ghost.state() == GhostState.RETURNING_HOME || ghost.state() == GhostState.ENTERING_HOUSE);
         if (returningHome) {
-            if (!soundManager().isPlaying(SoundID.GHOST_RETURNS)) {
-                soundManager().loop(SoundID.GHOST_RETURNS);
+            if (!ui.soundManager().isPlaying(SoundID.GHOST_RETURNS)) {
+                ui.soundManager().loop(SoundID.GHOST_RETURNS);
             }
         } else {
-            soundManager().stop(SoundID.GHOST_RETURNS);
+            ui.soundManager().stop(SoundID.GHOST_RETURNS);
         }
     }
 
     protected void updateSound(GameLevel level) {
-        if (!soundManager().isEnabled()) {
+        if (!ui.soundManager().isEnabled()) {
             return;
         }
         if (level.game().control().state().matches(StateName.HUNTING)) {

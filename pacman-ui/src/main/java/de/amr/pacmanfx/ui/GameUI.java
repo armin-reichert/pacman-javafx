@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -148,6 +149,8 @@ public interface GameUI extends Translator {
      * @return the primary stage provided by the JavaFX application
      */
     Stage stage();
+
+    SoundManager soundManager();
 
     /**
      * @return voice player if this UI. Only one voice at a time can be played.

@@ -156,13 +156,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     private final AssetMap assets = new AssetMap();
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
-    private final SoundManager soundManager = new SoundManager();
 
     @Override
-    public void init() {
+    public void init(GameUI ui) {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
-        registerSounds();
+        initSound(ui.soundManager());
     }
 
     @Override
@@ -223,7 +222,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         assets.setLocalizedTexts(TEXT_BUNDLE);
     }
 
-    private void registerSounds() {
+    private void initSound(SoundManager soundManager) {
         soundManager.registerAudioClipURL("audio.option.selection_changed",    LOCAL_RESOURCES.url("sound/ms-select1.wav"));
         soundManager.registerAudioClipURL("audio.option.value_changed",        LOCAL_RESOURCES.url("sound/ms-select2.wav"));
 
@@ -258,11 +257,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             LOCAL_RESOURCES.url("sound/ms-siren2.wav"), // TODO
             LOCAL_RESOURCES.url("sound/ms-siren2.wav")  // TODO
         );
-    }
-
-    @Override
-    public SoundManager soundManager() {
-        return soundManager;
     }
 
     @Override

@@ -96,7 +96,7 @@ public abstract class GameScene2D implements GameScene {
     @Override
     public final void end(Game game) {
         doEnd(game);
-        soundManager().stopAll();
+        ui.soundManager().stopAll();
         Logger.info("2D scene {} ends", getClass().getSimpleName());
     }
 

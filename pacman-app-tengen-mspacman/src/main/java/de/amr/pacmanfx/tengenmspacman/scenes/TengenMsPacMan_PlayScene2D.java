@@ -165,9 +165,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             int numRows = level.worldMap().numRows();
             canvasHeightUnscaled.set(TS(numRows + 2)); // 2 additional rows for level counter below maze
             if (level.isDemoLevel()) {
-                soundManager().setEnabled(false);
+                ui.soundManager().setEnabled(false);
             } else {
-                soundManager().setEnabled(true);
+                ui.soundManager().setEnabled(true);
                 // Update moving "game over" message if present
                 level.optMessage()
                     .filter(MovingGameLevelMessage.class::isInstance)
@@ -226,7 +226,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         StateMachine.State<Game> state = game.control().state();
         boolean shutUp = game.level().isDemoLevel() || state instanceof TestState;
         if (!shutUp) {
-            soundManager().play(SoundID.GAME_READY);
+            ui.soundManager().play(SoundID.GAME_READY);
         }
     }
 
@@ -276,11 +276,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     public void onGameStateChange(GameStateChangeEvent e) {
         switch (e.newState()) {
             case GameState.LEVEL_COMPLETE -> {
-                soundManager().stopAll();
+                ui.soundManager().stopAll();
                 playLevelCompleteAnimation(context.currentGame().level());
             }
             case GameState.GAME_OVER -> {
-                soundManager().stopAll();
+                ui.soundManager().stopAll();
                 dynamicCamera.enterManualMode();
                 dynamicCamera.setToTopPosition();
                 context().currentGame().level().optMessage().ifPresent(this::startGameOverMessageAnimation);
@@ -291,28 +291,28 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onBonusActivated(BonusActivatedEvent e) {
-        soundManager().loop(SoundID.BONUS_ACTIVE);
+        ui.soundManager().loop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
-        soundManager().stop(SoundID.BONUS_ACTIVE);
-        soundManager().play(SoundID.BONUS_EATEN);
+        ui.soundManager().stop(SoundID.BONUS_ACTIVE);
+        ui.soundManager().play(SoundID.BONUS_EATEN);
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent e) {
-        soundManager().stop(SoundID.BONUS_ACTIVE);
+        ui.soundManager().stop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
     public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
-        soundManager().play(SoundID.EXTRA_LIFE);
+        ui.soundManager().play(SoundID.EXTRA_LIFE);
     }
 
     @Override
     public void onGhostEaten(GhostEatenEvent e) {
-        soundManager().play(SoundID.GHOST_EATEN);
+        ui.soundManager().play(SoundID.GHOST_EATEN);
     }
 
     @Override
@@ -323,29 +323,29 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void onPacDying(PacDyingEvent e) {
         dynamicCamera.enterManualMode();
-        soundManager().play(SoundID.PAC_MAN_DEATH);
+        ui.soundManager().play(SoundID.PAC_MAN_DEATH);
     }
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        if (!soundManager().isPlaying(SoundID.PAC_MAN_MUNCHING)) {
-            soundManager().play(SoundID.PAC_MAN_MUNCHING);
+        if (!ui.soundManager().isPlaying(SoundID.PAC_MAN_MUNCHING)) {
+            ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
         }
     }
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        soundManager().stopSiren();
-        soundManager().loop(SoundID.PAC_MAN_POWER);
+        ui.soundManager().stopSiren();
+        ui.soundManager().loop(SoundID.PAC_MAN_POWER);
     }
 
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
-        soundManager().stop(SoundID.PAC_MAN_POWER);
+        ui.soundManager().stop(SoundID.PAC_MAN_POWER);
     }
 
     private void updateSound(GameLevel level) {
-        if (!soundManager().isEnabled()) return;
+        if (!ui.soundManager().isEnabled()) return;
 
         final Game game = level.game();
         if (game.control().state() == GameState.HUNTING) {
@@ -356,11 +356,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             final boolean ghostReturningHome = pac.isAlive()
                 && level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
             if (ghostReturningHome) {
-                if (!soundManager().isPlaying(SoundID.GHOST_RETURNS)) {
-                    soundManager().loop(SoundID.GHOST_RETURNS);
+                if (!ui.soundManager().isPlaying(SoundID.GHOST_RETURNS)) {
+                    ui.soundManager().loop(SoundID.GHOST_RETURNS);
                 }
             } else {
-                soundManager().stop(SoundID.GHOST_RETURNS);
+                ui.soundManager().stop(SoundID.GHOST_RETURNS);
             }
         }
     }
@@ -375,7 +375,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private void selectAndPlaySiren() {
         final float volume = 0.33f;
         final int sirenNumber = selectSirenNumber(context().currentGame().level().huntingTimer().phaseIndex());
-        soundManager().playSiren(sirenNumber, volume);
+        ui.soundManager().playSiren(sirenNumber, volume);
     }
 
     private void updateHUD(GameLevel level) {

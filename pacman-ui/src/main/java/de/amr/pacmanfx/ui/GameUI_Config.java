@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -33,26 +32,19 @@ public interface GameUI_Config extends Disposable {
 
     enum ConfigKey { COLOR_SCHEME, COLOR_MAP_INDEX, MAP_NUMBER }
 
-    void init();
+    void init(GameUI ui);
 
     @Override
     default void dispose() {
         Logger.info("Dispose UI configuration {}:", getClass().getSimpleName());
         Logger.info("Dispose {} assets", assets().numAssets());
         assets().dispose();
-        Logger.info("Dispose {} sounds", soundManager().numSounds());
-        soundManager().dispose();
     }
 
     /**
      * @return the game variant specific asset map
      */
     AssetMap assets();
-
-    /**
-     * @return the sound manager for this game variant
-     */
-    SoundManager soundManager();
 
     /**
      * @return the spritesheet for this game variant

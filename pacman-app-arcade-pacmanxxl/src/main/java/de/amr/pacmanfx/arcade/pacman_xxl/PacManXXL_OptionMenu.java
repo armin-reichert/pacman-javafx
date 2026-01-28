@@ -125,7 +125,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         entryMapOrder.setEnabled(!mapSelector.customMapPrototypes().isEmpty());
         logEntryState();
 
-        soundEnabledProperty().bind(ui.currentConfig().soundManager().muteProperty().not());
+        soundEnabledProperty().bind(ui.soundManager().muteProperty().not());
         chaseAnimation.init(ui.currentConfig(), canvas);
 
         requestFocus();

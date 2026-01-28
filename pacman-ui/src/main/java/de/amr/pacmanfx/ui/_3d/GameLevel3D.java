@@ -15,6 +15,7 @@ import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.world.*;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui.GameUI_PreferencesManager;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -71,8 +72,8 @@ public class GameLevel3D extends Group implements Disposable {
     private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
     private final DoubleProperty wallOpacityProperty    = new SimpleDoubleProperty(1);
 
+    private final GameUI ui;
     private final GameUI_Config uiConfig;
-    private final Translator translator;
     private final GameLevel level;
     private final WorldMapColorScheme colorScheme;
 
@@ -145,10 +146,10 @@ public class GameLevel3D extends Group implements Disposable {
                 pauseSecThen(0.5, () -> level.pac().hide()),
                 pauseSec(0.5),
                 levelSpinningAroundAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
-                pauseSecThen(0.5, () -> uiConfig.soundManager().play(SoundID.LEVEL_COMPLETE)),
+                pauseSecThen(0.5, () -> ui.soundManager().play(SoundID.LEVEL_COMPLETE)),
                 pauseSec(0.5),
                 wallsAndHouseDisappearing(),
-                pauseSecThen(1.0, () -> uiConfig.soundManager().play(SoundID.LEVEL_CHANGED))
+                pauseSecThen(1.0, () -> ui.soundManager().play(SoundID.LEVEL_CHANGED))
             );
         }
 
@@ -289,9 +290,9 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
-    public GameLevel3D(GameUI_Config uiConfig, Translator translator, GameLevel level) {
+    public GameLevel3D(GameUI ui, GameUI_Config uiConfig, GameLevel level) {
+        this.ui = requireNonNull(ui);
         this.uiConfig = requireNonNull(uiConfig);
-        this.translator =  requireNonNull(translator);
         this.level = requireNonNull(level);
 
         wallOpacityProperty.bind(PROPERTY_3D_WALL_OPACITY);
@@ -342,7 +343,7 @@ public class GameLevel3D extends Group implements Disposable {
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
         house3D.startSwirlAnimations();
 
-        pickerLevelCompleteMessages = RandomTextPicker.fromBundle(translator.localizedTexts(), "level.complete");
+        pickerLevelCompleteMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "level.complete");
     }
 
     private void createMaterials() {
@@ -720,7 +721,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public void onPacManDying(StateMachine.State<Game> state) {
         state.timer().resetIndefiniteTime(); // expires when level animation ends
-        uiConfig.soundManager().stopAll();
+        ui.soundManager().stopAll();
         ghostLightAnimation.stop();
         // do one last update before dying animation starts
         pac3D.update(level);
@@ -728,7 +729,7 @@ public class GameLevel3D extends Group implements Disposable {
         bonus3D().ifPresent(Bonus3D::expire);
         var animation = new SequentialTransition(
             pauseSec(1.5),
-            doNow(() -> uiConfig.soundManager().play(SoundID.PAC_MAN_DEATH)),
+            doNow(() -> ui.soundManager().play(SoundID.PAC_MAN_DEATH)),
             pac3D.dyingAnimation().getOrCreateAnimationFX(),
             pauseSec(0.5)
         );
@@ -748,7 +749,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public void onLevelComplete(StateMachine.State<Game> state, ObjectProperty<PerspectiveID> perspectiveIDProperty) {
         state.timer().resetIndefiniteTime(); // expires when animation ends
-        uiConfig.soundManager().stopAll();
+        ui.soundManager().stopAll();
         animationRegistry.stopAllAnimations();
         energizers3D.forEach(Energizer3D::stopPumping); //TODO needed?
         // hide 3D food explicitly because level might have been completed using cheat!
@@ -791,8 +792,8 @@ public class GameLevel3D extends Group implements Disposable {
         energizers3D().forEach(Energizer3D::hide);
         house3D.stopSwirlAnimations();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-        uiConfig.soundManager().stopAll();
-        uiConfig.soundManager().play(SoundID.GAME_OVER);
+        ui.soundManager().stopAll();
+        ui.soundManager().play(SoundID.GAME_OVER);
     }
 
     public void showAnimatedMessage(String messageText, float displaySeconds, double centerX, double centerY) {

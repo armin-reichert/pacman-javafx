@@ -15,10 +15,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.GameScene_Config;
-import de.amr.pacmanfx.ui.GameUI_Config;
-import de.amr.pacmanfx.ui.GameUI_PreferencesManager;
+import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
@@ -55,12 +52,12 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     private final AssetMap assets = new AssetMap();
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
-    private final SoundManager soundManager = new SoundManager();
 
     @Override
-    public void init() {
+    public void init(GameUI ui) {
         Logger.info("Load assets of UI configuration {}", getClass().getSimpleName());
         loadAssets();
+        initSound(ui.soundManager());
     }
 
     @Override
@@ -82,36 +79,38 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
         assets.set("app_icon", ARCADE_PAC_MAN_RESOURCES.loadImage("graphics/icons/pacman.png"));
         assets.set("color.game_over_message", ARCADE_RED);
 
-        assets.set("pac.color.head",   ARCADE_YELLOW);
-        assets.set("pac.color.eyes",   Color.grayRgb(33));
+        assets.set("pac.color.head", ARCADE_YELLOW);
+        assets.set("pac.color.eyes", Color.grayRgb(33));
         assets.set("pac.color.palate", ARCADE_BROWN);
 
-        assets.set("ghost.0.color.normal.dress",      ARCADE_RED);
-        assets.set("ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
-        assets.set("ghost.0.color.normal.pupils",     ARCADE_BLUE);
+        assets.set("ghost.0.color.normal.dress", ARCADE_RED);
+        assets.set("ghost.0.color.normal.eyeballs", ARCADE_WHITE);
+        assets.set("ghost.0.color.normal.pupils", ARCADE_BLUE);
 
-        assets.set("ghost.1.color.normal.dress",      ARCADE_PINK);
-        assets.set("ghost.1.color.normal.eyeballs",   ARCADE_WHITE);
-        assets.set("ghost.1.color.normal.pupils",     ARCADE_BLUE);
+        assets.set("ghost.1.color.normal.dress", ARCADE_PINK);
+        assets.set("ghost.1.color.normal.eyeballs", ARCADE_WHITE);
+        assets.set("ghost.1.color.normal.pupils", ARCADE_BLUE);
 
-        assets.set("ghost.2.color.normal.dress",      ARCADE_CYAN);
-        assets.set("ghost.2.color.normal.eyeballs",   ARCADE_WHITE);
-        assets.set("ghost.2.color.normal.pupils",     ARCADE_BLUE);
+        assets.set("ghost.2.color.normal.dress", ARCADE_CYAN);
+        assets.set("ghost.2.color.normal.eyeballs", ARCADE_WHITE);
+        assets.set("ghost.2.color.normal.pupils", ARCADE_BLUE);
 
-        assets.set("ghost.3.color.normal.dress",      ARCADE_ORANGE);
-        assets.set("ghost.3.color.normal.eyeballs",   ARCADE_WHITE);
-        assets.set("ghost.3.color.normal.pupils",     ARCADE_BLUE);
+        assets.set("ghost.3.color.normal.dress", ARCADE_ORANGE);
+        assets.set("ghost.3.color.normal.eyeballs", ARCADE_WHITE);
+        assets.set("ghost.3.color.normal.pupils", ARCADE_BLUE);
 
-        assets.set("ghost.color.frightened.dress",    ARCADE_BLUE);
+        assets.set("ghost.color.frightened.dress", ARCADE_BLUE);
         assets.set("ghost.color.frightened.eyeballs", ARCADE_ROSE);
-        assets.set("ghost.color.frightened.pupils",   ARCADE_ROSE);
+        assets.set("ghost.color.frightened.pupils", ARCADE_ROSE);
 
-        assets.set("ghost.color.flashing.dress",      ARCADE_WHITE);
-        assets.set("ghost.color.flashing.eyeballs",   ARCADE_ROSE);
-        assets.set("ghost.color.flashing.pupils",     ARCADE_RED);
+        assets.set("ghost.color.flashing.dress", ARCADE_WHITE);
+        assets.set("ghost.color.flashing.eyeballs", ARCADE_ROSE);
+        assets.set("ghost.color.flashing.pupils", ARCADE_RED);
 
         assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman_xxl.localized_texts_pacman"));
+    }
 
+    private void initSound(SoundManager soundManager) {
         soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      ARCADE_PAC_MAN_RESOURCES.url("sound/eat_fruit.mp3"));
         soundManager.registerAudioClipURL(SoundID.COIN_INSERTED,    ARCADE_PAC_MAN_RESOURCES.url("sound/credit.wav"));
         soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,       ARCADE_PAC_MAN_RESOURCES.url("sound/extend.mp3"));
@@ -134,11 +133,6 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
             ARCADE_PAC_MAN_RESOURCES.url("sound/siren_3.mp3"),
             ARCADE_PAC_MAN_RESOURCES.url("sound/siren_4.mp3")
         );
-    }
-
-    @Override
-    public SoundManager soundManager() {
-        return soundManager;
     }
 
     @Override

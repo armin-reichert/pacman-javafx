@@ -116,9 +116,9 @@ public class PlayView extends StackPane implements GameUI_View {
             final Game game = ui.context().gameByVariantName(newName);
             game.addGameEventListener(this);
 
+            ui.soundManager().dispose();
             final GameUI_Config uiConfig = ui.config(newName);
-            uiConfig.init();
-            uiConfig.soundManager().muteProperty().bind(GameUI.PROPERTY_MUTED);
+            uiConfig.init(ui);
 
             final Image icon = uiConfig.assets().image("app_icon");
             if (icon != null) {

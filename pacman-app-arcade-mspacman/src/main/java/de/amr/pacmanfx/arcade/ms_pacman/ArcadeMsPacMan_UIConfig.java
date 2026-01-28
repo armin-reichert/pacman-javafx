@@ -19,10 +19,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.GameScene_Config;
-import de.amr.pacmanfx.ui.GameUI_Config;
-import de.amr.pacmanfx.ui.GameUI_PreferencesManager;
+import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
@@ -60,13 +57,13 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     private static final ResourceManager LOCAL_RESOURCES = () -> ArcadeMsPacMan_UIConfig.class;
 
     private final AssetMap assets = new AssetMap();
-    private final SoundManager soundManager = new SoundManager();
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
 
     @Override
-    public void init() {
+    public void init(GameUI ui) {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
+        initSound(ui.soundManager());
     }
 
     @Override
@@ -125,7 +122,9 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         assets.set("ghost.color.flashing.pupils",     ARCADE_RED);
 
         assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts"));
+    }
 
+    private void initSound(SoundManager soundManager) {
         soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,      LOCAL_RESOURCES.url("sound/Fruit_Bounce.mp3"));
         soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      LOCAL_RESOURCES.url("sound/Fruit.mp3"));
         soundManager.registerAudioClipURL(SoundID.COIN_INSERTED,    LOCAL_RESOURCES.url("sound/credit.wav"));
@@ -167,11 +166,6 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
                 Color.valueOf(colorScheme.door()), Color.TRANSPARENT
         );
         return Ufx.recolorImage(mazeImage, colorChanges);
-    }
-
-    @Override
-    public SoundManager soundManager() {
-        return soundManager;
     }
 
     @Override

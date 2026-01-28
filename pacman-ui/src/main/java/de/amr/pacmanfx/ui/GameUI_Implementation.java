@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
+import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -58,6 +59,7 @@ public final class GameUI_Implementation implements GameUI {
     private final ActionBindingsManager globalActionBindings = new GlobalActionBindings();
     private final GameUI_ConfigManager uiConfigManager;
     private final GameUI_ViewManager viewManager;
+    private final SoundManager soundManager;
     private final Stage stage;
     private final Scene scene;
     private final StackPane layoutPane = new StackPane();
@@ -87,6 +89,9 @@ public final class GameUI_Implementation implements GameUI {
         scene = new Scene(layoutPane, sceneWidth, sceneHeight);
         pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
         viewManager = new GameUI_ViewManager(this, scene, layoutPane, this::createEditorView, flashMessageView);
+
+        soundManager = new SoundManager();
+        soundManager.muteProperty().bind(GameUI.PROPERTY_MUTED);
 
         composeLayout();
         setupScene();
@@ -253,7 +258,7 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void stopGame() {
         views().playView().optGameScene().ifPresent(gameScene -> gameScene.end(context().currentGame()));
-        currentConfig().soundManager().stopAll();
+        soundManager.stopAll();
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
     }
@@ -291,6 +296,11 @@ public final class GameUI_Implementation implements GameUI {
         stage.show();
         flashMessageView.start();
         Platform.runLater(customDirWatchdog::startWatching);
+    }
+
+    @Override
+    public SoundManager soundManager() {
+        return soundManager;
     }
 
     @Override

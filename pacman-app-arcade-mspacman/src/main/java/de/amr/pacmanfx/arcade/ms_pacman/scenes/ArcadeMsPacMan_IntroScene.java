@@ -114,7 +114,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(CreditAddedEvent e) {
-        soundManager().play(SoundID.COIN_INSERTED);
+        ui.soundManager().play(SoundID.COIN_INSERTED);
     }
 
     // Scene controller FSM

@@ -131,7 +131,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(CreditAddedEvent e) {
-        soundManager().play(SoundID.COIN_INSERTED);
+        ui.soundManager().play(SoundID.COIN_INSERTED);
     }
 
     public SceneState state() {

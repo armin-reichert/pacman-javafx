@@ -280,7 +280,7 @@ public final class CommonGameActions {
         public void execute(GameUI ui) {
             toggle(ui.clock().pausedProperty());
             if (ui.clock().isPaused()) {
-                ui.currentConfig().soundManager().stopAll();
+                ui.soundManager().stopAll();
             }
             Logger.info("Game ({}) {}", ui.context().gameVariantName(), ui.clock().isPaused() ? "paused" : "resumed");
         }

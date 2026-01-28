@@ -14,10 +14,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.GameScene_Config;
-import de.amr.pacmanfx.ui.GameUI_Config;
-import de.amr.pacmanfx.ui.GameUI_PreferencesManager;
+import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
@@ -68,17 +65,16 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     );
 
     private final AssetMap assets = new AssetMap();
-    private final SoundManager soundManager = new SoundManager();
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
 
     public ArcadePacMan_UIConfig() {
     }
 
     @Override
-    public void init() {
+    public void init(GameUI ui) {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
-        registerSounds();
+        initSound(ui.soundManager());
     }
 
     @Override
@@ -143,7 +139,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts"));
     }
 
-    private void registerSounds() {
+    private void initSound(SoundManager soundManager) {
         soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      LOCAL_RESOURCES.url("sound/eat_fruit.mp3"));
         soundManager.registerAudioClipURL(SoundID.COIN_INSERTED,    LOCAL_RESOURCES.url("sound/credit.wav"));
         soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,       LOCAL_RESOURCES.url("sound/extend.mp3"));
@@ -166,11 +162,6 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
             LOCAL_RESOURCES.url("sound/siren_3.mp3"),
             LOCAL_RESOURCES.url("sound/siren_4.mp3")
         );
-    }
-
-    @Override
-    public SoundManager soundManager() {
-        return soundManager;
     }
 
     @Override
