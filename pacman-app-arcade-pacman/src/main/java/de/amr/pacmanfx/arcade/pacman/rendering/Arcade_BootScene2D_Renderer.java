@@ -53,7 +53,7 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
 
     @Override
     public void draw(GameScene2D scene) {
-        final TickTimer stateTimer = scene.context().currentGame().control().state().timer();
+        final TickTimer stateTimer = scene.context().currentGameState().timer();
         final boolean fourthTick = stateTimer.tickCount() % 4 == 0;
         if (stateTimer.tickCount() == 1) {
             clearCanvas();

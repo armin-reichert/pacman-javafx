@@ -307,7 +307,7 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final StateMachine.State<?> state = ui.context().currentGame().control().state();
+            final StateMachine.State<?> state = ui.context().currentGameState();
             if (state.matches(LevelShortTestState.class.getSimpleName(), LevelMediumTestState.class.getSimpleName())) {
                 return true;
             }
