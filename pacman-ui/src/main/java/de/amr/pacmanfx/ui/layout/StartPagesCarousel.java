@@ -6,8 +6,8 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_StartPage;
-import de.amr.pacmanfx.ui.GameUI_View;
+import de.amr.pacmanfx.ui.StartPage;
+import de.amr.pacmanfx.ui.View;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
@@ -37,7 +37,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
-public class StartPagesCarousel extends Carousel implements GameUI_View {
+public class StartPagesCarousel extends Carousel implements View {
 
     //TODO start pages should define their preferred duration
     public static final int PAGE_CHANGE_SECONDS = 90;
@@ -56,7 +56,7 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
         }
     };
 
-    private final List<GameUI_StartPage> pages = new ArrayList<>();
+    private final List<StartPage> pages = new ArrayList<>();
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
 
     private GameUI ui;
@@ -92,7 +92,7 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
                 pages.get(oldIndex).onExitStartPage(ui);
             }
             if (newIndex != -1) {
-                GameUI_StartPage startPage = pages.get(newIndex);
+                StartPage startPage = pages.get(newIndex);
                 startPage.onEnterStartPage(ui);
                 startPage.layoutRoot().requestFocus();
             }
@@ -134,16 +134,16 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
         return Optional.of(this::composeTitle);
     }
 
-    public Stream<GameUI_StartPage> startPages() {
+    public Stream<StartPage> startPages() {
         return pages.stream();
     }
 
-    public Optional<GameUI_StartPage> currentStartPage() {
+    public Optional<StartPage> currentStartPage() {
         final int selectedIndex = selectedIndex();
         return selectedIndex >= 0 ? Optional.of(pages.get(selectedIndex)) : Optional.empty();
     }
 
-    public void addStartPage(GameUI_StartPage startPage) {
+    public void addStartPage(StartPage startPage) {
         requireNonNull(startPage);
         pages.add(startPage);
         addItem(startPage.layoutRoot());
@@ -152,7 +152,7 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
     }
 
     private String composeTitle() {
-        final String nameOfTheGame = currentStartPage().map(GameUI_StartPage::title).orElse("Unknown game");
+        final String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
         return ui != null ? ui.translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
     }
 }

@@ -183,13 +183,13 @@ public interface GameUI extends Translator {
 
     // Scene access
 
-    GameScene_Config currentGameSceneConfig();
+    GameSceneConfig currentGameSceneConfig();
 
-    boolean currentGameSceneHasID(GameScene_Config.SceneID sceneID);
+    boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID);
 
     // View access
 
-    GameUI_ViewManager views();
+    ViewManager views();
 
     void showEditorView();
 
@@ -202,19 +202,19 @@ public interface GameUI extends Translator {
     /**
      * @return the UI configuration manager
      */
-    GameUI_ConfigManager uiConfigManager();
+    UIConfigManager uiConfigManager();
 
     /**
      * @param gameVariantName name of game variant
      * @return UI configuration for given game variant
      */
-    GameUI_Config config(String gameVariantName);
+    UIConfig config(String gameVariantName);
 
     /**
      * @return UI configuration for the current game
      * @param <T> type of UI configuration
      */
-    <T extends GameUI_Config> T currentConfig();
+    <T extends UIConfig> T currentConfig();
 
     // Lifecycle
 

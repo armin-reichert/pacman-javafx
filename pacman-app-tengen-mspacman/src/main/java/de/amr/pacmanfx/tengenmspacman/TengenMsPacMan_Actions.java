@@ -8,7 +8,7 @@ import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameController.GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplayMode;
-import de.amr.pacmanfx.ui.GameScene_Config;
+import de.amr.pacmanfx.ui.GameSceneConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.GameAction;
 
@@ -59,7 +59,7 @@ public interface TengenMsPacMan_Actions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.currentGameSceneHasID(GameScene_Config.CommonSceneID.PLAY_SCENE_2D);
+            return ui.currentGameSceneHasID(GameSceneConfig.CommonSceneID.PLAY_SCENE_2D);
         }
     };
 

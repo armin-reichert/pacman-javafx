@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.ArcadePalette;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_StartPage;
+import de.amr.pacmanfx.ui.StartPage;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
  */
-public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
+public class PacManXXL_StartPage extends StackPane implements StartPage {
 
     private static final ResourceManager LOCAL_RESOURCES = () -> PacManXXL_StartPage.class;
     private static final Image WALLPAPER = LOCAL_RESOURCES.loadImage("graphics/screenshot.png");

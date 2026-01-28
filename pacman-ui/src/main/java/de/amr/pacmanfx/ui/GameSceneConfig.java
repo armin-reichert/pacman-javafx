@@ -10,7 +10,7 @@ import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public interface GameScene_Config {
+public interface GameSceneConfig {
 
     interface SceneID {}
 

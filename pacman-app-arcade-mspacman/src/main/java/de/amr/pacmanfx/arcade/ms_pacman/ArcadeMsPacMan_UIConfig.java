@@ -52,7 +52,7 @@ import static de.amr.pacmanfx.ui.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config {
+public class ArcadeMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
 
     private static final ResourceManager LOCAL_RESOURCES = () -> ArcadeMsPacMan_UIConfig.class;
 
@@ -68,7 +68,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public void dispose() {
-        GameUI_Config.super.dispose();
+        UIConfig.super.dispose();
         Logger.info("Dispose {} game scenes", scenesByID.size());
         scenesByID.values().forEach(GameScene::dispose);
         scenesByID.clear();
@@ -272,7 +272,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     @Override
     public MsPacManBody createLivesCounterShape3D() {
         return PacManModel3DRepository.instance().createMsPacManBody(
-            GameUI_PreferencesManager.instance().getFloat("3d.lives_counter.shape_size"),
+            GlobalPreferencesManager.instance().getFloat("3d.lives_counter.shape_size"),
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate"),
@@ -339,9 +339,9 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
                 if (cutSceneNumber == 0) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(game.level().number()));
                 }
-                yield GameScene_Config.cutSceneID(cutSceneNumber);
+                yield GameSceneConfig.cutSceneID(cutSceneNumber);
             }
-            case CutScenesTestState testState -> GameScene_Config.cutSceneID(testState.testedCutSceneNumber);
+            case CutScenesTestState testState -> GameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
         };
         final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, ArcadeMsPacMan_UIConfig::createGameScene);

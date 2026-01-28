@@ -12,25 +12,25 @@ import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameUI_ConfigManager {
+public class UIConfigManager {
 
-    private final Map<String, Supplier<? extends GameUI_Config>> factories = new HashMap<>();
-    private final Map<String, GameUI_Config> uiConfigCache = new HashMap<>();
+    private final Map<String, Supplier<? extends UIConfig>> factories = new HashMap<>();
+    private final Map<String, UIConfig> uiConfigCache = new HashMap<>();
 
-    public GameUI_ConfigManager() {}
+    public UIConfigManager() {}
 
-    public void addFactory(String gameVariantName, Supplier<? extends GameUI_Config> factory) {
+    public void addFactory(String gameVariantName, Supplier<? extends UIConfig> factory) {
         requireNonNull(gameVariantName);
         requireNonNull(factory);
         factories.put(gameVariantName, factory);
     }
 
-    public GameUI_Config getOrCreate(String variantName) {
+    public UIConfig getOrCreate(String variantName) {
         requireNonNull(variantName);
         return uiConfigCache.computeIfAbsent(variantName, _ -> {
             try {
-                final GameUI_Config config = factories.get(variantName).get();
-                if (config instanceof GameScene_Config gameSceneConfig) {
+                final UIConfig config = factories.get(variantName).get();
+                if (config instanceof GameSceneConfig gameSceneConfig) {
                     gameSceneConfig.gameScenes().forEach(scene -> {
                         if (scene instanceof GameScene2D gameScene2D) {
                             gameScene2D.debugInfoVisibleProperty().bind(GameUI.PROPERTY_DEBUG_INFO_VISIBLE);
@@ -48,7 +48,7 @@ public class GameUI_ConfigManager {
 
     public void dispose(String variantName) {
         requireNonNull(variantName);
-        final GameUI_Config config = uiConfigCache.remove(variantName);
+        final UIConfig config = uiConfigCache.remove(variantName);
         if (config != null) {
             config.dispose();
         }

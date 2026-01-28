@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.lib.PathWatchEventListener;
 import de.amr.pacmanfx.model.world.*;
-import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.UIConfig;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.tinylog.Logger;
@@ -194,7 +194,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
         final WorldMapColorScheme colorScheme = builtinMapPrototypes.contains(prototype)
             ? WORLD_MAP_COLOR_SCHEMES[randomInt(0, WORLD_MAP_COLOR_SCHEMES.length)]
             : WorldMapSelector.extractColorScheme(prototype);
-        worldMap.setConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME, colorScheme);
+        worldMap.setConfigValue(UIConfig.ConfigKey.COLOR_SCHEME, colorScheme);
         Logger.info("Map selected (mode {}): {}", selectionMode, worldMap.url());
 
         return worldMap;

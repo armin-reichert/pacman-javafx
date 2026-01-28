@@ -19,15 +19,15 @@ import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameUI_ViewManager {
+public class ViewManager {
 
-    private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>();
+    private final ObjectProperty<View> currentView = new SimpleObjectProperty<>();
     private final StartPagesCarousel startPagesView;
     private final PlayView playView;
     private final Supplier<EditorView> editorViewCreator;
     private EditorView editorView; // created on-demand
 
-    GameUI_ViewManager(
+    ViewManager(
         GameUI ui,
         Scene scene,
         Pane layoutPane,
@@ -71,9 +71,9 @@ public class GameUI_ViewManager {
         editorView.editor().start();
     }
 
-    private void selectView(GameUI_View view) {
+    private void selectView(View view) {
         requireNonNull(view);
-        final GameUI_View oldView = currentView();
+        final View oldView = currentView();
         if (oldView == view) {
             return;
         }
@@ -85,11 +85,11 @@ public class GameUI_ViewManager {
         currentView.set(view);
     }
 
-    ObjectProperty<GameUI_View> currentViewProperty() {
+    ObjectProperty<View> currentViewProperty() {
         return currentView;
     }
 
-    public GameUI_View currentView() {
+    public View currentView() {
         return currentView.get();
     }
 

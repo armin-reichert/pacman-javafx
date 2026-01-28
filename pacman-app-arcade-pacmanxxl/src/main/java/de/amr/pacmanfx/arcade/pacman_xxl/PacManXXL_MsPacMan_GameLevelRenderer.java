@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
@@ -26,7 +26,7 @@ public class PacManXXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLev
 
     @Override
     public void applyLevelSettings(GameLevel level, RenderInfo info) {
-        final WorldMapColorScheme worldMapColorScheme = level.worldMap().getConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME);
+        final WorldMapColorScheme worldMapColorScheme = level.worldMap().getConfigValue(UIConfig.ConfigKey.COLOR_SCHEME);
         final var terrainMapColorScheme = new TerrainMapColorScheme(
             backgroundColor(),
             Color.valueOf(worldMapColorScheme.wallFill()),

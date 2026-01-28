@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 
@@ -36,7 +36,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         game.hud().hide();
         movingText = new Actor();
         movingText.setPosition(TS(9), unscaledSize().y()); // lower border of screen
-        final GameUI_Config uiConfig = ui.currentConfig();
+        final UIConfig uiConfig = ui.currentConfig();
         ghost = uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW);
     }
 

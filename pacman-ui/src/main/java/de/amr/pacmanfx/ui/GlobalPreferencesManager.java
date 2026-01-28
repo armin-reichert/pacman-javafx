@@ -10,19 +10,19 @@ import javafx.scene.text.FontWeight;
 
 import static de.amr.pacmanfx.Globals.TS;
 
-public final class GameUI_PreferencesManager extends PreferencesManager {
+public final class GlobalPreferencesManager extends PreferencesManager {
 
     // Initialization-on-Demand Holder Idiom
     private static class Holder {
-        static final GameUI_PreferencesManager INSTANCE = new GameUI_PreferencesManager();
+        static final GlobalPreferencesManager INSTANCE = new GlobalPreferencesManager();
     }
 
-    public static GameUI_PreferencesManager instance() {
+    public static GlobalPreferencesManager instance() {
         return Holder.INSTANCE;
     }
 
-    private GameUI_PreferencesManager() {
-        super(GameUI_PreferencesManager.class);
+    private GlobalPreferencesManager() {
+        super(GlobalPreferencesManager.class);
     }
 
     protected void storeDefaultValues() {

@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Pulse;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
@@ -40,7 +40,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
         requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);
 
-        final GameUI_Config uiConfig = scene.ui().currentConfig();
+        final UIConfig uiConfig = scene.ui().currentConfig();
         levelRenderer = scene.adaptRenderer(uiConfig.createGameLevelRenderer(canvas));
         actorRenderer = scene.adaptRenderer(uiConfig.createActorRenderer(canvas));
         debugRenderer = scene.adaptRenderer(new Arcade_PlayScene2D_DebugInfo_Renderer(canvas));

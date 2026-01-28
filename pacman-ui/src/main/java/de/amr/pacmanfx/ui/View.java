@@ -9,7 +9,7 @@ import javafx.scene.Node;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public interface GameUI_View extends GameEventListener {
+public interface View extends GameEventListener {
     /**
      * @return the action bindings manager for this view
      */

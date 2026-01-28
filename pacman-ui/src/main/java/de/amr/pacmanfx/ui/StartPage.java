@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui;
 import javafx.scene.layout.Region;
 import org.tinylog.Logger;
 
-public interface GameUI_StartPage {
+public interface StartPage {
 
     Region layoutRoot();
 

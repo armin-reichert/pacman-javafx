@@ -24,7 +24,7 @@ public class GameUI_Builder {
 
     private static class GameConfiguration {
         Supplier<? extends AbstractGameModel> gameModelFactory;
-        Supplier<? extends GameUI_Config> uiConfigFactory;
+        Supplier<? extends UIConfig> uiConfigFactory;
         WorldMapSelector mapSelector;
     }
 
@@ -36,7 +36,7 @@ public class GameUI_Builder {
     private final double mainSceneWidth;
     private final double mainSceneHeight;
     private final Map<String, GameConfiguration> configByGameVariant = new LinkedHashMap<>();
-    private final List<Supplier<? extends GameUI_StartPage>> startPageFactories = new ArrayList<>();
+    private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
     private List<CommonDashboardID> dashboardIDs = List.of();
 
     private GameUI_Builder(Stage stage, double width, double height) {
@@ -55,7 +55,7 @@ public class GameUI_Builder {
     public GameUI_Builder game(
         String variantName,
         Supplier<? extends AbstractGameModel> gameModelFactory,
-        Supplier<? extends GameUI_Config> uiConfigFactory,
+        Supplier<? extends UIConfig> uiConfigFactory,
         WorldMapSelector optionalMapSelector)
     {
         validateGameVariantName(variantName);
@@ -74,7 +74,7 @@ public class GameUI_Builder {
     public GameUI_Builder game(
         String variantName,
         Supplier<? extends AbstractGameModel> gameModelFactory,
-        Supplier<? extends GameUI_Config> uiConfigFactory)
+        Supplier<? extends UIConfig> uiConfigFactory)
     {
         return game(variantName, gameModelFactory, uiConfigFactory, null);
     }
@@ -82,12 +82,12 @@ public class GameUI_Builder {
     public GameUI_Builder game(
         GameVariant variant,
         Supplier<? extends AbstractGameModel> gameModelFactory,
-        Supplier<? extends GameUI_Config> uiConfigFactory)
+        Supplier<? extends UIConfig> uiConfigFactory)
     {
         return game(variant.name(), gameModelFactory, uiConfigFactory, null);
     }
 
-    public GameUI_Builder startPage(Supplier<? extends GameUI_StartPage> startPageFactory) {
+    public GameUI_Builder startPage(Supplier<? extends StartPage> startPageFactory) {
         if (startPageFactory == null) {
             error("Start page factory must not be null");
         }
@@ -120,7 +120,7 @@ public class GameUI_Builder {
         configByGameVariant.forEach((gameVariant, config) -> ui.uiConfigManager().addFactory(gameVariant, config.uiConfigFactory));
 
         for (var factory : startPageFactories) {
-            GameUI_StartPage startPage = factory.get();
+            StartPage startPage = factory.get();
             if (startPage != null) {
                 ui.views().startPagesView().addStartPage(startPage);
                 startPage.init(ui);

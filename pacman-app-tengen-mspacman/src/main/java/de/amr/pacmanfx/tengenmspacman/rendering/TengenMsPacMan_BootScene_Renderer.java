@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_BootScene;
-import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import javafx.scene.canvas.Canvas;
@@ -18,7 +18,7 @@ public class TengenMsPacMan_BootScene_Renderer extends GameScene2D_Renderer {
 
     private final TengenMsPacMan_ActorRenderer actorRenderer;
 
-    public TengenMsPacMan_BootScene_Renderer(GameUI_Config uiConfig, GameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_BootScene_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
         actorRenderer = scene.adaptRenderer((TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
         createDefaultDebugInfoRenderer(scene, canvas);

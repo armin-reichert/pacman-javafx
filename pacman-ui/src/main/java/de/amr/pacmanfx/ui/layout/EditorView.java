@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_View;
+import de.amr.pacmanfx.ui.View;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.uilib.Ufx.paintBackground;
 
-public class EditorView implements GameUI_View {
+public class EditorView implements View {
 
     private final GameUI ui;
     private final TileMapEditor editor;

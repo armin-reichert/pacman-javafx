@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
 
@@ -44,7 +44,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
-        final GameUI_Config uiConfig = ui.currentConfig();
+        final UIConfig uiConfig = ui.currentConfig();
 
         game.hud().credit(false).score(true).levelCounter(true).livesCounter(false).show();
 

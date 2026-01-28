@@ -19,7 +19,7 @@ import de.amr.pacmanfx.tengenmspacman.model.actors.PacMan;
 import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
@@ -86,7 +86,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     @Override
     public void doInit(Game game) {
         final var tengenGame = (TengenMsPacMan_GameModel) game;
-        final GameUI_Config uiConfig = ui.currentConfig();
+        final UIConfig uiConfig = ui.currentConfig();
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
         final var hud = (TengenMsPacMan_HeadsUpDisplay) game.hud();

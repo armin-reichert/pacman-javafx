@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -16,7 +16,7 @@ public abstract class ArcadePacMan_CutScene_Renderer extends GameScene2D_Rendere
 
     public ArcadePacMan_CutScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
-        final GameUI_Config uiConfig = scene.ui().currentConfig();
+        final UIConfig uiConfig = scene.ui().currentConfig();
         actorRenderer = scene.adaptRenderer(uiConfig.createActorRenderer(canvas));
     }
 

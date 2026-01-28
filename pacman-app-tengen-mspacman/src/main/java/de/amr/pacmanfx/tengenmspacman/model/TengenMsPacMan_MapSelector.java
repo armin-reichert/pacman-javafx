@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.rendering.NonArcadeMapsSpriteSheet;
-import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.UIConfig;
 import org.tinylog.Logger;
 
 import java.io.IOException;
@@ -136,7 +136,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
             case STRANGE -> strangeMapPrototypes;
         };
         final var worldMap = new WorldMap(prototypes.get(number - 1));
-        worldMap.setConfigValue(GameUI_Config.ConfigKey.MAP_NUMBER, number);
+        worldMap.setConfigValue(UIConfig.ConfigKey.MAP_NUMBER, number);
         worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY, category);
         worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.NES_COLOR_SCHEME, nesColorScheme);
         worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MULTIPLE_FLASH_COLORS, false);

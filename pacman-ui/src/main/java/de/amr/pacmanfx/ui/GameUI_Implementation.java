@@ -57,8 +57,8 @@ public final class GameUI_Implementation implements GameUI {
     private final GameClock clock = new GameClock();
     private final DirectoryWatchdog customDirWatchdog;
     private final ActionBindingsManager globalActionBindings = new GlobalActionBindings();
-    private final GameUI_ConfigManager uiConfigManager;
-    private final GameUI_ViewManager viewManager;
+    private final UIConfigManager uiConfigManager;
+    private final ViewManager viewManager;
     private final SoundManager soundManager;
     private final Stage stage;
     private final Scene scene;
@@ -84,11 +84,11 @@ public final class GameUI_Implementation implements GameUI {
         clock.setPausableAction(this::simulateAndUpdateGameScene);
         clock.setPermanentAction(this::render);
 
-        uiConfigManager = new GameUI_ConfigManager();
+        uiConfigManager = new UIConfigManager();
         customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
         scene = new Scene(layoutPane, sceneWidth, sceneHeight);
         pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
-        viewManager = new GameUI_ViewManager(this, scene, layoutPane, this::createEditorView, flashMessageView);
+        viewManager = new ViewManager(this, scene, layoutPane, this::createEditorView, flashMessageView);
 
         soundManager = new SoundManager();
         soundManager.muteProperty().bind(GameUI.PROPERTY_MUTED);
@@ -98,8 +98,8 @@ public final class GameUI_Implementation implements GameUI {
         setupBindings();
         setupStage();
 
-        PROPERTY_3D_WALL_HEIGHT.set(GameUI_PreferencesManager.instance().getFloat("3d.obstacle.base_height"));
-        PROPERTY_3D_WALL_OPACITY.set(GameUI_PreferencesManager.instance().getFloat("3d.obstacle.opacity"));
+        PROPERTY_3D_WALL_HEIGHT.set(GlobalPreferencesManager.instance().getFloat("3d.obstacle.base_height"));
+        PROPERTY_3D_WALL_OPACITY.set(GlobalPreferencesManager.instance().getFloat("3d.obstacle.opacity"));
 
         // Load 3D models
         final var ignored = PacManModel3DRepository.instance();
@@ -132,7 +132,7 @@ public final class GameUI_Implementation implements GameUI {
             () -> {
                 final GameScene gameScene = viewManager.playView().optGameScene().orElse(null);
                 final AssetMap assets = context.gameVariantName() != null ? currentConfig().assets() : null;
-                final GameUI_View view = views().currentView();
+                final View view = views().currentView();
                 final boolean debug  = PROPERTY_DEBUG_INFO_VISIBLE.get();
                 final boolean is3D   = PROPERTY_3D_ENABLED.get();
                 final boolean paused = clock.isPaused();
@@ -148,7 +148,7 @@ public final class GameUI_Implementation implements GameUI {
         stage.titleProperty().bind(titleBinding);
 
         layoutPane.backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> currentGameSceneHasID(GameScene_Config.CommonSceneID.PLAY_SCENE_3D)
+            () -> currentGameSceneHasID(GameSceneConfig.CommonSceneID.PLAY_SCENE_3D)
                 ? Background.fill(Gradients.Samples.random())
                 : GameUI.BACKGROUND_PAC_MAN_WALLPAPER,
             // depends on:
@@ -312,7 +312,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public GameUI_ConfigManager uiConfigManager() {
+    public UIConfigManager uiConfigManager() {
         return uiConfigManager;
     }
 
@@ -322,7 +322,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public GameUI_ViewManager views() {
+    public ViewManager views() {
         return viewManager;
     }
 
@@ -348,19 +348,19 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public boolean currentGameSceneHasID(GameScene_Config.SceneID sceneID) {
+    public boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID) {
         final GameScene currentGameScene = views().playView().optGameScene().orElse(null);
         return currentGameScene != null && currentGameSceneConfig().gameSceneHasID(currentGameScene, sceneID);
     }
 
     @Override
-    public GameUI_Config config(String gameVariantName) {
+    public UIConfig config(String gameVariantName) {
         return uiConfigManager.getOrCreate(gameVariantName);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends GameUI_Config> T currentConfig() {
+    public <T extends UIConfig> T currentConfig() {
         final String gameVariantName = context.gameVariantName();
         if (gameVariantName == null) {
             throw new IllegalStateException("Cannot access UI configuration: no game variant is selected");
@@ -369,14 +369,14 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public GameScene_Config currentGameSceneConfig() {
+    public GameSceneConfig currentGameSceneConfig() {
         return currentConfig();
     }
 
     // private stuff
 
-    private static String computeStageTitle(Translator translator, GameUI_View view, AssetMap assets, GameScene gameScene,
-        boolean debug, boolean is3D, boolean paused)
+    private static String computeStageTitle(Translator translator, View view, AssetMap assets, GameScene gameScene,
+                                            boolean debug, boolean is3D, boolean paused)
     {
         if (view == null) {
             return translator.translate("view.missing"); // Should never happen

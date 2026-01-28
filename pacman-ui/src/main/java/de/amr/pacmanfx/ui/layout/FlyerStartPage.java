@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_StartPage;
+import de.amr.pacmanfx.ui.StartPage;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.FancyButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
@@ -21,7 +21,7 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW;
 import static java.util.Objects.requireNonNull;
 
-public abstract class FlyerStartPage extends StackPane implements GameUI_StartPage {
+public abstract class FlyerStartPage extends StackPane implements StartPage {
 
     public static final Font  DEFAULT_START_BUTTON_FONT = Ufx.deriveFont(GameUI.FONT_ARCADE_8, 32);
     public static final Color DEFAULT_START_BUTTON_BGCOLOR = Color.rgb(0, 155, 252, 0.7);

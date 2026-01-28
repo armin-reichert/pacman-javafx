@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
 import de.amr.pacmanfx.lib.Pulse;
 import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
@@ -32,7 +32,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
     private final ArcadePacMan_ActorRenderer actorRenderer;
     private final RectShort energizerSprite;
 
-    public ArcadePacMan_IntroScene_Renderer(GameUI_Config uiConfig, GameScene2D scene, Canvas canvas) {
+    public ArcadePacMan_IntroScene_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
         actorRenderer = scene.adaptRenderer((ArcadePacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
         debugRenderer = scene.adaptRenderer(new BaseDebugInfoRenderer(canvas) {

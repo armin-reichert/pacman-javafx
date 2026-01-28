@@ -11,9 +11,9 @@ import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
-import de.amr.pacmanfx.ui.GameScene_Config.CommonSceneID;
+import de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_View;
+import de.amr.pacmanfx.ui.View;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
@@ -66,7 +66,7 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final GameUI_View currentView = ui.views().currentView();
+            final View currentView = ui.views().currentView();
             return currentView == ui.views().playView() || currentView == ui.views().startPagesView();
         }
     };

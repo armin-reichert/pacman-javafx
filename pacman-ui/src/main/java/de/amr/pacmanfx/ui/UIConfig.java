@@ -28,7 +28,7 @@ import org.tinylog.Logger;
  * Game-variant specific configuration of the UI. Provides factory methods for renderers and actors and accessors to
  * the game-variant specific assets.
  */
-public interface GameUI_Config extends Disposable {
+public interface UIConfig extends Disposable {
 
     enum ConfigKey { COLOR_SCHEME, COLOR_MAP_INDEX, MAP_NUMBER }
 

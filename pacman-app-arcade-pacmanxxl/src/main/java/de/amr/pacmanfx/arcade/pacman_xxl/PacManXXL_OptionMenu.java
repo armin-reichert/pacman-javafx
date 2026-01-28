@@ -7,7 +7,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
 import javafx.scene.input.KeyCode;
@@ -56,7 +56,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             @Override
             public void onValueChanged(GameVariant oldVariant, GameVariant newVariant) {
                 if (ui != null) {
-                    final GameUI_Config uiConfig = ui.config(newVariant.name());
+                    final UIConfig uiConfig = ui.config(newVariant.name());
                     chaseAnimation.init(uiConfig, canvas);
                 }
             }

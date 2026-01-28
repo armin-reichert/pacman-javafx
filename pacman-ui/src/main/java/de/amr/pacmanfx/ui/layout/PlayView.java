@@ -42,8 +42,8 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.ui.GameScene_Config.CommonSceneID;
-import static de.amr.pacmanfx.ui.GameScene_Config.identifySceneSwitchType;
+import static de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
+import static de.amr.pacmanfx.ui.GameSceneConfig.identifySceneSwitchType;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
@@ -54,7 +54,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
-public class PlayView extends StackPane implements GameUI_View {
+public class PlayView extends StackPane implements View {
 
     private static final Dashboard.Style DASHBOARD_STYLE = new Dashboard.Style(
         Dashboard.DEFAULT_STYLE.labelWidth(),
@@ -117,7 +117,7 @@ public class PlayView extends StackPane implements GameUI_View {
             game.addGameEventListener(this);
 
             ui.soundManager().dispose();
-            final GameUI_Config uiConfig = ui.config(newName);
+            final UIConfig uiConfig = ui.config(newName);
             uiConfig.init(ui);
 
             final Image icon = uiConfig.assets().image("app_icon");
@@ -220,7 +220,7 @@ public class PlayView extends StackPane implements GameUI_View {
         switch (gameEvent) {
             case LevelCreatedEvent _ -> {
                 final GameLevel level = game.level();
-                final GameUI_Config uiConfig = ui.currentConfig();
+                final UIConfig uiConfig = ui.currentConfig();
 
                 //TODO this should be done elsewhere
                 level.pac().setAnimationManager(uiConfig.createPacAnimations());
@@ -430,7 +430,7 @@ public class PlayView extends StackPane implements GameUI_View {
             Vector2i gameSceneSizePx = gameScene2D.unscaledSize();
             double aspect = (double) gameSceneSizePx.x() / gameSceneSizePx.y();
             if (ui.currentGameSceneConfig().sceneDecorationRequested(gameScene)) {
-                final float maxScaling = GameUI_PreferencesManager.instance().getFloat("scene2d.max_scaling");
+                final float maxScaling = GlobalPreferencesManager.instance().getFloat("scene2d.max_scaling");
                 // Decorated game scene scaled-down to give space for the decoration
                 gameScene2D.scalingProperty().bind(canvasDecorator.scalingProperty().map(
                         scaling -> Math.min(scaling.doubleValue(), maxScaling)));

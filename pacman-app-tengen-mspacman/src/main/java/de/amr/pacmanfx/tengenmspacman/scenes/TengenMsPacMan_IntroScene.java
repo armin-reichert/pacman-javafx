@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameController.GameSt
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -58,7 +58,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     public void doInit(Game game) {
         game.hud().hide();
 
-        final GameUI_Config uiConfig = ui.currentConfig();
+        final UIConfig uiConfig = ui.currentConfig();
         spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         actionBindings.useAnyBinding(ACTION_ENTER_START_SCREEN,             TengenMsPacMan_UIConfig.ACTION_BINDINGS);
@@ -117,7 +117,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             public void onEnter(TengenMsPacMan_IntroScene scene) {
                 timer.restartTicks(TickTimer.INDEFINITE);
 
-                GameUI_Config uiConfig = scene.ui.currentConfig();
+                UIConfig uiConfig = scene.ui.currentConfig();
 
                 scene.msPacMan = new MsPacMan();
                 scene.msPacMan.setAnimationManager(scene.ui.currentConfig().createPacAnimations());
