@@ -55,12 +55,12 @@ public final class GameUI_Implementation implements GameUI {
 
     private final GameContext context;
     private final GameClock clock = new GameClock();
-    private final DirectoryWatchdog customDirWatchdog;
+    private final DirectoryWatchdog customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
     private final GlobalPreferencesManager preferencesManager = new GlobalPreferencesManager();
     private final ActionBindingsManager globalActionBindings = new GlobalActionBindings();
-    private final UIConfigManager uiConfigManager;
+    private final UIConfigManager uiConfigManager = new UIConfigManager();
     private final ViewManager viewManager;
-    private final SoundManager soundManager;
+    private final SoundManager soundManager = new SoundManager();
     private final Stage stage;
     private final Scene scene;
     private final StackPane layoutPane = new StackPane();
@@ -68,7 +68,7 @@ public final class GameUI_Implementation implements GameUI {
     private final FlashMessageView flashMessageView = new FlashMessageView();
     private final VoicePlayer voicePlayer = new VoicePlayer();
 
-    private final FontIcon pausedIcon;
+    private final FontIcon pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
     private final StatusIconBox statusIconBox = new StatusIconBox();
 
     private StringBinding titleBinding;
@@ -85,13 +85,9 @@ public final class GameUI_Implementation implements GameUI {
         clock.setPausableAction(this::simulateAndUpdateGameScene);
         clock.setPermanentAction(this::render);
 
-        uiConfigManager = new UIConfigManager();
-        customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
         scene = new Scene(layoutPane, sceneWidth, sceneHeight);
-        pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
         viewManager = new ViewManager(this, scene, layoutPane, this::createEditorView, flashMessageView);
 
-        soundManager = new SoundManager();
         soundManager.muteProperty().bind(GameUI.PROPERTY_MUTED);
 
         composeLayout();
@@ -381,8 +377,9 @@ public final class GameUI_Implementation implements GameUI {
 
     // private stuff
 
-    private static String computeStageTitle(Translator translator, View view, AssetMap assets, GameScene gameScene,
-                                            boolean debug, boolean is3D, boolean paused)
+    private static String computeStageTitle(
+        Translator translator, View view, AssetMap assets, GameScene gameScene,
+        boolean debug, boolean is3D, boolean paused)
     {
         if (view == null) {
             return translator.translate("view.missing"); // Should never happen
