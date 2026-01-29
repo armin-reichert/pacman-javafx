@@ -152,7 +152,7 @@ public class GameLevel3D extends Group implements Disposable {
         getChildren().add(maze3D);
         getChildren().add(ambientLight);
 
-        getChildren().add(animations.ghostLightAnimation().light());
+        getChildren().add(animations.ghostLight());
 
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
         house3D.startSwirlAnimations();

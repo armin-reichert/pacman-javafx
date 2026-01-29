@@ -36,6 +36,8 @@ public class GameLevel3DAnimations implements Disposable {
     private LevelCompletedAnimationShort levelCompletedShortAnimation;
     private GhostLightAnimation ghostLightAnimation;
 
+    private PointLight ghostLight;
+
     private Animation wallsSwinging(int numFlashes) {
         if (numFlashes == 0) {
             return pauseSec(1.0);
@@ -50,7 +52,7 @@ public class GameLevel3DAnimations implements Disposable {
         return timeline;
     }
 
-    public class LevelCompletedAnimation extends RegisteredAnimation {
+    private class LevelCompletedAnimation extends RegisteredAnimation {
         private static final int MESSAGE_FREQUENCY = 20; // 20% of cases
         private static final float SPINNING_SECONDS = 1.5f;
 
@@ -102,7 +104,7 @@ public class GameLevel3DAnimations implements Disposable {
         }
     }
 
-    public class LevelCompletedAnimationShort extends RegisteredAnimation {
+    private class LevelCompletedAnimationShort extends RegisteredAnimation {
 
         public LevelCompletedAnimationShort(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Level_Complete_Short_Animation");
@@ -120,7 +122,7 @@ public class GameLevel3DAnimations implements Disposable {
         }
     }
 
-    public class WallColorFlashingAnimation extends RegisteredAnimation {
+    private class WallColorFlashingAnimation extends RegisteredAnimation {
 
         private final Color fromColor = Color.valueOf(level3D.colorScheme().wallFill());
         private final Color toColor = Color.valueOf(level3D.colorScheme().wallStroke());
@@ -159,9 +161,8 @@ public class GameLevel3DAnimations implements Disposable {
     /**
      * A light animation that switches from ghost to ghost (JavaFX can only display a limited amount of lights per scene).
      */
-    public class GhostLightAnimation extends RegisteredAnimation {
+    private class GhostLightAnimation extends RegisteredAnimation {
 
-        private final PointLight ghostLight;
         private byte currentGhostID;
 
         public GhostLightAnimation(AnimationRegistry animationRegistry) {
@@ -170,10 +171,6 @@ public class GameLevel3DAnimations implements Disposable {
             ghostLight = new PointLight(Color.WHITE);
             ghostLight.setMaxRange(30);
             ghostLight.lightOnProperty().addListener((_, _, on) -> Logger.info("Ghost light {}", on ? "ON" : "OFF"));
-        }
-
-        public PointLight light() {
-            return ghostLight;
         }
 
         private static byte nextGhostID(byte id) {
@@ -250,6 +247,10 @@ public class GameLevel3DAnimations implements Disposable {
         levelCompletedFullAnimation = new LevelCompletedAnimation(level3D.animationRegistry());
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(level3D.animationRegistry());
         ghostLightAnimation = new GhostLightAnimation(level3D.animationRegistry());
+    }
+
+    public PointLight ghostLight() {
+        return ghostLight;
     }
 
     public GhostLightAnimation ghostLightAnimation() {
