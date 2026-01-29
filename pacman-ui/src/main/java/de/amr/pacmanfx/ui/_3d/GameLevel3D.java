@@ -13,7 +13,6 @@ import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
@@ -26,7 +25,7 @@ import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.assets.Translator;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
-import javafx.animation.*;
+import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -37,7 +36,6 @@ import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PointLight;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
@@ -46,7 +44,6 @@ import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
-import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.*;
@@ -79,10 +76,7 @@ public class GameLevel3D extends Group implements Disposable {
     private final RandomTextPicker<String> pickerLevelCompleteMessages;
 
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
-    private RegisteredAnimation wallColorFlashingAnimation;
-    private RegisteredAnimation levelCompletedFullAnimation;
-    private RegisteredAnimation levelCompletedShortAnimation;
-    private RegisteredAnimation ghostLightAnimation;
+    private final GameLevel3DAnimations animations;
 
     private MeshView[] ghostDressMeshViews;
     private MeshView[] ghostPupilsMeshViews;
@@ -97,7 +91,6 @@ public class GameLevel3D extends Group implements Disposable {
     private PhongMaterial particleMaterial;
 
     private AmbientLight ambientLight;
-    private PointLight ghostLight;
 
     private Group maze3D;
     private Box floor3D;
@@ -113,181 +106,6 @@ public class GameLevel3D extends Group implements Disposable {
     private MessageView messageView;
 
     private int wall3DCount;
-
-    private Animation wallsSwinging(int numFlashes) {
-        if (numFlashes == 0) {
-            return pauseSec(1.0);
-        }
-        var timeline = new Timeline(
-            new KeyFrame(Duration.millis(0.5 * 250),
-                new KeyValue(wallBaseHeightProperty, 0, Interpolator.EASE_BOTH)
-            )
-        );
-        timeline.setAutoReverse(true);
-        timeline.setCycleCount(2 * numFlashes);
-        return timeline;
-    }
-
-    private class LevelCompletedAnimation extends RegisteredAnimation {
-        private static final int MESSAGE_FREQUENCY = 20; // 20% of cases
-        private static final float SPINNING_SECONDS = 1.5f;
-
-        public LevelCompletedAnimation(AnimationRegistry animationRegistry) {
-            super(animationRegistry, "Level_Completed");
-        }
-
-        @Override
-        protected Animation createAnimationFX() {
-            return new SequentialTransition(
-                //doNow(() -> sometimesLevelCompleteMessage(level.number())),
-                pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),
-                wallsSwinging(level.numFlashes()),
-                pauseSecThen(0.5, () -> level.pac().hide()),
-                pauseSec(0.5),
-                levelSpinningAroundAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
-                pauseSecThen(0.5, () -> ui.soundManager().play(SoundID.LEVEL_COMPLETE)),
-                pauseSec(0.5),
-                wallsAndHouseDisappearing(),
-                pauseSecThen(1.0, () -> ui.soundManager().play(SoundID.LEVEL_CHANGED))
-            );
-        }
-
-        private Animation wallsAndHouseDisappearing() {
-            return new Timeline(
-                new KeyFrame(Duration.seconds(0.5), new KeyValue(house3D.wallBaseHeightProperty(), 0, Interpolator.EASE_IN)),
-                new KeyFrame(Duration.seconds(1.5), new KeyValue(wallBaseHeightProperty, 0, Interpolator.EASE_IN)),
-                new KeyFrame(Duration.seconds(2.5), _ -> maze3D.setVisible(false))
-            );
-        }
-
-        /*
-        private void sometimesLevelCompleteMessage(int levelNumber) {
-            if (randomInt(0, 100) < MESSAGE_FREQUENCY) {
-                String message = translatedLevelCompleteMessage(localizedTextsAccessor, levelNumber);
-                ui.showFlashMessage(Duration.seconds(3), message);
-            }
-        }
-         */
-
-        private Animation levelSpinningAroundAxis(Point3D axis) {
-            var spin360 = new RotateTransition(Duration.seconds(SPINNING_SECONDS), GameLevel3D.this);
-            spin360.setAxis(axis);
-            spin360.setFromAngle(0);
-            spin360.setToAngle(360);
-            spin360.setInterpolator(Interpolator.LINEAR);
-            return spin360;
-        }
-    }
-
-    private class LevelCompletedAnimationShort extends RegisteredAnimation {
-
-        public LevelCompletedAnimationShort(AnimationRegistry animationRegistry) {
-            super(animationRegistry, "Level_Complete_Short_Animation");
-        }
-
-        @Override
-        protected Animation createAnimationFX() {
-            return new SequentialTransition(
-                pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),
-                pauseSec(0.5),
-                wallsSwinging(level.numFlashes()),
-                pauseSecThen(0.5, () -> level.pac().hide())
-            );
-        }
-    }
-
-    //TODO This animation sometimes does not stop. Why?
-    private class WallColorFlashingAnimation extends RegisteredAnimation {
-
-        public WallColorFlashingAnimation(AnimationRegistry animationRegistry) {
-            super(animationRegistry, "WallColorFlashing");
-        }
-
-        @Override
-        protected Animation createAnimationFX() {
-            return new Transition() {
-                {
-                    setAutoReverse(true);
-                    setCycleCount(Animation.INDEFINITE);
-                    setCycleDuration(Duration.seconds(0.25));
-                }
-
-                @Override
-                protected void interpolate(double t) {
-                    Color color = Color.valueOf(colorScheme.wallFill()).interpolate(Color.valueOf(colorScheme.wallStroke()), t);
-                    wallTopMaterial.setDiffuseColor(color);
-                    wallTopMaterial.setSpecularColor(color.brighter());
-                }
-            };
-        }
-
-        @Override
-        public void stop() {
-            super.stop();
-            // reset wall colors
-            wallTopMaterial.setDiffuseColor(Color.valueOf(colorScheme.wallFill()));
-            wallTopMaterial.setSpecularColor(Color.valueOf(colorScheme.wallFill()).brighter());
-        }
-    }
-
-    /**
-     * A light animation that switches from ghost to ghost (JavaFX can only display a limited amount of lights per scene).
-     */
-    private class GhostLightAnimation extends RegisteredAnimation {
-
-        private byte currentGhostID;
-
-        public GhostLightAnimation(AnimationRegistry animationRegistry) {
-            super(animationRegistry, "GhostLight");
-            currentGhostID = RED_GHOST_SHADOW;
-        }
-
-        private static byte nextGhostID(byte id) {
-            return (byte) ((id + 1) % 4);
-        }
-
-        private void illuminateGhost(byte ghostID) {
-            MutableGhost3D ghost3D = ghosts3D.get(ghostID);
-            ghostLight.setColor(ghost3D.colorSet().normal().dress());
-            ghostLight.translateXProperty().bind(ghost3D.translateXProperty());
-            ghostLight.translateYProperty().bind(ghost3D.translateYProperty());
-            ghostLight.setTranslateZ(-25);
-            ghostLight.setLightOn(true);
-            currentGhostID = ghostID;
-            Logger.debug("Ghost light passed to ghost {}", currentGhostID);
-        }
-
-        @Override
-        protected Animation createAnimationFX() {
-            var timeline = new Timeline(new KeyFrame(Duration.millis(3000), _ -> {
-                Logger.debug("Try to pass light from ghost {} to next", currentGhostID);
-                // find the next hunting ghost, if exists, pass light to him
-                byte candidate = nextGhostID(currentGhostID);
-                while (candidate != currentGhostID) {
-                    if (level.ghost(candidate).state() == GhostState.HUNTING_PAC) {
-                        illuminateGhost(candidate);
-                        return;
-                    }
-                    candidate = nextGhostID(candidate);
-                }
-                ghostLight.setLightOn(false);
-            }));
-            timeline.setCycleCount(Animation.INDEFINITE);
-            return timeline;
-        }
-
-        @Override
-        public void playFromStart() {
-            illuminateGhost(RED_GHOST_SHADOW);
-            super.playFromStart();
-        }
-
-        @Override
-        public void stop() {
-            ghostLight.setLightOn(false);
-            super.stop();
-        }
-    }
 
     public GameLevel3D(GameUI ui, UIConfig uiConfig, GameLevel level) {
         this.ui = requireNonNull(ui);
@@ -316,12 +134,8 @@ public class GameLevel3D extends Group implements Disposable {
         createPellets3D();
         createEnergizers3D();
         createAmbientLight();
-        createGhostLight();
 
-        wallColorFlashingAnimation = new WallColorFlashingAnimation(animationRegistry);
-        levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry);
-        levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationRegistry);
-        ghostLightAnimation = new GhostLightAnimation(animationRegistry);
+        animations = new GameLevel3DAnimations(ui, this);
 
         getChildren().add(floor3D);
         getChildren().add(levelCounter3D);
@@ -337,12 +151,45 @@ public class GameLevel3D extends Group implements Disposable {
         // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
         getChildren().add(maze3D);
         getChildren().add(ambientLight);
-        getChildren().add(ghostLight);
+
+        getChildren().add(animations.ghostLightAnimation().light());
 
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
         house3D.startSwirlAnimations();
 
         pickerLevelCompleteMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "level.complete");
+    }
+
+    public GameLevel3DAnimations animations() {
+        return animations;
+    }
+
+    public AnimationRegistry animationRegistry() {
+        return animationRegistry;
+    }
+
+    public GameLevel level() {
+        return level;
+    }
+
+    public DoubleProperty wallBaseHeightProperty() {
+        return wallBaseHeightProperty;
+    }
+
+    public ArcadeHouse3D house3D() {
+        return house3D;
+    }
+
+    public Group maze3D() {
+        return maze3D;
+    }
+
+    public WorldMapColorScheme colorScheme() {
+        return colorScheme;
+    }
+
+    public PhongMaterial wallTopMaterial() {
+        return wallTopMaterial;
     }
 
     private void createMaterials() {
@@ -449,12 +296,6 @@ public class GameLevel3D extends Group implements Disposable {
     private void createAmbientLight() {
         ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);
-    }
-
-    private void createGhostLight() {
-        ghostLight = new PointLight(Color.WHITE);
-        ghostLight.setMaxRange(30);
-        ghostLight.lightOnProperty().addListener((_, _, on) -> Logger.info("Ghost light {}", on ? "ON" : "OFF"));
     }
 
     private void createMaze3D() {
@@ -670,14 +511,6 @@ public class GameLevel3D extends Group implements Disposable {
 
     public AnimationRegistry animationManager() { return animationRegistry; }
 
-    public void playWallColorFlashing() {
-        wallColorFlashingAnimation.playFromStart();
-    }
-
-    public void stopWallColorFlashing() {
-        wallColorFlashingAnimation.stop();
-    }
-
     /**
      * Called on each clock tick (frame).
      */
@@ -716,13 +549,13 @@ public class GameLevel3D extends Group implements Disposable {
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
         energizers3D().forEach(Energizer3D::startPumping);
         house3D.startSwirlAnimations();
-        ghostLightAnimation.playFromStart();
+        animations.playGhostLightAnimation();
     }
 
     public void onPacManDying(StateMachine.State<Game> state) {
         state.timer().resetIndefiniteTime(); // expires when level animation ends
         ui.soundManager().stopAll();
-        ghostLightAnimation.stop();
+        animations.stopGhostLightAnimation();
         // do one last update before dying animation starts
         pac3D.update(level);
         ghosts3D.forEach(MutableGhost3D::stopAllAnimations);
@@ -766,8 +599,8 @@ public class GameLevel3D extends Group implements Disposable {
         }
         boolean cutSceneFollows = level.cutSceneNumber() != 0;
         RegisteredAnimation levelCompletedAnimation = cutSceneFollows
-            ? levelCompletedShortAnimation
-            : levelCompletedFullAnimation;
+            ? animations.levelCompletedShortAnimation()
+            : animations.levelCompletedFullAnimation();
 
         var animation = new SequentialTransition(
             pauseSecThen(2, () -> {
@@ -788,7 +621,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public void onGameOver(StateMachine.State<Game> state) {
         state.timer().restartSeconds(3);
-        ghostLightAnimation.stop();
+        animations.stopGhostLightAnimation();
         energizers3D().forEach(Energizer3D::hide);
         house3D.stopSwirlAnimations();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
@@ -861,14 +694,11 @@ public class GameLevel3D extends Group implements Disposable {
             .forEach(shape3D -> shape3D.setDrawMode(drawMode));
     }
 
-
     private String translatedLevelCompleteMessage(Translator translator, int levelNumber) {
         return pickerLevelCompleteMessages.hasEntries()
             ? pickerLevelCompleteMessages.nextText() + "\n\n" + translator.translate("level_complete", levelNumber)
             : "";
     }
-
-    // still work in progress...
 
     private boolean disposed = false;
 
@@ -883,22 +713,7 @@ public class GameLevel3D extends Group implements Disposable {
         animationRegistry.stopAllAnimations();
         Logger.info("Stopped all managed animations");
 
-        if (wallColorFlashingAnimation != null) {
-            wallColorFlashingAnimation.dispose();
-            wallColorFlashingAnimation = null;
-        }
-        if (levelCompletedFullAnimation != null) {
-            levelCompletedFullAnimation.dispose();
-            levelCompletedFullAnimation = null;
-        }
-        if (levelCompletedShortAnimation != null) {
-            levelCompletedShortAnimation.dispose();
-            levelCompletedShortAnimation = null;
-        }
-        if (ghostLightAnimation != null) {
-            ghostLightAnimation.dispose();
-            ghostLightAnimation = null;
-        }
+        animations.dispose();
 
         // Dispose all remaining animations
         animationRegistry.dispose();
