@@ -253,18 +253,6 @@ public class GameLevel3DAnimations implements Disposable {
         return ghostLight;
     }
 
-    public GhostLightAnimation ghostLightAnimation() {
-        return ghostLightAnimation;
-    }
-
-    public LevelCompletedAnimationShort levelCompletedShortAnimation() {
-        return levelCompletedShortAnimation;
-    }
-
-    public LevelCompletedAnimation levelCompletedFullAnimation() {
-        return levelCompletedFullAnimation;
-    }
-
     public void playGhostLightAnimation() {
         ghostLightAnimation.playFromStart();
     }
@@ -279,5 +267,9 @@ public class GameLevel3DAnimations implements Disposable {
 
     public void stopWallColorFlashing() {
         wallColorFlashingAnimation.stop();
+    }
+
+    public RegisteredAnimation getLevelCompleteAnimation(boolean cutSceneFollows) {
+        return cutSceneFollows ? levelCompletedShortAnimation : levelCompletedFullAnimation;
     }
 }

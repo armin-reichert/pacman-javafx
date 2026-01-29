@@ -19,12 +19,12 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecycling;
-import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.assets.Translator;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
+import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -597,10 +597,9 @@ public class GameLevel3D extends Group implements Disposable {
         if (messageView != null) {
             messageView.setVisible(false);
         }
-        boolean cutSceneFollows = level.cutSceneNumber() != 0;
-        RegisteredAnimation levelCompletedAnimation = cutSceneFollows
-            ? animations.levelCompletedShortAnimation()
-            : animations.levelCompletedFullAnimation();
+
+        final boolean cutSceneFollows = level.cutSceneNumber() != 0;
+        final Animation levelCompletedAnimation = animations.getLevelCompleteAnimation(cutSceneFollows).getOrCreateAnimationFX();
 
         var animation = new SequentialTransition(
             pauseSecThen(2, () -> {
@@ -608,7 +607,7 @@ public class GameLevel3D extends Group implements Disposable {
                 perspectiveIDProperty.set(PerspectiveID.TOTAL);
                 wallBaseHeightProperty.unbind();
             }),
-            levelCompletedAnimation.getOrCreateAnimationFX(),
+            levelCompletedAnimation,
             pauseSec(0.25)
         );
         animation.setOnFinished(_ -> {
