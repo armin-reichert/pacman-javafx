@@ -48,11 +48,14 @@ public class ArcadePacMan_App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        final GameBox gameBox = GameBox.instance();
         final Dimension2D sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         try {
             final boolean useBuilder = Boolean.parseBoolean(getParameters().getNamed().getOrDefault("use_builder", "true"));
-            if (useBuilder) createUI_WithBuilder(primaryStage,sceneSize);
-            else            createUI(primaryStage, sceneSize);
+            if (useBuilder)
+                createUIUsingBuilder(gameBox, primaryStage, sceneSize);
+            else
+                createUIUsingAPI(gameBox, primaryStage, sceneSize);
             ui.show();
         }
         catch (RuntimeException x) {
@@ -66,11 +69,11 @@ public class ArcadePacMan_App extends Application {
         ui.terminate();
     }
 
-    private void createUI(Stage stage, Dimension2D size) {
-        final Game game = new ArcadePacMan_GameModel(GameBox.instance(), HIGH_SCORE_FILE);
-        GameBox.instance().registerGame(GameVariant.ARCADE_MS_PACMAN.name(), game);
+    private void createUIUsingAPI(GameBox gameBox, Stage primaryStage, Dimension2D size) {
+        final Game game = new ArcadePacMan_GameModel(gameBox, HIGH_SCORE_FILE);
+        gameBox.registerGame(GameVariant.ARCADE_MS_PACMAN.name(), game);
 
-        ui = new GameUI_Implementation(GameBox.instance(), stage, size.getWidth(), size.getHeight());
+        ui = new GameUI_Implementation(gameBox, primaryStage, size.getWidth(), size.getHeight());
         ui.uiConfigManager().addFactory(GameVariant.ARCADE_MS_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
         final StartPagesCarousel startPagesView = ui.views().startPagesView();
@@ -82,10 +85,10 @@ public class ArcadePacMan_App extends Application {
         ui.views().playView().dashboard().addCommonSections(ui, DASHBOARD_IDs);
     }
 
-    private void createUI_WithBuilder(Stage stage, Dimension2D size) {
+    private void createUIUsingBuilder(GameBox gameBox, Stage primaryStage, Dimension2D size) {
         ui = GameUI_Builder
-            .newUI(stage, size.getWidth(), size.getHeight())
-            .game(GameVariant.ARCADE_MS_PACMAN, () -> new ArcadePacMan_GameModel(GameBox.instance(), HIGH_SCORE_FILE), ArcadePacMan_UIConfig::new)
+            .newUI(primaryStage, size.getWidth(), size.getHeight())
+            .game(GameVariant.ARCADE_MS_PACMAN, () -> new ArcadePacMan_GameModel(gameBox, HIGH_SCORE_FILE), ArcadePacMan_UIConfig::new)
             .startPage(ArcadePacMan_StartPage::new)
             .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
             .build();
