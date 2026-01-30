@@ -34,7 +34,7 @@ public class DashboardSection3DSettings extends DashboardSection {
     private ChoiceBox<PerspectiveID> comboPerspectives;
     private CheckBox cbMiniViewVisible;
     private Slider sliderMiniViewSceneHeight;
-    private Slider sliderMiniViewOpacity;
+    private Slider sliderMiniViewOpacityPercentage;
     private Slider sliderWallHeight;
     private Slider sliderWallOpacity;
     private CheckBox cbAxesVisible;
@@ -55,12 +55,14 @@ public class DashboardSection3DSettings extends DashboardSection {
         addDynamicLabeledValue("Scene Size",     () -> sceneSizeInfo(ui));
 
         cbMiniViewVisible = addCheckBox("Mini View", PROPERTY_MINI_VIEW_ON);
+
         sliderMiniViewSceneHeight = addSlider(
             " - Height",
             MINI_VIEW_MIN_HEIGHT, MINI_VIEW_MAX_HEIGHT,
             PROPERTY_MINI_VIEW_HEIGHT.get(),
             false, false);
-        sliderMiniViewOpacity = addSlider(
+
+        sliderMiniViewOpacityPercentage = addSlider(
             " - Opacity",
             0, 100,
             PROPERTY_MINI_VIEW_OPACITY_PERCENT.get(),
@@ -71,6 +73,7 @@ public class DashboardSection3DSettings extends DashboardSection {
             0, 16,
             PROPERTY_3D_WALL_HEIGHT.get(),
             false, false);
+
         sliderWallOpacity = addSlider(
             "Wall Opacity",
             0, 1,
@@ -81,10 +84,13 @@ public class DashboardSection3DSettings extends DashboardSection {
         cbWireframeMode = addCheckBox("Wireframe Mode");
 
         setTooltip(sliderMiniViewSceneHeight, sliderMiniViewSceneHeight.valueProperty(), "%.0f px");
-        setTooltip(sliderMiniViewOpacity, sliderMiniViewOpacity.valueProperty(), "%.0f %%");
+        setTooltip(sliderMiniViewOpacityPercentage, sliderMiniViewOpacityPercentage.valueProperty(), "%.0f %%");
+
+        setTooltip(sliderWallHeight, sliderWallHeight.valueProperty(), "%.0f px");
+        setTooltip(sliderWallOpacity, sliderWallOpacity.valueProperty().multiply(100), "%.0f %%");
 
         setEditor(sliderMiniViewSceneHeight, PROPERTY_MINI_VIEW_HEIGHT);
-        setEditor(sliderMiniViewOpacity, PROPERTY_MINI_VIEW_OPACITY_PERCENT);
+        setEditor(sliderMiniViewOpacityPercentage, PROPERTY_MINI_VIEW_OPACITY_PERCENT);
         setEditor(sliderWallHeight, PROPERTY_3D_WALL_HEIGHT);
         setEditor(sliderWallOpacity, PROPERTY_3D_WALL_OPACITY);
         setEditor(comboPerspectives, PROPERTY_3D_PERSPECTIVE_ID);
@@ -100,7 +106,7 @@ public class DashboardSection3DSettings extends DashboardSection {
         comboPerspectives.setValue(PROPERTY_3D_PERSPECTIVE_ID.get());
         sliderMiniViewSceneHeight.setValue(PROPERTY_MINI_VIEW_HEIGHT.get());
         sliderMiniViewSceneHeight.setDisable(ui.views().playView().miniView().isMoving());
-        sliderMiniViewOpacity.setValue(PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
+        sliderMiniViewOpacityPercentage.setValue(PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
         sliderWallHeight.setValue(PROPERTY_3D_WALL_HEIGHT.get());
         sliderWallOpacity.setValue(PROPERTY_3D_WALL_OPACITY.get());
         cbUsePlayScene3D.setSelected(PROPERTY_3D_ENABLED.get());

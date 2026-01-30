@@ -23,7 +23,7 @@ import static de.amr.pacmanfx.Globals.TS;
  *     var r3D = new TerrainRenderer();
  *     r3D.setOnWallCreated(wall -> {
  *        wall.setBaseMaterial(baseMaterial);
- *        wall.setTopMaterial(topMaterial;
+ *        wall.setTopMaterial(topMaterial);
  *        parent.getChildren().addAll(wall.base(), wall.top());
  *        return wall;
  *     });

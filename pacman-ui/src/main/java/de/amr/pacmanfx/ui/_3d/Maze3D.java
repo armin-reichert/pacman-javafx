@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecyclingAnimation;
 import de.amr.pacmanfx.uilib.model3D.*;
@@ -58,7 +59,6 @@ public class Maze3D extends Group implements Disposable {
     private final DoubleProperty wallBaseHeight = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
     private final DoubleProperty wallOpacity = new SimpleDoubleProperty(1);
 
-    private TerrainRenderer3D terrainRenderer3D;
     private WorldMapColorScheme colorScheme;
     private Box floor3D;
     private ArcadeHouse3D house3D;
@@ -81,9 +81,8 @@ public class Maze3D extends Group implements Disposable {
 
         createWorldMapColorScheme(level.worldMap());
         createMaterials();
-        createTerrainRenderer();
         createFloor3D();
-        createObstacles3D(level.worldMap(), terrainRenderer3D);
+        createObstacles3D(level.worldMap());
         level.worldMap().terrainLayer().optHouse().ifPresent(house -> {
             createHouse3D(house);
             getChildren().add(house3D);
@@ -213,34 +212,31 @@ public class Maze3D extends Group implements Disposable {
         pelletMaterial = defaultPhongMaterial(Color.valueOf(colorScheme.pellet()));
         particleMaterial = defaultPhongMaterial(Color.valueOf(colorScheme.pellet()).deriveColor(0, 0.5, 1.5, 0.5));
 
-        floorMaterial = defaultPhongMaterial(PROPERTY_3D_FLOOR_COLOR);
+        floorMaterial = Ufx.colorSensitivePhongMaterial(PROPERTY_3D_FLOOR_COLOR);
         floorMaterial.setSpecularPower(128);
 
-        final Color diffuseColor = wallOpacityProperty()
-            .map(opacity -> colorWithOpacity(Color.valueOf(colorScheme.wallStroke()), opacity.doubleValue())).getValue();
-        wallBaseMaterial = defaultPhongMaterial(diffuseColor);
+        final ObservableValue<Color> diffuseColorProperty = wallOpacityProperty()
+            .map(opacity -> colorWithOpacity(Color.valueOf(colorScheme.wallStroke()), opacity.doubleValue()));
+        wallBaseMaterial = Ufx.colorSensitivePhongMaterial(diffuseColorProperty);
         wallBaseMaterial.setSpecularPower(64);
 
         wallTopMaterial = defaultPhongMaterial(Color.valueOf(colorScheme.wallFill()));
     }
 
-    private void createTerrainRenderer() {
-        terrainRenderer3D = new TerrainRenderer3D();
-        terrainRenderer3D.setOnWallCreated(wall3D -> {
-            wall3D.bindBaseHeight(wallBaseHeight);
-            wall3D.setBaseMaterial(wallBaseMaterial);
-            wall3D.setTopMaterial(wallTopMaterial);
-            ++wall3DCount;
-            getChildren().addAll(wall3D.base(), wall3D.top());
-            return wall3D;
-        });
-    }
-
-    private void createObstacles3D(WorldMap worldMap, TerrainRenderer3D terrainRenderer3D) {
+    private void createObstacles3D(WorldMap worldMap) {
         final float wallThickness = ui.prefs().getFloat("3d.obstacle.wall_thickness");
         final float cornerRadius = ui.prefs().getFloat("3d.obstacle.corner_radius");
         final House house = worldMap.terrainLayer().optHouse().orElse(null);
         final var stopWatch = new StopWatch();
+        final var terrainRenderer3D = new TerrainRenderer3D();
+        terrainRenderer3D.setOnWallCreated(wall3D -> {
+            ++wall3DCount;
+            wall3D.setBaseMaterial(wallBaseMaterial);
+            wall3D.setTopMaterial(wallTopMaterial);
+            wall3D.bindBaseHeight(wallBaseHeightProperty());
+            getChildren().addAll(wall3D.base(), wall3D.top());
+            return wall3D;
+        });
 
         wall3DCount = 0;
         for (Obstacle obstacle : worldMap.terrainLayer().obstacles()) {

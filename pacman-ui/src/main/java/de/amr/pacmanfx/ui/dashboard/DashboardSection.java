@@ -205,7 +205,7 @@ public abstract class DashboardSection extends TitledPane {
         slider.valueProperty().bindBidirectional(property);
     }
 
-    protected Slider addSlider(String labelText, int min, int max, double initialValue, boolean tickMarks, boolean tickLabels) {
+    protected Slider addSlider(String labelText, double min, double max, double initialValue, boolean tickMarks, boolean tickLabels) {
         var slider = new Slider(min, max, initialValue);
         slider.setShowTickMarks(tickMarks);
         slider.setShowTickLabels(tickLabels);

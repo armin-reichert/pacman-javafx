@@ -207,7 +207,7 @@ public interface Ufx {
      * @param colorProperty color property
      * @return material with Phong shading (diffuse=color, specular=color.brighter)
      */
-    static PhongMaterial defaultPhongMaterial(ObservableValue<Color> colorProperty) {
+    static PhongMaterial colorSensitivePhongMaterial(ObservableValue<Color> colorProperty) {
         requireNonNull(colorProperty);
         var material = new PhongMaterial();
         material.diffuseColorProperty().bind(colorProperty);
