@@ -33,7 +33,7 @@ public abstract class AbstractGameModel implements Game {
 
     private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
 
-    private final BooleanProperty collisionCheckedTwice = new SimpleBooleanProperty(false);
+    private final BooleanProperty collisionCheckedTwice = new SimpleBooleanProperty(true);
 
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
