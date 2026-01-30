@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.SimulationStep;
+import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -35,6 +36,8 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
@@ -262,6 +265,26 @@ public final class GameUI_Implementation implements GameUI {
     public DirectoryWatchdog customDirWatchdog() {
         return customDirWatchdog;
     }
+
+    @Override
+    public void editWorldMapFile(File worldMapFile) {
+        requireNonNull(worldMapFile);
+        views().selectEditorView(); // this ensures the editor view is created!
+        views().optEditorView().map(EditorView::editor).ifPresent(editor -> {
+            try {
+                editor.editFile(worldMapFile);
+                showEditorView();
+            } catch (IOException x) {
+                Logger.error(x, "Could not open map file {}", worldMapFile);
+                showFlashMessage("Cannot open world map file");
+            }
+            catch (WorldMapParseException x) {
+                Logger.error(x, "Error reading map file data from {}", worldMapFile);
+                showFlashMessage("Cannot read world map file data");
+            }
+        });
+    }
+
 
     @Override
     public ResourceBundle localizedTexts() {

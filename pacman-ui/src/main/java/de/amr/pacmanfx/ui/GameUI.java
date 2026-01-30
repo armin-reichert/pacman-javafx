@@ -5,13 +5,11 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
-import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
@@ -27,10 +25,8 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -39,12 +35,17 @@ import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
-import static java.util.Objects.requireNonNull;
 
+/**
+ * Central interface for the game UI. Provides access to shared resources, global state, and lifecycle methods.
+ * Implementations manage the JavaFX stage, views, sound, preferences, and configuration.
+ */
 public interface GameUI extends Translator {
 
+    /** Global keyboard handler used for all key bindings. */
     Keyboard KEYBOARD = new Keyboard();
 
+    /** Cheat key bindings (Alt + key). */
     Set<ActionBinding> CHEAT_BINDINGS = Set.of(
         new ActionBinding(CheatActions.ACTION_EAT_ALL_PELLETS,  alt(KeyCode.E)),
         new ActionBinding(CheatActions.ACTION_ADD_LIVES,        alt(KeyCode.L)),
@@ -52,6 +53,7 @@ public interface GameUI extends Translator {
         new ActionBinding(CheatActions.ACTION_KILL_GHOSTS,      alt(KeyCode.X))
     );
 
+    /** Steering key bindings (arrow keys, with optional Ctrl modifier). */
     Set<ActionBinding> STEERING_BINDINGS = Set.of(
         new ActionBinding(ACTION_STEER_UP,    bare(KeyCode.UP),    control(KeyCode.UP)),
         new ActionBinding(ACTION_STEER_DOWN,  bare(KeyCode.DOWN),  control(KeyCode.DOWN)),
@@ -59,18 +61,21 @@ public interface GameUI extends Translator {
         new ActionBinding(ACTION_STEER_RIGHT, bare(KeyCode.RIGHT), control(KeyCode.RIGHT))
     );
 
+    /** Key bindings for scene/level tests. */
     Set<ActionBinding> SCENE_TESTS_BINDINGS = Set.of(
         new ActionBinding(TestActions.ACTION_CUT_SCENES_TEST,      alt(KeyCode.C)),
         new ActionBinding(TestActions.ACTION_SHORT_LEVEL_TEST,     alt(KeyCode.T)),
         new ActionBinding(TestActions.ACTION_MEDIUM_LEVEL_TEST,    alt_shift(KeyCode.T))
     );
 
+    /** Key bindings specific to 3D play scene navigation and rendering. */
     Set<ActionBinding> PLAY_3D_BINDINGS = Set.of(
         new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,             alt(KeyCode.LEFT)),
         new ActionBinding(ACTION_PERSPECTIVE_NEXT,                 alt(KeyCode.RIGHT)),
         new ActionBinding(ACTION_TOGGLE_DRAW_MODE,                 alt(KeyCode.W))
     );
 
+    /** Common global key bindings used across all views/scenes. */
     Set<ActionBinding> COMMON_BINDINGS = Set.of(
         new ActionBinding(ACTION_BOOT_SHOW_PLAY_VIEW,              bare(KeyCode.F3)),
         new ActionBinding(ACTION_ENTER_FULLSCREEN,                 bare(KeyCode.F11)),
@@ -95,42 +100,100 @@ public interface GameUI extends Translator {
         new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_2D_3D,          alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
     );
 
-    ObjectProperty<Color>         PROPERTY_CANVAS_BACKGROUND_COLOR = new SimpleObjectProperty<>(Color.BLACK);
-    BooleanProperty               PROPERTY_CANVAS_FONT_SMOOTHING = new SimpleBooleanProperty(false);
-    BooleanProperty               PROPERTY_DEBUG_INFO_VISIBLE = new SimpleBooleanProperty(false);
-    IntegerProperty               PROPERTY_MINI_VIEW_HEIGHT = new SimpleIntegerProperty(400);
-    BooleanProperty               PROPERTY_MINI_VIEW_ON = new SimpleBooleanProperty(false);
-    IntegerProperty               PROPERTY_MINI_VIEW_OPACITY_PERCENT = new SimpleIntegerProperty(69);
-    BooleanProperty               PROPERTY_MUTED = new SimpleBooleanProperty(false);
-    IntegerProperty               PROPERTY_SIMULATION_STEPS = new SimpleIntegerProperty(1);
-    BooleanProperty               PROPERTY_3D_AXES_VISIBLE = new SimpleBooleanProperty(false);
-    ObjectProperty<DrawMode>      PROPERTY_3D_DRAW_MODE = new SimpleObjectProperty<>(DrawMode.FILL);
-    BooleanProperty               PROPERTY_3D_ENABLED = new SimpleBooleanProperty(false);
-    ObjectProperty<Color>         PROPERTY_3D_FLOOR_COLOR = new SimpleObjectProperty<>(Color.rgb(20,20,20));
-    ObjectProperty<Color>         PROPERTY_3D_LIGHT_COLOR = new SimpleObjectProperty<>(Color.WHITE);
-    ObjectProperty<PerspectiveID> PROPERTY_3D_PERSPECTIVE_ID = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
-    DoubleProperty                PROPERTY_3D_WALL_HEIGHT = new SimpleDoubleProperty();
-    DoubleProperty                PROPERTY_3D_WALL_OPACITY = new SimpleDoubleProperty(1.0);
+    /** Global property for canvas background color. */
+    ObjectProperty<Color> PROPERTY_CANVAS_BACKGROUND_COLOR = new SimpleObjectProperty<>(Color.BLACK);
 
+    /** Global property controlling canvas font smoothing. */
+    BooleanProperty PROPERTY_CANVAS_FONT_SMOOTHING = new SimpleBooleanProperty(false);
+
+    /** Global property controlling visibility of debug information. */
+    BooleanProperty PROPERTY_DEBUG_INFO_VISIBLE = new SimpleBooleanProperty(false);
+
+    /** Global property for mini-view height. */
+    IntegerProperty PROPERTY_MINI_VIEW_HEIGHT = new SimpleIntegerProperty(400);
+
+    /** Global property controlling mini-view visibility. */
+    BooleanProperty PROPERTY_MINI_VIEW_ON = new SimpleBooleanProperty(false);
+
+    /** Global property for mini-view opacity (0-100). */
+    IntegerProperty PROPERTY_MINI_VIEW_OPACITY_PERCENT = new SimpleIntegerProperty(69);
+
+    /** Global property controlling audio muting. */
+    BooleanProperty PROPERTY_MUTED = new SimpleBooleanProperty(false);
+
+    /** Global property for number of simulation steps per tick. */
+    IntegerProperty PROPERTY_SIMULATION_STEPS = new SimpleIntegerProperty(1);
+
+    /** Global property controlling visibility of 3D axes. */
+    BooleanProperty PROPERTY_3D_AXES_VISIBLE = new SimpleBooleanProperty(false);
+
+    /** Global property for 3D draw mode (fill/line). */
+    ObjectProperty<DrawMode> PROPERTY_3D_DRAW_MODE = new SimpleObjectProperty<>(DrawMode.FILL);
+
+    /** Global property enabling/disabling 3D rendering. */
+    BooleanProperty PROPERTY_3D_ENABLED = new SimpleBooleanProperty(false);
+
+    /** Global property for 3D floor color. */
+    ObjectProperty<Color> PROPERTY_3D_FLOOR_COLOR = new SimpleObjectProperty<>(Color.rgb(20,20,20));
+
+    /** Global property for 3D light color. */
+    ObjectProperty<Color> PROPERTY_3D_LIGHT_COLOR = new SimpleObjectProperty<>(Color.WHITE);
+
+    /** Global property for current 3D perspective. */
+    ObjectProperty<PerspectiveID> PROPERTY_3D_PERSPECTIVE_ID = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
+
+    /** Global property for 3D wall height. */
+    DoubleProperty PROPERTY_3D_WALL_HEIGHT = new SimpleDoubleProperty();
+
+    /** Global property for 3D wall opacity (0.0-1.0). */
+    DoubleProperty PROPERTY_3D_WALL_OPACITY = new SimpleDoubleProperty(1.0);
+
+    /** Resource manager for UI assets (fonts, images, sounds). */
     ResourceManager UI_RESOURCES = () -> GameUI.class;
+
+    /** Localized text bundle for the UI. */
     ResourceBundle LOCALIZED_TEXTS = UI_RESOURCES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
 
+    /** Voice media for immunity activation. */
     Media VOICE_IMMUNITY_ON        = UI_RESOURCES.loadMedia("sound/voice/immunity-on.mp3");
+
+    /** Voice media for immunity deactivation. */
     Media VOICE_IMMUNITY_OFF       = UI_RESOURCES.loadMedia("sound/voice/immunity-off.mp3");
+
+    /** Voice media for game start explanation. */
     Media VOICE_EXPLAIN_GAME_START = UI_RESOURCES.loadMedia("sound/voice/press-key.mp3");
+
+    /** Voice media for autopilot activation. */
     Media VOICE_AUTOPILOT_ON       = UI_RESOURCES.loadMedia("sound/voice/autopilot-on.mp3");
+
+    /** Voice media for autopilot deactivation. */
     Media VOICE_AUTOPILOT_OFF      = UI_RESOURCES.loadMedia("sound/voice/autopilot-off.mp3");
 
+    /** Good Pac-Man font (alternative variant). */
     Font FONT_PAC_FONT_GOOD        = UI_RESOURCES.loadFont("fonts/PacfontGood.ttf", 8);
+
+    /** Standard Pac-Man font. */
     Font FONT_PAC_FONT             = UI_RESOURCES.loadFont("fonts/Pacfont.ttf", 8);
+
+    /** Condensed monospace font for UI elements. */
     Font FONT_CONDENSED            = UI_RESOURCES.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12);
+
+    /** Monospaced font for debug/info text. */
     Font FONT_MONOSPACED           = UI_RESOURCES.loadFont("fonts/fantasquesansmono-bold.otf", 12);
+
+    /** Handwriting-style font for messages. */
     Font FONT_HANDWRITING          = UI_RESOURCES.loadFont("fonts/Molle-Italic.ttf", 9);
+
+    /** Arcade font size 8. */
     Font FONT_ARCADE_8             = UI_RESOURCES.loadFont("fonts/emulogic.ttf", 8);
+
+    /** Arcade font size 6. */
     Font FONT_ARCADE_6             = UI_RESOURCES.loadFont("fonts/emulogic.ttf", 6);
 
+    /** Background image using Pac-Man wallpaper. */
     Background BACKGROUND_PAC_MAN_WALLPAPER = createImageBackground(UI_RESOURCES.loadImage("graphics/pacman_wallpaper.png"));
 
+    /** Path to the main UI stylesheet. */
     String STYLE_SHEET_PATH = "/de/amr/pacmanfx/ui/css/style.css";
 
     /**
@@ -139,48 +202,54 @@ public interface GameUI extends Translator {
     DirectoryWatchdog customDirWatchdog();
 
     /**
-     * @return the clock driving the game
+     * @return the clock driving the game simulation and rendering
      */
     GameClock clock();
 
     /**
-     * @return (non UI) context
+     * @return the non-UI game context (model, variants, etc.)
      */
     GameContext context();
 
     /**
-     * @return the primary stage provided by the JavaFX application
+     * @return the primary JavaFX stage
      */
     Stage stage();
 
+    /**
+     * @return the sound manager for playing game sounds
+     */
     SoundManager soundManager();
 
+    /**
+     * @return the preferences manager for UI settings
+     */
     PreferencesManager prefs();
 
     /**
-     * @return voice player if this UI. Only one voice at a time can be played.
+     * @return voice player for sequential voice playback (one at a time)
      */
     VoicePlayer voicePlayer();
 
     // Messages
 
-    /** Default duration a flash message appears on the screen. */
+    /** Default duration for flash messages. */
     Duration DEFAULT_FLASH_MESSAGE_DURATION = Duration.seconds(1.5);
 
     /**
-     * Shows a message on the screen that slowly fades out.
+     * Shows a fading flash message on screen.
      *
-     * @param duration display duration before fading out
-     * @param message the message text, may include formatting symbols (see {@link String#format(String, Object...)})
-     * @param args arguments merged into the message text using String.format()
+     * @param duration display duration before fading
+     * @param message  message text (supports {@link String#format(String, Object...)})
+     * @param args     formatting arguments
      */
     void showFlashMessage(Duration duration, String message, Object... args);
 
     /**
-     * Shows a message on the screen that slowly fades out and displays for a default duration.
+     * Shows a fading flash message with default duration.
      *
-     * @param message the message text
-     * @param args arguments merged into the message text using {@link String#format(String, Object...)}
+     * @param message message text
+     * @param args    formatting arguments
      */
     default void showFlashMessage(String message, Object... args) {
         showFlashMessage(DEFAULT_FLASH_MESSAGE_DURATION, message, args);
@@ -188,83 +257,81 @@ public interface GameUI extends Translator {
 
     // Scene access
 
+    /**
+     * @return configuration of the current game scene
+     */
     GameSceneConfig currentGameSceneConfig();
 
+    /**
+     * @param sceneID scene identifier
+     * @return true if the current game scene matches the given ID
+     */
     boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID);
 
     // View access
 
+    /**
+     * @return manager for all UI views (start pages, play view, editor, etc.)
+     */
     ViewManager views();
 
+    /** Switches to the editor view (if allowed). */
     void showEditorView();
 
+    /** Switches to the play view. */
     void showPlayView();
 
+    /** Switches to the start pages view. */
     void showStartView();
 
     // Config
 
     /**
-     * @return the UI configuration manager
+     * @return manager for UI configurations per game variant
      */
     UIConfigManager uiConfigManager();
 
     /**
-     * @param gameVariantName name of game variant
-     * @return UI configuration for given game variant
+     * @param gameVariantName name of the game variant
+     * @return UI configuration for the specified variant
      */
     UIConfig config(String gameVariantName);
 
     /**
-     * @return UI configuration for the current game
-     * @param <T> type of UI configuration
+     * @return current UI configuration (cast to expected type)
+     * @param <T> expected configuration type
      */
     <T extends UIConfig> T currentConfig();
 
     // Lifecycle
 
+    /** Stops the current game (clock, sounds, scene). */
     void stopGame();
 
     /**
-     * Quits the current game scene (if any) and displays the start page for the current game.
+     * Quits the current game scene (if any) and returns to the start page.
      */
     void quitCurrentGameScene();
 
     /**
-     * Resets the game clock to normal speed and shows the boot screen for the selected game.
+     * Resets clock speed and shows the boot screen for the selected game.
      */
     void restart();
 
     /**
-     * Shows the UI centered on the screen and displays the first start page.
+     * Shows the UI (centered) and displays the first start page.
      */
     void show();
 
     /**
-     * Terminates the game and stops the game clock. Called when the application is terminated by closing the stage.
+     * Terminates the UI, stops clock, and cleans up resources.
      */
     void terminate();
 
     /**
-     * Loads world map file into the editor view.
+     * Opens the given world map file in the editor view.
      *
-     * @param worldMapFile a world map file
+     * @param worldMapFile world map file to edit
      */
-    default void editWorldMapFile(File worldMapFile) {
-        requireNonNull(worldMapFile);
-        views().selectEditorView(); // this ensures the editor view is created!
-        views().optEditorView().map(EditorView::editor).ifPresent(editor -> {
-            try {
-                editor.editFile(worldMapFile);
-                showEditorView();
-            } catch (IOException x) {
-                Logger.error(x, "Could not open map file {}", worldMapFile);
-                showFlashMessage("Cannot open world map file");
-            }
-            catch (WorldMapParseException x) {
-                Logger.error(x, "Error reading map file data from {}", worldMapFile);
-                showFlashMessage("Cannot read world map file data");
-            }
-        });
-    }
+    void editWorldMapFile(File worldMapFile);
 }
