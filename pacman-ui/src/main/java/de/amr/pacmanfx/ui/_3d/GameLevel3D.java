@@ -680,8 +680,7 @@ public class GameLevel3D extends Group implements Disposable {
             ghosts3D.forEach(ghost3D -> setDrawModeUnder(ghost3D, includeAll, newDrawMode));
         }
         catch (Exception x) {
-            Logger.error(x);
-            Logger.error("Could not change 3D draw mode");
+            Logger.error(x, "Could not change 3D draw mode");
         }
     }
 

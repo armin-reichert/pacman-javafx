@@ -303,12 +303,11 @@ public class TileMapEditor {
         try {
             return Optional.of(WorldMap.create(url));
         } catch (IOException x) {
-            Logger.error(x);
-            Logger.error("Could not load world map from URL '{}'", url);
+            Logger.error(x, "Could not load world map from URL '{}'", url);
             return Optional.empty();
         }
         catch (WorldMapParseException x) {
-            Logger.error("Could not parse world map");
+            Logger.error(x, "Could not parse world map");
             return Optional.empty();
         }
     }

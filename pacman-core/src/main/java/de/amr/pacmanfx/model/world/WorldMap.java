@@ -196,7 +196,7 @@ public class WorldMap {
             pw.print(sourceCode(false));
             return true;
         } catch (IOException x) {
-            Logger.error(x);
+            Logger.error(x, "Could not save world map to file {}", file);
             return false;
         }
     }

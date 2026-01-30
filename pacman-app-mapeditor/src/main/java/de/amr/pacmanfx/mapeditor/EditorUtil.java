@@ -49,8 +49,7 @@ public interface EditorUtil {
         try {
             return Color.valueOf(colorExpression);
         } catch (Exception x) {
-            Logger.error(x);
-            Logger.error("Error parsing color expression '{}', using default color {}", colorExpression, defaultColor);
+            Logger.error(x, "Error parsing color expression '{}', using default color {}", colorExpression, defaultColor);
             return defaultColor;
         }
     }

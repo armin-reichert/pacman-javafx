@@ -201,8 +201,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         try {
             loadHighScore();
         } catch (IOException x) {
-            Logger.error(x);
-            Logger.error("Error loading highscore file {}", highScoreFile.getAbsolutePath());
+            Logger.error(x, "Error loading highscore file {}", highScoreFile.getAbsolutePath());
         }
     }
 
@@ -213,8 +212,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         try {
             updateHighScore();
         } catch (IOException x) {
-            Logger.error(x);
-            Logger.error("Error updating highscore file {}", highScoreFile.getAbsolutePath());
+            Logger.error(x, "Error updating highscore file {}", highScoreFile.getAbsolutePath());
         }
     }
 

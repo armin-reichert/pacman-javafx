@@ -260,8 +260,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         try {
             updateHighScore();
         } catch (IOException x) {
-            Logger.error(x);
-            Logger.error("Error updating highscore file {}", highScoreFile.getAbsolutePath());
+            Logger.error(x, "Error updating highscore file {}", highScoreFile.getAbsolutePath());
         }
         Logger.info("Game ended with level number {}", level().number());
     }
@@ -283,8 +282,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         try {
             loadHighScore();
         } catch (IOException x) {
-            Logger.error(x);
-            Logger.error("Error updating highscore file {}", highScoreFile.getAbsolutePath());
+            Logger.error(x, "Error updating highscore file {}", highScoreFile.getAbsolutePath());
         }
         highScore().setEnabled(true);
         gateKeeper.reset();

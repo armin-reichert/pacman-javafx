@@ -9,8 +9,12 @@ import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import org.tinylog.Logger;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,12 +36,12 @@ public class MaterialFileReader {
         String fileUrl = baseUrl + filename;
         try {
             URL mtlUrl = new URI(fileUrl).toURL();
-            Logger.trace("Reading material from URL {}", mtlUrl);
+            Logger.debug("Reading material from URL {}", mtlUrl);
             read(mtlUrl.openStream());
-        } catch (FileNotFoundException ex) {
-            Logger.trace("No material file found for obj. [{}]", fileUrl);
-        } catch (Exception x) {
-            Logger.error(x);
+        } catch (IOException x) {
+            Logger.error(x, "No material file found for obj. [{}]", fileUrl);
+        } catch (URISyntaxException x) {
+            Logger.error(x, "Invalid URL for material file [{}]", fileUrl);
         }
     }
 
@@ -85,8 +89,7 @@ public class MaterialFileReader {
                     Logger.trace("Material file line ignored for name {}: {}", name, line);
                 }
             } catch (Exception x) {
-                Logger.error(x);
-                Logger.error("Failed to parse line: {}", line);
+                Logger.error(x, "Failed to parse line: {}", line);
             }
         }
         addMaterial(name);

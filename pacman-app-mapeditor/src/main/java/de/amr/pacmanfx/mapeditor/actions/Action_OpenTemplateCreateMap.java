@@ -58,7 +58,7 @@ public class Action_OpenTemplateCreateMap extends EditorUIAction<Void> {
         try (FileInputStream fis = new FileInputStream(file)) {
             return Optional.of(new Image(fis));
         } catch (IOException x) {
-            Logger.error(x);
+            Logger.error(x, "Could not read image from file '{}'", file);
             return Optional.empty();
         }
     }

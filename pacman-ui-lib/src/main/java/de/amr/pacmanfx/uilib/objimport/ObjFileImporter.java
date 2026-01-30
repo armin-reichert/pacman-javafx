@@ -88,8 +88,7 @@ public class ObjFileImporter {
             return importer.data;
         }
         catch (IOException x) {
-            Logger.error(x);
-            Logger.error("Importing OBJ file '{}' failed!", url);
+            Logger.error(x, "Importing OBJ file '{}' failed!", url);
             return null;
         }
     }

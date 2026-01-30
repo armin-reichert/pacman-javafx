@@ -640,8 +640,7 @@ public abstract class AbstractGameModel implements Game {
             final String dateTime = SCORE_DATE_TIME_FORMATTER.format(LocalDateTime.now());
             highScore.save(highScoreFile, "High Score updated at %s".formatted(dateTime));
         } catch (IOException x) {
-            Logger.error("High Score could not be saved to file '{}'", highScoreFile);
-            Logger.error(x);
+            Logger.error(x, "High Score could not be saved to file '{}'", highScoreFile);
         }
     }
 }

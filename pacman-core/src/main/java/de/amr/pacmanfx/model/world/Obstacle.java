@@ -51,8 +51,7 @@ public class Obstacle {
                     PolygonToRectangleConverter<RectShort> converter = RectShort::new;
                     innerAreaRectangles = converter.convertPolygonToRectangles(innerPolygon);
                 } catch (Exception x) {
-                    Logger.warn("Inner area rectangle partition could not be computed");
-                    Logger.error(x);
+                    Logger.warn(x, "Inner area rectangle partition could not be computed");
                 }
             }
         }

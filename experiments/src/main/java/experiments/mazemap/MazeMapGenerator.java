@@ -153,7 +153,7 @@ public class MazeMapGenerator {
             pw.print(worldMap.sourceCode(false));
             return true;
         } catch (IOException x) {
-            Logger.error(x);
+            Logger.error(x, "World map could not be saved to file '{}'", file);
             return false;
         }
     }

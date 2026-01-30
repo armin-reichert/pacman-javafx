@@ -44,7 +44,7 @@ public class TileMapEditorApp extends Application  {
 
             stage.show();
         } catch (Exception x) {
-            Logger.error(x);
+            Logger.error(x, "Could not start tile map editor application");
         }
     }
 }

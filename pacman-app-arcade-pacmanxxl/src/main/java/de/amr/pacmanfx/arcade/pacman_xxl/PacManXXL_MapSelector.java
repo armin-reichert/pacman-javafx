@@ -70,12 +70,10 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                     customMapPrototypes.add(worldMap);
                     Logger.info("Added new custom map from file '{}'", file);
                 } catch (IOException x) {
-                    Logger.error("Could not load world map");
-                    Logger.error(x);
+                    Logger.error(x, "Could not load world map");
                 }
                 catch (WorldMapParseException x) {
-                    Logger.error("Could not parse world map");
-                    Logger.error(x);
+                    Logger.error(x, "Could not parse world map");
                 }
             }
             else if (event.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
@@ -87,8 +85,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                         Logger.info("Removed custom map file '{}'", file);
                     });
                 } catch (MalformedURLException x) {
-                    Logger.error("Could not remove custom map for deleted file '{}'", file);
-                    Logger.error(x);
+                    Logger.error(x, "Could not remove custom map for deleted file '{}'", file);
                 }
             }
             else if (event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
@@ -100,12 +97,10 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                     customMapPrototypes.add(worldMap);
                     Logger.info("Updated custom map from file '{}'", file);
                 } catch (IOException x) {
-                    Logger.error("Could not load world map");
-                    Logger.error(x);
+                    Logger.error(x, "Could not load world map");
                 }
                 catch (WorldMapParseException x) {
-                    Logger.error("Could not parse world map");
-                    Logger.error(x);
+                    Logger.error(x, "Could not parse world map");
                 }
             }
         }
@@ -218,12 +213,11 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                     try {
                         WorldMap map = WorldMap.create(url);
                         map.saveToFile(targetFile);
-                    } catch (IOException e) {
-                        Logger.error("Could not save map with URL {} to file ''", url, targetFile);
+                    } catch (IOException x) {
+                        Logger.error(x, "Could not save map with URL {} to file ''", url, targetFile);
                     }
                     catch (WorldMapParseException x) {
-                        Logger.error("Could not parse world map");
-                        Logger.error(x); //TODO
+                        Logger.error(x, "Could not parse world map");
                     }
                 } else {
                     // Not all of these maps exits, just log them

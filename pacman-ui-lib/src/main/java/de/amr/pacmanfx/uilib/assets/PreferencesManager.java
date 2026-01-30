@@ -37,8 +37,7 @@ public abstract class PreferencesManager {
                     }
                 }
             } catch (BackingStoreException x) {
-                Logger.error("Could not access preferences store to add missing keys");
-                Logger.error(x);
+                Logger.error(x, "Could not access preferences store to add missing keys");
             }
         }
     }
