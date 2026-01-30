@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
@@ -30,6 +30,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -254,13 +255,16 @@ public interface GameUI extends Translator {
         views().selectEditorView(); // this ensures the editor view is created!
         views().optEditorView().map(EditorView::editor).ifPresent(editor -> {
             try {
-                final WorldMap map = WorldMap.loadFromFile(worldMapFile);
-                editor.setCurrentWorldMap(map);
-                editor.setCurrentFile(worldMapFile);
-            } catch (Exception x) {
-                Logger.error("Could not open map file {}", worldMapFile);
+                editor.editFile(worldMapFile);
+                showEditorView();
+            } catch (IOException x) {
+                Logger.error(x, "Could not open map file {}", worldMapFile);
+                showFlashMessage("Cannot open world map file");
             }
-            showEditorView();
+            catch (WorldMapParseException x) {
+                Logger.error(x, "Error reading map file data from {}", worldMapFile);
+                showFlashMessage("Cannot read world map file data");
+            }
         });
     }
 }
