@@ -36,6 +36,10 @@ import static de.amr.pacmanfx.ui.input.Keyboard.*;
  */
 public interface GameUI extends Translator {
 
+    // ------------------------------------------------------------------------
+    // Key Bindings
+    // ------------------------------------------------------------------------
+
     /** Global keyboard handler used for all key bindings. */
     Keyboard KEYBOARD = new Keyboard();
 
@@ -94,6 +98,10 @@ public interface GameUI extends Translator {
         new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_2D_3D,          alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
     );
 
+    // ------------------------------------------------------------------------
+    // Global Properties
+    // ------------------------------------------------------------------------
+
     /** Global property for canvas background color. */
     ObjectProperty<Color> PROPERTY_CANVAS_BACKGROUND_COLOR = new SimpleObjectProperty<>(Color.BLACK);
 
@@ -142,6 +150,10 @@ public interface GameUI extends Translator {
     /** Global property for 3D wall opacity (0.0-1.0). */
     DoubleProperty PROPERTY_3D_WALL_OPACITY = new SimpleDoubleProperty(1.0);
 
+    // ------------------------------------------------------------------------
+    // Accessors
+    // ------------------------------------------------------------------------
+
     /**
      * @return watchdog process observing the directory where user-defined maps are stored
      */
@@ -177,7 +189,9 @@ public interface GameUI extends Translator {
      */
     VoicePlayer voicePlayer();
 
+    // ------------------------------------------------------------------------
     // Messages
+    // ------------------------------------------------------------------------
 
     /** Default duration for flash messages. */
     Duration DEFAULT_FLASH_MESSAGE_DURATION = Duration.seconds(1.5);
@@ -201,7 +215,9 @@ public interface GameUI extends Translator {
         showFlashMessage(DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
 
+    // ------------------------------------------------------------------------
     // Scene access
+    // ------------------------------------------------------------------------
 
     /**
      * @return configuration of the current game scene
@@ -214,10 +230,12 @@ public interface GameUI extends Translator {
      */
     boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID);
 
+    // ------------------------------------------------------------------------
     // View access
+    // ------------------------------------------------------------------------
 
     /**
-     * @return manager for all UI views (start pages, play view, editor, etc.)
+     * @return manager for Ia all UI views (start pages, play view, editor, etc.)
      */
     ViewManager views();
 
@@ -230,7 +248,9 @@ public interface GameUI extends Translator {
     /** Switches to the start pages view. */
     void showStartView();
 
+    // ------------------------------------------------------------------------
     // Config
+    // ------------------------------------------------------------------------
 
     /**
      * @return manager for UI configurations per game variant
@@ -249,7 +269,9 @@ public interface GameUI extends Translator {
      */
     <T extends UIConfig> T currentConfig();
 
+    // ------------------------------------------------------------------------
     // Lifecycle
+    // ------------------------------------------------------------------------
 
     /** Stops the current game (clock, sounds, scene). */
     void stopGame();
