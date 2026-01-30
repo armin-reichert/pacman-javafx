@@ -29,10 +29,9 @@ import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
-import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
 
 /**
- * Central interface for the game UI. Provides access to shared resources, global state, and lifecycle methods.
+ * Central interface for the game UI. Provides access to global state, and lifecycle methods.
  * Implementations manage the JavaFX stage, views, sound, preferences, and configuration.
  */
 public interface GameUI extends Translator {
