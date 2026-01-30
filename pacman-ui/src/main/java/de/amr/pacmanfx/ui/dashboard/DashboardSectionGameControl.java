@@ -60,7 +60,7 @@ public class DashboardSectionGameControl extends DashboardSection {
 
         cbCollisionCheckedTwice.setOnAction(_ -> {
             final AbstractGameModel game = ui.context().currentGame();
-            game.setCollisionCheckedTwice(cbCollisionCheckedTwice.isSelected());
+            game.setCollisionDoubleChecked(cbCollisionCheckedTwice.isSelected());
         });
     }
 
@@ -86,7 +86,7 @@ public class DashboardSectionGameControl extends DashboardSection {
         buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !state.matches(StateName.INTRO));
         buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT] .setDisable(booting || !(state instanceof CutScenesTestState));
 
-        cbCollisionCheckedTwice.setSelected(game.isCollisionCheckedTwice());
+        cbCollisionCheckedTwice.setSelected(game.isCollisionDoubleChecked());
     }
 
     private boolean isBooting(StateMachine.State<?> state) {

@@ -33,7 +33,7 @@ public abstract class AbstractGameModel implements Game {
 
     private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
 
-    private final BooleanProperty collisionCheckedTwice = new SimpleBooleanProperty(true);
+    private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
 
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
@@ -63,11 +63,16 @@ public abstract class AbstractGameModel implements Game {
 
     protected final File highScoreFile;
 
+    /**
+     * Creates a new game model with the given high score file.
+     *
+     * @param highScoreFile file for saving/loading high score
+     */
     protected AbstractGameModel(File highScoreFile) {
         this.highScoreFile = requireNonNull(highScoreFile);
 
         score.pointsProperty().addListener((_, oldScore, newScore)
-            -> handleScoreChange(oldScore.intValue(), newScore.intValue()));
+                -> handleScoreChange(oldScore.intValue(), newScore.intValue()));
 
         cheatUsedProperty().addListener((_, _, cheatDetected) -> {
             if (cheatDetected) {
@@ -76,23 +81,36 @@ public abstract class AbstractGameModel implements Game {
         });
     }
 
+    /**
+     * Sets the game control (state machine) for this model.
+     *
+     * @param gameControl the game control
+     */
     public void setGameControl(GameControl gameControl) {
         this.gameControl = requireNonNull(gameControl);
         gameControl.stateMachine().setContext(this);
         gameControl.stateMachine().addStateChangeListener(
-            (oldState, newState) -> publishGameEvent(new GameStateChangeEvent(oldState, newState)));
+                (oldState, newState) -> publishGameEvent(new GameStateChangeEvent(oldState, newState)));
     }
 
-    public BooleanProperty collisionCheckedTwiceProperty() {
-        return collisionCheckedTwice;
+    public BooleanProperty collisionDoubleCheckedProperty() {
+        return collisionDoubleChecked;
     }
 
-    public Boolean isCollisionCheckedTwice() {
-        return collisionCheckedTwiceProperty().get();
+    /**
+     * @return true if collisions are double-checked each tick (to reduce missed collisions)
+     */
+    public Boolean isCollisionDoubleChecked() {
+        return collisionDoubleCheckedProperty().get();
     }
 
-    public void setCollisionCheckedTwice(boolean twice) {
-        collisionCheckedTwiceProperty().set(twice);
+    /**
+     * Enables/disables double-checking of collisions each tick.
+     *
+     * @param doubleChecked true to enable double-checking
+     */
+    public void setCollisionDoubleChecked(boolean doubleChecked) {
+        collisionDoubleCheckedProperty().set(doubleChecked);
     }
 
     public ObjectProperty<GameLevel> levelProperty() {
@@ -102,57 +120,57 @@ public abstract class AbstractGameModel implements Game {
     // To be implemented by subclasses
 
     /**
-     * Called when Pac finds a normal (non-energizer) pellet.
-
-     * @param level the game level
-     * @param tile the pellet tile
+     * Called when Pac-Man finds a normal (non-energizer) pellet.
+     *
+     * @param level the current game level
+     * @param tile  the tile containing the pellet
      */
     protected abstract void eatPellet(GameLevel level, Vector2i tile);
 
     /**
-     * Called when Pac finds an energizer pellet.
-
-     * @param level the game level
-     * @param tile the energizer tile
+     * Called when Pac-Man finds an energizer pellet.
+     *
+     * @param level the current game level
+     * @param tile  the tile containing the energizer
      */
     protected abstract void eatEnergizer(GameLevel level, Vector2i tile);
 
     /**
-     * Called when Pac collides with a bonus actor.
-
-     * @param level the game level
+     * Called when Pac-Man collides with a bonus actor.
+     *
+     * @param level the current game level
      * @param bonus the bonus actor
      */
     protected abstract void eatBonus(GameLevel level, Bonus bonus);
 
     /**
      * @param demoLevel the running demo level
-     * @return {@code true} if Pac can currently not be killed in this demo level
+     * @return {@code true} if Pac-Man cannot be killed in this demo level at the current time
      */
     protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
-    // These methods are public such that info panel can call them:
+    // These methods are public so the info panel can call them
 
     /**
-     * @param level the game level
+     * @param level the current game level
      * @param ghost a ghost
-     * @return the attack speed (pixel/frame) of this ghost
+     * @return the attack speed (pixels per frame) of this ghost
      */
     public abstract float ghostSpeedAttacking(GameLevel level, Ghost ghost);
 
     /**
-     * @param level the game level
-     * @return the speed (pixel/frame) of frightened ghosts
+     * @param level the current game level
+     * @return the speed (pixels per frame) of frightened ghosts
      */
     public abstract float ghostSpeedWhenFrightened(GameLevel level);
 
     /**
      * @param levelNumber the game level number (1, 2, ...)
-     * @return the speed (pixel/frame) of a ghost inside a tunnel leading to some portal
+     * @return the speed (pixels per frame) of a ghost inside a tunnel leading to a portal
      */
     public abstract float ghostSpeedTunnel(int levelNumber);
 
-    // Game interface
+    // Game interface implementation
 
     @Override
     public BooleanProperty cheatUsedProperty() {
@@ -226,7 +244,9 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public boolean isPlaying() { return playing.get(); }
+    public boolean isPlaying() {
+        return playing.get();
+    }
 
     @Override
     public void setPlaying(boolean playing) {
@@ -272,7 +292,6 @@ public abstract class AbstractGameModel implements Game {
     public void startHunting(GameLevel level) {
         level.huntingTimer().startFirstPhase(level.number());
 
-        //TODO move into UI layer?
         level.blinking().setStartState(Pulse.State.ON);
         level.blinking().restart();
         level.pac().optAnimationManager().ifPresent(AnimationManager::play);
@@ -299,7 +318,6 @@ public abstract class AbstractGameModel implements Game {
         level.optBonus().ifPresent(Bonus::setInactive);
 
         pac.setSpeed(0);
-        //TODO move animation-related stuff into UI layer?
         pac.stopAnimation();
         pac.selectAnimation(Pac.AnimationID.PAC_FULL);
         level.blinking().setStartState(Pulse.State.OFF);
@@ -340,6 +358,12 @@ public abstract class AbstractGameModel implements Game {
 
     // other stuff
 
+    /**
+     * Sets the start position for the given ghost.
+     *
+     * @param ghost the ghost
+     * @param tile  the start tile (or null if not specified)
+     */
     protected void setGhostStartPosition(Ghost ghost, Vector2i tile) {
         if (tile != null) {
             ghost.setStartPosition(halfTileRightOf(tile));
@@ -348,11 +372,22 @@ public abstract class AbstractGameModel implements Game {
         }
     }
 
+    /**
+     * Sets the scores at which extra lives are awarded.
+     *
+     * @param scores the extra life scores (varargs)
+     */
     protected void setExtraLifeScores(Integer... scores) {
         extraLifeScores = scores.length <= 1
-            ? Set.of(scores) : Collections.unmodifiableSortedSet(new TreeSet<>(Set.of(scores)));
+                ? Set.of(scores) : Collections.unmodifiableSortedSet(new TreeSet<>(Set.of(scores)));
     }
 
+    /**
+     * Handles score changes, checking for extra life awards.
+     *
+     * @param oldScore previous score
+     * @param newScore new score
+     */
     protected void handleScoreChange(int oldScore, int newScore) {
         for (int extraLifeScore : extraLifeScores) {
             if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
@@ -367,6 +402,9 @@ public abstract class AbstractGameModel implements Game {
         }
     }
 
+    /**
+     * Called when a cheat is detected. Disables high score saving by default.
+     */
     protected void handleCheatDetected() {
         highScore.setEnabled(false);
     }
@@ -388,7 +426,7 @@ public abstract class AbstractGameModel implements Game {
 
         level.ghosts().forEach(ghost -> ghost.tick(this));
 
-        if (isCollisionCheckedTwice()) {
+        if (isCollisionDoubleChecked()) {
             // call collision detection 2nd time, this should minimize collision missing
             detectCollisions(level);
         }
@@ -406,8 +444,8 @@ public abstract class AbstractGameModel implements Game {
             else {
                 // Frightened ghosts get killed when colliding with Pac
                 simStep.ghostsCollidingWithPac.stream()
-                    .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
-                    .forEach(simStep.ghostsKilled::add);
+                        .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
+                        .forEach(simStep.ghostsKilled::add);
                 // More than one ghost might have been killed in this step
                 simStep.ghostsKilled.forEach(ghost -> onEatGhost(level, ghost));
                 if (hasGhostBeenKilled()) {
@@ -464,14 +502,14 @@ public abstract class AbstractGameModel implements Game {
         // original Arcade game does). Collision behavior is controlled by the current collision strategy. The original
         // Arcade games use tile-based collision which can lead to missed collisions by passing through.
         level.ghosts()
-            .filter(ghost -> !level.worldMap().terrainLayer().isTileInPortalSpace(ghost.tile()))
-            .filter(ghost -> collisionStrategy().collide(level.pac(), ghost))
-            .forEach(simStep.ghostsCollidingWithPac::add);
+                .filter(ghost -> !level.worldMap().terrainLayer().isTileInPortalSpace(ghost.tile()))
+                .filter(ghost -> collisionStrategy().collide(level.pac(), ghost))
+                .forEach(simStep.ghostsCollidingWithPac::add);
 
         simStep.edibleBonus = level.optBonus()
-            .filter(bonus -> bonus.state() == BonusState.EDIBLE)
-            .filter(bonus -> collisionStrategy().collide(level.pac(), bonus))
-            .orElse(null);
+                .filter(bonus -> bonus.state() == BonusState.EDIBLE)
+                .filter(bonus -> collisionStrategy().collide(level.pac(), bonus))
+                .orElse(null);
 
         final Vector2i pacTile = level.pac().tile();
         if (level.worldMap().foodLayer().hasFoodAtTile(pacTile)) {
@@ -498,9 +536,9 @@ public abstract class AbstractGameModel implements Game {
             return;
         }
         simStep.pacKiller = simStep.ghostsCollidingWithPac.stream()
-            .filter(ghost -> ghost.state() == GhostState.HUNTING_PAC)
-            .findFirst()
-            .orElse(null);
+                .filter(ghost -> ghost.state() == GhostState.HUNTING_PAC)
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -528,12 +566,20 @@ public abstract class AbstractGameModel implements Game {
         }
     }
 
+    /**
+     * Clears all cheating-related properties.
+     */
     protected void clearCheatingProperties() {
         immuneProperty().set(false);
         usingAutopilotProperty().set(false);
         clearCheatFlag();
     }
 
+    /**
+     * Updates cheating properties in the current level.
+     *
+     * @param level the current game level
+     */
     protected void updateCheatingProperties(GameLevel level) {
         level.pac().immuneProperty().bind(immuneProperty());
         level.pac().usingAutopilotProperty().bind(usingAutopilotProperty());
@@ -544,6 +590,12 @@ public abstract class AbstractGameModel implements Game {
 
     // ScoreManager
 
+    /**
+     * Adds points to the current score and updates high score if necessary.
+     *
+     * @param level  the current game level
+     * @param points points to add
+     */
     protected void scorePoints(GameLevel level, int points) {
         if (!score.isEnabled()) {
             return;
@@ -558,11 +610,21 @@ public abstract class AbstractGameModel implements Game {
         score.setPoints(newScore);
     }
 
+    /**
+     * Loads the high score from file.
+     *
+     * @throws IOException if loading fails
+     */
     protected void loadHighScore() throws IOException {
         highScore.read(highScoreFile);
         Logger.info("High Score loaded from file '{}': points={}, level={}", highScoreFile, highScore.points(), highScore.levelNumber());
     }
 
+    /**
+     * Updates the high score file if the current high score is higher than the saved one.
+     *
+     * @throws IOException if saving fails
+     */
     protected void updateHighScore() throws IOException {
         final Score savedHighScore = Score.fromFile(highScoreFile);
         if (highScore.points() > savedHighScore.points()) {
@@ -570,6 +632,9 @@ public abstract class AbstractGameModel implements Game {
         }
     }
 
+    /**
+     * Saves the current high score to file.
+     */
     public void saveHighScore() {
         try {
             final String dateTime = SCORE_DATE_TIME_FORMATTER.format(LocalDateTime.now());
