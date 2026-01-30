@@ -267,7 +267,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public void editWorldMapFile(File worldMapFile) {
+    public void openWorldMapFileInEditor(File worldMapFile) {
         requireNonNull(worldMapFile);
         views().selectEditorView(); // this ensures the editor view is created!
         views().optEditorView().map(EditorView::editor).ifPresent(editor -> {

@@ -184,7 +184,7 @@ public class PacManGames3dApp extends Application {
             .map(DashboardSectionCustomMaps.class::cast)
             .ifPresent(section -> {
                 section.setCustomDirWatchDog(ui.customDirWatchdog());
-                section.setMapEditFunction(mapFile -> ui.editWorldMapFile(mapFile));
+                section.setMapEditFunction(mapFile -> ui.openWorldMapFileInEditor(mapFile));
             });
     }
 }

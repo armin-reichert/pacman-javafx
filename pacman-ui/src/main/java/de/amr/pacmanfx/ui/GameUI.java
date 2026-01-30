@@ -301,5 +301,5 @@ public interface GameUI extends Translator {
      *
      * @param worldMapFile world map file to edit
      */
-    void editWorldMapFile(File worldMapFile);
+    void openWorldMapFileInEditor(File worldMapFile);
 }
