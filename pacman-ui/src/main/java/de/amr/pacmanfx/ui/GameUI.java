@@ -11,9 +11,11 @@ import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.Translator;
 import javafx.beans.property.*;
@@ -36,6 +38,7 @@ import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
+import static java.util.Objects.requireNonNull;
 
 public interface GameUI extends Translator {
 
@@ -108,25 +111,24 @@ public interface GameUI extends Translator {
     DoubleProperty                PROPERTY_3D_WALL_HEIGHT = new SimpleDoubleProperty();
     DoubleProperty                PROPERTY_3D_WALL_OPACITY = new SimpleDoubleProperty(1.0);
 
-    ResourceManager GLOBAL_RESOURCES = () -> GameUI_Implementation.class;
+    ResourceManager UI_RESOURCES = () -> GameUI.class;
+    ResourceBundle LOCALIZED_TEXTS = UI_RESOURCES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
 
-    Media VOICE_IMMUNITY_ON        = GLOBAL_RESOURCES.loadMedia("sound/voice/immunity-on.mp3");
-    Media VOICE_IMMUNITY_OFF       = GLOBAL_RESOURCES.loadMedia("sound/voice/immunity-off.mp3");
-    Media VOICE_EXPLAIN_GAME_START = GLOBAL_RESOURCES.loadMedia("sound/voice/press-key.mp3");
-    Media VOICE_AUTOPILOT_ON       = GLOBAL_RESOURCES.loadMedia("sound/voice/autopilot-on.mp3");
-    Media VOICE_AUTOPILOT_OFF      = GLOBAL_RESOURCES.loadMedia("sound/voice/autopilot-off.mp3");
+    Media VOICE_IMMUNITY_ON        = UI_RESOURCES.loadMedia("sound/voice/immunity-on.mp3");
+    Media VOICE_IMMUNITY_OFF       = UI_RESOURCES.loadMedia("sound/voice/immunity-off.mp3");
+    Media VOICE_EXPLAIN_GAME_START = UI_RESOURCES.loadMedia("sound/voice/press-key.mp3");
+    Media VOICE_AUTOPILOT_ON       = UI_RESOURCES.loadMedia("sound/voice/autopilot-on.mp3");
+    Media VOICE_AUTOPILOT_OFF      = UI_RESOURCES.loadMedia("sound/voice/autopilot-off.mp3");
 
-    Font FONT_PAC_FONT_GOOD        = GLOBAL_RESOURCES.loadFont("fonts/PacfontGood.ttf", 8);
-    Font FONT_PAC_FONT             = GLOBAL_RESOURCES.loadFont("fonts/Pacfont.ttf", 8);
-    Font FONT_CONDENSED            = GLOBAL_RESOURCES.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12);
-    Font FONT_MONOSPACED           = GLOBAL_RESOURCES.loadFont("fonts/fantasquesansmono-bold.otf", 12);
-    Font FONT_HANDWRITING          = GLOBAL_RESOURCES.loadFont("fonts/Molle-Italic.ttf", 9);
-    Font FONT_ARCADE_8             = GLOBAL_RESOURCES.loadFont("fonts/emulogic.ttf", 8);
-    Font FONT_ARCADE_6             = GLOBAL_RESOURCES.loadFont("fonts/emulogic.ttf", 6);
+    Font FONT_PAC_FONT_GOOD        = UI_RESOURCES.loadFont("fonts/PacfontGood.ttf", 8);
+    Font FONT_PAC_FONT             = UI_RESOURCES.loadFont("fonts/Pacfont.ttf", 8);
+    Font FONT_CONDENSED            = UI_RESOURCES.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12);
+    Font FONT_MONOSPACED           = UI_RESOURCES.loadFont("fonts/fantasquesansmono-bold.otf", 12);
+    Font FONT_HANDWRITING          = UI_RESOURCES.loadFont("fonts/Molle-Italic.ttf", 9);
+    Font FONT_ARCADE_8             = UI_RESOURCES.loadFont("fonts/emulogic.ttf", 8);
+    Font FONT_ARCADE_6             = UI_RESOURCES.loadFont("fonts/emulogic.ttf", 6);
 
-    Background BACKGROUND_PAC_MAN_WALLPAPER = createImageBackground(GLOBAL_RESOURCES.loadImage("graphics/pacman_wallpaper.png"));
-
-    ResourceBundle LOCALIZED_TEXTS = GLOBAL_RESOURCES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
+    Background BACKGROUND_PAC_MAN_WALLPAPER = createImageBackground(UI_RESOURCES.loadImage("graphics/pacman_wallpaper.png"));
 
     String STYLE_SHEET_PATH = "/de/amr/pacmanfx/ui/css/style.css";
 
@@ -152,7 +154,8 @@ public interface GameUI extends Translator {
 
     SoundManager soundManager();
 
-    GlobalPreferencesManager prefs();
+    PreferencesManager prefs();
+
     /**
      * @return voice player if this UI. Only one voice at a time can be played.
      */
@@ -242,20 +245,20 @@ public interface GameUI extends Translator {
     void terminate();
 
     /**
-     * Default implementation of a function to open a map file and show it in the editor view.
+     * Loads world map file into the editor view.
      *
-     * @param mapFile a map file
+     * @param worldMapFile a world map file
      */
-    default void editWorldMap(File mapFile) {
-        Logger.debug("Edit map file {}", mapFile);
+    default void editWorldMapFile(File worldMapFile) {
+        requireNonNull(worldMapFile);
         views().selectEditorView(); // this ensures the editor view is created!
-        views().optEditorView().ifPresent(editorView -> {
+        views().optEditorView().map(EditorView::editor).ifPresent(editor -> {
             try {
-                final WorldMap map = WorldMap.loadFromFile(mapFile);
-                editorView.editor().setCurrentWorldMap(map);
-                editorView.editor().setCurrentFile(mapFile);
+                final WorldMap map = WorldMap.loadFromFile(worldMapFile);
+                editor.setCurrentWorldMap(map);
+                editor.setCurrentFile(worldMapFile);
             } catch (Exception x) {
-                Logger.error("Could not open map file {}", mapFile);
+                Logger.error("Could not open map file {}", worldMapFile);
             }
             showEditorView();
         });

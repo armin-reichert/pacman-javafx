@@ -31,28 +31,10 @@ import static java.util.Objects.requireNonNull;
 
 public class TileMapEditor {
 
-    private SampleMaps sampleMaps;
     private final TileMapEditorUI ui;
+    private final AnimationTimer updateTimer;
+    private SampleMaps sampleMaps;
     private Consumer<TileMapEditor> quitEditorAction = _ -> {};
-
-    private final AnimationTimer updateTimer = new AnimationTimer() {
-        private static final long FRAME_DURATION_NS = 1_000_000_000 / EditorGlobals.UPDATE_FREQ;
-        private long lastUpdate = 0;
-
-        @Override
-        public void handle(long now) {
-            if (now - lastUpdate >= FRAME_DURATION_NS) {
-                lastUpdate = now;
-                ui.messageDisplay().update();
-                processChanges();
-                try {
-                    ui.draw();
-                } catch (Exception x) {
-                    Logger.error(x);
-                }
-            }
-        }
-    };
 
     public TileMapEditor(Stage stage, PacManModel3DRepository model3DRepository) {
         requireNonNull(stage);
@@ -60,6 +42,7 @@ public class TileMapEditor {
         ui = new TileMapEditorUI(stage, this, model3DRepository);
         currentWorldMap.addListener((_, _, _) -> setWorldMapChanged());
         sourceCodeLineNumbers.addListener((_, _, lineNumbers) -> sourceCode.set(currentWorldMap().sourceCode(lineNumbers)));
+        updateTimer = createAnimationTimer();
     }
 
     public void setOnQuit(Consumer<TileMapEditor> quitEditorAction) {
@@ -83,6 +66,12 @@ public class TileMapEditor {
 
     public void stop() {
         updateTimer.stop();
+    }
+
+    public void editFile(File worldMapFile) throws WorldMapParseException, IOException {
+        final WorldMap map = WorldMap.loadFromFile(worldMapFile);
+        setCurrentWorldMap(map);
+        setCurrentFile(worldMapFile);
     }
 
     public void quit() {
@@ -322,5 +311,27 @@ public class TileMapEditor {
             Logger.error("Could not parse world map");
             return Optional.empty();
         }
+    }
+
+
+    private long lastAnimationFrame = 0;
+
+    private AnimationTimer createAnimationTimer() {
+        final long frameDurationNanos = 1_000_000_000 / EditorGlobals.UPDATE_FREQ;
+        return new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                if (now - lastAnimationFrame >= frameDurationNanos) {
+                    lastAnimationFrame = now;
+                    ui.messageDisplay().update();
+                    processChanges();
+                    try {
+                        ui.draw();
+                    } catch (Exception x) {
+                        Logger.error(x);
+                    }
+                }
+            }
+        };
     }
 }
