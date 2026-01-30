@@ -55,6 +55,10 @@ public class Maze3D extends Group implements Disposable {
     private final GameLevel level;
     private final AnimationRegistry animationRegistry;
 
+    private final DoubleProperty wallBaseHeight = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
+    private final DoubleProperty wallOpacity = new SimpleDoubleProperty(1);
+
+    private TerrainRenderer3D terrainRenderer3D;
     private WorldMapColorScheme colorScheme;
     private Box floor3D;
     private ArcadeHouse3D house3D;
@@ -64,9 +68,6 @@ public class Maze3D extends Group implements Disposable {
 
     private int wall3DCount;
 
-    private final DoubleProperty wallBaseHeight = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
-    private final DoubleProperty wallOpacity = new SimpleDoubleProperty(1);
-
     private PhongMaterial floorMaterial;
     private PhongMaterial wallBaseMaterial;
     private PhongMaterial wallTopMaterial;
@@ -75,61 +76,20 @@ public class Maze3D extends Group implements Disposable {
 
     public Maze3D(GameUI ui, GameLevel level, AnimationRegistry animationRegistry, List<PhongMaterial> ghostMaterials) {
         this.ui = ui;
-        this.animationRegistry = animationRegistry;
         this.level = level;
+        this.animationRegistry = animationRegistry;
 
-        createWorldMapColorScheme();
+        createWorldMapColorScheme(level.worldMap());
         createMaterials();
-
-        final var terrainRenderer3D = new TerrainRenderer3D();
-        terrainRenderer3D.setOnWallCreated(wall3D -> {
-            wall3D.bindBaseHeight(wallBaseHeight);
-            wall3D.setBaseMaterial(wallBaseMaterial);
-            wall3D.setTopMaterial(wallTopMaterial);
-            ++wall3DCount;
-            getChildren().addAll(wall3D.base(), wall3D.top());
-            return wall3D;
-        });
-
+        createTerrainRenderer();
         createFloor3D();
-
-        final WorldMap worldMap = level.worldMap();
-        final float wallThickness = ui.prefs().getFloat("3d.obstacle.wall_thickness");
-        final float cornerRadius = ui.prefs().getFloat("3d.obstacle.corner_radius");
-        final House house = worldMap.terrainLayer().optHouse().orElse(null);
-        final var stopWatch = new StopWatch();
-        wall3DCount = 0;
-
-        for (Obstacle obstacle : worldMap.terrainLayer().obstacles()) {
-            final Vector2i obstacleStartTile = tileAt(obstacle.startPoint().toVector2f());
-            // exclude house placeholder obstacle
-            if (house == null || !house.contains(obstacleStartTile)) {
-                terrainRenderer3D.renderObstacle3D(obstacle, isWorldBorder(worldMap, obstacle), wallThickness, cornerRadius);
-            }
-        }
-        final var passedTimeMillis = stopWatch.passedTime().toMillis();
-        Logger.info("Built 3D maze with {} composite walls in {} milliseconds", wall3DCount, passedTimeMillis);
-
-        if (house != null) {
-            final Vector2i[] ghostRevivalTiles = {
-                house.ghostRevivalTile(CYAN_GHOST_BASHFUL),
-                house.ghostRevivalTile(PINK_GHOST_SPEEDY),
-                house.ghostRevivalTile(ORANGE_GHOST_POKEY)
-            };
-            // Note: revival tile is the left of the pair of tiles in the house where the ghost is placed. The center
-            //       of the 3D shape is one tile to the right and a half tile to the bottom from the tile origin.
-            final Vector2f[] ghostRevivalPositions = Stream.of(ghostRevivalTiles)
-                .map(tile -> tile.scaled((float) TS).plus(TS, HTS))
-                .toArray(Vector2f[]::new);
-
-            createHouse(house, ghostRevivalPositions);
+        createObstacles3D(level.worldMap(), terrainRenderer3D);
+        level.worldMap().terrainLayer().optHouse().ifPresent(house -> {
+            createHouse3D(house);
             getChildren().add(house3D);
-        }
-
+        });
         createPellets3D();
         createEnergizers3D(ghostMaterials);
-
-        Logger.info("3D maze created for map (URL '{}'), color scheme: {}...", level.worldMap().url(), colorScheme);
     }
 
     public WorldMapColorScheme colorScheme() {
@@ -239,8 +199,7 @@ public class Maze3D extends Group implements Disposable {
         Logger.info("Disposed 3D maze");
     }
 
-    private void createWorldMapColorScheme() {
-        final WorldMap worldMap = level.worldMap();
+    private void createWorldMapColorScheme(WorldMap worldMap) {
         final WorldMapColorScheme proposedColorScheme = ui.currentConfig().colorScheme(worldMap);
         requireNonNull(proposedColorScheme);
         // Add some contrast with dark floor if wall fill color is very dark
@@ -263,6 +222,36 @@ public class Maze3D extends Group implements Disposable {
         wallBaseMaterial.setSpecularPower(64);
 
         wallTopMaterial = defaultPhongMaterial(Color.valueOf(colorScheme.wallFill()));
+    }
+
+    private void createTerrainRenderer() {
+        terrainRenderer3D = new TerrainRenderer3D();
+        terrainRenderer3D.setOnWallCreated(wall3D -> {
+            wall3D.bindBaseHeight(wallBaseHeight);
+            wall3D.setBaseMaterial(wallBaseMaterial);
+            wall3D.setTopMaterial(wallTopMaterial);
+            ++wall3DCount;
+            getChildren().addAll(wall3D.base(), wall3D.top());
+            return wall3D;
+        });
+    }
+
+    private void createObstacles3D(WorldMap worldMap, TerrainRenderer3D terrainRenderer3D) {
+        final float wallThickness = ui.prefs().getFloat("3d.obstacle.wall_thickness");
+        final float cornerRadius = ui.prefs().getFloat("3d.obstacle.corner_radius");
+        final House house = worldMap.terrainLayer().optHouse().orElse(null);
+        final var stopWatch = new StopWatch();
+
+        wall3DCount = 0;
+        for (Obstacle obstacle : worldMap.terrainLayer().obstacles()) {
+            final Vector2i obstacleStartTile = tileAt(obstacle.startPoint().toVector2f());
+            // exclude house placeholder obstacle
+            if (house == null || !house.contains(obstacleStartTile)) {
+                terrainRenderer3D.renderObstacle3D(obstacle, isWorldBorder(worldMap, obstacle), wallThickness, cornerRadius);
+            }
+        }
+        final var passedTimeMillis = stopWatch.passedTime().toMillis();
+        Logger.info("Built {} composite walls in {} milliseconds", wall3DCount, passedTimeMillis);
     }
 
     private void createFloor3D() {
@@ -288,7 +277,18 @@ public class Maze3D extends Group implements Disposable {
         }
     }
 
-    private void createHouse(House house, Vector2f[] ghostRevivalPositions) {
+    private void createHouse3D(House house) {
+        final Vector2i[] ghostRevivalTiles = {
+                house.ghostRevivalTile(CYAN_GHOST_BASHFUL),
+                house.ghostRevivalTile(PINK_GHOST_SPEEDY),
+                house.ghostRevivalTile(ORANGE_GHOST_POKEY)
+        };
+        // Note: revival tile is the left of the pair of tiles in the house where the ghost is placed. The center
+        //       of the 3D shape is one tile to the right and a half tile to the bottom from the tile origin.
+        final Vector2f[] ghostRevivalPositions = Stream.of(ghostRevivalTiles)
+                .map(tile -> tile.scaled((float) TS).plus(TS, HTS))
+                .toArray(Vector2f[]::new);
+
         house3D = new ArcadeHouse3D(
             animationRegistry,
             house,
