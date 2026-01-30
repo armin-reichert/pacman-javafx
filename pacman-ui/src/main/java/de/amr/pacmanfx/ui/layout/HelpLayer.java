@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.ArcadePalette;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.FadingPane;
 import javafx.scene.layout.Pane;
@@ -36,7 +37,7 @@ public class HelpLayer extends Pane {
         final boolean msPacMan = variantName.equals(GameVariant.ARCADE_MS_PACMAN.name())
                 || variantName.equals(GameVariant.ARCADE_MS_PACMAN_XXL.name());
         final Color bgColor = msPacMan ? ArcadePalette.ARCADE_RED : ArcadePalette.ARCADE_BLUE;
-        final var font = Ufx.deriveFont(GameUI.FONT_MONOSPACED, Math.max(6, 14 * scaling));
+        final var font = Ufx.deriveFont(GameUI_Resources.FONT_MONOSPACED, Math.max(6, 14 * scaling));
         final var infoPane = HelpInfo.build(ui).createPane(ui, colorWithOpacity(bgColor, 0.8), font);
         popup.setTranslateX(10 * scaling);
         popup.setTranslateY(30 * scaling);

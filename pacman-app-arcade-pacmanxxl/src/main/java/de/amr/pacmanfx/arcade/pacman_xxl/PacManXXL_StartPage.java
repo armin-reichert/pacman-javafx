@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.ArcadePalette;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.StartPage;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -39,9 +40,9 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     private static final double RELATIVE_MENU_HEIGHT = 0.66;
 
     private static final OptionMenuStyle MENU_STYLE = OptionMenuStyle.builder()
-        .titleFont(Ufx.deriveFont(GameUI.FONT_PAC_FONT_GOOD, 4 * TS))
+        .titleFont(Ufx.deriveFont(GameUI_Resources.FONT_PAC_FONT_GOOD, 4 * TS))
         .titleTextFill(ArcadePalette.ARCADE_RED)
-        .textFont(Ufx.deriveFont(GameUI.FONT_ARCADE_8, TS))
+        .textFont(Ufx.deriveFont(GameUI_Resources.FONT_ARCADE_8, TS))
         .entryTextFill(ArcadePalette.ARCADE_YELLOW)
         .entryValueFill(ArcadePalette.ARCADE_WHITE)
         .usageTextFill(ArcadePalette.ARCADE_YELLOW)

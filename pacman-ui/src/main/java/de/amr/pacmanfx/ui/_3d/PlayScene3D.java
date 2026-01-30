@@ -21,6 +21,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
@@ -549,7 +550,7 @@ public abstract class PlayScene3D implements GameScene {
         scores3D = new Scores3D(
             localizedTexts.translate("score.score"),
             localizedTexts.translate("score.high_score"),
-            GameUI.FONT_ARCADE_8
+            GameUI_Resources.FONT_ARCADE_8
         );
 
         // The scores are always displayed in full view, regardless which perspective is used

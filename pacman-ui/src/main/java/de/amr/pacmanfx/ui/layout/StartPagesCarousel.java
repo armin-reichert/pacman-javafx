@@ -4,10 +4,7 @@
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.ui.ActionBindingsManager;
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.StartPage;
-import de.amr.pacmanfx.ui.View;
+import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
@@ -97,7 +94,7 @@ public class StartPagesCarousel extends Carousel implements View {
                 startPage.layoutRoot().requestFocus();
             }
         });
-        setBackground(GameUI.BACKGROUND_PAC_MAN_WALLPAPER);
+        setBackground(GameUI_Resources.BACKGROUND_PAC_MAN_WALLPAPER);
     }
 
     @Override

@@ -8,6 +8,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_Resources;
 
 import java.util.List;
 
@@ -105,7 +106,7 @@ public final class CheatActions {
             }
             toggle(game.usingAutopilotProperty());
             boolean usingAutopilot = game.usingAutopilot();
-            ui.voicePlayer().play(usingAutopilot ? GameUI.VOICE_AUTOPILOT_ON : GameUI.VOICE_AUTOPILOT_OFF);
+            ui.voicePlayer().play(usingAutopilot ? GameUI_Resources.VOICE_AUTOPILOT_ON : GameUI_Resources.VOICE_AUTOPILOT_OFF);
             ui.showFlashMessage(ui.translate(usingAutopilot ? "autopilot_on" : "autopilot_off"));
         }
     };
@@ -119,7 +120,7 @@ public final class CheatActions {
             }
             toggle(game.immuneProperty());
             boolean immunityOn = game.immuneProperty().get();
-            ui.voicePlayer().play(immunityOn ? GameUI.VOICE_IMMUNITY_ON : GameUI.VOICE_IMMUNITY_OFF);
+            ui.voicePlayer().play(immunityOn ? GameUI_Resources.VOICE_IMMUNITY_ON : GameUI_Resources.VOICE_IMMUNITY_OFF);
             ui.showFlashMessage(ui.translate(immunityOn ? "player_immunity_on" : "player_immunity_off"));
         }
     };

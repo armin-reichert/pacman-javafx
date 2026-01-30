@@ -17,6 +17,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -88,7 +89,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         game.hud().credit(true).score(true).livesCounter(false).levelCounter(true).show();
 
-        ui.voicePlayer().play(GameUI.VOICE_EXPLAIN_GAME_START);
+        ui.voicePlayer().play(GameUI_Resources.VOICE_EXPLAIN_GAME_START);
 
         actionBindings.useAllBindings(ArcadePacMan_UIConfig.DEFAULT_BINDINGS); // insert coin + start game actions
         actionBindings.useAllBindings(GameUI.SCENE_TESTS_BINDINGS); // actions for starting tests
