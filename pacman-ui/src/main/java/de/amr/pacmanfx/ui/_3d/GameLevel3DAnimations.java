@@ -16,6 +16,7 @@ import javafx.animation.*;
 import javafx.geometry.Point3D;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -43,10 +44,8 @@ public class GameLevel3DAnimations implements Disposable {
             return pauseSec(1.0);
         }
         var timeline = new Timeline(
-                new KeyFrame(Duration.millis(0.5 * 250),
-                        new KeyValue(level3D.wallBaseHeightProperty(), 0, Interpolator.EASE_BOTH)
-                )
-        );
+            new KeyFrame(Duration.millis(0.5 * 250),
+                new KeyValue(level3D.maze3D().wallBaseHeightProperty(), 0, Interpolator.EASE_BOTH)));
         timeline.setAutoReverse(true);
         timeline.setCycleCount(2 * numFlashes);
         return timeline;
@@ -79,8 +78,8 @@ public class GameLevel3DAnimations implements Disposable {
 
         private Animation wallsAndHouseDisappearing() {
             return new Timeline(
-                    new KeyFrame(Duration.seconds(0.5), new KeyValue(level3D.house3D().wallBaseHeightProperty(), 0, Interpolator.EASE_IN)),
-                    new KeyFrame(Duration.seconds(1.5), new KeyValue(level3D.wallBaseHeightProperty(), 0, Interpolator.EASE_IN)),
+                    new KeyFrame(Duration.seconds(0.5), new KeyValue(level3D.maze3D().house3D().wallBaseHeightProperty(), 0, Interpolator.EASE_IN)),
+                    new KeyFrame(Duration.seconds(1.5), new KeyValue(level3D.maze3D().wallBaseHeightProperty(), 0, Interpolator.EASE_IN)),
                     new KeyFrame(Duration.seconds(2.5), _ -> level3D.maze3D().setVisible(false))
             );
         }
@@ -124,8 +123,8 @@ public class GameLevel3DAnimations implements Disposable {
 
     private class WallColorFlashingAnimation extends RegisteredAnimation {
 
-        private final Color fromColor = Color.valueOf(level3D.colorScheme().wallFill());
-        private final Color toColor = Color.valueOf(level3D.colorScheme().wallStroke());
+        private final Color fromColor = Color.valueOf(level3D.maze3D().colorScheme().wallFill());
+        private final Color toColor = Color.valueOf(level3D.maze3D().colorScheme().wallStroke());
 
         public WallColorFlashingAnimation(AnimationRegistry animationRegistry) {
             super(animationRegistry, "WallColorFlashing");
@@ -143,8 +142,8 @@ public class GameLevel3DAnimations implements Disposable {
                 @Override
                 protected void interpolate(double t) {
                     Color color = fromColor.interpolate(toColor, t);
-                    level3D.wallTopMaterial().setDiffuseColor(color);
-                    level3D.wallTopMaterial().setSpecularColor(color.brighter());
+                    level3D.maze3D().wallTopMaterial().setDiffuseColor(color);
+                    level3D.maze3D().wallTopMaterial().setSpecularColor(color.brighter());
                 }
             };
         }
@@ -153,8 +152,11 @@ public class GameLevel3DAnimations implements Disposable {
         public void stop() {
             super.stop();
             // reset wall colors
-            level3D.wallTopMaterial().setDiffuseColor(Color.valueOf(level3D.colorScheme().wallFill()));
-            level3D.wallTopMaterial().setSpecularColor(Color.valueOf(level3D.colorScheme().wallFill()).brighter());
+            final Maze3D maze3D = level3D.maze3D();
+            final Color wallFillColor = Color.valueOf(maze3D.colorScheme().wallFill());
+            final PhongMaterial wallTopMaterial = maze3D.wallTopMaterial();
+            wallTopMaterial.setDiffuseColor(wallFillColor);
+            wallTopMaterial.setSpecularColor(wallFillColor.brighter());
         }
     }
 

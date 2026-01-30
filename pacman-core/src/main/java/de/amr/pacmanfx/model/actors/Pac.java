@@ -78,7 +78,7 @@ public class Pac extends MovingActor {
         if (terrain.outOfBounds(tile)) {
             return terrain.isTileInPortalSpace(tile);
         }
-        if (terrain.optHouse().isPresent() && terrain.optHouse().get().isTileInHouseArea(tile)) {
+        if (terrain.optHouse().isPresent() && terrain.optHouse().get().contains(tile)) {
             return false; // Schieb ab, Alter!
         }
         return !terrain.isTileBlocked(tile);

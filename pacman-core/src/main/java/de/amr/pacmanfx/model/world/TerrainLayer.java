@@ -158,7 +158,7 @@ public class TerrainLayer extends WorldMapLayer {
         if (outOfBounds(tile) || isTileBlocked(tile)) {
             return false;
         }
-        if (house != null && house.isTileInHouseArea(tile)) {
+        if (house != null && house.contains(tile)) {
             return false;
         }
         long inaccessible = 0;

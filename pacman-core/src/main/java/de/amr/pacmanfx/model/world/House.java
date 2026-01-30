@@ -53,7 +53,7 @@ public interface House {
         );
     }
 
-    default boolean isTileInHouseArea(Vector2i tile) {
+    default boolean contains(Vector2i tile) {
         requireNonNull(tile);
         return tile.x() >= minTile().x() && tile.x() <= maxTile().x()
             && tile.y() >= minTile().y() && tile.y() <= maxTile().y();
@@ -64,7 +64,7 @@ public interface House {
      * @return tells if the given actor is located inside the house
      */
     default boolean isVisitedBy(Actor actor) {
-        return isTileInHouseArea(requireNonNull(actor).tile());
+        return contains(requireNonNull(actor).tile());
     }
 
     default Vector2f center() {

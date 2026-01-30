@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecycling;
+import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecyclingAnimation;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.*;
 import javafx.beans.property.BooleanProperty;
@@ -164,7 +164,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
     }
 
     private RegisteredAnimation createSwirlAnimation(AnimationRegistry animationRegistry, String label, Group swirl) {
-        Duration rotationTime = Duration.seconds(EnergizerExplosionAndRecycling.SWIRL_ROTATION_SEC);
+        Duration rotationTime = Duration.seconds(EnergizerExplosionAndRecyclingAnimation.SWIRL_ROTATION_SEC);
         return new RegisteredAnimation(animationRegistry, label) {
             @Override
             protected Animation createAnimationFX() {
@@ -303,7 +303,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
         if (swirls != null) {
             for (Group swirl : swirls) {
                 swirl.getChildren().forEach(child -> {
-                    if (child instanceof EnergizerExplosionAndRecycling.Particle particle) {
+                    if (child instanceof EnergizerExplosionAndRecyclingAnimation.Particle particle) {
                         particle.dispose();
                     }
                 });

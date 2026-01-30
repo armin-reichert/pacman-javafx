@@ -296,14 +296,15 @@ public abstract class PlayScene3D implements GameScene {
         gameLevel3D.pac3D().update(level);
 
         final FoodLayer foodLayer = level.worldMap().foodLayer();
-        gameLevel3D.pellets3D().forEach(pellet3D ->
+        final Maze3D maze3D = gameLevel3D.maze3D();
+        maze3D.pellets3D().forEach(pellet3D ->
             pellet3D.setVisible(!foodLayer.hasEatenFoodAtTile((Vector2i) pellet3D.getUserData())));
-        gameLevel3D.energizers3D().forEach(energizer3D ->
+        maze3D.energizers3D().forEach(energizer3D ->
                 energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
 
         final StateMachine.State<?> state = game.control().state();
         if (state.matches(StateName.HUNTING, StateName.EATING_GHOST)) { //TODO check this
-            gameLevel3D.energizers3D().stream()
+            maze3D.energizers3D().stream()
                 .filter(energizer3D -> energizer3D.shape().isVisible())
                 .forEach(Energizer3D::startPumping);
         }
@@ -442,7 +443,7 @@ public abstract class PlayScene3D implements GameScene {
 
         if (state instanceof TestState) {
             replaceGameLevel3D(level); //TODO check when to destroy previous level
-            gameLevel3D.energizers3D().forEach(Energizer3D::startPumping);
+            gameLevel3D.maze3D().energizers3D().forEach(Energizer3D::startPumping);
             showLevelTestMessage(level);
         }
         else {
@@ -464,12 +465,12 @@ public abstract class PlayScene3D implements GameScene {
         if (e.allPellets()) {
             eatAllPellets3D();
         } else {
-            final Energizer3D energizer3D = gameLevel3D.energizers3D().stream()
+            final Energizer3D energizer3D = gameLevel3D.maze3D().energizers3D().stream()
                 .filter(e3D -> tile.equals(e3D.tile())).findFirst().orElse(null);
             if (energizer3D != null) {
                 energizer3D.onEaten();
             } else {
-                gameLevel3D.pellets3D().stream()
+                gameLevel3D.maze3D().pellets3D().stream()
                     .filter(pellet3D -> tile.equals(pellet3D.getUserData()))
                     .findFirst()
                     .ifPresent(this::eatPellet3D);
@@ -568,7 +569,7 @@ public abstract class PlayScene3D implements GameScene {
     }
 
     protected GameLevel3D createGameLevel3D(GameLevel level) {
-        return new GameLevel3D(ui, ui.currentConfig(), level);
+        return new GameLevel3D(ui, level);
     }
 
     protected void replaceGameLevel3D(GameLevel level) {
@@ -670,7 +671,7 @@ public abstract class PlayScene3D implements GameScene {
     }
 
     protected void eatAllPellets3D() {
-        gameLevel3D.pellets3D().forEach(pellet3D -> {
+        gameLevel3D.maze3D().pellets3D().forEach(pellet3D -> {
             if (pellet3D.getParent() instanceof Group group) {
                 group.getChildren().remove(pellet3D);
             }

@@ -173,7 +173,7 @@ public class Bonus extends MovingActor {
         if (terrain.outOfBounds(tile)) {
             return terrain.isTileInPortalSpace(tile);
         }
-        if (terrain.optHouse().isPresent() && terrain.optHouse().get().isTileInHouseArea(tile)) {
+        if (terrain.optHouse().isPresent() && terrain.optHouse().get().contains(tile)) {
             return false;
         }
         return !terrain.isTileBlocked(tile);
