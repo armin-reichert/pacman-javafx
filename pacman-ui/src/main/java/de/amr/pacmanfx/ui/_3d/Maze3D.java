@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
@@ -14,6 +13,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import javafx.beans.property.DoubleProperty;
@@ -35,14 +35,14 @@ public class Maze3D extends Group implements Disposable {
     /** Normalized wall top color for very dark colors */
     private static final String DARK_GRAY = "0x2a2a2a";
 
-    private final GameUI ui;
+    private final PreferencesManager prefs;
+    private final WorldMapColorScheme colorScheme;
     private final GameLevel level;
     private final AnimationRegistry animationRegistry;
 
     private final DoubleProperty wallBaseHeight = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
     private final DoubleProperty wallOpacity = new SimpleDoubleProperty(1);
 
-    private WorldMapColorScheme colorScheme;
     private MazeMaterials3D materials;
     private MazeFloor3D mazeFloor3D;
     private MazeHouse3D mazeHouse3D;
@@ -51,15 +51,28 @@ public class Maze3D extends Group implements Disposable {
     private int wall3DCount;
 
     public Maze3D(GameUI ui, GameLevel level, AnimationRegistry animationRegistry, List<PhongMaterial> ghostMaterials) {
-        this.ui = ui;
-        this.level = level;
-        this.animationRegistry = animationRegistry;
-        createWorldMapColorScheme(level.worldMap());
+        requireNonNull(ui);
+        this.prefs = ui.prefs();
+        this.level = requireNonNull(level);
+        this.animationRegistry = requireNonNull(animationRegistry);
+        requireNonNull(ghostMaterials);
+
+        final WorldMapColorScheme proposedColorScheme = ui.currentConfig().colorScheme(level.worldMap());
+        colorScheme = adjustColorScheme(proposedColorScheme);
+
         createMaterials();
         createFloor3D();
         createObstacles3D(level.worldMap());
         level.worldMap().terrainLayer().optHouse().ifPresent(this::createHouse3D);
         createMazeFood3D(ghostMaterials);
+    }
+
+    // Adds some contrast if the wall fill color is very dark (assuming a very dark floor)
+    private WorldMapColorScheme adjustColorScheme(WorldMapColorScheme proposedColorScheme) {
+        final boolean isFillColorDark = Color.valueOf(proposedColorScheme.wallFill()).getBrightness() < 0.1;
+        return isFillColorDark
+            ? new WorldMapColorScheme(DARK_GRAY, proposedColorScheme.wallStroke(), proposedColorScheme.door(), proposedColorScheme.pellet())
+            : proposedColorScheme;
     }
 
     public WorldMapColorScheme colorScheme() {
@@ -120,19 +133,9 @@ public class Maze3D extends Group implements Disposable {
         materials = MazeMaterials3D.create(colorScheme, wallOpacityProperty());
     }
 
-    private void createWorldMapColorScheme(WorldMap worldMap) {
-        final WorldMapColorScheme proposedColorScheme = ui.currentConfig().colorScheme(worldMap);
-        requireNonNull(proposedColorScheme);
-        // Add some contrast with dark floor if wall fill color is very dark
-        final boolean veryDarkWallFillColor = Color.valueOf(proposedColorScheme.wallFill()).getBrightness() < 0.1;
-        colorScheme = veryDarkWallFillColor
-            ? new WorldMapColorScheme(DARK_GRAY, proposedColorScheme.wallStroke(), proposedColorScheme.door(), proposedColorScheme.pellet())
-            : proposedColorScheme;
-    }
-
     private void createObstacles3D(WorldMap worldMap) {
-        final float wallThickness = ui.prefs().getFloat("3d.obstacle.wall_thickness");
-        final float cornerRadius = ui.prefs().getFloat("3d.obstacle.corner_radius");
+        final float wallThickness = prefs.getFloat("3d.obstacle.wall_thickness");
+        final float cornerRadius = prefs.getFloat("3d.obstacle.corner_radius");
         final House house = worldMap.terrainLayer().optHouse().orElse(null);
         final var stopWatch = new StopWatch();
         final var terrainRenderer3D = new TerrainRenderer3D();
@@ -158,7 +161,7 @@ public class Maze3D extends Group implements Disposable {
     }
 
     private void createFloor3D() {
-        mazeFloor3D = new MazeFloor3D(ui.prefs(), level, materials.floor());
+        mazeFloor3D = new MazeFloor3D(prefs, level, materials.floor());
     }
 
     private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
@@ -171,12 +174,12 @@ public class Maze3D extends Group implements Disposable {
     }
 
     private void createHouse3D(House house) {
-        mazeHouse3D = new MazeHouse3D(ui.prefs(), colorScheme, animationRegistry, house);
+        mazeHouse3D = new MazeHouse3D(prefs, colorScheme, animationRegistry, house);
         getChildren().add(mazeHouse3D);
     }
 
     private void createMazeFood3D(List<PhongMaterial> ghostMaterials) {
-        mazeFood3D = new MazeFood3D(ui.prefs(), colorScheme, animationRegistry, level, ghostMaterials,
+        mazeFood3D = new MazeFood3D(prefs, colorScheme, animationRegistry, level, ghostMaterials,
             mazeHouse3D.arcadeHouse3D().swirls());
     }
 }
