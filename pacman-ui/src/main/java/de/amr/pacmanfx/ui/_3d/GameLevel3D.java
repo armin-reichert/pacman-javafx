@@ -108,7 +108,7 @@ public class GameLevel3D extends Group implements Disposable {
 
         animations = new GameLevel3DAnimations(ui, this);
 
-        getChildren().add(maze3D.floor3D());
+        getChildren().add(maze3D.mazeFloor3D());
         getChildren().add(levelCounter3D);
         getChildren().add(livesCounter3D);
         getChildren().addAll(pac3D, pac3D.light());

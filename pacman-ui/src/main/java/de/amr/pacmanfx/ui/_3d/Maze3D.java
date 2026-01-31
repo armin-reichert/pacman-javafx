@@ -25,8 +25,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.transform.Translate;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -52,7 +50,7 @@ public class Maze3D extends Group implements Disposable {
     private final DoubleProperty wallOpacity = new SimpleDoubleProperty(1);
 
     private WorldMapColorScheme colorScheme;
-    private Box floor3D;
+    private MazeFloor3D mazeFloor3D;
     private ArcadeHouse3D house3D;
     private MazeFood3D mazeFood3D;
 
@@ -94,8 +92,8 @@ public class Maze3D extends Group implements Disposable {
         return wallTopMaterial;
     }
 
-    public Box floor3D() {
-        return floor3D;
+    public MazeFloor3D mazeFloor3D() {
+        return mazeFloor3D;
     }
 
     public ArcadeHouse3D house3D() {
@@ -126,13 +124,9 @@ public class Maze3D extends Group implements Disposable {
             wallTopMaterial.specularColorProperty().unbind();
             wallTopMaterial = null;
         }
-        if (floor3D != null) {
-            floor3D.translateXProperty().unbind();
-            floor3D.translateYProperty().unbind();
-            floor3D.translateZProperty().unbind();
-            floor3D.materialProperty().unbind();
-            floor3D = null;
-            Logger.info("Unbound and cleared 3D floor");
+        if (mazeFloor3D != null) {
+            mazeFloor3D.dispose();
+            mazeFloor3D = null;
         }
         if (house3D != null) {
             house3D.openProperty().removeListener(this::handleHouseOpenChange);
@@ -200,17 +194,7 @@ public class Maze3D extends Group implements Disposable {
     }
 
     private void createFloor3D() {
-        final float padding = ui.prefs().getFloat("3d.floor.padding");
-        final float thickness = ui.prefs().getFloat("3d.floor.thickness");
-        final Vector2i worldSizePx = level.worldMap().terrainLayer().sizeInPixel();
-        final float sizeX = worldSizePx.x() + 2 * padding;
-        final float sizeY = worldSizePx.y();
-
-        floor3D = new Box(sizeX, sizeY, thickness);
-        floor3D.setMaterial(floorMaterial);
-        // Translate: top-left corner (without padding) at origin, surface top at z=0
-        final var translate = new Translate(0.5 * sizeX - padding, 0.5 * sizeY, 0.5 * thickness);
-        floor3D.getTransforms().add(translate);
+        mazeFloor3D = new MazeFloor3D(ui.prefs(), level, floorMaterial);
     }
 
     private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
