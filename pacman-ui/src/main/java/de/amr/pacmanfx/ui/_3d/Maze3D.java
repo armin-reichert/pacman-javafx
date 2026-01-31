@@ -9,35 +9,27 @@ import de.amr.pacmanfx.lib.StopWatch;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.world.*;
+import de.amr.pacmanfx.model.world.House;
+import de.amr.pacmanfx.model.world.Obstacle;
+import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecyclingAnimation;
-import de.amr.pacmanfx.uilib.model3D.*;
+import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
+import de.amr.pacmanfx.uilib.model3D.TerrainRenderer3D;
+import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.Bounds;
-import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Mesh;
-import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Shape3D;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import org.tinylog.Logger;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -62,17 +54,13 @@ public class Maze3D extends Group implements Disposable {
     private WorldMapColorScheme colorScheme;
     private Box floor3D;
     private ArcadeHouse3D house3D;
-    private Set<Shape3D> pellets3D;
-    private Set<Energizer3D> energizers3D;
-    private Group particleGroupsContainer = new Group();
+    private MazeFood3D mazeFood3D;
 
     private int wall3DCount;
 
     private PhongMaterial floorMaterial;
     private PhongMaterial wallBaseMaterial;
     private PhongMaterial wallTopMaterial;
-    private PhongMaterial pelletMaterial;
-    private PhongMaterial particleMaterial;
 
     public Maze3D(GameUI ui, GameLevel level, AnimationRegistry animationRegistry, List<PhongMaterial> ghostMaterials) {
         this.ui = ui;
@@ -87,8 +75,7 @@ public class Maze3D extends Group implements Disposable {
             createHouse3D(house);
             getChildren().add(house3D);
         });
-        createPellets3D();
-        createEnergizers3D(ghostMaterials);
+        createMazeFood3D(ghostMaterials);
     }
 
     public WorldMapColorScheme colorScheme() {
@@ -115,12 +102,8 @@ public class Maze3D extends Group implements Disposable {
         return house3D;
     }
 
-    public Set<Shape3D> pellets3D() { return Collections.unmodifiableSet(pellets3D); }
-
-    public Set<Energizer3D> energizers3D() { return Collections.unmodifiableSet(energizers3D); }
-
-    public Group particleGroupsContainer() {
-        return particleGroupsContainer;
+    public MazeFood3D mazeFood3D() {
+        return mazeFood3D;
     }
 
     @Override
@@ -143,17 +126,6 @@ public class Maze3D extends Group implements Disposable {
             wallTopMaterial.specularColorProperty().unbind();
             wallTopMaterial = null;
         }
-        if (pelletMaterial != null) {
-            pelletMaterial.diffuseColorProperty().unbind();
-            pelletMaterial.specularColorProperty().unbind();
-            pelletMaterial = null;
-        }
-        if (particleMaterial != null) {
-            particleMaterial.diffuseColorProperty().unbind();
-            particleMaterial.specularColorProperty().unbind();
-            particleMaterial = null;
-        }
-
         if (floor3D != null) {
             floor3D.translateXProperty().unbind();
             floor3D.translateYProperty().unbind();
@@ -172,28 +144,8 @@ public class Maze3D extends Group implements Disposable {
 
         getChildren().forEach(Wall3D::dispose);
 
-        if (pellets3D != null) {
-            pellets3D.forEach(pellet3D -> {
-                if (pellet3D instanceof MeshView meshView) {
-                    meshView.setMaterial(null);
-                    meshView.setMesh(null);
-                }
-            });
-            pellets3D = null;
-            Logger.info("Disposed 3D pellets");
-        }
-        if (energizers3D != null) {
-            disposeAll(energizers3D);
-            energizers3D.clear();
-            energizers3D = null;
-            Logger.info("Disposed 3D energizers");
-        }
-        if (particleGroupsContainer != null) {
-            particleGroupsContainer.getChildren().clear();
-            particleGroupsContainer = null;
-            Logger.info("Removed all particle groups");
-        }
 
+        mazeFood3D.dispose();
         getChildren().clear();
         Logger.info("Disposed 3D maze");
     }
@@ -209,9 +161,6 @@ public class Maze3D extends Group implements Disposable {
     }
 
     private void createMaterials() {
-        pelletMaterial = defaultPhongMaterial(Color.valueOf(colorScheme.pellet()));
-        particleMaterial = defaultPhongMaterial(Color.valueOf(colorScheme.pellet()).deriveColor(0, 0.5, 1.5, 0.5));
-
         floorMaterial = Ufx.colorSensitivePhongMaterial(PROPERTY_3D_FLOOR_COLOR);
         floorMaterial.setSpecularPower(128);
 
@@ -301,110 +250,8 @@ public class Maze3D extends Group implements Disposable {
         house3D.setDoorSensitivity(ui.prefs().getFloat("3d.house.sensitivity"));
     }
 
-    private void createPellets3D() {
-        final Mesh mesh = PacManModel3DRepository.instance().pelletMesh();
-        final var prototype = new MeshView(mesh);
-        final Bounds bounds = prototype.getBoundsInLocal();
-        final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
-        final float radius = ui.prefs().getFloat("3d.pellet.radius");
-        final double scaling = (2 * radius) / maxExtent;
-        final var scale = new Scale(scaling, scaling, scaling);
-        final FoodLayer foodLayer = level.worldMap().foodLayer();
-
-        pellets3D = foodLayer.tiles().filter(foodLayer::hasFoodAtTile)
-            .filter(tile -> !foodLayer.isEnergizerTile(tile))
-            .map(tile -> createPellet3D(mesh, scale, tile))
-            .collect(Collectors.toCollection(HashSet::new));
-    }
-
-    private Shape3D createPellet3D(Mesh pelletMesh, Scale scale, Vector2i tile) {
-        final var pelletShape = new MeshView(pelletMesh);
-        pelletShape.setMaterial(pelletMaterial);
-        pelletShape.setRotationAxis(Rotate.Z_AXIS);
-        pelletShape.setRotate(90);
-        pelletShape.setTranslateX(tile.x() * TS + HTS);
-        pelletShape.setTranslateY(tile.y() * TS + HTS);
-        pelletShape.setTranslateZ(- 6);
-        pelletShape.getTransforms().add(scale);
-        pelletShape.setUserData(tile);
-        return pelletShape;
-    }
-
-    private void createEnergizers3D(List<PhongMaterial> ghostMaterials) {
-        final float radius     = ui.prefs().getFloat("3d.energizer.radius");
-        final float minScaling = ui.prefs().getFloat("3d.energizer.scaling.min");
-        final float maxScaling = ui.prefs().getFloat("3d.energizer.scaling.max");
-        final FoodLayer foodLayer = level.worldMap().foodLayer();
-        energizers3D = foodLayer.tiles().filter(foodLayer::hasFoodAtTile)
-            .filter(foodLayer::isEnergizerTile)
-            .map(tile -> createAnimatedEnergizer3D(tile, radius, minScaling, maxScaling, ghostMaterials))
-            .collect(Collectors.toCollection(HashSet::new));
-    }
-
-    private Energizer3D createAnimatedEnergizer3D(Vector2i tile, float radius, float minScaling, float maxScaling, List<PhongMaterial> ghostMaterials) {
-        final var energizer3D = createEnergizer3D(tile, radius, minScaling, maxScaling);
-
-        final House house = level.worldMap().terrainLayer().optHouse().orElseThrow();
-        final Vector2i[] ghostRevivalTiles = {
-            house.ghostRevivalTile(RED_GHOST_SHADOW),
-            house.ghostRevivalTile(PINK_GHOST_SPEEDY),
-            house.ghostRevivalTile(CYAN_GHOST_BASHFUL),
-            house.ghostRevivalTile(ORANGE_GHOST_POKEY),
-        };
-
-        final Vector2f[] ghostRevivalCenters = {
-            revivalPositionCenter(ghostRevivalTiles[RED_GHOST_SHADOW]),
-            revivalPositionCenter(ghostRevivalTiles[PINK_GHOST_SPEEDY]),
-            revivalPositionCenter(ghostRevivalTiles[CYAN_GHOST_BASHFUL]),
-            revivalPositionCenter(ghostRevivalTiles[ORANGE_GHOST_POKEY])
-        };
-
-        setEatenAnimation(energizer3D, ghostMaterials.toArray(PhongMaterial[]::new), ghostRevivalCenters);
-        return energizer3D;
-    }
-
-    private Vector2f revivalPositionCenter(Vector2i revivalTile) {
-        return revivalTile.scaled(8f).plus(TS, HTS);
-    }
-
-    private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float minScaling, float maxScaling) {
-        final var energizerCenter = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-        return new SphericalEnergizer3D(
-            animationRegistry,
-            energizerRadius,
-            energizerCenter,
-            minScaling,
-            maxScaling,
-            pelletMaterial,
-            tile);
-    }
-
-    private void setEatenAnimation(Energizer3D energizer3D, Material[] ghostParticleMaterials, Vector2f[] ghostRevivalPositions) {
-        final Point3D energizerCenter = new Point3D(
-            energizer3D.shape().getTranslateX(),
-            energizer3D.shape().getTranslateY(),
-            energizer3D.shape().getTranslateZ());
-
-        final var animation = new EnergizerExplosionAndRecyclingAnimation(
-            animationRegistry,
-            energizerCenter,
-            house3D,
-            ghostRevivalPositions,
-            particleGroupsContainer,
-            particleMaterial,
-            ghostParticleMaterials,
-            this::particleTouchesFloor);
-
-        energizer3D.setEatenAnimation(animation);
-    }
-
-    private boolean particleTouchesFloor(EnergizerExplosionAndRecyclingAnimation.Particle particle) {
-        final Vector2i worldSizePx = level.worldMap().terrainLayer().sizeInPixel();
-        final Point3D center = particle.center();
-        final double r = particle.getRadius(), cx = center.getX(), cy = center.getY();
-        if (cx + r < 0 || cx - r > worldSizePx.x()) return false;
-        if (cy + r < 0 || cy - r > worldSizePx.y()) return false;
-        return center.getZ() >= 0;
+    private void createMazeFood3D(List<PhongMaterial> ghostMaterials) {
+        mazeFood3D = new MazeFood3D(ui.prefs(), animationRegistry, level, colorScheme, ghostMaterials, house3D.swirls());
     }
 
     private void handleHouseOpenChange(ObservableValue<? extends Boolean> obs, boolean wasOpen, boolean isOpen) {

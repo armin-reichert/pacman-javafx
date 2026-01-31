@@ -114,9 +114,9 @@ public class GameLevel3D extends Group implements Disposable {
         getChildren().addAll(pac3D, pac3D.light());
         getChildren().addAll(ghosts3D);
         getChildren().addAll(maze3D.house3D().swirls());
-        getChildren().add(maze3D.particleGroupsContainer());
-        getChildren().addAll(maze3D.energizers3D().stream().map(Energizer3D::shape).toList());
-        getChildren().addAll(maze3D.pellets3D());
+        getChildren().add(maze3D.mazeFood3D().particleGroupsContainer());
+        getChildren().addAll(maze3D.mazeFood3D().energizers3D().stream().map(Energizer3D::shape).toList());
+        getChildren().addAll(maze3D.mazeFood3D().pellets3D());
         getChildren().add(maze3D.house3D().doors()); // !!
         // Note: The order in which children are added to the root matters!
         // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
@@ -275,7 +275,7 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     public void onStartingGame() {
-        maze3D.energizers3D().forEach(Energizer3D::stopPumping);
+        maze3D.mazeFood3D().energizers3D().forEach(Energizer3D::stopPumping);
         if (levelCounter3D != null) {
             levelCounter3D.update(ui, level.game());
         }
@@ -284,7 +284,7 @@ public class GameLevel3D extends Group implements Disposable {
     public void onHuntingStart() {
         pac3D.init(level);
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
-        maze3D.energizers3D().forEach(Energizer3D::startPumping);
+        maze3D.mazeFood3D().energizers3D().forEach(Energizer3D::startPumping);
         maze3D.house3D().startSwirlAnimations();
         animations.playGhostLightAnimation();
     }
@@ -321,11 +321,11 @@ public class GameLevel3D extends Group implements Disposable {
         state.timer().resetIndefiniteTime(); // expires when animation ends
         ui.soundManager().stopAll();
         animationRegistry.stopAllAnimations();
-        maze3D.energizers3D().forEach(Energizer3D::stopPumping); //TODO needed?
+        maze3D.mazeFood3D().energizers3D().forEach(Energizer3D::stopPumping); //TODO needed?
         // hide 3D food explicitly because level might have been completed using cheat!
-        maze3D.pellets3D().forEach(pellet3D -> pellet3D.setVisible(false));
-        maze3D.energizers3D().forEach(Energizer3D::hide);
-        maze3D.particleGroupsContainer().getChildren().clear();
+        maze3D.mazeFood3D().pellets3D().forEach(pellet3D -> pellet3D.setVisible(false));
+        maze3D.mazeFood3D().energizers3D().forEach(Energizer3D::hide);
+        maze3D.mazeFood3D().particleGroupsContainer().getChildren().clear();
         for (Group swirl : maze3D.house3D().swirls()) {
             swirl.getChildren().clear();
         }
@@ -358,7 +358,7 @@ public class GameLevel3D extends Group implements Disposable {
     public void onGameOver(StateMachine.State<Game> state) {
         state.timer().restartSeconds(3);
         animations.stopGhostLightAnimation();
-        maze3D.energizers3D().forEach(Energizer3D::hide);
+        maze3D.mazeFood3D().energizers3D().forEach(Energizer3D::hide);
         maze3D.house3D().stopSwirlAnimations();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         ui.soundManager().stopAll();
@@ -404,7 +404,7 @@ public class GameLevel3D extends Group implements Disposable {
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode newDrawMode) {
         try {
             Predicate<Node> includeAll = _ -> false;
-            setDrawModeUnder(maze3D, node -> node instanceof Shape3D && maze3D.pellets3D().contains(node), newDrawMode);
+            setDrawModeUnder(maze3D, node -> node instanceof Shape3D && maze3D.mazeFood3D().pellets3D().contains(node), newDrawMode);
             setDrawModeUnder(pac3D, includeAll, newDrawMode);
             setDrawModeUnder(livesCounter3D, includeAll, newDrawMode);
             ghosts3D.forEach(ghost3D -> setDrawModeUnder(ghost3D, includeAll, newDrawMode));

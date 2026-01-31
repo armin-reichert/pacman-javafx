@@ -18,7 +18,10 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.ActionBindingsManager;
+import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
@@ -294,14 +297,17 @@ public abstract class PlayScene3D implements GameScene {
 
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         final Maze3D maze3D = gameLevel3D.maze3D();
-        maze3D.pellets3D().forEach(pellet3D ->
-            pellet3D.setVisible(!foodLayer.hasEatenFoodAtTile((Vector2i) pellet3D.getUserData())));
-        maze3D.energizers3D().forEach(energizer3D ->
-                energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
-
+        final MazeFood3D mazeFood3D = maze3D.mazeFood3D();
         final StateMachine.State<?> state = game.control().state();
+
+        mazeFood3D.pellets3D().forEach(pellet3D ->
+            pellet3D.setVisible(!foodLayer.hasEatenFoodAtTile((Vector2i) pellet3D.getUserData())));
+
+        mazeFood3D.energizers3D().forEach(energizer3D ->
+            energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
+
         if (state.matches(StateName.HUNTING, StateName.EATING_GHOST)) { //TODO check this
-            maze3D.energizers3D().stream()
+            mazeFood3D.energizers3D().stream()
                 .filter(energizer3D -> energizer3D.shape().isVisible())
                 .forEach(Energizer3D::startPumping);
         }
@@ -312,6 +318,7 @@ public abstract class PlayScene3D implements GameScene {
             }
             gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
         }
+
         gameLevel3D.updateLevelCounter3D();
         updateHUD(game);
         setActionBindings(level);
@@ -440,7 +447,7 @@ public abstract class PlayScene3D implements GameScene {
 
         if (state instanceof TestState) {
             replaceGameLevel3D(level); //TODO check when to destroy previous level
-            gameLevel3D.maze3D().energizers3D().forEach(Energizer3D::startPumping);
+            gameLevel3D.maze3D().mazeFood3D().energizers3D().forEach(Energizer3D::startPumping);
             showLevelTestMessage(level);
         }
         else {
@@ -462,12 +469,14 @@ public abstract class PlayScene3D implements GameScene {
         if (e.allPellets()) {
             eatAllPellets3D();
         } else {
-            final Energizer3D energizer3D = gameLevel3D.maze3D().energizers3D().stream()
-                .filter(e3D -> tile.equals(e3D.tile())).findFirst().orElse(null);
+            final MazeFood3D mazeFood3D = gameLevel3D.maze3D().mazeFood3D();
+            final Energizer3D energizer3D = mazeFood3D.energizers3D().stream()
+                .filter(e3D -> tile.equals(e3D.tile()))
+                .findFirst().orElse(null);
             if (energizer3D != null) {
                 energizer3D.onEaten();
             } else {
-                gameLevel3D.maze3D().pellets3D().stream()
+                mazeFood3D.pellets3D().stream()
                     .filter(pellet3D -> tile.equals(pellet3D.getUserData()))
                     .findFirst()
                     .ifPresent(this::eatPellet3D);
@@ -668,7 +677,7 @@ public abstract class PlayScene3D implements GameScene {
     }
 
     protected void eatAllPellets3D() {
-        gameLevel3D.maze3D().pellets3D().forEach(pellet3D -> {
+        gameLevel3D.maze3D().mazeFood3D().pellets3D().forEach(pellet3D -> {
             if (pellet3D.getParent() instanceof Group group) {
                 group.getChildren().remove(pellet3D);
             }
