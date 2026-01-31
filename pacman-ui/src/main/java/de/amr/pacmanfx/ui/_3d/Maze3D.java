@@ -4,17 +4,12 @@
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.lib.StopWatch;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.House;
-import de.amr.pacmanfx.model.world.Obstacle;
-import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
-import de.amr.pacmanfx.uilib.model3D.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -25,9 +20,6 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static java.util.Objects.requireNonNull;
 
 public class Maze3D extends Group implements Disposable {
@@ -44,11 +36,10 @@ public class Maze3D extends Group implements Disposable {
     private final DoubleProperty wallOpacity = new SimpleDoubleProperty(1);
 
     private MazeMaterials3D materials;
+    private MazeObstacles3D obstacles;
     private MazeFloor3D mazeFloor3D;
     private MazeHouse3D mazeHouse3D;
     private MazeFood3D mazeFood3D;
-
-    private int wall3DCount;
 
     public Maze3D(GameUI ui, GameLevel level, AnimationRegistry animationRegistry, List<PhongMaterial> ghostMaterials) {
         requireNonNull(ui);
@@ -62,7 +53,7 @@ public class Maze3D extends Group implements Disposable {
 
         createMaterials();
         createFloor3D();
-        createObstacles3D(level.worldMap());
+        createObstacles3D();
         level.worldMap().terrainLayer().optHouse().ifPresent(this::createHouse3D);
         createMazeFood3D(ghostMaterials);
     }
@@ -75,14 +66,6 @@ public class Maze3D extends Group implements Disposable {
             : proposedColorScheme;
     }
 
-    public WorldMapColorScheme colorScheme() {
-        return colorScheme;
-    }
-
-    public MazeMaterials3D materials() {
-        return materials;
-    }
-
     public DoubleProperty wallBaseHeightProperty() {
         return wallBaseHeight;
     }
@@ -91,15 +74,27 @@ public class Maze3D extends Group implements Disposable {
         return wallOpacity;
     }
 
-    public MazeFloor3D mazeFloor3D() {
+    public WorldMapColorScheme colorScheme() {
+        return colorScheme;
+    }
+
+    public MazeMaterials3D materials() {
+        return materials;
+    }
+
+    public MazeObstacles3D obstacles() {
+        return obstacles;
+    }
+
+    public MazeFloor3D floor() {
         return mazeFloor3D;
     }
 
-    public MazeHouse3D mazeHouse3D() {
+    public MazeHouse3D house() {
         return mazeHouse3D;
     }
 
-    public MazeFood3D mazeFood3D() {
+    public MazeFood3D food() {
         return mazeFood3D;
     }
 
@@ -115,6 +110,10 @@ public class Maze3D extends Group implements Disposable {
         if (mazeFloor3D != null) {
             mazeFloor3D.dispose();
             mazeFloor3D = null;
+        }
+        if (obstacles != null) {
+            obstacles.dispose();
+            obstacles = null;
         }
         if (mazeHouse3D != null) {
             mazeHouse3D.dispose();
@@ -133,44 +132,13 @@ public class Maze3D extends Group implements Disposable {
         materials = MazeMaterials3D.create(colorScheme, wallOpacityProperty());
     }
 
-    private void createObstacles3D(WorldMap worldMap) {
-        final float wallThickness = prefs.getFloat("3d.obstacle.wall_thickness");
-        final float cornerRadius = prefs.getFloat("3d.obstacle.corner_radius");
-        final House house = worldMap.terrainLayer().optHouse().orElse(null);
-        final var stopWatch = new StopWatch();
-        final var terrainRenderer3D = new TerrainRenderer3D();
-        terrainRenderer3D.setOnWallCreated(wall3D -> {
-            ++wall3DCount;
-            wall3D.setBaseMaterial(materials.wallBase());
-            wall3D.setTopMaterial(materials.wallTop());
-            wall3D.bindBaseHeight(wallBaseHeightProperty());
-            getChildren().addAll(wall3D.base(), wall3D.top());
-            return wall3D;
-        });
-
-        wall3DCount = 0;
-        for (Obstacle obstacle : worldMap.terrainLayer().obstacles()) {
-            final Vector2i obstacleStartTile = tileAt(obstacle.startPoint().toVector2f());
-            // exclude house placeholder obstacle
-            if (house == null || !house.contains(obstacleStartTile)) {
-                terrainRenderer3D.renderObstacle3D(obstacle, isWorldBorder(worldMap, obstacle), wallThickness, cornerRadius);
-            }
-        }
-        final var passedTimeMillis = stopWatch.passedTime().toMillis();
-        Logger.info("Built {} composite walls in {} milliseconds", wall3DCount, passedTimeMillis);
+    private void createObstacles3D() {
+        obstacles = new MazeObstacles3D(prefs);
+        obstacles.addObstacles(this, materials, wallBaseHeight, level);
     }
 
     private void createFloor3D() {
         mazeFloor3D = new MazeFloor3D(prefs, level, materials.floor());
-    }
-
-    private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
-        final Vector2i start = obstacle.startPoint();
-        if (obstacle.isClosed()) {
-            return start.x() == TS || start.y() == worldMap.terrainLayer().emptyRowsOverMaze() * TS + HTS;
-        } else {
-            return start.x() == 0 || start.x() == worldMap.numCols() * TS;
-        }
     }
 
     private void createHouse3D(House house) {

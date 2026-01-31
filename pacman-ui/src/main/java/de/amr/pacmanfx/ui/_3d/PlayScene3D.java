@@ -297,7 +297,7 @@ public abstract class PlayScene3D implements GameScene {
 
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         final Maze3D maze3D = gameLevel3D.maze3D();
-        final MazeFood3D mazeFood3D = maze3D.mazeFood3D();
+        final MazeFood3D mazeFood3D = maze3D.food();
         final StateMachine.State<?> state = game.control().state();
 
         mazeFood3D.pellets3D().forEach(pellet3D ->
@@ -447,7 +447,7 @@ public abstract class PlayScene3D implements GameScene {
 
         if (state instanceof TestState) {
             replaceGameLevel3D(level); //TODO check when to destroy previous level
-            gameLevel3D.maze3D().mazeFood3D().energizers3D().forEach(Energizer3D::startPumping);
+            gameLevel3D.maze3D().food().energizers3D().forEach(Energizer3D::startPumping);
             showLevelTestMessage(level);
         }
         else {
@@ -469,7 +469,7 @@ public abstract class PlayScene3D implements GameScene {
         if (e.allPellets()) {
             eatAllPellets3D();
         } else {
-            final MazeFood3D mazeFood3D = gameLevel3D.maze3D().mazeFood3D();
+            final MazeFood3D mazeFood3D = gameLevel3D.maze3D().food();
             final Energizer3D energizer3D = mazeFood3D.energizers3D().stream()
                 .filter(e3D -> tile.equals(e3D.tile()))
                 .findFirst().orElse(null);
@@ -677,7 +677,7 @@ public abstract class PlayScene3D implements GameScene {
     }
 
     protected void eatAllPellets3D() {
-        gameLevel3D.maze3D().mazeFood3D().pellets3D().forEach(pellet3D -> {
+        gameLevel3D.maze3D().food().pellets3D().forEach(pellet3D -> {
             if (pellet3D.getParent() instanceof Group group) {
                 group.getChildren().remove(pellet3D);
             }
