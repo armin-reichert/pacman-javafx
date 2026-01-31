@@ -44,12 +44,13 @@ public abstract class FlyerStartPage extends StackPane implements StartPage {
     protected Node startButton;
 
     protected FlyerStartPage() {
+
         getChildren().add(flyer);
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> flyer.nextFlyerPage();
-                case UP   -> flyer.prevFlyerPage();
+                case UP -> flyer.prevFlyerPage();
             }
         });
 

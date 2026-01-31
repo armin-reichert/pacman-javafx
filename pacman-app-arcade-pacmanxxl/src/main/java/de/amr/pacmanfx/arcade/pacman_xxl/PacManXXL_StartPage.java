@@ -77,7 +77,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                     e.consume();
                     if (ui != null) {
                         ui.voicePlayer().stop();
-                        ui.views().getView(ViewManager.ViewID.START_VIEW, StartPagesCarousel.class).pauseTimer();
+                        ui.views().getView(ViewManager.ViewID.START_VIEW, StartPagesCarousel.class).pauseProgressTimer();
                         ui.showEditorView();
                     }
                 }
@@ -85,7 +85,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                     e.consume();
                     if (ui != null) {
                         ui.voicePlayer().stop();
-                        ui.views().getView(ViewManager.ViewID.START_VIEW, StartPagesCarousel.class).pauseTimer();
+                        ui.views().getView(ViewManager.ViewID.START_VIEW, StartPagesCarousel.class).pauseProgressTimer();
                         menu.startSelectedGame();
                     }
                 }

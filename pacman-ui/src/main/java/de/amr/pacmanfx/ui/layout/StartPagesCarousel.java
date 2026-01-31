@@ -83,13 +83,13 @@ public class StartPagesCarousel extends Carousel implements View {
         actionBindings.setKeyCombination(CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
         actionBindings.setKeyCombination(CommonGameActions.ACTION_TOGGLE_PAUSED, bare(KeyCode.P));
         actionBindings.activateBindings(GameUI.KEYBOARD);
-        restartTimer();
+        restartProgressTimer();
         currentStartPage().ifPresent(page -> page.layoutRoot().requestFocus());
     }
 
     @Override
     public void onExit() {
-        pauseTimer();
+        pauseProgressTimer();
         actionBindings.releaseBindings(GameUI.KEYBOARD);
         currentStartPage().ifPresent(startPage -> startPage.onExitStartPage(ui));
     }

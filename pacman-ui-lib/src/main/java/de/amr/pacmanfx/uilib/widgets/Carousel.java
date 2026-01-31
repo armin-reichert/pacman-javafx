@@ -5,11 +5,10 @@ package de.amr.pacmanfx.uilib.widgets;
 
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -37,6 +36,8 @@ public class Carousel extends StackPane {
 
     private static final int NAVIGATION_BUTTON_SIZE = 32;
 
+    private static final Duration NAVIGATION_LOCK_DURATION = Duration.seconds(1.0);
+
     private final IntegerProperty selectedIndex = new SimpleIntegerProperty(-1) {
         @Override
         protected void invalidated() {
@@ -49,38 +50,10 @@ public class Carousel extends StackPane {
     private final Node btnForward;
 
     private final ProgressBar progressBar;
-    private final Timeline timer;
+    private final Timeline progressTimer;
 
-    private void arrangeChildren() {
-        getChildren().clear();
-        currentItem().ifPresent(item -> getChildren().add(item));
-        // Buttons must be added last to stack pane!
-        getChildren().addAll(progressBar, btnBack, btnForward);
-
-        StackPane.setAlignment(btnBack, Pos.CENTER_LEFT);
-        StackPane.setAlignment(btnForward, Pos.CENTER_RIGHT);
-        StackPane.setAlignment(progressBar, Pos.BOTTOM_CENTER);
-    }
-
-    protected Node createNavigationButton(Direction dir) {
-        final var icon = new ImageView(switch (dir) {
-            case LEFT -> ARROW_LEFT_IMAGE;
-            case RIGHT -> ARROW_RIGHT_IMAGE;
-            default -> throw new IllegalArgumentException("Illegal carousel button direction: %s".formatted(dir));
-        });
-        icon.setFitHeight(NAVIGATION_BUTTON_SIZE);
-        icon.setFitWidth(NAVIGATION_BUTTON_SIZE);
-
-        final var button = new Button();
-        button.setGraphic(icon);
-        button.setOpacity(0.1);
-        button.setOnMouseEntered(_ -> button.setOpacity(0.4));
-        button.setOnMouseExited(_ -> button.setOpacity(0.1));
-        // Without this, button gets input focus after being clicked with the mouse and the navigation keys stop working!
-        button.setFocusTraversable(false);
-
-        return button;
-    }
+    private final BooleanProperty navigationLocked = new SimpleBooleanProperty(false);
+    private final PauseTransition navigationLockTimer = new PauseTransition(NAVIGATION_LOCK_DURATION);
 
     public Carousel() {
         this(Duration.seconds(5));
@@ -91,57 +64,61 @@ public class Carousel extends StackPane {
 
         btnBack = createNavigationButton(Direction.LEFT);
         btnBack.setOnMousePressed(_ -> showPreviousItem());
+        btnBack.disableProperty().bind(navigationLocked);
 
         btnForward = createNavigationButton(Direction.RIGHT);
         btnForward.setOnMousePressed(_ -> showNextItem());
+        btnForward.disableProperty().bind(navigationLocked);
+
+        navigationLockTimer.setOnFinished(_ -> unlockNavigation());
 
         progressBar = new ProgressBar(0);
         progressBar.setPrefHeight(10);
         progressBar.setPrefWidth(400);
 
-        timer = new Timeline(
+        progressTimer = new Timeline(
             new KeyFrame(Duration.ZERO,
                 new KeyValue(progressBar.progressProperty(), 0)),
             new KeyFrame(itemChangeDuration,
                 _ -> showNextItem(),
                 new KeyValue(progressBar.progressProperty(), 1)));
-        timer.setCycleCount(Animation.INDEFINITE);
+        progressTimer.setCycleCount(Animation.INDEFINITE);
 
         // Note: timer must exist at this point
-        progressBar.visibleProperty().bind(timer.statusProperty().map(status -> status.equals(Animation.Status.RUNNING)));
+        progressBar.visibleProperty().bind(progressTimer.statusProperty().map(status -> status.equals(Animation.Status.RUNNING)));
 
         arrangeChildren();
 
         setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.SPACE) {
-                toggleTimer();
+                toggleProgressTimer();
                 e.consume();
             }
         });
     }
 
-    public void restartTimer() {
-        timer.stop();
-        timer.jumpTo(Duration.ZERO);
-        startTimer();
+    public void restartProgressTimer() {
+        progressTimer.stop();
+        progressTimer.jumpTo(Duration.ZERO);
+        startProgressTimer();
     }
 
-    public void startTimer() {
-        if (timer.getStatus() != Animation.Status.RUNNING) {
-            timer.play();
+    public void startProgressTimer() {
+        if (progressTimer.getStatus() != Animation.Status.RUNNING) {
+            progressTimer.play();
             Logger.info("Carousel timer started");
         }
     }
 
-    public void pauseTimer() {
-        if (timer.getStatus() == Animation.Status.RUNNING) {
-            timer.pause();
+    public void pauseProgressTimer() {
+        if (progressTimer.getStatus() == Animation.Status.RUNNING) {
+            progressTimer.pause();
             Logger.info("Carousel timer paused");
         }
     }
 
-    public void toggleTimer() {
-        if (timer.getStatus() == Animation.Status.RUNNING) pauseTimer(); else startTimer();
+    public void toggleProgressTimer() {
+        if (progressTimer.getStatus() == Animation.Status.RUNNING) pauseProgressTimer(); else startProgressTimer();
     }
 
     public IntegerProperty selectedIndexProperty() {
@@ -182,15 +159,66 @@ public class Carousel extends StackPane {
 
     public void showPreviousItem() {
         if (items.isEmpty()) return;
+        if (navigationLocked.get()) {
+            return;
+        }
         int prev = selectedIndex() > 0 ? selectedIndex() - 1: numItems() - 1;
         setSelectedIndex(prev);
-        restartTimer();
+        lockNavigation();
+        restartProgressTimer();
     }
 
     public void showNextItem() {
         if (items.isEmpty()) return;
+        if (navigationLocked.get()) {
+            return;
+        }
         int next = selectedIndex() < numItems() - 1 ? selectedIndex() + 1 : 0;
         setSelectedIndex(next);
-        restartTimer();
+        lockNavigation();
+        restartProgressTimer();
+    }
+
+    private void unlockNavigation() {
+        navigationLockTimer.stop();
+        navigationLocked.set(false);
+        Logger.info("Navigation unlocked");
+    }
+
+    private void lockNavigation() {
+        navigationLocked.set(true);
+        navigationLockTimer.playFromStart();
+        Logger.info("Navigation locked");
+    }
+
+    private void arrangeChildren() {
+        getChildren().clear();
+        currentItem().ifPresent(item -> getChildren().add(item));
+        // Buttons must be added last to stack pane!
+        getChildren().addAll(progressBar, btnBack, btnForward);
+
+        StackPane.setAlignment(btnBack, Pos.CENTER_LEFT);
+        StackPane.setAlignment(btnForward, Pos.CENTER_RIGHT);
+        StackPane.setAlignment(progressBar, Pos.BOTTOM_CENTER);
+    }
+
+    protected Node createNavigationButton(Direction dir) {
+        final var icon = new ImageView(switch (dir) {
+            case LEFT -> ARROW_LEFT_IMAGE;
+            case RIGHT -> ARROW_RIGHT_IMAGE;
+            default -> throw new IllegalArgumentException("Illegal carousel button direction: %s".formatted(dir));
+        });
+        icon.setFitHeight(NAVIGATION_BUTTON_SIZE);
+        icon.setFitWidth(NAVIGATION_BUTTON_SIZE);
+
+        final var button = new Button();
+        button.setGraphic(icon);
+        button.setOpacity(0.1);
+        button.setOnMouseEntered(_ -> button.setOpacity(0.4));
+        button.setOnMouseExited(_ -> button.setOpacity(0.1));
+        // Without this, button gets input focus after being clicked with the mouse and the navigation keys stop working!
+        button.setFocusTraversable(false);
+
+        return button;
     }
 }
