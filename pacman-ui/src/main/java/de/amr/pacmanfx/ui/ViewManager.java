@@ -13,6 +13,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import org.tinylog.Logger;
 import org.tinylog.Supplier;
 
 import java.util.Optional;
@@ -30,7 +31,6 @@ public class ViewManager {
     ViewManager(
         GameUI ui,
         Scene scene,
-        Pane layoutPane,
         Supplier<EditorView> editorViewCreator,
         FlashMessageView flashMessageView)
     {
@@ -47,7 +47,11 @@ public class ViewManager {
                 oldView.onExit();
             }
             if (newView != null) {
-                layoutPane.getChildren().set(0, newView.root());
+                if (scene.getRoot() instanceof Pane layoutPane) {
+                    layoutPane.getChildren().set(0, newView.root());
+                } else {
+                    Logger.error("Cannot replace view: Scene root must be a pane but is {}", scene.getRoot());
+                }
                 newView.onEnter();
             }
             flashMessageView.clear();

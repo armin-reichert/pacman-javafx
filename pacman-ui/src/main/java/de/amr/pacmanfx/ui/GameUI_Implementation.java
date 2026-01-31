@@ -17,7 +17,6 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
-import de.amr.pacmanfx.uilib.assets.Translator;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
@@ -64,9 +63,10 @@ public final class GameUI_Implementation implements GameUI {
     private final UIConfigManager uiConfigManager = new UIConfigManager();
     private final ViewManager viewManager;
     private final SoundManager soundManager = new SoundManager();
+
     private final Stage stage;
-    private final Scene scene;
-    private final StackPane layoutPane = new StackPane();
+    private final StackPane sceneLayout = new StackPane();
+    private final Scene scene = new Scene(sceneLayout);
 
     private final FlashMessageView flashMessageView = new FlashMessageView();
     private final VoicePlayer voicePlayer = new VoicePlayer();
@@ -88,15 +88,18 @@ public final class GameUI_Implementation implements GameUI {
         clock.setPausableAction(this::simulateAndUpdateGameScene);
         clock.setPermanentAction(this::render);
 
-        scene = new Scene(layoutPane, sceneWidth, sceneHeight);
-        viewManager = new ViewManager(this, scene, layoutPane, this::createEditorView, flashMessageView);
+        sceneLayout.setPrefSize(sceneWidth, sceneHeight);
+        viewManager = new ViewManager(this, scene, this::createEditorView, flashMessageView);
 
         soundManager.muteProperty().bind(GameUI.PROPERTY_MUTED);
+
+        stage.setScene(scene);
+        stage.setMinWidth(MIN_STAGE_WIDTH);
+        stage.setMinHeight(MIN_STAGE_HEIGHT);
 
         composeLayout();
         setupScene();
         setupBindings();
-        setupStage();
 
         PROPERTY_3D_WALL_HEIGHT.set(prefs().getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(prefs().getFloat("3d.obstacle.opacity"));
@@ -105,17 +108,11 @@ public final class GameUI_Implementation implements GameUI {
         final var ignored = PacManModel3DRepository.instance();
     }
 
-    private void setupStage() {
-        stage.setScene(scene);
-        stage.setMinWidth(MIN_STAGE_WIDTH);
-        stage.setMinHeight(MIN_STAGE_HEIGHT);
-    }
-
     private void composeLayout() {
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
         // First child is placeholder for current view (start view, play view, ...)
-        layoutPane.getChildren().setAll(new Region(), pausedIcon, statusIconBox, flashMessageView);
+        sceneLayout.getChildren().setAll(new Region(), pausedIcon, statusIconBox, flashMessageView);
     }
 
     private void setupBindings() {
@@ -131,12 +128,11 @@ public final class GameUI_Implementation implements GameUI {
         titleBinding = createStringBinding(
             () -> {
                 final GameScene gameScene = viewManager.playView().optGameScene().orElse(null);
-                final AssetMap assets = context.gameVariantName() != null ? currentConfig().assets() : null;
                 final View view = views().currentView();
                 final boolean debug  = PROPERTY_DEBUG_INFO_VISIBLE.get();
                 final boolean is3D   = PROPERTY_3D_ENABLED.get();
                 final boolean paused = clock.isPaused();
-                return computeStageTitle(this, view, assets, gameScene, debug, is3D, paused);
+                return computeStageTitle(view, gameScene, debug, is3D, paused);
             }, // depends on:
             context.gameVariantNameProperty(),
             views().currentViewProperty(),
@@ -147,7 +143,7 @@ public final class GameUI_Implementation implements GameUI {
         );
         stage.titleProperty().bind(titleBinding);
 
-        layoutPane.backgroundProperty().bind(Bindings.createObjectBinding(
+        sceneLayout.backgroundProperty().bind(Bindings.createObjectBinding(
             () -> currentGameSceneHasID(GameSceneConfig.CommonSceneID.PLAY_SCENE_3D)
                 ? Background.fill(Gradients.Samples.random())
                 : GameUI_Resources.BACKGROUND_PAC_MAN_WALLPAPER,
@@ -400,18 +396,19 @@ public final class GameUI_Implementation implements GameUI {
 
     // private stuff
 
-    private static String computeStageTitle(
-        Translator translator, View view, AssetMap assets, GameScene gameScene,
+    private String computeStageTitle(
+        View view, GameScene gameScene,
         boolean debug, boolean is3D, boolean paused)
     {
         if (view == null) {
-            return translator.translate("view.missing"); // Should never happen
+            return translate("view.missing"); // Should never happen
         }
         if (view.titleSupplier().isPresent()) {
             return view.titleSupplier().get().get();
         }
         final String appTitle = paused ? "app.title.paused" : "app.title";
-        final String viewMode = translator.translate(is3D ? "threeD" : "twoD");
+        final String viewMode = translate(is3D ? "threeD" : "twoD");
+        final AssetMap assets = context.gameVariantName() != null ? currentConfig().assets() : null;
         final String normalTitle = assets == null ? "" : assets.translate(appTitle, viewMode);
         return gameScene == null || !debug
             ? normalTitle
