@@ -53,16 +53,18 @@ public class MazeFood3D implements Disposable {
     private final Group particleGroupsContainer = new Group();
 
     public MazeFood3D(
-        PreferencesManager preferencesManager,
+        PreferencesManager prefs,
+        WorldMapColorScheme colorScheme,
         AnimationRegistry animationRegistry,
         GameLevel level,
-        WorldMapColorScheme colorScheme,
         List<PhongMaterial> ghostMaterials,
         List<Group> swirls)
     {
-        this.prefs = requireNonNull(preferencesManager);
+        this.prefs = requireNonNull(prefs);
+        requireNonNull(colorScheme);
         this.animationRegistry = requireNonNull(animationRegistry);
         this.level = requireNonNull(level);
+        requireNonNull(ghostMaterials);
         requireNonNull(swirls);
 
         pelletMaterial = defaultPhongMaterial(Color.valueOf(colorScheme.pellet()));

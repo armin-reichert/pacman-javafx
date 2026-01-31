@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.StopWatch;
-import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.House;
@@ -16,7 +15,6 @@ import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
 import de.amr.pacmanfx.uilib.model3D.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import javafx.beans.property.DoubleProperty;
@@ -28,9 +26,9 @@ import javafx.scene.paint.PhongMaterial;
 import org.tinylog.Logger;
 
 import java.util.List;
-import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_FLOOR_COLOR;
 import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
@@ -51,7 +49,7 @@ public class Maze3D extends Group implements Disposable {
 
     private WorldMapColorScheme colorScheme;
     private MazeFloor3D mazeFloor3D;
-    private ArcadeHouse3D house3D;
+    private MazeHouse3D mazeHouse3D;
     private MazeFood3D mazeFood3D;
 
     private int wall3DCount;
@@ -69,10 +67,7 @@ public class Maze3D extends Group implements Disposable {
         createMaterials();
         createFloor3D();
         createObstacles3D(level.worldMap());
-        level.worldMap().terrainLayer().optHouse().ifPresent(house -> {
-            createHouse3D(house);
-            getChildren().add(house3D);
-        });
+        level.worldMap().terrainLayer().optHouse().ifPresent(this::createHouse3D);
         createMazeFood3D(ghostMaterials);
     }
 
@@ -96,8 +91,8 @@ public class Maze3D extends Group implements Disposable {
         return mazeFloor3D;
     }
 
-    public ArcadeHouse3D house3D() {
-        return house3D;
+    public MazeHouse3D mazeHouse3D() {
+        return mazeHouse3D;
     }
 
     public MazeFood3D mazeFood3D() {
@@ -128,18 +123,15 @@ public class Maze3D extends Group implements Disposable {
             mazeFloor3D.dispose();
             mazeFloor3D = null;
         }
-        if (house3D != null) {
-            house3D.openProperty().removeListener(this::handleHouseOpenChange);
-            house3D.dispose();
-            house3D = null;
-            Logger.info("Disposed 3D house");
+        if (mazeHouse3D != null) {
+            mazeHouse3D.dispose();
+            mazeHouse3D = null;
         }
-        Logger.info("Removed 'house open' listener");
-
+        if (mazeFood3D != null) {
+            mazeFood3D.dispose();
+            mazeFood3D = null;
+        }
         getChildren().forEach(Wall3D::dispose);
-
-
-        mazeFood3D.dispose();
         getChildren().clear();
         Logger.info("Disposed 3D maze");
     }
@@ -207,40 +199,12 @@ public class Maze3D extends Group implements Disposable {
     }
 
     private void createHouse3D(House house) {
-        final Vector2i[] ghostRevivalTiles = {
-                house.ghostRevivalTile(CYAN_GHOST_BASHFUL),
-                house.ghostRevivalTile(PINK_GHOST_SPEEDY),
-                house.ghostRevivalTile(ORANGE_GHOST_POKEY)
-        };
-        // Note: revival tile is the left of the pair of tiles in the house where the ghost is placed. The center
-        //       of the 3D shape is one tile to the right and a half tile to the bottom from the tile origin.
-        final Vector2f[] ghostRevivalPositions = Stream.of(ghostRevivalTiles)
-                .map(tile -> tile.scaled((float) TS).plus(TS, HTS))
-                .toArray(Vector2f[]::new);
-
-        house3D = new ArcadeHouse3D(
-            animationRegistry,
-            house,
-            ghostRevivalPositions,
-            ui.prefs().getFloat("3d.house.base_height"),
-            ui.prefs().getFloat("3d.house.wall_thickness"),
-            ui.prefs().getFloat("3d.house.opacity")
-        );
-        house3D.setWallBaseColor(Color.valueOf(colorScheme.wallFill()));
-        house3D.setWallTopColor(Color.valueOf(colorScheme.wallStroke()));
-        house3D.setDoorColor(Color.valueOf(colorScheme.door()));
-        house3D.wallBaseHeightProperty().set(ui.prefs().getFloat("3d.house.base_height"));
-        house3D.openProperty().addListener(this::handleHouseOpenChange);
-        house3D.setDoorSensitivity(ui.prefs().getFloat("3d.house.sensitivity"));
+        mazeHouse3D = new MazeHouse3D(ui.prefs(), colorScheme, animationRegistry, house);
+        getChildren().add(mazeHouse3D);
     }
 
     private void createMazeFood3D(List<PhongMaterial> ghostMaterials) {
-        mazeFood3D = new MazeFood3D(ui.prefs(), animationRegistry, level, colorScheme, ghostMaterials, house3D.swirls());
-    }
-
-    private void handleHouseOpenChange(ObservableValue<? extends Boolean> obs, boolean wasOpen, boolean isOpen) {
-        if (isOpen && house3D != null) {
-            house3D.doorsOpenCloseAnimation().playFromStart();
-        }
+        mazeFood3D = new MazeFood3D(ui.prefs(), colorScheme, animationRegistry, level, ghostMaterials,
+            mazeHouse3D.arcadeHouse3D().swirls());
     }
 }

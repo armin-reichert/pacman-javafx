@@ -113,11 +113,11 @@ public class GameLevel3D extends Group implements Disposable {
         getChildren().add(livesCounter3D);
         getChildren().addAll(pac3D, pac3D.light());
         getChildren().addAll(ghosts3D);
-        getChildren().addAll(maze3D.house3D().swirls());
+        getChildren().addAll(maze3D.mazeHouse3D().arcadeHouse3D().swirls());
         getChildren().add(maze3D.mazeFood3D().particleGroupsContainer());
         getChildren().addAll(maze3D.mazeFood3D().energizers3D().stream().map(Energizer3D::shape).toList());
         getChildren().addAll(maze3D.mazeFood3D().pellets3D());
-        getChildren().add(maze3D.house3D().doors()); // !!
+        getChildren().add(maze3D.mazeHouse3D().arcadeHouse3D().doors()); // Note order of addition!
         // Note: The order in which children are added to the root matters!
         // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
         getChildren().add(maze3D);
@@ -126,7 +126,7 @@ public class GameLevel3D extends Group implements Disposable {
         getChildren().add(animations.ghostLight());
 
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
-        maze3D.house3D().startSwirlAnimations();
+        maze3D.mazeHouse3D().arcadeHouse3D().startSwirlAnimations();
 
         pickerLevelCompleteMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "level.complete");
     }
@@ -255,8 +255,8 @@ public class GameLevel3D extends Group implements Disposable {
         pac3D.update(level);
         ghosts3D.forEach(ghost3D -> ghost3D.update(level));
         bonus3D().ifPresent(bonus3D -> bonus3D.update(level));
-        if (maze3D.house3D() != null) {
-            maze3D.house3D().update(level);
+        if (maze3D != null) {
+            maze3D.mazeHouse3D().update(level);
         }
         updateLivesCounter3D();
     }
@@ -285,7 +285,7 @@ public class GameLevel3D extends Group implements Disposable {
         pac3D.init(level);
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
         maze3D.mazeFood3D().energizers3D().forEach(Energizer3D::startPumping);
-        maze3D.house3D().startSwirlAnimations();
+        maze3D.mazeHouse3D().arcadeHouse3D().startSwirlAnimations();
         animations.playGhostLightAnimation();
     }
 
@@ -326,10 +326,8 @@ public class GameLevel3D extends Group implements Disposable {
         maze3D.mazeFood3D().pellets3D().forEach(pellet3D -> pellet3D.setVisible(false));
         maze3D.mazeFood3D().energizers3D().forEach(Energizer3D::hide);
         maze3D.mazeFood3D().particleGroupsContainer().getChildren().clear();
-        for (Group swirl : maze3D.house3D().swirls()) {
-            swirl.getChildren().clear();
-        }
-        maze3D.house3D().setDoorsVisible(false);
+        maze3D.mazeHouse3D().cleanUp();
+        maze3D.mazeHouse3D().hideDoors();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         if (messageView != null) {
             messageView.setVisible(false);
@@ -359,7 +357,7 @@ public class GameLevel3D extends Group implements Disposable {
         state.timer().restartSeconds(3);
         animations.stopGhostLightAnimation();
         maze3D.mazeFood3D().energizers3D().forEach(Energizer3D::hide);
-        maze3D.house3D().stopSwirlAnimations();
+        maze3D.mazeHouse3D().arcadeHouse3D().stopSwirlAnimations();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         ui.soundManager().stopAll();
         ui.soundManager().play(SoundID.GAME_OVER);
@@ -449,10 +447,6 @@ public class GameLevel3D extends Group implements Disposable {
 
         PROPERTY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");
-
-        maze3D.house3D().openProperty().unbind();
-        maze3D.house3D().wallBaseHeightProperty().unbind();
-        maze3D.house3D().light().lightOnProperty().unbind();
 
         getChildren().clear();
         Logger.info("Removed all nodes under game level");
