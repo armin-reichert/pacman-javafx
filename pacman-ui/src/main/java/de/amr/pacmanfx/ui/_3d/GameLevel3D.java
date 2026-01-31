@@ -108,16 +108,16 @@ public class GameLevel3D extends Group implements Disposable {
 
         animations = new GameLevel3DAnimations(ui, this);
 
-        getChildren().add(maze3D.mazeFloor3D());
+        getChildren().add(maze3D.floor());
         getChildren().add(levelCounter3D);
         getChildren().add(livesCounter3D);
         getChildren().addAll(pac3D, pac3D.light());
         getChildren().addAll(ghosts3D);
-        getChildren().addAll(maze3D.mazeHouse3D().arcadeHouse3D().swirls());
-        getChildren().add(maze3D.mazeFood3D().particleGroupsContainer());
-        getChildren().addAll(maze3D.mazeFood3D().energizers3D().stream().map(Energizer3D::shape).toList());
-        getChildren().addAll(maze3D.mazeFood3D().pellets3D());
-        getChildren().add(maze3D.mazeHouse3D().arcadeHouse3D().doors()); // Note order of addition!
+        getChildren().addAll(maze3D.house().arcadeHouse3D().swirls());
+        getChildren().add(maze3D.food().particleGroupsContainer());
+        getChildren().addAll(maze3D.food().energizers3D().stream().map(Energizer3D::shape).toList());
+        getChildren().addAll(maze3D.food().pellets3D());
+        getChildren().add(maze3D.house().arcadeHouse3D().doors()); // Note order of addition!
         // Note: The order in which children are added to the root matters!
         // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
         getChildren().add(maze3D);
@@ -126,7 +126,7 @@ public class GameLevel3D extends Group implements Disposable {
         getChildren().add(animations.ghostLight());
 
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
-        maze3D.mazeHouse3D().arcadeHouse3D().startSwirlAnimations();
+        maze3D.house().arcadeHouse3D().startSwirlAnimations();
 
         pickerLevelCompleteMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "level.complete");
     }
@@ -256,7 +256,7 @@ public class GameLevel3D extends Group implements Disposable {
         ghosts3D.forEach(ghost3D -> ghost3D.update(level));
         bonus3D().ifPresent(bonus3D -> bonus3D.update(level));
         if (maze3D != null) {
-            maze3D.mazeHouse3D().update(level);
+            maze3D.house().update(level);
         }
         updateLivesCounter3D();
     }
@@ -275,7 +275,7 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     public void onStartingGame() {
-        maze3D.mazeFood3D().energizers3D().forEach(Energizer3D::stopPumping);
+        maze3D.food().energizers3D().forEach(Energizer3D::stopPumping);
         if (levelCounter3D != null) {
             levelCounter3D.update(ui, level.game());
         }
@@ -284,8 +284,8 @@ public class GameLevel3D extends Group implements Disposable {
     public void onHuntingStart() {
         pac3D.init(level);
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
-        maze3D.mazeFood3D().energizers3D().forEach(Energizer3D::startPumping);
-        maze3D.mazeHouse3D().arcadeHouse3D().startSwirlAnimations();
+        maze3D.food().energizers3D().forEach(Energizer3D::startPumping);
+        maze3D.house().arcadeHouse3D().startSwirlAnimations();
         animations.playGhostLightAnimation();
     }
 
@@ -321,13 +321,13 @@ public class GameLevel3D extends Group implements Disposable {
         state.timer().resetIndefiniteTime(); // expires when animation ends
         ui.soundManager().stopAll();
         animationRegistry.stopAllAnimations();
-        maze3D.mazeFood3D().energizers3D().forEach(Energizer3D::stopPumping); //TODO needed?
+        maze3D.food().energizers3D().forEach(Energizer3D::stopPumping); //TODO needed?
         // hide 3D food explicitly because level might have been completed using cheat!
-        maze3D.mazeFood3D().pellets3D().forEach(pellet3D -> pellet3D.setVisible(false));
-        maze3D.mazeFood3D().energizers3D().forEach(Energizer3D::hide);
-        maze3D.mazeFood3D().particleGroupsContainer().getChildren().clear();
-        maze3D.mazeHouse3D().cleanUp();
-        maze3D.mazeHouse3D().hideDoors();
+        maze3D.food().pellets3D().forEach(pellet3D -> pellet3D.setVisible(false));
+        maze3D.food().energizers3D().forEach(Energizer3D::hide);
+        maze3D.food().particleGroupsContainer().getChildren().clear();
+        maze3D.house().cleanUp();
+        maze3D.house().hideDoors();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         if (messageView != null) {
             messageView.setVisible(false);
@@ -356,8 +356,8 @@ public class GameLevel3D extends Group implements Disposable {
     public void onGameOver(StateMachine.State<Game> state) {
         state.timer().restartSeconds(3);
         animations.stopGhostLightAnimation();
-        maze3D.mazeFood3D().energizers3D().forEach(Energizer3D::hide);
-        maze3D.mazeHouse3D().arcadeHouse3D().stopSwirlAnimations();
+        maze3D.food().energizers3D().forEach(Energizer3D::hide);
+        maze3D.house().arcadeHouse3D().stopSwirlAnimations();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         ui.soundManager().stopAll();
         ui.soundManager().play(SoundID.GAME_OVER);
@@ -402,7 +402,7 @@ public class GameLevel3D extends Group implements Disposable {
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode newDrawMode) {
         try {
             Predicate<Node> includeAll = _ -> false;
-            setDrawModeUnder(maze3D, node -> node instanceof Shape3D && maze3D.mazeFood3D().pellets3D().contains(node), newDrawMode);
+            setDrawModeUnder(maze3D, node -> node instanceof Shape3D && maze3D.food().pellets3D().contains(node), newDrawMode);
             setDrawModeUnder(pac3D, includeAll, newDrawMode);
             setDrawModeUnder(livesCounter3D, includeAll, newDrawMode);
             ghosts3D.forEach(ghost3D -> setDrawModeUnder(ghost3D, includeAll, newDrawMode));

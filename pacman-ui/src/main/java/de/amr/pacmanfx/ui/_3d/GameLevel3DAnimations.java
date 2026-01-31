@@ -79,7 +79,7 @@ public class GameLevel3DAnimations implements Disposable {
         private Animation wallsAndHouseDisappearing() {
             return new Timeline(
                 new KeyFrame(Duration.seconds(0.5),
-                    new KeyValue(level3D.maze3D().mazeHouse3D().arcadeHouse3D().wallBaseHeightProperty(),
+                    new KeyValue(level3D.maze3D().house().arcadeHouse3D().wallBaseHeightProperty(),
                         0, Interpolator.EASE_IN)),
                 new KeyFrame(Duration.seconds(1.5),
                     new KeyValue(level3D.maze3D().wallBaseHeightProperty(), 0, Interpolator.EASE_IN)),
