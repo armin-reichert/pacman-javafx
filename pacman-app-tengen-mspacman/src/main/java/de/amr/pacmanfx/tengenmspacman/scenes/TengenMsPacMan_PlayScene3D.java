@@ -51,7 +51,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             levelInfo.setFitWidth(width);
             levelInfo.setFitHeight(height);
             levelInfo.imageProperty().bind(PROPERTY_3D_FLOOR_COLOR
-                .map(color -> createLeveInfo(tengenGame, level.number(), width, height, color)));
+                .map(color -> createLevelInfo(tengenGame, level.number(), width, height, color)));
 
             // Display the level info at front side of floor just over the surface
             levelInfo.setTranslateY(newLevel3D.maze3D().mazeFloor3D().getHeight() - levelInfo.getFitHeight());
@@ -61,7 +61,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         return newLevel3D;
     }
 
-    private Image createLeveInfo(TengenMsPacMan_GameModel game, int levelNumber, double width, double height, Color backgroundColor) {
+    private Image createLevelInfo(TengenMsPacMan_GameModel game, int levelNumber, double width, double height, Color backgroundColor) {
         final double scaling = 6;
         final var canvas = new Canvas(scaling * width, scaling * height);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important for crisp image!
