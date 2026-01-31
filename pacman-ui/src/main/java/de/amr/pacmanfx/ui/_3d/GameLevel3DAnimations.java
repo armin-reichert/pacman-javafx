@@ -146,8 +146,8 @@ public class GameLevel3DAnimations implements Disposable {
                 @Override
                 protected void interpolate(double t) {
                     Color color = fromColor.interpolate(toColor, t);
-                    level3D.maze3D().wallTopMaterial().setDiffuseColor(color);
-                    level3D.maze3D().wallTopMaterial().setSpecularColor(color.brighter());
+                    level3D.maze3D().materials().wallTop().setDiffuseColor(color);
+                    level3D.maze3D().materials().wallTop().setSpecularColor(color.brighter());
                 }
             };
         }
@@ -158,7 +158,7 @@ public class GameLevel3DAnimations implements Disposable {
             // reset wall colors
             final Maze3D maze3D = level3D.maze3D();
             final Color wallFillColor = Color.valueOf(maze3D.colorScheme().wallFill());
-            final PhongMaterial wallTopMaterial = maze3D.wallTopMaterial();
+            final PhongMaterial wallTopMaterial = maze3D.materials().wallTop();
             wallTopMaterial.setDiffuseColor(wallFillColor);
             wallTopMaterial.setSpecularColor(wallFillColor.brighter());
         }

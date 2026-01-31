@@ -13,13 +13,11 @@ import de.amr.pacmanfx.model.world.Obstacle;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -30,9 +28,6 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
-import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_FLOOR_COLOR;
-import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
-import static de.amr.pacmanfx.uilib.Ufx.defaultPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
 public class Maze3D extends Group implements Disposable {
@@ -48,21 +43,17 @@ public class Maze3D extends Group implements Disposable {
     private final DoubleProperty wallOpacity = new SimpleDoubleProperty(1);
 
     private WorldMapColorScheme colorScheme;
+    private MazeMaterials3D materials;
     private MazeFloor3D mazeFloor3D;
     private MazeHouse3D mazeHouse3D;
     private MazeFood3D mazeFood3D;
 
     private int wall3DCount;
 
-    private PhongMaterial floorMaterial;
-    private PhongMaterial wallBaseMaterial;
-    private PhongMaterial wallTopMaterial;
-
     public Maze3D(GameUI ui, GameLevel level, AnimationRegistry animationRegistry, List<PhongMaterial> ghostMaterials) {
         this.ui = ui;
         this.level = level;
         this.animationRegistry = animationRegistry;
-
         createWorldMapColorScheme(level.worldMap());
         createMaterials();
         createFloor3D();
@@ -75,16 +66,16 @@ public class Maze3D extends Group implements Disposable {
         return colorScheme;
     }
 
+    public MazeMaterials3D materials() {
+        return materials;
+    }
+
     public DoubleProperty wallBaseHeightProperty() {
         return wallBaseHeight;
     }
 
     public DoubleProperty wallOpacityProperty() {
         return wallOpacity;
-    }
-
-    public PhongMaterial wallTopMaterial() {
-        return wallTopMaterial;
     }
 
     public MazeFloor3D mazeFloor3D() {
@@ -104,20 +95,9 @@ public class Maze3D extends Group implements Disposable {
         wallBaseHeight.unbind();
         wallOpacity.unbind();
 
-        if (floorMaterial != null) {
-            floorMaterial.diffuseColorProperty().unbind();
-            floorMaterial.specularColorProperty().unbind();
-            floorMaterial = null;
-        }
-        if (wallBaseMaterial != null) {
-            wallBaseMaterial.diffuseColorProperty().unbind();
-            wallBaseMaterial.specularColorProperty().unbind();
-            wallBaseMaterial = null;
-        }
-        if (wallTopMaterial != null) {
-            wallTopMaterial.diffuseColorProperty().unbind();
-            wallTopMaterial.specularColorProperty().unbind();
-            wallTopMaterial = null;
+        if (materials != null) {
+            materials.dispose();
+            materials = null;
         }
         if (mazeFloor3D != null) {
             mazeFloor3D.dispose();
@@ -136,6 +116,10 @@ public class Maze3D extends Group implements Disposable {
         Logger.info("Disposed 3D maze");
     }
 
+    private void createMaterials() {
+        materials = MazeMaterials3D.create(colorScheme, wallOpacityProperty());
+    }
+
     private void createWorldMapColorScheme(WorldMap worldMap) {
         final WorldMapColorScheme proposedColorScheme = ui.currentConfig().colorScheme(worldMap);
         requireNonNull(proposedColorScheme);
@@ -146,18 +130,6 @@ public class Maze3D extends Group implements Disposable {
             : proposedColorScheme;
     }
 
-    private void createMaterials() {
-        floorMaterial = Ufx.colorSensitivePhongMaterial(PROPERTY_3D_FLOOR_COLOR);
-        floorMaterial.setSpecularPower(128);
-
-        final ObservableValue<Color> diffuseColorProperty = wallOpacityProperty()
-            .map(opacity -> colorWithOpacity(Color.valueOf(colorScheme.wallStroke()), opacity.doubleValue()));
-        wallBaseMaterial = Ufx.colorSensitivePhongMaterial(diffuseColorProperty);
-        wallBaseMaterial.setSpecularPower(64);
-
-        wallTopMaterial = defaultPhongMaterial(Color.valueOf(colorScheme.wallFill()));
-    }
-
     private void createObstacles3D(WorldMap worldMap) {
         final float wallThickness = ui.prefs().getFloat("3d.obstacle.wall_thickness");
         final float cornerRadius = ui.prefs().getFloat("3d.obstacle.corner_radius");
@@ -166,8 +138,8 @@ public class Maze3D extends Group implements Disposable {
         final var terrainRenderer3D = new TerrainRenderer3D();
         terrainRenderer3D.setOnWallCreated(wall3D -> {
             ++wall3DCount;
-            wall3D.setBaseMaterial(wallBaseMaterial);
-            wall3D.setTopMaterial(wallTopMaterial);
+            wall3D.setBaseMaterial(materials.wallBase());
+            wall3D.setTopMaterial(materials.wallTop());
             wall3D.bindBaseHeight(wallBaseHeightProperty());
             getChildren().addAll(wall3D.base(), wall3D.top());
             return wall3D;
@@ -186,7 +158,7 @@ public class Maze3D extends Group implements Disposable {
     }
 
     private void createFloor3D() {
-        mazeFloor3D = new MazeFloor3D(ui.prefs(), level, floorMaterial);
+        mazeFloor3D = new MazeFloor3D(ui.prefs(), level, materials.floor());
     }
 
     private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
