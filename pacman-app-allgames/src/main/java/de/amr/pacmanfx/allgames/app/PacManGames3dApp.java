@@ -25,6 +25,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
+import de.amr.pacmanfx.ui.ViewManager;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardSectionCustomMaps;
@@ -123,7 +124,7 @@ public class PacManGames3dApp extends Application {
                 ui.uiConfigManager().addFactory(ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_UIConfig::new);
                 ui.uiConfigManager().addFactory(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_UIConfig::new);
 
-                final StartPagesCarousel startPages = ui.views().startPagesView();
+                final StartPagesCarousel startPages = ui.views().getView(ViewManager.ViewID.START_VIEW, StartPagesCarousel.class);
                 startPages.addStartPage(new ArcadePacMan_StartPage());
                 startPages.addStartPage(new ArcadeMsPacMan_StartPage());
                 startPages.addStartPage(new TengenMsPacMan_StartPage());
@@ -131,8 +132,7 @@ public class PacManGames3dApp extends Application {
                 startPages.startPages().forEach(startPage -> startPage.init(ui));
                 startPages.setSelectedIndex(0);
 
-                final Dashboard dashboard = ui.views().playView().dashboard();
-                dashboard.addCommonSections(ui, DASHBOARD_IDs);
+                ui.dashboard().addCommonSections(ui, DASHBOARD_IDs);
             }
             configureDashboard();
             Logger.info("UI created {} builder", useBuilder ? "using" : "without");
@@ -169,7 +169,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void configureDashboard() {
-        final Dashboard dashboard = ui.views().playView().dashboard();
+        final Dashboard dashboard = ui.dashboard();
 
         // Add Joypad controller section
         dashboard.addSection(

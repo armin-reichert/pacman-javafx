@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.layout.EditorView;
+import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoicePlayer;
@@ -40,6 +41,7 @@ import java.io.IOException;
 import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
+import static de.amr.pacmanfx.ui.ViewManager.ViewID.*;
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
 
@@ -116,27 +118,26 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void setupBindings() {
-        statusIconBox.visibleProperty().bind(views().currentViewProperty()
-            .map(view -> view == views().playView() || view == views().startPagesView()));
+        statusIconBox.visibleProperty().bind(
+            views().selectedIDProperty().map(viewID -> viewID == PLAY_VIEW || viewID == START_VIEW));
 
         // Show paused icon only in play view
         pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> views().currentView() == views().playView() && clock.isPaused(),
-            views().currentViewProperty(), clock.pausedProperty())
+            () -> views().isSelected(PLAY_VIEW) && clock.isPaused(),
+            views().selectedIDProperty(), clock.pausedProperty())
         );
 
         titleBinding = createStringBinding(
             () -> {
-                final GameScene gameScene = viewManager.playView().optGameScene().orElse(null);
-                final View view = views().currentView();
                 final boolean debug  = PROPERTY_DEBUG_INFO_VISIBLE.get();
                 final boolean is3D   = PROPERTY_3D_ENABLED.get();
                 final boolean paused = clock.isPaused();
-                return computeStageTitle(view, gameScene, debug, is3D, paused);
-            }, // depends on:
+                final GameScene gameScene = playView().optGameScene().orElse(null);
+                return computeStageTitle(views().currentView(), gameScene, debug, is3D, paused);
+            },
             context.gameVariantNameProperty(),
             views().currentViewProperty(),
-            views().playView().currentGameSceneProperty(),
+            playView().currentGameSceneProperty(),
             PROPERTY_DEBUG_INFO_VISIBLE,
             PROPERTY_3D_ENABLED,
             clock().pausedProperty()
@@ -149,7 +150,7 @@ public final class GameUI_Implementation implements GameUI {
                 : GameUI_Resources.BACKGROUND_PAC_MAN_WALLPAPER,
             // depends on:
             views().currentViewProperty(),
-            views().playView().currentGameSceneProperty()
+            views().getView(PLAY_VIEW, PlayView.class).currentGameSceneProperty()
         ));
 
         context().gameVariantNameProperty().addListener((_, _, _) -> {
@@ -183,7 +184,7 @@ public final class GameUI_Implementation implements GameUI {
             },
             () -> views().currentView().onKeyboardInput(this)
         ));
-        scene.setOnScroll(e -> views().playView().optGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+        scene.setOnScroll(e -> views().getView(PLAY_VIEW, PlayView.class).optGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
     }
 
     private void simulateAndUpdateGameScene() {
@@ -193,7 +194,7 @@ public final class GameUI_Implementation implements GameUI {
         try {
             game.control().update();
             step.printLog();
-            views().playView().optGameScene().ifPresent(gameScene -> gameScene.update(game));
+            views().getView(PLAY_VIEW, PlayView.class).optGameScene().ifPresent(gameScene -> gameScene.update(game));
         } catch (Throwable x) {
             ka_tas_tro_phe(x);
         }
@@ -238,7 +239,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID) {
-        final GameScene currentGameScene = views().playView().optGameScene().orElse(null);
+        final GameScene currentGameScene = views().getView(PLAY_VIEW, PlayView.class).optGameScene().orElse(null);
         return currentGameScene != null && currentGameSceneConfig().gameSceneHasID(currentGameScene, sceneID);
     }
 
@@ -265,7 +266,7 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void openWorldMapFileInEditor(File worldMapFile) {
         requireNonNull(worldMapFile);
-        views().selectEditorView(); // this ensures the editor view is created!
+        views().selectView(EDITOR_VIEW); // this ensures the editor view is created!
         views().optEditorView().map(EditorView::editor).ifPresent(editor -> {
             try {
                 editor.editFile(worldMapFile);
@@ -296,7 +297,7 @@ public final class GameUI_Implementation implements GameUI {
     public void quitCurrentGameScene() {
         final Game game = context.currentGame();
         //TODO this is game-specific and should not be here
-        views().playView().optGameScene().ifPresent(gameScene -> {
+        views().getView(PLAY_VIEW, PlayView.class).optGameScene().ifPresent(gameScene -> {
             boolean shouldConsumeCoin = game.control().state().name().equals("STARTING_GAME_OR_LEVEL")
                 || game.isPlaying();
             if (shouldConsumeCoin && !context.coinMechanism().isEmpty()) {
@@ -319,8 +320,8 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void show() {
-        views().playView().dashboard().init(this);
-        views().selectStartView();
+        views().getView(PLAY_VIEW, PlayView.class).dashboard().init(this);
+        views().selectView(START_VIEW);
         stage.centerOnScreen();
         stage.show();
         flashMessageView.start();
@@ -331,7 +332,7 @@ public final class GameUI_Implementation implements GameUI {
     public void showEditorView() {
         if (!context.currentGame().isPlaying() || clock.isPaused()) {
             stopGame();
-            views().selectEditorView();
+            views().selectView(EDITOR_VIEW);
             return;
         }
         Logger.info("Editor cannot be opened while game is playing");
@@ -344,13 +345,13 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void showPlayView() {
-        views().selectPlayView();
+        views().selectView(PLAY_VIEW);
     }
 
     @Override
     public void showStartView() {
         stopGame();
-        views().selectStartView();
+        views().selectView(START_VIEW);
     }
 
     @Override
@@ -365,7 +366,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void stopGame() {
-        views().playView().optGameScene().ifPresent(gameScene -> gameScene.end(context().currentGame()));
+        views().getView(PLAY_VIEW, PlayView.class).optGameScene().ifPresent(gameScene -> gameScene.end(context().currentGame()));
         soundManager.stopAll();
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);

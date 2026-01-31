@@ -18,10 +18,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.ActionBindingsManager;
-import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_Resources;
+import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
@@ -513,7 +510,7 @@ public abstract class PlayScene3D implements GameScene {
     @Override
     public void onUnspecifiedChange(UnspecifiedChangeEvent event) {
         // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
-        ui.views().playView().updateGameScene(context.currentGame(), true);
+        ui.playView().updateGameScene(context.currentGame(), true);
     }
 
     // protected

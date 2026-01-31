@@ -4,10 +4,8 @@
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.model.GameVariant;
-import de.amr.pacmanfx.ui.ArcadePalette;
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_Resources;
-import de.amr.pacmanfx.ui.StartPage;
+import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
@@ -79,7 +77,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                     e.consume();
                     if (ui != null) {
                         ui.voicePlayer().stop();
-                        ui.views().startPagesView().pauseTimer();
+                        ui.views().getView(ViewManager.ViewID.START_VIEW, StartPagesCarousel.class).pauseTimer();
                         ui.showEditorView();
                     }
                 }
@@ -87,7 +85,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                     e.consume();
                     if (ui != null) {
                         ui.voicePlayer().stop();
-                        ui.views().startPagesView().pauseTimer();
+                        ui.views().getView(ViewManager.ViewID.START_VIEW, StartPagesCarousel.class).pauseTimer();
                         menu.startSelectedGame();
                     }
                 }

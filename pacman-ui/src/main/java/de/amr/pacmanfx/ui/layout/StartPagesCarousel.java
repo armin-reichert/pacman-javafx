@@ -56,10 +56,24 @@ public class StartPagesCarousel extends Carousel implements View {
     private final List<StartPage> pages = new ArrayList<>();
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
 
-    private GameUI ui;
+    private final GameUI ui;
 
-    public StartPagesCarousel() {
+    public StartPagesCarousel(GameUI ui) {
         super(Duration.seconds(PAGE_CHANGE_SECONDS));
+        this.ui = requireNonNull(ui);
+        selectedIndexProperty().addListener((_, ov, nv) -> {
+            Logger.info("Carousel selection changed from {} to {}", ov, nv);
+            int oldIndex = ov.intValue(), newIndex = nv.intValue();
+            if (oldIndex != -1) {
+                pages.get(oldIndex).onExitStartPage(ui);
+            }
+            if (newIndex != -1) {
+                StartPage startPage = pages.get(newIndex);
+                startPage.onEnterStartPage(ui);
+                startPage.layoutRoot().requestFocus();
+            }
+        });
+        setBackground(GameUI_Resources.BACKGROUND_PAC_MAN_WALLPAPER);
     }
 
     @Override
@@ -78,23 +92,6 @@ public class StartPagesCarousel extends Carousel implements View {
         pauseTimer();
         actionBindings.releaseBindings(GameUI.KEYBOARD);
         currentStartPage().ifPresent(startPage -> startPage.onExitStartPage(ui));
-    }
-
-    public void setUI(GameUI ui) {
-        this.ui = requireNonNull(ui);
-        selectedIndexProperty().addListener((_, ov, nv) -> {
-            Logger.info("Carousel selection changed from {} to {}", ov, nv);
-            int oldIndex = ov.intValue(), newIndex = nv.intValue();
-            if (oldIndex != -1) {
-                pages.get(oldIndex).onExitStartPage(ui);
-            }
-            if (newIndex != -1) {
-                StartPage startPage = pages.get(newIndex);
-                startPage.onEnterStartPage(ui);
-                startPage.layoutRoot().requestFocus();
-            }
-        });
-        setBackground(GameUI_Resources.BACKGROUND_PAC_MAN_WALLPAPER);
     }
 
     @Override

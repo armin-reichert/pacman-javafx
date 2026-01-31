@@ -6,7 +6,9 @@ package de.amr.pacmanfx.ui.dashboard;
 import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.ViewManager;
 import de.amr.pacmanfx.ui.action.GameAction;
+import de.amr.pacmanfx.ui.layout.PlayView;
 import javafx.scene.input.KeyCombination;
 
 import java.util.Comparator;
@@ -23,7 +25,7 @@ public class DashboardSectionKeyShortcutsLocal extends DashboardSection {
     @Override
     public void update(GameUI ui) {
         clearGrid();
-        ui.views().playView().optGameScene().ifPresent(gameScene -> addEntries(ui,gameScene));
+        ui.playView().optGameScene().ifPresent(gameScene -> addEntries(ui,gameScene));
     }
 
     private void addEntries(GameUI ui, GameScene gameScene) {

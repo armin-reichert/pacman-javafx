@@ -11,8 +11,10 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_Das
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
+import de.amr.pacmanfx.ui.ViewManager;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
+import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
@@ -51,7 +53,7 @@ public class TengenMsPacMan_App extends Application {
                 CommonDashboardID.ABOUT)
             .build();
 
-        final Dashboard dashboard = ui.views().playView().dashboard();
+        final Dashboard dashboard = ui.dashboard();
         dashboard.addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
             new DashboardSectionJoypad(dashboard),

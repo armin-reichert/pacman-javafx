@@ -5,8 +5,10 @@ package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.ViewManager;
 import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
+import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.Animation;
@@ -100,7 +102,7 @@ public class DashboardSectionAnimations3D extends DashboardSection {
         super.update(ui);
 
         //TODO use data binding
-        ui.views().playView().optGameScene().ifPresent(gameScene -> currentAnimationManager.set(observedAnimationManager(gameScene)));
+        ui.playView().optGameScene().ifPresent(gameScene -> currentAnimationManager.set(observedAnimationManager(gameScene)));
         if (currentAnimationManager.get() == null) {
             tableRows.clear();
             refreshTimer.pause();

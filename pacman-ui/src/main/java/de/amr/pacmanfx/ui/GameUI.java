@@ -9,7 +9,9 @@ import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.TestActions;
+import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
@@ -247,6 +249,14 @@ public interface GameUI extends Translator {
 
     /** Switches to the start pages view. */
     void showStartView();
+
+    default PlayView playView() {
+        return views().getView(ViewManager.ViewID.PLAY_VIEW, PlayView.class);
+    }
+
+    default Dashboard dashboard() {
+        return playView().dashboard();
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     // Config

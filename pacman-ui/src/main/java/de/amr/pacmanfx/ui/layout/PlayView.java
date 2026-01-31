@@ -68,6 +68,7 @@ public class PlayView extends StackPane implements View {
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
     private final ActionBindingsManager actionBindingsManager = new DefaultActionBindingsManager();
+    private final GameUI ui;
     private final Scene parentScene;
     private final Dashboard dashboard = new Dashboard(DASHBOARD_STYLE);
     private final CanvasDecorationPane canvasDecorator = new CanvasDecorationPane();
@@ -77,13 +78,13 @@ public class PlayView extends StackPane implements View {
     private final HelpLayer helpLayer;
     private final GameUI_ContextMenu contextMenu;
 
-    private GameUI ui;
-
     private GameScene2D_Renderer sceneRenderer;
     private HeadsUpDisplay_Renderer hudRenderer;
 
-    public PlayView(Scene parentScene) {
+    public PlayView(GameUI ui, Scene parentScene) {
+        this.ui = requireNonNull(ui);
         this.parentScene = requireNonNull(parentScene);
+
         this.contextMenu = new GameUI_ContextMenu();
         this.helpLayer = new HelpLayer(canvasDecorator);
 
@@ -97,10 +98,7 @@ public class PlayView extends StackPane implements View {
         configureContextMenu();
 
         dashboard.setVisible(false);
-    }
 
-    public void setUI(GameUI ui) {
-        this.ui = requireNonNull(ui);
         contextMenu.setUI(ui);
         miniView.setUI(ui);
         ui.context().gameVariantNameProperty().addListener(

@@ -9,9 +9,11 @@ import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
+import de.amr.pacmanfx.ui.ViewManager;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardSectionCustomMaps;
+import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
@@ -56,7 +58,7 @@ public class PacManXXL_App extends Application {
             .startPage(PacManXXL_StartPage::new)
             .build();
 
-        final Dashboard dashboard = ui.views().playView().dashboard();
+        final Dashboard dashboard = ui.dashboard();
         dashboard.findSection(CommonDashboardID.CUSTOM_MAPS)
             .filter(DashboardSectionCustomMaps.class::isInstance)
             .map(DashboardSectionCustomMaps.class::cast)

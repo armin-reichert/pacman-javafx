@@ -9,8 +9,10 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.ViewManager;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
+import de.amr.pacmanfx.ui.layout.PlayView;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -105,7 +107,7 @@ public class DashboardSection3DSettings extends DashboardSection {
 
         comboPerspectives.setValue(PROPERTY_3D_PERSPECTIVE_ID.get());
         sliderMiniViewSceneHeight.setValue(PROPERTY_MINI_VIEW_HEIGHT.get());
-        sliderMiniViewSceneHeight.setDisable(ui.views().playView().miniView().isMoving());
+        sliderMiniViewSceneHeight.setDisable(ui.playView().miniView().isMoving());
         sliderMiniViewOpacityPercentage.setValue(PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
         sliderWallHeight.setValue(PROPERTY_3D_WALL_HEIGHT.get());
         sliderWallOpacity.setValue(PROPERTY_3D_WALL_OPACITY.get());
@@ -117,14 +119,14 @@ public class DashboardSection3DSettings extends DashboardSection {
     }
 
     private String subSceneSizeInfo(GameUI ui) {
-        return ui.views().playView().optGameScene()
+        return ui.playView().optGameScene()
             .flatMap(GameScene::optSubScene)
             .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
             .orElse(NO_INFO);
     }
 
     private String subSceneCameraInfo(GameUI ui) {
-        final GameScene gameScene = ui.views().playView().optGameScene().orElse(null);
+        final GameScene gameScene = ui.playView().optGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
         return gameScene.optSubScene().map(SubScene::getCamera)
             .map(camera -> "rot=%.0f x=%.0f y=%.0f z=%.0f".formatted(
@@ -137,7 +139,7 @@ public class DashboardSection3DSettings extends DashboardSection {
 
     private String sceneSizeInfo(GameUI ui) {
         final Game game = ui.context().currentGame();
-        final GameScene gameScene = ui.views().playView().optGameScene().orElse(null);
+        final GameScene gameScene = ui.playView().optGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
 
         if (gameScene instanceof GameScene2D gameScene2D) {
