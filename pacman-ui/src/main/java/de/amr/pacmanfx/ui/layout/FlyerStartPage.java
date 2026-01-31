@@ -28,25 +28,28 @@ public abstract class FlyerStartPage extends StackPane implements StartPage {
     public static final Color DEFAULT_START_BUTTON_BGCOLOR = Color.rgb(0, 155, 252, 0.7);
     public static final Color DEFAULT_START_BUTTON_FILLCOLOR = Color.rgb(255, 255, 255);
 
-    public static FancyButton createDefaultStartButton(String text, Runnable action) {
-        var button = new FancyButton(text, DEFAULT_START_BUTTON_FONT, DEFAULT_START_BUTTON_BGCOLOR, DEFAULT_START_BUTTON_FILLCOLOR);
-        button.setAction(action);
-        StackPane.setAlignment(button, Pos.BOTTOM_CENTER);
-        return button;
+    public static final KeyCode SHUT_UP_KEYCODE = KeyCode.S;
+
+    public static class DefaultStartButton extends FancyButton {
+
+        public DefaultStartButton(String text, Runnable action) {
+            super(text, DEFAULT_START_BUTTON_FONT, DEFAULT_START_BUTTON_BGCOLOR, DEFAULT_START_BUTTON_FILLCOLOR);
+            StackPane.setAlignment(this, Pos.BOTTOM_CENTER);
+            setAction(action);
+        }
     }
 
-    protected final Flyer flyer;
+    protected final Flyer flyer = new Flyer();
     protected String title;
     protected Node startButton;
 
     protected FlyerStartPage() {
-        this.flyer = new Flyer();
         getChildren().add(flyer);
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> flyer.nextFlyerPage();
-                case UP -> flyer.prevFlyerPage();
+                case UP   -> flyer.prevFlyerPage();
             }
         });
 
@@ -73,17 +76,14 @@ public abstract class FlyerStartPage extends StackPane implements StartPage {
         getChildren().add(startButton);
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            if (e.getCode() == KeyCode.ESCAPE) {
+            if (e.getCode() == SHUT_UP_KEYCODE) {
                 ui.voicePlayer().stop();
             }
         });
     }
 
     protected Node createStartButton(GameUI ui) {
-        Node button = createDefaultStartButton(
-            ui.translate("play_button"),
-            () -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui)
-        );
+        final Node button = new DefaultStartButton(ui.translate("play_button"), () -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
         button.setTranslateY(-50);
         return button;
     }
