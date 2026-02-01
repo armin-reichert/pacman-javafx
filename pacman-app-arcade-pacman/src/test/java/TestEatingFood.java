@@ -2,6 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
+import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
@@ -16,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
-import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,16 +26,16 @@ public class TestEatingFood {
     static void setup() {
         final String variantName = GameVariant.ARCADE_PACMAN.name();
         final File highScoreFile = new File("");
-        THE_GAME_BOX.registerGame(variantName, new ArcadePacMan_GameModel(THE_GAME_BOX, highScoreFile));
-        THE_GAME_BOX.gameVariantNameProperty().set(variantName);
+        GameBox.instance().registerGame(variantName, new ArcadePacMan_GameModel(GameBox.instance().coinMechanism(), highScoreFile));
+        GameBox.instance().gameVariantNameProperty().set(variantName);
     }
 
     @BeforeEach
     public void createGameLevel() {
-        THE_GAME_BOX.currentGame().buildNormalLevel(1);
+        GameBox.instance().currentGame().buildNormalLevel(1);
     }
 
-    private ArcadePacMan_GameModel theGame() { return THE_GAME_BOX.currentGame(); }
+    private ArcadePacMan_GameModel theGame() { return GameBox.instance().currentGame(); }
 
     private GameLevel theGameLevel() {
         return theGame().level();
