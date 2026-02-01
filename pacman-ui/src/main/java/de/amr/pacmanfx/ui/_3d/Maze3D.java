@@ -25,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 public class Maze3D extends Group implements Disposable {
 
     /** Normalized wall top color for very dark colors */
-    private static final String DARK_GRAY = "0x2a2a2a";
+    private static final String DARK_WALL_FILL_COLOR = "0x2a2a2a";
 
     private final PreferencesManager prefs;
     private final WorldMapColorScheme colorScheme;
@@ -62,7 +62,7 @@ public class Maze3D extends Group implements Disposable {
     private WorldMapColorScheme adjustColorScheme(WorldMapColorScheme proposedColorScheme) {
         final boolean isFillColorDark = Color.valueOf(proposedColorScheme.wallFill()).getBrightness() < 0.1;
         return isFillColorDark
-            ? new WorldMapColorScheme(DARK_GRAY, proposedColorScheme.wallStroke(), proposedColorScheme.door(), proposedColorScheme.pellet())
+            ? new WorldMapColorScheme(DARK_WALL_FILL_COLOR, proposedColorScheme.wallStroke(), proposedColorScheme.door(), proposedColorScheme.pellet())
             : proposedColorScheme;
     }
 
