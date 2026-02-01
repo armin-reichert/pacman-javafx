@@ -15,7 +15,6 @@ import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.ViewManager;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
-import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
@@ -72,7 +71,7 @@ public class ArcadePacMan_App extends Application {
     }
 
     private void createUIUsingAPI(GameBox gameBox, Stage primaryStage, Dimension2D size) {
-        final Game game = new ArcadePacMan_GameModel(gameBox, HIGH_SCORE_FILE);
+        final Game game = new ArcadePacMan_GameModel(gameBox.coinMechanism(), HIGH_SCORE_FILE);
         gameBox.registerGame(GameVariant.ARCADE_MS_PACMAN.name(), game);
 
         ui = new GameUI_Implementation(gameBox, primaryStage, size.getWidth(), size.getHeight());
@@ -90,7 +89,8 @@ public class ArcadePacMan_App extends Application {
     private void createUIUsingBuilder(GameBox gameBox, Stage primaryStage, Dimension2D size) {
         ui = GameUI_Builder
             .newUI(primaryStage, size.getWidth(), size.getHeight())
-            .game(GameVariant.ARCADE_MS_PACMAN, () -> new ArcadePacMan_GameModel(gameBox, HIGH_SCORE_FILE), ArcadePacMan_UIConfig::new)
+            .game(GameVariant.ARCADE_MS_PACMAN,
+                () -> new ArcadePacMan_GameModel(gameBox.coinMechanism(), HIGH_SCORE_FILE), ArcadePacMan_UIConfig::new)
             .startPage(ArcadePacMan_StartPage::new)
             .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
             .build();

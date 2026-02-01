@@ -9,7 +9,6 @@ import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.sound.SoundManager;
 
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState.INTRO;
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState.SETTING_OPTIONS_FOR_START;
@@ -24,7 +23,7 @@ public interface ArcadeActions {
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
             final CoinMechanism coinMechanism = ui.context().coinMechanism();
-            if (coinMechanism.numCoins() < CoinMechanism.MAX_COINS) {
+            if (coinMechanism.numCoins() < coinMechanism.maxCoins()) {
                 coinMechanism.insertCoin();
                 ui.soundManager().setEnabled(true);
                 ui.voicePlayer().stop();

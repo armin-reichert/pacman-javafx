@@ -5,8 +5,6 @@ package de.amr.pacmanfx;
 
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.tinylog.Logger;
@@ -21,7 +19,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Container for the playable games. Each game variant is represented by an instance of its game model (see {@link Game}).
  */
-public class GameBox implements GameContext, CoinMechanism {
+public class GameBox implements GameContext {
 
     private static class Holder {
         static final GameBox INSTANCE = new GameBox();
@@ -52,6 +50,8 @@ public class GameBox implements GameContext, CoinMechanism {
     private final Map<String, Game> gamesByVariantName = new HashMap<>();
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
+
+    private final CoinMechanism coinMechanism = new SimpleCoinMechanism();
 
     public GameBox() {
         if (!DIRECTORY_CHECK_OK) {
@@ -108,17 +108,10 @@ public class GameBox implements GameContext, CoinMechanism {
         return variantName == null ? null : gameByVariantName(variantName);
     }
 
-    // CoinMechanism implementation
-
-    private final IntegerProperty numCoins = new SimpleIntegerProperty(0);
-
     @Override
     public CoinMechanism coinMechanism() {
-        return this;
+        return coinMechanism;
     }
-
-    @Override
-    public IntegerProperty numCoinsProperty() { return numCoins; }
 
     // other stuff
 

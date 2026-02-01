@@ -26,7 +26,7 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
 
     @Override
     public void onEnter(Game game) {
-        GameBox.instance().setNumCoins(1);
+        GameBox.instance().coinMechanism().setNumCoins(1);
         lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();
         timer.restartIndefinitely();
         game.prepareNewGame();
@@ -73,7 +73,7 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
         }
         else if (timer.atSecond(START + 10)) {
             if (game.level().number() == lastTestedLevelNumber) {
-                GameBox.instance().setNumCoins(0);
+                GameBox.instance().coinMechanism().setNumCoins(0);
                 game.boot();
                 game.control().restart(GameControl.StateName.BOOT.name());
             } else {
@@ -90,7 +90,7 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
 
     @Override
     public void onExit(Game game) {
-        GameBox.instance().setNumCoins(0);
+        GameBox.instance().coinMechanism().setNumCoins(0);
         game.boot();
         game.clearLevelCounter();
     }

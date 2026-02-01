@@ -33,7 +33,9 @@ public class ArcadeMsPacMan_App extends Application {
         final Dimension2D screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         ui = GameUI_Builder
             .newUI(primaryStage, screenSize.getWidth(), screenSize.getHeight())
-            .game(GameVariant.ARCADE_MS_PACMAN, () -> new ArcadeMsPacMan_GameModel(GameBox.instance(), HIGH_SCORE_FILE), ArcadeMsPacMan_UIConfig::new)
+            .game(GameVariant.ARCADE_MS_PACMAN,
+                () -> new ArcadeMsPacMan_GameModel(GameBox.instance().coinMechanism(), HIGH_SCORE_FILE),
+                ArcadeMsPacMan_UIConfig::new)
             .startPage(ArcadeMsPacMan_StartPage::new)
             .dashboard(
                 CommonDashboardID.GENERAL,

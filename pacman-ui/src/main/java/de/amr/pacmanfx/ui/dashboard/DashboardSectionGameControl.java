@@ -43,7 +43,8 @@ public class DashboardSectionGameControl extends DashboardSection {
 
     @Override
     public void init(GameUI ui) {
-        spinnerCredit            = addIntSpinner("Credit", 0, CoinMechanism.MAX_COINS, GameBox.instance().numCoinsProperty());
+        final CoinMechanism coinMechanism = GameBox.instance().coinMechanism();
+        spinnerCredit            = addIntSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
