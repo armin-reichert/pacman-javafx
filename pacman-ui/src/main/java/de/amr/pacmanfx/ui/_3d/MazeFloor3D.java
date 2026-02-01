@@ -4,9 +4,6 @@
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Translate;
@@ -14,27 +11,16 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
+// Translate: top-left corner (without padding) at origin, surface top at z=0
 public class MazeFloor3D extends Box implements Disposable {
 
-    public MazeFloor3D(PreferencesManager prefs, GameLevel level, PhongMaterial floorMaterial) {
-        requireNonNull(prefs);
-        requireNonNull(level);
+    public MazeFloor3D(PhongMaterial floorMaterial, float width, float height, float thickness, float padding) {
         requireNonNull(floorMaterial);
-
-        final Vector2i worldSizePx = level.worldMap().terrainLayer().sizeInPixel();
-        final float padding = prefs.getFloat("3d.floor.padding");
-        final float thickness = prefs.getFloat("3d.floor.thickness");
-        final float sizeX = worldSizePx.x() + 2 * padding;
-        final float sizeY = worldSizePx.y();
-
-        setWidth(sizeX);
-        setHeight(sizeY);
+        setWidth(width);
+        setHeight(height);
         setDepth(thickness);
         setMaterial(floorMaterial);
-
-        // Translate: top-left corner (without padding) at origin, surface top at z=0
-        final var translate = new Translate(0.5 * sizeX - padding, 0.5 * sizeY, 0.5 * thickness);
-        getTransforms().add(translate);
+        getTransforms().add(new Translate(0.5 * width - padding, 0.5 * height, 0.5 * thickness));
     }
 
     @Override

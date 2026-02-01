@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
@@ -37,9 +38,9 @@ public class Maze3D extends Group implements Disposable {
 
     private MazeMaterials3D materials;
     private MazeObstacles3D obstacles;
-    private MazeFloor3D mazeFloor3D;
-    private MazeHouse3D mazeHouse3D;
-    private MazeFood3D mazeFood3D;
+    private MazeFloor3D floor;
+    private MazeHouse3D house;
+    private MazeFood3D food;
 
     public Maze3D(GameUI ui, GameLevel level, AnimationRegistry animationRegistry, List<PhongMaterial> ghostMaterials) {
         requireNonNull(ui);
@@ -82,20 +83,16 @@ public class Maze3D extends Group implements Disposable {
         return materials;
     }
 
-    public MazeObstacles3D obstacles() {
-        return obstacles;
-    }
-
     public MazeFloor3D floor() {
-        return mazeFloor3D;
+        return floor;
     }
 
     public MazeHouse3D house() {
-        return mazeHouse3D;
+        return house;
     }
 
     public MazeFood3D food() {
-        return mazeFood3D;
+        return food;
     }
 
     @Override
@@ -107,21 +104,21 @@ public class Maze3D extends Group implements Disposable {
             materials.dispose();
             materials = null;
         }
-        if (mazeFloor3D != null) {
-            mazeFloor3D.dispose();
-            mazeFloor3D = null;
+        if (floor != null) {
+            floor.dispose();
+            floor = null;
         }
         if (obstacles != null) {
             obstacles.dispose();
             obstacles = null;
         }
-        if (mazeHouse3D != null) {
-            mazeHouse3D.dispose();
-            mazeHouse3D = null;
+        if (house != null) {
+            house.dispose();
+            house = null;
         }
-        if (mazeFood3D != null) {
-            mazeFood3D.dispose();
-            mazeFood3D = null;
+        if (food != null) {
+            food.dispose();
+            food = null;
         }
         getChildren().forEach(Wall3D::dispose);
         getChildren().clear();
@@ -133,21 +130,29 @@ public class Maze3D extends Group implements Disposable {
     }
 
     private void createObstacles3D() {
-        obstacles = new MazeObstacles3D(prefs);
-        obstacles.addObstacles(this, materials, wallBaseHeight, level);
+        obstacles = new MazeObstacles3D();
+        getChildren().add(obstacles);
+        final float wallThickness = prefs.getFloat("3d.obstacle.wall_thickness");
+        final float cornerRadius = prefs.getFloat("3d.obstacle.corner_radius");
+        obstacles.renderObstacles(level, wallThickness, cornerRadius, materials, wallBaseHeight);
     }
 
     private void createFloor3D() {
-        mazeFloor3D = new MazeFloor3D(prefs, level, materials.floor());
+        final float padding = prefs.getFloat("3d.floor.padding");
+        final float thickness = prefs.getFloat("3d.floor.thickness");
+        final Vector2i worldSizePx = level.worldMap().terrainLayer().sizeInPixel();
+        final float width = worldSizePx.x() + 2 * padding;
+        final float height = worldSizePx.y();
+        floor = new MazeFloor3D(materials.floor(), width, height, thickness, padding);
     }
 
     private void createHouse3D(House house) {
-        mazeHouse3D = new MazeHouse3D(prefs, colorScheme, animationRegistry, house);
-        getChildren().add(mazeHouse3D);
+        this.house = new MazeHouse3D(prefs, colorScheme, animationRegistry, house);
+        getChildren().add(this.house);
     }
 
     private void createMazeFood3D(List<PhongMaterial> ghostMaterials) {
-        mazeFood3D = new MazeFood3D(prefs, colorScheme, animationRegistry, level, ghostMaterials,
-            mazeHouse3D.arcadeHouse3D().swirls());
+        food = new MazeFood3D(prefs, colorScheme, animationRegistry, level, ghostMaterials,
+            house.arcadeHouse3D().swirls());
     }
 }
