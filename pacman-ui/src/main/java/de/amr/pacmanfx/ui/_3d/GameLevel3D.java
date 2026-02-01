@@ -65,9 +65,9 @@ public class GameLevel3D extends Group implements Disposable {
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final GameLevel3DAnimations animations;
 
-    private MeshView[] ghostDressMeshViews;
-    private MeshView[] ghostPupilsMeshViews;
-    private MeshView[] ghostEyesMeshViews;
+    private List<MeshView> ghostDressMeshViews;
+    private List<MeshView> ghostPupilsMeshViews;
+    private List<MeshView> ghostEyesMeshViews;
 
     private Node[] livesCounterShapes;
 
@@ -147,8 +147,8 @@ public class GameLevel3D extends Group implements Disposable {
         return maze3D;
     }
 
-    private MeshView[] createGhostComponentMeshViews(Mesh componentMesh) {
-        return IntStream.range(0, 4).mapToObj(_ -> new MeshView(componentMesh)).toArray(MeshView[]::new);
+    private List<MeshView> createGhostComponentMeshViews(Mesh componentMesh) {
+        return IntStream.range(0, 4).mapToObj(_ -> new MeshView(componentMesh)).toList();
     }
 
     private GhostColorSet createGhostColorSet(byte personality) {
@@ -177,9 +177,9 @@ public class GameLevel3D extends Group implements Disposable {
             animationRegistry,
             ghost,
             createGhostColorSet(ghost.personality()),
-            ghostDressMeshViews[ghost.personality()],
-            ghostPupilsMeshViews[ghost.personality()],
-            ghostEyesMeshViews[ghost.personality()],
+            ghostDressMeshViews.get(ghost.personality()),
+            ghostPupilsMeshViews.get(ghost.personality()),
+            ghostEyesMeshViews.get(ghost.personality()),
             ui.prefs().getFloat("3d.ghost.size"),
             level.numFlashes()
         );
