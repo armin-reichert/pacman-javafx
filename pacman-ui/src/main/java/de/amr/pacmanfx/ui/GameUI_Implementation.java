@@ -11,6 +11,8 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
+import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
@@ -61,8 +63,8 @@ public final class GameUI_Implementation implements GameUI {
     private final GameClock clock = new GameClock();
     private final DirectoryWatchdog customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
     private final GlobalPreferencesManager preferencesManager = new GlobalPreferencesManager();
-    private final ActionBindingsManager globalActionBindings = new GlobalActionBindings();
     private final UIConfigManager uiConfigManager = new UIConfigManager();
+    private final DefaultActionBindingsManager globalActionBindings = new DefaultActionBindingsManager();
     private final ViewManager viewManager;
     private final SoundManager soundManager = new SoundManager();
 
@@ -100,8 +102,9 @@ public final class GameUI_Implementation implements GameUI {
         stage.setMinHeight(MIN_STAGE_HEIGHT);
 
         composeLayout();
-        setupScene();
-        setupBindings();
+        initGlobalActionBindings();
+        initPropertyBindings();
+        initScene();
 
         PROPERTY_3D_WALL_HEIGHT.set(prefs().getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(prefs().getFloat("3d.obstacle.opacity"));
@@ -117,7 +120,7 @@ public final class GameUI_Implementation implements GameUI {
         sceneLayout.getChildren().setAll(new Region(), pausedIcon, statusIconBox, flashMessageView);
     }
 
-    private void setupBindings() {
+    private void initPropertyBindings() {
         statusIconBox.visibleProperty().bind(
             views().selectedIDProperty().map(viewID -> viewID == PLAY_VIEW || viewID == START_VIEW));
 
@@ -170,7 +173,14 @@ public final class GameUI_Implementation implements GameUI {
         return editorView;
     }
 
-    private void setupScene() {
+    private void initGlobalActionBindings() {
+        globalActionBindings.registerAnyBindingFrom(CommonGameActions.ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
+        globalActionBindings.registerAnyBindingFrom(CommonGameActions.ACTION_OPEN_EDITOR,      GameUI.COMMON_BINDINGS);
+        globalActionBindings.registerAnyBindingFrom(CommonGameActions.ACTION_TOGGLE_MUTED,     GameUI.COMMON_BINDINGS);
+        globalActionBindings.activateBindings(GameUI.KEYBOARD);
+    }
+
+    private void initScene() {
         scene.getStylesheets().add(GameUI_Resources.STYLE_SHEET_PATH);
 
         scene.addEventFilter(KeyEvent.KEY_PRESSED,  KEYBOARD::onKeyPressed);

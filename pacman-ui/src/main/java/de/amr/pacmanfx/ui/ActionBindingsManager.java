@@ -31,7 +31,7 @@ import java.util.Set;
  * <h2>Lifecycle</h2>
  * <ul>
  *   <li>{@link #activateBindings(Keyboard)} registers all known bindings with the keyboard.</li>
- *   <li>{@link #releaseBindings(Keyboard)} unregisters them again.</li>
+ *   <li>{@link #removeAllBindings(Keyboard)} unregisters them again.</li>
  *   <li>{@link #dispose()} frees any internal resources (if needed).</li>
  * </ul>
  *
@@ -67,16 +67,16 @@ public interface ActionBindingsManager extends Disposable {
         public void activateBindings(Keyboard keyboard) {}
 
         @Override
-        public void releaseBindings(Keyboard keyboard) {}
+        public void removeAllBindings(Keyboard keyboard) {}
 
         @Override
-        public void useAnyBinding(GameAction action, Set<ActionBinding> actionBindings) {}
+        public void registerAnyBindingFrom(GameAction action, Set<ActionBinding> actionBindings) {}
 
         @Override
-        public void setKeyCombination(GameAction action, KeyCombination combination) {}
+        public void triggerActionByKeyCombination(GameAction action, KeyCombination combination) {}
 
         @Override
-        public void useAllBindings(Set<ActionBinding> actionBindings) {}
+        public void registerAllBindingsFrom(Set<ActionBinding> actionBindings) {}
 
         @Override
         public Optional<GameAction> matchingAction(Keyboard keyboard) {
@@ -131,7 +131,7 @@ public interface ActionBindingsManager extends Disposable {
      *
      * @param keyboard the keyboard from which to remove bindings
      */
-    void releaseBindings(Keyboard keyboard);
+    void removeAllBindings(Keyboard keyboard);
 
     /**
      * Assigns a new key combination to the given action, replacing any previous binding.
@@ -139,7 +139,7 @@ public interface ActionBindingsManager extends Disposable {
      * @param action      the action to rebind
      * @param combination the new key combination
      */
-    void setKeyCombination(GameAction action, KeyCombination combination);
+    void triggerActionByKeyCombination(GameAction action, KeyCombination combination);
 
     /**
      * Registers exactly one binding for the given action from the provided set.
@@ -150,7 +150,7 @@ public interface ActionBindingsManager extends Disposable {
      * @param action         the action to bind
      * @param actionBindings the candidate bindings
      */
-    void useAnyBinding(GameAction action, Set<ActionBinding> actionBindings);
+    void registerAnyBindingFrom(GameAction action, Set<ActionBinding> actionBindings);
 
     /**
      * Registers all provided bindings.
@@ -160,5 +160,5 @@ public interface ActionBindingsManager extends Disposable {
      *
      * @param actionBindings the bindings to register
      */
-    void useAllBindings(Set<ActionBinding> actionBindings);
+    void registerAllBindingsFrom(Set<ActionBinding> actionBindings);
 }

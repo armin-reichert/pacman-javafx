@@ -46,7 +46,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void releaseBindings(Keyboard keyboard) {
+    public void removeAllBindings(Keyboard keyboard) {
         for (KeyCombination combination : actionForKeyCombination.keySet()) {
             keyboard.removeBinding(combination, this);
         }
@@ -54,26 +54,26 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void setKeyCombination(GameAction action, KeyCombination combination) {
+    public void triggerActionByKeyCombination(GameAction action, KeyCombination combination) {
         requireNonNull(action);
         requireNonNull(combination);
         actionForKeyCombination.put(combination, action);
     }
 
     @Override
-    public void useAnyBinding(GameAction gameAction, Set<ActionBinding> actionBindings) {
+    public void registerAnyBindingFrom(GameAction gameAction, Set<ActionBinding> actionBindings) {
         requireNonNull(gameAction);
         requireNonNull(actionBindings);
         actionBindings.stream()
             .filter(actionBinding -> actionBinding.gameAction() == gameAction)
             .findAny()
-            .ifPresent(this::useBinding);
+            .ifPresent(this::registerBinding);
     }
 
     @Override
-    public void useAllBindings(Set<ActionBinding> actionBindings) {
+    public void registerAllBindingsFrom(Set<ActionBinding> actionBindings) {
         for (ActionBinding binding : actionBindings) {
-            useBinding(binding);
+            registerBinding(binding);
         }
     }
 
@@ -85,7 +85,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
             .findFirst();
     }
 
-    private void useBinding(ActionBinding binding) {
+    private void registerBinding(ActionBinding binding) {
         for (KeyCombination combination : binding.keyCombinations()) {
             actionForKeyCombination.put(combination, binding.gameAction());
         }

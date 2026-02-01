@@ -89,7 +89,7 @@ public class ViewManager {
             final View oldView = viewMap.get(oldID);
             if (oldView != null) {
                 oldView.onExit();
-                oldView.actionBindingsManager().releaseBindings(GameUI.KEYBOARD);
+                oldView.actionBindingsManager().removeAllBindings(GameUI.KEYBOARD);
             }
         }
 

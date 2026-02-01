@@ -82,7 +82,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             hud.gameOptions(false).score(false).levelCounter(true).livesCounter(false).show();
         }
 
-        actionBindings.setKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, JOYPAD.key(JoypadButton.START));
+        actionBindings.triggerActionByKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, JOYPAD.key(JoypadButton.START));
 
         clapperboard = new Clapperboard(3, "JUNIOR");
         clapperboard.setPosition(3 * TS, 10 * TS);
