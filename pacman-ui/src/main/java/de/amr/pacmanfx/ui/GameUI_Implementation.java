@@ -14,7 +14,6 @@ import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.layout.EditorView;
-import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoicePlayer;
@@ -135,12 +134,12 @@ public final class GameUI_Implementation implements GameUI {
                 final boolean debug  = PROPERTY_DEBUG_INFO_VISIBLE.get();
                 final boolean is3D   = PROPERTY_3D_ENABLED.get();
                 final boolean paused = clock.isPaused();
-                final GameScene gameScene = playView().optGameScene().orElse(null);
+                final GameScene gameScene = views().getPlayView().optGameScene().orElse(null);
                 return computeStageTitle(views().currentView(), gameScene, debug, is3D, paused);
             },
             context.gameVariantNameProperty(),
             views().currentViewProperty(),
-            playView().currentGameSceneProperty(),
+            views().getPlayView().currentGameSceneProperty(),
             PROPERTY_DEBUG_INFO_VISIBLE,
             PROPERTY_3D_ENABLED,
             clock().pausedProperty()
@@ -153,7 +152,7 @@ public final class GameUI_Implementation implements GameUI {
                 : GameUI_Resources.BACKGROUND_PAC_MAN_WALLPAPER,
             // depends on:
             views().currentViewProperty(),
-            views().getView(PLAY_VIEW, PlayView.class).currentGameSceneProperty()
+            views().getPlayView().currentGameSceneProperty()
         ));
 
         context().gameVariantNameProperty().addListener((_, _, _) -> {
@@ -194,7 +193,7 @@ public final class GameUI_Implementation implements GameUI {
             },
             () -> views().currentView().onKeyboardInput(this)
         ));
-        scene.setOnScroll(e -> views().getView(PLAY_VIEW, PlayView.class).optGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+        scene.setOnScroll(e -> views().getPlayView().optGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
     }
 
     private void simulateAndUpdateGameScene() {
@@ -204,7 +203,7 @@ public final class GameUI_Implementation implements GameUI {
         try {
             game.control().update();
             step.printLog();
-            views().getView(PLAY_VIEW, PlayView.class).optGameScene().ifPresent(gameScene -> gameScene.update(game));
+            views().getPlayView().optGameScene().ifPresent(gameScene -> gameScene.update(game));
         } catch (Throwable x) {
             ka_tas_tro_phe(x);
         }
@@ -249,7 +248,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID) {
-        final GameScene currentGameScene = views().getView(PLAY_VIEW, PlayView.class).optGameScene().orElse(null);
+        final GameScene currentGameScene = views().getPlayView().optGameScene().orElse(null);
         return currentGameScene != null && currentGameSceneConfig().gameSceneHasID(currentGameScene, sceneID);
     }
 
@@ -307,7 +306,7 @@ public final class GameUI_Implementation implements GameUI {
     public void quitCurrentGameScene() {
         final Game game = context.currentGame();
         //TODO this is game-specific and should not be here
-        views().getView(PLAY_VIEW, PlayView.class).optGameScene().ifPresent(gameScene -> {
+        views().getPlayView().optGameScene().ifPresent(gameScene -> {
             boolean shouldConsumeCoin = game.control().state().name().equals("STARTING_GAME_OR_LEVEL")
                 || game.isPlaying();
             if (shouldConsumeCoin && !context.coinMechanism().isEmpty()) {
@@ -330,7 +329,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void show() {
-        views().getView(PLAY_VIEW, PlayView.class).dashboard().init(this);
+        views().getPlayView().dashboard().init(this);
         views().selectView(START_VIEW);
         stage.centerOnScreen();
         stage.show();
@@ -376,7 +375,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void stopGame() {
-        views().getView(PLAY_VIEW, PlayView.class).optGameScene().ifPresent(gameScene -> gameScene.end(context().currentGame()));
+        views().getPlayView().optGameScene().ifPresent(gameScene -> gameScene.end(context().currentGame()));
         soundManager.stopAll();
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);

@@ -26,7 +26,6 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
-import de.amr.pacmanfx.ui.ViewManager;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardSectionCustomMaps;
@@ -126,7 +125,7 @@ public class PacManGames3dApp extends Application {
                 ui.uiConfigManager().addFactory(ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_UIConfig::new);
                 ui.uiConfigManager().addFactory(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_UIConfig::new);
 
-                final StartPagesCarousel startPages = ui.views().getView(ViewManager.ViewID.START_VIEW, StartPagesCarousel.class);
+                final StartPagesCarousel startPages = ui.views().getStartPagesView();
                 startPages.addStartPage(new ArcadePacMan_StartPage());
                 startPages.addStartPage(new ArcadeMsPacMan_StartPage());
                 startPages.addStartPage(new TengenMsPacMan_StartPage());

@@ -11,7 +11,6 @@ import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
@@ -297,17 +296,10 @@ public interface GameUI extends Translator {
     void showStartView();
 
     /**
-     * Convenience accessor for the play view.
-     */
-    default PlayView playView() {
-        return views().getView(ViewManager.ViewID.PLAY_VIEW, PlayView.class);
-    }
-
-    /**
      * Convenience accessor for the dashboard inside the play view.
      */
     default Dashboard dashboard() {
-        return playView().dashboard();
+        return views().getPlayView().dashboard();
     }
 
     // ---------------------------------------------------------------------------------------------

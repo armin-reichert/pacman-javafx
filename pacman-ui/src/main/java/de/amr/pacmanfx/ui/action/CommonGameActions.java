@@ -117,7 +117,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_SHOW_HELP = new GameAction("SHOW_HELP") {
         @Override
         public void execute(GameUI ui) {
-            ui.views().getView(ViewID.PLAY_VIEW, PlayView.class).showHelp(ui);
+            ui.views().getPlayView().showHelp(ui);
         }
 
         @Override
@@ -225,7 +225,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_DASHBOARD = new GameAction("TOGGLE_DASHBOARD") {
         @Override
         public void execute(GameUI ui) {
-            ui.views().getView(ViewID.PLAY_VIEW, PlayView.class).dashboard().toggleVisibility();
+            ui.views().getPlayView().dashboard().toggleVisibility();
         }
 
         @Override
@@ -290,7 +290,7 @@ public final class CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
-            final PlayView playView = ui.views().getView(ViewID.PLAY_VIEW, PlayView.class);
+            final PlayView playView = ui.views().getPlayView();
             playView.optGameScene().ifPresent(_ -> {
                 ui.clock().stop();
                 toggle(PROPERTY_3D_ENABLED);

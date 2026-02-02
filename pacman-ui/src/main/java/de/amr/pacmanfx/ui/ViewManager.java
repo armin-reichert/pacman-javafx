@@ -168,7 +168,7 @@ public class ViewManager {
      * @throws IllegalArgumentException if no view is registered or the type does not match
      */
     @SuppressWarnings("unchecked")
-    public <V extends View> V getView(ViewID id, Class<V> viewClass) {
+    private <V extends View> V getView(ViewID id, Class<V> viewClass) {
         requireNonNull(id);
         requireNonNull(viewClass);
 
@@ -184,6 +184,14 @@ public class ViewManager {
         throw new IllegalArgumentException(
             "View with ID '%s' has type %s (expected: %s)"
                 .formatted(id, view.getClass(), viewClass));
+    }
+
+    public PlayView getPlayView() {
+        return getView(ViewID.PLAY_VIEW, PlayView.class);
+    }
+
+    public StartPagesCarousel getStartPagesView() {
+        return getView(ViewID.START_VIEW, StartPagesCarousel.class);
     }
 
     /**

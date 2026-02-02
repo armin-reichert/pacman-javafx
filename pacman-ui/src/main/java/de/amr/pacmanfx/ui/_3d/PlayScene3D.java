@@ -519,7 +519,7 @@ public abstract class PlayScene3D implements GameScene {
     @Override
     public void onUnspecifiedChange(UnspecifiedChangeEvent event) {
         // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
-        ui.playView().updateGameScene(context.currentGame(), true);
+        ui.views().getPlayView().updateGameScene(context.currentGame(), true);
     }
 
     // protected
