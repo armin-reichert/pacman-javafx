@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.util.Optional;
 import java.util.Set;
 
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
@@ -276,6 +277,14 @@ public interface GameUI extends Translator {
      * @return {@code true} if the active scene has the given ID
      */
     boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID);
+
+    /**
+     * Returns the current game scene if existing.
+     * @return (optional) game scene
+     */
+    default Optional<GameScene> optGameScene() {
+        return views().getPlayView().optGameScene();
+    }
 
     // ---------------------------------------------------------------------------------------------
     // View Access

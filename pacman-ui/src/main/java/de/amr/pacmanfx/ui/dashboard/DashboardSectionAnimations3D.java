@@ -100,7 +100,7 @@ public class DashboardSectionAnimations3D extends DashboardSection {
         super.update(ui);
 
         //TODO use data binding
-        ui.views().getPlayView().optGameScene().ifPresent(gameScene -> currentAnimationManager.set(observedAnimationManager(gameScene)));
+        ui.optGameScene().ifPresent(gameScene -> currentAnimationManager.set(observedAnimationManager(gameScene)));
         if (currentAnimationManager.get() == null) {
             tableRows.clear();
             refreshTimer.pause();

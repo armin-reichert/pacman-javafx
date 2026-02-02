@@ -15,7 +15,6 @@ import de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.ViewManager.ViewID;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
-import de.amr.pacmanfx.ui.layout.PlayView;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -290,14 +289,13 @@ public final class CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
-            final PlayView playView = ui.views().getPlayView();
-            playView.optGameScene().ifPresent(_ -> {
+            ui.optGameScene().ifPresent(_ -> {
                 ui.clock().stop();
                 toggle(PROPERTY_3D_ENABLED);
                 if (ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D) ||
                     ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D))
                 {
-                    playView.updateGameScene(game, true);
+                    ui.views().getPlayView().updateGameScene(game, true);
                     game.control().update(); //TODO needed?
                 }
                 if (!game.isPlaying()) {

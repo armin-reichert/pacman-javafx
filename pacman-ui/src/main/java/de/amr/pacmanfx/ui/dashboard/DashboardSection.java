@@ -92,7 +92,7 @@ public abstract class DashboardSection extends TitledPane {
     }
 
     protected Supplier<String> ifGameScenePresent(GameUI ui, Function<GameScene, String> fnInfo) {
-        return () -> ui.views().getPlayView().optGameScene().map(fnInfo).orElse(NO_INFO);
+        return () -> ui.optGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
     protected Supplier<String> ifGameLevel(Supplier<Game> gameSupplier, Function<GameLevel, String> fnInfo) {
