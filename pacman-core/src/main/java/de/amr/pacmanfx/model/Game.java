@@ -102,8 +102,6 @@ public interface Game extends LevelCounter {
     void addGameEventListener(GameEventListener listener);
     void removeGameEventListener(GameEventListener listener);
     void publishGameEvent(GameEvent event);
-    //void publishGameEvent(GameEvent.Type type);
-    //void publishGameEvent(GameEvent.Type type, Vector2i tile);
 
     // Game event handling
     void onLevelCompleted();
@@ -136,26 +134,19 @@ public interface Game extends LevelCounter {
     int lastCutSceneNumber();
 
     // Cheating
-
-    BooleanProperty cheatUsedProperty();
-
     default void raiseCheatFlag() {
         cheatUsedProperty().set(true);
     }
-
     default void clearCheatFlag() {
         cheatUsedProperty().set(false);
     }
-
+    BooleanProperty cheatUsedProperty();
     BooleanProperty immuneProperty();
-
-    default boolean immune() {
+    default boolean isImmune() {
         return immuneProperty().get();
     }
-
     BooleanProperty usingAutopilotProperty();
-
-    default boolean usingAutopilot() {
+    default boolean isUsingAutopilot() {
         return usingAutopilotProperty().get();
     }
 }

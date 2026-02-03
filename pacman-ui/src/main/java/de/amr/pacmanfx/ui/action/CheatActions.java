@@ -105,7 +105,7 @@ public final class CheatActions {
                 game.raiseCheatFlag();
             }
             toggle(game.usingAutopilotProperty());
-            boolean usingAutopilot = game.usingAutopilot();
+            boolean usingAutopilot = game.isUsingAutopilot();
             ui.voicePlayer().play(usingAutopilot ? GameUI_Resources.VOICE_AUTOPILOT_ON : GameUI_Resources.VOICE_AUTOPILOT_OFF);
             ui.showFlashMessage(ui.translate(usingAutopilot ? "autopilot_on" : "autopilot_off"));
         }

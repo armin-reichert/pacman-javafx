@@ -583,7 +583,7 @@ public abstract class AbstractGameModel implements Game {
     protected void updateCheatingProperties(GameLevel level) {
         level.pac().immuneProperty().bind(immuneProperty());
         level.pac().usingAutopilotProperty().bind(usingAutopilotProperty());
-        if (immune() || usingAutopilot()) {
+        if (isImmune() || isUsingAutopilot()) {
             raiseCheatFlag();
         }
     }
