@@ -140,14 +140,15 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
+        final Game game = gameContext().currentGame();
         if (e.newState() == GameState.LEVEL_COMPLETE) {
             ui.soundManager().stopAll();
-            createAndPlayLevelCompletedAnimation(gameContext.currentGame().level());
+            createAndPlayLevelCompletedAnimation(game.level());
         }
         else if (e.newState() == GameState.GAME_OVER) {
             ui.soundManager().stopAll();
             ui.soundManager().play(SoundID.GAME_OVER);
-            gameContext.currentGame().hud().credit(true);
+            game.hud().credit(true);
         }
     }
 
@@ -158,7 +159,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent e) {
-        gameContext.currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
+        acceptGameLevel(e.level());
     }
 
     @Override
@@ -175,13 +176,13 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        final long now = ui.clock().tickCount();
-        final long passed = now - lastMunchingSoundPlayedTick;
+        final long tick = ui.clock().tickCount();
+        final long passed = tick - lastMunchingSoundPlayedTick;
         final byte minDelay = ui.currentConfig().munchingSoundDelay();
-        Logger.debug("Pac found food, tick={} passed since last time={}", now, passed);
+        Logger.debug("Pac found food, tick={} passed since last time={}", tick, passed);
         if (passed > minDelay || minDelay == 0) {
             ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
-            lastMunchingSoundPlayedTick = now;
+            lastMunchingSoundPlayedTick = tick;
         }
     }
 
@@ -227,13 +228,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private void acceptGameLevel(GameLevel level) {
         final Game game = level.game();
         final boolean demoLevel = level.isDemoLevel();
-        game.hud().credit(false).levelCounter(true).show();
         if (demoLevel) {
-            game.hud().credit(true).livesCounter(false);
+            game.hud().credit(true).livesCounter(false).levelCounter(true).show();
             ui.soundManager().setEnabled(false);
             actionBindings.registerAllBindingsFrom(ArcadePacMan_UIConfig.DEFAULT_BINDINGS); // insert coin + start game
         } else {
-            game.hud().credit(false).livesCounter(true);
+            game.hud().credit(false).livesCounter(true).levelCounter(true).show();
             ui.soundManager().setEnabled(true);
             actionBindings.registerAllBindingsFrom(GameUI.STEERING_BINDINGS);
             actionBindings.registerAllBindingsFrom(GameUI.CHEAT_BINDINGS);
@@ -244,10 +244,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private void updateHUD(GameLevel level) {
         final Game game = level.game();
-        // While Pac-Man is still invisible on level start, one entry more is shown in the lives counter
+        // While Pac-Man is still invisible on level start, one Pac symbol more is shown in the lives counter
         final boolean oneExtra = game.control().state() == GameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
-        final int livesDisplayed = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
-        game.hud().setVisibleLifeCount(Math.clamp(livesDisplayed, 0, game.hud().maxLivesDisplayed()));
+        final int lifeCountDisplayed = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
+        game.hud().setVisibleLifeCount(Math.clamp(lifeCountDisplayed, 0, game.hud().maxLivesDisplayed()));
     }
 
     private void updateHuntingSound(GameLevel level) {
