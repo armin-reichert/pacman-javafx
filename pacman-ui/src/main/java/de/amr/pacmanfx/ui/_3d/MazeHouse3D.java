@@ -13,16 +13,19 @@ import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 
-public class MazeHouse3D extends Group implements Disposable {
+public class MazeHouse3D implements Disposable {
 
     private final ArcadeHouse3D arcadeHouse3D;
     private final ChangeListener<Boolean> houseOpenListener;
@@ -31,8 +34,8 @@ public class MazeHouse3D extends Group implements Disposable {
         PreferencesManager prefs,
         WorldMapColorScheme colorScheme,
         AnimationRegistry animationRegistry,
-        House house) {
-
+        House house)
+    {
         final Vector2i[] ghostRevivalTiles = {
             house.ghostRevivalTile(CYAN_GHOST_BASHFUL),
             house.ghostRevivalTile(PINK_GHOST_SPEEDY),
@@ -53,7 +56,6 @@ public class MazeHouse3D extends Group implements Disposable {
             prefs.getFloat("3d.house.wall_thickness"),
             prefs.getFloat("3d.house.opacity")
         );
-        getChildren().add(arcadeHouse3D);
 
         arcadeHouse3D.setWallBaseColor(Color.valueOf(colorScheme.wallFill()));
         arcadeHouse3D.wallBaseHeightProperty().set(prefs.getFloat("3d.house.base_height"));
@@ -69,6 +71,30 @@ public class MazeHouse3D extends Group implements Disposable {
         arcadeHouse3D.openProperty().addListener(houseOpenListener);
     }
 
+    public DoubleProperty wallBaseHeightProperty() {
+        return arcadeHouse3D.wallBaseHeightProperty();
+    }
+
+    public Node root() {
+        return arcadeHouse3D;
+    }
+
+    public List<Group> swirls() {
+        return arcadeHouse3D.swirls();
+    }
+
+    public Group doors() {
+        return arcadeHouse3D.doors();
+    }
+
+    public void startAnimations() {
+        arcadeHouse3D.startSwirlAnimations();
+    }
+
+    public void stopAnimations() {
+        arcadeHouse3D.stopSwirlAnimations();
+    }
+
     public void cleanUp() {
         for (Group swirl : arcadeHouse3D.swirls()) {
             swirl.getChildren().clear();
@@ -81,10 +107,6 @@ public class MazeHouse3D extends Group implements Disposable {
 
     public void hideDoors() {
         arcadeHouse3D.setDoorsVisible(false);
-    }
-
-    public ArcadeHouse3D arcadeHouse3D() {
-        return arcadeHouse3D;
     }
 
     @Override

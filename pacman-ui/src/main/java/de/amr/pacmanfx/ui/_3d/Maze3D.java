@@ -30,7 +30,6 @@ public class Maze3D extends Group implements Disposable {
 
     private final PreferencesManager prefs;
     private final WorldMapColorScheme colorScheme;
-    private final GameLevel level;
     private final AnimationRegistry animationRegistry;
 
     private final DoubleProperty wallBaseHeight = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
@@ -45,7 +44,6 @@ public class Maze3D extends Group implements Disposable {
     public Maze3D(GameUI ui, GameLevel level, AnimationRegistry animationRegistry, List<PhongMaterial> ghostMaterials) {
         requireNonNull(ui);
         this.prefs = ui.prefs();
-        this.level = requireNonNull(level);
         this.animationRegistry = requireNonNull(animationRegistry);
         requireNonNull(ghostMaterials);
 
@@ -53,10 +51,10 @@ public class Maze3D extends Group implements Disposable {
         colorScheme = adjustColorScheme(proposedColorScheme);
 
         createMaterials();
-        createFloor3D();
-        createObstacles3D();
+        createFloor3D(level);
+        createObstacles3D(level);
         level.worldMap().terrainLayer().optHouse().ifPresent(this::createHouse3D);
-        createMazeFood3D(ghostMaterials);
+        createMazeFood3D(level, ghostMaterials);
     }
 
     // Adds some contrast if the wall fill color is very dark (assuming a very dark floor)
@@ -129,7 +127,7 @@ public class Maze3D extends Group implements Disposable {
         materials = MazeMaterials3D.create(colorScheme, wallOpacityProperty());
     }
 
-    private void createObstacles3D() {
+    private void createObstacles3D(GameLevel level) {
         obstacles = new MazeObstacles3D();
         getChildren().add(obstacles);
         final float wallThickness = prefs.getFloat("3d.obstacle.wall_thickness");
@@ -137,7 +135,7 @@ public class Maze3D extends Group implements Disposable {
         obstacles.renderObstacles(level, wallThickness, cornerRadius, materials, wallBaseHeight);
     }
 
-    private void createFloor3D() {
+    private void createFloor3D(GameLevel level) {
         final float padding = prefs.getFloat("3d.floor.padding");
         final float thickness = prefs.getFloat("3d.floor.thickness");
         final Vector2i worldSizePx = level.worldMap().terrainLayer().sizeInPixel();
@@ -146,13 +144,12 @@ public class Maze3D extends Group implements Disposable {
         floor = new MazeFloor3D(materials.floor(), width, height, thickness, padding);
     }
 
-    private void createHouse3D(House house) {
-        this.house = new MazeHouse3D(prefs, colorScheme, animationRegistry, house);
-        getChildren().add(this.house);
+    private void createHouse3D(House modelHouse) {
+        house = new MazeHouse3D(prefs, colorScheme, animationRegistry, modelHouse);
+        getChildren().add(house.root());
     }
 
-    private void createMazeFood3D(List<PhongMaterial> ghostMaterials) {
-        food = new MazeFood3D(prefs, colorScheme, animationRegistry, level, ghostMaterials,
-            house.arcadeHouse3D().swirls());
+    private void createMazeFood3D(GameLevel level, List<PhongMaterial> ghostMaterials) {
+        food = new MazeFood3D(prefs, colorScheme, animationRegistry, level, ghostMaterials, house.swirls());
     }
 }

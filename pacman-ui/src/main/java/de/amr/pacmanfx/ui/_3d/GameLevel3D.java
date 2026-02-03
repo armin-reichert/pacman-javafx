@@ -113,11 +113,11 @@ public class GameLevel3D extends Group implements Disposable {
         getChildren().add(livesCounter3D);
         getChildren().addAll(pac3D, pac3D.light());
         getChildren().addAll(ghosts3D);
-        getChildren().addAll(maze3D.house().arcadeHouse3D().swirls());
+        getChildren().addAll(maze3D.house().swirls());
         getChildren().add(maze3D.food().particleGroupsContainer());
         getChildren().addAll(maze3D.food().energizers3D().stream().map(Energizer3D::shape).toList());
         getChildren().addAll(maze3D.food().pellets3D());
-        getChildren().add(maze3D.house().arcadeHouse3D().doors()); // Note order of addition!
+        getChildren().add(maze3D.house().doors()); // Note order of addition!
         // Note: The order in which children are added to the root matters!
         // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
         getChildren().add(maze3D);
@@ -126,7 +126,7 @@ public class GameLevel3D extends Group implements Disposable {
         getChildren().add(animations.ghostLight());
 
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
-        maze3D.house().arcadeHouse3D().startSwirlAnimations();
+        maze3D.house().startAnimations();
 
         pickerLevelCompleteMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "level.complete");
     }
@@ -285,7 +285,7 @@ public class GameLevel3D extends Group implements Disposable {
         pac3D.init(level);
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
         maze3D.food().energizers3D().forEach(Energizer3D::startPumping);
-        maze3D.house().arcadeHouse3D().startSwirlAnimations();
+        maze3D.house().startAnimations();
         animations.playGhostLightAnimation();
     }
 
@@ -357,7 +357,7 @@ public class GameLevel3D extends Group implements Disposable {
         state.timer().restartSeconds(3);
         animations.stopGhostLightAnimation();
         maze3D.food().energizers3D().forEach(Energizer3D::hide);
-        maze3D.house().arcadeHouse3D().stopSwirlAnimations();
+        maze3D.house().stopAnimations();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         ui.soundManager().stopAll();
         ui.soundManager().play(SoundID.GAME_OVER);
