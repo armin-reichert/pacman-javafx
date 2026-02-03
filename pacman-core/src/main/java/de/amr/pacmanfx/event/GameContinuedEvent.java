@@ -4,4 +4,6 @@
 
 package de.amr.pacmanfx.event;
 
-public record GameContinuedEvent() implements GameEvent {}
+import de.amr.pacmanfx.model.Game;
+
+public record GameContinuedEvent(Game game) implements GameEvent {}

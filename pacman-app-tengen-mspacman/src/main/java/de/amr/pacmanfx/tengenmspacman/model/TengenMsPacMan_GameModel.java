@@ -298,7 +298,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         if (tick == 1) {
             prepareNewGame();
             buildNormalLevel(startLevelNumber);
-            publishGameEvent(new GameStartedEvent());
+            publishGameEvent(new GameStartedEvent(this));
         }
         else if (tick == TICK_SHOW_READY) {
             startLevel();
@@ -318,7 +318,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
             final GameLevel level = level();
             level.getReadyToPlay();
             level.showPacAndGhosts();
-            publishGameEvent(new GameContinuedEvent());
+            publishGameEvent(new GameContinuedEvent(this));
         } else if (tick == TICK_RESUME_HUNTING) {
             control().enterState(HUNTING);
         }

@@ -236,7 +236,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                 msPacMan.hide();
                 heart.hide();
             }
-            case 775 -> game.control().terminateCurrentGameState();
+            case 775 -> game.control().terminateGameState();
         }
     }
 

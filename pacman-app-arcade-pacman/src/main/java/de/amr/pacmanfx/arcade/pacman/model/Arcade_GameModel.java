@@ -297,7 +297,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             prepareNewGame();
             clearLevelCounter();
             buildNormalLevel(1);
-            publishGameEvent(new GameStartedEvent());
+            publishGameEvent(new GameStartedEvent(this));
         }
         else if (tick == 2) {
             startLevel();
@@ -320,7 +320,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level.showPacAndGhosts();
         }
         else if (tick == 60) {
-            publishGameEvent(new GameContinuedEvent());
+            publishGameEvent(new GameContinuedEvent(this));
         }
         else if (tick == Arcade_GameController.TICK_RESUME_HUNTING) {
             control().enterState(GameState.HUNTING);

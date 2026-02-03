@@ -67,7 +67,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     /**
      * Note: Scene is also used in Pac-Man XXL game variant where world map can have non-Arcade size!
      *
-     * @return Unscaled scene size in pixels (width, height)
+     * @return Unscaled scene size in pixels as (width, height)
      */
     @Override
     public Vector2i unscaledSize() {
@@ -125,13 +125,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinues(GameContinuedEvent e) {
-        final Game game = gameContext.currentGame();
-        game.optGameLevel().ifPresent(this::resetAnimations);
+        e.game().optGameLevel().ifPresent(this::resetActorAnimations);
     }
 
     @Override
     public void onGameStarts(GameStartedEvent e) {
-        final Game game = gameContext.currentGame();
+        final Game game = e.game();
         final boolean silent = game.optGameLevel().isPresent() && game.level().isDemoLevel()
             || game.control().state() instanceof TestState;
         if (!silent) {
@@ -143,7 +142,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public void onGameStateChange(GameStateChangeEvent e) {
         if (e.newState() == GameState.LEVEL_COMPLETE) {
             ui.soundManager().stopAll();
-            playLevelCompletedAnimation(gameContext.currentGame().level());
+            createAndPlayLevelCompletedAnimation(gameContext.currentGame().level());
         }
         else if (e.newState() == GameState.GAME_OVER) {
             ui.soundManager().stopAll();
@@ -165,7 +164,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onPacDead(PacDeadEvent e) {
         // Trigger end of game state PACMAN_DYING after dying animation has finished
-        gameContext.currentGame().control().terminateCurrentGameState();
+        gameContext.currentGame().control().terminateGameState();
     }
 
     @Override
@@ -259,7 +258,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
         if (gameState == GameState.HUNTING) {
             final Pac pac = level.pac();
             if (!pac.powerTimer().isRunning()) {
-                selectAndPlaySiren(level);
+                final int huntingPhase = level.huntingTimer().phaseIndex();
+                selectAndPlaySiren(huntingPhase);
             }
             final boolean ghostReturningToHouse = pac.isAlive()
                 && level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
@@ -273,27 +273,26 @@ public class Arcade_PlayScene2D extends GameScene2D {
         }
     }
 
-    // Siren numbers are 1, 2, 3, 4, hunting phase index = 0..7
-    // TODO: move this logic into game model as it depends on the played game variant
-    private void selectAndPlaySiren(GameLevel level) {
-        final int sirenNumber = 1 + level.huntingTimer().phaseIndex() / 2;
+    // Each (scatter, chasing) hunting phase pair uses another siren. Sirens are numbered 1, 2, 3, 4.
+    // (0, 1) -> 1, (2, 3) -> 2, (4, 5) -> 3, (6, 7) -> 4
+    private void selectAndPlaySiren(int huntingPhase) {
+        final int sirenNumber = 1 + huntingPhase / 2;
         ui.soundManager().playSiren(sirenNumber, SIREN_VOLUME);
     }
 
-    private void playLevelCompletedAnimation(GameLevel level) {
-        levelCompletedAnimation = new LevelCompletedAnimation(level,
-            () -> level.game().control().terminateCurrentGameState());
+    private void createAndPlayLevelCompletedAnimation(GameLevel level) {
+        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> level.game().control().terminateGameState());
         levelCompletedAnimation.play();
     }
 
-    private void resetAnimations(GameLevel level) {
-        level.pac().optAnimationManager().ifPresent(animationManager -> {
-            animationManager.select(Pac.AnimationID.PAC_MUNCHING);
-            animationManager.reset();
+    private void resetActorAnimations(GameLevel level) {
+        level.pac().optAnimationManager().ifPresent(pacAnimations -> {
+            pacAnimations.select(Pac.AnimationID.PAC_MUNCHING);
+            pacAnimations.reset();
         });
-        level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(animationManager -> {
-            animationManager.select(Ghost.AnimationID.GHOST_NORMAL);
-            animationManager.reset();
+        level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(ghostAnimations -> {
+            ghostAnimations.select(Ghost.AnimationID.GHOST_NORMAL);
+            ghostAnimations.reset();
         }));
     }
 }

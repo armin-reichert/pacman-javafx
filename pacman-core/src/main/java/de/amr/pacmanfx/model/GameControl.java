@@ -59,7 +59,7 @@ public interface GameControl {
             () -> Logger.error("Cannot restart in state to '{}'. State not existing.", stateID));
     }
 
-    default void terminateCurrentGameState() {
+    default void terminateGameState() {
         stateMachine().state().timer().expire();
     }
 

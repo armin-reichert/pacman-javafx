@@ -150,7 +150,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                 flyingBag.setAcceleration(Vector2f.ZERO);
             }
             case 640 -> darkness = true;
-            case 660 -> game.control().terminateCurrentGameState();
+            case 660 -> game.control().terminateGameState();
         }
 
         stork.move();
