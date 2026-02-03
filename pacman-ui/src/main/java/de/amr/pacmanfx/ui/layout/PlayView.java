@@ -85,7 +85,7 @@ public class PlayView extends StackPane implements View {
         this.ui = requireNonNull(ui);
         this.parentScene = requireNonNull(parentScene);
 
-        this.contextMenu = new GameUI_ContextMenu();
+        this.contextMenu = new GameUI_ContextMenu(ui);
         this.helpLayer = new HelpLayer(canvasDecorator);
 
         canvasDecorator.setMinScaling(0.5);
@@ -99,7 +99,6 @@ public class PlayView extends StackPane implements View {
 
         dashboard.setVisible(false);
 
-        contextMenu.setUI(ui);
         miniView.setUI(ui);
         ui.context().gameVariantNameProperty().addListener(
             (_, oldVariantName, newVariantName) -> handleGameVariantChange(oldVariantName, newVariantName));
