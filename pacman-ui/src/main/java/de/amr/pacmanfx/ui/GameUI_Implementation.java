@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.action.SimpleActionBindingsManager;
 import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.ui.sound.VoicePlayer;
+import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
@@ -72,7 +72,7 @@ public final class GameUI_Implementation implements GameUI {
     private final Scene scene = new Scene(sceneLayout);
 
     private final FlashMessageView flashMessageView = new FlashMessageView();
-    private final VoicePlayer voicePlayer = new VoicePlayer();
+    private final VoiceManager voiceManager = new VoiceManager();
 
     private final FontIcon pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
     private final StatusIconBox statusIconBox = new StatusIconBox();
@@ -400,8 +400,8 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public VoicePlayer voicePlayer() {
-        return voicePlayer;
+    public VoiceManager voicePlayer() {
+        return voiceManager;
     }
 
     // private stuff

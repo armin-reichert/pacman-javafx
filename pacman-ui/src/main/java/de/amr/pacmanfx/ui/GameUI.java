@@ -12,7 +12,7 @@ import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.ui.sound.VoicePlayer;
+import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.Translator;
@@ -224,7 +224,7 @@ public interface GameUI extends Translator {
      * <p>
      * Only one voice clip plays at a time.
      */
-    VoicePlayer voicePlayer();
+    VoiceManager voicePlayer();
 
     // ---------------------------------------------------------------------------------------------
     // Messages
