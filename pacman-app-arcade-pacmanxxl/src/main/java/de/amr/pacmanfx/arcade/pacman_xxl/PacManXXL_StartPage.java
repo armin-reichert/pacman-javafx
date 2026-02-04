@@ -78,7 +78,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                 case E -> {
                     e.consume();
                     if (ui != null) {
-                        ui.voicePlayer().stop();
+                        ui.voicePlayer().stopVoice();
                         ui.views().getStartPagesView().pauseProgressTimer();
                         ui.showEditorView();
                     }
@@ -86,7 +86,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                 case ENTER -> {
                     e.consume();
                     if (ui != null) {
-                        ui.voicePlayer().stop();
+                        ui.voicePlayer().stopVoice();
                         ui.views().getStartPagesView().pauseProgressTimer();
                         menu.startSelectedGame();
                     }
@@ -110,12 +110,12 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariant);
         }
         menu.init(ui);
-        ui.voicePlayer().play(VOICE);
+        ui.voicePlayer().playVoice(VOICE);
     }
 
     @Override
     public void onExitStartPage(GameUI ui) {
-        ui.voicePlayer().stop();
+        ui.voicePlayer().stopVoice();
         menu.stopDrawLoop();
         removeMenuBinding();
     }

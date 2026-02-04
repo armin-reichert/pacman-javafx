@@ -89,7 +89,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         game.hud().credit(true).score(true).livesCounter(false).levelCounter(true).show();
 
-        ui.voicePlayer().play(GameUI_Resources.VOICE_EXPLAIN_GAME_START);
+        ui.voicePlayer().playVoice(GameUI_Resources.VOICE_EXPLAIN_GAME_START);
 
         actionBindings.registerAllFrom(ArcadePacMan_UIConfig.GAME_START_BINDINGS); // insert coin + start game actions
         actionBindings.registerAllFrom(GameUI.SCENE_TESTS_BINDINGS); // actions for starting tests
@@ -122,7 +122,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     protected void doEnd(Game game) {
         blinking.stop();
-        ui.voicePlayer().stop();
+        ui.voicePlayer().stopVoice();
     }
 
     @Override

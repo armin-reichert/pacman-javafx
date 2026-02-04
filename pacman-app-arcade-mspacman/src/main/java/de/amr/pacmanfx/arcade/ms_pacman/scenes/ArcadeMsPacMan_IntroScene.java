@@ -73,7 +73,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
-        ui.voicePlayer().play(GameUI_Resources.VOICE_EXPLAIN_GAME_START);
+        ui.voicePlayer().playVoice(GameUI_Resources.VOICE_EXPLAIN_GAME_START);
 
         game.hud().credit(true).score(true).levelCounter(true).livesCounter(false).show();
 
@@ -105,7 +105,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     protected void doEnd(Game game) {
-        ui.voicePlayer().stop();
+        ui.voicePlayer().stopVoice();
     }
 
     @Override

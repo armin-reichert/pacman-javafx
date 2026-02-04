@@ -12,23 +12,24 @@ import static java.util.Objects.requireNonNull;
 
 public class VoiceManager {
 
-    private MediaPlayer activePlayer;
+    private MediaPlayer player;
 
-    public void play(Media voice) {
-        requireNonNull(voice);
-        if (activePlayer != null && activePlayer.getMedia().equals(voice)) {
-            Logger.warn("Voice {} already playing", voice);
+    public void playVoice(Media voiceMedia) {
+        requireNonNull(voiceMedia);
+        if (player != null && player.getMedia().equals(voiceMedia)) {
+            Logger.warn("Voice {} already playing", voiceMedia);
             return;
         }
-        activePlayer = new MediaPlayer(voice);
-        activePlayer.muteProperty().bind(GameUI.PROPERTY_MUTED);
-        activePlayer.play();
+        stopVoice();
+        player = new MediaPlayer(voiceMedia);
+        player.muteProperty().bind(GameUI.PROPERTY_MUTED);
+        player.play();
     }
 
-    public void stop() {
-        if (activePlayer != null) {
-            activePlayer.stop();
+    public void stopVoice() {
+        if (player != null) {
+            player.stop();
         }
-        activePlayer = null;
+        player = null;
     }
 }

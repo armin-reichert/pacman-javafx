@@ -26,7 +26,7 @@ public class ArcadePacMan_StartPage extends FlyerStartPage {
     @Override
     public void onEnterStartPage(GameUI ui) {
         flyer.selectPage(0);
-        ui.voicePlayer().play(VOICE);
+        ui.voicePlayer().playVoice(VOICE);
         ui.context().gameVariantNameProperty().set(GameVariant.ARCADE_PACMAN.name());
     }
 }
