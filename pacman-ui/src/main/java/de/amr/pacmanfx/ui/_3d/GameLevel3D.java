@@ -405,7 +405,9 @@ public class GameLevel3D extends Group implements Disposable {
             setDrawModeUnder(maze3D, node -> node instanceof Shape3D && maze3D.food().pellets3D().contains(node), newDrawMode);
             setDrawModeUnder(pac3D, includeAll, newDrawMode);
             setDrawModeUnder(livesCounter3D, includeAll, newDrawMode);
-            ghosts3D.forEach(ghost3D -> setDrawModeUnder(ghost3D, includeAll, newDrawMode));
+            if (ghosts3D != null) {
+                ghosts3D.forEach(ghost3D -> setDrawModeUnder(ghost3D, includeAll, newDrawMode));
+            }
         }
         catch (Exception x) {
             Logger.error(x, "Could not change 3D draw mode");
