@@ -24,11 +24,11 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
 
     private void addEntries(GameUI ui) {
         final ActionBindingsManager actionBindingsManager = ui.views().currentView().actionBindingsManager();
-        if (actionBindingsManager.hasNoBindings()) {
+        if (actionBindingsManager.isEmpty()) {
             addRow(createLabel(NO_INFO, false));
         }
         else {
-            actionBindingsManager.actionForKeyCombination().entrySet().stream()
+            actionBindingsManager.actionRegisteredForKeyCombination().entrySet().stream()
                 .sorted(Comparator.comparing(e -> e.getKey().getDisplayText()))
                 .forEach(entry -> {
                     final KeyCombination keyCombination = entry.getKey();

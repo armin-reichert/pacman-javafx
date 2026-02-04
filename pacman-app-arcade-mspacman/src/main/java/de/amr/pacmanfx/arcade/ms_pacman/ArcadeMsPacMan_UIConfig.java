@@ -74,7 +74,8 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, GameSceneConfig, Resou
 
     @Override
     public void dispose() {
-        UIConfig.super.dispose();
+        Logger.info("Dispose UI configuration {}:", getClass().getSimpleName());
+        disposeAssets();
         Logger.info("Dispose {} game scenes", scenesByID.size());
         scenesByID.values().forEach(GameScene::dispose);
         scenesByID.clear();

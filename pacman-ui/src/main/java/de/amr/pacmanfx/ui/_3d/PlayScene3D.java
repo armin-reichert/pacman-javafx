@@ -24,7 +24,6 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.action.ActionBinding;
-import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -158,7 +157,7 @@ public class PlayScene3D implements GameScene {
         }
     };
 
-    protected final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
+    protected ActionBindingsManager actionBindings = ActionBindingsManager.NO_BINDINGS;
 
     /** Key bindings for 3D play-scene navigation and rendering options. */
     protected final Set<ActionBinding> _3D_BINDINGS = Set.of(

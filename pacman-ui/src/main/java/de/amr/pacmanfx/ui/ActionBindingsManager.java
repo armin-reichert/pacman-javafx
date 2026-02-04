@@ -30,71 +30,28 @@ import java.util.Set;
  *
  * <h2>Lifecycle</h2>
  * <ul>
- *   <li>{@link #activateBindings(Keyboard)} registers all known bindings with the keyboard.</li>
- *   <li>{@link #removeAllBindings(Keyboard)} unregisters them again.</li>
+ *   <li>{@link #addAll(Keyboard)} registers all known bindings with the keyboard.</li>
+ *   <li>{@link #removeAll(Keyboard)} unregisters them again.</li>
  *   <li>{@link #dispose()} frees any internal resources (if needed).</li>
  * </ul>
  *
  * <h2>Null Object</h2>
- * {@link #EMPTY} provides a safe no-op implementation that never matches actions
+ * {@link #NO_BINDINGS} provides a safe no-op implementation that never matches actions
  * and performs no registration. This avoids null checks in client code.
  */
 public interface ActionBindingsManager extends Disposable {
 
     /**
-     * Null-object implementation of {@link ActionBindingsManager}.
-     * <p>
-     * This implementation performs no action, holds no bindings, and never matches input.
-     * It is useful when a subsystem expects a bindings manager but no actual bindings
-     * should be active.
-     */
-    class EmptyBindingsManager implements ActionBindingsManager {
-
-        @Override
-        public void dispose() {}
-
-        @Override
-        public Map<KeyCombination, GameAction> actionForKeyCombination() {
-            return Map.of();
-        }
-
-        @Override
-        public boolean hasNoBindings() {
-            return true;
-        }
-
-        @Override
-        public void activateBindings(Keyboard keyboard) {}
-
-        @Override
-        public void removeAllBindings(Keyboard keyboard) {}
-
-        @Override
-        public void registerAnyBindingFrom(GameAction action, Set<ActionBinding> actionBindings) {}
-
-        @Override
-        public void triggerActionByKeyCombination(GameAction action, KeyCombination combination) {}
-
-        @Override
-        public void registerAllBindingsFrom(Set<ActionBinding> actionBindings) {}
-
-        @Override
-        public Optional<GameAction> matchingAction(Keyboard keyboard) {
-            return Optional.empty();
-        }
-    }
-
-    /**
      * The global null-object instance.
      */
-    ActionBindingsManager EMPTY = new EmptyBindingsManager();
+    ActionBindingsManager NO_BINDINGS = new EmptyBindingsManager();
 
     /**
      * Returns an immutable view of all key combinations currently bound to actions.
      *
      * @return a map from {@link KeyCombination} to {@link GameAction}
      */
-    Map<KeyCombination, GameAction> actionForKeyCombination();
+    Map<KeyCombination, GameAction> actionRegisteredForKeyCombination();
 
     /**
      * Determines whether the current keyboard state matches any registered action.
@@ -105,24 +62,24 @@ public interface ActionBindingsManager extends Disposable {
      * @param keyboard the keyboard to inspect
      * @return the matching action, or an empty {@code Optional} if none match
      */
-    Optional<GameAction> matchingAction(Keyboard keyboard);
+    Optional<GameAction> findMatchingAction(Keyboard keyboard);
 
     /**
      * Indicates whether this manager currently holds no bindings.
      *
      * @return {@code true} if no key combinations are registered
      */
-    boolean hasNoBindings();
+    boolean isEmpty();
 
     /**
      * Activates all known bindings on the given keyboard.
      * <p>
      * This typically means registering listeners or updating internal keyboard state
-     * so that {@link #matchingAction(Keyboard)} can resolve actions.
+     * so that {@link #findMatchingAction(Keyboard)} can resolve actions.
      *
      * @param keyboard the keyboard on which to activate bindings
      */
-    void activateBindings(Keyboard keyboard);
+    void addAll(Keyboard keyboard);
 
     /**
      * Removes all bindings previously activated on the given keyboard.
@@ -131,7 +88,7 @@ public interface ActionBindingsManager extends Disposable {
      *
      * @param keyboard the keyboard from which to remove bindings
      */
-    void removeAllBindings(Keyboard keyboard);
+    void removeAll(Keyboard keyboard);
 
     /**
      * Assigns a new key combination to the given action, replacing any previous binding.
@@ -139,7 +96,7 @@ public interface ActionBindingsManager extends Disposable {
      * @param action      the action to rebind
      * @param combination the new key combination
      */
-    void triggerActionByKeyCombination(GameAction action, KeyCombination combination);
+    void registerByKeyCombination(GameAction action, KeyCombination combination);
 
     /**
      * Registers exactly one binding for the given action from the provided set.
@@ -150,7 +107,7 @@ public interface ActionBindingsManager extends Disposable {
      * @param action         the action to bind
      * @param actionBindings the candidate bindings
      */
-    void registerAnyBindingFrom(GameAction action, Set<ActionBinding> actionBindings);
+    void registerAnyFrom(GameAction action, Set<ActionBinding> actionBindings);
 
     /**
      * Registers all provided bindings.
@@ -160,5 +117,5 @@ public interface ActionBindingsManager extends Disposable {
      *
      * @param actionBindings the bindings to register
      */
-    void registerAllBindingsFrom(Set<ActionBinding> actionBindings);
+    void registerAllFrom(Set<ActionBinding> actionBindings);
 }

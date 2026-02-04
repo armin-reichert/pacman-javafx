@@ -231,14 +231,14 @@ public class Arcade_PlayScene2D extends GameScene2D {
         if (demoLevel) {
             game.hud().credit(true).livesCounter(false).levelCounter(true).show();
             ui.soundManager().setEnabled(false);
-            actionBindings.registerAllBindingsFrom(ArcadePacMan_UIConfig.DEFAULT_BINDINGS); // insert coin + start game
+            actionBindings.registerAllFrom(ArcadePacMan_UIConfig.GAME_START_BINDINGS); // insert coin + start game
         } else {
             game.hud().credit(false).livesCounter(true).levelCounter(true).show();
             ui.soundManager().setEnabled(true);
-            actionBindings.registerAllBindingsFrom(GameUI.STEERING_BINDINGS);
-            actionBindings.registerAllBindingsFrom(GameUI.CHEAT_BINDINGS);
+            actionBindings.registerAllFrom(GameUI.STEERING_BINDINGS);
+            actionBindings.registerAllFrom(GameUI.CHEAT_BINDINGS);
         }
-        actionBindings.activateBindings(GameUI.KEYBOARD);
+        actionBindings.addAll(GameUI.KEYBOARD);
         Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 

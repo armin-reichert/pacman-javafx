@@ -12,11 +12,11 @@ import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
-public class DefaultActionBindingsManager implements ActionBindingsManager {
+public class SimpleActionBindingsManager implements ActionBindingsManager {
 
     private final Map<KeyCombination, GameAction> actionForKeyCombination = new HashMap<>();
 
-    public DefaultActionBindingsManager() {}
+    public SimpleActionBindingsManager() {}
 
     @Override
     public void dispose() {
@@ -24,17 +24,17 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public Map<KeyCombination, GameAction> actionForKeyCombination() {
+    public Map<KeyCombination, GameAction> actionRegisteredForKeyCombination() {
         return actionForKeyCombination;
     }
 
     @Override
-    public boolean hasNoBindings() {
+    public boolean isEmpty() {
         return actionForKeyCombination.isEmpty();
     }
 
     @Override
-    public void activateBindings(Keyboard keyboard) {
+    public void addAll(Keyboard keyboard) {
         for (KeyCombination combination : actionForKeyCombination.keySet()) {
             keyboard.setBinding(combination, this);
         }
@@ -46,7 +46,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void removeAllBindings(Keyboard keyboard) {
+    public void removeAll(Keyboard keyboard) {
         for (KeyCombination combination : actionForKeyCombination.keySet()) {
             keyboard.removeBinding(combination, this);
         }
@@ -54,14 +54,14 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void triggerActionByKeyCombination(GameAction action, KeyCombination combination) {
+    public void registerByKeyCombination(GameAction action, KeyCombination combination) {
         requireNonNull(action);
         requireNonNull(combination);
         actionForKeyCombination.put(combination, action);
     }
 
     @Override
-    public void registerAnyBindingFrom(GameAction gameAction, Set<ActionBinding> actionBindings) {
+    public void registerAnyFrom(GameAction gameAction, Set<ActionBinding> actionBindings) {
         requireNonNull(gameAction);
         requireNonNull(actionBindings);
         actionBindings.stream()
@@ -71,14 +71,14 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void registerAllBindingsFrom(Set<ActionBinding> actionBindings) {
+    public void registerAllFrom(Set<ActionBinding> actionBindings) {
         for (ActionBinding binding : actionBindings) {
             registerBinding(binding);
         }
     }
 
     @Override
-    public Optional<GameAction> matchingAction(Keyboard keyboard) {
+    public Optional<GameAction> findMatchingAction(Keyboard keyboard) {
         return actionForKeyCombination.keySet().stream()
             .filter(keyboard::isMatching)
             .map(actionForKeyCombination::get)

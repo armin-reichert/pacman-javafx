@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
-import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
+import de.amr.pacmanfx.ui.action.SimpleActionBindingsManager;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.CanvasDecorationPane;
@@ -67,7 +67,7 @@ public class PlayView extends StackPane implements View {
 
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
-    private final ActionBindingsManager actionBindingsManager = new DefaultActionBindingsManager();
+    private final ActionBindingsManager actionBindingsManager = new SimpleActionBindingsManager();
     private final GameUI ui;
     private final Scene parentScene;
     private final Dashboard dashboard = new Dashboard(DASHBOARD_STYLE);
@@ -167,7 +167,7 @@ public class PlayView extends StackPane implements View {
 
     @Override
     public void onKeyboardInput(GameUI ui) {
-        actionBindingsManager.matchingAction(GameUI.KEYBOARD).ifPresentOrElse(
+        actionBindingsManager.findMatchingAction(GameUI.KEYBOARD).ifPresentOrElse(
             action -> action.execute(ui),
             () -> optGameScene().ifPresent(GameScene::onKeyboardInput)
         );
@@ -361,26 +361,26 @@ public class PlayView extends StackPane implements View {
     }
 
     private void configureActionBindings() {
-        actionBindingsManager.registerAnyBindingFrom(ACTION_BOOT_SHOW_PLAY_VIEW, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_QUIT_GAME_SCENE, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_SHOW_HELP, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_SIMULATION_SLOWER, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_SIMULATION_SLOWEST, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_SIMULATION_FASTER, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_SIMULATION_FASTEST, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_SIMULATION_RESET, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_SIMULATION_ONE_STEP, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_SIMULATION_TEN_STEPS, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_TOGGLE_AUTOPILOT, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_TOGGLE_DEBUG_INFO, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_TOGGLE_MUTED, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_TOGGLE_PAUSED, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_TOGGLE_COLLISION_STRATEGY, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_TOGGLE_DASHBOARD, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_TOGGLE_IMMUNITY, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFrom(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_BOOT_SHOW_PLAY_VIEW, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_QUIT_GAME_SCENE, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_SHOW_HELP, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_SIMULATION_SLOWER, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_SIMULATION_SLOWEST, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_SIMULATION_FASTER, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_SIMULATION_FASTEST, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_SIMULATION_RESET, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_SIMULATION_ONE_STEP, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_SIMULATION_TEN_STEPS, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_AUTOPILOT, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_DEBUG_INFO, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_MUTED, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_PAUSED, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_COLLISION_STRATEGY, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_DASHBOARD, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_IMMUNITY, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GameUI.COMMON_BINDINGS);
     }
 
     private void handleContextMenuRequest(ContextMenuEvent event) {

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
+import de.amr.pacmanfx.ui.action.SimpleActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import javafx.geometry.Insets;
@@ -54,7 +54,7 @@ public class StartPagesCarousel extends Carousel implements View {
     };
 
     private final List<StartPage> pages = new ArrayList<>();
-    private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
+    private final ActionBindingsManager actionBindings = new SimpleActionBindingsManager();
 
     private final GameUI ui;
 
@@ -78,11 +78,11 @@ public class StartPagesCarousel extends Carousel implements View {
 
     @Override
     public void onEnter() {
-        actionBindings.triggerActionByKeyCombination(actionShowPrevPage, bare(KeyCode.LEFT));
-        actionBindings.triggerActionByKeyCombination(actionShowNextPage, bare(KeyCode.RIGHT));
-        actionBindings.triggerActionByKeyCombination(CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
-        actionBindings.triggerActionByKeyCombination(CommonGameActions.ACTION_TOGGLE_PAUSED, bare(KeyCode.P));
-        actionBindings.activateBindings(GameUI.KEYBOARD);
+        actionBindings.registerByKeyCombination(actionShowPrevPage, bare(KeyCode.LEFT));
+        actionBindings.registerByKeyCombination(actionShowNextPage, bare(KeyCode.RIGHT));
+        actionBindings.registerByKeyCombination(CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
+        actionBindings.registerByKeyCombination(CommonGameActions.ACTION_TOGGLE_PAUSED, bare(KeyCode.P));
+        actionBindings.addAll(GameUI.KEYBOARD);
         restartProgressTimer();
         currentStartPage().ifPresent(page -> page.layoutRoot().requestFocus());
     }
@@ -90,7 +90,7 @@ public class StartPagesCarousel extends Carousel implements View {
     @Override
     public void onExit() {
         pauseProgressTimer();
-        actionBindings.removeAllBindings(GameUI.KEYBOARD);
+        actionBindings.removeAll(GameUI.KEYBOARD);
         currentStartPage().ifPresent(startPage -> startPage.onExitStartPage(ui));
     }
 

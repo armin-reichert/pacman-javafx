@@ -89,7 +89,7 @@ public class ViewManager {
             final View oldView = viewMap.get(oldID);
             if (oldView != null) {
                 oldView.onExit();
-                oldView.actionBindingsManager().removeAllBindings(GameUI.KEYBOARD);
+                oldView.actionBindingsManager().removeAll(GameUI.KEYBOARD);
             }
         }
 
@@ -105,7 +105,7 @@ public class ViewManager {
         }
 
         layoutPane.getChildren().set(RESERVED_VIEW_INDEX_IN_LAYOUT, newView.root());
-        newView.actionBindingsManager().activateBindings(GameUI.KEYBOARD);
+        newView.actionBindingsManager().addAll(GameUI.KEYBOARD);
         newView.onEnter();
         flashMessageView.clear();
         currentView.set(newView);

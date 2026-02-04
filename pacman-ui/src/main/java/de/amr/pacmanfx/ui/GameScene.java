@@ -62,7 +62,7 @@ public interface GameScene extends GameEventListener, Disposable {
      * defined in the action bindings is executed.
      */
     default void onKeyboardInput() {
-        actionBindings().matchingAction(GameUI.KEYBOARD).ifPresent(action -> action.executeIfEnabled(ui()));
+        actionBindings().findMatchingAction(GameUI.KEYBOARD).ifPresent(action -> action.executeIfEnabled(ui()));
     }
 
     /**

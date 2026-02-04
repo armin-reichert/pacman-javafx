@@ -77,8 +77,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
         game.hud().credit(true).score(true).levelCounter(true).livesCounter(false).show();
 
-        actionBindings.registerAllBindingsFrom(ArcadePacMan_UIConfig.DEFAULT_BINDINGS);
-        actionBindings.registerAllBindingsFrom(GameUI.SCENE_TESTS_BINDINGS);
+        actionBindings.registerAllFrom(ArcadePacMan_UIConfig.GAME_START_BINDINGS);
+        actionBindings.registerAllFrom(GameUI.SCENE_TESTS_BINDINGS);
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);

@@ -34,9 +34,7 @@ public interface UIConfig extends Disposable {
 
     void init(GameUI ui);
 
-    @Override
-    default void dispose() {
-        Logger.info("Dispose UI configuration {}:", getClass().getSimpleName());
+    default void disposeAssets() {
         Logger.info("Dispose {} assets", assets().numAssets());
         assets().dispose();
     }

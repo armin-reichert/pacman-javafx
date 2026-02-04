@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
+import de.amr.pacmanfx.ui.action.SimpleActionBindingsManager;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -36,7 +36,7 @@ public abstract class GameScene2D implements GameScene {
     protected Canvas canvas;
 
     protected GameScene2D() {
-        actionBindings = new DefaultActionBindingsManager();
+        actionBindings = new SimpleActionBindingsManager();
     }
 
     @Override
@@ -89,7 +89,7 @@ public abstract class GameScene2D implements GameScene {
     @Override
     public final void init(Game game) {
         doInit(game);
-        actionBindings.activateBindings(GameUI.KEYBOARD);
+        actionBindings.addAll(GameUI.KEYBOARD);
         Logger.info("2D scene {} initialized", getClass().getSimpleName());
     }
 

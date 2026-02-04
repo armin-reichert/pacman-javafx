@@ -51,12 +51,7 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_UIConfig implements UIConfig, GameSceneConfig, ResourceManager {
 
-    @Override
-    public Class<?> resourceRootClass() {
-        return ArcadePacMan_UIConfig.class;
-    }
-
-    public static final Set<ActionBinding> DEFAULT_BINDINGS = Set.of(
+    public static final Set<ActionBinding> GAME_START_BINDINGS = Set.of(
         new ActionBinding(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
         new ActionBinding(ArcadeActions.ACTION_START_GAME,  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
     );
@@ -73,7 +68,11 @@ public class ArcadePacMan_UIConfig implements UIConfig, GameSceneConfig, Resourc
     private final AssetMap assets = new AssetMap();
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
 
-    public ArcadePacMan_UIConfig() {
+    public ArcadePacMan_UIConfig() {}
+
+    @Override
+    public Class<?> resourceRootClass() {
+        return ArcadePacMan_UIConfig.class;
     }
 
     @Override
@@ -85,7 +84,8 @@ public class ArcadePacMan_UIConfig implements UIConfig, GameSceneConfig, Resourc
 
     @Override
     public void dispose() {
-        UIConfig.super.dispose();
+        Logger.info("Dispose UI configuration {}:", getClass().getSimpleName());
+        disposeAssets();
         Logger.info("Dispose {} game scenes", scenesByID.size());
         scenesByID.values().forEach(GameScene::dispose);
         scenesByID.clear();

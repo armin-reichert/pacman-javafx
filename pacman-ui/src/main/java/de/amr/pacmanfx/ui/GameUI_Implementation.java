@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
+import de.amr.pacmanfx.ui.action.SimpleActionBindingsManager;
 import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -63,7 +63,7 @@ public final class GameUI_Implementation implements GameUI {
     private final DirectoryWatchdog customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
     private final GlobalPreferencesManager preferencesManager = new GlobalPreferencesManager();
     private final UIConfigManager uiConfigManager = new UIConfigManager();
-    private final DefaultActionBindingsManager globalActionBindings = new DefaultActionBindingsManager();
+    private final SimpleActionBindingsManager globalActionBindings = new SimpleActionBindingsManager();
     private final ViewManager viewManager;
     private final SoundManager soundManager = new SoundManager();
 
@@ -173,10 +173,10 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void initGlobalActionBindings() {
-        globalActionBindings.registerAnyBindingFrom(CommonGameActions.ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
-        globalActionBindings.registerAnyBindingFrom(CommonGameActions.ACTION_OPEN_EDITOR,      GameUI.COMMON_BINDINGS);
-        globalActionBindings.registerAnyBindingFrom(CommonGameActions.ACTION_TOGGLE_MUTED,     GameUI.COMMON_BINDINGS);
-        globalActionBindings.activateBindings(GameUI.KEYBOARD);
+        globalActionBindings.registerAnyFrom(CommonGameActions.ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
+        globalActionBindings.registerAnyFrom(CommonGameActions.ACTION_OPEN_EDITOR,      GameUI.COMMON_BINDINGS);
+        globalActionBindings.registerAnyFrom(CommonGameActions.ACTION_TOGGLE_MUTED,     GameUI.COMMON_BINDINGS);
+        globalActionBindings.addAll(GameUI.KEYBOARD);
     }
 
     private void initScene() {
@@ -186,7 +186,7 @@ public final class GameUI_Implementation implements GameUI {
         scene.addEventFilter(KeyEvent.KEY_RELEASED, KEYBOARD::onKeyReleased);
 
         // If a global action is bound to the key press, execute it; otherwise let the current view handle it.
-        scene.setOnKeyPressed(e -> globalActionBindings.matchingAction(KEYBOARD).ifPresentOrElse(action ->
+        scene.setOnKeyPressed(e -> globalActionBindings.findMatchingAction(KEYBOARD).ifPresentOrElse(action ->
             {
                 boolean executed = action.executeIfEnabled(this);
                 if (executed) e.consume();

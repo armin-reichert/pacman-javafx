@@ -58,7 +58,7 @@ public interface View extends GameEventListener {
      * @param ui the global game UI façade
      */
     default void onKeyboardInput(GameUI ui) {
-        actionBindingsManager().matchingAction(GameUI.KEYBOARD)
+        actionBindingsManager().findMatchingAction(GameUI.KEYBOARD)
             .ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
     }
 

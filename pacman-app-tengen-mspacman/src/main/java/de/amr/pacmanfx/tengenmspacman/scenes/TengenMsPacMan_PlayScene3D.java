@@ -13,17 +13,16 @@ import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Re
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
+import de.amr.pacmanfx.ui.action.SimpleActionBindingsManager;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_PAC_BOOSTER;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_FLOOR_COLOR;
-import static de.amr.pacmanfx.ui.input.Keyboard.control;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man.
@@ -78,19 +77,19 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void replaceActionBindings(GameLevel level) {
-        actionBindings.removeAllBindings(GameUI.KEYBOARD);
+        actionBindings = new SimpleActionBindingsManager();
 
-        actionBindings.registerAllBindingsFrom(_3D_BINDINGS);
+        actionBindings.registerAllFrom(_3D_BINDINGS);
         if (level.isDemoLevel()) {
             // In demo level, allow going back to options screen
-            actionBindings.registerAnyBindingFrom(ACTION_QUIT_DEMO_LEVEL, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
+            actionBindings.registerAnyFrom(ACTION_QUIT_DEMO_LEVEL, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
         } else {
-            actionBindings.registerAllBindingsFrom(TengenMsPacMan_UIConfig.STEERING_BINDINGS);
-            actionBindings.registerAnyBindingFrom(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
-            actionBindings.registerAllBindingsFrom(GameUI.CHEAT_BINDINGS);
+            actionBindings.registerAllFrom(TengenMsPacMan_UIConfig.STEERING_BINDINGS);
+            actionBindings.registerAnyFrom(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
+            actionBindings.registerAllFrom(GameUI.CHEAT_BINDINGS);
         }
 
-        actionBindings.activateBindings(GameUI.KEYBOARD);
+        actionBindings.addAll(GameUI.KEYBOARD);
     }
 
     @Override
