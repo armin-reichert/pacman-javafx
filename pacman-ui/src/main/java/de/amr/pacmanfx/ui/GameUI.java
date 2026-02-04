@@ -96,13 +96,6 @@ public interface GameUI extends Translator {
         new ActionBinding(TestActions.ACTION_MEDIUM_LEVEL_TEST,    alt_shift(KeyCode.T))
     );
 
-    /** Key bindings for 3D play-scene navigation and rendering options. */
-    Set<ActionBinding> PLAY_3D_BINDINGS = Set.of(
-        new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,             alt(KeyCode.LEFT)),
-        new ActionBinding(ACTION_PERSPECTIVE_NEXT,                 alt(KeyCode.RIGHT)),
-        new ActionBinding(ACTION_TOGGLE_DRAW_MODE,                 alt(KeyCode.W))
-    );
-
     /** Common global key bindings used across all views/scenes. */
     Set<ActionBinding> COMMON_BINDINGS = Set.of(
         new ActionBinding(ACTION_BOOT_SHOW_PLAY_VIEW,              bare(KeyCode.F3)),

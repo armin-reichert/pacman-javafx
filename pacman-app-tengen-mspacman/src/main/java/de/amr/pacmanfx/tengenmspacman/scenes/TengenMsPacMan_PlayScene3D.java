@@ -77,9 +77,10 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     @Override
-    protected void setActionBindings(GameLevel level) {
+    protected void replaceActionBindings(GameLevel level) {
         actionBindings.removeAllBindings(GameUI.KEYBOARD);
-        actionBindings.registerAllBindingsFrom(GameUI.PLAY_3D_BINDINGS);
+
+        actionBindings.registerAllBindingsFrom(_3D_BINDINGS);
         if (level.isDemoLevel()) {
             // In demo level, allow going back to options screen
             actionBindings.registerAnyBindingFrom(ACTION_QUIT_DEMO_LEVEL, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
@@ -88,8 +89,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             actionBindings.registerAnyBindingFrom(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
             actionBindings.registerAllBindingsFrom(GameUI.CHEAT_BINDINGS);
         }
-        actionBindings.triggerActionByKeyCombination(actionDroneClimb, control(KeyCode.MINUS));
-        actionBindings.triggerActionByKeyCombination(actionDroneDescent, control(KeyCode.PLUS));
+
         actionBindings.activateBindings(GameUI.KEYBOARD);
     }
 

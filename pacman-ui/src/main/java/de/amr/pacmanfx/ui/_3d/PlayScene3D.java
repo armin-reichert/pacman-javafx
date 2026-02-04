@@ -5,6 +5,7 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.*;
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -22,6 +23,7 @@ import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
+import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
@@ -44,30 +46,29 @@ import javafx.scene.SubScene;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
+import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
+import static de.amr.pacmanfx.ui.input.Keyboard.alt;
+import static de.amr.pacmanfx.ui.input.Keyboard.control;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.doNow;
 import static java.util.Objects.requireNonNull;
 
 /**
  * Common 3D play scene base class for all game variants.
  */
-public abstract class PlayScene3D implements GameScene {
+public class PlayScene3D implements GameScene {
 
     private static final float FADE_IN_SECONDS = 3;
 
@@ -79,6 +80,51 @@ public abstract class PlayScene3D implements GameScene {
 
     //TODO fix sound files
     private static final float SIREN_VOLUME = 0.33f;
+
+    public static class PlaySceneContextMenu extends GameUI_ContextMenu implements Disposable {
+
+        private final ToggleGroup perspectivesGroup = new ToggleGroup();
+
+        private final ChangeListener<PerspectiveID> perspectiveListener = (_, _, perspectiveID) -> {
+            for (Toggle toggle : perspectivesGroup.getToggles()) {
+                if (Objects.equals(toggle.getUserData(), perspectiveID)) {
+                    perspectivesGroup.selectToggle(toggle);
+                    break;
+                }
+            }
+        };
+
+        public PlaySceneContextMenu(GameUI ui) {
+            super(ui);
+            final Game game = ui.context().currentGame();
+            addLocalizedTitleItem("scene_display");
+            addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
+            addLocalizedCheckBox(GameUI.PROPERTY_MINI_VIEW_ON, "pip");
+            addLocalizedTitleItem("select_perspective");
+            for (PerspectiveID id : PerspectiveID.values()) {
+                final RadioMenuItem item = addLocalizedRadioButton("perspective_id_" + id.name());
+                item.setUserData(id);
+                item.setToggleGroup(perspectivesGroup);
+                if (id == GameUI.PROPERTY_3D_PERSPECTIVE_ID.get())  {
+                    item.setSelected(true);
+                }
+                item.setOnAction(_ -> GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(id));
+            }
+            addLocalizedTitleItem("pacman");
+            addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot");
+            addLocalizedCheckBox(game.immuneProperty(), "immunity");
+            addSeparator();
+            addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
+            addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
+
+            GameUI.PROPERTY_3D_PERSPECTIVE_ID.addListener(perspectiveListener);
+        }
+
+        @Override
+        public void dispose() {
+            GameUI.PROPERTY_3D_PERSPECTIVE_ID.removeListener(perspectiveListener);
+        }
+    }
 
     private final Map<PerspectiveID, Perspective> perspectivesByID = new EnumMap<>(PerspectiveID.class);
 
@@ -114,6 +160,15 @@ public abstract class PlayScene3D implements GameScene {
 
     protected final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
 
+    /** Key bindings for 3D play-scene navigation and rendering options. */
+    protected final Set<ActionBinding> _3D_BINDINGS = Set.of(
+        new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT)),
+        new ActionBinding(ACTION_PERSPECTIVE_NEXT,     alt(KeyCode.RIGHT)),
+        new ActionBinding(actionDroneClimb,            control(KeyCode.MINUS)),
+        new ActionBinding(actionDroneDescent,          control(KeyCode.PLUS)),
+        new ActionBinding(ACTION_TOGGLE_DRAW_MODE,     alt(KeyCode.W))
+    );
+
     protected final SubScene subScene;
     protected final Group subSceneRoot = new Group();
     protected final Group level3DParent = new Group();
@@ -125,8 +180,7 @@ public abstract class PlayScene3D implements GameScene {
     protected Scores3D scores3D;
     protected RandomTextPicker<String> pickerGameOverMessages;
 
-    // context menu radio button group
-    private final ToggleGroup perspectivesGroup = new ToggleGroup();
+    protected PlaySceneContextMenu contextMenu;
 
     public PlayScene3D() {
         // initial size is irrelevant (size gets bound to parent scene size eventually)
@@ -142,7 +196,7 @@ public abstract class PlayScene3D implements GameScene {
         createPerspectives();
     }
 
-    protected abstract void setActionBindings(GameLevel gameLevel);
+    protected void replaceActionBindings(GameLevel gameLevel) {}
 
     public void setContext(GameContext context) {
         this.context = requireNonNull(context);
@@ -190,40 +244,8 @@ public abstract class PlayScene3D implements GameScene {
 
     @Override
     public Optional<GameUI_ContextMenu> supplyContextMenu(Game game) {
-        final var menu = new GameUI_ContextMenu(ui);
-        menu.addLocalizedTitleItem("scene_display");
-        menu.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
-        menu.addLocalizedCheckBox(GameUI.PROPERTY_MINI_VIEW_ON, "pip");
-        menu.addLocalizedTitleItem("select_perspective");
-        addPerspectiveRadioItems(menu);
-        menu.addLocalizedTitleItem("pacman");
-        menu.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot");
-        menu.addLocalizedCheckBox(game.immuneProperty(), "immunity");
-        menu.addSeparator();
-        menu.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
-        menu.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
-        return Optional.of(menu);
-    }
-
-    private final ChangeListener<PerspectiveID> perspectiveIDChangeListener = (_, _, newID) -> {
-        for (Toggle toggle : perspectivesGroup.getToggles()) {
-            if (Objects.equals(toggle.getUserData(), newID)) {
-                perspectivesGroup.selectToggle(toggle);
-                break;
-            }
-        }
-    };
-
-    protected void addPerspectiveRadioItems(GameUI_ContextMenu contextMenu) {
-        for (PerspectiveID id : PerspectiveID.values()) {
-            final RadioMenuItem item = contextMenu.addLocalizedRadioButton("perspective_id_" + id.name());
-            item.setUserData(id);
-            item.setToggleGroup(perspectivesGroup);
-            if (id == GameUI.PROPERTY_3D_PERSPECTIVE_ID.get())  {
-                item.setSelected(true);
-            }
-            item.setOnAction(_ -> GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(id));
-        }
+        contextMenu = new PlaySceneContextMenu(ui);
+        return Optional.of(contextMenu);
     }
 
     @Override
@@ -238,7 +260,6 @@ public abstract class PlayScene3D implements GameScene {
     @Override
     public void init(Game game) {
         game.hud().score(true).show();
-        GameUI.PROPERTY_3D_PERSPECTIVE_ID.addListener(perspectiveIDChangeListener);
         perspectiveIDProperty().bind(GameUI.PROPERTY_3D_PERSPECTIVE_ID);
     }
 
@@ -250,7 +271,9 @@ public abstract class PlayScene3D implements GameScene {
             gameLevel3D = null;
         }
         level3DParent.getChildren().clear();
-        GameUI.PROPERTY_3D_PERSPECTIVE_ID.removeListener(perspectiveIDChangeListener);
+        if (contextMenu != null) {
+            contextMenu.dispose();
+        }
         perspectiveIDProperty().unbind();
     }
 
@@ -320,7 +343,7 @@ public abstract class PlayScene3D implements GameScene {
 
         gameLevel3D.updateLevelCounter3D();
         updateHUD(game);
-        setActionBindings(level);
+        replaceActionBindings(level);
         playSubSceneFadingInAnimation();
     }
 
@@ -456,7 +479,7 @@ public abstract class PlayScene3D implements GameScene {
         }
 
         gameLevel3D.updateLevelCounter3D();
-        setActionBindings(level);
+        replaceActionBindings(level);
         playSubSceneFadingInAnimation();
     }
 
