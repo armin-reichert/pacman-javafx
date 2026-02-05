@@ -26,14 +26,15 @@ import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.animation.AnimationSupport;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
-import de.amr.pacmanfx.uilib.assets.Translator;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.Scores3D;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
-import javafx.animation.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -60,7 +61,7 @@ import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
-import static de.amr.pacmanfx.uilib.animation.AnimationSupport.doNow;
+import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSecThen;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -68,12 +69,14 @@ import static java.util.Objects.requireNonNull;
  */
 public class PlayScene3D implements GameScene {
 
-    private static final float FADE_IN_SECONDS = 3;
-
     // Colors for fade effect
     private static final Color SCENE_FILL_DARK = Color.BLACK;
     private static final Color SCENE_FILL_BRIGHT = Color.TRANSPARENT;
 
+    private static final String READY_MESSAGE_TEXT = "READY!";
+    private static final String TEST_MESSAGE_TEXT = "LEVEL %d (TEST)";
+
+    private static final float SCENE_FADE_IN_SECONDS = 3;
     private static final float READY_MESSAGE_DISPLAY_SECONDS = 2.5f;
 
     //TODO fix sound files
@@ -282,7 +285,7 @@ public class PlayScene3D implements GameScene {
             return;
         }
         gameLevel3D.update();
-        updateCamera();
+        updatePerspective();
         updateHUD(game);
         ui.soundManager().setEnabled(!game.level().isDemoLevel());
         updateSound(game.level());
@@ -385,7 +388,7 @@ public class PlayScene3D implements GameScene {
         if (newState instanceof TestState) {
             game.optGameLevel().ifPresent(level -> {
                 replaceGameLevel3D(level);
-                showLevelTestMessage(level);
+                showTestMessage(level.worldMap(), level.number());
                 GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
             });
         }
@@ -424,7 +427,7 @@ public class PlayScene3D implements GameScene {
     public void onGameContinues(GameContinuedEvent event) {
         final Game game = gameContext().currentGame();
         if (gameLevel3D != null) {
-            game.optGameLevel().ifPresent(this::showReadyMessage);
+            game.optGameLevel().map(GameLevel::worldMap).ifPresent(this::showReadyMessage);
         }
     }
 
@@ -462,11 +465,11 @@ public class PlayScene3D implements GameScene {
         if (state instanceof TestState) {
             replaceGameLevel3D(level); //TODO check when to destroy previous level
             gameLevel3D.maze3D().food().energizers3D().forEach(Energizer3D::startPumping);
-            showLevelTestMessage(level);
+            showTestMessage(level.worldMap(), level.number());
         }
         else {
             if (!level.isDemoLevel() && state.matches(StateName.STARTING_GAME_OR_LEVEL, StateName.LEVEL_TRANSITION)) {
-                showReadyMessage(level);
+                showReadyMessage(level.worldMap());
             }
         }
 
@@ -577,11 +580,11 @@ public class PlayScene3D implements GameScene {
 
         perspectiveID.addListener((_, oldID, newID) -> {
             if (oldID != null) {
-                Perspective oldPerspective = perspectivesByID.get(oldID);
+                final Perspective oldPerspective = perspectivesByID.get(oldID);
                 oldPerspective.stopControlling(camera);
             }
             if (newID != null) {
-                Perspective newPerspective = perspectivesByID.get(newID);
+                final Perspective newPerspective = perspectivesByID.get(newID);
                 newPerspective.startControlling(camera);
             }
             else {
@@ -590,18 +593,27 @@ public class PlayScene3D implements GameScene {
         });
     }
 
+    private void updatePerspective() {
+        final PerspectiveID id = perspectiveID.get();
+        if (id != null && perspectivesByID.containsKey(id)) {
+            perspectivesByID.get(id).update(camera, gameContext());
+        } else {
+            Logger.error("No perspective with ID '{}' exists", id);
+        }
+    }
+
     private void replaceScores3D() {
         if (scores3D != null) {
             subSceneRoot.getChildren().remove(scores3D);
         }
-        createScores3D(ui);
+        createScores3D();
         subSceneRoot.getChildren().add(scores3D);
     }
 
-    private void createScores3D(Translator localizedTexts) {
+    private void createScores3D() {
         scores3D = new Scores3D(
-            localizedTexts.translate("score.score"),
-            localizedTexts.translate("score.high_score"),
+            ui.translate("score.score"),
+            ui.translate("score.high_score"),
             GameUI_Resources.FONT_ARCADE_8
         );
 
@@ -636,15 +648,6 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
     }
 
-    private void updateCamera() {
-        PerspectiveID id = perspectiveID.get();
-        if (id != null && perspectivesByID.containsKey(id)) {
-            perspectivesByID.get(id).update(camera, gameContext());
-        } else {
-            Logger.error("No perspective with ID '{}' exists", id);
-        }
-    }
-
     private void updateSiren(GameLevel level) {
         final boolean pacChased = !level.pac().powerTimer().isRunning();
         if (pacChased) {
@@ -677,26 +680,19 @@ public class PlayScene3D implements GameScene {
         }
     }
 
-    private void showLevelTestMessage(GameLevel level) {
-        final WorldMap worldMap = level.worldMap();
-        final double x = worldMap.numCols() * HTS;
-        final double y = (worldMap.numRows() - 2) * TS;
-        gameLevel3D.showAnimatedMessage("LEVEL %d (TEST)".formatted(level.number()), 5, x, y);
-    }
-
     private void playSubSceneFadingInAnimation() {
-        final var fadeInEffect = new Timeline(
-            new KeyFrame(Duration.seconds(FADE_IN_SECONDS),
-                new KeyValue(subScene.fillProperty(), SCENE_FILL_BRIGHT, Interpolator.LINEAR))
-        );
-        subScene.setFill(SCENE_FILL_DARK);
-        new SequentialTransition(
-            doNow(() -> {
-                currentPerspective().ifPresent(perspective -> perspective.startControlling(camera));
-                gameLevel3D.setVisible(true);
-                scores3D.setVisible(true);
-            }),
-            fadeInEffect
+        new Timeline(
+            new KeyFrame(Duration.ZERO, _ -> {
+                    //TODO Check if this is needed:
+                    currentPerspective().ifPresent(perspective -> perspective.startControlling(camera));
+                    subScene.setFill(SCENE_FILL_DARK);
+                    gameLevel3D.setVisible(true);
+                    scores3D.setVisible(true);
+                }
+            ),
+            new KeyFrame(
+                Duration.seconds(SCENE_FADE_IN_SECONDS),
+                new KeyValue(subScene.fillProperty(), SCENE_FILL_BRIGHT, Interpolator.EASE_IN))
         ).play();
     }
 
@@ -709,16 +705,22 @@ public class PlayScene3D implements GameScene {
     }
 
     private void eatPellet3D(Shape3D pellet3D) {
-        // remove after small delay for better visualization
         if (pellet3D.getParent() instanceof Group group) {
-            AnimationSupport.pauseSecThen(0.05, () -> group.getChildren().remove(pellet3D)).play();
+            // remove after small delay to let pellet not directly disappear when Pac-Man enters tile
+            pauseSecThen(0.05, () -> group.getChildren().remove(pellet3D)).play();
         }
     }
 
-    private void showReadyMessage(GameLevel level) {
-        level.worldMap().terrainLayer().optHouse().ifPresentOrElse(house -> {
+    private void showReadyMessage(WorldMap worldMap) {
+        worldMap.terrainLayer().optHouse().ifPresentOrElse(house -> {
             final Vector2f center = house.centerPositionUnderHouse();
-            gameLevel3D.showAnimatedMessage("READY!", READY_MESSAGE_DISPLAY_SECONDS, center.x(), center.y());
+            gameLevel3D.showAnimatedMessage(READY_MESSAGE_TEXT, READY_MESSAGE_DISPLAY_SECONDS, center.x(), center.y());
         }, () -> Logger.error("Cannot display READY message: no house in this game level! WTF?"));
+    }
+
+    private void showTestMessage(WorldMap worldMap, int levelNumber) {
+        final double x = worldMap.numCols() * HTS;
+        final double y = (worldMap.numRows() - 2) * TS;
+        gameLevel3D.showAnimatedMessage(TEST_MESSAGE_TEXT.formatted(levelNumber), 5, x, y);
     }
 }
