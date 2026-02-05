@@ -170,8 +170,6 @@ public class PlayScene3D implements GameScene {
         }
     };
 
-    protected ActionBindingsManager actionBindings = ActionBindingsManager.NO_BINDINGS;
-
     /** Key bindings for 3D play-scene navigation and rendering options. */
     protected final Set<ActionBinding> _3D_BINDINGS = Set.of(
         new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT)),
@@ -182,48 +180,30 @@ public class PlayScene3D implements GameScene {
         new ActionBinding(ACTION_TOGGLE_DRAW_MODE,     alt(KeyCode.W))
     );
 
-    protected final SubScene subScene;
     protected final Group subSceneRoot = new Group();
     protected final Group level3DParent = new Group();
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
+    protected final SubScene subScene;
 
+    protected ActionBindingsManager actionBindings = ActionBindingsManager.NO_BINDINGS;
     protected GameUI ui;
     protected GameLevel3D gameLevel3D;
     protected Scores3D scores3D;
     protected RandomTextPicker<String> pickerGameOverMessages;
-
     protected PlaySceneContextMenu contextMenu;
 
     public PlayScene3D() {
-        // initial size is irrelevant (size gets bound to parent scene size eventually)
+        final var axes3D = new CoordinateSystem();
+        axes3D.visibleProperty().bind(GameUI.PROPERTY_3D_AXES_VISIBLE);
+
+        subSceneRoot.getChildren().setAll(level3DParent, axes3D);
+
+        // Initial scene size is irrelevant (size gets bound to parent scene size eventually)
         subScene = new SubScene(subSceneRoot, 88, 88, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
         subScene.setFill(SCENE_FILL_DARK);
 
-        final var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(GameUI.PROPERTY_3D_AXES_VISIBLE);
-
-        subSceneRoot.getChildren().setAll(level3DParent, coordinateSystem);
-
         createPerspectives();
-    }
-
-    protected void replaceActionBindings(GameLevel gameLevel) {}
-
-    @Override
-    public void setUI(GameUI ui) {
-        this.ui = requireNonNull(ui);
-        pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");
-        //TODO reconsider this
-        replaceScores3D();
-    }
-
-    public Optional<GameLevel3D> level3D() {
-        return Optional.ofNullable(gameLevel3D);
-    }
-
-    public ObjectProperty<PerspectiveID> perspectiveIDProperty() {
-        return perspectiveID;
     }
 
     @Override
@@ -234,6 +214,14 @@ public class PlayScene3D implements GameScene {
             gameLevel3D.dispose();
             gameLevel3D = null;
         }
+    }
+
+    @Override
+    public void setUI(GameUI ui) {
+        this.ui = requireNonNull(ui);
+        pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");
+        //TODO reconsider this
+        replaceScores3D();
     }
 
     @Override
@@ -548,9 +536,40 @@ public class PlayScene3D implements GameScene {
         ui.views().getPlayView().updateGameScene(gameContext().currentGame(), true);
     }
 
-    // protected
+    // other stuff
 
-    protected void createPerspectives() {
+    public ObjectProperty<PerspectiveID> perspectiveIDProperty() {
+        return perspectiveID;
+    }
+
+    public Optional<Perspective> currentPerspective() {
+        return perspectiveID.get() == null ? Optional.empty() : Optional.of(perspectivesByID.get(perspectiveID.get()));
+    }
+
+    public Optional<GameLevel3D> level3D() {
+        return Optional.ofNullable(gameLevel3D);
+    }
+
+    protected GameLevel3D createGameLevel3D(GameLevel level) {
+        return new GameLevel3D(ui, level);
+    }
+
+    protected void replaceActionBindings(GameLevel gameLevel) {}
+
+    protected void updateHUD(Game game) {
+        final Score score = game.score(), highScore = game.highScore();
+        if (score.isEnabled()) {
+            scores3D.showScore(score.points(), score.levelNumber());
+        }
+        else { // disabled, show text "GAME OVER"
+            Color color = ui.currentConfig().assets().color("color.game_over_message");
+            scores3D.showTextForScore(ui.translate("score.game_over"), color);
+        }
+        // Always show high score
+        scores3D.showHighScore(highScore.points(), highScore.levelNumber());
+    }
+
+    private void createPerspectives() {
         perspectivesByID.put(PerspectiveID.DRONE, new DronePerspective());
         perspectivesByID.put(PerspectiveID.TOTAL, new TotalPerspective());
         perspectivesByID.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective());
@@ -579,7 +598,7 @@ public class PlayScene3D implements GameScene {
         subSceneRoot.getChildren().add(scores3D);
     }
 
-    protected void createScores3D(Translator localizedTexts) {
+    private void createScores3D(Translator localizedTexts) {
         scores3D = new Scores3D(
             localizedTexts.translate("score.score"),
             localizedTexts.translate("score.high_score"),
@@ -596,15 +615,7 @@ public class PlayScene3D implements GameScene {
         scores3D.setVisible(false);
     }
 
-    protected Optional<Perspective> currentPerspective() {
-        return perspectiveID.get() == null ? Optional.empty() : Optional.of(perspectivesByID.get(perspectiveID.get()));
-    }
-
-    protected GameLevel3D createGameLevel3D(GameLevel level) {
-        return new GameLevel3D(ui, level);
-    }
-
-    protected void replaceGameLevel3D(GameLevel level) {
+    private void replaceGameLevel3D(GameLevel level) {
         if (gameLevel3D != null) {
             Logger.info("Replacing existing game level 3D");
             gameLevel3D.getChildren().clear();
@@ -625,7 +636,7 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
     }
 
-    protected void updateCamera() {
+    private void updateCamera() {
         PerspectiveID id = perspectiveID.get();
         if (id != null && perspectivesByID.containsKey(id)) {
             perspectivesByID.get(id).update(camera, gameContext());
@@ -634,20 +645,7 @@ public class PlayScene3D implements GameScene {
         }
     }
 
-    protected void updateHUD(Game game) {
-        final Score score = game.score(), highScore = game.highScore();
-        if (score.isEnabled()) {
-            scores3D.showScore(score.points(), score.levelNumber());
-        }
-        else { // disabled, show text "GAME OVER"
-            Color color = ui.currentConfig().assets().color("color.game_over_message");
-            scores3D.showTextForScore(ui.translate("score.game_over"), color);
-        }
-        // Always show high score
-        scores3D.showHighScore(highScore.points(), highScore.levelNumber());
-    }
-
-    protected void updateSiren(GameLevel level) {
+    private void updateSiren(GameLevel level) {
         final boolean pacChased = !level.pac().powerTimer().isRunning();
         if (pacChased) {
             // siren numbers are 1..4, hunting phase index = 0..7
@@ -657,7 +655,7 @@ public class PlayScene3D implements GameScene {
         }
     }
 
-    protected void updateGhostSounds(Pac pac, Stream<Ghost> ghosts) {
+    private void updateGhostSounds(Pac pac, Stream<Ghost> ghosts) {
         boolean returningHome = pac.isAlive() && ghosts.anyMatch(ghost ->
             ghost.state() == GhostState.RETURNING_HOME || ghost.state() == GhostState.ENTERING_HOUSE);
         if (returningHome) {
@@ -669,7 +667,7 @@ public class PlayScene3D implements GameScene {
         }
     }
 
-    protected void updateSound(GameLevel level) {
+    private void updateSound(GameLevel level) {
         if (!ui.soundManager().isEnabled()) {
             return;
         }
@@ -679,14 +677,14 @@ public class PlayScene3D implements GameScene {
         }
     }
 
-    protected void showLevelTestMessage(GameLevel level) {
+    private void showLevelTestMessage(GameLevel level) {
         final WorldMap worldMap = level.worldMap();
         final double x = worldMap.numCols() * HTS;
         final double y = (worldMap.numRows() - 2) * TS;
         gameLevel3D.showAnimatedMessage("LEVEL %d (TEST)".formatted(level.number()), 5, x, y);
     }
 
-    protected void playSubSceneFadingInAnimation() {
+    private void playSubSceneFadingInAnimation() {
         final var fadeInEffect = new Timeline(
             new KeyFrame(Duration.seconds(FADE_IN_SECONDS),
                 new KeyValue(subScene.fillProperty(), SCENE_FILL_BRIGHT, Interpolator.LINEAR))
@@ -702,7 +700,7 @@ public class PlayScene3D implements GameScene {
         ).play();
     }
 
-    protected void eatAllPellets3D() {
+    private void eatAllPellets3D() {
         gameLevel3D.maze3D().food().pellets3D().forEach(pellet3D -> {
             if (pellet3D.getParent() instanceof Group group) {
                 group.getChildren().remove(pellet3D);
@@ -710,14 +708,14 @@ public class PlayScene3D implements GameScene {
         });
     }
 
-    protected void eatPellet3D(Shape3D pellet3D) {
+    private void eatPellet3D(Shape3D pellet3D) {
         // remove after small delay for better visualization
         if (pellet3D.getParent() instanceof Group group) {
             AnimationSupport.pauseSecThen(0.05, () -> group.getChildren().remove(pellet3D)).play();
         }
     }
 
-    protected void showReadyMessage(GameLevel level) {
+    private void showReadyMessage(GameLevel level) {
         level.worldMap().terrainLayer().optHouse().ifPresentOrElse(house -> {
             final Vector2f center = house.centerPositionUnderHouse();
             gameLevel3D.showAnimatedMessage("READY!", READY_MESSAGE_DISPLAY_SECONDS, center.x(), center.y());
