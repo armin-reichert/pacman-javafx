@@ -200,7 +200,7 @@ public interface GameUI extends Translator {
      * <p>
      * This is the primary entry point for interacting with the game engine.
      */
-    GameContext context();
+    GameContext gameContext();
 
     /**
      * Returns the primary JavaFX stage.

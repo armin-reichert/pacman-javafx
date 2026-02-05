@@ -254,7 +254,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent e) {
-        initForGameLevel(ui.context().currentGame().level());
+        initForGameLevel(ui.gameContext().currentGame().level());
     }
 
     @Override

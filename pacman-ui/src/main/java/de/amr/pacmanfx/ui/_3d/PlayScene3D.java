@@ -95,7 +95,7 @@ public class PlayScene3D implements GameScene {
 
         public PlaySceneContextMenu(GameUI ui) {
             super(ui);
-            final Game game = ui.context().currentGame();
+            final Game game = ui.gameContext().currentGame();
             addLocalizedTitleItem("scene_display");
             addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
             addLocalizedCheckBox(GameUI.PROPERTY_MINI_VIEW_ON, "pip");
@@ -212,12 +212,10 @@ public class PlayScene3D implements GameScene {
 
     protected void replaceActionBindings(GameLevel gameLevel) {}
 
-    public void setContext(GameContext context) {
-        this.context = requireNonNull(context);
-    }
-
+    @Override
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
+        context = ui.gameContext();
         pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");
         //TODO reconsider this
         replaceScores3D();

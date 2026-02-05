@@ -67,21 +67,14 @@ public abstract class GameScene2D implements GameScene {
     }
 
     /**
-     * Associates the global game context with this scene.
-     *
-     * @param gameContext the game context, must not be {@code null}
-     */
-    public void setGameContext(GameContext gameContext) {
-        this.gameContext = requireNonNull(gameContext);
-    }
-
-    /**
      * Associates this scene with the UI layer.
      *
      * @param ui the UI instance, must not be {@code null}
      */
+    @Override
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
+        gameContext = ui.gameContext();
     }
 
     /**

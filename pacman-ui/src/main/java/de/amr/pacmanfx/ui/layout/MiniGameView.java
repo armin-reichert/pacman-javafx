@@ -153,7 +153,7 @@ public class MiniGameView extends VBox {
         }
         canvasRenderer.clearCanvas();
 
-        final Game game = ui.context().currentGame();
+        final Game game = ui.gameContext().currentGame();
         if (game.level() != null) {
             var info = new RenderInfo();
             info.putAll(Map.of(

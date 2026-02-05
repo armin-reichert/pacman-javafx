@@ -100,17 +100,17 @@ public class PlayView extends StackPane implements View {
         dashboard.setVisible(false);
 
         miniView.setUI(ui);
-        ui.context().gameVariantNameProperty().addListener(
+        ui.gameContext().gameVariantNameProperty().addListener(
             (_, oldVariantName, newVariantName) -> handleGameVariantChange(oldVariantName, newVariantName));
     }
 
     private void handleGameVariantChange(String oldName, String newName) {
         if (oldName != null) {
-            ui.context().gameByVariantName(oldName).removeGameEventListener(this);
+            ui.gameContext().gameByVariantName(oldName).removeGameEventListener(this);
             ui.uiConfigManager().dispose(oldName);
         }
         if (newName != null) {
-            final Game game = ui.context().gameByVariantName(newName);
+            final Game game = ui.gameContext().gameByVariantName(newName);
             game.addGameEventListener(this);
 
             ui.soundManager().dispose();
@@ -153,7 +153,7 @@ public class PlayView extends StackPane implements View {
 
     public void showHelp(GameUI ui) {
         final double scaling = canvasDecorator.scalingProperty().get();
-        helpLayer.showHelpPopup(ui, scaling, ui.context().gameVariantName());
+        helpLayer.showHelpPopup(ui, scaling, ui.gameContext().gameVariantName());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -192,7 +192,7 @@ public class PlayView extends StackPane implements View {
 
     @Override
     public void render() {
-        final Game game = ui.context().currentGame();
+        final Game game = ui.gameContext().currentGame();
         optGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(gameScene2D -> {
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D);
@@ -212,7 +212,7 @@ public class PlayView extends StackPane implements View {
 
     @Override
     public void onGameEvent(GameEvent gameEvent) {
-        final Game game = ui.context().currentGame();
+        final Game game = ui.gameContext().currentGame();
         final StateMachine.State<Game> gameState = game.control().state();
         switch (gameEvent) {
             case LevelCreatedEvent _ -> {
@@ -235,7 +235,7 @@ public class PlayView extends StackPane implements View {
             }
             default -> {}
         }
-        updateGameScene(ui.context().currentGame(), false);
+        updateGameScene(ui.gameContext().currentGame(), false);
 
         optGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
     }
@@ -266,11 +266,9 @@ public class PlayView extends StackPane implements View {
         }
 
         if (intendedGameScene instanceof GameScene2D gameScene2D) {
-            gameScene2D.setGameContext(ui.context());
             gameScene2D.setUI(ui);
         }
         else if (intendedGameScene instanceof PlayScene3D playScene3D) {
-            playScene3D.setContext(ui.context());
             playScene3D.setUI(ui);
         }
 
@@ -390,7 +388,7 @@ public class PlayView extends StackPane implements View {
                 contextMenu.addLocalizedTitleItem("scene_display");
                 contextMenu.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
             }
-            gameScene.supplyContextMenu(ui.context().currentGame()).ifPresent(menu -> contextMenu.addAll(menu.itemsCopy()));
+            gameScene.supplyContextMenu(ui.gameContext().currentGame()).ifPresent(menu -> contextMenu.addAll(menu.itemsCopy()));
         });
         contextMenu.requestFocus();
         contextMenu.show(this, event.getScreenX(), event.getScreenY());

@@ -155,7 +155,7 @@ public final class GameUI_Implementation implements GameUI {
             views().getPlayView().currentGameSceneProperty()
         ));
 
-        context().gameVariantNameProperty().addListener((_, _, _) -> {
+        gameContext().gameVariantNameProperty().addListener((_, _, _) -> {
             final Game game = context.currentGame();
             statusIconBox.iconAutopilot().visibleProperty().bind(game.usingAutopilotProperty());
             statusIconBox.iconCheated()  .visibleProperty().bind(game.cheatUsedProperty());
@@ -242,7 +242,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public GameContext context() {
+    public GameContext gameContext() {
         return context;
     }
 
@@ -375,7 +375,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void stopGame() {
-        optGameScene().ifPresent(gameScene -> gameScene.end(context().currentGame()));
+        optGameScene().ifPresent(gameScene -> gameScene.end(gameContext().currentGame()));
         soundManager.stopAll();
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);

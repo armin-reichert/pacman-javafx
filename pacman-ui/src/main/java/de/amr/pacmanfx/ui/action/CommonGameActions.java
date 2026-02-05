@@ -38,7 +38,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_BOOT_SHOW_PLAY_VIEW = new GameAction("BOOT_SHOW_PLAY_VIEW") {
         @Override
         public void execute(GameUI ui) {
-            ui.context().coinMechanism().setNumCoins(0);
+            ui.gameContext().coinMechanism().setNumCoins(0);
             ui.showPlayView();
             ui.restart();
         }
@@ -54,7 +54,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("LET_GAME_STATE_EXPIRE") {
         @Override
         public void execute(GameUI ui) {
-            ui.context().currentGame().control().terminateGameState();
+            ui.gameContext().currentGame().control().terminateGameState();
         }
     };
 
@@ -93,7 +93,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_QUIT_GAME_SCENE = new GameAction("QUIT_GAME_SCENE") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.context().currentGame();
+            final Game game = ui.gameContext().currentGame();
             game.clearCheatFlag(); //TODO needed?
             ui.quitCurrentGameScene();
         }
@@ -103,7 +103,7 @@ public final class CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             ui.stopGame();
-            final Game game = ui.context().currentGame();
+            final Game game = ui.gameContext().currentGame();
             boolean isLevelShortTest = game.control().state() instanceof LevelShortTestState;
             if (isLevelShortTest) {
                 game.control().state().onExit(game); //TODO exit other states too?
@@ -121,7 +121,7 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            boolean isArcadeGame = GameVariant.isArcadeGameName(ui.context().gameVariantName());
+            boolean isArcadeGame = GameVariant.isArcadeGameName(ui.gameContext().gameVariantName());
             boolean isPlayScene2D = ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D);
             return isArcadeGame && isPlayScene2D;
         }
@@ -206,7 +206,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_COLLISION_STRATEGY = new GameAction("TOGGLE_COLLISION_STRATEGY") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.context().currentGame();
+            final Game game = ui.gameContext().currentGame();
             CollisionStrategy collisionStrategy = game.collisionStrategy();
             if (collisionStrategy == CollisionStrategy.CENTER_DISTANCE) {
                 game.setCollisionStrategy(CollisionStrategy.SAME_TILE);
@@ -281,14 +281,14 @@ public final class CommonGameActions {
             if (ui.clock().isPaused()) {
                 ui.soundManager().stopAll();
             }
-            Logger.info("Game ({}) {}", ui.context().gameVariantName(), ui.clock().isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", ui.gameContext().gameVariantName(), ui.clock().isPaused() ? "paused" : "resumed");
         }
     };
 
     public static final GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction("TOGGLE_PLAY_SCENE_2D_3D") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.context().currentGame();
+            final Game game = ui.gameContext().currentGame();
             ui.optGameScene().ifPresent(_ -> {
                 ui.clock().stop();
                 toggle(PROPERTY_3D_ENABLED);
@@ -307,7 +307,7 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final StateMachine.State<?> state = ui.context().currentGameState();
+            final StateMachine.State<?> state = ui.gameContext().currentGameState();
             if (state.matches(LevelShortTestState.class.getSimpleName(), LevelMediumTestState.class.getSimpleName())) {
                 return true;
             }

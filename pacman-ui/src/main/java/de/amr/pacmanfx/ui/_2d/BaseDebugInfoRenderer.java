@@ -33,7 +33,7 @@ public class BaseDebugInfoRenderer extends GameScene2D_Renderer {
 
     @Override
     public void draw(GameScene2D scene) {
-        final GameControl gameControl = scene.ui().context().currentGame().control();
+        final GameControl gameControl = scene.ui().gameContext().currentGame().control();
         final TickTimer stateTimer = gameControl.state().timer();
         final String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
             gameControl.state().name(),

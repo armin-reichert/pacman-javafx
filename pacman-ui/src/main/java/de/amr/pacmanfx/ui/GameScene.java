@@ -24,6 +24,8 @@ public interface GameScene extends GameEventListener, Disposable {
      */
     GameUI ui();
 
+    void setUI(GameUI ui);
+
     /**
      * @return (optional) JavaFX subscene associated with this game scene. 2D scenes without camera do not need one.
      */

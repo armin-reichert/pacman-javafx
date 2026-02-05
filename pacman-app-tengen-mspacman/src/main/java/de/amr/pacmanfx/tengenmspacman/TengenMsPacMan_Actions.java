@@ -21,7 +21,7 @@ public interface TengenMsPacMan_Actions {
     GameAction ACTION_ENTER_START_SCREEN = new GameAction("ENTER_START_SCREEN") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.context().currentGame();
+            final Game game = ui.gameContext().currentGame();
             game.control().enterState(GameState.SETTING_OPTIONS_FOR_START);
         }
     };
@@ -29,13 +29,13 @@ public interface TengenMsPacMan_Actions {
     GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction("QUIT_DEMO_LEVEL") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.context().currentGame();
+            final Game game = ui.gameContext().currentGame();
             game.control().enterState(GameState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final Game game = ui.context().currentGame();
+            final Game game = ui.gameContext().currentGame();
             return game.optGameLevel().isPresent() && game.level().isDemoLevel();
         }
     };
@@ -43,7 +43,7 @@ public interface TengenMsPacMan_Actions {
     GameAction ACTION_START_PLAYING = new GameAction("START_PLAYING") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.context().currentGame();
+            final Game game = ui.gameContext().currentGame();
             game.control().enterState(GameState.STARTING_GAME_OR_LEVEL);
         }
     };
@@ -73,7 +73,7 @@ public interface TengenMsPacMan_Actions {
     GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction("TOGGLE_PAC_BOOSTER") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.context().currentGame();
+            final Game game = ui.gameContext().currentGame();
             game.optGameLevel().ifPresent(gameLevel -> {
                 final var tengenGame = (TengenMsPacMan_GameModel) game;
                 tengenGame.activatePacBooster(gameLevel.pac(), !tengenGame.isBoosterActive());
@@ -85,7 +85,7 @@ public interface TengenMsPacMan_Actions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final var tengenGame = ui.context().<TengenMsPacMan_GameModel>currentGame();
+            final var tengenGame = ui.gameContext().<TengenMsPacMan_GameModel>currentGame();
             return tengenGame.pacBooster() == PacBooster.USE_A_OR_B && tengenGame.optGameLevel().isPresent();
         }
     };

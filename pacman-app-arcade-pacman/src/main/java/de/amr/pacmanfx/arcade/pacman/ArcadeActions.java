@@ -21,8 +21,8 @@ public interface ArcadeActions {
     GameAction ACTION_INSERT_COIN = new GameAction("INSERT_COIN") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.context().currentGame();
-            final CoinMechanism coinMechanism = ui.context().coinMechanism();
+            final Game game = ui.gameContext().currentGame();
+            final CoinMechanism coinMechanism = ui.gameContext().coinMechanism();
             if (coinMechanism.numCoins() < coinMechanism.maxCoins()) {
                 coinMechanism.insertCoin();
                 ui.soundManager().setEnabled(true);
@@ -36,14 +36,14 @@ public interface ArcadeActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final Game game = ui.context().currentGame();
+            final Game game = ui.gameContext().currentGame();
             if (game.isPlaying()) {
                 return false;
             }
             return game.control().state() == SETTING_OPTIONS_FOR_START
                 || game.control().state() == INTRO
                 || game.optGameLevel().isPresent() && game.level().isDemoLevel()
-                || ui.context().coinMechanism().isEmpty();
+                || ui.gameContext().coinMechanism().isEmpty();
         }
     };
 
@@ -51,13 +51,13 @@ public interface ArcadeActions {
         @Override
         public void execute(GameUI ui) {
             ui.voicePlayer().stopVoice();
-            ui.context().currentGame().control().enterState(GameState.STARTING_GAME_OR_LEVEL);
+            ui.gameContext().currentGame().control().enterState(GameState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final Game game = ui.context().currentGame();
-            return ui.context().coinMechanism().numCoins() > 0
+            final Game game = ui.gameContext().currentGame();
+            return ui.gameContext().coinMechanism().numCoins() > 0
                 && (game.control().state() == INTRO || game.control().state() == SETTING_OPTIONS_FOR_START)
                 && game.canStartNewGame();
         }

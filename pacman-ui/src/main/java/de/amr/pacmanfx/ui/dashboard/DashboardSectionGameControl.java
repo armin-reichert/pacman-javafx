@@ -50,7 +50,7 @@ public class DashboardSectionGameControl extends DashboardSection {
         buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
         cbCollisionCheckedTwice  = addCheckBox("Collision Check 2x");
 
-        setAction(choiceBoxInitialLives, () -> ui.context().currentGame().setInitialLifeCount(choiceBoxInitialLives.getValue()));
+        setAction(choiceBoxInitialLives, () -> ui.gameContext().currentGame().setInitialLifeCount(choiceBoxInitialLives.getValue()));
 
         //setAction(buttonGroupLevelActions[GAME_LEVEL_START], ArcadeActions.ACTION_START_GAME); //TODO FIXME!
         setAction(ui, buttonGroupLevelActions[GAME_LEVEL_QUIT], ACTION_RESTART_INTRO);
@@ -60,7 +60,7 @@ public class DashboardSectionGameControl extends DashboardSection {
         setAction(ui, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
 
         cbCollisionCheckedTwice.setOnAction(_ -> {
-            final AbstractGameModel game = ui.context().currentGame();
+            final AbstractGameModel game = ui.gameContext().currentGame();
             game.setCollisionDoubleChecked(cbCollisionCheckedTwice.isSelected());
         });
     }
@@ -69,7 +69,7 @@ public class DashboardSectionGameControl extends DashboardSection {
     public void update(GameUI ui) {
         super.update(ui);
 
-        final AbstractGameModel game = ui.context().currentGame();
+        final AbstractGameModel game = ui.gameContext().currentGame();
         final StateMachine.State<?> state = game.control().state();
 
         //TODO use binding
@@ -81,7 +81,7 @@ public class DashboardSectionGameControl extends DashboardSection {
 
         boolean booting = isBooting(state);
         buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(game, state));
-        buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || ui.context().currentGame().optGameLevel().isEmpty());
+        buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || ui.gameContext().currentGame().optGameLevel().isEmpty());
         buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(game, state));
 
         buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !state.matches(StateName.INTRO));
