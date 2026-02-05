@@ -4,8 +4,6 @@
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.GameContext;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
@@ -13,13 +11,28 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 
 public class DronePerspective implements Perspective {
 
-    static final int MIN_HEIGHT_OVER_GROUND = 25;
-    static final int MAX_HEIGHT_OVER_GROUND = 1500;
+    public static final int DEFAULT_Z = -200;
 
-    private final IntegerProperty heightOverGround = new SimpleIntegerProperty(200);
+    private double speed;
+    private int nearestGroundZ;
+    private int farestGroundZ;
+
+    public DronePerspective() {
+        speed = 0.05;
+        nearestGroundZ = -50;
+        farestGroundZ = -500;
+    }
+
+    public double speed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
 
     @Override
-    public void attach(PerspectiveCamera camera) {
+    public void apply(PerspectiveCamera camera) {
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
         camera.setFieldOfView(40); // default: 30
@@ -27,18 +40,12 @@ public class DronePerspective implements Perspective {
         camera.setRotate(0);
         camera.setTranslateX(0);
         camera.setTranslateY(0);
-        camera.translateZProperty().bind(heightOverGround.negate());
-    }
-
-    @Override
-    public void detach(PerspectiveCamera camera) {
-        camera.translateZProperty().unbind();
+        camera.setTranslateZ(DEFAULT_Z);
     }
 
     @Override
     public void update(PerspectiveCamera camera, GameContext gameContext) {
         gameContext.currentGame().optGameLevel().ifPresent(gameLevel -> {
-            double speed = 0.05;
             double x = lerp(camera.getTranslateX(), gameLevel.pac().x(), speed);
             double y = lerp(camera.getTranslateY(), gameLevel.pac().y(), speed);
             camera.setTranslateX(x);
@@ -46,21 +53,26 @@ public class DronePerspective implements Perspective {
         });
     }
 
-    public void moveUp() {
-        changeHeight(currentHeightDelta());
+    public void moveUp(PerspectiveCamera camera) {
+        changeZ(camera, -currentDeltaZ(camera));
     }
 
-    public void moveDown() {
-        changeHeight(-currentHeightDelta());
+    public void moveDown(PerspectiveCamera camera) {
+        changeZ(camera, currentDeltaZ(camera));
     }
 
-    private void changeHeight(int delta) {
-        heightOverGround.set(Math.clamp(heightOverGround.get() + delta, MIN_HEIGHT_OVER_GROUND, MAX_HEIGHT_OVER_GROUND));
+    public void moveDefaultHeight(PerspectiveCamera camera) {
+        camera.setTranslateZ(DEFAULT_Z);
     }
 
-    private int currentHeightDelta() {
-        int height = heightOverGround.get();
-        if (height > 100) return height / 10;
-        return 5;
+    private void changeZ(PerspectiveCamera camera, double deltaZ) {
+        final double oldZ = camera.getTranslateZ();
+        final double newZ = Math.clamp(oldZ + deltaZ, farestGroundZ, nearestGroundZ);
+        camera.setTranslateZ(newZ);
+    }
+
+    private double currentDeltaZ(PerspectiveCamera camera) {
+        final double logZ = Math.log10(Math.abs(camera.getTranslateZ()));
+        return 5 + logZ;
     }
 }

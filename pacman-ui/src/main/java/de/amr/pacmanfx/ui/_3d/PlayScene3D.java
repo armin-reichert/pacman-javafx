@@ -135,7 +135,7 @@ public class PlayScene3D implements GameScene {
             currentPerspective()
                 .filter(DronePerspective.class::isInstance)
                 .map(DronePerspective.class::cast)
-                .ifPresent(DronePerspective::moveUp);
+                .ifPresent(dronePerspective -> dronePerspective.moveUp(camera));
         }
         @Override
         public boolean isEnabled(GameUI ui) {
@@ -149,7 +149,21 @@ public class PlayScene3D implements GameScene {
             currentPerspective()
                 .filter(DronePerspective.class::isInstance)
                 .map(DronePerspective.class::cast)
-                .ifPresent(DronePerspective::moveDown);
+                .ifPresent(dronePerspective -> dronePerspective.moveDown(camera));
+        }
+        @Override
+        public boolean isEnabled(GameUI ui) {
+            return perspectiveID.get() == PerspectiveID.DRONE;
+        }
+    };
+
+    protected final GameAction actionDroneReset = new GameAction("DroneReset") {
+        @Override
+        public void execute(GameUI ui) {
+            currentPerspective()
+                .filter(DronePerspective.class::isInstance)
+                .map(DronePerspective.class::cast)
+                .ifPresent(dronePerspective -> dronePerspective.moveDefaultHeight(camera));
         }
         @Override
         public boolean isEnabled(GameUI ui) {
@@ -165,6 +179,7 @@ public class PlayScene3D implements GameScene {
         new ActionBinding(ACTION_PERSPECTIVE_NEXT,     alt(KeyCode.RIGHT)),
         new ActionBinding(actionDroneClimb,            control(KeyCode.MINUS)),
         new ActionBinding(actionDroneDescent,          control(KeyCode.PLUS)),
+        new ActionBinding(actionDroneReset,            control(KeyCode.DIGIT0)),
         new ActionBinding(ACTION_TOGGLE_DRAW_MODE,     alt(KeyCode.W))
     );
 
@@ -558,7 +573,7 @@ public class PlayScene3D implements GameScene {
             }
             if (newID != null) {
                 Perspective newPerspective = perspectivesByID.get(newID);
-                newPerspective.attach(camera);
+                newPerspective.apply(camera);
             }
             else {
                 Logger.error("New perspective ID is NULL!");
@@ -689,7 +704,7 @@ public class PlayScene3D implements GameScene {
         subScene.setFill(SCENE_FILL_DARK);
         new SequentialTransition(
             doNow(() -> {
-                currentPerspective().ifPresent(perspective -> perspective.attach(camera));
+                currentPerspective().ifPresent(perspective -> perspective.apply(camera));
                 gameLevel3D.setVisible(true);
                 scores3D.setVisible(true);
             }),
