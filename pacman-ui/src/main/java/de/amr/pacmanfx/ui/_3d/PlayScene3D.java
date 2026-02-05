@@ -31,10 +31,7 @@ import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.Scores3D;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -187,6 +184,7 @@ public class PlayScene3D implements GameScene {
     protected final Group level3DParent = new Group();
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final SubScene subScene;
+    protected final Animation fadeInAnimation;
 
     protected ActionBindingsManager actionBindings = ActionBindingsManager.NO_BINDINGS;
     protected GameUI ui;
@@ -207,6 +205,7 @@ public class PlayScene3D implements GameScene {
         subScene.setFill(SCENE_FILL_DARK);
 
         createPerspectives();
+        fadeInAnimation = createFadeInAnimation();
     }
 
     @Override
@@ -339,7 +338,7 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.updateLevelCounter3D();
         updateHUD(game);
         replaceActionBindings(level);
-        playSubSceneFadingInAnimation();
+        fadeInAnimation.playFromStart();
     }
 
     // Game event handlers
@@ -475,7 +474,7 @@ public class PlayScene3D implements GameScene {
 
         gameLevel3D.updateLevelCounter3D();
         replaceActionBindings(level);
-        playSubSceneFadingInAnimation();
+        fadeInAnimation.playFromStart();
     }
 
     private long lastMunchingSoundPlayedTick;
@@ -680,20 +679,19 @@ public class PlayScene3D implements GameScene {
         }
     }
 
-    private void playSubSceneFadingInAnimation() {
-        new Timeline(
+    private Animation createFadeInAnimation() {
+        return new Timeline(
             new KeyFrame(Duration.ZERO, _ -> {
-                    //TODO Check if this is needed:
-                    currentPerspective().ifPresent(perspective -> perspective.startControlling(camera));
-                    subScene.setFill(SCENE_FILL_DARK);
-                    gameLevel3D.setVisible(true);
-                    scores3D.setVisible(true);
-                }
+                //TODO Check if this is needed:
+                currentPerspective().ifPresent(perspective -> perspective.startControlling(camera));
+                subScene.setFill(SCENE_FILL_DARK);
+                gameLevel3D.setVisible(true);
+                scores3D.setVisible(true);
+            }
             ),
-            new KeyFrame(
-                Duration.seconds(SCENE_FADE_IN_SECONDS),
+            new KeyFrame(Duration.seconds(SCENE_FADE_IN_SECONDS),
                 new KeyValue(subScene.fillProperty(), SCENE_FILL_BRIGHT, Interpolator.EASE_IN))
-        ).play();
+        );
     }
 
     private void eatAllPellets3D() {
