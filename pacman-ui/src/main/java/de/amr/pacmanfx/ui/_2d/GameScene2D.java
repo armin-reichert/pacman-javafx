@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui._2d;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.UnspecifiedChangeEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -39,7 +38,6 @@ public abstract class GameScene2D implements GameScene {
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
 
     protected final ActionBindingsManager actionBindings = new SimpleActionBindingsManager();
-    protected GameContext gameContext;
     protected GameUI ui;
     protected Canvas canvas;
 
@@ -61,11 +59,6 @@ public abstract class GameScene2D implements GameScene {
         actionBindings.dispose();
     }
 
-    @Override
-    public GameContext gameContext() {
-        return gameContext;
-    }
-
     /**
      * Associates this scene with the UI layer.
      *
@@ -74,7 +67,6 @@ public abstract class GameScene2D implements GameScene {
     @Override
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
-        gameContext = ui.gameContext();
     }
 
     /**
@@ -140,7 +132,7 @@ public abstract class GameScene2D implements GameScene {
      */
     @Override
     public void onUnspecifiedChange(UnspecifiedChangeEvent event) {
-        ui.views().getPlayView().updateGameScene(gameContext.currentGame(), true);
+        ui.views().getPlayView().updateGameScene(gameContext().currentGame(), true);
     }
 
     @Override

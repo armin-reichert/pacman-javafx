@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
@@ -188,7 +187,6 @@ public class PlayScene3D implements GameScene {
     protected final Group level3DParent = new Group();
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
 
-    protected GameContext context;
     protected GameUI ui;
     protected GameLevel3D gameLevel3D;
     protected Scores3D scores3D;
@@ -215,7 +213,6 @@ public class PlayScene3D implements GameScene {
     @Override
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
-        context = ui.gameContext();
         pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");
         //TODO reconsider this
         replaceScores3D();
@@ -237,11 +234,6 @@ public class PlayScene3D implements GameScene {
             gameLevel3D.dispose();
             gameLevel3D = null;
         }
-    }
-
-    @Override
-    public GameContext gameContext() {
-        return context;
     }
 
     @Override
@@ -367,7 +359,7 @@ public class PlayScene3D implements GameScene {
             Logger.error("No game level3D exists!");
             return;
         }
-        context.currentGame().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> {
+        gameContext().currentGame().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> {
             gameLevel3D.updateBonus3D(bonus);
             ui.soundManager().loop(SoundID.BONUS_ACTIVE);
         });
@@ -379,7 +371,7 @@ public class PlayScene3D implements GameScene {
             Logger.error("No game level3D exists!");
             return;
         }
-        context.currentGame().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(_ -> {
+        gameContext().currentGame().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(_ -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
             ui.soundManager().stop(SoundID.BONUS_ACTIVE);
             ui.soundManager().play(SoundID.BONUS_EATEN);
@@ -392,7 +384,7 @@ public class PlayScene3D implements GameScene {
             Logger.error("No game level3D exists!");
             return;
         }
-        context.currentGame().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(_ -> {
+        gameContext().currentGame().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(_ -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
             ui.soundManager().stop(SoundID.BONUS_ACTIVE);
         });
@@ -400,7 +392,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onGameStateChange(GameStateChangeEvent changeEvent) {
-        final Game game = context.currentGame();
+        final Game game = gameContext().currentGame();
         final StateMachine.State<Game> newState = changeEvent.newState();
         if (newState instanceof TestState) {
             game.optGameLevel().ifPresent(level -> {
@@ -442,7 +434,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onGameContinues(GameContinuedEvent event) {
-        final Game game = context.currentGame();
+        final Game game = gameContext().currentGame();
         if (gameLevel3D != null) {
             game.optGameLevel().ifPresent(this::showReadyMessage);
         }
@@ -450,7 +442,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onGameStarts(GameStartedEvent event) {
-        final Game game = context.currentGame();
+        final Game game = gameContext().currentGame();
         final StateMachine.State<Game> state = game.control().state();
         final boolean silent = game.level().isDemoLevel() || state instanceof TestState;
         if (!silent) {
@@ -466,12 +458,12 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent event) {
-        context.currentGame().optGameLevel().ifPresent(this::replaceGameLevel3D);
+        gameContext().currentGame().optGameLevel().ifPresent(this::replaceGameLevel3D);
     }
 
     @Override
     public void onLevelStarts(LevelStartedEvent event) {
-        final Game game = context.currentGame();
+        final Game game = gameContext().currentGame();
         if (game.optGameLevel().isEmpty()) {
             Logger.error("No game level exists on level start? WTF!");
             return;
@@ -529,7 +521,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        final Game game = context.currentGame();
+        final Game game = gameContext().currentGame();
         ui.soundManager().stopSiren();
         if (!game.isLevelCompleted()) {
             gameLevel3D.pac3D().setMovementPowerMode(true);
@@ -553,7 +545,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onUnspecifiedChange(UnspecifiedChangeEvent event) {
         // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
-        ui.views().getPlayView().updateGameScene(context.currentGame(), true);
+        ui.views().getPlayView().updateGameScene(gameContext().currentGame(), true);
     }
 
     // protected

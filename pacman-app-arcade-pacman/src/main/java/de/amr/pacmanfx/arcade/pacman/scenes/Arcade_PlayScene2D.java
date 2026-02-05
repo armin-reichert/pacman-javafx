@@ -165,7 +165,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onPacDead(PacDeadEvent e) {
         // Trigger end of game state PACMAN_DYING after dying animation has finished
-        gameContext.currentGame().control().terminateGameState();
+        gameContext().currentGame().control().terminateGameState();
     }
 
     @Override

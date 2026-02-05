@@ -276,7 +276,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         switch (e.newState()) {
             case GameState.LEVEL_COMPLETE -> {
                 ui.soundManager().stopAll();
-                playLevelCompleteAnimation(gameContext.currentGame().level());
+                playLevelCompleteAnimation(gameContext().currentGame().level());
             }
             case GameState.GAME_OVER -> {
                 ui.soundManager().stopAll();
