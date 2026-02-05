@@ -578,11 +578,11 @@ public class PlayScene3D implements GameScene {
         perspectiveID.addListener((_, oldID, newID) -> {
             if (oldID != null) {
                 Perspective oldPerspective = perspectivesByID.get(oldID);
-                oldPerspective.detach(camera);
+                oldPerspective.stopControlling(camera);
             }
             if (newID != null) {
                 Perspective newPerspective = perspectivesByID.get(newID);
-                newPerspective.apply(camera);
+                newPerspective.startControlling(camera);
             }
             else {
                 Logger.error("New perspective ID is NULL!");
@@ -692,7 +692,7 @@ public class PlayScene3D implements GameScene {
         subScene.setFill(SCENE_FILL_DARK);
         new SequentialTransition(
             doNow(() -> {
-                currentPerspective().ifPresent(perspective -> perspective.apply(camera));
+                currentPerspective().ifPresent(perspective -> perspective.startControlling(camera));
                 gameLevel3D.setVisible(true);
                 scores3D.setVisible(true);
             }),

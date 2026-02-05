@@ -32,7 +32,7 @@ public class DronePerspective implements Perspective {
     }
 
     @Override
-    public void apply(PerspectiveCamera camera) {
+    public void startControlling(PerspectiveCamera camera) {
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
         camera.setFieldOfView(40); // default: 30

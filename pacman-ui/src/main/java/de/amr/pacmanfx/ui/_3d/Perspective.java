@@ -16,14 +16,14 @@ public interface Perspective {
      *
      * @param camera the camera of some scene
      */
-    void apply(PerspectiveCamera camera);
+    void startControlling(PerspectiveCamera camera);
 
     /**
      * Called when this perspective (camera controller) is detached from the camera of a scene.
      *
      * @param camera the camera of some scene
      */
-    default void detach(PerspectiveCamera camera) {}
+    default void stopControlling(PerspectiveCamera camera) {}
 
     /**
      * Called on every frame to update the camera within the given game context, e.g. to follow the Pac-Man in the
