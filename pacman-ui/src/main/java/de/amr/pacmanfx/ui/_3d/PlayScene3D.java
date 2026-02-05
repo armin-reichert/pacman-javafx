@@ -62,7 +62,49 @@ import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSecThen;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Common 3D play scene base class for all game variants.
+ * 3D implementation of the Pac‑Man play scene.
+ *
+ * <p>This scene is responsible for rendering and updating the full 3D
+ * representation of the current game level, including the maze, actors,
+ * food, bonus items, HUD elements, and all camera perspectives. It acts as
+ * the central coordinator between the game model, the 3D world, the active
+ * camera controller, and the UI framework.</p>
+ *
+ * <p>The scene manages:</p>
+ * <ul>
+ *   <li><strong>Lifecycle of the 3D level</strong> – creation, replacement,
+ *       disposal, and per‑frame updates of {@code GameLevel3D} and its
+ *       subcomponents.</li>
+ *   <li><strong>Camera perspectives</strong> – switching between multiple
+ *       {@link Perspective} strategies (drone, total, tracking, stalking),
+ *       delegating camera control to the active perspective, and handling
+ *       user input that affects perspective behavior.</li>
+ *   <li><strong>3D rendering infrastructure</strong> – creation of the
+ *       {@link SubScene}, camera setup, fade‑in animation, coordinate axes,
+ *       and placement of HUD elements such as scores.</li>
+ *   <li><strong>Game event handling</strong> – reacting to model events
+ *       (food eaten, bonus activated, state changes, level transitions,
+ *       Pac‑Man death, etc.) and updating the 3D world accordingly.</li>
+ *   <li><strong>Sound orchestration</strong> – enabling/disabling sounds,
+ *       playing contextual effects (munching, siren, ghost returning),
+ *       and synchronizing audio with game state.</li>
+ *   <li><strong>Input bindings</strong> – keyboard and scroll‑wheel
+ *       controls for perspective switching, drone height adjustment,
+ *       and rendering options.</li>
+ *   <li><strong>HUD and messaging</strong> – displaying READY/test messages,
+ *       score overlays, and animated text in the 3D world.</li>
+ * </ul>
+ *
+ * <p>The class is intentionally large because it serves as the integration
+ * point between many subsystems: the game model, the 3D rendering layer,
+ * the UI, input handling, and audio. It does not perform rendering itself;
+ * instead it delegates to {@code GameLevel3D} and the active
+ * {@link Perspective} implementation.</p>
+ *
+ * <p>Instances of this scene are created and managed by the {@link GameUI}.
+ * The scene is activated when switching from the 2D play scene to the 3D
+ * view, and it remains active until the user switches back or the game
+ * ends.</p>
  */
 public class PlayScene3D implements GameScene {
 
