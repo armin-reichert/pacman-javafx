@@ -38,7 +38,7 @@ public class PacManXXL_App extends Application {
         final var mapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
         final CoinMechanism coinMechanism = GameBox.instance().coinMechanism();
         ui = GameUI_Builder
-            .newUI(primaryStage, sceneSize.getWidth(), sceneSize.getHeight())
+            .newUI(primaryStage, sceneSize.getWidth(), sceneSize.getHeight(), GameBox.instance())
             .game(GameVariant.ARCADE_PACMAN_XXL,
                 () -> new PacManXXL_PacMan_GameModel(coinMechanism, mapSelector, HIGH_SCORE_FILE_PACMAN_XXL),
                 PacManXXL_PacMan_UIConfig::new)
