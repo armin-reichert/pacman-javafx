@@ -20,6 +20,47 @@ import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * Builder for constructing and configuring a {@link GameUI} instance.
+ *
+ * <p>This class provides a fluent API for assembling all components required
+ * to launch the Pac‑Man FX user interface. It allows clients to register
+ * multiple game variants, associate each variant with its own game model and
+ * UI configuration, define start pages, configure dashboard sections, and
+ * optionally enable interactive test modes.</p>
+ *
+ * <p>The builder separates concerns cleanly:</p>
+ * <ul>
+ *   <li><strong>Game variant registration</strong> – each variant is mapped to
+ *       a factory for creating its {@link AbstractGameModel}, a factory for
+ *       creating its {@link UIConfig}, and an optional {@link WorldMapSelector}.</li>
+ *
+ *   <li><strong>UI composition</strong> – start pages and dashboard sections
+ *       are collected and added to the resulting {@link GameUI} during
+ *       {@link #build()}.</li>
+ *
+ *   <li><strong>Optional interactive test states</strong> – when enabled via
+ *       {@link #includeTests(boolean)}, additional developer‑oriented states
+ *       (cutscene tests, mid‑level starts, etc.) are injected into the game’s
+ *       state machine. These states do not interfere with normal gameplay and
+ *       can only be entered through explicit developer key combinations.</li>
+ *
+ *   <li><strong>Window configuration</strong> – the builder stores the primary
+ *       JavaFX {@link Stage} and initial scene dimensions, ensuring the
+ *       resulting UI is initialized with the correct window context.</li>
+ * </ul>
+ *
+ * <p>The builder performs validation before constructing the UI to ensure that
+ * all required components are present and that configuration errors are
+ * detected early. The resulting {@link GameUI} is fully initialized, with all
+ * registered game variants, start pages, dashboards, and optional test modes
+ * ready for use.</p>
+ *
+ * <p>Instances of this builder are created via
+ * {@link #newUI(Stage, double, double, GameBox)}, after which clients may
+ * chain configuration calls before invoking {@link #build()} to obtain the
+ * final UI.</p>
+ */
 public class GameUI_Builder {
 
     private record WindowData(Stage stage, double sceneWidth, double sceneHeight) {}
