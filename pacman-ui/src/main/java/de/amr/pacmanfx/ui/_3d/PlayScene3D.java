@@ -166,7 +166,7 @@ public class PlayScene3D implements GameScene {
         }
     }
 
-    private final Map<PerspectiveID, Perspective> perspectivesByID = new EnumMap<>(PerspectiveID.class);
+    private final Map<PerspectiveID, Perspective<GameLevel>> perspectivesByID = new EnumMap<>(PerspectiveID.class);
 
     private final ObjectProperty<PerspectiveID> perspectiveID = new SimpleObjectProperty<>(PerspectiveID.NEAR_PLAYER);
 
@@ -176,7 +176,7 @@ public class PlayScene3D implements GameScene {
             currentPerspective()
                 .filter(DronePerspective.class::isInstance)
                 .map(DronePerspective.class::cast)
-                .ifPresent(dronePerspective -> dronePerspective.moveUp(camera));
+                .ifPresent(DronePerspective::moveUp);
         }
         @Override
         public boolean isEnabled(GameUI ui) {
@@ -190,7 +190,7 @@ public class PlayScene3D implements GameScene {
             currentPerspective()
                 .filter(DronePerspective.class::isInstance)
                 .map(DronePerspective.class::cast)
-                .ifPresent(dronePerspective -> dronePerspective.moveDown(camera));
+                .ifPresent(DronePerspective::moveDown);
         }
         @Override
         public boolean isEnabled(GameUI ui) {
@@ -204,7 +204,7 @@ public class PlayScene3D implements GameScene {
             currentPerspective()
                 .filter(DronePerspective.class::isInstance)
                 .map(DronePerspective.class::cast)
-                .ifPresent(dronePerspective -> dronePerspective.moveDefaultHeight(camera));
+                .ifPresent(DronePerspective::moveDefaultHeight);
         }
         @Override
         public boolean isEnabled(GameUI ui) {
@@ -315,21 +315,24 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void update(Game game) {
-        final long tick = ui.clock().tickCount();
+        final GameLevel level = game.optGameLevel().orElse(null);
+
         // Scene is already updated 2 ticks before the game level gets created!
-        if (game.optGameLevel().isEmpty()) {
-            Logger.info("Tick #{}: Game level not yet created, update ignored", tick);
+        if (level == null) {
+            Logger.info("Tick #{}: Game level not yet created, update ignored", ui.clock().tickCount());
             return;
         }
+
         if (gameLevel3D == null) {
-            Logger.info("Tick #{}: 3D game level not yet created", tick);
+            Logger.info("Tick #{}: 3D game level not yet created", ui.clock().tickCount());
             return;
         }
+
         gameLevel3D.update();
-        updatePerspective();
+        updatePerspective(level);
         updateHUD(game);
-        ui.soundManager().setEnabled(!game.level().isDemoLevel());
-        updateSound(game.level());
+        ui.soundManager().setEnabled(!level.isDemoLevel());
+        updateSound(level);
     }
 
     @Override
@@ -586,7 +589,7 @@ public class PlayScene3D implements GameScene {
         return perspectiveID;
     }
 
-    public Optional<Perspective> currentPerspective() {
+    public Optional<Perspective<GameLevel>> currentPerspective() {
         return perspectiveID.get() == null ? Optional.empty() : Optional.of(perspectivesByID.get(perspectiveID.get()));
     }
 
@@ -614,19 +617,19 @@ public class PlayScene3D implements GameScene {
     }
 
     private void createPerspectives() {
-        perspectivesByID.put(PerspectiveID.DRONE, new DronePerspective());
-        perspectivesByID.put(PerspectiveID.TOTAL, new TotalPerspective());
-        perspectivesByID.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective());
-        perspectivesByID.put(PerspectiveID.NEAR_PLAYER, new StalkingPlayerPerspective());
+        perspectivesByID.put(PerspectiveID.DRONE, new DronePerspective(camera));
+        perspectivesByID.put(PerspectiveID.TOTAL, new TotalPerspective(camera));
+        perspectivesByID.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective(camera));
+        perspectivesByID.put(PerspectiveID.NEAR_PLAYER, new StalkingPlayerPerspective(camera));
 
         perspectiveID.addListener((_, oldID, newID) -> {
             if (oldID != null) {
-                final Perspective oldPerspective = perspectivesByID.get(oldID);
-                oldPerspective.stopControlling(camera);
+                final Perspective<GameLevel> oldPerspective = perspectivesByID.get(oldID);
+                oldPerspective.stopControlling();
             }
             if (newID != null) {
-                final Perspective newPerspective = perspectivesByID.get(newID);
-                newPerspective.startControlling(camera);
+                final Perspective<GameLevel> newPerspective = perspectivesByID.get(newID);
+                newPerspective.startControlling();
             }
             else {
                 Logger.error("New perspective ID is NULL!");
@@ -634,10 +637,10 @@ public class PlayScene3D implements GameScene {
         });
     }
 
-    private void updatePerspective() {
+    private void updatePerspective(GameLevel level) {
         final PerspectiveID id = perspectiveID.get();
         if (id != null && perspectivesByID.containsKey(id)) {
-            perspectivesByID.get(id).update(camera, gameContext());
+            perspectivesByID.get(id).update(level);
         } else {
             Logger.error("No perspective with ID '{}' exists", id);
         }
@@ -725,7 +728,7 @@ public class PlayScene3D implements GameScene {
         return new Timeline(
             new KeyFrame(Duration.ZERO, _ -> {
                 //TODO Check if this is needed:
-                currentPerspective().ifPresent(perspective -> perspective.startControlling(camera));
+                currentPerspective().ifPresent(Perspective::startControlling);
                 subScene.setFill(SCENE_FILL_DARK);
                 gameLevel3D.setVisible(true);
                 scores3D.setVisible(true);

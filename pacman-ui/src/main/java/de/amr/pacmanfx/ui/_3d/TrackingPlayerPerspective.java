@@ -3,17 +3,24 @@
  */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.model.GameLevel;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
+import static java.util.Objects.requireNonNull;
 
-public class TrackingPlayerPerspective implements Perspective {
+public class TrackingPlayerPerspective implements Perspective<GameLevel> {
+
+    private final PerspectiveCamera camera;
+
+    public TrackingPlayerPerspective(PerspectiveCamera camera) {
+        this.camera = requireNonNull(camera);
+    }
 
     @Override
-    public void startControlling(PerspectiveCamera camera) {
+    public void startControlling() {
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
         camera.setFieldOfView(40); // default: 30
@@ -23,15 +30,13 @@ public class TrackingPlayerPerspective implements Perspective {
     }
 
     @Override
-    public void update(PerspectiveCamera camera, GameContext gameContext) {
-        gameContext.currentGame().optGameLevel().ifPresent(gameLevel -> {
-            double speedX = 0.03;
-            double speedY = 0.06;
-            double worldWidth = gameLevel.worldMap().numCols() * TS;
-            double targetX = Math.clamp(gameLevel.pac().x(), 80, worldWidth - 80);
-            double targetY = gameLevel.pac().y() + 150;
-            camera.setTranslateX(lerp(camera.getTranslateX(), targetX, speedX));
-            camera.setTranslateY(lerp(camera.getTranslateY(), targetY, speedY));
-        });
+    public void update(GameLevel level) {
+        double speedX = 0.03;
+        double speedY = 0.06;
+        double worldWidth = level.worldMap().numCols() * TS;
+        double targetX = Math.clamp(level.pac().x(), 80, worldWidth - 80);
+        double targetY = level.pac().y() + 150;
+        camera.setTranslateX(lerp(camera.getTranslateX(), targetX, speedX));
+        camera.setTranslateY(lerp(camera.getTranslateY(), targetY, speedY));
     }
 }

@@ -3,34 +3,28 @@
  */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.GameContext;
-import javafx.scene.PerspectiveCamera;
-
 /**
  * Implemented by scene camera perspectives (camera controller).
+ *
+ * @param <C> "context" of this camera perspective, e.g. the game context or game level.
  */
-public interface Perspective {
+public interface Perspective<C> {
 
     /**
      * Called when this perspective (camera controller) is applied to the camera of a scene.
-     *
-     * @param camera the camera of some scene
      */
-    void startControlling(PerspectiveCamera camera);
+    void startControlling();
 
     /**
      * Called when this perspective (camera controller) is detached from the camera of a scene.
-     *
-     * @param camera the camera of some scene
      */
-    default void stopControlling(PerspectiveCamera camera) {}
+    default void stopControlling() {}
 
     /**
      * Called on every frame to update the camera within the given game context, e.g. to follow the Pac-Man in the
      * current game level.
-     *
-     * @param camera the camera of some scene
-     * @param gameContext the game context
+
+     * @param context the camera context
      */
-    void update(PerspectiveCamera camera, GameContext gameContext);
+    void update(C context);
 }
