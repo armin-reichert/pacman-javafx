@@ -79,11 +79,11 @@ public final class GameUI_Implementation implements GameUI {
 
     private StringBinding titleBinding;
 
-    public GameUI_Implementation(GameContext context, Stage stage, double sceneWidth, double sceneHeight) {
+    public GameUI_Implementation(GameContext context, Stage stage, double mainSceneWidth, double mainSceneHeight) {
         requireNonNull(context);
         requireNonNull(stage);
-        requireNonNegative(sceneWidth);
-        requireNonNegative(sceneHeight);
+        requireNonNegative(mainSceneWidth);
+        requireNonNegative(mainSceneHeight);
 
         this.context = context;
         this.stage = stage;
@@ -91,7 +91,7 @@ public final class GameUI_Implementation implements GameUI {
         clock.setPausableAction(this::simulateAndUpdateGameScene);
         clock.setPermanentAction(this::render);
 
-        sceneLayout.setPrefSize(sceneWidth, sceneHeight);
+        sceneLayout.setPrefSize(mainSceneWidth, mainSceneHeight);
         viewManager = new ViewManager(this, scene, this::createEditorView, flashMessageView);
 
         soundManager.muteProperty().bind(GameUI.PROPERTY_MUTED);

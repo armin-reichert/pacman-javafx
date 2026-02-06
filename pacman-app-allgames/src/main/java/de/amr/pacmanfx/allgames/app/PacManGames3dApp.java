@@ -59,6 +59,8 @@ public class PacManGames3dApp extends Application {
     private static final float ASPECT_RATIO    = 1.6f; // 16:10
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
+    private static final boolean INCLUDE_TESTS = true;
+
     private static final List<CommonDashboardID> DASHBOARD_IDs = List.of(
         CommonDashboardID.GENERAL,
         CommonDashboardID.GAME_CONTROL,
@@ -111,11 +113,12 @@ public class PacManGames3dApp extends Application {
                     .startPage(TengenMsPacMan_StartPage::new)
                     .startPage(PacManXXL_StartPage::new)
                     .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
+                    .includeTests(INCLUDE_TESTS)
                     .build();
             }
             else {
                 for (GameVariant variant : GameVariant.values()) {
-                    registerGameWithTestStates(variant, xxlMapSelector);
+                    registerGame(variant, xxlMapSelector);
                 }
                 ui = new GameUI_Implementation(GameBox.instance(), primaryStage, sceneSize.getWidth(), sceneSize.getHeight());
 
@@ -153,7 +156,7 @@ public class PacManGames3dApp extends Application {
         }
     }
 
-    private void registerGameWithTestStates(GameVariant gameVariant, PacManXXL_MapSelector xxlMapSelector) {
+    private void registerGame(GameVariant gameVariant, PacManXXL_MapSelector xxlMapSelector) {
         final File highScoreFile = highScoreFile(gameVariant);
         final CoinMechanism coinMechanism = GameBox.instance().coinMechanism();
         final Game game = switch (gameVariant) {
@@ -163,10 +166,12 @@ public class PacManGames3dApp extends Application {
             case ARCADE_PACMAN_XXL    -> new PacManXXL_PacMan_GameModel(coinMechanism, xxlMapSelector, highScoreFile);
             case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(coinMechanism, xxlMapSelector, highScoreFile);
         };
-        final StateMachine<Game> gameStateMachine = game.control().stateMachine();
-        gameStateMachine.addState(new LevelShortTestState());
-        gameStateMachine.addState(new LevelMediumTestState());
-        gameStateMachine.addState(new CutScenesTestState());
+        if (INCLUDE_TESTS) {
+            final StateMachine<Game> gameStateMachine = game.control().stateMachine();
+            gameStateMachine.addState(new LevelShortTestState());
+            gameStateMachine.addState(new LevelMediumTestState());
+            gameStateMachine.addState(new CutScenesTestState());
+        }
         GameBox.instance().registerGame(gameVariant.name(), game);
     }
 
