@@ -25,123 +25,224 @@ import javafx.scene.image.Image;
 import org.tinylog.Logger;
 
 /**
- * Game-variant specific configuration of the UI. Provides factory methods for renderers and actors and accessors to
- * the game-variant specific assets.
+ * Defines the complete UI configuration for a specific game variant.
+ *
+ * <p>A {@code UIConfig} acts as the variant‑specific theme provider for the
+ * {@link GameUI} framework. It supplies all assets, renderers, animations,
+ * color schemes, and 3D models required to present the game according to the
+ * visual and audio rules of the selected variant (e.g., Arcade Pac‑Man,
+ * Ms. Pac‑Man, Tengen, etc.).</p>
+ *
+ * <p>The configuration is responsible for:</p>
+ *
+ * <ul>
+ *   <li><strong>Asset management</strong> – loading, exposing, and disposing
+ *       images, colors, localized texts, and sprite sheets via an
+ *       {@link AssetMap}.</li>
+ *
+ *   <li><strong>Renderer factories</strong> – creating renderers for 2D game
+ *       scenes, game levels, actors, and the heads‑up display.</li>
+ *
+ *   <li><strong>Animation factories</strong> – providing animation managers
+ *       for Pac‑Man and each ghost personality.</li>
+ *
+ *   <li><strong>3D model factories</strong> – constructing 3D representations
+ *       of Pac‑Man and the lives counter when the 3D play scene is enabled.</li>
+ *
+ *   <li><strong>Color scheme selection</strong> – returning the appropriate
+ *       {@link WorldMapColorScheme} for a given maze.</li>
+ *
+ *   <li><strong>Variant‑specific UI behavior</strong> – such as defining the
+ *       delay between munching sound effects or selecting sprite regions for
+ *       special scenes.</li>
+ * </ul>
+ *
+ * <p>The lifecycle of a {@code UIConfig} is:</p>
+ *
+ * <ol>
+ *   <li>{@link #init(GameUI)} is called once when the UI is created.</li>
+ *   <li>Renderers, assets, and animations are requested on demand.</li>
+ *   <li>{@link #dispose()} is called when the UI shuts down, which by default
+ *       disposes all loaded assets.</li>
+ * </ol>
+ *
+ * <p>Implementations of this interface are expected to be stateless aside from
+ * their asset maps and any cached renderers they choose to maintain.</p>
  */
 public interface UIConfig extends Disposable {
 
     enum ConfigKey { COLOR_SCHEME, COLOR_MAP_INDEX, MAP_NUMBER }
 
+    /**
+     * Initializes this UI configuration. Called once when the {@link GameUI}
+     * is created.
+     *
+     * @param ui the game UI instance that owns this configuration
+     */
     void init(GameUI ui);
 
+    /**
+     * Disposes all assets stored in the {@link AssetMap}. Called automatically
+     * by {@link #dispose()} unless overridden.
+     */
     default void disposeAssets() {
         Logger.info("Dispose {} assets", assets().numAssets());
         assets().dispose();
     }
 
     /**
-     * @return the game variant specific asset map
+     * Returns the asset map containing all variant‑specific images, colors,
+     * localized texts, and other resources.
+     *
+     * @return the asset map for this UI configuration
      */
     AssetMap assets();
 
     /**
-     * @return the spritesheet for this game variant
+     * Returns the sprite sheet used by this game variant.
+     *
+     * @return the variant‑specific sprite sheet
      */
     SpriteSheet<?> spriteSheet();
 
     /**
-     * @return spritesheet region from which the Arcade boot scene takes its random content.
+     * Returns the sprite sheet region used by the Arcade boot scene to select
+     * random content. Variants may override this to restrict the region.
+     *
+     * @return the sprite region used by the boot scene
      */
     default Rectangle2D spriteRegionForArcadeBootScene() {
-        return new Rectangle2D(0, 0, spriteSheet().sourceImage().getWidth(), spriteSheet().sourceImage().getHeight());
+        return new Rectangle2D(
+            0,
+            0,
+            spriteSheet().sourceImage().getWidth(),
+            spriteSheet().sourceImage().getHeight()
+        );
     }
 
     /**
-     * Minimum number of ticks since the last pellet eaten time until the next munching sound is played.
+     * Returns the minimum number of game ticks that must pass between two
+     * consecutive pellet‑munching sound effects.
      *
-     * @return if the munching sound should be played
+     * @return the required delay in ticks (0 means no delay)
      */
     default byte munchingSoundDelay() {
         return 0;
     }
 
     /**
-     * @param symbol bonus symbol code
-     * @return image representing the bonus symbol in a 2D scene
+     * Returns the 2D image representing the bonus symbol for the given code.
+     *
+     * @param symbol the bonus symbol code
+     * @return the image representing the bonus symbol
      */
     Image bonusSymbolImage(byte symbol);
 
     /**
-     * @param symbol bonus symbol code
-     * @return image representing the bonus value (points earned) in a 2D scene
+     * Returns the 2D image representing the bonus value (points earned) for
+     * the given bonus symbol code.
+     *
+     * @param symbol the bonus symbol code
+     * @return the image representing the bonus value
      */
     Image bonusValueImage(byte symbol);
 
     /**
-     * @param worldMap a world map (maze)
-     * @return the color scheme to use for this maze
+     * Returns the color scheme to use for the given world map (maze).
+     *
+     * @param worldMap the world map whose colors should be determined
+     * @return the color scheme for the given map
      */
     WorldMapColorScheme colorScheme(WorldMap worldMap);
 
     /**
-     * @param canvas the canvas where the 2D scene gets rendered
-     * @return a new renderer for a game level
+     * Creates a renderer for drawing the game level on the given canvas.
+     *
+     * @param canvas the canvas where the game level will be rendered
+     * @return a new game level renderer
      */
     GameLevelRenderer createGameLevelRenderer(Canvas canvas);
 
     /**
-     * @param ui the game UI
-     * @param canvas the canvas where the 2D scene gets rendered
-     * @param gameScene2D the game scene to be rendered
-     * @return a new renderer for the game scene
+     * Creates a renderer for drawing the specified 2D game scene.
+     *
+     * @param ui the owning game UI
+     * @param canvas the canvas where the scene will be rendered
+     * @param gameScene2D the 2D game scene to render
+     * @return a new renderer for the given scene
      */
     GameScene2D_Renderer createGameSceneRenderer(GameUI ui, Canvas canvas, GameScene2D gameScene2D);
 
     /**
-     * @param canvas canvas
-     * @param gameScene2D game scene
-     * @return a new renderer for the heads-up display (HUD)
+     * Creates a renderer for drawing the heads‑up display (HUD) of the given
+     * 2D game scene.
+     *
+     * @param canvas the canvas where the HUD will be rendered
+     * @param gameScene2D the game scene whose HUD should be rendered
+     * @return a new HUD renderer
      */
     HeadsUpDisplay_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D);
 
     /**
-     * @param canvas the canvas where the 2D scene gets rendered
-     * @return a new renderer for the actors
+     * Creates a renderer for drawing actors (Pac‑Man, ghosts, bonus items)
+     * in a 2D game scene.
+     *
+     * @param canvas the canvas where actors will be rendered
+     * @return a new actor renderer
      */
     ActorRenderer createActorRenderer(Canvas canvas);
 
     /**
-     * @param personality a ghost personality
-     * @return a ghost instance with this personality's behavior
+     * Creates a ghost instance with the specified personality and assigns it
+     * the appropriate animation manager for this variant.
+     *
+     * @param personality the ghost personality code
+     * @return a new ghost instance configured for this variant
      */
     Ghost createGhostWithAnimations(byte personality);
 
     /**
-     * @param personality a ghost personality
-     * @return an animation manager containing the animations for a  ghost instance with this personality's behavior
+     * Creates an animation manager containing all animations for a ghost with
+     * the specified personality.
+     *
+     * @param personality the ghost personality code
+     * @return the animation manager for the ghost
      */
     AnimationManager createGhostAnimations(byte personality);
 
     /**
-     * @return an animation manager with Pac-Man or Ms. Pac-Man animations (depending on the game variant)
+     * Creates an animation manager containing all animations for Pac‑Man or
+     * Ms. Pac‑Man, depending on the game variant.
+     *
+     * @return the animation manager for Pac‑Man
      */
     AnimationManager createPacAnimations();
 
     /**
+     * Creates the 3D representation of Pac‑Man or Ms. Pac‑Man for this game
+     * variant, including model, materials, and animation bindings.
+     *
      * @param animationRegistry the registry where animations are stored
-     * @param pac Pac-Man or Ms Pac-Man actor
-     * @return 3D representation for Pac-Man or Ms. Pac-Man in this game variant
+     * @param pac the Pac‑Man actor whose animations and state drive the model
+     * @param size the desired size of the 3D model
+     * @return the 3D representation of Pac‑Man
      */
     PacBase3D createPac3D(AnimationRegistry animationRegistry, Pac pac, double size);
 
     /**
-     * @return 3D representation of a lives counter
+     * Creates the 3D representation of the lives counter for this variant.
+     *
+     * @param size the desired size of the 3D shape
+     * @return the 3D node representing a life icon
      */
     Node createLivesCounterShape3D(double size);
 
     /**
-     * @param killedIndex index in sequence of killed ghosts
-     * @return image of the points value earned for killing the ghost
+     * Returns the image representing the points earned for killing a ghost
+     * at the given index in the sequence of killed ghosts.
+     *
+     * @param killedIndex the index of the killed ghost (0 = first, 1 = second, ...)
+     * @return the image showing the points value
      */
     Image killedGhostPointsImage(int killedIndex);
 }

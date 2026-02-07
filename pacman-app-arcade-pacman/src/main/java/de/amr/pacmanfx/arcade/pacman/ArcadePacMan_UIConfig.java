@@ -49,6 +49,61 @@ import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static java.util.Objects.requireNonNull;
 
+/**
+ * UI configuration for the Arcade Pac‑Man game variant.
+ *
+ * <p>This class defines the complete visual, audio, and scene‑selection
+ * configuration for the authentic arcade‑style Pac‑Man experience. It acts
+ * as the central theme provider for this variant, supplying all assets,
+ * renderers, animations, color schemes, and game scenes required by the
+ * {@link GameUI} framework.</p>
+ *
+ * <p>The configuration covers several major responsibilities:</p>
+ *
+ * <ul>
+ *   <li><strong>Asset management</strong> – loads and disposes images,
+ *       colors, localized texts, and sprite sheets used throughout the
+ *       arcade UI. All assets are stored in an {@link AssetMap} for easy
+ *       lookup by renderers and scenes.</li>
+ *
+ *   <li><strong>Sound initialization</strong> – registers all sound effects,
+ *       voice clips, and siren loops with the {@link SoundManager}, ensuring
+ *       that audio playback matches the original arcade behavior.</li>
+ *
+ *   <li><strong>Renderer factories</strong> – creates specialized renderers
+ *       for 2D scenes, the game level, the HUD, and individual actors. These
+ *       renderers use arcade‑accurate palettes, sprite sheets, and smoothing
+ *       rules.</li>
+ *
+ *   <li><strong>3D model factories</strong> – provides 3D shapes and models
+ *       for Pac‑Man and the lives counter when the 3D play scene is enabled.
+ *       Colors and lighting are derived from the arcade palette.</li>
+ *
+ *   <li><strong>Animation factories</strong> – constructs animation sets for
+ *       Pac‑Man and each ghost personality, ensuring that movement and state
+ *       transitions match the arcade rules.</li>
+ *
+ *   <li><strong>Scene creation and caching</strong> – lazily creates and
+ *       caches all game scenes (boot, intro, start, play, cutscenes, 3D
+ *       play scene). Scenes are reused across the game lifecycle and
+ *       disposed when the configuration is released.</li>
+ *
+ *   <li><strong>Scene selection logic</strong> – maps the current game state
+ *       to the appropriate {@link GameScene}, including support for
+ *       intermissions, cutscenes, and developer test states.</li>
+ *
+ *   <li><strong>Color scheme selection</strong> – provides the arcade
+ *       wall/door color scheme for maze rendering.</li>
+ * </ul>
+ *
+ * <p>Although this class is large, it serves as the authoritative definition
+ * of the Arcade Pac‑Man presentation layer. All visual and audio behavior
+ * specific to this variant is centralized here, keeping the rest of the UI
+ * framework clean and variant‑agnostic.</p>
+ *
+ * <p>Instances of this configuration are created by the {@link GameUI}
+ * during initialization and remain active for the lifetime of the UI.</p>
+ */
 public class ArcadePacMan_UIConfig implements UIConfig, GameSceneConfig, ResourceManager {
 
     public static final Set<ActionBinding> GAME_START_BINDINGS = Set.of(
