@@ -23,13 +23,18 @@ public class VoiceManager {
         stopVoice();
         player = new MediaPlayer(voiceMedia);
         player.muteProperty().bind(GameUI.PROPERTY_MUTED);
+        player.setOnError(() ->
+            Logger.error("Voice playback error: {}", player.getError())
+        );
         player.play();
     }
 
     public void stopVoice() {
         if (player != null) {
             player.stop();
+            player.muteProperty().unbind();
+            player.dispose();
+            player = null;
         }
-        player = null;
     }
 }
