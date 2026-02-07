@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.event.CreditAddedEvent;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameUI;
@@ -23,7 +24,8 @@ public interface ArcadeActions {
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().currentGame();
             final CoinMechanism coinMechanism = ui.gameContext().coinMechanism();
-            if (coinMechanism.numCoins() < coinMechanism.maxCoins()) {
+            final boolean acceptsCoin = coinMechanism.numCoins() < coinMechanism.maxCoins();
+            if (acceptsCoin) {
                 coinMechanism.insertCoin();
                 ui.soundManager().setEnabled(true);
                 ui.voicePlayer().stopVoice();
@@ -40,10 +42,10 @@ public interface ArcadeActions {
             if (game.isPlaying()) {
                 return false;
             }
-            return game.control().state() == SETTING_OPTIONS_FOR_START
-                || game.control().state() == INTRO
-                || game.optGameLevel().isPresent() && game.level().isDemoLevel()
-                || ui.gameContext().coinMechanism().isEmpty();
+            final boolean noCredit = ui.gameContext().coinMechanism().isEmpty();
+            final boolean demoLevel = game.optGameLevel().isPresent() && game.level().isDemoLevel();
+            final StateMachine.State<Game> gameState = game.control().state();
+            return gameState == SETTING_OPTIONS_FOR_START || gameState == INTRO || demoLevel || noCredit;
         }
     };
 
@@ -57,8 +59,10 @@ public interface ArcadeActions {
         @Override
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.gameContext().currentGame();
-            return ui.gameContext().coinMechanism().numCoins() > 0
-                && (game.control().state() == INTRO || game.control().state() == SETTING_OPTIONS_FOR_START)
+            boolean hasCredit = !ui.gameContext().coinMechanism().isEmpty();
+            final StateMachine.State<Game> gameState = game.control().state();
+            return hasCredit
+                && (gameState == INTRO || gameState == SETTING_OPTIONS_FOR_START)
                 && game.canStartNewGame();
         }
     };
