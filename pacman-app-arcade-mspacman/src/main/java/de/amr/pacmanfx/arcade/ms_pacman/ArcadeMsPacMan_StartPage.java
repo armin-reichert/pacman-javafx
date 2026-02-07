@@ -9,23 +9,27 @@ import de.amr.pacmanfx.ui.layout.FlyerStartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.media.Media;
 
-public class ArcadeMsPacMan_StartPage extends FlyerStartPage {
+public class ArcadeMsPacMan_StartPage extends FlyerStartPage implements ResourceManager {
 
-    private static final ResourceManager LOCAL_RESOURCES = () -> ArcadeMsPacMan_StartPage.class;
-    private static final Media VOICE = LOCAL_RESOURCES.loadMedia("sound/flyer-text.mp3");
+    private final Media flyerReadingVoice = loadMedia("sound/flyer-text.mp3");
 
     public ArcadeMsPacMan_StartPage() {
         setTitle("Ms. Pac-Man (Arcade)");
         flyer.setImages(
-            LOCAL_RESOURCES.loadImage("graphics/flyer-page-1.jpg"),
-            LOCAL_RESOURCES.loadImage("graphics/flyer-page-2.jpg")
+            loadImage("graphics/flyer-page-1.jpg"),
+            loadImage("graphics/flyer-page-2.jpg")
         );
+    }
+
+    @Override
+    public final Class<?> resourceRootClass() {
+        return ArcadeMsPacMan_StartPage.class;
     }
 
     @Override
     public void onEnterStartPage(GameUI ui) {
         flyer.selectPage(0);
-        ui.voicePlayer().playVoice(VOICE);
+        ui.voicePlayer().playVoice(flyerReadingVoice);
         ui.gameContext().gameVariantNameProperty().set(GameVariant.ARCADE_MS_PACMAN.name());
     }
 }
