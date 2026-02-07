@@ -308,10 +308,10 @@ public final class CommonGameActions {
         @Override
         public boolean isEnabled(GameUI ui) {
             final StateMachine.State<?> state = ui.gameContext().currentGameState();
-            if (state.matches(LevelShortTestState.class.getSimpleName(), LevelMediumTestState.class.getSimpleName())) {
+            if (state.nameMatches(LevelShortTestState.class.getSimpleName(), LevelMediumTestState.class.getSimpleName())) {
                 return true;
             }
-            return state.matches(StateName.BOOT, StateName.INTRO, StateName.SETTING_OPTIONS_FOR_START, StateName.HUNTING);
+            return state.nameMatches(StateName.BOOT.name(), StateName.INTRO.name(), StateName.SETTING_OPTIONS_FOR_START.name(), StateName.HUNTING.name());
         }
     };
 }

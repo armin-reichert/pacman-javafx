@@ -75,31 +75,31 @@ public class DashboardSectionGameControl extends DashboardSection {
         //TODO use binding
         choiceBoxInitialLives.setValue(game.initialLifeCount());
 
-        boolean creditDisabled = !state.matches(StateName.INTRO, StateName.SETTING_OPTIONS_FOR_START);
+        boolean creditDisabled = !state.nameMatches(StateName.INTRO.name(), StateName.SETTING_OPTIONS_FOR_START.name());
         spinnerCredit.setDisable(creditDisabled);
-        choiceBoxInitialLives.setDisable(!state.matches(StateName.INTRO));
+        choiceBoxInitialLives.setDisable(!state.nameMatches(StateName.INTRO.name()));
 
         boolean booting = isBooting(state);
         buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(game, state));
         buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || ui.gameContext().currentGame().optGameLevel().isEmpty());
         buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(game, state));
 
-        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !state.matches(StateName.INTRO));
+        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !state.nameMatches(StateName.INTRO.name()));
         buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT] .setDisable(booting || !(state instanceof CutScenesTestState));
 
         cbCollisionCheckedTwice.setSelected(game.isCollisionDoubleChecked());
     }
 
     private boolean isBooting(StateMachine.State<?> state) {
-        return state.matches(StateName.BOOT);
+        return state.nameMatches(StateName.BOOT.name());
     }
 
     private boolean canStartLevel(Game game, StateMachine.State<?> state) {
         return game.canStartNewGame()
-            && state.matches(StateName.INTRO, StateName.SETTING_OPTIONS_FOR_START);
+            && state.nameMatches(StateName.INTRO.name(), StateName.SETTING_OPTIONS_FOR_START.name());
     }
 
     private boolean canEnterNextLevel(Game game, StateMachine.State<?> state) {
-        return game.isPlaying() && state.matches(StateName.HUNTING);
+        return game.isPlaying() && state.nameMatches(StateName.HUNTING.name());
     }
 }

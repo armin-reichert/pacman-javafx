@@ -30,13 +30,14 @@ public class HelpInfo {
         final StateMachine.State<?> state = game.control().state();
 
         HelpInfo helpInfo = new HelpInfo(ui);
-        if (state.matches(StateName.INTRO)) {
+        if (state.nameMatches(StateName.INTRO.name())) {
             helpInfo.addInfoForIntroScene(game);
         }
-        else if (state.matches(StateName.SETTING_OPTIONS_FOR_START)) {
+        else if (state.nameMatches(StateName.SETTING_OPTIONS_FOR_START.name())) {
             helpInfo.addInfoForCreditScene(game);
         }
-        else if (state.matches(StateName.STARTING_GAME_OR_LEVEL, StateName.HUNTING, StateName.PACMAN_DYING, StateName.EATING_GHOST)) {
+        else if (state.nameMatches(StateName.STARTING_GAME_OR_LEVEL.name(), StateName.HUNTING.name(),
+                StateName.PACMAN_DYING.name(), StateName.EATING_GHOST.name())) {
             if (demoLevel) {
                 helpInfo.addInfoForDemoLevelPlayScene();
             } else {

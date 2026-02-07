@@ -264,7 +264,8 @@ public class GameLevel3D extends Group implements Disposable {
     private void updateLivesCounter3D() {
         if (livesCounter3D != null) {
             final GameControl gameControl = level.game().control();
-            final boolean oneMore = gameControl.state().matches(GameControl.StateName.STARTING_GAME_OR_LEVEL) && !level.pac().isVisible();
+            final boolean oneMore = gameControl.state().nameMatches(GameControl.StateName.STARTING_GAME_OR_LEVEL.name())
+                    && !level.pac().isVisible();
             final boolean visible = level.game().canStartNewGame();
             int lifeCount = level.game().lifeCount() - 1;
             // when the game starts and Pac-Man is not yet visible, show one more

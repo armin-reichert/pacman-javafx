@@ -229,7 +229,7 @@ public class PlayView extends StackPane implements View {
                 optGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
             }
             case GameStateChangeEvent _ -> {
-                if (gameState.matches(GameControl.StateName.LEVEL_COMPLETE)) {
+                if (gameState.nameMatches(GameControl.StateName.LEVEL_COMPLETE.name())) {
                     miniView.slideOut();
                 }
             }

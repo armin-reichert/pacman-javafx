@@ -37,17 +37,9 @@ public class StateMachine<CONTEXT> {
 
         String name();
 
-        default boolean matches(String... names) {
-            requireNonNull(names);
+        default boolean nameMatches(String... names) {
             if (names.length == 0) return false;
-            return Stream.of(names).anyMatch(name -> name.equals(name()));
-        }
-
-        @SuppressWarnings("unchecked")
-        default <E extends Enum<E>> boolean matches(E... alternatives) {
-            requireNonNull(alternatives);
-            if (alternatives.length == 0) return false;
-            return Stream.of(alternatives).anyMatch(state -> state.name().equals(name()));
+            return Stream.of(names).anyMatch(name -> name().equals(name));
         }
 
         /**
