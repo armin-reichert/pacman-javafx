@@ -15,7 +15,10 @@ import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import javafx.stage.Stage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
@@ -40,7 +43,7 @@ import static java.util.Objects.requireNonNull;
  *       {@link #build()}.</li>
  *
  *   <li><strong>Optional interactive test states</strong> – when enabled via
- *       {@link #includeTests(boolean)}, additional developer‑oriented states
+ *       {@link #includeInteractiveTests(boolean)}, additional developer‑oriented states
  *       (cutscene tests, mid‑level starts, etc.) are injected into the game’s
  *       state machine. These states do not interfere with normal gameplay and
  *       can only be entered through explicit developer key combinations.</li>
@@ -63,9 +66,12 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameUI_Builder {
 
-    private record WindowData(Stage stage, double sceneWidth, double sceneHeight) {}
+    private record WindowConfig(
+        Stage stage,
+        double sceneWidth,
+        double sceneHeight) {}
 
-    private record Configuration(
+    private record GameConfig(
         Supplier<? extends AbstractGameModel> gameModelFactory,
         Supplier<? extends UIConfig> uiConfigFactory,
         WorldMapSelector mapSelector) {}
@@ -75,14 +81,14 @@ public class GameUI_Builder {
     }
 
     private final GameBox gameBox;
-    private final WindowData windowData;
-    private final Map<String, Configuration> configByGameVariant = new LinkedHashMap<>();
+    private final WindowConfig windowConfig;
+    private final Map<String, GameConfig> gameConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
-    private List<CommonDashboardID> dashboardIDs = List.of();
-    private boolean includeTests;
+    private final List<CommonDashboardID> dashboardIDs = new ArrayList<>();
+    private boolean includeInteractiveTests;
 
     private GameUI_Builder(Stage stage, double mainSceneWidth, double mainSceneHeight, GameBox gameBox) {
-        windowData = new WindowData(stage, mainSceneWidth, mainSceneHeight);
+        windowConfig = new WindowConfig(stage, mainSceneWidth, mainSceneHeight);
         this.gameBox = gameBox;
     }
 
@@ -90,17 +96,17 @@ public class GameUI_Builder {
         String variantName,
         Supplier<? extends AbstractGameModel> gameModelFactory,
         Supplier<? extends UIConfig> uiConfigFactory,
-        WorldMapSelector optionalMapSelector)
+        WorldMapSelector mapSelector)
     {
         validateGameVariantName(variantName);
         if (gameModelFactory == null) {
             error("Game model factory for game variant '%s' is null".formatted(variantName));
         }
         if (uiConfigFactory == null) {
-            error("Game UI configuration factory for game variant '%s' is null".formatted(variantName));
+            error("UI configuration factory for game variant '%s' is null".formatted(variantName));
         }
-        final Configuration configuration = new Configuration(gameModelFactory, uiConfigFactory, optionalMapSelector);
-        configByGameVariant.put(variantName, configuration);
+        final GameConfig gameConfig = new GameConfig(gameModelFactory, uiConfigFactory, mapSelector);
+        gameConfigMap.put(variantName, gameConfig);
         return this;
     }
 
@@ -122,35 +128,32 @@ public class GameUI_Builder {
 
     public GameUI_Builder startPage(Supplier<? extends StartPage> startPageFactory) {
         if (startPageFactory == null) {
-            error("Start page factory must not be null");
+            error("Start page factory is null");
         }
         startPageFactories.add(startPageFactory);
         return this;
     }
 
-    public GameUI_Builder dashboard(CommonDashboardID... dashboardIDs) {
-        if (dashboardIDs == null) {
-            error("Dashboard entry list must not be null");
-        }
-        this.dashboardIDs = Arrays.asList(dashboardIDs);
+    public GameUI_Builder dashboard(CommonDashboardID... ids) {
+        this.dashboardIDs.addAll(List.of(ids));
         return this;
     }
 
-    public GameUI_Builder includeTests(boolean include) {
-        includeTests = include;
+    public GameUI_Builder includeInteractiveTests(boolean include) {
+        includeInteractiveTests = include;
         return this;
     }
 
     public GameUI build() {
-        validateConfiguration();
+        validateConfigurationData();
 
-        final var ui = new GameUI_Implementation(gameBox, windowData.stage(), windowData.sceneWidth, windowData.sceneHeight);
+        final var ui = new GameUI_Implementation(gameBox, windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight());
 
-        configByGameVariant.forEach((gameVariant, config) -> {
+        gameConfigMap.forEach((gameVariant, config) -> {
             final AbstractGameModel gameModel = config.gameModelFactory.get();
             gameBox.registerGame(gameVariant, gameModel);
             ui.uiConfigManager().addFactory(gameVariant, config.uiConfigFactory);
-            if (includeTests) {
+            if (includeInteractiveTests) {
                 final StateMachine<Game> gameStateMachine = gameModel.control().stateMachine();
                 gameStateMachine.addState(new LevelShortTestState());
                 gameStateMachine.addState(new LevelMediumTestState());
@@ -174,14 +177,14 @@ public class GameUI_Builder {
         return ui;
     }
 
-    private void validateConfiguration() {
-        if (configByGameVariant.isEmpty()) {
+    private void validateConfigurationData() {
+        if (gameConfigMap.isEmpty()) {
             error("No game configuration specified");
         }
-        if (windowData.sceneWidth() <= 0) {
+        if (windowConfig.sceneWidth() <= 0) {
             error("Main scene width must be a positive number");
         }
-        if (windowData.sceneHeight() <= 0) {
+        if (windowConfig.sceneHeight() <= 0) {
             error("Main scene height must be a positive number");
         }
     }

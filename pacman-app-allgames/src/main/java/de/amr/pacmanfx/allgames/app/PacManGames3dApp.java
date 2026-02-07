@@ -113,7 +113,7 @@ public class PacManGames3dApp extends Application {
                     .startPage(TengenMsPacMan_StartPage::new)
                     .startPage(PacManXXL_StartPage::new)
                     .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
-                    .includeTests(INCLUDE_TESTS)
+                    .includeInteractiveTests(INCLUDE_TESTS)
                     .build();
             }
             else {
