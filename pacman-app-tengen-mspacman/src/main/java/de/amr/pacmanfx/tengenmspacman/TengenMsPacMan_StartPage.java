@@ -9,23 +9,27 @@ import de.amr.pacmanfx.ui.layout.FlyerStartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.media.Media;
 
-public class TengenMsPacMan_StartPage extends FlyerStartPage {
+public class TengenMsPacMan_StartPage extends FlyerStartPage implements ResourceManager {
 
-    private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_StartPage.class;
-    private static final Media VOICE = LOCAL_RESOURCES.loadMedia("sound/flyer-text.mp3");
+    private final Media flyerTextSpeech = loadMedia("sound/flyer-text.mp3");
 
     public TengenMsPacMan_StartPage() {
         setTitle("Ms. Pac-Man (Tengen)");
         flyer.setImages(
-            LOCAL_RESOURCES.loadImage("graphics/flyer-page-1.png"),
-            LOCAL_RESOURCES.loadImage("graphics/flyer-page-2.png")
+            loadImage("graphics/flyer-page-1.png"),
+            loadImage("graphics/flyer-page-2.png")
         );
+    }
+
+    @Override
+    public final Class<?> resourceRootClass() {
+        return TengenMsPacMan_StartPage.class;
     }
 
     @Override
     public void onEnterStartPage(GameUI ui) {
         flyer.selectPage(0);
-        ui.voicePlayer().playVoice(VOICE);
+        ui.voicePlayer().playVoice(flyerTextSpeech);
         ui.gameContext().gameVariantNameProperty().set(GameVariant.TENGEN_MS_PACMAN.name());
     }
 }

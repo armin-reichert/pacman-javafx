@@ -11,7 +11,7 @@ import javafx.scene.media.Media;
 
 public class ArcadeMsPacMan_StartPage extends FlyerStartPage implements ResourceManager {
 
-    private final Media flyerReadingVoice = loadMedia("sound/flyer-text.mp3");
+    private final Media flyerTextSpeech = loadMedia("sound/flyer-text.mp3");
 
     public ArcadeMsPacMan_StartPage() {
         setTitle("Ms. Pac-Man (Arcade)");
@@ -29,7 +29,7 @@ public class ArcadeMsPacMan_StartPage extends FlyerStartPage implements Resource
     @Override
     public void onEnterStartPage(GameUI ui) {
         flyer.selectPage(0);
-        ui.voicePlayer().playVoice(flyerReadingVoice);
+        ui.voicePlayer().playVoice(flyerTextSpeech);
         ui.gameContext().gameVariantNameProperty().set(GameVariant.ARCADE_MS_PACMAN.name());
     }
 }
