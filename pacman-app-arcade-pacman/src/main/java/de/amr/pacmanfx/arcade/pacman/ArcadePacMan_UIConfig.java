@@ -112,7 +112,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, GameSceneConfig, Resourc
     );
 
     public static final WorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new WorldMapColorScheme(
-        "#000000", "#2121ff", "#ffb7ff", "#febdb4"
+        ARCADE_BLACK.toString(), ARCADE_BLUE.toString(), ARCADE_PINK.toString(), ARCADE_ROSE.toString()
     );
 
     private static final Map<Color, Color> BRIGHT_MAZE_COLOR_CHANGES = Map.of(
