@@ -14,8 +14,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameController.GameState;
@@ -45,7 +43,9 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_QUIT_DEMO_LEVEL;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.STEERING_BINDINGS;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.JOYPAD;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
@@ -121,14 +121,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
         // Action keyboard bindings
         if (level.isDemoLevel()) {
-            actionBindings.registerAnyFrom(TengenMsPacMan_Actions.ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
-            actionBindings.registerAnyFrom(ACTION_QUIT_DEMO_LEVEL, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
+            actionBindings.registerAnyFrom(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
+            actionBindings.registerAnyFrom(ACTION_QUIT_DEMO_LEVEL, TENGEN_SPECIFIC_BINDINGS);
         } else {
             // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
-            actionBindings.registerAllFrom(TengenMsPacMan_UIConfig.STEERING_BINDINGS);
+            actionBindings.registerAllFrom(STEERING_BINDINGS);
             actionBindings.registerAllFrom(GameUI.CHEAT_BINDINGS);
-            actionBindings.registerAnyFrom(TengenMsPacMan_Actions.ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
-            actionBindings.registerAnyFrom(TengenMsPacMan_Actions.ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
+            actionBindings.registerAnyFrom(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
+            actionBindings.registerAnyFrom(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
         }
         JOYPAD.setBindings(actionBindings);
         actionBindings.addAll(GameUI.KEYBOARD);

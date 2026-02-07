@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
@@ -19,6 +18,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.input.KeyCode;
 
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_START_PLAYING;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.JOYPAD;
@@ -75,8 +75,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
         actionBindings.registerAllFrom(GameUI.SCENE_TESTS_BINDINGS);
         actionBindings.registerByKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J));
-        actionBindings.registerAnyFrom(ACTION_START_PLAYING,                  TengenMsPacMan_UIConfig.ACTION_BINDINGS);
-        actionBindings.registerAnyFrom(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_START_PLAYING,                  TENGEN_SPECIFIC_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TENGEN_SPECIFIC_BINDINGS);
 
         JOYPAD.setBindings(actionBindings);
 

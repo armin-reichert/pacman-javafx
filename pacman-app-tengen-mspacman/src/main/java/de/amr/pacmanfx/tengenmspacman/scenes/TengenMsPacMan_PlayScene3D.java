@@ -7,7 +7,7 @@ import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.GameUI;
@@ -82,10 +82,10 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         actionBindings.registerAllFrom(_3D_BINDINGS);
         if (level.isDemoLevel()) {
             // In demo level, allow going back to options screen
-            actionBindings.registerAnyFrom(ACTION_QUIT_DEMO_LEVEL, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
+            actionBindings.registerAnyFrom(ACTION_QUIT_DEMO_LEVEL, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
         } else {
-            actionBindings.registerAllFrom(TengenMsPacMan_UIConfig.STEERING_BINDINGS);
-            actionBindings.registerAnyFrom(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
+            actionBindings.registerAllFrom(TengenMsPacMan_ActionBindings.STEERING_BINDINGS);
+            actionBindings.registerAnyFrom(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
             actionBindings.registerAllFrom(GameUI.CHEAT_BINDINGS);
         }
 

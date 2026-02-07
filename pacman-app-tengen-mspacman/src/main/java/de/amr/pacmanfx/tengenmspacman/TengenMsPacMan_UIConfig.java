@@ -5,7 +5,6 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.model.Game;
@@ -27,8 +26,6 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui.action.ActionBinding;
-import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -41,22 +38,22 @@ import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameController.GameState.*;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
-import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
@@ -70,22 +67,6 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     public static final Joypad JOYPAD = new Joypad(GameUI.KEYBOARD);
 
     private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
-
-    public static final Set<ActionBinding> STEERING_BINDINGS = Set.of(
-        new ActionBinding(CommonGameActions.ACTION_STEER_UP,    JOYPAD.key(JoypadButton.UP),    control(KeyCode.UP)),
-        new ActionBinding(CommonGameActions.ACTION_STEER_DOWN,  JOYPAD.key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
-        new ActionBinding(CommonGameActions.ACTION_STEER_LEFT,  JOYPAD.key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
-        new ActionBinding(CommonGameActions.ACTION_STEER_RIGHT, JOYPAD.key(JoypadButton.RIGHT), control(KeyCode.RIGHT))
-    );
-
-    public static final Set<ActionBinding> ACTION_BINDINGS = Set.of(
-        new ActionBinding(ACTION_QUIT_DEMO_LEVEL,     JOYPAD.key(JoypadButton.START)),
-        new ActionBinding(ACTION_ENTER_START_SCREEN,  JOYPAD.key(JoypadButton.START)),
-        new ActionBinding(ACTION_START_PLAYING,       JOYPAD.key(JoypadButton.START)),
-        new ActionBinding(ACTION_TOGGLE_PAC_BOOSTER,  JOYPAD.key(JoypadButton.A), JOYPAD.key(JoypadButton.B)),
-        new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, alt(KeyCode.C)),
-        new ActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, bare(KeyCode.SPACE))
-    );
 
     // Note: Order of bonus symbols ins spritesheet is not 1:1 with order of bonus values!
     // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000

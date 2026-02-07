@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameController.GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.actors.MsPacMan;
@@ -23,6 +22,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_ENTER_START_SCREEN;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
@@ -61,8 +61,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         final UIConfig uiConfig = ui.currentConfig();
         spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
-        actionBindings.registerAnyFrom(ACTION_ENTER_START_SCREEN,             TengenMsPacMan_UIConfig.ACTION_BINDINGS);
-        actionBindings.registerAnyFrom(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_ENTER_START_SCREEN,             TENGEN_SPECIFIC_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TENGEN_SPECIFIC_BINDINGS);
 
         ghostColors = Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
                 .map(personality -> uiConfig.assets().color("ghost.%d.color.normal.dress".formatted(personality)))
