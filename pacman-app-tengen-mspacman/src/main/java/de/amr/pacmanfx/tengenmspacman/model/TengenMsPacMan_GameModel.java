@@ -644,8 +644,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     }
 
     @Override
-    public void whilePacManDying(GameLevel level, long tick) {
-        final Pac pac = level.pac();
+    public void whilePacManDying(GameLevel level, Pac pac, long tick) {
         if (tick == 1) {
             level.huntingTimer().stop();
             gateKeeper.resetCounterAndSetEnabled(true);

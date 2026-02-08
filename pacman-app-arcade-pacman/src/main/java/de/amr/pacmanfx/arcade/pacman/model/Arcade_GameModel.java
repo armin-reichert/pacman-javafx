@@ -127,9 +127,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             if (powerSeconds > 0) {
                 level.huntingTimer().stop();
                 Logger.debug("Hunting stopped (Pac-Man got power)");
-                long ticks = TickTimer.secToTicks(powerSeconds);
-                level.pac().powerTimer().restartTicks(ticks);
-                Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
+                final long powerTicks = TickTimer.secToTicks(powerSeconds);
+                level.pac().powerTimer().restartTicks(powerTicks);
+                Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, powerSeconds);
                 level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
                 simStep.pacGotPower = true;
                 publishGameEvent(new PacGetsPowerEvent());
@@ -172,8 +172,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void whilePacManDying(GameLevel level, long tick) {
-        final Pac pac = level.pac();
+    public void whilePacManDying(GameLevel level, Pac pac, long tick) {
         if (tick == 1) {
             gateKeeper.resetCounterAndSetEnabled(true);
             level.huntingTimer().stop();

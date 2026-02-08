@@ -7,6 +7,7 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -105,7 +106,7 @@ public interface Game extends LevelCounter {
 
     // Game event handling
     void onLevelCompleted(GameLevel level);
-    void whilePacManDying(GameLevel level, long tick);
+    void whilePacManDying(GameLevel level, Pac pac, long tick);
     void onEatGhost(GameLevel level, Ghost ghost);
     void whileEatingGhost(GameLevel level, long tick);
     void onGameOver();

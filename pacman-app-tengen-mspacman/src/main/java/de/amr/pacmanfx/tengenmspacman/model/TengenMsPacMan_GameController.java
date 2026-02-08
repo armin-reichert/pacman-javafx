@@ -138,7 +138,7 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
             }
 
             private void clearReadyMessage(Game game) {
-                game.level().optMessage().filter(message -> message.type() == GameLevelMessageType.READY).ifPresent(message -> {
+                game.level().optMessage().filter(message -> message.type() == GameLevelMessageType.READY).ifPresent(_ -> {
                     game.clearLevelMessage(); // leave TEST message alone
                 });
             }
@@ -227,7 +227,7 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
                         game.control().enterState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
                     }
                 } else {
-                    game.whilePacManDying(game.level(), timer.tickCount());
+                    game.whilePacManDying(game.level(), game.level().pac(), timer.tickCount());
                 }
             }
         },

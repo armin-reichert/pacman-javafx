@@ -192,7 +192,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
                     }
                 }
                 else {
-                    game.whilePacManDying(game.level(), timer.tickCount());
+                    game.whilePacManDying(game.level(), game.level().pac(), timer.tickCount());
                 }
             }
         },
