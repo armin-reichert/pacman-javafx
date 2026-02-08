@@ -15,8 +15,6 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -28,8 +26,6 @@ import static java.util.Objects.requireNonNull;
  * Base class for all Pac-Man game models. Any logic implemented here should be identical in all Pac-Man game variants.
  */
 public abstract class AbstractGameModel implements Game {
-
-    private static final DateTimeFormatter SCORE_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static final CollisionStrategy DEFAULT_COLLISION_STRATEGY = CollisionStrategy.SAME_TILE;
 
@@ -652,8 +648,7 @@ public abstract class AbstractGameModel implements Game {
      */
     public void saveHighScore() {
         try {
-            final String dateTime = SCORE_DATE_TIME_FORMATTER.format(LocalDateTime.now());
-            highScore.save(highScoreFile, "High Score updated at %s".formatted(dateTime));
+            highScore.save(highScoreFile);
         } catch (IOException x) {
             Logger.error(x, "High Score could not be saved to file '{}'", highScoreFile);
         }

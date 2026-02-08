@@ -8,12 +8,15 @@ import org.tinylog.Logger;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 import static java.util.Objects.requireNonNull;
 
 public class Score {
+
+    private static final DateTimeFormatter SCORE_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static final String GITHUB_PACMAN_JAVAFX = "https://github.com/armin-reichert/pacman-javafx";
 
@@ -47,7 +50,7 @@ public class Score {
     public void read(File file) throws IOException {
         requireNonNull(file);
         if (!file.exists()) {
-            save(file, "High score");
+            save(file);
         }
         final var properties = new Properties();
         try (var inputStream = new BufferedInputStream(new FileInputStream(file))) {
@@ -58,21 +61,21 @@ public class Score {
         }
     }
 
-    public void save(File file, String description) throws IOException {
+    public void save(File file) throws IOException {
         requireNonNull(file);
-        requireNonNull(description);
         final boolean created = file.getParentFile().mkdirs();
         if (created) {
             Logger.info("Folder {} has been created", file.getParentFile());
         }
+        final String dateTime = SCORE_DATE_TIME_FORMATTER.format(LocalDateTime.now());
         final var properties = new Properties();
         try (var outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
             properties.setProperty(ATTR_POINTS, String.valueOf(points()));
             properties.setProperty(ATTR_LEVEL,  String.valueOf(levelNumber()));
             properties.setProperty(ATTR_DATE,   date().format(DateTimeFormatter.ISO_LOCAL_DATE));
             properties.setProperty(ATTR_URL,    GITHUB_PACMAN_JAVAFX);
-            properties.storeToXML(outputStream, description);
-            Logger.info("Saved '{}' to file '{}'. Points: {} Level: {}", description, file, points(), levelNumber());
+            properties.storeToXML(outputStream, "High Score updated at %s".formatted(dateTime));
+            Logger.info("High score saved in file '{}', points: {}, level: {}", file, points(), levelNumber());
         }
     }
 
