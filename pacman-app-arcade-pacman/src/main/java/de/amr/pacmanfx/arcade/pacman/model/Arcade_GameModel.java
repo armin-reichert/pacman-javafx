@@ -164,7 +164,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     // GameEvents interface
 
     @Override
-    public void updateHunting(GameLevel level) {
+    public void whileHunting(GameLevel level) {
         doHuntingStep(level);
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
@@ -292,7 +292,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             publishGameEvent(new GameStartedEvent(this));
         }
         else if (tick == 2) {
-            startLevel();
+            startLevel(level());
         }
         else if (tick == Arcade_GameController.TICK_NEW_GAME_SHOW_GUYS) {
             level().showPacAndGhosts();
@@ -373,7 +373,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             buildDemoLevel();
         }
         else if (tick == 2) {
-            startLevel();
+            startLevel(level());
         }
         else if (tick == 3) {
             // Now, actor animations are available
@@ -385,8 +385,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void startLevel() {
-        final GameLevel level = level();
+    public void startLevel(GameLevel level) {
         level.recordStartTime(System.currentTimeMillis());
         level.getReadyToPlay();
         if (level.isDemoLevel()) {
@@ -408,7 +407,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void startNextLevel() {
         buildNormalLevel(level().number() + 1);
-        startLevel();
+        startLevel(level());
     }
 
     @Override

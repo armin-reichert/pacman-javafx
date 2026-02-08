@@ -84,7 +84,7 @@ public interface Game extends LevelCounter {
     void buildNormalLevel(int levelNumber);
     void buildDemoLevel();
     GameLevel createLevel(int levelNumber, boolean demoLevel);
-    void startLevel();
+    void startLevel(GameLevel level);
     void startDemoLevel(long tick);
     void showLevelMessage(GameLevelMessageType type);
     void clearLevelMessage();
@@ -92,7 +92,7 @@ public interface Game extends LevelCounter {
     int lastLevelNumber();
     void startNextLevel();
     void startHunting(GameLevel level);
-    void updateHunting(GameLevel level);
+    void whileHunting(GameLevel level);
     void activateNextBonus(GameLevel level);
     boolean isBonusReached(GameLevel level);
     boolean hasPacManBeenKilled();

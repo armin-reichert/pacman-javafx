@@ -301,7 +301,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
             publishGameEvent(new GameStartedEvent(this));
         }
         else if (tick == TICK_SHOW_READY) {
-            startLevel();
+            startLevel(level());
         }
         else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
             level().showPacAndGhosts();
@@ -325,8 +325,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     }
 
     @Override
-    public void startLevel() {
-        final GameLevel level = level();
+    public void startLevel(GameLevel level) {
         level.recordStartTime(System.currentTimeMillis());
         level.getReadyToPlay();
         if (pacBooster == PacBooster.ALWAYS_ON) {
@@ -354,7 +353,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
             buildDemoLevel();
         }
         else if (tick == 2) {
-            startLevel();
+            startLevel(level());
         }
         else if (tick == 3) {
             // Now, actor animations are available
@@ -369,7 +368,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     public void startNextLevel() {
         if (level().number() < LAST_LEVEL_NUMBER) {
             buildNormalLevel(level().number() + 1);
-            startLevel();
+            startLevel(level());
             level().showPacAndGhosts();
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", LAST_LEVEL_NUMBER);
@@ -539,7 +538,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     }
 
     @Override
-    public void updateHunting(GameLevel level) {
+    public void whileHunting(GameLevel level) {
         doHuntingStep(level);
         gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
     }

@@ -31,7 +31,7 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
         timer.restartIndefinitely();
         game.prepareNewGame();
         game.buildNormalLevel(1);
-        game.startLevel();
+        game.startLevel(game.level());
         game.level().showPacAndGhosts();
     }
 

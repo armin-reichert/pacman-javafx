@@ -45,7 +45,7 @@ public class LevelMediumTestState implements StateMachine.State<Game>, TestState
         timer.restartSeconds(TEST_DURATION_SEC);
         game.prepareNewGame();
         game.buildNormalLevel(1);
-        game.startLevel();
+        game.startLevel(game.level());
         configureLevelForTest(game);
     }
 
@@ -55,7 +55,7 @@ public class LevelMediumTestState implements StateMachine.State<Game>, TestState
         level.pac().tick(game);
         level.ghosts().forEach(ghost -> ghost.tick(game));
         level.optBonus().ifPresent(bonus -> bonus.tick(game));
-        game.updateHunting(level);
+        game.whileHunting(level);
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
                 game.publishGameEvent(new StopAllSoundsEvent());

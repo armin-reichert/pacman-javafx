@@ -107,7 +107,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
 
             @Override
             public void onUpdate(Game game) {
-                game.updateHunting(game.level());
+                game.whileHunting(game.level());
                 if (game.isLevelCompleted()) {
                     game.control().enterState(LEVEL_COMPLETE);
                 }
