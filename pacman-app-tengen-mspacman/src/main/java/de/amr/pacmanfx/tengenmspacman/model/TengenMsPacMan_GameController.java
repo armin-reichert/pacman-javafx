@@ -154,7 +154,7 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
             @Override
             public void onUpdate(Game game) {
                 if (timer.tickCount() == 1) {
-                    game.onLevelCompleted();
+                    game.onLevelCompleted(game.level());
                 }
 
                 if (game.level().isDemoLevel()) {

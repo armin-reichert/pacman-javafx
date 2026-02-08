@@ -305,8 +305,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public void onLevelCompleted() {
-        final GameLevel level = level();
+    public void onLevelCompleted(GameLevel level) {
         final Pac pac = level.pac();
 
         level.huntingTimer().stop();

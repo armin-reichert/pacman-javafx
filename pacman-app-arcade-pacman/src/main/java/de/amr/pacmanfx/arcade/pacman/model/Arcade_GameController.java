@@ -129,7 +129,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
             @Override
             public void onUpdate(Game game) {
                 if (timer.tickCount() == 1) {
-                    game.onLevelCompleted();
+                    game.onLevelCompleted(game.level());
                 }
                 else if (timer.hasExpired()) {
                     if (game.level().isDemoLevel()) {

@@ -104,7 +104,7 @@ public interface Game extends LevelCounter {
     void publishGameEvent(GameEvent event);
 
     // Game event handling
-    void onLevelCompleted();
+    void onLevelCompleted(GameLevel level);
     void whilePacManDying(GameLevel level, long tick);
     void onEatGhost(GameLevel level, Ghost ghost);
     void whileEatingGhost(GameLevel level, long tick);
