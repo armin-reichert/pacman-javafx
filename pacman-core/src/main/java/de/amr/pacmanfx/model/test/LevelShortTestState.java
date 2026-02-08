@@ -39,7 +39,7 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
     public void onUpdate(Game game) {
         final float START = 1.0f;
         if (timer.atSecond(START)) {
-            game.continuePlaying(1);
+            game.continuePlaying(game.level(), 1);
             GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
             message.setPosition(game.level().worldMap().terrainLayer().messageCenterPosition());
             game.level().setMessage(message);

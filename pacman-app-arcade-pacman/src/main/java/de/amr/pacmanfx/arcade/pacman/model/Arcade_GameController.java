@@ -84,7 +84,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
             public void onUpdate(Game game) {
                 long tick = timer.tickCount();
                 if (game.isPlaying()) {
-                    game.continuePlaying(tick);
+                    game.continuePlaying(game.level(), tick);
                 }
                 else if (game.canStartNewGame()) {
                     game.startNewGame(tick);

@@ -79,7 +79,7 @@ public interface Game extends LevelCounter {
     void startNewGame(long tick);
     boolean isPlaying();
     void setPlaying(boolean playing);
-    void continuePlaying(long tick);
+    void continuePlaying(GameLevel level, long tick);
     boolean canContinueOnGameOver();
     void buildNormalLevel(int levelNumber);
     void buildDemoLevel();

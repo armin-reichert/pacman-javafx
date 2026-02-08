@@ -304,12 +304,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void continuePlaying(long tick) {
+    public void continuePlaying(GameLevel level, long tick) {
         if (tick == 1) {
-            final GameLevel level = level();
             level.getReadyToPlay();
-            showLevelMessage(GameLevelMessageType.READY);
             level.showPacAndGhosts();
+            showLevelMessage(GameLevelMessageType.READY);
         }
         else if (tick == 60) {
             publishGameEvent(new GameContinuedEvent(this));

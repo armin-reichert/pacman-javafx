@@ -99,7 +99,7 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
             public void onUpdate(Game game) {
                 final long tick = timer.tickCount();
                 if (game.isPlaying()) {
-                    game.continuePlaying(tick);
+                    game.continuePlaying(game.level(), tick);
                 }
                 else if (game.canStartNewGame()) {
                     game.startNewGame(tick);
