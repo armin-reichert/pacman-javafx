@@ -69,7 +69,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     protected int restingTicksAfterPelletEaten;
     protected int restingTicksAfterEnergizerEaten;
-    protected int allGhostsInLevelKilledPoints;
 
     protected int bonus1PelletsEaten;
     protected int bonus2PelletsEaten;
@@ -81,7 +80,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         pelletPoints = 10;
         energizerPoints = 50;
-        allGhostsInLevelKilledPoints = 12_000;
         restingTicksAfterPelletEaten = 1;
         restingTicksAfterEnergizerEaten = 3;
         setExtraLifeScores(10_000);
@@ -226,10 +224,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         level.energizerVictims().add(ghost);
         level.incrementGhostKillCount();
-        if (level.ghostKillCount() == 16) {
-            scorePoints(level, allGhostsInLevelKilledPoints);
-            Logger.info("Scored {} points for killing all ghosts in level {}", allGhostsInLevelKilledPoints, level.number());
-        }
         level.pac().hide();
         level.ghosts().forEach(Ghost::stopAnimation);
         publishGameEvent(new GhostEatenEvent(ghost));
