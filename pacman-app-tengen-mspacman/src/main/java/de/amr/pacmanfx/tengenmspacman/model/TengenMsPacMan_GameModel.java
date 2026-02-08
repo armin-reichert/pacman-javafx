@@ -618,7 +618,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         scorePoints(level, energizerPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
-        if (!isLevelCompleted()) {
+        if (!isLevelCompleted(level)) {
             level.ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(MovingActor::requestTurnBack);
             level.energizerVictims().clear();
             final float powerSeconds = level.pacPowerSeconds();

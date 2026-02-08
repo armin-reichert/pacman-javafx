@@ -330,11 +330,12 @@ public abstract class AbstractGameModel implements Game {
     /**
      * Returns whether the current level is completed.
      *
+     * @param level the current game level
      * @return {@code true} if all food has been eaten
      */
     @Override
-    public boolean isLevelCompleted() {
-        return level().worldMap().foodLayer().uneatenFoodCount() == 0;
+    public boolean isLevelCompleted(GameLevel level) {
+        return level.worldMap().foodLayer().uneatenFoodCount() == 0;
     }
 
     /**
@@ -561,7 +562,7 @@ public abstract class AbstractGameModel implements Game {
         checkFoodFound(level, pac);
         checkBonusFound(level);
 
-        if (!isLevelCompleted()) {
+        if (!isLevelCompleted(level)) {
             updatePacPower(level, pac);
             level.huntingTimer().update(level.number());
         }

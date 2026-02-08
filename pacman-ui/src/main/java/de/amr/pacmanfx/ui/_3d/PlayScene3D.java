@@ -558,7 +558,7 @@ public class PlayScene3D implements GameScene {
     public void onPacGetsPower(PacGetsPowerEvent e) {
         final Game game = gameContext().currentGame();
         ui.soundManager().stopSiren();
-        if (!game.isLevelCompleted()) {
+        if (!game.isLevelCompleted(game.level())) {
             gameLevel3D.pac3D().setMovementPowerMode(true);
             ui.soundManager().loop(SoundID.PAC_MAN_POWER);
             gameLevel3D.animations().playWallColorFlashing();

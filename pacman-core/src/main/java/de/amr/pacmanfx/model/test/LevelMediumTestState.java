@@ -66,7 +66,7 @@ public class LevelMediumTestState implements StateMachine.State<Game>, TestState
                 configureLevelForTest(game);
             }
         }
-        else if (game.isLevelCompleted()) {
+        else if (game.isLevelCompleted(game.level())) {
             game.control().enterStateNamed(GameControl.StateName.INTRO.name());
         } else if (game.hasPacManBeenKilled()) {
             timer.expire();
