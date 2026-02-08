@@ -5,8 +5,10 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.Pulse;
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.world.TerrainLayer;
 import javafx.beans.property.*;
 import org.tinylog.Logger;
 
@@ -17,6 +19,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
 
@@ -452,6 +456,19 @@ public abstract class AbstractGameModel implements Game {
                     quitHunting = true;
                 }
             }
+
+            // If collision happened while teleporting (horizontally), move collided actors into visible world
+            final TerrainLayer terrain = level.worldMap().terrainLayer();
+            terrain.hPortalContainingTile(pac.tile()).ifPresent(hPortal -> {
+                if (pac.moveDir() == Direction.LEFT) {
+                    pac.setX(hPortal.rightBorderEntryTile().x() * TS + HTS);
+                } else if (pac.moveDir() == Direction.RIGHT) {
+                    pac.setX(hPortal.leftBorderEntryTile().x() * TS - HTS);
+                }
+                // Not sure if colliding ghosts should also be moved back to light
+                //simStep.ghostsCollidingWithPac.forEach(ghost -> ghost.setX(pac.x()));
+                Logger.info("Detected collision while teleporting, moved Pac-Man back into world");
+            });
         }
 
         if (quitHunting) {
@@ -498,11 +515,11 @@ public abstract class AbstractGameModel implements Game {
     private void detectCollisions(GameLevel level) {
         requireNonNull(level);
 
-        // Ghosts colliding with Pac? While teleportation takes place, collisions are disabled. (Not sure what the
-        // original Arcade game does). Collision behavior is controlled by the current collision strategy. The original
-        // Arcade games use tile-based collision which can lead to missed collisions by passing through.
+        // Ghosts colliding with Pac?
+        // Collision behavior is controlled by the current collision strategy. The original Arcade games use
+        // tile-based collision which can lead to missed collisions by passing through.
         level.ghosts()
-                .filter(ghost -> !level.worldMap().terrainLayer().isTileInPortalSpace(ghost.tile()))
+                //.filter(ghost -> !level.worldMap().terrainLayer().isTileInPortalSpace(ghost.tile()))
                 .filter(ghost -> collisionStrategy().collide(level.pac(), ghost))
                 .forEach(simStep.ghostsCollidingWithPac::add);
 

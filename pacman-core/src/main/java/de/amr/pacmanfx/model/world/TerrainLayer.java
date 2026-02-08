@@ -141,6 +141,11 @@ public class TerrainLayer extends WorldMapLayer {
             .filter(not(this::outOfBounds));
     }
 
+    public Optional<HPortal> hPortalContainingTile(Vector2i tile) {
+        requireNonNull(tile);
+        return horizontalPortals().stream().filter(portal -> portal.contains(tile)).findFirst();
+    }
+
     public boolean isTileInPortalSpace(Vector2i tile) {
         requireNonNull(tile);
         return horizontalPortals().stream().anyMatch(portal -> portal.contains(tile));
