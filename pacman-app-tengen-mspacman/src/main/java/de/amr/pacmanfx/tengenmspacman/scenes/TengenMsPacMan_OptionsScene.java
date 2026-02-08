@@ -17,6 +17,9 @@ import de.amr.pacmanfx.ui.action.GameAction;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.input.KeyCode;
+import org.tinylog.Logger;
+
+import java.io.IOException;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_START_PLAYING;
@@ -167,7 +170,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         var values = MapCategory.values();
         int current = category.ordinal(), prev = (current == 0) ? values.length - 1 :  current - 1;
         tengenGame().setMapCategory(values[prev]);
-        tengenGame().saveHighScore();
+        saveHighScore();
         optionValueChanged();
     }
 
@@ -176,7 +179,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         var values = MapCategory.values();
         int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame().setMapCategory(values[next]);
-        tengenGame().saveHighScore();
+        saveHighScore();
         optionValueChanged();
     }
 
@@ -185,7 +188,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         var values = Difficulty.values();
         int current = difficulty.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
         tengenGame().setDifficulty(values[prev]);
-        tengenGame().saveHighScore();
+        saveHighScore();
         optionValueChanged();
     }
 
@@ -194,7 +197,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         var values = Difficulty.values();
         int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame().setDifficulty(values[next]);
-        tengenGame().saveHighScore();
+        saveHighScore();
         optionValueChanged();
     }
 
@@ -212,5 +215,14 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         int current = pacBooster.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame().setPacBooster(values[next]);
         optionValueChanged();
+    }
+
+    private void saveHighScore() {
+        try {
+            tengenGame().saveHighScore();
+        } catch (IOException x) {
+            Logger.error(x, "Could not save Tengen Ms. Pac-Man high score");
+            //TODO Show message in UI
+        }
     }
 }

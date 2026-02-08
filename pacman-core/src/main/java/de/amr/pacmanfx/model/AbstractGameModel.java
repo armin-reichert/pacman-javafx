@@ -645,12 +645,10 @@ public abstract class AbstractGameModel implements Game {
 
     /**
      * Saves the current high score to file.
+     *
+     * @throws IOException if saving fails
      */
-    public void saveHighScore() {
-        try {
-            highScore.save(highScoreFile);
-        } catch (IOException x) {
-            Logger.error(x, "High Score could not be saved to file '{}'", highScoreFile);
-        }
+    public void saveHighScore() throws IOException {
+        highScore.save(highScoreFile);
     }
 }
