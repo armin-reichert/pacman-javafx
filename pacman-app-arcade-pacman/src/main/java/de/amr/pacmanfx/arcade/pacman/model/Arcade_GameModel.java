@@ -172,8 +172,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void updatePacManDying(long tick) {
-        final GameLevel level = level();
+    public void whilePacManDying(GameLevel level, long tick) {
         final Pac pac = level.pac();
         if (tick == 1) {
             gateKeeper.resetCounterAndSetEnabled(true);
@@ -230,8 +229,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void updateEatingGhost(long tick) {
-        final GameLevel level = level();
+    public void whileEatingGhost(GameLevel level, long tick) {
         if (tick < Arcade_GameController.TICK_EATING_GHOST_COMPLETE) {
             level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                 .forEach(ghost -> ghost.tick(this));

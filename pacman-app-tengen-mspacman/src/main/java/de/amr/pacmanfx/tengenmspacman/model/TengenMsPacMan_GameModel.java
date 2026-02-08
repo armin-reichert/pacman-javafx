@@ -646,8 +646,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     }
 
     @Override
-    public void updatePacManDying(long tick) {
-        final GameLevel level = level();
+    public void whilePacManDying(GameLevel level, long tick) {
         final Pac pac = level.pac();
         if (tick == 1) {
             level.huntingTimer().stop();
@@ -705,11 +704,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     }
 
     @Override
-    public void updateEatingGhost(long tick) {
-        final GameLevel level = level();
+    public void whileEatingGhost(GameLevel level, long tick) {
         if (tick < TICK_EATING_GHOST_COMPLETE) {
-            level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
-                    .forEach(ghost -> ghost.tick(this));
+            level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).forEach(ghost -> ghost.tick(this));
             level.blinking().tick();
         }
         else if (tick == TICK_EATING_GHOST_COMPLETE) {

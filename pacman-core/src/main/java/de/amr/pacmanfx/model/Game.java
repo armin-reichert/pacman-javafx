@@ -105,9 +105,9 @@ public interface Game extends LevelCounter {
 
     // Game event handling
     void onLevelCompleted();
-    void updatePacManDying(long tick);
+    void whilePacManDying(GameLevel level, long tick);
     void onEatGhost(GameLevel level, Ghost ghost);
-    void updateEatingGhost(long tick);
+    void whileEatingGhost(GameLevel level, long tick);
     void onGameOver();
 
     // Actor collision algorithm

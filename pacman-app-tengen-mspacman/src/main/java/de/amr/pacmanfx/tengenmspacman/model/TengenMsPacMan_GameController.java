@@ -204,7 +204,7 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
                 if (timer.hasExpired()) {
                     game.control().resumePreviousState();
                 } else {
-                    game.updateEatingGhost(timer.tickCount());
+                    game.whileEatingGhost(game.level(), timer.tickCount());
                 }
             }
         },
@@ -227,7 +227,7 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
                         game.control().enterState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
                     }
                 } else {
-                    game.updatePacManDying(timer.tickCount());
+                    game.whilePacManDying(game.level(), timer.tickCount());
                 }
             }
         },
