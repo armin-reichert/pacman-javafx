@@ -562,7 +562,7 @@ public abstract class AbstractGameModel implements Game {
         checkBonusFound(level);
 
         if (!isLevelCompleted()) {
-            updatePacPower(level);
+            updatePacPower(level, pac);
             level.huntingTimer().update(level.number());
         }
     }
@@ -662,9 +662,9 @@ public abstract class AbstractGameModel implements Game {
      * and when the power timer expires, they take their normal color again and continue chasing Pac-Man.
      *
      * @param level the game level
+     * @param pac the Pac-Man
      */
-    protected void updatePacPower(GameLevel level) {
-        final Pac pac = level.pac();
+    protected void updatePacPower(GameLevel level, Pac pac) {
         if (pac.powerTimer().isRunning()) {
             pac.powerTimer().doTick();
             if (pac.isPowerFadingStarting(level)) {
