@@ -212,7 +212,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         try {
             updateHighScore();
         } catch (IOException x) {
-            Logger.error(x, "Error updating highscore file {}", highScoreFile.getAbsolutePath());
+            Logger.error(x, "Error updating highscore file {}", highScore.file().getAbsolutePath());
         }
     }
 

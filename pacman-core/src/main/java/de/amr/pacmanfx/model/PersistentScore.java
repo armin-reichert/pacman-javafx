@@ -13,7 +13,7 @@ import java.util.Properties;
 
 public class PersistentScore extends Score {
 
-    private static final DateTimeFormatter SCORE_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final File file;
 
@@ -44,7 +44,7 @@ public class PersistentScore extends Score {
         if (created) {
             Logger.info("Folder {} has been created", file.getParentFile());
         }
-        final String dateTime = SCORE_DATE_TIME_FORMATTER.format(LocalDateTime.now());
+        final String dateTime = DATE_TIME_FORMATTER.format(LocalDateTime.now());
         final var properties = new Properties();
         try (var outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
             properties.setProperty(ATTR_POINTS, String.valueOf(points()));

@@ -79,9 +79,6 @@ public abstract class AbstractGameModel implements Game {
     /** Score thresholds at which extra lives are awarded. */
     private Set<Integer> extraLifeScores = Set.of();
 
-    /** File used for loading and saving the high score. */
-    protected final File highScoreFile;
-
     /**
      * Creates a new game model with the given high score file.
      *
@@ -94,7 +91,7 @@ public abstract class AbstractGameModel implements Game {
      * @param highScoreFile file used for saving and loading the high score
      */
     protected AbstractGameModel(File highScoreFile) {
-        this.highScoreFile = requireNonNull(highScoreFile);
+        requireNonNull(highScoreFile);
         this.highScore = new PersistentScore(highScoreFile);
 
         score.pointsProperty().addListener((_, oldScore, newScore)
@@ -737,7 +734,8 @@ public abstract class AbstractGameModel implements Game {
      * @throws IOException if saving fails
      */
     protected void updateHighScore() throws IOException {
-        final PersistentScore savedHighScore = new PersistentScore(highScoreFile);
+        final PersistentScore savedHighScore = new PersistentScore(highScore.file());
+        savedHighScore.load();
         if (highScore.points() > savedHighScore.points()) {
             highScore.save();
         }
