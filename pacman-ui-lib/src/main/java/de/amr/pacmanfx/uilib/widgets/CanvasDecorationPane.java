@@ -94,8 +94,15 @@ public class CanvasDecorationPane extends StackPane {
     public void setCanvas(Canvas canvas) {
         this.canvas = requireNonNull(canvas);
         getChildren().setAll(canvas);
-        canvas.widthProperty() .bind(scaling.multiply(unscaledCanvasSize.get().getWidth()));
-        canvas.heightProperty().bind(scaling.multiply(unscaledCanvasSize.get().getHeight()));
+
+        canvas.widthProperty().bind(Bindings.createDoubleBinding(
+                () -> scaling() * unscaledCanvasSize.get().getWidth(),
+                scaling, unscaledCanvasSize)
+        );
+        canvas.heightProperty().bind(Bindings.createDoubleBinding(
+                () -> scaling() * unscaledCanvasSize.get().getHeight(),
+                scaling, unscaledCanvasSize)
+        );
     }
 
     public void updateLayout() {
