@@ -74,7 +74,7 @@ public abstract class AbstractGameModel implements Game {
     protected final Score score = new Score();
 
     /** Persistent high score. */
-    protected final Score highScore = new Score();
+    protected final PersistentScore highScore;
 
     /** Score thresholds at which extra lives are awarded. */
     private Set<Integer> extraLifeScores = Set.of();
@@ -95,6 +95,7 @@ public abstract class AbstractGameModel implements Game {
      */
     protected AbstractGameModel(File highScoreFile) {
         this.highScoreFile = requireNonNull(highScoreFile);
+        this.highScore = new PersistentScore(highScoreFile);
 
         score.pointsProperty().addListener((_, oldScore, newScore)
             -> handleScoreChange(oldScore.intValue(), newScore.intValue()));
@@ -262,7 +263,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public Score highScore() {
+    public PersistentScore highScore() {
         return highScore;
     }
 
@@ -731,33 +732,14 @@ public abstract class AbstractGameModel implements Game {
     }
 
     /**
-     * Loads the high score from file.
-     *
-     * @throws IOException if loading fails
-     */
-    protected void loadHighScore() throws IOException {
-        highScore.read(highScoreFile);
-        Logger.info("High Score loaded from file '{}': points={}, level={}", highScoreFile, highScore.points(), highScore.levelNumber());
-    }
-
-    /**
      * Updates the high score file if the current high score is higher than the saved one.
      *
      * @throws IOException if saving fails
      */
     protected void updateHighScore() throws IOException {
-        final Score savedHighScore = Score.fromFile(highScoreFile);
+        final PersistentScore savedHighScore = new PersistentScore(highScoreFile);
         if (highScore.points() > savedHighScore.points()) {
-            saveHighScore();
+            highScore.save();
         }
-    }
-
-    /**
-     * Saves the current high score to file.
-     *
-     * @throws IOException if saving fails
-     */
-    public void saveHighScore() throws IOException {
-        highScore.save(highScoreFile);
     }
 }

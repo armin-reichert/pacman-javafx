@@ -75,6 +75,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     protected Arcade_GameModel(CoinMechanism coinMechanism, File highscoreFile) {
         super(highscoreFile);
+
         this.coinMechanism = requireNonNull(coinMechanism);
         this.hud = new HeadsUpDisplay(coinMechanism);
 
@@ -271,11 +272,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void prepareNewGame() {
         score().reset();
         try {
-            loadHighScore();
+            highScore.load();
         } catch (IOException x) {
-            Logger.error(x, "Error updating highscore file {}", highScoreFile.getAbsolutePath());
+            Logger.error(x, "Error updating highscore file {}", highScore.file().getAbsolutePath());
         }
-        highScore().setEnabled(true);
+        highScore.setEnabled(true);
         gateKeeper.reset();
         levelProperty().set(null);
         setPlaying(false);

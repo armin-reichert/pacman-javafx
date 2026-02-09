@@ -219,7 +219,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     private void saveHighScore() {
         try {
-            tengenGame().saveHighScore();
+            tengenGame().highScore().save();
         } catch (IOException x) {
             Logger.error(x, "Could not save Tengen Ms. Pac-Man high score");
             //TODO Show message in UI

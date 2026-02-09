@@ -16,8 +16,6 @@ import static java.util.Objects.requireNonNull;
 
 public class Score {
 
-    private static final DateTimeFormatter SCORE_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     public static final String GITHUB_PACMAN_JAVAFX = "https://github.com/armin-reichert/pacman-javafx";
 
     public static final String ATTR_DATE = "date";
@@ -30,12 +28,6 @@ public class Score {
     private final IntegerProperty levelNumber = new SimpleIntegerProperty();
     private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>();
 
-    public static Score fromFile(File file) throws IOException {
-        final var score = new Score();
-        score.read(file);
-        return score;
-    }
-
     public Score() {
         reset();
     }
@@ -47,37 +39,6 @@ public class Score {
         setDate(LocalDate.now());
     }
 
-    public void read(File file) throws IOException {
-        requireNonNull(file);
-        if (!file.exists()) {
-            save(file);
-        }
-        final var properties = new Properties();
-        try (var inputStream = new BufferedInputStream(new FileInputStream(file))) {
-            properties.loadFromXML(inputStream);
-            setPoints(Integer.parseInt(properties.getProperty(ATTR_POINTS)));
-            setLevelNumber(Integer.parseInt(properties.getProperty(ATTR_LEVEL)));
-            setDate(LocalDate.parse(properties.getProperty(ATTR_DATE), DateTimeFormatter.ISO_LOCAL_DATE));
-        }
-    }
-
-    public void save(File file) throws IOException {
-        requireNonNull(file);
-        final boolean created = file.getParentFile().mkdirs();
-        if (created) {
-            Logger.info("Folder {} has been created", file.getParentFile());
-        }
-        final String dateTime = SCORE_DATE_TIME_FORMATTER.format(LocalDateTime.now());
-        final var properties = new Properties();
-        try (var outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
-            properties.setProperty(ATTR_POINTS, String.valueOf(points()));
-            properties.setProperty(ATTR_LEVEL,  String.valueOf(levelNumber()));
-            properties.setProperty(ATTR_DATE,   date().format(DateTimeFormatter.ISO_LOCAL_DATE));
-            properties.setProperty(ATTR_URL,    GITHUB_PACMAN_JAVAFX);
-            properties.storeToXML(outputStream, "High Score updated at %s".formatted(dateTime));
-            Logger.info("High score saved in file '{}', points: {}, level: {}", file, points(), levelNumber());
-        }
-    }
 
     public BooleanProperty enabledProperty() { return enabled; }
 

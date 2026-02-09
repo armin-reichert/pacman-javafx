@@ -48,7 +48,7 @@ public interface Game extends LevelCounter {
     /**
      * @return the high score of the current game variant
      */
-    Score highScore();
+    PersistentScore highScore();
 
     /**
      * Controls the selection of world maps for the game levels.

@@ -191,17 +191,17 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     @Override
     public void prepareNewGame() {
         lifeCountProperty().set(initialLifeCount());
+        levelProperty().set(null);
         clearLevelCounter();
         setPlaying(false);
         boosterActive = false;
-        highScore().setEnabled(true);
         gateKeeper.reset();
-        levelProperty().set(null);
-        score().reset();
+        score.reset();
         try {
-            loadHighScore();
+            highScore.load();
+            highScore.setEnabled(true);
         } catch (IOException x) {
-            Logger.error(x, "Error loading highscore file {}", highScoreFile.getAbsolutePath());
+            Logger.error(x, "Error loading highscore file {}", highScore.file().getAbsolutePath());
         }
     }
 
