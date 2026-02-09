@@ -34,13 +34,10 @@ public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSprite
         return new RectShort(col * MAP_SPRITE_WIDTH, row * MAP_SPRITE_HEIGHT, MAP_SPRITE_WIDTH, MAP_SPRITE_HEIGHT);
     }
 
-    private final Image image;
+    private Image image;
     private final SpriteMap<MapID> spriteMap = new SpriteMap<>(MapID.class);
 
     private ArcadeMapsSpriteSheet() {
-        final ResourceManager moduleResources = () -> TengenMsPacMan_UIConfig.class;
-        image = moduleResources.loadImage(TengenMsPacMan_UIConfig.ARCADE_MAPS_IMAGE_PATH);
-
         spriteMap.add(MapID.MAP1, spriteAtCell(0, 0));
         spriteMap.add(MapID.MAP2, spriteAtCell(0, 1));
         spriteMap.add(MapID.MAP3, spriteAtCell(0, 2));
@@ -56,6 +53,10 @@ public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSprite
 
     @Override
     public Image sourceImage() {
+        if (image == null) {
+            final ResourceManager moduleResources = () -> TengenMsPacMan_UIConfig.class;
+            image = moduleResources.loadImage(TengenMsPacMan_UIConfig.ARCADE_MAPS_IMAGE_PATH);
+        }
         return image;
     }
 

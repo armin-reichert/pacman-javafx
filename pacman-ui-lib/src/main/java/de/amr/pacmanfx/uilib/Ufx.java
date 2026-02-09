@@ -479,29 +479,6 @@ public final class Ufx {
     }
 
     /**
-     * Checks whether the image contains colors outside the NES palette.
-     *
-     * @param image the image to inspect
-     * @return {@code true} if at least one non-NES color is found
-     */
-    public static boolean checkForNonNES_PaletteColors(Image image) {
-        Set<Color> NES_colors = Stream.of(NES_Palette.COLORS).map(Color::valueOf).collect(Collectors.toSet());
-        boolean found = false;
-        PixelReader reader = image.getPixelReader();
-        for (int y = 0; y < image.getHeight(); ++y) {
-            for (int x = 0; x < image.getWidth(); ++x) {
-                Color color = reader.getColor(x, y);
-                if (color.equals(Color.TRANSPARENT)) continue;
-                if (!NES_colors.contains(color)) {
-                    Logger.warn("Found non-NES palette color {} at x={} y={}", color, x, y);
-                    found = true;
-                }
-            }
-        }
-        return found;
-    }
-
-    /**
      * Tests whether a sphere intersects an axis-aligned bounding box.
      *
      * @param cx     sphere center x
