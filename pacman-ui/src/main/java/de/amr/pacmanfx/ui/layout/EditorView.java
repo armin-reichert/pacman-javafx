@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.uilib.Ufx.paintBackground;
+import static de.amr.pacmanfx.uilib.UfxBackgrounds.paintBackground;
 
 public class EditorView implements View {
 

@@ -5,6 +5,7 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.uilib.UfxColors;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -19,7 +20,7 @@ public record MazeMaterials3D(PhongMaterial floor, PhongMaterial wallBase, Phong
         floorMaterial.setSpecularPower(128);
 
         final PhongMaterial wallBaseMaterial = colorBoundPhongMaterial(wallOpacity.map(
-            opacity -> colorWithOpacity(Color.valueOf(colorScheme.wallStroke()), opacity.doubleValue())));
+            opacity -> UfxColors.colorWithOpacity(Color.valueOf(colorScheme.wallStroke()), opacity.doubleValue())));
         wallBaseMaterial.setSpecularPower(64);
 
         final PhongMaterial wallTopMaterial = defaultPhongMaterial(Color.valueOf(colorScheme.wallFill()));

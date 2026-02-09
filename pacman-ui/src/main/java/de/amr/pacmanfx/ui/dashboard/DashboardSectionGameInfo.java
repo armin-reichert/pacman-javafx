@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 import static de.amr.pacmanfx.Globals.CYAN_GHOST_BASHFUL;
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.lib.TickTimer.secToTicks;
-import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
+import static de.amr.pacmanfx.uilib.UfxColors.formatColorHex;
 
 public class DashboardSectionGameInfo extends DashboardSection {
 

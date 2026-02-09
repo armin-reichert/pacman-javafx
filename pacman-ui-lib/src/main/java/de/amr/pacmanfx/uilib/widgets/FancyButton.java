@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.widgets;
 
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.effect.DropShadow;
@@ -36,7 +36,7 @@ public class FancyButton extends BorderPane {
         setCursor(Cursor.HAND);
         setMaxSize(200, 60);
         setPadding(new Insets(5, 5, 5, 5));
-        setBackground(Ufx.roundedBackground(bgColor, 20));
+        setBackground(UfxBackgrounds.roundedBackground(bgColor, 20));
         addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (action != null) action.run();
             e.consume();

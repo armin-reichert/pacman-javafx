@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.widgets;
 
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
@@ -30,15 +30,15 @@ public class Flyer extends StackPane {
     }
 
     private void fill(Image image) {
-        setBackground(Ufx.createImageBackground(image,
+        setBackground(UfxBackgrounds.createImageBackground(image,
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-            BackgroundPosition.CENTER, Ufx.FILL_PAGE_SIZE));
+            BackgroundPosition.CENTER, UfxBackgrounds.FILL_PAGE_SIZE));
     }
 
     private void fitHeight(Image image) {
         setBackground(new Background(new BackgroundImage(image,
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-            BackgroundPosition.CENTER, Ufx.FIT_HEIGHT_SIZE)));
+            BackgroundPosition.CENTER, UfxBackgrounds.FIT_HEIGHT_SIZE)));
     }
 
     public void selectPage(int index) {

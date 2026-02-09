@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
-import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
+import static de.amr.pacmanfx.uilib.UfxColors.colorWithOpacity;
 import static java.util.Objects.requireNonNull;
 
 public class Maze3D extends Group {

@@ -10,7 +10,7 @@ import javafx.scene.text.Font;
 
 import java.util.ResourceBundle;
 
-import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
+import static de.amr.pacmanfx.uilib.UfxBackgrounds.createImageBackground;
 
 /**
  * Central repository for static UI resources (fonts, media, backgrounds, etc.).

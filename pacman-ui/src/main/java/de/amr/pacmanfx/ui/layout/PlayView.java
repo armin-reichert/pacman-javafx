@@ -18,7 +18,7 @@ import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.action.SimpleActionBindingsManager;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.widgets.CanvasDecorationPane;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -47,8 +47,8 @@ import static de.amr.pacmanfx.ui.GameSceneConfig.identifySceneSwitchType;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
-import static de.amr.pacmanfx.uilib.Ufx.border;
-import static de.amr.pacmanfx.uilib.Ufx.paintBackground;
+import static de.amr.pacmanfx.uilib.UfxBackgrounds.border;
+import static de.amr.pacmanfx.uilib.UfxBackgrounds.paintBackground;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -431,7 +431,7 @@ public class PlayView extends StackPane implements View {
                         scaling -> Math.min(scaling.doubleValue(), maxScaling)));
                 canvasDecorator.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
                 canvasDecorator.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-                canvasDecorator.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::paintBackground));
+                canvasDecorator.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR.map(UfxBackgrounds::paintBackground));
                 canvasLayer.setCenter(canvasDecorator);
             }
             else {

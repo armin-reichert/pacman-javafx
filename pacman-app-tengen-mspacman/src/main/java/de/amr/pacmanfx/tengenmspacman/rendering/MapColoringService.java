@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.UfxImages;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -114,7 +114,7 @@ public class MapColoringService {
     {
         // Make copy of spritesheet image region
         final Image existingMapImage = spriteSheet.image(mapSprite);
-        final Image recoloredMapImage = Ufx.replaceImageColors(
+        final Image recoloredMapImage = UfxImages.replaceImageColors(
             existingMapImage,
             Color.valueOf(srcColorScheme.fillColorRGB()),
             Color.valueOf(srcColorScheme.strokeColorRGB()),

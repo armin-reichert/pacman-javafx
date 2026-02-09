@@ -9,6 +9,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.StartPage;
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
 import javafx.beans.property.SimpleStringProperty;
@@ -59,7 +60,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     private ChangeListener<Boolean> play3DListener;
 
     public PacManXXL_StartPage() {
-        setBackground(Ufx.createWallpaper(WALLPAPER));
+        setBackground(UfxBackgrounds.createWallpaper(WALLPAPER));
 
         menu = new PacManXXL_OptionMenu();
         menu.setStyle(MENU_STYLE);

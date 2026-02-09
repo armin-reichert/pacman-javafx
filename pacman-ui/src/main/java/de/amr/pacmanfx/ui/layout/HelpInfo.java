@@ -7,7 +7,7 @@ import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl.StateName;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -72,7 +72,7 @@ public class HelpInfo {
         }
         var pane = new BorderPane(grid);
         pane.setPadding(new Insets(10));
-        pane.setBackground(Ufx.roundedBackground(backgroundColor, 10));
+        pane.setBackground(UfxBackgrounds.roundedBackground(backgroundColor, 10));
 
         // add default entries:
         if (ui.gameContext().currentGame().isUsingAutopilot()) {

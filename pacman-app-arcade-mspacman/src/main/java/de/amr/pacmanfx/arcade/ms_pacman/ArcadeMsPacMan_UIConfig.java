@@ -28,7 +28,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.UfxImages;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -172,7 +172,7 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, GameSceneConfig, Resou
                 Color.valueOf(colorScheme.wallStroke()), ARCADE_WHITE,
                 Color.valueOf(colorScheme.door()), Color.TRANSPARENT
         );
-        return Ufx.recolorImage(mazeImage, colorChanges);
+        return UfxImages.recolorImage(mazeImage, colorChanges);
     }
 
     @Override
