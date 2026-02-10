@@ -29,7 +29,7 @@ import javafx.scene.text.Text;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.translated;
-import static de.amr.pacmanfx.mapeditor.EditorUtil.*;
+import static de.amr.pacmanfx.mapeditor.UfxMapEditor.*;
 import static java.util.Objects.requireNonNull;
 
 public class TemplateImageCanvas extends Canvas {

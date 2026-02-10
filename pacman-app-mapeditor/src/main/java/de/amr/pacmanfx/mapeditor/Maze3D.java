@@ -153,9 +153,9 @@ public class Maze3D extends Group {
         floor.setMaterial(coloredMaterial(Color.BLACK));
         mazeGroup.getChildren().add(floor);
 
-        final Color wallBaseColor = EditorUtil.getColorFromMapLayer(worldMap().terrainLayer(),
+        final Color wallBaseColor = UfxMapEditor.getColorFromMapLayer(worldMap().terrainLayer(),
             WorldMapPropertyName.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
-        final Color wallTopColor = EditorUtil.getColorFromMapLayer(worldMap().terrainLayer(),
+        final Color wallTopColor = UfxMapEditor.getColorFromMapLayer(worldMap().terrainLayer(),
             WorldMapPropertyName.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
 
         PhongMaterial wallBaseMaterial = coloredMaterial(wallBaseColor);
@@ -219,7 +219,7 @@ public class Maze3D extends Group {
         r3D.createWallBetweenTileCoordinates(houseLeftLower, houseMaxTile, Wall3D.DEFAULT_WALL_THICKNESS);
         r3D.createWallBetweenTileCoordinates(houseMaxTile, houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS);
 
-        Color doorColor = EditorUtil.getColorFromMapLayer(worldMap().terrainLayer(),
+        Color doorColor = UfxMapEditor.getColorFromMapLayer(worldMap().terrainLayer(),
             WorldMapPropertyName.COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
         var doorMaterial = coloredMaterial(doorColor);
         Stream.of(houseMinTile.plus(3, 0), houseMinTile.plus(4, 0)).forEach(doorTile -> {
@@ -249,7 +249,7 @@ public class Maze3D extends Group {
         if (worldMap() == null) {
             return;
         }
-        Color foodColor = EditorUtil.getColorFromMapLayer(worldMap().foodLayer(),
+        Color foodColor = UfxMapEditor.getColorFromMapLayer(worldMap().foodLayer(),
             WorldMapPropertyName.COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
         var foodMaterial = coloredMaterial(foodColor);
         foodGroup.getChildren().clear();

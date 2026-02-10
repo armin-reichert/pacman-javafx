@@ -39,7 +39,7 @@ import java.util.function.Predicate;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.ACTOR_SPRITES;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.translated;
-import static de.amr.pacmanfx.mapeditor.EditorUtil.getColorFromMapLayer;
+import static de.amr.pacmanfx.mapeditor.UfxMapEditor.getColorFromMapLayer;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.COLOR_FOOD;
 import static java.util.Objects.requireNonNull;
 
@@ -236,7 +236,7 @@ public class EditCanvas extends Canvas {
     }
 
     public Vector2i tileAt(double mouseX, double mouseY) {
-        return new Vector2i(EditorUtil.fullTiles(mouseX, gridSize()), EditorUtil.fullTiles(mouseY, gridSize()));
+        return new Vector2i(UfxMapEditor.fullTiles(mouseX, gridSize()), UfxMapEditor.fullTiles(mouseY, gridSize()));
     }
 
     public void enterInspectMode() {
@@ -512,7 +512,7 @@ public class EditCanvas extends Canvas {
 
         var miFloodWithPellets = new MenuItem(translated("menu.edit.flood_with_pellets"));
         miFloodWithPellets.setOnAction(_ -> new Action_FloodWithPellets(editor, tile).execute());
-        miFloodWithPellets.setDisable(!EditorUtil.canPlaceFoodAtTile(worldMap(), tile));
+        miFloodWithPellets.setDisable(!UfxMapEditor.canPlaceFoodAtTile(worldMap(), tile));
 
         contextMenu.getItems().setAll(
             miInsertRow,

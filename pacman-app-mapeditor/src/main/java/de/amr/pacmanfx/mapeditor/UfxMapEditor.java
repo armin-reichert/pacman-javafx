@@ -19,7 +19,7 @@ import java.util.Locale;
 
 import static java.util.Objects.requireNonNull;
 
-public interface EditorUtil {
+public interface UfxMapEditor {
 
     // Note: String.format is locale-dependent! This may produce illegal color format if locale is not ENGLISH!
     static String formatRGBA(Color color) {
@@ -93,11 +93,11 @@ public interface EditorUtil {
     }
 
     static boolean isPartOfHouse(WorldMap worldMap, Vector2i tile) {
-        Vector2i minTile = worldMap.terrainLayer().getTileProperty(WorldMapPropertyName.POS_HOUSE_MIN_TILE);
-        Vector2i maxTile = worldMap.terrainLayer().getTileProperty(WorldMapPropertyName.POS_HOUSE_MAX_TILE);
+        final Vector2i minTile = worldMap.terrainLayer().getTileProperty(WorldMapPropertyName.POS_HOUSE_MIN_TILE);
+        final Vector2i maxTile = worldMap.terrainLayer().getTileProperty(WorldMapPropertyName.POS_HOUSE_MAX_TILE);
         if (minTile != null && maxTile != null) {
             return minTile.x() <= tile.x() && tile.x() <= maxTile.x()
-                    && minTile.y() <= tile.y() && tile.y() <= maxTile.y();
+                && minTile.y() <= tile.y() && tile.y() <= maxTile.y();
         }
         return false;
     }

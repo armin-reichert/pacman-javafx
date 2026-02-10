@@ -17,7 +17,7 @@ import java.nio.IntBuffer;
 import java.time.LocalTime;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.mapeditor.EditorUtil.getColorFromMapLayer;
+import static de.amr.pacmanfx.mapeditor.UfxMapEditor.getColorFromMapLayer;
 
 public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
 

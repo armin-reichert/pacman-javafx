@@ -7,7 +7,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapPropertyName;
 
-import static de.amr.pacmanfx.mapeditor.EditorUtil.formatRGBA;
+import static de.amr.pacmanfx.mapeditor.UfxMapEditor.formatRGBA;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
 import static java.util.Objects.requireNonNull;
 

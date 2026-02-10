@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.mapeditor.properties;
 
-import de.amr.pacmanfx.mapeditor.EditorUtil;
+import de.amr.pacmanfx.mapeditor.UfxMapEditor;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.model.world.WorldMapLayer;
 import de.amr.pacmanfx.model.world.WorldMapLayerID;
@@ -36,6 +36,6 @@ class ColorPropertyEditor extends AbstractPropertyEditor {
 
     @Override
     protected String formattedValue() {
-        return EditorUtil.formatRGBA(colorPicker.getValue());
+        return UfxMapEditor.formatRGBA(colorPicker.getValue());
     }
 }

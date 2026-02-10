@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static de.amr.pacmanfx.mapeditor.EditorUtil.canPlaceFoodAtTile;
+import static de.amr.pacmanfx.mapeditor.UfxMapEditor.canPlaceFoodAtTile;
 
 public class Action_FloodWithPellets extends EditorAction<Void> {
 
