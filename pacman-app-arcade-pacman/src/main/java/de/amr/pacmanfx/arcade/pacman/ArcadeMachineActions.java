@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui.action.GameAction;
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState.INTRO;
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState.SETTING_OPTIONS_FOR_START;
 
-public interface ArcadeActions {
+public interface ArcadeMachineActions {
 
     /**
      * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
@@ -22,13 +22,13 @@ public interface ArcadeActions {
     GameAction ACTION_INSERT_COIN = new GameAction("INSERT_COIN") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.gameContext().currentGame();
             final CoinMechanism coinMechanism = ui.gameContext().coinMechanism();
             final boolean acceptsCoin = coinMechanism.numCoins() < coinMechanism.maxCoins();
             if (acceptsCoin) {
                 coinMechanism.insertCoin();
                 ui.soundManager().setEnabled(true);
                 ui.voicePlayer().stopVoice();
+                final Game game = ui.gameContext().currentGame();
                 if (game.control().state() != SETTING_OPTIONS_FOR_START) {
                     game.control().enterState(SETTING_OPTIONS_FOR_START);
                 }

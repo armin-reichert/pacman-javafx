@@ -107,8 +107,8 @@ import static java.util.Objects.requireNonNull;
 public class ArcadePacMan_UIConfig implements UIConfig, GameSceneConfig, ResourceManager {
 
     public static final Set<ActionBinding> GAME_START_BINDINGS = Set.of(
-        new ActionBinding(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
-        new ActionBinding(ArcadeActions.ACTION_START_GAME,  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
+        new ActionBinding(ArcadeMachineActions.ACTION_INSERT_COIN, bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
+        new ActionBinding(ArcadeMachineActions.ACTION_START_GAME,  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
     );
 
     public static final WorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new WorldMapColorScheme(
