@@ -20,7 +20,7 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
-import static de.amr.pacmanfx.uilib.Ufx.defaultPhongMaterial;
+import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -124,21 +124,21 @@ public class Ghost3D extends Group implements Disposable {
         requireNonNegative(size);
 
         normalMaterialSet = new MaterialSet(
-            defaultPhongMaterial(colorSet.normal().dress()),
-            defaultPhongMaterial(colorSet.normal().eyeballs()),
-            defaultPhongMaterial(colorSet.normal().pupils())
+            coloredPhongMaterial(colorSet.normal().dress()),
+            coloredPhongMaterial(colorSet.normal().eyeballs()),
+            coloredPhongMaterial(colorSet.normal().pupils())
         );
 
         frightenedMaterialSet = new MaterialSet(
-            defaultPhongMaterial(colorSet.frightened().dress()),
-            defaultPhongMaterial(colorSet.frightened().eyeballs()),
-            defaultPhongMaterial(colorSet.frightened().pupils())
+            coloredPhongMaterial(colorSet.frightened().dress()),
+            coloredPhongMaterial(colorSet.frightened().eyeballs()),
+            coloredPhongMaterial(colorSet.frightened().pupils())
         );
 
         flashingMaterialSet = new MaterialSet(
-            defaultPhongMaterial(colorSet.flashing().dress()),
-            defaultPhongMaterial(colorSet.flashing().eyeballs()),
-            defaultPhongMaterial(colorSet.flashing().pupils())
+            coloredPhongMaterial(colorSet.flashing().dress()),
+            coloredPhongMaterial(colorSet.flashing().eyeballs()),
+            coloredPhongMaterial(colorSet.flashing().pupils())
         );
 
         var eyes = new Group(pupilsShape, eyeballsShape);

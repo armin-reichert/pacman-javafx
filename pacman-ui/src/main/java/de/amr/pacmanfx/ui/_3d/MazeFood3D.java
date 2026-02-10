@@ -36,7 +36,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.uilib.Ufx.defaultPhongMaterial;
+import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
 public class MazeFood3D implements Disposable {
@@ -67,8 +67,8 @@ public class MazeFood3D implements Disposable {
         requireNonNull(ghostMaterials);
         requireNonNull(swirls);
 
-        pelletMaterial = defaultPhongMaterial(Color.valueOf(colorScheme.pellet()));
-        particleMaterial = defaultPhongMaterial(Color.valueOf(colorScheme.pellet()).deriveColor(0, 0.5, 1.5, 0.5));
+        pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
+        particleMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()).deriveColor(0, 0.5, 1.5, 0.5));
 
         createPellets3D();
         createEnergizers3D(ghostMaterials, swirls);

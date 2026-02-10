@@ -9,7 +9,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Dimension2D;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -143,18 +142,15 @@ public final class Ufx {
      * Creates a {@link PhongMaterial} using the given color for both diffuse and specular components.
      * The specular color is automatically brightened.
      *
-     * @param paint the base color (must be a {@link Color})
+     * @param color the base color
      * @return a configured {@link PhongMaterial}
      * @throws IllegalArgumentException if {@code paint} is not a {@link Color}
      */
-    public static PhongMaterial defaultPhongMaterial(Paint paint) {
-        requireNonNull(paint);
-        if (paint instanceof Color color) {
-            var material = new PhongMaterial(color);
-            material.setSpecularColor(color.brighter());
-            return material;
-        }
-        throw new IllegalArgumentException("Phong material needs color, no general paint");
+    public static PhongMaterial coloredPhongMaterial(Color color) {
+        requireNonNull(color);
+        var material = new PhongMaterial(color);
+        material.setSpecularColor(color.brighter());
+        return material;
     }
 
     /**

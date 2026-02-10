@@ -6,6 +6,7 @@ package de.amr.pacmanfx.mapeditor;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.world.*;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.GhostBody;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.model3D.TerrainRenderer3D;
@@ -41,13 +42,6 @@ public class Maze3D extends Group {
     public static final float HOUSE_WALL_HEIGHT = 12;
     public static final float HOUSE_DOOR_HEIGHT = 10;
     public static final float OBSTACLE_HEIGHT = 4;
-
-    private static PhongMaterial coloredMaterial(Color color) {
-        requireNonNull(color);
-        var material = new PhongMaterial(color);
-        material.setSpecularColor(color.brighter());
-        return material;
-    }
 
     private final BooleanProperty actorsVisible = new SimpleBooleanProperty(true);
 
@@ -150,7 +144,7 @@ public class Maze3D extends Group {
         final Box floor = new Box(width, height, 0.1);
         floor.setTranslateX(0.5 * width);
         floor.setTranslateY(0.5 * height);
-        floor.setMaterial(coloredMaterial(Color.BLACK));
+        floor.setMaterial(Ufx.coloredPhongMaterial(Color.BLACK));
         mazeGroup.getChildren().add(floor);
 
         final Color wallBaseColor = UfxMapEditor.getColorFromMapLayer(worldMap().terrainLayer(),
@@ -158,8 +152,8 @@ public class Maze3D extends Group {
         final Color wallTopColor = UfxMapEditor.getColorFromMapLayer(worldMap().terrainLayer(),
             WorldMapPropertyName.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
 
-        PhongMaterial wallBaseMaterial = coloredMaterial(wallBaseColor);
-        PhongMaterial wallTopMaterial = coloredMaterial(wallTopColor);
+        PhongMaterial wallBaseMaterial = Ufx.coloredPhongMaterial(wallBaseColor);
+        PhongMaterial wallTopMaterial = Ufx.coloredPhongMaterial(wallTopColor);
 
         r3D.setOnWallCreated(wall3D -> {
             wall3D.setBaseHeight(OBSTACLE_HEIGHT);
@@ -201,8 +195,8 @@ public class Maze3D extends Group {
         Vector2i houseRightUpper = Vector2i.of(houseMaxTile.x(), houseMinTile.y());
         Vector2i houseLeftLower = Vector2i.of(houseMinTile.x(), houseMaxTile.y());
 
-        PhongMaterial wallBaseMaterial = coloredMaterial(colorWithOpacity(wallBaseColor, 0.4));
-        PhongMaterial wallTopMaterial = coloredMaterial(wallTopColor);
+        PhongMaterial wallBaseMaterial = Ufx.coloredPhongMaterial(colorWithOpacity(wallBaseColor, 0.4));
+        PhongMaterial wallTopMaterial = Ufx.coloredPhongMaterial(wallTopColor);
 
         r3D.setOnWallCreated(wall3D -> {
             wall3D.setBaseMaterial(wallBaseMaterial);
@@ -221,7 +215,7 @@ public class Maze3D extends Group {
 
         Color doorColor = UfxMapEditor.getColorFromMapLayer(worldMap().terrainLayer(),
             WorldMapPropertyName.COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
-        var doorMaterial = coloredMaterial(doorColor);
+        var doorMaterial = Ufx.coloredPhongMaterial(doorColor);
         Stream.of(houseMinTile.plus(3, 0), houseMinTile.plus(4, 0)).forEach(doorTile -> {
             Box door = new Box(TS + HTS, 2, HOUSE_DOOR_HEIGHT);
             door.setMaterial(doorMaterial);
@@ -251,7 +245,7 @@ public class Maze3D extends Group {
         }
         Color foodColor = UfxMapEditor.getColorFromMapLayer(worldMap().foodLayer(),
             WorldMapPropertyName.COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
-        var foodMaterial = coloredMaterial(foodColor);
+        var foodMaterial = Ufx.coloredPhongMaterial(foodColor);
         foodGroup.getChildren().clear();
         worldMap().terrainLayer().tiles().filter(this::hasFoodAt).forEach(tile -> {
             Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -4);

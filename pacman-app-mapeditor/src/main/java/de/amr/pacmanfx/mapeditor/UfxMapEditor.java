@@ -19,10 +19,12 @@ import java.util.Locale;
 
 import static java.util.Objects.requireNonNull;
 
-public interface UfxMapEditor {
+public final class UfxMapEditor {
+
+    private UfxMapEditor() {}
 
     // Note: String.format is locale-dependent! This may produce illegal color format if locale is not ENGLISH!
-    static String formatRGBA(Color color) {
+    public static String formatRGBA(Color color) {
         return String.format(Locale.ENGLISH, "rgba(%d,%d,%d,%.2f)",
             (int) (color.getRed()   * 255),
             (int) (color.getGreen() * 255),
@@ -31,7 +33,7 @@ public interface UfxMapEditor {
         );
     }
 
-    static String formatRGBHex(Color color) {
+    public static String formatRGBHex(Color color) {
         return String.format(Locale.ENGLISH, "#%02x%02x%02x",
             (int) (color.getRed()   * 255),
             (int) (color.getGreen() * 255),
@@ -39,7 +41,7 @@ public interface UfxMapEditor {
         );
     }
 
-    static Color getColorFromMapLayer(WorldMapLayer layer, String key, Color defaultColor) {
+    public static Color getColorFromMapLayer(WorldMapLayer layer, String key, Color defaultColor) {
         requireNonNull(layer);
         requireNonNull(key);
         String colorExpression = layer.propertyMap().get(key);
@@ -54,14 +56,14 @@ public interface UfxMapEditor {
         }
     }
 
-    static Node filler(int pixels) {
+    public static Node filler(int pixels) {
         var filler = new HBox();
         filler.setMinWidth(pixels);
         filler.setMaxWidth(pixels);
         return filler;
     }
 
-    static Node spacer() {
+    public static Node spacer() {
         var spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         return spacer;
@@ -71,11 +73,11 @@ public interface UfxMapEditor {
      * @param pixels number of pixels
      * @return number of full tiles spanned by pixels
      */
-    static int fullTiles(double pixels, double gridSize) {
+    public static int fullTiles(double pixels, double gridSize) {
         return (int) (pixels / gridSize);
     }
 
-    static boolean hasAccessibleTerrainAtTile(WorldMap worldMap, Vector2i tile) {
+    public static boolean hasAccessibleTerrainAtTile(WorldMap worldMap, Vector2i tile) {
         byte value = worldMap.terrainLayer().content(tile);
         return value == TerrainTile.EMPTY.$
                 || value == TerrainTile.ONE_WAY_DOWN.$
@@ -84,7 +86,7 @@ public interface UfxMapEditor {
                 || value == TerrainTile.ONE_WAY_RIGHT.$;
     }
 
-    static boolean canPlaceFoodAtTile(WorldMap worldMap, Vector2i tile) {
+    public static boolean canPlaceFoodAtTile(WorldMap worldMap, Vector2i tile) {
         return !worldMap.terrainLayer().outOfBounds(tile)
                 && tile.y() >= worldMap.terrainLayer().emptyRowsOverMaze()
                 && tile.y() < worldMap.numRows() - worldMap.terrainLayer().emptyRowsBelowMaze()
@@ -92,7 +94,7 @@ public interface UfxMapEditor {
                 && hasAccessibleTerrainAtTile(worldMap, tile);
     }
 
-    static boolean isPartOfHouse(WorldMap worldMap, Vector2i tile) {
+    public static boolean isPartOfHouse(WorldMap worldMap, Vector2i tile) {
         final Vector2i minTile = worldMap.terrainLayer().getTileProperty(WorldMapPropertyName.POS_HOUSE_MIN_TILE);
         final Vector2i maxTile = worldMap.terrainLayer().getTileProperty(WorldMapPropertyName.POS_HOUSE_MAX_TILE);
         if (minTile != null && maxTile != null) {

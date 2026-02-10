@@ -15,7 +15,7 @@ import javafx.scene.transform.Translate;
 
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.uilib.Ufx.defaultPhongMaterial;
+import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 
 public class PacBodyNoEyes extends Group implements Disposable {
 
@@ -25,11 +25,11 @@ public class PacBodyNoEyes extends Group implements Disposable {
     private PhongMaterial palateMaterial;
 
     public PacBodyNoEyes(double size, Mesh headMesh, Color headColor, Mesh palateMesh, Color palateColor) {
-        headMaterial = defaultPhongMaterial(headColor);
+        headMaterial = coloredPhongMaterial(headColor);
         headMeshView = new MeshView(headMesh);
         headMeshView.setMaterial(headMaterial);
 
-        palateMaterial = defaultPhongMaterial(palateColor);
+        palateMaterial = coloredPhongMaterial(palateColor);
         palateMeshView = new MeshView(palateMesh);
         palateMeshView.setMaterial(palateMaterial);
 

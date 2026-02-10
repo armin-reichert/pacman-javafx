@@ -14,7 +14,7 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
-import static de.amr.pacmanfx.uilib.Ufx.defaultPhongMaterial;
+import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 
 public class GhostBody extends Group implements Disposable {
     private PhongMaterial dressMaterial;
@@ -28,18 +28,18 @@ public class GhostBody extends Group implements Disposable {
         Mesh dressMesh, Mesh pupilsMesh, Mesh eyeballsMesh,
         double size, Color dressColor, double rotateY)
     {
-        dressMaterial = defaultPhongMaterial(dressColor);
+        dressMaterial = coloredPhongMaterial(dressColor);
         dressMeshView = new MeshView(dressMesh);
         dressMeshView.setMaterial(dressMaterial);
         Bounds dressBounds = dressMeshView.getBoundsInLocal();
         var centeredOverOrigin = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
         dressMeshView.getTransforms().add(centeredOverOrigin);
 
-        pupilsMaterial = defaultPhongMaterial(Color.BLUE);
+        pupilsMaterial = coloredPhongMaterial(Color.BLUE);
         pupilsMeshView = new MeshView(pupilsMesh);
         pupilsMeshView.setMaterial(pupilsMaterial);
 
-        eyeballsMaterial = defaultPhongMaterial(Color.WHITE);
+        eyeballsMaterial = coloredPhongMaterial(Color.WHITE);
         eyeballsMeshView = new MeshView(eyeballsMesh);
         eyeballsMeshView.setMaterial(eyeballsMaterial);
 

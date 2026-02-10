@@ -28,7 +28,7 @@ public class MsPacManFemaleParts extends Group implements Disposable {
     public MsPacManFemaleParts(double pacSize, Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
         int divisions = 16; // 64 is default
 
-        bowMaterial = Ufx.defaultPhongMaterial(hairBowColor);
+        bowMaterial = Ufx.coloredPhongMaterial(hairBowColor);
         bowLeft = new Sphere(1.2, divisions);
         bowLeft.setMaterial(bowMaterial);
         bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -pacSize * 0.55));
@@ -36,7 +36,7 @@ public class MsPacManFemaleParts extends Group implements Disposable {
         bowRight.setMaterial(bowMaterial);
         bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -pacSize * 0.55));
 
-        pearlMaterial = Ufx.defaultPhongMaterial(hairBowPearlsColor);
+        pearlMaterial = Ufx.coloredPhongMaterial(hairBowPearlsColor);
         pearlLeft = new Sphere(0.4, divisions);
         pearlLeft.setMaterial(pearlMaterial);
         pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacSize * 0.58));
@@ -44,12 +44,12 @@ public class MsPacManFemaleParts extends Group implements Disposable {
         pearlRight.setMaterial(pearlMaterial);
         pearlRight.getTransforms().addAll(new Translate(2, -0.5, -pacSize * 0.58));
 
-        beautySpotMaterial = Ufx.defaultPhongMaterial(Color.rgb(120, 120, 120));
+        beautySpotMaterial = Ufx.coloredPhongMaterial(Color.rgb(120, 120, 120));
         beautySpot = new Sphere(0.5, divisions);
         beautySpot.getTransforms().addAll(new Translate(-0.33 * pacSize, -0.4 * pacSize, -0.14 * pacSize));
         beautySpot.setMaterial(beautySpotMaterial);
 
-        silicone = Ufx.defaultPhongMaterial(boobsColor);
+        silicone = Ufx.coloredPhongMaterial(boobsColor);
 
         double bx = -0.2 * pacSize; // forward
         double by = 1.6; // or - 1.6 // sidewards

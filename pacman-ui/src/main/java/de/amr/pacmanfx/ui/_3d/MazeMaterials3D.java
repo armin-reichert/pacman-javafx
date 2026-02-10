@@ -23,7 +23,7 @@ public record MazeMaterials3D(PhongMaterial floor, PhongMaterial wallBase, Phong
             opacity -> UfxColors.colorWithOpacity(Color.valueOf(colorScheme.wallStroke()), opacity.doubleValue())));
         wallBaseMaterial.setSpecularPower(64);
 
-        final PhongMaterial wallTopMaterial = defaultPhongMaterial(Color.valueOf(colorScheme.wallFill()));
+        final PhongMaterial wallTopMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.wallFill()));
 
         return new MazeMaterials3D(floorMaterial, wallBaseMaterial, wallTopMaterial);
     }
