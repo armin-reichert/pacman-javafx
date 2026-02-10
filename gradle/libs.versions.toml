@@ -11,7 +11,7 @@ tinylog = "2.7.0"
 # Usage: alias(libs.plugins.xyz)
 [plugins]
 javafx     = { id = "org.openjfx.javafxplugin", version = "0.1.0" }
-jlink      = { id = "org.beryx.jlink", version = "3.1.4-rc" }
+jlink      = { id = "org.beryx.jlink", version = "3.1.5" }
 osdetector = { id = "com.google.osdetector", version = "1.7.3" }
 
 # Usage: (dot-separated!)
