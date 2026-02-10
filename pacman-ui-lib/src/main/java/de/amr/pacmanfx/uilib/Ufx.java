@@ -4,9 +4,6 @@
 package de.amr.pacmanfx.uilib;
 
 import de.amr.pacmanfx.Validations;
-import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.model.world.Obstacle;
-import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ObservableValue;
@@ -23,9 +20,8 @@ import java.io.PrintWriter;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Locale;
+import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -82,18 +78,18 @@ public final class Ufx {
      *
      * @param description description included in the log output
      * @param code        the code block to execute and measure
-     * @return the measured {@link Duration}, or {@link Duration#ZERO} if an exception occurs
+     * @return the measured {@link Duration}, or {@link Optional#empty()} if an exception occurs
      */
-    public static Duration measureDuration(String description, Runnable code) {
+    public static Optional<Duration> measureDuration(String description, Runnable code) {
         final Instant start = Instant.now();
         try {
             code.run();
-            Duration duration = Duration.between(start, Instant.now());
-            Logger.info("{} millis: '{}'", duration.toMillis(), description);
-            return duration;
+            final Duration duration = Duration.between(start, Instant.now());
+            Logger.info("Runtime: {} ms: '{}'", duration.toMillis(), description);
+            return Optional.of(duration);
         } catch (Exception x) {
             Logger.error("Error running code in measurement", x);
-            return Duration.ZERO;
+            return Optional.empty();
         }
     }
 
@@ -174,56 +170,5 @@ public final class Ufx {
         material.diffuseColorProperty().bind(colorProperty);
         material.specularColorProperty().bind(colorProperty.map(Color::brighter));
         return material;
-    }
-
-    /**
-     * Tests whether a sphere intersects an axis-aligned bounding box.
-     *
-     * @param cx     sphere center x
-     * @param cy     sphere center y
-     * @param cz     sphere center z
-     * @param radius sphere radius
-     * @param xmin   box minimum x
-     * @param ymin   box minimum y
-     * @param zmin   box minimum z
-     * @param xmax   box maximum x
-     * @param ymax   box maximum y
-     * @param zmax   box maximum z
-     * @return {@code true} if the sphere and box overlap
-     */
-    public static boolean intersectsSphereBox(
-        double cx, double cy, double cz, double radius,
-        double xmin, double ymin, double zmin,
-        double xmax, double ymax, double zmax) {
-
-        // Find closest point on box to sphere center
-        double px = Math.clamp(cx, xmin, xmax);
-        double py = Math.clamp(cy, ymin, ymax);
-        double pz = Math.clamp(cz, zmin, zmax);
-
-        // Compute squared distance
-        double dx = px - cx;
-        double dy = py - cy;
-        double dz = pz - cz;
-        double dist2 = dx * dx + dy * dy + dz * dz;
-
-        return dist2 <= radius * radius;
-    }
-
-    /**
-     * Determines whether the given obstacle lies on the border of the world map.
-     *
-     * @param worldMap the world map
-     * @param obstacle the obstacle to test
-     * @return {@code true} if the obstacle is positioned at a map border
-     */
-    // TODO check if this covers all cases
-    public static boolean isBorderObstacle(WorldMap worldMap, Obstacle obstacle) {
-        Vector2i start = obstacle.startPoint();
-        if (obstacle.isClosed()) {
-            return start.x() == TS || start.y() == worldMap.terrainLayer().emptyRowsOverMaze() * TS + HTS;
-        } else {
-            return start.x() == 0 || start.x() == worldMap.numCols() * TS;
-        }
     }
 }

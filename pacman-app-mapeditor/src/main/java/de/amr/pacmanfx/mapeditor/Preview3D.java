@@ -93,7 +93,7 @@ public class Preview3D {
     }
 
     public void updateMaze() {
-        maze3D.updateMaze();
+        maze3D.rebuildMaze();
     }
 
     public void reset() {

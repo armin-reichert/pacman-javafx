@@ -46,6 +46,24 @@ public class ObstacleBuilder {
         }
     }
 
+    /**
+     * Determines whether the given obstacle lies on the border of this world map.
+     *
+     * @param obstacle the obstacle to test
+     * @param worldMap the world map containing the obstacle
+     * @return {@code true} if the obstacle is positioned at a map border
+     */
+    public static boolean isBorderObstacle(Obstacle obstacle, WorldMap worldMap) {
+        // TODO check if this covers all cases
+        final Vector2i start = obstacle.startPoint();
+        final TerrainLayer terrainLayer = worldMap.terrainLayer();
+        if (obstacle.isClosed()) {
+            return start.x() == TS || start.y() == terrainLayer.emptyRowsOverMaze() * TS + HTS;
+        }
+        return start.x() == 0 || start.x() == terrainLayer.numCols() * TS;
+    }
+
+
     // Arcs are represented by "diagonal" vectors
     private static final Vector2i SEG_ARC_NW_UP   = Vector2i.of(HTS, -HTS);
     private static final Vector2i SEG_ARC_NW_DOWN = SEG_ARC_NW_UP.inverse();

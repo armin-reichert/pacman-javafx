@@ -5,11 +5,7 @@ package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.model.world.FoodTile;
-import de.amr.pacmanfx.model.world.Obstacle;
-import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.model.world.WorldMapPropertyName;
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.uilib.model3D.GhostBody;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.model3D.TerrainRenderer3D;
@@ -130,8 +126,8 @@ public class Maze3D extends Group {
             ghostShape.visibleProperty().bind(actorsVisibleProperty());
         }
 
-        worldMapProperty().addListener((py, oldMap, newMap) -> {
-            if (newMap != null) updateMaze();
+        worldMapProperty().addListener((_, _, newMap) -> {
+            if (newMap != null) rebuildMaze();
         });
     }
 
@@ -144,22 +140,22 @@ public class Maze3D extends Group {
         setRotate(getRotate() + angle);
     }
 
-    public void updateMaze() {
-        final double worldWidth = worldMap().numCols() * TS;
-        final double worldHeight = worldMap().numRows() * TS;
+    public void rebuildMaze() {
+        final double width  = worldMap().numCols() * TS;
+        final double height = worldMap().numRows() * TS;
 
         mazeGroup.getChildren().clear();
 
-        // Floor left-upper corner at origin
-        Box floor = new Box(worldWidth, worldHeight, 0.1);
-        floor.setTranslateX(0.5 * worldWidth);
-        floor.setTranslateY(0.5 * worldHeight);
+        // Floor: Set left-upper corner at origin (centered at origina by default)
+        final Box floor = new Box(width, height, 0.1);
+        floor.setTranslateX(0.5 * width);
+        floor.setTranslateY(0.5 * height);
         floor.setMaterial(coloredMaterial(Color.BLACK));
         mazeGroup.getChildren().add(floor);
 
-        Color wallBaseColor = EditorUtil.getColorFromMapLayer(worldMap().terrainLayer(),
+        final Color wallBaseColor = EditorUtil.getColorFromMapLayer(worldMap().terrainLayer(),
             WorldMapPropertyName.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
-        Color wallTopColor = EditorUtil.getColorFromMapLayer(worldMap().terrainLayer(),
+        final Color wallTopColor = EditorUtil.getColorFromMapLayer(worldMap().terrainLayer(),
             WorldMapPropertyName.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
 
         PhongMaterial wallBaseMaterial = coloredMaterial(wallBaseColor);
@@ -175,7 +171,7 @@ public class Maze3D extends Group {
             return wall3D;
         });
         for (Obstacle obstacle : worldMap().terrainLayer().obstacles()) {
-            boolean worldBorder = Ufx.isBorderObstacle(worldMap(), obstacle);
+            boolean worldBorder = ObstacleBuilder.isBorderObstacle(obstacle, worldMap());
             r3D.renderObstacle3D(obstacle, worldBorder, 2, HTS);
         }
         r3D.setOnWallCreated(null);
