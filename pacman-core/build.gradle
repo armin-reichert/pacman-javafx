@@ -7,7 +7,7 @@ plugins {
 }
 
 javafx {
-    modules = ["javafx.base"]  // for JavFX properties and data binding
+    modules = ["javafx.base"]  // for JavaFX properties and data binding
 }
 
 dependencies {
