@@ -307,14 +307,14 @@ public final class GameUI_Implementation implements GameUI {
         });
 
         stopGame();
-        game.control().restart(GameControl.StateName.BOOT.name());
+        game.control().restartStateNamed(GameControl.StateName.BOOT.name());
         showStartView();
     }
 
     @Override
     public void restart() {
         stopGame();
-        context.currentGame().control().restart(GameControl.StateName.BOOT.name());
+        context.currentGame().control().restartStateNamed(GameControl.StateName.BOOT.name());
         Platform.runLater(clock::start);
     }
 

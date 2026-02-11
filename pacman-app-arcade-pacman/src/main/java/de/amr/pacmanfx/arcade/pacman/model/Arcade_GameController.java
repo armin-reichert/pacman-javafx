@@ -168,7 +168,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
             @Override
             public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
-                    game.control().stateMachine().resumePreviousState();
+                    game.resumePreviousState();
                 } else {
                     game.whileEatingGhost(game.level(), timer.tickCount());
                 }

@@ -30,7 +30,7 @@ public interface ArcadeMachineActions {
                 ui.voicePlayer().stopVoice();
                 final Game game = ui.gameContext().currentGame();
                 if (game.control().state() != SETTING_OPTIONS_FOR_START) {
-                    game.control().stateMachine().enterState(SETTING_OPTIONS_FOR_START);
+                    game.enterState(SETTING_OPTIONS_FOR_START);
                 }
                 game.publishGameEvent(new CreditAddedEvent(1));
             }
@@ -53,7 +53,7 @@ public interface ArcadeMachineActions {
         @Override
         public void execute(GameUI ui) {
             ui.voicePlayer().stopVoice();
-            ui.gameContext().currentGame().control().stateMachine().enterState(GameState.STARTING_GAME_OR_LEVEL);
+            ui.gameContext().currentGame().enterState(GameState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override

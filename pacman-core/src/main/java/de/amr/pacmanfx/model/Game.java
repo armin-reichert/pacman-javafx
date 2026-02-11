@@ -15,8 +15,6 @@ import javafx.beans.property.IntegerProperty;
 
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * Common interface for all Pac-Man game models.
  * <p>
@@ -39,8 +37,15 @@ public interface Game extends LevelCounter {
      * @param gameState the new game state
      */
     default void enterState(StateMachine.State<Game> gameState) {
-        requireNonNull(gameState);
-        control().stateMachine().enterState(gameState);
+        control().enterState(gameState);
+    }
+
+    default void resumePreviousState() {
+        control().resumePreviousState();
+    }
+
+    default void restartState(StateMachine.State<Game> gameState) {
+        control().restartState(gameState);
     }
 
     /**

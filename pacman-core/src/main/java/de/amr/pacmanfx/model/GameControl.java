@@ -73,6 +73,10 @@ public interface GameControl {
         return stateMachine().state();
     }
 
+    default void enterState(StateMachine.State<Game> gameState) {
+        stateMachine().enterState(gameState);
+    }
+
     /**
      * Enters the state with the given identifier.
      *
@@ -88,17 +92,25 @@ public interface GameControl {
         );
     }
 
+    default void resumePreviousState() {
+        stateMachine().resumePreviousState();
+    }
+
+    default void restartState(StateMachine.State<Game> gameState) {
+        stateMachine().restart(gameState);
+    }
+
     /**
      * Restarts the state with the given identifier.
      *
      * <p>If the state does not exist, an error is logged and no transition occurs.</p>
      *
-     * @param stateID the identifier of the state to restart
+     * @param stateName the identifier of the state to restart
      */
-    default void restart(String stateID) {
-        stateMachine().optState(stateID).ifPresentOrElse(
+    default void restartStateNamed(String stateName) {
+        optState(stateName).ifPresentOrElse(
             state -> stateMachine().restart(state),
-            () -> Logger.error("Cannot restart in state '{}'. State not existing.", stateID)
+            () -> Logger.error("Cannot restart in state '{}'. State not existing.", stateName)
         );
     }
 }
