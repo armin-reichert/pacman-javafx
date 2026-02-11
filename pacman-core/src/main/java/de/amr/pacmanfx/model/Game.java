@@ -5,6 +5,7 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -13,6 +14,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 
 import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Common interface for all Pac-Man game models.
@@ -29,6 +32,16 @@ public interface Game extends LevelCounter {
      * @return state machine controlling the game
      */
     GameControl control();
+
+    /**
+     * Convenience method for changing the game state.
+     *
+     * @param gameState the new game state
+     */
+    default void enterState(StateMachine.State<Game> gameState) {
+        requireNonNull(gameState);
+        control().stateMachine().enterState(gameState);
+    }
 
     /**
      * @return the "frame state", a collection of information on what happened in the current simulation step
