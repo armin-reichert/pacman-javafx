@@ -11,59 +11,94 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Each game model has a finite state machine which controls the game state transitions and eventually the scene
- * selection in the user interface. However, the game controller should not contain the details how the game works,
- * this should be implemented in the model itself.
-*/
+ * Defines the control contract for a game model driven by a {@link StateMachine}.
+ *
+ * <p>Each concrete game model owns a finite state machine that governs the
+ * progression of gameplay states (boot, intro, level transitions, dying, etc.).
+ * The controller layer should not implement game logic or state transitions
+ * directly; instead, it delegates all state management to the model via this
+ * interface.</p>
+ *
+ * <p>The state machine determines both the internal game flow and the scene
+ * selection in the user interface. Implementations are expected to register
+ * all required states and transitions during construction.</p>
+ */
 public interface GameControl {
 
     /**
-     * To avoid having to test against string constants in game-variant independent code, use these constants.
+     * Enumeration of well‑known game state identifiers.
+     *
+     * <p>These constants exist to avoid scattering string literals throughout
+     * game‑variant‑independent code. Implementations may define additional
+     * states, but these represent the canonical set used across Pac‑Man FX.</p>
      */
     enum StateName {
-        BOOT, INTRO, SETTING_OPTIONS_FOR_START, STARTING_GAME_OR_LEVEL, HUNTING, LEVEL_COMPLETE,
-        LEVEL_TRANSITION, EATING_GHOST, PACMAN_DYING, GAME_OVER, INTERMISSION
+        BOOT,
+        INTRO,
+        SETTING_OPTIONS_FOR_START,
+        STARTING_GAME_OR_LEVEL,
+        HUNTING,
+        LEVEL_COMPLETE,
+        LEVEL_TRANSITION,
+        EATING_GHOST,
+        PACMAN_DYING,
+        GAME_OVER,
+        INTERMISSION
     }
 
+    /**
+     * Returns the state machine controlling this game model.
+     *
+     * @return the underlying {@link StateMachine} instance
+     */
     StateMachine<Game> stateMachine();
 
+    /**
+     * Looks up a state by its identifier.
+     *
+     * @param stateName the state identifier
+     * @return an {@link Optional} containing the state if it exists
+     */
     default Optional<StateMachine.State<Game>> optState(String stateName) {
+        requireNonNull(stateName);
         return stateMachine().optState(stateName);
     }
 
+    /**
+     * Returns the currently active state of the game.
+     *
+     * @return the active {@link StateMachine.State}
+     */
     default StateMachine.State<Game> state() {
         return stateMachine().state();
     }
 
-    default void enterState(StateMachine.State<Game> gameState) {
-        stateMachine().enterState(gameState);
+    /**
+     * Enters the state with the given identifier.
+     *
+     * <p>If the state does not exist, an error is logged and the current state
+     * remains unchanged.</p>
+     *
+     * @param stateName the identifier of the state to enter
+     */
+    default void enterStateNamed(String stateName) {
+        optState(stateName).ifPresentOrElse(
+            state -> stateMachine().enterState(state),
+            () -> Logger.error("Cannot enter state '{}'. No state with that name exists.", stateName)
+        );
     }
 
-    default void enterStateNamed(String stateID) {
-        requireNonNull(stateID);
-        Optional<StateMachine.State<Game>> optState = stateMachine().optState(stateID);
-        optState.ifPresentOrElse(state -> stateMachine().enterState(state),
-            () -> Logger.error("Cannot change state to '{}'. State not existing.", stateID));
-    }
-
-    default void restart(StateMachine.State<Game> gameState) {
-        stateMachine().restart(gameState);
-    }
-
-    default void resumePreviousState() {
-        stateMachine().resumePreviousState();
-    }
-
+    /**
+     * Restarts the state with the given identifier.
+     *
+     * <p>If the state does not exist, an error is logged and no transition occurs.</p>
+     *
+     * @param stateID the identifier of the state to restart
+     */
     default void restart(String stateID) {
-        stateMachine().optState(stateID).ifPresentOrElse(state -> stateMachine().restart(state),
-            () -> Logger.error("Cannot restart in state to '{}'. State not existing.", stateID));
-    }
-
-    default void terminateGameState() {
-        stateMachine().state().timer().expire();
-    }
-
-    default void update() {
-        stateMachine().update();
+        stateMachine().optState(stateID).ifPresentOrElse(
+            state -> stateMachine().restart(state),
+            () -> Logger.error("Cannot restart in state '{}'. State not existing.", stateID)
+        );
     }
 }

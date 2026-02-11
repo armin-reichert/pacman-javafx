@@ -316,7 +316,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacDead(PacDeadEvent e) {
-        gameContext().currentGame().control().terminateGameState();
+        gameContext().currentGame().control().state().timer().expire();
     }
 
     @Override
@@ -389,7 +389,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private void playLevelCompleteAnimation(GameLevel level) {
         levelCompletedAnimation = new LevelCompletedAnimation(level,
-            () -> level.game().control().terminateGameState());
+            () -> level.game().control().state().timer().expire());
         levelCompletedAnimation.play();
     }
 

@@ -14,6 +14,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.function.Consumer;
+
 /**
  * Game clock with modifiable frame rate.
  */
@@ -28,7 +30,7 @@ public class GameClock {
             if (runningWhenChanged) {
                 stop();
             }
-            createClockWork();
+            createClockwork(targetFrameRate());
             if (runningWhenChanged) {
                 start();
             }
@@ -39,7 +41,7 @@ public class GameClock {
 
     private final BooleanProperty timeMeasured = new SimpleBooleanProperty(false);
 
-    private Timeline clockWork;
+    private Timeline clockwork;
     private Runnable pausableAction = () -> {};
     private Runnable permanentAction = () -> {};
 
@@ -50,8 +52,14 @@ public class GameClock {
     private long countTicksStartTime;
     private long ticksInFrame;
 
+    private Consumer<Throwable> errorHandler = x -> Logger.error(x, "Game clock encountered error");
+
     public GameClock() {
-        createClockWork();
+        createClockwork(targetFrameRate());
+    }
+
+    public void setErrorHandler(Consumer<Throwable> errorHandler) {
+        this.errorHandler = errorHandler;
     }
 
     public void setPausableAction(Runnable action) {
@@ -86,15 +94,15 @@ public class GameClock {
 
     public void start() {
         setPaused(false);
-        clockWork.play();
+        clockwork.play();
     }
 
     public void stop() {
-        clockWork.stop();
+        clockwork.stop();
     }
 
     public boolean isRunning() {
-        return clockWork.getStatus() == Status.RUNNING;
+        return clockwork.getStatus() == Status.RUNNING;
     }
 
     public double lastTicksPerSecond() {
@@ -116,13 +124,13 @@ public class GameClock {
     }
 
     public boolean makeOneStep(boolean pausableActionEnabled) {
-        long now = System.nanoTime();
+        final long now = System.nanoTime();
         if (pausableActionEnabled) {
             try {
                 execute(pausableAction, "Pausable action took {} milliseconds");
                 updateCount++;
             } catch (Throwable x) {
-                Logger.error(x);
+                errorHandler.accept(x);
                 return false;
             }
         }
@@ -135,26 +143,26 @@ public class GameClock {
                 ticksInFrame = 0;
                 countTicksStartTime = now;
             }
+            return true;
         } catch (Throwable x) {
-            Logger.error(x);
+            errorHandler.accept(x);
             return false;
         }
-        return true;
     }
 
-    private void createClockWork() {
-        Duration period = Duration.seconds(1.0 / targetFrameRate());
-        clockWork = new Timeline(targetFrameRate(), new KeyFrame(period, e -> makeOneStep(!isPaused())));
-        clockWork.setCycleCount(Animation.INDEFINITE);
-        clockWork.statusProperty().addListener((py, oldStatus, newStatus) ->
-            Logger.info("{} -> {}, target freq: {} Hz", oldStatus, newStatus, targetFrameRate()));
+    private void createClockwork(double frameRate) {
+        final var period = Duration.seconds(1.0 / frameRate);
+        clockwork = new Timeline(frameRate, new KeyFrame(period, _ -> makeOneStep(!isPaused())));
+        clockwork.setCycleCount(Animation.INDEFINITE);
+        clockwork.statusProperty().addListener((_, oldStatus, newStatus) ->
+            Logger.info("Clock status {} -> {}, target frequency: {} Hz", oldStatus, newStatus, frameRate));
     }
 
     private void execute(Runnable action, String logMessage) {
         if (timeMeasured.get()) {
-            double start = System.nanoTime();
+            final double start = System.nanoTime();
             action.run();
-            double duration = System.nanoTime() - start;
+            final double duration = System.nanoTime() - start;
             Logger.info(logMessage, duration / 1e6);
         } else {
             action.run();

@@ -270,7 +270,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     private void updateStateInHeaven() {
         if (sceneTimer.hasExpired()) {
-            gameContext().currentGame().control().terminateGameState();
+            gameContext().currentGame().control().state().timer().expire();
         }
     }
 }

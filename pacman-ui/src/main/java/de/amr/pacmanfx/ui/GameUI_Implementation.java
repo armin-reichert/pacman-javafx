@@ -88,8 +88,13 @@ public final class GameUI_Implementation implements GameUI {
         this.context = context;
         this.stage = stage;
 
-        clock.setPausableAction(this::simulateAndUpdateGameScene);
-        clock.setPermanentAction(this::render);
+        clock.setPausableAction(() -> {
+            final Game game = context.currentGame();
+            simulate(game);
+            optGameScene().ifPresent(gameScene -> gameScene.update(game));
+        });
+        clock.setPermanentAction(() -> views().currentView().render());
+        clock.setErrorHandler(this::ka_tas_tro_phe);
 
         sceneLayout.setPrefSize(mainSceneWidth, mainSceneHeight);
         viewManager = new ViewManager(this, scene, this::createEditorView, flashMessageView);
@@ -196,25 +201,11 @@ public final class GameUI_Implementation implements GameUI {
         scene.setOnScroll(e -> optGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
     }
 
-    private void simulateAndUpdateGameScene() {
-        final Game game = context.currentGame();
-        final SimulationStep step = game.simulationStep();
-        step.init(clock.tickCount());
-        try {
-            game.control().update();
-            step.printLog();
-            optGameScene().ifPresent(gameScene -> gameScene.update(game));
-        } catch (Throwable x) {
-            ka_tas_tro_phe(x);
-        }
-    }
-
-    private void render() {
-        try {
-            views().currentView().render();
-        } catch (Throwable x) {
-            ka_tas_tro_phe(x);
-        }
+    private void simulate(Game game) {
+        final SimulationStep simulationStep = game.simulationStep();
+        simulationStep.init(clock.tickCount());
+        game.control().stateMachine().update();
+        simulationStep.printLog();
     }
 
     /**

@@ -54,7 +54,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("LET_GAME_STATE_EXPIRE") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().currentGame().control().terminateGameState();
+            ui.gameContext().currentGame().control().state().timer().expire();
         }
     };
 
@@ -296,7 +296,7 @@ public final class CommonGameActions {
                     ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D))
                 {
                     ui.views().getPlayView().updateGameScene(game, true);
-                    game.control().update(); //TODO needed?
+                    game.control().stateMachine().update(); //TODO needed?
                 }
                 if (!game.isPlaying()) {
                     ui.showFlashMessage(ui.translate(PROPERTY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));

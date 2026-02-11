@@ -46,7 +46,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
             @Override
             public void onUpdate(Game game) {
                 if (timer.hasExpired()) { // timer is set to expired by UI
-                    game.control().enterState(INTRO);
+                    game.control().stateMachine().enterState(INTRO);
                 }
             }
         },
@@ -64,7 +64,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
             public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
                     // start demo level (attract mode)
-                    game.control().enterState(STARTING_GAME_OR_LEVEL);
+                    game.control().stateMachine().enterState(STARTING_GAME_OR_LEVEL);
                 }
             }
         },
@@ -109,13 +109,13 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
             public void onUpdate(Game game) {
                 game.whileHunting(game.level());
                 if (game.isLevelCompleted(game.level())) {
-                    game.control().enterState(LEVEL_COMPLETE);
+                    game.control().stateMachine().enterState(LEVEL_COMPLETE);
                 }
                 else if (game.hasPacManBeenKilled()) {
-                    game.control().enterState(PACMAN_DYING);
+                    game.control().stateMachine().enterState(PACMAN_DYING);
                 }
                 else if (game.hasGhostBeenKilled()) {
-                    game.control().enterState(EATING_GHOST);
+                    game.control().stateMachine().enterState(EATING_GHOST);
                 }
             }
         },
@@ -134,11 +134,11 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
                 else if (timer.hasExpired()) {
                     if (game.level().isDemoLevel()) {
                         // just in case: if demo level was completed, go back to intro scene
-                        game.control().enterState(INTRO);
+                        game.control().stateMachine().enterState(INTRO);
                     } else if (game.cutScenesEnabled() && game.level().cutSceneNumber() != 0) {
-                        game.control().enterState(INTERMISSION);
+                        game.control().stateMachine().enterState(INTERMISSION);
                     } else {
-                        game.control().enterState(LEVEL_TRANSITION);
+                        game.control().stateMachine().enterState(LEVEL_TRANSITION);
                     }
                 }
             }
@@ -154,7 +154,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
             @Override
             public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
-                    game.control().enterState(STARTING_GAME_OR_LEVEL);
+                    game.control().stateMachine().enterState(STARTING_GAME_OR_LEVEL);
                 }
             }
         },
@@ -168,7 +168,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
             @Override
             public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
-                    game.control().resumePreviousState();
+                    game.control().stateMachine().resumePreviousState();
                 } else {
                     game.whileEatingGhost(game.level(), timer.tickCount());
                 }
@@ -185,10 +185,10 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
             public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
                     if (game.level().isDemoLevel()) {
-                        game.control().enterState(GAME_OVER);
+                        game.control().stateMachine().enterState(GAME_OVER);
                     } else {
                         game.addLives(-1);
-                        game.control().enterState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
+                        game.control().stateMachine().enterState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
                     }
                 }
                 else {
@@ -209,9 +209,9 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
                 if (timer.hasExpired()) {
                     game.prepareNewGame();
                     if (game.canStartNewGame()) {
-                        game.control().enterState(SETTING_OPTIONS_FOR_START);
+                        game.control().stateMachine().enterState(SETTING_OPTIONS_FOR_START);
                     } else {
-                        game.control().enterState(INTRO);
+                        game.control().stateMachine().enterState(INTRO);
                     }
                 }
             }
@@ -232,7 +232,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
             @Override
             public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
-                    game.control().enterState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
+                    game.control().stateMachine().enterState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
                 }
             }
         };

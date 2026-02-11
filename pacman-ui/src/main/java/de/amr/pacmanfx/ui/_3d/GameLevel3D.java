@@ -305,7 +305,7 @@ public class GameLevel3D extends Group implements Disposable {
             pauseSec(0.5)
         );
         // Note: adding this inside the animation as last action does not work!
-        animation.setOnFinished(_ -> level.game().control().terminateGameState());
+        animation.setOnFinished(_ -> level.game().control().state().timer().expire());
         animation.play();
     }
 
@@ -349,7 +349,7 @@ public class GameLevel3D extends Group implements Disposable {
         animation.setOnFinished(_ -> {
             maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
             perspectiveIDProperty.bind(PROPERTY_3D_PERSPECTIVE_ID);
-            level.game().control().terminateGameState();
+            level.game().control().state().timer().expire();
         });
         animation.play();
     }

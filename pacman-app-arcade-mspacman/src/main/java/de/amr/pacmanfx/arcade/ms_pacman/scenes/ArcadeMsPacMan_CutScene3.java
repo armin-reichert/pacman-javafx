@@ -175,7 +175,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private void updateStateStorkLeavesScene() {
         stork.move();
         if (sceneTimer.hasExpired()) {
-            gameContext().currentGame().control().terminateGameState();
+            gameContext().currentGame().control().state().timer().expire();
         }
     }
 }
