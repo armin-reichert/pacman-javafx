@@ -51,10 +51,8 @@ public class ArcadePacMan_App extends Application {
         final Dimension2D sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         try {
             final boolean useBuilder = Boolean.parseBoolean(getParameters().getNamed().getOrDefault("use_builder", "true"));
-            if (useBuilder)
-                createUIUsingBuilder(primaryStage, sceneSize, GameBox.instance());
-            else
-                createUIUsingAPI(primaryStage, sceneSize, GameBox.instance());
+            if (useBuilder) createUIUsingBuilder(primaryStage, sceneSize, GameBox.instance());
+            else            createUIUsingAPI(primaryStage, sceneSize, GameBox.instance());
             ui.show();
         }
         catch (RuntimeException x) {
