@@ -113,6 +113,7 @@ public abstract class GameScene2D implements GameScene {
     public final void init(Game game) {
         doInit(game);
         actionBindings.addAll(GameUI.KEYBOARD);
+        debugInfoVisibleProperty().bind(GameUI.PROPERTY_DEBUG_INFO_VISIBLE);
         Logger.info("2D scene {} initialized", getClass().getSimpleName());
     }
 
@@ -123,6 +124,7 @@ public abstract class GameScene2D implements GameScene {
     public final void end(Game game) {
         doEnd(game);
         ui.soundManager().stopAll();
+        debugInfoVisibleProperty().unbind();
         Logger.info("2D scene {} ends", getClass().getSimpleName());
     }
 

@@ -3,9 +3,6 @@
  */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.ui._2d.GameScene2D;
-import org.tinylog.Logger;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -25,25 +22,17 @@ public class UIConfigManager {
         factories.put(gameVariantName, factory);
     }
 
-    public UIConfig getOrCreate(String variantName) {
+    public UIConfig getOrCreateUIConfig(String variantName) {
         requireNonNull(variantName);
-        return uiConfigCache.computeIfAbsent(variantName, _ -> {
-            try {
-                final UIConfig config = factories.get(variantName).get();
-                if (config instanceof GameSceneConfig gameSceneConfig) {
-                    gameSceneConfig.gameScenes().forEach(scene -> {
-                        if (scene instanceof GameScene2D gameScene2D) {
-                            gameScene2D.debugInfoVisibleProperty().bind(GameUI.PROPERTY_DEBUG_INFO_VISIBLE);
-                        }
-                    });
-                } else {
-                    Logger.error("UI configuration class must also implement GameScene_Config interface");
-                }
-                return config;
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to create config for " + variantName, e);
-            }
-        });
+        return uiConfigCache.computeIfAbsent(variantName, this::createConfig);
+    }
+
+    private UIConfig createConfig(String variantName) {
+        try {
+            return factories.get(variantName).get();
+        } catch (Exception x) {
+            throw new RuntimeException("Failed to create config for game variant " + variantName, x);
+        }
     }
 
     public void dispose(String variantName) {

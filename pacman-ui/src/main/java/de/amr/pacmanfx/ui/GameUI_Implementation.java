@@ -238,7 +238,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public UIConfig config(String gameVariantName) {
-        return uiConfigManager.getOrCreate(gameVariantName);
+        return uiConfigManager.getOrCreateUIConfig(gameVariantName);
     }
 
     @Override
