@@ -138,7 +138,7 @@ public interface GameClock {
      *
      * @return ticks per second during the last measurement interval
      */
-    double lastTicksPerSecond();
+    double fps();
 
     /**
      * Returns the total number of ticks executed since the clock was created.
@@ -153,18 +153,18 @@ public interface GameClock {
      *
      * @return the number of pausable updates
      */
-    long updateCount();
+    long pausableUpdatesCount();
 
     /**
      * Executes a fixed number of simulation steps synchronously.
      * <p>
      * This method is typically used for debugging or deterministic stepping.
      *
-     * @param n the number of steps to execute
+     * @param numSteps the number of steps to execute
      * @param pausableActionEnabled whether the pausable action should run
      * @return {@code true} if all steps completed without error
      */
-    boolean makeSteps(int n, boolean pausableActionEnabled);
+    boolean makeSteps(int numSteps, boolean pausableActionEnabled);
 
     /**
      * Executes a single simulation step synchronously.

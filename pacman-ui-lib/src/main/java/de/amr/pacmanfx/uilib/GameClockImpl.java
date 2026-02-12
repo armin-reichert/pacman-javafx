@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.uilib;
 
 import de.amr.pacmanfx.GameClock;
+import de.amr.pacmanfx.Validations;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
@@ -76,7 +77,7 @@ public class GameClockImpl implements GameClock {
     private long pausableUpdatesCount;
     private long tickCount;
 
-    private long lastTicksPerSec;
+    private long fps;
     private long countTicksStartTime;
     private long ticksInFrame;
 
@@ -154,51 +155,51 @@ public class GameClockImpl implements GameClock {
     }
 
     @Override
-    public double lastTicksPerSecond() {
-        return lastTicksPerSec;
+    public double fps() {
+        return fps;
     }
 
     @Override
     public long tickCount() { return tickCount; }
 
     @Override
-    public long updateCount() {
+    public long pausableUpdatesCount() {
         return pausableUpdatesCount;
     }
 
     @Override
-    public boolean makeSteps(int n, boolean pausableActionEnabled) {
-        for (int i = 0; i < n; ++i) {
-            if (!makeOneStep(pausableActionEnabled)) return false;
+    public boolean makeSteps(int numSteps, boolean pausableActionIncluded) {
+        Validations.requireNonNegative(numSteps);
+        for (int i = 0; i < numSteps; ++i) {
+            if (!makeOneStep(pausableActionIncluded)) return false;
         }
         return true;
     }
 
     @Override
-    public boolean makeOneStep(boolean pausableActionEnabled) {
-        if (pausableActionEnabled) {
-            try {
+    public boolean makeOneStep(boolean pausableActionIncluded) {
+        try {
+            if (pausableActionIncluded) {
                 execute(pausableAction, "Pausable action took {} milliseconds");
                 pausableUpdatesCount++;
-            } catch (Throwable x) {
-                errorHandler.accept(x);
-                return false;
             }
-        }
-        try {
             execute(permanentAction, "Permanent action took {} milliseconds");
-            ++tickCount;
-            ++ticksInFrame;
-            long after = System.nanoTime();
-            if (after - countTicksStartTime > 1e9) {
-                lastTicksPerSec = ticksInFrame;
-                ticksInFrame = 0;
-                countTicksStartTime = after;
-            }
-            return true;
+            computeFPS();
         } catch (Throwable x) {
             errorHandler.accept(x);
             return false;
+        }
+        return true;
+    }
+
+    private void computeFPS() {
+        final long now = System.nanoTime();
+        ++tickCount;
+        ++ticksInFrame;
+        if (now - countTicksStartTime > 1e9) {
+            fps = ticksInFrame;
+            ticksInFrame = 0;
+            countTicksStartTime = now;
         }
     }
 
