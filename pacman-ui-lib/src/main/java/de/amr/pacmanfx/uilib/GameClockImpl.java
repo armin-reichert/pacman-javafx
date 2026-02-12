@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.uilib;
 
+import de.amr.pacmanfx.GameClock;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
@@ -19,27 +20,21 @@ import java.util.function.Consumer;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A configurable game clock that drives the simulation at a target frame rate.
- *
- * <p>The clock is implemented using a JavaFX {@link Timeline}. Each frame triggers
- * a simulation “tick”, during which two types of actions may run:</p>
- *
+ * JavaFX-based implementation of {@link GameClock} using a {@link Timeline} to
+ * generate periodic ticks at a configurable frame rate.
+ * <p>
+ * The clock executes two independent actions on each tick:
  * <ul>
- *   <li><strong>Pausable action</strong> – executed only when the clock is not paused</li>
- *   <li><strong>Permanent action</strong> – executed every tick regardless of pause state</li>
+ *   <li>a <em>permanent action</em>, executed unconditionally</li>
+ *   <li>a <em>pausable action</em>, executed only when the clock is not paused</li>
  * </ul>
- *
- * <p>The target frame rate can be changed at runtime. When modified, the clock
- * automatically rebuilds its internal {@code Timeline} and resumes running if it
- * was active before the change.</p>
- *
- * <p>The clock also provides optional time‑measurement logging, tick counters,
- * and a customizable error handler for exceptions thrown during tick execution.</p>
+ * The clock supports dynamic frame-rate changes, time‑measurement logging,
+ * synchronous stepping for debugging, and basic tick statistics.
+ * <p>
+ * All tick execution occurs on the JavaFX Application Thread, as required by
+ * {@link Timeline}. Actions should therefore avoid long‑running work.
  */
-public class GameClock {
-
-    /** Default target frame rate in frames per second. */
-    public static final int DEFAULT_TARGET_FRAME_RATE = 60;
+public class GameClockImpl implements GameClock {
 
     /**
      * The desired frame rate. Changing this property rebuilds the internal
@@ -69,8 +64,13 @@ public class GameClock {
      */
     private final BooleanProperty timeMeasured = new SimpleBooleanProperty(false);
 
+    /** The JavaFX timeline that drives periodic tick execution. */
     private final Timeline clockwork = new Timeline();
+
+    /** Action executed only when the clock is not paused. */
     private Runnable pausableAction = () -> {};
+
+    /** Action executed on every tick, regardless of pause state. */
     private Runnable permanentAction = () -> {};
 
     private long pausableUpdatesCount;
@@ -85,123 +85,88 @@ public class GameClock {
 
     /**
      * Creates a new game clock with the default target frame rate.
+     * The internal {@link Timeline} is initialized immediately.
      */
-    public GameClock() {
+    public GameClockImpl() {
         createClockwork(targetFrameRate());
         clockwork.statusProperty().addListener((_, oldStatus, newStatus) ->
             Logger.info("Clock status {} -> {}, target frequency: {} Hz", oldStatus, newStatus, targetFrameRate()));
     }
 
-    /**
-     * Sets the error handler invoked when a tick action throws an exception.
-     *
-     * @param errorHandler the handler to use
-     */
+    @Override
     public void setErrorHandler(Consumer<Throwable> errorHandler) {
         this.errorHandler = errorHandler;
     }
 
-    /**
-     * Sets the action executed only when the clock is not paused.
-     *
-     * @param action the pausable action
-     */
+    @Override
     public void setPausableAction(Runnable action) {
         this.pausableAction = requireNonNull(action);
     }
 
-    /**
-     * Sets the action executed every tick, regardless of pause state.
-     *
-     * @param action the permanent action
-     */
+    @Override
     public void setPermanentAction(Runnable action) {
         this.permanentAction = requireNonNull(action);
     }
 
-    /** @return the property representing the target frame rate */
+    @Override
     public DoubleProperty targetFrameRateProperty() {
         return targetFrameRate;
     }
 
-    /** @return the current target frame rate in frames per second */
+    @Override
     public double targetFrameRate() {
         return targetFrameRate.get();
     }
 
-    /**
-     * Sets the target frame rate. The clock is rebuilt automatically.
-     *
-     * @param fps the desired frames per second
-     */
+    @Override
     public void setTargetFrameRate(double fps) {
         targetFrameRate.set(fps);
     }
 
-    /** @return the paused property */
+    @Override
     public BooleanProperty pausedProperty() { return paused; }
 
-    /** Sets whether the clock is paused. */
+    @Override
     public void setPaused(boolean b) {
         paused.set(b);
     }
 
-    /** @return {@code true} if the clock is paused */
+    @Override
     public boolean isPaused() { return paused.get(); }
 
-    /** @return the property controlling time‑measurement logging */
+    @Override
     public BooleanProperty timeMeasuredProperty() { return timeMeasured; }
 
-    /**
-     * Starts the clock. If paused, the clock is unpaused.
-     */
+    @Override
     public void start() {
         setPaused(false);
         clockwork.play();
     }
 
-    /**
-     * Stops the clock. No further ticks occur until {@link #start()} is called.
-     */
+    @Override
     public void stop() {
         clockwork.stop();
     }
 
-    /**
-     * @return {@code true} if the clock is currently running
-     */
+    @Override
     public boolean isRunning() {
         return clockwork.getStatus() == Status.RUNNING;
     }
 
-    /**
-     * Returns the number of ticks executed during the last measured second.
-     *
-     * @return ticks per second
-     */
+    @Override
     public double lastTicksPerSecond() {
         return lastTicksPerSec;
     }
 
-    /**
-     * @return the total number of ticks executed since the clock was created
-     */
+    @Override
     public long tickCount() { return tickCount; }
 
-    /**
-     * @return the number of pausable updates executed
-     */
+    @Override
     public long updateCount() {
         return pausableUpdatesCount;
     }
 
-    /**
-     * Executes a fixed number of simulation steps.
-     *
-     * @param n number of steps
-     * @param pausableActionEnabled whether the pausable action should run
-     * @return {@code true} if all steps completed successfully
-     */
+    @Override
     public boolean makeSteps(int n, boolean pausableActionEnabled) {
         for (int i = 0; i < n; ++i) {
             if (!makeOneStep(pausableActionEnabled)) return false;
@@ -209,12 +174,7 @@ public class GameClock {
         return true;
     }
 
-    /**
-     * Executes a single simulation step.
-     *
-     * @param pausableActionEnabled whether the pausable action should run
-     * @return {@code true} if the step completed successfully
-     */
+    @Override
     public boolean makeOneStep(boolean pausableActionEnabled) {
         if (pausableActionEnabled) {
             try {
@@ -244,6 +204,10 @@ public class GameClock {
 
     /**
      * Rebuilds the internal {@link Timeline} for the given frame rate.
+     * <p>
+     * The timeline is configured with a single {@link KeyFrame} whose duration
+     * corresponds to the desired frame period. Each frame triggers a call to
+     * {@link #makeOneStep(boolean)}.
      *
      * @param frameRate the desired frames per second
      */
@@ -257,6 +221,9 @@ public class GameClock {
 
     /**
      * Executes the given action, optionally measuring and logging its duration.
+     * <p>
+     * When time measurement is enabled, the execution time is logged in
+     * milliseconds using the provided log message.
      *
      * @param action the action to run
      * @param logMessage the log message used when time measurement is enabled

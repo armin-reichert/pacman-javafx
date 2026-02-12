@@ -17,7 +17,8 @@ import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
-import de.amr.pacmanfx.uilib.GameClock;
+import de.amr.pacmanfx.uilib.GameClockImpl;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
@@ -59,7 +60,7 @@ public final class GameUI_Implementation implements GameUI {
     private static final int PAUSE_ICON_SIZE = 80;
 
     private final GameContext context;
-    private final GameClock clock = new GameClock();
+    private final GameClock clock = new GameClockImpl();
     private final DirectoryWatchdog customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
     private final GlobalPreferencesManager preferencesManager = new GlobalPreferencesManager();
     private final UIConfigManager uiConfigManager = new UIConfigManager();

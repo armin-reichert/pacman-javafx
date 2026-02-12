@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
-import de.amr.pacmanfx.uilib.GameClock;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.Translator;
 import javafx.beans.property.*;
