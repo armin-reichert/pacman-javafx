@@ -45,12 +45,12 @@ public class GameClockImpl implements GameClock {
     private final IntegerProperty targetFrameRate = new SimpleIntegerProperty(DEFAULT_TARGET_FRAME_RATE) {
         @Override
         protected void invalidated() {
-            boolean running = isRunning();
-            if (running) {
+            final boolean wasRunning = isRunning();
+            if (wasRunning) {
                 stop();
             }
             createClockwork(targetFrameRate());
-            if (running) {
+            if (wasRunning) {
                 start();
             }
         }
@@ -96,7 +96,7 @@ public class GameClockImpl implements GameClock {
 
     @Override
     public void setErrorHandler(Consumer<Throwable> errorHandler) {
-        this.errorHandler = errorHandler;
+        this.errorHandler = requireNonNull(errorHandler);
     }
 
     @Override
