@@ -28,7 +28,7 @@ public class PacManXXL_App extends Application {
     private static final File HIGH_SCORE_FILE_PACMAN_XXL = GameContext.highScoreFile(GameVariant.ARCADE_PACMAN_XXL);
     private static final File HIGH_SCORE_FILE_MS_PACMAN_XXL = GameContext.highScoreFile(GameVariant.ARCADE_MS_PACMAN_XXL);
 
-    final GameBox gameBox = new GameBox();
+    private final GameBox gameBox = new GameBox();
     private GameUI ui;
 
     @Override

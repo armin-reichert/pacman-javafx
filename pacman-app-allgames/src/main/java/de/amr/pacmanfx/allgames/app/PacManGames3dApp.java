@@ -74,7 +74,7 @@ public class PacManGames3dApp extends Application {
         CommonDashboardID.ABOUT
     );
 
-    final GameBox gameBox = new GameBox();
+    private final GameBox gameBox = new GameBox();
     private GameUI ui;
 
     @Override
