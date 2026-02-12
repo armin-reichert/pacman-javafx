@@ -10,9 +10,9 @@ import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -42,15 +42,15 @@ public class GameClockImpl implements GameClock {
      * {@link Timeline}. If the clock was running, it is stopped and restarted
      * with the new timing.
      */
-    private final DoubleProperty targetFrameRate = new SimpleDoubleProperty(DEFAULT_TARGET_FRAME_RATE) {
+    private final IntegerProperty targetFrameRate = new SimpleIntegerProperty(DEFAULT_TARGET_FRAME_RATE) {
         @Override
         protected void invalidated() {
-            boolean runningWhenChanged = isRunning();
-            if (runningWhenChanged) {
+            boolean running = isRunning();
+            if (running) {
                 stop();
             }
             createClockwork(targetFrameRate());
-            if (runningWhenChanged) {
+            if (running) {
                 start();
             }
         }
@@ -110,17 +110,17 @@ public class GameClockImpl implements GameClock {
     }
 
     @Override
-    public DoubleProperty targetFrameRateProperty() {
+    public IntegerProperty targetFrameRateProperty() {
         return targetFrameRate;
     }
 
     @Override
-    public double targetFrameRate() {
+    public int targetFrameRate() {
         return targetFrameRate.get();
     }
 
     @Override
-    public void setTargetFrameRate(double fps) {
+    public void setTargetFrameRate(int fps) {
         targetFrameRate.set(fps);
     }
 

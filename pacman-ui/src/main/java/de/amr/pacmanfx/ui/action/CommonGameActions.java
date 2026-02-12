@@ -130,7 +130,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_SIMULATION_FASTER = new GameAction("SIMULATION_FASTER") {
         @Override
         public void execute(GameUI ui) {
-            double newRate = ui.gameContext().clock().targetFrameRate() + SIMULATION_SPEED_DELTA;
+            int newRate = ui.gameContext().clock().targetFrameRate() + SIMULATION_SPEED_DELTA;
             newRate = Math.clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
             ui.gameContext().clock().setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MAX ? "At maximum speed: " : "";
@@ -149,7 +149,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_SIMULATION_SLOWER = new GameAction("SIMULATION_SLOWER") {
         @Override
         public void execute(GameUI ui) {
-            double newRate = ui.gameContext().clock().targetFrameRate() - SIMULATION_SPEED_DELTA;
+            int newRate = ui.gameContext().clock().targetFrameRate() - SIMULATION_SPEED_DELTA;
             newRate = Math.clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
             ui.gameContext().clock().setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";

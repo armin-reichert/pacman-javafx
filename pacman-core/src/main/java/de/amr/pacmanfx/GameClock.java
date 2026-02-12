@@ -5,7 +5,7 @@
 package de.amr.pacmanfx;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 
 import java.util.function.Consumer;
 
@@ -66,14 +66,14 @@ public interface GameClock {
      *
      * @return the target frame rate property
      */
-    DoubleProperty targetFrameRateProperty();
+    IntegerProperty targetFrameRateProperty();
 
     /**
      * Returns the current target frame rate in frames per second.
      *
      * @return the target FPS
      */
-    double targetFrameRate();
+    int targetFrameRate();
 
     /**
      * Sets the desired target frame rate. The clock is rebuilt automatically
@@ -81,7 +81,7 @@ public interface GameClock {
      *
      * @param fps the new target frames per second
      */
-    void setTargetFrameRate(double fps);
+    void setTargetFrameRate(int fps);
 
     /**
      * Returns the paused property. When {@code true}, the pausable action
