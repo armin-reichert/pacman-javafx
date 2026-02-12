@@ -57,11 +57,6 @@ public class GameBox implements GameContext {
         this.clock = requireNonNull(clock);
     }
 
-    @Override
-    public GameClock clock() {
-        return clock;
-    }
-
     /**
      * @param variantName game variant name (e.g. "PACMAN", "MS_PACMAN", "MS_PACMAN_TENGEN", "PACMAN_XXL", "MS_PACMAN_XXL")
      * @param game the game model implementing the game variant
@@ -81,6 +76,11 @@ public class GameBox implements GameContext {
     }
 
     // GameContext implementation
+
+    @Override
+    public GameClock clock() {
+        return clock;
+    }
 
     @Override
     public boolean isGameRegistered(String name) {
