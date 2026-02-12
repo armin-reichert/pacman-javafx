@@ -176,7 +176,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = ui.clock().tickCount();
+        final long tick = gameContext().clock().tickCount();
         final long passed = tick - lastMunchingSoundPlayedTick;
         final byte minDelay = ui.currentConfig().munchingSoundDelay();
         Logger.debug("Pac found food, tick={} passed since last time={}", tick, passed);

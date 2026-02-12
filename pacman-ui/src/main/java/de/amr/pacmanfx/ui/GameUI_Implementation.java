@@ -17,8 +17,6 @@ import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
-import de.amr.pacmanfx.uilib.GameClockImpl;
-import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
@@ -60,7 +58,6 @@ public final class GameUI_Implementation implements GameUI {
     private static final int PAUSE_ICON_SIZE = 80;
 
     private final GameContext context;
-    private final GameClock clock = new GameClockImpl();
     private final DirectoryWatchdog customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
     private final GlobalPreferencesManager preferencesManager = new GlobalPreferencesManager();
     private final UIConfigManager uiConfigManager = new UIConfigManager();
@@ -89,13 +86,7 @@ public final class GameUI_Implementation implements GameUI {
         this.context = context;
         this.stage = stage;
 
-        clock.setPausableAction(() -> {
-            final Game game = context.currentGame();
-            simulate(game);
-            optGameScene().ifPresent(gameScene -> gameScene.update(game));
-        });
-        clock.setPermanentAction(() -> views().currentView().render());
-        clock.setErrorHandler(this::ka_tas_tro_phe);
+        initGameClock(context);
 
         sceneLayout.setPrefSize(mainSceneWidth, mainSceneHeight);
         viewManager = new ViewManager(this, scene, this::createEditorView, flashMessageView);
@@ -118,6 +109,17 @@ public final class GameUI_Implementation implements GameUI {
         final var ignored = PacManModel3DRepository.instance();
     }
 
+    private void initGameClock(GameContext context) {
+        requireNonNull(context.clock(), "Game clock has not been set in game context?");
+        context.clock().setPausableAction(() -> {
+            final Game game = context.currentGame();
+            simulate(game);
+            optGameScene().ifPresent(gameScene -> gameScene.update(game));
+        });
+        context.clock().setPermanentAction(() -> views().currentView().render());
+        context.clock().setErrorHandler(this::ka_tas_tro_phe);
+    }
+
     private void composeLayout() {
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
@@ -131,15 +133,15 @@ public final class GameUI_Implementation implements GameUI {
 
         // Show paused icon only in play view
         pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> views().isSelected(PLAY_VIEW) && clock.isPaused(),
-            views().selectedIDProperty(), clock.pausedProperty())
+            () -> views().isSelected(PLAY_VIEW) && gameContext().clock().isPaused(),
+            views().selectedIDProperty(), gameContext().clock().pausedProperty())
         );
 
         titleBinding = createStringBinding(
             () -> {
                 final boolean debug  = PROPERTY_DEBUG_INFO_VISIBLE.get();
                 final boolean is3D   = PROPERTY_3D_ENABLED.get();
-                final boolean paused = clock.isPaused();
+                final boolean paused = gameContext().clock().isPaused();
                 final GameScene gameScene = optGameScene().orElse(null);
                 return computeStageTitle(views().currentView(), gameScene, debug, is3D, paused);
             },
@@ -148,7 +150,7 @@ public final class GameUI_Implementation implements GameUI {
             views().getPlayView().currentGameSceneProperty(),
             PROPERTY_DEBUG_INFO_VISIBLE,
             PROPERTY_3D_ENABLED,
-            clock().pausedProperty()
+            gameContext().clock().pausedProperty()
         );
         stage.titleProperty().bind(titleBinding);
 
@@ -204,7 +206,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private void simulate(Game game) {
         final SimulationStep simulationStep = game.simulationStep();
-        simulationStep.init(clock.tickCount());
+        simulationStep.init(gameContext().clock().tickCount());
         game.control().stateMachine().update();
         simulationStep.printLog();
     }
@@ -222,11 +224,6 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     // GameUI interface
-
-    @Override
-    public GameClock clock() {
-        return clock;
-    }
 
     @Override
     public UIConfig config(String gameVariantName) {
@@ -316,7 +313,7 @@ public final class GameUI_Implementation implements GameUI {
     public void restart() {
         stopGame();
         context.currentGame().control().restartStateNamed(GameControl.StateName.BOOT.name());
-        Platform.runLater(clock::start);
+        Platform.runLater(gameContext().clock()::start);
     }
 
     @Override
@@ -331,7 +328,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void showEditorView() {
-        if (!context.currentGame().isPlaying() || clock.isPaused()) {
+        if (!context.currentGame().isPlaying() || gameContext().clock().isPaused()) {
             stopGame();
             views().selectView(EDITOR_VIEW);
             return;
@@ -369,8 +366,8 @@ public final class GameUI_Implementation implements GameUI {
     public void stopGame() {
         optGameScene().ifPresent(gameScene -> gameScene.end(gameContext().currentGame()));
         soundManager.stopAll();
-        clock.stop();
-        clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        gameContext().clock().stop();
+        gameContext().clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
     }
 
     @Override

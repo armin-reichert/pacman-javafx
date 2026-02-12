@@ -109,7 +109,7 @@ public final class CommonGameActions {
                 game.control().state().onExit(game); //TODO exit other states too?
             }
             game.control().restartStateNamed(StateName.INTRO.name());
-            ui.clock().start();
+            ui.gameContext().clock().start();
         }
     };
 
@@ -130,9 +130,9 @@ public final class CommonGameActions {
     public static final GameAction ACTION_SIMULATION_FASTER = new GameAction("SIMULATION_FASTER") {
         @Override
         public void execute(GameUI ui) {
-            double newRate = ui.clock().targetFrameRate() + SIMULATION_SPEED_DELTA;
+            double newRate = ui.gameContext().clock().targetFrameRate() + SIMULATION_SPEED_DELTA;
             newRate = Math.clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
-            ui.clock().setTargetFrameRate(newRate);
+            ui.gameContext().clock().setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MAX ? "At maximum speed: " : "";
             ui.showFlashMessage(Duration.seconds(0.75), prefix + newRate + "Hz");
         }
@@ -141,7 +141,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_SIMULATION_FASTEST = new GameAction("SIMULATION_FASTEST") {
         @Override
         public void execute(GameUI ui) {
-            ui.clock().setTargetFrameRate(SIMULATION_SPEED_MAX);
+            ui.gameContext().clock().setTargetFrameRate(SIMULATION_SPEED_MAX);
             ui.showFlashMessage(Duration.seconds(0.75), "At maximum speed: %d Hz", SIMULATION_SPEED_MAX);
         }
     };
@@ -149,9 +149,9 @@ public final class CommonGameActions {
     public static final GameAction ACTION_SIMULATION_SLOWER = new GameAction("SIMULATION_SLOWER") {
         @Override
         public void execute(GameUI ui) {
-            double newRate = ui.clock().targetFrameRate() - SIMULATION_SPEED_DELTA;
+            double newRate = ui.gameContext().clock().targetFrameRate() - SIMULATION_SPEED_DELTA;
             newRate = Math.clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
-            ui.clock().setTargetFrameRate(newRate);
+            ui.gameContext().clock().setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";
             ui.showFlashMessage(Duration.seconds(0.75), prefix + newRate + "Hz");
         }
@@ -159,7 +159,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_SIMULATION_SLOWEST = new GameAction("SIMULATION_SLOWEST") {
         @Override
         public void execute(GameUI ui) {
-            ui.clock().setTargetFrameRate(SIMULATION_SPEED_MIN);
+            ui.gameContext().clock().setTargetFrameRate(SIMULATION_SPEED_MIN);
             ui.showFlashMessage(Duration.seconds(0.75), "At minimum speed: %d Hz", SIMULATION_SPEED_MIN);
         }
     };
@@ -167,34 +167,34 @@ public final class CommonGameActions {
     public static final GameAction ACTION_SIMULATION_ONE_STEP = new GameAction("SIMULATION_ONE_STEP") {
         @Override
         public void execute(GameUI ui) {
-            boolean success = ui.clock().makeOneStep(true);
+            boolean success = ui.gameContext().clock().makeOneStep(true);
             if (!success) {
                 ui.showFlashMessage("Simulation step error, clock stopped!");
             }
         }
 
         @Override
-        public boolean isEnabled(GameUI ui) { return ui.clock().isPaused(); }
+        public boolean isEnabled(GameUI ui) { return ui.gameContext().clock().isPaused(); }
     };
 
     public static final GameAction ACTION_SIMULATION_TEN_STEPS = new GameAction("SIMULATION_TEN_STEPS") {
         @Override
         public void execute(GameUI ui) {
-            boolean success = ui.clock().makeSteps(10, true);
+            boolean success = ui.gameContext().clock().makeSteps(10, true);
             if (!success) {
                 ui.showFlashMessage("Simulation step error, clock stopped!");
             }
         }
 
         @Override
-        public boolean isEnabled(GameUI ui) { return ui.clock().isPaused(); }
+        public boolean isEnabled(GameUI ui) { return ui.gameContext().clock().isPaused(); }
      };
 
     public static final GameAction ACTION_SIMULATION_RESET = new GameAction("SIMULATION_RESET") {
         @Override
         public void execute(GameUI ui) {
-            ui.clock().setTargetFrameRate(NUM_TICKS_PER_SEC);
-            ui.showFlashMessage(Duration.seconds(0.75), ui.clock().targetFrameRate() + "Hz");
+            ui.gameContext().clock().setTargetFrameRate(NUM_TICKS_PER_SEC);
+            ui.showFlashMessage(Duration.seconds(0.75), ui.gameContext().clock().targetFrameRate() + "Hz");
         }
     };
 
@@ -277,11 +277,11 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_PAUSED = new GameAction("TOGGLE_PAUSED") {
         @Override
         public void execute(GameUI ui) {
-            toggle(ui.clock().pausedProperty());
-            if (ui.clock().isPaused()) {
+            toggle(ui.gameContext().clock().pausedProperty());
+            if (ui.gameContext().clock().isPaused()) {
                 ui.soundManager().stopAll();
             }
-            Logger.info("Game ({}) {}", ui.gameContext().gameVariantName(), ui.clock().isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", ui.gameContext().gameVariantName(), ui.gameContext().clock().isPaused() ? "paused" : "resumed");
         }
     };
 
@@ -290,7 +290,7 @@ public final class CommonGameActions {
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().currentGame();
             ui.optGameScene().ifPresent(_ -> {
-                ui.clock().stop();
+                ui.gameContext().clock().stop();
                 toggle(PROPERTY_3D_ENABLED);
                 if (ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D) ||
                     ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D))
@@ -301,7 +301,7 @@ public final class CommonGameActions {
                 if (!game.isPlaying()) {
                     ui.showFlashMessage(ui.translate(PROPERTY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
                 }
-                ui.clock().start();
+                ui.gameContext().clock().start();
             });
         }
 

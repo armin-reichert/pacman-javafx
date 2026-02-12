@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
+import de.amr.pacmanfx.uilib.GameClockImpl;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -69,6 +70,7 @@ public class ArcadePacMan_App extends Application {
     private void createUIUsingAPI(Stage primaryStage, Dimension2D size, GameBox gameBox) {
         final Game game = new ArcadePacMan_GameModel(gameBox.coinMechanism(), HIGH_SCORE_FILE);
         gameBox.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
+        gameBox.setClock(new GameClockImpl());
 
         ui = new GameUI_Implementation(gameBox, primaryStage, size.getWidth(), size.getHeight());
         ui.uiConfigManager().addFactory(GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);

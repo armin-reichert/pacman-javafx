@@ -112,4 +112,11 @@ public interface GameContext {
      * @return the coin mechanism
      */
     CoinMechanism coinMechanism();
+
+    /**
+     * Returns the clock driving simulation and rendering.
+     * <p>
+     * The clock is shared between UI and game logic.
+     */
+    GameClock clock();
 }

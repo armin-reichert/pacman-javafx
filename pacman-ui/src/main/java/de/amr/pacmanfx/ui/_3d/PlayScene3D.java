@@ -319,12 +319,12 @@ public class PlayScene3D implements GameScene {
 
         // Scene is already updated 2 ticks before the game level gets created!
         if (level == null) {
-            Logger.info("Tick #{}: Game level not yet created, update ignored", ui.clock().tickCount());
+            Logger.info("Tick #{}: Game level not yet created, update ignored", ui.gameContext().clock().tickCount());
             return;
         }
 
         if (gameLevel3D == null) {
-            Logger.info("Tick #{}: 3D game level not yet created", ui.clock().tickCount());
+            Logger.info("Tick #{}: 3D game level not yet created", ui.gameContext().clock().tickCount());
             return;
         }
 
@@ -543,7 +543,7 @@ public class PlayScene3D implements GameScene {
                     .ifPresent(this::eatPellet3D);
             }
             // Play munching sound?
-            final long now = ui.clock().tickCount();
+            final long now = gameContext().clock().tickCount();
             final long passed = now - lastMunchingSoundPlayedTick;
             Logger.debug("Pac found food, tick={} passed since last time={}", now, passed);
             byte minDelay = ui.currentConfig().munchingSoundDelay();

@@ -53,10 +53,21 @@ public class GameBox implements GameContext {
 
     private final CoinMechanism coinMechanism = new SimpleCoinMechanism();
 
+    private GameClock clock;
+
     public GameBox() {
         if (!DIRECTORY_CHECK_OK) {
             throw new IllegalStateException("User directory check failed");
         }
+    }
+
+    public void setClock(GameClock clock) {
+        this.clock = requireNonNull(clock);
+    }
+
+    @Override
+    public GameClock clock() {
+        return clock;
     }
 
     /**

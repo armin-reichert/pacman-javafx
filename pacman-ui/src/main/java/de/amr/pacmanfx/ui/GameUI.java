@@ -189,13 +189,6 @@ public interface GameUI extends Translator {
     DirectoryWatchdog customDirWatchdog();
 
     /**
-     * Returns the clock driving simulation and rendering.
-     * <p>
-     * The clock is shared between UI and game logic.
-     */
-    GameClock clock();
-
-    /**
      * Returns the non-UI game context (model, variants, rules, etc.).
      * <p>
      * This is the primary entry point for interacting with the game engine.

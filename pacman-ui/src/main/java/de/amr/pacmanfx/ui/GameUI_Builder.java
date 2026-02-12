@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
+import de.amr.pacmanfx.uilib.GameClockImpl;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -90,6 +91,7 @@ public class GameUI_Builder {
     private GameUI_Builder(Stage stage, double mainSceneWidth, double mainSceneHeight, GameBox gameBox) {
         windowConfig = new WindowConfig(stage, mainSceneWidth, mainSceneHeight);
         this.gameBox = gameBox;
+        gameBox.setClock(new GameClockImpl());
     }
 
     public GameUI_Builder game(

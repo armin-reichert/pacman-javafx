@@ -121,7 +121,7 @@ public class MiniGameView extends VBox {
         slideInAnimation.setByY(10);
         slideInAnimation.setDelay(Duration.seconds(1));
         slideInAnimation.setInterpolator(Interpolator.EASE_OUT);
-        slideInAnimation.setOnFinished(e -> bindCanvasSize());
+        slideInAnimation.setOnFinished(_ -> bindCanvasSize());
         unbindCanvasSize();
         slideInAnimation.play();
     }
@@ -135,7 +135,7 @@ public class MiniGameView extends VBox {
         slideOutAnimation.setByY(10);
         slideOutAnimation.setDelay(Duration.seconds(2));
         slideOutAnimation.setInterpolator(Interpolator.EASE_IN);
-        slideOutAnimation.setOnFinished(e -> bindCanvasSize());
+        slideOutAnimation.setOnFinished(_ -> bindCanvasSize());
         unbindCanvasSize();
         slideOutAnimation.play();
     }
@@ -161,7 +161,7 @@ public class MiniGameView extends VBox {
                 CommonRenderInfoKey.MAP_BRIGHT, false,
                 CommonRenderInfoKey.MAP_EMPTY, game.level().worldMap().foodLayer().uneatenFoodCount() == 0,
                 CommonRenderInfoKey.MAP_FLASHING, false,
-                CommonRenderInfoKey.TICK, ui.clock().tickCount()
+                CommonRenderInfoKey.TICK, ui.gameContext().clock().tickCount()
             ));
             gameLevelRenderer.applyLevelSettings(game.level(), info);
             gameLevelRenderer.drawLevel(game.level(), info);
