@@ -16,6 +16,8 @@ import org.tinylog.Logger;
 
 import java.util.function.Consumer;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * A configurable game clock that drives the simulation at a target frame rate.
  *
@@ -67,11 +69,11 @@ public class GameClock {
      */
     private final BooleanProperty timeMeasured = new SimpleBooleanProperty(false);
 
-    private Timeline clockwork;
+    private final Timeline clockwork = new Timeline();
     private Runnable pausableAction = () -> {};
     private Runnable permanentAction = () -> {};
 
-    private long updateCount;
+    private long pausableUpdatesCount;
     private long tickCount;
 
     private long lastTicksPerSec;
@@ -86,6 +88,8 @@ public class GameClock {
      */
     public GameClock() {
         createClockwork(targetFrameRate());
+        clockwork.statusProperty().addListener((_, oldStatus, newStatus) ->
+            Logger.info("Clock status {} -> {}, target frequency: {} Hz", oldStatus, newStatus, targetFrameRate()));
     }
 
     /**
@@ -103,7 +107,7 @@ public class GameClock {
      * @param action the pausable action
      */
     public void setPausableAction(Runnable action) {
-        this.pausableAction = action;
+        this.pausableAction = requireNonNull(action);
     }
 
     /**
@@ -112,7 +116,7 @@ public class GameClock {
      * @param action the permanent action
      */
     public void setPermanentAction(Runnable action) {
-        this.permanentAction = action;
+        this.permanentAction = requireNonNull(action);
     }
 
     /** @return the property representing the target frame rate */
@@ -188,7 +192,7 @@ public class GameClock {
      * @return the number of pausable updates executed
      */
     public long updateCount() {
-        return updateCount;
+        return pausableUpdatesCount;
     }
 
     /**
@@ -200,8 +204,7 @@ public class GameClock {
      */
     public boolean makeSteps(int n, boolean pausableActionEnabled) {
         for (int i = 0; i < n; ++i) {
-            boolean success = makeOneStep(pausableActionEnabled);
-            if (!success) return false;
+            if (!makeOneStep(pausableActionEnabled)) return false;
         }
         return true;
     }
@@ -213,11 +216,10 @@ public class GameClock {
      * @return {@code true} if the step completed successfully
      */
     public boolean makeOneStep(boolean pausableActionEnabled) {
-        final long now = System.nanoTime();
         if (pausableActionEnabled) {
             try {
                 execute(pausableAction, "Pausable action took {} milliseconds");
-                updateCount++;
+                pausableUpdatesCount++;
             } catch (Throwable x) {
                 errorHandler.accept(x);
                 return false;
@@ -227,10 +229,11 @@ public class GameClock {
             execute(permanentAction, "Permanent action took {} milliseconds");
             ++tickCount;
             ++ticksInFrame;
-            if (now - countTicksStartTime > 1e9) {
+            long after = System.nanoTime();
+            if (after - countTicksStartTime > 1e9) {
                 lastTicksPerSec = ticksInFrame;
                 ticksInFrame = 0;
-                countTicksStartTime = now;
+                countTicksStartTime = after;
             }
             return true;
         } catch (Throwable x) {
@@ -246,10 +249,10 @@ public class GameClock {
      */
     private void createClockwork(double frameRate) {
         final var period = Duration.seconds(1.0 / frameRate);
-        clockwork = new Timeline(frameRate, new KeyFrame(period, _ -> makeOneStep(!isPaused())));
+        clockwork.getKeyFrames().setAll(new KeyFrame(period, _ -> makeOneStep(!isPaused())));
         clockwork.setCycleCount(Animation.INDEFINITE);
-        clockwork.statusProperty().addListener((_, oldStatus, newStatus) ->
-            Logger.info("Clock status {} -> {}, target frequency: {} Hz", oldStatus, newStatus, frameRate));
+        ticksInFrame = 0;
+        countTicksStartTime = System.nanoTime();
     }
 
     /**
@@ -260,9 +263,9 @@ public class GameClock {
      */
     private void execute(Runnable action, String logMessage) {
         if (timeMeasured.get()) {
-            final double start = System.nanoTime();
+            final long start = System.nanoTime();
             action.run();
-            final double duration = System.nanoTime() - start;
+            final long duration = System.nanoTime() - start;
             Logger.info(logMessage, duration / 1e6);
         } else {
             action.run();
