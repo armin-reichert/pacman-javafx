@@ -26,15 +26,16 @@ public class ArcadeMsPacMan_App extends Application {
 
     private static final File HIGH_SCORE_FILE = GameContext.highScoreFile(GameVariant.ARCADE_MS_PACMAN);
 
+    final GameBox gameBox = new GameBox();
     private GameUI ui;
 
     @Override
     public void start(Stage primaryStage) {
         final Dimension2D screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         ui = GameUI_Builder
-            .newUI(primaryStage, screenSize.getWidth(), screenSize.getHeight(), GameBox.instance())
+            .newUI(primaryStage, screenSize.getWidth(), screenSize.getHeight(), gameBox)
             .game(GameVariant.ARCADE_MS_PACMAN,
-                () -> new ArcadeMsPacMan_GameModel(GameBox.instance().coinMechanism(), HIGH_SCORE_FILE),
+                () -> new ArcadeMsPacMan_GameModel(gameBox.coinMechanism(), HIGH_SCORE_FILE),
                 ArcadeMsPacMan_UIConfig::new)
             .startPage(ArcadeMsPacMan_StartPage::new)
             .dashboard(

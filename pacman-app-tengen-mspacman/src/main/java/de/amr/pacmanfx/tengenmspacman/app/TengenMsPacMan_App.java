@@ -31,6 +31,7 @@ public class TengenMsPacMan_App extends Application {
 
     private static final File HIGH_SCORE_FILE = GameContext.highScoreFile(TENGEN_MS_PACMAN);
 
+    final GameBox gameBox = new GameBox();
     private GameUI ui;
 
     @Override
@@ -38,7 +39,7 @@ public class TengenMsPacMan_App extends Application {
         final Dimension2D sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         ui = GameUI_Builder
-            .newUI(primaryStage, sceneSize.getWidth(), sceneSize.getHeight(), GameBox.instance())
+            .newUI(primaryStage, sceneSize.getWidth(), sceneSize.getHeight(), gameBox)
             .game(TENGEN_MS_PACMAN, () -> new TengenMsPacMan_GameModel(HIGH_SCORE_FILE), TengenMsPacMan_UIConfig::new)
             .startPage(TengenMsPacMan_StartPage::new)
             .dashboard(

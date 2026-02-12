@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.CoinMechanism;
@@ -43,7 +42,7 @@ public class DashboardSectionGameControl extends DashboardSection {
 
     @Override
     public void init(GameUI ui) {
-        final CoinMechanism coinMechanism = GameBox.instance().coinMechanism();
+        final CoinMechanism coinMechanism = ui.gameContext().coinMechanism();
         spinnerCredit            = addIntSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));

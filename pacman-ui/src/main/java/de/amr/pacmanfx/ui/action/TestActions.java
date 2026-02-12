@@ -28,7 +28,7 @@ public class TestActions {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().currentGame().control().restartStateNamed(LevelShortTestState.class.getSimpleName());
-            ui.showFlashMessage(Duration.seconds(3), "Level TEST MODE");
+            ui.showFlashMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
         }
 
         @Override
@@ -41,7 +41,7 @@ public class TestActions {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().currentGame().control().restartStateNamed(LevelMediumTestState.class.getSimpleName());
-            ui.showFlashMessage(Duration.seconds(3), "Level TEST MODE");
+            ui.showFlashMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
         }
 
         @Override

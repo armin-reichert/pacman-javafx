@@ -3,16 +3,22 @@
  */
 package de.amr.pacmanfx.model.test;
 
-import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.event.BonusEatenEvent;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.*;
 
+import static java.util.Objects.requireNonNull;
+
 public class LevelShortTestState implements StateMachine.State<Game>, TestState {
 
+    private final CoinMechanism coinMechanism;
     private final TickTimer timer = new TickTimer("Timer_" + name());
     private int lastTestedLevelNumber;
+
+    public LevelShortTestState(CoinMechanism coinMechanism) {
+        this.coinMechanism = requireNonNull(coinMechanism);
+    }
 
     @Override
     public String name() {
@@ -26,7 +32,7 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
 
     @Override
     public void onEnter(Game game) {
-        GameBox.instance().coinMechanism().setNumCoins(1);
+        coinMechanism.setNumCoins(1);
         lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();
         timer.restartIndefinitely();
         game.prepareNewGame();
@@ -73,7 +79,7 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
         }
         else if (timer.atSecond(START + 10)) {
             if (game.level().number() == lastTestedLevelNumber) {
-                GameBox.instance().coinMechanism().setNumCoins(0);
+                coinMechanism.setNumCoins(0);
                 game.boot();
                 game.control().restartStateNamed(GameControl.StateName.BOOT.name());
             } else {
@@ -90,7 +96,7 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
 
     @Override
     public void onExit(Game game) {
-        GameBox.instance().coinMechanism().setNumCoins(0);
+        coinMechanism.setNumCoins(0);
         game.boot();
         game.clearLevelCounter();
     }

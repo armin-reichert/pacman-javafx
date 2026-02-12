@@ -45,6 +45,7 @@ public class ArcadePacMan_App extends Application {
 
     private static final File HIGH_SCORE_FILE = GameContext.highScoreFile(GameVariant.ARCADE_PACMAN);
 
+    final GameBox gameBox = new GameBox();
     private GameUI ui;
 
     @Override
@@ -52,8 +53,8 @@ public class ArcadePacMan_App extends Application {
         final Dimension2D sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         try {
             final boolean useBuilder = Boolean.parseBoolean(getParameters().getNamed().getOrDefault("use_builder", "true"));
-            if (useBuilder) createUIUsingBuilder(primaryStage, sceneSize, GameBox.instance());
-            else            createUIUsingAPI(primaryStage, sceneSize, GameBox.instance());
+            if (useBuilder) createUIUsingBuilder(primaryStage, sceneSize);
+            else            createUIUsingAPI(primaryStage, sceneSize);
             ui.show();
         }
         catch (RuntimeException x) {
@@ -67,7 +68,7 @@ public class ArcadePacMan_App extends Application {
         ui.terminate();
     }
 
-    private void createUIUsingAPI(Stage primaryStage, Dimension2D size, GameBox gameBox) {
+    private void createUIUsingAPI(Stage primaryStage, Dimension2D size) {
         final Game game = new ArcadePacMan_GameModel(gameBox.coinMechanism(), HIGH_SCORE_FILE);
         gameBox.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
         gameBox.setClock(new GameClockImpl());
@@ -84,7 +85,7 @@ public class ArcadePacMan_App extends Application {
         ui.dashboard().addCommonSections(ui, DASHBOARD_IDs);
     }
 
-    private void createUIUsingBuilder(Stage primaryStage, Dimension2D size, GameBox gameBox) {
+    private void createUIUsingBuilder(Stage primaryStage, Dimension2D size) {
         ui = GameUI_Builder
             .newUI(primaryStage, size.getWidth(), size.getHeight(), gameBox)
             .game(GameVariant.ARCADE_PACMAN,

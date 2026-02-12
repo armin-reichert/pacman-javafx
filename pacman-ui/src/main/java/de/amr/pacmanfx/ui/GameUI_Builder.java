@@ -157,7 +157,7 @@ public class GameUI_Builder {
             ui.uiConfigManager().addFactory(gameVariant, config.uiConfigFactory);
             if (includeInteractiveTests) {
                 final StateMachine<Game> gameStateMachine = gameModel.control().stateMachine();
-                gameStateMachine.addState(new LevelShortTestState());
+                gameStateMachine.addState(new LevelShortTestState(gameBox.coinMechanism()));
                 gameStateMachine.addState(new LevelMediumTestState());
                 gameStateMachine.addState(new CutScenesTestState());
             }
