@@ -19,9 +19,9 @@ public class EnergizerFragment extends Sphere implements Disposable {
     private static final short SPHERE_DIVISIONS = 8;
     private static final Vector3f GRAVITY = new Vector3f(0, 0, 0.18f);
 
-    public boolean moving_home = false;
-    public boolean part_of_swirl = false;
-    public byte ghost_personality = -1;
+    public boolean movingHome = false;
+    public boolean partOfSwirl = false;
+    public byte ghostPersonality = -1;
     public Point3D houseTargetPosition;
     public Vector3f velocity;
 
