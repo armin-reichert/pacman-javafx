@@ -25,7 +25,7 @@ public class SphericalEnergizerFragment3D extends EnergizerFragmentShape3D {
      * @param origin   the initial world position of the fragment
      */
     public SphericalEnergizerFragment3D(double radius, Material material, Vector3f velocity, Point3D origin) {
-        this.velocity = velocity;
+        setVelocity(velocity);
         ball = new Sphere(radius, MESH_DIVISIONS);
         ball.setMaterial(material);
         ball.setTranslateX(origin.getX());
