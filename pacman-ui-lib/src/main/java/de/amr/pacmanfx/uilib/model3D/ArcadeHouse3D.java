@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.uilib.UfxColors;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndSwirlAnimation;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.*;
 import javafx.beans.property.BooleanProperty;
@@ -45,6 +44,8 @@ import static java.util.Objects.requireNonNull;
  * exploding energizers.</p>
  */
 public class ArcadeHouse3D extends Group implements Disposable {
+
+    private static final float SWIRL_ROTATION_SEC = 1.0f;
 
     private static final int DOOR_VERTICAL_BAR_COUNT = 4;
 
@@ -164,7 +165,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
     }
 
     private RegisteredAnimation createSwirlAnimation(AnimationRegistry animationRegistry, String label, Group swirl) {
-        Duration rotationTime = Duration.seconds(EnergizerExplosionAndSwirlAnimation.SWIRL_ROTATION_SEC);
+        Duration rotationTime = Duration.seconds(SWIRL_ROTATION_SEC);
         return new RegisteredAnimation(animationRegistry, label) {
             @Override
             protected Animation createAnimationFX() {
