@@ -107,8 +107,8 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
         private void onParticleLandedOnFloor(EnergizerFragmentShape3D particle) {
             particle.ghostColorIndex = randomByte(0, 4);
             particle.shape().setMaterial(ghostDressMaterials.get(particle.ghostColorIndex));
-            particle.shape().setRadius(PARTICLE_RADIUS_RETURNING_HOME);
-            particle.shape().setTranslateZ(-particle.shape().getRadius()); // floor top is at z=0
+            particle.setSize(2 * PARTICLE_RADIUS_RETURNING_HOME);
+            particle.shape().setTranslateZ(-0.5 * particle.size()); // floor top is at z=0
             var swirlCenter = new Point3D(
                 ghostRevivalPositionCenters[particle.ghostColorIndex].x(),
                 ghostRevivalPositionCenters[particle.ghostColorIndex].y(),
@@ -201,7 +201,7 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
             for (int i = 0; i < PARTICLE_COUNT; ++i) {
                 double radius = randomParticleRadius();
                 Vector3f velocity = randomParticleVelocity();
-                EnergizerFragmentShape3D particle = new EnergizerFragmentShape3D(radius, particleMaterial, velocity, origin);
+                EnergizerFragmentShape3D particle = new SphericalEnergizerFragment3D(radius, particleMaterial, velocity, origin);
                 particle.shape().setVisible(true);
                 particles.add(particle);
             }
@@ -304,7 +304,7 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
     }
 
     private boolean particleTouchesFloor(EnergizerFragmentShape3D particle) {
-        final double r = particle.shape().getRadius(), cx = particle.shape().getTranslateX(), cy = particle.shape().getTranslateY();
+        final double r = 0.5 * particle.size(), cx = particle.shape().getTranslateX(), cy = particle.shape().getTranslateY();
         if (cx + r < 0 || cx - r > floorSize.x()) return false;
         if (cy + r < 0 || cy - r > floorSize.y()) return false;
         return particle.shape().getTranslateZ() >= 0;

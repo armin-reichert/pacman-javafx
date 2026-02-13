@@ -7,9 +7,7 @@ package de.amr.pacmanfx.uilib.animation;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector3f;
 import javafx.geometry.Point3D;
-import javafx.scene.paint.Material;
 import javafx.scene.shape.Shape3D;
-import javafx.scene.shape.Sphere;
 
 /**
  * A small 3D particle used for the energizer explosion animation.
@@ -22,10 +20,7 @@ import javafx.scene.shape.Sphere;
  * The fragment is lightweight and disposable. Calling {@link #dispose()}
  * releases its material reference so it can be garbage‑collected.
  */
-public class EnergizerFragmentShape3D implements Disposable, EnergizerFragment {
-
-    /** Number of subdivisions used for the sphere mesh. */
-    private static final short SPHERE_DIVISIONS = 8;
+public abstract class EnergizerFragmentShape3D implements Disposable, EnergizerFragment {
 
     /** Whether this fragment is currently moving back toward the ghost house. */
     public boolean movingHome = false;
@@ -45,39 +40,7 @@ public class EnergizerFragmentShape3D implements Disposable, EnergizerFragment {
     /** Current velocity of the fragment in 3D space. */
     public Vector3f velocity;
 
-    private final Sphere shape;
-
-    /**
-     * Creates a new energizer fragment.
-     *
-     * @param radius   the sphere radius
-     * @param material the material applied to the sphere
-     * @param velocity the initial velocity vector
-     * @param origin   the initial world position of the fragment
-     */
-    public EnergizerFragmentShape3D(double radius, Material material, Vector3f velocity, Point3D origin) {
-        this.velocity = velocity;
-        shape = new Sphere(radius, SPHERE_DIVISIONS);
-        shape.setMaterial(material);
-        shape.setTranslateX(origin.getX());
-        shape.setTranslateY(origin.getY());
-        shape.setTranslateZ(origin.getZ());
-    }
-
-    public Sphere shape() {
-        return shape;
-    }
-
-    /**
-     * Releases resources held by this fragment.
-     * <p>
-     * Currently this clears the material reference so the fragment can be
-     * garbage‑collected. Additional cleanup may be added if needed.
-     */
-    @Override
-    public void dispose() {
-        shape.setMaterial(null);
-    }
+    public abstract Shape3D shape();
 
     /**
      * Applies gravity to the fragment and advances its position.
@@ -97,6 +60,7 @@ public class EnergizerFragmentShape3D implements Disposable, EnergizerFragment {
      */
     @Override
     public void move() {
+        final Shape3D shape = shape();
         shape.setTranslateX(shape.getTranslateX() + velocity.x());
         shape.setTranslateY(shape.getTranslateY() + velocity.y());
         shape.setTranslateZ(shape.getTranslateZ() + velocity.z());
