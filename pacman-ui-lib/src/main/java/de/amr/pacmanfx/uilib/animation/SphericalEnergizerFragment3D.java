@@ -9,7 +9,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.Sphere;
 
-public class SphericalEnergizerFragment3D extends EnergizerFragmentShape3D {
+public class SphericalEnergizerFragment3D extends AbstractEnergizerFragment {
 
     /** Number of subdivisions used for the sphere mesh. */
     private static final short MESH_DIVISIONS = 8;
