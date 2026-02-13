@@ -16,14 +16,15 @@ import static java.util.Objects.requireNonNull;
 /**
  * Base class for 3D particle fragments used in the energizer explosion animation.
  * <p>
- * Each fragment is represented by a {@link Shape3D} instance and moves freely in
- * 3D space according to its velocity vector. Fragments may participate in special
- * animation modes such as being attracted to the ghost house or swirling inside it.
+ * A fragment is represented by a {@link Shape3D} and moves freely in 3D space
+ * according to its velocity vector. Subclasses define the concrete geometry
+ * and size of the fragment. The fragment may participate in special animation
+ * modes such as being attracted to the ghost house or swirling inside it.
  * <p>
- * The fragment is lightweight and disposable. Subclasses must implement
- * {@link #shape()} to provide the underlying 3D geometry.
+ * Fragments are lightweight and disposable. Subclasses must implement
+ * {@link #shape()}, {@link #size()} and {@link #setSize(double)}.
  */
-public abstract class AbstractEnergizerFragment implements Disposable, EnergizerFragment {
+public abstract class AbstractEnergizerFragment implements Disposable {
 
     /**
      * Tests whether a sphere intersects an axis-aligned bounding box (AABB).
@@ -35,7 +36,7 @@ public abstract class AbstractEnergizerFragment implements Disposable, Energizer
      *   <li>Intersection occurs if the distance is less than or equal to the squared radius.</li>
      * </ol>
      *
-     * @param sphereCenter the sphere center
+     * @param sphereCenter the sphere center in the same coordinate system as the AABB
      * @param radius       the sphere radius
      * @param boxMin       the minimum AABB corner
      * @param boxMax       the maximum AABB corner
@@ -65,6 +66,7 @@ public abstract class AbstractEnergizerFragment implements Disposable, Energizer
      */
     public enum FragmentState { FLYING, ATTRACTED_BY_HOUSE, INSIDE_SWIRL }
 
+    /** Current animation state of the fragment. */
     private FragmentState state = FragmentState.FLYING;
 
     /**
@@ -88,6 +90,22 @@ public abstract class AbstractEnergizerFragment implements Disposable, Energizer
      * @return the fragment's {@link Shape3D}
      */
     public abstract Shape3D shape();
+
+    /**
+     * Sets the fragment's visual size. The meaning of “size” is defined by
+     * the concrete subclass (e.g., diameter of a sphere).
+     *
+     * @param size the new size value
+     */
+    abstract void setSize(double size);
+
+    /**
+     * Returns the fragment's visual size. The meaning of “size” is defined by
+     * the concrete subclass (e.g., diameter of a sphere).
+     *
+     * @return the fragment size
+     */
+    abstract double size();
 
     /**
      * Sets the fragment's velocity.
@@ -196,7 +214,6 @@ public abstract class AbstractEnergizerFragment implements Disposable, Energizer
      *
      * @param gravity the gravity vector (non-null)
      */
-    @Override
     public void fly(Vector3f gravity) {
         requireNonNull(gravity);
         velocity = velocity.add(gravity);
@@ -207,7 +224,6 @@ public abstract class AbstractEnergizerFragment implements Disposable, Energizer
      * Moves the fragment according to its current velocity by updating the
      * translation coordinates of its underlying {@link Shape3D}.
      */
-    @Override
     public void move() {
         final Shape3D shape = shape();
         shape.setTranslateX(shape.getTranslateX() + velocity.x());

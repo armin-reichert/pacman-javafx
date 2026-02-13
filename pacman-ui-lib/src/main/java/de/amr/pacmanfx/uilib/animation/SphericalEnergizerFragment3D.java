@@ -14,7 +14,7 @@ public class SphericalEnergizerFragment3D extends AbstractEnergizerFragment {
     /** Number of subdivisions used for the sphere mesh. */
     private static final short MESH_DIVISIONS = 8;
 
-    private final Sphere ball;
+    private final Sphere sphere;
 
     /**
      * Creates a new energizer fragment.
@@ -26,30 +26,30 @@ public class SphericalEnergizerFragment3D extends AbstractEnergizerFragment {
      */
     public SphericalEnergizerFragment3D(double radius, Material material, Vector3f velocity, Point3D origin) {
         setVelocity(velocity);
-        ball = new Sphere(radius, MESH_DIVISIONS);
-        ball.setMaterial(material);
-        ball.setTranslateX(origin.getX());
-        ball.setTranslateY(origin.getY());
-        ball.setTranslateZ(origin.getZ());
+        sphere = new Sphere(radius, MESH_DIVISIONS);
+        sphere.setMaterial(material);
+        sphere.setTranslateX(origin.getX());
+        sphere.setTranslateY(origin.getY());
+        sphere.setTranslateZ(origin.getZ());
     }
 
     @Override
     public Sphere shape() {
-        return ball;
+        return sphere;
     }
 
     @Override
     public void dispose() {
-        ball.setMaterial(null);
+        sphere.setMaterial(null);
     }
 
     @Override
     public void setSize(double size) {
-        ball.setRadius(0.5 * size);
+        sphere.setRadius(0.5 * size);
     }
 
     @Override
     public double size() {
-        return 2 * ball.getRadius();
+        return 2 * sphere.getRadius();
     }
 }
