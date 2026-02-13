@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector3f;
 import javafx.animation.Animation;
@@ -11,10 +10,8 @@ import javafx.animation.Transition;
 import javafx.application.Platform;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
-import javafx.scene.effect.Glow;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -39,9 +36,6 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
     // Time includes movement of particles to the ghost house after the explosion
     private static final Duration TOTAL_DURATION = Duration.seconds(30);
 
-    // Use low-resolution mesh for particle
-    private static final short PARTICLE_DIVISIONS = 8;
-
     private static final short PARTICLE_COUNT = 500;
 
     private static final float PARTICLE_MEAN_RADIUS_UNSCALED = 0.2f;
@@ -56,51 +50,6 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
     private static final float PARTICLE_SPEED_MOVING_HOME_MIN = 0.4f;
     private static final float PARTICLE_SPEED_MOVING_HOME_MAX = 0.8f;
 
-    private static final Vector3f GRAVITY = new Vector3f(0, 0, 0.18f);
-
-    public static class Particle extends Sphere implements Disposable {
-        public boolean moving_home = false;
-        public boolean part_of_swirl = false;
-        public byte ghost_personality = -1;
-        public Point3D houseTargetPosition;
-        public Vector3f velocity;
-
-        public Particle(double radius, Material material, Vector3f velocity, Point3D origin) {
-            super(radius, PARTICLE_DIVISIONS);
-            this.velocity = velocity;
-            setMaterial(material);
-            setTranslateX(origin.getX());
-            setTranslateY(origin.getY());
-            setTranslateZ(origin.getZ());
-            setEffect(randomGlow());
-        }
-
-        private Glow randomGlow() {
-            return new Glow(0.5 + randomFloat(0, 0.5f));
-        }
-
-        @Override
-        public void dispose() {
-            setMaterial(null);
-        }
-
-        public Point3D center() {
-            return new Point3D(getTranslateX(), getTranslateY(), getTranslateZ());
-        }
-
-        public void fly() {
-            move();
-            velocity = velocity.add(GRAVITY);
-            //velocity.z += GRAVITY_Z;
-        }
-
-        public void move() {
-            setTranslateX(getTranslateX() + velocity.x());
-            setTranslateY(getTranslateY() + velocity.y());
-            setTranslateZ(getTranslateZ() + velocity.z());
-        }
-    }
-
     private final List<Group> swirls;
     private final Vector2f floorSize;
 
@@ -111,23 +60,23 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
 
     private Material particleMaterial;
     private List<PhongMaterial> ghostDressMaterials;
-    private List<Particle> particles;
+    private List<EnergizerFragment> particles;
 
     private class ParticlesMovement extends Transition {
 
-        private final List<Particle> trash = new ArrayList<>();
+        private final List<EnergizerFragment> trash = new ArrayList<>();
 
         public ParticlesMovement() {
             setCycleDuration(TOTAL_DURATION);
             setOnFinished(_ -> {
                 trash.clear();
-                for (Particle particle : particles) {
+                for (EnergizerFragment particle : particles) {
                     if (!particle.part_of_swirl) {
                         trash.add(particle);
                     }
                 }
                 Platform.runLater(() -> {
-                    trash.forEach(Particle::dispose);
+                    trash.forEach(EnergizerFragment::dispose);
                     trash.clear();
                 });
             });
@@ -136,7 +85,7 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
         @Override
         protected void interpolate(double t) {
             trash.clear();
-            for (Particle particle : particles) {
+            for (EnergizerFragment particle : particles) {
                 if (particle.moving_home) {
                     boolean homePositionReached = moveHome(particle);
                     if (homePositionReached) {
@@ -154,7 +103,7 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
                         landedOnFloor(particle);
                         particle.moving_home = true;
                     }
-                    else if (particle.center().getZ() > 50) {
+                    else if (particle.getTranslateZ() > 50) {
                         // if particle fell over world border, remove it at some z position under floor level
                         trash.add(particle);
                     }
@@ -164,14 +113,14 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
                 Platform.runLater(() -> {
                     particles.removeAll(trash);
                     particlesGroup.getChildren().removeAll(trash);
-                    trash.forEach(Particle::dispose);
+                    trash.forEach(EnergizerFragment::dispose);
                     Logger.debug("{} particles disposed, t={}", trash.size(), t);
                     trash.clear();
                 });
             }
         }
 
-        private void landedOnFloor(Particle particle) {
+        private void landedOnFloor(EnergizerFragment particle) {
             particle.ghost_personality = randomByte(0, 4);
             particle.setMaterial(ghostDressMaterials.get(particle.ghost_personality));
             particle.setRadius(PARTICLE_RADIUS_RETURNING_HOME);
@@ -183,19 +132,19 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
             particle.houseTargetPosition = randomPointOnLateralSurface(swirlCenter, SWIRL_RADIUS, SWIRL_HEIGHT);
 
             float speed = randomFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
-            Point3D center = particle.center();
             particle.velocity = new Vector3f(
-                (float) (particle.houseTargetPosition.getX() - center.getX()),
-                (float) (particle.houseTargetPosition.getY() - center.getY()),
-                0).normalized().mul(speed);
+                (float) (particle.houseTargetPosition.getX() - particle.getTranslateX()),
+                (float) (particle.houseTargetPosition.getY() - particle.getTranslateY()),
+                0)
+                .normalized()
+                .mul(speed);
         }
 
-        private boolean moveHome(Particle particle) {
-            Point3D center = particle.center();
+        private boolean moveHome(EnergizerFragment particle) {
             // if target reached, move particle to its column group
             double distXY = Math.hypot(
-                center.getX() - particle.houseTargetPosition.getX(),
-                center.getY() - particle.houseTargetPosition.getY());
+                particle.getTranslateX() - particle.houseTargetPosition.getX(),
+                particle.getTranslateY() - particle.houseTargetPosition.getY());
             boolean homePositionReached = distXY < particle.velocity.length();
             if (!homePositionReached) {
                 particle.move();
@@ -218,7 +167,7 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
             );
         }
 
-        private void particleReachedHome(Particle particle, List<Group> swirls) {
+        private void particleReachedHome(EnergizerFragment particle, List<Group> swirls) {
             Group targetSwirl = swirls.get(swirlIndex(particle.ghost_personality));
             particle.setTranslateX(particle.houseTargetPosition.getX() - targetSwirl.getTranslateX());
             particle.setTranslateY(particle.houseTargetPosition.getY() - targetSwirl.getTranslateY());
@@ -241,7 +190,7 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
             };
         }
 
-        private void moveInsideSwirl(Particle particle) {
+        private void moveInsideSwirl(EnergizerFragment particle) {
             particle.move();
             if (particle.getTranslateZ() < -SWIRL_HEIGHT) {
                 particle.setTranslateZ(0);
@@ -258,7 +207,7 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
         public void stop() {
             super.stop();
             if (particles != null) {
-                for (Particle particle : particles) {
+                for (EnergizerFragment particle : particles) {
                     particle.velocity = Vector3f.ZERO;
                 }
             }
@@ -269,7 +218,7 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
             for (int i = 0; i < PARTICLE_COUNT; ++i) {
                 double radius = randomParticleRadius();
                 Vector3f velocity = randomParticleVelocity();
-                Particle particle = new Particle(radius, particleMaterial, velocity, origin);
+                EnergizerFragment particle = new EnergizerFragment(radius, particleMaterial, velocity, origin);
                 particle.setVisible(true);
                 particles.add(particle);
             }
@@ -331,7 +280,7 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
             ghostRevivalPositionCenters = null;
         }
         if (particles != null) {
-            for (Particle particle : particles) {
+            for (EnergizerFragment particle : particles) {
                 particle.dispose();
             }
             Logger.info("Disposed {} particles", particles.size());
@@ -354,11 +303,10 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
         }
     }
 
-    private boolean particleTouchesFloor(EnergizerExplosionAndRecyclingAnimation.Particle particle) {
-        final Point3D center = particle.center();
-        final double r = particle.getRadius(), cx = center.getX(), cy = center.getY();
+    private boolean particleTouchesFloor(EnergizerFragment particle) {
+        final double r = particle.getRadius(), cx = particle.getTranslateX(), cy = particle.getTranslateY();
         if (cx + r < 0 || cx - r > floorSize.x()) return false;
         if (cy + r < 0 || cy - r > floorSize.y()) return false;
-        return center.getZ() >= 0;
+        return particle.getTranslateZ() >= 0;
     }
 }
