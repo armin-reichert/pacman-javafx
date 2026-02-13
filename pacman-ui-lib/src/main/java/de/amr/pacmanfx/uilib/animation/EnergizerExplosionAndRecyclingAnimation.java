@@ -50,9 +50,12 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
     private static final float PARTICLE_SPEED_MOVING_HOME_MIN = 0.4f;
     private static final float PARTICLE_SPEED_MOVING_HOME_MAX = 0.8f;
 
+    private static final int PARTICLE_REMOVAL_Z = 50;
+
     private final List<Group> swirls;
     private final Vector2f floorSize;
 
+    private Vector3f gravity = Vector3f.ZERO;
     private Point3D origin;
     private Vector2f[] ghostRevivalPositionCenters;
     private Group particlesGroupContainer;
@@ -98,12 +101,12 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
                     moveInsideSwirl(particle);
                 }
                 else {
-                    particle.fly();
+                    particle.fly(gravity);
                     if (particleTouchesFloor(particle)) {
                         landedOnFloor(particle);
                         particle.movingHome = true;
                     }
-                    else if (particle.getTranslateZ() > 50) {
+                    else if (particle.getTranslateZ() > PARTICLE_REMOVAL_Z) {
                         // if particle fell over world border, remove it at some z position under floor level
                         trash.add(particle);
                     }
@@ -121,13 +124,13 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
         }
 
         private void landedOnFloor(EnergizerFragment particle) {
-            particle.ghostPersonality = randomByte(0, 4);
-            particle.setMaterial(ghostDressMaterials.get(particle.ghostPersonality));
+            particle.ghostColorIndex = randomByte(0, 4);
+            particle.setMaterial(ghostDressMaterials.get(particle.ghostColorIndex));
             particle.setRadius(PARTICLE_RADIUS_RETURNING_HOME);
             particle.setTranslateZ(-particle.getRadius()); // floor top is at z=0
             var swirlCenter = new Point3D(
-                ghostRevivalPositionCenters[particle.ghostPersonality].x(),
-                ghostRevivalPositionCenters[particle.ghostPersonality].y(),
+                ghostRevivalPositionCenters[particle.ghostColorIndex].x(),
+                ghostRevivalPositionCenters[particle.ghostColorIndex].y(),
                 0); // floor top is at z=0
             particle.houseTargetPosition = randomPointOnLateralSurface(swirlCenter, SWIRL_RADIUS, SWIRL_HEIGHT);
 
@@ -168,7 +171,7 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
         }
 
         private void particleReachedHome(EnergizerFragment particle, List<Group> swirls) {
-            Group targetSwirl = swirls.get(swirlIndex(particle.ghostPersonality));
+            Group targetSwirl = swirls.get(swirlIndex(particle.ghostColorIndex));
             particle.setTranslateX(particle.houseTargetPosition.getX() - targetSwirl.getTranslateX());
             particle.setTranslateY(particle.houseTargetPosition.getY() - targetSwirl.getTranslateY());
             particle.setTranslateZ(particle.houseTargetPosition.getZ());
@@ -262,6 +265,10 @@ public class EnergizerExplosionAndRecyclingAnimation extends RegisteredAnimation
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
         this.floorSize = requireNonNull(floorSize);
         particlesGroupContainer.getChildren().add(particlesGroup);
+    }
+
+    public void setGravity(Vector3f gravity) {
+        this.gravity = gravity;
     }
 
     @Override

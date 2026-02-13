@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2f;
+import de.amr.pacmanfx.lib.math.Vector3f;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
@@ -55,6 +56,8 @@ import static java.util.Objects.requireNonNull;
  * 3D representation of game level.
  */
 public class GameLevel3D extends Group implements Disposable {
+
+    public static final Vector3f GRAVITY = new Vector3f(0, 0, 0.18f);
 
     private final GameUI ui;
     private final UIConfig uiConfig;

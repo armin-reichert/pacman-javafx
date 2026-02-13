@@ -211,7 +211,7 @@ public class MazeFood3D implements Disposable {
                 energizer3D.shape().getTranslateY(),
                 energizer3D.shape().getTranslateZ());
 
-        final var animation = new EnergizerExplosionAndRecyclingAnimation(
+        final var explosion = new EnergizerExplosionAndRecyclingAnimation(
                 animationRegistry,
                 energizerCenter,
                 swirls,
@@ -221,6 +221,9 @@ public class MazeFood3D implements Disposable {
                 ghostParticleMaterials,
                 level.worldMap().terrainLayer().sizeInPixel().toVector2f());
 
-        energizer3D.setEatenAnimation(animation);
+        // Important: Without gravity, explosion particles do not fall to floor and do not return to house!
+        explosion.setGravity(GameLevel3D.GRAVITY);
+
+        energizer3D.setEatenAnimation(explosion);
     }
 }

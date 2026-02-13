@@ -13,15 +13,14 @@ import javafx.scene.shape.Sphere;
 
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomFloat;
 
+// TODO: Better use smaller meshes than spheres?
 public class EnergizerFragment extends Sphere implements Disposable {
 
-    // TODO: Better use smaller meshes than spheres?
     private static final short SPHERE_DIVISIONS = 8;
-    private static final Vector3f GRAVITY = new Vector3f(0, 0, 0.18f);
 
     public boolean movingHome = false;
     public boolean partOfSwirl = false;
-    public byte ghostPersonality = -1;
+    public byte ghostColorIndex = -1;
     public Point3D houseTargetPosition;
     public Vector3f velocity;
 
@@ -44,9 +43,9 @@ public class EnergizerFragment extends Sphere implements Disposable {
         setMaterial(null);
     }
 
-    public void fly() {
+    public void fly(Vector3f gravity) {
         move();
-        velocity = velocity.add(GRAVITY);
+        velocity = velocity.add(gravity);
     }
 
     public void move() {
