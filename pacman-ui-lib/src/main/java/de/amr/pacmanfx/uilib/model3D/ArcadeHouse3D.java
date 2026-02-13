@@ -13,7 +13,6 @@ import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.uilib.UfxColors;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndSwirlAnimation;
-import de.amr.pacmanfx.uilib.animation.SphericalEnergizerFragment;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.*;
 import javafx.beans.property.BooleanProperty;
@@ -35,8 +34,8 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.uilib.UfxColors.colorWithOpacity;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
+import static de.amr.pacmanfx.uilib.UfxColors.colorWithOpacity;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -304,7 +303,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
         if (swirls != null) {
             for (Group swirl : swirls) {
                 swirl.getChildren().forEach(child -> {
-                    if (child instanceof SphericalEnergizerFragment particle) {
+                    if (child instanceof Disposable particle) {
                         particle.dispose();
                     }
                 });
