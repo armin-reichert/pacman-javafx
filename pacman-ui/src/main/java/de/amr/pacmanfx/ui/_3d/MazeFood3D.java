@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecyclingAnimation;
+import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndSwirlAnimation;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
@@ -211,7 +211,7 @@ public class MazeFood3D implements Disposable {
                 energizer3D.shape().getTranslateY(),
                 energizer3D.shape().getTranslateZ());
 
-        final var explosion = new EnergizerExplosionAndRecyclingAnimation(
+        final var explosion = new EnergizerExplosionAndSwirlAnimation(
                 animationRegistry,
                 energizerCenter,
                 swirls,
