@@ -22,6 +22,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
@@ -45,6 +46,8 @@ public class MazeFood3D implements Disposable {
     private final AnimationRegistry animationRegistry;
     private final GameLevel level;
 
+    private final Box floor3D;
+
     private PhongMaterial pelletMaterial;
     private PhongMaterial particleMaterial;
 
@@ -58,7 +61,8 @@ public class MazeFood3D implements Disposable {
         AnimationRegistry animationRegistry,
         GameLevel level,
         List<PhongMaterial> ghostMaterials,
-        List<Group> swirls)
+        List<Group> swirls,
+        Box floor3D)
     {
         this.prefs = requireNonNull(prefs);
         requireNonNull(colorScheme);
@@ -66,6 +70,7 @@ public class MazeFood3D implements Disposable {
         this.level = requireNonNull(level);
         requireNonNull(ghostMaterials);
         requireNonNull(swirls);
+        this.floor3D = requireNonNull(floor3D);
 
         pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
         particleMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()).deriveColor(0, 0.5, 1.5, 0.5));
@@ -150,7 +155,7 @@ public class MazeFood3D implements Disposable {
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         energizers3D = foodLayer.tiles().filter(foodLayer::hasFoodAtTile)
                 .filter(foodLayer::isEnergizerTile)
-                .map(tile -> createAnimatedEnergizer3D(tile, radius, minScaling, maxScaling, ghostMaterials, swirls))
+                .map(tile -> createAnimatedEnergizer3D(tile, radius, minScaling, maxScaling, ghostMaterials, swirls, floor3D))
                 .collect(Collectors.toCollection(HashSet::new));
     }
 
@@ -160,7 +165,8 @@ public class MazeFood3D implements Disposable {
         float minScaling,
         float maxScaling,
         List<PhongMaterial> ghostMaterials,
-        List<Group> swirls)
+        List<Group> swirls,
+        Box floor3D)
     {
 
         final var energizer3D = createEnergizer3D(tile, radius, minScaling, maxScaling);
@@ -180,7 +186,7 @@ public class MazeFood3D implements Disposable {
                 revivalPositionCenter(ghostRevivalTiles[ORANGE_GHOST_POKEY])
         };
 
-        setEatenAnimation(energizer3D, ghostMaterials, ghostRevivalCenters, swirls);
+        setEatenAnimation(energizer3D, ghostMaterials, ghostRevivalCenters, swirls, floor3D);
         return energizer3D;
     }
 
@@ -204,7 +210,8 @@ public class MazeFood3D implements Disposable {
         Energizer3D energizer3D,
         List<PhongMaterial> ghostParticleMaterials,
         Vector2f[] ghostRevivalPositions,
-        List<Group> swirls)
+        List<Group> swirls,
+        Box floor3D)
     {
         final Point3D energizerCenter = new Point3D(
                 energizer3D.shape().getTranslateX(),
@@ -219,7 +226,7 @@ public class MazeFood3D implements Disposable {
                 particleGroupsContainer,
                 particleMaterial,
                 ghostParticleMaterials,
-                level.worldMap().terrainLayer().sizeInPixel().toVector2f());
+                floor3D);
 
         // Important: Without gravity, explosion particles do not fall to floor and do not return to house!
         explosion.setGravity(GameLevel3D.GRAVITY);

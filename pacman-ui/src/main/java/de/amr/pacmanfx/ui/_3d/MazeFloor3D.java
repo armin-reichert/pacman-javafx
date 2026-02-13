@@ -20,7 +20,12 @@ public class MazeFloor3D extends Box implements Disposable {
         setHeight(height);
         setDepth(thickness);
         setMaterial(floorMaterial);
-        getTransforms().add(new Translate(0.5 * width - padding, 0.5 * height, 0.5 * thickness));
+        setTranslateX(0.5 * width);
+        setTranslateY(0.5 * height);
+        setTranslateZ(0.5 * thickness);
+
+        //TODO rethink this. It complicates collision handling
+        getTransforms().add(new Translate(-padding, 0, 0));
     }
 
     @Override

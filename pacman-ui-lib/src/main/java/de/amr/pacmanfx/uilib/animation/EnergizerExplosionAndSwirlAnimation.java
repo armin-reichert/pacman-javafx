@@ -12,6 +12,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -56,7 +57,7 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
     private static final int PARTICLE_REMOVAL_Z = 50;
 
     private final List<Group> swirls;
-    private final Vector2f floorSize;
+    private final Box floor3D;
 
     private Vector3f gravity = Vector3f.ZERO;
     private Point3D origin;
@@ -80,9 +81,10 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
         protected void interpolate(double t) {
             for (EnergizerFragmentShape3D particle : particles) {
                 switch (particle.state()) {
+                    case null -> Logger.error("Particle state not set");
                     case EnergizerFragmentShape3D.FragmentState.FLYING -> {
                         particle.fly(gravity);
-                        if (particleTouchesFloor(particle)) {
+                        if (particle.collidesWith(floor3D)) {
                             onParticleLandedOnFloor(particle);
                             particle.setState(EnergizerFragmentShape3D.FragmentState.ATTRACTED_BY_HOUSE);
                         } else if (particle.shape().getTranslateZ() > PARTICLE_REMOVAL_Z) {
@@ -231,7 +233,7 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
         Group particlesGroupContainer,
         Material particleMaterial,
         List<PhongMaterial> ghostDressMaterials,
-        Vector2f floorSize)
+        Box floor3D)
     {
         super(animationRegistry, "Energizer_Explosion");
 
@@ -241,7 +243,7 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
         this.particlesGroupContainer = requireNonNull(particlesGroupContainer);
         this.particleMaterial = requireNonNull(particleMaterial);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
-        this.floorSize = requireNonNull(floorSize);
+        this.floor3D = requireNonNull(floor3D);
         particlesGroupContainer.getChildren().add(particlesGroup);
     }
 
@@ -299,12 +301,5 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
         if (ghostDressMaterials != null) {
             ghostDressMaterials = null;
         }
-    }
-
-    private boolean particleTouchesFloor(EnergizerFragmentShape3D particle) {
-        final double r = 0.5 * particle.size(), cx = particle.shape().getTranslateX(), cy = particle.shape().getTranslateY();
-        if (cx + r < 0 || cx - r > floorSize.x()) return false;
-        if (cy + r < 0 || cy - r > floorSize.y()) return false;
-        return particle.shape().getTranslateZ() >= 0;
     }
 }

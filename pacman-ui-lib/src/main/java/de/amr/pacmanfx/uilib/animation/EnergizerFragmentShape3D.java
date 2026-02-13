@@ -8,6 +8,7 @@ import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector3f;
 import javafx.geometry.Point3D;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.Shape3D;
 
 import static java.util.Objects.requireNonNull;
@@ -73,6 +74,33 @@ public abstract class EnergizerFragmentShape3D implements Disposable, EnergizerF
 
     public void setHouseTargetPosition(Point3D point3D) {
         this.houseTargetPosition = point3D;
+    }
+
+    public boolean collidesWith(Box box) {
+        final Shape3D shape = shape();
+        final Point3D shapeCenter = new Point3D(shape.getTranslateX(), shape.getTranslateY(), shape.getTranslateZ());
+        final Point3D boxOrigin = box.localToParent(Point3D.ZERO); // takes parent transforms into account!
+        final Point3D boxMin = new Point3D(
+            boxOrigin.getX() - 0.5 * box.getWidth(),
+            boxOrigin.getY() - 0.5 * box.getHeight(),
+            boxOrigin.getZ() - 0.5 * box.getDepth());
+        final Point3D boxMax = new Point3D(
+            boxOrigin.getX() + 0.5 * box.getWidth(),
+            boxOrigin.getY() + 0.5 * box.getHeight(),
+            boxOrigin.getZ() + 0.5 * box.getDepth());
+        return intersectsSphereAABB(shapeCenter, 0.5 * size(), boxMin, boxMax);
+    }
+
+    private static boolean intersectsSphereAABB(Point3D sphereCenter, double radius, Point3D boxMin, Point3D boxMax) {
+        final double x = Math.clamp(sphereCenter.getX(), boxMin.getX(), boxMax.getX());
+        final double y = Math.clamp(sphereCenter.getY(), boxMin.getY(), boxMax.getY());
+        final double z = Math.clamp(sphereCenter.getZ(), boxMin.getZ(), boxMax.getZ());
+
+        final double dx = sphereCenter.getX() - x;
+        final double dy = sphereCenter.getY() - y;
+        final double dz = sphereCenter.getZ() - z;
+
+        return dx*dx + dy*dy + dz*dz <= radius * radius;
     }
 
     /**
