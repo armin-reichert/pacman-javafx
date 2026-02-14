@@ -140,7 +140,7 @@ public class Maze3D extends Group {
 
         mazeGroup.getChildren().clear();
 
-        // Floor: Set left-upper corner at origin (centered at origina by default)
+        // Floor: Set left-upper corner at origin (centered at origin by default)
         final Box floor = new Box(width, height, 0.1);
         floor.setTranslateX(0.5 * width);
         floor.setTranslateY(0.5 * height);

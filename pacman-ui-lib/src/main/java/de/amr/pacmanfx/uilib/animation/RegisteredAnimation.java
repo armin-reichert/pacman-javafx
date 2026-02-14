@@ -79,7 +79,7 @@ public abstract class RegisteredAnimation implements Disposable {
 
     public void playFromStart() {
         Animation animationFX = getOrCreateAnimationFX();
-       requireNonNull(animationFX);
+        requireNonNull(animationFX);
         if (animationFX.getStatus() != Animation.Status.RUNNING) {
             Logger.trace("Play animation '{}' from start", label);
             animationFX.playFromStart();

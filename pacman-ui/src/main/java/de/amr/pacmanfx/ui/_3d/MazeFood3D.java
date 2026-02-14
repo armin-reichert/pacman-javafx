@@ -5,11 +5,9 @@
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
-import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerParticlesAnimation;
@@ -37,7 +35,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
@@ -169,41 +168,24 @@ public class MazeFood3D implements Disposable {
         List<PhongMaterial> ghostMaterials,
         Box floor3D)
     {
-        final var energizer3D = createEnergizer3D(tile, radius, minScaling, maxScaling);
-
-        final House house = level.worldMap().terrainLayer().optHouse().orElseThrow();
-        final Vector2i[] ghostRevivalTiles = {
-            house.ghostRevivalTile(RED_GHOST_SHADOW),
-            house.ghostRevivalTile(PINK_GHOST_SPEEDY),
-            house.ghostRevivalTile(CYAN_GHOST_BASHFUL),
-            house.ghostRevivalTile(ORANGE_GHOST_POKEY),
-        };
+        final var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
+        final var energizer3D = new SphericalEnergizer3D(
+            animationRegistry,
+            radius,
+            center,
+            minScaling,
+            maxScaling,
+            pelletMaterial,
+            tile);
 
         final EnergizerParticlesAnimation particlesAnimation = createParticlesAnimation(
             energizer3D,
             ghostMaterials,
             swirlAnimations,
             floor3D);
-
         energizer3D.setEatenAnimation(particlesAnimation);
 
         return energizer3D;
-    }
-
-    private Vector2f revivalPositionCenter(Vector2i revivalTile) {
-        return revivalTile.scaled((float) TS).plus(TS, HTS);
-    }
-
-    private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float minScaling, float maxScaling) {
-        final var energizerCenter = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-        return new SphericalEnergizer3D(
-                animationRegistry,
-                energizerRadius,
-                energizerCenter,
-                minScaling,
-                maxScaling,
-                pelletMaterial,
-                tile);
     }
 
     private EnergizerParticlesAnimation createParticlesAnimation(
@@ -221,11 +203,11 @@ public class MazeFood3D implements Disposable {
             animationRegistry,
             energizerCenter,
             swirlAnimations,
-            particleGroupsContainer,
             particleMaterial,
             ghostParticleMaterials,
             floor3D);
 
+        particleGroupsContainer.getChildren().add(particlesAnimation.particleShapesGroup());
         // Important: Without gravity, particles would not land on the floor and then get attracted by the house!
         particlesAnimation.setGravity(GameLevel3D.GRAVITY);
         return particlesAnimation;

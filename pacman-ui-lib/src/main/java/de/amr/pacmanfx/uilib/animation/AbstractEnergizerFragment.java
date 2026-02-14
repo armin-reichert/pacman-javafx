@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector3f;
 import javafx.geometry.Point3D;

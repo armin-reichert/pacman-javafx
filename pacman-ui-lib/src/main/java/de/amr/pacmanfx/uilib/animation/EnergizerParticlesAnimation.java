@@ -36,7 +36,6 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
     private static final float SWIRL_HEIGHT = 12;
     private static final float SWIRL_RISING_SPEED = 0.5f;
 
-    private static final Duration PARTICLE_SWARM_MOVEMENT_DELAY = Duration.millis(200);
     // Time includes movement of particles to the ghost house after the explosion
     private static final Duration PARTICLE_SWARM_DROPPERS_DISPOSAL_TIME = Duration.seconds(15);
 
@@ -56,16 +55,16 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
 
     private static final int PARTICLE_REMOVAL_Z = 50;
 
+    private final Point3D origin;
     private final Box floor3D;
+    private final List<ArcadeHouse3D.SwirlAnimation> swirlAnimations;
+    private final Material particleMaterial;
+    private final List<PhongMaterial> ghostDressMaterials;
 
     private Vector3f gravity = Vector3f.ZERO;
-    private Point3D origin;
-    private List<ArcadeHouse3D.SwirlAnimation> swirlAnimations;
-    private Group particlesGroupContainer;
+
     private Group particleShapesGroup = new Group();
-    private Material particleMaterial;
-    private List<PhongMaterial> ghostDressMaterials;
-    private List<AbstractEnergizerFragment> particles;
+    private final List<AbstractEnergizerFragment> particles = new ArrayList<>();
     private final Set<AbstractEnergizerFragment> particlesToDispose = new HashSet<>();
 
     private class ParticleSwarmMovement extends Transition {
@@ -185,7 +184,7 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
 
         @Override
         public void play() {
-            createAndAddParticles(particleMaterial, origin);
+            createAndAddParticles(origin);
             super.play();
         }
 
@@ -199,8 +198,8 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
             }
         }
 
-        private void createAndAddParticles(Material particleMaterial, Point3D origin) {
-            particles = new ArrayList<>();
+        private void createAndAddParticles(Point3D origin) {
+            particles.clear();
             particleShapesGroup.getChildren().clear();
             for (int i = 0; i < PARTICLE_COUNT; ++i) {
                 final var particle = new BallEnergizerFragment(randomParticleRadius(), particleMaterial, origin);
@@ -232,7 +231,6 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
         AnimationRegistry animationRegistry,
         Point3D origin,
         List<ArcadeHouse3D.SwirlAnimation> swirlAnimations,
-        Group particlesGroupContainer,
         Material particleMaterial,
         List<PhongMaterial> ghostDressMaterials,
         Box floor3D)
@@ -241,25 +239,26 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
 
         this.origin = requireNonNull(origin);
         this.swirlAnimations = requireNonNull(swirlAnimations);
-        this.particlesGroupContainer = requireNonNull(particlesGroupContainer);
         this.particleMaterial = requireNonNull(particleMaterial);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
         this.floor3D = requireNonNull(floor3D);
-        particlesGroupContainer.getChildren().add(particleShapesGroup);
     }
 
     public void setGravity(Vector3f gravity) {
         this.gravity = gravity;
     }
 
+    public Group particleShapesGroup() {
+        return particleShapesGroup;
+    }
+
     @Override
     protected Animation createAnimationFX() {
         final var swarmMovement = new ParticleSwarmMovement(PARTICLE_SWARM_DROPPERS_DISPOSAL_TIME);
-        swarmMovement.setDelay(PARTICLE_SWARM_MOVEMENT_DELAY);
         swarmMovement.setOnFinished(_ -> {
             // Particles that did not make it into the swirl will be disposed
             for (AbstractEnergizerFragment particle : particles) {
-                if (particle.state() == AbstractEnergizerFragment.FragmentState.ATTRACTED) {
+                if (particle.state() != AbstractEnergizerFragment.FragmentState.INSIDE_SWIRL) {
                     particlesToDispose.add(particle);
                 }
             }
@@ -274,33 +273,21 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
 
     @Override
     protected void freeResources() {
-        if (origin != null) {
-            origin = null;
-        }
-        if (swirlAnimations != null) {
-            swirlAnimations = null;
-        }
-        if (particles != null) {
-            for (AbstractEnergizerFragment particle : particles) {
+        if (!particles.isEmpty()) {
+            final int particleCount = particles.size();
+            for (var particle : particles) {
                 particle.dispose();
             }
-            Logger.info("Disposed {} particles", particles.size());
             particles.clear();
-            particles = null;
+            Logger.info("Disposed {} particles", particleCount);
         }
         if (particleShapesGroup != null) {
             particleShapesGroup.getChildren().clear();
             particleShapesGroup = null;
+            Logger.info("Disposed particle shapes group");
         }
-        if (particlesGroupContainer != null) {
-            particlesGroupContainer.getChildren().remove(particleShapesGroup);
-            particlesGroupContainer = null;
-        }
-        if (particleMaterial != null) {
-            particleMaterial = null;
-        }
-        if (ghostDressMaterials != null) {
-            ghostDressMaterials = null;
-        }
+        final int particleCount = particlesToDispose.size();
+        particlesToDispose.clear();
+        Logger.info("Disposed {} particles that should have been disposed before", particleCount);
     }
 }

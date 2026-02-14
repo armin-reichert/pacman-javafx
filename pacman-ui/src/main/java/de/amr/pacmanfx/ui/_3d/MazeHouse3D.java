@@ -111,10 +111,7 @@ public class MazeHouse3D implements Disposable {
     public void dispose() {
         arcadeHouse3D.openProperty().removeListener(houseOpenListener);
         Logger.info("Removed 'house open' listener");
-        arcadeHouse3D.openProperty().unbind();
-        arcadeHouse3D.wallBaseHeightProperty().unbind();
-        arcadeHouse3D.light().lightOnProperty().unbind();
         arcadeHouse3D.dispose();
-        Logger.info("Unbound and disposed 3D house");
+        Logger.info("Disposed 3D house");
     }
 }
