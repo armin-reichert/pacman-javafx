@@ -55,6 +55,7 @@ public class MazeFood3D implements Disposable {
     private Set<Shape3D> pellets3D = Set.of();
     private Set<Energizer3D> energizers3D = Set.of();
     private final Group particleGroupsContainer = new Group();
+    private final List<ArcadeHouse3D.SwirlAnimation> swirlAnimations;
 
     public MazeFood3D(
         PreferencesManager prefs,
@@ -71,12 +72,13 @@ public class MazeFood3D implements Disposable {
         this.level = requireNonNull(level);
         requireNonNull(ghostMaterials);
         this.floor3D = requireNonNull(floor3D);
+        this.swirlAnimations = requireNonNull(swirlAnimations);
 
         pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
         particleMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()).deriveColor(0, 0.5, 1.5, 0.5));
 
         createPellets3D();
-        createEnergizers3D(ghostMaterials, swirlAnimations);
+        createEnergizers3D(ghostMaterials);
     }
 
     @Override
@@ -148,15 +150,15 @@ public class MazeFood3D implements Disposable {
         return pelletShape;
     }
 
-    private void createEnergizers3D(List<PhongMaterial> ghostMaterials, List<ArcadeHouse3D.SwirlAnimation> swirlAnimations) {
+    private void createEnergizers3D(List<PhongMaterial> ghostMaterials) {
         final float radius     = prefs.getFloat("3d.energizer.radius");
         final float minScaling = prefs.getFloat("3d.energizer.scaling.min");
         final float maxScaling = prefs.getFloat("3d.energizer.scaling.max");
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         energizers3D = foodLayer.tiles().filter(foodLayer::hasFoodAtTile)
-                .filter(foodLayer::isEnergizerTile)
-                .map(tile -> createAnimatedEnergizer3D(tile, radius, minScaling, maxScaling, ghostMaterials, floor3D, swirlAnimations))
-                .collect(Collectors.toCollection(HashSet::new));
+            .filter(foodLayer::isEnergizerTile)
+            .map(tile -> createAnimatedEnergizer3D(tile, radius, minScaling, maxScaling, ghostMaterials, floor3D))
+            .collect(Collectors.toCollection(HashSet::new));
     }
 
     private Energizer3D createAnimatedEnergizer3D(
@@ -165,10 +167,8 @@ public class MazeFood3D implements Disposable {
         float minScaling,
         float maxScaling,
         List<PhongMaterial> ghostMaterials,
-        Box floor3D,
-        List<ArcadeHouse3D.SwirlAnimation> swirlAnimations)
+        Box floor3D)
     {
-
         final var energizer3D = createEnergizer3D(tile, radius, minScaling, maxScaling);
 
         final House house = level.worldMap().terrainLayer().optHouse().orElseThrow();
@@ -179,14 +179,14 @@ public class MazeFood3D implements Disposable {
             house.ghostRevivalTile(ORANGE_GHOST_POKEY),
         };
 
-        final Vector2f[] ghostRevivalCenters = {
-            revivalPositionCenter(ghostRevivalTiles[RED_GHOST_SHADOW]),
-            revivalPositionCenter(ghostRevivalTiles[PINK_GHOST_SPEEDY]),
-            revivalPositionCenter(ghostRevivalTiles[CYAN_GHOST_BASHFUL]),
-            revivalPositionCenter(ghostRevivalTiles[ORANGE_GHOST_POKEY])
-        };
+        final EnergizerParticlesAnimation particlesAnimation = createParticlesAnimation(
+            energizer3D,
+            ghostMaterials,
+            swirlAnimations,
+            floor3D);
 
-        setEatenAnimation(energizer3D, ghostMaterials, ghostRevivalCenters, swirlAnimations, floor3D);
+        energizer3D.setEatenAnimation(particlesAnimation);
+
         return energizer3D;
     }
 
@@ -206,10 +206,9 @@ public class MazeFood3D implements Disposable {
                 tile);
     }
 
-    private void setEatenAnimation(
+    private EnergizerParticlesAnimation createParticlesAnimation(
         Energizer3D energizer3D,
         List<PhongMaterial> ghostParticleMaterials,
-        Vector2f[] ghostRevivalPositions,
         List<ArcadeHouse3D.SwirlAnimation> swirlAnimations,
         Box floor3D)
     {
@@ -218,19 +217,17 @@ public class MazeFood3D implements Disposable {
             energizer3D.shape().getTranslateY(),
             energizer3D.shape().getTranslateZ());
 
-        final var explosion = new EnergizerParticlesAnimation(
+        final var particlesAnimation = new EnergizerParticlesAnimation(
             animationRegistry,
             energizerCenter,
-            ghostRevivalPositions,
             swirlAnimations,
             particleGroupsContainer,
             particleMaterial,
             ghostParticleMaterials,
             floor3D);
 
-        // Important: Without gravity, explosion particles do not fall to floor and do not return to house!
-        explosion.setGravity(GameLevel3D.GRAVITY);
-
-        energizer3D.setEatenAnimation(explosion);
+        // Important: Without gravity, particles would not land on the floor and then get attracted by the house!
+        particlesAnimation.setGravity(GameLevel3D.GRAVITY);
+        return particlesAnimation;
     }
 }

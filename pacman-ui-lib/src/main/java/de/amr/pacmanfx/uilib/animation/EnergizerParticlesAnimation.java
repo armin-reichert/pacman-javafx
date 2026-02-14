@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector3f;
 import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
 import javafx.animation.Animation;
@@ -61,7 +60,6 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
 
     private Vector3f gravity = Vector3f.ZERO;
     private Point3D origin;
-    private Vector2f[] ghostRevivalPositionCenters;
     private List<ArcadeHouse3D.SwirlAnimation> swirlAnimations;
     private Group particlesGroupContainer;
     private Group particleShapesGroup = new Group();
@@ -128,12 +126,10 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
             // Set uniform size for particles returning to house
             particle.setSize(2 * PARTICLE_RADIUS_RETURNING_HOME);
 
-            particle.setTargetSwirlGroup(swirlAnimations.get(swirlIndex).swirlGroup());
+            final Group targetSwirlGroup = swirlAnimations.get(swirlIndex).swirlGroup();
+            particle.setTargetSwirlGroup(targetSwirlGroup);
 
-            final var swirlCenter = new Point3D(
-                ghostRevivalPositionCenters[ghostID].x(),
-                ghostRevivalPositionCenters[ghostID].y(),
-                0); // floor top is at z=0
+            final var swirlCenter = new Point3D(targetSwirlGroup.getTranslateX(), targetSwirlGroup.getTranslateY(), 0);
             particle.setTargetPosition(randomPointOnLateralSwirlSurface(swirlCenter));
 
             final float speed = randomFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
@@ -235,7 +231,6 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
     public EnergizerParticlesAnimation(
         AnimationRegistry animationRegistry,
         Point3D origin,
-        Vector2f[] ghostRevivalPositionCenters,
         List<ArcadeHouse3D.SwirlAnimation> swirlAnimations,
         Group particlesGroupContainer,
         Material particleMaterial,
@@ -245,7 +240,6 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
         super(animationRegistry, "Energizer_Explosion");
 
         this.origin = requireNonNull(origin);
-        this.ghostRevivalPositionCenters = requireNonNull(ghostRevivalPositionCenters);
         this.swirlAnimations = requireNonNull(swirlAnimations);
         this.particlesGroupContainer = requireNonNull(particlesGroupContainer);
         this.particleMaterial = requireNonNull(particleMaterial);
@@ -282,9 +276,6 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
     protected void freeResources() {
         if (origin != null) {
             origin = null;
-        }
-        if (ghostRevivalPositionCenters != null) {
-            ghostRevivalPositionCenters = null;
         }
         if (swirlAnimations != null) {
             swirlAnimations = null;
