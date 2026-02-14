@@ -63,7 +63,7 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
     private Point3D origin;
     private Vector2f[] ghostRevivalPositionCenters;
     private Group particlesGroupContainer;
-    private Group particlesGroup = new Group();
+    private Group particleShapesGroup = new Group();
 
     private Material particleMaterial;
     private List<PhongMaterial> ghostDressMaterials;
@@ -85,13 +85,13 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
                         particle.fly(gravity);
                         if (particle.collidesWith(floor3D)) {
                             onParticleLandedOnFloor(particle);
-                            particle.setState(AbstractEnergizerFragment.FragmentState.ATTRACTED_BY_HOUSE);
+                            particle.setState(AbstractEnergizerFragment.FragmentState.ATTRACTED);
                         } else if (particle.shape().getTranslateZ() > PARTICLE_REMOVAL_Z) {
                             // if particle fell over world border, remove it at some z position under floor level
                             particlesToDispose.add(particle);
                         }
                     }
-                    case AbstractEnergizerFragment.FragmentState.ATTRACTED_BY_HOUSE -> {
+                    case AbstractEnergizerFragment.FragmentState.ATTRACTED -> {
                         final boolean homeReached = moveHome(particle);
                         if (homeReached) {
                             onParticleReachedHome(particle, swirls);
@@ -112,12 +112,12 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
                 ghostRevivalPositionCenters[particle.ghostColorIndex()].x(),
                 ghostRevivalPositionCenters[particle.ghostColorIndex()].y(),
                 0); // floor top is at z=0
-            particle.setHouseTargetPosition(randomPointOnLateralSurface(swirlCenter, SWIRL_RADIUS, SWIRL_HEIGHT));
+            particle.setTargetPosition(randomPointOnLateralSurface(swirlCenter, SWIRL_RADIUS, SWIRL_HEIGHT));
 
             final float speed = randomFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
             particle.setVelocity(new Vector3f(
-                (float) (particle.houseTargetPosition().getX() - particle.shape().getTranslateX()),
-                (float) (particle.houseTargetPosition().getY() - particle.shape().getTranslateY()),
+                (float) (particle.targetPosition().getX() - particle.shape().getTranslateX()),
+                (float) (particle.targetPosition().getY() - particle.shape().getTranslateY()),
                 0
             ).normalized().mul(speed));
         }
@@ -125,8 +125,8 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
         private boolean moveHome(AbstractEnergizerFragment particle) {
             // if target reached, move particle to its column group
             final double distXY = Math.hypot(
-                particle.shape().getTranslateX() - particle.houseTargetPosition().getX(),
-                particle.shape().getTranslateY() - particle.houseTargetPosition().getY());
+                particle.shape().getTranslateX() - particle.targetPosition().getX(),
+                particle.shape().getTranslateY() - particle.targetPosition().getY());
             final boolean homePositionReached = distXY < particle.velocity().length();
             if (!homePositionReached) {
                 particle.move();
@@ -146,14 +146,14 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
         private void onParticleReachedHome(AbstractEnergizerFragment particle, List<Group> swirls) {
             final Group swirl = swirls.get(swirlIndex(particle.ghostColorIndex()));
             final Shape3D particleShape = particle.shape();
-            final Point3D targetPosition = particle.houseTargetPosition();
+            final Point3D targetPosition = particle.targetPosition();
             particleShape.setTranslateX(targetPosition.getX() - swirl.getTranslateX());
             particleShape.setTranslateY(targetPosition.getY() - swirl.getTranslateY());
             particleShape.setTranslateZ(targetPosition.getZ());
             particle.setVelocity(new Vector3f(0, 0, -SWIRL_RISING_SPEED));
             Platform.runLater(() -> {
-                if (particlesGroup != null) {
-                    particlesGroup.getChildren().remove(particleShape);
+                if (particleShapesGroup != null) {
+                    particleShapesGroup.getChildren().remove(particleShape);
                     swirl.getChildren().add(particleShape);
                 }
             });
@@ -193,14 +193,14 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
 
         private void createAndAddParticles(Material particleMaterial, Point3D origin) {
             particles = new ArrayList<>();
+            particleShapesGroup.getChildren().clear();
             for (int i = 0; i < PARTICLE_COUNT; ++i) {
-                final double radius = randomParticleRadius();
-                final Vector3f velocity = randomParticleVelocity();
-                final var particle = new SphericalEnergizerFragment3D(radius, particleMaterial, velocity, origin);
+                final var particle = new BallEnergizerFragment(randomParticleRadius(), particleMaterial, origin);
+                particle.setVelocity(randomParticleVelocity());
                 particle.shape().setVisible(true);
                 particles.add(particle);
+                particleShapesGroup.getChildren().add(particle.shape());
             }
-            particlesGroup.getChildren().setAll(particles.stream().map(AbstractEnergizerFragment::shape).toList());
         }
 
         private double randomParticleRadius() {
@@ -239,7 +239,7 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
         this.particleMaterial = requireNonNull(particleMaterial);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
         this.floor3D = requireNonNull(floor3D);
-        particlesGroupContainer.getChildren().add(particlesGroup);
+        particlesGroupContainer.getChildren().add(particleShapesGroup);
     }
 
     public void setGravity(Vector3f gravity) {
@@ -253,14 +253,14 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
         swarmMovement.setOnFinished(_ -> {
             // Particles that did not make it into the swirl will be disposed
             for (AbstractEnergizerFragment particle : particles) {
-                if (particle.state() == AbstractEnergizerFragment.FragmentState.ATTRACTED_BY_HOUSE) {
+                if (particle.state() == AbstractEnergizerFragment.FragmentState.ATTRACTED) {
                     particlesToDispose.add(particle);
                 }
             }
             Logger.info("{} particles will be disposed", particlesToDispose.size());
             particlesToDispose.forEach(AbstractEnergizerFragment::dispose);
             particles.removeAll(particlesToDispose);
-            particlesGroup.getChildren().removeAll(particlesToDispose.stream().map(AbstractEnergizerFragment::shape).toList());
+            particleShapesGroup.getChildren().removeAll(particlesToDispose.stream().map(AbstractEnergizerFragment::shape).toList());
             particlesToDispose.clear();
         });
         return swarmMovement;
@@ -282,12 +282,12 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
             particles.clear();
             particles = null;
         }
-        if (particlesGroup != null) {
-            particlesGroup.getChildren().clear();
-            particlesGroup = null;
+        if (particleShapesGroup != null) {
+            particleShapesGroup.getChildren().clear();
+            particleShapesGroup = null;
         }
         if (particlesGroupContainer != null) {
-            particlesGroupContainer.getChildren().remove(particlesGroup);
+            particlesGroupContainer.getChildren().remove(particleShapesGroup);
             particlesGroupContainer = null;
         }
         if (particleMaterial != null) {

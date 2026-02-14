@@ -42,8 +42,7 @@ public abstract class AbstractEnergizerFragment implements Disposable {
      * @param boxMax       the maximum AABB corner
      * @return {@code true} if the sphere intersects the AABB
      */
-    public static boolean intersectsSphereAABB(
-            Point3D sphereCenter, double radius, Point3D boxMin, Point3D boxMax) {
+    public static boolean intersectsSphereAABB(Point3D sphereCenter, double radius, Point3D boxMin, Point3D boxMax) {
 
         final double x = Math.clamp(sphereCenter.getX(), boxMin.getX(), boxMax.getX());
         final double y = Math.clamp(sphereCenter.getY(), boxMin.getY(), boxMax.getY());
@@ -60,26 +59,24 @@ public abstract class AbstractEnergizerFragment implements Disposable {
      * The animation state of a fragment.
      * <ul>
      *   <li>{@code FLYING}: The fragment moves freely according to its velocity.</li>
-     *   <li>{@code ATTRACTED_BY_HOUSE}: The fragment is pulled toward the ghost house.</li>
+     *   <li>{@code ATTRACTED}: The fragment is pulled toward the ghost house.</li>
      *   <li>{@code INSIDE_SWIRL}: The fragment moves inside the ghost-house swirl effect.</li>
      * </ul>
      */
-    public enum FragmentState { FLYING, ATTRACTED_BY_HOUSE, INSIDE_SWIRL }
+    public enum FragmentState { FLYING, ATTRACTED, INSIDE_SWIRL }
 
     /** Current animation state of the fragment. */
     private FragmentState state = FragmentState.FLYING;
 
     /**
-     * Index of the ghost color associated with this fragment, or {@code -1}
-     * if no color is associated.
+     * Index of the ghost color associated with this fragment, or {@code -1} if no color is associated.
      */
     private byte ghostColorIndex = -1;
 
     /**
-     * Target position inside the ghost house. Used when the fragment is in
-     * {@link FragmentState#INSIDE_SWIRL}.
+     * Target position inside the ghost house. Used when the fragment is in {@link FragmentState#INSIDE_SWIRL}.
      */
-    private Point3D houseTargetPosition;
+    private Point3D targetPosition;
 
     /** Current velocity of the fragment in 3D space. Immutable vector. */
     private Vector3f velocity = Vector3f.ZERO;
@@ -92,20 +89,20 @@ public abstract class AbstractEnergizerFragment implements Disposable {
     public abstract Shape3D shape();
 
     /**
-     * Sets the fragment's visual size. The meaning of “size” is defined by
-     * the concrete subclass (e.g., diameter of a sphere).
+     * Sets the fragment's visual size. The meaning of “size” is defined by the concrete subclass
+     * (e.g., diameter of a sphere).
      *
      * @param size the new size value
      */
-    abstract void setSize(double size);
+    public abstract void setSize(double size);
 
     /**
-     * Returns the fragment's visual size. The meaning of “size” is defined by
-     * the concrete subclass (e.g., diameter of a sphere).
+     * Returns the fragment's visual size. The meaning of “size” is defined by the concrete subclass
+     * (e.g., diameter of a sphere).
      *
      * @return the fragment size
      */
-    abstract double size();
+    public abstract double size();
 
     /**
      * Sets the fragment's velocity.
@@ -152,27 +149,27 @@ public abstract class AbstractEnergizerFragment implements Disposable {
      * @param index a valid ghost personality index, or {@code -1}
      */
     public void setGhostColorIndex(byte index) {
-        this.ghostColorIndex = Validations.requireValidGhostPersonality(index);
+        ghostColorIndex = Validations.requireValidGhostPersonality(index);
     }
 
     /**
      * @return the target position inside the ghost house, or {@code null} if not set
      */
-    public Point3D houseTargetPosition() {
-        return houseTargetPosition;
+    public Point3D targetPosition() {
+        return targetPosition;
     }
 
     /**
      * Sets the target position inside the ghost house.
      *
-     * @param point3D the target position (may be {@code null})
+     * @param point the target position (may be {@code null})
      */
-    public void setHouseTargetPosition(Point3D point3D) {
-        this.houseTargetPosition = point3D;
+    public void setTargetPosition(Point3D point) {
+        targetPosition = point;
     }
 
     /**
-     * Checks whether this fragment (treated as a sphere) intersects the given box.
+     * Checks whether this fragment intersects the given box.
      * <p>
      * The fragment is approximated as a sphere with radius {@code size() / 2}.
      * The box is treated as an axis-aligned bounding box (AABB) in the fragment's
@@ -184,25 +181,23 @@ public abstract class AbstractEnergizerFragment implements Disposable {
      */
     public boolean collidesWith(Box box) {
         final Shape3D shape = shape();
-        final Point3D shapeCenter = new Point3D(
-                shape.getTranslateX(),
-                shape.getTranslateY(),
-                shape.getTranslateZ()
-        );
+
+        //TODO use localToParent(Point3D.ZERO) here too?
+        final Point3D shapeCenter = new Point3D(shape.getTranslateX(), shape.getTranslateY(), shape.getTranslateZ());
 
         // Box center in parent coordinates (accounts for parent transforms)
         final Point3D boxOrigin = box.localToParent(Point3D.ZERO);
 
         final Point3D boxMin = new Point3D(
-                boxOrigin.getX() - 0.5 * box.getWidth(),
-                boxOrigin.getY() - 0.5 * box.getHeight(),
-                boxOrigin.getZ() - 0.5 * box.getDepth()
+            boxOrigin.getX() - 0.5 * box.getWidth(),
+            boxOrigin.getY() - 0.5 * box.getHeight(),
+            boxOrigin.getZ() - 0.5 * box.getDepth()
         );
 
         final Point3D boxMax = new Point3D(
-                boxOrigin.getX() + 0.5 * box.getWidth(),
-                boxOrigin.getY() + 0.5 * box.getHeight(),
-                boxOrigin.getZ() + 0.5 * box.getDepth()
+            boxOrigin.getX() + 0.5 * box.getWidth(),
+            boxOrigin.getY() + 0.5 * box.getHeight(),
+            boxOrigin.getZ() + 0.5 * box.getDepth()
         );
 
         return intersectsSphereAABB(shapeCenter, 0.5 * size(), boxMin, boxMax);
