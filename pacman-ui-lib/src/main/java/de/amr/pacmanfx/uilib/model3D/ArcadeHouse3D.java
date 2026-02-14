@@ -45,7 +45,32 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeHouse3D extends Group implements Disposable {
 
-    private static final float SWIRL_ROTATION_SEC = 1.0f;
+    public static class SwirlAnimation extends RegisteredAnimation {
+
+        private static final float SWIRL_ROTATION_SEC = 1.0f;
+
+        private final Group swirlGroup = new Group();
+
+        public SwirlAnimation(AnimationRegistry animationRegistry, String label) {
+            super(animationRegistry, label);
+        }
+
+        public Group swirlGroup() {
+            return swirlGroup;
+        }
+
+        @Override
+        protected Animation createAnimationFX() {
+            Duration rotationTime = Duration.seconds(SWIRL_ROTATION_SEC);
+            var rotation = new RotateTransition(rotationTime, swirlGroup);
+            rotation.setAxis(Rotate.Z_AXIS);
+            rotation.setFromAngle(0);
+            rotation.setToAngle(360);
+            rotation.setInterpolator(Interpolator.LINEAR);
+            rotation.setCycleCount(Animation.INDEFINITE);
+            return rotation;
+        }
+    }
 
     private static final int DOOR_VERTICAL_BAR_COUNT = 4;
 
@@ -66,12 +91,11 @@ public class ArcadeHouse3D extends Group implements Disposable {
     private Group doors;
     private Group leftDoor;
     private Group rightDoor;
-    private Group[] swirls;
 
     private float doorSensitivity = 10;
 
     private RegisteredAnimation doorsMeltingAnimation;
-    private List<RegisteredAnimation> swirlAnimations = new ArrayList<>(3);
+    private List<SwirlAnimation> swirlAnimations = new ArrayList<>(3);
 
     public ArcadeHouse3D(
         AnimationRegistry animationRegistry,
@@ -144,13 +168,11 @@ public class ArcadeHouse3D extends Group implements Disposable {
         //getChildren().addAll(doors /*,light*/);
 
         // These groups are added to their parent in GameLevel3D to ensure correct ordering!
-        swirls = new Group[ghostRevivalPositionCenters.length];
         for (int i = 0; i < ghostRevivalPositionCenters.length; ++i) {
-            swirls[i] = new Group();
-            swirls[i].setTranslateX(ghostRevivalPositionCenters[i].x());
-            swirls[i].setTranslateY(ghostRevivalPositionCenters[i].y());
-            RegisteredAnimation animation = createSwirlAnimation(animationRegistry, "Swirl_%d".formatted(i), swirls[i]);
+            var animation = new SwirlAnimation(animationRegistry, "Swirl_%d".formatted(i));
             swirlAnimations.add(animation);
+            animation.swirlGroup().setTranslateX(ghostRevivalPositionCenters[i].x());
+            animation.swirlGroup().setTranslateY(ghostRevivalPositionCenters[i].y());
         }
 
         doorsMeltingAnimation = new RegisteredAnimation(animationRegistry, "Doors_Melting") {
@@ -160,22 +182,6 @@ public class ArcadeHouse3D extends Group implements Disposable {
                     new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessProperty, 0)),
                     new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessProperty, barThickness))
                 );
-            }
-        };
-    }
-
-    private RegisteredAnimation createSwirlAnimation(AnimationRegistry animationRegistry, String label, Group swirl) {
-        Duration rotationTime = Duration.seconds(SWIRL_ROTATION_SEC);
-        return new RegisteredAnimation(animationRegistry, label) {
-            @Override
-            protected Animation createAnimationFX() {
-                var rotation = new RotateTransition(rotationTime, swirl);
-                rotation.setAxis(Rotate.Z_AXIS);
-                rotation.setFromAngle(0);
-                rotation.setToAngle(360);
-                rotation.setInterpolator(Interpolator.LINEAR);
-                rotation.setCycleCount(Animation.INDEFINITE);
-                return rotation;
             }
         };
     }
@@ -244,8 +250,8 @@ public class ArcadeHouse3D extends Group implements Disposable {
         });
     }
 
-    public List<Group> swirls() {
-        return List.of(swirls);
+    public List<SwirlAnimation> swirlAnimations() {
+        return swirlAnimations;
     }
 
     public BooleanProperty openProperty() {return doorsOpenProperty;}
@@ -301,17 +307,18 @@ public class ArcadeHouse3D extends Group implements Disposable {
             Wall3D.dispose(child); // does nothing if child is not part of 3D wall
         }
 
-        if (swirls != null) {
-            for (Group swirl : swirls) {
-                swirl.getChildren().forEach(child -> {
+        if (swirlAnimations != null) {
+            for (var swirlAnimation : swirlAnimations) {
+                final Group swirlGroup = swirlAnimation.swirlGroup();
+                swirlGroup.getChildren().forEach(child -> {
                     if (child instanceof Disposable particle) {
                         particle.dispose();
                     }
                 });
-                swirl.getChildren().clear();
-                swirls = null;
+                swirlGroup.getChildren().clear();
             }
             Logger.info("Disposed swirls and their particles");
+            swirlAnimations = null;
         }
 
         getChildren().clear();

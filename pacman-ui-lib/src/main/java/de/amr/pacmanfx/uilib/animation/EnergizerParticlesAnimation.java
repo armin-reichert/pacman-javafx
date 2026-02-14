@@ -3,8 +3,10 @@
  */
 package de.amr.pacmanfx.uilib.animation;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector3f;
+import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.application.Platform;
@@ -22,15 +24,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
 import static java.util.Objects.requireNonNull;
 
 /**
- * When an energizer explodes, the particles are sucked in by 3 swirls inside the ghost house where they accumulate
- * to colored ghost shapes.
+ * When an energizer explodes, the explosion particles that land on the floor are sucked in by 3 swirls
+ * inside the ghost house where they accumulate to colored ghost shapes.
  */
-public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
+public class EnergizerParticlesAnimation extends RegisteredAnimation {
 
     private static final float SWIRL_RADIUS = 7;
     private static final float SWIRL_HEIGHT = 12;
@@ -56,15 +57,14 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
 
     private static final int PARTICLE_REMOVAL_Z = 50;
 
-    private final List<Group> swirls;
     private final Box floor3D;
 
     private Vector3f gravity = Vector3f.ZERO;
     private Point3D origin;
     private Vector2f[] ghostRevivalPositionCenters;
+    private List<ArcadeHouse3D.SwirlAnimation> swirlAnimations;
     private Group particlesGroupContainer;
     private Group particleShapesGroup = new Group();
-
     private Material particleMaterial;
     private List<PhongMaterial> ghostDressMaterials;
     private List<AbstractEnergizerFragment> particles;
@@ -92,9 +92,9 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
                         }
                     }
                     case AbstractEnergizerFragment.FragmentState.ATTRACTED -> {
-                        final boolean homeReached = moveHome(particle);
+                        final boolean homeReached = moveTowardsTargetPosition(particle);
                         if (homeReached) {
-                            onParticleReachedHome(particle, swirls);
+                            onParticleReachedTargetPosition(particle);
                             particle.setState(AbstractEnergizerFragment.FragmentState.INSIDE_SWIRL);
                         }
                     }
@@ -103,16 +103,38 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
             }
         }
 
+        // When a particle lands on the maze floor, it is resized to a uniform size and gets attracted by a randomly
+        // assigned swirl inside the ghost house. Once it reaches its target position on the swirls surface, it is
+        // integrated into the swirl and moves forever on the surface.
         private void onParticleLandedOnFloor(AbstractEnergizerFragment particle) {
-            particle.setGhostColorIndex(randomByte(0, 4));
-            particle.shape().setMaterial(ghostDressMaterials.get(particle.ghostColorIndex()));
+            // Select random ghost ID and assign target swirl where particle will be finally end
+            final byte[] ghostIDs = {
+                Globals.RED_GHOST_SHADOW,
+                Globals.PINK_GHOST_SPEEDY,
+                Globals.CYAN_GHOST_BASHFUL,
+                Globals.ORANGE_GHOST_POKEY
+            };
+            final byte ghostID = ghostIDs[randomInt(0, ghostIDs.length)];
+            final int swirlIndex = switch (ghostID) {
+                case Globals.CYAN_GHOST_BASHFUL -> 0;
+                case Globals.RED_GHOST_SHADOW, Globals.PINK_GHOST_SPEEDY -> 1;
+                case Globals.ORANGE_GHOST_POKEY -> 2;
+                default -> throw new IllegalArgumentException("Illegal ghost ID: " + ghostID);
+            };
+
+            particle.shape().setMaterial(ghostDressMaterials.get(ghostID));
+            particle.shape().setTranslateZ(-0.5 * particle.size()); // put particle on floor surface
+
+            // Set uniform size for particles returning to house
             particle.setSize(2 * PARTICLE_RADIUS_RETURNING_HOME);
-            particle.shape().setTranslateZ(-0.5 * particle.size()); // floor top is at z=0
+
+            particle.setTargetSwirlGroup(swirlAnimations.get(swirlIndex).swirlGroup());
+
             final var swirlCenter = new Point3D(
-                ghostRevivalPositionCenters[particle.ghostColorIndex()].x(),
-                ghostRevivalPositionCenters[particle.ghostColorIndex()].y(),
+                ghostRevivalPositionCenters[ghostID].x(),
+                ghostRevivalPositionCenters[ghostID].y(),
                 0); // floor top is at z=0
-            particle.setTargetPosition(randomPointOnLateralSurface(swirlCenter, SWIRL_RADIUS, SWIRL_HEIGHT));
+            particle.setTargetPosition(randomPointOnLateralSwirlSurface(swirlCenter));
 
             final float speed = randomFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
             particle.setVelocity(new Vector3f(
@@ -122,50 +144,40 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
             ).normalized().mul(speed));
         }
 
-        private boolean moveHome(AbstractEnergizerFragment particle) {
-            // if target reached, move particle to its column group
+        private boolean moveTowardsTargetPosition(AbstractEnergizerFragment particle) {
             final double distXY = Math.hypot(
                 particle.shape().getTranslateX() - particle.targetPosition().getX(),
                 particle.shape().getTranslateY() - particle.targetPosition().getY());
-            final boolean homePositionReached = distXY < particle.velocity().length();
-            if (!homePositionReached) {
+            final boolean targetPositionReached = distXY < particle.velocity().length();
+            if (!targetPositionReached) {
                 particle.move();
             }
-            return homePositionReached;
+            return targetPositionReached;
         }
 
-        private Point3D randomPointOnLateralSurface(Point3D center, double r, double h) {
+        private Point3D randomPointOnLateralSwirlSurface(Point3D swirlCenter) {
             final double angle = Math.toRadians(randomInt(0, 360));
             return new Point3D(
-                center.getX() + r * Math.cos(angle),
-                center.getY() + r * Math.sin(angle),
-                randomFloat(0, (float) h)
+                swirlCenter.getX() + SWIRL_RADIUS * Math.cos(angle),
+                swirlCenter.getY() + SWIRL_RADIUS * Math.sin(angle),
+                randomFloat(0, SWIRL_HEIGHT)
             );
         }
 
-        private void onParticleReachedHome(AbstractEnergizerFragment particle, List<Group> swirls) {
-            final Group swirl = swirls.get(swirlIndex(particle.ghostColorIndex()));
-            final Shape3D particleShape = particle.shape();
-            final Point3D targetPosition = particle.targetPosition();
-            particleShape.setTranslateX(targetPosition.getX() - swirl.getTranslateX());
-            particleShape.setTranslateY(targetPosition.getY() - swirl.getTranslateY());
-            particleShape.setTranslateZ(targetPosition.getZ());
-            particle.setVelocity(new Vector3f(0, 0, -SWIRL_RISING_SPEED));
+        private void onParticleReachedTargetPosition(AbstractEnergizerFragment particle) {
             Platform.runLater(() -> {
+                final Point3D targetPosition = particle.targetPosition();
+                final Shape3D particleShape = particle.shape();
                 if (particleShapesGroup != null) {
                     particleShapesGroup.getChildren().remove(particleShape);
-                    swirl.getChildren().add(particleShape);
+                    particle.targetSwirlGroup().getChildren().add(particleShape);
+                    // Set position relative to swirl group
+                    particleShape.setTranslateX(targetPosition.getX() - particle.targetSwirlGroup().getTranslateX());
+                    particleShape.setTranslateY(targetPosition.getY() - particle.targetSwirlGroup().getTranslateY());
+                    particleShape.setTranslateZ(targetPosition.getZ());
+                    particle.setVelocity(new Vector3f(0, 0, -SWIRL_RISING_SPEED));
                 }
             });
-        }
-
-        private int swirlIndex(byte personality) {
-            return switch (personality) {
-                case CYAN_GHOST_BASHFUL -> 0;
-                case RED_GHOST_SHADOW, PINK_GHOST_SPEEDY -> 1;
-                case ORANGE_GHOST_POKEY -> 2;
-                default -> throw new IllegalArgumentException("Illegal ghost personality: " + personality);
-            };
         }
 
         private void moveInsideSwirl(AbstractEnergizerFragment particle) {
@@ -220,11 +232,11 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
         }
     }
 
-    public EnergizerExplosionAndSwirlAnimation(
+    public EnergizerParticlesAnimation(
         AnimationRegistry animationRegistry,
         Point3D origin,
-        List<Group> swirls,
         Vector2f[] ghostRevivalPositionCenters,
+        List<ArcadeHouse3D.SwirlAnimation> swirlAnimations,
         Group particlesGroupContainer,
         Material particleMaterial,
         List<PhongMaterial> ghostDressMaterials,
@@ -233,8 +245,8 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
         super(animationRegistry, "Energizer_Explosion");
 
         this.origin = requireNonNull(origin);
-        this.swirls = requireNonNull(swirls);
         this.ghostRevivalPositionCenters = requireNonNull(ghostRevivalPositionCenters);
+        this.swirlAnimations = requireNonNull(swirlAnimations);
         this.particlesGroupContainer = requireNonNull(particlesGroupContainer);
         this.particleMaterial = requireNonNull(particleMaterial);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
@@ -273,6 +285,9 @@ public class EnergizerExplosionAndSwirlAnimation extends RegisteredAnimation {
         }
         if (ghostRevivalPositionCenters != null) {
             ghostRevivalPositionCenters = null;
+        }
+        if (swirlAnimations != null) {
+            swirlAnimations = null;
         }
         if (particles != null) {
             for (AbstractEnergizerFragment particle : particles) {

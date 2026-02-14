@@ -8,6 +8,7 @@ import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector3f;
 import javafx.geometry.Point3D;
+import javafx.scene.Group;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Shape3D;
 
@@ -68,10 +69,7 @@ public abstract class AbstractEnergizerFragment implements Disposable {
     /** Current animation state of the fragment. */
     private FragmentState state = FragmentState.FLYING;
 
-    /**
-     * Index of the ghost color associated with this fragment, or {@code -1} if no color is associated.
-     */
-    private byte ghostColorIndex = -1;
+    private Group targetSwirlGroup;
 
     /**
      * Target position inside the ghost house. Used when the fragment is in {@link FragmentState#INSIDE_SWIRL}.
@@ -136,20 +134,12 @@ public abstract class AbstractEnergizerFragment implements Disposable {
         return state;
     }
 
-    /**
-     * @return the ghost color index associated with this fragment, or {@code -1}
-     */
-    public byte ghostColorIndex() {
-        return ghostColorIndex;
+    public Group targetSwirlGroup() {
+        return targetSwirlGroup;
     }
 
-    /**
-     * Sets the ghost color index for this fragment.
-     *
-     * @param index a valid ghost personality index, or {@code -1}
-     */
-    public void setGhostColorIndex(byte index) {
-        ghostColorIndex = Validations.requireValidGhostPersonality(index);
+    public void setTargetSwirlGroup(Group targetSwirlGroup) {
+        this.targetSwirlGroup = targetSwirlGroup;
     }
 
     /**

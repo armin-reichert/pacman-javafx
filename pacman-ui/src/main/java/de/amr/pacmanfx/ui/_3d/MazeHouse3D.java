@@ -79,8 +79,8 @@ public class MazeHouse3D implements Disposable {
         return arcadeHouse3D;
     }
 
-    public List<Group> swirls() {
-        return arcadeHouse3D.swirls();
+    public List<ArcadeHouse3D.SwirlAnimation> swirlAnimations() {
+        return arcadeHouse3D.swirlAnimations();
     }
 
     public Group doors() {
@@ -95,11 +95,7 @@ public class MazeHouse3D implements Disposable {
         arcadeHouse3D.stopSwirlAnimations();
     }
 
-    public void cleanUp() {
-        for (Group swirl : arcadeHouse3D.swirls()) {
-            swirl.getChildren().clear();
-        }
-    }
+    public void cleanUp() {}
 
     public void update(GameLevel level) {
         arcadeHouse3D.update(level);

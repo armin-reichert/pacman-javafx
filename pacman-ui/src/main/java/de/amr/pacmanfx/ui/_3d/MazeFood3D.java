@@ -12,8 +12,9 @@ import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndSwirlAnimation;
+import de.amr.pacmanfx.uilib.animation.EnergizerParticlesAnimation;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
+import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.model3D.SphericalEnergizer3D;
@@ -61,22 +62,21 @@ public class MazeFood3D implements Disposable {
         AnimationRegistry animationRegistry,
         GameLevel level,
         List<PhongMaterial> ghostMaterials,
-        List<Group> swirls,
-        Box floor3D)
+        Box floor3D,
+        List<ArcadeHouse3D.SwirlAnimation> swirlAnimations)
     {
         this.prefs = requireNonNull(prefs);
         requireNonNull(colorScheme);
         this.animationRegistry = requireNonNull(animationRegistry);
         this.level = requireNonNull(level);
         requireNonNull(ghostMaterials);
-        requireNonNull(swirls);
         this.floor3D = requireNonNull(floor3D);
 
         pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
         particleMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()).deriveColor(0, 0.5, 1.5, 0.5));
 
         createPellets3D();
-        createEnergizers3D(ghostMaterials, swirls);
+        createEnergizers3D(ghostMaterials, swirlAnimations);
     }
 
     @Override
@@ -148,14 +148,14 @@ public class MazeFood3D implements Disposable {
         return pelletShape;
     }
 
-    private void createEnergizers3D(List<PhongMaterial> ghostMaterials, List<Group> swirls) {
+    private void createEnergizers3D(List<PhongMaterial> ghostMaterials, List<ArcadeHouse3D.SwirlAnimation> swirlAnimations) {
         final float radius     = prefs.getFloat("3d.energizer.radius");
         final float minScaling = prefs.getFloat("3d.energizer.scaling.min");
         final float maxScaling = prefs.getFloat("3d.energizer.scaling.max");
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         energizers3D = foodLayer.tiles().filter(foodLayer::hasFoodAtTile)
                 .filter(foodLayer::isEnergizerTile)
-                .map(tile -> createAnimatedEnergizer3D(tile, radius, minScaling, maxScaling, ghostMaterials, swirls, floor3D))
+                .map(tile -> createAnimatedEnergizer3D(tile, radius, minScaling, maxScaling, ghostMaterials, floor3D, swirlAnimations))
                 .collect(Collectors.toCollection(HashSet::new));
     }
 
@@ -165,28 +165,28 @@ public class MazeFood3D implements Disposable {
         float minScaling,
         float maxScaling,
         List<PhongMaterial> ghostMaterials,
-        List<Group> swirls,
-        Box floor3D)
+        Box floor3D,
+        List<ArcadeHouse3D.SwirlAnimation> swirlAnimations)
     {
 
         final var energizer3D = createEnergizer3D(tile, radius, minScaling, maxScaling);
 
         final House house = level.worldMap().terrainLayer().optHouse().orElseThrow();
         final Vector2i[] ghostRevivalTiles = {
-                house.ghostRevivalTile(RED_GHOST_SHADOW),
-                house.ghostRevivalTile(PINK_GHOST_SPEEDY),
-                house.ghostRevivalTile(CYAN_GHOST_BASHFUL),
-                house.ghostRevivalTile(ORANGE_GHOST_POKEY),
+            house.ghostRevivalTile(RED_GHOST_SHADOW),
+            house.ghostRevivalTile(PINK_GHOST_SPEEDY),
+            house.ghostRevivalTile(CYAN_GHOST_BASHFUL),
+            house.ghostRevivalTile(ORANGE_GHOST_POKEY),
         };
 
         final Vector2f[] ghostRevivalCenters = {
-                revivalPositionCenter(ghostRevivalTiles[RED_GHOST_SHADOW]),
-                revivalPositionCenter(ghostRevivalTiles[PINK_GHOST_SPEEDY]),
-                revivalPositionCenter(ghostRevivalTiles[CYAN_GHOST_BASHFUL]),
-                revivalPositionCenter(ghostRevivalTiles[ORANGE_GHOST_POKEY])
+            revivalPositionCenter(ghostRevivalTiles[RED_GHOST_SHADOW]),
+            revivalPositionCenter(ghostRevivalTiles[PINK_GHOST_SPEEDY]),
+            revivalPositionCenter(ghostRevivalTiles[CYAN_GHOST_BASHFUL]),
+            revivalPositionCenter(ghostRevivalTiles[ORANGE_GHOST_POKEY])
         };
 
-        setEatenAnimation(energizer3D, ghostMaterials, ghostRevivalCenters, swirls, floor3D);
+        setEatenAnimation(energizer3D, ghostMaterials, ghostRevivalCenters, swirlAnimations, floor3D);
         return energizer3D;
     }
 
@@ -210,23 +210,23 @@ public class MazeFood3D implements Disposable {
         Energizer3D energizer3D,
         List<PhongMaterial> ghostParticleMaterials,
         Vector2f[] ghostRevivalPositions,
-        List<Group> swirls,
+        List<ArcadeHouse3D.SwirlAnimation> swirlAnimations,
         Box floor3D)
     {
         final Point3D energizerCenter = new Point3D(
-                energizer3D.shape().getTranslateX(),
-                energizer3D.shape().getTranslateY(),
-                energizer3D.shape().getTranslateZ());
+            energizer3D.shape().getTranslateX(),
+            energizer3D.shape().getTranslateY(),
+            energizer3D.shape().getTranslateZ());
 
-        final var explosion = new EnergizerExplosionAndSwirlAnimation(
-                animationRegistry,
-                energizerCenter,
-                swirls,
-                ghostRevivalPositions,
-                particleGroupsContainer,
-                particleMaterial,
-                ghostParticleMaterials,
-                floor3D);
+        final var explosion = new EnergizerParticlesAnimation(
+            animationRegistry,
+            energizerCenter,
+            ghostRevivalPositions,
+            swirlAnimations,
+            particleGroupsContainer,
+            particleMaterial,
+            ghostParticleMaterials,
+            floor3D);
 
         // Important: Without gravity, explosion particles do not fall to floor and do not return to house!
         explosion.setGravity(GameLevel3D.GRAVITY);
