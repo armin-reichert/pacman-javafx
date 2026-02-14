@@ -289,6 +289,22 @@ public class ArcadeHouse3D extends Group implements Disposable {
         }
     }
 
+    public void disposeSwirlAnimations() {
+        for (var swirlAnimation : swirlAnimations) {
+            final Group swirlGroup = swirlAnimation.swirlGroup();
+            swirlGroup.getChildren().forEach(child -> {
+                if (child instanceof Disposable particle) {
+                    particle.dispose();
+                }
+            });
+            swirlGroup.getChildren().clear();
+            swirlAnimation.dispose();
+        }
+        swirlAnimations.clear();
+        swirlAnimations = null;
+        Logger.info("Disposed swirl animations");
+    }
+
     @Override
     public void dispose() {
         doorsMeltingAnimation.stop();
@@ -296,29 +312,11 @@ public class ArcadeHouse3D extends Group implements Disposable {
         doorsMeltingAnimation = null;
 
         if (swirlAnimations != null) {
-            for (RegisteredAnimation swirlAnimation : swirlAnimations) {
-                swirlAnimation.dispose();
-            }
-            swirlAnimations.clear();
-            swirlAnimations = null;
-            Logger.info("Disposed swirl animations");
-        }
-        for (Node child : getChildren()) {
-            Wall3D.dispose(child); // does nothing if child is not part of 3D wall
+            disposeSwirlAnimations();
         }
 
-        if (swirlAnimations != null) {
-            for (var swirlAnimation : swirlAnimations) {
-                final Group swirlGroup = swirlAnimation.swirlGroup();
-                swirlGroup.getChildren().forEach(child -> {
-                    if (child instanceof Disposable particle) {
-                        particle.dispose();
-                    }
-                });
-                swirlGroup.getChildren().clear();
-            }
-            Logger.info("Disposed swirls and their particles");
-            swirlAnimations = null;
+        for (Node child : getChildren()) {
+            Wall3D.dispose(child); // does nothing if child is not part of 3D wall
         }
 
         getChildren().clear();

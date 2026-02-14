@@ -95,7 +95,9 @@ public class MazeHouse3D implements Disposable {
         arcadeHouse3D.stopSwirlAnimations();
     }
 
-    public void cleanUp() {}
+    public void cleanUp() {
+        arcadeHouse3D.disposeSwirlAnimations();
+    }
 
     public void update(GameLevel level) {
         arcadeHouse3D.update(level);
