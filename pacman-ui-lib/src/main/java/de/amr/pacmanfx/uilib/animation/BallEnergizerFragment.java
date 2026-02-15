@@ -10,10 +10,7 @@ import javafx.scene.shape.Sphere;
 
 public class BallEnergizerFragment extends AbstractEnergizerFragment {
 
-    /** Number of subdivisions used for the sphere mesh. */
-    private static final short MESH_DIVISIONS = 8;
-
-    private final Sphere ball;
+    private Sphere ball;
 
     /**
      * Creates a new energizer fragment.
@@ -21,13 +18,29 @@ public class BallEnergizerFragment extends AbstractEnergizerFragment {
      * @param radius   the sphere radius
      * @param material the material applied to the sphere
      * @param origin   the initial world position of the fragment
+     * @param divisions the mesh subdivisions of the sphere
      */
-    public BallEnergizerFragment(double radius, Material material, Point3D origin) {
-        ball = new Sphere(radius, MESH_DIVISIONS);
+    public BallEnergizerFragment(double radius, Material material, Point3D origin, int divisions) {
+        ball = new Sphere(radius, divisions);
         ball.setMaterial(material);
         ball.setTranslateX(origin.getX());
         ball.setTranslateY(origin.getY());
         ball.setTranslateZ(origin.getZ());
+    }
+
+    private Sphere modifiedBall(int divisions) {
+        final Sphere newBall = new Sphere(ball.getRadius(), divisions);
+        newBall.setMaterial(ball.getMaterial());
+        newBall.setTranslateX(ball.getTranslateX());
+        newBall.setTranslateY(ball.getTranslateY());
+        newBall.setTranslateZ(ball.getTranslateZ());
+        return newBall;
+    }
+
+    public void changeBallMeshResolution(int divisions) {
+        if (ball.getDivisions() != divisions) {
+            ball = modifiedBall(divisions);
+        }
     }
 
     @Override

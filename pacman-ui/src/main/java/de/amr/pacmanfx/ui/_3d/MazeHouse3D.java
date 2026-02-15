@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
+import de.amr.pacmanfx.uilib.animation.SwirlAnimation;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
@@ -79,7 +80,7 @@ public class MazeHouse3D implements Disposable {
         return arcadeHouse3D;
     }
 
-    public List<ArcadeHouse3D.SwirlAnimation> swirlAnimations() {
+    public List<SwirlAnimation> swirlAnimations() {
         return arcadeHouse3D.swirlAnimations();
     }
 

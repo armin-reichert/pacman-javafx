@@ -11,11 +11,9 @@ import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerParticlesAnimation;
+import de.amr.pacmanfx.uilib.animation.SwirlAnimation;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
-import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
-import de.amr.pacmanfx.uilib.model3D.Energizer3D;
-import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
-import de.amr.pacmanfx.uilib.model3D.SphericalEnergizer3D;
+import de.amr.pacmanfx.uilib.model3D.*;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -54,7 +52,7 @@ public class MazeFood3D implements Disposable {
     private Set<Shape3D> pellets3D = Set.of();
     private Set<Energizer3D> energizers3D = Set.of();
     private final Group particleGroupsContainer = new Group();
-    private final List<ArcadeHouse3D.SwirlAnimation> swirlAnimations;
+    private final List<SwirlAnimation> swirlAnimations;
 
     public MazeFood3D(
         PreferencesManager prefs,
@@ -63,7 +61,7 @@ public class MazeFood3D implements Disposable {
         GameLevel level,
         List<PhongMaterial> ghostMaterials,
         Box floor3D,
-        List<ArcadeHouse3D.SwirlAnimation> swirlAnimations)
+        List<SwirlAnimation> swirlAnimations)
     {
         this.prefs = requireNonNull(prefs);
         requireNonNull(colorScheme);
@@ -191,7 +189,7 @@ public class MazeFood3D implements Disposable {
     private EnergizerParticlesAnimation createParticlesAnimation(
         Energizer3D energizer3D,
         List<PhongMaterial> ghostParticleMaterials,
-        List<ArcadeHouse3D.SwirlAnimation> swirlAnimations,
+        List<SwirlAnimation> swirlAnimations,
         Box floor3D)
     {
         final Point3D energizerCenter = new Point3D(
@@ -202,7 +200,7 @@ public class MazeFood3D implements Disposable {
         final var particlesAnimation = new EnergizerParticlesAnimation(
             animationRegistry,
             energizerCenter,
-            swirlAnimations.stream().map(ArcadeHouse3D.SwirlAnimation::swirlGroup).toList(),
+            swirlAnimations.stream().map(SwirlAnimation::swirlGroup).toList(),
             particleMaterial,
             ghostParticleMaterials,
             floor3D);

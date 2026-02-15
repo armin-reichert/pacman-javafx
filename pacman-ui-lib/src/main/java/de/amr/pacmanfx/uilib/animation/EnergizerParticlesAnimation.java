@@ -31,6 +31,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class EnergizerParticlesAnimation extends RegisteredAnimation {
 
+    private static final int MESH_DIVISIONS_HIGH = 8;
+    private static final int MESH_DIVISIONS_LOW  = 4;
+
     private static final float SWIRL_RADIUS = 7;
     private static final float SWIRL_HEIGHT = 12;
 
@@ -118,6 +121,13 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
                 case Globals.ORANGE_GHOST_POKEY -> 2;
                 default -> throw new IllegalArgumentException("Illegal ghost ID: " + ghostID);
             };
+
+            //TODO find better way
+            if (particle instanceof BallEnergizerFragment ballParticle) {
+                particleShapesGroup.getChildren().remove(ballParticle.shape());
+                ballParticle.changeBallMeshResolution(MESH_DIVISIONS_LOW);
+                particleShapesGroup.getChildren().add(ballParticle.shape());
+            }
 
             particle.shape().setMaterial(ghostDressMaterials.get(ghostID));
 
@@ -208,7 +218,7 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
             particles.clear();
             particleShapesGroup.getChildren().clear();
             for (int i = 0; i < PARTICLE_COUNT; ++i) {
-                final var particle = new BallEnergizerFragment(randomParticleRadius(), particleMaterial, origin);
+                final var particle = new BallEnergizerFragment(randomParticleRadius(), particleMaterial, origin, MESH_DIVISIONS_HIGH);
                 particle.setVelocity(randomParticleVelocity());
                 particle.shape().setVisible(true);
                 particles.add(particle);

@@ -18,6 +18,7 @@ import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.SwirlAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.assets.Translator;
@@ -116,7 +117,7 @@ public class GameLevel3D extends Group implements Disposable {
         getChildren().add(livesCounter3D);
         getChildren().addAll(pac3D, pac3D.light());
         getChildren().addAll(ghosts3D);
-        getChildren().addAll(maze3D.house().swirlAnimations().stream().map(ArcadeHouse3D.SwirlAnimation::swirlGroup).toList());
+        getChildren().addAll(maze3D.house().swirlAnimations().stream().map(SwirlAnimation::swirlGroup).toList());
         getChildren().add(maze3D.food().particleGroupsContainer());
         getChildren().addAll(maze3D.food().energizers3D().stream().map(Energizer3D::shape).toList());
         getChildren().addAll(maze3D.food().pellets3D());
