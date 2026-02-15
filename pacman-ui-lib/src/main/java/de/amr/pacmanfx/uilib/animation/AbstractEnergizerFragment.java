@@ -104,10 +104,10 @@ public abstract class AbstractEnergizerFragment implements Disposable {
     /**
      * Sets the fragment's velocity.
      *
-     * @param velocity a non-null velocity vector
+     * @param velocity a velocity vector
      */
     public void setVelocity(Vector3f velocity) {
-        this.velocity = requireNonNull(velocity);
+        this.velocity = velocity;
     }
 
     /**

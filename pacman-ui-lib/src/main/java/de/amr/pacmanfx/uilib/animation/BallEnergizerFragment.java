@@ -38,6 +38,9 @@ public class BallEnergizerFragment extends AbstractEnergizerFragment {
     @Override
     public void dispose() {
         ball.setMaterial(null);
+        setVelocity(null);
+        setTargetPosition(null);
+        setTargetSwirlGroup(null);
     }
 
     @Override

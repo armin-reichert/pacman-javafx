@@ -5,10 +5,10 @@ package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.math.Vector3f;
+import de.amr.pacmanfx.uilib.animation.AbstractEnergizerFragment.FragmentState;
 import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
-import javafx.application.Platform;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.Material;
@@ -34,7 +34,8 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
 
     private static final float SWIRL_RADIUS = 7;
     private static final float SWIRL_HEIGHT = 12;
-    private static final float SWIRL_RISING_SPEED = 0.5f;
+
+    private static final Vector3f SWIRL_RISING_VELOCITY = new Vector3f(0, 0, -0.5f);
 
     // Time includes movement of particles to the ghost house after the explosion
     private static final Duration PARTICLE_SWARM_DROPPERS_DISPOSAL_TIME = Duration.seconds(15);
@@ -42,7 +43,7 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
     private static final short PARTICLE_COUNT = 500;
 
     private static final float PARTICLE_MEAN_RADIUS_UNSCALED = 0.2f;
-    private static final float PARTICLE_RADIUS_RETURNING_HOME = 0.15f;
+    private static final float PARTICLE_SIZE_WHEN_RETURNING_HOME = 0.4f;
 
     private static final float PARTICLE_SPEED_EXPLODING_XY_MIN = 0.0f;
     private static final float PARTICLE_SPEED_EXPLODING_XY_MAX = 1.0f;
@@ -54,6 +55,13 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
     private static final float PARTICLE_SPEED_MOVING_HOME_MAX = 0.8f;
 
     private static final int PARTICLE_REMOVAL_Z = 50;
+
+    private static final byte[] GHOST_IDS = {
+        Globals.RED_GHOST_SHADOW,
+        Globals.PINK_GHOST_SPEEDY,
+        Globals.CYAN_GHOST_BASHFUL,
+        Globals.ORANGE_GHOST_POKEY
+    };
 
     private final Point3D origin;
     private final Box floor3D;
@@ -78,40 +86,33 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
         protected void interpolate(double t) {
             for (AbstractEnergizerFragment particle : particles) {
                 switch (particle.state()) {
-                    case AbstractEnergizerFragment.FragmentState.FLYING -> {
+                    case FragmentState.FLYING -> {
                         particle.fly(gravity);
                         if (particle.collidesWith(floor3D)) {
                             onParticleLandedOnFloor(particle);
-                            particle.setState(AbstractEnergizerFragment.FragmentState.ATTRACTED);
                         } else if (particle.shape().getTranslateZ() > PARTICLE_REMOVAL_Z) {
                             // if particle fell over world border, remove it at some z position under floor level
                             particlesToDispose.add(particle);
                         }
                     }
-                    case AbstractEnergizerFragment.FragmentState.ATTRACTED -> {
+                    case FragmentState.ATTRACTED -> {
                         final boolean homeReached = moveTowardsTargetPosition(particle);
                         if (homeReached) {
                             onParticleReachedTargetPosition(particle);
-                            particle.setState(AbstractEnergizerFragment.FragmentState.INSIDE_SWIRL);
                         }
                     }
-                    case AbstractEnergizerFragment.FragmentState.INSIDE_SWIRL -> moveInsideSwirl(particle);
+                    case FragmentState.INSIDE_SWIRL -> moveInsideSwirl(particle);
                 }
             }
         }
 
-        // When a particle lands on the maze floor, it is resized to a uniform size and gets attracted by a randomly
-        // assigned swirl inside the ghost house. Once it reaches its target position on the swirls surface, it is
-        // integrated into the swirl and moves forever on the surface.
+        /* When a particle lands on the maze floor, it is resized to a uniform size and gets attracted by a randomly
+         * assigned swirl inside the ghost house. Once it reaches its target position (on the swirl surface), it is
+         * integrated into the swirl and moves forever on the swirl surface.
+         */
         private void onParticleLandedOnFloor(AbstractEnergizerFragment particle) {
-            // Select random ghost ID and assign target swirl where particle will be finally end
-            final byte[] ghostIDs = {
-                Globals.RED_GHOST_SHADOW,
-                Globals.PINK_GHOST_SPEEDY,
-                Globals.CYAN_GHOST_BASHFUL,
-                Globals.ORANGE_GHOST_POKEY
-            };
-            final byte ghostID = ghostIDs[randomInt(0, ghostIDs.length)];
+            // Select random ghost ID and assign target swirl located at that ghost's revival position in the house
+            final byte ghostID = GHOST_IDS[randomInt(0, GHOST_IDS.length)];
             final int swirlIndex = switch (ghostID) {
                 case Globals.CYAN_GHOST_BASHFUL -> 0;
                 case Globals.RED_GHOST_SHADOW, Globals.PINK_GHOST_SPEEDY -> 1;
@@ -120,10 +121,11 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
             };
 
             particle.shape().setMaterial(ghostDressMaterials.get(ghostID));
-            particle.shape().setTranslateZ(-0.5 * particle.size()); // put particle on floor surface
 
             // Set uniform size for particles returning to house
-            particle.setSize(2 * PARTICLE_RADIUS_RETURNING_HOME);
+            particle.setSize(PARTICLE_SIZE_WHEN_RETURNING_HOME);
+            // Put particle on floor surface
+            particle.shape().setTranslateZ(floorSurfaceZ() - 0.5 * particle.size());
 
             final Group targetSwirlGroup = swirlAnimations.get(swirlIndex).swirlGroup();
             particle.setTargetSwirlGroup(targetSwirlGroup);
@@ -137,6 +139,8 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
                 (float) (particle.targetPosition().getY() - particle.shape().getTranslateY()),
                 0
             ).normalized().mul(speed));
+
+            particle.setState(FragmentState.ATTRACTED);
         }
 
         private boolean moveTowardsTargetPosition(AbstractEnergizerFragment particle) {
@@ -160,26 +164,31 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
         }
 
         private void onParticleReachedTargetPosition(AbstractEnergizerFragment particle) {
-            Platform.runLater(() -> {
-                final Point3D targetPosition = particle.targetPosition();
-                final Shape3D particleShape = particle.shape();
-                if (particleShapesGroup != null) {
-                    particleShapesGroup.getChildren().remove(particleShape);
-                    particle.targetSwirlGroup().getChildren().add(particleShape);
-                    // Set position relative to swirl group
-                    particleShape.setTranslateX(targetPosition.getX() - particle.targetSwirlGroup().getTranslateX());
-                    particleShape.setTranslateY(targetPosition.getY() - particle.targetSwirlGroup().getTranslateY());
-                    particleShape.setTranslateZ(targetPosition.getZ());
-                    particle.setVelocity(new Vector3f(0, 0, -SWIRL_RISING_SPEED));
-                }
-            });
+            final Point3D targetPosition = particle.targetPosition();
+            final Shape3D particleShape = particle.shape();
+            final Group targetSwirlGroup = particle.targetSwirlGroup();
+            if (particleShapesGroup != null) {
+                particleShapesGroup.getChildren().remove(particleShape);
+                targetSwirlGroup.getChildren().add(particleShape);
+                // Set position relative to swirl group
+                particleShape.setTranslateX(targetPosition.getX() - targetSwirlGroup.getTranslateX());
+                particleShape.setTranslateY(targetPosition.getY() - targetSwirlGroup.getTranslateY());
+                particleShape.setTranslateZ(targetPosition.getZ());
+                particle.setVelocity(SWIRL_RISING_VELOCITY);
+                particle.setState(FragmentState.INSIDE_SWIRL);
+            }
+            else Logger.error("Particle shapes group is NULL");
         }
 
         private void moveInsideSwirl(AbstractEnergizerFragment particle) {
             particle.move();
             if (particle.shape().getTranslateZ() < -SWIRL_HEIGHT) {
-                particle.shape().setTranslateZ(0);
+                particle.shape().setTranslateZ(floorSurfaceZ() - 0.5 * particle.size());
             }
+        }
+
+        private double floorSurfaceZ() {
+            return floor3D.getTranslateZ() - 0.5 * floor3D.getDepth();
         }
 
         @Override
@@ -191,10 +200,8 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
         @Override
         public void stop() {
             super.stop();
-            if (particles != null) {
-                for (AbstractEnergizerFragment particle : particles) {
-                    particle.setVelocity(Vector3f.ZERO);
-                }
+            for (AbstractEnergizerFragment particle : particles) {
+                particle.setVelocity(Vector3f.ZERO);
             }
         }
 
@@ -229,7 +236,7 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
 
     public EnergizerParticlesAnimation(
         AnimationRegistry animationRegistry,
-        Point3D origin,
+        Point3D energizerCenter,
         List<ArcadeHouse3D.SwirlAnimation> swirlAnimations,
         Material particleMaterial,
         List<PhongMaterial> ghostDressMaterials,
@@ -237,7 +244,7 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
     {
         super(animationRegistry, "Energizer_Explosion");
 
-        this.origin = requireNonNull(origin);
+        this.origin = requireNonNull(energizerCenter);
         this.swirlAnimations = requireNonNull(swirlAnimations);
         this.particleMaterial = requireNonNull(particleMaterial);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
@@ -258,7 +265,7 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
         swarmMovement.setOnFinished(_ -> {
             // Particles that did not make it into the swirl will be disposed
             for (AbstractEnergizerFragment particle : particles) {
-                if (particle.state() != AbstractEnergizerFragment.FragmentState.INSIDE_SWIRL) {
+                if (particle.state() != FragmentState.INSIDE_SWIRL) {
                     particlesToDispose.add(particle);
                 }
             }
@@ -273,8 +280,8 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
 
     @Override
     protected void freeResources() {
-        if (!particles.isEmpty()) {
-            final int particleCount = particles.size();
+        final int particleCount = particles.size();
+        if (particleCount > 0) {
             for (var particle : particles) {
                 particle.dispose();
             }
@@ -286,8 +293,13 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
             particleShapesGroup = null;
             Logger.info("Disposed particle shapes group");
         }
-        final int particleCount = particlesToDispose.size();
-        particlesToDispose.clear();
-        Logger.info("Disposed {} particles that should have been disposed before", particleCount);
+        final int particlesToDisposeCount = particlesToDispose.size();
+        if (particlesToDisposeCount > 0) {
+            for (var particle : particlesToDispose) {
+                particle.dispose();
+            }
+            particlesToDispose.clear();
+            Logger.info("Disposed {} particles that should have been disposed before", particlesToDisposeCount);
+        }
     }
 }
