@@ -7,7 +7,6 @@ package de.amr.pacmanfx.uilib.animation;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector3f;
 import javafx.geometry.Point3D;
-import javafx.scene.Group;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Shape3D;
 
@@ -68,7 +67,7 @@ public abstract class AbstractEnergizerFragment implements Disposable {
     /** Current animation state of the fragment. */
     private FragmentState state = FragmentState.FLYING;
 
-    private Group targetSwirlGroup;
+    private int targetSwirlIndex;
 
     /**
      * Target position inside the ghost house. Used when the fragment is in {@link FragmentState#INSIDE_SWIRL}.
@@ -133,12 +132,12 @@ public abstract class AbstractEnergizerFragment implements Disposable {
         return state;
     }
 
-    public Group targetSwirlGroup() {
-        return targetSwirlGroup;
+    public int targetSwirlIndex() {
+        return targetSwirlIndex;
     }
 
-    public void setTargetSwirlGroup(Group targetSwirlGroup) {
-        this.targetSwirlGroup = targetSwirlGroup;
+    public void setTargetSwirlIndex(int index) {
+        this.targetSwirlIndex = index;
     }
 
     /**

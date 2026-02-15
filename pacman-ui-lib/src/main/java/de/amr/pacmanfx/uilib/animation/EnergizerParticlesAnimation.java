@@ -128,7 +128,7 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
             particle.shape().setTranslateZ(floorSurfaceZ() - 0.5 * particle.size());
 
             final Group targetSwirlGroup = swirlAnimations.get(swirlIndex).swirlGroup();
-            particle.setTargetSwirlGroup(targetSwirlGroup);
+            particle.setTargetSwirlIndex(swirlIndex);
 
             final var swirlCenter = new Point3D(targetSwirlGroup.getTranslateX(), targetSwirlGroup.getTranslateY(), 0);
             particle.setTargetPosition(randomPointOnLateralSwirlSurface(swirlCenter));
@@ -166,7 +166,7 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
         private void onParticleReachedTargetPosition(AbstractEnergizerFragment particle) {
             final Point3D targetPosition = particle.targetPosition();
             final Shape3D particleShape = particle.shape();
-            final Group targetSwirlGroup = particle.targetSwirlGroup();
+            final Group targetSwirlGroup = swirlAnimations.get(particle.targetSwirlIndex()).swirlGroup();
             if (particleShapesGroup != null) {
                 particleShapesGroup.getChildren().remove(particleShape);
                 targetSwirlGroup.getChildren().add(particleShape);

@@ -40,7 +40,6 @@ public class BallEnergizerFragment extends AbstractEnergizerFragment {
         ball.setMaterial(null);
         setVelocity(null);
         setTargetPosition(null);
-        setTargetSwirlGroup(null);
     }
 
     @Override
