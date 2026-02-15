@@ -10,8 +10,8 @@ import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.animation.SwirlAnimation;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -84,7 +84,7 @@ public class Maze3D extends Group implements Disposable {
         createFloor3D(level);
         createObstacles3D(level);
         level.worldMap().terrainLayer().optHouse().ifPresent(this::createHouse3D);
-        createMazeFood3D(level, ghostMaterials, house3D.swirlAnimations());
+        createMazeFood3D(level, ghostMaterials);
     }
 
     /**
@@ -222,7 +222,8 @@ public class Maze3D extends Group implements Disposable {
      * @param level          the level providing pellet and energizer positions
      * @param ghostMaterials materials used for ghost-related visual effects
      */
-    private void createMazeFood3D(GameLevel level, List<PhongMaterial> ghostMaterials, List<SwirlAnimation> swirlAnimations) {
-        food3D = new MazeFood3D(prefs, colorScheme, animationRegistry, level, ghostMaterials, floor3D, swirlAnimations);
+    private void createMazeFood3D(GameLevel level, List<PhongMaterial> ghostMaterials) {
+        final List<Group> swirlGroups = house3D.swirlAnimations().stream().map(SwirlAnimation::swirlGroup).toList();
+        food3D = new MazeFood3D(prefs, colorScheme, animationRegistry, level, ghostMaterials, floor3D, swirlGroups);
     }
 }

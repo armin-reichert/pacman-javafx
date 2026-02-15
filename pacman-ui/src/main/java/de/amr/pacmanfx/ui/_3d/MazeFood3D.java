@@ -11,9 +11,10 @@ import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerParticlesAnimation;
-import de.amr.pacmanfx.uilib.animation.SwirlAnimation;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
-import de.amr.pacmanfx.uilib.model3D.*;
+import de.amr.pacmanfx.uilib.model3D.Energizer3D;
+import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
+import de.amr.pacmanfx.uilib.model3D.SphericalEnergizer3D;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -52,7 +53,6 @@ public class MazeFood3D implements Disposable {
     private Set<Shape3D> pellets3D = Set.of();
     private Set<Energizer3D> energizers3D = Set.of();
     private final Group particleGroupsContainer = new Group();
-    private final List<SwirlAnimation> swirlAnimations;
 
     public MazeFood3D(
         PreferencesManager prefs,
@@ -61,7 +61,7 @@ public class MazeFood3D implements Disposable {
         GameLevel level,
         List<PhongMaterial> ghostMaterials,
         Box floor3D,
-        List<SwirlAnimation> swirlAnimations)
+        List<Group> swirlGroups)
     {
         this.prefs = requireNonNull(prefs);
         requireNonNull(colorScheme);
@@ -69,13 +69,12 @@ public class MazeFood3D implements Disposable {
         this.level = requireNonNull(level);
         requireNonNull(ghostMaterials);
         this.floor3D = requireNonNull(floor3D);
-        this.swirlAnimations = requireNonNull(swirlAnimations);
 
         pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
         particleMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()).deriveColor(0, 0.5, 1.5, 0.5));
 
         createPellets3D();
-        createEnergizers3D(ghostMaterials);
+        createEnergizers3D(ghostMaterials, swirlGroups);
     }
 
     @Override
@@ -147,14 +146,14 @@ public class MazeFood3D implements Disposable {
         return pelletShape;
     }
 
-    private void createEnergizers3D(List<PhongMaterial> ghostMaterials) {
+    private void createEnergizers3D(List<PhongMaterial> ghostMaterials, List<Group> swirlGroups) {
         final float radius     = prefs.getFloat("3d.energizer.radius");
         final float minScaling = prefs.getFloat("3d.energizer.scaling.min");
         final float maxScaling = prefs.getFloat("3d.energizer.scaling.max");
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         energizers3D = foodLayer.tiles().filter(foodLayer::hasFoodAtTile)
             .filter(foodLayer::isEnergizerTile)
-            .map(tile -> createAnimatedEnergizer3D(tile, radius, minScaling, maxScaling, ghostMaterials, floor3D))
+            .map(tile -> createAnimatedEnergizer3D(tile, radius, minScaling, maxScaling, ghostMaterials, floor3D, swirlGroups))
             .collect(Collectors.toCollection(HashSet::new));
     }
 
@@ -164,8 +163,9 @@ public class MazeFood3D implements Disposable {
         float minScaling,
         float maxScaling,
         List<PhongMaterial> ghostMaterials,
-        Box floor3D)
-    {
+        Box floor3D,
+        List<Group> swirlGroups
+    ) {
         final var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
         final var energizer3D = new SphericalEnergizer3D(
             animationRegistry,
@@ -176,11 +176,13 @@ public class MazeFood3D implements Disposable {
             pelletMaterial,
             tile);
 
+        //TODO there si still memory leaking!
         final EnergizerParticlesAnimation particlesAnimation = createParticlesAnimation(
             energizer3D,
             ghostMaterials,
-            swirlAnimations,
+            swirlGroups,
             floor3D);
+
         energizer3D.setEatenAnimation(particlesAnimation);
 
         return energizer3D;
@@ -189,7 +191,7 @@ public class MazeFood3D implements Disposable {
     private EnergizerParticlesAnimation createParticlesAnimation(
         Energizer3D energizer3D,
         List<PhongMaterial> ghostParticleMaterials,
-        List<SwirlAnimation> swirlAnimations,
+        List<Group> swirlGroups,
         Box floor3D)
     {
         final Point3D energizerCenter = new Point3D(
@@ -200,7 +202,7 @@ public class MazeFood3D implements Disposable {
         final var particlesAnimation = new EnergizerParticlesAnimation(
             animationRegistry,
             energizerCenter,
-            swirlAnimations.stream().map(SwirlAnimation::swirlGroup).toList(),
+            swirlGroups,
             particleMaterial,
             ghostParticleMaterials,
             floor3D);

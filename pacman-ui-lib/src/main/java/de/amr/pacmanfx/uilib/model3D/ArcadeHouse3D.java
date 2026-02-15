@@ -13,8 +13,10 @@ import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.uilib.UfxColors;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
-import de.amr.pacmanfx.uilib.animation.SwirlAnimation;
-import javafx.animation.*;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -27,10 +29,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import org.tinylog.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -38,12 +36,6 @@ import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static de.amr.pacmanfx.uilib.UfxColors.colorWithOpacity;
 import static java.util.Objects.requireNonNull;
 
-/**
- * 3D house in Arcade style.
- *
- * <p>At each ghost position inside the house, a swirl attracts the particles emitted by
- * exploding energizers.</p>
- */
 public class ArcadeHouse3D extends Group implements Disposable {
 
     private static final int DOOR_VERTICAL_BAR_COUNT = 4;
@@ -69,12 +61,10 @@ public class ArcadeHouse3D extends Group implements Disposable {
     private float doorSensitivity = 10;
 
     private RegisteredAnimation doorsMeltingAnimation;
-    private List<SwirlAnimation> swirlAnimations = new ArrayList<>(3);
 
     public ArcadeHouse3D(
         AnimationRegistry animationRegistry,
         House house,
-        Vector2f[] ghostRevivalPositionCenters,
         double baseHeight,
         double wallThickness,
         double opacity)
@@ -138,16 +128,6 @@ public class ArcadeHouse3D extends Group implements Disposable {
         light.setTranslateX(houseCenter.x());
         light.setTranslateY(houseCenter.y());
         light.translateZProperty().bind(wallBaseHeightProperty.multiply(-1));
-
-        //getChildren().addAll(doors /*,light*/);
-
-        // These groups are added to their parent in GameLevel3D to ensure correct ordering!
-        for (int i = 0; i < ghostRevivalPositionCenters.length; ++i) {
-            var animation = new SwirlAnimation(animationRegistry, "Swirl_%d".formatted(i));
-            swirlAnimations.add(animation);
-            animation.swirlGroup().setTranslateX(ghostRevivalPositionCenters[i].x());
-            animation.swirlGroup().setTranslateY(ghostRevivalPositionCenters[i].y());
-        }
 
         doorsMeltingAnimation = new RegisteredAnimation(animationRegistry, "Doors_Melting") {
             @Override
@@ -224,10 +204,6 @@ public class ArcadeHouse3D extends Group implements Disposable {
         });
     }
 
-    public List<SwirlAnimation> swirlAnimations() {
-        return swirlAnimations;
-    }
-
     public BooleanProperty openProperty() {return doorsOpenProperty;}
 
     public DoubleProperty wallBaseHeightProperty() {
@@ -250,35 +226,6 @@ public class ArcadeHouse3D extends Group implements Disposable {
         return light;
     }
 
-    public void startSwirlAnimations() {
-        if (swirlAnimations != null) {
-            swirlAnimations.forEach(RegisteredAnimation::playFromStart);
-            Logger.info("Swirl animations started");
-        }
-    }
-
-    public void stopSwirlAnimations() {
-        if (swirlAnimations != null) {
-            swirlAnimations.forEach(RegisteredAnimation::stop);
-        }
-    }
-
-    public void disposeSwirlAnimations() {
-        for (var swirlAnimation : swirlAnimations) {
-            final Group swirlGroup = swirlAnimation.swirlGroup();
-            swirlGroup.getChildren().forEach(child -> {
-                if (child instanceof Disposable particle) {
-                    particle.dispose();
-                }
-            });
-            swirlGroup.getChildren().clear();
-            swirlAnimation.dispose();
-        }
-        swirlAnimations.clear();
-        swirlAnimations = null;
-        Logger.info("Disposed swirl animations");
-    }
-
     @Override
     public void dispose() {
         openProperty().unbind();
@@ -287,10 +234,6 @@ public class ArcadeHouse3D extends Group implements Disposable {
         doorsMeltingAnimation.stop();
         doorsMeltingAnimation.dispose();
         doorsMeltingAnimation = null;
-
-        if (swirlAnimations != null) {
-            disposeSwirlAnimations();
-        }
 
         for (Node child : getChildren()) {
             Wall3D.dispose(child); // does nothing if child is not part of 3D wall

@@ -11,9 +11,10 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
+import de.amr.pacmanfx.uilib.animation.SwirlAnimation;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
-import de.amr.pacmanfx.uilib.animation.SwirlAnimation;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
@@ -21,6 +22,7 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -30,6 +32,7 @@ public class MazeHouse3D implements Disposable {
 
     private final ArcadeHouse3D arcadeHouse3D;
     private final ChangeListener<Boolean> houseOpenListener;
+    private List<SwirlAnimation> swirlAnimations = new ArrayList<>(3);
 
     public MazeHouse3D(
         PreferencesManager prefs,
@@ -45,14 +48,13 @@ public class MazeHouse3D implements Disposable {
 
         // Note: revival tile is the left of the pair of tiles in the house where the ghost is placed. The center
         //       of the 3D shape is one tile to the right and a half tile to the bottom from the tile origin.
-        final Vector2f[] ghostRevivalPositions = Stream.of(ghostRevivalTiles)
+        final Vector2f[] ghostRevivalPositionCenters = Stream.of(ghostRevivalTiles)
             .map(tile -> tile.scaled((float) TS).plus(TS, HTS))
             .toArray(Vector2f[]::new);
 
         arcadeHouse3D = new ArcadeHouse3D(
             animationRegistry,
             house,
-            ghostRevivalPositions,
             prefs.getFloat("3d.house.base_height"),
             prefs.getFloat("3d.house.wall_thickness"),
             prefs.getFloat("3d.house.opacity")
@@ -70,6 +72,16 @@ public class MazeHouse3D implements Disposable {
             }
         };
         arcadeHouse3D.openProperty().addListener(houseOpenListener);
+
+
+        // These groups are added to their parent in GameLevel3D to ensure correct ordering!
+        for (int i = 0; i < ghostRevivalPositionCenters.length; ++i) {
+            var animation = new SwirlAnimation(animationRegistry, "Swirl_%d".formatted(i));
+            swirlAnimations.add(animation);
+            animation.swirlGroup().setTranslateX(ghostRevivalPositionCenters[i].x());
+            animation.swirlGroup().setTranslateY(ghostRevivalPositionCenters[i].y());
+        }
+
     }
 
     public DoubleProperty wallBaseHeightProperty() {
@@ -81,23 +93,37 @@ public class MazeHouse3D implements Disposable {
     }
 
     public List<SwirlAnimation> swirlAnimations() {
-        return arcadeHouse3D.swirlAnimations();
+        return swirlAnimations;
     }
 
     public Group doors() {
         return arcadeHouse3D.doors();
     }
 
-    public void startAnimations() {
-        arcadeHouse3D.startSwirlAnimations();
+    public void startSwirlAnimations() {
+        if (swirlAnimations != null) {
+            swirlAnimations.forEach(RegisteredAnimation::playFromStart);
+            Logger.info("Swirl animations started");
+        }
     }
 
-    public void stopAnimations() {
-        arcadeHouse3D.stopSwirlAnimations();
+    public void stopSwirlAnimations() {
+        if (swirlAnimations != null) {
+            swirlAnimations.forEach(RegisteredAnimation::stop);
+        }
     }
 
-    public void cleanUp() {
-        arcadeHouse3D.disposeSwirlAnimations();
+    public void deleteSwirlAnimations() {
+        if (swirlAnimations != null) {
+            for (var swirlAnimation : swirlAnimations) {
+                swirlAnimation.stop();
+                swirlAnimation.swirlGroup().getChildren().clear();
+                swirlAnimation.dispose();
+            }
+            swirlAnimations.clear();
+            swirlAnimations = null;
+            Logger.info("Disposed swirl animations");
+        }
     }
 
     public void update(GameLevel level) {
@@ -114,5 +140,6 @@ public class MazeHouse3D implements Disposable {
         Logger.info("Removed 'house open' listener");
         arcadeHouse3D.dispose();
         Logger.info("Disposed 3D house");
+        deleteSwirlAnimations();
     }
 }

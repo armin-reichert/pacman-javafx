@@ -130,7 +130,7 @@ public class GameLevel3D extends Group implements Disposable {
         getChildren().add(animations.ghostLight());
 
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
-        maze3D.house().startAnimations();
+        maze3D.house().startSwirlAnimations();
 
         pickerLevelCompleteMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "level.complete");
     }
@@ -290,7 +290,7 @@ public class GameLevel3D extends Group implements Disposable {
         pac3D.init(level);
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
         maze3D.food().energizers3D().forEach(Energizer3D::startPumping);
-        maze3D.house().startAnimations();
+        maze3D.house().startSwirlAnimations();
         animations.playGhostLightAnimation();
     }
 
@@ -326,14 +326,18 @@ public class GameLevel3D extends Group implements Disposable {
         state.timer().resetIndefiniteTime(); // expires when animation ends
         ui.soundManager().stopAll();
         animationRegistry.stopAllAnimations();
+
         maze3D.food().energizers3D().forEach(Energizer3D::stopPumping); //TODO needed?
         // hide 3D food explicitly because level might have been completed using cheat!
         maze3D.food().pellets3D().forEach(pellet3D -> pellet3D.setVisible(false));
         maze3D.food().energizers3D().forEach(Energizer3D::hide);
         maze3D.food().particleGroupsContainer().getChildren().clear();
-        maze3D.house().cleanUp();
+
         maze3D.house().hideDoors();
+        maze3D.house().deleteSwirlAnimations();
+
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
+
         if (messageView != null) {
             messageView.setVisible(false);
         }
@@ -362,7 +366,7 @@ public class GameLevel3D extends Group implements Disposable {
         state.timer().restartSeconds(3);
         animations.stopGhostLightAnimation();
         maze3D.food().energizers3D().forEach(Energizer3D::hide);
-        maze3D.house().stopAnimations();
+        maze3D.house().stopSwirlAnimations();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         ui.soundManager().stopAll();
         ui.soundManager().play(SoundID.GAME_OVER);
