@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
@@ -69,17 +68,6 @@ public class MazeHouse3D implements Disposable {
             AnimationRegistry animationRegistry,
             House house)
     {
-        final Vector2i[] ghostRevivalTiles = {
-                house.ghostRevivalTile(CYAN_GHOST_BASHFUL),
-                house.ghostRevivalTile(PINK_GHOST_SPEEDY),
-                house.ghostRevivalTile(ORANGE_GHOST_POKEY)
-        };
-
-        // Revival tile is the left tile of the pair. The 3D swirl center is one tile right and half a tile down.
-        final Vector2f[] ghostRevivalPositionCenters = Stream.of(ghostRevivalTiles)
-                .map(tile -> tile.scaled((float) TS).plus(TS, HTS))
-                .toArray(Vector2f[]::new);
-
         arcadeHouse3D = new ArcadeHouse3D(
                 animationRegistry,
                 house,
@@ -103,12 +91,24 @@ public class MazeHouse3D implements Disposable {
         };
         arcadeHouse3D.openProperty().addListener(houseOpenListener);
 
+        createSwirlAnimations(animationRegistry, house);
+    }
+
+    private void createSwirlAnimations(AnimationRegistry animationRegistry, House house) {
+        final List<Vector2f> revivalPositions = Stream.of(
+            house.ghostRevivalTile(CYAN_GHOST_BASHFUL),
+            house.ghostRevivalTile(PINK_GHOST_SPEEDY),
+            house.ghostRevivalTile(ORANGE_GHOST_POKEY))
+            .map(tile -> tile.scaled(TS).plus(TS, HTS).toVector2f())
+            .toList();
+
         // Create swirl animations above the revival tiles
-        for (int i = 0; i < ghostRevivalPositionCenters.length; ++i) {
-            var animation = new SwirlAnimation(animationRegistry, "Swirl_%d".formatted(i));
+        for (int i = 0; i < revivalPositions.size(); i++) {
+            final Vector2f position = revivalPositions.get(i);
+            final var animation = new SwirlAnimation(animationRegistry, "Swirl_%d".formatted(i));
             swirlAnimations.add(animation);
-            animation.swirlGroup().setTranslateX(ghostRevivalPositionCenters[i].x());
-            animation.swirlGroup().setTranslateY(ghostRevivalPositionCenters[i].y());
+            animation.swirlGroup().setTranslateX(position.x());
+            animation.swirlGroup().setTranslateY(position.y());
         }
     }
 
