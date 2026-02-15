@@ -202,7 +202,7 @@ public class MazeFood3D implements Disposable {
         final var particlesAnimation = new EnergizerParticlesAnimation(
             animationRegistry,
             energizerCenter,
-            swirlAnimations,
+            swirlAnimations.stream().map(ArcadeHouse3D.SwirlAnimation::swirlGroup).toList(),
             particleMaterial,
             ghostParticleMaterials,
             floor3D);

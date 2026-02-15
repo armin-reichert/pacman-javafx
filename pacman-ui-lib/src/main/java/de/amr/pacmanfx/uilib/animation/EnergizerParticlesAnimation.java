@@ -6,7 +6,6 @@ package de.amr.pacmanfx.uilib.animation;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.math.Vector3f;
 import de.amr.pacmanfx.uilib.animation.AbstractEnergizerFragment.FragmentState;
-import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.geometry.Point3D;
@@ -65,7 +64,7 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
 
     private final Point3D origin;
     private final Box floor3D;
-    private final List<ArcadeHouse3D.SwirlAnimation> swirlAnimations;
+    private final List<Group> swirlGroups;
     private final Material particleMaterial;
     private final List<PhongMaterial> ghostDressMaterials;
 
@@ -127,7 +126,7 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
             // Put particle on floor surface
             particle.shape().setTranslateZ(floorSurfaceZ() - 0.5 * particle.size());
 
-            final Group targetSwirlGroup = swirlAnimations.get(swirlIndex).swirlGroup();
+            final Group targetSwirlGroup = swirlGroups.get(swirlIndex);
             particle.setTargetSwirlIndex(swirlIndex);
 
             final var swirlCenter = new Point3D(targetSwirlGroup.getTranslateX(), targetSwirlGroup.getTranslateY(), 0);
@@ -166,7 +165,7 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
         private void onParticleReachedTargetPosition(AbstractEnergizerFragment particle) {
             final Point3D targetPosition = particle.targetPosition();
             final Shape3D particleShape = particle.shape();
-            final Group targetSwirlGroup = swirlAnimations.get(particle.targetSwirlIndex()).swirlGroup();
+            final Group targetSwirlGroup = swirlGroups.get(particle.targetSwirlIndex());
             if (particleShapesGroup != null) {
                 particleShapesGroup.getChildren().remove(particleShape);
                 targetSwirlGroup.getChildren().add(particleShape);
@@ -237,7 +236,7 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
     public EnergizerParticlesAnimation(
         AnimationRegistry animationRegistry,
         Point3D energizerCenter,
-        List<ArcadeHouse3D.SwirlAnimation> swirlAnimations,
+        List<Group> swirlGroups,
         Material particleMaterial,
         List<PhongMaterial> ghostDressMaterials,
         Box floor3D)
@@ -245,7 +244,7 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
         super(animationRegistry, "Energizer_Explosion");
 
         this.origin = requireNonNull(energizerCenter);
-        this.swirlAnimations = requireNonNull(swirlAnimations);
+        this.swirlGroups = requireNonNull(swirlGroups);
         this.particleMaterial = requireNonNull(particleMaterial);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
         this.floor3D = requireNonNull(floor3D);
