@@ -28,7 +28,9 @@ This is an implementation of the classic Arcade games Pac-Man and Ms. Pac-Man an
 
 The user interface can be switched between 2D and 3D, even during the gameplay (key combination <kbd>Alt+3</kbd>). The game implementation tries to mimic the original Arcade version as good as possible, however there are some differences, e.g. in the "attract mode" behaviour, or the bonus behaviour in the Ms. Pac-Man game.
 
-The game also contains a game variant (working title "Pac-Man XXL") with 8 different Arcade-like maps (shamelessly stolen from the one and only Shaun Williams 👏, https://github.com/masonicGIT/pacman). To integrate these maps, I implemented a map editor that can either be used as a standalone application or called from within the XXL version of the game). All these maps and all your custom maps are playable in 2D and in 3D! 
+The game also contains a game variant (working title "Pac-Man XXL") with 8 different Arcade-like maps (shamelessly stolen from the one and only Shaun Williams 👏, https://github.com/masonicGIT/pacman). To integrate these maps, I implemented a map editor that can either be used as a standalone application or called from within the XXL version of the game). All these maps and all your custom maps are playable in 2D and in 3D!
+
+The 3D models for Pac-Man and the ghosts have been created and provided for free by Gianmarco Cavallaccio (https://www.artstation.com/gianmart) 👏.
 
 ### How to use custom maps in PacMan XXL
 
