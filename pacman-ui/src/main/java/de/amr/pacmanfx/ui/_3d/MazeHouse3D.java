@@ -64,10 +64,10 @@ public class MazeHouse3D implements Disposable {
      * @param house            the logical ghost house from the game world
      */
     public MazeHouse3D(
-            PreferencesManager prefs,
-            WorldMapColorScheme colorScheme,
-            AnimationRegistry animationRegistry,
-            ArcadeHouse house)
+        PreferencesManager prefs,
+        WorldMapColorScheme colorScheme,
+        AnimationRegistry animationRegistry,
+        ArcadeHouse house)
     {
         arcadeHouse3D = new ArcadeHouse3D(
             animationRegistry,
