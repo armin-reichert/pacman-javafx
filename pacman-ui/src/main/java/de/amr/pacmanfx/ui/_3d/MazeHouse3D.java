@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -66,14 +67,14 @@ public class MazeHouse3D implements Disposable {
             PreferencesManager prefs,
             WorldMapColorScheme colorScheme,
             AnimationRegistry animationRegistry,
-            House house)
+            ArcadeHouse house)
     {
         arcadeHouse3D = new ArcadeHouse3D(
-                animationRegistry,
-                house,
-                prefs.getFloat("3d.house.base_height"),
-                prefs.getFloat("3d.house.wall_thickness"),
-                prefs.getFloat("3d.house.opacity")
+            animationRegistry,
+            house,
+            prefs.getFloat("3d.house.base_height"),
+            prefs.getFloat("3d.house.wall_thickness"),
+            prefs.getFloat("3d.house.opacity")
         );
 
         // Apply color scheme and rendering parameters

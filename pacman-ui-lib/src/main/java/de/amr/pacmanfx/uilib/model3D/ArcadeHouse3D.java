@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.world.House;
+import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.uilib.UfxColors;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
@@ -64,7 +64,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
     public ArcadeHouse3D(
         AnimationRegistry animationRegistry,
-        House house,
+        ArcadeHouse house,
         double baseHeight,
         double wallThickness,
         double opacity)

@@ -65,6 +65,10 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
         Globals.ORANGE_GHOST_POKEY
     };
 
+    private static byte randomGhostID() {
+        return GHOST_IDS[randomInt(0, GHOST_IDS.length)];
+    }
+
     private final Point3D origin;
     private final Box floor3D;
     private final List<Group> swirlGroups;
@@ -113,8 +117,15 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
          * integrated into the swirl and moves forever on the swirl surface.
          */
         private void onParticleLandedOnFloor(AbstractEnergizerFragment particle) {
-            // Select random ghost ID and assign target swirl located at that ghost's revival position in the house
-            final byte ghostID = GHOST_IDS[randomInt(0, GHOST_IDS.length)];
+            //TODO find better way to reshape particles
+            if (particle instanceof BallEnergizerFragment ballParticle) {
+                particleShapesGroup.getChildren().remove(ballParticle.shape());
+                ballParticle.changeBallMeshResolution(MESH_DIVISIONS_LOW);
+                particleShapesGroup.getChildren().add(ballParticle.shape());
+            }
+
+            // Select random ghost ID and assign target swirl at that ghost's revival position in the house
+            final byte ghostID = randomGhostID();
             final int swirlIndex = switch (ghostID) {
                 case Globals.CYAN_GHOST_BASHFUL -> 0;
                 case Globals.RED_GHOST_SHADOW, Globals.PINK_GHOST_SPEEDY -> 1;
@@ -122,23 +133,17 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
                 default -> throw new IllegalArgumentException("Illegal ghost ID: " + ghostID);
             };
 
-            //TODO find better way
-            if (particle instanceof BallEnergizerFragment ballParticle) {
-                particleShapesGroup.getChildren().remove(ballParticle.shape());
-                ballParticle.changeBallMeshResolution(MESH_DIVISIONS_LOW);
-                particleShapesGroup.getChildren().add(ballParticle.shape());
-            }
-
             particle.shape().setMaterial(ghostDressMaterials.get(ghostID));
 
             // Set uniform size for particles returning to house
             particle.setSize(PARTICLE_SIZE_WHEN_RETURNING_HOME);
-            // Put particle on floor surface
+
+            // Place particle on floor surface
             particle.shape().setTranslateZ(floorSurfaceZ() - 0.5 * particle.size());
 
-            final Group targetSwirlGroup = swirlGroups.get(swirlIndex);
             particle.setTargetSwirlIndex(swirlIndex);
 
+            final Group targetSwirlGroup = swirlGroups.get(swirlIndex);
             final var swirlCenter = new Point3D(targetSwirlGroup.getTranslateX(), targetSwirlGroup.getTranslateY(), 0);
             particle.setTargetPosition(randomPointOnLateralSwirlSurface(swirlCenter));
 

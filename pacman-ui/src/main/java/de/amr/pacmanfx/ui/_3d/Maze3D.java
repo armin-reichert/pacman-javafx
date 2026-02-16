@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.world.House;
+import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -83,7 +83,12 @@ public class Maze3D extends Group implements Disposable {
         createMaterials();
         createFloor3D(level);
         createObstacles3D(level);
-        level.worldMap().terrainLayer().optHouse().ifPresent(this::createHouse3D);
+        level.worldMap().terrainLayer().optHouse()
+            .filter(ArcadeHouse.class::isInstance)
+            .map(ArcadeHouse.class::cast)
+            .ifPresentOrElse(
+                this::createHouse3D,
+                () -> Logger.error("For creating 3D house, currently only Arcade house is supported"));
         createMazeFood3D(level, ghostMaterials);
     }
 
@@ -211,7 +216,7 @@ public class Maze3D extends Group implements Disposable {
      *
      * @param house the house model from the world map
      */
-    private void createHouse3D(House house) {
+    private void createHouse3D(ArcadeHouse house) {
         house3D = new MazeHouse3D(prefs, colorScheme, animationRegistry, house);
         getChildren().add(house3D.root());
     }
