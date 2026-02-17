@@ -7,7 +7,6 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
@@ -26,10 +25,10 @@ import java.util.Random;
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSecThen;
+import static java.util.Objects.requireNonNull;
 
 public class GameLevel3DAnimations implements Disposable {
 
-    private final GameUI ui;
     private final GameLevel3D level3D;
 
     private WallColorFlashingAnimation wallColorFlashingAnimation;
@@ -69,10 +68,10 @@ public class GameLevel3DAnimations implements Disposable {
                     pauseSecThen(0.5, () -> level.pac().hide()),
                     pauseSec(0.5),
                     levelSpinningAroundAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
-                    pauseSecThen(0.5, () -> ui.soundManager().play(SoundID.LEVEL_COMPLETE)),
+                    pauseSecThen(0.5, () -> level3D.soundManager().play(SoundID.LEVEL_COMPLETE)),
                     pauseSec(0.5),
                     wallsAndHouseDisappearing(),
-                    pauseSecThen(1.0, () -> ui.soundManager().play(SoundID.LEVEL_CHANGED))
+                    pauseSecThen(1.0, () -> level3D.soundManager().play(SoundID.LEVEL_CHANGED))
             );
         }
 
@@ -246,9 +245,8 @@ public class GameLevel3DAnimations implements Disposable {
         }
     }
 
-    public GameLevel3DAnimations(GameUI ui, GameLevel3D level3D) {
-        this.ui = ui;
-        this.level3D = level3D;
+    public GameLevel3DAnimations(GameLevel3D level3D) {
+        this.level3D = requireNonNull(level3D);
         wallColorFlashingAnimation = new WallColorFlashingAnimation(level3D.animationRegistry());
         levelCompletedFullAnimation = new LevelCompletedAnimation(level3D.animationRegistry());
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(level3D.animationRegistry());

@@ -92,10 +92,11 @@ public class GameLevel3D extends Group implements Disposable {
 
     public GameLevel3D(GameUI ui, GameLevel level) {
         requireNonNull(ui);
+        this.level = requireNonNull(level);
+
         this.prefs = ui.prefs();
         this.uiConfig = ui.currentConfig();
         this.soundManager = ui.soundManager();
-        this.level = requireNonNull(level);
 
         PROPERTY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
 
@@ -117,7 +118,7 @@ public class GameLevel3D extends Group implements Disposable {
         createMaze3D(ghostNormalDressMaterials);
         createAmbientLight();
 
-        animations = new GameLevel3DAnimations(ui, this);
+        animations = new GameLevel3DAnimations(this);
 
         getChildren().add(maze3D.floor());
         getChildren().add(levelCounter3D);
@@ -154,6 +155,10 @@ public class GameLevel3D extends Group implements Disposable {
 
     public Maze3D maze3D() {
         return maze3D;
+    }
+
+    public SoundManager soundManager() {
+        return soundManager;
     }
 
     private GhostColorSet createGhostColorSet(byte personality) {
