@@ -5,10 +5,11 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -27,26 +28,29 @@ import static java.util.Objects.requireNonNull;
 
 public class LevelCounter3D extends Group implements Disposable {
 
+    private final PreferencesManager prefs;
     private final UIConfig uiConfig;
     private final AnimationRegistry animationRegistry;
     private RegisteredAnimation spinningAnimation;
 
-    public LevelCounter3D(AnimationRegistry animationRegistry, UIConfig uiConfig) {
+    public LevelCounter3D(AnimationRegistry animationRegistry, UIConfig uiConfig, PreferencesManager prefs) {
         this.animationRegistry = requireNonNull(animationRegistry);
         this.uiConfig = requireNonNull(uiConfig);
+        this.prefs = requireNonNull(prefs);
     }
 
-    public void update(GameUI ui, Game game) {
+    public void rebuild(GameLevel level) {
+        final Game game = level.game();
+        final float cubeSize = prefs.getFloat("3d.level_counter.symbol_size");
         getChildren().clear();
-        float cubeSize = ui.prefs().getFloat("3d.level_counter.symbol_size");
         for (int i = 0; i < game.levelCounterSymbols().size(); ++i) {
-            Byte symbol = game.levelCounterSymbols().get(i);
-            Image symbolImage = uiConfig.bonusSymbolImage(symbol);
-            var material = new PhongMaterial(Color.WHITE);
-            material.setDiffuseMap(symbolImage);
-            var cube = new Box(cubeSize, cubeSize, cubeSize);
-            cube.setMaterial(material);
-            cube.setTranslateX(-i * 16);
+            final Byte symbol = game.levelCounterSymbols().get(i);
+            final Image symbolImage = uiConfig.bonusSymbolImage(symbol);
+            final var texture = new PhongMaterial(Color.WHITE);
+            texture.setDiffuseMap(symbolImage);
+            final var cube = new Box(cubeSize, cubeSize, cubeSize);
+            cube.setMaterial(texture);
+            cube.setTranslateX(-i * 16); // arranged from right to left
             cube.setTranslateY(0);
             cube.setTranslateZ(-HTS);
             getChildren().add(cube);
@@ -59,14 +63,14 @@ public class LevelCounter3D extends Group implements Disposable {
         spinningAnimation = new RegisteredAnimation(animationRegistry, "LevelCounter_Spinning") {
             @Override
             protected Animation createAnimationFX() {
-                var cubesAnimation = new ParallelTransition();
+                final var cubesAnimation = new ParallelTransition();
                 for (int i = 0; i < getChildren().size(); ++i) {
-                    Node shape = getChildren().get(i);
-                    var spinning = new RotateTransition(Duration.seconds(6), shape);
+                    final Node cube = getChildren().get(i);
+                    final var spinning = new RotateTransition(Duration.seconds(6), cube);
                     spinning.setCycleCount(Animation.INDEFINITE);
                     spinning.setInterpolator(Interpolator.LINEAR);
                     spinning.setAxis(Rotate.X_AXIS);
-                    spinning.setByAngle(i % 2 == 0 ? 360 : -360);
+                    spinning.setByAngle(i % 2 == 0 ? 360 : -360); // alternate spinning direction
                     cubesAnimation.getChildren().add(spinning);
                 }
                 return cubesAnimation;
@@ -83,8 +87,8 @@ public class LevelCounter3D extends Group implements Disposable {
             spinningAnimation = null;
         }
         for (Node child : getChildren()) {
-            if (child instanceof Box box) {
-                box.setMaterial(null);
+            if (child instanceof Box cube) {
+                cube.setMaterial(null);
             }
         }
         getChildren().clear();

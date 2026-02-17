@@ -217,7 +217,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     private void createLevelCounter3D() {
         WorldMap worldMap = level.worldMap();
-        levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
+        levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig, ui.prefs());
         levelCounter3D.setTranslateX(TS * (worldMap.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.setTranslateZ(-ui.prefs().getFloat("3d.level_counter.elevation"));
@@ -277,7 +277,7 @@ public class GameLevel3D extends Group implements Disposable {
     public void onStartingGame() {
         maze3D.food().energizers3D().forEach(Energizer3D::stopPumping);
         if (levelCounter3D != null) {
-            levelCounter3D.update(ui, level.game());
+            levelCounter3D.rebuild(level);
         }
     }
 
@@ -397,9 +397,9 @@ public class GameLevel3D extends Group implements Disposable {
         bonus3D.showEdible();
     }
 
-    public void updateLevelCounter3D() {
+    public void rebuildLevelCounter3D() {
         if (levelCounter3D != null) {
-            levelCounter3D.update(ui, level.game());
+            levelCounter3D.rebuild(level);
         }
     }
 

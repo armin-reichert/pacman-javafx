@@ -380,7 +380,7 @@ public class PlayScene3D implements GameScene {
             gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
         }
 
-        gameLevel3D.updateLevelCounter3D();
+        gameLevel3D.rebuildLevelCounter3D();
         updateHUD(game);
         replaceActionBindings(level);
         fadeInAnimation.playFromStart();
@@ -517,7 +517,7 @@ public class PlayScene3D implements GameScene {
             }
         }
 
-        gameLevel3D.updateLevelCounter3D();
+        gameLevel3D.rebuildLevelCounter3D();
         replaceActionBindings(level);
         fadeInAnimation.playFromStart();
     }
