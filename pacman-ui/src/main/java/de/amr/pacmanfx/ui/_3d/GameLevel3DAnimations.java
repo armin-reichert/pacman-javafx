@@ -13,7 +13,6 @@ import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import de.amr.pacmanfx.uilib.model3D.MutableGhost3D;
 import javafx.animation.*;
 import javafx.geometry.Point3D;
-import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
@@ -25,53 +24,46 @@ import java.util.Random;
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSecThen;
-import static java.util.Objects.requireNonNull;
 
 public class GameLevel3DAnimations implements Disposable {
 
-    private final GameLevel3D level3D;
-
-    private WallColorFlashingAnimation wallColorFlashingAnimation;
-    private LevelCompletedAnimation levelCompletedFullAnimation;
-    private LevelCompletedAnimationShort levelCompletedShortAnimation;
-    private GhostLightAnimation ghostLightAnimation;
-
-    private PointLight ghostLight;
-
-    private Animation wallsSwinging(int numFlashes) {
+    private static Animation createMazeWallsSwingingAnimation(Maze3D maze3D, int numFlashes) {
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }
-        var timeline = new Timeline(
+        final var timeline = new Timeline(
             new KeyFrame(Duration.millis(0.5 * 250),
-                new KeyValue(level3D.maze3D().wallBaseHeightProperty(), 0, Interpolator.EASE_BOTH)));
+                new KeyValue(maze3D.wallBaseHeightProperty(), 0, Interpolator.EASE_BOTH)));
         timeline.setAutoReverse(true);
         timeline.setCycleCount(2 * numFlashes);
         return timeline;
     }
 
-    private class LevelCompletedAnimation extends RegisteredAnimation {
-        private static final int MESSAGE_FREQUENCY = 20; // 20% of cases
+    private static class LevelCompletedAnimation extends RegisteredAnimation {
+
         private static final float SPINNING_SECONDS = 1.5f;
 
-        public LevelCompletedAnimation(AnimationRegistry animationRegistry) {
+        private final GameLevel3D level3D;
+
+        public LevelCompletedAnimation(AnimationRegistry animationRegistry, GameLevel3D level3D) {
             super(animationRegistry, "Level_Completed");
+            this.level3D = level3D;
         }
 
         @Override
         protected Animation createAnimationFX() {
             final GameLevel level = level3D.level();
             return new SequentialTransition(
-                    //doNow(() -> sometimesLevelCompleteMessage(level.number())),
-                    pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),
-                    wallsSwinging(level.numFlashes()),
-                    pauseSecThen(0.5, () -> level.pac().hide()),
-                    pauseSec(0.5),
-                    levelSpinningAroundAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
-                    pauseSecThen(0.5, () -> level3D.soundManager().play(SoundID.LEVEL_COMPLETE)),
-                    pauseSec(0.5),
-                    wallsAndHouseDisappearing(),
-                    pauseSecThen(1.0, () -> level3D.soundManager().play(SoundID.LEVEL_CHANGED))
+                //doNow(() -> sometimesLevelCompleteMessage(level.number())),
+                pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),
+                createMazeWallsSwingingAnimation(level3D.maze3D(), level.numFlashes()),
+                pauseSecThen(0.5, () -> level.pac().hide()),
+                pauseSec(0.5),
+                levelSpinningAroundAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
+                pauseSecThen(0.5, () -> level3D.soundManager().play(SoundID.LEVEL_COMPLETE)),
+                pauseSec(0.5),
+                wallsAndHouseDisappearing(),
+                pauseSecThen(1.0, () -> level3D.soundManager().play(SoundID.LEVEL_CHANGED))
             );
         }
 
@@ -87,15 +79,6 @@ public class GameLevel3DAnimations implements Disposable {
             );
         }
 
-        /*
-        private void sometimesLevelCompleteMessage(int levelNumber) {
-            if (randomInt(0, 100) < MESSAGE_FREQUENCY) {
-                String message = translatedLevelCompleteMessage(localizedTextsAccessor, levelNumber);
-                ui.showFlashMessage(Duration.seconds(3), message);
-            }
-        }
-         */
-
         private Animation levelSpinningAroundAxis(Point3D axis) {
             var spin360 = new RotateTransition(Duration.seconds(SPINNING_SECONDS), level3D);
             spin360.setAxis(axis);
@@ -106,31 +89,38 @@ public class GameLevel3DAnimations implements Disposable {
         }
     }
 
-    private class LevelCompletedAnimationShort extends RegisteredAnimation {
+    private static class LevelCompletedAnimationShort extends RegisteredAnimation {
 
-        public LevelCompletedAnimationShort(AnimationRegistry animationRegistry) {
+        private final GameLevel3D level3D;
+
+        public LevelCompletedAnimationShort(AnimationRegistry animationRegistry, GameLevel3D level3D) {
             super(animationRegistry, "Level_Complete_Short_Animation");
+            this.level3D = level3D;
         }
 
         @Override
         protected Animation createAnimationFX() {
             final GameLevel level = level3D.level();
             return new SequentialTransition(
-                    pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),
-                    pauseSec(0.5),
-                    wallsSwinging(level.numFlashes()),
-                    pauseSecThen(0.5, () -> level.pac().hide())
+                pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),
+                pauseSec(0.5),
+                createMazeWallsSwingingAnimation(level3D.maze3D(), level.numFlashes()),
+                pauseSecThen(0.5, () -> level.pac().hide())
             );
         }
     }
 
-    private class WallColorFlashingAnimation extends RegisteredAnimation {
+    private static class WallColorFlashingAnimation extends RegisteredAnimation {
 
-        private final Color fromColor = Color.valueOf(level3D.maze3D().colorScheme().wallFill());
-        private final Color toColor = Color.valueOf(level3D.maze3D().colorScheme().wallStroke());
+        private final GameLevel3D level3D;
+        private final Color fromColor;
+        private final Color toColor;
 
-        public WallColorFlashingAnimation(AnimationRegistry animationRegistry) {
+        public WallColorFlashingAnimation(AnimationRegistry animationRegistry, GameLevel3D level3D) {
             super(animationRegistry, "WallColorFlashing");
+            this.level3D = level3D;
+            this.fromColor = Color.valueOf(level3D.maze3D().colorScheme().wallFill());
+            this.toColor = Color.valueOf(level3D.maze3D().colorScheme().wallStroke());
         }
 
         @Override
@@ -166,16 +156,19 @@ public class GameLevel3DAnimations implements Disposable {
     /**
      * A light animation that switches from ghost to ghost (JavaFX can only display a limited amount of lights per scene).
      */
-    private class GhostLightAnimation extends RegisteredAnimation {
+    private static class GhostLightAnimation extends RegisteredAnimation {
 
+        private final GameLevel3D level3D;
         private byte currentGhostID;
 
-        public GhostLightAnimation(AnimationRegistry animationRegistry) {
+        public GhostLightAnimation(AnimationRegistry animationRegistry, GameLevel3D level3D) {
             super(animationRegistry, "GhostLight");
+            this.level3D = level3D;
+
             currentGhostID = RED_GHOST_SHADOW;
-            ghostLight = new PointLight(Color.WHITE);
-            ghostLight.setMaxRange(30);
-            ghostLight.lightOnProperty().addListener((_, _, on) -> Logger.info("Ghost light {}", on ? "ON" : "OFF"));
+            level3D.ghostLight().setColor(Color.WHITE);
+            level3D.ghostLight().setMaxRange(30);
+            level3D.ghostLight().lightOnProperty().addListener((_, _, on) -> Logger.info("Ghost light {}", on ? "ON" : "OFF"));
         }
 
         private static byte nextGhostID(byte id) {
@@ -184,11 +177,11 @@ public class GameLevel3DAnimations implements Disposable {
 
         private void illuminateGhost(byte ghostID) {
             MutableGhost3D ghost3D = level3D.ghosts3D().get(ghostID);
-            ghostLight.setColor(ghost3D.colorSet().normal().dress());
-            ghostLight.translateXProperty().bind(ghost3D.translateXProperty());
-            ghostLight.translateYProperty().bind(ghost3D.translateYProperty());
-            ghostLight.setTranslateZ(-25);
-            ghostLight.setLightOn(true);
+            level3D.ghostLight().setColor(ghost3D.colorSet().normal().dress());
+            level3D.ghostLight().translateXProperty().bind(ghost3D.translateXProperty());
+            level3D.ghostLight().translateYProperty().bind(ghost3D.translateYProperty());
+            level3D.ghostLight().setTranslateZ(-25);
+            level3D.ghostLight().setLightOn(true);
             currentGhostID = ghostID;
             Logger.debug("Ghost light passed to ghost {}", currentGhostID);
         }
@@ -206,7 +199,7 @@ public class GameLevel3DAnimations implements Disposable {
                     }
                     candidate = nextGhostID(candidate);
                 }
-                ghostLight.setLightOn(false);
+                level3D.ghostLight().setLightOn(false);
             }));
             timeline.setCycleCount(Animation.INDEFINITE);
             return timeline;
@@ -220,9 +213,22 @@ public class GameLevel3DAnimations implements Disposable {
 
         @Override
         public void stop() {
-            ghostLight.setLightOn(false);
+            level3D.ghostLight().setLightOn(false);
             super.stop();
         }
+    }
+
+    private WallColorFlashingAnimation wallColorFlashingAnimation;
+    private LevelCompletedAnimation levelCompletedFullAnimation;
+    private LevelCompletedAnimationShort levelCompletedShortAnimation;
+    private GhostLightAnimation ghostLightAnimation;
+
+    public GameLevel3DAnimations(GameLevel3D level3D) {
+        final AnimationRegistry animationRegistry = level3D.animationRegistry();
+        wallColorFlashingAnimation = new WallColorFlashingAnimation(animationRegistry, level3D);
+        levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry, level3D);
+        levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationRegistry, level3D);
+        ghostLightAnimation = new GhostLightAnimation(animationRegistry, level3D);
     }
 
     @Override
@@ -243,18 +249,6 @@ public class GameLevel3DAnimations implements Disposable {
             ghostLightAnimation.dispose();
             ghostLightAnimation = null;
         }
-    }
-
-    public GameLevel3DAnimations(GameLevel3D level3D) {
-        this.level3D = requireNonNull(level3D);
-        wallColorFlashingAnimation = new WallColorFlashingAnimation(level3D.animationRegistry());
-        levelCompletedFullAnimation = new LevelCompletedAnimation(level3D.animationRegistry());
-        levelCompletedShortAnimation = new LevelCompletedAnimationShort(level3D.animationRegistry());
-        ghostLightAnimation = new GhostLightAnimation(level3D.animationRegistry());
-    }
-
-    public PointLight ghostLight() {
-        return ghostLight;
     }
 
     public void playGhostLightAnimation() {

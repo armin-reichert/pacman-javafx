@@ -32,6 +32,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.PointLight;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -81,6 +82,7 @@ public class GameLevel3D extends Group implements Disposable {
     private Node[] livesCounterShapes;
 
     private AmbientLight ambientLight;
+    private PointLight ghostLight;
 
     private Maze3D maze3D;
     private LevelCounter3D levelCounter3D;
@@ -116,7 +118,7 @@ public class GameLevel3D extends Group implements Disposable {
             .map(Ghost3D.MaterialSet::dress)
             .toList();
         createMaze3D(ghostNormalDressMaterials);
-        createAmbientLight();
+        createLights();
 
         animations = new GameLevel3DAnimations(this);
 
@@ -134,8 +136,7 @@ public class GameLevel3D extends Group implements Disposable {
         // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
         getChildren().add(maze3D);
         getChildren().add(ambientLight);
-
-        getChildren().add(animations.ghostLight());
+        getChildren().add(ghostLight);
 
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
         maze3D.house().startSwirlAnimations();
@@ -159,6 +160,10 @@ public class GameLevel3D extends Group implements Disposable {
 
     public SoundManager soundManager() {
         return soundManager;
+    }
+
+    public PointLight ghostLight() {
+        return ghostLight;
     }
 
     private GhostColorSet createGhostColorSet(byte personality) {
@@ -234,9 +239,11 @@ public class GameLevel3D extends Group implements Disposable {
         levelCounter3D.setTranslateZ(-prefs.getFloat("3d.level_counter.elevation"));
     }
 
-    private void createAmbientLight() {
+    private void createLights() {
         ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);
+
+        ghostLight = new PointLight();
     }
 
     private void createMaze3D(List<PhongMaterial> ghostMaterials) {
@@ -467,6 +474,12 @@ public class GameLevel3D extends Group implements Disposable {
             ambientLight = null;
             Logger.info("Unbound and cleared ambient light");
         }
+        if (ghostLight != null) {
+            ghostLight.colorProperty().unbind();
+            ghostLight = null;
+            Logger.info("Unbound and cleared ghost light");
+        }
+
         if (maze3D != null) {
             maze3D.dispose();
             maze3D = null;
