@@ -17,9 +17,11 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.SwirlAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
 import javafx.animation.Animation;
@@ -63,10 +65,12 @@ public class GameLevel3D extends Group implements Disposable {
             .toList();
     }
 
-    private final GameUI ui;
-    private final UIConfig uiConfig;
     private final GameLevel level;
 
+    private final PreferencesManager prefs;
+    private final UIConfig uiConfig;
+    private final SoundManager soundManager;
+    
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final GameLevel3DAnimations animations;
 
@@ -87,8 +91,10 @@ public class GameLevel3D extends Group implements Disposable {
     private MessageView messageView;
 
     public GameLevel3D(GameUI ui, GameLevel level) {
-        this.ui = requireNonNull(ui);
+        requireNonNull(ui);
+        this.prefs = ui.prefs();
         this.uiConfig = ui.currentConfig();
+        this.soundManager = ui.soundManager();
         this.level = requireNonNull(level);
 
         PROPERTY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
@@ -101,7 +107,7 @@ public class GameLevel3D extends Group implements Disposable {
 
         createLevelCounter3D();
         createLivesCounter3D();
-        createPac3D(ui.prefs().getFloat("3d.pac.size"));
+        createPac3D(prefs.getFloat("3d.pac.size"));
         ghosts3D = level.ghosts().map(this::createMutatingGhost3D).toList();
         final List<PhongMaterial> ghostNormalDressMaterials = ghosts3D.stream()
             .map(MutableGhost3D::ghost3D)
@@ -179,7 +185,7 @@ public class GameLevel3D extends Group implements Disposable {
             ghostDressMeshViews.get(ghost.personality()),
             ghostPupilsMeshViews.get(ghost.personality()),
             ghostEyesMeshViews.get(ghost.personality()),
-            ui.prefs().getFloat("3d.ghost.size"),
+            prefs.getFloat("3d.ghost.size"),
             level.numFlashes()
         );
         mutatingGhost3D.visibleProperty().bind(Bindings.createBooleanBinding(
@@ -200,10 +206,10 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private void createLivesCounter3D() {
-        final double shapeSize = ui.prefs().getFloat("3d.lives_counter.shape_size");
-        final int capacity = ui.prefs().getInt("3d.lives_counter.capacity");
-        final Color pillarColor = ui.prefs().getColor("3d.lives_counter.pillar_color");
-        final Color plateColor = ui.prefs().getColor("3d.lives_counter.plate_color");
+        final double shapeSize = prefs.getFloat("3d.lives_counter.shape_size");
+        final int capacity = prefs.getInt("3d.lives_counter.capacity");
+        final Color pillarColor = prefs.getColor("3d.lives_counter.pillar_color");
+        final Color plateColor = prefs.getColor("3d.lives_counter.plate_color");
         livesCounterShapes = new Node[capacity];
         for (int i = 0; i < livesCounterShapes.length; ++i) {
             livesCounterShapes[i] = uiConfig.createLivesCounterShape3D(shapeSize);
@@ -217,10 +223,10 @@ public class GameLevel3D extends Group implements Disposable {
 
     private void createLevelCounter3D() {
         WorldMap worldMap = level.worldMap();
-        levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig, ui.prefs());
+        levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig, prefs);
         levelCounter3D.setTranslateX(TS * (worldMap.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
-        levelCounter3D.setTranslateZ(-ui.prefs().getFloat("3d.level_counter.elevation"));
+        levelCounter3D.setTranslateZ(-prefs.getFloat("3d.level_counter.elevation"));
     }
 
     private void createAmbientLight() {
@@ -229,7 +235,7 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private void createMaze3D(List<PhongMaterial> ghostMaterials) {
-        maze3D = new Maze3D(ui.currentConfig(), ui.prefs(), level, animationRegistry, ghostMaterials);
+        maze3D = new Maze3D(uiConfig, prefs, level, animationRegistry, ghostMaterials);
         maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
         maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
     }
@@ -291,7 +297,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public void onPacManDying(StateMachine.State<Game> state) {
         state.timer().resetIndefiniteTime(); // expires when level animation ends
-        ui.soundManager().stopAll();
+        soundManager.stopAll();
         animations.stopGhostLightAnimation();
         // do one last update before dying animation starts
         pac3D.update(level);
@@ -299,7 +305,7 @@ public class GameLevel3D extends Group implements Disposable {
         bonus3D().ifPresent(Bonus3D::expire);
         var animation = new SequentialTransition(
             pauseSec(1.5),
-            doNow(() -> ui.soundManager().play(SoundID.PAC_MAN_DEATH)),
+            doNow(() -> soundManager.play(SoundID.PAC_MAN_DEATH)),
             pac3D.dyingAnimation().getOrCreateAnimationFX(),
             pauseSec(0.5)
         );
@@ -319,7 +325,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public void onLevelComplete(StateMachine.State<Game> state, ObjectProperty<PerspectiveID> perspectiveIDProperty) {
         state.timer().resetIndefiniteTime(); // expires when animation ends
-        ui.soundManager().stopAll();
+        soundManager.stopAll();
         animationRegistry.stopAllAnimations();
 
         maze3D.food().energizers3D().forEach(Energizer3D::stopPumping); //TODO needed?
@@ -363,8 +369,8 @@ public class GameLevel3D extends Group implements Disposable {
         maze3D.food().energizers3D().forEach(Energizer3D::hide);
         maze3D.house().stopSwirlAnimations();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-        ui.soundManager().stopAll();
-        ui.soundManager().play(SoundID.GAME_OVER);
+        soundManager.stopAll();
+        soundManager.play(SoundID.GAME_OVER);
     }
 
     public void showAnimatedMessage(String messageText, float displaySeconds, double centerX, double centerY) {
@@ -391,8 +397,8 @@ public class GameLevel3D extends Group implements Disposable {
             bonus3D.dispose();
         }
         bonus3D = new Bonus3D(animationRegistry, bonus,
-            uiConfig.bonusSymbolImage(bonus.symbol()), ui.prefs().getFloat("3d.bonus.symbol.width"),
-            uiConfig.bonusValueImage(bonus.symbol()), ui.prefs().getFloat("3d.bonus.points.width"));
+            uiConfig.bonusSymbolImage(bonus.symbol()), prefs.getFloat("3d.bonus.symbol.width"),
+            uiConfig.bonusValueImage(bonus.symbol()), prefs.getFloat("3d.bonus.points.width"));
         getChildren().add(bonus3D);
         bonus3D.showEdible();
     }
