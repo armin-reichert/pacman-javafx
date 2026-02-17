@@ -304,13 +304,13 @@ public class GameLevel3D extends Group implements Disposable {
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
         maze3D.food().energizers3D().forEach(Energizer3D::startPumping);
         maze3D.house().startSwirlAnimations();
-        animations.playGhostLightAnimation();
+        animations.ghostLightAnimation().playFromStart();
     }
 
     public void onPacManDying(StateMachine.State<Game> state) {
         state.timer().resetIndefiniteTime(); // expires when level animation ends
         soundManager.stopAll();
-        animations.stopGhostLightAnimation();
+        animations.ghostLightAnimation().stop();
         // do one last update before dying animation starts
         pac3D.update(level);
         ghosts3D.forEach(MutableGhost3D::stopAllAnimations);
@@ -356,7 +356,7 @@ public class GameLevel3D extends Group implements Disposable {
         }
 
         final boolean cutSceneFollows = level.cutSceneNumber() != 0;
-        final Animation levelCompletedAnimation = animations.getLevelCompleteAnimation(cutSceneFollows).getOrCreateAnimationFX();
+        final Animation levelCompletedAnimation = animations.selectLevelCompleteAnimation(cutSceneFollows).getOrCreateAnimationFX();
 
         var animation = new SequentialTransition(
             pauseSecThen(2, () -> {
@@ -377,7 +377,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public void onGameOver(StateMachine.State<Game> state) {
         state.timer().restartSeconds(3);
-        animations.stopGhostLightAnimation();
+        animations.ghostLightAnimation().stop();
         maze3D.food().energizers3D().forEach(Energizer3D::hide);
         maze3D.house().stopSwirlAnimations();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));

@@ -24,6 +24,7 @@ import java.util.Random;
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSecThen;
+import static java.util.Objects.requireNonNull;
 
 public class GameLevel3DAnimations implements Disposable {
 
@@ -153,9 +154,6 @@ public class GameLevel3DAnimations implements Disposable {
         }
     }
 
-    /**
-     * A light animation that switches from ghost to ghost (JavaFX can only display a limited amount of lights per scene).
-     */
     private static class GhostLightAnimation extends RegisteredAnimation {
 
         private final GameLevel3D level3D;
@@ -224,6 +222,7 @@ public class GameLevel3DAnimations implements Disposable {
     private GhostLightAnimation ghostLightAnimation;
 
     public GameLevel3DAnimations(GameLevel3D level3D) {
+        requireNonNull(level3D);
         final AnimationRegistry animationRegistry = level3D.animationRegistry();
         wallColorFlashingAnimation = new WallColorFlashingAnimation(animationRegistry, level3D);
         levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry, level3D);
@@ -251,23 +250,15 @@ public class GameLevel3DAnimations implements Disposable {
         }
     }
 
-    public void playGhostLightAnimation() {
-        ghostLightAnimation.playFromStart();
+    public RegisteredAnimation ghostLightAnimation() {
+        return ghostLightAnimation;
     }
 
-    public void stopGhostLightAnimation() {
-        ghostLightAnimation.stop();
+    public RegisteredAnimation wallColorFlashingAnimation() {
+        return wallColorFlashingAnimation;
     }
 
-    public void playWallColorFlashing() {
-        wallColorFlashingAnimation.playFromStart();
-    }
-
-    public void stopWallColorFlashing() {
-        wallColorFlashingAnimation.stop();
-    }
-
-    public RegisteredAnimation getLevelCompleteAnimation(boolean cutSceneFollows) {
+    public RegisteredAnimation selectLevelCompleteAnimation(boolean cutSceneFollows) {
         return cutSceneFollows ? levelCompletedShortAnimation : levelCompletedFullAnimation;
     }
 }
