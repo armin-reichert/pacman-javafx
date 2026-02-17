@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.SwirlAnimation;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
@@ -65,20 +65,19 @@ public class Maze3D extends Group implements Disposable {
     /**
      * Creates a new 3D maze for the given level.
      *
-     * @param ui               the game UI providing preferences and configuration
+     * @param uiConfig         the game UI configuration
+     * @param prefs            the UI preferences
      * @param level            the game level whose world map is rendered
      * @param animationRegistry registry for registering animations used by 3D components
      * @param ghostMaterials   materials used for rendering ghost-related 3D elements
      * @throws NullPointerException if any required argument is {@code null}
      */
-    public Maze3D(GameUI ui, GameLevel level, AnimationRegistry animationRegistry, List<PhongMaterial> ghostMaterials) {
-        requireNonNull(ui);
-        this.prefs = ui.prefs();
+    public Maze3D(UIConfig uiConfig, PreferencesManager prefs, GameLevel level, AnimationRegistry animationRegistry, List<PhongMaterial> ghostMaterials) {
+        requireNonNull(uiConfig);
+        this.prefs = requireNonNull(prefs);
         this.animationRegistry = requireNonNull(animationRegistry);
         requireNonNull(ghostMaterials);
-
-        final WorldMapColorScheme proposedColorScheme = ui.currentConfig().colorScheme(level.worldMap());
-        colorScheme = adjustColorScheme(proposedColorScheme);
+        this.colorScheme = adjustColorScheme(uiConfig.colorScheme(level.worldMap()));
 
         createMaterials();
         createFloor3D(level);

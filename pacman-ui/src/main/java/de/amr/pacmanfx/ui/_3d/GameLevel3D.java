@@ -20,8 +20,6 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.SwirlAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
-import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
-import de.amr.pacmanfx.uilib.assets.Translator;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
 import javafx.animation.Animation;
@@ -45,10 +43,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.*;
 import static java.util.Objects.requireNonNull;
@@ -60,11 +57,15 @@ public class GameLevel3D extends Group implements Disposable {
 
     public static final Vector3f GRAVITY = new Vector3f(0, 0, 0.18f);
 
+    private static List<MeshView> createGhostComponentMeshViews(Mesh mesh) {
+        return Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
+            .map(_ -> new MeshView(mesh))
+            .toList();
+    }
+
     private final GameUI ui;
     private final UIConfig uiConfig;
     private final GameLevel level;
-
-    private final RandomTextPicker<String> pickerLevelCompleteMessages;
 
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final GameLevel3DAnimations animations;
@@ -131,8 +132,6 @@ public class GameLevel3D extends Group implements Disposable {
 
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
         maze3D.house().startSwirlAnimations();
-
-        pickerLevelCompleteMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "level.complete");
     }
 
     public GameLevel3DAnimations animations() {
@@ -149,10 +148,6 @@ public class GameLevel3D extends Group implements Disposable {
 
     public Maze3D maze3D() {
         return maze3D;
-    }
-
-    private List<MeshView> createGhostComponentMeshViews(Mesh componentMesh) {
-        return IntStream.range(0, 4).mapToObj(_ -> new MeshView(componentMesh)).toList();
     }
 
     private GhostColorSet createGhostColorSet(byte personality) {
@@ -234,7 +229,7 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private void createMaze3D(List<PhongMaterial> ghostMaterials) {
-        maze3D = new Maze3D(ui, level, animationRegistry, ghostMaterials);
+        maze3D = new Maze3D(ui.currentConfig(), ui.prefs(), level, animationRegistry, ghostMaterials);
         maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
         maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
     }
@@ -430,12 +425,6 @@ public class GameLevel3D extends Group implements Disposable {
             .filter(Shape3D.class::isInstance)
             .map(Shape3D.class::cast)
             .forEach(shape3D -> shape3D.setDrawMode(drawMode));
-    }
-
-    private String translatedLevelCompleteMessage(Translator translator, int levelNumber) {
-        return pickerLevelCompleteMessages.hasEntries()
-            ? pickerLevelCompleteMessages.nextText() + "\n\n" + translator.translate("level_complete", levelNumber)
-            : "";
     }
 
     private boolean disposed = false;
