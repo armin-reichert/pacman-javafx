@@ -52,7 +52,6 @@ public class PacManModel3DRepository implements Disposable {
         return pelletModel;
     }
 
-
     @Override
     public void dispose() {
         Logger.info("Dispose 3D model repository");
