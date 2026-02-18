@@ -26,12 +26,18 @@ public class Model3D implements Disposable {
 
     private ObjFileContent objFileContent;
 
+    protected Model3D() {
+    }
+
     /**
      * @param url URL addressing an OBJ file (Wavefront .obj file format)
      */
     public Model3D(URL url) {
         requireNonNull(url);
+        loadModel(url);
+    }
 
+    protected void loadModel(URL url) {
         Ufx.measureDuration("Import OBJ file '%s'".formatted(url), () -> {
             objFileContent = ObjFileImporter.importObjFile(url, StandardCharsets.UTF_8);
         });

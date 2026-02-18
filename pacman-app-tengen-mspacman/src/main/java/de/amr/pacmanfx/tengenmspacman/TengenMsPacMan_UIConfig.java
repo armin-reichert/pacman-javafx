@@ -335,7 +335,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
 
     @Override
     public MsPacManBody createLivesCounterShape3D(double size) {
-        return PacManModel3DRepository.instance().createMsPacManBody(
+        return PacManModel3DRepository.instance().pacManModel().createMsPacManBody(
             size,
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),

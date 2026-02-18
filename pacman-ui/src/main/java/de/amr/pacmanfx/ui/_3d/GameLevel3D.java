@@ -104,9 +104,10 @@ public class GameLevel3D extends Group implements Disposable {
 
         setMouseTransparent(true); // this increases performance, they say...
 
-        ghostDressMeshViews  = createGhostComponentMeshViews(PacManModel3DRepository.instance().ghostDressMesh());
-        ghostPupilsMeshViews = createGhostComponentMeshViews(PacManModel3DRepository.instance().ghostPupilsMesh());
-        ghostEyesMeshViews   = createGhostComponentMeshViews(PacManModel3DRepository.instance().ghostEyeballsMesh());
+        final var ghostModel3D = PacManModel3DRepository.instance().ghostModel();
+        ghostDressMeshViews  = createGhostComponentMeshViews(ghostModel3D.dressMesh());
+        ghostPupilsMeshViews = createGhostComponentMeshViews(ghostModel3D.pupilsMesh());
+        ghostEyesMeshViews   = createGhostComponentMeshViews(ghostModel3D.eyeballsMesh());
 
         createLevelCounter3D();
         createLivesCounter3D();

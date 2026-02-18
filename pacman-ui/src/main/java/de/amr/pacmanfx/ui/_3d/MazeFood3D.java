@@ -118,7 +118,7 @@ public class MazeFood3D implements Disposable {
     }
 
     private void createPellets3D() {
-        final Mesh mesh = PacManModel3DRepository.instance().pelletMesh();
+        final Mesh mesh = PacManModel3DRepository.instance().pelletModel().mesh();
         final var prototype = new MeshView(mesh);
         final Bounds bounds = prototype.getBoundsInLocal();
         final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());

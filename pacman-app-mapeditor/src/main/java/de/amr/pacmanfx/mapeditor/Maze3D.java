@@ -107,14 +107,14 @@ public class Maze3D extends Group {
 
         foodGroup.visibleProperty().bind(foodVisible);
 
-        pacmanShape3D = model3DRepository.createPacBody(ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
+        pacmanShape3D = model3DRepository.pacManModel().createPacBody(ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
         pacmanShape3D.visibleProperty().bind(actorsVisibleProperty());
 
         ghostShapes = new GhostBody[] {
-            model3DRepository.createGhostBody(ACTOR_SIZE, Color.RED, 0),
-            model3DRepository.createGhostBody(ACTOR_SIZE, Color.PINK, 90),
-            model3DRepository.createGhostBody(ACTOR_SIZE, Color.CYAN, 270),
-            model3DRepository.createGhostBody(ACTOR_SIZE, Color.ORANGE, 270)
+            model3DRepository.ghostModel().createGhostBody(ACTOR_SIZE, Color.RED, 0),
+            model3DRepository.ghostModel().createGhostBody(ACTOR_SIZE, Color.PINK, 90),
+            model3DRepository.ghostModel().createGhostBody(ACTOR_SIZE, Color.CYAN, 270),
+            model3DRepository.ghostModel().createGhostBody(ACTOR_SIZE, Color.ORANGE, 270)
         };
         for (var ghostShape : ghostShapes) {
             ghostShape.visibleProperty().bind(actorsVisibleProperty());

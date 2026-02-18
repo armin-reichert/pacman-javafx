@@ -56,8 +56,8 @@ public abstract class PacBase3D extends Group implements Disposable {
 
         requireNonNull(model3DRepository);
 
-        body = model3DRepository.createPacBody(size, headColor, eyesColor, palateColor);
-        jaw = model3DRepository.createBlindPacBody(size, headColor, palateColor);
+        body = model3DRepository.pacManModel().createPacBody(size, headColor, eyesColor, palateColor);
+        jaw = model3DRepository.pacManModel().createBlindPacBody(size, headColor, palateColor);
 
         getChildren().setAll(jaw, body);
         getTransforms().add(moveRotation);

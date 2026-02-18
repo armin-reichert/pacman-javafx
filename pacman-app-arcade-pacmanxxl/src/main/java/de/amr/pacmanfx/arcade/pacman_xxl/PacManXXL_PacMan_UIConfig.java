@@ -236,7 +236,7 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, GameSceneConfig, Res
 
     @Override
     public PacBody createLivesCounterShape3D(double size) {
-        return PacManModel3DRepository.instance().createPacBody(
+        return PacManModel3DRepository.instance().pacManModel().createPacBody(
             size,
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
