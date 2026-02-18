@@ -7,7 +7,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
-import de.amr.pacmanfx.ui.action.SimpleActionBindingsManager;
+import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 
 public class Arcade_PlayScene3D extends PlayScene3D {
 
@@ -15,7 +15,7 @@ public class Arcade_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void replaceActionBindings(GameLevel level) {
-        actionBindings = new SimpleActionBindingsManager();
+        actionBindings = new ActionBindingsManagerImpl();
 
         if (level.isDemoLevel()) {
             actionBindings.registerAllFrom(ArcadePacMan_UIConfig.GAME_START_BINDINGS);

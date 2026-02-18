@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.SimpleActionBindingsManager;
+import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -37,7 +37,7 @@ public abstract class GameScene2D implements GameScene {
     private final BooleanProperty debugInfoVisible = new SimpleBooleanProperty(false);
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
 
-    protected final ActionBindingsManager actionBindings = new SimpleActionBindingsManager();
+    protected final ActionBindingsManager actionBindings = new ActionBindingsManagerImpl();
     protected GameUI ui;
     protected Canvas canvas;
 

@@ -4,9 +4,7 @@
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GlobalPreferencesManager;
 import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

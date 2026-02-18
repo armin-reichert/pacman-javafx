@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.action.SimpleActionBindingsManager;
+import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import javafx.geometry.Insets;
@@ -54,7 +54,7 @@ public class StartPagesCarousel extends Carousel implements View {
     };
 
     private final List<StartPage> pages = new ArrayList<>();
-    private final ActionBindingsManager actionBindings = new SimpleActionBindingsManager();
+    private final ActionBindingsManager actionBindings = new ActionBindingsManagerImpl();
 
     private final GameUI ui;
 

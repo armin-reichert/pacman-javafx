@@ -13,7 +13,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Re
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
-import de.amr.pacmanfx.ui.action.SimpleActionBindingsManager;
+import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -77,7 +77,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void replaceActionBindings(GameLevel level) {
-        actionBindings = new SimpleActionBindingsManager();
+        actionBindings = new ActionBindingsManagerImpl();
 
         actionBindings.registerAllFrom(_3D_BINDINGS);
         if (level.isDemoLevel()) {

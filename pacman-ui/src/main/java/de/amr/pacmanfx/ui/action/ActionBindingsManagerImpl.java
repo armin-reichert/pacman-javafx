@@ -12,11 +12,11 @@ import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
-public class SimpleActionBindingsManager implements ActionBindingsManager {
+public class ActionBindingsManagerImpl implements ActionBindingsManager {
 
     private final Map<KeyCombination, GameAction> actionForKeyCombination = new HashMap<>();
 
-    public SimpleActionBindingsManager() {}
+    public ActionBindingsManagerImpl() {}
 
     @Override
     public void dispose() {

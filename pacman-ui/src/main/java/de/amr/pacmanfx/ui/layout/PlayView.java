@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
-import de.amr.pacmanfx.ui.action.SimpleActionBindingsManager;
+import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.widgets.CanvasDecorationPane;
@@ -72,7 +72,7 @@ public class PlayView extends StackPane implements View {
 
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
-    private final ActionBindingsManager actionBindingsManager = new SimpleActionBindingsManager();
+    private final ActionBindingsManager actionBindingsManager = new ActionBindingsManagerImpl();
     private final GameUI ui;
     private final Scene parentScene;
     private final Dashboard dashboard = new Dashboard(DASHBOARD_STYLE);
