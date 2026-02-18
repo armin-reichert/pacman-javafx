@@ -16,7 +16,7 @@ import static de.amr.pacmanfx.uilib.UfxColors.formatColorHex;
 
 public abstract class PreferencesManager {
 
-    private final Map<String, Object> defaultValueMap = new HashMap<>();
+    private final Map<String, Object> defaultPreferencesMap = new HashMap<>();
     private final Preferences prefs;
 
     public PreferencesManager(Class<?> packageProvidingClass) {
@@ -25,13 +25,13 @@ public abstract class PreferencesManager {
         if (!isBackingStoreAccessible()) {
             Logger.error("User preferences could not be accessed, using default values!");
         } else {
-            final List<String> allKeys = defaultValueMap.keySet().stream().sorted().toList();
+            final List<String> allKeys = defaultPreferencesMap.keySet().stream().sorted().toList();
             // add missing values
             try {
                 final Set<String> prefKeys = new HashSet<>(Arrays.asList(prefs.keys()));
                 for (String key : allKeys) {
                     if (!prefKeys.contains(key)) {
-                        final Object defaultValue = defaultValueMap.get(key);
+                        final Object defaultValue = defaultPreferencesMap.get(key);
                         store(key, defaultValue);
                         Logger.info("Added missing preference '{}'='{}'", key, defaultValue);
                     }
@@ -60,22 +60,22 @@ public abstract class PreferencesManager {
             case Integer intValue -> prefs.putInt(key, intValue);
             default               -> prefs.put(key, String.valueOf(defaultValue));
         }
-        defaultValueMap.put(key, defaultValue);
+        defaultPreferencesMap.put(key, defaultValue);
     }
 
     public void storeDefault(String key, Object defaultValue) {
-        defaultValueMap.put(key, defaultValue);
+        defaultPreferencesMap.put(key, defaultValue);
     }
 
     public void storeColor(String key, Color color) {
         final String colorSpec = formatColorHex(color);
         prefs.put(key, colorSpec);
-        defaultValueMap.put(key, colorSpec);
+        defaultPreferencesMap.put(key, colorSpec);
     }
 
     public void storeDefaultColor(String key, Color color) {
         final String colorSpec = formatColorHex(color);
-        defaultValueMap.put(key, colorSpec);
+        defaultPreferencesMap.put(key, colorSpec);
     }
 
     public Color getColor(String colorKey) {
@@ -86,26 +86,26 @@ public abstract class PreferencesManager {
     public void storeFont(String key, Font font) {
         final String familyKey = key + ".family";
         prefs.put(familyKey, font.getFamily());
-        defaultValueMap.put(familyKey, font.getFamily());
+        defaultPreferencesMap.put(familyKey, font.getFamily());
 
         final String styleKey = key + ".style";
         prefs.put(styleKey, font.getStyle());
-        defaultValueMap.put(styleKey, font.getStyle());
+        defaultPreferencesMap.put(styleKey, font.getStyle());
 
         final String sizeKey = key + ".size";
         prefs.putFloat(sizeKey, (float) font.getSize());
-        defaultValueMap.put(sizeKey, (float) font.getSize());
+        defaultPreferencesMap.put(sizeKey, (float) font.getSize());
     }
 
     public void storeDefaultFont(String key, Font font) {
         final String familyKey = key + ".family";
-        defaultValueMap.put(familyKey, font.getFamily());
+        defaultPreferencesMap.put(familyKey, font.getFamily());
 
         final String styleKey = key + ".style";
-        defaultValueMap.put(styleKey, font.getStyle());
+        defaultPreferencesMap.put(styleKey, font.getStyle());
 
         final String sizeKey = key + ".size";
-        defaultValueMap.put(sizeKey, (float) font.getSize());
+        defaultPreferencesMap.put(sizeKey, (float) font.getSize());
     }
 
     public Font getFont(String key) {
@@ -122,7 +122,7 @@ public abstract class PreferencesManager {
     }
 
     public <T> T getDefaultValue(String key, Class<T> type) {
-        final Object defaultValue = defaultValueMap.get(key);
+        final Object defaultValue = defaultPreferencesMap.get(key);
         if (type.isInstance(defaultValue)) {
             return type.cast(defaultValue);
         }
@@ -131,7 +131,7 @@ public abstract class PreferencesManager {
     }
 
     private Object getValue(String key) {
-        final Object defaultValue = defaultValueMap.get(key);
+        final Object defaultValue = defaultPreferencesMap.get(key);
         return switch (defaultValue) {
             case Float floatValue -> prefs.getFloat(key, floatValue);
             case Integer intValue -> prefs.getInt(key, intValue);

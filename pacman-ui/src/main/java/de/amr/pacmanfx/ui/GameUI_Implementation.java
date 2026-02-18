@@ -12,8 +12,8 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
-import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -52,51 +52,7 @@ import static javafx.beans.binding.Bindings.createStringBinding;
 /**
  * User interface for the Pac-Man game suite. Shows a carousel with a start page for each game variant.
  */
-public final class GameUI_Implementation implements GameUI {
-
-    private static class GlobalPreferences extends PreferencesManager {
-
-        public GlobalPreferences() {
-            super(GameUI_Implementation.class);
-        }
-
-        protected void storeDefaultValues() {
-            storeDefault("3d.bonus.symbol.width", 8.0f);
-            storeDefault("3d.bonus.points.width", 1.8f * 8.0f);
-            storeDefault("3d.energizer.radius", 3.5f);
-            storeDefault("3d.energizer.scaling.min", 0.2f);
-            storeDefault("3d.energizer.scaling.max", 1.0f);
-            storeDefault("3d.floor.padding", 5.0f);
-            storeDefault("3d.floor.thickness", 0.5f);
-            storeDefault("3d.ghost.size", 15.5f);
-            storeDefault("3d.house.base_height", 12.0f);
-            storeDefault("3d.house.opacity", 0.4f);
-            storeDefault("3d.house.sensitivity", 1.5f * TS);
-            storeDefault("3d.house.wall_thickness", 2.5f);
-            storeDefault("3d.level_counter.symbol_size", 10.0f);
-            storeDefault("3d.level_counter.elevation", 6f);
-            storeDefault("3d.lives_counter.capacity", 5);
-            storeDefaultColor("3d.lives_counter.pillar_color", Color.grayRgb(120));
-            storeDefaultColor("3d.lives_counter.plate_color",  Color.grayRgb(180));
-            storeDefault("3d.lives_counter.shape_size", 12.0f);
-            storeDefault("3d.obstacle.base_height", 4.0f);
-            storeDefault("3d.obstacle.corner_radius", 4.0f);
-            storeDefault("3d.obstacle.opacity", 1.0f);
-            storeDefault("3d.obstacle.wall_thickness", 2.25f);
-            storeDefault("3d.pac.size", 16.0f);
-            storeDefault("3d.pellet.radius", 1.0f);
-
-            // "Kornblumenblau, sind die Augen der Frauen beim Weine. Hicks!"
-            storeDefaultColor("context_menu.title.fill", Color.CORNFLOWERBLUE);
-            storeDefaultFont("context_menu.title.font", Font.font("Dialog", FontWeight.BLACK, 14.0f));
-
-            storeDefaultColor("debug_text.fill", Color.WHITE);
-            storeDefaultColor("debug_text.stroke", Color.GRAY);
-            storeDefaultFont("debug_text.font", Font.font("Sans", 16.0f));
-
-            storeDefault("scene2d.max_scaling", 5.0f);
-        }
-    }
+public final class GameUI_Implementation extends PreferencesManager implements GameUI {
 
     // Oh no, my program!
     private static final String SOMEONE_CALL_AN_AMBULANCE = "KA-TA-STRO-PHE!\nSOMEONE CALL AN AMBULANCE!";
@@ -104,7 +60,6 @@ public final class GameUI_Implementation implements GameUI {
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
 
-    private final PreferencesManager prefs = new GlobalPreferences();
     private final DirectoryWatchdog customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
     private final UIConfigManager uiConfigManager = new UIConfigManager();
     private final ActionBindingsManager actionBindingsManager = new ActionBindingsManagerImpl();
@@ -124,6 +79,8 @@ public final class GameUI_Implementation implements GameUI {
     private StringBinding titleBinding;
 
     public GameUI_Implementation(GameContext gameContext, Stage stage, int mainSceneWidth, int mainSceneHeight) {
+        super(GameUI_Implementation.class);
+
         requireNonNegative(mainSceneWidth);
         requireNonNegative(mainSceneHeight);
 
@@ -161,8 +118,8 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void initPropertyBindings() {
-        PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
-        PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
+        PROPERTY_3D_WALL_HEIGHT.set(getFloat("3d.obstacle.base_height"));
+        PROPERTY_3D_WALL_OPACITY.set(getFloat("3d.obstacle.opacity"));
 
         soundManager.muteProperty().bind(GameUI.PROPERTY_MUTED);
 
@@ -261,6 +218,46 @@ public final class GameUI_Implementation implements GameUI {
         stopGame();
     }
 
+    // PreferencesManager interface
+
+    @Override
+		protected void storeDefaultValues() {
+        storeDefault("3d.bonus.symbol.width", 8.0f);
+        storeDefault("3d.bonus.points.width", 1.8f * 8.0f);
+        storeDefault("3d.energizer.radius", 3.5f);
+        storeDefault("3d.energizer.scaling.min", 0.2f);
+        storeDefault("3d.energizer.scaling.max", 1.0f);
+        storeDefault("3d.floor.padding", 5.0f);
+        storeDefault("3d.floor.thickness", 0.5f);
+        storeDefault("3d.ghost.size", 15.5f);
+        storeDefault("3d.house.base_height", 12.0f);
+        storeDefault("3d.house.opacity", 0.4f);
+        storeDefault("3d.house.sensitivity", 1.5f * TS);
+        storeDefault("3d.house.wall_thickness", 2.5f);
+        storeDefault("3d.level_counter.symbol_size", 10.0f);
+        storeDefault("3d.level_counter.elevation", 6f);
+        storeDefault("3d.lives_counter.capacity", 5);
+        storeDefaultColor("3d.lives_counter.pillar_color", Color.grayRgb(120));
+        storeDefaultColor("3d.lives_counter.plate_color",  Color.grayRgb(180));
+        storeDefault("3d.lives_counter.shape_size", 12.0f);
+        storeDefault("3d.obstacle.base_height", 4.0f);
+        storeDefault("3d.obstacle.corner_radius", 4.0f);
+        storeDefault("3d.obstacle.opacity", 1.0f);
+        storeDefault("3d.obstacle.wall_thickness", 2.25f);
+        storeDefault("3d.pac.size", 16.0f);
+        storeDefault("3d.pellet.radius", 1.0f);
+
+        // "Kornblumenblau, sind die Augen der Frauen beim Weine. Hicks!"
+        storeDefaultColor("context_menu.title.fill", Color.CORNFLOWERBLUE);
+        storeDefaultFont("context_menu.title.font", Font.font("Dialog", FontWeight.BLACK, 14.0f));
+
+        storeDefaultColor("debug_text.fill", Color.WHITE);
+        storeDefaultColor("debug_text.stroke", Color.GRAY);
+        storeDefaultFont("debug_text.font", Font.font("Sans", 16.0f));
+
+        storeDefault("scene2d.max_scaling", 5.0f);
+    }
+
     // GameUI interface
 
     @Override
@@ -326,7 +323,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public PreferencesManager prefs() {
-        return prefs;
+        return this;
     }
 
     @Override
