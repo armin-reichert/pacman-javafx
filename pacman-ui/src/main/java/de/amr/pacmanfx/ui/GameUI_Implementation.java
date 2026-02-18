@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameBox;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
@@ -86,21 +87,21 @@ public final class GameUI_Implementation implements GameUI {
         initPropertyBindings();
         initScene();
         initStage();
-        initGameClock(context);
+        initGameClock();
 
         // Load 3D models
         final var ignored = PacManModel3DRepository.instance();
     }
 
-    private void initGameClock(GameContext context) {
-        requireNonNull(context.clock(), "Game clock has not been set in game context?");
-        context.clock().setPausableAction(() -> {
+    private void initGameClock() {
+        final GameClock clock = requireNonNull(context.clock(), "Game clock has not been set in game context?");
+        clock.setPausableAction(() -> {
             final Game game = context.currentGame();
             simulate(game);
             optGameScene().ifPresent(gameScene -> gameScene.update(game));
         });
-        context.clock().setPermanentAction(() -> views().currentView().render());
-        context.clock().setErrorHandler(this::ka_tas_tro_phe);
+        clock.setPermanentAction(() -> views().currentView().render());
+        clock.setErrorHandler(this::ka_tas_tro_phe);
     }
 
     private void initLayout(int mainSceneWidth, int mainSceneHeight) {
