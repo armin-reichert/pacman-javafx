@@ -32,9 +32,9 @@ import de.amr.pacmanfx.uilib.UfxImages;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
-import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -277,8 +277,8 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, GameSceneConfig, Resou
     }
 
     @Override
-    public MsPacManBody createLivesCounterShape3D(double size) {
-        return PacManModel3DRepository.instance().pacManModel().createMsPacManBody(
+    public MsPacManBody createLivesCounterShape3D(Models3D models3D, double size) {
+        return models3D.pacManModel().createMsPacManBody(
             size,
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
@@ -290,11 +290,11 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, GameSceneConfig, Resou
     }
 
     @Override
-    public MsPacMan3D createPac3D(AnimationRegistry animationRegistry, Pac pac, double size) {
+    public MsPacMan3D createPac3D(AnimationRegistry animationRegistry, Models3D models3D, Pac pac, double size) {
         requireNonNull(animationRegistry);
         requireNonNull(pac);
         final var msPacMan3D = new MsPacMan3D(
-            PacManModel3DRepository.instance(),
+            models3D,
             animationRegistry,
             pac,
             size,

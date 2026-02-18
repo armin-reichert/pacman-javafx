@@ -9,26 +9,17 @@ import org.tinylog.Logger;
 
 import java.net.URL;
 
-public class PacManModel3DRepository implements Disposable {
+public class Models3D implements Disposable {
 
-    private static final ResourceManager RM = () -> PacManModel3DRepository.class;
-
-    // Initialization-on-Demand Holder Idiom
-    private static class Holder {
-        static final PacManModel3DRepository INSTANCE = new PacManModel3DRepository();
-    }
-
-    public static PacManModel3DRepository instance() {
-        return Holder.INSTANCE;
-    }
+    private static final ResourceManager RESOURCE_MANAGER = () -> Models3D.class;
 
     public static Model3D loadModelFromObjFile(String objFilePath) {
-        final URL url = RM.url(objFilePath);
+        final URL url = RESOURCE_MANAGER.url(objFilePath);
         if (url == null) {
             throw new IllegalArgumentException("Could not access model3D with resource path '%s'".formatted(objFilePath));
         }
         try {
-					return new Model3D(url);
+            return new Model3D(url);
         } catch (Exception x) {
             throw new IllegalArgumentException("Could not load 3D model from URL '%s'".formatted(url), x);
         }
@@ -38,7 +29,7 @@ public class PacManModel3DRepository implements Disposable {
     private final GhostModel3D ghostModel = new GhostModel3D();
     private final PelletModel3D pelletModel = new PelletModel3D();
 
-    private PacManModel3DRepository() {}
+    public Models3D() {}
 
     public PacManModel3D pacManModel() {
         return pacManModel;

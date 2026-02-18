@@ -27,10 +27,10 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import de.amr.pacmanfx.uilib.model3D.PacBody;
 import de.amr.pacmanfx.uilib.model3D.PacMan3D;
-import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -235,8 +235,8 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, GameSceneConfig, Res
     }
 
     @Override
-    public PacBody createLivesCounterShape3D(double size) {
-        return PacManModel3DRepository.instance().pacManModel().createPacBody(
+    public PacBody createLivesCounterShape3D(Models3D models3D, double size) {
+        return models3D.pacManModel().createPacBody(
             size,
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
@@ -245,9 +245,9 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, GameSceneConfig, Res
     }
 
     @Override
-    public PacBase3D createPac3D(AnimationRegistry animationRegistry, Pac pac, double size) {
+    public PacBase3D createPac3D(AnimationRegistry animationRegistry, Models3D models3D, Pac pac, double size) {
         var pacMan3D = new PacMan3D(
-            PacManModel3DRepository.instance(),
+            models3D,
             animationRegistry,
             pac,
             size,

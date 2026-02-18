@@ -13,9 +13,9 @@ import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
-import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.Translator;
+import de.amr.pacmanfx.uilib.model3D.Models3D;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -61,6 +61,8 @@ import static de.amr.pacmanfx.ui.input.Keyboard.*;
  * Extends {@link Translator} so all UI text can be localized.
  */
 public interface GameUI extends Translator {
+
+    Models3D models3D();
 
     // ---------------------------------------------------------------------------------------------
     // Key Bindings

@@ -16,7 +16,7 @@ public class GhostModel3D implements Disposable {
 	private final Model3D model3D;
 
 	public GhostModel3D() {
-		model3D = PacManModel3DRepository.loadModelFromObjFile("/de/amr/pacmanfx/uilib/model3D/ghost.obj");
+		model3D = Models3D.loadModelFromObjFile("/de/amr/pacmanfx/uilib/model3D/ghost.obj");
 	}
 
 	@Override

@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.mapeditor.app;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
+import de.amr.pacmanfx.uilib.model3D.Models3D;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
@@ -25,7 +25,8 @@ public class TileMapEditorApp extends Application  {
     @Override
     public void start(Stage stage) {
         try {
-            var editor = new TileMapEditor(stage, PacManModel3DRepository.instance());
+            final Models3D models3D = new Models3D();
+            var editor = new TileMapEditor(stage, models3D);
 
             var miQuit = new MenuItem(translated("quit"));
             miQuit.setOnAction(_ -> editor.ui().afterCheckForUnsavedChanges(stage::close));

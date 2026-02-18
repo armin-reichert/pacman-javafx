@@ -44,7 +44,7 @@ public abstract class PacBase3D extends Group implements Disposable {
     protected RegisteredAnimation movementAnimation;
 
     protected PacBase3D(
-        PacManModel3DRepository model3DRepository,
+        Models3D model3DRepository,
         AnimationRegistry animationRegistry,
         Pac pac,
         double size,

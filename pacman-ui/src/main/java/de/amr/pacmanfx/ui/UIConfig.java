@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
@@ -223,19 +224,21 @@ public interface UIConfig extends Disposable {
      * variant, including model, materials, and animation bindings.
      *
      * @param animationRegistry the registry where animations are stored
+     * @param models3D the 3D models
      * @param pac the Pac‑Man actor whose animations and state drive the model
      * @param size the desired size of the 3D model
      * @return the 3D representation of Pac‑Man
      */
-    PacBase3D createPac3D(AnimationRegistry animationRegistry, Pac pac, double size);
+    PacBase3D createPac3D(AnimationRegistry animationRegistry, Models3D models3D, Pac pac, double size);
 
     /**
      * Creates the 3D representation of the lives counter for this variant.
      *
+     * @param models3D the 3D models
      * @param size the desired size of the 3D shape
      * @return the 3D node representing a life icon
      */
-    Node createLivesCounterShape3D(double size);
+    Node createLivesCounterShape3D(Models3D models3D, double size);
 
     /**
      * Returns the image representing the points earned for killing a ghost

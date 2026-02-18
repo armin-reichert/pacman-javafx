@@ -7,7 +7,6 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.View;
-import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.Region;
@@ -26,7 +25,7 @@ public class EditorView implements View {
 
     public EditorView(Stage stage, GameUI ui) {
         this.ui = ui;
-        editor = new TileMapEditor(stage, PacManModel3DRepository.instance());
+        editor = new TileMapEditor(stage, ui.models3D());
         MenuItem miQuitEditor = createQuitEditorMenuItem();
         editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
         editor.ui().layoutPane().setBackground(paintBackground(Color.valueOf("#dddddd"))); // JavaFX default grey

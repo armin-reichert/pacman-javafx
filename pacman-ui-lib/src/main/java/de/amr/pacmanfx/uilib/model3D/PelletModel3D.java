@@ -13,7 +13,7 @@ public class PelletModel3D implements Disposable {
 	private final Model3D model3D;
 
 	public PelletModel3D() {
-		model3D = PacManModel3DRepository.loadModelFromObjFile("/de/amr/pacmanfx/uilib/model3D/pellet.obj");
+		model3D = Models3D.loadModelFromObjFile("/de/amr/pacmanfx/uilib/model3D/pellet.obj");
 	}
 
 	@Override

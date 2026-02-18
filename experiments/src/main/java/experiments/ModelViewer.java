@@ -1,6 +1,6 @@
 package experiments;
 
-import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
+import de.amr.pacmanfx.uilib.model3D.Models3D;
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.control.Menu;
@@ -23,7 +23,7 @@ public class ModelViewer extends Application {
     static final String DIR = REPOSITORY_DIR
         + "pacman-ui-lib/src/main/resources/de/amr/pacmanfx/uilib/model3D";
 
-    private final PacManModel3DRepository model3DRepository = PacManModel3DRepository.instance();
+    private Models3D models3D;
     private Stage stage;
     private SubScene previewArea;
     private final BorderPane layoutPane = new BorderPane();
@@ -33,6 +33,11 @@ public class ModelViewer extends Application {
     private Node currentNode;
     private final Rotate rotX = new Rotate(0, Rotate.X_AXIS);
     private final Rotate rotY = new Rotate(0, Rotate.Y_AXIS);
+
+    @Override
+    public void init() throws Exception {
+        models3D = new Models3D();
+    }
 
     @Override
     public void start(Stage stage) {
@@ -89,7 +94,7 @@ public class ModelViewer extends Application {
         if (selectedFile != null) {
             Logger.info("File {} selected", selectedFile);
             try {
-                Node shape = model3DRepository.createPacBody(16, Color.YELLOW, Color.BLACK, Color.PINK);
+                Node shape = models3D.pacManModel().createPacBody(16, Color.YELLOW, Color.BLACK, Color.PINK);
                 //allMeshViewsUnder(shape).forEach(meshView -> meshView.setDrawMode(DrawMode.LINE));
                 setCurrentNode(new Group(shape));
             } catch (Exception x) {

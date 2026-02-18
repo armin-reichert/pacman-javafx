@@ -104,21 +104,21 @@ public class GameLevel3D extends Group implements Disposable {
 
         setMouseTransparent(true); // this increases performance, they say...
 
-        final var ghostModel3D = PacManModel3DRepository.instance().ghostModel();
+        final GhostModel3D ghostModel3D = ui.models3D().ghostModel();
         ghostDressMeshViews  = createGhostComponentMeshViews(ghostModel3D.dressMesh());
         ghostPupilsMeshViews = createGhostComponentMeshViews(ghostModel3D.pupilsMesh());
         ghostEyesMeshViews   = createGhostComponentMeshViews(ghostModel3D.eyeballsMesh());
 
         createLevelCounter3D();
-        createLivesCounter3D();
-        createPac3D(prefs.getFloat("3d.pac.size"));
+        createLivesCounter3D(ui.models3D());
+        createPac3D(ui.models3D(), prefs.getFloat("3d.pac.size"));
         ghosts3D = level.ghosts().map(this::createMutatingGhost3D).toList();
         final List<PhongMaterial> ghostNormalDressMaterials = ghosts3D.stream()
             .map(MutableGhost3D::ghost3D)
             .map(Ghost3D::normalMaterialSet)
             .map(Ghost3D.MaterialSet::dress)
             .toList();
-        createMaze3D(ghostNormalDressMaterials);
+        createMaze3D(ui.models3D(), ghostNormalDressMaterials);
         createLights();
 
         animations = new GameLevel3DAnimations(this);
@@ -211,19 +211,19 @@ public class GameLevel3D extends Group implements Disposable {
         return center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
     }
 
-    private void createPac3D(double size) {
-        pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), size);
+    private void createPac3D(Models3D models3D, double size) {
+        pac3D = uiConfig.createPac3D(animationRegistry, models3D, level.pac(), size);
         pac3D.init(level);
     }
 
-    private void createLivesCounter3D() {
+    private void createLivesCounter3D(Models3D models3D) {
         final double shapeSize = prefs.getFloat("3d.lives_counter.shape_size");
         final int capacity = prefs.getInt("3d.lives_counter.capacity");
         final Color pillarColor = prefs.getColor("3d.lives_counter.pillar_color");
         final Color plateColor = prefs.getColor("3d.lives_counter.plate_color");
         livesCounterShapes = new Node[capacity];
         for (int i = 0; i < livesCounterShapes.length; ++i) {
-            livesCounterShapes[i] = uiConfig.createLivesCounterShape3D(shapeSize);
+            livesCounterShapes[i] = uiConfig.createLivesCounterShape3D(models3D, shapeSize);
         }
         livesCounter3D = new LivesCounter3D(animationRegistry, livesCounterShapes);
         livesCounter3D.setTranslateX(2 * TS);
@@ -247,8 +247,8 @@ public class GameLevel3D extends Group implements Disposable {
         ghostLight = new PointLight();
     }
 
-    private void createMaze3D(List<PhongMaterial> ghostMaterials) {
-        maze3D = new Maze3D(uiConfig, prefs, level, animationRegistry, ghostMaterials);
+    private void createMaze3D(Models3D models3D, List<PhongMaterial> ghostMaterials) {
+        maze3D = new Maze3D(uiConfig, prefs, models3D, level, animationRegistry, ghostMaterials);
         maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
         maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
     }
