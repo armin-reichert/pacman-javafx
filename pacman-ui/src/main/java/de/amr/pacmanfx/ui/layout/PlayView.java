@@ -24,6 +24,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -37,6 +38,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
 import javafx.util.Duration;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
 import java.util.Optional;
@@ -55,6 +58,8 @@ import static java.util.Objects.requireNonNull;
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
 public class PlayView extends StackPane implements View {
+
+    private static final int PAUSE_ICON_SIZE = 80;
 
     private static final Dashboard.Style DASHBOARD_STYLE = new Dashboard.Style(
         Dashboard.DEFAULT_STYLE.labelWidth(),
@@ -77,6 +82,7 @@ public class PlayView extends StackPane implements View {
     private final BorderPane widgetLayer = new BorderPane();
     private final HelpLayer helpLayer;
     private final GameUI_ContextMenu contextMenu;
+    private final FontIcon pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
 
     private GameScene2D_Renderer sceneRenderer;
     private HeadsUpDisplay_Renderer hudRenderer;
@@ -129,10 +135,11 @@ public class PlayView extends StackPane implements View {
     }
 
     private void composeLayout() {
+        StackPane.setAlignment(pausedIcon, Pos.CENTER);
         widgetLayer.setLeft(dashboard);
         widgetLayer.setRight(miniView);
         canvasLayer.setCenter(canvasDecorator);
-        getChildren().addAll(canvasLayer, widgetLayer, helpLayer);
+        getChildren().addAll(canvasLayer, widgetLayer, helpLayer, pausedIcon);
     }
 
     public ObjectProperty<GameScene> currentGameSceneProperty() {
@@ -328,6 +335,11 @@ public class PlayView extends StackPane implements View {
     }
 
     private void configurePropertyBindings() {
+        pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
+            () -> ui.gameContext().clock().isPaused(),
+            ui.gameContext().clock().pausedProperty())
+        );
+
         GameUI.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smooth) ->
             canvasDecorator.canvas().getGraphicsContext2D().setFontSmoothingType(
                 smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));

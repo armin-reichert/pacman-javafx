@@ -283,6 +283,11 @@ public final class CommonGameActions {
             }
             Logger.info("Game ({}) {}", ui.gameContext().gameVariantName(), ui.gameContext().clock().isPaused() ? "paused" : "resumed");
         }
+
+        @Override
+        public boolean isEnabled(GameUI ui) {
+            return ui.views().isSelected(ViewID.PLAY_VIEW);
+        }
     };
 
     public static final GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction("TOGGLE_PLAY_SCENE_2D_3D") {

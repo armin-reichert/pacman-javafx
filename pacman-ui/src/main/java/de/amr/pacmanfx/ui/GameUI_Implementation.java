@@ -32,8 +32,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
-import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -55,7 +53,6 @@ public final class GameUI_Implementation implements GameUI {
 
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
-    private static final int PAUSE_ICON_SIZE = 80;
 
     private final GameContext context;
     private final DirectoryWatchdog customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
@@ -72,7 +69,6 @@ public final class GameUI_Implementation implements GameUI {
     private final FlashMessageView flashMessageView = new FlashMessageView();
     private final VoiceManager voiceManager = new VoiceManager();
 
-    private final FontIcon pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
     private final StatusIconBox statusIconBox = new StatusIconBox();
 
     private StringBinding titleBinding;
@@ -122,20 +118,13 @@ public final class GameUI_Implementation implements GameUI {
 
     private void composeLayout() {
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
-        StackPane.setAlignment(pausedIcon, Pos.CENTER);
         // First child is placeholder for current view (start view, play view, ...)
-        sceneLayout.getChildren().setAll(new Region(), pausedIcon, statusIconBox, flashMessageView);
+        sceneLayout.getChildren().setAll(new Region(), statusIconBox, flashMessageView);
     }
 
     private void initPropertyBindings() {
         statusIconBox.visibleProperty().bind(
             views().selectedIDProperty().map(viewID -> viewID == PLAY_VIEW || viewID == START_VIEW));
-
-        // Show paused icon only in play view
-        pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> views().isSelected(PLAY_VIEW) && gameContext().clock().isPaused(),
-            views().selectedIDProperty(), gameContext().clock().pausedProperty())
-        );
 
         titleBinding = createStringBinding(
             () -> {
