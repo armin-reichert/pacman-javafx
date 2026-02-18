@@ -16,28 +16,29 @@ import static de.amr.pacmanfx.uilib.UfxColors.formatColorHex;
 
 public abstract class PreferencesManager {
 
-    private final Map<String, Object> defaultPreferencesMap = new HashMap<>();
-    private final Preferences prefs;
+    private final Map<String, Object> defaultsMap = new HashMap<>();
+    private final Preferences userPrefs;
 
-    public PreferencesManager(Class<?> packageProvidingClass) {
-        prefs = Preferences.userNodeForPackage(packageProvidingClass);
-        storeDefaultValues();
+    public PreferencesManager(Class<?> packageMember) {
+        userPrefs = Preferences.userNodeForPackage(packageMember);
         if (!isBackingStoreAccessible()) {
             Logger.error("User preferences could not be accessed, using default values!");
         } else {
-            final List<String> allKeys = defaultPreferencesMap.keySet().stream().sorted().toList();
-            // add missing values
+            Logger.info("Preferences backing store is accessible");
+            storeDefaultValues();
+            // Add missing values
+            final List<String> keys = defaultsMap.keySet().stream().sorted().toList();
             try {
-                final Set<String> prefKeys = new HashSet<>(Arrays.asList(prefs.keys()));
-                for (String key : allKeys) {
-                    if (!prefKeys.contains(key)) {
-                        final Object defaultValue = defaultPreferencesMap.get(key);
-                        store(key, defaultValue);
+                final Set<String> definedKeys = new HashSet<>(Arrays.asList(userPrefs.keys()));
+                for (String key : keys) {
+                    if (!definedKeys.contains(key)) {
+                        final Object defaultValue = defaultsMap.get(key);
+                        storeEntry(key, defaultValue);
                         Logger.info("Added missing preference '{}'='{}'", key, defaultValue);
                     }
                 }
             } catch (BackingStoreException x) {
-                Logger.error(x, "Could not access preferences store to add missing keys");
+                Logger.error(x, "Adding missing preference keys failed: Could not access preferences store");
             }
         }
     }
@@ -46,83 +47,93 @@ public abstract class PreferencesManager {
 
     public boolean isBackingStoreAccessible() {
         try {
-            prefs.keys();
-            Logger.info("Preferences backing store accessible");
+            userPrefs.keys();
             return true;
         } catch (BackingStoreException x) {
             return false;
         }
     }
 
-    public void store(String key, Object defaultValue) {
-        switch (defaultValue) {
-            case Float floatValue -> prefs.putFloat(key, floatValue);
-            case Integer intValue -> prefs.putInt(key, intValue);
-            default               -> prefs.put(key, String.valueOf(defaultValue));
+    public void logPreferences() {
+        try {
+            Arrays.stream(userPrefs.keys()).sorted().forEach(key -> {
+                final Object value = getValue(key);
+                Logger.info("{} => {}", key, value);
+            });
+        } catch (BackingStoreException e) {
+				    Logger.error("Could not log preferences: backing store not accessible");
         }
-        defaultPreferencesMap.put(key, defaultValue);
+		}
+
+    public void storeEntry(String key, Object defaultValue) {
+        switch (defaultValue) {
+            case Float floatValue -> userPrefs.putFloat(key, floatValue);
+            case Integer intValue -> userPrefs.putInt(key, intValue);
+            default               -> userPrefs.put(key, String.valueOf(defaultValue));
+        }
+        defaultsMap.put(key, defaultValue);
     }
 
-    public void storeDefault(String key, Object defaultValue) {
-        defaultPreferencesMap.put(key, defaultValue);
-    }
-
-    public void storeColor(String key, Color color) {
-        final String colorSpec = formatColorHex(color);
-        prefs.put(key, colorSpec);
-        defaultPreferencesMap.put(key, colorSpec);
+    public void storeDefaultEntry(String key, Object defaultValue) {
+        defaultsMap.put(key, defaultValue);
     }
 
     public void storeDefaultColor(String key, Color color) {
         final String colorSpec = formatColorHex(color);
-        defaultPreferencesMap.put(key, colorSpec);
+        defaultsMap.put(key, colorSpec);
+    }
+
+    public void storeDefaultFont(String key, Font font) {
+        final String familyKey = key + ".family";
+        defaultsMap.put(familyKey, font.getFamily());
+
+        final String styleKey = key + ".style";
+        defaultsMap.put(styleKey, font.getStyle());
+
+        final String sizeKey = key + ".size";
+        defaultsMap.put(sizeKey, (float) font.getSize());
+    }
+
+    public void storeColor(String key, Color color) {
+        final String colorSpec = formatColorHex(color);
+        userPrefs.put(key, colorSpec);
+        defaultsMap.put(key, colorSpec);
     }
 
     public Color getColor(String colorKey) {
-        final String colorValue = prefs.get(colorKey, getDefaultValue(colorKey, String.class));
+        final String colorValue = userPrefs.get(colorKey, getDefaultValue(colorKey, String.class));
         return Color.valueOf(colorValue);
     }
 
     public void storeFont(String key, Font font) {
         final String familyKey = key + ".family";
-        prefs.put(familyKey, font.getFamily());
-        defaultPreferencesMap.put(familyKey, font.getFamily());
+        userPrefs.put(familyKey, font.getFamily());
+        defaultsMap.put(familyKey, font.getFamily());
 
         final String styleKey = key + ".style";
-        prefs.put(styleKey, font.getStyle());
-        defaultPreferencesMap.put(styleKey, font.getStyle());
+        userPrefs.put(styleKey, font.getStyle());
+        defaultsMap.put(styleKey, font.getStyle());
 
         final String sizeKey = key + ".size";
-        prefs.putFloat(sizeKey, (float) font.getSize());
-        defaultPreferencesMap.put(sizeKey, (float) font.getSize());
-    }
-
-    public void storeDefaultFont(String key, Font font) {
-        final String familyKey = key + ".family";
-        defaultPreferencesMap.put(familyKey, font.getFamily());
-
-        final String styleKey = key + ".style";
-        defaultPreferencesMap.put(styleKey, font.getStyle());
-
-        final String sizeKey = key + ".size";
-        defaultPreferencesMap.put(sizeKey, (float) font.getSize());
+        userPrefs.putFloat(sizeKey, (float) font.getSize());
+        defaultsMap.put(sizeKey, (float) font.getSize());
     }
 
     public Font getFont(String key) {
         final String familyKey = key + ".family";
-        final String family = prefs.get(familyKey, getDefaultValue(familyKey, String.class));
+        final String family = userPrefs.get(familyKey, getDefaultValue(familyKey, String.class));
 
         final String styleKey = key + ".style";
-        final String style = prefs.get(styleKey, getDefaultValue(styleKey, String.class));
+        final String style = userPrefs.get(styleKey, getDefaultValue(styleKey, String.class));
 
         final String sizeKey = key + ".size";
-        final float size = prefs.getFloat(sizeKey, getDefaultValue(sizeKey, Float.class));
+        final float size = userPrefs.getFloat(sizeKey, getDefaultValue(sizeKey, Float.class));
 
         return Font.font(family, FontWeight.findByName(style), size);
     }
 
     public <T> T getDefaultValue(String key, Class<T> type) {
-        final Object defaultValue = defaultPreferencesMap.get(key);
+        final Object defaultValue = defaultsMap.get(key);
         if (type.isInstance(defaultValue)) {
             return type.cast(defaultValue);
         }
@@ -131,11 +142,12 @@ public abstract class PreferencesManager {
     }
 
     private Object getValue(String key) {
-        final Object defaultValue = defaultPreferencesMap.get(key);
+        final Object defaultValue = defaultsMap.get(key);
         return switch (defaultValue) {
-            case Float floatValue -> prefs.getFloat(key, floatValue);
-            case Integer intValue -> prefs.getInt(key, intValue);
-            default               -> prefs.get(key, String.valueOf(defaultValue));
+            case null -> "<undefined>";
+            case Float floatValue -> userPrefs.getFloat(key, floatValue);
+            case Integer intValue -> userPrefs.getInt(key, intValue);
+            default               -> userPrefs.get(key, String.valueOf(defaultValue));
         };
     }
 
