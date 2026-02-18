@@ -56,7 +56,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private final GameContext context;
     private final DirectoryWatchdog customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
-    private final GlobalPreferencesManager preferencesManager = new GlobalPreferencesManager();
+    private final GlobalPreferencesManager prefs = new GlobalPreferencesManager();
     private final UIConfigManager uiConfigManager = new UIConfigManager();
     private final SimpleActionBindingsManager globalActionBindings = new SimpleActionBindingsManager();
     private final ViewManager viewManager;
@@ -73,33 +73,20 @@ public final class GameUI_Implementation implements GameUI {
 
     private StringBinding titleBinding;
 
-    public GameUI_Implementation(GameContext context, Stage stage, double mainSceneWidth, double mainSceneHeight) {
-        requireNonNull(context);
-        requireNonNull(stage);
+    public GameUI_Implementation(GameContext context, Stage stage, int mainSceneWidth, int mainSceneHeight) {
         requireNonNegative(mainSceneWidth);
         requireNonNegative(mainSceneHeight);
 
-        this.context = context;
-        this.stage = stage;
+        this.context = requireNonNull(context);
+        this.stage = requireNonNull(stage);
+        this.viewManager = new ViewManager(this, scene, this::createEditorView, flashMessageView);
 
-        initGameClock(context);
-
-        sceneLayout.setPrefSize(mainSceneWidth, mainSceneHeight);
-        viewManager = new ViewManager(this, scene, this::createEditorView, flashMessageView);
-
-        soundManager.muteProperty().bind(GameUI.PROPERTY_MUTED);
-
-        stage.setScene(scene);
-        stage.setMinWidth(MIN_STAGE_WIDTH);
-        stage.setMinHeight(MIN_STAGE_HEIGHT);
-
-        composeLayout();
-        initGlobalActionBindings();
+        initLayout(mainSceneWidth,mainSceneHeight);
+        initActionBindings();
         initPropertyBindings();
         initScene();
-
-        PROPERTY_3D_WALL_HEIGHT.set(prefs().getFloat("3d.obstacle.base_height"));
-        PROPERTY_3D_WALL_OPACITY.set(prefs().getFloat("3d.obstacle.opacity"));
+        initStage();
+        initGameClock(context);
 
         // Load 3D models
         final var ignored = PacManModel3DRepository.instance();
@@ -116,13 +103,19 @@ public final class GameUI_Implementation implements GameUI {
         context.clock().setErrorHandler(this::ka_tas_tro_phe);
     }
 
-    private void composeLayout() {
-        StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
+    private void initLayout(int mainSceneWidth, int mainSceneHeight) {
+        sceneLayout.setPrefSize(mainSceneWidth, mainSceneHeight);
         // First child is placeholder for current view (start view, play view, ...)
         sceneLayout.getChildren().setAll(new Region(), statusIconBox, flashMessageView);
+        StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
     }
 
     private void initPropertyBindings() {
+        PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
+        PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
+
+        soundManager.muteProperty().bind(GameUI.PROPERTY_MUTED);
+
         statusIconBox.visibleProperty().bind(
             views().selectedIDProperty().map(viewID -> viewID == PLAY_VIEW || viewID == START_VIEW));
 
@@ -169,7 +162,7 @@ public final class GameUI_Implementation implements GameUI {
         return editorView;
     }
 
-    private void initGlobalActionBindings() {
+    private void initActionBindings() {
         globalActionBindings.registerAnyFrom(CommonGameActions.ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
         globalActionBindings.registerAnyFrom(CommonGameActions.ACTION_OPEN_EDITOR,      GameUI.COMMON_BINDINGS);
         globalActionBindings.registerAnyFrom(CommonGameActions.ACTION_TOGGLE_MUTED,     GameUI.COMMON_BINDINGS);
@@ -191,6 +184,12 @@ public final class GameUI_Implementation implements GameUI {
             () -> views().currentView().onKeyboardInput(this)
         ));
         scene.setOnScroll(e -> optGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+    }
+
+    private void initStage() {
+        stage.setScene(scene);
+        stage.setMinWidth(MIN_STAGE_WIDTH);
+        stage.setMinHeight(MIN_STAGE_HEIGHT);
     }
 
     private void simulate(Game game) {
@@ -277,7 +276,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public GlobalPreferencesManager prefs() {
-        return preferencesManager;
+        return prefs;
     }
 
     @Override

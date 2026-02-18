@@ -12,6 +12,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
@@ -33,7 +34,6 @@ import de.amr.pacmanfx.uilib.GameClockImpl;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.geometry.Dimension2D;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -79,14 +79,14 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final Dimension2D sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
+        final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         try {
             final boolean useBuilder = Boolean.parseBoolean(getParameters().getNamed().getOrDefault("use_builder", "true"));
             // Shared map selector used by Pac-Man XXL and Ms. Pac-Man XXL
             final var xxlMapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
             if (useBuilder) {
                 ui = GameUI_Builder
-                    .newUI(primaryStage, sceneSize.getWidth(), sceneSize.getHeight(), gameBox)
+                    .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
 
                     .game(ARCADE_PACMAN,
                         () -> new ArcadePacMan_GameModel(gameBox.coinMechanism(), highScoreFile(ARCADE_PACMAN)),
@@ -121,7 +121,7 @@ public class PacManGames3dApp extends Application {
                     registerGame(variant, xxlMapSelector);
                 }
                 gameBox.setClock(new GameClockImpl());
-                ui = new GameUI_Implementation(gameBox, primaryStage, sceneSize.getWidth(), sceneSize.getHeight());
+                ui = new GameUI_Implementation(gameBox, primaryStage, sceneSize.x(), sceneSize.y());
 
                 ui.uiConfigManager().addFactory(ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new);
                 ui.uiConfigManager().addFactory(ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig::new);

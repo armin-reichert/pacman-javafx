@@ -8,13 +8,13 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
-import javafx.geometry.Dimension2D;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -31,9 +31,9 @@ public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final Dimension2D screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
+        final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         ui = GameUI_Builder
-            .newUI(primaryStage, screenSize.getWidth(), screenSize.getHeight(), gameBox)
+            .newUI(primaryStage, screenSize.x(), screenSize.y(), gameBox)
             .game(GameVariant.ARCADE_MS_PACMAN,
                 () -> new ArcadeMsPacMan_GameModel(gameBox.coinMechanism(), HIGH_SCORE_FILE),
                 ArcadeMsPacMan_UIConfig::new)

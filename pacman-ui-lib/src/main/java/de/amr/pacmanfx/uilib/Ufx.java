@@ -4,10 +4,10 @@
 package de.amr.pacmanfx.uilib;
 
 import de.amr.pacmanfx.Validations;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.Dimension2D;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.text.Font;
@@ -39,13 +39,13 @@ public final class Ufx {
      *
      * @param aspectRatio    the desired width/height ratio (e.g. 16.0/10.0)
      * @param heightFraction fraction of the available screen height to use (0–1)
-     * @return a {@link Dimension2D} containing the computed width and height
+     * @return a {@link Vector2i} containing the computed width and height
      */
-    public static Dimension2D computeScreenSectionSize(double aspectRatio, double heightFraction) {
+    public static Vector2i computeScreenSectionSize(double aspectRatio, double heightFraction) {
         final double availableHeight = Screen.getPrimary().getVisualBounds().getHeight();
         final double height = Math.floor(heightFraction * availableHeight);
         final double width = Math.floor(aspectRatio * height);
-        return new Dimension2D(width, height);
+        return new Vector2i((int)width, (int)height);
     }
 
     /**

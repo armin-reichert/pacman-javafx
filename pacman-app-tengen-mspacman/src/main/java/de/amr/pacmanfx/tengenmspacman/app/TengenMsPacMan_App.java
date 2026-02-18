@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
@@ -16,7 +17,6 @@ import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
-import javafx.geometry.Dimension2D;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -36,10 +36,10 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final Dimension2D sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
+        final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         ui = GameUI_Builder
-            .newUI(primaryStage, sceneSize.getWidth(), sceneSize.getHeight(), gameBox)
+            .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
             .game(TENGEN_MS_PACMAN, () -> new TengenMsPacMan_GameModel(HIGH_SCORE_FILE), TengenMsPacMan_UIConfig::new)
             .startPage(TengenMsPacMan_StartPage::new)
             .dashboard(

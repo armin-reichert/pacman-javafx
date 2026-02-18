@@ -61,23 +61,20 @@ import static java.util.Objects.requireNonNull;
  * ready for use.</p>
  *
  * <p>Instances of this builder are created via
- * {@link #newUI(Stage, double, double, GameBox)}, after which clients may
+ * {@link #newUI(Stage, int, int, GameBox)}, after which clients may
  * chain configuration calls before invoking {@link #build()} to obtain the
  * final UI.</p>
  */
 public class GameUI_Builder {
 
-    private record WindowConfig(
-        Stage stage,
-        double sceneWidth,
-        double sceneHeight) {}
+    private record WindowConfig(Stage stage, int sceneWidth, int sceneHeight) {}
 
     private record GameConfig(
         Supplier<? extends AbstractGameModel> gameModelFactory,
         Supplier<? extends UIConfig> uiConfigFactory,
         WorldMapSelector mapSelector) {}
 
-    public static GameUI_Builder newUI(Stage stage, double mainSceneWidth, double mainSceneHeight, GameBox gameBox) {
+    public static GameUI_Builder newUI(Stage stage, int mainSceneWidth, int mainSceneHeight, GameBox gameBox) {
         return new GameUI_Builder(stage, mainSceneWidth, mainSceneHeight, requireNonNull(gameBox));
     }
 
@@ -88,7 +85,7 @@ public class GameUI_Builder {
     private final List<CommonDashboardID> dashboardIDs = new ArrayList<>();
     private boolean includeInteractiveTests;
 
-    private GameUI_Builder(Stage stage, double mainSceneWidth, double mainSceneHeight, GameBox gameBox) {
+    private GameUI_Builder(Stage stage, int mainSceneWidth, int mainSceneHeight, GameBox gameBox) {
         windowConfig = new WindowConfig(stage, mainSceneWidth, mainSceneHeight);
         this.gameBox = gameBox;
         gameBox.setClock(new GameClockImpl());

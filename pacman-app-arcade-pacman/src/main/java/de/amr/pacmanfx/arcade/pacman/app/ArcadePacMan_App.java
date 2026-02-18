@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.GameUI;
@@ -19,7 +20,6 @@ import de.amr.pacmanfx.uilib.GameClockImpl;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.geometry.Dimension2D;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -50,7 +50,7 @@ public class ArcadePacMan_App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final Dimension2D sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
+        final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         try {
             final boolean useBuilder = Boolean.parseBoolean(getParameters().getNamed().getOrDefault("use_builder", "true"));
             if (useBuilder) createUIUsingBuilder(primaryStage, sceneSize);
@@ -68,12 +68,12 @@ public class ArcadePacMan_App extends Application {
         ui.terminate();
     }
 
-    private void createUIUsingAPI(Stage primaryStage, Dimension2D size) {
+    private void createUIUsingAPI(Stage primaryStage, Vector2i size) {
         final Game game = new ArcadePacMan_GameModel(gameBox.coinMechanism(), HIGH_SCORE_FILE);
         gameBox.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
         gameBox.setClock(new GameClockImpl());
 
-        ui = new GameUI_Implementation(gameBox, primaryStage, size.getWidth(), size.getHeight());
+        ui = new GameUI_Implementation(gameBox, primaryStage, size.x(), size.y());
         ui.uiConfigManager().addFactory(GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
         final StartPagesCarousel startPagesView = ui.views().getStartPagesView();
@@ -85,9 +85,9 @@ public class ArcadePacMan_App extends Application {
         ui.dashboard().addCommonSections(ui, DASHBOARD_IDs);
     }
 
-    private void createUIUsingBuilder(Stage primaryStage, Dimension2D size) {
+    private void createUIUsingBuilder(Stage primaryStage, Vector2i size) {
         ui = GameUI_Builder
-            .newUI(primaryStage, size.getWidth(), size.getHeight(), gameBox)
+            .newUI(primaryStage, size.x(), size.y(), gameBox)
             .game(GameVariant.ARCADE_PACMAN,
                 () -> new ArcadePacMan_GameModel(gameBox.coinMechanism(), HIGH_SCORE_FILE), ArcadePacMan_UIConfig::new)
             .startPage(ArcadePacMan_StartPage::new)
