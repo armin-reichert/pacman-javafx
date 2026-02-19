@@ -6,7 +6,7 @@ package experiments;
 
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
-import de.amr.pacmanfx.uilib.objimport.ObjFileContent;
+import de.amr.pacmanfx.uilib.objimport.Model3D;
 import javafx.scene.paint.Material;
 import org.tinylog.Logger;
 
@@ -20,7 +20,7 @@ public class ObjModelLoaderTest {
             ResourceManager rm = () -> ObjModelLoaderTest.class;
             var url = rm.url(args[0]);
             try {
-                var model = Models3D.loadObjFile(url);
+                var model = Models3D.loadWavefrontObjFile(url);
                 Logger.info(contentAsText(model, url));
             } catch (Exception x) {
                 Logger.error(x);
@@ -30,7 +30,7 @@ public class ObjModelLoaderTest {
         }
     }
 
-    public static String contentAsText(ObjFileContent model, URL url) {
+    public static String contentAsText(Model3D model, URL url) {
         var sb = new StringBuilder();
         sb.append("3D model loaded from URL ").append(url).append("\n");
         sb.append("\tMeshes:\n");

@@ -78,7 +78,7 @@ public class ObjFileImporter {
         }
     }
 
-    public static ObjFileContent importObjFile(URL url, Charset charset) throws IOException {
+    public static Model3D importObjFile(URL url, Charset charset) throws IOException {
         requireNonNull(url);
         requireNonNull(charset);
         try (final InputStream is = url.openStream()) {
@@ -96,10 +96,10 @@ public class ObjFileImporter {
     private String meshName = "default";
     private int currentSmoothingGroup = 0;
 
-    private final ObjFileContent data;
+    private final Model3D data;
 
     private ObjFileImporter(URL url) {
-        data = new ObjFileContent(url);
+        data = new Model3D(url);
     }
 
     private void parse(BufferedReader reader) throws IOException {

@@ -5,16 +5,16 @@
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.uilib.objimport.ObjFileContent;
+import de.amr.pacmanfx.uilib.objimport.Model3D;
 import javafx.scene.shape.Mesh;
 
 public class PelletModel3D implements Disposable {
 	private static final String MESH_ID_PELLET = "Pellet";
 
-	private final ObjFileContent model3D;
+	private final Model3D model3D;
 
 	public PelletModel3D() {
-		model3D = Models3D.loadModelFromObjFile("/de/amr/pacmanfx/uilib/model3D/pellet.obj");
+		model3D = Models3D.createFromObjFile(this::getClass, "/de/amr/pacmanfx/uilib/model3D/pellet.obj");
 	}
 
 	@Override

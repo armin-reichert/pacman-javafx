@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.uilib.objimport.ObjFileContent;
+import de.amr.pacmanfx.uilib.objimport.Model3D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Mesh;
 
@@ -15,10 +15,10 @@ public class PacManModel3D implements Disposable {
 	private static final String MESH_ID_PAC_MAN_HEAD = "PacMan.Head";
 	private static final String MESH_ID_PAC_MAN_PALATE = "PacMan.Palate";
 
-	private final ObjFileContent model3D;
+	private final Model3D model3D;
 
 	public PacManModel3D() {
-		model3D = Models3D.loadModelFromObjFile("/de/amr/pacmanfx/uilib/model3D/pacman.obj");
+		model3D = Models3D.createFromObjFile(this::getClass, "/de/amr/pacmanfx/uilib/model3D/pacman.obj");
 	}
 
 	@Override
