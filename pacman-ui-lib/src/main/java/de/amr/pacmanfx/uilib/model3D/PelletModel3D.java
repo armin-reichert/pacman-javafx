@@ -16,7 +16,7 @@ public class PelletModel3D implements Disposable {
 
 	public PelletModel3D() {
 		try {
-			model3D = Models3D.createFromObjFile(this::getClass, "/de/amr/pacmanfx/uilib/model3D/pellet.obj");
+			model3D = Model3D.fromWavefrontFile(getClass().getResource("/de/amr/pacmanfx/uilib/model3D/pellet.obj"));
 		} catch (Model3DException x) {
 			throw new RuntimeException(x);
 		}

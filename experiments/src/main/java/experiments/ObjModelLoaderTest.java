@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package experiments;
 
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.objimport.Model3D;
 import javafx.scene.paint.Material;
 import org.tinylog.Logger;
@@ -20,7 +19,7 @@ public class ObjModelLoaderTest {
             ResourceManager rm = () -> ObjModelLoaderTest.class;
             var url = rm.url(args[0]);
             try {
-                var model3D = Models3D.loadWavefrontObjFile(url);
+                var model3D = Model3D.fromWavefrontFile(url);
                 Logger.info(contentAsText(model3D, url));
             } catch (Exception x) {
                 Logger.error(x);

@@ -19,7 +19,7 @@ public class GhostModel3D implements Disposable {
 
 	public GhostModel3D() {
 		try {
-			model3D = Models3D.createFromObjFile(this::getClass, "/de/amr/pacmanfx/uilib/model3D/ghost.obj");
+			model3D = Model3D.fromWavefrontFile(getClass().getResource("/de/amr/pacmanfx/uilib/model3D/ghost.obj"));
 		} catch (Model3DException x) {
 			throw new RuntimeException(x);
 		}

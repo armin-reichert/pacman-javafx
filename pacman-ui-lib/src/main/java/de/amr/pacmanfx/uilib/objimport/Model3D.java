@@ -4,12 +4,16 @@
 package de.amr.pacmanfx.uilib.objimport;
 
 import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.uilib.model3D.Model3DException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableFloatArray;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.TriangleMesh;
+import org.tinylog.Logger;
 
+import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static java.util.Objects.requireNonNull;
@@ -32,6 +36,26 @@ import static java.util.Objects.requireNonNull;
  * A separate OBJ importer is expected to populate the fields.
  */
 public class Model3D implements Disposable {
+
+    public static Model3D fromWavefrontFile(URL modelURL) throws Model3DException {
+        try {
+            final Model3D content = ObjFileImporter.importObjFile(modelURL, StandardCharsets.UTF_8);
+            if (content == null) {
+                throw new Model3DException("Could not load OBJ file");
+            }
+            for (TriangleMesh mesh : content.meshMap().values()) {
+                try {
+                    ObjFileImporter.validateTriangleMesh(mesh);
+                } catch (AssertionError error) {
+                    Logger.error("Invalid OBJ file data: {}, URL: '{}'", error.getMessage(), modelURL);
+                }
+            }
+            return content;
+        } catch (IOException x) {
+            throw new Model3DException("Could not load OBJ file", x);
+        }
+    }
+
 
     /**
      * Creates a new model representation for the OBJ file located at the given URL.
