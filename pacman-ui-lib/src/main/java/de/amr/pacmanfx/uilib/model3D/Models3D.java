@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.pacmanfx.uilib.objimport.ObjFileContent;
 
 import java.net.URL;
 
@@ -32,7 +33,7 @@ public abstract class Models3D {
      * @return the loaded model
      * @throws IllegalArgumentException if the resource cannot be found or loaded
      */
-    public static Model3D loadModelFromObjFile(String objFilePath) {
+    public static ObjFileContent loadModelFromObjFile(String objFilePath) {
         final ResourceManager resourceManager = () -> Models3D.class;
         final URL url = resourceManager.url(objFilePath);
 
@@ -43,7 +44,7 @@ public abstract class Models3D {
         }
 
         try {
-            return new Model3D(url);
+            return Model3D.loadObjFile(url);
         } catch (Exception x) {
             throw new IllegalArgumentException(
                 "Could not load 3D model from URL '%s'".formatted(url), x

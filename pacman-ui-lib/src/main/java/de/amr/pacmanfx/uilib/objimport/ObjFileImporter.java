@@ -78,18 +78,14 @@ public class ObjFileImporter {
         }
     }
 
-    public static ObjFileContent importObjFile(URL url, Charset charset) {
+    public static ObjFileContent importObjFile(URL url, Charset charset) throws IOException {
         requireNonNull(url);
         requireNonNull(charset);
-        try (InputStream is = url.openStream()) {
-            var reader = new BufferedReader(new InputStreamReader(is, charset));
-            ObjFileImporter importer = new ObjFileImporter(url);
+        try (final InputStream is = url.openStream()) {
+            final var reader = new BufferedReader(new InputStreamReader(is, charset));
+            final ObjFileImporter importer = new ObjFileImporter(url);
             importer.parse(reader);
             return importer.data;
-        }
-        catch (IOException x) {
-            Logger.error(x, "Importing OBJ file '{}' failed!", url);
-            return null;
         }
     }
 

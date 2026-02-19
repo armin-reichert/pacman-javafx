@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.uilib.objimport.ObjFileContent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Mesh;
 
@@ -14,7 +15,7 @@ public class PacManModel3D implements Disposable {
 	private static final String MESH_ID_PAC_MAN_HEAD = "PacMan.Head";
 	private static final String MESH_ID_PAC_MAN_PALATE = "PacMan.Palate";
 
-	private final Model3D model3D;
+	private final ObjFileContent model3D;
 
 	public PacManModel3D() {
 		model3D = Models3D.loadModelFromObjFile("/de/amr/pacmanfx/uilib/model3D/pacman.obj");
@@ -26,15 +27,15 @@ public class PacManModel3D implements Disposable {
 	}
 
 	public Mesh eyesMesh() {
-		return model3D.mesh(MESH_ID_PAC_MAN_EYES);
+		return Model3D.mesh(model3D, MESH_ID_PAC_MAN_EYES);
 	}
 
 	public Mesh headMesh() {
-		return model3D.mesh(MESH_ID_PAC_MAN_HEAD);
+		return Model3D.mesh(model3D, MESH_ID_PAC_MAN_HEAD);
 	}
 
 	public Mesh palateMesh() {
-		return model3D.mesh(MESH_ID_PAC_MAN_PALATE);
+		return Model3D.mesh(model3D, MESH_ID_PAC_MAN_PALATE);
 	}
 
 	public PacBody createPacBody(double size, Color headColor, Color eyesColor, Color palateColor) {

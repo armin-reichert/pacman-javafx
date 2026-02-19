@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.uilib.objimport.ObjFileContent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Mesh;
 
@@ -13,7 +14,7 @@ public class GhostModel3D implements Disposable {
 	private static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
 	private static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
 
-	private final Model3D model3D;
+	private final ObjFileContent model3D;
 
 	public GhostModel3D() {
 		model3D = Models3D.loadModelFromObjFile("/de/amr/pacmanfx/uilib/model3D/ghost.obj");
@@ -25,15 +26,15 @@ public class GhostModel3D implements Disposable {
 	}
 
 	public Mesh dressMesh() {
-		return model3D.mesh(MESH_ID_GHOST_DRESS);
+		return Model3D.mesh(model3D, MESH_ID_GHOST_DRESS);
 	}
 
 	public Mesh eyeballsMesh() {
-		return model3D.mesh(MESH_ID_GHOST_EYEBALLS);
+		return Model3D.mesh(model3D, MESH_ID_GHOST_EYEBALLS);
 	}
 
 	public Mesh pupilsMesh() {
-		return model3D.mesh(MESH_ID_GHOST_PUPILS);
+		return Model3D.mesh(model3D, MESH_ID_GHOST_PUPILS);
 	}
 
 	public GhostBody createGhostBody(double size, Color dressColor, double rotateY) {
