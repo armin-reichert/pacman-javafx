@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package experiments;
 
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.model3D.Model3D;
+import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.objimport.ObjFileContent;
 import javafx.scene.paint.Material;
 import org.tinylog.Logger;
@@ -20,7 +20,7 @@ public class ObjModelLoaderTest {
             ResourceManager rm = () -> ObjModelLoaderTest.class;
             var url = rm.url(args[0]);
             try {
-                var model = Model3D.loadObjFile(url);
+                var model = Models3D.loadObjFile(url);
                 Logger.info(contentAsText(model, url));
             } catch (Exception x) {
                 Logger.error(x);
@@ -34,11 +34,11 @@ public class ObjModelLoaderTest {
         var sb = new StringBuilder();
         sb.append("3D model loaded from URL ").append(url).append("\n");
         sb.append("\tMeshes:\n");
-        for (var entry : Model3D.meshMap(model).entrySet()) {
+        for (var entry : Models3D.meshMap(model).entrySet()) {
             sb.append("\t\t'%s': %s%n".formatted(entry.getKey(), entry.getValue()));
         }
         sb.append("\tMaterials:\n");
-        for (Map<String, Material> lib : Model3D.materialLibs(model)) {
+        for (Map<String, Material> lib : Models3D.materialLibs(model)) {
             for (var entry : lib.entrySet()) {
                 sb.append("\t\t'%s': %s%n".formatted(entry.getKey(), entry.getValue()));
             }

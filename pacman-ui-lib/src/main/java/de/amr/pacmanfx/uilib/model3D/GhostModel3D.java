@@ -26,15 +26,15 @@ public class GhostModel3D implements Disposable {
 	}
 
 	public Mesh dressMesh() {
-		return Model3D.mesh(model3D, MESH_ID_GHOST_DRESS);
+		return Models3D.mesh(model3D, MESH_ID_GHOST_DRESS);
 	}
 
 	public Mesh eyeballsMesh() {
-		return Model3D.mesh(model3D, MESH_ID_GHOST_EYEBALLS);
+		return Models3D.mesh(model3D, MESH_ID_GHOST_EYEBALLS);
 	}
 
 	public Mesh pupilsMesh() {
-		return Model3D.mesh(model3D, MESH_ID_GHOST_PUPILS);
+		return Models3D.mesh(model3D, MESH_ID_GHOST_PUPILS);
 	}
 
 	public GhostBody createGhostBody(double size, Color dressColor, double rotateY) {
