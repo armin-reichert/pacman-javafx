@@ -55,11 +55,12 @@ public class PacManModel3D implements Disposable {
 	}
 
 	public MsPacManBody createMsPacManBody(
-			double size,
-			Color headColor, Color eyesColor, Color palateColor,
-			Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
-		var body = createPacBody(size, headColor, eyesColor, palateColor);
-		var femaleParts = createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor);
+		double size,
+		Color headColor, Color eyesColor, Color palateColor,
+		Color hairBowColor, Color hairBowPearlsColor, Color boobsColor)
+	{
+		final var body = createPacBody(size, headColor, eyesColor, palateColor);
+		final var femaleParts = createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor);
 		return new MsPacManBody(body, femaleParts);
 	}
 }

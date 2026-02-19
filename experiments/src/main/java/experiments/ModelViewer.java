@@ -20,10 +20,8 @@ import java.io.File;
 public class ModelViewer extends Application {
 
     static final String REPOSITORY_DIR = System.getProperty("user.home") + "/git/pacman-javafx/";
-    static final String DIR = REPOSITORY_DIR
-        + "pacman-ui-lib/src/main/resources/de/amr/pacmanfx/uilib/model3D";
+    static final String DIR = REPOSITORY_DIR + "pacman-ui-lib/src/main/resources/de/amr/pacmanfx/uilib/model3D";
 
-    private Models3D models3D;
     private Stage stage;
     private SubScene previewArea;
     private final BorderPane layoutPane = new BorderPane();
@@ -33,11 +31,6 @@ public class ModelViewer extends Application {
     private Node currentNode;
     private final Rotate rotX = new Rotate(0, Rotate.X_AXIS);
     private final Rotate rotY = new Rotate(0, Rotate.Y_AXIS);
-
-    @Override
-    public void init() throws Exception {
-        models3D = new Models3D();
-    }
 
     @Override
     public void start(Stage stage) {
@@ -62,10 +55,10 @@ public class ModelViewer extends Application {
 
     private Parent createSceneContent() {
         MenuItem miOpenFile = new MenuItem("Open...");
-        miOpenFile.setOnAction(e -> openFile());
+        miOpenFile.setOnAction(_ -> openFile());
 
         MenuItem miExit = new MenuItem("Exit");
-        miExit.setOnAction(e -> stage.close());
+        miExit.setOnAction(_ -> stage.close());
 
         Menu fileMenu = new Menu("File");
         fileMenu.getItems().addAll(miOpenFile, miExit);
@@ -94,7 +87,7 @@ public class ModelViewer extends Application {
         if (selectedFile != null) {
             Logger.info("File {} selected", selectedFile);
             try {
-                Node shape = models3D.pacManModel().createPacBody(16, Color.YELLOW, Color.BLACK, Color.PINK);
+                Node shape = Models3D.PAC_MAN_MODEL.createPacBody(16, Color.YELLOW, Color.BLACK, Color.PINK);
                 //allMeshViewsUnder(shape).forEach(meshView -> meshView.setDrawMode(DrawMode.LINE));
                 setCurrentNode(new Group(shape));
             } catch (Exception x) {
