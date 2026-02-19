@@ -13,7 +13,7 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerParticlesAnimation;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
-import de.amr.pacmanfx.uilib.model3D.PelletModel3D;
+import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.SphericalEnergizer3D;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
@@ -58,7 +58,6 @@ public class MazeFood3D implements Disposable {
         PreferencesManager prefs,
         WorldMapColorScheme colorScheme,
         AnimationRegistry animationRegistry,
-        PelletModel3D pelletModel3D,
         GameLevel level,
         List<PhongMaterial> ghostMaterials,
         Box floor3D,
@@ -74,7 +73,7 @@ public class MazeFood3D implements Disposable {
         pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
         particleMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()).deriveColor(0, 0.5, 1.5, 0.5));
 
-        createPellets3D(pelletModel3D);
+        createPellets3D();
         createEnergizers3D(ghostMaterials, swirlGroups);
     }
 
@@ -118,8 +117,8 @@ public class MazeFood3D implements Disposable {
         return particleGroupsContainer;
     }
 
-    private void createPellets3D(PelletModel3D pelletModel3D) {
-        final Mesh mesh = pelletModel3D.mesh();
+    private void createPellets3D() {
+        final Mesh mesh = Models3D.PELLET_MODEL.mesh();
         final var prototype = new MeshView(mesh);
         final Bounds bounds = prototype.getBoundsInLocal();
         final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());

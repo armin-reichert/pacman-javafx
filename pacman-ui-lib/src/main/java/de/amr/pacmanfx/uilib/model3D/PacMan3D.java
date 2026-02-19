@@ -15,13 +15,12 @@ import javafx.util.Duration;
 public class PacMan3D extends PacBase3D {
 
     public PacMan3D(
-        Models3D model3DRepository,
         AnimationRegistry animationRegistry,
         Pac pac,
         double size,
         Color headColor, Color eyesColor, Color palateColor)
     {
-        super(model3DRepository, animationRegistry, pac, size, headColor, eyesColor, palateColor);
+        super(animationRegistry, pac, size, headColor, eyesColor, palateColor);
 
         dyingAnimation = new RegisteredAnimation(animationRegistry, "PacMan_Dying") {
             @Override

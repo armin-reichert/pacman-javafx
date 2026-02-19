@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.uilib.model3D.Models3D;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -39,12 +38,11 @@ public class Preview3D {
     private double anchorX;
     private double anchorAngle;
 
-    public Preview3D(TileMapEditorUI ui, Models3D model3DRepository, double width, double height) {
+    public Preview3D(TileMapEditorUI ui, double width, double height) {
         requireNonNull(ui);
         requireNonNull(ui.editor());
-        requireNonNull(model3DRepository);
 
-        maze3D = new Maze3D(model3DRepository);
+        maze3D = new Maze3D();
         maze3D.actorsVisibleProperty().bind(ui.actorsVisibleProperty());
         maze3D.worldMapProperty().bind(ui.editor().currentWorldMapProperty());
         maze3D.foodVisibleProperty().bind(foodVisible);

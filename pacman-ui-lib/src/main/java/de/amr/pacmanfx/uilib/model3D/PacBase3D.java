@@ -44,7 +44,6 @@ public abstract class PacBase3D extends Group implements Disposable {
     protected RegisteredAnimation movementAnimation;
 
     protected PacBase3D(
-        Models3D model3DRepository,
         AnimationRegistry animationRegistry,
         Pac pac,
         double size,
@@ -54,10 +53,8 @@ public abstract class PacBase3D extends Group implements Disposable {
         this.size = size;
         this.animationRegistry = requireNonNull(animationRegistry);
 
-        requireNonNull(model3DRepository);
-
-        body = model3DRepository.pacManModel().createPacBody(size, headColor, eyesColor, palateColor);
-        jaw = model3DRepository.pacManModel().createBlindPacBody(size, headColor, palateColor);
+        body = Models3D.PAC_MAN_MODEL.createPacBody(size, headColor, eyesColor, palateColor);
+        jaw = Models3D.PAC_MAN_MODEL.createBlindPacBody(size, headColor, palateColor);
 
         getChildren().setAll(jaw, body);
         getTransforms().add(moveRotation);
@@ -75,11 +72,11 @@ public abstract class PacBase3D extends Group implements Disposable {
                         new KeyValue(jaw.rotateProperty(), 0, Interpolator.LINEAR)
                 };
                 var animation = new Timeline(
-                        new KeyFrame(Duration.ZERO,        "Open on Start", mouthOpen),
-                        new KeyFrame(Duration.millis(100), "Start Closing", mouthOpen),
-                        new KeyFrame(Duration.millis(130), "Closed",        mouthClosed),
-                        new KeyFrame(Duration.millis(200), "Start Opening", mouthClosed),
-                        new KeyFrame(Duration.millis(280), "Open",          mouthOpen)
+                    new KeyFrame(Duration.ZERO,        "Open on Start", mouthOpen),
+                    new KeyFrame(Duration.millis(100), "Start Closing", mouthOpen),
+                    new KeyFrame(Duration.millis(130), "Closed",        mouthClosed),
+                    new KeyFrame(Duration.millis(200), "Start Opening", mouthClosed),
+                    new KeyFrame(Duration.millis(280), "Open",          mouthOpen)
                 );
                 animation.setCycleCount(Animation.INDEFINITE);
                 return animation;

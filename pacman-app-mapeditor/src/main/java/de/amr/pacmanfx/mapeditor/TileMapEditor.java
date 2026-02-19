@@ -8,7 +8,6 @@ import de.amr.pacmanfx.mapeditor.actions.Action_SaveMapFileInteractively;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapChecker;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
-import de.amr.pacmanfx.uilib.model3D.Models3D;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -36,10 +35,9 @@ public class TileMapEditor {
     private SampleMaps sampleMaps;
     private Consumer<TileMapEditor> quitEditorAction = _ -> {};
 
-    public TileMapEditor(Stage stage, Models3D model3DRepository) {
+    public TileMapEditor(Stage stage) {
         requireNonNull(stage);
-        requireNonNull(model3DRepository);
-        ui = new TileMapEditorUI(stage, this, model3DRepository);
+        ui = new TileMapEditorUI(stage, this);
         currentWorldMap.addListener((_, _, _) -> setWorldMapChanged());
         sourceCodeLineNumbers.addListener((_, _, lineNumbers) -> sourceCode.set(currentWorldMap().sourceCode(lineNumbers)));
         updateTimer = createAnimationTimer();

@@ -18,15 +18,14 @@ public class MsPacMan3D extends PacBase3D {
     private MsPacManFemaleParts femaleBodyParts;
 
     public MsPacMan3D(
-        Models3D model3DRepository,
         AnimationRegistry animationRegistry,
         Pac msPacMan,
         double size,
         Color headColor, Color eyesColor, Color palateColor,
         Color hairBowColor, Color hairBowPearlsColor, Color boobsColor)
     {
-        super(model3DRepository, animationRegistry, msPacMan, size, headColor, eyesColor, palateColor);
-        femaleBodyParts = model3DRepository.pacManModel().createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor);
+        super(animationRegistry, msPacMan, size, headColor, eyesColor, palateColor);
+        femaleBodyParts = Models3D.PAC_MAN_MODEL.createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor);
         getChildren().add(femaleBodyParts);
 
         dyingAnimation = new RegisteredAnimation(animationRegistry, "Ms_PacMan_Dying") {

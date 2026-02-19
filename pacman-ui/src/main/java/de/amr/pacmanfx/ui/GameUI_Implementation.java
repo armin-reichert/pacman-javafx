@@ -20,7 +20,6 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
-import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.application.Platform;
@@ -60,7 +59,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
 
-    private final Models3D models3D = new Models3D();
     private final DirectoryWatchdog customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
     private final UIConfigManager uiConfigManager = new UIConfigManager();
     private final ActionBindingsManager actionBindingsManager = new ActionBindingsManagerImpl();
@@ -257,11 +255,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     // GameUI interface
-
-    @Override
-    public Models3D models3D() {
-        return models3D;
-    }
 
     @Override
     public UIConfig config(String gameVariantName) {

@@ -12,8 +12,6 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.SwirlAnimation;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
-import de.amr.pacmanfx.uilib.model3D.Models3D;
-import de.amr.pacmanfx.uilib.model3D.PelletModel3D;
 import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -74,7 +72,7 @@ public class Maze3D extends Group implements Disposable {
      * @param ghostMaterials   materials used for rendering ghost-related 3D elements
      * @throws NullPointerException if any required argument is {@code null}
      */
-    public Maze3D(UIConfig uiConfig, PreferencesManager prefs, Models3D models3D, GameLevel level, AnimationRegistry animationRegistry, List<PhongMaterial> ghostMaterials) {
+    public Maze3D(UIConfig uiConfig, PreferencesManager prefs, GameLevel level, AnimationRegistry animationRegistry, List<PhongMaterial> ghostMaterials) {
         requireNonNull(uiConfig);
         this.prefs = requireNonNull(prefs);
         this.animationRegistry = requireNonNull(animationRegistry);
@@ -90,7 +88,7 @@ public class Maze3D extends Group implements Disposable {
             .ifPresentOrElse(
                 this::createHouse3D,
                 () -> Logger.error("For creating 3D house, currently only Arcade house is supported"));
-        createMazeFood3D(level, models3D.pelletModel(), ghostMaterials);
+        createMazeFood3D(level, ghostMaterials);
     }
 
     /**
@@ -226,11 +224,10 @@ public class Maze3D extends Group implements Disposable {
      * Creates the 3D food layer (pellets, energizers, bonus items).
      *
      * @param level          the level providing pellet and energizer positions
-     * @param pelletModel3D  the pellet 3D model
      * @param ghostMaterials materials used for ghost-related visual effects
      */
-    private void createMazeFood3D(GameLevel level, PelletModel3D pelletModel3D, List<PhongMaterial> ghostMaterials) {
+    private void createMazeFood3D(GameLevel level, List<PhongMaterial> ghostMaterials) {
         final List<Group> swirlGroups = house3D.swirlAnimations().stream().map(SwirlAnimation::swirlGroup).toList();
-        food3D = new MazeFood3D(prefs, colorScheme, animationRegistry, pelletModel3D, level, ghostMaterials, floor3D, swirlGroups);
+        food3D = new MazeFood3D(prefs, colorScheme, animationRegistry, level, ghostMaterials, floor3D, swirlGroups);
     }
 }

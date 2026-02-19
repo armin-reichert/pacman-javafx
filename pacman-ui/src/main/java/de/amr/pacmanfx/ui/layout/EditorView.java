@@ -25,7 +25,7 @@ public class EditorView implements View {
 
     public EditorView(Stage stage, GameUI ui) {
         this.ui = ui;
-        editor = new TileMapEditor(stage, ui.models3D());
+        editor = new TileMapEditor(stage);
         MenuItem miQuitEditor = createQuitEditorMenuItem();
         editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
         editor.ui().layoutPane().setBackground(paintBackground(Color.valueOf("#dddddd"))); // JavaFX default grey

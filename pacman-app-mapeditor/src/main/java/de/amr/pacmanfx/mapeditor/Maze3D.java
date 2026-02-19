@@ -34,7 +34,6 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
 import static de.amr.pacmanfx.uilib.UfxColors.colorWithOpacity;
-import static java.util.Objects.requireNonNull;
 
 public class Maze3D extends Group {
 
@@ -92,9 +91,7 @@ public class Maze3D extends Group {
     private final Node pacmanShape3D;
     private final GhostBody[] ghostShapes;
 
-    public Maze3D(Models3D model3DRepository) {
-        requireNonNull(model3DRepository);
-
+    public Maze3D() {
         camera = new PerspectiveCamera(true);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
@@ -107,14 +104,14 @@ public class Maze3D extends Group {
 
         foodGroup.visibleProperty().bind(foodVisible);
 
-        pacmanShape3D = model3DRepository.pacManModel().createPacBody(ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
+        pacmanShape3D = Models3D.PAC_MAN_MODEL.createPacBody(ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
         pacmanShape3D.visibleProperty().bind(actorsVisibleProperty());
 
         ghostShapes = new GhostBody[] {
-            model3DRepository.ghostModel().createGhostBody(ACTOR_SIZE, Color.RED, 0),
-            model3DRepository.ghostModel().createGhostBody(ACTOR_SIZE, Color.PINK, 90),
-            model3DRepository.ghostModel().createGhostBody(ACTOR_SIZE, Color.CYAN, 270),
-            model3DRepository.ghostModel().createGhostBody(ACTOR_SIZE, Color.ORANGE, 270)
+            Models3D.GHOST_MODEL.createGhostBody(ACTOR_SIZE, Color.RED, 0),
+            Models3D.GHOST_MODEL.createGhostBody(ACTOR_SIZE, Color.PINK, 90),
+            Models3D.GHOST_MODEL.createGhostBody(ACTOR_SIZE, Color.CYAN, 270),
+            Models3D.GHOST_MODEL.createGhostBody(ACTOR_SIZE, Color.ORANGE, 270)
         };
         for (var ghostShape : ghostShapes) {
             ghostShape.visibleProperty().bind(actorsVisibleProperty());

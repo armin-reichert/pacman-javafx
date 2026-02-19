@@ -334,8 +334,8 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     }
 
     @Override
-    public MsPacManBody createLivesCounterShape3D(Models3D models3D, double size) {
-        return models3D.pacManModel().createMsPacManBody(
+    public MsPacManBody createLivesCounterShape3D(double size) {
+        return Models3D.PAC_MAN_MODEL.createMsPacManBody(
             size,
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
@@ -347,9 +347,8 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     }
 
     @Override
-    public MsPacMan3D createPac3D(AnimationRegistry animationRegistry, Models3D models3D, Pac pac, double size) {
+    public MsPacMan3D createPac3D(AnimationRegistry animationRegistry, Pac pac, double size) {
         var pac3D = new MsPacMan3D(
-            models3D,
             animationRegistry,
             pac,
             size,

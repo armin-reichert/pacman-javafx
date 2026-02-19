@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Mesh;
 
 public class PacManModel3D implements Disposable {
+
 	private static final String MESH_ID_PAC_MAN_EYES = "PacMan.Eyes";
 	private static final String MESH_ID_PAC_MAN_HEAD = "PacMan.Head";
 	private static final String MESH_ID_PAC_MAN_PALATE = "PacMan.Palate";
