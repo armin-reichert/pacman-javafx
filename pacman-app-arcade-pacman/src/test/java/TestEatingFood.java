@@ -22,20 +22,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestEatingFood {
 
+    private static GameBox gameBox;
+
     @BeforeAll
     static void setup() {
         final String variantName = GameVariant.ARCADE_PACMAN.name();
         final File highScoreFile = new File("");
-        GameBox.instance().registerGame(variantName, new ArcadePacMan_GameModel(GameBox.instance().coinMechanism(), highScoreFile));
-        GameBox.instance().gameVariantNameProperty().set(variantName);
+        gameBox = new GameBox();
+        gameBox.registerGame(variantName, new ArcadePacMan_GameModel(gameBox.coinMechanism(), highScoreFile));
+        gameBox.gameVariantNameProperty().set(variantName);
     }
 
     @BeforeEach
     public void createGameLevel() {
-        GameBox.instance().currentGame().buildNormalLevel(1);
+        gameBox.currentGame().buildNormalLevel(1);
     }
 
-    private ArcadePacMan_GameModel theGame() { return GameBox.instance().currentGame(); }
+    private ArcadePacMan_GameModel theGame() { return gameBox.currentGame(); }
 
     private GameLevel theGameLevel() {
         return theGame().level();
