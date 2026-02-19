@@ -20,8 +20,8 @@ public class ObjModelLoaderTest {
             ResourceManager rm = () -> ObjModelLoaderTest.class;
             var url = rm.url(args[0]);
             try {
-                var model = Models3D.loadWavefrontObjFile(url);
-                Logger.info(contentAsText(model, url));
+                var model3D = Models3D.loadWavefrontObjFile(url);
+                Logger.info(contentAsText(model3D, url));
             } catch (Exception x) {
                 Logger.error(x);
             }
@@ -30,15 +30,15 @@ public class ObjModelLoaderTest {
         }
     }
 
-    public static String contentAsText(Model3D model, URL url) {
+    public static String contentAsText(Model3D model3D, URL url) {
         var sb = new StringBuilder();
         sb.append("3D model loaded from URL ").append(url).append("\n");
         sb.append("\tMeshes:\n");
-        for (var entry : Models3D.meshMap(model).entrySet()) {
+        for (var entry : model3D.meshMap().entrySet()) {
             sb.append("\t\t'%s': %s%n".formatted(entry.getKey(), entry.getValue()));
         }
         sb.append("\tMaterials:\n");
-        for (Map<String, Material> lib : Models3D.materialLibs(model)) {
+        for (Map<String, Material> lib : model3D.materialLibs()) {
             for (var entry : lib.entrySet()) {
                 sb.append("\t\t'%s': %s%n".formatted(entry.getKey(), entry.getValue()));
             }

@@ -12,6 +12,8 @@ import javafx.scene.shape.TriangleMesh;
 import java.net.URL;
 import java.util.*;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Represents a 3D model loaded from a Wavefront OBJ file.
  * <p>
@@ -41,21 +43,21 @@ public class Model3D implements Disposable {
     }
 
     /** The URL of the OBJ file this model was loaded from. */
-    public final URL url;
+    final URL url;
 
     /**
      * Maps mesh names (OBJ object/group names) to their corresponding {@link TriangleMesh}.
      * <p>
      * OBJ files may contain multiple named objects; each becomes a separate mesh.
      */
-    public final Map<String, TriangleMesh> triangleMeshMap = new HashMap<>();
+    final Map<String, TriangleMesh> triangleMeshMap = new HashMap<>();
 
     /**
      * A list of material maps, one per mesh group.
      * <p>
      * Each entry maps material names to JavaFX {@link Material} instances.
      */
-    public final List<Map<String, Material>> materialMapsList = new ArrayList<>();
+    final List<Map<String, Material>> materialMapsList = new ArrayList<>();
 
     /** Flat array of vertex coordinates (x, y, z). */
     final ObservableFloatArray vertexArray = FXCollections.observableFloatArray();
@@ -125,4 +127,18 @@ public class Model3D implements Disposable {
         normalsArray.clear();
         faceNormalsList.clear();
     }
+
+    public Map<String, TriangleMesh> meshMap() {
+        return Collections.unmodifiableMap(triangleMeshMap);
+    }
+
+    public Optional<TriangleMesh> mesh(String meshName) {
+        requireNonNull(meshName);
+        return Optional.ofNullable(triangleMeshMap.get(meshName));
+    }
+
+    public List<Map<String, Material>> materialLibs() {
+        return Collections.unmodifiableList(materialMapsList);
+    }
+
 }

@@ -31,15 +31,15 @@ public class PacManModel3D implements Disposable {
 	}
 
 	public Mesh eyesMesh() {
-		return Models3D.mesh(model3D, MESH_ID_PAC_MAN_EYES).orElseThrow();
+		return model3D.mesh(MESH_ID_PAC_MAN_EYES).orElseThrow();
 	}
 
 	public Mesh headMesh() {
-		return Models3D.mesh(model3D, MESH_ID_PAC_MAN_HEAD).orElseThrow();
+		return model3D.mesh(MESH_ID_PAC_MAN_HEAD).orElseThrow();
 	}
 
 	public Mesh palateMesh() {
-		return Models3D.mesh(model3D, MESH_ID_PAC_MAN_PALATE).orElseThrow();
+		return model3D.mesh(MESH_ID_PAC_MAN_PALATE).orElseThrow();
 	}
 
 	public PacBody createPacBody(double size, Color headColor, Color eyesColor, Color palateColor) {

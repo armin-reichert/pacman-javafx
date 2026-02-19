@@ -85,6 +85,12 @@ public class ObjFileImporter {
             final var reader = new BufferedReader(new InputStreamReader(is, charset));
             final ObjFileImporter importer = new ObjFileImporter(url);
             importer.parse(reader);
+            Logger.info("OBJ file parsed: {} vertices, {} uvs, {} faces, {} smoothing groups. URL={}",
+                importer.data.vertexArray.size() / 3,
+                importer.data.uvArray.size() / 2,
+                importer.data.facesList.size() / 6,
+                importer.data.smoothingGroupList.size(),
+                url);
             return importer.data;
         }
     }
@@ -147,8 +153,6 @@ public class ObjFileImporter {
             }
         }
         commitCurrentMesh();
-        Logger.info("OBJ file parsed: {} vertices, {} uvs, {} faces, {} smoothing groups",
-            data.vertexArray.size() / 3, data.uvArray.size() / 2, data.facesList.size() / 6, data.smoothingGroupList.size());
     }
 
     /**

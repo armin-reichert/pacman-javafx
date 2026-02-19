@@ -28,6 +28,6 @@ public class PelletModel3D implements Disposable {
 	}
 
 	public Mesh mesh() {
-		return Models3D.mesh(model3D, MESH_ID_PELLET).orElseThrow();
+		return model3D.mesh(MESH_ID_PELLET).orElseThrow();
 	}
 }

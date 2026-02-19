@@ -20,6 +20,7 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
+import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.application.Platform;
@@ -350,6 +351,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     @Override
     public void show() {
         logPreferences();
+        load3DModels(); // fail fast
         viewManager.getPlayView().dashboard().init(this);
         viewManager.selectView(START_VIEW);
         stage.centerOnScreen();
@@ -444,5 +446,11 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         return gameScene == null || !debug
             ? normalTitle
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
+    }
+
+    private void load3DModels() {
+        Logger.info("Loaded {}", Models3D.PAC_MAN_MODEL);
+        Logger.info("Loaded {}", Models3D.GHOST_MODEL);
+        Logger.info("Loaded {}", Models3D.PELLET_MODEL);
     }
 }

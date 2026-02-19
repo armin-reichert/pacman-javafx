@@ -6,19 +6,12 @@ package de.amr.pacmanfx.uilib.model3D;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.objimport.Model3D;
 import de.amr.pacmanfx.uilib.objimport.ObjFileImporter;
-import javafx.scene.paint.Material;
 import javafx.scene.shape.TriangleMesh;
 import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Central access point for loading and providing 3D models used by the UI layer.
@@ -58,7 +51,7 @@ public abstract class Models3D {
             if (content == null) {
                 throw new Model3DException("Could not load OBJ file");
             }
-            for (TriangleMesh mesh : content.triangleMeshMap.values()) {
+            for (TriangleMesh mesh : content.meshMap().values()) {
                 try {
                     ObjFileImporter.validateTriangleMesh(mesh);
                 } catch (AssertionError error) {
@@ -79,23 +72,4 @@ public abstract class Models3D {
 
     /** Shared 3D model instance for pellets. */
     public static final PelletModel3D PELLET_MODEL = new PelletModel3D();
-
-    public static Map<String, TriangleMesh> meshMap(Model3D model3D) {
-        requireNonNull(model3D);
-        return Collections.unmodifiableMap(model3D.triangleMeshMap);
-    }
-
-    public static Optional<TriangleMesh> mesh(Model3D model3D, String meshName) {
-        requireNonNull(model3D);
-        requireNonNull(meshName);
-        if (model3D.triangleMeshMap.containsKey(meshName)) {
-            return Optional.ofNullable(model3D.triangleMeshMap.get(meshName));
-        }
-        return Optional.empty();
-    }
-
-    public static List<Map<String, Material>> materialLibs(Model3D model3D) {
-        requireNonNull(model3D);
-        return Collections.unmodifiableList(model3D.materialMapsList);
-    }
 }
