@@ -18,7 +18,11 @@ public class PacManModel3D implements Disposable {
 	private final Model3D model3D;
 
 	public PacManModel3D() {
-		model3D = Models3D.createFromObjFile(this::getClass, "/de/amr/pacmanfx/uilib/model3D/pacman.obj");
+		try {
+			model3D = Models3D.createFromObjFile(this::getClass, "/de/amr/pacmanfx/uilib/model3D/pacman.obj");
+		} catch (Model3DException x) {
+			throw new RuntimeException(x);
+		}
 	}
 
 	@Override
@@ -27,15 +31,15 @@ public class PacManModel3D implements Disposable {
 	}
 
 	public Mesh eyesMesh() {
-		return Models3D.mesh(model3D, MESH_ID_PAC_MAN_EYES);
+		return Models3D.mesh(model3D, MESH_ID_PAC_MAN_EYES).orElseThrow();
 	}
 
 	public Mesh headMesh() {
-		return Models3D.mesh(model3D, MESH_ID_PAC_MAN_HEAD);
+		return Models3D.mesh(model3D, MESH_ID_PAC_MAN_HEAD).orElseThrow();
 	}
 
 	public Mesh palateMesh() {
-		return Models3D.mesh(model3D, MESH_ID_PAC_MAN_PALATE);
+		return Models3D.mesh(model3D, MESH_ID_PAC_MAN_PALATE).orElseThrow();
 	}
 
 	public PacBody createPacBody(double size, Color headColor, Color eyesColor, Color palateColor) {

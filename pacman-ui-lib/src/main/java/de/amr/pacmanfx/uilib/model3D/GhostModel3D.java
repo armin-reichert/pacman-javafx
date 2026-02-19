@@ -18,7 +18,11 @@ public class GhostModel3D implements Disposable {
 	private final Model3D model3D;
 
 	public GhostModel3D() {
-		model3D = Models3D.createFromObjFile(this::getClass, "/de/amr/pacmanfx/uilib/model3D/ghost.obj");
+		try {
+			model3D = Models3D.createFromObjFile(this::getClass, "/de/amr/pacmanfx/uilib/model3D/ghost.obj");
+		} catch (Model3DException x) {
+			throw new RuntimeException(x);
+		}
 	}
 
 	@Override
@@ -27,15 +31,15 @@ public class GhostModel3D implements Disposable {
 	}
 
 	public Mesh dressMesh() {
-		return Models3D.mesh(model3D, MESH_ID_GHOST_DRESS);
+		return Models3D.mesh(model3D, MESH_ID_GHOST_DRESS).orElseThrow();
 	}
 
 	public Mesh eyeballsMesh() {
-		return Models3D.mesh(model3D, MESH_ID_GHOST_EYEBALLS);
+		return Models3D.mesh(model3D, MESH_ID_GHOST_EYEBALLS).orElseThrow();
 	}
 
 	public Mesh pupilsMesh() {
-		return Models3D.mesh(model3D, MESH_ID_GHOST_PUPILS);
+		return Models3D.mesh(model3D, MESH_ID_GHOST_PUPILS).orElseThrow();
 	}
 
 	public GhostBody createGhostBody(double size, Color dressColor, double rotateY) {

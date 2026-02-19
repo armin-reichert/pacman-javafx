@@ -14,7 +14,11 @@ public class PelletModel3D implements Disposable {
 	private final Model3D model3D;
 
 	public PelletModel3D() {
-		model3D = Models3D.createFromObjFile(this::getClass, "/de/amr/pacmanfx/uilib/model3D/pellet.obj");
+		try {
+			model3D = Models3D.createFromObjFile(this::getClass, "/de/amr/pacmanfx/uilib/model3D/pellet.obj");
+		} catch (Model3DException x) {
+			throw new RuntimeException(x);
+		}
 	}
 
 	@Override
@@ -23,6 +27,6 @@ public class PelletModel3D implements Disposable {
 	}
 
 	public Mesh mesh() {
-		return Models3D.mesh(model3D, MESH_ID_PELLET);
+		return Models3D.mesh(model3D, MESH_ID_PELLET).orElseThrow();
 	}
 }
