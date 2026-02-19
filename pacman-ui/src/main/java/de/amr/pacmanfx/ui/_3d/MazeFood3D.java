@@ -44,15 +44,15 @@ public class MazeFood3D implements Disposable {
     private final PreferencesManager prefs;
     private final AnimationRegistry animationRegistry;
     private final GameLevel level;
-
     private final Box floor3D;
 
     private PhongMaterial pelletMaterial;
     private PhongMaterial particleMaterial;
 
-    private Set<Shape3D> pellets3D = Set.of();
+    private Group particleGroupsContainer = new Group();
+
+    private Set<MeshView> pellets3D = Set.of();
     private Set<Energizer3D> energizers3D = Set.of();
-    private final Group particleGroupsContainer = new Group();
 
     public MazeFood3D(
         PreferencesManager prefs,
@@ -90,7 +90,7 @@ public class MazeFood3D implements Disposable {
             particleMaterial = null;
         }
         if (!pellets3D.isEmpty()) {
-            pellets3D.stream().filter(MeshView.class::isInstance).map(MeshView.class::cast).forEach(meshView -> {
+            pellets3D.forEach(meshView -> {
                 meshView.setMaterial(null);
                 meshView.setMesh(null);
             });
@@ -103,8 +103,9 @@ public class MazeFood3D implements Disposable {
             energizers3D = Set.of();
             Logger.info("Disposed 3D energizers");
         }
-        if (!particleGroupsContainer.getChildren().isEmpty()) {
+        if (particleGroupsContainer != null) {
             particleGroupsContainer.getChildren().clear();
+            particleGroupsContainer = null;
             Logger.info("Removed all particle groups");
         }
     }
@@ -118,32 +119,32 @@ public class MazeFood3D implements Disposable {
     }
 
     private void createPellets3D() {
-        final Mesh mesh = Models3D.PELLET_MODEL.mesh();
-        final var prototype = new MeshView(mesh);
-        final Bounds bounds = prototype.getBoundsInLocal();
+        final var pelletPrototype = new MeshView(Models3D.PELLET_MODEL.mesh());
+        final Bounds bounds = pelletPrototype.getBoundsInLocal();
         final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
         final float radius = prefs.getFloat("3d.pellet.radius");
         final double scaling = (2 * radius) / maxExtent;
         final var scale = new Scale(scaling, scaling, scaling);
         final FoodLayer foodLayer = level.worldMap().foodLayer();
 
-        pellets3D = foodLayer.tiles().filter(foodLayer::hasFoodAtTile)
-                .filter(tile -> !foodLayer.isEnergizerTile(tile))
-                .map(tile -> createPellet3D(mesh, scale, tile))
-                .collect(Collectors.toCollection(HashSet::new));
+        pellets3D = foodLayer.tiles()
+            .filter(foodLayer::hasFoodAtTile)
+            .filter(tile -> !foodLayer.isEnergizerTile(tile))
+            .map(tile -> createPellet3D(pelletPrototype.getMesh(), scale, tile))
+            .collect(Collectors.toCollection(HashSet::new));
     }
 
-    private Shape3D createPellet3D(Mesh pelletMesh, Scale scale, Vector2i tile) {
-        final var pelletShape = new MeshView(pelletMesh);
-        pelletShape.setMaterial(pelletMaterial);
-        pelletShape.setRotationAxis(Rotate.Z_AXIS);
-        pelletShape.setRotate(90);
-        pelletShape.setTranslateX(tile.x() * TS + HTS);
-        pelletShape.setTranslateY(tile.y() * TS + HTS);
-        pelletShape.setTranslateZ(- 6);
-        pelletShape.getTransforms().add(scale);
-        pelletShape.setUserData(tile);
-        return pelletShape;
+    private MeshView createPellet3D(Mesh pelletMesh, Scale scale, Vector2i tile) {
+        final var meshView = new MeshView(pelletMesh);
+        meshView.setMaterial(pelletMaterial);
+        meshView.setRotationAxis(Rotate.Z_AXIS);
+        meshView.setRotate(90);
+        meshView.setTranslateX(tile.x() * TS + HTS);
+        meshView.setTranslateY(tile.y() * TS + HTS);
+        meshView.setTranslateZ(- 6);
+        meshView.getTransforms().add(scale);
+        meshView.setUserData(tile);
+        return meshView;
     }
 
     private void createEnergizers3D(List<PhongMaterial> ghostMaterials, List<Group> swirlGroups) {
@@ -151,7 +152,8 @@ public class MazeFood3D implements Disposable {
         final float minScaling = prefs.getFloat("3d.energizer.scaling.min");
         final float maxScaling = prefs.getFloat("3d.energizer.scaling.max");
         final FoodLayer foodLayer = level.worldMap().foodLayer();
-        energizers3D = foodLayer.tiles().filter(foodLayer::hasFoodAtTile)
+        energizers3D = foodLayer.tiles()
+            .filter(foodLayer::hasFoodAtTile)
             .filter(foodLayer::isEnergizerTile)
             .map(tile -> createAnimatedEnergizer3D(tile, radius, minScaling, maxScaling, ghostMaterials, floor3D, swirlGroups))
             .collect(Collectors.toCollection(HashSet::new));
@@ -176,7 +178,7 @@ public class MazeFood3D implements Disposable {
             pelletMaterial,
             tile);
 
-        //TODO there si still memory leaking!
+        //TODO there is still a memory leak!
         final EnergizerParticlesAnimation particlesAnimation = createParticlesAnimation(
             energizer3D,
             ghostMaterials,
@@ -208,7 +210,7 @@ public class MazeFood3D implements Disposable {
             floor3D);
 
         particleGroupsContainer.getChildren().add(particlesAnimation.particleShapesGroup());
-        // Important: Without gravity, particles would not land on the floor and then get attracted by the house!
+        // Important: Without gravity, particles would not land on the floor and in turn get attracted by the house!
         particlesAnimation.setGravity(GameLevel3D.GRAVITY);
         return particlesAnimation;
     }

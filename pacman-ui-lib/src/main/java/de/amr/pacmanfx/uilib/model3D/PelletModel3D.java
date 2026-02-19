@@ -9,6 +9,7 @@ import de.amr.pacmanfx.uilib.objimport.Model3D;
 import javafx.scene.shape.Mesh;
 
 public class PelletModel3D implements Disposable {
+
 	private static final String MESH_ID_PELLET = "Pellet";
 
 	private final Model3D model3D;
