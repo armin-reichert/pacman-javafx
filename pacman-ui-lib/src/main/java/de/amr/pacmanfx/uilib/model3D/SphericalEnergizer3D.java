@@ -19,7 +19,9 @@ import static java.util.Objects.requireNonNull;
 
 public class SphericalEnergizer3D implements Energizer3D {
 
-    private final Sphere sphere;
+    private static final int PUMPING_FREQUENCY = 3; // 3 inflate+expand cycles per second
+
+    private Sphere sphere;
     private RegisteredAnimation pumpingAnimation;
     private RegisteredAnimation eatenAnimation;
 
@@ -27,38 +29,50 @@ public class SphericalEnergizer3D implements Energizer3D {
         AnimationRegistry animationRegistry,
         double radius,
         Point3D center,
-        double minScaling,
-        double maxScaling,
+        double inflatedSize,
+        double expandedSize,
         Material material,
         Vector2i tile)
     {
-        requireNonNegative(radius, "Energizer radius must be positive but is %f");
         requireNonNull(animationRegistry);
+        requireNonNegative(radius, "Energizer radius must be positive but is %f");
+        requireNonNull(center);
+        requireNonNegative(inflatedSize, "Energizer inflated size must be positive but is %f");
+        requireNonNegative(expandedSize, "Energizer expanded size must be positive but is %f");
+        requireNonNull(material);
+        requireNonNull(tile);
 
         sphere = new Sphere(radius);
         sphere.setMaterial(material);
         sphere.setTranslateX(center.getX());
         sphere.setTranslateY(center.getY());
         sphere.setTranslateZ(center.getZ());
+        sphere.setUserData(tile);
 
-        sphere.setUserData(requireNonNull(tile));
+        pumpingAnimation = createPumpingAnimation(animationRegistry, sphere, inflatedSize, expandedSize);
+    }
 
-        pumpingAnimation = new RegisteredAnimation(animationRegistry, "Energizer_Pumping") {
+    private static RegisteredAnimation createPumpingAnimation(
+        AnimationRegistry animationRegistry,
+        Sphere sphere,
+        double inflatedSize,
+        double expandedSize)
+    {
+        return new RegisteredAnimation(animationRegistry, "Energizer_Pumping") {
             @Override
             protected Animation createAnimationFX() {
-                // 3 full pumping cycles per second = 6 compress/expand cycles
-                Duration duration = Duration.millis(166.6);
-                var transition = new ScaleTransition(duration, sphere);
-                transition.setAutoReverse(true);
-                transition.setCycleCount(Animation.INDEFINITE);
-                transition.setInterpolator(Interpolator.EASE_BOTH);
-                transition.setFromX(maxScaling);
-                transition.setFromY(maxScaling);
-                transition.setFromZ(maxScaling);
-                transition.setToX(minScaling);
-                transition.setToY(minScaling);
-                transition.setToZ(minScaling);
-                return transition;
+                final Duration duration = Duration.seconds(1).divide(2 * PUMPING_FREQUENCY);
+                final var pumping = new ScaleTransition(duration, sphere);
+                pumping.setAutoReverse(true);
+                pumping.setCycleCount(Animation.INDEFINITE);
+                pumping.setInterpolator(Interpolator.EASE_BOTH);
+                pumping.setFromX(expandedSize);
+                pumping.setFromY(expandedSize);
+                pumping.setFromZ(expandedSize);
+                pumping.setToX(inflatedSize);
+                pumping.setToY(inflatedSize);
+                pumping.setToZ(inflatedSize);
+                return pumping;
             }
         };
     }
@@ -76,6 +90,10 @@ public class SphericalEnergizer3D implements Energizer3D {
 
     @Override
     public void dispose() {
+        if (sphere != null) {
+            sphere.setMaterial(null);
+            sphere = null;
+        }
         if (pumpingAnimation != null) {
             pumpingAnimation.dispose();
             pumpingAnimation = null;
