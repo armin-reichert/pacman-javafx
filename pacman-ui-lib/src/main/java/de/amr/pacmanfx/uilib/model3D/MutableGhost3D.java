@@ -97,7 +97,7 @@ public class MutableGhost3D extends Group implements Disposable {
 
         @Override
         public void playFromStart() {
-            var rotateTransition = (RotateTransition) getOrCreateAnimationFX();
+            var rotateTransition = (RotateTransition) getOrCreateWrappedAnimation();
             rotateTransition.stop();
             rotateTransition.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
             rotateTransition.playFromStart();
@@ -105,7 +105,7 @@ public class MutableGhost3D extends Group implements Disposable {
 
         @Override
         public void playOrContinue() {
-            var rotateTransition = (RotateTransition) getOrCreateAnimationFX();
+            var rotateTransition = (RotateTransition) getOrCreateWrappedAnimation();
             rotateTransition.stop();
             rotateTransition.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
             rotateTransition.play();

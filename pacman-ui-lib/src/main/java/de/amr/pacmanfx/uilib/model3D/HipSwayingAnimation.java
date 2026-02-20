@@ -27,10 +27,10 @@ public class HipSwayingAnimation extends RegisteredAnimation {
     public HipSwayingAnimation(AnimationRegistry animationRegistry, Node node) {
         super(animationRegistry, "MsPacMan_HipSwaying");
         this.node = requireNonNull(node);
-        setFactory(this::createAnimationFX);
+        setFactory(this::createwrappedAnimation);
     }
 
-    private RotateTransition createAnimationFX() {
+    private RotateTransition createwrappedAnimation() {
         var rotateTransition = new RotateTransition(SWING_TIME, node);
         rotateTransition.setAxis(Rotate.Z_AXIS);
         rotateTransition.setCycleCount(Animation.INDEFINITE);
@@ -41,9 +41,9 @@ public class HipSwayingAnimation extends RegisteredAnimation {
 
     @Override
     public void stop() {
-        if (animationFX != null) {
-            animationFX.stop();
-            var rotateTransition = (RotateTransition) animationFX;
+        if (wrappedAnimation != null) {
+            wrappedAnimation.stop();
+            var rotateTransition = (RotateTransition) wrappedAnimation;
             node.setRotationAxis(rotateTransition.getAxis());
             node.setRotate(0);
         }
@@ -51,25 +51,25 @@ public class HipSwayingAnimation extends RegisteredAnimation {
 
     @Override
     public void pause() {
-        if (animationFX != null) {
-            animationFX.pause();
-            var rotateTransition = (RotateTransition) animationFX;
+        if (wrappedAnimation != null) {
+            wrappedAnimation.pause();
+            var rotateTransition = (RotateTransition) wrappedAnimation;
             node.setRotationAxis(rotateTransition.getAxis());
             node.setRotate(0);
         }
     }
 
     public void setPowerMode(boolean power) {
-        if (animationFX != null) {
-            boolean wasRunning = animationFX.getStatus() == Animation.Status.RUNNING;
-            animationFX.stop();
-            animationFX.setRate(power ? POWER_RATE : 1);
-            var rotateTransition = (RotateTransition) animationFX;
+        if (wrappedAnimation != null) {
+            boolean wasRunning = wrappedAnimation.getStatus() == Animation.Status.RUNNING;
+            wrappedAnimation.stop();
+            wrappedAnimation.setRate(power ? POWER_RATE : 1);
+            var rotateTransition = (RotateTransition) wrappedAnimation;
             double amplification = power ? POWER_ANGLE_AMPLIFICATION : 1;
             rotateTransition.setFromAngle(HIP_ANGLE_FROM * amplification);
             rotateTransition.setToAngle(HIP_ANGLE_TO * amplification);
             if (wasRunning) {
-                animationFX.play();
+                wrappedAnimation.play();
             }
         }
     }

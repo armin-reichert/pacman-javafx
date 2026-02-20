@@ -65,8 +65,8 @@ public class Bonus3D extends Box implements Disposable {
         }
 
         public void update(GameLevel level) {
-            if (animationFX != null && animationFX.getStatus() == Animation.Status.RUNNING) {
-                RotateTransition rotateTransition = (RotateTransition) animationFX;
+            if (wrappedAnimation != null && wrappedAnimation.getStatus() == Animation.Status.RUNNING) {
+                RotateTransition rotateTransition = (RotateTransition) wrappedAnimation;
                 Vector2f center = Bonus3D.this.bonus.center();
                 boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
                 setVisible(Bonus3D.this.bonus.state() == BonusState.EDIBLE && !outsideWorld);

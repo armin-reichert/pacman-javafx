@@ -43,8 +43,8 @@ public class HeadBangingAnimation extends RegisteredAnimation {
     @Override
     public void stop() {
         super.stop();
-        if (animationFX != null) {
-            var rotateTransition = (RotateTransition) animationFX;
+        if (wrappedAnimation != null) {
+            var rotateTransition = (RotateTransition) wrappedAnimation;
             node.setRotationAxis(rotateTransition.getAxis());
             node.setRotate(0);
         }
@@ -53,15 +53,15 @@ public class HeadBangingAnimation extends RegisteredAnimation {
     @Override
     public void pause() {
         super.pause();
-        if (animationFX != null) {
-            var rotateTransition = (RotateTransition) animationFX;
+        if (wrappedAnimation != null) {
+            var rotateTransition = (RotateTransition) wrappedAnimation;
             node.setRotationAxis(rotateTransition.getAxis());
             node.setRotate(0);
         }
     }
 
     public void update(Pac pac) {
-        var rotateTransition = (RotateTransition) getOrCreateAnimationFX();
+        var rotateTransition = (RotateTransition) getOrCreateWrappedAnimation();
         if (pac.isParalyzed()) {
             pause();
         } else {
@@ -75,7 +75,7 @@ public class HeadBangingAnimation extends RegisteredAnimation {
     }
 
     public void setPowerMode(boolean power) {
-        var rotateTransition = (RotateTransition) getOrCreateAnimationFX();
+        var rotateTransition = (RotateTransition) getOrCreateWrappedAnimation();
         boolean running = rotateTransition.getStatus() == Animation.Status.RUNNING;
         rotateTransition.stop();
         rotateTransition.setFromAngle(BANG_ANGLE_FROM * POWER_ANGLE_AMPLIFICATION);

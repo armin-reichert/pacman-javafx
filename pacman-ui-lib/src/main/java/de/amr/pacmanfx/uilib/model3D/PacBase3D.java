@@ -63,7 +63,7 @@ public abstract class PacBase3D extends Group implements Disposable {
         chewingAnimation = new RegisteredAnimation(animationRegistry, "PacMan_Chewing") {
             @Override
             public void stop() {
-                Animation animation = getOrCreateAnimationFX();
+                Animation animation = getOrCreateWrappedAnimation();
                 animation.stop();
                 if (jaw != null) {
                     // open mouth when stopped
