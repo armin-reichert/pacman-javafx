@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.animation;
 import de.amr.pacmanfx.lib.Disposable;
 import javafx.animation.Animation;
 import org.tinylog.Logger;
+import org.tinylog.Supplier;
 
 import java.util.Optional;
 
@@ -15,21 +16,29 @@ import static java.util.Objects.requireNonNull;
  * A wrapper around a JavaFX animation. Such an animation is registered in its associated animation repository and
  * the embedded JavaFX animation is created on demand.
  */
-public abstract class RegisteredAnimation implements Disposable {
+public class RegisteredAnimation implements Disposable {
 
     private final String label;
     private final AnimationRegistry registry;
+
+    private Supplier<Animation> factory;
     protected Animation animationFX;
 
-    /**
-     * @return the JavaFX animation wrapped by this container
-     */
-    protected abstract Animation createAnimationFX();
-
-    protected RegisteredAnimation(AnimationRegistry registry, String label) {
+    public RegisteredAnimation(AnimationRegistry registry, String label) {
         this.registry = requireNonNull(registry);
         this.label = requireNonNull(label);
         registry.register(this);
+    }
+
+    public RegisteredAnimation(AnimationRegistry registry, String label, Supplier<Animation> factory) {
+        this.registry = requireNonNull(registry);
+        this.label = requireNonNull(label);
+        this.factory = requireNonNull(factory);
+        registry.register(this);
+    }
+
+    public void setFactory(Supplier<Animation> factory) {
+        this.factory = requireNonNull(factory);
     }
 
     public String label() {
@@ -43,14 +52,14 @@ public abstract class RegisteredAnimation implements Disposable {
     public Animation getOrCreateAnimationFX() {
         if (animationFX == null) {
             try {
-                animationFX = createAnimationFX();
+                animationFX = factory.get();
             } catch (Exception x) {
                 Logger.error("Creating JavaFX animation '{}' failed", label);
-                throw new IllegalStateException(x);
+                throw new IllegalStateException("Animation creation failed", x);
             }
             if (animationFX == null) {
                 Logger.error("Creating JavaFX animation '{}' returned null", label);
-                throw new IllegalStateException();
+                throw new IllegalStateException("Animation factory returned null");
             }
         }
         return animationFX;

@@ -83,10 +83,10 @@ public class MutableGhost3D extends Group implements Disposable {
 
         public BrakeAnimation(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Ghost_Braking_%s".formatted(ghost.name()));
+            setFactory(this::createAnimationFX);
         }
 
-        @Override
-        protected Animation createAnimationFX() {
+        private Animation createAnimationFX() {
             var rotateTransition = new RotateTransition(Duration.seconds(0.5), MutableGhost3D.this);
             rotateTransition.setAxis(Rotate.Y_AXIS);
             rotateTransition.setAutoReverse(true);
@@ -123,10 +123,10 @@ public class MutableGhost3D extends Group implements Disposable {
 
         public PointsAnimation(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Ghost_Points_%s".formatted(ghost.name()));
+            setFactory(this::createAnimationFX);
         }
 
-        @Override
-        protected Animation createAnimationFX() {
+        private Animation createAnimationFX() {
             var numberBoxRotation = new RotateTransition(Duration.seconds(1), numberShape3D);
             numberBoxRotation.setAxis(Rotate.X_AXIS);
             numberBoxRotation.setFromAngle(0);

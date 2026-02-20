@@ -27,10 +27,10 @@ public class HipSwayingAnimation extends RegisteredAnimation {
     public HipSwayingAnimation(AnimationRegistry animationRegistry, Node node) {
         super(animationRegistry, "MsPacMan_HipSwaying");
         this.node = requireNonNull(node);
+        setFactory(this::createAnimationFX);
     }
 
-    @Override
-    protected RotateTransition createAnimationFX() {
+    private RotateTransition createAnimationFX() {
         var rotateTransition = new RotateTransition(SWING_TIME, node);
         rotateTransition.setAxis(Rotate.Z_AXIS);
         rotateTransition.setCycleCount(Animation.INDEFINITE);

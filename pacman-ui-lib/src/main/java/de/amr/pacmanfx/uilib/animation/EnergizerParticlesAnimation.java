@@ -264,6 +264,8 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
         this.particleMaterial = requireNonNull(particleMaterial);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
         this.floor3D = requireNonNull(floor3D);
+
+        setFactory(this::createAnimationFX);
     }
 
     public void setGravity(Vector3f gravity) {
@@ -274,8 +276,7 @@ public class EnergizerParticlesAnimation extends RegisteredAnimation {
         return particleShapesGroup;
     }
 
-    @Override
-    protected Animation createAnimationFX() {
+    private Animation createAnimationFX() {
         final var swarmMovement = new ParticleSwarmMovement(PARTICLE_SWARM_DROPPERS_DISPOSAL_TIME);
         swarmMovement.setOnFinished(_ -> {
             // Particles that did not make it into the swirl will be disposed

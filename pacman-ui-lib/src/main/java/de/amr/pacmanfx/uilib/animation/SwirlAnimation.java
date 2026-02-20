@@ -19,14 +19,14 @@ public class SwirlAnimation extends RegisteredAnimation {
 
     public SwirlAnimation(AnimationRegistry animationRegistry, String label) {
         super(animationRegistry, label);
+        setFactory(this::createAnimationFX);
     }
 
     public Group swirlGroup() {
         return swirlGroup;
     }
 
-    @Override
-    protected Animation createAnimationFX() {
+    private Animation createAnimationFX() {
         Duration rotationTime = Duration.seconds(SWIRL_ROTATION_SEC);
         var rotation = new RotateTransition(rotationTime, swirlGroup);
         rotation.setAxis(Rotate.Z_AXIS);

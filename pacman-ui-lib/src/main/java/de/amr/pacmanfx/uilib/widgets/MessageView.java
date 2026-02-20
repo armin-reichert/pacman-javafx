@@ -96,10 +96,10 @@ public class MessageView extends ImageView implements Disposable {
 
         public MoveInOutAnimation(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Message_Movement");
+            setFactory(this::createAnimationFX);
         }
 
-        @Override
-        protected Animation createAnimationFX() {
+        private Animation createAnimationFX() {
             double hiddenZ = hiddenZPosition();
             double visibleZ = -(hiddenZ + 2);
             var moveUp = new TranslateTransition(Duration.seconds(1), MessageView.this);
@@ -111,7 +111,7 @@ public class MessageView extends ImageView implements Disposable {
                 new PauseTransition(Duration.seconds(displaySeconds)),
                 moveDown
             );
-            movement.setOnFinished(e -> setVisible(false));
+            movement.setOnFinished(_ -> setVisible(false));
             return movement;
         }
     }

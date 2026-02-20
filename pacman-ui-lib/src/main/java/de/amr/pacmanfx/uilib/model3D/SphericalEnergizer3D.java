@@ -58,23 +58,22 @@ public class SphericalEnergizer3D implements Energizer3D {
         double inflatedSize,
         double expandedSize)
     {
-        return new RegisteredAnimation(animationRegistry, "Energizer_Pumping") {
-            @Override
-            protected Animation createAnimationFX() {
-                final Duration duration = Duration.seconds(1).divide(2 * PUMPING_FREQUENCY);
-                final var pumping = new ScaleTransition(duration, sphere);
-                pumping.setAutoReverse(true);
-                pumping.setCycleCount(Animation.INDEFINITE);
-                pumping.setInterpolator(Interpolator.EASE_BOTH);
-                pumping.setFromX(expandedSize);
-                pumping.setFromY(expandedSize);
-                pumping.setFromZ(expandedSize);
-                pumping.setToX(inflatedSize);
-                pumping.setToY(inflatedSize);
-                pumping.setToZ(inflatedSize);
-                return pumping;
-            }
-        };
+        final var animation = new RegisteredAnimation(animationRegistry, "Energizer_Pumping");
+        animation.setFactory(() -> {
+            final Duration duration = Duration.seconds(1).divide(2 * PUMPING_FREQUENCY);
+            final var pumping = new ScaleTransition(duration, sphere);
+            pumping.setAutoReverse(true);
+            pumping.setCycleCount(Animation.INDEFINITE);
+            pumping.setInterpolator(Interpolator.EASE_BOTH);
+            pumping.setFromX(expandedSize);
+            pumping.setFromY(expandedSize);
+            pumping.setFromZ(expandedSize);
+            pumping.setToX(inflatedSize);
+            pumping.setToY(inflatedSize);
+            pumping.setToZ(inflatedSize);
+            return pumping;
+        });
+        return animation;
     }
 
     @Override

@@ -28,10 +28,10 @@ public class HeadBangingAnimation extends RegisteredAnimation {
     public HeadBangingAnimation(AnimationRegistry animationRegistry, Node node) {
         super(animationRegistry, "Pac_Man_Head_Banging");
         this.node = requireNonNull(node);
+        setFactory(this::createAnimationFX);
     }
 
-    @Override
-    protected Animation createAnimationFX() {
+    private Animation createAnimationFX() {
         var rotateTransition = new RotateTransition(BANG_TIME, node);
         rotateTransition.setAxis(Rotate.X_AXIS);
         rotateTransition.setCycleCount(Animation.INDEFINITE);

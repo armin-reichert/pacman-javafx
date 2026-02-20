@@ -62,27 +62,6 @@ public abstract class PacBase3D extends Group implements Disposable {
 
         chewingAnimation = new RegisteredAnimation(animationRegistry, "PacMan_Chewing") {
             @Override
-            protected Animation createAnimationFX() {
-                var mouthClosed = new KeyValue[] {
-                        new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
-                        new KeyValue(jaw.rotateProperty(), -54, Interpolator.LINEAR)
-                };
-                var mouthOpen = new KeyValue[] {
-                        new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
-                        new KeyValue(jaw.rotateProperty(), 0, Interpolator.LINEAR)
-                };
-                var animation = new Timeline(
-                    new KeyFrame(Duration.ZERO,        "Open on Start", mouthOpen),
-                    new KeyFrame(Duration.millis(100), "Start Closing", mouthOpen),
-                    new KeyFrame(Duration.millis(130), "Closed",        mouthClosed),
-                    new KeyFrame(Duration.millis(200), "Start Opening", mouthClosed),
-                    new KeyFrame(Duration.millis(280), "Open",          mouthOpen)
-                );
-                animation.setCycleCount(Animation.INDEFINITE);
-                return animation;
-            }
-
-            @Override
             public void stop() {
                 Animation animation = getOrCreateAnimationFX();
                 animation.stop();
@@ -93,6 +72,26 @@ public abstract class PacBase3D extends Group implements Disposable {
                 }
             }
         };
+
+        chewingAnimation.setFactory(() -> {
+            var mouthClosed = new KeyValue[] {
+                new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
+                new KeyValue(jaw.rotateProperty(), -54, Interpolator.LINEAR)
+            };
+            var mouthOpen = new KeyValue[] {
+                new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
+                new KeyValue(jaw.rotateProperty(), 0, Interpolator.LINEAR)
+            };
+            var animation = new Timeline(
+                new KeyFrame(Duration.ZERO,        "Open on Start", mouthOpen),
+                new KeyFrame(Duration.millis(100), "Start Closing", mouthOpen),
+                new KeyFrame(Duration.millis(130), "Closed",        mouthClosed),
+                new KeyFrame(Duration.millis(200), "Start Opening", mouthClosed),
+                new KeyFrame(Duration.millis(280), "Open",          mouthOpen)
+            );
+            animation.setCycleCount(Animation.INDEFINITE);
+            return animation;
+        });
 
         light.translateXProperty().bind(translateXProperty());
         light.translateYProperty().bind(translateYProperty());

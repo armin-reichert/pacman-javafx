@@ -51,10 +51,10 @@ public class Bonus3D extends Box implements Disposable {
 
         public EdibleAnimation(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Bonus_Edible");
+            setFactory(this::createAnimationFX);
         }
 
-        @Override
-        protected Animation createAnimationFX() {
+        private Animation createAnimationFX() {
             var animation = new RotateTransition(Duration.seconds(1), Bonus3D.this);
             animation.setAxis(Rotate.X_AXIS);
             animation.setFromAngle(0);
@@ -104,18 +104,16 @@ public class Bonus3D extends Box implements Disposable {
 
         edibleAnimation = new EdibleAnimation(animationRegistry);
 
-        eatenAnimation = new RegisteredAnimation(animationRegistry, "Bonus_Eaten") {
-            @Override
-            protected Animation createAnimationFX() {
-                var animation = new RotateTransition(Duration.seconds(1), Bonus3D.this);
-                animation.setAxis(Rotate.X_AXIS);
-                animation.setByAngle(360);
-                animation.setInterpolator(Interpolator.LINEAR);
-                animation.setRate(2);
-                animation.setCycleCount(2);
-                return animation;
-            }
-        };
+        eatenAnimation = new RegisteredAnimation(animationRegistry, "Bonus_Eaten");
+        eatenAnimation.setFactory(() -> {
+            var animation = new RotateTransition(Duration.seconds(1), Bonus3D.this);
+            animation.setAxis(Rotate.X_AXIS);
+            animation.setByAngle(360);
+            animation.setInterpolator(Interpolator.LINEAR);
+            animation.setRate(2);
+            animation.setCycleCount(2);
+            return animation;
+        });
     }
 
     @Override

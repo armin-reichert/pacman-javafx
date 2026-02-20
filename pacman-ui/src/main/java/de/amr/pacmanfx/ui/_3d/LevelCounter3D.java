@@ -60,22 +60,20 @@ public class LevelCounter3D extends Group implements Disposable {
             spinningAnimation.stop();
             spinningAnimation.dispose();
         }
-        spinningAnimation = new RegisteredAnimation(animationRegistry, "LevelCounter_Spinning") {
-            @Override
-            protected Animation createAnimationFX() {
-                final var cubesAnimation = new ParallelTransition();
-                for (int i = 0; i < getChildren().size(); ++i) {
-                    final Node cube = getChildren().get(i);
-                    final var spinning = new RotateTransition(Duration.seconds(6), cube);
-                    spinning.setCycleCount(Animation.INDEFINITE);
-                    spinning.setInterpolator(Interpolator.LINEAR);
-                    spinning.setAxis(Rotate.X_AXIS);
-                    spinning.setByAngle(i % 2 == 0 ? 360 : -360); // alternate spinning direction
-                    cubesAnimation.getChildren().add(spinning);
-                }
-                return cubesAnimation;
+        spinningAnimation = new RegisteredAnimation(animationRegistry, "LevelCounter_Spinning");
+        spinningAnimation.setFactory(() -> {
+            final var cubesAnimation = new ParallelTransition();
+            for (int i = 0; i < getChildren().size(); ++i) {
+                final Node cube = getChildren().get(i);
+                final var spinning = new RotateTransition(Duration.seconds(6), cube);
+                spinning.setCycleCount(Animation.INDEFINITE);
+                spinning.setInterpolator(Interpolator.LINEAR);
+                spinning.setAxis(Rotate.X_AXIS);
+                spinning.setByAngle(i % 2 == 0 ? 360 : -360); // alternate spinning direction
+                cubesAnimation.getChildren().add(spinning);
             }
-        };
+            return cubesAnimation;
+        });
         spinningAnimation.playFromStart();
     }
 

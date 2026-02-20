@@ -47,10 +47,10 @@ public class Ghost3D extends Group implements Disposable {
 
         public DressAnimation(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Ghost_DressAnimation_%s".formatted(ghost.name()));
+            setFactory(this::createAnimationFX);
         }
 
-        @Override
-        protected Animation createAnimationFX() {
+        private Animation createAnimationFX() {
             var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
             // TODO I expected this should be the z-axis but... (transforms messed-up?)
             animation.setAxis(Rotate.Y_AXIS);
@@ -67,6 +67,7 @@ public class Ghost3D extends Group implements Disposable {
 
         public FlashingAnimation(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Ghost_Flashing_%s".formatted(ghost.name()));
+            setFactory(this::createAnimationFX);
         }
 
         public void setTotalDuration(Duration totalDuration) {
@@ -79,8 +80,7 @@ public class Ghost3D extends Group implements Disposable {
             invalidate();
         }
 
-        @Override
-        protected Animation createAnimationFX() {
+        private Animation createAnimationFX() {
             Duration flashEndTime = totalDuration.divide(numFlashes), highlightTime = flashEndTime.divide(3);
             var flashingTimeline = new Timeline(
                 new KeyFrame(highlightTime,

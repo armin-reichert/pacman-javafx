@@ -13,7 +13,6 @@ import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.uilib.UfxColors;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -160,15 +159,11 @@ public class ArcadeHouse3D extends Group implements Disposable {
         light.translateZProperty().bind(wallBaseHeightProperty.multiply(-1));
 
         // Door melting animation
-        doorsMeltingAnimation = new RegisteredAnimation(animationRegistry, "Doors_Melting") {
-            @Override
-            protected Animation createAnimationFX() {
-                return new Timeline(
-                    new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessProperty, 0)),
-                    new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessProperty, barThickness))
-                );
-            }
-        };
+        doorsMeltingAnimation = new RegisteredAnimation(animationRegistry, "Doors_Melting");
+        doorsMeltingAnimation.setFactory(() -> new Timeline(
+            new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessProperty, 0)),
+            new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessProperty, barThickness)))
+        );
     }
 
     /**

@@ -6,7 +6,6 @@ package de.amr.pacmanfx.uilib.model3D;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
-import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.paint.Color;
@@ -28,18 +27,16 @@ public class MsPacMan3D extends PacBase3D {
         femaleBodyParts = Models3D.PAC_MAN_MODEL.createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor);
         getChildren().add(femaleBodyParts);
 
-        dyingAnimation = new RegisteredAnimation(animationRegistry, "Ms_PacMan_Dying") {
-            @Override
-            protected Animation createAnimationFX() {
-                var spinning = new RotateTransition(Duration.seconds(0.25), MsPacMan3D.this);
-                spinning.setAxis(Rotate.Z_AXIS);
-                spinning.setFromAngle(0);
-                spinning.setToAngle(360);
-                spinning.setInterpolator(Interpolator.LINEAR);
-                spinning.setCycleCount(4);
-                return spinning;
-            }
-        };
+        dyingAnimation = new RegisteredAnimation(animationRegistry, "Ms_PacMan_Dying");
+        dyingAnimation.setFactory(() -> {
+            var spinning = new RotateTransition(Duration.seconds(0.25), MsPacMan3D.this);
+            spinning.setAxis(Rotate.Z_AXIS);
+            spinning.setFromAngle(0);
+            spinning.setToAngle(360);
+            spinning.setInterpolator(Interpolator.LINEAR);
+            spinning.setCycleCount(4);
+            return spinning;
+        });
 
         movementAnimation = new HipSwayingAnimation(animationRegistry, this);
         setMovementPowerMode(false);

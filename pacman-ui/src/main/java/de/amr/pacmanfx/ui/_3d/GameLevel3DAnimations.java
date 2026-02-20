@@ -83,10 +83,10 @@ public class GameLevel3DAnimations implements Disposable {
         public LevelCompletedAnimation(AnimationRegistry animationRegistry, GameLevel3D level3D) {
             super(animationRegistry, "Level_Completed");
             this.level3D = level3D;
+            setFactory(this::createAnimationFX);
         }
 
-        @Override
-        protected Animation createAnimationFX() {
+        private Animation createAnimationFX() {
             final GameLevel level = level3D.level();
             return new SequentialTransition(
                 pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),
@@ -150,10 +150,10 @@ public class GameLevel3DAnimations implements Disposable {
         public LevelCompletedAnimationShort(AnimationRegistry animationRegistry, GameLevel3D level3D) {
             super(animationRegistry, "Level_Complete_Short_Animation");
             this.level3D = level3D;
+            setFactory(this::createAnimationFX);
         }
 
-        @Override
-        protected Animation createAnimationFX() {
+        private Animation createAnimationFX() {
             final GameLevel level = level3D.level();
             return new SequentialTransition(
                 pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),
@@ -182,10 +182,10 @@ public class GameLevel3DAnimations implements Disposable {
             this.level3D = level3D;
             this.fromColor = Color.valueOf(level3D.maze3D().colorScheme().wallFill());
             this.toColor = Color.valueOf(level3D.maze3D().colorScheme().wallStroke());
+            setFactory(this::createAnimationFX);
         }
 
-        @Override
-        protected Animation createAnimationFX() {
+        private Animation createAnimationFX() {
             return new Transition() {
                 {
                     setAutoReverse(true);
@@ -234,6 +234,8 @@ public class GameLevel3DAnimations implements Disposable {
             level3D.ghostLight().setMaxRange(30);
             level3D.ghostLight().lightOnProperty().addListener((_, _, on) ->
                 Logger.info("Ghost light {}", on ? "ON" : "OFF"));
+
+            setFactory(this::createAnimationFX);
         }
 
         private static byte nextGhostID(byte id) {
@@ -254,8 +256,7 @@ public class GameLevel3DAnimations implements Disposable {
             Logger.debug("Ghost light passed to ghost {}", currentGhostID);
         }
 
-        @Override
-        protected Animation createAnimationFX() {
+        private Animation createAnimationFX() {
             var timeline = new Timeline(new KeyFrame(Duration.millis(3000), _ -> {
                 Logger.debug("Try to pass light from ghost {} to next", currentGhostID);
                 byte candidate = nextGhostID(currentGhostID);
