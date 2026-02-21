@@ -120,7 +120,7 @@ public class MessageView extends ImageView implements Disposable {
         return 0.5 * getBoundsInLocal().getHeight();
     }
 
-    private ManagedAnimation moveInOutAnimation;
+    private final ManagedAnimation moveInOutAnimation;
     private final float displaySeconds;
 
     private MessageView(AnimationRegistry animationRegistry, Builder builder) {
@@ -141,10 +141,7 @@ public class MessageView extends ImageView implements Disposable {
 
     @Override
     public void dispose() {
-        if (moveInOutAnimation != null) {
-            moveInOutAnimation.dispose();
-            moveInOutAnimation = null;
-        }
+        moveInOutAnimation.dispose();
     }
 
     public void showCenteredAt(double centerX, double centerY) {
