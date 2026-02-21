@@ -47,21 +47,20 @@ public class Ghost3D extends Group implements Disposable {
 
         public DressAnimation(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Ghost_DressAnimation_%s".formatted(ghost.name()));
-            setFactory(this::createAnimationFX);
-        }
-
-        private Animation createAnimationFX() {
-            var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
-            // TODO I expected this should be the z-axis but... (transforms messed-up?)
-            animation.setAxis(Rotate.Y_AXIS);
-            animation.setByAngle(30);
-            animation.setCycleCount(Animation.INDEFINITE);
-            animation.setAutoReverse(true);
-            return animation;
+            setFactory(() -> {
+                final var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
+                // TODO: I expected this should be the z-axis but...
+                animation.setAxis(Rotate.Y_AXIS);
+                animation.setByAngle(30);
+                animation.setCycleCount(Animation.INDEFINITE);
+                animation.setAutoReverse(true);
+                return animation;
+            });
         }
     }
 
     public class FlashingAnimation extends ManagedAnimation {
+
         private Duration totalDuration = Duration.seconds(3);
         private int numFlashes = 5;
 
@@ -81,8 +80,9 @@ public class Ghost3D extends Group implements Disposable {
         }
 
         private Animation createAnimationFX() {
-            Duration flashEndTime = totalDuration.divide(numFlashes), highlightTime = flashEndTime.divide(3);
-            var flashingTimeline = new Timeline(
+            final Duration flashEndTime = totalDuration.divide(numFlashes);
+            final Duration highlightTime = flashEndTime.divide(3);
+            final var flashingTimeline = new Timeline(
                 new KeyFrame(highlightTime,
                     new KeyValue(flashingMaterialSet.dress().diffuseColorProperty(),  colorSet.flashing().dress()),
                     new KeyValue(flashingMaterialSet.pupils().diffuseColorProperty(), colorSet.flashing().pupils())
@@ -93,7 +93,7 @@ public class Ghost3D extends Group implements Disposable {
                 )
             );
             flashingTimeline.setCycleCount(numFlashes);
-            flashingTimeline.setOnFinished(e -> {
+            flashingTimeline.setOnFinished(_ -> {
                 flashingMaterialSet.dress().setDiffuseColor(colorSet.frightened().dress());
                 flashingMaterialSet.dress().setSpecularColor(colorSet.frightened().dress().brighter());
                 flashingMaterialSet.pupils().setDiffuseColor(colorSet.frightened().pupils());
@@ -116,7 +116,7 @@ public class Ghost3D extends Group implements Disposable {
         double size)
     {
         requireNonNull(animationRegistry);
-        this.ghost = requireNonNull(ghost);
+        this.ghost         = requireNonNull(ghost);
         this.colorSet      = requireNonNull(colorSet);
         this.dressShape    = requireNonNull(dressShape);
         this.pupilsShape   = requireNonNull(pupilsShape);
@@ -141,19 +141,19 @@ public class Ghost3D extends Group implements Disposable {
             coloredPhongMaterial(colorSet.flashing().pupils())
         );
 
-        var eyes = new Group(pupilsShape, eyeballsShape);
         dressGroup = new Group(dressShape);
+        final var eyesGroup = new Group(pupilsShape, eyeballsShape);
 
-        getChildren().setAll(dressGroup, eyes);
+        getChildren().setAll(dressGroup, eyesGroup);
 
-        Bounds dressBounds = dressShape.getBoundsInLocal();
+        final Bounds dressBounds = dressShape.getBoundsInLocal();
         var centeredOverOrigin = new Translate(
             -dressBounds.getCenterX(),
             -dressBounds.getCenterY(),
             -dressBounds.getCenterZ()
         );
         dressShape.getTransforms().add(centeredOverOrigin);
-        eyes.getTransforms().add(centeredOverOrigin);
+        eyesGroup.getTransforms().add(centeredOverOrigin);
 
         // TODO: change orientation in OBJ file?
         getTransforms().addAll(
@@ -162,13 +162,13 @@ public class Ghost3D extends Group implements Disposable {
             new Rotate(180, Rotate.Z_AXIS)
         );
 
-        Bounds bounds = getBoundsInLocal();
-        Scale scale = new Scale(
-            size / bounds.getWidth(),
-            size / bounds.getHeight(),
-            size / bounds.getDepth()
+        final Bounds bounds = getBoundsInLocal();
+        getTransforms().add(
+            new Scale(
+                size / bounds.getWidth(),
+                size / bounds.getHeight(),
+                size / bounds.getDepth())
         );
-        getTransforms().add(scale);
 
         dressAnimation = new DressAnimation(animationRegistry);
         flashingAnimation = new FlashingAnimation(animationRegistry);
@@ -187,6 +187,7 @@ public class Ghost3D extends Group implements Disposable {
     }
 
     public void turnTowards(Direction dir) {
+        requireNonNull(dir);
         setRotationAxis(Rotate.Z_AXIS);
         setRotate(switch (dir) {
             case LEFT  -> 0;
@@ -240,28 +241,43 @@ public class Ghost3D extends Group implements Disposable {
     public void dispose() {
         getChildren().clear();
 
-        dressShape.setMesh(null);
-        dressShape.materialProperty().unbind();
-        dressShape.setMaterial(null);
-        dressShape = null;
+        if (dressShape != null) {
+            dressShape.setMesh(null);
+            dressShape.materialProperty().unbind();
+            dressShape.setMaterial(null);
+            dressShape = null;
+        }
 
-        pupilsShape.setMesh(null);
-        pupilsShape.materialProperty().unbind();
-        pupilsShape.setMaterial(null);
-        pupilsShape = null;
+        if (pupilsShape != null) {
+            pupilsShape.setMesh(null);
+            pupilsShape.materialProperty().unbind();
+            pupilsShape.setMaterial(null);
+            pupilsShape = null;
+        }
 
-        eyeballsShape.setMesh(null);
-        eyeballsShape.materialProperty().unbind();
-        eyeballsShape.setMaterial(null);
-        eyeballsShape = null;
+        if (eyeballsShape != null) {
+            eyeballsShape.setMesh(null);
+            eyeballsShape.materialProperty().unbind();
+            eyeballsShape.setMaterial(null);
+            eyeballsShape = null;
 
-        dressGroup.getChildren().clear();
-        dressGroup = null;
+        }
 
-        dressAnimation.dispose();
-        dressAnimation = null;
-        flashingAnimation.dispose();
-        flashingAnimation = null;
+        if (dressGroup != null) {
+            dressGroup.getChildren().clear();
+            dressGroup = null;
+        }
+
+        if (dressAnimation != null) {
+            dressAnimation.dispose();
+            dressAnimation = null;
+
+        }
+
+        if (flashingAnimation != null) {
+            flashingAnimation.dispose();
+            flashingAnimation = null;
+        }
 
         normalMaterialSet = null;
         frightenedMaterialSet = null;
