@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.widgets;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
@@ -92,7 +92,7 @@ public class MessageView extends ImageView implements Disposable {
         return canvas.snapshot(null, null);
     }
 
-    private class MoveInOutAnimation extends RegisteredAnimation {
+    private class MoveInOutAnimation extends ManagedAnimation {
 
         public MoveInOutAnimation(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Message_Movement");
@@ -120,7 +120,7 @@ public class MessageView extends ImageView implements Disposable {
         return 0.5 * getBoundsInLocal().getHeight();
     }
 
-    private RegisteredAnimation moveInOutAnimation;
+    private ManagedAnimation moveInOutAnimation;
     private final float displaySeconds;
 
     private MessageView(AnimationRegistry animationRegistry, Builder builder) {

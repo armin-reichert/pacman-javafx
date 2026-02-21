@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -79,7 +79,7 @@ public class MutableGhost3D extends Group implements Disposable {
     private Ghost3D ghostShape3D;
     private Box numberShape3D;
 
-    private class BrakeAnimation extends RegisteredAnimation {
+    private class BrakeAnimation extends ManagedAnimation {
 
         public BrakeAnimation(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Ghost_Braking_%s".formatted(ghost.name()));
@@ -97,7 +97,7 @@ public class MutableGhost3D extends Group implements Disposable {
 
         @Override
         public void playFromStart() {
-            var rotateTransition = (RotateTransition) getOrCreateWrappedAnimation();
+            var rotateTransition = (RotateTransition) animationFX();
             rotateTransition.stop();
             rotateTransition.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
             rotateTransition.playFromStart();
@@ -105,7 +105,7 @@ public class MutableGhost3D extends Group implements Disposable {
 
         @Override
         public void playOrContinue() {
-            var rotateTransition = (RotateTransition) getOrCreateWrappedAnimation();
+            var rotateTransition = (RotateTransition) animationFX();
             rotateTransition.stop();
             rotateTransition.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
             rotateTransition.play();
@@ -119,7 +119,7 @@ public class MutableGhost3D extends Group implements Disposable {
         }
     }
 
-    private class PointsAnimation extends RegisteredAnimation {
+    private class PointsAnimation extends ManagedAnimation {
 
         public PointsAnimation(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Ghost_Points_%s".formatted(ghost.name()));

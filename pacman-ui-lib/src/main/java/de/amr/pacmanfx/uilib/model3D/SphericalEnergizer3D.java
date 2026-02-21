@@ -5,7 +5,7 @@ package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
@@ -22,8 +22,8 @@ public class SphericalEnergizer3D implements Energizer3D {
     private static final int PUMPING_FREQUENCY = 3; // 3 inflate+expand cycles per second
 
     private Sphere sphere;
-    private RegisteredAnimation pumpingAnimation;
-    private RegisteredAnimation eatenAnimation;
+    private ManagedAnimation pumpingAnimation;
+    private ManagedAnimation eatenAnimation;
 
     public SphericalEnergizer3D(
         AnimationRegistry animationRegistry,
@@ -52,13 +52,13 @@ public class SphericalEnergizer3D implements Energizer3D {
         pumpingAnimation = createPumpingAnimation(animationRegistry, sphere, inflatedSize, expandedSize);
     }
 
-    private static RegisteredAnimation createPumpingAnimation(
+    private static ManagedAnimation createPumpingAnimation(
         AnimationRegistry animationRegistry,
         Sphere sphere,
         double inflatedSize,
         double expandedSize)
     {
-        final var animation = new RegisteredAnimation(animationRegistry, "Energizer_Pumping");
+        final var animation = new ManagedAnimation(animationRegistry, "Energizer_Pumping");
         animation.setFactory(() -> {
             final Duration duration = Duration.seconds(1).divide(2 * PUMPING_FREQUENCY);
             final var pumping = new ScaleTransition(duration, sphere);
@@ -111,7 +111,7 @@ public class SphericalEnergizer3D implements Energizer3D {
         pumpingAnimation.pause();
     }
 
-    public void setEatenAnimation(RegisteredAnimation animation) {
+    public void setEatenAnimation(ManagedAnimation animation) {
         eatenAnimation = requireNonNull(animation);
     }
 

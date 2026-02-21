@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.*;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
@@ -43,7 +43,7 @@ public class Ghost3D extends Group implements Disposable {
 
     private Group dressGroup;
 
-    public class DressAnimation extends RegisteredAnimation {
+    public class DressAnimation extends ManagedAnimation {
 
         public DressAnimation(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Ghost_DressAnimation_%s".formatted(ghost.name()));
@@ -61,7 +61,7 @@ public class Ghost3D extends Group implements Disposable {
         }
     }
 
-    public class FlashingAnimation extends RegisteredAnimation {
+    public class FlashingAnimation extends ManagedAnimation {
         private Duration totalDuration = Duration.seconds(3);
         private int numFlashes = 5;
 
@@ -178,7 +178,7 @@ public class Ghost3D extends Group implements Disposable {
         return normalMaterialSet;
     }
 
-    public RegisteredAnimation dressAnimation() {
+    public ManagedAnimation dressAnimation() {
         return dressAnimation;
     }
 

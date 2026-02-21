@@ -11,7 +11,7 @@ import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-public class SwirlAnimation extends RegisteredAnimation {
+public class SwirlAnimation extends ManagedAnimation {
 
     private static final float SWIRL_ROTATION_SEC = 1.0f;
 

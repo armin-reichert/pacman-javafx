@@ -5,7 +5,7 @@ package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -16,7 +16,7 @@ import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
-public class HeadBangingAnimation extends RegisteredAnimation {
+public class HeadBangingAnimation extends ManagedAnimation {
     private static final short BANG_ANGLE_FROM = -10;
     private static final short BANG_ANGLE_TO = 15;
     private static final Duration BANG_TIME = Duration.seconds(0.3);
@@ -43,8 +43,8 @@ public class HeadBangingAnimation extends RegisteredAnimation {
     @Override
     public void stop() {
         super.stop();
-        if (wrappedAnimation != null) {
-            var rotateTransition = (RotateTransition) wrappedAnimation;
+        if (animationFX != null) {
+            var rotateTransition = (RotateTransition) animationFX;
             node.setRotationAxis(rotateTransition.getAxis());
             node.setRotate(0);
         }
@@ -53,15 +53,15 @@ public class HeadBangingAnimation extends RegisteredAnimation {
     @Override
     public void pause() {
         super.pause();
-        if (wrappedAnimation != null) {
-            var rotateTransition = (RotateTransition) wrappedAnimation;
+        if (animationFX != null) {
+            var rotateTransition = (RotateTransition) animationFX;
             node.setRotationAxis(rotateTransition.getAxis());
             node.setRotate(0);
         }
     }
 
     public void update(Pac pac) {
-        var rotateTransition = (RotateTransition) getOrCreateWrappedAnimation();
+        var rotateTransition = (RotateTransition) animationFX();
         if (pac.isParalyzed()) {
             pause();
         } else {
@@ -75,7 +75,7 @@ public class HeadBangingAnimation extends RegisteredAnimation {
     }
 
     public void setPowerMode(boolean power) {
-        var rotateTransition = (RotateTransition) getOrCreateWrappedAnimation();
+        var rotateTransition = (RotateTransition) animationFX();
         boolean running = rotateTransition.getStatus() == Animation.Status.RUNNING;
         rotateTransition.stop();
         rotateTransition.setFromAngle(BANG_ANGLE_FROM * POWER_ANGLE_AMPLIFICATION);

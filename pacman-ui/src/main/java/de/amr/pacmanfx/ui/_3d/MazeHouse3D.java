@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.SwirlAnimation;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
@@ -150,7 +150,7 @@ public class MazeHouse3D implements Disposable {
      */
     public void startSwirlAnimations() {
         if (swirlAnimations != null) {
-            swirlAnimations.forEach(RegisteredAnimation::playFromStart);
+            swirlAnimations.forEach(ManagedAnimation::playFromStart);
             Logger.info("Swirl animations started");
         }
     }
@@ -160,7 +160,7 @@ public class MazeHouse3D implements Disposable {
      */
     public void stopSwirlAnimations() {
         if (swirlAnimations != null) {
-            swirlAnimations.forEach(RegisteredAnimation::stop);
+            swirlAnimations.forEach(ManagedAnimation::stop);
         }
     }
 

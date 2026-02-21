@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.LightBase;
@@ -39,9 +39,9 @@ public abstract class PacBase3D extends Group implements Disposable {
 
     protected PointLight light = new PointLight();
 
-    protected RegisteredAnimation chewingAnimation;
-    protected RegisteredAnimation dyingAnimation;
-    protected RegisteredAnimation movementAnimation;
+    protected ManagedAnimation chewingAnimation;
+    protected ManagedAnimation dyingAnimation;
+    protected ManagedAnimation movementAnimation;
 
     protected PacBase3D(
         AnimationRegistry animationRegistry,
@@ -60,10 +60,10 @@ public abstract class PacBase3D extends Group implements Disposable {
         getTransforms().add(moveRotation);
         setTranslateZ(-0.5 * size);
 
-        chewingAnimation = new RegisteredAnimation(animationRegistry, "PacMan_Chewing") {
+        chewingAnimation = new ManagedAnimation(animationRegistry, "PacMan_Chewing") {
             @Override
             public void stop() {
-                Animation animation = getOrCreateWrappedAnimation();
+                Animation animation = animationFX();
                 animation.stop();
                 if (jaw != null) {
                     // open mouth when stopped
@@ -102,7 +102,7 @@ public abstract class PacBase3D extends Group implements Disposable {
         return light;
     }
 
-    public RegisteredAnimation dyingAnimation() {
+    public ManagedAnimation dyingAnimation() {
         return dyingAnimation;
     }
 

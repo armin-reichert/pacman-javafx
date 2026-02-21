@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.lib.Disposable;
 import org.tinylog.Logger;
 
 import java.util.Collections;
@@ -15,55 +14,44 @@ import static java.util.Objects.requireNonNull;
 /**
  * A registry for managed animations.
  */
-public class AnimationRegistry implements Disposable {
+public class AnimationRegistry {
 
-    private final Set<RegisteredAnimation> registeredAnimations = new HashSet<>();
-    private final Set<RegisteredAnimation> markedForDisposal = new HashSet<>();
+    private final Set<ManagedAnimation> registered = new HashSet<>();
+    private final Set<ManagedAnimation> garbage = new HashSet<>();
 
-    void register(RegisteredAnimation registeredAnimation) {
-        requireNonNull(registeredAnimation);
-        if (registeredAnimations.contains(registeredAnimation)) {
-            Logger.warn("Animation '{}' is already registered", registeredAnimation.label());
+    public void register(ManagedAnimation animation) {
+        requireNonNull(animation);
+        if (registered.contains(animation)) {
+            Logger.warn("Animation '{}' is already registered", animation.label());
         } else {
-            registeredAnimations.add(registeredAnimation);
-            Logger.trace("Animation '{}' registered", registeredAnimation.label());
+            registered.add(animation);
+            Logger.info("Animation '{}' registered", animation.label());
         }
     }
 
-    void markForDisposal(RegisteredAnimation registeredAnimation) {
-        if (markedForDisposal.contains(registeredAnimation)) {
+    public void addToTrash(ManagedAnimation animation) {
+        if (!registered.contains(animation)) {
+            Logger.error("Animation '{}' is not registered, cannot be added to trash", animation.label());
             return;
         }
-        if (!registeredAnimations.contains(registeredAnimation)) {
-            Logger.error("Animation '{}' is not registered, cannot be marked for disposal", registeredAnimation.label());
-            return;
+        if (!garbage.contains(animation)) {
+            registered.remove(animation);
+            garbage.add(animation);
+            Logger.info("Animation '{}' unregistered and added to trash", animation.label());
         }
-        registeredAnimations.remove(registeredAnimation);
-        markedForDisposal.add(registeredAnimation);
     }
 
-    @Override
-    public void dispose() {
-        Logger.info("Dispose {} animations", markedForDisposal.size());
-        markedForDisposal.forEach(RegisteredAnimation::dispose);
-        markedForDisposal.clear();
+    public void garbageCollect() {
+        Logger.info("Dispose {} animations and empty trash can", garbage.size());
+        garbage.forEach(ManagedAnimation::dispose);
+        garbage.clear();
     }
 
     public void stopAllAnimations() {
-        registeredAnimations.forEach(RegisteredAnimation::stop);
+        registered.forEach(ManagedAnimation::stop);
     }
 
-    public void disposeAllAnimations() {
-        registeredAnimations.forEach(RegisteredAnimation::dispose);
-        registeredAnimations.clear();
-        Logger.info("All animations disposed and removed");
-    }
-
-    public Set<RegisteredAnimation> disposedAnimations() {
-        return Collections.unmodifiableSet(markedForDisposal);
-    }
-
-    public Set<RegisteredAnimation> animations() {
-        return Collections.unmodifiableSet(registeredAnimations);
+    public Set<ManagedAnimation> animations() {
+        return Collections.unmodifiableSet(registered);
     }
 }

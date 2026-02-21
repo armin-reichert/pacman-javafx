@@ -23,10 +23,10 @@ import static java.util.Objects.requireNonNull;
  *   <li>automatic registration in the associated {@link AnimationRegistry}</li>
  * </ul>
  * <p>
- * The embedded JavaFX animation is created on demand via {@link #getOrCreateWrappedAnimation()}.
+ * The embedded JavaFX animation is created on demand via {@link #animationFX()}.
  * This allows animations to be registered early without incurring construction cost until needed.
  */
-public class RegisteredAnimation implements Disposable {
+public class ManagedAnimation implements Disposable {
 
     /** Human‑readable identifier for logging and debugging. */
     private final String label;
@@ -38,7 +38,7 @@ public class RegisteredAnimation implements Disposable {
     private Supplier<Animation> factory;
 
     /** The lazily created JavaFX animation instance. */
-    protected Animation wrappedAnimation;
+    protected Animation animationFX;
 
     /**
      * Creates a registered animation without an initial factory.
@@ -47,7 +47,7 @@ public class RegisteredAnimation implements Disposable {
      * @param registry the animation registry
      * @param label    unique label for this animation
      */
-    public RegisteredAnimation(AnimationRegistry registry, String label) {
+    public ManagedAnimation(AnimationRegistry registry, String label) {
         this.registry = requireNonNull(registry);
         this.label = requireNonNull(label);
         registry.register(this);
@@ -60,7 +60,7 @@ public class RegisteredAnimation implements Disposable {
      * @param label    unique label for this animation
      * @param factory  factory that creates the JavaFX animation
      */
-    public RegisteredAnimation(AnimationRegistry registry, String label, Supplier<Animation> factory) {
+    public ManagedAnimation(AnimationRegistry registry, String label, Supplier<Animation> factory) {
         this.registry = requireNonNull(registry);
         this.label = requireNonNull(label);
         this.factory = requireNonNull(factory);
@@ -84,8 +84,8 @@ public class RegisteredAnimation implements Disposable {
     /**
      * @return the underlying JavaFX animation, if already created
      */
-    public Optional<Animation> animationFX() {
-        return Optional.ofNullable(wrappedAnimation);
+    public Optional<Animation> optAnimationFX() {
+        return Optional.ofNullable(animationFX);
     }
 
     /**
@@ -95,23 +95,27 @@ public class RegisteredAnimation implements Disposable {
      *
      * @return the wrapped JavaFX animation instance
      */
-    public Animation getOrCreateWrappedAnimation() {
-        if (wrappedAnimation == null) {
-            if (factory == null) {
-                throw new IllegalStateException("Animation factory is null");
-            }
-            try {
-                wrappedAnimation = factory.get();
-            } catch (Exception x) {
-                Logger.error(x, "Creating JavaFX animation '{}' failed", label);
-                throw new IllegalStateException("Animation creation failed", x);
-            }
-            if (wrappedAnimation == null) {
-                Logger.error("Creating JavaFX animation '{}' returned null", label);
-                throw new IllegalStateException("Animation factory returned null");
-            }
+    public Animation animationFX() {
+        if (animationFX == null) {
+            createAnimationFX();
         }
-        return wrappedAnimation;
+        return animationFX;
+    }
+
+    private void createAnimationFX() {
+        if (factory == null) {
+            throw new IllegalStateException("Animation factory is null");
+        }
+        try {
+            animationFX = factory.get();
+        } catch (Exception x) {
+            Logger.error(x, "Creating JavaFX animation '{}' failed", label);
+            throw new IllegalStateException("Animation creation failed", x);
+        }
+        if (animationFX == null) {
+            Logger.error("Creating JavaFX animation '{}' returned null", label);
+            throw new IllegalStateException("Animation factory returned null");
+        }
     }
 
     /**
@@ -131,21 +135,20 @@ public class RegisteredAnimation implements Disposable {
      */
     @Override
     public final void dispose() {
-        stop();
-        if (wrappedAnimation != null) {
-            wrappedAnimation.setOnFinished(null);
-            wrappedAnimation = null;
+        if (animationFX != null) {
+            stop(); // handles case when FX animation is embedded inside sequential or parallel transition!
+            animationFX.setOnFinished(null);
+            animationFX = null;
             freeResources();
         }
-        registry.markForDisposal(this);
-        Logger.info("Disposed animation '{}'", label);
+        registry.addToTrash(this);
     }
 
     /**
      * Invalidates the cached JavaFX animation so it will be recreated on next use.
      */
     public void invalidate() {
-        wrappedAnimation = null;
+        animationFX = null;
     }
 
     /**
@@ -153,7 +156,7 @@ public class RegisteredAnimation implements Disposable {
      * Does nothing if the animation is already running.
      */
     public void playFromStart() {
-        Animation animationFX = getOrCreateWrappedAnimation();
+        Animation animationFX = animationFX();
         requireNonNull(animationFX);
         if (animationFX.getStatus() != Animation.Status.RUNNING) {
             Logger.trace("Play animation '{}' from start", label);
@@ -166,7 +169,7 @@ public class RegisteredAnimation implements Disposable {
      * If the animation has been paused, it continues from the paused position.
      */
     public void playOrContinue() {
-        Animation animation = getOrCreateWrappedAnimation();
+        Animation animation = animationFX();
         requireNonNull(animation);
         if (animation.getStatus() != Animation.Status.RUNNING) {
             Logger.trace("Continue/play animation '{}'", label);
@@ -179,10 +182,10 @@ public class RegisteredAnimation implements Disposable {
      * Logs a warning if the animation cannot be paused (e.g., embedded animations).
      */
     public void pause() {
-        if (wrappedAnimation != null) {
+        if (animationFX != null) {
             try {
-                if (wrappedAnimation.getStatus() != Animation.Status.PAUSED) {
-                    wrappedAnimation.pause();
+                if (animationFX.getStatus() != Animation.Status.PAUSED) {
+                    animationFX.pause();
                     Logger.debug("Paused animation '{}'", label);
                 }
             } catch (IllegalStateException x) {
@@ -196,11 +199,11 @@ public class RegisteredAnimation implements Disposable {
      * Logs a warning if the animation cannot be stopped.
      */
     public void stop() {
-        if (wrappedAnimation != null) {
+        if (animationFX != null) {
             try {
-                if (wrappedAnimation.getStatus() != Animation.Status.STOPPED) {
+                if (animationFX.getStatus() != Animation.Status.STOPPED) {
                     Logger.debug("Stop animation '{}'", label);
-                    wrappedAnimation.stop();
+                    animationFX.stop();
                 }
             } catch (IllegalStateException x) {
                 Logger.warn("Could not stop (embedded?) animation '{}'", label);
@@ -212,6 +215,6 @@ public class RegisteredAnimation implements Disposable {
      * @return {@code true} if the animation exists and is currently running
      */
     public boolean isRunning() {
-        return wrappedAnimation != null && wrappedAnimation.getStatus() == Animation.Status.RUNNING;
+        return animationFX != null && animationFX.getStatus() == Animation.Status.RUNNING;
     }
 }

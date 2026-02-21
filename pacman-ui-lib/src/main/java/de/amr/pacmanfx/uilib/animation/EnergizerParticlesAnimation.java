@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
  * inside the ghost house where they accumulate to colored ghost shapes.
  * <p>Particles falling off from the maze are destroyed after a certain time.</p>
  */
-public class EnergizerParticlesAnimation extends RegisteredAnimation {
+public class EnergizerParticlesAnimation extends ManagedAnimation {
 
     private static final int MESH_DIVISIONS_HIGH = 8;
     private static final int MESH_DIVISIONS_LOW  = 4;

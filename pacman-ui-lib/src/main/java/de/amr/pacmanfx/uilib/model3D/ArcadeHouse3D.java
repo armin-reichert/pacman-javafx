@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.uilib.UfxColors;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -81,7 +81,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
     private float doorSensitivity = 10;
 
     /** Animation that shrinks and regrows the door bars. */
-    private RegisteredAnimation doorsMeltingAnimation;
+    private ManagedAnimation doorsMeltingAnimation;
 
     /**
      * Creates a 3D ghost house representation.
@@ -159,7 +159,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
         light.translateZProperty().bind(wallBaseHeightProperty.multiply(-1));
 
         // Door melting animation
-        doorsMeltingAnimation = new RegisteredAnimation(animationRegistry, "Doors_Melting");
+        doorsMeltingAnimation = new ManagedAnimation(animationRegistry, "Doors_Melting");
         doorsMeltingAnimation.setFactory(() -> new Timeline(
             new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessProperty, 0)),
             new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessProperty, barThickness)))
@@ -281,7 +281,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
     }
 
     /** Returns the animation that melts and regrows the door bars. */
-    public RegisteredAnimation doorsOpenCloseAnimation() {
+    public ManagedAnimation doorsOpenCloseAnimation() {
         return doorsMeltingAnimation;
     }
 

@@ -5,7 +5,7 @@ package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.scene.Node;
 
 /**
@@ -16,7 +16,7 @@ public interface Energizer3D extends Disposable {
     Vector2i tile();
     void startPumping();
     void stopPumping();
-    void setEatenAnimation(RegisteredAnimation animation);
+    void setEatenAnimation(ManagedAnimation animation);
     void onEaten();
     void hide();
 }

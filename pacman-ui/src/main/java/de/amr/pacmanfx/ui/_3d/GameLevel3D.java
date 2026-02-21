@@ -318,7 +318,7 @@ public class GameLevel3D extends Group implements Disposable {
         var animation = new SequentialTransition(
             pauseSec(1.5),
             doNow(() -> soundManager.play(SoundID.PAC_MAN_DEATH)),
-            pac3D.dyingAnimation().getOrCreateWrappedAnimation(),
+            pac3D.dyingAnimation().animationFX(),
             pauseSec(0.5)
         );
         // Note: adding this inside the animation as last action does not work!
@@ -356,7 +356,7 @@ public class GameLevel3D extends Group implements Disposable {
         }
 
         final boolean cutSceneFollows = level.cutSceneNumber() != 0;
-        final Animation levelCompletedAnimation = animations.selectLevelCompleteAnimation(cutSceneFollows).getOrCreateWrappedAnimation();
+        final Animation levelCompletedAnimation = animations.selectLevelCompleteAnimation(cutSceneFollows).animationFX();
 
         var animation = new SequentialTransition(
             pauseSecThen(2, () -> {
@@ -460,8 +460,8 @@ public class GameLevel3D extends Group implements Disposable {
 
         animations.dispose();
 
-        // Dispose all remaining animations
-        animationRegistry.dispose();
+        // Garbage collect remaining animations
+        animationRegistry.garbageCollect();
 
         PROPERTY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");

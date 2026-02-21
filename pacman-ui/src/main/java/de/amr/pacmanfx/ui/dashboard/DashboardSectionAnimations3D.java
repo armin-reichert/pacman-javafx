@@ -8,7 +8,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -41,9 +41,9 @@ public class DashboardSectionAnimations3D extends DashboardSection {
         private final StringProperty labelProperty;
         private final ObjectProperty<Animation> animationProperty;
 
-        TableRow(RegisteredAnimation registeredAnimation) {
-            labelProperty = new SimpleStringProperty(registeredAnimation.label());
-            animationProperty = new SimpleObjectProperty<>(registeredAnimation.animationFX().orElse(null));
+        TableRow(ManagedAnimation managedAnimation) {
+            labelProperty = new SimpleStringProperty(managedAnimation.label());
+            animationProperty = new SimpleObjectProperty<>(managedAnimation.optAnimationFX().orElse(null));
         }
 
         public StringProperty labelProperty() { return labelProperty; }
@@ -119,22 +119,22 @@ public class DashboardSectionAnimations3D extends DashboardSection {
     private void updateTableData() {
         tableRows.clear();
         if (currentAnimationManager.get() != null) {
-            final Set<RegisteredAnimation> animations = currentAnimationManager.get().animations();
+            final Set<ManagedAnimation> animations = currentAnimationManager.get().animations();
             tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.RUNNING));
             tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.PAUSED));
             tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.STOPPED));
         }
     }
 
-    private List<TableRow> animationDataSortedByLabel(Set<RegisteredAnimation> animations, Animation.Status status) {
+    private List<TableRow> animationDataSortedByLabel(Set<ManagedAnimation> animations, Animation.Status status) {
         return animations.stream()
             .filter(animation -> hasStatus(animation, status))
-            .sorted(Comparator.comparing(RegisteredAnimation::label))
+            .sorted(Comparator.comparing(ManagedAnimation::label))
             .map(TableRow::new)
             .toList();
     }
 
-    private boolean hasStatus(RegisteredAnimation managedAnimation, Animation.Status status) {
-        return managedAnimation.animationFX().map(animation -> animation.getStatus() == status).orElse(false);
+    private boolean hasStatus(ManagedAnimation managedAnimation, Animation.Status status) {
+        return managedAnimation.optAnimationFX().map(animation -> animation.getStatus() == status).orElse(false);
     }
 }

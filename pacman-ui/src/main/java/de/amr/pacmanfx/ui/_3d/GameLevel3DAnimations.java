@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.MutableGhost3D;
 import javafx.animation.*;
 import javafx.geometry.Point3D;
@@ -74,7 +74,7 @@ public class GameLevel3DAnimations implements Disposable {
      * </ul>
      * This is the long version used when a cutscene follows.
      */
-    private static class LevelCompletedAnimation extends RegisteredAnimation {
+    private static class LevelCompletedAnimation extends ManagedAnimation {
 
         private static final float SPINNING_SECONDS = 1.5f;
 
@@ -143,7 +143,7 @@ public class GameLevel3DAnimations implements Disposable {
      *   <li>Pac‑Man hiding</li>
      * </ul>
      */
-    private static class LevelCompletedAnimationShort extends RegisteredAnimation {
+    private static class LevelCompletedAnimationShort extends ManagedAnimation {
 
         private final GameLevel3D level3D;
 
@@ -171,7 +171,7 @@ public class GameLevel3DAnimations implements Disposable {
      * Used during energizer mode to create a flashing effect.
      * Automatically restores the original wall colors when stopped.
      */
-    private static class WallColorFlashingAnimation extends RegisteredAnimation {
+    private static class WallColorFlashingAnimation extends ManagedAnimation {
 
         private final GameLevel3D level3D;
         private final Color fromColor;
@@ -220,7 +220,7 @@ public class GameLevel3DAnimations implements Disposable {
      * <p>
      * If no ghost is hunting, the light is turned off.
      */
-    private static class GhostLightAnimation extends RegisteredAnimation {
+    private static class GhostLightAnimation extends ManagedAnimation {
 
         private final GameLevel3D level3D;
         private byte currentGhostID;
@@ -336,12 +336,12 @@ public class GameLevel3DAnimations implements Disposable {
     }
 
     /** @return the ghost‑spotlight animation */
-    public RegisteredAnimation ghostLightAnimation() {
+    public ManagedAnimation ghostLightAnimation() {
         return ghostLightAnimation;
     }
 
     /** @return the wall‑color flashing animation */
-    public RegisteredAnimation wallColorFlashingAnimation() {
+    public ManagedAnimation wallColorFlashingAnimation() {
         return wallColorFlashingAnimation;
     }
 
@@ -352,7 +352,7 @@ public class GameLevel3DAnimations implements Disposable {
      * @param cutSceneFollows whether a cutscene will follow the level completion
      * @return the selected animation
      */
-    public RegisteredAnimation selectLevelCompleteAnimation(boolean cutSceneFollows) {
+    public ManagedAnimation selectLevelCompleteAnimation(boolean cutSceneFollows) {
         return cutSceneFollows ? levelCompletedShortAnimation : levelCompletedFullAnimation;
     }
 }

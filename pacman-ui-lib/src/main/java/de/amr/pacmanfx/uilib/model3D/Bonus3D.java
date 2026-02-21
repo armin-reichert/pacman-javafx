@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -45,9 +45,9 @@ public class Bonus3D extends Box implements Disposable {
     private PhongMaterial pointsTexture;
 
     private EdibleAnimation edibleAnimation;
-    private RegisteredAnimation eatenAnimation;
+    private ManagedAnimation eatenAnimation;
 
-    private class EdibleAnimation extends RegisteredAnimation {
+    private class EdibleAnimation extends ManagedAnimation {
 
         public EdibleAnimation(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Bonus_Edible");
@@ -65,8 +65,8 @@ public class Bonus3D extends Box implements Disposable {
         }
 
         public void update(GameLevel level) {
-            if (wrappedAnimation != null && wrappedAnimation.getStatus() == Animation.Status.RUNNING) {
-                RotateTransition rotateTransition = (RotateTransition) wrappedAnimation;
+            if (animationFX != null && animationFX.getStatus() == Animation.Status.RUNNING) {
+                RotateTransition rotateTransition = (RotateTransition) animationFX;
                 Vector2f center = Bonus3D.this.bonus.center();
                 boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
                 setVisible(Bonus3D.this.bonus.state() == BonusState.EDIBLE && !outsideWorld);
@@ -104,7 +104,7 @@ public class Bonus3D extends Box implements Disposable {
 
         edibleAnimation = new EdibleAnimation(animationRegistry);
 
-        eatenAnimation = new RegisteredAnimation(animationRegistry, "Bonus_Eaten");
+        eatenAnimation = new ManagedAnimation(animationRegistry, "Bonus_Eaten");
         eatenAnimation.setFactory(() -> {
             var animation = new RotateTransition(Duration.seconds(1), Bonus3D.this);
             animation.setAxis(Rotate.X_AXIS);
