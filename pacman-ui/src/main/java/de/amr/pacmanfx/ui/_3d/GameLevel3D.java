@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector3f;
@@ -307,23 +308,24 @@ public class GameLevel3D extends Group implements Disposable {
         animations.ghostLightAnimation().playFromStart();
     }
 
-    public void onPacManDying(StateMachine.State<Game> state) {
-        state.timer().resetIndefiniteTime(); // expires when level animation ends
+    public void onPacManDying(TickTimer gameStateTimer) {
         soundManager.stopAll();
         animations.ghostLightAnimation().stop();
-        // do one last update before dying animation starts
-        pac3D.update(level);
+        animations.wallColorFlashingAnimation().stop();
         ghosts3D.forEach(MutableGhost3D::stopAllAnimations);
         bonus3D().ifPresent(Bonus3D::expire);
-        var animation = new SequentialTransition(
+        // Do one last update before dying animation starts
+        pac3D.update(level);
+
+        gameStateTimer.resetIndefiniteTime(); // keep game state until Pac-Man animation ends
+        final var dyingAnimation = new SequentialTransition(
             pauseSec(1.5),
             doNow(() -> soundManager.play(SoundID.PAC_MAN_DEATH)),
             pac3D.dyingAnimation().animationFX(),
             pauseSec(0.5)
         );
-        // Note: adding this inside the animation as last action does not work!
-        animation.setOnFinished(_ -> level.game().control().state().timer().expire());
-        animation.play();
+        dyingAnimation.setOnFinished(_ -> gameStateTimer.expire());
+        dyingAnimation.play();
     }
 
     public void onEatingGhost() {
@@ -457,8 +459,6 @@ public class GameLevel3D extends Group implements Disposable {
 
         animationRegistry.stopAllAnimations();
         Logger.info("Stopped all managed animations");
-
-        animations.dispose();
 
         // Garbage collect remaining animations
         animationRegistry.garbageCollect();

@@ -31,7 +31,7 @@ public class AnimationRegistry {
 
     public void addToTrash(ManagedAnimation animation) {
         if (!registered.contains(animation)) {
-            Logger.error("Animation '{}' is not registered, cannot be added to trash", animation.label());
+            Logger.warn("Animation '{}' is not registered, cannot be added to trash", animation.label());
             return;
         }
         if (!garbage.contains(animation)) {

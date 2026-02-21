@@ -441,7 +441,7 @@ public class PlayScene3D implements GameScene {
                 gameLevel3D.onHuntingStart();
             }
             else if (newState.nameMatches(StateName.PACMAN_DYING.name())) {
-                gameLevel3D.onPacManDying(newState);
+                gameLevel3D.onPacManDying(newState.timer());
             }
             else if (newState.nameMatches(StateName.EATING_GHOST.name())) {
                 gameLevel3D.onEatingGhost();

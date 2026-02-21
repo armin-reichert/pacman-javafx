@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -37,10 +36,8 @@ import static java.util.Objects.requireNonNull;
  *   <li>a ghost spotlight animation</li>
  * </ul>
  * All animations are registered in the {@link AnimationRegistry} of the owning {@link GameLevel3D}.
- * <p>
- * The class also provides cleanup via {@link #dispose()}.
  */
-public class GameLevel3DAnimations implements Disposable {
+public class GameLevel3DAnimations {
 
     /**
      * Creates an animation that briefly lowers and raises the maze wall base height,
@@ -303,36 +300,6 @@ public class GameLevel3DAnimations implements Disposable {
         levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry, level3D);
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationRegistry, level3D);
         ghostLightAnimation = new GhostLightAnimation(animationRegistry, level3D);
-    }
-
-    /**
-     * Disposes all animations created by this container.
-     * <p>
-     * Ensures that:
-     * <ul>
-     *   <li>all animations are stopped</li>
-     *   <li>all resources are released</li>
-     *   <li>no lingering references remain</li>
-     * </ul>
-     */
-    @Override
-    public void dispose() {
-        if (wallColorFlashingAnimation != null) {
-            wallColorFlashingAnimation.dispose();
-            wallColorFlashingAnimation = null;
-        }
-        if (levelCompletedFullAnimation != null) {
-            levelCompletedFullAnimation.dispose();
-            levelCompletedFullAnimation = null;
-        }
-        if (levelCompletedShortAnimation != null) {
-            levelCompletedShortAnimation.dispose();
-            levelCompletedShortAnimation = null;
-        }
-        if (ghostLightAnimation != null) {
-            ghostLightAnimation.dispose();
-            ghostLightAnimation = null;
-        }
     }
 
     /** @return the ghost‑spotlight animation */
