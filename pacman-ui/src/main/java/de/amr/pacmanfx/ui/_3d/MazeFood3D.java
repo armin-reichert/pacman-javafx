@@ -46,12 +46,11 @@ public class MazeFood3D implements Disposable {
     private final Maze3D maze3D;
 
     private PhongMaterial pelletMaterial;
-    private PhongMaterial particleMaterial;
 
     private Set<MeshView> pellets3D = Set.of();
     private Set<Energizer3D> energizers3D = Set.of();
 
-    private EnergizerParticlesAnimation particlesAnimation;
+    private final EnergizerParticlesAnimation particlesAnimation;
 
     public MazeFood3D(
         PreferencesManager prefs,
@@ -69,7 +68,6 @@ public class MazeFood3D implements Disposable {
         this.maze3D = requireNonNull(maze3D);
 
         pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
-        particleMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()).deriveColor(0, 0.5, 1.5, 0.5));
 
         createPellets3D();
         createEnergizers3D();
@@ -84,11 +82,6 @@ public class MazeFood3D implements Disposable {
             pelletMaterial.diffuseColorProperty().unbind();
             pelletMaterial.specularColorProperty().unbind();
             pelletMaterial = null;
-        }
-        if (particleMaterial != null) {
-            particleMaterial.diffuseColorProperty().unbind();
-            particleMaterial.specularColorProperty().unbind();
-            particleMaterial = null;
         }
         if (!pellets3D.isEmpty()) {
             pellets3D.forEach(meshView -> {
@@ -176,7 +169,6 @@ public class MazeFood3D implements Disposable {
         final var particlesAnimation = new EnergizerParticlesAnimation(
             animationRegistry,
             swirlBaseCenters,
-            particleMaterial,
             ghostParticleMaterials,
             maze3D.floor(),
             maze3D.particlesGroup());
