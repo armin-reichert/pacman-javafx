@@ -242,7 +242,7 @@ public class MutableGhost3D extends Group implements Disposable {
                 brakeAnimation.playFromStart();
             }
         }
-        Logger.info("{} 3D appearance set to {}", ghost.name(), newAppearance);
+        Logger.debug("{} 3D appearance set to {}", ghost.name(), newAppearance);
     }
 
     // Separate method such that listener can be removed
