@@ -8,7 +8,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.Sphere;
 
-public class BallEnergizerFragment extends AbstractEnergizerFragment {
+public class BallEnergizerParticle extends AbstractEnergizerParticle {
 
     private Sphere ball;
 
@@ -20,7 +20,7 @@ public class BallEnergizerFragment extends AbstractEnergizerFragment {
      * @param origin   the initial world position of the fragment
      * @param divisions the mesh subdivisions of the sphere
      */
-    public BallEnergizerFragment(double radius, Material material, Point3D origin, int divisions) {
+    public BallEnergizerParticle(double radius, Material material, Point3D origin, int divisions) {
         ball = new Sphere(radius, divisions);
         ball.setMaterial(material);
         ball.setTranslateX(origin.getX());
@@ -37,7 +37,7 @@ public class BallEnergizerFragment extends AbstractEnergizerFragment {
         return newBall;
     }
 
-    public void changeBallMeshResolution(int divisions) {
+    public void changeMeshResolution(int divisions) {
         if (ball.getDivisions() != divisions) {
             ball = modifiedBall(divisions);
         }

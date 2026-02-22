@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
  * Fragments are lightweight and disposable. Subclasses must implement
  * {@link #shape()}, {@link #size()} and {@link #setSize(double)}.
  */
-public abstract class AbstractEnergizerFragment implements Disposable {
+public abstract class AbstractEnergizerParticle implements Disposable {
 
     /**
      * Tests whether a sphere intersects an axis-aligned bounding box (AABB).
@@ -62,7 +62,7 @@ public abstract class AbstractEnergizerFragment implements Disposable {
      *   <li>{@code INSIDE_SWIRL}: The fragment moves inside the ghost-house swirl effect.</li>
      * </ul>
      */
-    public enum FragmentState { FLYING, ATTRACTED, INSIDE_SWIRL }
+    public enum FragmentState { FLYING, ATTRACTED, INSIDE_SWIRL, OUT_OF_WORLD }
 
     /** Current animation state of the fragment. */
     private FragmentState state = FragmentState.FLYING;

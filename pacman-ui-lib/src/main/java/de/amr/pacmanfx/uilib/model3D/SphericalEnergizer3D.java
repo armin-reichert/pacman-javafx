@@ -23,7 +23,6 @@ public class SphericalEnergizer3D implements Energizer3D {
 
     private Sphere sphere;
     private ManagedAnimation pumpingAnimation;
-    private ManagedAnimation eatenAnimation;
 
     public SphericalEnergizer3D(
         AnimationRegistry animationRegistry,
@@ -97,10 +96,6 @@ public class SphericalEnergizer3D implements Energizer3D {
             pumpingAnimation.dispose();
             pumpingAnimation = null;
         }
-        if (eatenAnimation != null) {
-            eatenAnimation.dispose();
-            eatenAnimation = null;
-        }
     }
 
     public void startPumping() {
@@ -111,15 +106,8 @@ public class SphericalEnergizer3D implements Energizer3D {
         pumpingAnimation.pause();
     }
 
-    public void setEatenAnimation(ManagedAnimation animation) {
-        eatenAnimation = requireNonNull(animation);
-    }
-
     public void onEaten() {
         pumpingAnimation.stop();
         sphere.setVisible(false);
-        if (eatenAnimation != null) {
-            eatenAnimation.playFromStart();
-        }
     }
 }

@@ -35,6 +35,7 @@ import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
@@ -535,6 +536,12 @@ public class PlayScene3D implements GameScene {
                 .filter(e3D -> tile.equals(e3D.tile()))
                 .findFirst().orElse(null);
             if (energizer3D != null) {
+                final Point3D center = new Point3D(
+                    energizer3D.shape().getTranslateX(),
+                    energizer3D.shape().getTranslateY(),
+                    energizer3D.shape().getTranslateZ()
+                );
+                mazeFood3D.particlesAnimation().showExplosion(center);
                 energizer3D.onEaten();
             } else {
                 mazeFood3D.pellets3D().stream()

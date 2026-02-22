@@ -61,6 +61,8 @@ public class Maze3D extends Group implements Disposable {
     private MazeHouse3D house3D;
     private MazeFood3D food3D;
 
+    private final Group particlesGroup = new Group();
+
     /**
      * Creates a new 3D maze for the given level.
      *
@@ -138,6 +140,10 @@ public class Maze3D extends Group implements Disposable {
     /** @return the 3D food component (pellets, energizers, etc.) */
     public MazeFood3D food() {
         return food3D;
+    }
+
+    public Group particlesGroup() {
+        return particlesGroup;
     }
 
     /**
@@ -226,6 +232,6 @@ public class Maze3D extends Group implements Disposable {
      * @param ghostMaterials materials used for ghost-related visual effects
      */
     private void createMazeFood3D(GameLevel level, List<PhongMaterial> ghostMaterials) {
-        food3D = new MazeFood3D(prefs, colorScheme, animationRegistry, level, ghostMaterials, floor3D, house3D.swirls());
+        food3D = new MazeFood3D(prefs, colorScheme, animationRegistry, level, ghostMaterials, this);
     }
 }
