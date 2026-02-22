@@ -306,7 +306,6 @@ public class ArcadeHouse3D extends Group implements Disposable {
         openProperty().unbind();
         wallBaseHeightProperty().unbind();
 
-        doorsMeltingAnimation.stop();
         doorsMeltingAnimation.dispose();
         doorsMeltingAnimation = null;
 

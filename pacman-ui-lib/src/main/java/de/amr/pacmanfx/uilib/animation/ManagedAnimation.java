@@ -15,7 +15,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * A lazily created JavaFX animation that is registered in an {@link AnimationRegistry}.
  * <p>
- * A {@code RegisteredAnimation} encapsulates:
+ * A {@code ManagedAnimation} encapsulates:
  * <ul>
  *   <li>a unique label identifying the animation</li>
  *   <li>a factory that creates the underlying JavaFX {@link Animation}</li>
@@ -31,14 +31,13 @@ public class ManagedAnimation implements Disposable {
     /** Human‑readable identifier for logging and debugging. */
     private final String label;
 
-    /** Registry that owns and manages this animation. */
-    private final AnimationRegistry registry;
-
     /** Factory for creating the JavaFX animation lazily. */
     private Supplier<Animation> factory;
 
     /** The lazily created JavaFX animation instance. */
     protected Animation animationFX;
+
+    private boolean disposed;
 
     /**
      * Creates a registered animation without an initial factory.
@@ -48,7 +47,6 @@ public class ManagedAnimation implements Disposable {
      * @param label    unique label for this animation
      */
     public ManagedAnimation(AnimationRegistry registry, String label) {
-        this.registry = requireNonNull(registry);
         this.label = requireNonNull(label);
         registry.register(this);
     }
@@ -61,7 +59,6 @@ public class ManagedAnimation implements Disposable {
      * @param factory  factory that creates the JavaFX animation
      */
     public ManagedAnimation(AnimationRegistry registry, String label, Supplier<Animation> factory) {
-        this.registry = requireNonNull(registry);
         this.label = requireNonNull(label);
         this.factory = requireNonNull(factory);
         registry.register(this);
@@ -130,7 +127,6 @@ public class ManagedAnimation implements Disposable {
      *   <li>stops the animation</li>
      *   <li>clears listeners and references</li>
      *   <li>invokes {@link #freeResources()}</li>
-     *   <li>marks this animation for disposal in the registry</li>
      * </ul>
      */
     @Override
@@ -141,7 +137,11 @@ public class ManagedAnimation implements Disposable {
             animationFX = null;
             freeResources();
         }
-        registry.addToTrash(this);
+        disposed = true;
+    }
+
+    public boolean disposed() {
+        return disposed;
     }
 
     /**

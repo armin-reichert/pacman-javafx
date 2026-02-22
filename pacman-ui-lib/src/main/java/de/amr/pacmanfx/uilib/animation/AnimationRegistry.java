@@ -17,7 +17,6 @@ import static java.util.Objects.requireNonNull;
 public class AnimationRegistry {
 
     private final Set<ManagedAnimation> registered = new HashSet<>();
-    private final Set<ManagedAnimation> garbage = new HashSet<>();
 
     public void register(ManagedAnimation animation) {
         requireNonNull(animation);
@@ -29,22 +28,10 @@ public class AnimationRegistry {
         }
     }
 
-    public void addToTrash(ManagedAnimation animation) {
-        if (!registered.contains(animation)) {
-            Logger.warn("Animation '{}' is not registered, cannot be added to trash", animation.label());
-            return;
-        }
-        if (!garbage.contains(animation)) {
-            registered.remove(animation);
-            garbage.add(animation);
-            Logger.info("Animation '{}' unregistered and added to trash", animation.label());
-        }
-    }
-
     public void garbageCollect() {
-        Logger.info("Dispose {} animations and empty trash can", garbage.size());
-        garbage.forEach(ManagedAnimation::dispose);
-        garbage.clear();
+        var disposedAnimations = registered.stream().filter(ManagedAnimation::disposed).toList();
+        disposedAnimations.forEach(registered::remove);
+        Logger.info("Removed {} disposed animations", disposedAnimations.size());
     }
 
     public void stopAllAnimations() {
