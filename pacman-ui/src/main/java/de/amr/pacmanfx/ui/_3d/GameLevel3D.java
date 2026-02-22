@@ -447,21 +447,10 @@ public class GameLevel3D extends Group implements Disposable {
             .forEach(shape3D -> shape3D.setDrawMode(drawMode));
     }
 
-    private boolean disposed = false;
-
     public void dispose() {
-        if (disposed) {
-            Logger.warn("Game level 3D already has been disposed!");
-            return;
-        }
         Logger.info("Disposing game level 3D...");
-        disposed = true;
 
-        animationRegistry.stopAllAnimations();
-        Logger.info("Stopped all managed animations");
-
-        // Garbage collect remaining animations
-        animationRegistry.garbageCollect();
+        animationRegistry.clear();
 
         PROPERTY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");
@@ -479,7 +468,6 @@ public class GameLevel3D extends Group implements Disposable {
             ghostLight = null;
             Logger.info("Unbound and cleared ghost light");
         }
-
         if (maze3D != null) {
             maze3D.dispose();
             maze3D = null;
@@ -518,10 +506,6 @@ public class GameLevel3D extends Group implements Disposable {
             messageView = null;
             Logger.info("Disposed message view");
         }
-        disposeGhostMeshViews();
-    }
-
-    private void disposeGhostMeshViews() {
         if (ghostDressMeshViews != null) {
             for (MeshView meshView : ghostDressMeshViews) {
                 meshView.setMesh(null);

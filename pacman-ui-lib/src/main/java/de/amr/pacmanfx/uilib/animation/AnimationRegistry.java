@@ -28,6 +28,12 @@ public class AnimationRegistry {
         }
     }
 
+    public void clear() {
+        stopAllAnimations();
+        registered.forEach(ManagedAnimation::dispose);
+        garbageCollect();
+    }
+
     public void garbageCollect() {
         var disposedAnimations = registered.stream().filter(ManagedAnimation::disposed).toList();
         disposedAnimations.forEach(registered::remove);
