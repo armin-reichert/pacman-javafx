@@ -14,10 +14,10 @@ import javafx.scene.Group;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -143,10 +143,9 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
             // Place particle on floor surface
             particle.shape().setTranslateZ(floorSurfaceZ() - 0.5 * particle.size());
 
-            particle.setTargetSwirlIndex(swirlIndex);
-
             final Group targetSwirlGroup = swirls.get(swirlIndex);
             final var swirlCenter = new Point3D(targetSwirlGroup.getTranslateX(), targetSwirlGroup.getTranslateY(), 0);
+            particle.setTargetSwirlIndex(swirlIndex);
             particle.setTargetPosition(randomPointOnLateralSwirlSurface(swirlCenter));
 
             final float speed = randomFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
@@ -157,6 +156,15 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
             ).normalized().mul(speed));
 
             particle.setState(FragmentState.ATTRACTED);
+        }
+
+        private Point3D randomPointOnLateralSwirlSurface(Point3D swirlCenter) {
+            final double angle = Math.toRadians(randomInt(0, 360));
+            return new Point3D(
+                swirlCenter.getX() + SWIRL_RADIUS * Math.cos(angle),
+                swirlCenter.getY() + SWIRL_RADIUS * Math.sin(angle),
+                randomFloat(0, SWIRL_HEIGHT)
+            );
         }
 
         private boolean moveTowardsTargetPosition(AbstractEnergizerFragment particle) {
@@ -170,36 +178,28 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
             return targetPositionReached;
         }
 
-        private Point3D randomPointOnLateralSwirlSurface(Point3D swirlCenter) {
+        private void onParticleReachedTargetPosition(AbstractEnergizerFragment particle) {
+            // Place particle at random position on swirl bottom radius
             final double angle = Math.toRadians(randomInt(0, 360));
-            return new Point3D(
-                swirlCenter.getX() + SWIRL_RADIUS * Math.cos(angle),
-                swirlCenter.getY() + SWIRL_RADIUS * Math.sin(angle),
-                randomFloat(0, SWIRL_HEIGHT)
-            );
+            final Group swirl = swirls.get(particle.targetSwirlIndex());
+            final var center = new Point3D(swirl.getTranslateX(), swirl.getTranslateY(), 0);
+            particle.setAngle(angle);
+            particle.shape().setTranslateX(center.getX() + SWIRL_RADIUS * Math.cos(angle));
+            particle.shape().setTranslateY(center.getY() + SWIRL_RADIUS * Math.sin(angle));
+            particle.setState(FragmentState.INSIDE_SWIRL);
         }
 
-        private void onParticleReachedTargetPosition(AbstractEnergizerFragment particle) {
-            final Point3D targetPosition = particle.targetPosition();
-            final Shape3D particleShape = particle.shape();
-            final Group targetSwirlGroup = swirls.get(particle.targetSwirlIndex());
-            if (particleShapesGroup != null) {
-                particleShapesGroup.getChildren().remove(particleShape);
-                targetSwirlGroup.getChildren().add(particleShape);
-                // Set position relative to swirl group
-                particleShape.setTranslateX(targetPosition.getX() - targetSwirlGroup.getTranslateX());
-                particleShape.setTranslateY(targetPosition.getY() - targetSwirlGroup.getTranslateY());
-                particleShape.setTranslateZ(targetPosition.getZ());
-                particle.setVelocity(SWIRL_RISING_VELOCITY);
-                particle.setState(FragmentState.INSIDE_SWIRL);
-            }
-            else Logger.error("Particle shapes group is NULL");
-        }
+        static final float ROTATION_SPEED = 0.1f;
 
         private void moveInsideSwirl(AbstractEnergizerFragment particle) {
+            particle.setVelocity(SWIRL_RISING_VELOCITY);
             particle.move();
             if (particle.shape().getTranslateZ() < -SWIRL_HEIGHT) {
                 particle.shape().setTranslateZ(floorSurfaceZ() - 0.5 * particle.size());
+            }
+            particle.setAngle(particle.angle() + ROTATION_SPEED);
+            if (particle.angle() > Math.TAU) {
+                particle.setAngle(particle.angle() - Math.TAU);
             }
         }
 

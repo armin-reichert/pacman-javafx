@@ -77,6 +77,16 @@ public abstract class AbstractEnergizerFragment implements Disposable {
     /** Current velocity of the fragment in 3D space. Immutable vector. */
     private Vector3f velocity = Vector3f.ZERO;
 
+    private double angle;
+
+    public void setAngle(double angle) {
+        this.angle = angle;
+    }
+
+    public double angle() {
+        return angle;
+    }
+
     /**
      * Returns the 3D shape representing this fragment.
      *
