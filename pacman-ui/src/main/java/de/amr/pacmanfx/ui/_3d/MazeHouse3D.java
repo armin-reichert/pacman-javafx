@@ -11,10 +11,9 @@ import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.animation.SwirlAnimation;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
+import de.amr.pacmanfx.uilib.model3D.Swirl3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
@@ -23,6 +22,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -45,14 +45,16 @@ import static de.amr.pacmanfx.Globals.*;
  */
 public class MazeHouse3D implements Disposable {
 
+    public static final float SWIRL_ROTATION_SECONDS = 1f;
+
     /** The 3D model of the ghost house. */
     private final ArcadeHouse3D arcadeHouse3D;
 
     /** Listener that triggers the door animation when the house opens. */
     private final ChangeListener<Boolean> houseOpenListener;
 
-    /** Swirl animations above the ghost revival tiles. */
-    private List<SwirlAnimation> swirlAnimations = new ArrayList<>(3);
+    /** Swirls above the ghost revival tiles. */
+    private final List<Swirl3D> swirls = new ArrayList<>(3);
 
     /**
      * Creates a new 3D ghost house with swirl animations positioned above the
@@ -92,10 +94,10 @@ public class MazeHouse3D implements Disposable {
         };
         arcadeHouse3D.openProperty().addListener(houseOpenListener);
 
-        createSwirlAnimations(animationRegistry, house);
+        createSwirls(animationRegistry, house);
     }
 
-    private void createSwirlAnimations(AnimationRegistry animationRegistry, House house) {
+    private void createSwirls(AnimationRegistry animationRegistry, House house) {
         final List<Vector2f> revivalPositions = Stream.of(
             house.ghostRevivalTile(CYAN_GHOST_BASHFUL),
             house.ghostRevivalTile(PINK_GHOST_SPEEDY),
@@ -106,10 +108,10 @@ public class MazeHouse3D implements Disposable {
         // Create swirl animations above the revival tiles
         for (int i = 0; i < revivalPositions.size(); i++) {
             final Vector2f position = revivalPositions.get(i);
-            final var animation = new SwirlAnimation(animationRegistry, "Swirl_%d".formatted(i));
-            swirlAnimations.add(animation);
-            animation.swirlGroup().setTranslateX(position.x());
-            animation.swirlGroup().setTranslateY(position.y());
+            final Swirl3D swirl3D = new Swirl3D(animationRegistry, "Swirl_%d".formatted(i), SWIRL_ROTATION_SECONDS);
+            swirl3D.setTranslateX(position.x());
+            swirl3D.setTranslateY(position.y());
+            swirls.add(swirl3D);
         }
     }
 
@@ -134,8 +136,8 @@ public class MazeHouse3D implements Disposable {
     /**
      * @return the swirl animations above the ghost revival tiles
      */
-    public List<SwirlAnimation> swirlAnimations() {
-        return swirlAnimations;
+    public List<Swirl3D> swirls() {
+        return Collections.unmodifiableList(swirls);
     }
 
     /**
@@ -149,37 +151,18 @@ public class MazeHouse3D implements Disposable {
      * Starts all swirl animations from the beginning.
      */
     public void startSwirlAnimations() {
-        if (swirlAnimations != null) {
-            swirlAnimations.forEach(ManagedAnimation::playFromStart);
-            Logger.info("Swirl animations started");
-        }
+        swirls.forEach(swirl3D -> swirl3D.animation().playFromStart());
+        Logger.info("Swirl animations started");
     }
 
+    public void hideSwirls() {
+        swirls.forEach(swirl3D -> swirl3D.setVisible(false));
+    }
     /**
      * Stops all swirl animations.
      */
     public void stopSwirlAnimations() {
-        if (swirlAnimations != null) {
-            swirlAnimations.forEach(ManagedAnimation::stop);
-        }
-    }
-
-    /**
-     * Disposes all swirl animations and clears their scene graph nodes.
-     * <p>
-     * After calling this method, the swirl animation list becomes {@code null}.
-     */
-    public void deleteSwirlAnimations() {
-        if (swirlAnimations != null) {
-            for (var swirlAnimation : swirlAnimations) {
-                swirlAnimation.stop();
-                swirlAnimation.swirlGroup().getChildren().clear();
-                swirlAnimation.dispose();
-            }
-            swirlAnimations.clear();
-            swirlAnimations = null;
-            Logger.info("Disposed swirl animations");
-        }
+        swirls.forEach(swirl3D -> swirl3D.animation().stop());
     }
 
     /**
@@ -207,6 +190,7 @@ public class MazeHouse3D implements Disposable {
         Logger.info("Removed 'house open' listener");
         arcadeHouse3D.dispose();
         Logger.info("Disposed 3D house");
-        deleteSwirlAnimations();
+        swirls.forEach(Swirl3D::dispose);
+        Logger.info("Disposed swirls");
     }
 }

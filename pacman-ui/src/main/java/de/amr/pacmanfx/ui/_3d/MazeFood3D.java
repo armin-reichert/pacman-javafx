@@ -15,6 +15,7 @@ import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.SphericalEnergizer3D;
+import de.amr.pacmanfx.uilib.model3D.Swirl3D;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -61,7 +62,7 @@ public class MazeFood3D implements Disposable {
         GameLevel level,
         List<PhongMaterial> ghostMaterials,
         Box floor3D,
-        List<Group> swirlGroups)
+        List<Swirl3D> swirls)
     {
         this.prefs = requireNonNull(prefs);
         requireNonNull(colorScheme);
@@ -74,7 +75,7 @@ public class MazeFood3D implements Disposable {
         particleMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()).deriveColor(0, 0.5, 1.5, 0.5));
 
         createPellets3D();
-        createEnergizers3D(ghostMaterials, swirlGroups);
+        createEnergizers3D(ghostMaterials, swirls);
     }
 
     @Override
@@ -147,7 +148,7 @@ public class MazeFood3D implements Disposable {
         return meshView;
     }
 
-    private void createEnergizers3D(List<PhongMaterial> ghostMaterials, List<Group> swirlGroups) {
+    private void createEnergizers3D(List<PhongMaterial> ghostMaterials, List<Swirl3D> swirls) {
         final float radius     = prefs.getFloat("3d.energizer.radius");
         final float minScaling = prefs.getFloat("3d.energizer.scaling.min");
         final float maxScaling = prefs.getFloat("3d.energizer.scaling.max");
@@ -155,7 +156,7 @@ public class MazeFood3D implements Disposable {
         energizers3D = foodLayer.tiles()
             .filter(foodLayer::hasFoodAtTile)
             .filter(foodLayer::isEnergizerTile)
-            .map(tile -> createAnimatedEnergizer3D(tile, radius, minScaling, maxScaling, ghostMaterials, floor3D, swirlGroups))
+            .map(tile -> createAnimatedEnergizer3D(tile, radius, minScaling, maxScaling, ghostMaterials, floor3D, swirls))
             .collect(Collectors.toCollection(HashSet::new));
     }
 
@@ -166,7 +167,7 @@ public class MazeFood3D implements Disposable {
         float maxScaling,
         List<PhongMaterial> ghostMaterials,
         Box floor3D,
-        List<Group> swirlGroups
+        List<Swirl3D> swirls
     ) {
         final var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
         final var energizer3D = new SphericalEnergizer3D(
@@ -182,7 +183,7 @@ public class MazeFood3D implements Disposable {
         final EnergizerParticlesAnimation particlesAnimation = createParticlesAnimation(
             energizer3D,
             ghostMaterials,
-            swirlGroups,
+            swirls,
             floor3D);
 
         energizer3D.setEatenAnimation(particlesAnimation);
@@ -193,7 +194,7 @@ public class MazeFood3D implements Disposable {
     private EnergizerParticlesAnimation createParticlesAnimation(
         Energizer3D energizer3D,
         List<PhongMaterial> ghostParticleMaterials,
-        List<Group> swirlGroups,
+        List<Swirl3D> swirls,
         Box floor3D)
     {
         final Point3D energizerCenter = new Point3D(
@@ -204,7 +205,7 @@ public class MazeFood3D implements Disposable {
         final var particlesAnimation = new EnergizerParticlesAnimation(
             animationRegistry,
             energizerCenter,
-            swirlGroups,
+            swirls,
             particleMaterial,
             ghostParticleMaterials,
             floor3D);

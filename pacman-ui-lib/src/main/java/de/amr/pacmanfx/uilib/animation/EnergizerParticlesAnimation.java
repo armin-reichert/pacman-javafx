@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.animation;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.math.Vector3f;
 import de.amr.pacmanfx.uilib.animation.AbstractEnergizerFragment.FragmentState;
+import de.amr.pacmanfx.uilib.model3D.Swirl3D;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.geometry.Point3D;
@@ -72,7 +73,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
     private final Point3D origin;
     private final Box floor3D;
-    private final List<Group> swirlGroups;
+    private final List<Swirl3D> swirls;
     private final Material particleMaterial;
     private final List<PhongMaterial> ghostDressMaterials;
 
@@ -144,7 +145,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
             particle.setTargetSwirlIndex(swirlIndex);
 
-            final Group targetSwirlGroup = swirlGroups.get(swirlIndex);
+            final Group targetSwirlGroup = swirls.get(swirlIndex);
             final var swirlCenter = new Point3D(targetSwirlGroup.getTranslateX(), targetSwirlGroup.getTranslateY(), 0);
             particle.setTargetPosition(randomPointOnLateralSwirlSurface(swirlCenter));
 
@@ -181,7 +182,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         private void onParticleReachedTargetPosition(AbstractEnergizerFragment particle) {
             final Point3D targetPosition = particle.targetPosition();
             final Shape3D particleShape = particle.shape();
-            final Group targetSwirlGroup = swirlGroups.get(particle.targetSwirlIndex());
+            final Group targetSwirlGroup = swirls.get(particle.targetSwirlIndex());
             if (particleShapesGroup != null) {
                 particleShapesGroup.getChildren().remove(particleShape);
                 targetSwirlGroup.getChildren().add(particleShape);
@@ -252,7 +253,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     public EnergizerParticlesAnimation(
         AnimationRegistry animationRegistry,
         Point3D energizerCenter,
-        List<Group> swirlGroups,
+        List<Swirl3D> swirls,
         Material particleMaterial,
         List<PhongMaterial> ghostDressMaterials,
         Box floor3D)
@@ -260,7 +261,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         super(animationRegistry, "Energizer_Explosion");
 
         this.origin = requireNonNull(energizerCenter);
-        this.swirlGroups = requireNonNull(swirlGroups);
+        this.swirls = requireNonNull(swirls);
         this.particleMaterial = requireNonNull(particleMaterial);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
         this.floor3D = requireNonNull(floor3D);

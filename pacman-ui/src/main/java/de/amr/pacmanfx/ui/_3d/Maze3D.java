@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.SwirlAnimation;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import javafx.beans.property.DoubleProperty;
@@ -227,7 +226,6 @@ public class Maze3D extends Group implements Disposable {
      * @param ghostMaterials materials used for ghost-related visual effects
      */
     private void createMazeFood3D(GameLevel level, List<PhongMaterial> ghostMaterials) {
-        final List<Group> swirlGroups = house3D.swirlAnimations().stream().map(SwirlAnimation::swirlGroup).toList();
-        food3D = new MazeFood3D(prefs, colorScheme, animationRegistry, level, ghostMaterials, floor3D, swirlGroups);
+        food3D = new MazeFood3D(prefs, colorScheme, animationRegistry, level, ghostMaterials, floor3D, house3D.swirls());
     }
 }

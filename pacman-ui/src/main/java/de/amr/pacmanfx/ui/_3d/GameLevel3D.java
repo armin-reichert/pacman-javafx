@@ -20,7 +20,6 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.SwirlAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.*;
@@ -124,11 +123,11 @@ public class GameLevel3D extends Group implements Disposable {
         animations = new GameLevel3DAnimations(this);
 
         getChildren().add(maze3D.floor());
+        getChildren().addAll(maze3D.house().swirls());
         getChildren().add(levelCounter3D);
         getChildren().add(livesCounter3D);
         getChildren().addAll(pac3D, pac3D.light());
         getChildren().addAll(ghosts3D);
-        getChildren().addAll(maze3D.house().swirlAnimations().stream().map(SwirlAnimation::swirlGroup).toList());
         getChildren().add(maze3D.food().particleGroupsContainer());
         getChildren().addAll(maze3D.food().energizers3D().stream().map(Energizer3D::shape).toList());
         getChildren().addAll(maze3D.food().pellets3D());
@@ -349,7 +348,8 @@ public class GameLevel3D extends Group implements Disposable {
         maze3D.food().particleGroupsContainer().getChildren().clear();
 
         maze3D.house().hideDoors();
-        maze3D.house().deleteSwirlAnimations();
+        maze3D.house().stopSwirlAnimations();
+        maze3D.house().hideSwirls();
 
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
 
