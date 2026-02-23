@@ -79,6 +79,8 @@ public abstract class EnergizerParticle implements Disposable {
         OUT_OF_WORLD
     }
 
+    private Shape3D shape3D;
+
     /** Current motion state of this particle. */
     private FragmentState state = FragmentState.FLYING;
 
@@ -93,6 +95,23 @@ public abstract class EnergizerParticle implements Disposable {
 
     /** Current angular position of the particle (used for swirl motion). */
     private double angle;
+
+    protected EnergizerParticle(Shape3D shape3D) {
+        this.shape3D = requireNonNull(shape3D);
+    }
+
+    /**
+     * Returns the 3D shape representing this particle.
+     *
+     * @return the particle's {@link Shape3D}
+     */
+    public Shape3D shape() {
+        return shape3D;
+    }
+
+    protected void setShape3D(Shape3D shape3D) {
+        this.shape3D = requireNonNull(shape3D);
+    }
 
     /**
      * Sets the angular position of this particle.
@@ -109,13 +128,6 @@ public abstract class EnergizerParticle implements Disposable {
     public double angle() {
         return angle;
     }
-
-    /**
-     * Returns the 3D shape representing this particle.
-     *
-     * @return the particle's {@link Shape3D}
-     */
-    public abstract Shape3D shape();
 
     /**
      * Sets the visual size of this particle. The meaning of “size” depends on the concrete subclass

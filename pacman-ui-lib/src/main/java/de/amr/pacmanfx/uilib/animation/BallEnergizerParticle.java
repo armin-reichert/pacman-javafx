@@ -10,8 +10,6 @@ import javafx.scene.shape.Sphere;
 
 public class BallEnergizerParticle extends EnergizerParticle {
 
-    private Sphere ball;
-
     /**
      * Creates a new energizer fragment.
      *
@@ -21,47 +19,50 @@ public class BallEnergizerParticle extends EnergizerParticle {
      * @param divisions the mesh subdivisions of the sphere
      */
     public BallEnergizerParticle(double radius, Material material, Point3D origin, int divisions) {
-        ball = new Sphere(radius, divisions);
+        super(new Sphere(radius, divisions));
+        final Sphere ball = shape();
         ball.setMaterial(material);
         ball.setTranslateX(origin.getX());
         ball.setTranslateY(origin.getY());
         ball.setTranslateZ(origin.getZ());
     }
 
-    private Sphere modifiedBall(int divisions) {
-        final Sphere newBall = new Sphere(ball.getRadius(), divisions);
-        newBall.setMaterial(ball.getMaterial());
-        newBall.setTranslateX(ball.getTranslateX());
-        newBall.setTranslateY(ball.getTranslateY());
-        newBall.setTranslateZ(ball.getTranslateZ());
-        return newBall;
-    }
-
     public void changeMeshResolution(int divisions) {
+        final Sphere ball = shape();
         if (ball.getDivisions() != divisions) {
-            ball = modifiedBall(divisions);
+            setShape3D(modifiedBall(divisions));
         }
     }
 
     @Override
     public Sphere shape() {
-        return ball;
+        return (Sphere) super.shape();
     }
 
     @Override
     public void dispose() {
-        ball.setMaterial(null);
+        shape().setMaterial(null);
         setVelocity(null);
         setTargetPosition(null);
     }
 
     @Override
     public void setSize(double size) {
-        ball.setRadius(0.5 * size);
+        shape().setRadius(0.5 * size);
     }
 
     @Override
     public double size() {
-        return 2 * ball.getRadius();
+        return 2 * shape().getRadius();
+    }
+
+    private Sphere modifiedBall(int divisions) {
+        final Sphere ball = shape();
+        final Sphere newBall = new Sphere(ball.getRadius(), divisions);
+        newBall.setMaterial(ball.getMaterial());
+        newBall.setTranslateX(ball.getTranslateX());
+        newBall.setTranslateY(ball.getTranslateY());
+        newBall.setTranslateZ(ball.getTranslateZ());
+        return newBall;
     }
 }
