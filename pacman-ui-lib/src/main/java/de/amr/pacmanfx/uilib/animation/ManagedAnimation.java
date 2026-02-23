@@ -47,6 +47,7 @@ public class ManagedAnimation implements Disposable {
      * @param label    unique label for this animation
      */
     public ManagedAnimation(AnimationRegistry registry, String label) {
+        requireNonNull(registry);
         this.label = requireNonNull(label);
         registry.register(this);
     }
@@ -59,6 +60,7 @@ public class ManagedAnimation implements Disposable {
      * @param factory  factory that creates the JavaFX animation
      */
     public ManagedAnimation(AnimationRegistry registry, String label, Supplier<Animation> factory) {
+        requireNonNull(registry);
         this.label = requireNonNull(label);
         this.factory = requireNonNull(factory);
         registry.register(this);
@@ -156,10 +158,8 @@ public class ManagedAnimation implements Disposable {
      * Does nothing if the animation is already running.
      */
     public void playFromStart() {
-        Animation animationFX = animationFX();
-        requireNonNull(animationFX);
+        final Animation animationFX = animationFX();
         if (animationFX.getStatus() != Animation.Status.RUNNING) {
-            Logger.trace("Play animation '{}' from start", label);
             animationFX.playFromStart();
         }
     }
@@ -169,10 +169,8 @@ public class ManagedAnimation implements Disposable {
      * If the animation has been paused, it continues from the paused position.
      */
     public void playOrContinue() {
-        Animation animation = animationFX();
-        requireNonNull(animation);
+        final Animation animation = animationFX();
         if (animation.getStatus() != Animation.Status.RUNNING) {
-            Logger.trace("Continue/play animation '{}'", label);
             animation.play();
         }
     }
@@ -182,15 +180,17 @@ public class ManagedAnimation implements Disposable {
      * Logs a warning if the animation cannot be paused (e.g., embedded animations).
      */
     public void pause() {
-        if (animationFX != null) {
-            try {
-                if (animationFX.getStatus() != Animation.Status.PAUSED) {
-                    animationFX.pause();
-                    Logger.debug("Paused animation '{}'", label);
-                }
-            } catch (IllegalStateException x) {
-                Logger.warn("Could not pause (embedded?) animation '{}'", label);
+        if (animationFX == null) {
+            return;
+        }
+        try {
+            if (animationFX.getStatus() != Animation.Status.PAUSED) {
+                animationFX.pause();
+                Logger.debug("Paused animation '{}'", label);
             }
+        } catch (IllegalStateException x) {
+            // This may happen if attempt is made to pause animation embedded inside other animation
+            Logger.warn("Could not pause (embedded?) animation '{}'", label);
         }
     }
 
@@ -199,15 +199,15 @@ public class ManagedAnimation implements Disposable {
      * Logs a warning if the animation cannot be stopped.
      */
     public void stop() {
-        if (animationFX != null) {
-            try {
-                if (animationFX.getStatus() != Animation.Status.STOPPED) {
-                    Logger.debug("Stop animation '{}'", label);
-                    animationFX.stop();
-                }
-            } catch (IllegalStateException x) {
-                Logger.warn("Could not stop (embedded?) animation '{}'", label);
+        if (animationFX == null) {
+            return;
+        }
+        try {
+            if (animationFX.getStatus() != Animation.Status.STOPPED) {
+                animationFX.stop();
             }
+        } catch (IllegalStateException x) {
+            Logger.warn("Could not stop (embedded?) animation '{}'", label);
         }
     }
 
