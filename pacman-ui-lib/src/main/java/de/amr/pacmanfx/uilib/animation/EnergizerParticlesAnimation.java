@@ -34,7 +34,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     private static final float SWIRL_RADIUS = 7;
     private static final float SWIRL_HEIGHT = 12;
 
-    private static final Vector3f SWIRL_RISING_VELOCITY = new Vector3f(0, 0, -0.5f);
+    private static final Vector3f SWIRL_RISING_VELOCITY = new Vector3f(0, 0, -0.3f);
 
     private static final float PARTICLE_MEAN_RADIUS_UNSCALED = 0.15f;
 
