@@ -14,32 +14,38 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Base class for 3D particle fragments used in the energizer explosion animation.
- * <p>
- * A particle is represented by a concrete {@link Shape3D} instance and moves freely in
- * three-dimensional space according to its current velocity. Subclasses define the
- * concrete geometry (e.g., sphere, box, mesh) and how its size is interpreted.
- * <p>
- * During the explosion sequence, a particle may transition through several motion states:
+ *
+ * <p>A particle consists of:
  * <ul>
- *   <li><b>FLYING</b> – free movement under its velocity and optional gravity</li>
+ *   <li>a concrete {@link Shape3D} instance used purely for rendering, and</li>
+ *   <li>a simulation state (position, velocity, angle, motion state) that determines how the particle moves.</li>
+ * </ul>
+ *
+ * <p>The particle moves freely in three-dimensional space according to its velocity. Subclasses define
+ * the concrete geometry (e.g., sphere, box, mesh) and how its visual size is interpreted. The geometry
+ * may be replaced at runtime (for example, to change mesh resolution); the particle automatically
+ * re-applies its current position to the new shape.
+ *
+ * <p>During the explosion sequence, a particle may transition through several motion states:
+ * <ul>
+ *   <li><b>FLYING</b> – free movement under velocity and optional gravity</li>
  *   <li><b>ATTRACTED</b> – movement toward a target position (e.g., the ghost house)</li>
  *   <li><b>INSIDE_SWIRL</b> – circular or spiral motion inside the ghost-house swirl</li>
  *   <li><b>OUT_OF_WORLD</b> – particle has left the valid simulation space and can be removed</li>
  * </ul>
- * <p>
- * This class stores only the simulation state of a particle. Rendering is delegated to
- * the {@link Shape3D} returned by {@link #shape()}. Particles are lightweight and can be
- * disposed via {@link #dispose()} when no longer needed.
- * <p>
- * Subclasses must implement {@link #shape()}, {@link #size()}, and {@link #setSize(double)}
- * to define the concrete geometry.
+ *
+ * <p>The particle’s position is maintained independently of the shape’s transforms. The shape’s
+ * translation is updated whenever the particle moves or when the geometry is replaced.
+ *
+ * <p>Subclasses must implement {@link #size()} and {@link #setSize(double)} to define how the visual
+ * size of the particle is interpreted.
  */
 public abstract class EnergizerParticle implements Disposable {
 
     /**
      * Tests whether a sphere intersects an axis-aligned bounding box (AABB).
-     * <p>
-     * The algorithm:
+     *
+     * <p>The algorithm:
      * <ol>
      *   <li>Clamp the sphere center to the AABB.</li>
      *   <li>Compute the squared distance between the sphere center and the clamped point.</li>
@@ -79,6 +85,7 @@ public abstract class EnergizerParticle implements Disposable {
         OUT_OF_WORLD
     }
 
+    /** The render shape of this particle. */
     private Shape3D shape3D;
 
     /** Current motion state of this particle. */
@@ -88,20 +95,40 @@ public abstract class EnergizerParticle implements Disposable {
     private int targetSwirlIndex;
 
     /** Target position used in {@link FragmentState#INSIDE_SWIRL}. */
-    private Point3D targetPosition;
+    private Vector3f targetPosition;
+
+    /** Current position (center) of the particle in 3D space. */
+    private Vector3f position;
 
     /** Current velocity of the particle in 3D space. */
-    private Vector3f velocity = Vector3f.ZERO;
+    private Vector3f velocity;
 
     /** Current angular position of the particle (used for swirl motion). */
     private double angle;
 
-    protected EnergizerParticle(Shape3D shape3D) {
+    /**
+     * Creates a particle with the given shape and initial position.
+     *
+     * @param shape3D         the render shape (non-null)
+     * @param initialPosition the initial simulation position (non-null)
+     */
+    protected EnergizerParticle(Shape3D shape3D, Vector3f initialPosition) {
         this.shape3D = requireNonNull(shape3D);
+        setPosition(initialPosition);
+        setVelocity(Vector3f.ZERO);
     }
 
     /**
-     * Returns the 3D shape representing this particle.
+     * Creates a particle at the origin with the given shape.
+     *
+     * @param shape3D the render shape (non-null)
+     */
+    protected EnergizerParticle(Shape3D shape3D) {
+        this(shape3D, Vector3f.ZERO);
+    }
+
+    /**
+     * Returns the 3D shape used to render this particle.
      *
      * @return the particle's {@link Shape3D}
      */
@@ -109,8 +136,17 @@ public abstract class EnergizerParticle implements Disposable {
         return shape3D;
     }
 
+    /**
+     * Replaces the particle’s render shape. The new shape is positioned at the particle’s
+     * current simulation position.
+     *
+     * @param shape3D the new render shape (non-null)
+     */
     protected void setShape3D(Shape3D shape3D) {
         this.shape3D = requireNonNull(shape3D);
+        shape3D.setTranslateX(position.x());
+        shape3D.setTranslateY(position.y());
+        shape3D.setTranslateZ(position.z());
     }
 
     /**
@@ -130,6 +166,43 @@ public abstract class EnergizerParticle implements Disposable {
     }
 
     /**
+     * Returns the particle’s current simulation position.
+     *
+     * @return the particle position
+     */
+    public Vector3f position() {
+        return position;
+    }
+
+    /**
+     * Sets the particle’s simulation position and updates the shape’s translation.
+     *
+     * @param position the new position (non-null)
+     */
+    public void setPosition(Vector3f position) {
+        this.position = requireNonNull(position);
+        shape3D.setTranslateX(position.x());
+        shape3D.setTranslateY(position.y());
+        shape3D.setTranslateZ(position.z());
+    }
+
+    /**
+     * Sets the particle’s velocity.
+     *
+     * @param velocity a velocity vector (non-null)
+     */
+    public void setVelocity(Vector3f velocity) {
+        this.velocity = requireNonNull(velocity);
+    }
+
+    /**
+     * @return the current velocity of this particle
+     */
+    public Vector3f velocity() {
+        return velocity;
+    }
+
+    /**
      * Sets the visual size of this particle. The meaning of “size” depends on the concrete subclass
      * (e.g., sphere diameter, box edge length).
      *
@@ -145,23 +218,7 @@ public abstract class EnergizerParticle implements Disposable {
     public abstract double size();
 
     /**
-     * Sets the particle's velocity.
-     *
-     * @param velocity a velocity vector
-     */
-    public void setVelocity(Vector3f velocity) {
-        this.velocity = velocity;
-    }
-
-    /**
-     * @return the current velocity of this particle
-     */
-    public Vector3f velocity() {
-        return velocity;
-    }
-
-    /**
-     * Sets the particle's motion state.
+     * Sets the particle’s motion state.
      *
      * @param state the new state (non-null)
      */
@@ -195,7 +252,7 @@ public abstract class EnergizerParticle implements Disposable {
     /**
      * @return the target position inside the ghost house, or {@code null} if not set
      */
-    public Point3D targetPosition() {
+    public Vector3f targetPosition() {
         return targetPosition;
     }
 
@@ -204,30 +261,22 @@ public abstract class EnergizerParticle implements Disposable {
      *
      * @param point the target position (may be {@code null})
      */
-    public void setTargetPosition(Point3D point) {
+    public void setTargetPosition(Vector3f point) {
         targetPosition = point;
     }
 
     /**
      * Checks whether this particle intersects the given box.
-     * <p>
-     * The particle is approximated as a sphere with radius {@code size() / 2}.
+     *
+     * <p>The particle is approximated as a sphere with radius {@code size() / 2}.
      * The box is treated as an axis-aligned bounding box (AABB) in parent coordinates.
      *
      * @param box the box to test against
      * @return {@code true} if the particle intersects the box
      */
     public boolean collidesWith(Box box) {
-        final Shape3D shape = shape();
+        final Point3D shapeCenter = new Point3D(position.x(), position.y(), position.z());
 
-        // Approximate particle center (translation only)
-        final Point3D shapeCenter = new Point3D(
-            shape.getTranslateX(),
-            shape.getTranslateY(),
-            shape.getTranslateZ()
-        );
-
-        // Box center in parent coordinates
         final Point3D boxOrigin = box.localToParent(Point3D.ZERO);
 
         final Point3D boxMin = new Point3D(
@@ -246,8 +295,8 @@ public abstract class EnergizerParticle implements Disposable {
     }
 
     /**
-     * Applies gravity to the particle and advances its position.
-     * Gravity is added to the current velocity, then {@link #move()} is invoked.
+     * Applies gravity to the particle by adding the gravity vector to its velocity,
+     * then moves the particle.
      *
      * @param gravity the gravity vector (non-null)
      */
@@ -258,13 +307,13 @@ public abstract class EnergizerParticle implements Disposable {
     }
 
     /**
-     * Moves the particle according to its current velocity by updating the translation
-     * coordinates of its underlying {@link Shape3D}.
+     * Moves the particle according to its current velocity by integrating its position
+     * and updating the shape’s translation.
      */
     public void move() {
-        final Shape3D shape = shape();
-        shape.setTranslateX(shape.getTranslateX() + velocity.x());
-        shape.setTranslateY(shape.getTranslateY() + velocity.y());
-        shape.setTranslateZ(shape.getTranslateZ() + velocity.z());
+        position = position.add(velocity);
+        shape3D.setTranslateX(position.x());
+        shape3D.setTranslateY(position.y());
+        shape3D.setTranslateZ(position.z());
     }
 }

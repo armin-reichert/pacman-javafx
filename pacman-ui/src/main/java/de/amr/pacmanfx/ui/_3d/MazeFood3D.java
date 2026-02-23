@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.lib.math.Vector3f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.FoodLayer;
@@ -161,11 +162,12 @@ public class MazeFood3D implements Disposable {
     }
 
     private EnergizerParticlesAnimation createParticlesAnimation(List<PhongMaterial> ghostParticleMaterials) {
-        final List<Point3D> swirlBaseCenters = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
+        final List<Vector3f> swirlBaseCenters = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
             .map(level::ghost)
             .map(Ghost::startPosition)
-            .map(pos -> new Point3D(pos.x()+HTS, pos.y()+HTS, 0))
+            .map(pos -> new Vector3f(pos.x() + HTS, pos.y() + HTS, 0))
             .toList();
+
         final var particlesAnimation = new EnergizerParticlesAnimation(
             animationRegistry,
             swirlBaseCenters,
