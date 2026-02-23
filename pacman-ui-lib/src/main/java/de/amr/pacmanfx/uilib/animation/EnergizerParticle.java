@@ -15,30 +15,41 @@ import static java.util.Objects.requireNonNull;
 /**
  * Base class for 3D particle fragments used in the energizer explosion animation.
  * <p>
- * A fragment is represented by a {@link Shape3D} and moves freely in 3D space
- * according to its velocity vector. Subclasses define the concrete geometry
- * and size of the fragment. The fragment may participate in special animation
- * modes such as being attracted to the ghost house or swirling inside it.
+ * A particle is represented by a concrete {@link Shape3D} instance and moves freely in
+ * three-dimensional space according to its current velocity. Subclasses define the
+ * concrete geometry (e.g., sphere, box, mesh) and how its size is interpreted.
  * <p>
- * Fragments are lightweight and disposable. Subclasses must implement
- * {@link #shape()}, {@link #size()} and {@link #setSize(double)}.
+ * During the explosion sequence, a particle may transition through several motion states:
+ * <ul>
+ *   <li><b>FLYING</b> – free movement under its velocity and optional gravity</li>
+ *   <li><b>ATTRACTED</b> – movement toward a target position (e.g., the ghost house)</li>
+ *   <li><b>INSIDE_SWIRL</b> – circular or spiral motion inside the ghost-house swirl</li>
+ *   <li><b>OUT_OF_WORLD</b> – particle has left the valid simulation space and can be removed</li>
+ * </ul>
+ * <p>
+ * This class stores only the simulation state of a particle. Rendering is delegated to
+ * the {@link Shape3D} returned by {@link #shape()}. Particles are lightweight and can be
+ * disposed via {@link #dispose()} when no longer needed.
+ * <p>
+ * Subclasses must implement {@link #shape()}, {@link #size()}, and {@link #setSize(double)}
+ * to define the concrete geometry.
  */
-public abstract class AbstractEnergizerParticle implements Disposable {
+public abstract class EnergizerParticle implements Disposable {
 
     /**
      * Tests whether a sphere intersects an axis-aligned bounding box (AABB).
      * <p>
-     * This uses the standard algorithm:
+     * The algorithm:
      * <ol>
      *   <li>Clamp the sphere center to the AABB.</li>
-     *   <li>Compute the squared distance to the clamped point.</li>
-     *   <li>Intersection occurs if the distance is less than or equal to the squared radius.</li>
+     *   <li>Compute the squared distance between the sphere center and the clamped point.</li>
+     *   <li>Intersection occurs if the squared distance is less than or equal to {@code radius²}.</li>
      * </ol>
      *
      * @param sphereCenter the sphere center in the same coordinate system as the AABB
      * @param radius       the sphere radius
-     * @param boxMin       the minimum AABB corner
-     * @param boxMax       the maximum AABB corner
+     * @param boxMin       minimum AABB corner
+     * @param boxMax       maximum AABB corner
      * @return {@code true} if the sphere intersects the AABB
      */
     public static boolean intersectsSphereAABB(Point3D sphereCenter, double radius, Point3D boxMin, Point3D boxMax) {
@@ -55,63 +66,74 @@ public abstract class AbstractEnergizerParticle implements Disposable {
     }
 
     /**
-     * The animation state of a fragment.
-     * <ul>
-     *   <li>{@code FLYING}: The fragment moves freely according to its velocity.</li>
-     *   <li>{@code ATTRACTED}: The fragment is pulled toward the ghost house.</li>
-     *   <li>{@code INSIDE_SWIRL}: The fragment moves inside the ghost-house swirl effect.</li>
-     * </ul>
+     * Motion states of a particle during the explosion animation.
      */
-    public enum FragmentState { FLYING, ATTRACTED, INSIDE_SWIRL, OUT_OF_WORLD }
+    public enum FragmentState {
+        /** Free flight under velocity and gravity. */
+        FLYING,
+        /** Movement toward a target position (e.g., ghost house). */
+        ATTRACTED,
+        /** Circular or spiral motion inside the ghost-house swirl. */
+        INSIDE_SWIRL,
+        /** Particle has left the simulation space and should be removed. */
+        OUT_OF_WORLD
+    }
 
-    /** Current animation state of the fragment. */
+    /** Current motion state of this particle. */
     private FragmentState state = FragmentState.FLYING;
 
+    /** Index used by the swirl system to assign a swirl target or orbit slot. */
     private int targetSwirlIndex;
 
-    /**
-     * Target position inside the ghost house. Used when the fragment is in {@link FragmentState#INSIDE_SWIRL}.
-     */
+    /** Target position used in {@link FragmentState#INSIDE_SWIRL}. */
     private Point3D targetPosition;
 
-    /** Current velocity of the fragment in 3D space. Immutable vector. */
+    /** Current velocity of the particle in 3D space. */
     private Vector3f velocity = Vector3f.ZERO;
 
+    /** Current angular position of the particle (used for swirl motion). */
     private double angle;
 
+    /**
+     * Sets the angular position of this particle.
+     *
+     * @param angle angle in radians
+     */
     public void setAngle(double angle) {
         this.angle = angle;
     }
 
+    /**
+     * @return the current angular position of this particle in radians
+     */
     public double angle() {
         return angle;
     }
 
     /**
-     * Returns the 3D shape representing this fragment.
+     * Returns the 3D shape representing this particle.
      *
-     * @return the fragment's {@link Shape3D}
+     * @return the particle's {@link Shape3D}
      */
     public abstract Shape3D shape();
 
     /**
-     * Sets the fragment's visual size. The meaning of “size” is defined by the concrete subclass
-     * (e.g., diameter of a sphere).
+     * Sets the visual size of this particle. The meaning of “size” depends on the concrete subclass
+     * (e.g., sphere diameter, box edge length).
      *
      * @param size the new size value
      */
     public abstract void setSize(double size);
 
     /**
-     * Returns the fragment's visual size. The meaning of “size” is defined by the concrete subclass
-     * (e.g., diameter of a sphere).
+     * Returns the visual size of this particle. The meaning of “size” depends on the concrete subclass.
      *
-     * @return the fragment size
+     * @return the particle size
      */
     public abstract double size();
 
     /**
-     * Sets the fragment's velocity.
+     * Sets the particle's velocity.
      *
      * @param velocity a velocity vector
      */
@@ -120,14 +142,14 @@ public abstract class AbstractEnergizerParticle implements Disposable {
     }
 
     /**
-     * @return the current velocity of this fragment
+     * @return the current velocity of this particle
      */
     public Vector3f velocity() {
         return velocity;
     }
 
     /**
-     * Sets the fragment's animation state.
+     * Sets the particle's motion state.
      *
      * @param state the new state (non-null)
      */
@@ -136,16 +158,24 @@ public abstract class AbstractEnergizerParticle implements Disposable {
     }
 
     /**
-     * @return the current animation state of this fragment
+     * @return the current motion state of this particle
      */
     public FragmentState state() {
         return state;
     }
 
+    /**
+     * @return the swirl target index used by the swirl system
+     */
     public int targetSwirlIndex() {
         return targetSwirlIndex;
     }
 
+    /**
+     * Sets the swirl target index.
+     *
+     * @param index the new index
+     */
     public void setTargetSwirlIndex(int index) {
         this.targetSwirlIndex = index;
     }
@@ -167,23 +197,25 @@ public abstract class AbstractEnergizerParticle implements Disposable {
     }
 
     /**
-     * Checks whether this fragment intersects the given box.
+     * Checks whether this particle intersects the given box.
      * <p>
-     * The fragment is approximated as a sphere with radius {@code size() / 2}.
-     * The box is treated as an axis-aligned bounding box (AABB) in the fragment's
-     * parent coordinate system. The box center is obtained via
-     * {@link Box#localToParent(Point3D)} to account for parent transforms.
+     * The particle is approximated as a sphere with radius {@code size() / 2}.
+     * The box is treated as an axis-aligned bounding box (AABB) in parent coordinates.
      *
      * @param box the box to test against
-     * @return {@code true} if the fragment intersects the box, {@code false} otherwise
+     * @return {@code true} if the particle intersects the box
      */
     public boolean collidesWith(Box box) {
         final Shape3D shape = shape();
 
-        //TODO use localToParent(Point3D.ZERO) here too?
-        final Point3D shapeCenter = new Point3D(shape.getTranslateX(), shape.getTranslateY(), shape.getTranslateZ());
+        // Approximate particle center (translation only)
+        final Point3D shapeCenter = new Point3D(
+            shape.getTranslateX(),
+            shape.getTranslateY(),
+            shape.getTranslateZ()
+        );
 
-        // Box center in parent coordinates (accounts for parent transforms)
+        // Box center in parent coordinates
         final Point3D boxOrigin = box.localToParent(Point3D.ZERO);
 
         final Point3D boxMin = new Point3D(
@@ -202,7 +234,7 @@ public abstract class AbstractEnergizerParticle implements Disposable {
     }
 
     /**
-     * Applies gravity to the fragment and advances its position.
+     * Applies gravity to the particle and advances its position.
      * Gravity is added to the current velocity, then {@link #move()} is invoked.
      *
      * @param gravity the gravity vector (non-null)
@@ -214,8 +246,8 @@ public abstract class AbstractEnergizerParticle implements Disposable {
     }
 
     /**
-     * Moves the fragment according to its current velocity by updating the
-     * translation coordinates of its underlying {@link Shape3D}.
+     * Moves the particle according to its current velocity by updating the translation
+     * coordinates of its underlying {@link Shape3D}.
      */
     public void move() {
         final Shape3D shape = shape();

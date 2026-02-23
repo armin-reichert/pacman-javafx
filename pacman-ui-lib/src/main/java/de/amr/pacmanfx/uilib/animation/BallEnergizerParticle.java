@@ -8,7 +8,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.Sphere;
 
-public class BallEnergizerParticle extends AbstractEnergizerParticle {
+public class BallEnergizerParticle extends EnergizerParticle {
 
     private Sphere ball;
 

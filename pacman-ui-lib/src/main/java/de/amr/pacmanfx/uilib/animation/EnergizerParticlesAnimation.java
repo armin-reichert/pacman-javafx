@@ -5,7 +5,7 @@ package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.math.Vector3f;
-import de.amr.pacmanfx.uilib.animation.AbstractEnergizerParticle.FragmentState;
+import de.amr.pacmanfx.uilib.animation.EnergizerParticle.FragmentState;
 import javafx.animation.Transition;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -71,7 +71,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
     private Vector3f gravity = Vector3f.ZERO;
 
-    private final List<AbstractEnergizerParticle> particles = new ArrayList<>();
+    private final List<EnergizerParticle> particles = new ArrayList<>();
     private final Group particlesGroup;
 
     public EnergizerParticlesAnimation(
@@ -95,7 +95,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
             @Override
             protected void interpolate(double frac) {
-                for (AbstractEnergizerParticle particle : particles) {
+                for (EnergizerParticle particle : particles) {
                     switch (particle.state()) {
                         case FLYING       -> doFly(particle);
                         case ATTRACTED    -> doAttract(particle);
@@ -151,7 +151,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         );
     }
 
-    private void doFly(AbstractEnergizerParticle particle) {
+    private void doFly(EnergizerParticle particle) {
         particle.fly(gravity);
         if (particle.collidesWith(floor3D)) {
             onParticleLandedOnFloor(particle);
@@ -163,7 +163,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         }
     }
 
-    private void doAttract(AbstractEnergizerParticle particle) {
+    private void doAttract(EnergizerParticle particle) {
         final boolean homeReached = moveParticleTowardsTarget(particle);
         if (homeReached) {
             onParticleReachedTarget(particle);
@@ -174,7 +174,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
      * assigned swirl inside the ghost house. Once it reaches its target position (on the swirl surface), it is
      * integrated into the swirl and moves forever on the swirl surface.
      */
-    private void onParticleLandedOnFloor(AbstractEnergizerParticle particle) {
+    private void onParticleLandedOnFloor(EnergizerParticle particle) {
         final byte ghostID = randomGhostID();
         final int targetSwirlIndex = switch (ghostID) {
             case Globals.CYAN_GHOST_BASHFUL -> 0;
@@ -214,7 +214,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         );
     }
 
-    private boolean moveParticleTowardsTarget(AbstractEnergizerParticle particle) {
+    private boolean moveParticleTowardsTarget(EnergizerParticle particle) {
         final double distXY = Math.hypot(
                 particle.shape().getTranslateX() - particle.targetPosition().getX(),
                 particle.shape().getTranslateY() - particle.targetPosition().getY());
@@ -225,7 +225,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         return targetReached;
     }
 
-    private void onParticleReachedTarget(AbstractEnergizerParticle particle) {
+    private void onParticleReachedTarget(EnergizerParticle particle) {
         particle.setState(FragmentState.INSIDE_SWIRL);
         // Place particle at random position on swirl base radius
         particle.setAngle(Math.toRadians(randomInt(0, 360)));
@@ -233,7 +233,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         updateParticleSwirlPosition(particle);
     }
 
-    private void doMoveInsideSwirl(AbstractEnergizerParticle particle) {
+    private void doMoveInsideSwirl(EnergizerParticle particle) {
         particle.move();
         if (particle.shape().getTranslateZ() < -SWIRL_HEIGHT) {
             particle.shape().setTranslateZ(floorSurfaceZ() - 0.5 * particle.size());
@@ -245,7 +245,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         updateParticleSwirlPosition(particle);
     }
 
-    private void updateParticleSwirlPosition(AbstractEnergizerParticle particle) {
+    private void updateParticleSwirlPosition(EnergizerParticle particle) {
         final var center = swirlBaseCenters.get(particle.targetSwirlIndex());
         particle.shape().setTranslateX(center.getX() + SWIRL_RADIUS * Math.cos(particle.angle()));
         particle.shape().setTranslateY(center.getY() + SWIRL_RADIUS * Math.sin(particle.angle()));
