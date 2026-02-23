@@ -92,7 +92,7 @@ public abstract class EnergizerParticle implements Disposable {
     private FragmentState state = FragmentState.FLYING;
 
     /** Index used by the swirl system to assign a swirl target or orbit slot. */
-    private int targetSwirlIndex;
+    private byte targetSwirlIndex;
 
     /** Target position used in {@link FragmentState#INSIDE_SWIRL}. */
     private Vector3f targetPosition;
@@ -104,7 +104,7 @@ public abstract class EnergizerParticle implements Disposable {
     private Vector3f velocity;
 
     /** Current angular position of the particle (used for swirl motion). */
-    private double angle;
+    private float angle;
 
     /**
      * Creates a particle with the given shape and initial position.
@@ -155,13 +155,13 @@ public abstract class EnergizerParticle implements Disposable {
      * @param angle angle in radians
      */
     public void setAngle(double angle) {
-        this.angle = angle;
+        this.angle = (float) angle;
     }
 
     /**
      * @return the current angular position of this particle in radians
      */
-    public double angle() {
+    public float angle() {
         return angle;
     }
 
@@ -236,7 +236,7 @@ public abstract class EnergizerParticle implements Disposable {
     /**
      * @return the swirl target index used by the swirl system
      */
-    public int targetSwirlIndex() {
+    public byte targetSwirlIndex() {
         return targetSwirlIndex;
     }
 
@@ -245,7 +245,7 @@ public abstract class EnergizerParticle implements Disposable {
      *
      * @param index the new index
      */
-    public void setTargetSwirlIndex(int index) {
+    public void setTargetSwirlIndex(byte index) {
         this.targetSwirlIndex = index;
     }
 

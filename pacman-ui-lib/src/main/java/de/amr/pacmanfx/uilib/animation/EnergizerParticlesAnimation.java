@@ -7,7 +7,6 @@ import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.math.Vector3f;
 import de.amr.pacmanfx.uilib.animation.EnergizerParticle.FragmentState;
 import javafx.animation.Transition;
-import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
