@@ -181,7 +181,6 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
             case Globals.ORANGE_GHOST_POKEY -> 2;
             default -> throw new IllegalArgumentException("Illegal ghost ID: " + ghostID);
         };
-        final var swirlCenter = swirlBaseCenters.get(targetSwirlIndex);
         final float speed = randomFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
 
         if (particle instanceof BallEnergizerParticle ball) {
@@ -189,37 +188,29 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
             ball.changeMeshResolution(MESH_DIVISIONS_LOW);
             particlesGroup.getChildren().add(particle.shape());
         }
+        particle.shape().setMaterial(ghostDressMaterials.get(ghostID));
+
+        particle.setTargetSwirlIndex(targetSwirlIndex);
         particle.setSize(PARTICLE_SIZE_WHEN_RETURNING_HOME);
+
         final double z = floorSurfaceZ() - 0.5 * particle.size();
         particle.setPosition(new Vector3f(particle.position().x(), particle.position().y(), z));
-        particle.setTargetSwirlIndex(targetSwirlIndex);
-        particle.setTargetPosition(randomPointOnLateralSwirlSurface(swirlCenter));
-        particle.setVelocity(new Vector3f(
-            particle.targetPosition().x() - particle.position().x(),
-            particle.targetPosition().y() - particle.position().y(),
-            0)
-            .normalized().mul(speed));
+
+        final var swirlCenter = swirlBaseCenters.get(targetSwirlIndex);
+        final Vector3f velocity = swirlCenter.sub(particle.position()).normalized().mul(speed);
+        particle.setVelocity(velocity);
 
         particle.setState(FragmentState.ATTRACTED);
-
-        particle.shape().setMaterial(ghostDressMaterials.get(ghostID));
     }
 
-    private Vector3f randomPointOnLateralSwirlSurface(Vector3f swirlCenter) {
-        final double angle = Math.toRadians(randomInt(0, 360));
-        return new Vector3f(
-            swirlCenter.x() + SWIRL_RADIUS * Math.cos(angle),
-            swirlCenter.y() + SWIRL_RADIUS * Math.sin(angle),
-            randomFloat(0, SWIRL_HEIGHT)
-        );
+    private Vector3f targetSwirlPosition(EnergizerParticle particle) {
+        return swirlBaseCenters.get(particle.targetSwirlIndex());
     }
 
     private boolean moveParticleTowardsTarget(EnergizerParticle particle) {
-        final double xyDist = Math.hypot(
-            particle.position().x() - particle.targetPosition().x(),
-            particle.position().y() - particle.targetPosition().y()
-        );
-        final boolean targetReached = xyDist < particle.velocity().length();
+        final Vector3f targetSwirlPosition = targetSwirlPosition(particle);
+        final double dist = particle.position().euclideanDist(targetSwirlPosition);
+        final boolean targetReached = dist <= particle.velocity().length();
         if (!targetReached) {
             particle.move();
         }

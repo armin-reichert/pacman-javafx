@@ -94,9 +94,6 @@ public abstract class EnergizerParticle implements Disposable {
     /** Index used by the swirl system to assign a swirl target or orbit slot. */
     private byte targetSwirlIndex;
 
-    /** Target position used in {@link FragmentState#INSIDE_SWIRL}. */
-    private Vector3f targetPosition;
-
     /** Current position (center) of the particle in 3D space. */
     private Vector3f position;
 
@@ -247,22 +244,6 @@ public abstract class EnergizerParticle implements Disposable {
      */
     public void setTargetSwirlIndex(byte index) {
         this.targetSwirlIndex = index;
-    }
-
-    /**
-     * @return the target position inside the ghost house, or {@code null} if not set
-     */
-    public Vector3f targetPosition() {
-        return targetPosition;
-    }
-
-    /**
-     * Sets the target position inside the ghost house.
-     *
-     * @param point the target position (may be {@code null})
-     */
-    public void setTargetPosition(Vector3f point) {
-        targetPosition = point;
     }
 
     /**
