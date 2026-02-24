@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.math.Vector3f;
@@ -10,7 +9,7 @@ import javafx.scene.shape.Sphere;
 
 import static java.util.Objects.requireNonNull;
 
-public class BallEnergizerParticle extends EnergizerParticle {
+public class SphericalEnergizerParticle extends EnergizerParticle {
 
     public enum Resolution { LOW, HIGH;
 
@@ -30,7 +29,7 @@ public class BallEnergizerParticle extends EnergizerParticle {
      * @param center   the initial position of the fragment
      * @param resolution the mesh resolution
      */
-    public BallEnergizerParticle(double radius, Material material, Vector3f center, Resolution resolution) {
+    public SphericalEnergizerParticle(double radius, Material material, Vector3f center, Resolution resolution) {
         super(new Sphere(radius, resolution.divisions()));
         setPosition(center);
         shape().setMaterial(material);
@@ -39,7 +38,7 @@ public class BallEnergizerParticle extends EnergizerParticle {
     public void setResolution(Resolution resolution) {
         requireNonNull(resolution);
         if (shape().getDivisions() != resolution.divisions()) {
-            setShape3D(reshaped(resolution));
+            setShape3D(reshapedSphere(resolution));
         }
     }
 
@@ -63,7 +62,7 @@ public class BallEnergizerParticle extends EnergizerParticle {
         return 2 * shape().getRadius();
     }
 
-    private Sphere reshaped(Resolution resolution) {
+    private Sphere reshapedSphere(Resolution resolution) {
         requireNonNull(resolution);
         final Sphere oldShape = shape();
         final Sphere newShape = new Sphere(oldShape.getRadius(), resolution.divisions());

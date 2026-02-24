@@ -137,7 +137,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     public void showExplosion(Vector3f origin) {
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
             final PhongMaterial material = ghostDressMaterials.get(randomInt(0, 4));
-            final var particle = new BallEnergizerParticle(randomParticleRadius(), material, origin, BallEnergizerParticle.Resolution.HIGH);
+            final var particle = new SphericalEnergizerParticle(randomParticleRadius(), material, origin, SphericalEnergizerParticle.Resolution.HIGH);
             particle.setVelocity(randomParticleVelocity());
             particle.setState(FragmentState.FLYING);
             particle.shape().setVisible(true);
@@ -207,9 +207,9 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
             default -> throw new IllegalArgumentException("Illegal ghost ID: " + ghostID);
         };
 
-        if (particle instanceof BallEnergizerParticle ball) {
+        if (particle instanceof SphericalEnergizerParticle ball) {
             particlesGroup.getChildren().remove(particle.shape());
-            ball.setResolution(BallEnergizerParticle.Resolution.LOW);
+            ball.setResolution(SphericalEnergizerParticle.Resolution.LOW);
             particlesGroup.getChildren().add(particle.shape());
         }
         particle.shape().setMaterial(ghostDressMaterials.get(ghostID));
