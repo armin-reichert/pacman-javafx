@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * When an energizer explodes, the explosion particles that land on the floor are sucked in by 3 swirls
  * inside the ghost house where they accumulate to colored ghost shapes.
- * <p>Particles falling off from the maze are destroyed after a certain time.</p>
+ * <p>Particles falling off from the maze are hidden at a certain height below the maze.</p>
  */
 public class EnergizerParticlesAnimation extends ManagedAnimation {
 
@@ -57,7 +57,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     public static final Config DEFAULT_CONFIG = new Config(
         new ExplosionConfig(400, 0.3f, 0, 0.4f, 2, 8),
         new AttractionConfig(0.4f, 0.3f, 0.5f),
-        new SwirlConfig(7, 12, 0.3f, 0.05f)
+        new SwirlConfig(6, 12, 0.3f, 0.05f)
     );
 
     private static final byte[] GHOST_IDS = {
