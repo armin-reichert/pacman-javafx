@@ -141,9 +141,7 @@ public abstract class EnergizerParticle implements Disposable {
      */
     protected void setShape3D(Shape3D shape3D) {
         this.shape3D = requireNonNull(shape3D);
-        shape3D.setTranslateX(position.x());
-        shape3D.setTranslateY(position.y());
-        shape3D.setTranslateZ(position.z());
+        updateShapeTranslate();
     }
 
     /**
@@ -178,9 +176,7 @@ public abstract class EnergizerParticle implements Disposable {
      */
     public void setPosition(Vector3f position) {
         this.position = requireNonNull(position);
-        shape3D.setTranslateX(position.x());
-        shape3D.setTranslateY(position.y());
-        shape3D.setTranslateZ(position.z());
+        updateShapeTranslate();
     }
 
     /**
@@ -293,6 +289,10 @@ public abstract class EnergizerParticle implements Disposable {
      */
     public void move() {
         position = position.add(velocity);
+        updateShapeTranslate();
+    }
+
+    private void updateShapeTranslate() {
         shape3D.setTranslateX(position.x());
         shape3D.setTranslateY(position.y());
         shape3D.setTranslateZ(position.z());
