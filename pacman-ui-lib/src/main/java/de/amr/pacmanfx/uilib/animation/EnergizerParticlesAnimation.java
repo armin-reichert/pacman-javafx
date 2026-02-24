@@ -55,7 +55,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     {}
 
     public static final Config DEFAULT_CONFIG = new Config(
-        new ExplosionConfig(400, 0.3f, 0, 0.4f, 2, 8),
+        new ExplosionConfig(400, 0.2f, 0, 0.4f, 2, 8),
         new AttractionConfig(0.4f, 0.3f, 0.5f),
         new SwirlConfig(6, 12, 0.3f, 0.05f)
     );
@@ -131,28 +131,28 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
     public void showExplosion(Vector3f origin) {
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
-            final PhongMaterial material = ghostDressMaterials.get(randomInt(0, 4));
-            final var particle = new SphericalEnergizerParticle(randomParticleRadius(), material, origin, SphericalEnergizerParticle.Resolution.HIGH);
-            particle.setVelocity(randomParticleVelocity());
-            particle.setState(FragmentState.FLYING);
-            particle.shape().setVisible(true);
+            final EnergizerParticle particle = createExplosionParticle(origin);
             particles.add(particle);
             particlesGroup.getChildren().add(particle.shape());
         }
     }
 
-    private double randomParticleRadius() {
-        final double scaling = Math.clamp(RND.nextGaussian(2, 0.1), 0.5, 4);
-        return scaling * config.explosion().particleMeanRadius();
+    private EnergizerParticle createExplosionParticle(Vector3f origin) {
+        final PhongMaterial material = ghostDressMaterials.get(randomInt(0, 4));
+        final double radius = Math.clamp(RND.nextGaussian(2, 0.1), 0.5, 4) * config.explosion().particleMeanRadius();
+        final var particle = new SphericalEnergizerParticle(radius, material, origin, SphericalEnergizerParticle.Resolution.HIGH);
+        particle.setVelocity(randomParticleVelocity(config.explosion()));
+        particle.setState(FragmentState.FLYING);
+        return particle;
     }
 
-    private Vector3f randomParticleVelocity() {
+    private Vector3f randomParticleVelocity(ExplosionConfig cfg) {
         final int xDir = RND.nextBoolean() ? -1 : 1;
         final int yDir = RND.nextBoolean() ? -1 : 1;
         return new Vector3f(
-            xDir * randomFloat(config.explosion().particleMinSpeedXY(), config.explosion().particleMaxSpeedXY()),
-            yDir * randomFloat(config.explosion().particleMinSpeedXY, config.explosion().particleMaxSpeedXY()),
-            -randomFloat(config.explosion().particleMinSpeedZ(), config.explosion().particleMaxSpeedZ())
+            xDir * randomFloat(cfg.particleMinSpeedXY(), cfg.particleMaxSpeedXY()),
+            yDir * randomFloat(cfg.particleMinSpeedXY(), cfg.particleMaxSpeedXY()),
+            -randomFloat(cfg.particleMinSpeedZ(), cfg.particleMaxSpeedZ())
         );
     }
 
