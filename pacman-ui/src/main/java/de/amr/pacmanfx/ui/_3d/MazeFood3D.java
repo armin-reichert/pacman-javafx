@@ -169,6 +169,7 @@ public class MazeFood3D implements Disposable {
             .toList();
 
         final var particlesAnimation = new EnergizerParticlesAnimation(
+            EnergizerParticlesAnimation.DEFAULT_CONFIG,
             animationRegistry,
             swirlBaseCenters,
             ghostParticleMaterials,

@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
 import static java.util.Objects.requireNonNull;
 
@@ -27,30 +26,43 @@ import static java.util.Objects.requireNonNull;
  */
 public class EnergizerParticlesAnimation extends ManagedAnimation {
 
-    private static final short EXPLOSION_PARTICLE_COUNT = 400;
+    public record Config(
+        ExplosionConfig explosion,
+        AttractionConfig attraction,
+        SwirlConfig swirl)
+    {}
+
+    public record ExplosionConfig(
+        int particleCount,
+        float particleMeanRadius,
+        float particleMinSpeedXY,
+        float particleMaxSpeedXY,
+        float particleMinSpeedZ,
+        float particleMaxSpeedZ)
+    {}
+
+    public record AttractionConfig(
+        float particleSize,
+        float particleMinSpeed,
+        float particleMaxSpeed)
+    {}
+
+    public record SwirlConfig(
+        float radius,
+        float height,
+        float upwardsSpeed,
+        float rotationSpeed)
+    {}
+
+    public static final Config DEFAULT_CONFIG = new Config(
+        new ExplosionConfig(400, 0.15f, 0, 0.4f, 2, 8),
+        new AttractionConfig(0.4f, 0.3f, 0.5f),
+        new SwirlConfig(7, 12, 0.3f, 0.05f)
+    );
 
     private static final int MESH_DIVISIONS_HIGH = 8;
     private static final int MESH_DIVISIONS_LOW  = 4;
 
-    private static final float SWIRL_RADIUS = 7;
-    private static final float SWIRL_HEIGHT = 12;
-
-    private static final Vector3f SWIRL_RISING_VELOCITY = new Vector3f(0, 0, -0.3f);
-
-    private static final float PARTICLE_MEAN_RADIUS_UNSCALED = 0.15f;
-
-    private static final float PARTICLE_SIZE_ATTRACTED = 0.4f;
-
-    private static final float PARTICLE_SPEED_EXPLODING_XY_MIN = 0.0f;
-    private static final float PARTICLE_SPEED_EXPLODING_XY_MAX = 0.4f;
-
-    private static final float PARTICLE_SPEED_EXPLODING_Z_MIN = 2;
-    private static final float PARTICLE_SPEED_EXPLODING_Z_MAX = 8;
-
-    private static final float PARTICLE_MIN_SPEED_ATTRACTED = 0.3f;
-    private static final float PARTICLE_MAX_SPEED_ATTRACTED = 0.6f;
-
-    private static final float SWIRL_ROTATION_SPEED = 0.05f;
 
     private static final int PARTICLE_OUT_OF_VIEW_Z = 50;
 
@@ -65,6 +77,8 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         return GHOST_IDS[randomInt(0, GHOST_IDS.length)];
     }
 
+    private final Config config;
+
     private final List<Vector3f> swirlBaseCenters;
     private final Box floor3D;
     private final List<PhongMaterial> ghostDressMaterials;
@@ -75,6 +89,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     private final Group particlesGroup;
 
     public EnergizerParticlesAnimation(
+        Config config,
         AnimationRegistry animationRegistry,
         List<Vector3f> swirlBaseCenters,
         List<PhongMaterial> ghostDressMaterials,
@@ -83,6 +98,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     {
         super(animationRegistry, "Energizers_ParticlesAnimation");
 
+        this.config = requireNonNull(config);
         this.swirlBaseCenters = requireNonNull(swirlBaseCenters);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
         this.floor3D = requireNonNull(floor3D);
@@ -120,7 +136,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     }
 
     public void showExplosion(Vector3f origin) {
-        for (int i = 0; i < EXPLOSION_PARTICLE_COUNT; ++i) {
+        for (int i = 0; i < config.explosion().particleCount(); ++i) {
             final PhongMaterial material = ghostDressMaterials.get(randomInt(0, 4));
             final var particle = new BallEnergizerParticle(randomParticleRadius(), material, origin, MESH_DIVISIONS_HIGH);
             particle.setVelocity(randomParticleVelocity());
@@ -133,16 +149,16 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
     private double randomParticleRadius() {
         final double scaling = Math.clamp(RND.nextGaussian(2, 0.1), 0.5, 4);
-        return scaling * PARTICLE_MEAN_RADIUS_UNSCALED;
+        return scaling * config.explosion().particleMeanRadius();
     }
 
     private Vector3f randomParticleVelocity() {
         final int xDir = RND.nextBoolean() ? -1 : 1;
         final int yDir = RND.nextBoolean() ? -1 : 1;
         return new Vector3f(
-            xDir * randomFloat(PARTICLE_SPEED_EXPLODING_XY_MIN, PARTICLE_SPEED_EXPLODING_XY_MAX),
-            yDir * randomFloat(PARTICLE_SPEED_EXPLODING_XY_MIN, PARTICLE_SPEED_EXPLODING_XY_MAX),
-            -randomFloat(PARTICLE_SPEED_EXPLODING_Z_MIN, PARTICLE_SPEED_EXPLODING_Z_MAX)
+            xDir * randomFloat(config.explosion().particleMinSpeedXY(), config.explosion().particleMaxSpeedXY()),
+            yDir * randomFloat(config.explosion().particleMinSpeedXY, config.explosion().particleMaxSpeedXY()),
+            -randomFloat(config.explosion().particleMinSpeedZ(), config.explosion().particleMaxSpeedZ())
         );
     }
 
@@ -200,13 +216,13 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         particle.shape().setMaterial(ghostDressMaterials.get(ghostID));
 
         particle.setTargetSwirlIndex(targetSwirlIndex);
-        particle.setSize(PARTICLE_SIZE_ATTRACTED);
+        particle.setSize(config.attraction().particleSize());
 
         final double z = floorSurfaceZ() - 0.5 * particle.size();
         particle.setPosition(new Vector3f(particle.position().x(), particle.position().y(), z));
 
         final Vector3f swirlCenter = swirlBaseCenters.get(targetSwirlIndex);
-        final float speed = randomFloat(PARTICLE_MIN_SPEED_ATTRACTED, PARTICLE_MAX_SPEED_ATTRACTED);
+        final float speed = randomFloat(config.attraction().particleMinSpeed, config.attraction().particleMaxSpeed);
         final Vector3f velocity = swirlCenter.sub(particle.position()).setToLength(speed);
         particle.setVelocity(velocity);
 
@@ -224,7 +240,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
     private void onParticleReachedTarget(EnergizerParticle particle) {
         particle.setAngle(Math.toRadians(randomInt(0, 360)));
-        particle.setVelocity(SWIRL_RISING_VELOCITY);
+        particle.setVelocity(new Vector3f(0, 0, -config.swirl().upwardsSpeed()));
         updateParticlePositionOnSwirlSurface(particle);
         particle.setState(FragmentState.INSIDE_SWIRL);
     }
@@ -232,12 +248,12 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     private void updateStateInsideSwirl(EnergizerParticle particle) {
         particle.move();
         final Vector3f pos = particle.position();
-        if (pos.z() < -SWIRL_HEIGHT) {
+        if (pos.z() < -config.swirl().height()) {
             // reached top of swirl: move to bottom of floor
             particle.setPosition(new Vector3f(pos.x(), pos.y(), floorSurfaceZ() - 0.5 * particle.size()));
         }
         // Rotate on swirl surface
-        particle.setAngle(particle.angle() + SWIRL_ROTATION_SPEED);
+        particle.setAngle(particle.angle() + config.swirl().rotationSpeed());
         if (particle.angle() > Math.TAU) {
             particle.setAngle(particle.angle() - Math.TAU);
         }
@@ -247,8 +263,8 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     private void updateParticlePositionOnSwirlSurface(EnergizerParticle particle) {
         final Vector3f swirlBaseCenter = swirlBaseCenters.get(particle.targetSwirlIndex());
         final var pos = new Vector3f(
-            swirlBaseCenter.x() + SWIRL_RADIUS * Math.cos(particle.angle()),
-            swirlBaseCenter.y() + SWIRL_RADIUS * Math.sin(particle.angle()),
+            swirlBaseCenter.x() + config.swirl().radius() * Math.cos(particle.angle()),
+            swirlBaseCenter.y() + config.swirl().radius() * Math.sin(particle.angle()),
             particle.position().z()
         );
         particle.setPosition(pos);
