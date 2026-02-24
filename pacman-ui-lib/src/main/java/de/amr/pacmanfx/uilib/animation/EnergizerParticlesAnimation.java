@@ -55,15 +55,10 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     {}
 
     public static final Config DEFAULT_CONFIG = new Config(
-        new ExplosionConfig(400, 0.15f, 0, 0.4f, 2, 8),
+        new ExplosionConfig(400, 0.3f, 0, 0.4f, 2, 8),
         new AttractionConfig(0.4f, 0.3f, 0.5f),
         new SwirlConfig(7, 12, 0.3f, 0.05f)
     );
-
-    private static final int MESH_DIVISIONS_HIGH = 8;
-    private static final int MESH_DIVISIONS_LOW  = 4;
-
-    private static final int PARTICLE_OUT_OF_VIEW_Z = 50;
 
     private static final byte[] GHOST_IDS = {
         RED_GHOST_SHADOW,
@@ -175,9 +170,13 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         if (particle.collidesWith(floor3D)) {
             onParticleLandedOnFloor(particle);
         }
-        else if (particle.position().z() >= PARTICLE_OUT_OF_VIEW_Z) {
+        else if (isParticleOutsideView(particle)) {
             onParticleLeftView(particle);
         }
+    }
+
+    private boolean isParticleOutsideView(EnergizerParticle particle) {
+        return particle.position().z() >= 50; // positive z direction points down!
     }
     
     private void onParticleLeftView(EnergizerParticle particle) {
