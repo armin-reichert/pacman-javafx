@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.math.Vector3f;
 import de.amr.pacmanfx.uilib.animation.EnergizerParticle.FragmentState;
 import javafx.animation.Transition;
@@ -16,6 +15,8 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
 import static java.util.Objects.requireNonNull;
 
@@ -38,7 +39,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
     private static final float PARTICLE_MEAN_RADIUS_UNSCALED = 0.15f;
 
-    private static final float PARTICLE_SIZE_WHEN_RETURNING_HOME = 0.4f;
+    private static final float PARTICLE_SIZE_ATTRACTED = 0.4f;
 
     private static final float PARTICLE_SPEED_EXPLODING_XY_MIN = 0.0f;
     private static final float PARTICLE_SPEED_EXPLODING_XY_MAX = 0.4f;
@@ -46,18 +47,18 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     private static final float PARTICLE_SPEED_EXPLODING_Z_MIN = 2;
     private static final float PARTICLE_SPEED_EXPLODING_Z_MAX = 8;
 
-    private static final float PARTICLE_SPEED_MOVING_HOME_MIN = 0.3f;
-    private static final float PARTICLE_SPEED_MOVING_HOME_MAX = 0.6f;
+    private static final float PARTICLE_MIN_SPEED_ATTRACTED = 0.3f;
+    private static final float PARTICLE_MAX_SPEED_ATTRACTED = 0.6f;
 
-    private static final float PARTICLE_ROTATION_SPEED = 0.05f;
+    private static final float SWIRL_ROTATION_SPEED = 0.05f;
 
-    private static final int PARTICLE_OUT_OF_WORLD_Z = 50;
+    private static final int PARTICLE_OUT_OF_VIEW_Z = 50;
 
     private static final byte[] GHOST_IDS = {
-        Globals.RED_GHOST_SHADOW,
-        Globals.PINK_GHOST_SPEEDY,
-        Globals.CYAN_GHOST_BASHFUL,
-        Globals.ORANGE_GHOST_POKEY
+        RED_GHOST_SHADOW,
+        PINK_GHOST_SPEEDY,
+        CYAN_GHOST_BASHFUL,
+        ORANGE_GHOST_POKEY
     };
 
     private static byte randomGhostID() {
@@ -80,14 +81,14 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         Box floor3D,
         Group particlesGroup)
     {
-        super(animationRegistry, "Energizer_Explosion");
+        super(animationRegistry, "Energizers_ParticlesAnimation");
 
         this.swirlBaseCenters = requireNonNull(swirlBaseCenters);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
         this.floor3D = requireNonNull(floor3D);
         this.particlesGroup = requireNonNull(particlesGroup);
 
-        setFactory(() -> new Transition() {
+        setFactory(() -> new Transition(60) {
             {
                 setCycleDuration(Duration.INDEFINITE);
             }
@@ -95,12 +96,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
             @Override
             protected void interpolate(double frac) {
                 for (EnergizerParticle particle : particles) {
-                    switch (particle.state()) {
-                        case FLYING       -> doFly(particle);
-                        case ATTRACTED    -> doAttract(particle);
-                        case INSIDE_SWIRL -> doMoveInsideSwirl(particle);
-                        case OUT_OF_WORLD -> {}
-                    }
+                    updateParticleState(particle);
                 }
             }
         });
@@ -150,21 +146,35 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         );
     }
 
-    private void doFly(EnergizerParticle particle) {
+    private void updateParticleState(EnergizerParticle particle) {
+        switch (particle.state()) {
+            case FLYING       -> updateStateFlying(particle);
+            case ATTRACTED    -> updateStateAttracted(particle);
+            case INSIDE_SWIRL -> updateStateInsideSwirl(particle);
+            case OUT_OF_VIEW  -> {}
+        }
+    }
+    
+    private void updateStateFlying(EnergizerParticle particle) {
         particle.fly(gravity);
         if (particle.collidesWith(floor3D)) {
             onParticleLandedOnFloor(particle);
         }
-        else if (particle.position().z() > PARTICLE_OUT_OF_WORLD_Z) {
-            particle.shape().setVisible(false);
-            particle.setVelocity(Vector3f.ZERO);
-            particle.setState(FragmentState.OUT_OF_WORLD);
+        else if (particle.position().z() >= PARTICLE_OUT_OF_VIEW_Z) {
+            onParticleLeftView(particle);
         }
     }
+    
+    private void onParticleLeftView(EnergizerParticle particle) {
+        particle.shape().setVisible(false);
+        particle.setVelocity(Vector3f.ZERO);
+        particle.setState(FragmentState.OUT_OF_VIEW);
+    }
 
-    private void doAttract(EnergizerParticle particle) {
-        final boolean homeReached = moveParticleTowardsTarget(particle);
-        if (homeReached) {
+    private void updateStateAttracted(EnergizerParticle particle) {
+        final Vector3f target = swirlBaseCenters.get(particle.targetSwirlIndex());
+        final boolean targetReached = moveParticleTowardsTarget(particle, target);
+        if (targetReached) {
             onParticleReachedTarget(particle);
         }
     }
@@ -176,12 +186,11 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     private void onParticleLandedOnFloor(EnergizerParticle particle) {
         final byte ghostID = randomGhostID();
         final byte targetSwirlIndex = switch (ghostID) {
-            case Globals.CYAN_GHOST_BASHFUL -> 0;
-            case Globals.RED_GHOST_SHADOW, Globals.PINK_GHOST_SPEEDY -> 1;
-            case Globals.ORANGE_GHOST_POKEY -> 2;
+            case CYAN_GHOST_BASHFUL -> 0;
+            case RED_GHOST_SHADOW, PINK_GHOST_SPEEDY -> 1;
+            case ORANGE_GHOST_POKEY -> 2;
             default -> throw new IllegalArgumentException("Illegal ghost ID: " + ghostID);
         };
-        final float speed = randomFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
 
         if (particle instanceof BallEnergizerParticle ball) {
             particlesGroup.getChildren().remove(particle.shape());
@@ -191,25 +200,21 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         particle.shape().setMaterial(ghostDressMaterials.get(ghostID));
 
         particle.setTargetSwirlIndex(targetSwirlIndex);
-        particle.setSize(PARTICLE_SIZE_WHEN_RETURNING_HOME);
+        particle.setSize(PARTICLE_SIZE_ATTRACTED);
 
         final double z = floorSurfaceZ() - 0.5 * particle.size();
         particle.setPosition(new Vector3f(particle.position().x(), particle.position().y(), z));
 
-        final var swirlCenter = swirlBaseCenters.get(targetSwirlIndex);
-        final Vector3f velocity = swirlCenter.sub(particle.position()).normalized().mul(speed);
+        final Vector3f swirlCenter = swirlBaseCenters.get(targetSwirlIndex);
+        final float speed = randomFloat(PARTICLE_MIN_SPEED_ATTRACTED, PARTICLE_MAX_SPEED_ATTRACTED);
+        final Vector3f velocity = swirlCenter.sub(particle.position()).setToLength(speed);
         particle.setVelocity(velocity);
 
         particle.setState(FragmentState.ATTRACTED);
     }
 
-    private Vector3f targetSwirlPosition(EnergizerParticle particle) {
-        return swirlBaseCenters.get(particle.targetSwirlIndex());
-    }
-
-    private boolean moveParticleTowardsTarget(EnergizerParticle particle) {
-        final Vector3f targetSwirlPosition = targetSwirlPosition(particle);
-        final double dist = particle.position().euclideanDist(targetSwirlPosition);
+    private boolean moveParticleTowardsTarget(EnergizerParticle particle, Vector3f target) {
+        final double dist = particle.position().euclideanDist(target);
         final boolean targetReached = dist <= particle.velocity().length();
         if (!targetReached) {
             particle.move();
@@ -218,29 +223,29 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     }
 
     private void onParticleReachedTarget(EnergizerParticle particle) {
-        particle.setState(FragmentState.INSIDE_SWIRL);
         particle.setAngle(Math.toRadians(randomInt(0, 360)));
         particle.setVelocity(SWIRL_RISING_VELOCITY);
-        updateSwirlPosition(particle);
+        updateParticlePositionOnSwirlSurface(particle);
+        particle.setState(FragmentState.INSIDE_SWIRL);
     }
 
-    private void doMoveInsideSwirl(EnergizerParticle particle) {
+    private void updateStateInsideSwirl(EnergizerParticle particle) {
         particle.move();
         final Vector3f pos = particle.position();
         if (pos.z() < -SWIRL_HEIGHT) {
             // reached top of swirl: move to bottom of floor
             particle.setPosition(new Vector3f(pos.x(), pos.y(), floorSurfaceZ() - 0.5 * particle.size()));
         }
-        // Rotate on swirl border
-        particle.setAngle(particle.angle() + PARTICLE_ROTATION_SPEED);
+        // Rotate on swirl surface
+        particle.setAngle(particle.angle() + SWIRL_ROTATION_SPEED);
         if (particle.angle() > Math.TAU) {
             particle.setAngle(particle.angle() - Math.TAU);
         }
-        updateSwirlPosition(particle);
+        updateParticlePositionOnSwirlSurface(particle);
     }
 
-    private void updateSwirlPosition(EnergizerParticle particle) {
-        final var swirlBaseCenter = swirlBaseCenters.get(particle.targetSwirlIndex());
+    private void updateParticlePositionOnSwirlSurface(EnergizerParticle particle) {
+        final Vector3f swirlBaseCenter = swirlBaseCenters.get(particle.targetSwirlIndex());
         final var pos = new Vector3f(
             swirlBaseCenter.x() + SWIRL_RADIUS * Math.cos(particle.angle()),
             swirlBaseCenter.y() + SWIRL_RADIUS * Math.sin(particle.angle()),

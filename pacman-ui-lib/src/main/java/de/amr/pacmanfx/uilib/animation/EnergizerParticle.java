@@ -82,7 +82,7 @@ public abstract class EnergizerParticle implements Disposable {
         /** Circular or spiral motion inside the ghost-house swirl. */
         INSIDE_SWIRL,
         /** Particle has left the simulation space and should be removed. */
-        OUT_OF_WORLD
+        OUT_OF_VIEW
     }
 
     /** The render shape of this particle. */

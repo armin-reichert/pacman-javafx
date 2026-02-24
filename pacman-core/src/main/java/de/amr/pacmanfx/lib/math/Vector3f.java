@@ -53,8 +53,13 @@ public record Vector3f(float x, float y, float z) {
      * @return normalized (length 1) vector
      */
     public Vector3f normalized() {
-        float norm = 1.0f / length();
+        final float norm = 1.0f / length();
         return new Vector3f(x * norm, y * norm, z * norm);
+    }
+
+    public Vector3f setToLength(float newLength) {
+        final float factor = newLength / length();
+        return new Vector3f(x * factor, y * factor, z * factor);
     }
 
     public double euclideanDist(Vector3f v) {
