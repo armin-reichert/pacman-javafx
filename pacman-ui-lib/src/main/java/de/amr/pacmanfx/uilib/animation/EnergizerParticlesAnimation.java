@@ -63,7 +63,6 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     private static final int MESH_DIVISIONS_HIGH = 8;
     private static final int MESH_DIVISIONS_LOW  = 4;
 
-
     private static final int PARTICLE_OUT_OF_VIEW_Z = 50;
 
     private static final byte[] GHOST_IDS = {
@@ -138,7 +137,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     public void showExplosion(Vector3f origin) {
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
             final PhongMaterial material = ghostDressMaterials.get(randomInt(0, 4));
-            final var particle = new BallEnergizerParticle(randomParticleRadius(), material, origin, MESH_DIVISIONS_HIGH);
+            final var particle = new BallEnergizerParticle(randomParticleRadius(), material, origin, BallEnergizerParticle.Resolution.HIGH);
             particle.setVelocity(randomParticleVelocity());
             particle.setState(FragmentState.FLYING);
             particle.shape().setVisible(true);
@@ -210,7 +209,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
         if (particle instanceof BallEnergizerParticle ball) {
             particlesGroup.getChildren().remove(particle.shape());
-            ball.changeMeshResolution(MESH_DIVISIONS_LOW);
+            ball.setResolution(BallEnergizerParticle.Resolution.LOW);
             particlesGroup.getChildren().add(particle.shape());
         }
         particle.shape().setMaterial(ghostDressMaterials.get(ghostID));
