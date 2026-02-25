@@ -176,8 +176,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     private EnergizerParticle createExplosionParticle() {
         final PhongMaterial material = ghostDressMaterials.get(randomInt(0, 4));
         final double radius = Math.clamp(RND.nextGaussian(2, 0.1), 0.5, 4) * config.explosion().particleMeanRadius();
-        final var particle = new SphericalEnergizerParticle(radius, material, SphericalEnergizerParticle.Resolution.HIGH);
-        return particle;
+        return new SphericalEnergizerParticle(radius, material, SphericalEnergizerParticle.Resolution.HIGH);
     }
 
     private Vector3f randomParticleVelocity(ExplosionConfig cfg) {
