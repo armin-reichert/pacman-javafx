@@ -154,10 +154,12 @@ public class MazeFood3D implements Disposable {
 
     private Energizer3D createEnergizer3D(Vector2i tile, Supplier<Shape3D> shapeFactory) {
         final var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-        final float minScaling = prefs.getFloat("3d.energizer.scaling.min");
-        final float maxScaling = prefs.getFloat("3d.energizer.scaling.max");
-        final var energizer3D = new Energizer3D(animationRegistry, center, tile, minScaling, maxScaling);
+        final float inflatedSize = prefs.getFloat("3d.energizer.scaling.min");
+        final float expandedSize = prefs.getFloat("3d.energizer.scaling.max");
+        final var energizer3D = new Energizer3D(animationRegistry, center, tile);
         energizer3D.setShapeFactory(shapeFactory);
+        energizer3D.setInflatedSize(inflatedSize);
+        energizer3D.setExpandedSize(expandedSize);
         return energizer3D;
     }
 

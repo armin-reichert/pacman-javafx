@@ -19,7 +19,6 @@ import javafx.util.Duration;
 
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
 public class Energizer3D implements Disposable {
@@ -63,8 +62,8 @@ public class Energizer3D implements Disposable {
     private final AnimationRegistry animationRegistry;
     private final Point3D center;
     private final Vector2i tile;
-    private final double inflatedSize;
-    private final double expandedSize;
+    private double inflatedSize = 0.2;
+    private double expandedSize = 1.0;
 
     private Supplier<Shape3D> shapeFactory;
     private Shape3D shape;
@@ -73,20 +72,24 @@ public class Energizer3D implements Disposable {
     public Energizer3D(
         AnimationRegistry animationRegistry,
         Point3D center,
-        Vector2i tile,
-        double inflatedSize,
-        double expandedSize)
+        Vector2i tile)
     {
         this.animationRegistry = requireNonNull(animationRegistry);
         this.center = requireNonNull(center);
         this.tile = requireNonNull(tile);
-        this.inflatedSize = requireNonNegative(inflatedSize, "Energizer inflated size must be positive but is %f");
-        this.expandedSize = requireNonNegative(expandedSize, "Energizer expanded size must be positive but is %f");
         shapeFactory = () -> createDefaultShape(center, tile);
     }
 
     public void setShapeFactory(Supplier<Shape3D> shapeFactory) {
         this.shapeFactory = requireNonNull(shapeFactory);
+    }
+
+    public void setInflatedSize(double inflatedSize) {
+        this.inflatedSize = inflatedSize;
+    }
+
+    public void setExpandedSize(double expandedSize) {
+        this.expandedSize = expandedSize;
     }
 
     public void hide() {
