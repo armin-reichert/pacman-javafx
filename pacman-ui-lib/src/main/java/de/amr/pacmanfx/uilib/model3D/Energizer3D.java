@@ -12,6 +12,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
 import javafx.geometry.Point3D;
 import javafx.scene.paint.Material;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 
@@ -22,7 +23,31 @@ public class Energizer3D implements Disposable {
 
     private static final int PUMPING_FREQUENCY = 3; // 3 inflate+expand cycles per second
 
-    private Sphere sphere;
+    private static ManagedAnimation createPumpingAnimation(
+        AnimationRegistry animationRegistry,
+        Shape3D shape3D,
+        double inflatedSize,
+        double expandedSize)
+    {
+        final var animation = new ManagedAnimation(animationRegistry, "Energizer_Pumping_%s".formatted(shape3D.getUserData()));
+        animation.setFactory(() -> {
+            final Duration duration = Duration.seconds(1).divide(2 * PUMPING_FREQUENCY);
+            final var pumping = new ScaleTransition(duration, shape3D);
+            pumping.setAutoReverse(true);
+            pumping.setCycleCount(Animation.INDEFINITE);
+            pumping.setInterpolator(Interpolator.EASE_BOTH);
+            pumping.setFromX(expandedSize);
+            pumping.setFromY(expandedSize);
+            pumping.setFromZ(expandedSize);
+            pumping.setToX(inflatedSize);
+            pumping.setToY(inflatedSize);
+            pumping.setToZ(inflatedSize);
+            return pumping;
+        });
+        return animation;
+    }
+
+    private Shape3D shape;
     private ManagedAnimation pumpingAnimation;
 
     public Energizer3D(
@@ -42,53 +67,29 @@ public class Energizer3D implements Disposable {
         requireNonNull(material);
         requireNonNull(tile);
 
-        sphere = new Sphere(radius);
-        sphere.setMaterial(material);
-        sphere.setTranslateX(center.getX());
-        sphere.setTranslateY(center.getY());
-        sphere.setTranslateZ(center.getZ());
-        sphere.setUserData(tile);
+        shape = new Sphere(radius);
+        shape.setMaterial(material);
+        shape.setTranslateX(center.getX());
+        shape.setTranslateY(center.getY());
+        shape.setTranslateZ(center.getZ());
+        shape.setUserData(tile);
 
-        pumpingAnimation = createPumpingAnimation(animationRegistry, sphere, inflatedSize, expandedSize);
-    }
-
-    private static ManagedAnimation createPumpingAnimation(
-        AnimationRegistry animationRegistry,
-        Sphere sphere,
-        double inflatedSize,
-        double expandedSize)
-    {
-        final var animation = new ManagedAnimation(animationRegistry, "Energizer_Pumping_%s".formatted(sphere.getUserData()));
-        animation.setFactory(() -> {
-            final Duration duration = Duration.seconds(1).divide(2 * PUMPING_FREQUENCY);
-            final var pumping = new ScaleTransition(duration, sphere);
-            pumping.setAutoReverse(true);
-            pumping.setCycleCount(Animation.INDEFINITE);
-            pumping.setInterpolator(Interpolator.EASE_BOTH);
-            pumping.setFromX(expandedSize);
-            pumping.setFromY(expandedSize);
-            pumping.setFromZ(expandedSize);
-            pumping.setToX(inflatedSize);
-            pumping.setToY(inflatedSize);
-            pumping.setToZ(inflatedSize);
-            return pumping;
-        });
-        return animation;
+        pumpingAnimation = createPumpingAnimation(animationRegistry, shape, inflatedSize, expandedSize);
     }
 
     public void hide() {
-        sphere.setVisible(false);
+        shape.setVisible(false);
     }
 
-    public Sphere shape() { return sphere; }
+    public Shape3D shape() { return shape; }
 
-    public Vector2i tile() { return (Vector2i) sphere.getUserData(); }
+    public Vector2i tile() { return (Vector2i) shape.getUserData(); }
 
     @Override
     public void dispose() {
-        if (sphere != null) {
-            sphere.setMaterial(null);
-            sphere = null;
+        if (shape != null) {
+            shape.setMaterial(null);
+            shape = null;
         }
         if (pumpingAnimation != null) {
             pumpingAnimation.dispose();
@@ -114,6 +115,6 @@ public class Energizer3D implements Disposable {
             pumpingAnimation.dispose();
             pumpingAnimation = null;
         }
-        sphere.setVisible(false);
+        shape.setVisible(false);
     }
 }
