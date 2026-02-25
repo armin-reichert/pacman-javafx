@@ -5,16 +5,19 @@ package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
 import javafx.geometry.Point3D;
-import javafx.scene.paint.Material;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
+
+import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
@@ -22,6 +25,16 @@ import static java.util.Objects.requireNonNull;
 public class Energizer3D implements Disposable {
 
     private static final int PUMPING_FREQUENCY = 3; // 3 inflate+expand cycles per second
+
+    private static Shape3D createDefaultShape(Point3D center, Vector2i tile) {
+        final var shape = new Sphere(3.5);
+        shape.setMaterial(Ufx.coloredPhongMaterial(Color.WHITE));
+        shape.setTranslateX(center.getX());
+        shape.setTranslateY(center.getY());
+        shape.setTranslateZ(center.getZ());
+        shape.setUserData(tile);
+        return shape;
+    }
 
     private static ManagedAnimation createPumpingAnimation(
         AnimationRegistry animationRegistry,
@@ -47,41 +60,50 @@ public class Energizer3D implements Disposable {
         return animation;
     }
 
+    private final AnimationRegistry animationRegistry;
+    private final Point3D center;
+    private final Vector2i tile;
+    private final double inflatedSize;
+    private final double expandedSize;
+
+    private Supplier<Shape3D> shapeFactory;
     private Shape3D shape;
     private ManagedAnimation pumpingAnimation;
 
     public Energizer3D(
         AnimationRegistry animationRegistry,
-        double radius,
         Point3D center,
+        Vector2i tile,
         double inflatedSize,
-        double expandedSize,
-        Material material,
-        Vector2i tile)
+        double expandedSize)
     {
-        requireNonNull(animationRegistry);
-        requireNonNegative(radius, "Energizer radius must be positive but is %f");
-        requireNonNull(center);
-        requireNonNegative(inflatedSize, "Energizer inflated size must be positive but is %f");
-        requireNonNegative(expandedSize, "Energizer expanded size must be positive but is %f");
-        requireNonNull(material);
-        requireNonNull(tile);
+        this.animationRegistry = requireNonNull(animationRegistry);
+        this.center = requireNonNull(center);
+        this.tile = requireNonNull(tile);
+        this.inflatedSize = requireNonNegative(inflatedSize, "Energizer inflated size must be positive but is %f");
+        this.expandedSize = requireNonNegative(expandedSize, "Energizer expanded size must be positive but is %f");
+        shapeFactory = () -> createDefaultShape(center, tile);
+    }
 
-        shape = new Sphere(radius);
-        shape.setMaterial(material);
-        shape.setTranslateX(center.getX());
-        shape.setTranslateY(center.getY());
-        shape.setTranslateZ(center.getZ());
-        shape.setUserData(tile);
-
-        pumpingAnimation = createPumpingAnimation(animationRegistry, shape, inflatedSize, expandedSize);
+    public void setShapeFactory(Supplier<Shape3D> shapeFactory) {
+        this.shapeFactory = requireNonNull(shapeFactory);
     }
 
     public void hide() {
         shape.setVisible(false);
     }
 
-    public Shape3D shape() { return shape; }
+    public Shape3D shape() {
+        if (shape == null) {
+            shape = shapeFactory.get();
+            shape.setTranslateX(center.getX());
+            shape.setTranslateY(center.getY());
+            shape.setTranslateZ(center.getZ());
+            shape.setUserData(tile);
+            pumpingAnimation = createPumpingAnimation(animationRegistry, shape, inflatedSize, expandedSize);
+        }
+        return shape;
+    }
 
     public Vector2i tile() { return (Vector2i) shape.getUserData(); }
 

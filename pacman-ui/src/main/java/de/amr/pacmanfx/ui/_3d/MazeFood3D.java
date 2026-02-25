@@ -23,6 +23,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import org.tinylog.Logger;
@@ -31,6 +32,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -70,7 +72,7 @@ public class MazeFood3D implements Disposable {
         pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
 
         createPellets3D();
-        createEnergizers3D();
+        createEnergizers3D(level.worldMap().foodLayer());
 
         //TODO there is still a memory leak!
         particlesAnimation = createParticlesAnimation(ghostMaterials);
@@ -136,28 +138,27 @@ public class MazeFood3D implements Disposable {
         return meshView;
     }
 
-    private void createEnergizers3D() {
-        final float radius     = prefs.getFloat("3d.energizer.radius");
-        final float minScaling = prefs.getFloat("3d.energizer.scaling.min");
-        final float maxScaling = prefs.getFloat("3d.energizer.scaling.max");
-        final FoodLayer foodLayer = level.worldMap().foodLayer();
+    private void createEnergizers3D(FoodLayer foodLayer) {
+        final float radius = prefs.getFloat("3d.energizer.radius");
+        final Supplier<Shape3D> shapeFactory = () -> {
+            final var sphere = new Sphere(radius);
+            sphere.setMaterial(pelletMaterial);
+            return sphere;
+        };
         energizers3D = foodLayer.tiles()
             .filter(foodLayer::isEnergizerTile)
             .filter(foodLayer::hasFoodAtTile)
-            .map(tile -> createEnergizer3D(tile, radius, minScaling, maxScaling))
+            .map(tile -> createEnergizer3D(tile, shapeFactory))
             .collect(Collectors.toCollection(HashSet::new));
     }
 
-    private Energizer3D createEnergizer3D(Vector2i tile, float radius, float minScaling, float maxScaling) {
+    private Energizer3D createEnergizer3D(Vector2i tile, Supplier<Shape3D> shapeFactory) {
         final var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-        return new Energizer3D(
-            animationRegistry,
-            radius,
-            center,
-            minScaling,
-            maxScaling,
-            pelletMaterial,
-            tile);
+        final float minScaling = prefs.getFloat("3d.energizer.scaling.min");
+        final float maxScaling = prefs.getFloat("3d.energizer.scaling.max");
+        final var energizer3D = new Energizer3D(animationRegistry, center, tile, minScaling, maxScaling);
+        energizer3D.setShapeFactory(shapeFactory);
+        return energizer3D;
     }
 
     private EnergizerParticlesAnimation createParticlesAnimation(List<PhongMaterial> ghostParticleMaterials) {
