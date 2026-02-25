@@ -14,8 +14,10 @@ import javafx.scene.shape.Box;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
@@ -86,6 +88,8 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     private final List<EnergizerParticle> particles = new ArrayList<>();
     private final Group particlesGroup;
 
+    private final Queue<EnergizerParticle> pool = new ArrayDeque<>();
+
     public EnergizerParticlesAnimation(
         Config config,
         AnimationRegistry animationRegistry,
@@ -128,6 +132,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
             Logger.info("Disposed {} particles", particleCount);
         }
         particlesGroup.getChildren().clear();
+        pool.clear();
     }
 
     public void setGravity(Vector3f gravity) {
@@ -136,10 +141,28 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
     public void showExplosion(Vector3f origin) {
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
-            final EnergizerParticle particle = createExplosionParticle(origin);
+            final EnergizerParticle particle = obtainParticle(origin);
             particles.add(particle);
             particlesGroup.getChildren().add(particle.shape());
         }
+    }
+
+    private EnergizerParticle obtainParticle(Vector3f origin) {
+        EnergizerParticle particle = pool.poll();
+        if (particle == null) {
+            particle = createExplosionParticle(origin);
+        } else {
+            Logger.debug("Particle obtained from pool! Pool size={}", pool.size());
+        }
+        return particle;
+    }
+
+    private void releaseParticle(EnergizerParticle particle) {
+        particlesGroup.getChildren().remove(particle.shape());
+        pool.offer(particle);
+        particle.reset();
+        particle.shape().setVisible(false);
+        Logger.debug("Particle released! Pool size={}", pool.size());
     }
 
     private EnergizerParticle createExplosionParticle(Vector3f origin) {
@@ -185,8 +208,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     }
     
     private void onParticleLeftView(EnergizerParticle particle) {
-        particle.shape().setVisible(false);
-        particle.setVelocity(Vector3f.ZERO);
+        releaseParticle(particle);
         particle.setState(FragmentState.OUT_OF_VIEW);
     }
 

@@ -124,6 +124,13 @@ public abstract class EnergizerParticle implements Disposable {
         this(shape3D, Vector3f.ZERO);
     }
 
+    public void reset() {
+        state = FragmentState.FLYING;
+        targetSwirlIndex = -1;
+        position = Vector3f.ZERO;
+        velocity = Vector3f.ZERO;
+    }
+
     /**
      * Returns the 3D shape used to render this particle.
      *
