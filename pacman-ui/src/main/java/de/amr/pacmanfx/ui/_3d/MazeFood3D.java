@@ -141,9 +141,9 @@ public class MazeFood3D implements Disposable {
     private void createEnergizers3D(FoodLayer foodLayer) {
         final float radius = prefs.getFloat("3d.energizer.radius");
         final Supplier<Shape3D> shapeFactory = () -> {
-            final var sphere = new Sphere(radius, 48);
-            sphere.setMaterial(pelletMaterial);
-            return sphere;
+            final var shape = new Sphere(radius, 48);
+            shape.setMaterial(pelletMaterial);
+            return shape;
         };
         energizers3D = foodLayer.tiles()
             .filter(foodLayer::isEnergizerTile)
