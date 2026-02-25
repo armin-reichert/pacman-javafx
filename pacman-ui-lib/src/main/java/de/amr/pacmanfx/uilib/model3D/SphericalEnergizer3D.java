@@ -57,7 +57,7 @@ public class SphericalEnergizer3D implements Energizer3D {
         double inflatedSize,
         double expandedSize)
     {
-        final var animation = new ManagedAnimation(animationRegistry, "Energizer_Pumping");
+        final var animation = new ManagedAnimation(animationRegistry, "Energizer_Pumping_%s".formatted(sphere.getUserData()));
         animation.setFactory(() -> {
             final Duration duration = Duration.seconds(1).divide(2 * PUMPING_FREQUENCY);
             final var pumping = new ScaleTransition(duration, sphere);
@@ -99,15 +99,23 @@ public class SphericalEnergizer3D implements Energizer3D {
     }
 
     public void startPumping() {
-        pumpingAnimation.playOrContinue();
+        if (pumpingAnimation != null) {
+            pumpingAnimation.playOrContinue();
+        }
     }
 
     public void stopPumping() {
-        pumpingAnimation.pause();
+        if (pumpingAnimation != null) {
+            pumpingAnimation.pause();
+        }
     }
 
     public void onEaten() {
-        pumpingAnimation.stop();
+        if (pumpingAnimation != null) {
+            pumpingAnimation.stop();
+            pumpingAnimation.dispose();
+            pumpingAnimation = null;
+        }
         sphere.setVisible(false);
     }
 }

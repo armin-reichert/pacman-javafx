@@ -143,8 +143,8 @@ public class MazeFood3D implements Disposable {
         final float maxScaling = prefs.getFloat("3d.energizer.scaling.max");
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         energizers3D = foodLayer.tiles()
-            .filter(foodLayer::hasFoodAtTile)
             .filter(foodLayer::isEnergizerTile)
+            .filter(foodLayer::hasFoodAtTile)
             .map(tile -> createEnergizer3D(tile, radius, minScaling, maxScaling))
             .collect(Collectors.toCollection(HashSet::new));
     }
