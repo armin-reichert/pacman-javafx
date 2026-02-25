@@ -37,7 +37,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     {}
 
     public record ExplosionConfig(
-        int particleCount,
+        int   particleCount,
         float particleMeanRadius,
         float particleMinSpeedXY,
         float particleMaxSpeedXY,
@@ -59,7 +59,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     {}
 
     public static final Config DEFAULT_CONFIG = new Config(
-        new ExplosionConfig(400, 0.2f, 0, 0.4f, 2, 8),
+        new ExplosionConfig(300, 0.25f, 0.05f, 0.4f, 2, 8),
         new AttractionConfig(0.4f, 0.3f, 0.5f),
         new SwirlConfig(6, 12, 0.3f, 0.05f)
     );
