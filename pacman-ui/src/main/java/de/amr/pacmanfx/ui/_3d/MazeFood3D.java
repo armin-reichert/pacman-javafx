@@ -16,7 +16,6 @@ import de.amr.pacmanfx.uilib.animation.EnergizerParticlesAnimation;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
-import de.amr.pacmanfx.uilib.model3D.SphericalEnergizer3D;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
@@ -151,7 +150,7 @@ public class MazeFood3D implements Disposable {
 
     private Energizer3D createEnergizer3D(Vector2i tile, float radius, float minScaling, float maxScaling) {
         final var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-        return new SphericalEnergizer3D(
+        return new Energizer3D(
             animationRegistry,
             radius,
             center,
