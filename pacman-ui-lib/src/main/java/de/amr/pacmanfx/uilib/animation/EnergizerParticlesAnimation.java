@@ -87,10 +87,9 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
     private Vector3f gravity = Vector3f.ZERO;
 
-    private final List<EnergizerParticle> particles = new ArrayList<>();
-    private final Group particlesGroup;
-
     private final Queue<EnergizerParticle> pool = new ArrayDeque<>();
+    private final List<EnergizerParticle> particles = new ArrayList<>();
+    private final Group particleShapesGroup;
 
     public EnergizerParticlesAnimation(
         Config config,
@@ -98,7 +97,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         List<Vector3f> swirlBaseCenters,
         List<PhongMaterial> ghostDressMaterials,
         Box floor3D,
-        Group particlesGroup)
+        Group particleShapesGroup)
     {
         super(animationRegistry, "Energizers_ParticlesAnimation");
 
@@ -106,22 +105,17 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         this.swirlBaseCenters = requireNonNull(swirlBaseCenters);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
         this.floor3D = requireNonNull(floor3D);
-        this.particlesGroup = requireNonNull(particlesGroup);
+        this.particleShapesGroup = requireNonNull(particleShapesGroup);
 
         setFactory(this::createAnimationDriver);
         prefillPool();
     }
 
     private Animation createAnimationDriver() {
-        final var loop = new Timeline(
-            new KeyFrame(FRAME_DURATION, _ -> {
-                for (EnergizerParticle particle : particles) {
-                    updateParticleState(particle);
-                }
-            })
-        );
-        loop.setCycleCount(Animation.INDEFINITE);
-        return loop;
+        final var driver = new Timeline(
+            new KeyFrame(FRAME_DURATION, _ -> particles.forEach(this::updateParticleState)));
+        driver.setCycleCount(Animation.INDEFINITE);
+        return driver;
     }
 
     @Override
@@ -134,7 +128,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
             particles.clear();
             Logger.info("Disposed {} particles", particleCount);
         }
-        particlesGroup.getChildren().clear();
+        particleShapesGroup.getChildren().clear();
         pool.clear();
     }
 
@@ -146,16 +140,17 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
             final EnergizerParticle particle = obtainParticle();
             particle.setPosition(origin);
+            particle.setVelocity(randomParticleVelocity(config.explosion()));
+            particle.setState(FragmentState.FLYING);
             particle.shape().setVisible(true);
             particles.add(particle);
-            particlesGroup.getChildren().add(particle.shape());
+            particleShapesGroup.getChildren().add(particle.shape());
         }
     }
 
     private void prefillPool() {
         for (int i = 0; i < POOL_PREFILL_COUNT; ++i) {
-            final EnergizerParticle particle = createExplosionParticle();
-            pool.offer(particle);
+            pool.offer(createExplosionParticle());
         }
         Logger.info("Particle pool prefilled! Pool size={}", pool.size());
     }
@@ -171,7 +166,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     }
 
     private void releaseParticle(EnergizerParticle particle) {
-        particlesGroup.getChildren().remove(particle.shape());
+        particleShapesGroup.getChildren().remove(particle.shape());
         pool.offer(particle);
         particle.reset();
         particle.shape().setVisible(false);
@@ -182,8 +177,6 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         final PhongMaterial material = ghostDressMaterials.get(randomInt(0, 4));
         final double radius = Math.clamp(RND.nextGaussian(2, 0.1), 0.5, 4) * config.explosion().particleMeanRadius();
         final var particle = new SphericalEnergizerParticle(radius, material, SphericalEnergizerParticle.Resolution.HIGH);
-        particle.setVelocity(randomParticleVelocity(config.explosion()));
-        particle.setState(FragmentState.FLYING);
         return particle;
     }
 
