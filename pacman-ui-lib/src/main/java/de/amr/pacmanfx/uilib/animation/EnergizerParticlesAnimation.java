@@ -5,7 +5,9 @@ package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.math.Vector3f;
 import de.amr.pacmanfx.uilib.animation.EnergizerParticle.FragmentState;
-import javafx.animation.Transition;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -60,6 +62,8 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         new SwirlConfig(6, 12, 0.3f, 0.05f)
     );
 
+    private static final Duration FRAME_DURATION = Duration.millis(1000.0 / 60);
+
     private static final byte[] GHOST_IDS = {
         RED_GHOST_SHADOW,
         PINK_GHOST_SPEEDY,
@@ -98,18 +102,19 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         this.floor3D = requireNonNull(floor3D);
         this.particlesGroup = requireNonNull(particlesGroup);
 
-        setFactory(() -> new Transition(60) {
-            {
-                setCycleDuration(Duration.INDEFINITE);
-            }
+        setFactory(this::createAnimationDriver);
+    }
 
-            @Override
-            protected void interpolate(double frac) {
+    private Animation createAnimationDriver() {
+        final var loop = new Timeline(
+            new KeyFrame(FRAME_DURATION, _ -> {
                 for (EnergizerParticle particle : particles) {
                     updateParticleState(particle);
                 }
-            }
-        });
+            })
+        );
+        loop.setCycleCount(Animation.INDEFINITE);
+        return loop;
     }
 
     @Override
