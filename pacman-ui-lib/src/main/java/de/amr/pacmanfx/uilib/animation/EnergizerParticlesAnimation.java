@@ -64,6 +64,8 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         new SwirlConfig(6, 12, 0.3f, 0.05f)
     );
 
+    private static final int POOL_PREFILL_COUNT = 200;
+
     private static final Duration FRAME_DURATION = Duration.millis(1000.0 / 60);
 
     private static final byte[] GHOST_IDS = {
@@ -107,6 +109,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         this.particlesGroup = requireNonNull(particlesGroup);
 
         setFactory(this::createAnimationDriver);
+        prefillPool();
     }
 
     private Animation createAnimationDriver() {
@@ -141,16 +144,26 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
     public void showExplosion(Vector3f origin) {
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
-            final EnergizerParticle particle = obtainParticle(origin);
+            final EnergizerParticle particle = obtainParticle();
+            particle.setPosition(origin);
+            particle.shape().setVisible(true);
             particles.add(particle);
             particlesGroup.getChildren().add(particle.shape());
         }
     }
 
-    private EnergizerParticle obtainParticle(Vector3f origin) {
+    private void prefillPool() {
+        for (int i = 0; i < POOL_PREFILL_COUNT; ++i) {
+            final EnergizerParticle particle = createExplosionParticle();
+            pool.offer(particle);
+        }
+        Logger.info("Particle pool prefilled! Pool size={}", pool.size());
+    }
+
+    private EnergizerParticle obtainParticle() {
         EnergizerParticle particle = pool.poll();
         if (particle == null) {
-            particle = createExplosionParticle(origin);
+            particle = createExplosionParticle();
         } else {
             Logger.debug("Particle obtained from pool! Pool size={}", pool.size());
         }
@@ -165,10 +178,10 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         Logger.debug("Particle released! Pool size={}", pool.size());
     }
 
-    private EnergizerParticle createExplosionParticle(Vector3f origin) {
+    private EnergizerParticle createExplosionParticle() {
         final PhongMaterial material = ghostDressMaterials.get(randomInt(0, 4));
         final double radius = Math.clamp(RND.nextGaussian(2, 0.1), 0.5, 4) * config.explosion().particleMeanRadius();
-        final var particle = new SphericalEnergizerParticle(radius, material, origin, SphericalEnergizerParticle.Resolution.HIGH);
+        final var particle = new SphericalEnergizerParticle(radius, material, SphericalEnergizerParticle.Resolution.HIGH);
         particle.setVelocity(randomParticleVelocity(config.explosion()));
         particle.setState(FragmentState.FLYING);
         return particle;
@@ -233,11 +246,6 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
             default -> throw new IllegalArgumentException("Illegal ghost ID: " + ghostID);
         };
 
-        if (particle instanceof SphericalEnergizerParticle ball) {
-            particlesGroup.getChildren().remove(particle.shape());
-            ball.setResolution(SphericalEnergizerParticle.Resolution.LOW);
-            particlesGroup.getChildren().add(particle.shape());
-        }
         particle.shape().setMaterial(ghostDressMaterials.get(ghostID));
 
         particle.setTargetSwirlIndex(targetSwirlIndex);

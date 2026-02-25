@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.lib.math.Vector3f;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.Sphere;
 
@@ -26,12 +25,10 @@ public class SphericalEnergizerParticle extends EnergizerParticle {
      *
      * @param radius   the sphere radius
      * @param material the material applied to the sphere
-     * @param center   the initial position of the fragment
      * @param resolution the mesh resolution
      */
-    public SphericalEnergizerParticle(double radius, Material material, Vector3f center, Resolution resolution) {
+    public SphericalEnergizerParticle(double radius, Material material, Resolution resolution) {
         super(new Sphere(radius, resolution.divisions()));
-        setPosition(center);
         shape().setMaterial(material);
     }
 
