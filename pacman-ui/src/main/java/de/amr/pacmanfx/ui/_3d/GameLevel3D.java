@@ -58,7 +58,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D extends Group implements Disposable {
 
-    public static final Vector3f GRAVITY = new Vector3f(0, 0, 0.18f);
+    public static final Vector3f GRAVITY = new Vector3f(0, 0, 0.1f);
 
     private static List<MeshView> createGhostComponentMeshViews(Mesh mesh) {
         return Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
