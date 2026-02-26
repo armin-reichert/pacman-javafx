@@ -37,6 +37,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     {}
 
     public record ExplosionConfig(
+        Vector3f gravity,
         int   particleCount,
         float particleMeanRadius,
         float particleMinSpeedXY,
@@ -59,7 +60,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     {}
 
     public static final Config DEFAULT_CONFIG = new Config(
-        new ExplosionConfig(300, 0.25f, 0.05f, 0.4f, 1.5f, 6),
+        new ExplosionConfig(new Vector3f(0, 0, 0.1f), 300, 0.25f, 0.05f, 0.4f, 1.5f, 6),
         new AttractionConfig(0.4f, 0.3f, 0.5f),
         new SwirlConfig(6, 12, 0.3f, 0.05f)
     );
@@ -80,13 +81,9 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     }
 
     private final Config config;
-
     private final List<Vector3f> swirlBaseCenters;
     private final Box floor3D;
     private final List<PhongMaterial> ghostDressMaterials;
-
-    private Vector3f gravity = Vector3f.ZERO;
-
     private final Queue<EnergizerParticle> pool = new ArrayDeque<>();
     private final List<EnergizerParticle> particles = new ArrayList<>();
     private final Group particleShapesGroup;
@@ -130,10 +127,6 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         }
         particleShapesGroup.getChildren().clear();
         pool.clear();
-    }
-
-    public void setGravity(Vector3f gravity) {
-        this.gravity = gravity;
     }
 
     public void showExplosion(Vector3f origin) {
@@ -199,7 +192,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     }
     
     private void updateStateFlying(EnergizerParticle particle) {
-        particle.fly(gravity);
+        particle.fly(config.explosion.gravity());
         if (particle.collidesWith(floor3D)) {
             onParticleLandedOnFloor(particle);
         }

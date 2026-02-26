@@ -170,17 +170,12 @@ public class MazeFood3D implements Disposable {
             .map(pos -> new Vector3f(pos.x() + HTS, pos.y() + HTS, 0))
             .toList();
 
-        final var particlesAnimation = new EnergizerParticlesAnimation(
+        return new EnergizerParticlesAnimation(
             EnergizerParticlesAnimation.DEFAULT_CONFIG,
             animationRegistry,
             swirlBaseCenters,
             ghostParticleMaterials,
             maze3D.floor(),
             maze3D.particlesGroup());
-
-        // Important: Without gravity, particles would not land on the floor and in turn get attracted by the house!
-        particlesAnimation.setGravity(GameLevel3D.GRAVITY);
-
-        return particlesAnimation;
     }
 }
