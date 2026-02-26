@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.animation;
 
+import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector3f;
 import de.amr.pacmanfx.uilib.animation.EnergizerParticle.FragmentState;
 import javafx.animation.Animation;
@@ -91,7 +92,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     public EnergizerParticlesAnimation(
         Config config,
         AnimationRegistry animationRegistry,
-        List<Vector3f> swirlBaseCenters,
+        List<Vector2f> swirlBaseCentersXY,
         List<PhongMaterial> ghostDressMaterials,
         Box floor3D,
         Group particleShapesGroup)
@@ -99,11 +100,12 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         super(animationRegistry, "Energizers_ParticlesAnimation");
 
         this.config = requireNonNull(config);
-        this.swirlBaseCenters = requireNonNull(swirlBaseCenters);
+        requireNonNull(swirlBaseCentersXY);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
         this.floor3D = requireNonNull(floor3D);
         this.particleShapesGroup = requireNonNull(particleShapesGroup);
 
+        this.swirlBaseCenters = swirlBaseCentersXY.stream().map(xy -> new Vector3f(xy.x(), xy.y(), floorSurfaceZ())).toList();
         setFactory(this::createAnimationDriver);
         prefillPool();
     }
