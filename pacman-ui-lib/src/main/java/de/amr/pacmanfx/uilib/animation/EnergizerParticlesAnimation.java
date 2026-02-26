@@ -63,8 +63,6 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         new SwirlConfig(4, 20, 0.3f, 0.05f)
     );
 
-    private static final int POOL_PREFILL_COUNT = 200;
-
     private static final Duration FRAME_DURATION = Duration.millis(1000.0 / 60);
 
     private static final byte[] GHOST_IDS = {
@@ -104,7 +102,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
         this.swirlBaseCenters = swirlBaseCentersXY.stream().map(xy -> new Vector3f(xy.x(), xy.y(), floorSurfaceZ())).toList();
         setFactory(this::createAnimationDriver);
-        prefillPool();
+        prefillPool(0.75f);
     }
 
     private Animation createAnimationDriver() {
@@ -140,8 +138,9 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         }
     }
 
-    private void prefillPool() {
-        for (int i = 0; i < POOL_PREFILL_COUNT; ++i) {
+    private void prefillPool(float percentage) {
+        final int prefillCount = (int) (config.explosion.particleCount() * percentage);
+        for (int i = 0; i < prefillCount; ++i) {
             pool.offer(createExplosionParticle());
         }
         Logger.info("Particle pool prefilled! Pool size={}", pool.size());
