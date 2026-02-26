@@ -15,7 +15,10 @@ import javafx.scene.shape.Box;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
@@ -81,7 +84,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     private final Box floor3D;
     private final List<PhongMaterial> ghostDressMaterials;
     private final Queue<EnergizerParticle> pool = new ArrayDeque<>();
-    private final Set<EnergizerParticle> particles = new HashSet<>();
+    private final List<EnergizerParticle> particles = new ArrayList<>();
     private final Group particleShapesGroup;
 
     public EnergizerParticlesAnimation(
@@ -106,7 +109,11 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     }
 
     private Animation createAnimationDriver() {
-        final var driver = new Timeline(new KeyFrame(FRAME_DURATION, _ -> particles.forEach(this::updateParticleState)));
+        final var driver = new Timeline(new KeyFrame(FRAME_DURATION, _ -> {
+            for (int i = particles.size() - 1; i >= 0; --i) {
+                updateParticleState(particles.get(i));
+            }
+        }));
         driver.setCycleCount(Animation.INDEFINITE);
         return driver;
     }
@@ -157,6 +164,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     }
 
     private void releaseParticle(EnergizerParticle particle) {
+        particles.remove(particle);
         particleShapesGroup.getChildren().remove(particle.shape());
         pool.offer(particle);
         particle.reset();
