@@ -15,10 +15,7 @@ import javafx.scene.shape.Box;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
@@ -63,7 +60,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     public static final Config DEFAULT_CONFIG = new Config(
         new ExplosionConfig(new Vector3f(0, 0, 0.1f), 300, 0.25f, 0.05f, 0.4f, 1.5f, 6),
         new AttractionConfig(0.4f, 0.3f, 0.5f),
-        new SwirlConfig(6, 12, 0.3f, 0.05f)
+        new SwirlConfig(4, 20, 0.3f, 0.05f)
     );
 
     private static final int POOL_PREFILL_COUNT = 200;
@@ -86,7 +83,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     private final Box floor3D;
     private final List<PhongMaterial> ghostDressMaterials;
     private final Queue<EnergizerParticle> pool = new ArrayDeque<>();
-    private final List<EnergizerParticle> particles = new ArrayList<>();
+    private final Set<EnergizerParticle> particles = new HashSet<>();
     private final Group particleShapesGroup;
 
     public EnergizerParticlesAnimation(
@@ -111,8 +108,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     }
 
     private Animation createAnimationDriver() {
-        final var driver = new Timeline(
-            new KeyFrame(FRAME_DURATION, _ -> particles.forEach(this::updateParticleState)));
+        final var driver = new Timeline(new KeyFrame(FRAME_DURATION, _ -> particles.forEach(this::updateParticleState)));
         driver.setCycleCount(Animation.INDEFINITE);
         return driver;
     }
@@ -132,6 +128,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     }
 
     public void showExplosion(Vector3f origin) {
+        requireNonNull(origin);
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
             final EnergizerParticle particle = obtainParticle();
             particle.setPosition(origin);
