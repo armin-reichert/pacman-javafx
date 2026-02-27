@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.math.Vector3f;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl.StateName;
 import de.amr.pacmanfx.model.GameLevel;
@@ -536,13 +535,7 @@ public class PlayScene3D implements GameScene {
                 .filter(e3D -> tile.equals(e3D.tile()))
                 .findFirst().orElse(null);
             if (energizer3D != null) {
-                //TODO is this correct or should I use sceneToLocal or the like?
-                final Vector3f center = new Vector3f(
-                    energizer3D.shape().getTranslateX(),
-                    energizer3D.shape().getTranslateY(),
-                    energizer3D.shape().getTranslateZ()
-                );
-                mazeFood3D.particlesAnimation().showExplosion(center);
+                mazeFood3D.createEnergizerExplosion(energizer3D);
                 energizer3D.onEaten();
             } else {
                 mazeFood3D.pellets3D().stream()

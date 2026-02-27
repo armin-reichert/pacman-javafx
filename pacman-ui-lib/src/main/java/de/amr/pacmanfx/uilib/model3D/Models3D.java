@@ -3,6 +3,9 @@
  */
 package de.amr.pacmanfx.uilib.model3D;
 
+import javafx.scene.shape.Mesh;
+import javafx.scene.shape.TriangleMesh;
+
 /**
  * Central access point for loading and providing 3D models used by the UI layer.
  * <p>
@@ -27,4 +30,23 @@ public abstract class Models3D {
 
     /** Shared 3D model instance for pellets. */
     public static final PelletModel3D PELLET_MODEL = new PelletModel3D();
+
+    public static Mesh createScaledMesh(Mesh original, double scale) {
+        if (!(original instanceof TriangleMesh mesh)) {
+            throw new IllegalArgumentException("Only TriangleMesh supported");
+        }
+
+        final TriangleMesh copy = new TriangleMesh();
+        copy.getTexCoords().addAll(mesh.getTexCoords());
+        copy.getFaces().addAll(mesh.getFaces());
+        copy.getFaceSmoothingGroups().addAll(mesh.getFaceSmoothingGroups());
+
+        final float[] points = mesh.getPoints().toArray(null);
+        for (int i = 0; i < points.length; i++) {
+            points[i] *= (float) scale;
+        }
+        copy.getPoints().addAll(points);
+
+        return copy;
+    }
 }

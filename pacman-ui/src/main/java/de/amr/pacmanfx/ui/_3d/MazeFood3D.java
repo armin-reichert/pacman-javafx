@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.lib.math.Vector3f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.FoodLayer;
@@ -25,7 +26,6 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
 import org.tinylog.Logger;
 
 import java.util.Collections;
@@ -33,7 +33,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -49,10 +48,10 @@ public class MazeFood3D implements Disposable {
 
     private PhongMaterial pelletMaterial;
 
-    private Set<MeshView> pellets3D = Set.of();
-    private Set<Energizer3D> energizers3D = Set.of();
+    private final Set<MeshView> pellets3D = new HashSet<>();
+    private final Set<Energizer3D> energizers3D = new HashSet<>();
 
-    private final EnergizerParticlesAnimation particlesAnimation;
+    private EnergizerParticlesAnimation particlesAnimation;
 
     public MazeFood3D(
         PreferencesManager prefs,
@@ -90,19 +89,17 @@ public class MazeFood3D implements Disposable {
                 meshView.setMaterial(null);
                 meshView.setMesh(null);
             });
-            pellets3D = Set.of();
             Logger.info("Disposed 3D pellets");
         }
         if (!energizers3D.isEmpty()) {
             energizers3D.forEach(Energizer3D::dispose);
             energizers3D.clear();
-            energizers3D = Set.of();
             Logger.info("Disposed 3D energizers");
         }
-    }
-
-    public EnergizerParticlesAnimation particlesAnimation() {
-        return particlesAnimation;
+        if (particlesAnimation != null) {
+            particlesAnimation.dispose();
+            particlesAnimation = null;
+        }
     }
 
     public Set<Shape3D> pellets3D() { return Collections.unmodifiableSet(pellets3D); }
@@ -110,22 +107,42 @@ public class MazeFood3D implements Disposable {
     public Set<Energizer3D> energizers3D() { return Collections.unmodifiableSet(energizers3D); }
 
     private void createPellets3D() {
-        final var pelletPrototype = new MeshView(Models3D.PELLET_MODEL.mesh());
-        final Bounds bounds = pelletPrototype.getBoundsInLocal();
-        final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
-        final float radius = prefs.getFloat("3d.pellet.radius");
-        final double scaling = (2 * radius) / maxExtent;
-        final var scale = new Scale(scaling, scaling, scaling);
+        final Mesh pelletMesh = Models3D.PELLET_MODEL.mesh();
+        final double scaling = computePelletScaling(pelletMesh);
+        final Mesh scaledPelletMesh = Models3D.createScaledMesh(pelletMesh, scaling);
         final FoodLayer foodLayer = level.worldMap().foodLayer();
-
-        pellets3D = foodLayer.tiles()
+        pellets3D.clear(); // just in case
+        foodLayer.tiles()
             .filter(foodLayer::hasFoodAtTile)
             .filter(tile -> !foodLayer.isEnergizerTile(tile))
-            .map(tile -> createPellet3D(pelletPrototype.getMesh(), scale, tile))
-            .collect(Collectors.toCollection(HashSet::new));
+            .map(tile -> createPellet3D(scaledPelletMesh, tile))
+            .forEach(pellets3D::add);
     }
 
-    private MeshView createPellet3D(Mesh pelletMesh, Scale scale, Vector2i tile) {
+    private double computePelletScaling(Mesh pelletMesh) {
+        final var dummy = new MeshView(pelletMesh);
+        final Bounds bounds = dummy.getBoundsInLocal();
+        final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
+        final float radius = prefs.getFloat("3d.pellet.radius");
+        return (2 * radius) / maxExtent;
+    }
+
+    public void startAnimation() {
+        particlesAnimation.playFromStart();
+    }
+
+    public void stopAnimation() {
+        particlesAnimation.stop();
+    }
+
+    public void createEnergizerExplosion(Energizer3D energizer) {
+        final Point3D point = energizer.shape().localToScene(Point3D.ZERO);
+        final Vector3f origin = new Vector3f(point.getX(), point.getY(), point.getZ());
+        particlesAnimation.createEnergizerExplosion(origin);
+    }
+
+    //TODO create scaled prototype *mesh* and remove scale transform from each pellet
+    private MeshView createPellet3D(Mesh pelletMesh, Vector2i tile) {
         final var meshView = new MeshView(pelletMesh);
         meshView.setMaterial(pelletMaterial);
         meshView.setRotationAxis(Rotate.Z_AXIS);
@@ -133,7 +150,6 @@ public class MazeFood3D implements Disposable {
         meshView.setTranslateX(tile.x() * TS + HTS);
         meshView.setTranslateY(tile.y() * TS + HTS);
         meshView.setTranslateZ(- 6);
-        meshView.getTransforms().add(scale);
         meshView.setUserData(tile);
         return meshView;
     }
@@ -145,11 +161,12 @@ public class MazeFood3D implements Disposable {
             shape.setMaterial(pelletMaterial);
             return shape;
         };
-        energizers3D = foodLayer.tiles()
+        energizers3D.clear(); // just in case
+        foodLayer.tiles()
             .filter(foodLayer::isEnergizerTile)
             .filter(foodLayer::hasFoodAtTile)
             .map(tile -> createEnergizer3D(tile, shapeFactory))
-            .collect(Collectors.toCollection(HashSet::new));
+            .forEach(energizers3D::add);
     }
 
     private Energizer3D createEnergizer3D(Vector2i tile, Supplier<Shape3D> shapeFactory) {

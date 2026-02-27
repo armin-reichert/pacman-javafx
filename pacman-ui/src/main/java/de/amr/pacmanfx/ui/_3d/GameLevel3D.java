@@ -7,7 +7,6 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector3f;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
@@ -299,7 +298,7 @@ public class GameLevel3D extends Group implements Disposable {
         pac3D.init(level);
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
         maze3D.food().energizers3D().forEach(Energizer3D::startPumping);
-        maze3D.food().particlesAnimation().playFromStart();
+        maze3D.food().startAnimation();
         animations.ghostLightAnimation().playFromStart();
     }
 
@@ -337,7 +336,7 @@ public class GameLevel3D extends Group implements Disposable {
         soundManager.stopAll();
         animationRegistry.stopAllAnimations();
 
-        maze3D.food().particlesAnimation().stop();
+        maze3D.food().stopAnimation();
         maze3D.particlesGroup().getChildren().clear();
         maze3D.food().energizers3D().forEach(Energizer3D::stopPumping); //TODO needed?
         // hide 3D food explicitly because level might have been completed using cheat!
@@ -375,7 +374,7 @@ public class GameLevel3D extends Group implements Disposable {
         state.timer().restartSeconds(3);
         animations.ghostLightAnimation().stop();
         maze3D.food().energizers3D().forEach(Energizer3D::hide);
-        maze3D.food().particlesAnimation().stop();
+        maze3D.food().stopAnimation();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         soundManager.stopAll();
         soundManager.play(SoundID.GAME_OVER);

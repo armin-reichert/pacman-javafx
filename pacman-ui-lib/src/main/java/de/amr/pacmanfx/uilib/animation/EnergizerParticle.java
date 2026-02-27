@@ -179,10 +179,10 @@ public abstract class EnergizerParticle implements Disposable {
     /**
      * Sets the particle’s simulation position and updates the shape’s translation.
      *
-     * @param position the new position (non-null)
+     * @param point the new position (non-null)
      */
-    public void setPosition(Vector3f position) {
-        this.position = requireNonNull(position);
+    public void setPosition(Vector3f point) {
+        this.position = requireNonNull(point);
         updateShapeTranslate();
     }
 
