@@ -66,6 +66,8 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         new SwirlConfig(4, 20, 0.3f, 0.05f)
     );
 
+    private static final float INITIAL_POOL_PERCENTAGE = 0.75f;
+
     private static final Duration FRAME_DURATION = Duration.millis(1000.0 / 60);
 
     private static final byte[] GHOST_IDS = {
@@ -105,15 +107,11 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
         this.swirlBaseCenters = swirlBaseCentersXY.stream().map(xy -> new Vector3f(xy.x(), xy.y(), floorSurfaceZ())).toList();
         setFactory(this::createAnimationDriver);
-        prefillPool(0.75f);
+        prefillPool();
     }
 
     private Animation createAnimationDriver() {
-        final var driver = new Timeline(new KeyFrame(FRAME_DURATION, _ -> {
-            for (int i = particles.size() - 1; i >= 0; --i) {
-                updateParticleState(particles.get(i));
-            }
-        }));
+        final var driver = new Timeline(new KeyFrame(FRAME_DURATION, _ -> updateParticleState()));
         driver.setCycleCount(Animation.INDEFINITE);
         return driver;
     }
@@ -145,8 +143,8 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         }
     }
 
-    private void prefillPool(float percentage) {
-        final int prefillCount = (int) (config.explosion.particleCount() * percentage);
+    private void prefillPool() {
+        final int prefillCount = (int) (config.explosion.particleCount() * INITIAL_POOL_PERCENTAGE);
         for (int i = 0; i < prefillCount; ++i) {
             pool.offer(createExplosionParticle());
         }
@@ -186,6 +184,13 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
             yDir * randomFloat(cfg.particleMinSpeedXY(), cfg.particleMaxSpeedXY()),
             -randomFloat(cfg.particleMinSpeedZ(), cfg.particleMaxSpeedZ())
         );
+    }
+
+    private void updateParticleState() {
+        // Iterate backwards to avoid concurrent modification exception
+        for (int i = particles.size() - 1; i >= 0; --i) {
+            updateParticleState(particles.get(i));
+        }
     }
 
     private void updateParticleState(EnergizerParticle particle) {
