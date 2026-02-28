@@ -50,8 +50,9 @@ public class MazeFood3D implements Disposable {
 
     private final Set<MeshView> pellets3D = new HashSet<>();
     private final Set<Energizer3D> energizers3D = new HashSet<>();
+    private final Supplier<Shape3D> energizerShapeFactory;
 
-    private EnergizerParticlesAnimation particlesAnimation;
+    private EnergizerParticlesAnimation explodedEnergizerParticlesAnimation;
 
     public MazeFood3D(
         PreferencesManager prefs,
@@ -69,12 +70,23 @@ public class MazeFood3D implements Disposable {
         this.maze3D = requireNonNull(maze3D);
 
         pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
+        energizerShapeFactory = () -> {
+            final var shape = new Sphere(prefs.getFloat("3d.energizer.radius"), 48);
+            shape.setMaterial(pelletMaterial);
+            return shape;
+        };
 
         createPellets3D();
         createEnergizers3D(level.worldMap().foodLayer());
 
-        //TODO there is still a memory leak!
-        particlesAnimation = createParticlesAnimation(ghostMaterials);
+        // The bottom center positions of the swirls where the particles of exploded energizers eventually are displayed
+        final List<Vector2f> swirlBaseCenters = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
+            .map(level::ghost)
+            .map(Ghost::startPosition)
+            .map(pos -> pos.plus(HTS, HTS))
+            .toList();
+
+        explodedEnergizerParticlesAnimation = createEnergizerParticlesAnimation(ghostMaterials, swirlBaseCenters);
     }
 
     @Override
@@ -96,15 +108,29 @@ public class MazeFood3D implements Disposable {
             energizers3D.clear();
             Logger.info("Disposed 3D energizers");
         }
-        if (particlesAnimation != null) {
-            particlesAnimation.dispose();
-            particlesAnimation = null;
+        if (explodedEnergizerParticlesAnimation != null) {
+            explodedEnergizerParticlesAnimation.dispose();
+            explodedEnergizerParticlesAnimation = null;
         }
     }
 
     public Set<Shape3D> pellets3D() { return Collections.unmodifiableSet(pellets3D); }
 
     public Set<Energizer3D> energizers3D() { return Collections.unmodifiableSet(energizers3D); }
+
+    public void startAnimation() {
+        explodedEnergizerParticlesAnimation.playFromStart();
+    }
+
+    public void stopAnimation() {
+        explodedEnergizerParticlesAnimation.stop();
+    }
+
+    public void createEnergizerExplosion(Energizer3D energizer) {
+        final Point3D point = energizer.shape().localToScene(Point3D.ZERO);
+        final Vector3f origin = new Vector3f(point.getX(), point.getY(), point.getZ());
+        explodedEnergizerParticlesAnimation.createEnergizerExplosion(origin);
+    }
 
     private void createPellets3D() {
         final Mesh pelletMesh = Models3D.PELLET_MODEL.mesh();
@@ -127,20 +153,6 @@ public class MazeFood3D implements Disposable {
         return (2 * radius) / maxExtent;
     }
 
-    public void startAnimation() {
-        particlesAnimation.playFromStart();
-    }
-
-    public void stopAnimation() {
-        particlesAnimation.stop();
-    }
-
-    public void createEnergizerExplosion(Energizer3D energizer) {
-        final Point3D point = energizer.shape().localToScene(Point3D.ZERO);
-        final Vector3f origin = new Vector3f(point.getX(), point.getY(), point.getZ());
-        particlesAnimation.createEnergizerExplosion(origin);
-    }
-
     //TODO create scaled prototype *mesh* and remove scale transform from each pellet
     private MeshView createPellet3D(Mesh pelletMesh, Vector2i tile) {
         final var meshView = new MeshView(pelletMesh);
@@ -155,17 +167,11 @@ public class MazeFood3D implements Disposable {
     }
 
     private void createEnergizers3D(FoodLayer foodLayer) {
-        final float radius = prefs.getFloat("3d.energizer.radius");
-        final Supplier<Shape3D> shapeFactory = () -> {
-            final var shape = new Sphere(radius, 48);
-            shape.setMaterial(pelletMaterial);
-            return shape;
-        };
         energizers3D.clear(); // just in case
         foodLayer.tiles()
             .filter(foodLayer::isEnergizerTile)
             .filter(foodLayer::hasFoodAtTile)
-            .map(tile -> createEnergizer3D(tile, shapeFactory))
+            .map(tile -> createEnergizer3D(tile, energizerShapeFactory))
             .forEach(energizers3D::add);
     }
 
@@ -180,13 +186,7 @@ public class MazeFood3D implements Disposable {
         return energizer3D;
     }
 
-    private EnergizerParticlesAnimation createParticlesAnimation(List<PhongMaterial> ghostMaterials) {
-        final List<Vector2f> swirlBaseCenters = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
-            .map(level::ghost)
-            .map(Ghost::startPosition)
-            .map(pos -> pos.plus(HTS, HTS))
-            .toList();
-
+    private EnergizerParticlesAnimation createEnergizerParticlesAnimation(List<PhongMaterial> ghostMaterials, List<Vector2f> swirlBaseCenters) {
         return new EnergizerParticlesAnimation(
             EnergizerParticlesAnimation.DEFAULT_CONFIG,
             animationRegistry,
