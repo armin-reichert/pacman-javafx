@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.ui._3d.config.Config3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerParticlesAnimation;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
@@ -47,6 +48,7 @@ public class MazeFood3D implements Disposable {
     private EnergizerParticlesAnimation explodedEnergizerParticlesAnimation;
 
     public MazeFood3D(
+        Config3D config3D,
         WorldMapColorScheme colorScheme,
         AnimationRegistry animationRegistry,
         GameLevel level,
@@ -62,13 +64,13 @@ public class MazeFood3D implements Disposable {
         final var pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
 
         energizerShapeFactory = () -> {
-            final var shape = new Sphere(PlayScene3D.ENERGIZER_RADIUS, 48);
+            final var shape = new Sphere(config3D.energizer().radius(), 48);
             shape.setMaterial(pelletMaterial);
             return shape;
         };
 
         createPellets3D(level.worldMap().foodLayer(), pelletMaterial, maze3D.floorTop() - PlayScene3D.PELLET_FLOOR_ELEVATION);
-        createEnergizers3D(animationRegistry, level.worldMap().foodLayer(), maze3D.floorTop() - PlayScene3D.ENERGIZER_FLOOR_ELEVATION);
+        createEnergizers3D(config3D, animationRegistry, level.worldMap().foodLayer(), maze3D.floorTop() - config3D.energizer().floorElevation());
 
         // The bottom center positions of the swirls where the particles of exploded energizers eventually are displayed
         final List<Vector2f> swirlBaseCenters = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
@@ -149,23 +151,23 @@ public class MazeFood3D implements Disposable {
         return meshView;
     }
 
-    private void createEnergizers3D(AnimationRegistry animationRegistry, FoodLayer foodLayer, double z) {
+    private void createEnergizers3D(Config3D config3D, AnimationRegistry animationRegistry, FoodLayer foodLayer, double z) {
         energizers3D.clear(); // just in case
         foodLayer.tiles()
             .filter(foodLayer::isEnergizerTile)
             .filter(foodLayer::hasFoodAtTile)
-            .map(tile -> createEnergizer3D(animationRegistry, tile, z, energizerShapeFactory))
+            .map(tile -> createEnergizer3D(config3D, animationRegistry, tile, z, energizerShapeFactory))
             .forEach(energizers3D::add);
     }
 
-    private Energizer3D createEnergizer3D(AnimationRegistry animationRegistry, Vector2i tile, double z, Supplier<Shape3D> shapeFactory) {
+    private Energizer3D createEnergizer3D(Config3D config3D, AnimationRegistry animationRegistry, Vector2i tile, double z, Supplier<Shape3D> shapeFactory) {
         final Vector2i tileCenter = tile.scaled(TS).plus(HTS, HTS);
         final var center = new Point3D(tileCenter.x(), tileCenter.y(), z);
         final var energizer3D = new Energizer3D(animationRegistry, center, tile);
         energizer3D.setShapeFactory(shapeFactory);
-        energizer3D.setPumpingFrequency(PlayScene3D.ENERGIZER_PUMPING_FREQUENCY);
-        energizer3D.setInflatedSize(PlayScene3D.ENERGIZER_INFLATED_SCALING);
-        energizer3D.setExpandedSize(PlayScene3D.ENERGIZER_EXPANDED_SCALING);
+        energizer3D.setPumpingFrequency(config3D.energizer().pumpingFrequency());
+        energizer3D.setInflatedSize(config3D.energizer().scalingInflated());
+        energizer3D.setExpandedSize(config3D.energizer().scalingExpanded());
         return energizer3D;
     }
 

@@ -114,16 +114,11 @@ public class PlayScene3D implements GameScene {
     public static final float FLOOR_THICKNESS = 0.5f;
 
     public static final float PELLET_RADIUS = 1f;
-    public static final int   PELLET_FLOOR_ELEVATION = 6;
-
-    public static final float ENERGIZER_RADIUS = 3.5f;
-    public static final float ENERGIZER_FLOOR_ELEVATION = 6;
-    public static final float ENERGIZER_INFLATED_SCALING = 0.2f;
-    public static final float ENERGIZER_EXPANDED_SCALING = 1.0f;
-    public static final int   ENERGIZER_PUMPING_FREQUENCY = 3; // 3 inflate+expand cycles per second
+    public static final float PELLET_FLOOR_ELEVATION = 6f;
 
     public static final float BONUS_SYMBOL_WIDTH = 8f;
     public static final float BONUS_POINTS_WIDTH = 14.5f;
+
     public static final float GHOST_SIZE = 15.5f;
     public static final float PAC_SIZE = 16.0f;
 

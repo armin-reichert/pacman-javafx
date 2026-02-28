@@ -242,7 +242,7 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private void createMaze3D(List<PhongMaterial> ghostMaterials) {
-        maze3D = new Maze3D(uiConfig, prefs, level, animationRegistry, ghostMaterials);
+        maze3D = new Maze3D(uiConfig, level, animationRegistry, ghostMaterials);
         maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
         maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
     }

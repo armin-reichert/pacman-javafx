@@ -9,8 +9,8 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.UIConfig;
+import de.amr.pacmanfx.ui._3d.config.Config3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -42,7 +42,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class Maze3D extends Group implements Disposable {
 
-    private final PreferencesManager prefs;
     private final WorldMapColorScheme colorScheme;
     private final AnimationRegistry animationRegistry;
 
@@ -64,15 +63,13 @@ public class Maze3D extends Group implements Disposable {
      * Creates a new 3D maze for the given level.
      *
      * @param uiConfig         the game UI configuration
-     * @param prefs            the UI preferences
      * @param level            the game level whose world map is rendered
      * @param animationRegistry registry for registering animations used by 3D components
      * @param ghostMaterials   materials used for rendering ghost-related 3D elements
      * @throws NullPointerException if any required argument is {@code null}
      */
-    public Maze3D(UIConfig uiConfig, PreferencesManager prefs, GameLevel level, AnimationRegistry animationRegistry, List<PhongMaterial> ghostMaterials) {
+    public Maze3D(UIConfig uiConfig, GameLevel level, AnimationRegistry animationRegistry, List<PhongMaterial> ghostMaterials) {
         requireNonNull(uiConfig);
-        this.prefs = requireNonNull(prefs);
         this.animationRegistry = requireNonNull(animationRegistry);
         requireNonNull(ghostMaterials);
         this.colorScheme = adjustColorScheme(uiConfig.colorScheme(level.worldMap()));
@@ -86,7 +83,7 @@ public class Maze3D extends Group implements Disposable {
             .ifPresentOrElse(
                 this::createHouse3D,
                 () -> Logger.error("For creating 3D house, currently only Arcade house is supported"));
-        createMazeFood3D(level, ghostMaterials);
+        createMazeFood3D(uiConfig.config3D(), level, ghostMaterials);
     }
 
     /**
@@ -230,7 +227,7 @@ public class Maze3D extends Group implements Disposable {
      * @param level          the level providing pellet and energizer positions
      * @param ghostMaterials materials used for ghost-related visual effects
      */
-    private void createMazeFood3D(GameLevel level, List<PhongMaterial> ghostMaterials) {
-        food3D = new MazeFood3D(colorScheme, animationRegistry, level, ghostMaterials, this);
+    private void createMazeFood3D(Config3D config3D, GameLevel level, List<PhongMaterial> ghostMaterials) {
+        food3D = new MazeFood3D(config3D, colorScheme, animationRegistry, level, ghostMaterials, this);
     }
 }

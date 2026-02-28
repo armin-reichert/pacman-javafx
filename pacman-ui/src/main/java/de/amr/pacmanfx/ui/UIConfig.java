@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui._3d.config.*;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -71,6 +72,14 @@ import org.tinylog.Logger;
  */
 public interface UIConfig extends Disposable {
 
+    Config3D DEFAULT_CONFIG_3D = new Config3D(
+        new ActorConfig(),
+        new EnergizerConfig(3, 3.5f, 6.0f, 0.2f, 1.0f),
+        new FloorConfig(5f, 0.5f),
+        new HouseConfig(),
+        new PelletConfig(1.0f, 6.0f)
+    );
+
     enum ConfigKey { COLOR_SCHEME, COLOR_MAP_INDEX, MAP_NUMBER }
 
     /**
@@ -104,6 +113,10 @@ public interface UIConfig extends Disposable {
      * @return the variant‑specific sprite sheet
      */
     SpriteSheet<?> spriteSheet();
+
+    default Config3D config3D() {
+        return DEFAULT_CONFIG_3D;
+    }
 
     /**
      * Returns the sprite sheet region used by the Arcade boot scene to select
