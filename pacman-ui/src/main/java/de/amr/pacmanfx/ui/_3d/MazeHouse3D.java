@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.ui._3d.config.HouseConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
 import javafx.beans.property.DoubleProperty;
@@ -35,23 +36,24 @@ public class MazeHouse3D implements Disposable {
      */
     public MazeHouse3D(
         WorldMapColorScheme colorScheme,
+        HouseConfig3D config3D,
         AnimationRegistry animationRegistry,
         ArcadeHouse house)
     {
         arcadeHouse3D = new ArcadeHouse3D(
             animationRegistry,
             house,
-            PlayScene3D.HOUSE_BASE_HEIGHT,
-            PlayScene3D.HOUSE_WALL_THICKNESS,
-            PlayScene3D.HOUSE_OPACITY
+            config3D.baseHeight(),
+            config3D.wallThickness(),
+            config3D.opacity()
         );
 
         // Apply color scheme and rendering parameters
         arcadeHouse3D.setWallBaseColor(Color.valueOf(colorScheme.wallFill()));
-        arcadeHouse3D.wallBaseHeightProperty().set(PlayScene3D.HOUSE_BASE_HEIGHT);
+        arcadeHouse3D.wallBaseHeightProperty().set(config3D.baseHeight());
         arcadeHouse3D.setWallTopColor(Color.valueOf(colorScheme.wallStroke()));
         arcadeHouse3D.setDoorColor(Color.valueOf(colorScheme.door()));
-        arcadeHouse3D.setDoorSensitivity(PlayScene3D.HOUSE_SENSITIVITY);
+        arcadeHouse3D.setDoorSensitivity(config3D.sensitivity());
 
         // Door animation listener
         houseOpenListener = (_, _, open) -> {

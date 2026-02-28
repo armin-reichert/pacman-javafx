@@ -76,7 +76,7 @@ public interface UIConfig extends Disposable {
         new ActorConfig3D(16.0f, 15.5f, 8.0f, 14.5f),
         new EnergizerConfig3D(3, 3.5f, 6.0f, 0.2f, 1.0f),
         new FloorConfig3D(5f, 0.5f),
-        new HouseConfig3D(),
+        new HouseConfig3D(12.0f, 0.4f, 12.0f, 2.5f),
         new PelletConfig3D(1.0f, 6.0f)
     );
 

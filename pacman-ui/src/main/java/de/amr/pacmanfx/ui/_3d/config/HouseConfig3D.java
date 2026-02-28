@@ -4,5 +4,9 @@
 
 package de.amr.pacmanfx.ui._3d.config;
 
-public record HouseConfig3D() {
-}
+public record HouseConfig3D(
+    float baseHeight,
+    float opacity,
+    float sensitivity,
+    float wallThickness
+) {}

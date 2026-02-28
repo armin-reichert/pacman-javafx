@@ -110,11 +110,6 @@ public class PlayScene3D implements GameScene {
 
     //TODO create a 3D config class and move all these settings into an instance of it
 
-    public static final float HOUSE_BASE_HEIGHT = 12.0f;
-    public static final float HOUSE_OPACITY = 0.4f;
-    public static final float HOUSE_SENSITIVITY = 12.0f;
-    public static final float HOUSE_WALL_THICKNESS = 2.5f;
-
     public static final float OBSTACLE_BASE_HEIGHT = 4.0f;
     public static final float OBSTACLE_CORNER_RADIUS = 4.0f;
     public static final float OBSTACLE_OPACITY = 1.0f;
