@@ -57,6 +57,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D extends Group implements Disposable {
 
+    private static final float BONUS_SYMBOL_WIDTH = 8f;
+    private static final float  BONUS_POINTS_WIDTH = 14.5f;
+
     private static List<MeshView> createGhostComponentMeshViews(Mesh mesh) {
         return Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
             .map(_ -> new MeshView(mesh))
@@ -404,8 +407,8 @@ public class GameLevel3D extends Group implements Disposable {
             bonus3D.dispose();
         }
         bonus3D = new Bonus3D(animationRegistry, bonus,
-            uiConfig.bonusSymbolImage(bonus.symbol()), prefs.getFloat("3d.bonus.symbol.width"),
-            uiConfig.bonusValueImage(bonus.symbol()), prefs.getFloat("3d.bonus.points.width"));
+            uiConfig.bonusSymbolImage(bonus.symbol()), BONUS_SYMBOL_WIDTH,
+            uiConfig.bonusValueImage(bonus.symbol()), BONUS_POINTS_WIDTH);
         getChildren().add(bonus3D);
         bonus3D.showEdible();
     }
