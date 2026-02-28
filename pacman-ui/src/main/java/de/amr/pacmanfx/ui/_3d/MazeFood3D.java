@@ -14,7 +14,6 @@ import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerParticlesAnimation;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
 import javafx.geometry.Bounds;
@@ -41,6 +40,7 @@ import static java.util.Objects.requireNonNull;
 
 public class MazeFood3D implements Disposable {
 
+    private static final float PELLET_RADIUS = 1f;
     private static final int PELLET_FLOOR_ELEVATION = 6;
 
     private static final float ENERGIZER_RADIUS = 3.5f;
@@ -49,7 +49,6 @@ public class MazeFood3D implements Disposable {
     private static final float ENERGIZER_EXPANDED_SCALING = 1.0f;
     private static final int   ENERGIZER_PUMPING_FREQUENCY = 3; // 3 inflate+expand cycles per second
 
-    private final PreferencesManager prefs;
     private final AnimationRegistry animationRegistry;
     private final GameLevel level;
     private final Maze3D maze3D;
@@ -61,14 +60,12 @@ public class MazeFood3D implements Disposable {
     private EnergizerParticlesAnimation explodedEnergizerParticlesAnimation;
 
     public MazeFood3D(
-        PreferencesManager prefs,
         WorldMapColorScheme colorScheme,
         AnimationRegistry animationRegistry,
         GameLevel level,
         List<PhongMaterial> ghostMaterials,
         Maze3D maze3D)
     {
-        this.prefs = requireNonNull(prefs);
         requireNonNull(colorScheme);
         this.animationRegistry = requireNonNull(animationRegistry);
         this.level = requireNonNull(level);
@@ -151,8 +148,7 @@ public class MazeFood3D implements Disposable {
         final var dummy = new MeshView(pelletMesh);
         final Bounds bounds = dummy.getBoundsInLocal();
         final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
-        final float radius = prefs.getFloat("3d.pellet.radius");
-        return (2 * radius) / maxExtent;
+        return (2 * PELLET_RADIUS) / maxExtent;
     }
 
     private MeshView createPellet3D(Mesh pelletMesh, PhongMaterial pelletMaterial, Vector2i tile) {

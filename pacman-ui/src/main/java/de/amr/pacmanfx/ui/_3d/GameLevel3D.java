@@ -58,8 +58,9 @@ import static java.util.Objects.requireNonNull;
 public class GameLevel3D extends Group implements Disposable {
 
     private static final float BONUS_SYMBOL_WIDTH = 8f;
-    private static final float  BONUS_POINTS_WIDTH = 14.5f;
+    private static final float BONUS_POINTS_WIDTH = 14.5f;
     private static final float GHOST_SIZE = 15.5f;
+    private static final float PAC_SIZE = 16.0f;
 
     private static List<MeshView> createGhostComponentMeshViews(Mesh mesh) {
         return Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
@@ -111,7 +112,7 @@ public class GameLevel3D extends Group implements Disposable {
 
         createLevelCounter3D();
         createLivesCounter3D();
-        createPac3D(prefs.getFloat("3d.pac.size"));
+        createPac3D();
         ghosts3D = level.ghosts().map(this::createMutatingGhost3D).toList();
         final List<PhongMaterial> ghostNormalDressMaterials = ghosts3D.stream()
             .map(MutableGhost3D::ghost3D)
@@ -209,8 +210,8 @@ public class GameLevel3D extends Group implements Disposable {
         return center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
     }
 
-    private void createPac3D(double size) {
-        pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), size);
+    private void createPac3D() {
+        pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), PAC_SIZE);
         pac3D.init(level);
     }
 

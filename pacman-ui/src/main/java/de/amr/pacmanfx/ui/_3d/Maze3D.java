@@ -237,6 +237,6 @@ public class Maze3D extends Group implements Disposable {
      * @param ghostMaterials materials used for ghost-related visual effects
      */
     private void createMazeFood3D(GameLevel level, List<PhongMaterial> ghostMaterials) {
-        food3D = new MazeFood3D(prefs, colorScheme, animationRegistry, level, ghostMaterials, this);
+        food3D = new MazeFood3D(colorScheme, animationRegistry, level, ghostMaterials, this);
     }
 }

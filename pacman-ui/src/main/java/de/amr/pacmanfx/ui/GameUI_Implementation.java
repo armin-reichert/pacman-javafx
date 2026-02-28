@@ -233,8 +233,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         storeDefaultEntry("3d.obstacle.corner_radius", 4.0f);
         storeDefaultEntry("3d.obstacle.opacity", 1.0f);
         storeDefaultEntry("3d.obstacle.wall_thickness", 2.25f);
-        storeDefaultEntry("3d.pac.size", 16.0f);
-        storeDefaultEntry("3d.pellet.radius", 1.0f);
 
         // "Kornblumenblau, sind die Augen der Frauen beim Weine. Hicks!"
         storeDefaultColor("context_menu.title.fill", Color.CORNFLOWERBLUE);
