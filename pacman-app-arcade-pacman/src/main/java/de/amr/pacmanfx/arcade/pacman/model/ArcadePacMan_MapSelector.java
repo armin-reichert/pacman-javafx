@@ -50,9 +50,9 @@ public class ArcadePacMan_MapSelector implements WorldMapSelector {
             loadMapPrototypes();
         }
         final WorldMap worldMap = new WorldMap(prototype);
-        worldMap.setConfigValue(UIConfig.ConfigKey.MAP_NUMBER, 1);
-        worldMap.setConfigValue(UIConfig.ConfigKey.COLOR_MAP_INDEX, 0);
-        worldMap.setConfigValue(UIConfig.ConfigKey.COLOR_SCHEME, WorldMapSelector.extractColorScheme(prototype));
+        worldMap.setConfigValue(UIConfig.WorldMapConfigKey.MAP_NUMBER, 1);
+        worldMap.setConfigValue(UIConfig.WorldMapConfigKey.COLOR_MAP_INDEX, 0);
+        worldMap.setConfigValue(UIConfig.WorldMapConfigKey.COLOR_SCHEME, WorldMapSelector.extractColorScheme(prototype));
         return worldMap;
     }
 }

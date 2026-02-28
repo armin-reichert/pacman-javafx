@@ -53,14 +53,14 @@ public class DashboardSectionGameInfo extends DashboardSection {
                 final Color strokeColor = Color.valueOf(nesColors.strokeColorRGB());
                 final Color pelletColor = Color.valueOf(nesColors.pelletColorRGB());
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
-            } else if (worldMap.hasConfigValue(UIConfig.ConfigKey.COLOR_SCHEME)) {
+            } else if (worldMap.hasConfigValue(UIConfig.WorldMapConfigKey.COLOR_SCHEME)) {
                 // Pac-Man XXL game
-                final WorldMapColorScheme colorScheme = worldMap.getConfigValue(UIConfig.ConfigKey.COLOR_SCHEME);
+                final WorldMapColorScheme colorScheme = worldMap.getConfigValue(UIConfig.WorldMapConfigKey.COLOR_SCHEME);
                 final Color fillColor = Color.valueOf(colorScheme.wallFill());
                 final Color strokeColor = Color.valueOf(colorScheme.wallStroke());
                 final Color pelletColor = Color.valueOf(colorScheme.pellet());
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
-            } else if (worldMap.hasConfigValue(UIConfig.ConfigKey.COLOR_MAP_INDEX)) {
+            } else if (worldMap.hasConfigValue(UIConfig.WorldMapConfigKey.COLOR_MAP_INDEX)) {
                 // Arcade games
                 final WorldMapColorScheme coloring = ui.currentConfig().colorScheme(worldMap);
                 return "%s / %s / %s".formatted(coloring.wallFill(), coloring.wallStroke(), coloring.pellet());

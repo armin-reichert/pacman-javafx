@@ -188,7 +188,7 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, GameSceneConfig, Resou
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
         requireNonNull(worldMap);
-        final int index = worldMap.getConfigValue(ConfigKey.COLOR_MAP_INDEX);
+        final int index = worldMap.getConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX);
         return ArcadeMsPacMan_MapSelector.MAP_COLOR_SCHEMES[index];
     }
 

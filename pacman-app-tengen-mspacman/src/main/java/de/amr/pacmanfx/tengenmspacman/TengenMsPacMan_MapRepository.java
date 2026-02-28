@@ -37,7 +37,7 @@ public class TengenMsPacMan_MapRepository {
      */
     public MapImageSet createMazeSpriteSet(WorldMap worldMap, int flashCount) {
         final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY);
-        final int mapNumber = worldMap.getConfigValue(UIConfig.ConfigKey.MAP_NUMBER);
+        final int mapNumber = worldMap.getConfigValue(UIConfig.WorldMapConfigKey.MAP_NUMBER);
         final NES_ColorScheme requestedColorScheme = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.NES_COLOR_SCHEME);
         // for randomly colored maps (levels 28-31, non-ARCADE maps), multiple random flash colors appear
         final boolean randomFlashColors = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MULTIPLE_FLASH_COLORS);

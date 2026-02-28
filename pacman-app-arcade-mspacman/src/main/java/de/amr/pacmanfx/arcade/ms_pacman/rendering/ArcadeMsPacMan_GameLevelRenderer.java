@@ -45,7 +45,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     protected void drawMap(GameLevel level, RenderInfo info) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final float emptySpaceOverMazePixels = TS(terrain.emptyRowsOverMaze());
-        final int colorMapIndex = level.worldMap().getConfigValue(UIConfig.ConfigKey.COLOR_MAP_INDEX);
+        final int colorMapIndex = level.worldMap().getConfigValue(UIConfig.WorldMapConfigKey.COLOR_MAP_INDEX);
 
         ctx.save();
         ctx.scale(scaling(), scaling());

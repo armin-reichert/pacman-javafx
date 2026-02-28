@@ -136,7 +136,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
             case STRANGE -> strangeMapPrototypes;
         };
         final var worldMap = new WorldMap(prototypes.get(number - 1));
-        worldMap.setConfigValue(UIConfig.ConfigKey.MAP_NUMBER, number);
+        worldMap.setConfigValue(UIConfig.WorldMapConfigKey.MAP_NUMBER, number);
         worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY, category);
         worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.NES_COLOR_SCHEME, nesColorScheme);
         worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MULTIPLE_FLASH_COLORS, false);

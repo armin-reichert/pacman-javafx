@@ -76,7 +76,7 @@ public class GenericMapRenderer extends BaseRenderer {
 
             // Color scheme is set by the map selector
             final FoodLayer foodLayer = worldMap.foodLayer();
-            final WorldMapColorScheme foodColorScheme = worldMap.getConfigValue(UIConfig.ConfigKey.COLOR_SCHEME);
+            final WorldMapColorScheme foodColorScheme = worldMap.getConfigValue(UIConfig.WorldMapConfigKey.COLOR_SCHEME);
             final Color pelletColor = Color.valueOf(foodColorScheme.pellet());
             foodRenderer.setPelletColor(pelletColor);
             foodLayer.tiles()

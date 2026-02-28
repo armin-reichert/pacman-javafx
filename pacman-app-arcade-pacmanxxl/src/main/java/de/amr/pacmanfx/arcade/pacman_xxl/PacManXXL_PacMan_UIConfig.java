@@ -197,7 +197,7 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, GameSceneConfig, Res
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        return worldMap.getConfigValue(ConfigKey.COLOR_SCHEME);
+        return worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
     }
 
     @Override

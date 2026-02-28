@@ -84,7 +84,7 @@ public interface UIConfig extends Disposable {
         new PelletConfig3D(1.0f, 6.0f)
     );
 
-    enum ConfigKey { COLOR_SCHEME, COLOR_MAP_INDEX, MAP_NUMBER }
+    enum WorldMapConfigKey { COLOR_SCHEME, COLOR_MAP_INDEX, MAP_NUMBER }
 
     /**
      * Initializes this UI configuration. Called once when the {@link GameUI}

@@ -98,8 +98,8 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
         final WorldMap prototype = mapPrototypes.get(mapNumber - 1);
 
         final WorldMap worldMap = new WorldMap(prototype);
-        worldMap.setConfigValue(UIConfig.ConfigKey.MAP_NUMBER, mapNumber);
-        worldMap.setConfigValue(UIConfig.ConfigKey.COLOR_MAP_INDEX, colorMapIndex(levelNumber));
+        worldMap.setConfigValue(UIConfig.WorldMapConfigKey.MAP_NUMBER, mapNumber);
+        worldMap.setConfigValue(UIConfig.WorldMapConfigKey.COLOR_MAP_INDEX, colorMapIndex(levelNumber));
         return worldMap;
     }
 }

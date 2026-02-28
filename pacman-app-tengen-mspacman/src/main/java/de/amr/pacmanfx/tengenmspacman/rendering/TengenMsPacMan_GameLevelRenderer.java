@@ -217,7 +217,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     private void configureNormalMazeRenderInfo(RenderInfo info, MapCategory mapCategory, WorldMap worldMap, long tick) {
-        final int mapNumber = worldMap.getConfigValue(UIConfig.ConfigKey.MAP_NUMBER);
+        final int mapNumber = worldMap.getConfigValue(UIConfig.WorldMapConfigKey.MAP_NUMBER);
         final MapImageSet mapImageSet = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_SPRITE_SET);
         info.put(CommonRenderInfoKey.MAZE_IMAGE, mapImageSet.mapImage().spriteSheetImage());
         if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
