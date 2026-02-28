@@ -40,15 +40,6 @@ import static java.util.Objects.requireNonNull;
 
 public class MazeFood3D implements Disposable {
 
-    private static final float PELLET_RADIUS = 1f;
-    private static final int PELLET_FLOOR_ELEVATION = 6;
-
-    private static final float ENERGIZER_RADIUS = 3.5f;
-    private static final float ENERGIZER_FLOOR_ELEVATION = 6;
-    private static final float ENERGIZER_INFLATED_SCALING = 0.2f;
-    private static final float ENERGIZER_EXPANDED_SCALING = 1.0f;
-    private static final int   ENERGIZER_PUMPING_FREQUENCY = 3; // 3 inflate+expand cycles per second
-
     private final AnimationRegistry animationRegistry;
     private final GameLevel level;
     private final Maze3D maze3D;
@@ -75,7 +66,7 @@ public class MazeFood3D implements Disposable {
         final var pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
 
         energizerShapeFactory = () -> {
-            final var shape = new Sphere(ENERGIZER_RADIUS, 48);
+            final var shape = new Sphere(PlayScene3D.ENERGIZER_RADIUS, 48);
             shape.setMaterial(pelletMaterial);
             return shape;
         };
@@ -148,7 +139,7 @@ public class MazeFood3D implements Disposable {
         final var dummy = new MeshView(pelletMesh);
         final Bounds bounds = dummy.getBoundsInLocal();
         final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
-        return (2 * PELLET_RADIUS) / maxExtent;
+        return (2 * PlayScene3D.PELLET_RADIUS) / maxExtent;
     }
 
     private MeshView createPellet3D(Mesh pelletMesh, PhongMaterial pelletMaterial, Vector2i tile) {
@@ -158,7 +149,7 @@ public class MazeFood3D implements Disposable {
         meshView.setRotate(90);
         meshView.setTranslateX(tile.x() * TS + HTS);
         meshView.setTranslateY(tile.y() * TS + HTS);
-        meshView.setTranslateZ(maze3D.floorTop() - PELLET_FLOOR_ELEVATION);
+        meshView.setTranslateZ(maze3D.floorTop() - PlayScene3D.PELLET_FLOOR_ELEVATION);
         meshView.setUserData(tile);
         return meshView;
     }
@@ -174,12 +165,12 @@ public class MazeFood3D implements Disposable {
 
     private Energizer3D createEnergizer3D(Vector2i tile, Supplier<Shape3D> shapeFactory) {
         final Vector2i tileCenter = tile.scaled(TS).plus(HTS, HTS);
-        final var center = new Point3D(tileCenter.x(), tileCenter.y(), maze3D.floorTop() - ENERGIZER_FLOOR_ELEVATION);
+        final var center = new Point3D(tileCenter.x(), tileCenter.y(), maze3D.floorTop() - PlayScene3D.ENERGIZER_FLOOR_ELEVATION);
         final var energizer3D = new Energizer3D(animationRegistry, center, tile);
         energizer3D.setShapeFactory(shapeFactory);
-        energizer3D.setPumpingFrequency(ENERGIZER_PUMPING_FREQUENCY);
-        energizer3D.setInflatedSize(ENERGIZER_INFLATED_SCALING);
-        energizer3D.setExpandedSize(ENERGIZER_EXPANDED_SCALING);
+        energizer3D.setPumpingFrequency(PlayScene3D.ENERGIZER_PUMPING_FREQUENCY);
+        energizer3D.setInflatedSize(PlayScene3D.ENERGIZER_INFLATED_SCALING);
+        energizer3D.setExpandedSize(PlayScene3D.ENERGIZER_EXPANDED_SCALING);
         return energizer3D;
     }
 

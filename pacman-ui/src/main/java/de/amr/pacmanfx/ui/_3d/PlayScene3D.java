@@ -108,18 +108,35 @@ import static java.util.Objects.requireNonNull;
  */
 public class PlayScene3D implements GameScene {
 
+    public static final float FLOOR_PADDING   = 5f;
+    public static final float FLOOR_THICKNESS = 0.5f;
+
+    public static final float PELLET_RADIUS = 1f;
+    public static final int   PELLET_FLOOR_ELEVATION = 6;
+
+    public static final float ENERGIZER_RADIUS = 3.5f;
+    public static final float ENERGIZER_FLOOR_ELEVATION = 6;
+    public static final float ENERGIZER_INFLATED_SCALING = 0.2f;
+    public static final float ENERGIZER_EXPANDED_SCALING = 1.0f;
+    public static final int   ENERGIZER_PUMPING_FREQUENCY = 3; // 3 inflate+expand cycles per second
+
+    public static final float BONUS_SYMBOL_WIDTH = 8f;
+    public static final float BONUS_POINTS_WIDTH = 14.5f;
+    public static final float GHOST_SIZE = 15.5f;
+    public static final float PAC_SIZE = 16.0f;
+
     // Colors for fade effect
-    private static final Color SCENE_FILL_DARK = Color.BLACK;
-    private static final Color SCENE_FILL_BRIGHT = Color.TRANSPARENT;
+    public static final Color SCENE_FILL_DARK = Color.BLACK;
+    public static final Color SCENE_FILL_BRIGHT = Color.TRANSPARENT;
 
-    private static final String READY_MESSAGE_TEXT = "READY!";
-    private static final String TEST_MESSAGE_TEXT = "LEVEL %d (TEST)";
+    public static final String READY_MESSAGE_TEXT = "READY!";
+    public static final String TEST_MESSAGE_TEXT = "LEVEL %d (TEST)";
 
-    private static final float SCENE_FADE_IN_SECONDS = 3;
-    private static final float READY_MESSAGE_DISPLAY_SECONDS = 2.5f;
+    public static final float SCENE_FADE_IN_SECONDS = 3;
+    public static final float READY_MESSAGE_DISPLAY_SECONDS = 2.5f;
 
     //TODO fix sound files
-    private static final float SIREN_VOLUME = 0.33f;
+    public static final float SIREN_VOLUME = 0.33f;
 
     public static class PlaySceneContextMenu extends GameUI_ContextMenu implements Disposable {
 

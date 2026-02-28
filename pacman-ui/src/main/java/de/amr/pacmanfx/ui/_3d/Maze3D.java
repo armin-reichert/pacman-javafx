@@ -42,9 +42,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class Maze3D extends Group implements Disposable {
 
-    private static final float FLOOR_PADDING   = 5f;
-    private static final float FLOOR_THICKNESS = 0.5f;
-
     /** Normalized wall fill color used when the configured wall color is extremely dark. */
     private static final String DARK_WALL_FILL_COLOR = "0x2a2a2a";
 
@@ -215,9 +212,9 @@ public class Maze3D extends Group implements Disposable {
      */
     private void createFloor3D(GameLevel level) {
         final Vector2i worldSizePx = level.worldMap().terrainLayer().sizeInPixel();
-        final float width = worldSizePx.x() + 2 * FLOOR_PADDING;
+        final float width = worldSizePx.x() + 2 * PlayScene3D.FLOOR_PADDING;
         final float height = worldSizePx.y();
-        floor3D = new MazeFloor3D(materials3D.floor(), width, height, FLOOR_THICKNESS, FLOOR_PADDING);
+        floor3D = new MazeFloor3D(materials3D.floor(), width, height, PlayScene3D.FLOOR_THICKNESS, PlayScene3D.FLOOR_PADDING);
     }
 
     /**

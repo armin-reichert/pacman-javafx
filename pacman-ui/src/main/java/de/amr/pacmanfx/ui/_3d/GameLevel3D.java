@@ -57,11 +57,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D extends Group implements Disposable {
 
-    private static final float BONUS_SYMBOL_WIDTH = 8f;
-    private static final float BONUS_POINTS_WIDTH = 14.5f;
-    private static final float GHOST_SIZE = 15.5f;
-    private static final float PAC_SIZE = 16.0f;
-
     private static List<MeshView> createGhostComponentMeshViews(Mesh mesh) {
         return Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
             .map(_ -> new MeshView(mesh))
@@ -195,7 +190,7 @@ public class GameLevel3D extends Group implements Disposable {
             ghostDressMeshViews.get(ghost.personality()),
             ghostPupilsMeshViews.get(ghost.personality()),
             ghostEyesMeshViews.get(ghost.personality()),
-            GHOST_SIZE,
+            PlayScene3D.GHOST_SIZE,
             level.numFlashes()
         );
         mutatingGhost3D.visibleProperty().bind(Bindings.createBooleanBinding(
@@ -211,7 +206,7 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private void createPac3D() {
-        pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), PAC_SIZE);
+        pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), PlayScene3D.PAC_SIZE);
         pac3D.init(level);
     }
 
@@ -409,8 +404,8 @@ public class GameLevel3D extends Group implements Disposable {
             bonus3D.dispose();
         }
         bonus3D = new Bonus3D(animationRegistry, bonus,
-            uiConfig.bonusSymbolImage(bonus.symbol()), BONUS_SYMBOL_WIDTH,
-            uiConfig.bonusValueImage(bonus.symbol()), BONUS_POINTS_WIDTH);
+            uiConfig.bonusSymbolImage(bonus.symbol()), PlayScene3D.BONUS_SYMBOL_WIDTH,
+            uiConfig.bonusValueImage(bonus.symbol()), PlayScene3D.BONUS_POINTS_WIDTH);
         getChildren().add(bonus3D);
         bonus3D.showEdible();
     }
