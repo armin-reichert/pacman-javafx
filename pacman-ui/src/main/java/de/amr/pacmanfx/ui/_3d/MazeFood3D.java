@@ -41,12 +41,17 @@ import static java.util.Objects.requireNonNull;
 
 public class MazeFood3D implements Disposable {
 
+    private static final int PELLET_FLOOR_ELEVATION = 6;
+
+    private static final float ENERGIZER_RADIUS = 3.5f;
+    private static final float ENERGIZER_FLOOR_ELEVATION = 6;
+    private static final float ENERGIZER_INFLATED_SCALING = 0.2f;
+    private static final float ENERGIZER_EXPANDED_SCALING = 1.0f;
+
     private final PreferencesManager prefs;
     private final AnimationRegistry animationRegistry;
     private final GameLevel level;
     private final Maze3D maze3D;
-
-    private PhongMaterial pelletMaterial;
 
     private final Set<MeshView> pellets3D = new HashSet<>();
     private final Set<Energizer3D> energizers3D = new HashSet<>();
@@ -69,14 +74,15 @@ public class MazeFood3D implements Disposable {
         requireNonNull(ghostMaterials);
         this.maze3D = requireNonNull(maze3D);
 
-        pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
+        final var pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
+
         energizerShapeFactory = () -> {
-            final var shape = new Sphere(prefs.getFloat("3d.energizer.radius"), 48);
+            final var shape = new Sphere(ENERGIZER_RADIUS, 48);
             shape.setMaterial(pelletMaterial);
             return shape;
         };
 
-        createPellets3D();
+        createPellets3D(pelletMaterial);
         createEnergizers3D(level.worldMap().foodLayer());
 
         // The bottom center positions of the swirls where the particles of exploded energizers eventually are displayed
@@ -91,11 +97,6 @@ public class MazeFood3D implements Disposable {
 
     @Override
     public void dispose() {
-        if (pelletMaterial != null) {
-            pelletMaterial.diffuseColorProperty().unbind();
-            pelletMaterial.specularColorProperty().unbind();
-            pelletMaterial = null;
-        }
         if (!pellets3D.isEmpty()) {
             pellets3D.forEach(meshView -> {
                 meshView.setMaterial(null);
@@ -132,7 +133,7 @@ public class MazeFood3D implements Disposable {
         explodedEnergizerParticlesAnimation.createEnergizerExplosion(origin);
     }
 
-    private void createPellets3D() {
+    private void createPellets3D(PhongMaterial pelletMaterial) {
         final Mesh pelletMesh = Models3D.PELLET_MODEL.mesh();
         final double scaling = computePelletScaling(pelletMesh);
         final Mesh scaledPelletMesh = Models3D.createScaledMesh(pelletMesh, scaling);
@@ -141,7 +142,7 @@ public class MazeFood3D implements Disposable {
         foodLayer.tiles()
             .filter(foodLayer::hasFoodAtTile)
             .filter(tile -> !foodLayer.isEnergizerTile(tile))
-            .map(tile -> createPellet3D(scaledPelletMesh, tile))
+            .map(tile -> createPellet3D(scaledPelletMesh, pelletMaterial, tile))
             .forEach(pellets3D::add);
     }
 
@@ -153,15 +154,14 @@ public class MazeFood3D implements Disposable {
         return (2 * radius) / maxExtent;
     }
 
-    //TODO create scaled prototype *mesh* and remove scale transform from each pellet
-    private MeshView createPellet3D(Mesh pelletMesh, Vector2i tile) {
+    private MeshView createPellet3D(Mesh pelletMesh, PhongMaterial pelletMaterial, Vector2i tile) {
         final var meshView = new MeshView(pelletMesh);
         meshView.setMaterial(pelletMaterial);
         meshView.setRotationAxis(Rotate.Z_AXIS);
         meshView.setRotate(90);
         meshView.setTranslateX(tile.x() * TS + HTS);
         meshView.setTranslateY(tile.y() * TS + HTS);
-        meshView.setTranslateZ(- 6);
+        meshView.setTranslateZ(maze3D.floorTop() - PELLET_FLOOR_ELEVATION);
         meshView.setUserData(tile);
         return meshView;
     }
@@ -176,13 +176,11 @@ public class MazeFood3D implements Disposable {
     }
 
     private Energizer3D createEnergizer3D(Vector2i tile, Supplier<Shape3D> shapeFactory) {
-        final var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-        final float inflatedSize = prefs.getFloat("3d.energizer.scaling.min");
-        final float expandedSize = prefs.getFloat("3d.energizer.scaling.max");
+        final var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, maze3D.floorTop() - ENERGIZER_FLOOR_ELEVATION);
         final var energizer3D = new Energizer3D(animationRegistry, center, tile);
         energizer3D.setShapeFactory(shapeFactory);
-        energizer3D.setInflatedSize(inflatedSize);
-        energizer3D.setExpandedSize(expandedSize);
+        energizer3D.setInflatedSize(ENERGIZER_INFLATED_SCALING);
+        energizer3D.setExpandedSize(ENERGIZER_EXPANDED_SCALING);
         return energizer3D;
     }
 

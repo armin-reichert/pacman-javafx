@@ -146,6 +146,10 @@ public class Maze3D extends Group implements Disposable {
         return particlesGroup;
     }
 
+    public double floorTop() {
+        return floor3D.getTranslateZ() - 0.5 * floor3D.getDepth();
+    }
+
     /**
      * Disposes all 3D resources created by this maze.
      * <p>
