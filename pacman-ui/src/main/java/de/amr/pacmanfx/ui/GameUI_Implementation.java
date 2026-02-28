@@ -219,11 +219,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
 		protected void storeDefaultValues() {
-        storeDefaultEntry("3d.lives_counter.capacity", 5);
-        storeDefaultColor("3d.lives_counter.pillar_color", Color.grayRgb(120));
-        storeDefaultColor("3d.lives_counter.plate_color",  Color.grayRgb(180));
-        storeDefaultEntry("3d.lives_counter.shape_size", 12.0f);
-
         // "Kornblumenblau, sind die Augen der Frauen beim Weine. Hicks!"
         storeDefaultColor("context_menu.title.fill", Color.CORNFLOWERBLUE);
         storeDefaultFont("context_menu.title.font", Font.font("Dialog", FontWeight.BLACK, 14.0f));

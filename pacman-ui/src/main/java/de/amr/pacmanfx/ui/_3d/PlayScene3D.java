@@ -140,6 +140,11 @@ public class PlayScene3D implements GameScene {
     public static final float LEVEL_COUNTER_SYMBOL_SIZE = 10.0f;
     public static final float LEVEL_COUNTER_ELEVATION = 6.0f;
 
+    public static final int   LIVES_COUNTER_CAPACITY = 5;
+    public static final Color LIVES_COUNTER_PILLAR_COLOR = Color.grayRgb(120);
+    public static final Color LIVES_COUNTER_PLATE_COLOR = Color.grayRgb(180);
+    public static final float LIVES_COUNTER_SHAPE_SIZE = 12.0f;
+
     // Colors for fade effect
     public static final Color SCENE_FILL_DARK = Color.BLACK;
     public static final Color SCENE_FILL_BRIGHT = Color.TRANSPARENT;

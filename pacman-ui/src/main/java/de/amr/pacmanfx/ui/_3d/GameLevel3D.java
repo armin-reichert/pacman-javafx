@@ -211,10 +211,10 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private void createLivesCounter3D() {
-        final double shapeSize = prefs.getFloat("3d.lives_counter.shape_size");
-        final int capacity = prefs.getInt("3d.lives_counter.capacity");
-        final Color pillarColor = prefs.getColor("3d.lives_counter.pillar_color");
-        final Color plateColor = prefs.getColor("3d.lives_counter.plate_color");
+        final double shapeSize = PlayScene3D.LIVES_COUNTER_SHAPE_SIZE;
+        final int capacity = PlayScene3D.LIVES_COUNTER_CAPACITY;
+        final Color pillarColor = PlayScene3D.LIVES_COUNTER_PILLAR_COLOR;
+        final Color plateColor = PlayScene3D.LIVES_COUNTER_PLATE_COLOR;
         livesCounterShapes = new Node[capacity];
         for (int i = 0; i < livesCounterShapes.length; ++i) {
             livesCounterShapes[i] = uiConfig.createLivesCounterShape3D(shapeSize);
