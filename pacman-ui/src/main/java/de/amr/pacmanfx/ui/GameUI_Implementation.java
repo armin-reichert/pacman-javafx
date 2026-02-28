@@ -221,7 +221,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 		protected void storeDefaultValues() {
         storeDefaultEntry("3d.bonus.symbol.width", 8.0f);
         storeDefaultEntry("3d.bonus.points.width", 1.8f * 8.0f);
-        storeDefaultEntry("3d.energizer.radius", 3.5f);
         storeDefaultEntry("3d.floor.padding", 5.0f);
         storeDefaultEntry("3d.floor.thickness", 0.5f);
         storeDefaultEntry("3d.ghost.size", 15.5f);

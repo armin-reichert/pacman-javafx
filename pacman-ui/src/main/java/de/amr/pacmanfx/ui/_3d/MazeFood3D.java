@@ -47,6 +47,7 @@ public class MazeFood3D implements Disposable {
     private static final float ENERGIZER_FLOOR_ELEVATION = 6;
     private static final float ENERGIZER_INFLATED_SCALING = 0.2f;
     private static final float ENERGIZER_EXPANDED_SCALING = 1.0f;
+    private static final int   ENERGIZER_PUMPING_FREQUENCY = 3; // 3 inflate+expand cycles per second
 
     private final PreferencesManager prefs;
     private final AnimationRegistry animationRegistry;
@@ -179,6 +180,7 @@ public class MazeFood3D implements Disposable {
         final var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, maze3D.floorTop() - ENERGIZER_FLOOR_ELEVATION);
         final var energizer3D = new Energizer3D(animationRegistry, center, tile);
         energizer3D.setShapeFactory(shapeFactory);
+        energizer3D.setPumpingFrequency(ENERGIZER_PUMPING_FREQUENCY);
         energizer3D.setInflatedSize(ENERGIZER_INFLATED_SCALING);
         energizer3D.setExpandedSize(ENERGIZER_EXPANDED_SCALING);
         return energizer3D;

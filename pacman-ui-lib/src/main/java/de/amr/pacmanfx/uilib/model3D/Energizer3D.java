@@ -23,8 +23,6 @@ import static java.util.Objects.requireNonNull;
 
 public class Energizer3D implements Disposable {
 
-    private static final int PUMPING_FREQUENCY = 3; // 3 inflate+expand cycles per second
-
     private static Shape3D createDefaultShape(Point3D center, Vector2i tile) {
         final var shape = new Sphere(3.5);
         shape.setMaterial(Ufx.coloredPhongMaterial(Color.WHITE));
@@ -38,12 +36,13 @@ public class Energizer3D implements Disposable {
     private static ManagedAnimation createPumpingAnimation(
         AnimationRegistry animationRegistry,
         Shape3D shape3D,
+        int pumpingFrequency,
         double inflatedSize,
         double expandedSize)
     {
         final var animation = new ManagedAnimation(animationRegistry, "Energizer_Pumping_%s".formatted(shape3D.getUserData()));
         animation.setFactory(() -> {
-            final Duration duration = Duration.seconds(1).divide(2 * PUMPING_FREQUENCY);
+            final Duration duration = Duration.seconds(1).divide(2 * pumpingFrequency);
             final var pumping = new ScaleTransition(duration, shape3D);
             pumping.setAutoReverse(true);
             pumping.setCycleCount(Animation.INDEFINITE);
@@ -62,6 +61,8 @@ public class Energizer3D implements Disposable {
     private final AnimationRegistry animationRegistry;
     private final Point3D center;
     private final Vector2i tile;
+
+    private int pumpingFrequency = 3;
     private double inflatedSize = 0.2;
     private double expandedSize = 1.0;
 
@@ -92,6 +93,10 @@ public class Energizer3D implements Disposable {
         this.expandedSize = expandedSize;
     }
 
+    public void setPumpingFrequency(int frequency) {
+        this.pumpingFrequency = frequency;
+    }
+
     public void hide() {
         shape.setVisible(false);
     }
@@ -103,7 +108,7 @@ public class Energizer3D implements Disposable {
             shape.setTranslateY(center.getY());
             shape.setTranslateZ(center.getZ());
             shape.setUserData(tile);
-            pumpingAnimation = createPumpingAnimation(animationRegistry, shape, inflatedSize, expandedSize);
+            pumpingAnimation = createPumpingAnimation(animationRegistry, shape, pumpingFrequency, inflatedSize, expandedSize);
         }
         return shape;
     }
