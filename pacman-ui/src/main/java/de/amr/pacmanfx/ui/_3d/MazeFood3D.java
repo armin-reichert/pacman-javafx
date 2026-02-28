@@ -177,7 +177,8 @@ public class MazeFood3D implements Disposable {
     }
 
     private Energizer3D createEnergizer3D(Vector2i tile, Supplier<Shape3D> shapeFactory) {
-        final var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, maze3D.floorTop() - ENERGIZER_FLOOR_ELEVATION);
+        final Vector2i tileCenter = tile.scaled(TS).plus(HTS, HTS);
+        final var center = new Point3D(tileCenter.x(), tileCenter.y(), maze3D.floorTop() - ENERGIZER_FLOOR_ELEVATION);
         final var energizer3D = new Energizer3D(animationRegistry, center, tile);
         energizer3D.setShapeFactory(shapeFactory);
         energizer3D.setPumpingFrequency(ENERGIZER_PUMPING_FREQUENCY);
