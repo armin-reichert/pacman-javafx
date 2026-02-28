@@ -128,6 +128,8 @@ public class PlayScene3D implements GameScene {
     // Colors for fade effect
     public static final Color SCENE_FILL_DARK = Color.BLACK;
     public static final Color SCENE_FILL_BRIGHT = Color.TRANSPARENT;
+    /** Normalized wall fill color used when the configured wall color is extremely dark. */
+    public static final String DARK_WALL_FILL_COLOR = "0x2a2a2a";
 
     public static final String READY_MESSAGE_TEXT = "READY!";
     public static final String TEST_MESSAGE_TEXT = "LEVEL %d (TEST)";

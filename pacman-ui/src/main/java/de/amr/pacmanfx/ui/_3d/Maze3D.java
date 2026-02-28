@@ -42,9 +42,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class Maze3D extends Group implements Disposable {
 
-    /** Normalized wall fill color used when the configured wall color is extremely dark. */
-    private static final String DARK_WALL_FILL_COLOR = "0x2a2a2a";
-
     private final PreferencesManager prefs;
     private final WorldMapColorScheme colorScheme;
     private final AnimationRegistry animationRegistry;
@@ -102,9 +99,9 @@ public class Maze3D extends Group implements Disposable {
     private WorldMapColorScheme adjustColorScheme(WorldMapColorScheme proposedColorScheme) {
         final boolean isFillColorDark = Color.valueOf(proposedColorScheme.wallFill()).getBrightness() < 0.1;
         return isFillColorDark
-                ? new WorldMapColorScheme(DARK_WALL_FILL_COLOR, proposedColorScheme.wallStroke(),
+            ? new WorldMapColorScheme(PlayScene3D.DARK_WALL_FILL_COLOR, proposedColorScheme.wallStroke(),
                 proposedColorScheme.door(), proposedColorScheme.pellet())
-                : proposedColorScheme;
+            : proposedColorScheme;
     }
 
     /** @return the property controlling the base height of all walls */
