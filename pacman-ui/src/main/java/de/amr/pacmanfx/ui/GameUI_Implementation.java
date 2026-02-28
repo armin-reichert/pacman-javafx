@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
+import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.layout.EditorView;
@@ -114,8 +115,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     private void initPropertyBindings() {
-        PROPERTY_3D_WALL_HEIGHT.set(getFloat("3d.obstacle.base_height"));
-        PROPERTY_3D_WALL_OPACITY.set(getFloat("3d.obstacle.opacity"));
+        PROPERTY_3D_WALL_HEIGHT.set(PlayScene3D.OBSTACLE_BASE_HEIGHT);
+        PROPERTY_3D_WALL_OPACITY.set(PlayScene3D.OBSTACLE_OPACITY);
 
         soundManager.muteProperty().bind(GameUI.PROPERTY_MUTED);
 
@@ -224,10 +225,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         storeDefaultColor("3d.lives_counter.pillar_color", Color.grayRgb(120));
         storeDefaultColor("3d.lives_counter.plate_color",  Color.grayRgb(180));
         storeDefaultEntry("3d.lives_counter.shape_size", 12.0f);
-        storeDefaultEntry("3d.obstacle.base_height", 4.0f);
-        storeDefaultEntry("3d.obstacle.corner_radius", 4.0f);
-        storeDefaultEntry("3d.obstacle.opacity", 1.0f);
-        storeDefaultEntry("3d.obstacle.wall_thickness", 2.25f);
 
         // "Kornblumenblau, sind die Augen der Frauen beim Weine. Hicks!"
         storeDefaultColor("context_menu.title.fill", Color.CORNFLOWERBLUE);
