@@ -13,6 +13,8 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui._3d.config.Config3D;
+import de.amr.pacmanfx.ui._3d.config.EnergizerConfig;
+import de.amr.pacmanfx.ui._3d.config.PelletConfig;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerParticlesAnimation;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
@@ -69,8 +71,11 @@ public class MazeFood3D implements Disposable {
             return shape;
         };
 
-        createPellets3D(level.worldMap().foodLayer(), pelletMaterial, maze3D.floorTop() - PlayScene3D.PELLET_FLOOR_ELEVATION);
-        createEnergizers3D(config3D, animationRegistry, level.worldMap().foodLayer(), maze3D.floorTop() - config3D.energizer().floorElevation());
+        final FoodLayer foodLayer = level.worldMap().foodLayer();
+        final PelletConfig pelletConfig = config3D.pellet();
+        final EnergizerConfig energizerConfig = config3D.energizer();
+        createPellets3D(foodLayer, pelletConfig, pelletMaterial, maze3D.floorTop() - pelletConfig.floorElevation());
+        createEnergizers3D(config3D, animationRegistry, foodLayer, maze3D.floorTop() - energizerConfig.floorElevation());
 
         // The bottom center positions of the swirls where the particles of exploded energizers eventually are displayed
         final List<Vector2f> swirlBaseCenters = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
@@ -120,9 +125,9 @@ public class MazeFood3D implements Disposable {
         explodedEnergizerParticlesAnimation.createEnergizerExplosion(origin);
     }
 
-    private void createPellets3D(FoodLayer foodLayer, PhongMaterial pelletMaterial, double z) {
+    private void createPellets3D(FoodLayer foodLayer, PelletConfig pelletConfig, PhongMaterial pelletMaterial, double z) {
         final Mesh pelletMesh = Models3D.PELLET_MODEL.mesh();
-        final double scaling = computePelletScaling(pelletMesh);
+        final double scaling = computePelletScaling(pelletConfig, pelletMesh);
         final Mesh scaledPelletMesh = Models3D.createScaledMesh(pelletMesh, scaling);
         pellets3D.clear(); // just in case
         foodLayer.tiles()
@@ -132,11 +137,11 @@ public class MazeFood3D implements Disposable {
             .forEach(pellets3D::add);
     }
 
-    private double computePelletScaling(Mesh pelletMesh) {
+    private double computePelletScaling(PelletConfig pelletConfig, Mesh pelletMesh) {
         final var dummy = new MeshView(pelletMesh);
         final Bounds bounds = dummy.getBoundsInLocal();
         final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
-        return (2 * PlayScene3D.PELLET_RADIUS) / maxExtent;
+        return (2 * pelletConfig.radius()) / maxExtent;
     }
 
     private MeshView createPellet3D(Mesh pelletMesh, PhongMaterial pelletMaterial, Vector2i tile, double z) {

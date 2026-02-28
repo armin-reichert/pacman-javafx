@@ -74,8 +74,9 @@ public class Maze3D extends Group implements Disposable {
         requireNonNull(ghostMaterials);
         this.colorScheme = adjustColorScheme(uiConfig.colorScheme(level.worldMap()));
 
+        final Config3D config3D = uiConfig.config3D();
         createMaterials();
-        createFloor3D(level);
+        createFloor3D(config3D, level);
         createObstacles3D(level);
         level.worldMap().terrainLayer().optHouse()
             .filter(ArcadeHouse.class::isInstance)
@@ -83,7 +84,7 @@ public class Maze3D extends Group implements Disposable {
             .ifPresentOrElse(
                 this::createHouse3D,
                 () -> Logger.error("For creating 3D house, currently only Arcade house is supported"));
-        createMazeFood3D(uiConfig.config3D(), level, ghostMaterials);
+        createMazeFood3D(config3D, level, ghostMaterials);
     }
 
     /**
@@ -204,11 +205,11 @@ public class Maze3D extends Group implements Disposable {
      *
      * @param level the level whose world map determines the floor size
      */
-    private void createFloor3D(GameLevel level) {
+    private void createFloor3D(Config3D config3D, GameLevel level) {
         final Vector2i worldSizePx = level.worldMap().terrainLayer().sizeInPixel();
-        final float width = worldSizePx.x() + 2 * PlayScene3D.FLOOR_PADDING;
+        final float width = worldSizePx.x() + 2 * config3D.floor().padding();
         final float height = worldSizePx.y();
-        floor3D = new MazeFloor3D(materials3D.floor(), width, height, PlayScene3D.FLOOR_THICKNESS, PlayScene3D.FLOOR_PADDING);
+        floor3D = new MazeFloor3D(materials3D.floor(), width, height, config3D.floor().thickness(), config3D.floor().padding());
     }
 
     /**

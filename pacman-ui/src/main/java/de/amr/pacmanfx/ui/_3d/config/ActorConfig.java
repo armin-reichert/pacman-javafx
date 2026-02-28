@@ -4,5 +4,9 @@
 
 package de.amr.pacmanfx.ui._3d.config;
 
-public record ActorConfig() {
-}
+public record ActorConfig(
+    float pacSize,
+    float ghostSize,
+    float bonusSymbolWidth,
+    float bonusPointsWidth
+) {}

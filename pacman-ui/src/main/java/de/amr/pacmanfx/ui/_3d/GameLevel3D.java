@@ -16,6 +16,8 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.UIConfig;
+import de.amr.pacmanfx.ui._3d.config.ActorConfig;
+import de.amr.pacmanfx.ui._3d.config.Config3D;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -107,8 +109,11 @@ public class GameLevel3D extends Group implements Disposable {
 
         createLevelCounter3D();
         createLivesCounter3D();
-        createPac3D();
-        ghosts3D = level.ghosts().map(this::createMutatingGhost3D).toList();
+
+        final Config3D config3D = uiConfig.config3D();
+
+        createPac3D(config3D.actor());
+        ghosts3D = level.ghosts().map(ghost -> createMutatingGhost3D(config3D.actor(), ghost)).toList();
         final List<PhongMaterial> ghostNormalDressMaterials = ghosts3D.stream()
             .map(MutableGhost3D::ghost3D)
             .map(Ghost3D::normalMaterialSet)
@@ -182,7 +187,7 @@ public class GameLevel3D extends Group implements Disposable {
         );
     }
 
-    private MutableGhost3D createMutatingGhost3D(Ghost ghost) {
+    private MutableGhost3D createMutatingGhost3D(ActorConfig actorConfig, Ghost ghost) {
         var mutatingGhost3D = new MutableGhost3D(
             animationRegistry,
             ghost,
@@ -190,7 +195,7 @@ public class GameLevel3D extends Group implements Disposable {
             ghostDressMeshViews.get(ghost.personality()),
             ghostPupilsMeshViews.get(ghost.personality()),
             ghostEyesMeshViews.get(ghost.personality()),
-            PlayScene3D.GHOST_SIZE,
+            actorConfig.ghostSize(),
             level.numFlashes()
         );
         mutatingGhost3D.visibleProperty().bind(Bindings.createBooleanBinding(
@@ -205,8 +210,8 @@ public class GameLevel3D extends Group implements Disposable {
         return center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
     }
 
-    private void createPac3D() {
-        pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), PlayScene3D.PAC_SIZE);
+    private void createPac3D(ActorConfig actorConfig) {
+        pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), actorConfig.pacSize());
         pac3D.init(level);
     }
 
@@ -403,9 +408,10 @@ public class GameLevel3D extends Group implements Disposable {
             getChildren().remove(bonus3D);
             bonus3D.dispose();
         }
+        final ActorConfig actorConfig = uiConfig.config3D().actor();
         bonus3D = new Bonus3D(animationRegistry, bonus,
-            uiConfig.bonusSymbolImage(bonus.symbol()), PlayScene3D.BONUS_SYMBOL_WIDTH,
-            uiConfig.bonusValueImage(bonus.symbol()), PlayScene3D.BONUS_POINTS_WIDTH);
+            uiConfig.bonusSymbolImage(bonus.symbol()), actorConfig.bonusSymbolWidth(),
+            uiConfig.bonusValueImage(bonus.symbol()),  actorConfig.bonusPointsWidth());
         getChildren().add(bonus3D);
         bonus3D.showEdible();
     }

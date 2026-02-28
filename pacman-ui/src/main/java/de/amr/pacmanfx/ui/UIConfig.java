@@ -73,7 +73,7 @@ import org.tinylog.Logger;
 public interface UIConfig extends Disposable {
 
     Config3D DEFAULT_CONFIG_3D = new Config3D(
-        new ActorConfig(),
+        new ActorConfig(16.0f, 15.5f, 8.0f, 14.5f),
         new EnergizerConfig(3, 3.5f, 6.0f, 0.2f, 1.0f),
         new FloorConfig(5f, 0.5f),
         new HouseConfig(),

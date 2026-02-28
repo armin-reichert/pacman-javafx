@@ -110,18 +110,6 @@ public class PlayScene3D implements GameScene {
 
     //TODO create a 3D config class and move all these settings into an instance of it
 
-    public static final float FLOOR_PADDING   = 5f;
-    public static final float FLOOR_THICKNESS = 0.5f;
-
-    public static final float PELLET_RADIUS = 1f;
-    public static final float PELLET_FLOOR_ELEVATION = 6f;
-
-    public static final float BONUS_SYMBOL_WIDTH = 8f;
-    public static final float BONUS_POINTS_WIDTH = 14.5f;
-
-    public static final float GHOST_SIZE = 15.5f;
-    public static final float PAC_SIZE = 16.0f;
-
     public static final float HOUSE_BASE_HEIGHT = 12.0f;
     public static final float HOUSE_OPACITY = 0.4f;
     public static final float HOUSE_SENSITIVITY = 12.0f;
