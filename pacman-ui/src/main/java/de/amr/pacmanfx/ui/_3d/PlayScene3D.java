@@ -108,6 +108,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class PlayScene3D implements GameScene {
 
+    //TODO create a 3D config class and move all these settings into an instance of it
+
     public static final float FLOOR_PADDING   = 5f;
     public static final float FLOOR_THICKNESS = 0.5f;
 
@@ -124,6 +126,11 @@ public class PlayScene3D implements GameScene {
     public static final float BONUS_POINTS_WIDTH = 14.5f;
     public static final float GHOST_SIZE = 15.5f;
     public static final float PAC_SIZE = 16.0f;
+
+    public static final float HOUSE_BASE_HEIGHT = 12.0f;
+    public static final float HOUSE_OPACITY = 0.4f;
+    public static final float HOUSE_SENSITIVITY = 12.0f;
+    public static final float HOUSE_WALL_THICKNESS = 2.5f;
 
     // Colors for fade effect
     public static final Color SCENE_FILL_DARK = Color.BLACK;

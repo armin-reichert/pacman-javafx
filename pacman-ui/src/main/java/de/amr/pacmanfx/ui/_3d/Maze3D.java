@@ -220,7 +220,7 @@ public class Maze3D extends Group implements Disposable {
      * @param house the house model from the world map
      */
     private void createHouse3D(ArcadeHouse house) {
-        house3D = new MazeHouse3D(prefs, colorScheme, animationRegistry, house);
+        house3D = new MazeHouse3D(colorScheme, animationRegistry, house);
         getChildren().add(house3D.root());
     }
 

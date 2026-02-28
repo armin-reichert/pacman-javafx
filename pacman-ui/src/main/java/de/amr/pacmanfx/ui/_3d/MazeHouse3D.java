@@ -9,7 +9,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
@@ -30,13 +29,11 @@ public class MazeHouse3D implements Disposable {
      * Creates a new 3D ghost house with swirl animations positioned above the
      * ghost revival tiles.
      *
-     * @param prefs            user preferences for 3D rendering parameters
      * @param colorScheme      color scheme of the world map
      * @param animationRegistry registry for creating and tracking animations
      * @param house            the logical ghost house from the game world
      */
     public MazeHouse3D(
-        PreferencesManager prefs,
         WorldMapColorScheme colorScheme,
         AnimationRegistry animationRegistry,
         ArcadeHouse house)
@@ -44,17 +41,17 @@ public class MazeHouse3D implements Disposable {
         arcadeHouse3D = new ArcadeHouse3D(
             animationRegistry,
             house,
-            prefs.getFloat("3d.house.base_height"),
-            prefs.getFloat("3d.house.wall_thickness"),
-            prefs.getFloat("3d.house.opacity")
+            PlayScene3D.HOUSE_BASE_HEIGHT,
+            PlayScene3D.HOUSE_WALL_THICKNESS,
+            PlayScene3D.HOUSE_OPACITY
         );
 
         // Apply color scheme and rendering parameters
         arcadeHouse3D.setWallBaseColor(Color.valueOf(colorScheme.wallFill()));
-        arcadeHouse3D.wallBaseHeightProperty().set(prefs.getFloat("3d.house.base_height"));
+        arcadeHouse3D.wallBaseHeightProperty().set(PlayScene3D.HOUSE_BASE_HEIGHT);
         arcadeHouse3D.setWallTopColor(Color.valueOf(colorScheme.wallStroke()));
         arcadeHouse3D.setDoorColor(Color.valueOf(colorScheme.door()));
-        arcadeHouse3D.setDoorSensitivity(prefs.getFloat("3d.house.sensitivity"));
+        arcadeHouse3D.setDoorSensitivity(PlayScene3D.HOUSE_SENSITIVITY);
 
         // Door animation listener
         houseOpenListener = (_, _, open) -> {

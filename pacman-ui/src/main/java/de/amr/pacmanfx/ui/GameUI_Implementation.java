@@ -43,7 +43,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
-import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.ui.ViewManager.ViewID.*;
 import static java.util.Objects.requireNonNull;
@@ -219,10 +218,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
 		protected void storeDefaultValues() {
-        storeDefaultEntry("3d.house.base_height", 12.0f);
-        storeDefaultEntry("3d.house.opacity", 0.4f);
-        storeDefaultEntry("3d.house.sensitivity", 1.5f * TS);
-        storeDefaultEntry("3d.house.wall_thickness", 2.5f);
         storeDefaultEntry("3d.level_counter.symbol_size", 10.0f);
         storeDefaultEntry("3d.level_counter.elevation", 6f);
         storeDefaultEntry("3d.lives_counter.capacity", 5);
