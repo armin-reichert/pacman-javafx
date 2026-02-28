@@ -41,7 +41,7 @@ public class LevelCounter3D extends Group implements Disposable {
 
     public void rebuild(GameLevel level) {
         final Game game = level.game();
-        final float cubeSize = prefs.getFloat("3d.level_counter.symbol_size");
+        final float cubeSize = PlayScene3D.LEVEL_COUNTER_SYMBOL_SIZE;
         getChildren().clear();
         for (int i = 0; i < game.levelCounterSymbols().size(); ++i) {
             final Byte symbol = game.levelCounterSymbols().get(i);

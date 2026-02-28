@@ -135,7 +135,10 @@ public class PlayScene3D implements GameScene {
     public static final float OBSTACLE_BASE_HEIGHT = 4.0f;
     public static final float OBSTACLE_CORNER_RADIUS = 4.0f;
     public static final float OBSTACLE_OPACITY = 1.0f;
-    public static final float OBSTACLE_WALL_THIKNESS = 2.25f;
+    public static final float OBSTACLE_WALL_THICKNESS = 2.25f;
+
+    public static final float LEVEL_COUNTER_SYMBOL_SIZE = 10.0f;
+    public static final float LEVEL_COUNTER_ELEVATION = 6.0f;
 
     // Colors for fade effect
     public static final Color SCENE_FILL_DARK = Color.BLACK;

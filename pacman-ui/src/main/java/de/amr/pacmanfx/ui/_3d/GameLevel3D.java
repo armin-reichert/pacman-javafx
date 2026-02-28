@@ -231,7 +231,7 @@ public class GameLevel3D extends Group implements Disposable {
         levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig, prefs);
         levelCounter3D.setTranslateX(TS * (worldMap.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
-        levelCounter3D.setTranslateZ(-prefs.getFloat("3d.level_counter.elevation"));
+        levelCounter3D.setTranslateZ(-PlayScene3D.LEVEL_COUNTER_ELEVATION);
     }
 
     private void createLights() {

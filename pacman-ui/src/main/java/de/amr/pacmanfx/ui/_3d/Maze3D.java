@@ -197,7 +197,7 @@ public class Maze3D extends Group implements Disposable {
     private void createObstacles3D(GameLevel level) {
         obstacles3D = new MazeObstacles3D();
         getChildren().add(obstacles3D);
-        final float wallThickness = PlayScene3D.OBSTACLE_WALL_THIKNESS;
+        final float wallThickness = PlayScene3D.OBSTACLE_WALL_THICKNESS;
         final float cornerRadius = PlayScene3D.OBSTACLE_CORNER_RADIUS;
         obstacles3D.renderObstacles(level, wallThickness, cornerRadius, materials3D, wallBaseHeight);
     }

@@ -219,8 +219,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
 		protected void storeDefaultValues() {
-        storeDefaultEntry("3d.level_counter.symbol_size", 10.0f);
-        storeDefaultEntry("3d.level_counter.elevation", 6f);
         storeDefaultEntry("3d.lives_counter.capacity", 5);
         storeDefaultColor("3d.lives_counter.pillar_color", Color.grayRgb(120));
         storeDefaultColor("3d.lives_counter.plate_color",  Color.grayRgb(180));
