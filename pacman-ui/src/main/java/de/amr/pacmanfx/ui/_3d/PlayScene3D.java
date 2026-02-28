@@ -110,11 +110,6 @@ public class PlayScene3D implements GameScene {
 
     //TODO create a 3D config class and move all these settings into an instance of it
 
-    public static final float OBSTACLE_BASE_HEIGHT = 4.0f;
-    public static final float OBSTACLE_CORNER_RADIUS = 4.0f;
-    public static final float OBSTACLE_OPACITY = 1.0f;
-    public static final float OBSTACLE_WALL_THICKNESS = 2.25f;
-
     public static final float LEVEL_COUNTER_SYMBOL_SIZE = 10.0f;
     public static final float LEVEL_COUNTER_ELEVATION = 6.0f;
 

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui._3d.config.Config3D;
 import de.amr.pacmanfx.ui._3d.config.HouseConfig3D;
+import de.amr.pacmanfx.ui._3d.config.MazeConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import javafx.beans.property.DoubleProperty;
@@ -78,7 +79,7 @@ public class Maze3D extends Group implements Disposable {
         final Config3D config3D = uiConfig.config3D();
         createMaterials();
         createFloor3D(config3D, level);
-        createObstacles3D(level);
+        createObstacles3D(config3D.maze(), level);
         level.worldMap().terrainLayer().optHouse()
             .filter(ArcadeHouse.class::isInstance)
             .map(ArcadeHouse.class::cast)
@@ -193,11 +194,11 @@ public class Maze3D extends Group implements Disposable {
      *
      * @param level the level whose world map defines the obstacle layout
      */
-    private void createObstacles3D(GameLevel level) {
+    private void createObstacles3D(MazeConfig3D mazeConfig, GameLevel level) {
         obstacles3D = new MazeObstacles3D();
         getChildren().add(obstacles3D);
-        final float wallThickness = PlayScene3D.OBSTACLE_WALL_THICKNESS;
-        final float cornerRadius = PlayScene3D.OBSTACLE_CORNER_RADIUS;
+        final float wallThickness = mazeConfig.obstacleWallThickness();
+        final float cornerRadius  = mazeConfig.obstacleCornerRadius();
         obstacles3D.renderObstacles(level, wallThickness, cornerRadius, materials3D, wallBaseHeight);
     }
 

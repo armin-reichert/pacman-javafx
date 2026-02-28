@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
-import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.layout.EditorView;
@@ -115,9 +114,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     private void initPropertyBindings() {
-        PROPERTY_3D_WALL_HEIGHT.set(PlayScene3D.OBSTACLE_BASE_HEIGHT);
-        PROPERTY_3D_WALL_OPACITY.set(PlayScene3D.OBSTACLE_OPACITY);
-
         soundManager.muteProperty().bind(GameUI.PROPERTY_MUTED);
 
         statusIconBox.visibleProperty().bind(
@@ -325,6 +321,10 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public void show() {
+        // These need the current UI config to be initialized
+        PROPERTY_3D_WALL_HEIGHT .set(currentConfig().config3D().maze().obstacleBaseHeight());
+        PROPERTY_3D_WALL_OPACITY.set(currentConfig().config3D().maze().obstacleOpacity());
+
         logPreferences();
         load3DModels(); // fail fast
         viewManager.getPlayView().dashboard().init(this);
