@@ -7,6 +7,7 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.UIConfig;
+import de.amr.pacmanfx.ui._3d.config.LevelCounterConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
@@ -39,9 +40,9 @@ public class LevelCounter3D extends Group implements Disposable {
         this.prefs = requireNonNull(prefs);
     }
 
-    public void rebuild(GameLevel level) {
+    public void rebuild(LevelCounterConfig3D config, GameLevel level) {
         final Game game = level.game();
-        final float cubeSize = PlayScene3D.LEVEL_COUNTER_SYMBOL_SIZE;
+        final float cubeSize = config.symbolSize();
         getChildren().clear();
         for (int i = 0; i < game.levelCounterSymbols().size(); ++i) {
             final Byte symbol = game.levelCounterSymbols().get(i);

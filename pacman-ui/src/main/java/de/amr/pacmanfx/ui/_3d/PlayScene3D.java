@@ -110,9 +110,6 @@ public class PlayScene3D implements GameScene {
 
     //TODO create a 3D config class and move all these settings into an instance of it
 
-    public static final float LEVEL_COUNTER_SYMBOL_SIZE = 10.0f;
-    public static final float LEVEL_COUNTER_ELEVATION = 6.0f;
-
     public static final int   LIVES_COUNTER_CAPACITY = 5;
     public static final Color LIVES_COUNTER_PILLAR_COLOR = Color.grayRgb(120);
     public static final Color LIVES_COUNTER_PLATE_COLOR = Color.grayRgb(180);
@@ -392,7 +389,7 @@ public class PlayScene3D implements GameScene {
             gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
         }
 
-        gameLevel3D.rebuildLevelCounter3D();
+        gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().config3D().levelCounter());
         updateHUD(game);
         replaceActionBindings(level);
         fadeInAnimation.playFromStart();
@@ -529,7 +526,7 @@ public class PlayScene3D implements GameScene {
             }
         }
 
-        gameLevel3D.rebuildLevelCounter3D();
+        gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().config3D().levelCounter());
         replaceActionBindings(level);
         fadeInAnimation.playFromStart();
     }

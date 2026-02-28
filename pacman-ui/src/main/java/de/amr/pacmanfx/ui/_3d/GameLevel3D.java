@@ -18,6 +18,7 @@ import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui._3d.config.ActorConfig3D;
 import de.amr.pacmanfx.ui._3d.config.Config3D;
+import de.amr.pacmanfx.ui._3d.config.LevelCounterConfig3D;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -99,6 +100,8 @@ public class GameLevel3D extends Group implements Disposable {
         this.uiConfig = ui.currentConfig();
         this.soundManager = ui.soundManager();
 
+        final Config3D config3D = uiConfig.config3D();
+
         PROPERTY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
 
         setMouseTransparent(true); // this increases performance, they say...
@@ -107,10 +110,8 @@ public class GameLevel3D extends Group implements Disposable {
         ghostPupilsMeshViews = createGhostComponentMeshViews(Models3D.GHOST_MODEL.pupilsMesh());
         ghostEyesMeshViews   = createGhostComponentMeshViews(Models3D.GHOST_MODEL.eyeballsMesh());
 
-        createLevelCounter3D();
+        createLevelCounter3D(config3D.levelCounter());
         createLivesCounter3D();
-
-        final Config3D config3D = uiConfig.config3D();
 
         createPac3D(config3D.actor());
         ghosts3D = level.ghosts().map(ghost -> createMutatingGhost3D(config3D.actor(), ghost)).toList();
@@ -231,12 +232,12 @@ public class GameLevel3D extends Group implements Disposable {
         livesCounter3D.plateColorProperty().set(plateColor);
     }
 
-    private void createLevelCounter3D() {
+    private void createLevelCounter3D(LevelCounterConfig3D config) {
         WorldMap worldMap = level.worldMap();
         levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig, prefs);
         levelCounter3D.setTranslateX(TS * (worldMap.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
-        levelCounter3D.setTranslateZ(-PlayScene3D.LEVEL_COUNTER_ELEVATION);
+        levelCounter3D.setTranslateZ(-config.elevation());
     }
 
     private void createLights() {
@@ -295,7 +296,7 @@ public class GameLevel3D extends Group implements Disposable {
     public void onStartingGame() {
         maze3D.food().energizers3D().forEach(Energizer3D::stopPumping);
         if (levelCounter3D != null) {
-            levelCounter3D.rebuild(level);
+            levelCounter3D.rebuild(uiConfig.config3D().levelCounter(), level);
         }
     }
 
@@ -416,9 +417,9 @@ public class GameLevel3D extends Group implements Disposable {
         bonus3D.showEdible();
     }
 
-    public void rebuildLevelCounter3D() {
+    public void rebuildLevelCounter3D(LevelCounterConfig3D config) {
         if (levelCounter3D != null) {
-            levelCounter3D.rebuild(level);
+            levelCounter3D.rebuild(config, level);
         }
     }
 

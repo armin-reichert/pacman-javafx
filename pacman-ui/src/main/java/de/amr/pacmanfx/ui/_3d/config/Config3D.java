@@ -9,6 +9,7 @@ public record Config3D(
     EnergizerConfig3D energizer,
     FloorConfig3D floor,
     HouseConfig3D house,
+    LevelCounterConfig3D levelCounter,
     MazeConfig3D maze,
     PelletConfig3D pellet
 ) {}
