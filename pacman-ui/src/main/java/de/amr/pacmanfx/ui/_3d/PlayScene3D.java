@@ -108,18 +108,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class PlayScene3D implements GameScene {
 
-    //TODO create a 3D config class and move all these settings into an instance of it
-
-    public static final int   LIVES_COUNTER_CAPACITY = 5;
-    public static final Color LIVES_COUNTER_PILLAR_COLOR = Color.grayRgb(120);
-    public static final Color LIVES_COUNTER_PLATE_COLOR = Color.grayRgb(180);
-    public static final float LIVES_COUNTER_SHAPE_SIZE = 12.0f;
-
     // Colors for fade effect
     public static final Color SCENE_FILL_DARK = Color.BLACK;
     public static final Color SCENE_FILL_BRIGHT = Color.TRANSPARENT;
-    /** Normalized wall fill color used when the configured wall color is extremely dark. */
-    public static final String DARK_WALL_FILL_COLOR = "0x2a2a2a";
 
     public static final String READY_MESSAGE_TEXT = "READY!";
     public static final String TEST_MESSAGE_TEXT = "LEVEL %d (TEST)";

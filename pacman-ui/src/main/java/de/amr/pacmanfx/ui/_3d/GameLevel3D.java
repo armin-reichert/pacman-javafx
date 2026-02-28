@@ -19,6 +19,7 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui._3d.config.ActorConfig3D;
 import de.amr.pacmanfx.ui._3d.config.Config3D;
 import de.amr.pacmanfx.ui._3d.config.LevelCounterConfig3D;
+import de.amr.pacmanfx.ui._3d.config.LivesCounterConfig3D;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -111,7 +112,7 @@ public class GameLevel3D extends Group implements Disposable {
         ghostEyesMeshViews   = createGhostComponentMeshViews(Models3D.GHOST_MODEL.eyeballsMesh());
 
         createLevelCounter3D(config3D.levelCounter());
-        createLivesCounter3D();
+        createLivesCounter3D(config3D.livesCounter());
 
         createPac3D(config3D.actor());
         ghosts3D = level.ghosts().map(ghost -> createMutatingGhost3D(config3D.actor(), ghost)).toList();
@@ -216,11 +217,11 @@ public class GameLevel3D extends Group implements Disposable {
         pac3D.init(level);
     }
 
-    private void createLivesCounter3D() {
-        final double shapeSize = PlayScene3D.LIVES_COUNTER_SHAPE_SIZE;
-        final int capacity = PlayScene3D.LIVES_COUNTER_CAPACITY;
-        final Color pillarColor = PlayScene3D.LIVES_COUNTER_PILLAR_COLOR;
-        final Color plateColor = PlayScene3D.LIVES_COUNTER_PLATE_COLOR;
+    private void createLivesCounter3D(LivesCounterConfig3D config) {
+        final double shapeSize  = config.shapeSize();
+        final int capacity      = config.capacity();
+        final Color pillarColor = config.pillarColor();
+        final Color plateColor  = config.plateColor();
         livesCounterShapes = new Node[capacity];
         for (int i = 0; i < livesCounterShapes.length; ++i) {
             livesCounterShapes[i] = uiConfig.createLivesCounterShape3D(shapeSize);

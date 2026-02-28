@@ -74,7 +74,7 @@ public class Maze3D extends Group implements Disposable {
         requireNonNull(uiConfig);
         this.animationRegistry = requireNonNull(animationRegistry);
         requireNonNull(ghostMaterials);
-        this.colorScheme = adjustColorScheme(uiConfig.colorScheme(level.worldMap()));
+        this.colorScheme = adjustColorScheme(uiConfig.config3D().maze(), uiConfig.colorScheme(level.worldMap()));
 
         final Config3D config3D = uiConfig.config3D();
         createMaterials();
@@ -96,10 +96,10 @@ public class Maze3D extends Group implements Disposable {
      * @param proposedColorScheme the original color scheme
      * @return a possibly adjusted color scheme with improved contrast
      */
-    private WorldMapColorScheme adjustColorScheme(WorldMapColorScheme proposedColorScheme) {
+    private WorldMapColorScheme adjustColorScheme(MazeConfig3D config, WorldMapColorScheme proposedColorScheme) {
         final boolean isFillColorDark = Color.valueOf(proposedColorScheme.wallFill()).getBrightness() < 0.1;
         return isFillColorDark
-            ? new WorldMapColorScheme(PlayScene3D.DARK_WALL_FILL_COLOR, proposedColorScheme.wallStroke(),
+            ? new WorldMapColorScheme(config.darkWallFillColor(), proposedColorScheme.wallStroke(),
                 proposedColorScheme.door(), proposedColorScheme.pellet())
             : proposedColorScheme;
     }
