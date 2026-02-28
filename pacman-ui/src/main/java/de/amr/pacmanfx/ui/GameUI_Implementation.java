@@ -219,8 +219,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
 		protected void storeDefaultValues() {
-        storeDefaultEntry("3d.floor.padding", 5.0f);
-        storeDefaultEntry("3d.floor.thickness", 0.5f);
         storeDefaultEntry("3d.ghost.size", 15.5f);
         storeDefaultEntry("3d.house.base_height", 12.0f);
         storeDefaultEntry("3d.house.opacity", 0.4f);
