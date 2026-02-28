@@ -59,6 +59,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     private static final float BONUS_SYMBOL_WIDTH = 8f;
     private static final float  BONUS_POINTS_WIDTH = 14.5f;
+    private static final float GHOST_SIZE = 15.5f;
 
     private static List<MeshView> createGhostComponentMeshViews(Mesh mesh) {
         return Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
@@ -193,7 +194,7 @@ public class GameLevel3D extends Group implements Disposable {
             ghostDressMeshViews.get(ghost.personality()),
             ghostPupilsMeshViews.get(ghost.personality()),
             ghostEyesMeshViews.get(ghost.personality()),
-            prefs.getFloat("3d.ghost.size"),
+            GHOST_SIZE,
             level.numFlashes()
         );
         mutatingGhost3D.visibleProperty().bind(Bindings.createBooleanBinding(
