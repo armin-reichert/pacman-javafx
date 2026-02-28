@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui._3d.config;
 
-public record EnergizerConfig(
+public record EnergizerConfig3D(
     int pumpingFrequency,
     float radius,
     float floorElevation,

@@ -13,8 +13,8 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui._3d.config.Config3D;
-import de.amr.pacmanfx.ui._3d.config.EnergizerConfig;
-import de.amr.pacmanfx.ui._3d.config.PelletConfig;
+import de.amr.pacmanfx.ui._3d.config.EnergizerConfig3D;
+import de.amr.pacmanfx.ui._3d.config.PelletConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerParticlesAnimation;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
@@ -72,8 +72,8 @@ public class MazeFood3D implements Disposable {
         };
 
         final FoodLayer foodLayer = level.worldMap().foodLayer();
-        final PelletConfig pelletConfig = config3D.pellet();
-        final EnergizerConfig energizerConfig = config3D.energizer();
+        final PelletConfig3D pelletConfig = config3D.pellet();
+        final EnergizerConfig3D energizerConfig = config3D.energizer();
         createPellets3D(foodLayer, pelletConfig, pelletMaterial, maze3D.floorTop() - pelletConfig.floorElevation());
         createEnergizers3D(config3D, animationRegistry, foodLayer, maze3D.floorTop() - energizerConfig.floorElevation());
 
@@ -125,7 +125,7 @@ public class MazeFood3D implements Disposable {
         explodedEnergizerParticlesAnimation.createEnergizerExplosion(origin);
     }
 
-    private void createPellets3D(FoodLayer foodLayer, PelletConfig pelletConfig, PhongMaterial pelletMaterial, double z) {
+    private void createPellets3D(FoodLayer foodLayer, PelletConfig3D pelletConfig, PhongMaterial pelletMaterial, double z) {
         final Mesh pelletMesh = Models3D.PELLET_MODEL.mesh();
         final double scaling = computePelletScaling(pelletConfig, pelletMesh);
         final Mesh scaledPelletMesh = Models3D.createScaledMesh(pelletMesh, scaling);
@@ -137,7 +137,7 @@ public class MazeFood3D implements Disposable {
             .forEach(pellets3D::add);
     }
 
-    private double computePelletScaling(PelletConfig pelletConfig, Mesh pelletMesh) {
+    private double computePelletScaling(PelletConfig3D pelletConfig, Mesh pelletMesh) {
         final var dummy = new MeshView(pelletMesh);
         final Bounds bounds = dummy.getBoundsInLocal();
         final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());

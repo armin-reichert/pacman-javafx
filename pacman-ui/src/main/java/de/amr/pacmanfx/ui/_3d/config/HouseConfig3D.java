@@ -4,5 +4,5 @@
 
 package de.amr.pacmanfx.ui._3d.config;
 
-public record HouseConfig() {
+public record HouseConfig3D() {
 }

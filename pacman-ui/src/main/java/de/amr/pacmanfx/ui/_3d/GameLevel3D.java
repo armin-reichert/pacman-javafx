@@ -16,7 +16,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.ui._3d.config.ActorConfig;
+import de.amr.pacmanfx.ui._3d.config.ActorConfig3D;
 import de.amr.pacmanfx.ui._3d.config.Config3D;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -187,7 +187,7 @@ public class GameLevel3D extends Group implements Disposable {
         );
     }
 
-    private MutableGhost3D createMutatingGhost3D(ActorConfig actorConfig, Ghost ghost) {
+    private MutableGhost3D createMutatingGhost3D(ActorConfig3D actorConfig, Ghost ghost) {
         var mutatingGhost3D = new MutableGhost3D(
             animationRegistry,
             ghost,
@@ -210,7 +210,7 @@ public class GameLevel3D extends Group implements Disposable {
         return center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
     }
 
-    private void createPac3D(ActorConfig actorConfig) {
+    private void createPac3D(ActorConfig3D actorConfig) {
         pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), actorConfig.pacSize());
         pac3D.init(level);
     }
@@ -408,7 +408,7 @@ public class GameLevel3D extends Group implements Disposable {
             getChildren().remove(bonus3D);
             bonus3D.dispose();
         }
-        final ActorConfig actorConfig = uiConfig.config3D().actor();
+        final ActorConfig3D actorConfig = uiConfig.config3D().actor();
         bonus3D = new Bonus3D(animationRegistry, bonus,
             uiConfig.bonusSymbolImage(bonus.symbol()), actorConfig.bonusSymbolWidth(),
             uiConfig.bonusValueImage(bonus.symbol()),  actorConfig.bonusPointsWidth());

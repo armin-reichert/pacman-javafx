@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.ui._3d.config;
 
 public record Config3D(
-    ActorConfig actor,
-    EnergizerConfig energizer,
-    FloorConfig floor,
-    HouseConfig house,
-    PelletConfig pellet
+    ActorConfig3D actor,
+    EnergizerConfig3D energizer,
+    FloorConfig3D floor,
+    HouseConfig3D house,
+    PelletConfig3D pellet
 ) {}

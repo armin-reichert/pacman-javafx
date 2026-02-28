@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui._3d.config;
 
-public record PelletConfig(
-    float radius,
-    float floorElevation
+public record FloorConfig3D(
+    float padding,
+    float thickness
 ) {}
