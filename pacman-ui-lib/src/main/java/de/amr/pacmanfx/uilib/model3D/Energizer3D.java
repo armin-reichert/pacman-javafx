@@ -19,25 +19,27 @@ import javafx.util.Duration;
 
 import java.util.function.Supplier;
 
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 public class Energizer3D implements Disposable {
 
-    private static Shape3D createDefaultShape(Vector2i tile) {
+    private static Shape3D createDefaultShape() {
         final var shape = new Sphere(3.5);
         shape.setMaterial(Ufx.coloredPhongMaterial(Color.WHITE));
-        shape.setUserData(tile);
         return shape;
     }
 
     private static ManagedAnimation createPumpingAnimation(
         AnimationRegistry animationRegistry,
+        String label,
         Shape3D shape3D,
         int pumpingFrequency,
         double inflatedSize,
         double expandedSize)
     {
-        final var animation = new ManagedAnimation(animationRegistry, "Energizer_Pumping_%s".formatted(shape3D.getUserData()));
+        final var animation = new ManagedAnimation(animationRegistry, label);
         animation.setFactory(() -> {
             final Duration duration = Duration.seconds(1).divide(2 * pumpingFrequency);
             final var pumping = new ScaleTransition(duration, shape3D);
@@ -69,13 +71,15 @@ public class Energizer3D implements Disposable {
 
     public Energizer3D(
         AnimationRegistry animationRegistry,
-        Point3D center,
-        Vector2i tile)
+        Vector2i tile,
+        double z)
     {
         this.animationRegistry = requireNonNull(animationRegistry);
-        this.center = requireNonNull(center);
         this.tile = requireNonNull(tile);
-        shapeFactory = () -> createDefaultShape(tile);
+
+        final Vector2i tileCenter = tile.scaled(TS).plus(HTS, HTS);
+        this.center = new Point3D(tileCenter.x(), tileCenter.y(), z);
+        shapeFactory = Energizer3D::createDefaultShape;
     }
 
     public void setShapeFactory(Supplier<Shape3D> shapeFactory) {
@@ -104,13 +108,13 @@ public class Energizer3D implements Disposable {
             shape.setTranslateX(center.getX());
             shape.setTranslateY(center.getY());
             shape.setTranslateZ(center.getZ());
-            shape.setUserData(tile);
-            pumpingAnimation = createPumpingAnimation(animationRegistry, shape, pumpingFrequency, inflatedSize, expandedSize);
+            pumpingAnimation = createPumpingAnimation(animationRegistry, "Energizer_Pumping_%s".formatted(tile),
+                shape, pumpingFrequency, inflatedSize, expandedSize);
         }
         return shape;
     }
 
-    public Vector2i tile() { return (Vector2i) shape.getUserData(); }
+    public Vector2i tile() { return tile; }
 
     @Override
     public void dispose() {
