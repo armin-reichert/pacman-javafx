@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;

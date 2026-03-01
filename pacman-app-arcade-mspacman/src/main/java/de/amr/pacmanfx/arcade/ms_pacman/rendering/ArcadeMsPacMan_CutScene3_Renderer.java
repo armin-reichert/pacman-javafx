@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_CutScene3;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
+import de.amr.pacmanfx.ui.d2.GameScene2D;
+import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import javafx.scene.canvas.Canvas;
 
 import java.util.stream.Stream;

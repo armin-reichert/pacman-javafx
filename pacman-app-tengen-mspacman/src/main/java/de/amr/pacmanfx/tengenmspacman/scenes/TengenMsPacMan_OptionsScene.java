@@ -12,7 +12,7 @@ import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameController.GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.action.GameAction;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;

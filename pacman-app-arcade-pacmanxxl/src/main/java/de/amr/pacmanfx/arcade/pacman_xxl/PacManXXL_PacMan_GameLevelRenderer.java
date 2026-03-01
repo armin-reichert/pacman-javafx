@@ -7,7 +7,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GameLevel_Renderer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
+import de.amr.pacmanfx.ui.d2.GenericMapRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
 import javafx.scene.canvas.Canvas;

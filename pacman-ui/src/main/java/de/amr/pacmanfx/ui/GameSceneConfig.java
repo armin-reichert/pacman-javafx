@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._3d.PlayScene3D;
+import de.amr.pacmanfx.ui.d2.GameScene2D;
+import de.amr.pacmanfx.ui.d3.PlayScene3D;
 
 import java.util.Optional;
 import java.util.stream.Stream;

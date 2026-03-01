@@ -5,7 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.d2.GameScene2D;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_ENTER_START_SCREEN;

@@ -23,9 +23,9 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.input;
     exports de.amr.pacmanfx.ui.layout;
     exports de.amr.pacmanfx.ui.sound;
-    exports de.amr.pacmanfx.ui._2d;
-    exports de.amr.pacmanfx.ui._3d;
-    exports de.amr.pacmanfx.ui._3d.config;
+    exports de.amr.pacmanfx.ui.d2;
+    exports de.amr.pacmanfx.ui.d3;
+    exports de.amr.pacmanfx.ui.d3.config;
     exports de.amr.pacmanfx.ui;
     exports de.amr.pacmanfx.ui.action;
 }

@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene1;
-import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui.d2.GameScene2D;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.TS;

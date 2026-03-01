@@ -14,8 +14,8 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui.d2.GameScene2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 

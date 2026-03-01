@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.ViewManager.ViewID;
-import de.amr.pacmanfx.ui._3d.PerspectiveID;
+import de.amr.pacmanfx.ui.d3.PerspectiveID;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
 import org.tinylog.Logger;
