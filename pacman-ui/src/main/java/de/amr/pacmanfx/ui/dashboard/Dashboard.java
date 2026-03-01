@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 
 public class Dashboard extends VBox {
 
-    public record Style(
+    public record DashboardConfig(
         int labelWidth,
         int width,
         Color contentBackground,
@@ -26,7 +26,7 @@ public class Dashboard extends VBox {
         Font labelFont,
         Font contentFont) {}
 
-    public static final Style DEFAULT_STYLE = new Style(
+    public static final DashboardConfig DEFAULT_CONFIG = new DashboardConfig(
         110,
         320,
         Color.rgb(0, 0, 50, 1.0),
@@ -35,26 +35,67 @@ public class Dashboard extends VBox {
         Font.font("Sans", 12)
     );
 
-    private static final Map<CommonDashboardID, String> TITLE_KEYS = new EnumMap<>(CommonDashboardID.class);
-    static {
-        TITLE_KEYS.put(CommonDashboardID.ABOUT, "infobox.about.title");
-        TITLE_KEYS.put(CommonDashboardID.ACTOR_INFO, "infobox.actor_info.title");
-        TITLE_KEYS.put(CommonDashboardID.ANIMATION_INFO, "infobox.animation_info.title");
-        TITLE_KEYS.put(CommonDashboardID.CUSTOM_MAPS, "infobox.custom_maps.title");
-        TITLE_KEYS.put(CommonDashboardID.GENERAL, "infobox.general.title");
-        TITLE_KEYS.put(CommonDashboardID.GAME_CONTROL, "infobox.game_control.title");
-        TITLE_KEYS.put(CommonDashboardID.GAME_INFO, "infobox.game_info.title");
-        TITLE_KEYS.put(CommonDashboardID.KEYS_GLOBAL, "infobox.keyboard_shortcuts_global.title");
-        TITLE_KEYS.put(CommonDashboardID.KEYS_LOCAL, "infobox.keyboard_shortcuts_local.title");
-        TITLE_KEYS.put(CommonDashboardID.README, "infobox.readme.title");
-        TITLE_KEYS.put(CommonDashboardID.SETTINGS_3D, "infobox.3D_settings.title");
+    private static DashboardSection createCommonSection(Dashboard dashboard, DashboardID id) {
+        requireNonNull(dashboard);
+        requireNonNull(id);
+        return switch (id) {
+            case CommonDashboardID.ABOUT          -> new DashboardSectionAbout(dashboard);
+            case CommonDashboardID.ACTOR_INFO     -> new DashboardSectionActorInfo(dashboard);
+            case CommonDashboardID.ANIMATION_INFO -> new DashboardSectionAnimations3D(dashboard);
+            // this dashboard section needs additional configuration to work!
+            case CommonDashboardID.CUSTOM_MAPS    -> new DashboardSectionCustomMaps(dashboard);
+            case CommonDashboardID.GENERAL        -> new DashboardSectionGeneral(dashboard);
+            case CommonDashboardID.GAME_CONTROL   -> new DashboardSectionGameControl(dashboard);
+            case CommonDashboardID.GAME_INFO      -> new DashboardSectionGameInfo(dashboard);
+            case CommonDashboardID.KEYS_GLOBAL    -> new DashboardSectionKeyShortcutsGlobal(dashboard);
+            case CommonDashboardID.KEYS_LOCAL     -> new DashboardSectionKeyShortcutsLocal(dashboard);
+            case CommonDashboardID.README         -> new DashboardSectionReadmeFirst(dashboard);
+            case CommonDashboardID.SETTINGS_3D    -> new DashboardSection3DSettings(dashboard);
+            default -> throw new IllegalArgumentException("Illegal dashboard ID: " + id);
+        };
+    }
+
+    private static String titleKey(DashboardID id) {
+        requireNonNull(id);
+        return switch (id) {
+            case CommonDashboardID.ABOUT          -> "infobox.about.title";
+            case CommonDashboardID.ACTOR_INFO     -> "infobox.actor_info.title";
+            case CommonDashboardID.ANIMATION_INFO -> "infobox.animation_info.title";
+            case CommonDashboardID.CUSTOM_MAPS    -> "infobox.custom_maps.title";
+            case CommonDashboardID.GENERAL        -> "infobox.general.title";
+            case CommonDashboardID.GAME_CONTROL   -> "infobox.game_control.title";
+            case CommonDashboardID.GAME_INFO      -> "infobox.game_info.title";
+            case CommonDashboardID.KEYS_GLOBAL    -> "infobox.keyboard_shortcuts_global.title";
+            case CommonDashboardID.KEYS_LOCAL     -> "infobox.keyboard_shortcuts_local.title";
+            case CommonDashboardID.README         -> "infobox.readme.title";
+            case CommonDashboardID.SETTINGS_3D    -> "infobox.3D_settings.title";
+            default -> throw new IllegalArgumentException("Illegal dashboard ID: " + id);
+        };
+    }
+
+    private static boolean isCommonSectionMaximizedByDefault(DashboardID id) {
+        requireNonNull(id);
+        return switch (id) {
+            case CommonDashboardID.ABOUT          -> true;
+            case CommonDashboardID.ACTOR_INFO     -> true;
+            case CommonDashboardID.ANIMATION_INFO -> true;
+            case CommonDashboardID.CUSTOM_MAPS    -> true;
+            case CommonDashboardID.GENERAL        -> false;
+            case CommonDashboardID.GAME_CONTROL   -> false;
+            case CommonDashboardID.GAME_INFO      -> true;
+            case CommonDashboardID.KEYS_GLOBAL    -> true;
+            case CommonDashboardID.KEYS_LOCAL     -> false;
+            case CommonDashboardID.README         -> false;
+            case CommonDashboardID.SETTINGS_3D    -> true;
+            default -> throw new IllegalArgumentException("Illegal dashboard ID: " + id);
+        };
     }
 
     private final Map<DashboardID, DashboardSection> sectionsByID = new LinkedHashMap<>();
-    private final Style style;
+    private final DashboardConfig dashboardConfig;
 
-    public Dashboard(Style style) {
-        this.style = requireNonNull(style);
+    public Dashboard(DashboardConfig dashboardConfig) {
+        this.dashboardConfig = requireNonNull(dashboardConfig);
         visibleProperty().addListener((_, ignored, visible) -> {
             if (visible) {
                 updateLayout();
@@ -64,11 +105,11 @@ public class Dashboard extends VBox {
     }
 
     public Dashboard() {
-        this(DEFAULT_STYLE);
+        this(DEFAULT_CONFIG);
     }
 
-    public Style style() {
-        return style;
+    public DashboardConfig style() {
+        return dashboardConfig;
     }
 
     public void init(GameUI ui) {
@@ -90,43 +131,6 @@ public class Dashboard extends VBox {
         updateLayout();
     }
 
-    private DashboardSection createCommonSection(DashboardID id) {
-        requireNonNull(id);
-        return switch (id) {
-            case CommonDashboardID.ABOUT          -> new DashboardSectionAbout(this);
-            case CommonDashboardID.ACTOR_INFO     -> new DashboardSectionActorInfo(this);
-            case CommonDashboardID.ANIMATION_INFO -> new DashboardSectionAnimations3D(this);
-            // this dashboard section needs additional configuration to work!
-            case CommonDashboardID.CUSTOM_MAPS    -> new DashboardSectionCustomMaps(this);
-            case CommonDashboardID.GENERAL        -> new DashboardSectionGeneral(this);
-            case CommonDashboardID.GAME_CONTROL   -> new DashboardSectionGameControl(this);
-            case CommonDashboardID.GAME_INFO      -> new DashboardSectionGameInfo(this);
-            case CommonDashboardID.KEYS_GLOBAL    -> new DashboardSectionKeyShortcutsGlobal(this);
-            case CommonDashboardID.KEYS_LOCAL     -> new DashboardSectionKeyShortcutsLocal(this);
-            case CommonDashboardID.README         -> new DashboardSectionReadmeFirst(this);
-            case CommonDashboardID.SETTINGS_3D    -> new DashboardSection3DSettings(this);
-            default -> throw new IllegalArgumentException("Illegal dashboard ID: " + id);
-        };
-    }
-
-    private boolean isCommonSectionShownMaximized(DashboardID id) {
-        requireNonNull(id);
-        return switch (id) {
-            case CommonDashboardID.ABOUT          -> true;
-            case CommonDashboardID.ACTOR_INFO     -> true;
-            case CommonDashboardID.ANIMATION_INFO -> true;
-            case CommonDashboardID.CUSTOM_MAPS    -> true;
-            case CommonDashboardID.GENERAL        -> false;
-            case CommonDashboardID.GAME_CONTROL   -> false;
-            case CommonDashboardID.GAME_INFO      -> true;
-            case CommonDashboardID.KEYS_GLOBAL    -> true;
-            case CommonDashboardID.KEYS_LOCAL     -> false;
-            case CommonDashboardID.README         -> false;
-            case CommonDashboardID.SETTINGS_3D    -> true;
-            default -> throw new IllegalArgumentException("Illegal dashboard ID: " + id);
-        };
-    }
-
     /**
      * Adds one of the common dashboard sections defined by the given ID.
      *
@@ -136,9 +140,9 @@ public class Dashboard extends VBox {
     public void addCommonSection(Translator translator, CommonDashboardID id) {
         requireNonNull(translator);
         requireNonNull(id);
-        final DashboardSection section = createCommonSection(id);
-        final boolean maximized = isCommonSectionShownMaximized(id);
-        sectionsByID.put(id, configure(section, translator.translate(TITLE_KEYS.get(id)), maximized));
+        final DashboardSection section = createCommonSection(this, id);
+        final boolean maximized = isCommonSectionMaximizedByDefault(id);
+        sectionsByID.put(id, configure(section, translator.translate(titleKey(id)), maximized));
     }
 
     public void addSection(DashboardID id, DashboardSection section, String title, boolean maximized) {

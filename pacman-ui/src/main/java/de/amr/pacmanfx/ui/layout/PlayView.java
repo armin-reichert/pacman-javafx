@@ -12,11 +12,11 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
-import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.widgets.CanvasDecorationPane;
@@ -61,9 +61,9 @@ public class PlayView extends StackPane implements View {
 
     private static final int PAUSE_ICON_SIZE = 80;
 
-    private static final Dashboard.Style DASHBOARD_STYLE = new Dashboard.Style(
-        Dashboard.DEFAULT_STYLE.labelWidth(),
-        Dashboard.DEFAULT_STYLE.width(),
+    private static final Dashboard.DashboardConfig DASHBOARD_DASHBOARD_CONFIG = new Dashboard.DashboardConfig(
+        Dashboard.DEFAULT_CONFIG.labelWidth(),
+        Dashboard.DEFAULT_CONFIG.width(),
         Color.rgb(0, 0, 0x33),
         ArcadePalette.ARCADE_WHITE,
         Font.font("Sans", 12),
@@ -75,7 +75,7 @@ public class PlayView extends StackPane implements View {
     private final ActionBindingsManager actionBindingsManager = new ActionBindingsManagerImpl();
     private final GameUI ui;
     private final Scene parentScene;
-    private final Dashboard dashboard = new Dashboard(DASHBOARD_STYLE);
+    private final Dashboard dashboard = new Dashboard(DASHBOARD_DASHBOARD_CONFIG);
     private final CanvasDecorationPane canvasDecorator = new CanvasDecorationPane();
     private final MiniGameView miniView = new MiniGameView();
     private final BorderPane canvasLayer = new BorderPane();

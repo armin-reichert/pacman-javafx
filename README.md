@@ -131,7 +131,7 @@ Cheats:
 
 <div>
     <a href="https://www.youtube.com/watch?v=I85na24MRcQ&t=132s">
-        <img alt="Ms. Pac-Man maze" src="doc/mspacman-maze.png" style="width:500px">
+        <img alt="Ms. Pac-Man maze" src="doc/mspacman-maze.png" dashboardConfig="width:500px">
     </a>
 </div>
 
