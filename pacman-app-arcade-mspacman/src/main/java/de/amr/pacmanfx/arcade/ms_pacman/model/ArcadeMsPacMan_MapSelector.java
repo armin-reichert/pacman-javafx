@@ -3,11 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
-import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.model.world.WorldMapParseException;
-import de.amr.pacmanfx.model.world.WorldMapSelector;
-import de.amr.pacmanfx.ui.UIConfig;
+import de.amr.pacmanfx.model.world.*;
 import org.tinylog.Logger;
 
 import java.io.IOException;
@@ -98,8 +94,8 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
         final WorldMap prototype = mapPrototypes.get(mapNumber - 1);
 
         final WorldMap worldMap = new WorldMap(prototype);
-        worldMap.setConfigValue(UIConfig.WorldMapConfigKey.MAP_NUMBER, mapNumber);
-        worldMap.setConfigValue(UIConfig.WorldMapConfigKey.COLOR_MAP_INDEX, colorMapIndex(levelNumber));
+        worldMap.setConfigValue(WorldMapConfigKey.MAP_NUMBER, mapNumber);
+        worldMap.setConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX, colorMapIndex(levelNumber));
         return worldMap;
     }
 }

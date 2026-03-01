@@ -6,9 +6,9 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
-import de.amr.pacmanfx.ui.UIConfig;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class TengenMsPacMan_MapRepository {
      */
     public MapImageSet createMazeSpriteSet(WorldMap worldMap, int flashCount) {
         final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY);
-        final int mapNumber = worldMap.getConfigValue(UIConfig.WorldMapConfigKey.MAP_NUMBER);
+        final int mapNumber = worldMap.getConfigValue(WorldMapConfigKey.MAP_NUMBER);
         final NES_ColorScheme requestedColorScheme = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.NES_COLOR_SCHEME);
         // for randomly colored maps (levels 28-31, non-ARCADE maps), multiple random flash colors appear
         final boolean randomFlashColors = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MULTIPLE_FLASH_COLORS);
