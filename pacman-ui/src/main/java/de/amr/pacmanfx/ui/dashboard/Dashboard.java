@@ -91,6 +91,13 @@ public class Dashboard extends VBox {
         };
     }
 
+    private static DashboardSection configure(DashboardSection section, String title, boolean maximized) {
+        section.setText(title);
+        section.setDisplayedMaximized(maximized);
+        return section;
+    }
+
+
     private final Map<DashboardID, DashboardSection> sectionsByID = new LinkedHashMap<>();
     private final DashboardConfig dashboardConfig;
 
@@ -196,9 +203,4 @@ public class Dashboard extends VBox {
         }
     }
 
-    private DashboardSection configure(DashboardSection section, String title, boolean maximized) {
-        section.setText(title);
-        section.setDisplayedMaximized(maximized);
-        return section;
-    }
 }
