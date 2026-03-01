@@ -8,8 +8,6 @@ import de.amr.pacmanfx.uilib.assets.Translator;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -17,23 +15,6 @@ import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 
 public class Dashboard extends VBox {
-
-    public record DashboardConfig(
-        int labelWidth,
-        int width,
-        Color contentBackground,
-        Color textColor,
-        Font labelFont,
-        Font contentFont) {}
-
-    public static final DashboardConfig DEFAULT_CONFIG = new DashboardConfig(
-        110,
-        320,
-        Color.rgb(0, 0, 50, 1.0),
-        Color.WHITE,
-        Font.font("Sans", 12),
-        Font.font("Sans", 12)
-    );
 
     private static DashboardSection createCommonSection(Dashboard dashboard, DashboardID id) {
         requireNonNull(dashboard);
@@ -109,10 +90,6 @@ public class Dashboard extends VBox {
             }
         });
         setPadding(new Insets(10));
-    }
-
-    public Dashboard() {
-        this(DEFAULT_CONFIG);
     }
 
     public DashboardConfig style() {

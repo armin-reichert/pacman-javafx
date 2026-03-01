@@ -18,6 +18,7 @@ import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
+import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.widgets.CanvasDecorationPane;
 import javafx.beans.binding.Bindings;
@@ -61,9 +62,19 @@ public class PlayView extends StackPane implements View {
 
     private static final int PAUSE_ICON_SIZE = 80;
 
-    private static final Dashboard.DashboardConfig DASHBOARD_DASHBOARD_CONFIG = new Dashboard.DashboardConfig(
-        Dashboard.DEFAULT_CONFIG.labelWidth(),
-        Dashboard.DEFAULT_CONFIG.width(),
+    public static final DashboardConfig DASHBOARD_CONFIG = new DashboardConfig(
+        110,
+        320,
+        Color.rgb(0, 0, 50, 1.0),
+        Color.WHITE,
+        Font.font("Sans", 12),
+        Font.font("Sans", 12)
+    );
+
+
+    private static final DashboardConfig DASHBOARD_DASHBOARD_CONFIG = new DashboardConfig(
+        DASHBOARD_CONFIG.labelWidth(),
+        DASHBOARD_CONFIG.width(),
         Color.rgb(0, 0, 0x33),
         ArcadePalette.ARCADE_WHITE,
         Font.font("Sans", 12),
