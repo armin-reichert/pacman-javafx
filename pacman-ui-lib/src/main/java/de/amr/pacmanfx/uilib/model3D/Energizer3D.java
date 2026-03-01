@@ -5,7 +5,6 @@ package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
@@ -13,6 +12,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
 import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
@@ -27,7 +27,7 @@ public class Energizer3D implements Disposable {
 
     private static Shape3D createDefaultShape() {
         final var shape = new Sphere(3.5);
-        shape.setMaterial(Ufx.coloredPhongMaterial(Color.WHITE));
+        shape.setMaterial(new PhongMaterial(Color.WHITE));
         return shape;
     }
 
@@ -79,42 +79,9 @@ public class Energizer3D implements Disposable {
 
         final Vector2i tileCenter = tile.scaled(TS).plus(HTS, HTS);
         this.center = new Point3D(tileCenter.x(), tileCenter.y(), z);
+
         shapeFactory = Energizer3D::createDefaultShape;
     }
-
-    public void setShapeFactory(Supplier<Shape3D> shapeFactory) {
-        this.shapeFactory = requireNonNull(shapeFactory);
-    }
-
-    public void setInflatedSize(double inflatedSize) {
-        this.inflatedSize = inflatedSize;
-    }
-
-    public void setExpandedSize(double expandedSize) {
-        this.expandedSize = expandedSize;
-    }
-
-    public void setPumpingFrequency(int frequency) {
-        this.pumpingFrequency = frequency;
-    }
-
-    public void hide() {
-        shape.setVisible(false);
-    }
-
-    public Shape3D shape() {
-        if (shape == null) {
-            shape = shapeFactory.get();
-            shape.setTranslateX(center.getX());
-            shape.setTranslateY(center.getY());
-            shape.setTranslateZ(center.getZ());
-            pumpingAnimation = createPumpingAnimation(animationRegistry, "Energizer_Pumping_%s".formatted(tile),
-                shape, pumpingFrequency, inflatedSize, expandedSize);
-        }
-        return shape;
-    }
-
-    public Vector2i tile() { return tile; }
 
     @Override
     public void dispose() {
@@ -128,6 +95,49 @@ public class Energizer3D implements Disposable {
         }
     }
 
+    public Shape3D shape() {
+        if (shape == null) {
+            shape = shapeFactory.get();
+            shape.setTranslateX(center.getX());
+            shape.setTranslateY(center.getY());
+            shape.setTranslateZ(center.getZ());
+            if (pumpingAnimation != null) {
+                pumpingAnimation.dispose();
+            }
+            pumpingAnimation = createPumpingAnimation(animationRegistry, "Energizer_Pumping_%s".formatted(tile),
+                shape, pumpingFrequency, inflatedSize, expandedSize);
+        }
+        return shape;
+    }
+
+    public Vector2i tile() { return tile; }
+
+    public void setShapeFactory(Supplier<Shape3D> shapeFactory) {
+        this.shapeFactory = requireNonNull(shapeFactory);
+        shape = null; // trigger shape and pumping animation recreation
+    }
+
+    public void setInflatedSize(double inflatedSize) {
+        this.inflatedSize = inflatedSize;
+        shape = null; // trigger shape and pumping animation recreation
+    }
+
+    public void setExpandedSize(double expandedSize) {
+        this.expandedSize = expandedSize;
+        shape = null; // trigger shape and pumping animation recreation
+    }
+
+    public void setPumpingFrequency(int frequency) {
+        this.pumpingFrequency = frequency;
+        shape = null; // trigger shape and pumping animation recreation
+    }
+
+    public void hide() {
+        if (shape != null) {
+            shape.setVisible(false);
+        }
+    }
+
     public void startPumping() {
         if (pumpingAnimation != null) {
             pumpingAnimation.playOrContinue();
@@ -136,16 +146,12 @@ public class Energizer3D implements Disposable {
 
     public void stopPumping() {
         if (pumpingAnimation != null) {
-            pumpingAnimation.pause();
+            pumpingAnimation.stop();
         }
     }
 
     public void onEaten() {
-        if (pumpingAnimation != null) {
-            pumpingAnimation.stop();
-            pumpingAnimation.dispose();
-            pumpingAnimation = null;
-        }
-        shape.setVisible(false);
+        stopPumping();
+        hide();
     }
 }
