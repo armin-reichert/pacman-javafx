@@ -23,12 +23,9 @@ import static java.util.Objects.requireNonNull;
 
 public class Energizer3D implements Disposable {
 
-    private static Shape3D createDefaultShape(Point3D center, Vector2i tile) {
+    private static Shape3D createDefaultShape(Vector2i tile) {
         final var shape = new Sphere(3.5);
         shape.setMaterial(Ufx.coloredPhongMaterial(Color.WHITE));
-        shape.setTranslateX(center.getX());
-        shape.setTranslateY(center.getY());
-        shape.setTranslateZ(center.getZ());
         shape.setUserData(tile);
         return shape;
     }
@@ -78,7 +75,7 @@ public class Energizer3D implements Disposable {
         this.animationRegistry = requireNonNull(animationRegistry);
         this.center = requireNonNull(center);
         this.tile = requireNonNull(tile);
-        shapeFactory = () -> createDefaultShape(center, tile);
+        shapeFactory = () -> createDefaultShape(tile);
     }
 
     public void setShapeFactory(Supplier<Shape3D> shapeFactory) {
