@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
@@ -69,7 +69,7 @@ public class DashboardSectionGameControl extends DashboardSection {
         super.update(ui);
 
         final AbstractGameModel game = ui.gameContext().currentGame();
-        final StateMachine.State<?> state = game.control().state();
+        final State<?> state = game.control().state();
 
         //TODO use binding
         choiceBoxInitialLives.setValue(game.initialLifeCount());
@@ -89,16 +89,16 @@ public class DashboardSectionGameControl extends DashboardSection {
         cbCollisionCheckedTwice.setSelected(game.isCollisionDoubleChecked());
     }
 
-    private boolean isBooting(StateMachine.State<?> state) {
+    private boolean isBooting(State<?> state) {
         return state.nameMatches(CommonStateName.BOOT.name());
     }
 
-    private boolean canStartLevel(Game game, StateMachine.State<?> state) {
+    private boolean canStartLevel(Game game, State<?> state) {
         return game.canStartNewGame()
             && state.nameMatches(CommonStateName.INTRO.name(), CommonStateName.SETTING_OPTIONS_FOR_START.name());
     }
 
-    private boolean canEnterNextLevel(Game game, StateMachine.State<?> state) {
+    private boolean canEnterNextLevel(Game game, State<?> state) {
         return game.isPlaying() && state.nameMatches(CommonStateName.HUNTING.name());
     }
 }

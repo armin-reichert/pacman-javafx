@@ -13,7 +13,6 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameController.GameState;
 import de.amr.pacmanfx.tengenmspacman.model.actors.*;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import javafx.beans.property.BooleanProperty;
@@ -34,7 +33,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomByte;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
-import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameController.GameState.HUNTING;
+import static de.amr.pacmanfx.tengenmspacman.model.TengenGameState.HUNTING;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -359,7 +358,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
             level().showPacAndGhosts();
         }
         else if (tick == TICK_DEMO_LEVEL_START_HUNTING) {
-            enterState(GameState.HUNTING);
+            enterState(TengenGameState.HUNTING);
         }
     }
 

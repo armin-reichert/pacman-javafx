@@ -51,7 +51,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
-import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState.*;
+import static de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState.*;
 import static de.amr.pacmanfx.ui.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;

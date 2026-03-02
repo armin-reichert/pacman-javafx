@@ -6,14 +6,10 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
-import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameController.GameState;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengenmspacman.model.*;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.action.GameAction;
+import de.amr.pacmanfx.ui.d2.GameScene2D;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.input.KeyCode;
@@ -104,7 +100,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            game.enterState(GameState.INTRO);
+            game.enterState(TengenGameState.INTRO);
         }
     }
 

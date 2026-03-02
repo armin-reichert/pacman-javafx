@@ -5,9 +5,10 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.lib.TickTimer;
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
@@ -120,7 +121,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     // Scene controller FSM
 
-    public enum SceneState implements StateMachine.State<ArcadeMsPacMan_IntroScene> {
+    public enum SceneState implements State<ArcadeMsPacMan_IntroScene> {
 
         STARTING {
             @Override
@@ -218,9 +219,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 final Game game = scene.gameContext().currentGame();
                 scene.marquee.timer().doTick();
                 if (sceneTimer.atSecond(2.0) && !game.canStartNewGame()) {
-                    game.enterState(GameState.STARTING_GAME_OR_LEVEL); // demo level
+                    game.enterState(ArcadeGameState.STARTING_GAME_OR_LEVEL); // demo level
                 } else if (sceneTimer.atSecond(5)) {
-                    game.enterState(GameState.SETTING_OPTIONS_FOR_START);
+                    game.enterState(ArcadeGameState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };

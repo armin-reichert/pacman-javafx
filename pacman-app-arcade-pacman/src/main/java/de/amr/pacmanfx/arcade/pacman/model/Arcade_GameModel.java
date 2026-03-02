@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.arcade.pacman.model;
 
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.TickTimer;
@@ -299,7 +298,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
         else if (tick == Arcade_GameController.TICK_NEW_GAME_START_HUNTING) {
             setPlaying(true);
-            enterState(GameState.HUNTING);
+            enterState(ArcadeGameState.HUNTING);
         }
     }
 
@@ -314,7 +313,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             publishGameEvent(new GameContinuedEvent(this));
         }
         else if (tick == Arcade_GameController.TICK_RESUME_HUNTING) {
-            enterState(GameState.HUNTING);
+            enterState(ArcadeGameState.HUNTING);
         }
     }
 
@@ -379,7 +378,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level().showPacAndGhosts();
         }
         else if (tick == Arcade_GameController.TICK_RESUME_HUNTING) {
-            enterState(GameState.HUNTING);
+            enterState(ArcadeGameState.HUNTING);
         }
     }
 

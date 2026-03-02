@@ -4,25 +4,18 @@
 package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.event.BonusEatenEvent;
-import de.amr.pacmanfx.lib.TickTimer;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.lib.fsm.AbstractState;
 import de.amr.pacmanfx.model.*;
 
 import static java.util.Objects.requireNonNull;
 
-public class LevelShortTestState implements StateMachine.State<Game>, TestState {
+public class LevelShortTestState extends AbstractState<Game> implements TestState {
 
     private final CoinMechanism coinMechanism;
-    private final TickTimer timer = new TickTimer("Timer_" + name());
     private int lastTestedLevelNumber;
 
     public LevelShortTestState(CoinMechanism coinMechanism) {
         this.coinMechanism = requireNonNull(coinMechanism);
-    }
-
-    @Override
-    public TickTimer timer() {
-        return timer;
     }
 
     @Override

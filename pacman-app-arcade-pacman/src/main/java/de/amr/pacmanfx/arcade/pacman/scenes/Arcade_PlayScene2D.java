@@ -4,9 +4,9 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState;
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.lib.fsm.StateMachine.State;
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
@@ -19,9 +19,9 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.control.CheckMenuItem;
@@ -141,11 +141,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
         final Game game = gameContext().currentGame();
-        if (e.newState() == GameState.LEVEL_COMPLETE) {
+        if (e.newState() == ArcadeGameState.LEVEL_COMPLETE) {
             ui.soundManager().stopAll();
             createAndPlayLevelCompletedAnimation(game.level());
         }
-        else if (e.newState() == GameState.GAME_OVER) {
+        else if (e.newState() == ArcadeGameState.GAME_OVER) {
             ui.soundManager().stopAll();
             ui.soundManager().play(SoundID.GAME_OVER);
             game.hud().credit(true);
@@ -245,7 +245,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private void updateHUD(GameLevel level) {
         final Game game = level.game();
         // While Pac-Man is still invisible on level start, one Pac symbol more is shown in the lives counter
-        final boolean oneExtra = game.control().state() == GameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
+        final boolean oneExtra = game.control().state() == ArcadeGameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
         final int lifeCountDisplayed = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
         game.hud().setVisibleLifeCount(Math.clamp(lifeCountDisplayed, 0, game.hud().maxLivesDisplayed()));
     }
@@ -255,7 +255,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
             return;
 
         final State<Game> gameState = level.game().control().state();
-        if (gameState == GameState.HUNTING) {
+        if (gameState == ArcadeGameState.HUNTING) {
             final Pac pac = level.pac();
             if (!pac.powerTimer().isRunning()) {
                 final int huntingPhase = level.huntingTimer().phaseIndex();

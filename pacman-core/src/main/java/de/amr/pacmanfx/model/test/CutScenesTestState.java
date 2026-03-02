@@ -4,21 +4,13 @@
 package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.event.UnspecifiedChangeEvent;
-import de.amr.pacmanfx.lib.TickTimer;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.lib.fsm.AbstractState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 
-public class CutScenesTestState implements StateMachine.State<Game>, TestState {
-
-    private final TickTimer timer = new TickTimer("Timer_" + name());
+public class CutScenesTestState extends AbstractState<Game> implements TestState {
 
     public int testedCutSceneNumber;
-
-    @Override
-    public TickTimer timer() {
-        return timer;
-    }
 
     @Override
     public void onEnter(Game game) {

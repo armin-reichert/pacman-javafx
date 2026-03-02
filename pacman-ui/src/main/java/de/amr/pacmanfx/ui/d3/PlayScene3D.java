@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
@@ -359,7 +359,7 @@ public class PlayScene3D implements GameScene {
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         final Maze3D maze3D = gameLevel3D.maze3D();
         final MazeFood3D mazeFood3D = maze3D.food();
-        final StateMachine.State<?> state = game.control().state();
+        final State<?> state = game.control().state();
 
         mazeFood3D.pellets3D().forEach(pellet3D ->
             pellet3D.setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
@@ -428,7 +428,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onGameStateChange(GameStateChangeEvent changeEvent) {
         final Game game = gameContext().currentGame();
-        final StateMachine.State<Game> newState = changeEvent.newState();
+        final State<Game> newState = changeEvent.newState();
         if (newState instanceof TestState) {
             game.optGameLevel().ifPresent(level -> {
                 replaceGameLevel3D(level);
@@ -478,7 +478,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onGameStarts(GameStartedEvent event) {
         final Game game = gameContext().currentGame();
-        final StateMachine.State<Game> state = game.control().state();
+        final State<Game> state = game.control().state();
         final boolean silent = game.level().isDemoLevel() || state instanceof TestState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
@@ -504,7 +504,7 @@ public class PlayScene3D implements GameScene {
             return;
         }
         final GameLevel level = game.level();
-        final StateMachine.State<Game> state = game.control().state();
+        final State<Game> state = game.control().state();
 
         if (state instanceof TestState) {
             replaceGameLevel3D(level); //TODO check when to destroy previous level

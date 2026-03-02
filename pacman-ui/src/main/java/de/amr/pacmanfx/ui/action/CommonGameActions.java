@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl.CommonStateName;
@@ -312,7 +312,7 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final StateMachine.State<?> state = ui.gameContext().currentGameState();
+            final State<?> state = ui.gameContext().currentGameState();
             if (state.nameMatches(LevelShortTestState.class.getSimpleName(), LevelMediumTestState.class.getSimpleName())) {
                 return true;
             }

@@ -51,7 +51,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
-import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameController.GameState.*;
+import static de.amr.pacmanfx.tengenmspacman.model.TengenGameState.*;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static java.util.Objects.requireNonNull;

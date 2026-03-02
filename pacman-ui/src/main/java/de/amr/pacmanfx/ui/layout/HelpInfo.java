@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl.CommonStateName;
 import de.amr.pacmanfx.ui.GameUI;
@@ -27,7 +27,7 @@ public class HelpInfo {
     public static HelpInfo build(GameUI ui) {
         final Game game = ui.gameContext().currentGame();
         final boolean demoLevel = game.optGameLevel().isPresent() && game.level().isDemoLevel();
-        final StateMachine.State<?> state = game.control().state();
+        final State<?> state = game.control().state();
 
         HelpInfo helpInfo = new HelpInfo(ui);
         if (state.nameMatches(CommonStateName.INTRO.name())) {

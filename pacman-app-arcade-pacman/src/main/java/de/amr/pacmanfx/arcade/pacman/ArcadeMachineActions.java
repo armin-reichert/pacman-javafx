@@ -3,16 +3,16 @@
  */
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState;
 import de.amr.pacmanfx.event.CreditAddedEvent;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.GameAction;
 
-import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState.INTRO;
-import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState.SETTING_OPTIONS_FOR_START;
+import static de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState.INTRO;
+import static de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState.SETTING_OPTIONS_FOR_START;
 
 public interface ArcadeMachineActions {
 
@@ -44,7 +44,7 @@ public interface ArcadeMachineActions {
             }
             final boolean noCredit = ui.gameContext().coinMechanism().isEmpty();
             final boolean demoLevel = game.optGameLevel().isPresent() && game.level().isDemoLevel();
-            final StateMachine.State<Game> gameState = game.control().state();
+            final State<Game> gameState = game.control().state();
             return gameState == SETTING_OPTIONS_FOR_START || gameState == INTRO || demoLevel || noCredit;
         }
     };
@@ -53,14 +53,14 @@ public interface ArcadeMachineActions {
         @Override
         public void execute(GameUI ui) {
             ui.voicePlayer().stopVoice();
-            ui.gameContext().currentGame().enterState(GameState.STARTING_GAME_OR_LEVEL);
+            ui.gameContext().currentGame().enterState(ArcadeGameState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.gameContext().currentGame();
             boolean hasCredit = !ui.gameContext().coinMechanism().isEmpty();
-            final StateMachine.State<Game> gameState = game.control().state();
+            final State<Game> gameState = game.control().state();
             return hasCredit
                 && (gameState == INTRO || gameState == SETTING_OPTIONS_FOR_START)
                 && game.canStartNewGame();

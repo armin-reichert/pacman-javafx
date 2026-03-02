@@ -4,11 +4,12 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.lib.Pulse;
 import de.amr.pacmanfx.lib.TickTimer;
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
@@ -139,7 +140,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         return (SceneState) sceneController.state();
     }
 
-    public enum SceneState implements StateMachine.State<ArcadePacMan_IntroScene> {
+    public enum SceneState implements State<ArcadePacMan_IntroScene> {
 
         STARTING {
             @Override
@@ -310,10 +311,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 if (timer.atSecond(0.75)) {
                     scene.ghosts.get(ORANGE_GHOST_POKEY).hide();
                     if (!game.canStartNewGame()) {
-                        game.enterState(GameState.STARTING_GAME_OR_LEVEL);
+                        game.enterState(ArcadeGameState.STARTING_GAME_OR_LEVEL);
                     }
                 } else if (timer.atSecond(5)) {
-                    game.enterState(GameState.SETTING_OPTIONS_FOR_START);
+                    game.enterState(ArcadeGameState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx;
 
-import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
@@ -99,7 +99,7 @@ public interface GameContext {
      *
      * @return current state of game control (state machine)
      */
-    default StateMachine.State<Game> currentGameState()  {
+    default State<Game> currentGameState()  {
         return currentGame().control().state();
     }
 

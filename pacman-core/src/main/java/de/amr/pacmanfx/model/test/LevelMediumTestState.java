@@ -4,21 +4,15 @@
 package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
-import de.amr.pacmanfx.lib.TickTimer;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.lib.fsm.AbstractState;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 
-public class LevelMediumTestState implements StateMachine.State<Game>, TestState {
+public class LevelMediumTestState extends AbstractState<Game> implements TestState {
+
     static final int TEST_DURATION_SEC = 10;
 
-    private final TickTimer timer = new TickTimer("Timer_" + name());
     private int lastTestedLevelNumber;
-
-    @Override
-    public TickTimer timer() {
-        return timer;
-    }
 
     private void configureLevelForTest(Game game) {
         final GameLevel gameLevel = game.level();

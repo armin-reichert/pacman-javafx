@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.TickTimer;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
@@ -338,7 +338,7 @@ public class GameLevel3D extends Group implements Disposable {
         });
     }
 
-    public void onLevelComplete(StateMachine.State<Game> state, ObjectProperty<PerspectiveID> perspectiveIDProperty) {
+    public void onLevelComplete(State<Game> state, ObjectProperty<PerspectiveID> perspectiveIDProperty) {
         state.timer().resetIndefiniteTime(); // expires when animation ends
         soundManager.stopAll();
         animationRegistry.stopAllAnimations();
@@ -377,7 +377,7 @@ public class GameLevel3D extends Group implements Disposable {
         animation.play();
     }
 
-    public void onGameOver(StateMachine.State<Game> state) {
+    public void onGameOver(State<Game> state) {
         state.timer().restartSeconds(3);
         animations.ghostLightAnimation().stop();
         maze3D.food().energizers3D().forEach(Energizer3D::hide);

@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.model;
 
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import org.tinylog.Logger;
 
@@ -59,7 +60,7 @@ public interface GameControl {
      * @param stateName the state identifier
      * @return an {@link Optional} containing the state if it exists
      */
-    default Optional<StateMachine.State<Game>> optState(String stateName) {
+    default Optional<State<Game>> optState(String stateName) {
         requireNonNull(stateName);
         return stateMachine().optState(stateName);
     }
@@ -67,13 +68,13 @@ public interface GameControl {
     /**
      * Returns the currently active state of the game.
      *
-     * @return the active {@link StateMachine.State}
+     * @return the active {@link State}
      */
-    default StateMachine.State<Game> state() {
+    default State<Game> state() {
         return stateMachine().state();
     }
 
-    default void enterState(StateMachine.State<Game> gameState) {
+    default void enterState(State<Game> gameState) {
         stateMachine().enterState(gameState);
     }
 
@@ -96,7 +97,7 @@ public interface GameControl {
         stateMachine().resumePreviousState();
     }
 
-    default void restartState(StateMachine.State<Game> gameState) {
+    default void restartState(State<Game> gameState) {
         stateMachine().restart(gameState);
     }
 

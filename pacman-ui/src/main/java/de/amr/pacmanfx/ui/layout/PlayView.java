@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
@@ -231,7 +231,7 @@ public class PlayView extends StackPane implements View {
     @Override
     public void onGameEvent(GameEvent gameEvent) {
         final Game game = ui.gameContext().currentGame();
-        final StateMachine.State<Game> gameState = game.control().state();
+        final State<Game> gameState = game.control().state();
         switch (gameEvent) {
             case LevelCreatedEvent _ -> {
                 final GameLevel level = game.level();

@@ -5,7 +5,7 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameController.GameState;
+import de.amr.pacmanfx.tengenmspacman.model.TengenGameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplayMode;
 import de.amr.pacmanfx.ui.GameSceneConfig;
@@ -22,7 +22,7 @@ public interface TengenMsPacMan_Actions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().currentGame();
-            game.enterState(GameState.SETTING_OPTIONS_FOR_START);
+            game.enterState(TengenGameState.SETTING_OPTIONS_FOR_START);
         }
     };
 
@@ -30,7 +30,7 @@ public interface TengenMsPacMan_Actions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().currentGame();
-            game.enterState(GameState.SETTING_OPTIONS_FOR_START);
+            game.enterState(TengenGameState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
@@ -44,7 +44,7 @@ public interface TengenMsPacMan_Actions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().currentGame();
-            game.enterState(GameState.STARTING_GAME_OR_LEVEL);
+            game.enterState(TengenGameState.STARTING_GAME_OR_LEVEL);
         }
     };
 

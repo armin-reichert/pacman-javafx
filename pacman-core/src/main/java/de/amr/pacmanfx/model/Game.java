@@ -5,7 +5,7 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -59,7 +59,7 @@ public interface Game extends LevelCounter {
      *
      * @param gameState the state to enter
      */
-    default void enterState(StateMachine.State<Game> gameState) {
+    default void enterState(State<Game> gameState) {
         control().enterState(gameState);
     }
 
@@ -75,7 +75,7 @@ public interface Game extends LevelCounter {
      *
      * @param gameState the state to restart
      */
-    default void restartState(StateMachine.State<Game> gameState) {
+    default void restartState(State<Game> gameState) {
         control().restartState(gameState);
     }
 
