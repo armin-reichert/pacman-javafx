@@ -44,7 +44,7 @@ import static java.util.Objects.requireNonNull;
 public class MazeFood3D implements Disposable {
 
     private final FoodLayer foodLayer;
-    private final Set<Shape3D> pellets3D = new HashSet<>();
+    private final Set<Pellet3D> pellets3D = new HashSet<>();
     private final Set<Energizer3D> energizers3D = new HashSet<>();
     private final Supplier<Shape3D> energizerShapeFactory;
 
@@ -92,11 +92,9 @@ public class MazeFood3D implements Disposable {
     @Override
     public void dispose() {
         if (!pellets3D.isEmpty()) {
-            pellets3D.forEach(shape3D -> {
-                shape3D.setMaterial(null);
-                if (shape3D instanceof MeshView meshView) {
-                    meshView.setMesh(null);
-                }
+            pellets3D.forEach(pellet3D -> {
+                pellet3D.setMaterial(null);
+                pellet3D.setMesh(null);
             });
             Logger.info("Disposed 3D pellets");
         }
@@ -111,7 +109,7 @@ public class MazeFood3D implements Disposable {
         }
     }
 
-    public Set<Shape3D> pellets3D() { return Collections.unmodifiableSet(pellets3D); }
+    public Set<Pellet3D> pellets3D() { return Collections.unmodifiableSet(pellets3D); }
 
     public Set<Energizer3D> energizers3D() { return Collections.unmodifiableSet(energizers3D); }
 
@@ -148,15 +146,15 @@ public class MazeFood3D implements Disposable {
         return (2 * config.radius()) / maxExtent;
     }
 
-    private Shape3D createPelletShape3D(Mesh mesh, PhongMaterial material, Vector2i tile, double z) {
-        final Shape3D pellet3D = new MeshView(mesh);
+    private Pellet3D createPelletShape3D(Mesh mesh, PhongMaterial material, Vector2i tile, double z) {
+        final var pellet3D = new Pellet3D(mesh, tile);
         pellet3D.setMaterial(material);
+        //TODO fix rotation in OBJ file
         pellet3D.setRotationAxis(Rotate.Z_AXIS);
         pellet3D.setRotate(90);
         pellet3D.setTranslateX(tile.x() * TS + HTS);
         pellet3D.setTranslateY(tile.y() * TS + HTS);
         pellet3D.setTranslateZ(z);
-        pellet3D.setUserData(tile);
         return pellet3D;
     }
 

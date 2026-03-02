@@ -362,7 +362,7 @@ public class PlayScene3D implements GameScene {
         final StateMachine.State<?> state = game.control().state();
 
         mazeFood3D.pellets3D().forEach(pellet3D ->
-            pellet3D.setVisible(!foodLayer.hasEatenFoodAtTile((Vector2i) pellet3D.getUserData())));
+            pellet3D.setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
 
         mazeFood3D.energizers3D().forEach(energizer3D ->
             energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
@@ -539,7 +539,7 @@ public class PlayScene3D implements GameScene {
                 energizer3D.onEaten();
             } else {
                 mazeFood3D.pellets3D().stream()
-                    .filter(pellet3D -> tile.equals(pellet3D.getUserData()))
+                    .filter(pellet3D -> tile.equals(pellet3D.tile()))
                     .findFirst()
                     .ifPresent(this::eatPellet3D);
             }
