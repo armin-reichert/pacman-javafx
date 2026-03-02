@@ -81,7 +81,7 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
             if (game.level().number() == lastTestedLevelNumber) {
                 coinMechanism.setNumCoins(0);
                 game.boot();
-                game.control().restartStateNamed(GameControl.StateName.BOOT.name());
+                game.control().restartStateWithName(GameControl.StateName.BOOT.name());
             } else {
                 timer.restartIndefinitely();
                 game.startNextLevel();

@@ -85,7 +85,7 @@ public interface GameControl {
      *
      * @param stateName the identifier of the state to enter
      */
-    default void enterStateNamed(String stateName) {
+    default void enterStateWithName(String stateName) {
         optState(stateName).ifPresentOrElse(
             state -> stateMachine().enterState(state),
             () -> Logger.error("Cannot enter state '{}'. No state with that name exists.", stateName)
@@ -107,7 +107,7 @@ public interface GameControl {
      *
      * @param stateName the identifier of the state to restart
      */
-    default void restartStateNamed(String stateName) {
+    default void restartStateWithName(String stateName) {
         optState(stateName).ifPresentOrElse(
             state -> stateMachine().restart(state),
             () -> Logger.error("Cannot restart in state '{}'. State not existing.", stateName)

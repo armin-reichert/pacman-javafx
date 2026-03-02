@@ -64,7 +64,7 @@ public final class CheatActions {
                 if (!vulnerableGhosts.isEmpty()) {
                     level.energizerVictims().clear(); // resets value of next killed ghost to 200
                     vulnerableGhosts.forEach(ghost -> game.onEatGhost(level, ghost));
-                    game.control().enterStateNamed(GameControl.StateName.EATING_GHOST.name());
+                    game.control().enterStateWithName(GameControl.StateName.EATING_GHOST.name());
                 }
             });
         }
@@ -84,7 +84,7 @@ public final class CheatActions {
             if (game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
                 game.raiseCheatFlag();
             }
-            game.control().enterStateNamed(GameControl.StateName.LEVEL_COMPLETE.name());
+            game.control().enterStateWithName(GameControl.StateName.LEVEL_COMPLETE.name());
         }
 
         @Override

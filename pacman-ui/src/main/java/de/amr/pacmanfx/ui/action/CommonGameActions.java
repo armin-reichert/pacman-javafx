@@ -108,7 +108,7 @@ public final class CommonGameActions {
             if (isLevelShortTest) {
                 game.control().state().onExit(game); //TODO exit other states too?
             }
-            game.control().restartStateNamed(StateName.INTRO.name());
+            game.control().restartStateWithName(StateName.INTRO.name());
             ui.gameContext().clock().start();
         }
     };
