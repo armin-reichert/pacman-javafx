@@ -25,9 +25,11 @@ import static java.util.Objects.requireNonNull;
 
 public class Energizer3D implements Disposable {
 
+    private static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial(Color.WHITE);
+
     private static Shape3D createDefaultShape() {
         final var shape = new Sphere(3.5);
-        shape.setMaterial(new PhongMaterial(Color.WHITE));
+        shape.setMaterial(DEFAULT_MATERIAL);
         return shape;
     }
 
