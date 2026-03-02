@@ -40,7 +40,7 @@ public class CutScenesTestState implements StateMachine.State<Game>, TestState {
                 //TODO find another solution and get rid of this event type
                 game.publishGameEvent(new UnspecifiedChangeEvent("Cut Scene Test"));
             } else {
-                game.control().enterStateWithName(GameControl.StateName.INTRO.name());
+                game.control().enterStateWithName(GameControl.CommonStateName.INTRO.name());
             }
         }
     }

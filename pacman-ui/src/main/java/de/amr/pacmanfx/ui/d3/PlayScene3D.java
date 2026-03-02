@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameControl.StateName;
+import de.amr.pacmanfx.model.GameControl.CommonStateName;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -367,13 +367,13 @@ public class PlayScene3D implements GameScene {
         mazeFood3D.energizers3D().forEach(energizer3D ->
             energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
 
-        if (state.nameMatches(StateName.HUNTING.name(), StateName.EATING_GHOST.name())) { //TODO check this
+        if (state.nameMatches(CommonStateName.HUNTING.name(), CommonStateName.EATING_GHOST.name())) { //TODO check this
             mazeFood3D.energizers3D().stream()
                 .filter(energizer3D -> energizer3D.shape().isVisible())
                 .forEach(Energizer3D::startPumping);
         }
 
-        if (state.nameMatches(StateName.HUNTING.name())) {
+        if (state.nameMatches(CommonStateName.HUNTING.name())) {
             if (level.pac().powerTimer().isRunning()) {
                 ui.soundManager().loop(SoundID.PAC_MAN_POWER);
             }
@@ -437,19 +437,19 @@ public class PlayScene3D implements GameScene {
             });
         }
         else {
-            if (newState.nameMatches(StateName.HUNTING.name())) {
+            if (newState.nameMatches(CommonStateName.HUNTING.name())) {
                 gameLevel3D.onHuntingStart();
             }
-            else if (newState.nameMatches(StateName.PACMAN_DYING.name())) {
+            else if (newState.nameMatches(CommonStateName.PACMAN_DYING.name())) {
                 gameLevel3D.onPacManDying(newState.timer());
             }
-            else if (newState.nameMatches(StateName.EATING_GHOST.name())) {
+            else if (newState.nameMatches(CommonStateName.EATING_GHOST.name())) {
                 gameLevel3D.onEatingGhost();
             }
-            else if (newState.nameMatches(StateName.LEVEL_COMPLETE.name())) {
+            else if (newState.nameMatches(CommonStateName.LEVEL_COMPLETE.name())) {
                 gameLevel3D.onLevelComplete(newState, perspectiveID);
             }
-            else if (newState.nameMatches(StateName.GAME_OVER.name())) {
+            else if (newState.nameMatches(CommonStateName.GAME_OVER.name())) {
                 gameLevel3D.onGameOver(newState);
                 final boolean showMessage = randomInt(0, 1000) < 250;
                 if (!game.level().isDemoLevel() && showMessage) {
@@ -457,7 +457,7 @@ public class PlayScene3D implements GameScene {
                     ui.showFlashMessage(Duration.seconds(2.5), message);
                 }
             }
-            else if (newState.nameMatches(StateName.STARTING_GAME_OR_LEVEL.name())) {
+            else if (newState.nameMatches(CommonStateName.STARTING_GAME_OR_LEVEL.name())) {
                 if (gameLevel3D != null) {
                     gameLevel3D.onStartingGame();
                 } else {
@@ -512,7 +512,7 @@ public class PlayScene3D implements GameScene {
             showTestMessage(level.worldMap(), level.number());
         }
         else {
-            if (!level.isDemoLevel() && state.nameMatches(StateName.STARTING_GAME_OR_LEVEL.name(), StateName.LEVEL_TRANSITION.name())) {
+            if (!level.isDemoLevel() && state.nameMatches(CommonStateName.STARTING_GAME_OR_LEVEL.name(), CommonStateName.LEVEL_TRANSITION.name())) {
                 showReadyMessage(level.worldMap());
             }
         }
@@ -719,7 +719,7 @@ public class PlayScene3D implements GameScene {
         if (!ui.soundManager().isEnabled()) {
             return;
         }
-        if (level.game().control().state().nameMatches(StateName.HUNTING.name())) {
+        if (level.game().control().state().nameMatches(CommonStateName.HUNTING.name())) {
             updateSiren(level);
             updateGhostSounds(level.pac(), level.ghosts());
         }
