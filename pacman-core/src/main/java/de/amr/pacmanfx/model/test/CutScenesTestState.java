@@ -16,11 +16,6 @@ public class CutScenesTestState implements StateMachine.State<Game>, TestState {
     public int testedCutSceneNumber;
 
     @Override
-    public String name() {
-        return getClass().getSimpleName();
-    }
-
-    @Override
     public TickTimer timer() {
         return timer;
     }

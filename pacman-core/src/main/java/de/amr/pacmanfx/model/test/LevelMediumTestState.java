@@ -16,11 +16,6 @@ public class LevelMediumTestState implements StateMachine.State<Game>, TestState
     private int lastTestedLevelNumber;
 
     @Override
-    public String name() {
-        return getClass().getSimpleName();
-    }
-
-    @Override
     public TickTimer timer() {
         return timer;
     }

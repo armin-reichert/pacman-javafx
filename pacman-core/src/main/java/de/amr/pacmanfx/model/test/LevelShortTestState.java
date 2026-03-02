@@ -21,11 +21,6 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
     }
 
     @Override
-    public String name() {
-        return getClass().getSimpleName();
-    }
-
-    @Override
     public TickTimer timer() {
         return timer;
     }

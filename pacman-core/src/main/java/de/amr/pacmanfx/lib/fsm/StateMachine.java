@@ -35,9 +35,11 @@ public class StateMachine<CONTEXT> {
      */
     public interface State<C> {
 
-        String name();
+        default Object name() {
+            return getClass().getSimpleName();
+        }
 
-        default boolean nameMatches(String... names) {
+        default boolean nameMatches(Object... names) {
             if (names.length == 0) return false;
             return Stream.of(names).anyMatch(name -> name().equals(name));
         }
