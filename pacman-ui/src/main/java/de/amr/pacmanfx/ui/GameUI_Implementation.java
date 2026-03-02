@@ -214,7 +214,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     // PreferencesManager interface
 
     @Override
-		protected void storeDefaultValues() {
+    protected void storeDefaultPrefValues() {
         // "Kornblumenblau, sind die Augen der Frauen beim Weine. Hicks!"
         storeDefaultColor("context_menu.title.fill", Color.CORNFLOWERBLUE);
         storeDefaultFont("context_menu.title.font", Font.font("Dialog", FontWeight.BLACK, 14.0f));

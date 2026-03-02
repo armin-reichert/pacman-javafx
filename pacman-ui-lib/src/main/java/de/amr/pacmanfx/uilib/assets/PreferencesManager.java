@@ -25,7 +25,7 @@ public abstract class PreferencesManager {
             Logger.error("User preferences could not be accessed, using default values!");
         } else {
             Logger.info("Preferences backing store is accessible");
-            storeDefaultValues();
+            storeDefaultPrefValues();
             // Add missing values
             final List<String> keys = defaultsMap.keySet().stream().sorted().toList();
             try {
@@ -43,7 +43,7 @@ public abstract class PreferencesManager {
         }
     }
 
-    protected abstract void storeDefaultValues();
+    protected abstract void storeDefaultPrefValues();
 
     public boolean isBackingStoreAccessible() {
         try {
