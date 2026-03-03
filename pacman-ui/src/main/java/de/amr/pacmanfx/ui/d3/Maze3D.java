@@ -9,9 +9,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.ui.d3.config.Config3D;
-import de.amr.pacmanfx.ui.d3.config.HouseConfig3D;
-import de.amr.pacmanfx.ui.d3.config.MazeConfig3D;
+import de.amr.pacmanfx.ui.d3.config.*;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import javafx.beans.property.DoubleProperty;
@@ -79,24 +77,31 @@ public class Maze3D extends Group implements Disposable {
      * @param ghostMaterials   materials used for ghost-related effects (energizer particles etc.)
      * @throws NullPointerException if any required argument is {@code null}
      */
-    public Maze3D(UIConfig uiConfig, GameLevel level, AnimationRegistry animationRegistry,
-                  List<PhongMaterial> ghostMaterials) {
+    public Maze3D(
+        UIConfig uiConfig,
+        GameLevel level,
+        AnimationRegistry animationRegistry,
+        List<PhongMaterial> ghostMaterials)
+    {
         requireNonNull(uiConfig);
+        requireNonNull(level);
         this.animationRegistry = requireNonNull(animationRegistry);
         requireNonNull(ghostMaterials);
+
         this.colorScheme = adjustColorScheme(uiConfig.config3D().maze(), uiConfig.colorScheme(level.worldMap()));
 
         final Config3D config3D = uiConfig.config3D();
+
         createMaterials();
-        createFloor3D(config3D, level);
+        createFloor3D(config3D.floor(), level);
         createObstacles3D(config3D.maze(), level);
         level.worldMap().terrainLayer().optHouse()
             .filter(ArcadeHouse.class::isInstance)
             .map(ArcadeHouse.class::cast)
             .ifPresentOrElse(
-                house -> createHouse3D(config3D.house(), house),
-                () -> Logger.error("For creating 3D house, currently only Arcade house is supported"));
-        createMazeFood3D(config3D, level, ghostMaterials);
+                arcadeHouse -> createArcadeHouse3D(config3D.house(), arcadeHouse),
+                () -> Logger.error("Currently only Arcade house is supported"));
+        createMazeFood3D(config3D.pellet(), config3D.energizer(), level, ghostMaterials);
     }
 
     /**
@@ -195,21 +200,21 @@ public class Maze3D extends Group implements Disposable {
         obstacles3D.renderObstacles(level, wallThickness, cornerRadius, materials3D, wallBaseHeight);
     }
 
-    private void createFloor3D(Config3D config3D, GameLevel level) {
-        final Vector2i worldSizePx = level.worldMap().terrainLayer().sizeInPixel();
-        final float width = worldSizePx.x() + 2 * config3D.floor().padding();
-        final float height = worldSizePx.y();
-        floor3D = new MazeFloor3D(materials3D.floor(), width, height,
-            config3D.floor().thickness(), config3D.floor().padding());
+    private void createFloor3D(FloorConfig3D floorConfig, GameLevel level) {
+        final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
+        final float width = terrainSize.x() + 2 * floorConfig.padding();
+        final float height = terrainSize.y();
+        floor3D = new MazeFloor3D(materials3D.floor(), width, height, floorConfig.thickness(), floorConfig.padding());
     }
 
-    private void createHouse3D(HouseConfig3D houseConfig, ArcadeHouse house) {
+    private void createArcadeHouse3D(HouseConfig3D houseConfig, ArcadeHouse house) {
         house3D = new MazeHouse3D(colorScheme, houseConfig, animationRegistry, house);
         getChildren().add(house3D.root());
     }
 
-    private void createMazeFood3D(Config3D config3D, GameLevel level, List<PhongMaterial> ghostMaterials) {
-        food3D = new MazeFood3D(config3D.pellet(), config3D.energizer(), colorScheme,
-            animationRegistry, level, ghostMaterials, this);
+    private void createMazeFood3D(
+        PelletConfig3D pelletConfig, EnergizerConfig3D energizerConfig, GameLevel level, List<PhongMaterial> ghostMaterials)
+    {
+        food3D = new MazeFood3D(pelletConfig, energizerConfig, colorScheme, animationRegistry, level, ghostMaterials, this);
     }
 }
