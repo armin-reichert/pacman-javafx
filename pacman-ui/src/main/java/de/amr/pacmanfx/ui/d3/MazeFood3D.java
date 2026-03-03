@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.d3.config.Config3D;
 import de.amr.pacmanfx.ui.d3.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.d3.config.PelletConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -51,13 +50,16 @@ public class MazeFood3D implements Disposable {
     private EnergizerParticlesAnimation explodedEnergizerParticlesAnimation;
 
     public MazeFood3D(
-        Config3D config3D,
+        PelletConfig3D pelletConfig3D,
+        EnergizerConfig3D energizerConfig3D,
         WorldMapColorScheme colorScheme,
         AnimationRegistry animationRegistry,
         GameLevel level,
         List<PhongMaterial> ghostMaterials,
         Maze3D maze3D)
     {
+        requireNonNull(pelletConfig3D);
+        requireNonNull(energizerConfig3D);
         requireNonNull(colorScheme);
         requireNonNull(animationRegistry);
         requireNonNull(level);
@@ -69,15 +71,13 @@ public class MazeFood3D implements Disposable {
         final var pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
 
         energizerShapeFactory = () -> {
-            final var shape = new Sphere(config3D.energizer().radius(), 48);
+            final var shape = new Sphere(energizerConfig3D.radius(), 48);
             shape.setMaterial(pelletMaterial);
             return shape;
         };
 
-        final PelletConfig3D pelletConfig = config3D.pellet();
-        final EnergizerConfig3D energizerConfig = config3D.energizer();
-        createPellets3D(pelletConfig, pelletMaterial, maze3D.floorTop() - pelletConfig.floorElevation());
-        createEnergizers3D(energizerConfig, animationRegistry, maze3D.floorTop() - energizerConfig.floorElevation());
+        createPellets3D(pelletConfig3D, pelletMaterial, maze3D.floorTop() - pelletConfig3D.floorElevation());
+        createEnergizers3D(energizerConfig3D, animationRegistry, maze3D.floorTop() - energizerConfig3D.floorElevation());
 
         // The bottom center positions of the swirls where the particles of exploded energizers eventually are displayed
         final List<Vector2f> swirlBaseCenters = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
