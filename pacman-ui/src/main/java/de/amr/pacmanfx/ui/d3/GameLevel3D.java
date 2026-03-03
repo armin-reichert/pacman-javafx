@@ -424,14 +424,20 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
-    private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode newDrawMode) {
+    private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode drawMode) {
+        final Predicate<Node> excludeNone = _ -> false;
         try {
-            Predicate<Node> includeAll = _ -> false;
-            setDrawModeUnder(maze3D, node -> node instanceof Shape3D && maze3D.food().pellets3D().contains(node), newDrawMode);
-            setDrawModeUnder(pac3D, includeAll, newDrawMode);
-            setDrawModeUnder(livesCounter3D, includeAll, newDrawMode);
+            if (maze3D != null) {
+                setDrawModeExcluding(maze3D, node -> node instanceof Pellet3D, drawMode);
+            }
+            if (pac3D != null) {
+                setDrawModeExcluding(pac3D, excludeNone, drawMode);
+            }
+            if (livesCounter3D != null) {
+                setDrawModeExcluding(livesCounter3D, excludeNone, drawMode);
+            }
             if (ghosts3D != null) {
-                ghosts3D.forEach(ghost3D -> setDrawModeUnder(ghost3D, includeAll, newDrawMode));
+                ghosts3D.forEach(ghost3D -> setDrawModeExcluding(ghost3D, excludeNone, drawMode));
             }
         }
         catch (Exception x) {
@@ -439,7 +445,7 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
-    private static void setDrawModeUnder(Node node, Predicate<Node> exclusionFilter, DrawMode drawMode) {
+    private static void setDrawModeExcluding(Node node, Predicate<Node> exclusionFilter, DrawMode drawMode) {
         if (node == null) return; //TODO why does this happen?
         node.lookupAll("*").stream()
             .filter(exclusionFilter.negate())
