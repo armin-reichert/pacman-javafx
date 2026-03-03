@@ -13,13 +13,11 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.ui.d3.config.ActorConfig3D;
-import de.amr.pacmanfx.ui.d3.config.Config3D;
-import de.amr.pacmanfx.ui.d3.config.LevelCounterConfig3D;
-import de.amr.pacmanfx.ui.d3.config.LivesCounterConfig3D;
+import de.amr.pacmanfx.ui.d3.config.*;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -121,7 +119,7 @@ public class GameLevel3D extends Group implements Disposable {
             .map(Ghost3D::normalMaterialSet)
             .map(Ghost3D.MaterialSet::dress)
             .toList();
-        createMaze3D(ghostNormalDressMaterials);
+        createMaze3D(config3D, ghostNormalDressMaterials);
         createLights();
 
         animations = new GameLevel3DAnimations(this);
@@ -248,10 +246,22 @@ public class GameLevel3D extends Group implements Disposable {
         ghostLight = new PointLight();
     }
 
-    private void createMaze3D(List<PhongMaterial> ghostMaterials) {
-        maze3D = new Maze3D(uiConfig, level, animationRegistry, ghostMaterials);
+    private void createMaze3D(Config3D config3D, List<PhongMaterial> ghostMaterials) {
+        WorldMapColorScheme colorScheme = adjustColorScheme(config3D.maze(), uiConfig.colorScheme(level.worldMap()));
+        maze3D = new Maze3D(config3D, colorScheme, level, animationRegistry, ghostMaterials);
         maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
         maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
+    }
+
+    private WorldMapColorScheme adjustColorScheme(MazeConfig3D mazeConfig3D, WorldMapColorScheme proposedColorScheme) {
+        final boolean isFillColorDark = Color.valueOf(proposedColorScheme.wallFill()).getBrightness() < 0.1;
+        return isFillColorDark
+            ? new WorldMapColorScheme(
+                mazeConfig3D.darkWallFillColor(),
+                proposedColorScheme.wallStroke(),
+                proposedColorScheme.door(),
+                proposedColorScheme.pellet())
+            : proposedColorScheme;
     }
 
     public LivesCounter3D livesCounter3D() {

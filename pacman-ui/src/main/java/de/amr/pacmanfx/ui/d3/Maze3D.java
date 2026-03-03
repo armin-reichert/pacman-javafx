@@ -8,14 +8,12 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d3.config.*;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import org.tinylog.Logger;
 
@@ -71,26 +69,24 @@ public class Maze3D extends Group implements Disposable {
     /**
      * Creates a new 3D maze for the given level.
      *
-     * @param uiConfig         global UI configuration (provides 3D settings and color scheme)
+     * @param config3D         3D configuration
      * @param level            the game level whose world map is rendered
      * @param animationRegistry registry for animations used by 3D components
      * @param ghostMaterials   materials used for ghost-related effects (energizer particles etc.)
      * @throws NullPointerException if any required argument is {@code null}
      */
     public Maze3D(
-        UIConfig uiConfig,
+        Config3D config3D,
+        WorldMapColorScheme colorScheme,
         GameLevel level,
         AnimationRegistry animationRegistry,
         List<PhongMaterial> ghostMaterials)
     {
-        requireNonNull(uiConfig);
+        requireNonNull(config3D);
         requireNonNull(level);
         this.animationRegistry = requireNonNull(animationRegistry);
         requireNonNull(ghostMaterials);
-
-        this.colorScheme = adjustColorScheme(uiConfig.config3D().maze(), uiConfig.colorScheme(level.worldMap()));
-
-        final Config3D config3D = uiConfig.config3D();
+        this.colorScheme = requireNonNull(colorScheme);
 
         createMaterials();
         createFloor3D(config3D.floor(), level);
@@ -102,18 +98,6 @@ public class Maze3D extends Group implements Disposable {
                 arcadeHouse -> createArcadeHouse3D(config3D.house(), arcadeHouse),
                 () -> Logger.error("Currently only Arcade house is supported"));
         createMazeFood3D(config3D.pellet(), config3D.energizer(), level, ghostMaterials);
-    }
-
-    /**
-     * Ensures sufficient contrast when the wall fill color is extremely dark.
-     * This prevents walls from visually merging with the floor.
-     */
-    private WorldMapColorScheme adjustColorScheme(MazeConfig3D config, WorldMapColorScheme proposed) {
-        final boolean isFillColorDark = Color.valueOf(proposed.wallFill()).getBrightness() < 0.1;
-        return isFillColorDark
-            ? new WorldMapColorScheme(config.darkWallFillColor(), proposed.wallStroke(),
-            proposed.door(), proposed.pellet())
-            : proposed;
     }
 
     /** @return the property controlling the base height of all walls */
