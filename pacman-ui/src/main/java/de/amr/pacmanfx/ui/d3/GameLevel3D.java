@@ -20,14 +20,12 @@ import de.amr.pacmanfx.ui.d3.config.*;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.AnimationSupport;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -67,9 +65,7 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private final GameLevel level;
-
     private final UIConfig uiConfig;
-
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
 
     private MeshView[] ghostDressMeshViews;
@@ -349,7 +345,7 @@ public class GameLevel3D extends Group implements Disposable {
         });
     }
 
-    public void onLevelComplete(State<Game> state, ObjectProperty<PerspectiveID> perspectiveIDProperty, SoundManager soundManager) {
+    public void onLevelComplete(State<Game> state, SoundManager soundManager) {
         soundManager.stopAll();
         animationRegistry.stopAllAnimations();
 
@@ -374,11 +370,11 @@ public class GameLevel3D extends Group implements Disposable {
 
         final boolean cutSceneFollows = level.cutSceneNumber() != 0;
         final Animation levelCompletedAnimation = animations.selectLevelCompleteAnimation(cutSceneFollows).animationFX();
+        final PerspectiveID perspectiveBeforeAnimation = GameUI.PROPERTY_3D_PERSPECTIVE_ID.get();
 
         final var animationSequence = new SequentialTransition(
             pauseSecThen(2, () -> {
-                perspectiveIDProperty.unbind();
-                perspectiveIDProperty.set(PerspectiveID.TOTAL);
+                GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
                 maze3D.wallBaseHeightProperty().unbind();
             }),
             levelCompletedAnimation,
@@ -387,7 +383,7 @@ public class GameLevel3D extends Group implements Disposable {
 
         animationSequence.setOnFinished(_ -> {
             maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
-            perspectiveIDProperty.bind(PROPERTY_3D_PERSPECTIVE_ID);
+            GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(perspectiveBeforeAnimation);
             state.timer().expire();
         });
 

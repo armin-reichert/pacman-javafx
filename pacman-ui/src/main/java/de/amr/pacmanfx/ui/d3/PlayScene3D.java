@@ -23,7 +23,6 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.action.ActionBinding;
-import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
@@ -32,8 +31,6 @@ import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.Scores3D;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.animation.*;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
@@ -49,7 +46,9 @@ import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -167,64 +166,9 @@ public class PlayScene3D implements GameScene {
         }
     }
 
-    private final Map<PerspectiveID, Perspective<GameLevel>> perspectivesByID = new EnumMap<>(PerspectiveID.class);
-
-    private final ObjectProperty<PerspectiveID> perspectiveID = new SimpleObjectProperty<>(PerspectiveID.NEAR_PLAYER);
-
-    protected final GameAction actionDroneClimb = new GameAction("DroneClimb") {
-        @Override
-        public void execute(GameUI ui) {
-            currentPerspective()
-                .filter(DronePerspective.class::isInstance)
-                .map(DronePerspective.class::cast)
-                .ifPresent(DronePerspective::moveUp);
-        }
-        @Override
-        public boolean isEnabled(GameUI ui) {
-            return perspectiveID.get() == PerspectiveID.DRONE;
-        }
-    };
-
-    protected final GameAction actionDroneDescent = new GameAction("DroneDescent") {
-        @Override
-        public void execute(GameUI ui) {
-            currentPerspective()
-                .filter(DronePerspective.class::isInstance)
-                .map(DronePerspective.class::cast)
-                .ifPresent(DronePerspective::moveDown);
-        }
-        @Override
-        public boolean isEnabled(GameUI ui) {
-            return perspectiveID.get() == PerspectiveID.DRONE;
-        }
-    };
-
-    protected final GameAction actionDroneReset = new GameAction("DroneReset") {
-        @Override
-        public void execute(GameUI ui) {
-            currentPerspective()
-                .filter(DronePerspective.class::isInstance)
-                .map(DronePerspective.class::cast)
-                .ifPresent(DronePerspective::moveDefaultHeight);
-        }
-        @Override
-        public boolean isEnabled(GameUI ui) {
-            return perspectiveID.get() == PerspectiveID.DRONE;
-        }
-    };
-
-    /** Key bindings for 3D play-scene navigation and rendering options. */
-    protected final Set<ActionBinding> _3D_BINDINGS = Set.of(
-        new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT)),
-        new ActionBinding(ACTION_PERSPECTIVE_NEXT,     alt(KeyCode.RIGHT)),
-        new ActionBinding(actionDroneClimb,            control(KeyCode.MINUS)),
-        new ActionBinding(actionDroneDescent,          control(KeyCode.PLUS)),
-        new ActionBinding(actionDroneReset,            control(KeyCode.DIGIT0)),
-        new ActionBinding(ACTION_TOGGLE_DRAW_MODE,     alt(KeyCode.W))
-    );
-
     protected final Group subSceneRoot = new Group();
     protected final Group level3DParent = new Group();
+    protected final PerspectiveManager perspectiveManager;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final SubScene subScene;
     protected final Animation fadeInAnimation;
@@ -247,14 +191,16 @@ public class PlayScene3D implements GameScene {
         subScene.setCamera(camera);
         subScene.setFill(SCENE_FILL_DARK);
 
-        createPerspectives();
+        perspectiveManager = new PerspectiveManager(camera);
         fadeInAnimation = createFadeInAnimation();
+
+        bindSceneActions();
     }
 
     @Override
     public void dispose() {
         actionBindings.dispose();
-        perspectivesByID.clear();
+        perspectiveManager.dispose();
         if (gameLevel3D != null) {
             gameLevel3D.dispose();
             gameLevel3D = null;
@@ -288,16 +234,16 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onScroll(ScrollEvent scrollEvent) {
         if (scrollEvent.getDeltaY() < 0) {
-            actionDroneClimb.executeIfEnabled(ui);
+            perspectiveManager.actionDroneClimb.executeIfEnabled(ui);
         } else if (scrollEvent.getDeltaY() > 0) {
-            actionDroneDescent.executeIfEnabled(ui);
+            perspectiveManager.actionDroneDescent.executeIfEnabled(ui);
         }
     }
 
     @Override
     public void init(Game game) {
         game.hud().score(true).show();
-        perspectiveIDProperty().bind(GameUI.PROPERTY_3D_PERSPECTIVE_ID);
+        perspectiveManager.activeIDProperty().bind(GameUI.PROPERTY_3D_PERSPECTIVE_ID);
     }
 
     @Override
@@ -311,7 +257,7 @@ public class PlayScene3D implements GameScene {
         if (contextMenu != null) {
             contextMenu.dispose();
         }
-        perspectiveIDProperty().unbind();
+        perspectiveManager.activeIDProperty().unbind();
     }
 
     @Override
@@ -330,7 +276,7 @@ public class PlayScene3D implements GameScene {
         }
 
         gameLevel3D.update();
-        updatePerspective(level);
+        perspectiveManager.updatePerspective(level);
         updateHUD(game);
         ui.soundManager().setEnabled(!level.isDemoLevel());
         updateSound(level);
@@ -454,7 +400,7 @@ public class PlayScene3D implements GameScene {
             gameLevel3D.onEatingGhost();
         }
         else if (stateIs(gameState, LEVEL_COMPLETE)) {
-            gameLevel3D.onLevelComplete(gameState, perspectiveID, ui.soundManager());
+            gameLevel3D.onLevelComplete(gameState, ui.soundManager());
         }
         else if (stateIs(gameState, GAME_OVER)) {
             gameLevel3D.onGameOver(gameState, ui.soundManager());
@@ -588,12 +534,16 @@ public class PlayScene3D implements GameScene {
 
     // other stuff
 
-    public ObjectProperty<PerspectiveID> perspectiveIDProperty() {
-        return perspectiveID;
-    }
-
-    public Optional<Perspective<GameLevel>> currentPerspective() {
-        return perspectiveID.get() == null ? Optional.empty() : Optional.of(perspectivesByID.get(perspectiveID.get()));
+    protected void bindSceneActions() {
+        final Set<ActionBinding> bindings = Set.of(
+            new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,           alt(KeyCode.LEFT)),
+            new ActionBinding(ACTION_PERSPECTIVE_NEXT,               alt(KeyCode.RIGHT)),
+            new ActionBinding(perspectiveManager.actionDroneClimb,   control(KeyCode.MINUS)),
+            new ActionBinding(perspectiveManager.actionDroneDescent, control(KeyCode.PLUS)),
+            new ActionBinding(perspectiveManager.actionDroneReset,   control(KeyCode.DIGIT0)),
+            new ActionBinding(ACTION_TOGGLE_DRAW_MODE,               alt(KeyCode.W))
+        );
+        actionBindings.registerAllFrom(bindings);
     }
 
     public Optional<GameLevel3D> level3D() {
@@ -617,36 +567,6 @@ public class PlayScene3D implements GameScene {
         }
         // Always show high score
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
-    }
-
-    private void createPerspectives() {
-        perspectivesByID.put(PerspectiveID.DRONE, new DronePerspective(camera));
-        perspectivesByID.put(PerspectiveID.TOTAL, new TotalPerspective(camera));
-        perspectivesByID.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective(camera));
-        perspectivesByID.put(PerspectiveID.NEAR_PLAYER, new StalkingPlayerPerspective(camera));
-
-        perspectiveID.addListener((_, oldID, newID) -> {
-            if (oldID != null) {
-                final Perspective<GameLevel> oldPerspective = perspectivesByID.get(oldID);
-                oldPerspective.stopControlling();
-            }
-            if (newID != null) {
-                final Perspective<GameLevel> newPerspective = perspectivesByID.get(newID);
-                newPerspective.startControlling();
-            }
-            else {
-                Logger.error("New perspective ID is NULL!");
-            }
-        });
-    }
-
-    private void updatePerspective(GameLevel level) {
-        final PerspectiveID id = perspectiveID.get();
-        if (id != null && perspectivesByID.containsKey(id)) {
-            perspectivesByID.get(id).update(level);
-        } else {
-            Logger.error("No perspective with ID '{}' exists", id);
-        }
     }
 
     private void replaceScores3D() {
@@ -734,7 +654,7 @@ public class PlayScene3D implements GameScene {
         return new Timeline(
             new KeyFrame(Duration.ZERO, _ -> {
                 //TODO Check if this is needed:
-                currentPerspective().ifPresent(Perspective::startControlling);
+                perspectiveManager.currentPerspective().ifPresent(Perspective::startControlling);
                 subScene.setFill(SCENE_FILL_DARK);
                 gameLevel3D.setVisible(true);
                 scores3D.setVisible(true);

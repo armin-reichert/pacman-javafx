@@ -16,14 +16,13 @@ public class Arcade_PlayScene3D extends PlayScene3D {
     @Override
     protected void replaceActionBindings(GameLevel level) {
         actionBindings = new ActionBindingsManagerImpl();
-
         if (level.isDemoLevel()) {
             actionBindings.registerAllFrom(ArcadePacMan_UIConfig.GAME_START_BINDINGS);
         } else {
             actionBindings.registerAllFrom(GameUI.STEERING_BINDINGS);
             actionBindings.registerAllFrom(GameUI.CHEAT_BINDINGS);
         }
-        actionBindings.registerAllFrom(_3D_BINDINGS);
+        bindSceneActions();
 
         actionBindings.addAll(GameUI.KEYBOARD);
     }
