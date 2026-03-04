@@ -45,9 +45,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.*;
 import static java.util.Objects.requireNonNull;
@@ -57,10 +57,12 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D extends Group implements Disposable {
 
-    private static List<MeshView> createGhostComponentMeshViews(Mesh mesh) {
-        return Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
-            .map(_ -> new MeshView(mesh))
-            .toList();
+    private static MeshView[] create4MeshViews(Mesh mesh) {
+        final MeshView[] meshViews = new MeshView[4];
+        for (int i = 0; i < 4; ++i) {
+            meshViews[i] = new MeshView(mesh);
+        }
+        return meshViews;
     }
 
     private final GameLevel level;
@@ -70,9 +72,9 @@ public class GameLevel3D extends Group implements Disposable {
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final GameLevel3DAnimations animations;
 
-    private List<MeshView> ghostDressMeshViews;
-    private List<MeshView> ghostPupilsMeshViews;
-    private List<MeshView> ghostEyesMeshViews;
+    private MeshView[] ghostDressMeshViews;
+    private MeshView[] ghostPupilsMeshViews;
+    private MeshView[] ghostEyesMeshViews;
 
     private Node[] livesCounterShapes;
 
@@ -97,9 +99,9 @@ public class GameLevel3D extends Group implements Disposable {
 
         setMouseTransparent(true); // this increases performance, they say...
 
-        ghostDressMeshViews  = createGhostComponentMeshViews(Models3D.GHOST_MODEL.dressMesh());
-        ghostPupilsMeshViews = createGhostComponentMeshViews(Models3D.GHOST_MODEL.pupilsMesh());
-        ghostEyesMeshViews   = createGhostComponentMeshViews(Models3D.GHOST_MODEL.eyeballsMesh());
+        ghostDressMeshViews  = create4MeshViews(Models3D.GHOST_MODEL.dressMesh());
+        ghostPupilsMeshViews = create4MeshViews(Models3D.GHOST_MODEL.pupilsMesh());
+        ghostEyesMeshViews   = create4MeshViews(Models3D.GHOST_MODEL.eyeballsMesh());
 
         createLevelCounter3D(config3D.levelCounter());
         createLivesCounter3D(config3D.livesCounter());
@@ -177,13 +179,14 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private MutableGhost3D createMutatingGhost3D(ActorConfig3D actorConfig, Ghost ghost) {
-        var mutatingGhost3D = new MutableGhost3D(
+        final byte id = ghost.personality();
+        final var mutatingGhost3D = new MutableGhost3D(
             animationRegistry,
             ghost,
-            createGhostColorSet(ghost.personality()),
-            ghostDressMeshViews.get(ghost.personality()),
-            ghostPupilsMeshViews.get(ghost.personality()),
-            ghostEyesMeshViews.get(ghost.personality()),
+            createGhostColorSet(id),
+            ghostDressMeshViews[id],
+            ghostPupilsMeshViews[id],
+            ghostEyesMeshViews[id],
             actorConfig.ghostSize(),
             level.numFlashes()
         );
