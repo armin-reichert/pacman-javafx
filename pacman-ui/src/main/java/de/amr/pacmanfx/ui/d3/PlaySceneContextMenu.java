@@ -37,7 +37,7 @@ import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PLAY_SCE
  * <p>Instances must be disposed via {@link #dispose()} to remove listeners and
  * avoid memory leaks.</p>
  */
-class PlaySceneContextMenu extends GameUI_ContextMenu implements Disposable {
+public class PlaySceneContextMenu extends GameUI_ContextMenu implements Disposable {
 
     /**
      * Toggle group containing all perspective radio buttons.
