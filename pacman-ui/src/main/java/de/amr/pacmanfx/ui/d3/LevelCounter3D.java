@@ -10,7 +10,6 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d3.config.LevelCounterConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -29,15 +28,13 @@ import static java.util.Objects.requireNonNull;
 
 public class LevelCounter3D extends Group implements Disposable {
 
-    private final PreferencesManager prefs;
     private final UIConfig uiConfig;
     private final AnimationRegistry animationRegistry;
     private ManagedAnimation spinningAnimation;
 
-    public LevelCounter3D(AnimationRegistry animationRegistry, UIConfig uiConfig, PreferencesManager prefs) {
+    public LevelCounter3D(AnimationRegistry animationRegistry, UIConfig uiConfig) {
         this.animationRegistry = requireNonNull(animationRegistry);
         this.uiConfig = requireNonNull(uiConfig);
-        this.prefs = requireNonNull(prefs);
     }
 
     public void rebuild(LevelCounterConfig3D config, GameLevel level) {

@@ -193,7 +193,6 @@ public class Maze3D extends Group implements Disposable {
 
     private void createArcadeHouse3D(HouseConfig3D houseConfig, ArcadeHouse house) {
         house3D = new MazeHouse3D(colorScheme, houseConfig, animationRegistry, house);
-        getChildren().add(house3D.root());
     }
 
     private void createMazeFood3D(

@@ -22,7 +22,6 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
 import javafx.animation.Animation;
@@ -67,7 +66,6 @@ public class GameLevel3D extends Group implements Disposable {
 
     private final GameLevel level;
 
-    private final PreferencesManager prefs;
     private final UIConfig uiConfig;
     private final SoundManager soundManager;
     
@@ -95,7 +93,6 @@ public class GameLevel3D extends Group implements Disposable {
         requireNonNull(ui);
         this.level = requireNonNull(level);
 
-        this.prefs = ui.prefs();
         this.uiConfig = ui.currentConfig();
         this.soundManager = ui.soundManager();
 
@@ -124,6 +121,8 @@ public class GameLevel3D extends Group implements Disposable {
 
         animations = new GameLevel3DAnimations(this);
 
+        // Note: The order in which children are added matters!
+        // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
         getChildren().add(maze3D.floor());
         getChildren().addAll(maze3D.particlesGroup());
         getChildren().add(levelCounter3D);
@@ -132,9 +131,8 @@ public class GameLevel3D extends Group implements Disposable {
         getChildren().addAll(ghosts3D);
         getChildren().addAll(maze3D.food().energizers3D().stream().map(Energizer3D::shape).toList());
         getChildren().addAll(maze3D.food().pellets3D());
+        getChildren().add(maze3D.house().root());
         getChildren().add(maze3D.house().doors()); // Note order of addition!
-        // Note: The order in which children are added to the root matters!
-        // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
         getChildren().add(maze3D);
         getChildren().add(ambientLight);
         getChildren().add(ghostLight);
@@ -233,7 +231,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     private void createLevelCounter3D(LevelCounterConfig3D config) {
         WorldMap worldMap = level.worldMap();
-        levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig, prefs);
+        levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
         levelCounter3D.setTranslateX(TS * (worldMap.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.setTranslateZ(-config.elevation());
