@@ -20,6 +20,7 @@ import de.amr.pacmanfx.ui.d3.config.*;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationSupport;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
@@ -70,7 +71,6 @@ public class GameLevel3D extends Group implements Disposable {
     private final UIConfig uiConfig;
 
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
-    private final GameLevel3DAnimations animations;
 
     private MeshView[] ghostDressMeshViews;
     private MeshView[] ghostPupilsMeshViews;
@@ -89,35 +89,34 @@ public class GameLevel3D extends Group implements Disposable {
     private Bonus3D bonus3D;
     private MessageView messageView;
 
+    private GameLevel3DAnimations animations;
+
     public GameLevel3D(GameUI ui, GameLevel level) {
         requireNonNull(ui);
         this.level = requireNonNull(level);
         this.uiConfig = ui.currentConfig();
-        final Config3D config3D = uiConfig.config3D();
-
-        PROPERTY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
-
-        setMouseTransparent(true); // this increases performance, they say...
 
         final int numGhosts = (int) level.ghosts().count();
         ghostDressMeshViews  = createMeshViews(numGhosts, Models3D.GHOST_MODEL.dressMesh());
         ghostPupilsMeshViews = createMeshViews(numGhosts, Models3D.GHOST_MODEL.pupilsMesh());
         ghostEyesMeshViews   = createMeshViews(numGhosts, Models3D.GHOST_MODEL.eyeballsMesh());
 
-        createLevelCounter3D(config3D.levelCounter());
-        createLivesCounter3D(config3D.livesCounter());
+        createLevelCounter3D(uiConfig.config3D().levelCounter());
+        createLivesCounter3D(uiConfig.config3D().livesCounter());
 
-        createPac3D(config3D.actor());
-        ghosts3D = level.ghosts().map(ghost -> createMutatingGhost3D(config3D.actor(), ghost)).toList();
+        createPac3D(uiConfig.config3D().actor());
+
+        ghosts3D = level.ghosts().map(ghost -> createMutatingGhost3D(uiConfig.config3D().actor(), ghost)).toList();
+        ghosts3D.forEach(ghost3D -> ghost3D.init(level));
+
         final List<PhongMaterial> ghostNormalDressMaterials = ghosts3D.stream()
             .map(MutableGhost3D::ghost3D)
             .map(Ghost3D::normalMaterialSet)
             .map(Ghost3D.MaterialSet::dress)
             .toList();
-        createMaze3D(config3D, ghostNormalDressMaterials);
-        createLights();
+        createMaze3D(uiConfig.config3D(), ghostNormalDressMaterials);
 
-        animations = new GameLevel3DAnimations(this, ui.soundManager());
+        createLights();
 
         // Note: The order in which children are added matters!
         // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
@@ -135,11 +134,8 @@ public class GameLevel3D extends Group implements Disposable {
         getChildren().add(ambientLight);
         getChildren().add(ghostLight);
 
-        ghosts3D.forEach(ghost3D -> ghost3D.init(level));
-    }
-
-    public GameLevel3DAnimations animations() {
-        return animations;
+        PROPERTY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
+        setMouseTransparent(true); // this increases performance, they say...
     }
 
     public AnimationRegistry animationRegistry() {
@@ -156,6 +152,14 @@ public class GameLevel3D extends Group implements Disposable {
 
     public PointLight ghostLight() {
         return ghostLight;
+    }
+
+    public Optional<GameLevel3DAnimations> animations() {
+        return Optional.ofNullable(animations);
+    }
+
+    public void setAnimations(GameLevel3DAnimations animations) {
+        this.animations = requireNonNull(animations);
     }
 
     private GhostColorSet createGhostColorSet(byte personality) {
@@ -309,13 +313,17 @@ public class GameLevel3D extends Group implements Disposable {
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
         maze3D.food().energizers3D().forEach(Energizer3D::startPumping);
         maze3D.food().startAnimation();
-        animations.ghostLightAnimation().playFromStart();
+        if (animations != null) {
+            animations.ghostLightAnimation().playFromStart();
+        }
     }
 
     public void onPacManDying(State<Game> gameState, SoundManager soundManager) {
         soundManager.stopAll();
-        animations.ghostLightAnimation().stop();
-        animations.wallColorFlashingAnimation().stop();
+        if (animations != null) {
+            animations.ghostLightAnimation().stop();
+            animations.wallColorFlashingAnimation().stop();
+        }
         ghosts3D.forEach(MutableGhost3D::stopAllAnimations);
         bonus3D().ifPresent(Bonus3D::expire);
         // Do one last update before dying animation starts
@@ -342,7 +350,6 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     public void onLevelComplete(State<Game> state, ObjectProperty<PerspectiveID> perspectiveIDProperty, SoundManager soundManager) {
-        state.timer().resetIndefiniteTime(); // expires when animation ends
         soundManager.stopAll();
         animationRegistry.stopAllAnimations();
 
@@ -360,10 +367,15 @@ public class GameLevel3D extends Group implements Disposable {
             messageView.setVisible(false);
         }
 
+        if (animations == null) {
+            pauseSecThen(2, () -> state.timer().expire()).play();
+            return;
+        }
+
         final boolean cutSceneFollows = level.cutSceneNumber() != 0;
         final Animation levelCompletedAnimation = animations.selectLevelCompleteAnimation(cutSceneFollows).animationFX();
 
-        var animation = new SequentialTransition(
+        final var animationSequence = new SequentialTransition(
             pauseSecThen(2, () -> {
                 perspectiveIDProperty.unbind();
                 perspectiveIDProperty.set(PerspectiveID.TOTAL);
@@ -372,12 +384,15 @@ public class GameLevel3D extends Group implements Disposable {
             levelCompletedAnimation,
             pauseSec(0.25)
         );
-        animation.setOnFinished(_ -> {
+
+        animationSequence.setOnFinished(_ -> {
             maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
             perspectiveIDProperty.bind(PROPERTY_3D_PERSPECTIVE_ID);
-            level.game().control().state().timer().expire();
+            state.timer().expire();
         });
-        animation.play();
+
+        state.timer().resetIndefiniteTime(); // game continues after animation sequence ends
+        animationSequence.play();
     }
 
     public void onGameOver(State<Game> state, SoundManager soundManager) {

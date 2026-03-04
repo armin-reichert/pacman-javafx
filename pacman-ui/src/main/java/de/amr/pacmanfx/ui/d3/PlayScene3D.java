@@ -564,14 +564,14 @@ public class PlayScene3D implements GameScene {
         if (!game.isLevelCompleted(game.level())) {
             gameLevel3D.pac3D().setMovementPowerMode(true);
             ui.soundManager().loop(SoundID.PAC_MAN_POWER);
-            gameLevel3D.animations().wallColorFlashingAnimation().playFromStart();
+            gameLevel3D.animations().ifPresent(animations -> animations.wallColorFlashingAnimation().playFromStart());
         }
     }
 
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
         gameLevel3D.pac3D().setMovementPowerMode(false);
-        gameLevel3D.animations().wallColorFlashingAnimation().stop();
+        gameLevel3D.animations().ifPresent(animations -> animations.wallColorFlashingAnimation().stop());
         ui.soundManager().stop(SoundID.PAC_MAN_POWER);
     }
 
@@ -683,6 +683,7 @@ public class PlayScene3D implements GameScene {
         } else {
             Logger.info("Creating new game level 3D");
         }
+
         gameLevel3D = createGameLevel3D(level);
         Logger.info("Created new game level 3D");
 
@@ -693,6 +694,8 @@ public class PlayScene3D implements GameScene {
         Logger.info("Initialized actors of game level 3D");
 
         gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
+
+        gameLevel3D.setAnimations(new GameLevel3DAnimations(gameLevel3D, ui.soundManager()));
     }
 
     private void updateSiren(GameLevel level) {
