@@ -57,9 +57,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D extends Group implements Disposable {
 
-    private static MeshView[] create4MeshViews(Mesh mesh) {
-        final MeshView[] meshViews = new MeshView[4];
-        for (int i = 0; i < 4; ++i) {
+    private static MeshView[] createMeshViews(int n, Mesh mesh) {
+        final var meshViews = new MeshView[n];
+        for (int i = 0; i < meshViews.length; ++i) {
             meshViews[i] = new MeshView(mesh);
         }
         return meshViews;
@@ -99,9 +99,10 @@ public class GameLevel3D extends Group implements Disposable {
 
         setMouseTransparent(true); // this increases performance, they say...
 
-        ghostDressMeshViews  = create4MeshViews(Models3D.GHOST_MODEL.dressMesh());
-        ghostPupilsMeshViews = create4MeshViews(Models3D.GHOST_MODEL.pupilsMesh());
-        ghostEyesMeshViews   = create4MeshViews(Models3D.GHOST_MODEL.eyeballsMesh());
+        final int numGhosts = (int) level.ghosts().count();
+        ghostDressMeshViews  = createMeshViews(numGhosts, Models3D.GHOST_MODEL.dressMesh());
+        ghostPupilsMeshViews = createMeshViews(numGhosts, Models3D.GHOST_MODEL.pupilsMesh());
+        ghostEyesMeshViews   = createMeshViews(numGhosts, Models3D.GHOST_MODEL.eyeballsMesh());
 
         createLevelCounter3D(config3D.levelCounter());
         createLivesCounter3D(config3D.livesCounter());
