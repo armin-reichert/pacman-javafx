@@ -48,7 +48,7 @@ public class LevelMediumTestState extends AbstractState<Game> implements TestSta
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
                 game.publishGameEvent(new StopAllSoundsEvent());
-                game.control().enterStateWithName(GameControl.CommonStateName.INTRO.name());
+                game.control().enterStateWithName(GameControl.CommonGameState.INTRO.name());
             } else {
                 timer().restartSeconds(TEST_DURATION_SEC);
                 game.startNextLevel();
@@ -56,11 +56,11 @@ public class LevelMediumTestState extends AbstractState<Game> implements TestSta
             }
         }
         else if (game.isLevelCompleted(game.level())) {
-            game.control().enterStateWithName(GameControl.CommonStateName.INTRO.name());
+            game.control().enterStateWithName(GameControl.CommonGameState.INTRO.name());
         } else if (game.hasPacManBeenKilled()) {
             timer.expire();
         } else if (game.hasGhostBeenKilled()) {
-            game.control().enterStateWithName(GameControl.CommonStateName.EATING_GHOST.name());
+            game.control().enterStateWithName(GameControl.CommonGameState.EATING_GHOST.name());
         }
     }
 

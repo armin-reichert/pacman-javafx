@@ -308,14 +308,14 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         });
 
         stopGame();
-        game.control().restartStateWithName(GameControl.CommonStateName.BOOT.name());
+        game.control().restartStateWithName(GameControl.CommonGameState.BOOT.name());
         showStartView();
     }
 
     @Override
     public void restart() {
         stopGame();
-        gameContext.currentGame().control().restartStateWithName(GameControl.CommonStateName.BOOT.name());
+        gameContext.currentGame().control().restartStateWithName(GameControl.CommonGameState.BOOT.name());
         Platform.runLater(gameContext.clock()::start);
     }
 

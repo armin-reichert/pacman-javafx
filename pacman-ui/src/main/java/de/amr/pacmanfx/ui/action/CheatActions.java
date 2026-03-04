@@ -48,7 +48,7 @@ public final class CheatActions {
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.gameContext().currentGame();
             return game.optGameLevel().isPresent() && !game.level().isDemoLevel()
-                    && game.control().state().nameMatches(GameControl.CommonStateName.HUNTING.name());
+                    && game.control().state().nameMatches(GameControl.CommonGameState.HUNTING.name());
         }
     };
 
@@ -64,7 +64,7 @@ public final class CheatActions {
                 if (!vulnerableGhosts.isEmpty()) {
                     level.energizerVictims().clear(); // resets value of next killed ghost to 200
                     vulnerableGhosts.forEach(ghost -> game.onEatGhost(level, ghost));
-                    game.control().enterStateWithName(GameControl.CommonStateName.EATING_GHOST.name());
+                    game.control().enterStateWithName(GameControl.CommonGameState.EATING_GHOST.name());
                 }
             });
         }
@@ -72,7 +72,7 @@ public final class CheatActions {
         @Override
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.gameContext().currentGame();
-            return game.control().state().nameMatches(GameControl.CommonStateName.HUNTING.name())
+            return game.control().state().nameMatches(GameControl.CommonGameState.HUNTING.name())
                 && game.optGameLevel().isPresent() && !game.level().isDemoLevel();
         }
     };
@@ -84,14 +84,14 @@ public final class CheatActions {
             if (game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
                 game.raiseCheatFlag();
             }
-            game.control().enterStateWithName(GameControl.CommonStateName.LEVEL_COMPLETE.name());
+            game.control().enterStateWithName(GameControl.CommonGameState.LEVEL_COMPLETE.name());
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.gameContext().currentGame();
             return game.isPlaying()
-                    && game.control().state().nameMatches(GameControl.CommonStateName.HUNTING.name())
+                    && game.control().state().nameMatches(GameControl.CommonGameState.HUNTING.name())
                     && game.optGameLevel().isPresent()
                     && game.level().number() < game.lastLevelNumber();
         }

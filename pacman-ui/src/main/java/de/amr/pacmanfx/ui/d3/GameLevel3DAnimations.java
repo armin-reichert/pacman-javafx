@@ -7,6 +7,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.MutableGhost3D;
@@ -76,10 +77,12 @@ public class GameLevel3DAnimations {
         private static final float SPINNING_SECONDS = 1.5f;
 
         private final GameLevel3D level3D;
+        private final SoundManager soundManager;
 
-        public LevelCompletedAnimation(AnimationRegistry animationRegistry, GameLevel3D level3D) {
+        public LevelCompletedAnimation(AnimationRegistry animationRegistry, GameLevel3D level3D, SoundManager soundManager) {
             super(animationRegistry, "Level_Completed");
-            this.level3D = level3D;
+            this.level3D = requireNonNull(level3D);
+            this.soundManager = requireNonNull(soundManager);
             setFactory(this::createAnimationFX);
         }
 
@@ -91,10 +94,10 @@ public class GameLevel3DAnimations {
                 pauseSecThen(0.5, () -> level.pac().hide()),
                 pauseSec(0.5),
                 levelSpinningAroundAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
-                pauseSecThen(0.5, () -> level3D.soundManager().play(SoundID.LEVEL_COMPLETE)),
+                pauseSecThen(0.5, () -> soundManager.play(SoundID.LEVEL_COMPLETE)),
                 pauseSec(0.5),
                 wallsAndHouseDisappearing(),
-                pauseSecThen(1.0, () -> level3D.soundManager().play(SoundID.LEVEL_CHANGED))
+                pauseSecThen(1.0, () -> soundManager.play(SoundID.LEVEL_CHANGED))
             );
         }
 
@@ -283,21 +286,22 @@ public class GameLevel3DAnimations {
         }
     }
 
-    private WallColorFlashingAnimation wallColorFlashingAnimation;
-    private LevelCompletedAnimation levelCompletedFullAnimation;
-    private LevelCompletedAnimationShort levelCompletedShortAnimation;
-    private GhostLightAnimation ghostLightAnimation;
+    private final WallColorFlashingAnimation wallColorFlashingAnimation;
+    private final LevelCompletedAnimation levelCompletedFullAnimation;
+    private final LevelCompletedAnimationShort levelCompletedShortAnimation;
+    private final GhostLightAnimation ghostLightAnimation;
 
     /**
      * Creates all animations associated with the given 3D level.
      *
      * @param level3D the 3D level representation
      */
-    public GameLevel3DAnimations(GameLevel3D level3D) {
+    public GameLevel3DAnimations(GameLevel3D level3D, SoundManager soundManager) {
         requireNonNull(level3D);
+        requireNonNull(soundManager);
         final AnimationRegistry animationRegistry = level3D.animationRegistry();
         wallColorFlashingAnimation = new WallColorFlashingAnimation(animationRegistry, level3D);
-        levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry, level3D);
+        levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry, level3D, soundManager);
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationRegistry, level3D);
         ghostLightAnimation = new GhostLightAnimation(animationRegistry, level3D);
     }

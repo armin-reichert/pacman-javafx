@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameControl.CommonStateName;
+import de.amr.pacmanfx.model.GameControl.CommonGameState;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
@@ -108,7 +108,7 @@ public final class CommonGameActions {
             if (isLevelShortTest) {
                 game.control().state().onExit(game); //TODO exit other states too?
             }
-            game.control().restartStateWithName(CommonStateName.INTRO.name());
+            game.control().restartStateWithName(CommonGameState.INTRO.name());
             ui.gameContext().clock().start();
         }
     };
@@ -316,7 +316,7 @@ public final class CommonGameActions {
             if (state.nameMatches(LevelShortTestState.class.getSimpleName(), LevelMediumTestState.class.getSimpleName())) {
                 return true;
             }
-            return state.nameMatches(CommonStateName.BOOT.name(), CommonStateName.INTRO.name(), CommonStateName.SETTING_OPTIONS_FOR_START.name(), CommonStateName.HUNTING.name());
+            return state.nameMatches(CommonGameState.BOOT.name(), CommonGameState.INTRO.name(), CommonGameState.SETTING_OPTIONS_FOR_START.name(), CommonGameState.HUNTING.name());
         }
     };
 }

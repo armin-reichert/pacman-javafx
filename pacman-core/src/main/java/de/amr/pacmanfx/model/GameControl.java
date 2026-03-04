@@ -33,7 +33,7 @@ public interface GameControl {
      * game‑variant‑independent code. Implementations may define additional
      * states, but these represent the canonical set used across Pac‑Man FX.</p>
      */
-    enum CommonStateName {
+    enum CommonGameState {
         BOOT,
         INTRO,
         SETTING_OPTIONS_FOR_START,

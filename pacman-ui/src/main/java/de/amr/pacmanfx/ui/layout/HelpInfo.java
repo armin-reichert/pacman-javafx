@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameControl.CommonStateName;
+import de.amr.pacmanfx.model.GameControl.CommonGameState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import javafx.geometry.Insets;
@@ -30,14 +30,14 @@ public class HelpInfo {
         final State<?> state = game.control().state();
 
         HelpInfo helpInfo = new HelpInfo(ui);
-        if (state.nameMatches(CommonStateName.INTRO.name())) {
+        if (state.nameMatches(CommonGameState.INTRO.name())) {
             helpInfo.addInfoForIntroScene(game);
         }
-        else if (state.nameMatches(CommonStateName.SETTING_OPTIONS_FOR_START.name())) {
+        else if (state.nameMatches(CommonGameState.SETTING_OPTIONS_FOR_START.name())) {
             helpInfo.addInfoForCreditScene(game);
         }
-        else if (state.nameMatches(CommonStateName.STARTING_GAME_OR_LEVEL.name(), CommonStateName.HUNTING.name(),
-                CommonStateName.PACMAN_DYING.name(), CommonStateName.EATING_GHOST.name())) {
+        else if (state.nameMatches(CommonGameState.STARTING_GAME_OR_LEVEL.name(), CommonGameState.HUNTING.name(),
+                CommonGameState.PACMAN_DYING.name(), CommonGameState.EATING_GHOST.name())) {
             if (demoLevel) {
                 helpInfo.addInfoForDemoLevelPlayScene();
             } else {

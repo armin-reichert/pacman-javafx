@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameControl.CommonStateName;
+import de.amr.pacmanfx.model.GameControl.CommonGameState;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -55,6 +55,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
+import static de.amr.pacmanfx.model.GameControl.CommonGameState.*;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
@@ -367,13 +368,13 @@ public class PlayScene3D implements GameScene {
         mazeFood3D.energizers3D().forEach(energizer3D ->
             energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
 
-        if (state.nameMatches(CommonStateName.HUNTING.name(), CommonStateName.EATING_GHOST.name())) { //TODO check this
+        if (state.nameMatches(HUNTING.name(), EATING_GHOST.name())) { //TODO check this
             mazeFood3D.energizers3D().stream()
                 .filter(energizer3D -> energizer3D.shape().isVisible())
                 .forEach(Energizer3D::startPumping);
         }
 
-        if (state.nameMatches(CommonStateName.HUNTING.name())) {
+        if (state.nameMatches(HUNTING.name())) {
             if (level.pac().powerTimer().isRunning()) {
                 ui.soundManager().loop(SoundID.PAC_MAN_POWER);
             }
@@ -426,45 +427,46 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void onGameStateChange(GameStateChangeEvent changeEvent) {
+    public void onGameStateChange(GameStateChangeEvent event) {
+        final State<Game> gameState = event.newState();
         final Game game = gameContext().currentGame();
-        final State<Game> newState = changeEvent.newState();
-        if (newState instanceof TestState) {
+
+        if (gameState instanceof TestState) {
             game.optGameLevel().ifPresent(level -> {
                 replaceGameLevel3D(level);
                 showTestMessage(level.worldMap(), level.number());
                 GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
             });
+            return;
         }
-        else {
-            if (newState.nameMatches(CommonStateName.HUNTING.name())) {
-                gameLevel3D.onHuntingStart();
-            }
-            else if (newState.nameMatches(CommonStateName.PACMAN_DYING.name())) {
-                gameLevel3D.onPacManDying(newState.timer());
-            }
-            else if (newState.nameMatches(CommonStateName.EATING_GHOST.name())) {
-                gameLevel3D.onEatingGhost();
-            }
-            else if (newState.nameMatches(CommonStateName.LEVEL_COMPLETE.name())) {
-                gameLevel3D.onLevelComplete(newState, perspectiveID);
-            }
-            else if (newState.nameMatches(CommonStateName.GAME_OVER.name())) {
-                gameLevel3D.onGameOver(newState);
-                final boolean showMessage = randomInt(0, 1000) < 250;
-                if (!game.level().isDemoLevel() && showMessage) {
-                    final String message = pickerGameOverMessages.nextText();
-                    ui.showFlashMessage(Duration.seconds(2.5), message);
-                }
-            }
-            else if (newState.nameMatches(CommonStateName.STARTING_GAME_OR_LEVEL.name())) {
-                if (gameLevel3D != null) {
-                    gameLevel3D.onStartingGame();
-                } else {
-                    Logger.error("No 3D game level available"); //TODO can this happen?
-                }
+
+        //TODO check if this state change handler is needed
+        if (stateIs(gameState, STARTING_GAME_OR_LEVEL) && gameLevel3D != null) {
+            gameLevel3D.onStartingGame();
+        }
+        else if (stateIs(gameState, HUNTING)) {
+            gameLevel3D.onHuntingStart();
+        }
+        else if (stateIs(gameState, PACMAN_DYING)) {
+            gameLevel3D.onPacManDying(gameState, ui.soundManager());
+        }
+        else if (stateIs(gameState, EATING_GHOST)) {
+            gameLevel3D.onEatingGhost();
+        }
+        else if (stateIs(gameState, LEVEL_COMPLETE)) {
+            gameLevel3D.onLevelComplete(gameState, perspectiveID, ui.soundManager());
+        }
+        else if (stateIs(gameState, GAME_OVER)) {
+            gameLevel3D.onGameOver(gameState, ui.soundManager());
+            final boolean showMsg = randomInt(0, 1000) < 250;
+            if (!game.level().isDemoLevel() && showMsg) {
+                ui.showFlashMessage(Duration.seconds(2.5), pickerGameOverMessages.nextText());
             }
         }
+    }
+
+    private boolean stateIs(State<Game> gameState, CommonGameState commonGameState) {
+        return gameState.nameMatches(commonGameState.name());
     }
 
     @Override
@@ -512,7 +514,7 @@ public class PlayScene3D implements GameScene {
             showTestMessage(level.worldMap(), level.number());
         }
         else {
-            if (!level.isDemoLevel() && state.nameMatches(CommonStateName.STARTING_GAME_OR_LEVEL.name(), CommonStateName.LEVEL_TRANSITION.name())) {
+            if (!level.isDemoLevel() && state.nameMatches(STARTING_GAME_OR_LEVEL.name(), CommonGameState.LEVEL_TRANSITION.name())) {
                 showReadyMessage(level.worldMap());
             }
         }
@@ -719,7 +721,7 @@ public class PlayScene3D implements GameScene {
         if (!ui.soundManager().isEnabled()) {
             return;
         }
-        if (level.game().control().state().nameMatches(CommonStateName.HUNTING.name())) {
+        if (level.game().control().state().nameMatches(HUNTING.name())) {
             updateSiren(level);
             updateGhostSounds(level.pac(), level.ghosts());
         }

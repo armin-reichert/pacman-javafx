@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.Game;
@@ -67,8 +66,7 @@ public class GameLevel3D extends Group implements Disposable {
     private final GameLevel level;
 
     private final UIConfig uiConfig;
-    private final SoundManager soundManager;
-    
+
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final GameLevel3DAnimations animations;
 
@@ -92,10 +90,7 @@ public class GameLevel3D extends Group implements Disposable {
     public GameLevel3D(GameUI ui, GameLevel level) {
         requireNonNull(ui);
         this.level = requireNonNull(level);
-
         this.uiConfig = ui.currentConfig();
-        this.soundManager = ui.soundManager();
-
         final Config3D config3D = uiConfig.config3D();
 
         PROPERTY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
@@ -119,7 +114,7 @@ public class GameLevel3D extends Group implements Disposable {
         createMaze3D(config3D, ghostNormalDressMaterials);
         createLights();
 
-        animations = new GameLevel3DAnimations(this);
+        animations = new GameLevel3DAnimations(this, ui.soundManager());
 
         // Note: The order in which children are added matters!
         // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
@@ -154,10 +149,6 @@ public class GameLevel3D extends Group implements Disposable {
 
     public Maze3D maze3D() {
         return maze3D;
-    }
-
-    public SoundManager soundManager() {
-        return soundManager;
     }
 
     public PointLight ghostLight() {
@@ -291,7 +282,7 @@ public class GameLevel3D extends Group implements Disposable {
     private void updateLivesCounter3D() {
         if (livesCounter3D != null) {
             final GameControl gameControl = level.game().control();
-            final boolean oneMore = gameControl.state().nameMatches(GameControl.CommonStateName.STARTING_GAME_OR_LEVEL.name())
+            final boolean oneMore = gameControl.state().nameMatches(GameControl.CommonGameState.STARTING_GAME_OR_LEVEL.name())
                     && !level.pac().isVisible();
             final boolean visible = level.game().canStartNewGame();
             int lifeCount = level.game().lifeCount() - 1;
@@ -317,7 +308,7 @@ public class GameLevel3D extends Group implements Disposable {
         animations.ghostLightAnimation().playFromStart();
     }
 
-    public void onPacManDying(TickTimer gameStateTimer) {
+    public void onPacManDying(State<Game> gameState, SoundManager soundManager) {
         soundManager.stopAll();
         animations.ghostLightAnimation().stop();
         animations.wallColorFlashingAnimation().stop();
@@ -326,14 +317,14 @@ public class GameLevel3D extends Group implements Disposable {
         // Do one last update before dying animation starts
         pac3D.update(level);
 
-        gameStateTimer.resetIndefiniteTime(); // keep game state until Pac-Man animation ends
+        gameState.timer().resetIndefiniteTime(); // keep game state until Pac-Man animation ends
         final var dyingAnimation = new SequentialTransition(
             pauseSec(1.5),
             doNow(() -> soundManager.play(SoundID.PAC_MAN_DEATH)),
             pac3D.dyingAnimation().animationFX(),
             pauseSec(0.5)
         );
-        dyingAnimation.setOnFinished(_ -> gameStateTimer.expire());
+        dyingAnimation.setOnFinished(_ -> gameState.timer().expire());
         dyingAnimation.play();
     }
 
@@ -346,7 +337,7 @@ public class GameLevel3D extends Group implements Disposable {
         });
     }
 
-    public void onLevelComplete(State<Game> state, ObjectProperty<PerspectiveID> perspectiveIDProperty) {
+    public void onLevelComplete(State<Game> state, ObjectProperty<PerspectiveID> perspectiveIDProperty, SoundManager soundManager) {
         state.timer().resetIndefiniteTime(); // expires when animation ends
         soundManager.stopAll();
         animationRegistry.stopAllAnimations();
@@ -385,7 +376,7 @@ public class GameLevel3D extends Group implements Disposable {
         animation.play();
     }
 
-    public void onGameOver(State<Game> state) {
+    public void onGameOver(State<Game> state, SoundManager soundManager) {
         state.timer().restartSeconds(3);
         animations.ghostLightAnimation().stop();
         maze3D.food().energizers3D().forEach(Energizer3D::hide);
