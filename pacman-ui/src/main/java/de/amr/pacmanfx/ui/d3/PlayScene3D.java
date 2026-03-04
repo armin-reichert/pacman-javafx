@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -31,14 +30,10 @@ import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.Scores3D;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.animation.*;
-import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
@@ -46,7 +41,6 @@ import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -120,51 +114,6 @@ public class PlayScene3D implements GameScene {
 
     //TODO fix sound files
     public static final float SIREN_VOLUME = 0.33f;
-
-    public static class PlaySceneContextMenu extends GameUI_ContextMenu implements Disposable {
-
-        private final ToggleGroup perspectivesGroup = new ToggleGroup();
-
-        private final ChangeListener<PerspectiveID> perspectiveListener = (_, _, perspectiveID) -> {
-            for (Toggle toggle : perspectivesGroup.getToggles()) {
-                if (Objects.equals(toggle.getUserData(), perspectiveID)) {
-                    perspectivesGroup.selectToggle(toggle);
-                    break;
-                }
-            }
-        };
-
-        public PlaySceneContextMenu(GameUI ui) {
-            super(ui);
-            final Game game = ui.gameContext().currentGame();
-            addLocalizedTitleItem("scene_display");
-            addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
-            addLocalizedCheckBox(GameUI.PROPERTY_MINI_VIEW_ON, "pip");
-            addLocalizedTitleItem("select_perspective");
-            for (PerspectiveID id : PerspectiveID.values()) {
-                final RadioMenuItem item = addLocalizedRadioButton("perspective_id_" + id.name());
-                item.setUserData(id);
-                item.setToggleGroup(perspectivesGroup);
-                if (id == GameUI.PROPERTY_3D_PERSPECTIVE_ID.get())  {
-                    item.setSelected(true);
-                }
-                item.setOnAction(_ -> GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(id));
-            }
-            addLocalizedTitleItem("pacman");
-            addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot");
-            addLocalizedCheckBox(game.immuneProperty(), "immunity");
-            addSeparator();
-            addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
-            addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
-
-            GameUI.PROPERTY_3D_PERSPECTIVE_ID.addListener(perspectiveListener);
-        }
-
-        @Override
-        public void dispose() {
-            GameUI.PROPERTY_3D_PERSPECTIVE_ID.removeListener(perspectiveListener);
-        }
-    }
 
     protected final Group subSceneRoot = new Group();
     protected final Group level3DParent = new Group();
