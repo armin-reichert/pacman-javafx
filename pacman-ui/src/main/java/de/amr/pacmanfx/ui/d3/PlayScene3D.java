@@ -146,6 +146,13 @@ public class PlayScene3D implements GameScene {
         bindSceneActions();
     }
 
+    public void setUI(GameUI ui) {
+        this.ui = requireNonNull(ui);
+        pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");
+        //TODO reconsider this
+        replaceScores3D();
+    }
+
     @Override
     public void dispose() {
         actionBindings.dispose();
@@ -154,14 +161,6 @@ public class PlayScene3D implements GameScene {
             gameLevel3D.dispose();
             gameLevel3D = null;
         }
-    }
-
-    @Override
-    public void setUI(GameUI ui) {
-        this.ui = requireNonNull(ui);
-        pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");
-        //TODO reconsider this
-        replaceScores3D();
     }
 
     @Override

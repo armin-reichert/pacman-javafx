@@ -50,6 +50,15 @@ public abstract class GameScene2D implements GameScene {
     protected GameScene2D() {}
 
     /**
+     * Associates this scene with the UI layer.
+     *
+     * @param ui the UI instance, must not be {@code null}
+     */
+    public void setUI(GameUI ui) {
+        this.ui = requireNonNull(ui);
+    }
+
+    /**
      * Releases bindings and resources held by this scene.
      * Called when the scene is permanently discarded.
      */
@@ -58,16 +67,6 @@ public abstract class GameScene2D implements GameScene {
         backgroundColor.unbind();
         scaling.unbind();
         actionBindings.dispose();
-    }
-
-    /**
-     * Associates this scene with the UI layer.
-     *
-     * @param ui the UI instance, must not be {@code null}
-     */
-    @Override
-    public void setUI(GameUI ui) {
-        this.ui = requireNonNull(ui);
     }
 
     /**
