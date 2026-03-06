@@ -18,7 +18,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
-import de.amr.pacmanfx.ui.sound.PlaySceneSoundEffects;
+import de.amr.pacmanfx.ui.sound.PlayingSoundEffects;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
@@ -107,7 +107,7 @@ public class PlayScene3D implements GameScene {
     protected final SubScene subScene;
     protected final FadeInAnimation fadeInAnimation;
 
-    protected PlaySceneSoundEffects soundEffects;
+    protected PlayingSoundEffects soundEffects;
     protected ActionBindingsManager actionBindings = ActionBindingsManager.NO_BINDINGS;
     protected GameUI ui;
     protected GameLevel3D gameLevel3D;
@@ -156,7 +156,7 @@ public class PlayScene3D implements GameScene {
 
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
-        soundEffects = new PlaySceneSoundEffects(ui.soundManager());
+        soundEffects = new PlayingSoundEffects(ui.soundManager());
         soundEffects.setMunchingSoundDelay(ui.currentConfig().munchingSoundDelay());
         pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");
         //TODO reconsider this

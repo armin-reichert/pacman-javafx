@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.model.GameControl.CommonGameState.HUNTING;
 import static java.util.Objects.requireNonNull;
 
-public class PlaySceneSoundEffects {
+public class PlayingSoundEffects {
 
     //TODO fix sound files
     public static final float SIREN_VOLUME = 0.33f;
@@ -25,7 +25,7 @@ public class PlaySceneSoundEffects {
     private long lastMunchingSoundPlayedTick;
     private byte munchingSoundDelay;
 
-    public PlaySceneSoundEffects(SoundManager soundManager) {
+    public PlayingSoundEffects(SoundManager soundManager) {
         this.soundManager = requireNonNull(soundManager);
     }
 
