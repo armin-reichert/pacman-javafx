@@ -144,7 +144,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
                 case OPTION_STARTING_LEVEL -> setPrevStartLevelValue();
             }
         }
-        else super.onKeyboardInput();
+        else actionBindings().findMatchingAction(GameUI.KEYBOARD).ifPresent(action -> action.executeIfEnabled(ui()));
     }
 
     private void setPrevStartLevelValue() {
