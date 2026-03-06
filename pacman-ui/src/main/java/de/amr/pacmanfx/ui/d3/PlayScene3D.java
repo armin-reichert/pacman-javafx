@@ -517,26 +517,18 @@ public class PlayScene3D implements GameScene {
 
     private void replaceGameLevel3D(GameLevel level) {
         if (gameLevel3D != null) {
-            Logger.info("Replacing existing game level 3D");
+            Logger.info("Replacing existing game level 3D...");
             gameLevel3D.getChildren().clear();
             gameLevel3D.dispose();
             Logger.info("Disposed old game level 3D");
-        } else {
-            Logger.info("Creating new game level 3D");
         }
-
         gameLevel3D = createGameLevel3D(level);
-        Logger.info("Created new game level 3D");
-
-        level3DParent.getChildren().setAll(gameLevel3D);
-
         gameLevel3D.pac3D().init(level);
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
-        Logger.info("Initialized actors of game level 3D");
-
         gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
-
         gameLevel3D.setAnimations(new GameLevel3DAnimations(gameLevel3D, ui.soundManager()));
-    }
 
+        level3DParent.getChildren().setAll(gameLevel3D);
+        Logger.info("Created and added new game level 3D to play scene");
+    }
 }
