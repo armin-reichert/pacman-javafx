@@ -173,13 +173,13 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
     private EnergizerParticle createExplosionParticle() {
         final PhongMaterial material = ghostDressMaterials.get(randomInt(0, 4));
-        final double radius = Math.clamp(RND.nextGaussian(2, 0.1), 0.5, 4) * config.explosion().particleMeanRadius();
+        final double radius = Math.clamp(RANDOM_GENERATOR.nextGaussian(2, 0.1), 0.5, 4) * config.explosion().particleMeanRadius();
         return new SphericalEnergizerParticle(radius, material, SphericalEnergizerParticle.Resolution.HIGH);
     }
 
     private Vector3f randomParticleVelocity(ExplosionConfig cfg) {
-        final int xDir = RND.nextBoolean() ? -1 : 1;
-        final int yDir = RND.nextBoolean() ? -1 : 1;
+        final int xDir = chance(0.5) ? -1 : 1;
+        final int yDir = chance(0.5) ? -1 : 1;
         return new Vector3f(
             xDir * randomFloat(cfg.particleMinSpeedXY(), cfg.particleMaxSpeedXY()),
             yDir * randomFloat(cfg.particleMinSpeedXY(), cfg.particleMaxSpeedXY()),

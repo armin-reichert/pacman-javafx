@@ -5,6 +5,7 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.fsm.State;
+import de.amr.pacmanfx.lib.math.RandomNumberSupport;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl.CommonGameState;
 import de.amr.pacmanfx.model.GameLevel;
@@ -43,7 +44,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.model.GameControl.CommonGameState.*;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
@@ -305,7 +305,7 @@ public class PlayScene3D implements GameScene {
         }
         else if (stateIs(gameState, GAME_OVER)) {
             gameLevel3D.onGameOver(gameState, ui.soundManager());
-            final boolean showMsg = randomInt(0, 1000) < 250;
+            final boolean showMsg = RandomNumberSupport.chance(0.25);
             if (!game.level().isDemoLevel() && showMsg) {
                 ui.showFlashMessage(Duration.seconds(2.5), pickerGameOverMessages.nextText());
             }
