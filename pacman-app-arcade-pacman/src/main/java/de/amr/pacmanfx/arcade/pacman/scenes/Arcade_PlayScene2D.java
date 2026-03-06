@@ -64,7 +64,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         game.optGameLevel().ifPresent(level -> {
             updateHUD(level);
             soundEffects.setEnabled(!level.isDemoLevel());
-            soundEffects.updateSound(level);
+            soundEffects.playLevelPlayingSound(level);
         });
     }
 

@@ -149,7 +149,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             }
             updateHUD(level);
             soundEffects.setEnabled(!level.isDemoLevel());
-            soundEffects.updateSound(level);
+            soundEffects.playLevelPlayingSound(level);
         });
     }
 

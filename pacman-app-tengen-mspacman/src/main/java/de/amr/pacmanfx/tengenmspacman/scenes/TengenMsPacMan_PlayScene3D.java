@@ -4,16 +4,15 @@
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.pacmanfx.lib.nes.NES_Palette;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
-import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -92,12 +91,11 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     @Override
-    protected void updateHUD(Game game) {
-        final Score score = game.score(), highScore = game.highScore();
+    protected void updateHUD(GameLevel level) {
+        final Score score = level.game().score(), highScore = level.game().highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
-        }
-        else {
+        } else {
             scores3D.showTextForScore(ui.translate("score.game_over"), Color.valueOf(NES_Palette.color(0x16)));
         }
         // Always show high score
