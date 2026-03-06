@@ -5,7 +5,6 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.fsm.State;
-import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl.CommonGameState;
 import de.amr.pacmanfx.model.GameLevel;
@@ -15,7 +14,6 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.FoodLayer;
-import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
@@ -43,7 +41,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.model.GameControl.CommonGameState.*;
@@ -103,11 +100,7 @@ public class PlayScene3D implements GameScene {
     public static final Color SCENE_FILL_DARK = Color.BLACK;
     public static final Color SCENE_FILL_BRIGHT = Color.TRANSPARENT;
 
-    public static final String READY_MESSAGE_TEXT = "READY!";
-    public static final String TEST_MESSAGE_TEXT = "LEVEL %d (TEST)";
-
     public static final float SCENE_FADE_IN_SECONDS = 3;
-    public static final float READY_MESSAGE_DISPLAY_SECONDS = 2.5f;
 
     //TODO fix sound files
     public static final float SIREN_VOLUME = 0.33f;
@@ -325,7 +318,7 @@ public class PlayScene3D implements GameScene {
         if (gameState instanceof TestState) {
             game.optGameLevel().ifPresent(level -> {
                 replaceGameLevel3D(level);
-                showTestMessage(level.worldMap(), level.number());
+                gameLevel3D.showTestMessage();
                 GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
             });
             return;
@@ -362,9 +355,8 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onGameContinues(GameContinuedEvent event) {
-        final Game game = gameContext().currentGame();
         if (gameLevel3D != null) {
-            game.optGameLevel().map(GameLevel::worldMap).ifPresent(this::showReadyMessage);
+            gameLevel3D.showReadyMessage();
         }
     }
 
@@ -402,11 +394,11 @@ public class PlayScene3D implements GameScene {
         if (state instanceof TestState) {
             replaceGameLevel3D(level); //TODO check when to destroy previous level
             gameLevel3D.maze3D().food().energizers3D().forEach(Energizer3D::startPumping);
-            showTestMessage(level.worldMap(), level.number());
+            gameLevel3D.showTestMessage();
         }
         else {
             if (!level.isDemoLevel() && state.nameMatches(STARTING_GAME_OR_LEVEL.name(), CommonGameState.LEVEL_TRANSITION.name())) {
-                showReadyMessage(level.worldMap());
+                gameLevel3D.showReadyMessage();
             }
         }
 
@@ -595,18 +587,5 @@ public class PlayScene3D implements GameScene {
             new KeyFrame(Duration.seconds(SCENE_FADE_IN_SECONDS),
                 new KeyValue(subScene.fillProperty(), SCENE_FILL_BRIGHT, Interpolator.EASE_IN))
         );
-    }
-
-    private void showReadyMessage(WorldMap worldMap) {
-        worldMap.terrainLayer().optHouse().ifPresentOrElse(house -> {
-            final Vector2f center = house.centerPositionUnderHouse();
-            gameLevel3D.showAnimatedMessage(READY_MESSAGE_TEXT, READY_MESSAGE_DISPLAY_SECONDS, center.x(), center.y());
-        }, () -> Logger.error("Cannot display READY message: no house in this game level! WTF?"));
-    }
-
-    private void showTestMessage(WorldMap worldMap, int levelNumber) {
-        final double x = worldMap.numCols() * HTS;
-        final double y = (worldMap.numRows() - 2) * TS;
-        gameLevel3D.showAnimatedMessage(TEST_MESSAGE_TEXT.formatted(levelNumber), 5, x, y);
     }
 }

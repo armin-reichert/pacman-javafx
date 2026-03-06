@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
@@ -56,6 +57,11 @@ import static java.util.Objects.requireNonNull;
  * 3D representation of game level.
  */
 public class GameLevel3D extends Group implements Disposable {
+
+    public static final String READY_MESSAGE_TEXT = "READY!";
+    public static final String TEST_MESSAGE_TEXT = "LEVEL %d (TEST)";
+
+    public static final float READY_MESSAGE_DISPLAY_SECONDS = 2.5f;
 
     private static MeshView[] createMeshViews(int n, Mesh mesh) {
         final var meshViews = new MeshView[n];
@@ -424,6 +430,21 @@ public class GameLevel3D extends Group implements Disposable {
     // Removes the pellet after a small delay to let pellet not directly disappear when Pac-Man enters the tile
     public void eatPellet3D(Pellet3D pellet3D) {
         pauseSecThen(0.05, () -> getChildren().remove(pellet3D)).play();
+    }
+
+    public void showReadyMessage() {
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        terrain.optHouse().ifPresentOrElse(house -> {
+            final Vector2f center = house.centerPositionUnderHouse();
+            showAnimatedMessage(READY_MESSAGE_TEXT, READY_MESSAGE_DISPLAY_SECONDS, center.x(), center.y());
+        }, () -> Logger.error("Cannot display READY message: no house in this game level! WTF?"));
+    }
+
+    public void showTestMessage() {
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final double x = terrain.numCols() * HTS;
+        final double y = (terrain.numRows() - 2) * TS;
+        showAnimatedMessage(TEST_MESSAGE_TEXT.formatted(level.number()), 5, x, y);
     }
 
     public void showAnimatedMessage(String messageText, float displaySeconds, double centerX, double centerY) {
