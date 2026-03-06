@@ -138,7 +138,7 @@ public class PlayingSoundEffects {
     }
 
     /**
-     * Manages level-wide playing sounds (siren + ghost returning) when in {@link HUNTING} state.
+     * Manages level-wide playing sounds (siren + ghost returning) when in HUNTING state.
      * <p>
      * Does nothing if sound is globally disabled.
      * </p>
