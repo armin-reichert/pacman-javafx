@@ -6,12 +6,10 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState;
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.TerrainLayer;
@@ -23,6 +21,7 @@ import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
+import de.amr.pacmanfx.ui.sound.PlaySceneSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.control.CheckMenuItem;
 import org.tinylog.Logger;
@@ -30,19 +29,24 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
+import static java.util.Objects.requireNonNull;
 
 /**
  * 2D play scene for Arcade game variants.
  */
 public class Arcade_PlayScene2D extends GameScene2D {
 
-    //TODO fix volume in audio file
-    public static final float SIREN_VOLUME = 0.33f;
-
-    private long lastMunchingSoundPlayedTick;
+    private PlaySceneSoundEffects soundEffects;
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public Arcade_PlayScene2D() {}
+
+    @Override
+    public void setUI(GameUI ui) {
+        this.ui = requireNonNull(ui);
+        soundEffects = new PlaySceneSoundEffects(ui.soundManager());
+        soundEffects.setMunchingSoundDelay(ui.currentConfig().munchingSoundDelay());
+    }
 
     public Optional<LevelCompletedAnimation> optLevelCompletedAnimation() {
         return Optional.ofNullable(levelCompletedAnimation);
@@ -60,7 +64,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public void update(Game game) {
         game.optGameLevel().ifPresent(level -> {
             updateHUD(level);
-            updateHuntingSound(level);
+            soundEffects.setEnabled(!level.isDemoLevel());
+            soundEffects.updateSound(level);
         });
     }
 
@@ -104,23 +109,22 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onBonusActivated(BonusActivatedEvent e) {
         // This is the sound in Ms. Pac-Man when the bonus wanders the maze. In Pac-Man, this is a no-op.
-        ui.soundManager().loop(SoundID.BONUS_ACTIVE);
+        soundEffects.playBonusActiveSound();
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
-        ui.soundManager().stop(SoundID.BONUS_ACTIVE);
-        ui.soundManager().play(SoundID.BONUS_EATEN);
+        soundEffects.playBonusEatenSound();
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent e) {
-        ui.soundManager().stop(SoundID.BONUS_ACTIVE);
+        soundEffects.playBonusExpiredSound();
     }
 
     @Override
     public void onCreditAdded(CreditAddedEvent e) {
-        ui.soundManager().play(SoundID.COIN_INSERTED);
+        soundEffects.playCoinInsertedSound();
     }
 
     @Override
@@ -134,7 +138,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final boolean silent = game.optGameLevel().isPresent() && game.level().isDemoLevel()
             || game.control().state() instanceof TestState;
         if (!silent) {
-            ui.soundManager().play(SoundID.GAME_READY);
+            soundEffects.playGameReadySound();
         }
     }
 
@@ -146,8 +150,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
             createAndPlayLevelCompletedAnimation(game.level());
         }
         else if (e.newState() == ArcadeGameState.GAME_OVER) {
-            ui.soundManager().stopAll();
-            ui.soundManager().play(SoundID.GAME_OVER);
+            soundEffects.playGameOverSound();
             game.hud().credit(true);
         }
     }
@@ -176,30 +179,23 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = gameContext().clock().tickCount();
-        final long passed = tick - lastMunchingSoundPlayedTick;
-        final byte minDelay = ui.currentConfig().munchingSoundDelay();
-        Logger.debug("Pac found food, tick={} passed since last time={}", tick, passed);
-        if (passed > minDelay || minDelay == 0) {
-            ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
-            lastMunchingSoundPlayedTick = tick;
-        }
+        soundEffects.playPacMunchingSound(gameContext().clock().tickCount());
     }
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        ui.soundManager().stopSiren();
-        ui.soundManager().loop(SoundID.PAC_MAN_POWER);
+        soundEffects.stopSiren();
+        soundEffects.playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
-        ui.soundManager().stop(SoundID.PAC_MAN_POWER);
+        soundEffects.stopPacPowerSound();
     }
 
     @Override
     public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
-        ui.soundManager().play(SoundID.EXTRA_LIFE);
+        soundEffects.playExtraLifeSound();
     }
 
     // private
@@ -248,36 +244,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final boolean oneExtra = game.control().state() == ArcadeGameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
         final int lifeCountDisplayed = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
         game.hud().setVisibleLifeCount(Math.clamp(lifeCountDisplayed, 0, game.hud().maxLivesDisplayed()));
-    }
-
-    private void updateHuntingSound(GameLevel level) {
-        if (!ui.soundManager().isEnabled())
-            return;
-
-        final State<Game> gameState = level.game().control().state();
-        if (gameState == ArcadeGameState.HUNTING) {
-            final Pac pac = level.pac();
-            if (!pac.powerTimer().isRunning()) {
-                final int huntingPhase = level.huntingTimer().phaseIndex();
-                selectAndPlaySiren(huntingPhase);
-            }
-            final boolean ghostReturningToHouse = pac.isAlive()
-                && level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
-            if (ghostReturningToHouse) {
-                if (!ui.soundManager().isPlaying(SoundID.GHOST_RETURNS)) {
-                    ui.soundManager().loop(SoundID.GHOST_RETURNS);
-                }
-            } else {
-                ui.soundManager().stop(SoundID.GHOST_RETURNS);
-            }
-        }
-    }
-
-    // Each (scatter, chasing) hunting phase pair uses another siren. Sirens are numbered 1, 2, 3, 4.
-    // (0, 1) -> 1, (2, 3) -> 2, (4, 5) -> 3, (6, 7) -> 4
-    private void selectAndPlaySiren(int huntingPhase) {
-        final int sirenNumber = 1 + huntingPhase / 2;
-        ui.soundManager().playSiren(sirenNumber, SIREN_VOLUME);
     }
 
     private void createAndPlayLevelCompletedAnimation(GameLevel level) {

@@ -10,8 +10,6 @@ import de.amr.pacmanfx.model.GameControl.CommonGameState;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.ui.ActionBindingsManager;
@@ -20,13 +18,16 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
-import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.ui.sound.PlaySceneSoundEffects;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.Scores3D;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
-import javafx.animation.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
@@ -39,7 +40,6 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
@@ -96,28 +96,46 @@ import static java.util.Objects.requireNonNull;
  */
 public class PlayScene3D implements GameScene {
 
-    // Colors for fade effect
     public static final Color SCENE_FILL_DARK = Color.BLACK;
     public static final Color SCENE_FILL_BRIGHT = Color.TRANSPARENT;
-
-    public static final float SCENE_FADE_IN_SECONDS = 3;
-
-    //TODO fix sound files
-    public static final float SIREN_VOLUME = 0.33f;
+    public static final Duration FADE_IN_DURATION = Duration.seconds(3);
 
     protected final Group subSceneRoot = new Group();
     protected final Group level3DParent = new Group();
     protected final PerspectiveManager perspectiveManager;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final SubScene subScene;
-    protected final Animation fadeInAnimation;
+    protected final FadeInAnimation fadeInAnimation;
 
+    protected PlaySceneSoundEffects soundEffects;
     protected ActionBindingsManager actionBindings = ActionBindingsManager.NO_BINDINGS;
     protected GameUI ui;
     protected GameLevel3D gameLevel3D;
     protected Scores3D scores3D;
     protected RandomTextPicker<String> pickerGameOverMessages;
     protected PlaySceneContextMenu contextMenu;
+
+    public class FadeInAnimation {
+        private final Timeline timeline;
+
+        public FadeInAnimation(Duration fadeInDuration) {
+            timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, _ -> {
+                    subScene.setFill(SCENE_FILL_DARK);
+                    gameLevel3D.setVisible(true);
+                    scores3D.setVisible(true);
+                    //TODO Check if this is needed:
+                    perspectiveManager.currentPerspective().ifPresent(Perspective::startControlling);
+                }),
+                new KeyFrame(fadeInDuration,
+                    new KeyValue(subScene.fillProperty(), SCENE_FILL_BRIGHT, Interpolator.EASE_IN))
+            );
+        }
+
+        public void play() {
+            timeline.playFromStart();
+        }
+    }
 
     public PlayScene3D() {
         final var axes3D = new CoordinateSystem();
@@ -131,13 +149,15 @@ public class PlayScene3D implements GameScene {
         subScene.setFill(SCENE_FILL_DARK);
 
         perspectiveManager = new PerspectiveManager(camera);
-        fadeInAnimation = createFadeInAnimation();
+        fadeInAnimation = new FadeInAnimation(FADE_IN_DURATION);
 
         bindSceneActions();
     }
 
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
+        soundEffects = new PlaySceneSoundEffects(ui.soundManager());
+        soundEffects.setMunchingSoundDelay(ui.currentConfig().munchingSoundDelay());
         pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");
         //TODO reconsider this
         replaceScores3D();
@@ -186,7 +206,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void end(Game game) {
-        ui.soundManager().stopAll();
+        soundEffects.stopAll();
         if (gameLevel3D != null) {
             gameLevel3D.dispose();
             gameLevel3D = null;
@@ -216,8 +236,8 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.update();
         perspectiveManager.updatePerspective(level);
         updateHUD(game);
-        ui.soundManager().setEnabled(!level.isDemoLevel());
-        updateSound(level);
+        soundEffects.setEnabled(!level.isDemoLevel());
+        soundEffects.updateSound(level);
     }
 
     @Override
@@ -260,7 +280,7 @@ public class PlayScene3D implements GameScene {
 
         if (state.nameMatches(HUNTING.name())) {
             if (level.pac().powerTimer().isRunning()) {
-                ui.soundManager().loop(SoundID.PAC_MAN_POWER);
+                soundEffects.playPacPowerSound();
             }
             gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
         }
@@ -268,45 +288,32 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().config3D().levelCounter());
         updateHUD(game);
         replaceActionBindings(level);
-        fadeInAnimation.playFromStart();
+        fadeInAnimation.play();
     }
 
     // Game event handlers
 
     @Override
     public void onBonusActivated(BonusActivatedEvent event) {
-        if (gameLevel3D == null) {
-            Logger.error("No game level3D exists!");
-            return;
-        }
         gameContext().currentGame().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> {
             gameLevel3D.updateBonus3D(bonus);
-            ui.soundManager().loop(SoundID.BONUS_ACTIVE);
+            soundEffects.playBonusActiveSound();
         });
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent event) {
-        if (gameLevel3D == null) {
-            Logger.error("No game level3D exists!");
-            return;
-        }
         gameContext().currentGame().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(_ -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
-            ui.soundManager().stop(SoundID.BONUS_ACTIVE);
-            ui.soundManager().play(SoundID.BONUS_EATEN);
+            soundEffects.playBonusEatenSound();
         });
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent event) {
-        if (gameLevel3D == null) {
-            Logger.error("No game level3D exists!");
-            return;
-        }
         gameContext().currentGame().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(_ -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
-            ui.soundManager().stop(SoundID.BONUS_ACTIVE);
+            soundEffects.playBonusExpiredSound();
         });
     }
 
@@ -366,13 +373,13 @@ public class PlayScene3D implements GameScene {
         final State<Game> state = game.control().state();
         final boolean silent = game.level().isDemoLevel() || state instanceof TestState;
         if (!silent) {
-            ui.soundManager().play(SoundID.GAME_READY);
+            soundEffects.playGameReadySound();
         }
     }
 
     @Override
     public void onGhostEaten(GhostEatenEvent event) {
-        ui.soundManager().play(SoundID.GHOST_EATEN);
+        soundEffects.playGhostEatenSound();
     }
 
 
@@ -404,10 +411,8 @@ public class PlayScene3D implements GameScene {
 
         gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().config3D().levelCounter());
         replaceActionBindings(level);
-        fadeInAnimation.playFromStart();
+        fadeInAnimation.play();
     }
-
-    private long lastMunchingSoundPlayedTick;
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
@@ -415,26 +420,18 @@ public class PlayScene3D implements GameScene {
             gameLevel3D.eatAllPellets3D();
         } else {
             gameLevel3D.eatFood(e.pac().tile());
-            // Play munching sound?
-            final long now = gameContext().clock().tickCount();
-            final long passed = now - lastMunchingSoundPlayedTick;
-            Logger.debug("Pac found food, tick={} passed since last time={}", now, passed);
-            byte minDelay = ui.currentConfig().munchingSoundDelay();
-            if (passed > minDelay  || minDelay == 0) {
-                ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
-                lastMunchingSoundPlayedTick = now;
-            }
+            soundEffects.playPacMunchingSound(gameContext().clock().tickCount());
         }
     }
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
         final Game game = gameContext().currentGame();
-        ui.soundManager().stopSiren();
+        soundEffects.stopSiren();
         if (!game.isLevelCompleted(game.level())) {
             gameLevel3D.pac3D().setMovementPowerMode(true);
-            ui.soundManager().loop(SoundID.PAC_MAN_POWER);
             gameLevel3D.animations().ifPresent(animations -> animations.wallColorFlashingAnimation().playFromStart());
+            soundEffects.playPacPowerSound();
         }
     }
 
@@ -442,12 +439,12 @@ public class PlayScene3D implements GameScene {
     public void onPacLostPower(PacLostPowerEvent e) {
         gameLevel3D.pac3D().setMovementPowerMode(false);
         gameLevel3D.animations().ifPresent(animations -> animations.wallColorFlashingAnimation().stop());
-        ui.soundManager().stop(SoundID.PAC_MAN_POWER);
+        soundEffects.stopPacPowerSound();
     }
 
     @Override
     public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
-        ui.soundManager().play(SoundID.EXTRA_LIFE);
+        soundEffects.playExtraLifeSound();
     }
 
     @Override
@@ -542,50 +539,4 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.setAnimations(new GameLevel3DAnimations(gameLevel3D, ui.soundManager()));
     }
 
-    private void updateSiren(GameLevel level) {
-        final boolean pacChased = !level.pac().powerTimer().isRunning();
-        if (pacChased) {
-            // siren numbers are 1..4, hunting phase index = 0..7
-            final int huntingPhase = level.huntingTimer().phaseIndex();
-            final int sirenNumber = 1 + huntingPhase / 2;
-            ui.soundManager().playSiren(sirenNumber, SIREN_VOLUME); // TODO change sound file volume?
-        }
-    }
-
-    private void updateGhostSounds(Pac pac, Stream<Ghost> ghosts) {
-        boolean returningHome = pac.isAlive() && ghosts.anyMatch(ghost ->
-            ghost.state() == GhostState.RETURNING_HOME || ghost.state() == GhostState.ENTERING_HOUSE);
-        if (returningHome) {
-            if (!ui.soundManager().isPlaying(SoundID.GHOST_RETURNS)) {
-                ui.soundManager().loop(SoundID.GHOST_RETURNS);
-            }
-        } else {
-            ui.soundManager().stop(SoundID.GHOST_RETURNS);
-        }
-    }
-
-    private void updateSound(GameLevel level) {
-        if (!ui.soundManager().isEnabled()) {
-            return;
-        }
-        if (level.game().control().state().nameMatches(HUNTING.name())) {
-            updateSiren(level);
-            updateGhostSounds(level.pac(), level.ghosts());
-        }
-    }
-
-    private Animation createFadeInAnimation() {
-        return new Timeline(
-            new KeyFrame(Duration.ZERO, _ -> {
-                //TODO Check if this is needed:
-                perspectiveManager.currentPerspective().ifPresent(Perspective::startControlling);
-                subScene.setFill(SCENE_FILL_DARK);
-                gameLevel3D.setVisible(true);
-                scores3D.setVisible(true);
-            }
-            ),
-            new KeyFrame(Duration.seconds(SCENE_FADE_IN_SECONDS),
-                new KeyValue(subScene.fillProperty(), SCENE_FILL_BRIGHT, Interpolator.EASE_IN))
-        );
-    }
 }
