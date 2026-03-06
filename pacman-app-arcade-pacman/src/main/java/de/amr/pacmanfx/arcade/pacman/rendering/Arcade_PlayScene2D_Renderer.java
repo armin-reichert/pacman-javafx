@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Pulse;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
@@ -66,7 +67,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
             levelRenderer.drawLevel(level, info);
             updateActorZOrder(level);
             actorsInZOrder.forEach(actorRenderer::drawActor);
-            if (scene.debugInfoVisible()) {
+            if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
                 debugRenderer.draw(scene);
             }
         });

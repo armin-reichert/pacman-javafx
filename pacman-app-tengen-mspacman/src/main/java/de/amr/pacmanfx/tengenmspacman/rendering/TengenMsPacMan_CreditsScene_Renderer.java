@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CreditsScene;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import javafx.scene.canvas.Canvas;
@@ -41,7 +42,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends GameScene2D_Renderer i
             drawJavaFXRemakeCreditsText();
             ctx.setGlobalAlpha(1);
         }
-        if (scene.debugInfoVisible()) {
+        if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }

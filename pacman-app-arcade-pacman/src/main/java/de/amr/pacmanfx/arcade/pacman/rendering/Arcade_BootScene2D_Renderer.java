@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -67,7 +68,7 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
         else if (stateTimer.atSecond(3.5)) {
             showGrid(scene);
         }
-        if (scene.debugInfoVisible()) {
+        if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }

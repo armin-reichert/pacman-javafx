@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -44,7 +45,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2D_Renderer imp
             drawMidwayCopyright(logo, TS * 6, TS * 28);
         }
 
-        if (scene.debugInfoVisible()) {
+        if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }

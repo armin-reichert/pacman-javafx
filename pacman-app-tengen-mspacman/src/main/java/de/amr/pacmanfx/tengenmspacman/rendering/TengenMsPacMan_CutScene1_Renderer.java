@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CutScene1;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
@@ -29,7 +30,7 @@ public class TengenMsPacMan_CutScene1_Renderer extends GameScene2D_Renderer {
             actorRenderer.drawActor(cutScene.pinky());
             actorRenderer.drawActor(cutScene.heart());
         }
-        if (scene.debugInfoVisible()) {
+        if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }

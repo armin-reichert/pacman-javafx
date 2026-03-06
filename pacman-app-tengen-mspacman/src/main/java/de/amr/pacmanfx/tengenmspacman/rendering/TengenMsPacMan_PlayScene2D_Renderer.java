@@ -115,7 +115,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
             levelRenderer.drawDoor(worldMap); // ghosts appear under door, so draw door over again
             actorsInZOrder.forEach(actorRenderer::drawActor);
             ctx.restore();
-            if (playScene2D.debugInfoVisible()) {
+            if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
                 ctx.getCanvas().setClip(null); // also show normally clipped region (to see how Pac-Man travels through portals)
                 debugRenderer.draw(playScene2D);
             }

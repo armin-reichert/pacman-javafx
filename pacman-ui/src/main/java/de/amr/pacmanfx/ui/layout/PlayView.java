@@ -278,9 +278,6 @@ public class PlayView extends StackPane implements View {
         if (currentGameScene != null) {
             currentGameScene.end(game);
             Logger.info("Game scene ended: {}", currentGameScene.getClass().getSimpleName());
-            if (currentGameScene instanceof GameScene2D gameScene2D) {
-                gameScene2D.debugInfoVisibleProperty().unbind();
-            }
         }
 
         if (intendedGameScene instanceof GameScene2D gameScene2D) {
@@ -291,9 +288,6 @@ public class PlayView extends StackPane implements View {
         }
 
         embedGameScene(parentScene, intendedGameScene);
-        if (intendedGameScene instanceof GameScene2D gameScene2D) {
-            gameScene2D.debugInfoVisibleProperty().bind(GameUI.PROPERTY_DEBUG_INFO_VISIBLE);
-        }
         intendedGameScene.init(game);
         Logger.info("Game scene initialized: {}", intendedGameScene.getClass().getSimpleName());
 

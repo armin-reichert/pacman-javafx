@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
 import de.amr.pacmanfx.lib.Pulse;
 import de.amr.pacmanfx.lib.math.RectShort;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -71,7 +72,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
                 drawCopyright();
             }
         }
-        if (intro.debugInfoVisible()) {
+        if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }

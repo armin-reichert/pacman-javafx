@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
@@ -64,7 +65,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer {
         }
         drawMidwayCopyright(introScene.ui().currentConfig().assets().image("logo.midway"), TS(6), TS(28));
 
-        if (scene.debugInfoVisible()) {
+        if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }

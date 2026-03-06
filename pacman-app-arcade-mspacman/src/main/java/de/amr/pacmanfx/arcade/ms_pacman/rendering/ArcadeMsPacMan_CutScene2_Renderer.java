@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_CutScene2;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
@@ -30,7 +31,7 @@ public class ArcadeMsPacMan_CutScene2_Renderer extends GameScene2D_Renderer {
         cutScene.clapperboard().setFont(arcadeFont8());
         Stream.of(cutScene.clapperboard(), cutScene.msPacMan(), cutScene.pacMan()).forEach(actorRenderer::drawActor);
 
-        if (cutScene.debugInfoVisible()) {
+        if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }
