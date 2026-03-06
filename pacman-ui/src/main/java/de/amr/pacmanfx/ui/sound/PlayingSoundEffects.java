@@ -59,11 +59,17 @@ public class PlayingSoundEffects {
     }
 
     public void playPacPowerSound() {
+        stopSiren();
         soundManager.loop(SoundID.PAC_MAN_POWER);
     }
 
     public void stopPacPowerSound() {
         soundManager.stop(SoundID.PAC_MAN_POWER);
+    }
+
+    public void playPacDeadSound() {
+        soundManager.stopAll();
+        soundManager.play(SoundID.PAC_MAN_DEATH);
     }
 
     public void playBonusActiveSound() {

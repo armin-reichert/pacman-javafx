@@ -22,7 +22,6 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.PlayingSoundEffects;
-import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.control.CheckMenuItem;
 import org.tinylog.Logger;
 
@@ -98,12 +97,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
         return Optional.of(menu);
     }
 
-    @Override
-    public void onSwitch_3D_2D(GameScene scene3D) {
-        gameContext().currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
-        Logger.info("2D scene {} entered from 3D scene {}", getClass().getSimpleName(), scene3D.getClass().getSimpleName());
-    }
-
     // Game event handlers
 
     @Override
@@ -146,7 +139,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public void onGameStateChange(GameStateChangeEvent e) {
         final Game game = gameContext().currentGame();
         if (e.newState() == ArcadeGameState.LEVEL_COMPLETE) {
-            ui.soundManager().stopAll();
+            soundEffects.stopAll();
             createAndPlayLevelCompletedAnimation(game.level());
         }
         else if (e.newState() == ArcadeGameState.GAME_OVER) {
@@ -157,7 +150,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGhostEaten(GhostEatenEvent e) {
-        ui.soundManager().play(SoundID.GHOST_EATEN);
+        soundEffects.playGhostEatenSound();
     }
 
     @Override
@@ -173,8 +166,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacDying(PacDyingEvent e) {
-        ui.soundManager().stopSiren();
-        ui.soundManager().play(SoundID.PAC_MAN_DEATH);
+        soundEffects.playPacDeadSound();
     }
 
     @Override
@@ -184,7 +176,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        soundEffects.stopSiren();
         soundEffects.playPacPowerSound();
     }
 
@@ -196,6 +187,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
         soundEffects.playExtraLifeSound();
+    }
+
+    @Override
+    public void onSwitch_3D_2D(GameScene scene3D) {
+        gameContext().currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
+        Logger.info("2D scene {} entered from 3D scene {}", getClass().getSimpleName(), scene3D.getClass().getSimpleName());
     }
 
     // private

@@ -4,14 +4,12 @@
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.GameLevelMessageType;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.tengenmspacman.model.*;
@@ -21,6 +19,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
+import de.amr.pacmanfx.ui.sound.PlayingSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -68,6 +67,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private final PlayScene2DCamera dynamicCamera;
     private final PerspectiveCamera fixedCamera;
 
+    private PlayingSoundEffects soundEffects;
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public TengenMsPacMan_PlayScene2D() {
@@ -103,41 +103,18 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
+    public void setUI(GameUI ui) {
+        this.ui = requireNonNull(ui);
+        soundEffects = new PlayingSoundEffects(ui.soundManager());
+        soundEffects.setMunchingSoundDelay(ui.currentConfig().munchingSoundDelay());
+    }
+
+    @Override
     public void setCanvas(Canvas canvas) {
         this.canvas = requireNonNull(canvas);
         canvas.widthProperty() .bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED));
         canvas.heightProperty().bind(scalingProperty().multiply(canvasHeightUnscaled));
         rootPane.getChildren().setAll(canvas);
-    }
-
-    private void initForGameLevel(GameLevel level) {
-        level.game().hud().levelCounter(true).livesCounter(true).show();
-
-        dynamicCamera.updateRange(level.worldMap());
-
-        // Action keyboard bindings
-        if (level.isDemoLevel()) {
-            actionBindings.registerAnyFrom(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
-            actionBindings.registerAnyFrom(ACTION_QUIT_DEMO_LEVEL, TENGEN_SPECIFIC_BINDINGS);
-        } else {
-            // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
-            actionBindings.registerAllFrom(STEERING_BINDINGS);
-            actionBindings.registerAllFrom(GameUI.CHEAT_BINDINGS);
-            actionBindings.registerAnyFrom(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
-            actionBindings.registerAnyFrom(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
-        }
-        JOYPAD.setBindings(actionBindings);
-        actionBindings.addAll(GameUI.KEYBOARD);
-    }
-
-    private void updateScaling() {
-        SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
-        scalingProperty().set(switch (displayMode) {
-            case SCALED_TO_FIT -> subScene.getHeight() / canvasHeightUnscaled.get();
-            case SCROLLING -> subScene.getHeight() / NES_SIZE_PX.y();
-        });
-        Logger.debug("Tengen 2D play scene sub-scene: w={0.00} h={0.00} scaling={0.00}",
-            subScene.getWidth(), subScene.getHeight(), scaling());
     }
 
     @Override
@@ -158,23 +135,21 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void update(Game game) {
         game.optGameLevel().ifPresent(level -> {
-            int numRows = level.worldMap().numRows();
+            final int numRows = level.worldMap().terrainLayer().numRows();
             canvasHeightUnscaled.set(TS(numRows + 2)); // 2 additional rows for level counter below maze
-            if (level.isDemoLevel()) {
-                ui.soundManager().setEnabled(false);
-            } else {
-                ui.soundManager().setEnabled(true);
+            if (!level.isDemoLevel()) {
                 // Update moving "game over" message if present
                 level.optMessage()
                     .filter(MovingGameLevelMessage.class::isInstance)
                     .map(MovingGameLevelMessage.class::cast)
                     .ifPresent(MovingGameLevelMessage::updateMovement);
-                updateSound(level);
             }
             if (subScene.getCamera() == dynamicCamera) {
                 dynamicCamera.update(TS(level.worldMap().numRows()), level.pac());
             }
             updateHUD(level);
+            soundEffects.setEnabled(!level.isDemoLevel());
+            soundEffects.updateSound(level);
         });
     }
 
@@ -215,19 +190,26 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         return gameContext().currentGame().optGameLevel().map(level -> level.worldMap().terrainLayer().sizeInPixel()).orElse(NES_SIZE_PX);
     }
 
+    // Game event handlers
+
     @Override
-    public void onGameStarts(GameStartedEvent e) {
-        final Game game = gameContext().currentGame();
-        State<Game> state = game.control().state();
-        boolean shutUp = game.level().isDemoLevel() || state instanceof TestState;
-        if (!shutUp) {
-            ui.soundManager().play(SoundID.GAME_READY);
-        }
+    public void onBonusActivated(BonusActivatedEvent e) {
+        soundEffects.playBonusActiveSound();
+    }
+
+    @Override
+    public void onBonusEaten(BonusEatenEvent e) {
+        soundEffects.playBonusEatenSound();
+    }
+
+    @Override
+    public void onBonusExpired(BonusExpiredEvent e) {
+        soundEffects.playBonusExpiredSound();
     }
 
     @Override
     public void onGameContinues(GameContinuedEvent e) {
-        TengenMsPacMan_GameModel game = gameContext().currentGame();
+        final TengenMsPacMan_GameModel game = gameContext().currentGame();
         game.optGameLevel().ifPresent(level -> {
             resetAnimations(level);
             game.showLevelMessage(GameLevelMessageType.READY);
@@ -235,22 +217,42 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         });
     }
 
-    private void resetAnimations(GameLevel level) {
-        final TengenMsPacMan_GameModel game = gameContext().currentGame();
-        level.pac().optAnimationManager().ifPresent(animationManager -> {
-            animationManager.select(game.isBoosterActive()
-                ? TengenMsPacMan_AnimationID.ANIM_MS_PAC_MAN_BOOSTER : Pac.AnimationID.PAC_MUNCHING);
-            animationManager.reset();
-        });
-        level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(animationManager -> {
-            animationManager.select(Ghost.AnimationID.GHOST_NORMAL);
-            animationManager.reset();
-        }));
+    @Override
+    public void onGameStarts(GameStartedEvent e) {
+        final Game game = e.game();
+        final boolean silent = game.optGameLevel().isPresent() && game.level().isDemoLevel()
+            || game.control().state() instanceof TestState;
+        if (!silent) {
+            soundEffects.playGameReadySound();
+        }
+    }
+
+    @Override
+    public void onGameStateChange(GameStateChangeEvent e) {
+        final Game game = gameContext().currentGame();
+        switch (e.newState()) {
+            case TengenGameState.LEVEL_COMPLETE -> {
+                soundEffects.stopAll();
+                playLevelCompleteAnimation(game.level());
+            }
+            case TengenGameState.GAME_OVER -> {
+                soundEffects.stopAll();
+                dynamicCamera.enterManualMode();
+                dynamicCamera.setToTopPosition();
+                game.level().optMessage().ifPresent(this::startGameOverMessageAnimation);
+            }
+            default -> {}
+        }
+    }
+
+    @Override
+    public void onGhostEaten(GhostEatenEvent e) {
+        soundEffects.playGhostEatenSound();
     }
 
     @Override
     public void onLevelCreated(LevelCreatedEvent e) {
-        initForGameLevel(ui.gameContext().currentGame().level());
+        acceptGameLevel(e.level());
     }
 
     @Override
@@ -261,56 +263,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onSwitch_3D_2D(GameScene scene3D) {
-        // Switch might occur just during the few ticks when level is not yet available!
-        gameContext().currentGame().optGameLevel().ifPresent(this::initForGameLevel);
-        dynamicCamera.enterTrackingMode();
-    }
-
-    @Override
-    public void onGameStateChange(GameStateChangeEvent e) {
-        switch (e.newState()) {
-            case TengenGameState.LEVEL_COMPLETE -> {
-                ui.soundManager().stopAll();
-                playLevelCompleteAnimation(gameContext().currentGame().level());
-            }
-            case TengenGameState.GAME_OVER -> {
-                ui.soundManager().stopAll();
-                dynamicCamera.enterManualMode();
-                dynamicCamera.setToTopPosition();
-                gameContext().currentGame().level().optMessage().ifPresent(this::startGameOverMessageAnimation);
-            }
-            default -> {}
-        }
-    }
-
-    @Override
-    public void onBonusActivated(BonusActivatedEvent e) {
-        ui.soundManager().loop(SoundID.BONUS_ACTIVE);
-    }
-
-    @Override
-    public void onBonusEaten(BonusEatenEvent e) {
-        ui.soundManager().stop(SoundID.BONUS_ACTIVE);
-        ui.soundManager().play(SoundID.BONUS_EATEN);
-    }
-
-    @Override
-    public void onBonusExpired(BonusExpiredEvent e) {
-        ui.soundManager().stop(SoundID.BONUS_ACTIVE);
-    }
-
-    @Override
-    public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
-        ui.soundManager().play(SoundID.EXTRA_LIFE);
-    }
-
-    @Override
-    public void onGhostEaten(GhostEatenEvent e) {
-        ui.soundManager().play(SoundID.GHOST_EATEN);
-    }
-
-    @Override
     public void onPacDead(PacDeadEvent e) {
         gameContext().currentGame().control().state().timer().expire();
     }
@@ -318,11 +270,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void onPacDying(PacDyingEvent e) {
         dynamicCamera.enterManualMode();
-        ui.soundManager().play(SoundID.PAC_MAN_DEATH);
+        soundEffects.playPacDeadSound();
     }
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
+        //TODO check this
         if (!ui.soundManager().isPlaying(SoundID.PAC_MAN_MUNCHING)) {
             ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
         }
@@ -330,47 +283,57 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        ui.soundManager().stopSiren();
-        ui.soundManager().loop(SoundID.PAC_MAN_POWER);
+        soundEffects.playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
-        ui.soundManager().stop(SoundID.PAC_MAN_POWER);
+        soundEffects.stopPacPowerSound();
     }
 
-    private void updateSound(GameLevel level) {
-        if (!ui.soundManager().isEnabled()) return;
+    @Override
+    public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
+        soundEffects.playExtraLifeSound();
+    }
 
-        final Game game = level.game();
-        if (game.control().state() == TengenGameState.HUNTING) {
-            final Pac pac = level.pac();
-            if (!pac.powerTimer().isRunning()) {
-                selectAndPlaySiren();
-            }
-            final boolean ghostReturningHome = pac.isAlive()
-                && level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
-            if (ghostReturningHome) {
-                if (!ui.soundManager().isPlaying(SoundID.GHOST_RETURNS)) {
-                    ui.soundManager().loop(SoundID.GHOST_RETURNS);
-                }
-            } else {
-                ui.soundManager().stop(SoundID.GHOST_RETURNS);
-            }
+    @Override
+    public void onSwitch_3D_2D(GameScene scene3D) {
+        // Switch might occur just during the few ticks when level is not yet available!
+        gameContext().currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
+        dynamicCamera.enterTrackingMode();
+        Logger.info("2D scene {} entered from 3D scene {}", getClass().getSimpleName(), scene3D.getClass().getSimpleName());
+    }
+
+    // private
+
+    private void acceptGameLevel(GameLevel level) {
+        level.game().hud().levelCounter(true).livesCounter(true).show();
+
+        dynamicCamera.updateRange(level.worldMap());
+
+        // Action keyboard bindings
+        if (level.isDemoLevel()) {
+            actionBindings.registerAnyFrom(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
+            actionBindings.registerAnyFrom(ACTION_QUIT_DEMO_LEVEL, TENGEN_SPECIFIC_BINDINGS);
+        } else {
+            // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
+            actionBindings.registerAllFrom(STEERING_BINDINGS);
+            actionBindings.registerAllFrom(GameUI.CHEAT_BINDINGS);
+            actionBindings.registerAnyFrom(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
+            actionBindings.registerAnyFrom(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
         }
+        JOYPAD.setBindings(actionBindings);
+        actionBindings.addAll(GameUI.KEYBOARD);
     }
 
-    //TODO move this logic into game model as it depends on the currently played game variant
-    private int selectSirenNumber(int huntingPhase) {
-        // siren numbers are 1..4, hunting phase index = 0..7
-        return 1 + huntingPhase / 2;
-    }
-
-    //TODO fix volume in audio file
-    private void selectAndPlaySiren() {
-        final float volume = 0.33f;
-        final int sirenNumber = selectSirenNumber(gameContext().currentGame().level().huntingTimer().phaseIndex());
-        ui.soundManager().playSiren(sirenNumber, volume);
+    private void updateScaling() {
+        SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
+        scalingProperty().set(switch (displayMode) {
+            case SCALED_TO_FIT -> subScene.getHeight() / canvasHeightUnscaled.get();
+            case SCROLLING -> subScene.getHeight() / NES_SIZE_PX.y();
+        });
+        Logger.debug("Tengen 2D play scene sub-scene: w={0.00} h={0.00} scaling={0.00}",
+            subScene.getWidth(), subScene.getHeight(), scaling());
     }
 
     private void updateHUD(GameLevel level) {
@@ -394,5 +357,18 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             double messageWidth = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, GAME_OVER_MESSAGE_FONT);
             movingMessage.startMovement(unscaledSize().x(), messageWidth);
         }
+    }
+
+    private void resetAnimations(GameLevel level) {
+        final TengenMsPacMan_GameModel game = gameContext().currentGame();
+        level.pac().optAnimationManager().ifPresent(animationManager -> {
+            animationManager.select(game.isBoosterActive()
+                ? TengenMsPacMan_AnimationID.ANIM_MS_PAC_MAN_BOOSTER : Pac.AnimationID.PAC_MUNCHING);
+            animationManager.reset();
+        });
+        level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(animationManager -> {
+            animationManager.select(Ghost.AnimationID.GHOST_NORMAL);
+            animationManager.reset();
+        }));
     }
 }
