@@ -37,7 +37,6 @@ import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -52,7 +51,6 @@ import static de.amr.pacmanfx.model.GameControl.CommonGameState.*;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
-import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSecThen;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -424,7 +422,7 @@ public class PlayScene3D implements GameScene {
     public void onPacEatsFood(PacEatsFoodEvent e) {
         final Vector2i tile = e.pac().tile();
         if (e.allPellets()) {
-            eatAllPellets3D();
+            gameLevel3D.eatAllPellets3D();
         } else {
             final MazeFood3D mazeFood3D = gameLevel3D.maze3D().food();
             final Energizer3D energizer3D = mazeFood3D.energizers3D().stream()
@@ -437,7 +435,7 @@ public class PlayScene3D implements GameScene {
                 mazeFood3D.pellets3D().stream()
                     .filter(pellet3D -> tile.equals(pellet3D.tile()))
                     .findFirst()
-                    .ifPresent(this::eatPellet3D);
+                    .ifPresent(gameLevel3D::eatPellet3D);
             }
             // Play munching sound?
             final long now = gameContext().clock().tickCount();
@@ -611,21 +609,6 @@ public class PlayScene3D implements GameScene {
             new KeyFrame(Duration.seconds(SCENE_FADE_IN_SECONDS),
                 new KeyValue(subScene.fillProperty(), SCENE_FILL_BRIGHT, Interpolator.EASE_IN))
         );
-    }
-
-    private void eatAllPellets3D() {
-        gameLevel3D.maze3D().food().pellets3D().forEach(pellet3D -> {
-            if (pellet3D.getParent() instanceof Group group) {
-                group.getChildren().remove(pellet3D);
-            }
-        });
-    }
-
-    private void eatPellet3D(Shape3D pellet3D) {
-        if (pellet3D.getParent() instanceof Group group) {
-            // remove after small delay to let pellet not directly disappear when Pac-Man enters tile
-            pauseSecThen(0.05, () -> group.getChildren().remove(pellet3D)).play();
-        }
     }
 
     private void showReadyMessage(WorldMap worldMap) {

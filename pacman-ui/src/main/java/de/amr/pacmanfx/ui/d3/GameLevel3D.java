@@ -401,6 +401,15 @@ public class GameLevel3D extends Group implements Disposable {
         soundManager.play(SoundID.GAME_OVER);
     }
 
+    public void eatAllPellets3D() {
+        maze3D.food().pellets3D().forEach(pellet3D -> getChildren().remove(pellet3D));
+    }
+
+    // Removes the pellet after a small delay to let pellet not directly disappear when Pac-Man enters the tile
+    public void eatPellet3D(Pellet3D pellet3D) {
+        pauseSecThen(0.05, () -> getChildren().remove(pellet3D)).play();
+    }
+
     public void showAnimatedMessage(String messageText, float displaySeconds, double centerX, double centerY) {
         if (messageView != null) {
             messageView.dispose();
