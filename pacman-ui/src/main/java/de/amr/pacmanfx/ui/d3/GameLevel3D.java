@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Vector2f;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
@@ -399,6 +400,21 @@ public class GameLevel3D extends Group implements Disposable {
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         soundManager.stopAll();
         soundManager.play(SoundID.GAME_OVER);
+    }
+
+    public void eatFood(Vector2i tile) {
+        final Energizer3D energizer3D = maze3D.food().energizers3D().stream()
+            .filter(e3D -> tile.equals(e3D.tile()))
+            .findFirst().orElse(null);
+        if (energizer3D != null) {
+            maze3D.food().createEnergizerExplosion(energizer3D);
+            energizer3D.onEaten();
+        } else {
+            maze3D.food().pellets3D().stream()
+                .filter(pellet3D -> tile.equals(pellet3D.tile()))
+                .findFirst()
+                .ifPresent(this::eatPellet3D);
+        }
     }
 
     public void eatAllPellets3D() {
