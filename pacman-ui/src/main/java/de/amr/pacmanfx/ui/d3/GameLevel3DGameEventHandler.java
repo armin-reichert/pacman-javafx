@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
+import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.RandomNumberSupport;
@@ -18,6 +19,7 @@ import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import javafx.animation.SequentialTransition;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 import org.tinylog.Supplier;
 
 import static de.amr.pacmanfx.model.GameControl.CommonGameState.*;
@@ -36,10 +38,26 @@ public class GameLevel3DGameEventHandler {
         return gameState.nameMatches(expected.name());
     }
 
-    public void onGameStateChange(GameStateChangeEvent event, GameLevel3D level3D, Payload payload) {
-        requireNonNull(event);
+    public void handleGameEvent(GameEvent gameEvent, GameLevel3D level3D, Payload payload) {
+        requireNonNull(gameEvent);
+        requireNonNull(level3D);
+        requireNonNull(payload);
 
+        if (gameEvent instanceof GameStateChangeEvent changeEvent) {
+            onGameStateChange(changeEvent, level3D, payload);
+        }
+        else {
+            onGameEvent(gameEvent, level3D, payload);
+        }
+    }
+
+    private void onGameEvent(GameEvent gameEvent, GameLevel3D level3D, Payload payload) {
+        // currently no other events to handle
+    }
+
+    private void onGameStateChange(GameStateChangeEvent event, GameLevel3D level3D, Payload payload) {
         if (level3D == null) {
+            Logger.info("Ignoring game state change event because level3D is null");
             return;
         }
 
@@ -64,7 +82,7 @@ public class GameLevel3DGameEventHandler {
         }
     }
 
-    public void onStartingGame(GameLevel3D level3D, Payload ignored) {
+    private void onStartingGame(GameLevel3D level3D, Payload ignored) {
         level3D.maze3D().food().energizers3D().forEach(Energizer3D::stopPumping);
         if (level3D.levelCounter3D() != null) {
             level3D.levelCounter3D().rebuild(level3D.config3D().levelCounter(), level3D.level());
@@ -80,7 +98,7 @@ public class GameLevel3DGameEventHandler {
         level3D.animations().ifPresent(animations -> animations.ghostLightAnimation().playFromStart());
     }
 
-    public void onPacManDying(GameLevel3D level3D, Payload payload) {
+    private void onPacManDying(GameLevel3D level3D, Payload payload) {
         final GameLevel level = level3D.level();
         final State<Game> gameState = payload.gameState();
         final PlayingSoundEffects soundEffects = payload.soundEffects();
@@ -109,7 +127,7 @@ public class GameLevel3DGameEventHandler {
         dyingAnimation.play();
     }
 
-    public void onEatingGhost(GameLevel3D level3D, Payload ignored) {
+    private void onEatingGhost(GameLevel3D level3D, Payload ignored) {
         final GameLevel level = level3D.level();
         level.game().simulationStep().ghostsKilled.forEach(killedGhost -> {
             byte personality = killedGhost.personality();
@@ -119,7 +137,7 @@ public class GameLevel3DGameEventHandler {
         });
     }
 
-    public void onLevelComplete(GameLevel3D level3D, Payload payload) {
+    private void onLevelComplete(GameLevel3D level3D, Payload payload) {
         final State<Game> gameState = payload.gameState();
         final PlayingSoundEffects soundEffects = payload.soundEffects();
 
@@ -141,7 +159,7 @@ public class GameLevel3DGameEventHandler {
         );
     }
 
-    public void onGameOver(GameLevel3D level3D, Payload payload) {
+    private void onGameOver(GameLevel3D level3D, Payload payload) {
         final GameLevel level = level3D.level();
         final GameUI ui = payload.ui();
         final State<Game> gameState = payload.gameState();

@@ -292,7 +292,7 @@ public class PlayScene3D implements GameScene {
             });
             return;
         }
-        level3DGameEventHandler.onGameStateChange(event, gameLevel3D,
+        level3DGameEventHandler.handleGameEvent(event, gameLevel3D,
             new GameLevel3DGameEventHandler.Payload(ui, gameState, soundEffects, pickerGameOverMessages::nextText));
     }
 
