@@ -9,7 +9,6 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl.CommonGameState;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
-import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.FoodLayer;
@@ -20,8 +19,6 @@ import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.PlayingSoundEffects;
-import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
-import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import de.amr.pacmanfx.uilib.model3D.Scores3D;
@@ -107,14 +104,13 @@ public class PlayScene3D implements GameScene {
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final SubScene subScene;
     protected final FadeInAnimation fadeInAnimation;
-    protected final GameLevel3DGameEventHandler level3DGameEventHandler = new GameLevel3DGameEventHandler();
 
+    protected GameLevel3DEventHandler level3D_EventHandler;
     protected PlayingSoundEffects soundEffects;
     protected ActionBindingsManager actionBindings = ActionBindingsManager.NO_BINDINGS;
     protected GameUI ui;
     protected GameLevel3D gameLevel3D;
     protected Scores3D scores3D;
-    protected RandomTextPicker<String> pickerGameOverMessages;
     protected PlaySceneContextMenu contextMenu;
 
     public class FadeInAnimation {
@@ -159,9 +155,14 @@ public class PlayScene3D implements GameScene {
         this.ui = requireNonNull(ui);
         soundEffects = new PlayingSoundEffects(ui.soundManager());
         soundEffects.setMunchingSoundDelay(ui.currentConfig().munchingSoundDelay());
-        pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");
+        level3D_EventHandler = new GameLevel3DEventHandler(ui, soundEffects);
+
         //TODO reconsider this
         replaceScores3D();
+    }
+
+    public Optional<GameLevel3D> level3D() {
+        return Optional.ofNullable(gameLevel3D);
     }
 
     @Override
@@ -258,33 +259,8 @@ public class PlayScene3D implements GameScene {
     // GameEventListener interface
 
     @Override
-    public void onBonusActivated(BonusActivatedEvent event) {
-        optBonus().ifPresent(bonus -> {
-            gameLevel3D.updateBonus3D(bonus);
-            soundEffects.playBonusActiveSound();
-        });
-    }
-
-    @Override
-    public void onBonusEaten(BonusEatenEvent event) {
-        optBonus().ifPresent(_ -> {
-            gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
-            soundEffects.playBonusEatenSound();
-        });
-    }
-
-    @Override
-    public void onBonusExpired(BonusExpiredEvent event) {
-        optBonus().ifPresent(_ -> {
-            gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
-            soundEffects.playBonusExpiredSound();
-        });
-    }
-
-    @Override
     public void onGameStateChange(GameStateChangeEvent event) {
-        final State<Game> gameState = event.newState();
-        if (gameState instanceof TestState) {
+        if (event.newState() instanceof TestState) {
             optGameLevel().ifPresent(level -> {
                 replaceGameLevel3D(level);
                 gameLevel3D.showTestMessage();
@@ -292,30 +268,37 @@ public class PlayScene3D implements GameScene {
             });
             return;
         }
-        level3DGameEventHandler.handleGameEvent(event, gameLevel3D,
-            new GameLevel3DGameEventHandler.Payload(ui, gameState, soundEffects, pickerGameOverMessages::nextText));
+        level3D_EventHandler.handleGameStateChange(event,gameLevel3D);
+    }
+
+    @Override
+    public void onBonusActivated(BonusActivatedEvent event) {
+        level3D_EventHandler.onBonusActivated(event, gameLevel3D);
+    }
+
+    @Override
+    public void onBonusEaten(BonusEatenEvent event) {
+        level3D_EventHandler.onBonusEaten(event, gameLevel3D);
+    }
+
+    @Override
+    public void onBonusExpired(BonusExpiredEvent event) {
+        level3D_EventHandler.onBonusExpired(event, gameLevel3D);
     }
 
     @Override
     public void onGameContinues(GameContinuedEvent event) {
-        if (gameLevel3D != null) {
-            gameLevel3D.showReadyMessage();
-        }
+        level3D_EventHandler.onGameContinues(event, gameLevel3D);
     }
 
     @Override
     public void onGameStarts(GameStartedEvent event) {
-        final Game game = gameContext().currentGame();
-        final State<Game> state = game.control().state();
-        final boolean silent = game.level().isDemoLevel() || state instanceof TestState;
-        if (!silent) {
-            soundEffects.playGameReadySound();
-        }
+        level3D_EventHandler.onGameStarts(event, gameLevel3D);
     }
 
     @Override
     public void onGhostEaten(GhostEatenEvent event) {
-        soundEffects.playGhostEatenSound();
+        level3D_EventHandler.onGhostEaten(event, gameLevel3D);
     }
 
 
@@ -350,34 +333,17 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        if (e.allPellets()) {
-            gameLevel3D.eatAllPellets3D();
-        } else {
-            gameLevel3D.eatFood(e.pac().tile());
-            soundEffects.playPacMunchingSound(gameContext().clock().tickCount());
-        }
+        level3D_EventHandler.onPacEatsFood(e, gameLevel3D);
     }
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        optGameLevel().ifPresent(gameLevel -> {
-            final Game game = gameLevel.game();
-            soundEffects.stopSiren();
-            if (!game.isLevelCompleted(gameLevel)) {
-                gameLevel3D.pac3D().ifPresent(pac3D -> pac3D.setMovementPowerMode(true));
-                gameLevel3D.animations().ifPresent(animations -> animations.wallColorFlashingAnimation().playFromStart());
-                soundEffects.playPacPowerSound();
-            }
-        });
+        level3D_EventHandler.onPacGetsPower(e, gameLevel3D);
     }
 
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
-        optGameLevel().ifPresent(_ -> {
-            gameLevel3D.pac3D().ifPresent(pac3D -> pac3D.setMovementPowerMode(false));
-            gameLevel3D.animations().ifPresent(animations -> animations.wallColorFlashingAnimation().stop());
-            soundEffects.stopPacPowerSound();
-        });
+        level3D_EventHandler.onPacLostPower(e, gameLevel3D);
     }
 
     @Override
@@ -453,10 +419,6 @@ public class PlayScene3D implements GameScene {
         actionBindings.registerAllFrom(bindings);
     }
 
-    public Optional<GameLevel3D> level3D() {
-        return Optional.ofNullable(gameLevel3D);
-    }
-
     protected GameLevel3D createGameLevel3D(GameLevel level) {
         return new GameLevel3D(ui.currentConfig(), level);
     }
@@ -525,9 +487,5 @@ public class PlayScene3D implements GameScene {
 
     private Optional<GameLevel> optGameLevel() {
         return gameContext().currentGame().optGameLevel();
-    }
-
-    private Optional<Bonus> optBonus() {
-        return optGameLevel().flatMap(GameLevel::optBonus);
     }
 }
