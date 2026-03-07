@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
-import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.ui.ActionBindingsManager;
@@ -253,8 +252,9 @@ public class PlayScene3D implements GameScene {
 
         final GameLevel level = optGameLevel().get();
         gameLevel3D.update();
-        updateHUD(level);
+        updateHUD3D(level);
         perspectiveManager.updatePerspective(level);
+
         soundEffects.setEnabled(!level.isDemoLevel());
         soundEffects.playLevelPlayingSound(level);
     }
@@ -382,40 +382,34 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onSwitch_2D_3D(GameScene scene2D) {
-        if (optGameLevel().isEmpty()) {
-            return;
-        }
         optGameLevel().ifPresent(level -> {
-            final State<?> state = level.game().control().state();
-
             if (gameLevel3D == null) {
                 replaceGameLevel3D(level);
             }
+            initFood3D(level.worldMap().foodLayer(), level.game().control().state().nameMatches(HUNTING.name(), EATING_GHOST.name()));
 
-            level.pac().show();
-            level.ghosts().forEach(Ghost::show);
+            final PacBase3D pac3D = gameLevel3D.pac3D().orElseThrow(() -> new IllegalStateException("Pac3D not found in GameLevel3D"));
+            initPac3D(pac3D, level);
 
-            final PacBase3D pac3D = gameLevel3D.pac3D()
-                    .orElseThrow(() -> new IllegalStateException("Pac3D not found in GameLevel3D"));
+            gameLevel3D.livesCounter3D().ifPresent(livesCounter3D -> livesCounter3D.startTracking(pac3D));
+            gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().config3D().levelCounter());
 
-            pac3D.init(level);
-            pac3D.update(level);
+            updateHUD3D(level);
+            replaceActionBindings(level);
 
-            initFood3D(level.worldMap().foodLayer(), state.nameMatches(HUNTING.name(), EATING_GHOST.name()));
-
-            if (state.nameMatches(HUNTING.name())) {
+            if (level.game().control().state().nameMatches(HUNTING.name())) {
                 if (level.pac().powerTimer().isRunning()) {
                     soundEffects.playPacPowerSound();
                 }
             }
 
-            gameLevel3D.livesCounter3D().ifPresent(livesCounter3D -> livesCounter3D.startTracking(pac3D));
-            gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().config3D().levelCounter());
-            updateHUD(level);
-            replaceActionBindings(level);
-
             fadeInAnimation.play();
         });
+    }
+
+    private void initPac3D(PacBase3D pac3D, GameLevel level) {
+        pac3D.init(level);
+        pac3D.update(level);
     }
 
     private void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
@@ -489,7 +483,7 @@ public class PlayScene3D implements GameScene {
      *
      * @param level current game level
      */
-    protected void updateHUD(GameLevel level) {
+    protected void updateHUD3D(GameLevel level) {
         final Score score = level.game().score(), highScore = level.game().highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
