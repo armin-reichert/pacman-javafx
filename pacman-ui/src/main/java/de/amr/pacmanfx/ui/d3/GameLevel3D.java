@@ -20,8 +20,6 @@ import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d3.config.*;
 import de.amr.pacmanfx.ui.sound.PlayingSoundEffects;
-import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.*;
