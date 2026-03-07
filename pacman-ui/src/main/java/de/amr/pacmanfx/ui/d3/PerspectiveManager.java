@@ -69,9 +69,9 @@ public class PerspectiveManager implements Disposable {
         perspectivesByID.put(PerspectiveID.NEAR_PLAYER,   new StalkingPlayerPerspective(camera));
 
         // Initialize drone control actions
-        actionDroneClimb   = createDroneAction("DroneClimb",   DronePerspective::moveUp);
-        actionDroneDescent = createDroneAction("DroneDescent", DronePerspective::moveDown);
-        actionDroneReset   = createDroneAction("DroneReset",   DronePerspective::moveDefaultHeight);
+        actionDroneClimb   = createDroneAction("DRONE_CLIMB",   DronePerspective::moveUp);
+        actionDroneDescent = createDroneAction("DRONE_DESCENT", DronePerspective::moveDown);
+        actionDroneReset   = createDroneAction("DRONE_RESET",   DronePerspective::moveDefaultHeight);
 
         // Automatically (de)activate control when perspective changes
         activeID.addListener((_, oldID, newID) -> {
