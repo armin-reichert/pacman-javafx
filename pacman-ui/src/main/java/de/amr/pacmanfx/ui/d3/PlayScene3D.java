@@ -195,7 +195,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void end(Game game) {
-        soundEffects.stopAll();
+        ui.soundManager().stopAll();
         if (gameLevel3D != null) {
             gameLevel3DParentGroup.getChildren().clear();
             gameLevel3D.dispose();
@@ -348,7 +348,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
-        soundEffects.playExtraLifeSound();
+        level3D_EventHandler.onSpecialScoreReached(e, gameLevel3D);
     }
 
     @Override
