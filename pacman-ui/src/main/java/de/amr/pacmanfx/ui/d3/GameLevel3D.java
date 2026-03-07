@@ -100,23 +100,23 @@ public class GameLevel3D extends Group implements Disposable {
         this.uiConfig = requireNonNull(uiConfig);
         this.config3D = uiConfig.config3D();
 
-        final int numGhosts = (int) level.ghosts().count();
-        ghostDressMeshViews  = createMeshViews(numGhosts, Models3D.GHOST_MODEL.dressMesh());
-        ghostPupilsMeshViews = createMeshViews(numGhosts, Models3D.GHOST_MODEL.pupilsMesh());
-        ghostEyesMeshViews   = createMeshViews(numGhosts, Models3D.GHOST_MODEL.eyeballsMesh());
-
         createLevelCounter3D();
         createLivesCounter3D();
         createPac3D();
-
-        ghosts3D = level.ghosts().map(ghost -> createMutatingGhost3D(config3D.actor(), ghost)).toList();
-        ghosts3D.forEach(ghost3D -> ghost3D.init(level));
+        createGhosts3D();
 
         createMaze3D();
         createLights();
 
-        // Note: The order in which children are added matters!
-        // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
+        arrangeChildren();
+
+        PROPERTY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
+        setMouseTransparent(true); // this increases performance, they say...
+    }
+
+    // Note: The order in which children are added matters!
+    // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
+    private void arrangeChildren() {
         getChildren().add(maze3D.floor());
         getChildren().addAll(maze3D.particlesGroup());
         getChildren().add(levelCounter3D);
@@ -130,9 +130,6 @@ public class GameLevel3D extends Group implements Disposable {
         getChildren().add(maze3D);
         getChildren().add(ambientLight);
         getChildren().add(ghostLight);
-
-        PROPERTY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
-        setMouseTransparent(true); // this increases performance, they say...
     }
 
     public AnimationRegistry animationRegistry() {
@@ -224,6 +221,16 @@ public class GameLevel3D extends Group implements Disposable {
         final ActorConfig3D actorConfig = config3D.actor();
         pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), actorConfig.pacSize());
         pac3D.init(level);
+    }
+
+    private void createGhosts3D() {
+        final int numGhosts = (int) level.ghosts().count();
+        ghostDressMeshViews  = createMeshViews(numGhosts, Models3D.GHOST_MODEL.dressMesh());
+        ghostPupilsMeshViews = createMeshViews(numGhosts, Models3D.GHOST_MODEL.pupilsMesh());
+        ghostEyesMeshViews   = createMeshViews(numGhosts, Models3D.GHOST_MODEL.eyeballsMesh());
+
+        ghosts3D = level.ghosts().map(ghost -> createMutatingGhost3D(config3D.actor(), ghost)).toList();
+        ghosts3D.forEach(ghost3D -> ghost3D.init(level));
     }
 
     private void createLivesCounter3D() {
