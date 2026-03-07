@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameControl.CommonGameState;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -48,54 +47,40 @@ import static de.amr.pacmanfx.ui.input.Keyboard.control;
 import static java.util.Objects.requireNonNull;
 
 /**
- * 3D implementation of the Pac‑Man play scene.
+ * 3D implementation of the Pac-Man play scene.
+ * <p>
+ * This scene is responsible for rendering and updating the full 3D representation
+ * of the current game level, including the maze, actors, food, bonus items, HUD
+ * elements, and all camera perspectives. It acts as the central coordinator between
+ * the game model, the 3D world, the active camera controller, and the UI framework.
+ * </p>
  *
- * <p>This scene is responsible for rendering and updating the full 3D
- * representation of the current game level, including the maze, actors,
- * food, bonus items, HUD elements, and all camera perspectives. It acts as
- * the central coordinator between the game model, the 3D world, the active
- * camera controller, and the UI framework.</p>
- *
- * <p>The scene manages:</p>
+ * <p>It manages:</p>
  * <ul>
- *   <li><strong>Lifecycle of the 3D level</strong> – creation, replacement,
- *       disposal, and per‑frame updates of {@code GameLevel3D} and its
- *       subcomponents.</li>
- *   <li><strong>Camera perspectives</strong> – switching between multiple
- *       {@link Perspective} strategies (drone, total, tracking, stalking),
- *       delegating camera control to the active perspective, and handling
- *       user input that affects perspective behavior.</li>
- *   <li><strong>3D rendering infrastructure</strong> – creation of the
- *       {@link SubScene}, camera setup, fade‑in animation, coordinate axes,
- *       and placement of HUD elements such as scores.</li>
- *   <li><strong>Game event handling</strong> – reacting to model events
- *       (food eaten, bonus activated, state changes, level transitions,
- *       Pac‑Man death, etc.) and updating the 3D world accordingly.</li>
- *   <li><strong>Sound orchestration</strong> – enabling/disabling sounds,
- *       playing contextual effects (munching, siren, ghost returning),
- *       and synchronizing audio with game state.</li>
- *   <li><strong>Input bindings</strong> – keyboard and scroll‑wheel
- *       controls for perspective switching, drone height adjustment,
- *       and rendering options.</li>
- *   <li><strong>HUD and messaging</strong> – displaying READY/test messages,
- *       score overlays, and animated text in the 3D world.</li>
+ *   <li>Lifecycle of the 3D level — creation, replacement, disposal, and per-frame updates</li>
+ *   <li>Camera perspectives — switching between multiple strategies (drone, total, tracking, stalking)</li>
+ *   <li>3D rendering infrastructure — SubScene, camera setup, fade-in animation, coordinate axes, HUD placement</li>
+ *   <li>Game event handling — reacting to model events and updating the 3D world</li>
+ *   <li>Sound orchestration — contextual effects (munching, siren, ghost returning) synchronized with state</li>
+ *   <li>Input bindings — keyboard and scroll-wheel controls for perspective and drone movement</li>
+ *   <li>HUD and messaging — READY/test messages, score overlays, animated text</li>
  * </ul>
  *
- * <p>The class is intentionally large because it serves as the integration
- * point between many subsystems: the game model, the 3D rendering layer,
- * the UI, input handling, and audio. It does not perform rendering itself;
- * instead it delegates to {@code GameLevel3D} and the active
- * {@link Perspective} implementation.</p>
+ * <p>The class delegates actual rendering to {@link GameLevel3D} and camera control to {@link PerspectiveManager}.
+ * It is intentionally large because it is the integration point for model ↔ 3D ↔ UI ↔ input ↔ audio.</p>
  *
- * <p>Instances of this scene are created and managed by the {@link GameUI}.
- * The scene is activated when switching from the 2D play scene to the 3D
- * view, and it remains active until the user switches back or the game
- * ends.</p>
+ * <p>Instances are created and managed by {@link GameUI}. The scene is activated when switching
+ * from 2D to 3D view and remains active until the user switches back or the game ends.</p>
  */
 public class PlayScene3D implements GameScene {
 
+    /** Fill color used at the start of the fade-in animation. */
     public static final Color SCENE_FILL_DARK = Color.BLACK;
+
+    /** Final fill color after fade-in (fully transparent). */
     public static final Color SCENE_FILL_BRIGHT = Color.TRANSPARENT;
+
+    /** Duration of the fade-in animation when the 3D scene becomes active. */
     public static final Duration FADE_IN_DURATION = Duration.seconds(3);
 
     protected final Group subSceneRoot = new Group();
@@ -113,35 +98,54 @@ public class PlayScene3D implements GameScene {
     protected Scores3D scores3D;
     protected PlaySceneContextMenu contextMenu;
 
+    /**
+     * Inner class managing the fade-in animation of the 3D sub-scene.
+     * Darkens the background initially and gradually fades to transparent.
+     */
     public class FadeInAnimation {
         private final Timeline timeline;
 
+        /**
+         * Creates a new fade-in animation with the specified duration.
+         *
+         * @param fadeInDuration duration of the fade from dark to transparent
+         */
         public FadeInAnimation(Duration fadeInDuration) {
             timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, _ -> {
-                    subScene.setFill(SCENE_FILL_DARK);
-                    gameLevel3D.setVisible(true);
-                    scores3D.setVisible(true);
-                    //TODO Check if this is needed:
-                    perspectiveManager.currentPerspective().ifPresent(Perspective::startControlling);
-                }),
-                new KeyFrame(fadeInDuration,
-                    new KeyValue(subScene.fillProperty(), SCENE_FILL_BRIGHT, Interpolator.EASE_IN))
+                    new KeyFrame(Duration.ZERO, _ -> {
+                        subScene.setFill(SCENE_FILL_DARK);
+                        if (gameLevel3D != null) {
+                            gameLevel3D.setVisible(true);
+                        }
+                        if (scores3D != null) {
+                            scores3D.setVisible(true);
+                        }
+                        // TODO: Verify if startControlling is required here (may be redundant)
+                        perspectiveManager.currentPerspective().ifPresent(Perspective::startControlling);
+                    }),
+                    new KeyFrame(fadeInDuration,
+                            new KeyValue(subScene.fillProperty(), SCENE_FILL_BRIGHT, Interpolator.EASE_IN))
             );
         }
 
+        /**
+         * Plays the fade-in animation from the beginning.
+         */
         public void play() {
             timeline.playFromStart();
         }
     }
 
+    /**
+     * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
+     */
     public PlayScene3D() {
         final var axes3D = new CoordinateSystem();
         axes3D.visibleProperty().bind(GameUI.PROPERTY_3D_AXES_VISIBLE);
 
         subSceneRoot.getChildren().setAll(gameLevel3DParentGroup, axes3D);
 
-        // Initial scene size is irrelevant (size gets bound to parent scene size eventually)
+        // Initial size is irrelevant (will be bound to parent scene size later)
         subScene = new SubScene(subSceneRoot, 88, 88, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
 
@@ -149,20 +153,6 @@ public class PlayScene3D implements GameScene {
         fadeInAnimation = new FadeInAnimation(FADE_IN_DURATION);
 
         bindSceneActions();
-    }
-
-    public void setUI(GameUI ui) {
-        this.ui = requireNonNull(ui);
-        soundEffects = new PlayingSoundEffects(ui.soundManager());
-        soundEffects.setMunchingSoundDelay(ui.currentConfig().munchingSoundDelay());
-        level3D_EventHandler = new GameLevel3DEventHandler(ui, soundEffects);
-
-        //TODO reconsider this
-        replaceScores3D();
-    }
-
-    public Optional<GameLevel3D> level3D() {
-        return Optional.ofNullable(gameLevel3D);
     }
 
     @Override
@@ -179,13 +169,48 @@ public class PlayScene3D implements GameScene {
         }
     }
 
-    // GameScene interface
+    /**
+     * Injects the UI reference and initializes dependent components (sound effects,
+     * event handler, scores). Called after construction.
+     *
+     * @param ui the game UI instance (must not be null)
+     */
+    public void setUI(GameUI ui) {
+        this.ui = requireNonNull(ui);
+        soundEffects = new PlayingSoundEffects(ui.soundManager());
+        soundEffects.setMunchingSoundDelay(ui.currentConfig().munchingSoundDelay());
+        level3D_EventHandler = new GameLevel3DEventHandler(ui, soundEffects);
+
+        // TODO: reconsider whether scores need recreation here (variant/font change?)
+        replaceScores3D();
+    }
+
+    /**
+     * Returns the current 3D level representation, if present.
+     *
+     * @return optional containing the 3D level or empty if not yet created
+     */
+    public Optional<GameLevel3D> level3D() {
+        return Optional.ofNullable(gameLevel3D);
+    }
+
+    // ────────────────────────────────────────────────────────────────────────────
+    // GameScene interface implementation
+    // ────────────────────────────────────────────────────────────────────────────
 
     @Override
     public ActionBindingsManager actionBindings() {
         return actionBindings;
     }
 
+    /**
+     * Initializes the 3D scene when it becomes active.
+     * <p>
+     * Binds perspective ID, shows score HUD, and sets initial dark fill.
+     * </p>
+     *
+     * @param game the active game instance
+     */
     @Override
     public void init(Game game) {
         game.hud().score(true).show();
@@ -193,6 +218,14 @@ public class PlayScene3D implements GameScene {
         subScene.setFill(SCENE_FILL_DARK);
     }
 
+    /**
+     * Cleans up resources when the 3D scene is deactivated or the game ends.
+     * <p>
+     * Stops sounds, disposes 3D level, context menu, unbinds properties.
+     * </p>
+     *
+     * @param game the game instance being ended
+     */
     @Override
     public void end(Game game) {
         ui.soundManager().stopAll();
@@ -207,17 +240,24 @@ public class PlayScene3D implements GameScene {
         perspectiveManager.activeIDProperty().unbind();
     }
 
+    /**
+     * Updates the 3D scene each frame.
+     * <p>
+     * Skips update if level or 3D level is not yet created.
+     * Updates 3D level, HUD, perspective, and plays contextual sounds.
+     * </p>
+     *
+     * @param game the active game instance
+     */
     @Override
     public void update(Game game) {
         final long tick = ui.gameContext().clock().tickCount();
 
-        // update is already called before the game level has been created!
         if (optGameLevel().isEmpty()) {
             Logger.info("Tick #{}: Game level not yet created, update ignored", tick);
             return;
         }
 
-        // update is already called before the 3D game level has been created!
         if (gameLevel3D == null) {
             Logger.info("Tick #{}: 3D game level not yet created, update ignored", tick);
             return;
@@ -256,7 +296,9 @@ public class PlayScene3D implements GameScene {
         return ui;
     }
 
-    // GameEventListener interface
+    // ────────────────────────────────────────────────────────────────────────────
+    // GameEventListener implementations (delegated to handler)
+    // ────────────────────────────────────────────────────────────────────────────
 
     @Override
     public void onGameStateChange(GameStateChangeEvent event) {
@@ -268,7 +310,7 @@ public class PlayScene3D implements GameScene {
             });
             return;
         }
-        level3D_EventHandler.handleGameStateChange(event,gameLevel3D);
+        level3D_EventHandler.handleGameStateChange(event, gameLevel3D);
     }
 
     @Override
@@ -301,7 +343,6 @@ public class PlayScene3D implements GameScene {
         level3D_EventHandler.onGhostEaten(event, gameLevel3D);
     }
 
-
     @Override
     public void onLevelCreated(LevelCreatedEvent event) {
         gameContext().currentGame().optGameLevel().ifPresent(this::replaceGameLevel3D);
@@ -316,12 +357,12 @@ public class PlayScene3D implements GameScene {
         optGameLevel().ifPresent(gameLevel -> {
             final State<Game> state = gameLevel.game().control().state();
             if (state instanceof TestState) {
-                replaceGameLevel3D(gameLevel); //TODO check when to destroy previous level
+                replaceGameLevel3D(gameLevel);
                 gameLevel3D.maze3D().food().energizers3D().forEach(Energizer3D::startPumping);
                 gameLevel3D.showTestMessage();
-            }
-            else {
-                if (!gameLevel.isDemoLevel() && state.nameMatches(STARTING_GAME_OR_LEVEL.name(), CommonGameState.LEVEL_TRANSITION.name())) {
+            } else {
+                if (!gameLevel.isDemoLevel() &&
+                        state.nameMatches(STARTING_GAME_OR_LEVEL.name(), LEVEL_TRANSITION.name())) {
                     gameLevel3D.showReadyMessage();
                 }
             }
@@ -363,7 +404,8 @@ public class PlayScene3D implements GameScene {
             level.pac().show();
             level.ghosts().forEach(Ghost::show);
 
-            final PacBase3D pac3D = gameLevel3D.pac3D().orElseThrow(() -> new IllegalStateException("Pac3D not found in GameLevel3D"));
+            final PacBase3D pac3D = gameLevel3D.pac3D()
+                    .orElseThrow(() -> new IllegalStateException("Pac3D not found in GameLevel3D"));
 
             pac3D.init(level);
             pac3D.update(level);
@@ -374,22 +416,23 @@ public class PlayScene3D implements GameScene {
             final State<?> state = level.game().control().state();
 
             mazeFood3D.pellets3D().forEach(pellet3D ->
-                pellet3D.setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
+                    pellet3D.setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
 
             mazeFood3D.energizers3D().forEach(energizer3D ->
-                energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
+                    energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
 
-            if (state.nameMatches(HUNTING.name(), EATING_GHOST.name())) { //TODO check this
+            if (state.nameMatches(HUNTING.name(), EATING_GHOST.name())) {
                 mazeFood3D.energizers3D().stream()
-                    .filter(energizer3D -> energizer3D.shape().isVisible())
-                    .forEach(Energizer3D::startPumping);
+                        .filter(energizer3D -> energizer3D.shape().isVisible())
+                        .forEach(Energizer3D::startPumping);
             }
 
             if (state.nameMatches(HUNTING.name())) {
                 if (level.pac().powerTimer().isRunning()) {
                     soundEffects.playPacPowerSound();
                 }
-                gameLevel3D.livesCounter3D().ifPresent(livesCounter3D -> livesCounter3D.startTracking(pac3D));
+                gameLevel3D.livesCounter3D().ifPresent(livesCounter3D ->
+                        livesCounter3D.startTracking(pac3D));
             }
 
             gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().config3D().levelCounter());
@@ -401,44 +444,71 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onUnspecifiedChange(UnspecifiedChangeEvent event) {
-        // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
+        // TODO: remove (currently only used by GameState.TESTING_CUT_SCENES)
         ui.views().getPlayView().updateGameScene(gameContext().currentGame(), true);
     }
 
-    // other stuff
+    // ────────────────────────────────────────────────────────────────────────────
+    // Protected / helper methods
+    // ────────────────────────────────────────────────────────────────────────────
 
+    /**
+     * Binds global scene-level keyboard actions (perspective switching, drone controls, etc.).
+     */
     protected void bindSceneActions() {
         final Set<ActionBinding> bindings = Set.of(
-            new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,           alt(KeyCode.LEFT)),
-            new ActionBinding(ACTION_PERSPECTIVE_NEXT,               alt(KeyCode.RIGHT)),
-            new ActionBinding(perspectiveManager.actionDroneClimb,   control(KeyCode.MINUS)),
-            new ActionBinding(perspectiveManager.actionDroneDescent, control(KeyCode.PLUS)),
-            new ActionBinding(perspectiveManager.actionDroneReset,   control(KeyCode.DIGIT0)),
-            new ActionBinding(ACTION_TOGGLE_DRAW_MODE,               alt(KeyCode.W))
+                new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,           alt(KeyCode.LEFT)),
+                new ActionBinding(ACTION_PERSPECTIVE_NEXT,               alt(KeyCode.RIGHT)),
+                new ActionBinding(perspectiveManager.actionDroneClimb,   control(KeyCode.MINUS)),
+                new ActionBinding(perspectiveManager.actionDroneDescent, control(KeyCode.PLUS)),
+                new ActionBinding(perspectiveManager.actionDroneReset,   control(KeyCode.DIGIT0)),
+                new ActionBinding(ACTION_TOGGLE_DRAW_MODE,               alt(KeyCode.W))
         );
         actionBindings.registerAllFrom(bindings);
     }
 
+    /**
+     * Factory method to create a new 3D level representation.
+     * <p>May be overridden by subclasses for variant-specific 3D levels.</p>
+     *
+     * @param level the logical game level
+     * @return new 3D level instance
+     */
     protected GameLevel3D createGameLevel3D(GameLevel level) {
         return new GameLevel3D(ui.currentConfig(), level);
     }
 
-    protected void replaceActionBindings(GameLevel level) {}
+    /**
+     * Hook for replacing action bindings when a new level starts.
+     * <p>Empty by default — override in subclasses if needed (e.g. variant-specific keys).</p>
+     *
+     * @param level the new game level
+     */
+    protected void replaceActionBindings(GameLevel level) {
+        // No-op — override in subclasses if variant needs different bindings
+    }
 
+    /**
+     * Updates the 3D score and high-score display based on current game state.
+     *
+     * @param level current game level
+     */
     protected void updateHUD(GameLevel level) {
         final Score score = level.game().score(), highScore = level.game().highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
-        }
-        else { // disabled, show text "GAME OVER"
+        } else {
+            // Show "GAME OVER" when score is disabled
             Color color = ui.currentConfig().assets().color("color.game_over_message");
             scores3D.showTextForScore(ui.translate("score.game_over"), color);
         }
-        // Always show high score
+        // High score always visible
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
     }
 
-    // private
+    // ────────────────────────────────────────────────────────────────────────────
+    // Private helpers
+    // ────────────────────────────────────────────────────────────────────────────
 
     private void replaceScores3D() {
         if (scores3D != null) {
@@ -450,12 +520,12 @@ public class PlayScene3D implements GameScene {
 
     private void createScores3D() {
         scores3D = new Scores3D(
-            ui.translate("score.score"),
-            ui.translate("score.high_score"),
-            GameUI_Resources.FONT_ARCADE_8
+                ui.translate("score.score"),
+                ui.translate("score.high_score"),
+                GameUI_Resources.FONT_ARCADE_8
         );
 
-        // The scores are always displayed in full view, regardless which perspective is used
+        // Scores always visible in full view, independent of perspective
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
 
@@ -474,7 +544,8 @@ public class PlayScene3D implements GameScene {
         }
         gameLevel3D = createGameLevel3D(level);
 
-        PacBase3D pac3D = gameLevel3D.pac3D().orElseThrow(() -> new IllegalStateException("Pac3D not found in GameLevel3D"));
+        PacBase3D pac3D = gameLevel3D.pac3D().orElseThrow(
+                () -> new IllegalStateException("Pac3D not found in GameLevel3D"));
 
         pac3D.init(level);
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
