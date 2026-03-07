@@ -19,6 +19,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d3.config.*;
+import de.amr.pacmanfx.ui.sound.PlayingSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -315,27 +316,27 @@ public class GameLevel3D extends Group implements Disposable {
         pac3D.init(level);
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
         maze3D.food().energizers3D().forEach(Energizer3D::startPumping);
-        maze3D.food().startAnimation();
+        maze3D.food().startParticlesAnimation();
         if (animations != null) {
             animations.ghostLightAnimation().playFromStart();
         }
     }
 
-    public void onPacManDying(State<Game> gameState, SoundManager soundManager) {
-        soundManager.stopAll();
+    public void onPacManDying(State<Game> gameState, PlayingSoundEffects soundEffects) {
+        soundEffects.stopAll();
         if (animations != null) {
             animations.ghostLightAnimation().stop();
             animations.wallColorFlashingAnimation().stop();
         }
         ghosts3D.forEach(MutableGhost3D::stopAllAnimations);
         bonus3D().ifPresent(Bonus3D::expire);
-        // Do one last update before dying animation starts
+        // Do one last update before "dying" animation starts
         pac3D.update(level);
 
-        gameState.timer().resetIndefiniteTime(); // keep game state until Pac-Man animation ends
+        gameState.timer().resetIndefiniteTime(); // freeze game state until Pac-Man animation ends
         final var dyingAnimation = new SequentialTransition(
             pauseSec(1.5),
-            doNow(() -> soundManager.play(SoundID.PAC_MAN_DEATH)),
+            doNow(soundEffects::playPacDeadSound),
             pac3D.dyingAnimation().animationFX(),
             pauseSec(0.5)
         );
@@ -352,29 +353,40 @@ public class GameLevel3D extends Group implements Disposable {
         });
     }
 
-    public void onLevelComplete(State<Game> state, SoundManager soundManager) {
-        soundManager.stopAll();
+    public void onLevelComplete(State<Game> state, PlayingSoundEffects soundEffects) {
+        soundEffects.stopAll();
         animationRegistry.stopAllAnimations();
 
-        maze3D.food().stopAnimation();
+        final MazeFood3D food3D = maze3D.food();
+
+        food3D.stopParticlesAnimation();
         maze3D.particlesGroup().getChildren().clear();
-        maze3D.food().energizers3D().forEach(Energizer3D::stopPumping); //TODO needed?
+
+        food3D.energizers3D().forEach(energizer3D -> {
+            energizer3D.stopPumping();
+            energizer3D.hide();
+        });
+
         // hide 3D food explicitly because level might have been completed using cheat!
-        maze3D.food().pellets3D().forEach(pellet3D -> pellet3D.setVisible(false));
-        maze3D.food().energizers3D().forEach(Energizer3D::hide);
+        food3D.pellets3D().forEach(pellet3D -> pellet3D.setVisible(false));
+
         maze3D.house().hideDoors();
 
-        bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
+        bonus3D().ifPresent(Bonus3D::expire);
 
         if (messageView != null) {
             messageView.setVisible(false);
         }
 
-        if (animations == null) {
-            pauseSecThen(2, () -> state.timer().expire()).play();
-            return;
+        if (animations != null) {
+            playLevelEndAnimation(state);
         }
+        else {
+            pauseSecThen(2, () -> state.timer().expire()).play();
+        }
+    }
 
+    private void playLevelEndAnimation(State<Game> state) {
         final boolean cutSceneFollows = level.cutSceneNumber() != 0;
         final Animation levelCompletedAnimation = animations.selectLevelCompleteAnimation(cutSceneFollows).animationFX();
         final PerspectiveID perspectiveBeforeAnimation = GameUI.PROPERTY_3D_PERSPECTIVE_ID.get();
@@ -389,23 +401,31 @@ public class GameLevel3D extends Group implements Disposable {
         );
 
         animationSequence.setOnFinished(_ -> {
-            maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
             GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(perspectiveBeforeAnimation);
+            maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
             state.timer().expire();
         });
 
-        state.timer().resetIndefiniteTime(); // game continues after animation sequence ends
+        state.timer().resetIndefiniteTime(); // freeze game control until animation sequence ends
         animationSequence.play();
     }
 
-    public void onGameOver(State<Game> state, SoundManager soundManager) {
+    public void onGameOver(State<Game> state, PlayingSoundEffects soundEffects) {
         state.timer().restartSeconds(3);
         animations.ghostLightAnimation().stop();
-        maze3D.food().energizers3D().forEach(Energizer3D::hide);
-        maze3D.food().stopAnimation();
-        bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-        soundManager.stopAll();
-        soundManager.play(SoundID.GAME_OVER);
+
+        final MazeFood3D food3D = maze3D.food();
+        food3D.energizers3D().forEach(energizer3D -> {
+            energizer3D.stopPumping();
+            energizer3D.hide();
+        });
+
+        food3D.stopParticlesAnimation();
+        maze3D.particlesGroup().getChildren().clear();
+
+        bonus3D().ifPresent(Bonus3D::expire);
+
+        soundEffects.playGameOverSound();
     }
 
     public void eatFood(Vector2i tile) {

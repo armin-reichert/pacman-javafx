@@ -113,11 +113,11 @@ public class MazeFood3D implements Disposable {
 
     public Set<Energizer3D> energizers3D() { return Collections.unmodifiableSet(energizers3D); }
 
-    public void startAnimation() {
+    public void startParticlesAnimation() {
         explodedEnergizerParticlesAnimation.playFromStart();
     }
 
-    public void stopAnimation() {
+    public void stopParticlesAnimation() {
         explodedEnergizerParticlesAnimation.stop();
     }
 

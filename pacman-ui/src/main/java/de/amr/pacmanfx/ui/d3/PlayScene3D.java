@@ -102,7 +102,7 @@ public class PlayScene3D implements GameScene {
     public static final Duration FADE_IN_DURATION = Duration.seconds(3);
 
     protected final Group subSceneRoot = new Group();
-    protected final Group level3DParent = new Group();
+    protected final Group gameLevel3DParentGroup = new Group();
     protected final PerspectiveManager perspectiveManager;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final SubScene subScene;
@@ -142,12 +142,11 @@ public class PlayScene3D implements GameScene {
         final var axes3D = new CoordinateSystem();
         axes3D.visibleProperty().bind(GameUI.PROPERTY_3D_AXES_VISIBLE);
 
-        subSceneRoot.getChildren().setAll(level3DParent, axes3D);
+        subSceneRoot.getChildren().setAll(gameLevel3DParentGroup, axes3D);
 
         // Initial scene size is irrelevant (size gets bound to parent scene size eventually)
         subScene = new SubScene(subSceneRoot, 88, 88, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
-        subScene.setFill(SCENE_FILL_DARK);
 
         perspectiveManager = new PerspectiveManager(camera);
         fadeInAnimation = new FadeInAnimation(FADE_IN_DURATION);
@@ -168,16 +167,17 @@ public class PlayScene3D implements GameScene {
     public void dispose() {
         actionBindings.dispose();
         perspectiveManager.dispose();
+        if (contextMenu != null) {
+            contextMenu.dispose();
+        }
         if (gameLevel3D != null) {
+            gameLevel3DParentGroup.getChildren().clear();
             gameLevel3D.dispose();
             gameLevel3D = null;
         }
     }
 
-    @Override
-    public GameUI ui() {
-        return ui;
-    }
+    // GameScene interface
 
     @Override
     public ActionBindingsManager actionBindings() {
@@ -185,9 +185,48 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public Optional<GameUI_ContextMenu> supplyContextMenu(Game game) {
-        contextMenu = new PlaySceneContextMenu(ui);
-        return Optional.of(contextMenu);
+    public void init(Game game) {
+        game.hud().score(true).show();
+        perspectiveManager.activeIDProperty().bind(GameUI.PROPERTY_3D_PERSPECTIVE_ID);
+        subScene.setFill(SCENE_FILL_DARK);
+    }
+
+    @Override
+    public void end(Game game) {
+        soundEffects.stopAll();
+        if (gameLevel3D != null) {
+            gameLevel3DParentGroup.getChildren().clear();
+            gameLevel3D.dispose();
+            gameLevel3D = null;
+        }
+        if (contextMenu != null) {
+            contextMenu.dispose();
+        }
+        perspectiveManager.activeIDProperty().unbind();
+    }
+
+    @Override
+    public void update(Game game) {
+        final long tick = ui.gameContext().clock().tickCount();
+
+        // update is already called before the game level has been created!
+        if (optGameLevel().isEmpty()) {
+            Logger.info("Tick #{}: Game level not yet created, update ignored", tick);
+            return;
+        }
+
+        // update is already called before the 3D game level has been created!
+        if (gameLevel3D == null) {
+            Logger.info("Tick #{}: 3D game level not yet created, update ignored", tick);
+            return;
+        }
+
+        final GameLevel level = optGameLevel().get();
+        gameLevel3D.update();
+        updateHUD(level);
+        perspectiveManager.updatePerspective(level);
+        soundEffects.setEnabled(!level.isDemoLevel());
+        soundEffects.playLevelPlayingSound(level);
     }
 
     @Override
@@ -200,54 +239,22 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void init(Game game) {
-        game.hud().score(true).show();
-        perspectiveManager.activeIDProperty().bind(GameUI.PROPERTY_3D_PERSPECTIVE_ID);
-    }
-
-    @Override
-    public void end(Game game) {
-        soundEffects.stopAll();
-        if (gameLevel3D != null) {
-            gameLevel3D.dispose();
-            gameLevel3D = null;
-        }
-        level3DParent.getChildren().clear();
-        if (contextMenu != null) {
-            contextMenu.dispose();
-        }
-        perspectiveManager.activeIDProperty().unbind();
-    }
-
-    @Override
-    public void update(Game game) {
-        // update is already called before the game level has been created!
-        if (optGameLevel().isEmpty()) {
-            Logger.info("Tick #{}: Game level not yet created, update ignored", ui.gameContext().clock().tickCount());
-            return;
-        }
-
-        // update is already called before the 3D game level has been created!
-        if (gameLevel3D == null) {
-            Logger.info("Tick #{}: 3D game level not yet created", ui.gameContext().clock().tickCount());
-            return;
-        }
-
-        optGameLevel().ifPresent(level -> {
-            gameLevel3D.update();
-            perspectiveManager.updatePerspective(level);
-            updateHUD(level);
-            soundEffects.setEnabled(!level.isDemoLevel());
-            soundEffects.playLevelPlayingSound(level);
-        });
-    }
-
-    @Override
     public Optional<SubScene> optSubScene() {
         return Optional.of(subScene);
     }
 
-    // Game event handlers
+    @Override
+    public Optional<GameUI_ContextMenu> supplyContextMenu(Game game) {
+        contextMenu = new PlaySceneContextMenu(ui);
+        return Optional.of(contextMenu);
+    }
+
+    @Override
+    public GameUI ui() {
+        return ui;
+    }
+
+    // GameEventListener interface
 
     @Override
     public void onBonusActivated(BonusActivatedEvent event) {
@@ -295,16 +302,16 @@ public class PlayScene3D implements GameScene {
             gameLevel3D.onHuntingStart();
         }
         else if (stateIs(gameState, PACMAN_DYING)) {
-            gameLevel3D.onPacManDying(gameState, ui.soundManager());
+            gameLevel3D.onPacManDying(gameState, soundEffects);
         }
         else if (stateIs(gameState, EATING_GHOST)) {
             gameLevel3D.onEatingGhost();
         }
         else if (stateIs(gameState, LEVEL_COMPLETE)) {
-            gameLevel3D.onLevelComplete(gameState, ui.soundManager());
+            gameLevel3D.onLevelComplete(gameState, soundEffects);
         }
         else if (stateIs(gameState, GAME_OVER)) {
-            gameLevel3D.onGameOver(gameState, ui.soundManager());
+            gameLevel3D.onGameOver(gameState, soundEffects);
             final boolean showMsg = RandomNumberSupport.chance(0.25);
             if (!game.level().isDemoLevel() && showMsg) {
                 ui.showFlashMessage(Duration.seconds(2.5), pickerGameOverMessages.nextText());
@@ -515,9 +522,9 @@ public class PlayScene3D implements GameScene {
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
 
-        scores3D.translateXProperty().bind(level3DParent.translateXProperty().add(TS));
-        scores3D.translateYProperty().bind(level3DParent.translateYProperty().subtract(4.5 * TS));
-        scores3D.translateZProperty().bind(level3DParent.translateZProperty().subtract(4.5 * TS));
+        scores3D.translateXProperty().bind(gameLevel3DParentGroup.translateXProperty().add(TS));
+        scores3D.translateYProperty().bind(gameLevel3DParentGroup.translateYProperty().subtract(4.5 * TS));
+        scores3D.translateZProperty().bind(gameLevel3DParentGroup.translateZProperty().subtract(4.5 * TS));
         scores3D.setVisible(false);
     }
 
@@ -534,7 +541,7 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
         gameLevel3D.setAnimations(new GameLevel3DAnimations(gameLevel3D, ui.soundManager()));
 
-        level3DParent.getChildren().setAll(gameLevel3D);
+        gameLevel3DParentGroup.getChildren().setAll(gameLevel3D);
         Logger.info("Created and added new game level 3D to play scene");
     }
 
@@ -543,6 +550,6 @@ public class PlayScene3D implements GameScene {
     }
 
     private Optional<Bonus> optBonus() {
-        return gameContext().currentGame().optGameLevel().flatMap(GameLevel::optBonus);
+        return optGameLevel().flatMap(GameLevel::optBonus);
     }
 }
