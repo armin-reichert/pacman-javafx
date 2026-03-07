@@ -21,7 +21,6 @@ import de.amr.pacmanfx.ui.d3.config.ActorConfig3D;
 import de.amr.pacmanfx.ui.d3.config.Config3D;
 import de.amr.pacmanfx.ui.d3.config.LevelCounterConfig3D;
 import de.amr.pacmanfx.ui.d3.config.LivesCounterConfig3D;
-import de.amr.pacmanfx.ui.sound.PlayingSoundEffects;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.*;
@@ -34,7 +33,6 @@ import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
@@ -51,7 +49,8 @@ import java.util.function.Predicate;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI.*;
-import static de.amr.pacmanfx.uilib.animation.AnimationSupport.*;
+import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
+import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSecThen;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -144,8 +143,24 @@ public class GameLevel3D extends Group implements Disposable {
         return level;
     }
 
+    public UIConfig uiConfig() {
+        return uiConfig;
+    }
+
+    public Config3D config3D() {
+        return config3D;
+    }
+
     public Maze3D maze3D() {
         return maze3D;
+    }
+
+    public LevelCounter3D levelCounter3D() {
+        return levelCounter3D;
+    }
+
+    public MessageView messageView() {
+        return messageView;
     }
 
     public PointLight ghostLight() {
@@ -302,88 +317,7 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
-    public void onStartingGame() {
-        maze3D.food().energizers3D().forEach(Energizer3D::stopPumping);
-        if (levelCounter3D != null) {
-            levelCounter3D.rebuild(config3D.levelCounter(), level);
-        }
-    }
-
-    public void onHuntingStart() {
-        pac3D.init(level);
-        ghosts3D.forEach(ghost3D -> ghost3D.init(level));
-        maze3D.food().energizers3D().forEach(Energizer3D::startPumping);
-        maze3D.food().startParticlesAnimation();
-        if (animations != null) {
-            animations.ghostLightAnimation().playFromStart();
-        }
-    }
-
-    public void onPacManDying(State<Game> gameState, PlayingSoundEffects soundEffects) {
-        soundEffects.stopAll();
-        if (animations != null) {
-            animations.ghostLightAnimation().stop();
-            animations.wallColorFlashingAnimation().stop();
-        }
-        ghosts3D.forEach(MutableGhost3D::stopAllAnimations);
-        bonus3D().ifPresent(Bonus3D::expire);
-        // Do one last update before "dying" animation starts
-        pac3D.update(level);
-
-        gameState.timer().resetIndefiniteTime(); // freeze game state until Pac-Man animation ends
-        final var dyingAnimation = new SequentialTransition(
-            pauseSec(1.5),
-            doNow(soundEffects::playPacDeadSound),
-            pac3D.dyingAnimation().animationFX(),
-            pauseSec(0.5)
-        );
-        dyingAnimation.setOnFinished(_ -> gameState.timer().expire());
-        dyingAnimation.play();
-    }
-
-    public void onEatingGhost() {
-        level.game().simulationStep().ghostsKilled.forEach(killedGhost -> {
-            byte personality = killedGhost.personality();
-            int killedIndex = level.energizerVictims().indexOf(killedGhost);
-            Image pointsImage = uiConfig.killedGhostPointsImage(killedIndex);
-            ghosts3D.get(personality).setNumberImage(pointsImage);
-        });
-    }
-
-    public void onLevelComplete(State<Game> state, PlayingSoundEffects soundEffects) {
-        soundEffects.stopAll();
-        animationRegistry.stopAllAnimations();
-
-        final MazeFood3D food3D = maze3D.food();
-
-        food3D.stopParticlesAnimation();
-        maze3D.particlesGroup().getChildren().clear();
-
-        food3D.energizers3D().forEach(energizer3D -> {
-            energizer3D.stopPumping();
-            energizer3D.hide();
-        });
-
-        // hide 3D food explicitly because level might have been completed using cheat!
-        food3D.pellets3D().forEach(pellet3D -> pellet3D.setVisible(false));
-
-        maze3D.house().hideDoors();
-
-        bonus3D().ifPresent(Bonus3D::expire);
-
-        if (messageView != null) {
-            messageView.setVisible(false);
-        }
-
-        if (animations != null) {
-            playLevelEndAnimation(state);
-        }
-        else {
-            pauseSecThen(2, () -> state.timer().expire()).play();
-        }
-    }
-
-    private void playLevelEndAnimation(State<Game> state) {
+    public void playLevelEndAnimation(State<Game> state) {
         final boolean cutSceneFollows = level.cutSceneNumber() != 0;
         final Animation levelCompletedAnimation = animations.selectLevelCompleteAnimation(cutSceneFollows).animationFX();
         final PerspectiveID perspectiveBeforeAnimation = GameUI.PROPERTY_3D_PERSPECTIVE_ID.get();
@@ -405,24 +339,6 @@ public class GameLevel3D extends Group implements Disposable {
 
         state.timer().resetIndefiniteTime(); // freeze game control until animation sequence ends
         animationSequence.play();
-    }
-
-    public void onGameOver(State<Game> state, PlayingSoundEffects soundEffects) {
-        state.timer().restartSeconds(3);
-        animations.ghostLightAnimation().stop();
-
-        final MazeFood3D food3D = maze3D.food();
-        food3D.energizers3D().forEach(energizer3D -> {
-            energizer3D.stopPumping();
-            energizer3D.hide();
-        });
-
-        food3D.stopParticlesAnimation();
-        maze3D.particlesGroup().getChildren().clear();
-
-        bonus3D().ifPresent(Bonus3D::expire);
-
-        soundEffects.playGameOverSound();
     }
 
     public void eatFood(Vector2i tile) {

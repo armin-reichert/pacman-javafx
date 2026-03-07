@@ -5,7 +5,6 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.fsm.State;
-import de.amr.pacmanfx.lib.math.RandomNumberSupport;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl.CommonGameState;
 import de.amr.pacmanfx.model.GameLevel;
@@ -107,6 +106,7 @@ public class PlayScene3D implements GameScene {
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final SubScene subScene;
     protected final FadeInAnimation fadeInAnimation;
+    protected final GameLevel3DGameEventHandler level3DGameEventHandler = new GameLevel3DGameEventHandler();
 
     protected PlayingSoundEffects soundEffects;
     protected ActionBindingsManager actionBindings = ActionBindingsManager.NO_BINDINGS;
@@ -283,40 +283,16 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onGameStateChange(GameStateChangeEvent event) {
         final State<Game> gameState = event.newState();
-        final Game game = gameContext().currentGame();
-
         if (gameState instanceof TestState) {
-            game.optGameLevel().ifPresent(level -> {
+            optGameLevel().ifPresent(level -> {
                 replaceGameLevel3D(level);
                 gameLevel3D.showTestMessage();
                 GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
             });
             return;
         }
-
-        //TODO check if this state change handler is needed
-        if (stateIs(gameState, STARTING_GAME_OR_LEVEL) && gameLevel3D != null) {
-            gameLevel3D.onStartingGame();
-        }
-        else if (stateIs(gameState, HUNTING)) {
-            gameLevel3D.onHuntingStart();
-        }
-        else if (stateIs(gameState, PACMAN_DYING)) {
-            gameLevel3D.onPacManDying(gameState, soundEffects);
-        }
-        else if (stateIs(gameState, EATING_GHOST)) {
-            gameLevel3D.onEatingGhost();
-        }
-        else if (stateIs(gameState, LEVEL_COMPLETE)) {
-            gameLevel3D.onLevelComplete(gameState, soundEffects);
-        }
-        else if (stateIs(gameState, GAME_OVER)) {
-            gameLevel3D.onGameOver(gameState, soundEffects);
-            final boolean showMsg = RandomNumberSupport.chance(0.25);
-            if (!game.level().isDemoLevel() && showMsg) {
-                ui.showFlashMessage(Duration.seconds(2.5), pickerGameOverMessages.nextText());
-            }
-        }
+        level3DGameEventHandler.onGameStateChange(event, gameLevel3D,
+            new GameLevel3DGameEventHandler.Payload(ui, gameState, soundEffects, pickerGameOverMessages::nextText));
     }
 
     @Override
@@ -498,10 +474,6 @@ public class PlayScene3D implements GameScene {
     }
 
     // private
-
-    private boolean stateIs(State<Game> gameState, CommonGameState commonGameState) {
-        return gameState.nameMatches(commonGameState.name());
-    }
 
     private void replaceScores3D() {
         if (scores3D != null) {
