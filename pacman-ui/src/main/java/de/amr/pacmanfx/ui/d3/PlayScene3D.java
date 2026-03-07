@@ -159,14 +159,8 @@ public class PlayScene3D implements GameScene {
     public void dispose() {
         actionBindings.dispose();
         perspectiveManager.dispose();
-        if (contextMenu != null) {
-            contextMenu.dispose();
-        }
-        if (gameLevel3D != null) {
-            gameLevel3DParentGroup.getChildren().clear();
-            gameLevel3D.dispose();
-            gameLevel3D = null;
-        }
+        disposeContextMenu();
+        disposeGameLevel3D();
     }
 
     /**
@@ -228,16 +222,10 @@ public class PlayScene3D implements GameScene {
      */
     @Override
     public void end(Game game) {
-        ui.soundManager().stopAll();
-        if (gameLevel3D != null) {
-            gameLevel3DParentGroup.getChildren().clear();
-            gameLevel3D.dispose();
-            gameLevel3D = null;
-        }
-        if (contextMenu != null) {
-            contextMenu.dispose();
-        }
+        soundEffects.stopAll();
         perspectiveManager.activeIDProperty().unbind();
+        disposeGameLevel3D();
+        disposeContextMenu();
     }
 
     /**
@@ -398,9 +386,12 @@ public class PlayScene3D implements GameScene {
             return;
         }
         optGameLevel().ifPresent(level -> {
+            final State<?> state = level.game().control().state();
+
             if (gameLevel3D == null) {
                 replaceGameLevel3D(level);
             }
+
             level.pac().show();
             level.ghosts().forEach(Ghost::show);
 
@@ -410,36 +401,37 @@ public class PlayScene3D implements GameScene {
             pac3D.init(level);
             pac3D.update(level);
 
-            final FoodLayer foodLayer = level.worldMap().foodLayer();
-            final Maze3D maze3D = gameLevel3D.maze3D();
-            final MazeFood3D mazeFood3D = maze3D.food();
-            final State<?> state = level.game().control().state();
-
-            mazeFood3D.pellets3D().forEach(pellet3D ->
-                    pellet3D.setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
-
-            mazeFood3D.energizers3D().forEach(energizer3D ->
-                    energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
-
-            if (state.nameMatches(HUNTING.name(), EATING_GHOST.name())) {
-                mazeFood3D.energizers3D().stream()
-                        .filter(energizer3D -> energizer3D.shape().isVisible())
-                        .forEach(Energizer3D::startPumping);
-            }
+            initFood3D(level.worldMap().foodLayer(), state.nameMatches(HUNTING.name(), EATING_GHOST.name()));
 
             if (state.nameMatches(HUNTING.name())) {
                 if (level.pac().powerTimer().isRunning()) {
                     soundEffects.playPacPowerSound();
                 }
-                gameLevel3D.livesCounter3D().ifPresent(livesCounter3D ->
-                        livesCounter3D.startTracking(pac3D));
             }
 
+            gameLevel3D.livesCounter3D().ifPresent(livesCounter3D -> livesCounter3D.startTracking(pac3D));
             gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().config3D().levelCounter());
             updateHUD(level);
             replaceActionBindings(level);
+
             fadeInAnimation.play();
         });
+    }
+
+    private void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
+        final Maze3D maze3D = gameLevel3D.maze3D();
+
+        maze3D.food().pellets3D().forEach(pellet3D ->
+            pellet3D.setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
+
+        maze3D.food().energizers3D().forEach(energizer3D ->
+            energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
+
+        if (startEnergizerPumping) {
+            maze3D.food().energizers3D().stream()
+                .filter(energizer3D -> energizer3D.shape().isVisible())
+                .forEach(Energizer3D::startPumping);
+        }
     }
 
     @Override
@@ -452,17 +444,21 @@ public class PlayScene3D implements GameScene {
     // Protected / helper methods
     // ────────────────────────────────────────────────────────────────────────────
 
+    protected Optional<GameLevel> optGameLevel() {
+        return gameContext().currentGame().optGameLevel();
+    }
+
     /**
      * Binds global scene-level keyboard actions (perspective switching, drone controls, etc.).
      */
     protected void bindSceneActions() {
         final Set<ActionBinding> bindings = Set.of(
-                new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,           alt(KeyCode.LEFT)),
-                new ActionBinding(ACTION_PERSPECTIVE_NEXT,               alt(KeyCode.RIGHT)),
-                new ActionBinding(perspectiveManager.actionDroneClimb,   control(KeyCode.MINUS)),
-                new ActionBinding(perspectiveManager.actionDroneDescent, control(KeyCode.PLUS)),
-                new ActionBinding(perspectiveManager.actionDroneReset,   control(KeyCode.DIGIT0)),
-                new ActionBinding(ACTION_TOGGLE_DRAW_MODE,               alt(KeyCode.W))
+            new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,           alt(KeyCode.LEFT)),
+            new ActionBinding(ACTION_PERSPECTIVE_NEXT,               alt(KeyCode.RIGHT)),
+            new ActionBinding(perspectiveManager.actionDroneClimb,   control(KeyCode.MINUS)),
+            new ActionBinding(perspectiveManager.actionDroneDescent, control(KeyCode.PLUS)),
+            new ActionBinding(perspectiveManager.actionDroneReset,   control(KeyCode.DIGIT0)),
+            new ActionBinding(ACTION_TOGGLE_DRAW_MODE,               alt(KeyCode.W))
         );
         actionBindings.registerAllFrom(bindings);
     }
@@ -520,9 +516,9 @@ public class PlayScene3D implements GameScene {
 
     private void createScores3D() {
         scores3D = new Scores3D(
-                ui.translate("score.score"),
-                ui.translate("score.high_score"),
-                GameUI_Resources.FONT_ARCADE_8
+            ui.translate("score.score"),
+            ui.translate("score.high_score"),
+            GameUI_Resources.FONT_ARCADE_8
         );
 
         // Scores always visible in full view, independent of perspective
@@ -556,7 +552,17 @@ public class PlayScene3D implements GameScene {
         Logger.info("Created and added new game level 3D to play scene");
     }
 
-    private Optional<GameLevel> optGameLevel() {
-        return gameContext().currentGame().optGameLevel();
+    private void disposeGameLevel3D() {
+        if (gameLevel3D != null) {
+            gameLevel3DParentGroup.getChildren().clear();
+            gameLevel3D.dispose();
+            gameLevel3D = null;
+        }
+    }
+
+    private void disposeContextMenu() {
+        if (contextMenu != null) {
+            contextMenu.dispose();
+        }
     }
 }
