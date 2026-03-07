@@ -479,7 +479,7 @@ public class PlayScene3D implements GameScene {
     }
 
     protected GameLevel3D createGameLevel3D(GameLevel level) {
-        return new GameLevel3D(ui, level);
+        return new GameLevel3D(ui.currentConfig(), level);
     }
 
     protected void replaceActionBindings(GameLevel level) {}

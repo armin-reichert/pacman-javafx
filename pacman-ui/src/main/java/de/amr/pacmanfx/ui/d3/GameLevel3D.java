@@ -13,12 +13,14 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.TerrainLayer;
-import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.ui.d3.config.*;
+import de.amr.pacmanfx.ui.d3.config.ActorConfig3D;
+import de.amr.pacmanfx.ui.d3.config.Config3D;
+import de.amr.pacmanfx.ui.d3.config.LevelCounterConfig3D;
+import de.amr.pacmanfx.ui.d3.config.LivesCounterConfig3D;
 import de.amr.pacmanfx.ui.sound.PlayingSoundEffects;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -72,6 +74,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     private final GameLevel level;
     private final UIConfig uiConfig;
+    private final Config3D config3D;
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
 
     private MeshView[] ghostDressMeshViews;
@@ -93,31 +96,24 @@ public class GameLevel3D extends Group implements Disposable {
 
     private GameLevel3DAnimations animations;
 
-    public GameLevel3D(GameUI ui, GameLevel level) {
-        requireNonNull(ui);
+    public GameLevel3D(UIConfig uiConfig, GameLevel level) {
         this.level = requireNonNull(level);
-        this.uiConfig = ui.currentConfig();
+        this.uiConfig = requireNonNull(uiConfig);
+        this.config3D = uiConfig.config3D();
 
         final int numGhosts = (int) level.ghosts().count();
         ghostDressMeshViews  = createMeshViews(numGhosts, Models3D.GHOST_MODEL.dressMesh());
         ghostPupilsMeshViews = createMeshViews(numGhosts, Models3D.GHOST_MODEL.pupilsMesh());
         ghostEyesMeshViews   = createMeshViews(numGhosts, Models3D.GHOST_MODEL.eyeballsMesh());
 
-        createLevelCounter3D(uiConfig.config3D().levelCounter());
-        createLivesCounter3D(uiConfig.config3D().livesCounter());
+        createLevelCounter3D();
+        createLivesCounter3D();
+        createPac3D();
 
-        createPac3D(uiConfig.config3D().actor());
-
-        ghosts3D = level.ghosts().map(ghost -> createMutatingGhost3D(uiConfig.config3D().actor(), ghost)).toList();
+        ghosts3D = level.ghosts().map(ghost -> createMutatingGhost3D(config3D.actor(), ghost)).toList();
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
 
-        final List<PhongMaterial> ghostNormalDressMaterials = ghosts3D.stream()
-            .map(MutableGhost3D::ghost3D)
-            .map(Ghost3D::normalMaterialSet)
-            .map(Ghost3D.MaterialSet::dress)
-            .toList();
-        createMaze3D(uiConfig.config3D(), ghostNormalDressMaterials);
-
+        createMaze3D();
         createLights();
 
         // Note: The order in which children are added matters!
@@ -209,31 +205,30 @@ public class GameLevel3D extends Group implements Disposable {
         return center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
     }
 
-    private void createPac3D(ActorConfig3D actorConfig) {
+    private void createPac3D() {
+        final ActorConfig3D actorConfig = config3D.actor();
         pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), actorConfig.pacSize());
         pac3D.init(level);
     }
 
-    private void createLivesCounter3D(LivesCounterConfig3D config) {
-        final double shapeSize  = config.shapeSize();
-        final int capacity      = config.capacity();
-        final Color pillarColor = config.pillarColor();
-        final Color plateColor  = config.plateColor();
-        livesCounterShapes = new Node[capacity];
+    private void createLivesCounter3D() {
+        final LivesCounterConfig3D config = config3D.livesCounter();
+        livesCounterShapes = new Node[config.capacity()];
         for (int i = 0; i < livesCounterShapes.length; ++i) {
-            livesCounterShapes[i] = uiConfig.createLivesCounterShape3D(shapeSize);
+            livesCounterShapes[i] = uiConfig.createLivesCounterShape3D(config.shapeSize());
         }
         livesCounter3D = new LivesCounter3D(animationRegistry, livesCounterShapes);
         livesCounter3D.setTranslateX(2 * TS);
         livesCounter3D.setTranslateY(2 * TS);
-        livesCounter3D.pillarColorProperty().set(pillarColor);
-        livesCounter3D.plateColorProperty().set(plateColor);
+        livesCounter3D.pillarColorProperty().set(config.pillarColor());
+        livesCounter3D.plateColorProperty().set(config.plateColor());
     }
 
-    private void createLevelCounter3D(LevelCounterConfig3D config) {
-        WorldMap worldMap = level.worldMap();
+    private void createLevelCounter3D() {
+        final LevelCounterConfig3D config = config3D.levelCounter();
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
         levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
-        levelCounter3D.setTranslateX(TS * (worldMap.numCols() - 2));
+        levelCounter3D.setTranslateX(TS * (terrain.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.setTranslateZ(-config.elevation());
     }
@@ -245,22 +240,27 @@ public class GameLevel3D extends Group implements Disposable {
         ghostLight = new PointLight();
     }
 
-    private void createMaze3D(Config3D config3D, List<PhongMaterial> ghostMaterials) {
-        WorldMapColorScheme colorScheme = adjustColorScheme(config3D.maze(), uiConfig.colorScheme(level.worldMap()));
-        maze3D = new Maze3D(config3D, colorScheme, level, animationRegistry, ghostMaterials);
+    private void createMaze3D() {
+        WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
+        final boolean wallsVeryDark = Color.valueOf(colorScheme.wallFill()).getBrightness() < 0.1;
+        if (wallsVeryDark) {
+            final String notTooDarkColor = config3D.maze().darkWallFillColor();
+            colorScheme = new WorldMapColorScheme(
+                notTooDarkColor,
+                colorScheme.wallStroke(),
+                colorScheme.door(),
+                colorScheme.pellet());
+        }
+
+        final List<PhongMaterial> ghostNormalDressMaterials = ghosts3D.stream()
+            .map(MutableGhost3D::ghost3D)
+            .map(Ghost3D::normalMaterialSet)
+            .map(Ghost3D.MaterialSet::dress)
+            .toList();
+
+        maze3D = new Maze3D(config3D, colorScheme, level, animationRegistry, ghostNormalDressMaterials);
         maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
         maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
-    }
-
-    private WorldMapColorScheme adjustColorScheme(MazeConfig3D mazeConfig3D, WorldMapColorScheme proposedColorScheme) {
-        final boolean isFillColorDark = Color.valueOf(proposedColorScheme.wallFill()).getBrightness() < 0.1;
-        return isFillColorDark
-            ? new WorldMapColorScheme(
-                mazeConfig3D.darkWallFillColor(),
-                proposedColorScheme.wallStroke(),
-                proposedColorScheme.door(),
-                proposedColorScheme.pellet())
-            : proposedColorScheme;
     }
 
     public LivesCounter3D livesCounter3D() {
@@ -272,7 +272,6 @@ public class GameLevel3D extends Group implements Disposable {
     public List<MutableGhost3D> ghosts3D() { return Collections.unmodifiableList(ghosts3D); }
 
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
-
 
     public AnimationRegistry animationManager() { return animationRegistry; }
 
@@ -306,7 +305,7 @@ public class GameLevel3D extends Group implements Disposable {
     public void onStartingGame() {
         maze3D.food().energizers3D().forEach(Energizer3D::stopPumping);
         if (levelCounter3D != null) {
-            levelCounter3D.rebuild(uiConfig.config3D().levelCounter(), level);
+            levelCounter3D.rebuild(config3D.levelCounter(), level);
         }
     }
 
@@ -488,7 +487,7 @@ public class GameLevel3D extends Group implements Disposable {
             getChildren().remove(bonus3D);
             bonus3D.dispose();
         }
-        final ActorConfig3D actorConfig = uiConfig.config3D().actor();
+        final ActorConfig3D actorConfig = config3D.actor();
         bonus3D = new Bonus3D(animationRegistry, bonus,
             uiConfig.bonusSymbolImage(bonus.symbol()), actorConfig.bonusSymbolWidth(),
             uiConfig.bonusValueImage(bonus.symbol()),  actorConfig.bonusPointsWidth());
