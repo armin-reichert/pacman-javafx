@@ -170,7 +170,7 @@ public class GameLevel3DEventHandler {
         soundEffects.stopPacPowerSound();
     }
 
-    public void onSpecialScoreReached(SpecialScoreReachedEvent ignoredEvent, GameLevel3D level3D) {
+    public void onSpecialScoreReached(SpecialScoreReachedEvent ignoredEvent, GameLevel3D ignoredLevel3D) {
         soundEffects.playExtraLifeSound();
     }
 
