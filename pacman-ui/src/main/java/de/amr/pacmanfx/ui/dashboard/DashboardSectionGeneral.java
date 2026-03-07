@@ -62,7 +62,7 @@ public class DashboardSectionGeneral extends DashboardSection {
         var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
         setEditor(sliderTargetFPS, ui.gameContext().clock().targetFrameRateProperty());
 
-        addDynamicLabeledValue("", () -> "FPS: %.1f (Target: %.1f)".formatted(ui.gameContext().clock().fps(), ui.gameContext().clock().targetFrameRate()));
+        addDynamicLabeledValue("", () -> "FPS: %.1f (Target: %d)".formatted(ui.gameContext().clock().fps(), ui.gameContext().clock().targetFrameRate()));
         addDynamicLabeledValue("Total Updates",  ui.gameContext().clock()::pausableUpdatesCount);
 
         addColorPicker("Canvas Color", PROPERTY_CANVAS_BACKGROUND_COLOR);
