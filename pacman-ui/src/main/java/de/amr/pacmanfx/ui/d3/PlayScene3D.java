@@ -23,6 +23,7 @@ import de.amr.pacmanfx.ui.sound.PlayingSoundEffects;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
+import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import de.amr.pacmanfx.uilib.model3D.Scores3D;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.animation.Interpolator;
@@ -363,7 +364,7 @@ public class PlayScene3D implements GameScene {
             final Game game = gameLevel.game();
             soundEffects.stopSiren();
             if (!game.isLevelCompleted(gameLevel)) {
-                gameLevel3D.pac3D().setMovementPowerMode(true);
+                gameLevel3D.pac3D().ifPresent(pac3D -> pac3D.setMovementPowerMode(true));
                 gameLevel3D.animations().ifPresent(animations -> animations.wallColorFlashingAnimation().playFromStart());
                 soundEffects.playPacPowerSound();
             }
@@ -373,7 +374,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
         optGameLevel().ifPresent(_ -> {
-            gameLevel3D.pac3D().setMovementPowerMode(false);
+            gameLevel3D.pac3D().ifPresent(pac3D -> pac3D.setMovementPowerMode(false));
             gameLevel3D.animations().ifPresent(animations -> animations.wallColorFlashingAnimation().stop());
             soundEffects.stopPacPowerSound();
         });
@@ -396,8 +397,10 @@ public class PlayScene3D implements GameScene {
             level.pac().show();
             level.ghosts().forEach(Ghost::show);
 
-            gameLevel3D.pac3D().init(level);
-            gameLevel3D.pac3D().update(level);
+            final PacBase3D pac3D = gameLevel3D.pac3D().orElseThrow(() -> new IllegalStateException("Pac3D not found in GameLevel3D"));
+
+            pac3D.init(level);
+            pac3D.update(level);
 
             final FoodLayer foodLayer = level.worldMap().foodLayer();
             final Maze3D maze3D = gameLevel3D.maze3D();
@@ -405,22 +408,22 @@ public class PlayScene3D implements GameScene {
             final State<?> state = level.game().control().state();
 
             mazeFood3D.pellets3D().forEach(pellet3D ->
-                    pellet3D.setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
+                pellet3D.setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
 
             mazeFood3D.energizers3D().forEach(energizer3D ->
-                    energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
+                energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
 
             if (state.nameMatches(HUNTING.name(), EATING_GHOST.name())) { //TODO check this
                 mazeFood3D.energizers3D().stream()
-                        .filter(energizer3D -> energizer3D.shape().isVisible())
-                        .forEach(Energizer3D::startPumping);
+                    .filter(energizer3D -> energizer3D.shape().isVisible())
+                    .forEach(Energizer3D::startPumping);
             }
 
             if (state.nameMatches(HUNTING.name())) {
                 if (level.pac().powerTimer().isRunning()) {
                     soundEffects.playPacPowerSound();
                 }
-                gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
+                gameLevel3D.livesCounter3D().ifPresent(livesCounter3D -> livesCounter3D.startTracking(pac3D));
             }
 
             gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().config3D().levelCounter());
@@ -508,9 +511,12 @@ public class PlayScene3D implements GameScene {
             Logger.info("Disposed old game level 3D");
         }
         gameLevel3D = createGameLevel3D(level);
-        gameLevel3D.pac3D().init(level);
+
+        PacBase3D pac3D = gameLevel3D.pac3D().orElseThrow(() -> new IllegalStateException("Pac3D not found in GameLevel3D"));
+
+        pac3D.init(level);
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
-        gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
+        gameLevel3D.livesCounter3D().ifPresent(livesCounter3D -> livesCounter3D.startTracking(pac3D));
         gameLevel3D.setAnimations(new GameLevel3DAnimations(gameLevel3D, ui.soundManager()));
 
         gameLevel3DParentGroup.getChildren().setAll(gameLevel3D);

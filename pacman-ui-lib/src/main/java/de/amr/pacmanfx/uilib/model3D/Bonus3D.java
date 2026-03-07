@@ -120,10 +120,14 @@ public class Bonus3D extends Box implements Disposable {
     public void dispose() {
         symbolTexture = null;
         pointsTexture = null;
-        edibleAnimation.stop();
-        edibleAnimation = null;
-        eatenAnimation.stop();
-        eatenAnimation = null;
+        if (edibleAnimation != null) {
+            edibleAnimation.stop();
+            edibleAnimation = null;
+        }
+        if (eatenAnimation != null) {
+            eatenAnimation.stop();
+            eatenAnimation = null;
+        }
     }
 
     public void update(GameLevel gameLevel) {

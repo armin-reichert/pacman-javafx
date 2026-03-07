@@ -41,7 +41,7 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import org.tinylog.Logger;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -95,6 +95,8 @@ public class GameLevel3D extends Group implements Disposable {
 
     private GameLevel3DAnimations animations;
 
+    private final List<Disposable> disposables = new ArrayList<>();
+
     public GameLevel3D(UIConfig uiConfig, GameLevel level) {
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
@@ -104,7 +106,6 @@ public class GameLevel3D extends Group implements Disposable {
         createLivesCounter3D();
         createPac3D();
         createGhosts3D();
-
         createMaze3D();
         createLights();
 
@@ -172,6 +173,31 @@ public class GameLevel3D extends Group implements Disposable {
         this.animations = requireNonNull(animations);
     }
 
+    private boolean outsideWorld(Ghost ghost) {
+        Vector2f center = ghost.center();
+        return center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
+    }
+
+    private void createPac3D() {
+        final ActorConfig3D actorConfig = config3D.actor();
+        pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), actorConfig.pacSize());
+        pac3D.init(level);
+
+        disposables.add(pac3D);
+    }
+
+    private void createGhosts3D() {
+        final int numGhosts = (int) level.ghosts().count();
+        ghostDressMeshViews  = createMeshViews(numGhosts, Models3D.GHOST_MODEL.dressMesh());
+        ghostPupilsMeshViews = createMeshViews(numGhosts, Models3D.GHOST_MODEL.pupilsMesh());
+        ghostEyesMeshViews   = createMeshViews(numGhosts, Models3D.GHOST_MODEL.eyeballsMesh());
+
+        ghosts3D = level.ghosts().map(ghost -> createMutatingGhost3D(config3D.actor(), ghost)).toList();
+        ghosts3D.forEach(ghost3D -> ghost3D.init(level));
+
+        disposables.addAll(ghosts3D);
+    }
+
     private GhostColorSet createGhostColorSet(byte personality) {
         AssetMap assets = uiConfig.assets();
         return new GhostColorSet(
@@ -212,27 +238,6 @@ public class GameLevel3D extends Group implements Disposable {
         return mutatingGhost3D;
     }
 
-    private boolean outsideWorld(Ghost ghost) {
-        Vector2f center = ghost.center();
-        return center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
-    }
-
-    private void createPac3D() {
-        final ActorConfig3D actorConfig = config3D.actor();
-        pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), actorConfig.pacSize());
-        pac3D.init(level);
-    }
-
-    private void createGhosts3D() {
-        final int numGhosts = (int) level.ghosts().count();
-        ghostDressMeshViews  = createMeshViews(numGhosts, Models3D.GHOST_MODEL.dressMesh());
-        ghostPupilsMeshViews = createMeshViews(numGhosts, Models3D.GHOST_MODEL.pupilsMesh());
-        ghostEyesMeshViews   = createMeshViews(numGhosts, Models3D.GHOST_MODEL.eyeballsMesh());
-
-        ghosts3D = level.ghosts().map(ghost -> createMutatingGhost3D(config3D.actor(), ghost)).toList();
-        ghosts3D.forEach(ghost3D -> ghost3D.init(level));
-    }
-
     private void createLivesCounter3D() {
         final LivesCounterConfig3D config = config3D.livesCounter();
         livesCounterShapes = new Node[config.capacity()];
@@ -244,6 +249,8 @@ public class GameLevel3D extends Group implements Disposable {
         livesCounter3D.setTranslateY(2 * TS);
         livesCounter3D.pillarColorProperty().set(config.pillarColor());
         livesCounter3D.plateColorProperty().set(config.plateColor());
+
+        disposables.add(livesCounter3D);
     }
 
     private void createLevelCounter3D() {
@@ -253,6 +260,8 @@ public class GameLevel3D extends Group implements Disposable {
         levelCounter3D.setTranslateX(TS * (terrain.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.setTranslateZ(-config.elevation());
+
+        disposables.add(levelCounter3D);
     }
 
     private void createLights() {
@@ -283,15 +292,17 @@ public class GameLevel3D extends Group implements Disposable {
         maze3D = new Maze3D(config3D, colorScheme, level, animationRegistry, ghostNormalDressMaterials);
         maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
         maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
+
+        disposables.add(maze3D);
     }
 
-    public LivesCounter3D livesCounter3D() {
-        return livesCounter3D;
+    public Optional<LivesCounter3D> livesCounter3D() {
+        return Optional.ofNullable(livesCounter3D);
     }
 
-    public PacBase3D pac3D() { return pac3D; }
+    public Optional<PacBase3D> pac3D() { return Optional.ofNullable(pac3D); }
 
-    public List<MutableGhost3D> ghosts3D() { return Collections.unmodifiableList(ghosts3D); }
+    public List<MutableGhost3D> ghosts3D() { return List.copyOf(ghosts3D); }
 
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
 
@@ -400,7 +411,10 @@ public class GameLevel3D extends Group implements Disposable {
             .text(messageText)
             .textColor(Color.YELLOW)
             .build(animationRegistry);
+
         getChildren().add(messageView);
+        disposables.add(messageView);
+
         messageView.showCenteredAt(centerX, centerY);
     }
 
@@ -414,8 +428,10 @@ public class GameLevel3D extends Group implements Disposable {
         bonus3D = new Bonus3D(animationRegistry, bonus,
             uiConfig.bonusSymbolImage(bonus.symbol()), actorConfig.bonusSymbolWidth(),
             uiConfig.bonusValueImage(bonus.symbol()),  actorConfig.bonusPointsWidth());
-        getChildren().add(bonus3D);
         bonus3D.showEdible();
+        getChildren().add(bonus3D);
+
+        disposables.add(bonus3D);
     }
 
     public void rebuildLevelCounter3D(LevelCounterConfig3D config) {
@@ -475,70 +491,32 @@ public class GameLevel3D extends Group implements Disposable {
             ghostLight = null;
             Logger.info("Unbound and cleared ghost light");
         }
-        if (maze3D != null) {
-            maze3D.dispose();
-            maze3D = null;
-        }
+
+        disposables.forEach(Disposable::dispose);
+        disposables.clear();
+
         if (livesCounterShapes != null) {
             disposeAll(List.of(livesCounterShapes));
             livesCounterShapes = null;
         }
-        if (livesCounter3D != null) {
-            livesCounter3D.dispose();
-            livesCounter3D = null;
-            Logger.info("Disposed lives counter 3D");
+
+        clearMeshViewArray(ghostDressMeshViews, "ghost dresses");
+        ghostDressMeshViews = null;
+
+        clearMeshViewArray(ghostPupilsMeshViews, "ghost pupils");
+        ghostPupilsMeshViews = null;
+
+        clearMeshViewArray(ghostEyesMeshViews, "ghost eyes");
+        ghostEyesMeshViews = null;
+    }
+
+    private void clearMeshViewArray(MeshView[] meshViews, String description) {
+        if (meshViews == null) return;
+        for (MeshView meshView : meshViews) {
+            meshView.setMesh(null);
+            meshView.materialProperty().unbind();
+            meshView.setMaterial(null);
         }
-        if (levelCounter3D != null) {
-            levelCounter3D.dispose();
-            levelCounter3D = null;
-            Logger.info("Disposed level counter 3D");
-        }
-        if (pac3D != null) {
-            pac3D.dispose();
-            pac3D = null;
-            Logger.info("Disposed Pac 3D");
-        }
-        if (ghosts3D != null) {
-            disposeAll(ghosts3D);
-            ghosts3D = null;
-            Logger.info("Disposed 3D ghosts");
-        }
-        if (bonus3D != null) {
-            bonus3D.dispose();
-            bonus3D = null;
-            Logger.info("Disposed 3D bonus");
-        }
-        if (messageView != null) {
-            messageView.dispose();
-            messageView = null;
-            Logger.info("Disposed message view");
-        }
-        if (ghostDressMeshViews != null) {
-            for (MeshView meshView : ghostDressMeshViews) {
-                meshView.setMesh(null);
-                meshView.materialProperty().unbind();
-                meshView.setMaterial(null);
-            }
-            ghostDressMeshViews = null;
-            Logger.info("Cleared dress mesh views");
-        }
-        if (ghostPupilsMeshViews != null) {
-            for (MeshView meshView : ghostPupilsMeshViews) {
-                meshView.setMesh(null);
-                meshView.materialProperty().unbind();
-                meshView.setMaterial(null);
-            }
-            ghostPupilsMeshViews = null;
-            Logger.info("Cleared pupils mesh views");
-        }
-        if (ghostEyesMeshViews != null) {
-            for (MeshView meshView : ghostEyesMeshViews) {
-                meshView.setMesh(null);
-                meshView.materialProperty().unbind();
-                meshView.setMaterial(null);
-            }
-            ghostEyesMeshViews = null;
-            Logger.info("Cleared eyes mesh views");
-        }
+        Logger.info("Cleared mesh views {}", description);
     }
 }

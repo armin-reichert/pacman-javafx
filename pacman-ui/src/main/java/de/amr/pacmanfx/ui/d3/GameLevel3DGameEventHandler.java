@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui.sound.PlayingSoundEffects;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.MutableGhost3D;
+import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import javafx.animation.SequentialTransition;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
@@ -72,7 +73,7 @@ public class GameLevel3DGameEventHandler {
 
     public void onHuntingStart(GameLevel3D level3D, Payload ignored) {
         final GameLevel level = level3D.level();
-        level3D.pac3D().init(level);
+        level3D.pac3D().ifPresent(pac3D -> pac3D.init(level));
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
         level3D.maze3D().food().energizers3D().forEach(Energizer3D::startPumping);
         level3D.maze3D().food().startParticlesAnimation();
@@ -91,14 +92,17 @@ public class GameLevel3DGameEventHandler {
         });
         level3D.ghosts3D().forEach(MutableGhost3D::stopAllAnimations);
         level3D.bonus3D().ifPresent(Bonus3D::expire);
+
+        final PacBase3D pac3D = level3D.pac3D().orElseThrow(() -> new IllegalStateException("No Pac3D in level?"));
+
         // Do one last update before "dying" animation starts
-        level3D.pac3D().update(level);
+        pac3D.update(level);
 
         gameState.timer().resetIndefiniteTime(); // freeze game state until Pac-Man animation ends
         final var dyingAnimation = new SequentialTransition(
             pauseSec(1.5),
             doNow(soundEffects::playPacDeadSound),
-            level3D.pac3D().dyingAnimation().animationFX(),
+            pac3D.dyingAnimation().animationFX(),
             pauseSec(0.5)
         );
         dyingAnimation.setOnFinished(_ -> gameState.timer().expire());

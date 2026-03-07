@@ -183,10 +183,16 @@ public class MutableGhost3D extends Group implements Disposable {
     }
 
     public void stopAllAnimations() {
-        brakeAnimation.stop();
-        pointsAnimation.stop();
-        ghostShape3D.dressAnimation().stop();
-        ghostShape3D.flashingAnimation().stop();
+        if (brakeAnimation != null)  brakeAnimation.stop();
+        if (pointsAnimation != null) pointsAnimation.stop();
+        if (ghostShape3D != null) {
+            if (ghostShape3D.dressAnimation() != null) {
+                ghostShape3D.dressAnimation().stop();
+            }
+            if (ghostShape3D.flashingAnimation() != null) {
+                ghostShape3D.flashingAnimation().stop();
+            }
+        }
     }
 
     public void init(GameLevel gameLevel) {
