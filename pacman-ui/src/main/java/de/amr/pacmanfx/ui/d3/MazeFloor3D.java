@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
-import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Translate;
@@ -12,10 +12,11 @@ import org.tinylog.Logger;
 import static java.util.Objects.requireNonNull;
 
 // Translate: top-left corner (without padding) at origin, surface top at z=0
-public class MazeFloor3D extends Box implements Disposable {
+public class MazeFloor3D extends Box implements DisposableGraphicsObject {
 
     public MazeFloor3D(PhongMaterial floorMaterial, float width, float height, float thickness, float padding) {
         requireNonNull(floorMaterial);
+
         setWidth(width);
         setHeight(height);
         setDepth(thickness);
@@ -30,11 +31,7 @@ public class MazeFloor3D extends Box implements Disposable {
 
     @Override
     public void dispose() {
-        translateXProperty().unbind();
-        translateYProperty().unbind();
-        translateZProperty().unbind();
-        materialProperty().unbind();
-        setMaterial(null);
+        cleanupShape3D(this);
         Logger.info("Unbound and cleared 3D floor");
     }
 }

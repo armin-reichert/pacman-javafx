@@ -37,7 +37,7 @@ public class LivesCounter3D extends Group implements DisposableGraphicsObject {
     private final IntegerProperty livesCount = new SimpleIntegerProperty(0);
     private final List<NodePositionTracker> trackers = new ArrayList<>();
 
-    private class Stand extends Group {
+    private class Stand extends Group implements DisposableGraphicsObject{
         Cylinder pillar;
         Cylinder podium;
 
@@ -57,6 +57,11 @@ public class LivesCounter3D extends Group implements DisposableGraphicsObject {
             podium.setRotate(90);
 
             getChildren().setAll(pillar, podium);
+        }
+
+        @Override
+        public void dispose() {
+            cleanupGroup(this, true);
         }
     }
 
@@ -130,6 +135,7 @@ public class LivesCounter3D extends Group implements DisposableGraphicsObject {
         plateThickness.unbind();
         plateRadius.unbind();
         plateMaterial.unbind();
+
         cleanupGroup(this, true);
     }
 }
