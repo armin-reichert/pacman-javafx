@@ -6,7 +6,6 @@ package de.amr.pacmanfx.uilib.model3D;
 import de.amr.pacmanfx.lib.Disposable;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
@@ -19,51 +18,46 @@ import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 
 public class PacBody extends Group implements Disposable {
 
-    private MeshView headMeshView;
-    private MeshView eyesMeshView;
-    private MeshView palateMeshView;
-
+    // TODO Adapt mesh position and rotation in OBJ file
     public PacBody(
         double size,
-        Mesh headMesh, Color headColor,
-        Mesh eyesMesh, Color eyesColor,
+        Mesh headMesh,   Color headColor,
+        Mesh eyesMesh,   Color eyesColor,
         Mesh palateMesh, Color palateColor)
     {
-        final PhongMaterial headMaterial = coloredPhongMaterial(headColor);
-        headMeshView = new MeshView(headMesh);
-        headMeshView.setMaterial(headMaterial);
+        final var head = new MeshView(headMesh);
+        head.setMaterial(coloredPhongMaterial(headColor));
 
-        final PhongMaterial eyesMaterial = coloredPhongMaterial(eyesColor);
-        eyesMeshView = new MeshView(eyesMesh);
-        eyesMeshView.setMaterial(eyesMaterial);
+        final var eyes = new MeshView(eyesMesh);
+        eyes.setMaterial(coloredPhongMaterial(eyesColor));
 
-        final PhongMaterial palateMaterial = coloredPhongMaterial(palateColor);
-        palateMeshView = new MeshView(palateMesh);
-        palateMeshView.setMaterial(palateMaterial);
+        final var palate = new MeshView(palateMesh);
+        palate.setMaterial(coloredPhongMaterial(palateColor));
 
-        getChildren().addAll(headMeshView, eyesMeshView, palateMeshView);
+        getChildren().addAll(head, eyes, palate);
 
-        final var headBounds = headMeshView.getBoundsInLocal();
+        final var headBounds = head.getBoundsInLocal();
         final var centeredOverOrigin = new Translate(-headBounds.getCenterX(), -headBounds.getCenterY(), -headBounds.getCenterZ());
-        Stream.of(headMeshView, eyesMeshView, palateMeshView)
-            .map(MeshView::getTransforms)
-            .forEach(tf -> tf.add(centeredOverOrigin));
+        Stream.of(head, eyes, palate).forEach(mv -> mv.getTransforms().add(centeredOverOrigin));
 
-        // TODO check/fix Pac-Man mesh position and rotation in OBJ file
-        getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+        getTransforms().add(new Rotate(90,  Rotate.X_AXIS));
         getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
         getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
 
         final var bounds = getBoundsInLocal();
-        getTransforms().add(new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth()));
+        final var scaleToSize = new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
+        getTransforms().add(scaleToSize);
     }
 
     @Override
     public void dispose() {
+        for (var node : getChildren()) {
+            if (node instanceof MeshView) {
+                disposeMeshView((MeshView) node);
+            }
+        }
+        getTransforms().clear();
         getChildren().clear();
-        disposeMeshView(headMeshView);   headMeshView = null;
-        disposeMeshView(eyesMeshView);   eyesMeshView = null;
-        disposeMeshView(palateMeshView); palateMeshView = null;
     }
 
     private void disposeMeshView(MeshView meshView) {
