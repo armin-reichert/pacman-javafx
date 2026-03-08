@@ -42,7 +42,6 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -566,41 +565,18 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Called when {@link GameUI#PROPERTY_3D_DRAW_MODE} changes.
      */
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode drawMode) {
-        final Predicate<Node> excludeNone = _ -> false;
-        try {
-            if (maze3D != null) {
-                setDrawModeExcluding(maze3D, node -> node instanceof Pellet3D, drawMode);
-            }
-            if (pac3D != null) {
-                setDrawModeExcluding(pac3D, excludeNone, drawMode);
-            }
-            if (livesCounter3D != null) {
-                setDrawModeExcluding(livesCounter3D, excludeNone, drawMode);
-            }
-            if (ghosts3D != null) {
-                ghosts3D.forEach(ghost3D -> setDrawModeExcluding(ghost3D, excludeNone, drawMode));
-            }
-        }
-        catch (Exception x) {
-            Logger.error(x, "Could not change 3D draw mode");
-        }
+        setDrawMode(this, drawMode);
     }
 
-    /**
-     * Applies the given draw mode to all {@link Shape3D} descendants of a node,
-     * excluding those matching the filter.
-     *
-     * @param node             root node to search (null is ignored)
-     * @param exclusionFilter  shapes matching this predicate are skipped
-     * @param drawMode         new draw mode (wireframe/solid)
-     */
-    private static void setDrawModeExcluding(Node node, Predicate<Node> exclusionFilter, DrawMode drawMode) {
-        if (node == null) return; //TODO why does this happen?
-        node.lookupAll("*").stream()
-            .filter(exclusionFilter.negate())
-            .filter(Shape3D.class::isInstance)
-            .map(Shape3D.class::cast)
-            .forEach(shape3D -> shape3D.setDrawMode(drawMode));
+    private void setDrawMode(Group root, DrawMode drawMode) {
+        for (Node node : root.getChildren()) {
+            if (node instanceof Group) {
+                setDrawMode((Group) node, drawMode);
+            }
+            else if (node instanceof Shape3D shape3D) {
+                shape3D.setDrawMode(drawMode);
+            }
+        }
     }
 
     /**
