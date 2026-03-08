@@ -19,10 +19,6 @@ import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 
 public class PacBody extends Group implements Disposable {
 
-    private PhongMaterial headMaterial;
-    private PhongMaterial eyesMaterial;
-    private PhongMaterial palateMaterial;
-
     private MeshView headMeshView;
     private MeshView eyesMeshView;
     private MeshView palateMeshView;
@@ -33,22 +29,22 @@ public class PacBody extends Group implements Disposable {
         Mesh eyesMesh, Color eyesColor,
         Mesh palateMesh, Color palateColor)
     {
-        headMaterial = coloredPhongMaterial(headColor);
+        final PhongMaterial headMaterial = coloredPhongMaterial(headColor);
         headMeshView = new MeshView(headMesh);
         headMeshView.setMaterial(headMaterial);
 
-        eyesMaterial = coloredPhongMaterial(eyesColor);
+        final PhongMaterial eyesMaterial = coloredPhongMaterial(eyesColor);
         eyesMeshView = new MeshView(eyesMesh);
         eyesMeshView.setMaterial(eyesMaterial);
 
-        palateMaterial = coloredPhongMaterial(palateColor);
+        final PhongMaterial palateMaterial = coloredPhongMaterial(palateColor);
         palateMeshView = new MeshView(palateMesh);
         palateMeshView.setMaterial(palateMaterial);
 
         getChildren().addAll(headMeshView, eyesMeshView, palateMeshView);
 
-        var headBounds = headMeshView.getBoundsInLocal();
-        var centeredOverOrigin = new Translate(-headBounds.getCenterX(), -headBounds.getCenterY(), -headBounds.getCenterZ());
+        final var headBounds = headMeshView.getBoundsInLocal();
+        final var centeredOverOrigin = new Translate(-headBounds.getCenterX(), -headBounds.getCenterY(), -headBounds.getCenterZ());
         Stream.of(headMeshView, eyesMeshView, palateMeshView)
             .map(MeshView::getTransforms)
             .forEach(tf -> tf.add(centeredOverOrigin));
@@ -58,30 +54,22 @@ public class PacBody extends Group implements Disposable {
         getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
         getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
 
-        var bounds = getBoundsInLocal();
+        final var bounds = getBoundsInLocal();
         getTransforms().add(new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth()));
     }
 
     @Override
     public void dispose() {
         getChildren().clear();
-        if (headMeshView != null) {
-            headMeshView.setMesh(null);
-            headMeshView.setMaterial(null);
-            headMeshView = null;
+        disposeMeshView(headMeshView);   headMeshView = null;
+        disposeMeshView(eyesMeshView);   eyesMeshView = null;
+        disposeMeshView(palateMeshView); palateMeshView = null;
+    }
+
+    private void disposeMeshView(MeshView meshView) {
+        if (meshView != null) {
+            meshView.setMesh(null);
+            meshView.setMaterial(null);
         }
-        headMaterial = null;
-        if (eyesMeshView != null) {
-            eyesMeshView.setMesh(null);
-            eyesMeshView.setMaterial(null);
-            eyesMeshView = null;
-        }
-        eyesMaterial = null;
-        if (palateMeshView != null) {
-            palateMeshView.setMesh(null);
-            palateMeshView.setMaterial(null);
-            palateMeshView = null;
-        }
-        palateMaterial = null;
     }
 }
