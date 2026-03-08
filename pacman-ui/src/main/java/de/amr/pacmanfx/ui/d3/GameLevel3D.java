@@ -36,8 +36,6 @@ import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.Mesh;
-import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import org.tinylog.Logger;
 
@@ -62,14 +60,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public static final String TEST_MESSAGE_TEXT = "LEVEL %d (TEST)";
 
     public static final float READY_MESSAGE_DISPLAY_SECONDS = 2.5f;
-
-    private static MeshView[] createMeshViews(int n, Mesh mesh) {
-        final var meshViews = new MeshView[n];
-        for (int i = 0; i < meshViews.length; ++i) {
-            meshViews[i] = new MeshView(mesh);
-        }
-        return meshViews;
-    }
 
     private final GameLevel level;
     private final UIConfig uiConfig;
@@ -488,15 +478,5 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         cleanupGroup(this, true);
         Logger.info("Cleaned an removed all nodes under game level");
 
-    }
-
-    private void clearMeshViewArray(MeshView[] meshViews, String description) {
-        if (meshViews == null) return;
-        for (MeshView meshView : meshViews) {
-            meshView.setMesh(null);
-            meshView.materialProperty().unbind();
-            meshView.setMaterial(null);
-        }
-        Logger.info("Cleared mesh views {}", description);
     }
 }
