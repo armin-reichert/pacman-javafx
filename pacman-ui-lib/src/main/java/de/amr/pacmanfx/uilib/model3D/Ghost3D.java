@@ -26,22 +26,9 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D representation of a ghost.
  */
-public class Ghost3D extends Group implements Disposable {
+public class Ghost3D extends Group implements DisposableGraphicsObject {
 
     public record MaterialSet(PhongMaterial dress, PhongMaterial eyeballs, PhongMaterial pupils) {}
-
-    private final Ghost ghost;
-    private final GhostColorSet colorSet;
-
-    private MaterialSet normalMaterialSet;
-    private MaterialSet frightenedMaterialSet;
-    private MaterialSet flashingMaterialSet;
-
-    private MeshView dressShape;
-    private MeshView pupilsShape;
-    private MeshView eyeballsShape;
-
-    private Group dressGroup;
 
     public class DressAnimation extends ManagedAnimation {
 
@@ -103,6 +90,15 @@ public class Ghost3D extends Group implements Disposable {
         }
     }
 
+    private final Ghost ghost;
+    private final GhostColorSet colorSet;
+    private MaterialSet normalMaterialSet;
+    private MaterialSet frightenedMaterialSet;
+    private MaterialSet flashingMaterialSet;
+    private MeshView dressShape;
+    private MeshView pupilsShape;
+    private MeshView eyeballsShape;
+    private Group dressGroup;
     private DressAnimation dressAnimation;
     private FlashingAnimation flashingAnimation;
 
@@ -239,48 +235,24 @@ public class Ghost3D extends Group implements Disposable {
 
     @Override
     public void dispose() {
-        getChildren().clear();
+        normalMaterialSet = null;
+        frightenedMaterialSet = null;
+        flashingMaterialSet = null;
 
-        if (dressShape != null) {
-            dressShape.setMesh(null);
-            dressShape.materialProperty().unbind();
-            dressShape.setMaterial(null);
-            dressShape = null;
-        }
-
-        if (pupilsShape != null) {
-            pupilsShape.setMesh(null);
-            pupilsShape.materialProperty().unbind();
-            pupilsShape.setMaterial(null);
-            pupilsShape = null;
-        }
-
-        if (eyeballsShape != null) {
-            eyeballsShape.setMesh(null);
-            eyeballsShape.materialProperty().unbind();
-            eyeballsShape.setMaterial(null);
-            eyeballsShape = null;
-
-        }
-
-        if (dressGroup != null) {
-            dressGroup.getChildren().clear();
-            dressGroup = null;
-        }
+        cleanupGroup(this, true);
+        dressShape = null;
+        pupilsShape = null;
+        eyeballsShape = null;
+        dressGroup = null;
 
         if (dressAnimation != null) {
             dressAnimation.dispose();
             dressAnimation = null;
 
         }
-
         if (flashingAnimation != null) {
             flashingAnimation.dispose();
             flashingAnimation = null;
         }
-
-        normalMaterialSet = null;
-        frightenedMaterialSet = null;
-        flashingMaterialSet = null;
     }
 }

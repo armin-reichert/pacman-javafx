@@ -478,15 +478,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         PROPERTY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");
 
-        getChildren().clear();
-        Logger.info("Removed all nodes under game level");
-
         cleanupLight(ambientLight);
         ambientLight = null;
         Logger.info("Unbound and cleared ambient light");
 
         cleanupLight(ghostLight);
-        ghostLight.colorProperty().unbind();
         ghostLight = null;
         Logger.info("Unbound and cleared ghost light");
 
@@ -506,6 +502,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         clearMeshViewArray(ghostEyesMeshViews, "ghost eyes");
         ghostEyesMeshViews = null;
+
+        cleanupGroup(this, true);
+        Logger.info("Cleaned an removed all nodes under game level");
+
     }
 
     private void clearMeshViewArray(MeshView[] meshViews, String description) {

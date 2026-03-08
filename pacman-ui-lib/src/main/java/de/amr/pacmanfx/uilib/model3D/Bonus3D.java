@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
  * on each of its faces. When eaten, the bonus symbol is replaced by the points earned for eating the bonus.
  * For a moving bonus, the rotating cube moves through the world and rotates towards its current move direction.</p>
  */
-public class Bonus3D extends Box implements Disposable {
+public class Bonus3D extends Box implements DisposableGraphicsObject {
 
     private final Bonus bonus;
 
@@ -128,6 +128,7 @@ public class Bonus3D extends Box implements Disposable {
             eatenAnimation.stop();
             eatenAnimation = null;
         }
+        cleanupShape3D(this);
     }
 
     public void update(GameLevel gameLevel) {

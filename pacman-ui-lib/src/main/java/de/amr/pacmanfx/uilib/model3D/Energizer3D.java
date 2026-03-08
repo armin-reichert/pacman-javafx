@@ -23,7 +23,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class Energizer3D implements Disposable {
+public class Energizer3D implements DisposableGraphicsObject {
 
     private static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial(Color.WHITE);
 
@@ -87,10 +87,8 @@ public class Energizer3D implements Disposable {
 
     @Override
     public void dispose() {
-        if (shape != null) {
-            shape.setMaterial(null);
-            shape = null;
-        }
+        cleanupShape3D(shape);
+        shape = null;
         if (pumpingAnimation != null) {
             pumpingAnimation.dispose();
             pumpingAnimation = null;
