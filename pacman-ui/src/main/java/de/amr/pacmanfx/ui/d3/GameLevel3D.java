@@ -76,10 +76,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final Config3D config3D;
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
 
-    private MeshView[] ghostDressMeshViews;
-    private MeshView[] ghostPupilsMeshViews;
-    private MeshView[] ghostEyesMeshViews;
-
     private Node[] livesCounterShapes;
 
     private AmbientLight ambientLight;
@@ -187,11 +183,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createGhosts3D() {
-        final int numGhosts = (int) level.ghosts().count();
-        ghostDressMeshViews  = createMeshViews(numGhosts, Models3D.GHOST_MODEL.dressMesh());
-        ghostPupilsMeshViews = createMeshViews(numGhosts, Models3D.GHOST_MODEL.pupilsMesh());
-        ghostEyesMeshViews   = createMeshViews(numGhosts, Models3D.GHOST_MODEL.eyeballsMesh());
-
         ghosts3D = level.ghosts().map(ghost -> createMutatingGhost3D(config3D.actor(), ghost)).toList();
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
 
@@ -225,9 +216,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             animationRegistry,
             ghost,
             createGhostColorSet(id),
-            ghostDressMeshViews[id],
-            ghostPupilsMeshViews[id],
-            ghostEyesMeshViews[id],
+            Models3D.GHOST_MODEL.dressMesh(),
+            Models3D.GHOST_MODEL.pupilsMesh(),
+            Models3D.GHOST_MODEL.eyeballsMesh(),
             actorConfig.ghostSize(),
             level.numFlashes()
         );
@@ -493,15 +484,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             disposeAll(List.of(livesCounterShapes));
             livesCounterShapes = null;
         }
-
-        clearMeshViewArray(ghostDressMeshViews, "ghost dresses");
-        ghostDressMeshViews = null;
-
-        clearMeshViewArray(ghostPupilsMeshViews, "ghost pupils");
-        ghostPupilsMeshViews = null;
-
-        clearMeshViewArray(ghostEyesMeshViews, "ghost eyes");
-        ghostEyesMeshViews = null;
 
         cleanupGroup(this, true);
         Logger.info("Cleaned an removed all nodes under game level");

@@ -21,6 +21,7 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -144,22 +145,22 @@ public class MutableGhost3D extends Group implements Disposable {
         AnimationRegistry animationRegistry,
         Ghost ghost,
         GhostColorSet colorSet,
-        MeshView dressShape,
-        MeshView pupilsShape,
-        MeshView eyeballsShape,
+        Mesh dressMesh,
+        Mesh pupilsMesh,
+        Mesh eyeballsMesh,
         double size,
         int numFlashes)
     {
         requireNonNull(animationRegistry);
         this.ghost = requireNonNull(ghost);
         this.colorSet = requireNonNull(colorSet);
-        requireNonNull(dressShape);
-        requireNonNull(pupilsShape);
-        requireNonNull(eyeballsShape);
+        requireNonNull(dressMesh);
+        requireNonNull(pupilsMesh);
+        requireNonNull(eyeballsMesh);
         this.size = requireNonNegative(size);
         this.numFlashes = requireNonNegativeInt(numFlashes);
 
-        ghostShape3D = new Ghost3D(animationRegistry, ghost, colorSet, dressShape, pupilsShape, eyeballsShape, size);
+        ghostShape3D = new Ghost3D(animationRegistry, ghost, colorSet, dressMesh, pupilsMesh, eyeballsMesh, size);
         numberShape3D = new Box(NUMBER_BOX_SIZE_X, NUMBER_BOX_SIZE_Y, NUMBER_BOX_SIZE_Z);
         getChildren().setAll(ghostShape3D, numberShape3D);
 

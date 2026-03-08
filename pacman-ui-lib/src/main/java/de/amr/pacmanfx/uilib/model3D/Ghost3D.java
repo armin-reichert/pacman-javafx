@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.Validations;
-import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -13,6 +12,7 @@ import javafx.animation.*;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -106,17 +106,17 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         AnimationRegistry animationRegistry,
         Ghost ghost,
         GhostColorSet colorSet,
-        MeshView dressShape,
-        MeshView pupilsShape,
-        MeshView eyeballsShape,
+        Mesh dressMesh,
+        Mesh pupilsMesh,
+        Mesh eyeballsMesh,
         double size)
     {
         requireNonNull(animationRegistry);
         this.ghost         = requireNonNull(ghost);
         this.colorSet      = requireNonNull(colorSet);
-        this.dressShape    = requireNonNull(dressShape);
-        this.pupilsShape   = requireNonNull(pupilsShape);
-        this.eyeballsShape = requireNonNull(eyeballsShape);
+        this.dressShape    = new MeshView(requireNonNull(dressMesh));
+        this.pupilsShape   = new MeshView(requireNonNull(pupilsMesh));
+        this.eyeballsShape = new MeshView(requireNonNull(eyeballsMesh));
         requireNonNegative(size);
 
         normalMaterialSet = new MaterialSet(
@@ -240,6 +240,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         flashingMaterialSet = null;
 
         cleanupGroup(this, true);
+
         dressShape = null;
         pupilsShape = null;
         eyeballsShape = null;
