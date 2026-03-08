@@ -557,7 +557,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     public void rebuildLevelCounter3D(LevelCounterConfig3D config) {
         if (levelCounter3D != null) {
-            levelCounter3D.rebuild(config, level);
+            levelCounter3D.rebuild(config, level.game().levelCounterSymbols());
         }
     }
 

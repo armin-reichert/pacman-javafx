@@ -3,13 +3,11 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
-import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d3.config.LevelCounterConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -23,10 +21,12 @@ import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import java.util.List;
+
 import static de.amr.pacmanfx.Globals.HTS;
 import static java.util.Objects.requireNonNull;
 
-public class LevelCounter3D extends Group implements Disposable {
+public class LevelCounter3D extends Group implements DisposableGraphicsObject {
 
     private final UIConfig uiConfig;
     private final AnimationRegistry animationRegistry;
@@ -37,12 +37,11 @@ public class LevelCounter3D extends Group implements Disposable {
         this.uiConfig = requireNonNull(uiConfig);
     }
 
-    public void rebuild(LevelCounterConfig3D config, GameLevel level) {
-        final Game game = level.game();
+    public void rebuild(LevelCounterConfig3D config, List<Byte> symbols) {
         final float cubeSize = config.symbolSize();
         getChildren().clear();
-        for (int i = 0; i < game.levelCounterSymbols().size(); ++i) {
-            final Byte symbol = game.levelCounterSymbols().get(i);
+        for (int i = 0; i < symbols.size(); ++i) {
+            final Byte symbol = symbols.get(i);
             final Image symbolImage = uiConfig.bonusSymbolImage(symbol);
             final var texture = new PhongMaterial(Color.WHITE);
             texture.setDiffuseMap(symbolImage);
@@ -78,15 +77,9 @@ public class LevelCounter3D extends Group implements Disposable {
     @Override
     public void dispose() {
         if (spinningAnimation != null) {
-            spinningAnimation.stop();
             spinningAnimation.dispose();
             spinningAnimation = null;
         }
-        for (Node child : getChildren()) {
-            if (child instanceof Box cube) {
-                cube.setMaterial(null);
-            }
-        }
-        getChildren().clear();
+        cleanupGroup(this, true);
     }
 }

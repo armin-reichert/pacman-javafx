@@ -179,7 +179,7 @@ public class GameLevel3DEventHandler {
     private void onStartingGame(GameLevel3D level3D) {
         level3D.maze3D().food().energizers3D().forEach(Energizer3D::stopPumping);
         if (level3D.levelCounter3D() != null) {
-            level3D.levelCounter3D().rebuild(level3D.config3D().levelCounter(), level3D.level());
+            level3D.levelCounter3D().rebuild(level3D.config3D().levelCounter(), level3D.level().game().levelCounterSymbols());
         }
     }
 
