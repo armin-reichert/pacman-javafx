@@ -52,13 +52,39 @@ import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSecThen;
 import static java.util.Objects.requireNonNull;
 
 /**
- * 3D representation of game level.
+ * Represents the complete 3D visualization of a single Pac-Man game level.
+ * <p>
+ * This class serves as the root node for all 3D elements of a level, including:
+ * <ul>
+ *   <li>Maze (floor, walls, house, pellets, energizers, particles)</li>
+ *   <li>Actors (Pac-Man, ghosts, bonus symbol)</li>
+ *   <li>Counters (lives, level number)</li>
+ *   <li>Lights (ambient + ghost-specific point light)</li>
+ *   <li>Dynamic messages (READY!, test mode, etc.)</li>
+ *   <li>Animations (level complete, flashing walls, etc.)</li>
+ * </ul>
+ * <p>
+ * It manages component creation, per-frame updates, draw mode changes, and full resource
+ * cleanup via {@link DisposableGraphicsObject} and a {@link List} of {@link Disposable} components.
+ * <p>
+ * Instances are created by {@link PlayScene3D} and disposed when the level ends or the
+ * 3D view is deactivated.
+ *
+ * @see PlayScene3D
+ * @see Maze3D
+ * @see PacBase3D
+ * @see MutableGhost3D
+ * @see DisposableGraphicsObject
  */
 public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
+    /** Standard "READY!" message shown at level start */
     public static final String READY_MESSAGE_TEXT = "READY!";
+
+    /** Test mode overlay message format */
     public static final String TEST_MESSAGE_TEXT = "LEVEL %d (TEST)";
 
+    /** Default display duration for READY! message */
     public static final float READY_MESSAGE_DISPLAY_SECONDS = 2.5f;
 
     private final GameLevel level;
@@ -83,6 +109,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private final List<Disposable> disposables = new ArrayList<>();
 
+    /**
+     * Creates a new 3D level representation for the given game level.
+     *
+     * @param uiConfig global UI configuration (provides 3D settings, colors, models)
+     * @param level    the game level to visualize
+     */
     public GameLevel3D(UIConfig uiConfig, GameLevel level) {
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
@@ -101,8 +133,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         setMouseTransparent(true); // this increases performance, they say...
     }
 
-    // Note: The order in which children are added matters!
-    // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
+    /**
+     * Arranges all direct children in the correct rendering order.
+     * <p>
+     * Order matters for correct transparency: actors and effects must appear
+     * in front of walls/house.
+     */
     private void arrangeChildren() {
         getChildren().add(maze3D.floor());
         getChildren().addAll(maze3D.particlesGroup());
@@ -119,51 +155,70 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().add(ghostLight);
     }
 
+    /** @return registry for all level-specific animations */
     public AnimationRegistry animationRegistry() {
         return animationRegistry;
     }
 
+    /** @return the underlying game level model */
     public GameLevel level() {
         return level;
     }
 
+    /** @return UI configuration used for this level */
     public UIConfig uiConfig() {
         return uiConfig;
     }
 
+    /** @return 3D-specific configuration */
     public Config3D config3D() {
         return config3D;
     }
 
+    /** @return the maze visualization component */
     public Maze3D maze3D() {
         return maze3D;
     }
 
+    /** @return level number counter visualization */
     public LevelCounter3D levelCounter3D() {
         return levelCounter3D;
     }
 
+    /** @return current message overlay view (READY!, test mode, etc.) */
     public MessageView messageView() {
         return messageView;
     }
 
+    /** @return point light used for ghost highlighting */
     public PointLight ghostLight() {
         return ghostLight;
     }
 
+    /** @return optional animations controller for this level */
     public Optional<GameLevel3DAnimations> animations() {
         return Optional.ofNullable(animations);
     }
 
+    /** Sets the animation controller for level-specific effects */
     public void setAnimations(GameLevel3DAnimations animations) {
         this.animations = requireNonNull(animations);
     }
 
+    /**
+     * Determines if the given ghost's center position is outside the visible world bounds.
+     *
+     * @param ghost the ghost to check
+     * @return true if the ghost is outside the maze bounds
+     */
     private boolean outsideWorld(Ghost ghost) {
         Vector2f center = ghost.center();
         return center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
     }
 
+    /**
+     * Creates and initializes the 3D representation of Pac-Man.
+     */
     private void createPac3D() {
         final ActorConfig3D actorConfig = config3D.actor();
         pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), actorConfig.pacSize());
@@ -172,6 +227,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         disposables.add(pac3D);
     }
 
+    /**
+     * Creates and initializes all ghost 3D representations.
+     */
     private void createGhosts3D() {
         ghosts3D = level.ghosts().map(ghost -> createMutatingGhost3D(config3D.actor(), ghost)).toList();
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
@@ -179,6 +237,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         disposables.addAll(ghosts3D);
     }
 
+    /**
+     * Creates a color set for a ghost based on its personality.
+     *
+     * @param personality the ghost personality ID (0–3)
+     * @return the color set for normal, frightened, and flashing states
+     */
     private GhostColorSet createGhostColorSet(byte personality) {
         AssetMap assets = uiConfig.assets();
         return new GhostColorSet(
@@ -200,6 +264,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         );
     }
 
+    /**
+     * Creates a mutable 3D ghost representation for the given model ghost.
+     *
+     * @param actorConfig configuration for actor sizes
+     * @param ghost       the model ghost
+     * @return the 3D ghost with visibility binding
+     */
     private MutableGhost3D createMutatingGhost3D(ActorConfig3D actorConfig, Ghost ghost) {
         final byte id = ghost.personality();
         final var mutatingGhost3D = new MutableGhost3D(
@@ -219,6 +290,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return mutatingGhost3D;
     }
 
+    /**
+     * Creates and initializes the lives counter visualization.
+     */
     private void createLivesCounter3D() {
         final LivesCounterConfig3D config = config3D.livesCounter();
         livesCounterShapes = new Node[config.capacity()];
@@ -234,6 +308,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         disposables.add(livesCounter3D);
     }
 
+    /**
+     * Creates and initializes the level number counter visualization.
+     */
     private void createLevelCounter3D() {
         final LevelCounterConfig3D config = config3D.levelCounter();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
@@ -245,6 +322,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         disposables.add(levelCounter3D);
     }
 
+    /**
+     * Creates ambient and ghost-specific point lights.
+     */
     private void createLights() {
         ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);
@@ -252,6 +332,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         ghostLight = new PointLight();
     }
 
+    /**
+     * Creates and initializes the maze visualization, including color scheme adjustment.
+     */
     private void createMaze3D() {
         WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final boolean wallsVeryDark = Color.valueOf(colorScheme.wallFill()).getBrightness() < 0.1;
@@ -277,20 +360,33 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         disposables.add(maze3D);
     }
 
+    /** @return lives counter visualization (optional if not created) */
     public Optional<LivesCounter3D> livesCounter3D() {
         return Optional.ofNullable(livesCounter3D);
     }
 
-    public Optional<PacBase3D> pac3D() { return Optional.ofNullable(pac3D); }
+    /** @return Pac-Man 3D representation (optional if not created) */
+    public Optional<PacBase3D> pac3D() {
+        return Optional.ofNullable(pac3D);
+    }
 
-    public List<MutableGhost3D> ghosts3D() { return List.copyOf(ghosts3D); }
+    /** @return immutable list of all ghost 3D representations */
+    public List<MutableGhost3D> ghosts3D() {
+        return List.copyOf(ghosts3D);
+    }
 
-    public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
+    /** @return optional bonus visualization */
+    public Optional<Bonus3D> bonus3D() {
+        return Optional.ofNullable(bonus3D);
+    }
 
-    public AnimationRegistry animationManager() { return animationRegistry; }
+    /** @return animation registry for this level */
+    public AnimationRegistry animationManager() {
+        return animationRegistry;
+    }
 
     /**
-     * Called on each clock tick (frame).
+     * Called once per game tick/frame to update all dynamic elements.
      */
     public void update() {
         pac3D.update(level);
@@ -302,11 +398,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         updateLivesCounter3D();
     }
 
+    /**
+     * Updates the lives counter visibility and count based on game state.
+     */
     private void updateLivesCounter3D() {
         if (livesCounter3D != null) {
             final GameControl gameControl = level.game().control();
             final boolean oneMore = gameControl.state().nameMatches(GameControl.CommonGameState.STARTING_GAME_OR_LEVEL.name())
-                    && !level.pac().isVisible();
+                && !level.pac().isVisible();
             final boolean visible = level.game().canStartNewGame();
             int lifeCount = level.game().lifeCount() - 1;
             // when the game starts and Pac-Man is not yet visible, show one more
@@ -316,6 +415,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
     }
 
+    /**
+     * Plays the level completion animation sequence and resets game timer.
+     *
+     * @param state the current game state (used to determine cut-scene follow-up)
+     */
     public void playLevelEndAnimation(State<Game> state) {
         final boolean cutSceneFollows = level.cutSceneNumber() != 0;
         final Animation levelCompletedAnimation = animations.selectLevelCompleteAnimation(cutSceneFollows).animationFX();
@@ -336,10 +440,15 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             state.timer().expire();
         });
 
-        state.timer().resetIndefiniteTime(); // freeze game control until animation sequence ends
+        state.timer().resetIndefiniteTime(); // freeze game control until animation ends
         animationSequence.play();
     }
 
+    /**
+     * Handles Pac-Man eating food at the given tile (pellet or energizer).
+     *
+     * @param tile the tile where food was eaten
+     */
     public void eatFood(Vector2i tile) {
         final Energizer3D energizer3D = maze3D.food().energizers3D().stream()
             .filter(e3D -> tile.equals(e3D.tile()))
@@ -355,15 +464,25 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
     }
 
+    /**
+     * Removes all pellet visualizations (used when all pellets are eaten at once).
+     */
     public void eatAllPellets3D() {
         maze3D.food().pellets3D().forEach(pellet3D -> getChildren().remove(pellet3D));
     }
 
-    // Removes the pellet after a small delay to let pellet not directly disappear when Pac-Man enters the tile
+    /**
+     * Schedules removal of a single pellet after a short delay (visual feedback).
+     *
+     * @param pellet3D the pellet shape to remove
+     */
     public void eatPellet3D(Pellet3D pellet3D) {
         pauseSecThen(0.05, () -> getChildren().remove(pellet3D)).play();
     }
 
+    /**
+     * Displays the "READY!" message centered under the ghost house.
+     */
     public void showReadyMessage() {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         terrain.optHouse().ifPresentOrElse(house -> {
@@ -372,6 +491,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }, () -> Logger.error("Cannot display READY message: no house in this game level! WTF?"));
     }
 
+    /**
+     * Displays the test mode overlay message.
+     */
     public void showTestMessage() {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final double x = terrain.numCols() * HTS;
@@ -379,6 +501,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         showAnimatedMessage(TEST_MESSAGE_TEXT.formatted(level.number()), 5, x, y);
     }
 
+    /**
+     * Shows a temporary animated message at the specified world coordinates.
+     *
+     * @param messageText    message content
+     * @param displaySeconds duration before fade-out
+     * @param centerX        x-coordinate (world units)
+     * @param centerY        y-coordinate (world units)
+     */
     public void showAnimatedMessage(String messageText, float displaySeconds, double centerX, double centerY) {
         if (messageView != null) {
             messageView.dispose();
@@ -399,6 +529,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         messageView.showCenteredAt(centerX, centerY);
     }
 
+    /**
+     * Replaces or creates the bonus visualization for the given bonus item.
+     *
+     * @param bonus the current bonus model
+     */
     public void updateBonus3D(Bonus bonus) {
         requireNonNull(bonus);
         if (bonus3D != null) {
@@ -415,12 +550,21 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         disposables.add(bonus3D);
     }
 
+    /**
+     * Rebuilds the level counter visualization using the latest configuration.
+     *
+     * @param config current level counter settings
+     */
     public void rebuildLevelCounter3D(LevelCounterConfig3D config) {
         if (levelCounter3D != null) {
             levelCounter3D.rebuild(config, level);
         }
     }
 
+    /**
+     * Updates draw mode (wireframe/solid) for all relevant 3D shapes.
+     * Called when {@link GameUI#PROPERTY_3D_DRAW_MODE} changes.
+     */
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode drawMode) {
         final Predicate<Node> excludeNone = _ -> false;
         try {
@@ -442,6 +586,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
     }
 
+    /**
+     * Applies the given draw mode to all {@link Shape3D} descendants of a node,
+     * excluding those matching the filter.
+     *
+     * @param node             root node to search (null is ignored)
+     * @param exclusionFilter  shapes matching this predicate are skipped
+     * @param drawMode         new draw mode (wireframe/solid)
+     */
     private static void setDrawModeExcluding(Node node, Predicate<Node> exclusionFilter, DrawMode drawMode) {
         if (node == null) return; //TODO why does this happen?
         node.lookupAll("*").stream()
@@ -451,32 +603,25 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .forEach(shape3D -> shape3D.setDrawMode(drawMode));
     }
 
+    /**
+     * Releases all resources held by this level.
+     * <p>
+     * Clears animations, unbinds listeners, disposes all registered components,
+     * cleans lights and the entire scene graph, and removes all children.
+     */
     public void dispose() {
         Logger.info("Disposing game level 3D...");
-
         animationRegistry.clear();
-
         PROPERTY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
-        Logger.info("Removed 'draw mode' listener");
-
-        cleanupLight(ambientLight);
-        ambientLight = null;
-        Logger.info("Unbound and cleared ambient light");
-
-        cleanupLight(ghostLight);
-        ghostLight = null;
-        Logger.info("Unbound and cleared ghost light");
-
+        cleanupLight(ambientLight); ambientLight = null;
+        cleanupLight(ghostLight);   ghostLight = null;
         disposables.forEach(Disposable::dispose);
         disposables.clear();
-
         if (livesCounterShapes != null) {
             disposeAll(List.of(livesCounterShapes));
             livesCounterShapes = null;
         }
-
         cleanupGroup(this, true);
-        Logger.info("Cleaned an removed all nodes under game level");
-
+        Logger.info("Cleaned and removed all nodes under game level 3D");
     }
 }
