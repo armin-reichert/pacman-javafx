@@ -118,32 +118,6 @@ public class Wall3D {
         return (T) top;
     }
 
-    public static void dispose(Node part) {
-        if (isBase(part) || isTop(part)) {
-            switch (part) {
-                case Box box -> disposeBox(box);
-                case Cylinder cylinder -> disposeCylinder(cylinder);
-                default -> Logger.error("Only Box and Cylinder are allowed as parts of 3D wall");
-            }
-        }
-    }
-
-    private static void disposeBox(Box box) {
-        box.depthProperty().unbind();
-        box.translateXProperty().unbind();
-        box.translateYProperty().unbind();
-        box.translateZProperty().unbind();
-        box.setMaterial(null);
-    }
-
-    private static void disposeCylinder(Cylinder cylinder) {
-        cylinder.heightProperty().unbind();
-        cylinder.translateXProperty().unbind();
-        cylinder.translateYProperty().unbind();
-        cylinder.translateZProperty().unbind();
-        cylinder.setMaterial(null);
-    }
-
     public void setBaseHeight(double baseHeight) {
         if (base instanceof Box box) {
             box.depthProperty().unbind();

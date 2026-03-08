@@ -20,7 +20,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -302,36 +301,13 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
      */
     @Override
     public void dispose() {
+        r3D.setOnWallCreated(null);
         openProperty().unbind();
         wallBaseHeightProperty().unbind();
-
-        doorsMeltingAnimation.dispose();
-        doorsMeltingAnimation = null;
-
-        for (Node child : getChildren()) {
-            Wall3D.dispose(child);
-        }
-
+        barMaterial = wallBaseMaterial = wallTopMaterial = null;
+        doorsMeltingAnimation.dispose(); doorsMeltingAnimation = null;
         cleanupGroup(this, true);
-        getChildren().clear();
-
-        cleanupGroup(leftDoor, true);
-        leftDoor = null;
-
-        cleanupGroup(rightDoor, true);
-        rightDoor = null;
-
-        doors.getChildren().clear();
-        doors = null;
-
-        barMaterial = null;
-        wallBaseMaterial = null;
-        wallTopMaterial = null;
-
-        cleanupLight(light);
-        light = null;
-
-        r3D.setOnWallCreated(null);
+        cleanupGroup(doors, true); leftDoor = rightDoor = doors = null;
+        cleanupLight(light); light = null;
     }
-
 }

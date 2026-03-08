@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.d3.config.*;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -47,7 +48,7 @@ import static java.util.Objects.requireNonNull;
  * @see MazeFood3D
  * @see MazeMaterials3D
  */
-public class Maze3D extends Group implements Disposable {
+public class Maze3D extends Group implements DisposableGraphicsObject {
 
     private final WorldMapColorScheme colorScheme;
     private final AnimationRegistry animationRegistry;
@@ -162,8 +163,7 @@ public class Maze3D extends Group implements Disposable {
         if (house3D != null)     { house3D.dispose();     house3D = null; }
         if (food3D != null)      { food3D.dispose();      food3D = null; }
 
-        getChildren().forEach(Wall3D::dispose);
-        getChildren().clear();
+        cleanupGroup(this, true);
 
         Logger.info("Disposed 3D maze");
     }
