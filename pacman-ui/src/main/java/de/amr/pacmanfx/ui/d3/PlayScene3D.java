@@ -333,31 +333,30 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent event) {
-        gameContext().currentGame().optGameLevel().ifPresent(this::replaceGameLevel3D);
+        replaceGameLevel3D(event.level());
     }
 
     @Override
     public void onLevelStarts(LevelStartedEvent event) {
-        if (optGameLevel().isEmpty()) {
-            Logger.error("No game level exists on level start? WTF!");
-            return;
+        final GameLevel gameLevel = event.level();
+        if (gameLevel3D == null) {
+            Logger.warn("Level starts but no 3D level exists? Creating one...");
+            replaceGameLevel3D(gameLevel);
         }
-        optGameLevel().ifPresent(gameLevel -> {
-            final State<Game> state = gameLevel.game().control().state();
-            if (state instanceof TestState) {
-                replaceGameLevel3D(gameLevel);
-                gameLevel3D.maze3D().food().energizers3D().forEach(Energizer3D::startPumping);
-                gameLevel3D.showTestMessage();
-            } else {
-                if (!gameLevel.isDemoLevel() &&
-                        state.nameMatches(STARTING_GAME_OR_LEVEL.name(), LEVEL_TRANSITION.name())) {
-                    gameLevel3D.showReadyMessage();
-                }
+        final State<Game> state = gameLevel.game().control().state();
+        if (state instanceof TestState) {
+            replaceGameLevel3D(gameLevel);
+            gameLevel3D.maze3D().food().energizers3D().forEach(Energizer3D::startPumping);
+            gameLevel3D.showTestMessage();
+        } else {
+            if (!gameLevel.isDemoLevel() &&
+                    state.nameMatches(STARTING_GAME_OR_LEVEL.name(), LEVEL_TRANSITION.name())) {
+                gameLevel3D.showReadyMessage();
             }
-            gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().config3D().levelCounter());
-            replaceActionBindings(gameLevel);
-            fadeInAnimation.play();
-        });
+        }
+        gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().config3D().levelCounter());
+        replaceActionBindings(gameLevel);
+        fadeInAnimation.play();
     }
 
     @Override

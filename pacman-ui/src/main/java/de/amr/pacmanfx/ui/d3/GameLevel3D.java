@@ -88,7 +88,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private final GameLevel level;
     private final UIConfig uiConfig;
-    private final Config3D config3D;
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
 
     private Node[] livesCounterShapes;
@@ -117,7 +116,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public GameLevel3D(UIConfig uiConfig, GameLevel level) {
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
-        this.config3D = uiConfig.config3D();
 
         createLevelCounter3D();
         createLivesCounter3D();
@@ -130,6 +128,32 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         PROPERTY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
         setMouseTransparent(true); // this increases performance, they say...
+    }
+
+    /**
+     * Releases all resources held by this level.
+     * <p>
+     * Clears animations, unbinds listeners, disposes all registered components,
+     * cleans lights and the entire scene graph, and removes all children.
+     */
+    public void dispose() {
+        Logger.info("Disposing game level 3D...");
+        animationRegistry.clear();
+        PROPERTY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
+        cleanupLight(ambientLight); ambientLight = null;
+        cleanupLight(ghostLight);   ghostLight = null;
+        disposables.forEach(Disposable::dispose);
+        disposables.clear();
+        if (livesCounterShapes != null) {
+            disposeAll(List.of(livesCounterShapes));
+            livesCounterShapes = null;
+        }
+        cleanupGroup(this, true);
+        Logger.info("Cleaned and removed all nodes under game level 3D");
+    }
+
+    public Config3D config3D() {
+        return uiConfig.config3D();
     }
 
     /**
@@ -167,11 +191,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /** @return UI configuration used for this level */
     public UIConfig uiConfig() {
         return uiConfig;
-    }
-
-    /** @return 3D-specific configuration */
-    public Config3D config3D() {
-        return config3D;
     }
 
     /** @return the maze visualization component */
@@ -219,7 +238,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Creates and initializes the 3D representation of Pac-Man.
      */
     private void createPac3D() {
-        final ActorConfig3D actorConfig = config3D.actor();
+        final ActorConfig3D actorConfig = config3D().actor();
         pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), actorConfig.pacSize());
         pac3D.init(level);
 
@@ -230,7 +249,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Creates and initializes all ghost 3D representations.
      */
     private void createGhosts3D() {
-        ghosts3D = level.ghosts().map(ghost -> createMutatingGhost3D(config3D.actor(), ghost)).toList();
+        ghosts3D = level.ghosts().map(ghost -> createMutatingGhost3D(config3D().actor(), ghost)).toList();
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
 
         disposables.addAll(ghosts3D);
@@ -293,7 +312,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Creates and initializes the lives counter visualization.
      */
     private void createLivesCounter3D() {
-        final LivesCounterConfig3D config = config3D.livesCounter();
+        final LivesCounterConfig3D config = config3D().livesCounter();
         livesCounterShapes = new Node[config.capacity()];
         for (int i = 0; i < livesCounterShapes.length; ++i) {
             livesCounterShapes[i] = uiConfig.createLivesCounterShape3D(config.shapeSize());
@@ -311,7 +330,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Creates and initializes the level number counter visualization.
      */
     private void createLevelCounter3D() {
-        final LevelCounterConfig3D config = config3D.levelCounter();
+        final LevelCounterConfig3D config = config3D().levelCounter();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
         levelCounter3D.setTranslateX(TS * (terrain.numCols() - 2));
@@ -338,7 +357,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final boolean wallsVeryDark = Color.valueOf(colorScheme.wallFill()).getBrightness() < 0.1;
         if (wallsVeryDark) {
-            final String notTooDarkColor = config3D.maze().darkWallFillColor();
+            final String notTooDarkColor = config3D().maze().darkWallFillColor();
             colorScheme = new WorldMapColorScheme(
                 notTooDarkColor,
                 colorScheme.wallStroke(),
@@ -352,7 +371,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .map(Ghost3D.MaterialSet::dress)
             .toList();
 
-        maze3D = new Maze3D(config3D, colorScheme, level, animationRegistry, ghostNormalDressMaterials);
+        maze3D = new Maze3D(config3D(), colorScheme, level, animationRegistry, ghostNormalDressMaterials);
         maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
         maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
 
@@ -539,7 +558,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             getChildren().remove(bonus3D);
             bonus3D.dispose();
         }
-        final ActorConfig3D actorConfig = config3D.actor();
+        final ActorConfig3D actorConfig = config3D().actor();
         bonus3D = new Bonus3D(animationRegistry, bonus,
             uiConfig.bonusSymbolImage(bonus.symbol()), actorConfig.bonusSymbolWidth(),
             uiConfig.bonusValueImage(bonus.symbol()),  actorConfig.bonusPointsWidth());
@@ -577,27 +596,5 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 shape3D.setDrawMode(drawMode);
             }
         }
-    }
-
-    /**
-     * Releases all resources held by this level.
-     * <p>
-     * Clears animations, unbinds listeners, disposes all registered components,
-     * cleans lights and the entire scene graph, and removes all children.
-     */
-    public void dispose() {
-        Logger.info("Disposing game level 3D...");
-        animationRegistry.clear();
-        PROPERTY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
-        cleanupLight(ambientLight); ambientLight = null;
-        cleanupLight(ghostLight);   ghostLight = null;
-        disposables.forEach(Disposable::dispose);
-        disposables.clear();
-        if (livesCounterShapes != null) {
-            disposeAll(List.of(livesCounterShapes));
-            livesCounterShapes = null;
-        }
-        cleanupGroup(this, true);
-        Logger.info("Cleaned and removed all nodes under game level 3D");
     }
 }
