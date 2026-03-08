@@ -56,7 +56,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D representation of game level.
  */
-public class GameLevel3D extends Group implements Disposable {
+public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public static final String READY_MESSAGE_TEXT = "READY!";
     public static final String TEST_MESSAGE_TEXT = "LEVEL %d (TEST)";
@@ -481,16 +481,14 @@ public class GameLevel3D extends Group implements Disposable {
         getChildren().clear();
         Logger.info("Removed all nodes under game level");
 
-        if (ambientLight != null) {
-            ambientLight.colorProperty().unbind();
-            ambientLight = null;
-            Logger.info("Unbound and cleared ambient light");
-        }
-        if (ghostLight != null) {
-            ghostLight.colorProperty().unbind();
-            ghostLight = null;
-            Logger.info("Unbound and cleared ghost light");
-        }
+        cleanupLight(ambientLight);
+        ambientLight = null;
+        Logger.info("Unbound and cleared ambient light");
+
+        cleanupLight(ghostLight);
+        ghostLight.colorProperty().unbind();
+        ghostLight = null;
+        Logger.info("Unbound and cleared ghost light");
 
         disposables.forEach(Disposable::dispose);
         disposables.clear();

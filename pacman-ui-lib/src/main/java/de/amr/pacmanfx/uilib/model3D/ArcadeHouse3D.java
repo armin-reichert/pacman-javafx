@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
@@ -50,7 +49,7 @@ import static java.util.Objects.requireNonNull;
  * <p>
  * All created 3D nodes are owned by this group and cleaned up via {@link #dispose()}.
  */
-public class ArcadeHouse3D extends Group implements Disposable {
+public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
 
     private static final int DOOR_VERTICAL_BAR_COUNT = 4;
 
@@ -313,12 +312,13 @@ public class ArcadeHouse3D extends Group implements Disposable {
             Wall3D.dispose(child);
         }
 
+        cleanupGroup(this, true);
         getChildren().clear();
 
-        disposeDoor(leftDoor);
+        cleanupGroup(leftDoor, true);
         leftDoor = null;
 
-        disposeDoor(rightDoor);
+        cleanupGroup(rightDoor, true);
         rightDoor = null;
 
         doors.getChildren().clear();
@@ -328,26 +328,10 @@ public class ArcadeHouse3D extends Group implements Disposable {
         wallBaseMaterial = null;
         wallTopMaterial = null;
 
-        light.translateZProperty().unbind();
-        light.lightOnProperty().unbind();
+        cleanupLight(light);
         light = null;
 
         r3D.setOnWallCreated(null);
     }
 
-    /**
-     * Disposes all cylinders inside a door group.
-     */
-    private void disposeDoor(Group door) {
-        for (Node node : door.getChildren()) {
-            if (node instanceof Cylinder bar) {
-                bar.radiusProperty().unbind();
-                bar.heightProperty().unbind();
-                bar.translateXProperty().unbind();
-                bar.translateYProperty().unbind();
-                bar.translateZProperty().unbind();
-                bar.setMaterial(null);
-            }
-        }
-    }
 }

@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.lib.Disposable;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Mesh;
@@ -16,7 +15,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 
-public class PacBody extends Group implements Disposable {
+public class PacBody extends Group implements DisposableGraphicsObject {
 
     // TODO Adapt mesh position and rotation in OBJ file
     public PacBody(
@@ -51,19 +50,6 @@ public class PacBody extends Group implements Disposable {
 
     @Override
     public void dispose() {
-        for (var node : getChildren()) {
-            if (node instanceof MeshView) {
-                disposeMeshView((MeshView) node);
-            }
-        }
-        getTransforms().clear();
-        getChildren().clear();
-    }
-
-    private void disposeMeshView(MeshView meshView) {
-        if (meshView != null) {
-            meshView.setMesh(null);
-            meshView.setMaterial(null);
-        }
+        cleanupGroup(this, true);
     }
 }
