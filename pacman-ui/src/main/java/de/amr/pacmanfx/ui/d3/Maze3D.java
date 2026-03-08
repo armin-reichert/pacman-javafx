@@ -163,6 +163,7 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
         if (house3D != null)     { house3D.dispose();     house3D = null; }
         if (food3D != null)      { food3D.dispose();      food3D = null; }
 
+        cleanupGroup(particlesGroup, true);
         cleanupGroup(this, true);
 
         Logger.info("Disposed 3D maze");

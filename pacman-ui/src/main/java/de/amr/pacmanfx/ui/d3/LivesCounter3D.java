@@ -3,9 +3,9 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
-import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.beans.property.*;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Displays for each remaining live a Pac-Man sitting on a pillar tracking the Pac-Man in the maze.
  */
-public class LivesCounter3D extends Group implements Disposable {
+public class LivesCounter3D extends Group implements DisposableGraphicsObject {
 
     private final ObjectProperty<Color> pillarColor = new SimpleObjectProperty<>(Color.grayRgb(120));
     private final ObjectProperty<PhongMaterial> pillarMaterial = new SimpleObjectProperty<>(new PhongMaterial());
@@ -130,5 +130,6 @@ public class LivesCounter3D extends Group implements Disposable {
         plateThickness.unbind();
         plateRadius.unbind();
         plateMaterial.unbind();
+        cleanupGroup(this, true);
     }
 }
