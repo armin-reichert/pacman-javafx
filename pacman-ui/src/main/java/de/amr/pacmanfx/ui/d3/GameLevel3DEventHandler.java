@@ -87,7 +87,7 @@ public class GameLevel3DEventHandler {
      * Handles bonus activation: updates 3D representation and plays sound.
      */
     public void onBonusActivated(BonusActivatedEvent gameEvent, GameLevel3D level3D) {
-        level3D.updateBonus3D(gameEvent.bonus());
+        level3D.replaceBonus3D(gameEvent.bonus());
         soundEffects.playBonusActiveSound();
     }
 

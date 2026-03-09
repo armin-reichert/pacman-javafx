@@ -74,26 +74,26 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
+    public static final double PELLET_EATING_DELAY_SEC = 0.05;
+
     private final GameLevel level;
+
     private final UIConfig uiConfig;
     private final AnimationRegistry animationRegistry;
-
-    private Node[] livesCounterShapes;
+    private final List<Disposable> disposables = new ArrayList<>();
 
     private AmbientLight ambientLight;
     private PointLight ghostLight;
-
     private Maze3D maze3D;
     private LevelCounter3D levelCounter3D;
     private LivesCounter3D livesCounter3D;
     private PacBase3D pac3D;
     private List<MutableGhost3D> ghosts3D;
     private Bonus3D bonus3D;
+    private Node[] livesCounterShapes;
 
     private GameLevel3DAnimations animations;
     private GameLevel3DMessageManager messageManager;
-
-    private final List<Disposable> disposables = new ArrayList<>();
 
     /**
      * Creates a new 3D level representation for the given game level.
@@ -102,16 +102,24 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * @param level    the game level to visualize
      */
     public GameLevel3D(UIConfig uiConfig, GameLevel level) {
-        this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
+        this.level = requireNonNull(level);
         this.animationRegistry = new AnimationRegistry();
 
-        createLevelCounter3D();
-        createLivesCounter3D();
         createPac3D();
         createGhosts3D();
-        createMaze3D();
+
+        // These materials are used by the energizer particles
+        final List<PhongMaterial> ghostDressMaterials = ghosts3D.stream()
+            .map(MutableGhost3D::ghost3D)
+            .map(Ghost3D::normalMaterialSet)
+            .map(Ghost3D.MaterialSet::dress)
+            .toList();
+        createMaze3D(ghostDressMaterials);
+
         createLights();
+        createLevelCounter3D();
+        createLivesCounter3D();
         createMessageManager();
 
         arrangeChildren();
@@ -126,61 +134,37 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Clears animations, unbinds listeners, disposes all registered components,
      * cleans lights and the entire scene graph, and removes all children.
      */
+    @Override
     public void dispose() {
         Logger.info("Disposing game level 3D...");
         animationRegistry.clear();
         PROPERTY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
         cleanupLight(ambientLight); ambientLight = null;
         cleanupLight(ghostLight);   ghostLight = null;
-        disposables.forEach(Disposable::dispose);
-        disposables.clear();
         if (livesCounterShapes != null) {
             disposeAll(List.of(livesCounterShapes));
             livesCounterShapes = null;
         }
+        disposables.forEach(Disposable::dispose);
+        disposables.clear();
         cleanupGroup(this, true);
         Logger.info("Cleaned and removed all nodes under game level 3D");
     }
 
-    public Config3D config3D() {
-        return uiConfig.config3D();
-    }
-
-    /**
-     * Arranges all direct children in the correct rendering order.
-     * <p>
-     * Order matters for correct transparency: actors and effects must appear
-     * in front of walls/house.
-     */
-    private void arrangeChildren() {
-        getChildren().add(maze3D.floor());
-        getChildren().addAll(maze3D.particlesGroup());
-        getChildren().add(levelCounter3D);
-        getChildren().add(livesCounter3D);
-        getChildren().addAll(pac3D, pac3D.light());
-        getChildren().addAll(ghosts3D);
-        getChildren().addAll(maze3D.food().energizers3D().stream().map(Energizer3D::shape).toList());
-        getChildren().addAll(maze3D.food().pellets3D());
-        getChildren().add(maze3D.house().root());
-        getChildren().add(maze3D.house().doors()); // Note order of addition!
-        getChildren().add(maze3D);
-        getChildren().add(ambientLight);
-        getChildren().add(ghostLight);
-    }
+    // Accessors
 
     /** @return registry for all level-specific animations */
     public AnimationRegistry animationRegistry() {
         return animationRegistry;
     }
 
+    public Config3D config3D() {
+        return uiConfig.config3D();
+    }
+
     /** @return the underlying game level model */
     public GameLevel level() {
         return level;
-    }
-
-    /** @return UI configuration used for this level */
-    public UIConfig uiConfig() {
-        return uiConfig;
     }
 
     /** @return the maze visualization component */
@@ -223,139 +207,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
     }
 
-    /**
-     * Creates and initializes the 3D representation of Pac-Man.
-     */
-    private void createPac3D() {
-        final ActorConfig3D actorConfig = config3D().actor();
-        pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), actorConfig.pacSize());
-        pac3D.init(level);
-
-        disposables.add(pac3D);
-    }
-
-    /**
-     * Creates and initializes all ghost 3D representations.
-     */
-    private void createGhosts3D() {
-        ghosts3D = level.ghosts().map(ghost -> createMutatingGhost3D(config3D().actor(), ghost)).toList();
-        ghosts3D.forEach(ghost3D -> ghost3D.init(level));
-
-        disposables.addAll(ghosts3D);
-    }
-
-    /**
-     * Creates a mutable 3D ghost representation for the given model ghost.
-     *
-     * @param actorConfig configuration for actor sizes
-     * @param ghost       the model ghost
-     * @return the 3D ghost with visibility binding
-     */
-    private MutableGhost3D createMutatingGhost3D(ActorConfig3D actorConfig, Ghost ghost) {
-        final byte id = ghost.personality();
-        final var mutatingGhost3D = new MutableGhost3D(
-            animationRegistry,
-            ghost,
-            uiConfig.createGhostColorSet(id),
-            Models3D.GHOST_MODEL.dressMesh(),
-            Models3D.GHOST_MODEL.pupilsMesh(),
-            Models3D.GHOST_MODEL.eyeballsMesh(),
-            actorConfig.ghostSize(),
-            level.numFlashes()
-        );
-        mutatingGhost3D.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> ghost.isVisible() && !outsideWorld(ghost),
-            ghost.visibleProperty(), ghost.positionProperty()
-        ));
-        return mutatingGhost3D;
-    }
-
-    /**
-     * Creates and initializes the lives counter visualization.
-     */
-    private void createLivesCounter3D() {
-        final LivesCounterConfig3D config = config3D().livesCounter();
-        livesCounterShapes = new Node[config.capacity()];
-        for (int i = 0; i < livesCounterShapes.length; ++i) {
-            livesCounterShapes[i] = uiConfig.createLivesCounterShape3D(config.shapeSize());
-        }
-        livesCounter3D = new LivesCounter3D(animationRegistry, livesCounterShapes);
-        livesCounter3D.setTranslateX(2 * TS);
-        livesCounter3D.setTranslateY(2 * TS);
-        livesCounter3D.pillarColorProperty().set(config.pillarColor());
-        livesCounter3D.plateColorProperty().set(config.plateColor());
-
-        disposables.add(livesCounter3D);
-    }
-
-    /**
-     * Creates and initializes the level number counter visualization.
-     */
-    private void createLevelCounter3D() {
-        final LevelCounterConfig3D config = config3D().levelCounter();
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
-        levelCounter3D.setTranslateX(TS * (terrain.numCols() - 2));
-        levelCounter3D.setTranslateY(2 * TS);
-        levelCounter3D.setTranslateZ(-config.elevation());
-
-        disposables.add(levelCounter3D);
-    }
-
-    /**
-     * Creates ambient and ghost-specific point lights.
-     */
-    private void createLights() {
-        ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);
-
-        ghostLight = new PointLight();
-    }
-
-    /**
-     * Creates and initializes the maze visualization, including color scheme adjustment.
-     */
-    private void createMaze3D() {
-        WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
-        final boolean wallsVeryDark = Color.valueOf(colorScheme.wallFill()).getBrightness() < 0.1;
-        if (wallsVeryDark) {
-            final String notTooDarkColor = config3D().maze().darkWallFillColor();
-            colorScheme = new WorldMapColorScheme(
-                notTooDarkColor,
-                colorScheme.wallStroke(),
-                colorScheme.door(),
-                colorScheme.pellet());
-        }
-
-        final List<PhongMaterial> ghostNormalDressMaterials = ghosts3D.stream()
-            .map(MutableGhost3D::ghost3D)
-            .map(Ghost3D::normalMaterialSet)
-            .map(Ghost3D.MaterialSet::dress)
-            .toList();
-
-        maze3D = new Maze3D(config3D(), colorScheme, level, animationRegistry, ghostNormalDressMaterials);
-        maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
-        maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
-
-        disposables.add(maze3D);
-    }
-
-    private void createMessageManager() {
-        this.messageManager = new GameLevel3DMessageManager(animationRegistry, this);
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        terrain.optHouse().ifPresentOrElse(
-            house -> messageManager.setReadyMessageCenter(house.centerPositionUnderHouse()),
-            () -> {
-                Logger.error("No house in this game level! WTF?");
-                final double x = terrain.numCols() * HTS, y = terrain.numRows() * HTS;
-                messageManager.setReadyMessageCenter(Vector2f.of(x, y));
-        });
-        messageManager.setTestMessageCenter(
-            Vector2f.of(terrain.numCols() * HTS, (terrain.numRows() - 2) * TS));
-
-        disposables.add(messageManager);
-    }
-
     /** @return lives counter visualization (optional if not created) */
     public Optional<LivesCounter3D> livesCounter3D() {
         return Optional.ofNullable(livesCounter3D);
@@ -381,6 +232,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return animationRegistry;
     }
 
+    /** @return UI configuration used for this level */
+    public UIConfig uiConfig() {
+        return uiConfig;
+    }
+
+    // Lifecycle and updates
+
     /**
      * Called once per game tick/frame to update all dynamic elements.
      */
@@ -392,23 +250,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             maze3D.house().update(level);
         }
         updateLivesCounter3D();
-    }
-
-    /**
-     * Updates the lives counter visibility and count based on game state.
-     */
-    private void updateLivesCounter3D() {
-        if (livesCounter3D != null) {
-            final GameControl gameControl = level.game().control();
-            final boolean oneMore = gameControl.state().nameMatches(GameControl.CommonGameState.STARTING_GAME_OR_LEVEL.name())
-                && !level.pac().isVisible();
-            final boolean visible = level.game().canStartNewGame();
-            int lifeCount = level.game().lifeCount() - 1;
-            // when the game starts and Pac-Man is not yet visible, show one more
-            if (oneMore) lifeCount += 1;
-            livesCounter3D.livesCountProperty().set(lifeCount);
-            livesCounter3D.setVisible(visible);
-        }
     }
 
     /**
@@ -456,7 +297,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             maze3D.food().pellets3D().stream()
                 .filter(pellet3D -> tile.equals(pellet3D.tile()))
                 .findFirst()
-                .ifPresent(this::eatPellet3D);
+                .ifPresent(this::eatPellet3DAfterDelay);
         }
     }
 
@@ -472,8 +313,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      *
      * @param pellet3D the pellet shape to remove
      */
-    public void eatPellet3D(Pellet3D pellet3D) {
-        pauseSecThen(0.05, () -> getChildren().remove(pellet3D)).play();
+    private void eatPellet3DAfterDelay(Pellet3D pellet3D) {
+        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> getChildren().remove(pellet3D)).play();
     }
 
     /**
@@ -481,7 +322,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      *
      * @param bonus the current bonus model
      */
-    public void updateBonus3D(Bonus bonus) {
+    public void replaceBonus3D(Bonus bonus) {
         requireNonNull(bonus);
         if (bonus3D != null) {
             getChildren().remove(bonus3D);
@@ -505,6 +346,174 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void rebuildLevelCounter3D(LevelCounterConfig3D config) {
         if (levelCounter3D != null) {
             levelCounter3D.rebuild(config, level.game().levelCounterSymbols());
+        }
+    }
+
+    // private
+
+    /**
+     * Arranges all direct children in the correct rendering order.
+     * <p>
+     * Order matters for correct transparency: actors and effects must appear
+     * in front of walls/house.
+     */
+    private void arrangeChildren() {
+        getChildren().add(maze3D.floor());
+        getChildren().addAll(maze3D.particlesGroup());
+        getChildren().add(levelCounter3D);
+        getChildren().add(livesCounter3D);
+        getChildren().addAll(pac3D, pac3D.light());
+        getChildren().addAll(ghosts3D);
+        getChildren().addAll(maze3D.food().energizers3D().stream().map(Energizer3D::shape).toList());
+        getChildren().addAll(maze3D.food().pellets3D());
+        getChildren().add(maze3D.house().root());
+        getChildren().add(maze3D.house().doors());
+        getChildren().add(maze3D);
+        getChildren().add(ambientLight);
+        getChildren().add(ghostLight);
+    }
+
+    /**
+     * Creates and initializes the 3D representation of Pac-Man.
+     */
+    private void createPac3D() {
+        final ActorConfig3D actorConfig = config3D().actor();
+        pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), actorConfig.pacSize());
+        pac3D.init(level);
+
+        disposables.add(pac3D);
+    }
+
+    /**
+     * Creates and initializes all ghost 3D representations.
+     */
+    private void createGhosts3D() {
+        ghosts3D = level.ghosts().map(ghost -> createMutableGhost3D(config3D().actor(), ghost)).toList();
+        ghosts3D.forEach(ghost3D -> ghost3D.init(level));
+
+        disposables.addAll(ghosts3D);
+    }
+
+    /**
+     * Creates a mutable 3D ghost representation for the given model ghost.
+     *
+     * @param actorConfig configuration for actor sizes
+     * @param ghost       the model ghost
+     * @return the 3D ghost with visibility binding
+     */
+    private MutableGhost3D createMutableGhost3D(ActorConfig3D actorConfig, Ghost ghost) {
+        final byte id = ghost.personality();
+        final var ghost3D = new MutableGhost3D(
+            animationRegistry,
+            ghost,
+            uiConfig.createGhostColorSet(id),
+            Models3D.GHOST_MODEL.dressMesh(),
+            Models3D.GHOST_MODEL.pupilsMesh(),
+            Models3D.GHOST_MODEL.eyeballsMesh(),
+            actorConfig.ghostSize(),
+            level.numFlashes()
+        );
+        ghost3D.visibleProperty().bind(Bindings.createBooleanBinding(
+            () -> ghost.isVisible() && !outsideWorld(ghost),
+            ghost.visibleProperty(), ghost.positionProperty()
+        ));
+        return ghost3D;
+    }
+
+    /**
+     * Creates and initializes the lives counter visualization.
+     */
+    private void createLivesCounter3D() {
+        final LivesCounterConfig3D config = config3D().livesCounter();
+        livesCounterShapes = new Node[config.capacity()];
+        for (int i = 0; i < livesCounterShapes.length; ++i) {
+            livesCounterShapes[i] = uiConfig.createLivesCounterShape3D(config.shapeSize());
+        }
+        livesCounter3D = new LivesCounter3D(animationRegistry, livesCounterShapes);
+        livesCounter3D.setTranslateX(2 * TS);
+        livesCounter3D.setTranslateY(2 * TS);
+        livesCounter3D.pillarColorProperty().set(config.pillarColor());
+        livesCounter3D.plateColorProperty().set(config.plateColor());
+
+        disposables.add(livesCounter3D);
+    }
+
+    /**
+     * Creates and initializes the level number counter visualization.
+     */
+    private void createLevelCounter3D() {
+        final LevelCounterConfig3D config = config3D().levelCounter();
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
+        levelCounter3D.setTranslateX(TS * (terrain.numCols() - 2));
+        levelCounter3D.setTranslateY(2 * TS);
+        levelCounter3D.setTranslateZ(-config.elevation());
+
+        disposables.add(levelCounter3D);
+    }
+
+    /**
+     * Creates ambient and ghost-specific point lights.
+     */
+    private void createLights() {
+        ambientLight = new AmbientLight();
+        ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);
+
+        ghostLight = new PointLight();
+    }
+
+    /**
+     * Creates and initializes the maze visualization, including color scheme adjustment.
+     */
+    private void createMaze3D(List<PhongMaterial> ghostDressMaterials) {
+        WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
+        final boolean wallsVeryDark = Color.valueOf(colorScheme.wallFill()).getBrightness() < 0.1;
+        if (wallsVeryDark) {
+            final String notTooDarkColor = config3D().maze().darkWallFillColor();
+            colorScheme = new WorldMapColorScheme(
+                notTooDarkColor,
+                colorScheme.wallStroke(),
+                colorScheme.door(),
+                colorScheme.pellet());
+        }
+
+        maze3D = new Maze3D(config3D(), colorScheme, level, animationRegistry, ghostDressMaterials);
+        maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
+        maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
+
+        disposables.add(maze3D);
+    }
+
+    private void createMessageManager() {
+        this.messageManager = new GameLevel3DMessageManager(animationRegistry, this);
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        terrain.optHouse().ifPresentOrElse(
+            house -> messageManager.setReadyMessageCenter(house.centerPositionUnderHouse()),
+            () -> {
+                Logger.error("No house in this game level! WTF?");
+                final double x = terrain.numCols() * HTS, y = terrain.numRows() * HTS;
+                messageManager.setReadyMessageCenter(Vector2f.of(x, y));
+            });
+        messageManager.setTestMessageCenter(
+            Vector2f.of(terrain.numCols() * HTS, (terrain.numRows() - 2) * TS));
+
+        disposables.add(messageManager);
+    }
+
+    /**
+     * Updates the lives counter visibility and count based on game state.
+     */
+    private void updateLivesCounter3D() {
+        if (livesCounter3D != null) {
+            final GameControl gameControl = level.game().control();
+            final boolean oneMore = gameControl.state().nameMatches(GameControl.CommonGameState.STARTING_GAME_OR_LEVEL.name())
+                && !level.pac().isVisible();
+            final boolean visible = level.game().canStartNewGame();
+            int lifeCount = level.game().lifeCount() - 1;
+            // when the game starts and Pac-Man is not yet visible, show one more
+            if (oneMore) lifeCount += 1;
+            livesCounter3D.livesCountProperty().set(lifeCount);
+            livesCounter3D.setVisible(visible);
         }
     }
 
