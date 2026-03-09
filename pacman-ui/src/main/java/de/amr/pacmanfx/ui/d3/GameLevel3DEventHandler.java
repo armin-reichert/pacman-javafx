@@ -112,7 +112,7 @@ public class GameLevel3DEventHandler {
      */
     public void onGameContinues(GameContinuedEvent ignoredEvent, GameLevel3D level3D) {
         if (level3D != null) {
-            level3D.showReadyMessage();
+            level3D.messageManager().showReadyMessage();
         }
     }
 
@@ -241,9 +241,7 @@ public class GameLevel3DEventHandler {
         level3D.maze3D().house().hideDoors();
         level3D.bonus3D().ifPresent(Bonus3D::expire);
 
-        if (level3D.messageView() != null) {
-            level3D.messageView().setVisible(false);
-        }
+        level3D.messageManager().hideMessage();
 
         level3D.animations().ifPresentOrElse(
                 _ -> level3D.playLevelEndAnimation(gameState),

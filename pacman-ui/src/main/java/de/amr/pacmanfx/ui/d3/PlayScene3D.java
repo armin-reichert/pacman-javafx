@@ -293,7 +293,7 @@ public class PlayScene3D implements GameScene {
         if (event.newState() instanceof TestState) {
             optGameLevel().ifPresent(level -> {
                 replaceGameLevel3D(level);
-                gameLevel3D.showTestMessage();
+                gameLevel3D.messageManager().showLevelTestMessage(level);
                 GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
             });
             return;
@@ -347,11 +347,11 @@ public class PlayScene3D implements GameScene {
         if (state instanceof TestState) {
             replaceGameLevel3D(gameLevel);
             gameLevel3D.maze3D().food().energizers3D().forEach(Energizer3D::startPumping);
-            gameLevel3D.showTestMessage();
+            gameLevel3D.messageManager().showLevelTestMessage(gameLevel);
         } else {
             if (!gameLevel.isDemoLevel() &&
                     state.nameMatches(STARTING_GAME_OR_LEVEL.name(), LEVEL_TRANSITION.name())) {
-                gameLevel3D.showReadyMessage();
+                gameLevel3D.messageManager().showReadyMessage();
             }
         }
         gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().config3D().levelCounter());

@@ -15,7 +15,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d3.config.ActorConfig3D;
 import de.amr.pacmanfx.ui.d3.config.Config3D;
@@ -24,7 +23,6 @@ import de.amr.pacmanfx.ui.d3.config.LivesCounterConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.*;
-import de.amr.pacmanfx.uilib.widgets.MessageView;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
@@ -77,18 +75,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
-    /** Standard "READY!" message shown at level start */
-    public static final String READY_MESSAGE_TEXT = "READY!";
-
-    /** Test mode overlay message format */
-    public static final String TEST_MESSAGE_TEXT = "LEVEL %d (TEST)";
-
-    /** Default display duration for READY! message */
-    public static final float READY_MESSAGE_DISPLAY_SECONDS = 2.5f;
-
     private final GameLevel level;
     private final UIConfig uiConfig;
-    private final AnimationRegistry animationRegistry = new AnimationRegistry();
+    private final AnimationRegistry animationRegistry;
 
     private Node[] livesCounterShapes;
 
@@ -101,9 +90,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private PacBase3D pac3D;
     private List<MutableGhost3D> ghosts3D;
     private Bonus3D bonus3D;
-    private MessageView messageView;
 
     private GameLevel3DAnimations animations;
+    private GameLevel3DMessageManager messageManager;
 
     private final List<Disposable> disposables = new ArrayList<>();
 
@@ -116,6 +105,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public GameLevel3D(UIConfig uiConfig, GameLevel level) {
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
+        this.animationRegistry = new AnimationRegistry();
 
         createLevelCounter3D();
         createLivesCounter3D();
@@ -123,6 +113,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createGhosts3D();
         createMaze3D();
         createLights();
+        createMessageManager();
 
         arrangeChildren();
 
@@ -203,9 +194,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return levelCounter3D;
     }
 
-    /** @return current message overlay view (READY!, test mode, etc.) */
-    public MessageView messageView() {
-        return messageView;
+    public GameLevel3DMessageManager messageManager() {
+        return messageManager;
     }
 
     /** @return point light used for ghost highlighting */
@@ -378,6 +368,22 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         disposables.add(maze3D);
     }
 
+    private void createMessageManager() {
+        this.messageManager = new GameLevel3DMessageManager(animationRegistry, this);
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        terrain.optHouse().ifPresentOrElse(
+            house -> messageManager.setReadyMessageCenter(house.centerPositionUnderHouse()),
+            () -> {
+                Logger.error("No house in this game level! WTF?");
+                final double x = terrain.numCols() * HTS, y = terrain.numRows() * HTS;
+                messageManager.setReadyMessageCenter(Vector2f.of(x, y));
+        });
+        messageManager.setTestMessageCenter(
+            Vector2f.of(terrain.numCols() * HTS, (terrain.numRows() - 2) * TS));
+
+        disposables.add(messageManager);
+    }
+
     /** @return lives counter visualization (optional if not created) */
     public Optional<LivesCounter3D> livesCounter3D() {
         return Optional.ofNullable(livesCounter3D);
@@ -496,55 +502,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     public void eatPellet3D(Pellet3D pellet3D) {
         pauseSecThen(0.05, () -> getChildren().remove(pellet3D)).play();
-    }
-
-    /**
-     * Displays the "READY!" message centered under the ghost house.
-     */
-    public void showReadyMessage() {
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        terrain.optHouse().ifPresentOrElse(house -> {
-            final Vector2f center = house.centerPositionUnderHouse();
-            showAnimatedMessage(READY_MESSAGE_TEXT, READY_MESSAGE_DISPLAY_SECONDS, center.x(), center.y());
-        }, () -> Logger.error("Cannot display READY message: no house in this game level! WTF?"));
-    }
-
-    /**
-     * Displays the test mode overlay message.
-     */
-    public void showTestMessage() {
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final double x = terrain.numCols() * HTS;
-        final double y = (terrain.numRows() - 2) * TS;
-        showAnimatedMessage(TEST_MESSAGE_TEXT.formatted(level.number()), 5, x, y);
-    }
-
-    /**
-     * Shows a temporary animated message at the specified world coordinates.
-     *
-     * @param messageText    message content
-     * @param displaySeconds duration before fade-out
-     * @param centerX        x-coordinate (world units)
-     * @param centerY        y-coordinate (world units)
-     */
-    public void showAnimatedMessage(String messageText, float displaySeconds, double centerX, double centerY) {
-        if (messageView != null) {
-            messageView.dispose();
-            getChildren().remove(messageView);
-        }
-        messageView = MessageView.builder()
-            .backgroundColor(Color.BLACK)
-            .borderColor(Color.WHITE)
-            .displaySeconds(displaySeconds)
-            .font(GameUI_Resources.FONT_ARCADE_6)
-            .text(messageText)
-            .textColor(Color.YELLOW)
-            .build(animationRegistry);
-
-        getChildren().add(messageView);
-        disposables.add(messageView);
-
-        messageView.showCenteredAt(centerX, centerY);
     }
 
     /**
