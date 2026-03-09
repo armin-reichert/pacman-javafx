@@ -21,7 +21,6 @@ import de.amr.pacmanfx.ui.d3.config.Config3D;
 import de.amr.pacmanfx.ui.d3.config.LevelCounterConfig3D;
 import de.amr.pacmanfx.ui.d3.config.LivesCounterConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.*;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
@@ -246,33 +245,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     /**
-     * Creates a color set for a ghost based on its personality.
-     *
-     * @param personality the ghost personality ID (0–3)
-     * @return the color set for normal, frightened, and flashing states
-     */
-    private GhostColorSet createGhostColorSet(byte personality) {
-        AssetMap assets = uiConfig.assets();
-        return new GhostColorSet(
-            new GhostComponentColors(
-                assets.color("ghost.%d.color.normal.dress".formatted(personality)),
-                assets.color("ghost.%d.color.normal.pupils".formatted(personality)),
-                assets.color("ghost.%d.color.normal.eyeballs".formatted(personality))
-            ),
-            new GhostComponentColors(
-                assets.color("ghost.color.frightened.dress"),
-                assets.color("ghost.color.frightened.pupils"),
-                assets.color("ghost.color.frightened.eyeballs")
-            ),
-            new GhostComponentColors(
-                assets.color("ghost.color.flashing.dress"),
-                assets.color("ghost.color.flashing.pupils"),
-                assets.color("ghost.color.frightened.eyeballs")
-            )
-        );
-    }
-
-    /**
      * Creates a mutable 3D ghost representation for the given model ghost.
      *
      * @param actorConfig configuration for actor sizes
@@ -284,7 +256,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final var mutatingGhost3D = new MutableGhost3D(
             animationRegistry,
             ghost,
-            createGhostColorSet(id),
+            uiConfig.createGhostColorSet(id),
             Models3D.GHOST_MODEL.dressMesh(),
             Models3D.GHOST_MODEL.pupilsMesh(),
             Models3D.GHOST_MODEL.eyeballsMesh(),

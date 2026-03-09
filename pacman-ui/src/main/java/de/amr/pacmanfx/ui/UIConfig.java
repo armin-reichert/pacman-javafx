@@ -16,6 +16,8 @@ import de.amr.pacmanfx.ui.d3.config.*;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.model3D.GhostColorSet;
+import de.amr.pacmanfx.uilib.model3D.GhostComponentColors;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
@@ -243,6 +245,33 @@ public interface UIConfig extends Disposable {
      * @return the 3D representation of Pac‑Man
      */
     PacBase3D createPac3D(AnimationRegistry animationRegistry, Pac pac, double size);
+
+    /**
+     * Creates a color set for a ghost based on its personality.
+     *
+     * @param personality the ghost personality ID (0–3)
+     * @return the color set for normal, frightened, and flashing states
+     */
+    default GhostColorSet createGhostColorSet(byte personality) {
+        final AssetMap assets = assets();
+        return new GhostColorSet(
+            new GhostComponentColors(
+                assets.color("ghost.%d.color.normal.dress".formatted(personality)),
+                assets.color("ghost.%d.color.normal.pupils".formatted(personality)),
+                assets.color("ghost.%d.color.normal.eyeballs".formatted(personality))
+            ),
+            new GhostComponentColors(
+                assets.color("ghost.color.frightened.dress"),
+                assets.color("ghost.color.frightened.pupils"),
+                assets.color("ghost.color.frightened.eyeballs")
+            ),
+            new GhostComponentColors(
+                assets.color("ghost.color.flashing.dress"),
+                assets.color("ghost.color.flashing.pupils"),
+                assets.color("ghost.color.frightened.eyeballs")
+            )
+        );
+    }
 
     /**
      * Creates the 3D representation of the lives counter for this variant.
