@@ -20,6 +20,7 @@ import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
@@ -38,9 +39,12 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
+import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSecThen;
 import static java.util.Objects.requireNonNull;
 
 public class MazeFood3D implements Disposable {
+
+    public static final double PELLET_EATING_DELAY_SEC = 0.05;
 
     private final FoodLayer foodLayer;
     private final Set<Pellet3D> pellets3D = new HashSet<>();
@@ -125,6 +129,43 @@ public class MazeFood3D implements Disposable {
         final Point3D point = energizer.shape().localToScene(Point3D.ZERO);
         final Vector3f origin = new Vector3f(point.getX(), point.getY(), point.getZ());
         explodedEnergizerParticlesAnimation.createEnergizerExplosion(origin);
+    }
+
+    /**
+     * Handles Pac-Man eating food at the given tile (pellet or energizer).
+     *
+     * @param pelletContainer the JavaFX group containing the pellet shapes (used for removing eaten pellets)
+     * @param tile the tile where food was eaten
+     */
+    public void removeFoodAt(Group pelletContainer, Vector2i tile) {
+        final Energizer3D energizer3D = energizers3D().stream()
+            .filter(e3D -> tile.equals(e3D.tile()))
+            .findFirst().orElse(null);
+        if (energizer3D != null) {
+            createEnergizerExplosion(energizer3D);
+            energizer3D.onEaten();
+        } else {
+            pellets3D().stream()
+                .filter(pellet3D -> tile.equals(pellet3D.tile()))
+                .findFirst()
+                .ifPresent(pellet3D -> removePellet3DAfterDelay(pelletContainer, pellet3D));
+        }
+    }
+
+    /**
+     * Removes all pellet visualizations (used when all pellets are eaten at once).
+     */
+    public void removeAllPellets3D(Group pelletContainer) {
+        pellets3D().forEach(pellet3D -> pelletContainer.getChildren().remove(pellet3D));
+    }
+
+    /**
+     * Schedules removal of a single pellet after a short delay (visual feedback).
+     *
+     * @param pellet3D the pellet shape to remove
+     */
+    private void removePellet3DAfterDelay(Group pelletContainer, Pellet3D pellet3D) {
+        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> pelletContainer.getChildren().remove(pellet3D)).play();
     }
 
     private void createPellets3D(PelletConfig3D config, PhongMaterial pelletMaterial, double z) {

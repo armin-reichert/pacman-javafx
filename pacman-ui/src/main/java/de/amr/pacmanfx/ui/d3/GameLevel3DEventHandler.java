@@ -139,10 +139,11 @@ public class GameLevel3DEventHandler {
      * Handles Pac eating food: updates 3D food and plays munching sound (with rate limiting).
      */
     public void onPacEatsFood(PacEatsFoodEvent gameEvent, GameLevel3D level3D) {
+        final MazeFood3D mazeFood3D = level3D.maze3D().food();
         if (gameEvent.allPellets()) {
-            level3D.eatAllPellets3D();
+            mazeFood3D.removeAllPellets3D(level3D);
         } else {
-            level3D.eatFood(gameEvent.pac().tile());
+            mazeFood3D.removeFoodAt(level3D, gameEvent.pac().tile());
             soundEffects.playPacMunchingSound(ui.gameContext().clock().tickCount());
         }
     }

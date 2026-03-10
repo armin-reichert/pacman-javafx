@@ -5,7 +5,6 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -33,7 +32,6 @@ import java.util.Optional;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI.*;
-import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSecThen;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -62,8 +60,6 @@ import static java.util.Objects.requireNonNull;
  * @see DisposableGraphicsObject
  */
 public class GameLevel3D extends Group implements DisposableGraphicsObject {
-
-    public static final double PELLET_EATING_DELAY_SEC = 0.05;
 
     private final GameLevel level;
 
@@ -222,42 +218,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             maze3D.house().update(level);
         }
         livesCounter3D.update(level);
-    }
-
-    /**
-     * Handles Pac-Man eating food at the given tile (pellet or energizer).
-     *
-     * @param tile the tile where food was eaten
-     */
-    public void eatFood(Vector2i tile) {
-        final Energizer3D energizer3D = maze3D.food().energizers3D().stream()
-            .filter(e3D -> tile.equals(e3D.tile()))
-            .findFirst().orElse(null);
-        if (energizer3D != null) {
-            maze3D.food().createEnergizerExplosion(energizer3D);
-            energizer3D.onEaten();
-        } else {
-            maze3D.food().pellets3D().stream()
-                .filter(pellet3D -> tile.equals(pellet3D.tile()))
-                .findFirst()
-                .ifPresent(this::eatPellet3DAfterDelay);
-        }
-    }
-
-    /**
-     * Removes all pellet visualizations (used when all pellets are eaten at once).
-     */
-    public void eatAllPellets3D() {
-        maze3D.food().pellets3D().forEach(pellet3D -> getChildren().remove(pellet3D));
-    }
-
-    /**
-     * Schedules removal of a single pellet after a short delay (visual feedback).
-     *
-     * @param pellet3D the pellet shape to remove
-     */
-    private void eatPellet3DAfterDelay(Pellet3D pellet3D) {
-        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> getChildren().remove(pellet3D)).play();
     }
 
     /**
