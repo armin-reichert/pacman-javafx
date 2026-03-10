@@ -116,7 +116,7 @@ public abstract class AbstractGameModel implements Game {
         this.gameControl = requireNonNull(gameControl);
         gameControl.stateMachine().setContext(this);
         gameControl.stateMachine().addStateChangeListener(
-            (oldState, newState) -> publishGameEvent(new GameStateChangeEvent(oldState, newState)));
+            (oldState, newState) -> publishGameEvent(new GameStateChangeEvent(this, oldState, newState)));
     }
 
     /**

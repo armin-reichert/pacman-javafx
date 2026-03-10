@@ -73,7 +73,7 @@ public class GameLevel3DEventHandler {
         } else if (stateMatches(gameState, EATING_GHOST)) {
             onEatingGhost(level3D);
         } else if (stateMatches(gameState, LEVEL_COMPLETE)) {
-            onLevelComplete(level3D);
+            event.game().optGameLevel().ifPresent(level -> onLevelComplete(level3D, level));
         } else if (stateMatches(gameState, GAME_OVER)) {
             onGameOver(level3D);
         }
@@ -228,8 +228,8 @@ public class GameLevel3DEventHandler {
         });
     }
 
-    private void onLevelComplete(GameLevel3D level3D) {
-        final State<Game> gameState = ui.gameContext().currentGameState();
+    private void onLevelComplete(GameLevel3D level3D, GameLevel level) {
+        final State<Game> gameState = level.game().control().state();
 
         soundEffects.stopAll();
         level3D.animationRegistry().stopAllAnimations();
@@ -242,8 +242,8 @@ public class GameLevel3DEventHandler {
         level3D.messageManager().hideMessage();
 
         level3D.animations().ifPresentOrElse(
-                _ -> level3D.playLevelEndAnimation(gameState),
-                () -> pauseSecThen(2, () -> gameState.timer().expire()).play()
+            animations -> animations.playLevelEndAnimation(level3D.maze3D(), level, gameState),
+            () -> pauseSecThen(2, () -> gameState.timer().expire()).play()
         );
     }
 

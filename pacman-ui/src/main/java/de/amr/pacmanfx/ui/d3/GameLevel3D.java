@@ -4,10 +4,8 @@
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -20,8 +18,6 @@ import de.amr.pacmanfx.ui.d3.config.LevelCounterConfig3D;
 import de.amr.pacmanfx.ui.d3.config.LivesCounterConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.*;
-import javafx.animation.Animation;
-import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.AmbientLight;
@@ -41,7 +37,6 @@ import java.util.Optional;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI.*;
-import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSecThen;
 import static java.util.Objects.requireNonNull;
 
@@ -233,35 +228,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             maze3D.house().update(level);
         }
         livesCounter3D.update(level);
-    }
-
-    /**
-     * Plays the level completion animation sequence and resets game timer.
-     *
-     * @param state the current game state (used to determine cut-scene follow-up)
-     */
-    public void playLevelEndAnimation(State<Game> state) {
-        final boolean cutSceneFollows = level.cutSceneNumber() != 0;
-        final Animation levelCompletedAnimation = animations.selectLevelCompleteAnimation(cutSceneFollows).animationFX();
-        final PerspectiveID perspectiveBeforeAnimation = GameUI.PROPERTY_3D_PERSPECTIVE_ID.get();
-
-        final var animationSequence = new SequentialTransition(
-            pauseSecThen(2, () -> {
-                GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
-                maze3D.wallBaseHeightProperty().unbind();
-            }),
-            levelCompletedAnimation,
-            pauseSec(0.25)
-        );
-
-        animationSequence.setOnFinished(_ -> {
-            GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(perspectiveBeforeAnimation);
-            maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
-            state.timer().expire();
-        });
-
-        state.timer().resetIndefiniteTime(); // freeze game control until animation ends
-        animationSequence.play();
     }
 
     /**

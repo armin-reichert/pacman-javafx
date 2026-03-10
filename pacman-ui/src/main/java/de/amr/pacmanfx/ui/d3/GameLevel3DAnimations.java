@@ -3,9 +3,12 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
+import de.amr.pacmanfx.lib.fsm.State;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -23,6 +26,7 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.chance;
+import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_WALL_HEIGHT;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSecThen;
 import static java.util.Objects.requireNonNull;
@@ -327,13 +331,32 @@ public class GameLevel3DAnimations {
     }
 
     /**
-     * Selects the appropriate level‑completion animation depending on whether
-     * a cutscene follows.
+     * Plays the level completion animation sequence and resets game timer.
      *
-     * @param cutSceneFollows whether a cutscene will follow the level completion
-     * @return the selected animation
+     * @param maze3D the 3D maze to be animated
+     * @param level the completed level (used to determine animation details)
+     * @param state the current game state (used to determine cut-scene follow-up)
      */
-    public ManagedAnimation selectLevelCompleteAnimation(boolean cutSceneFollows) {
-        return cutSceneFollows ? levelCompletedShortAnimation : levelCompletedFullAnimation;
+    public void playLevelEndAnimation(Maze3D maze3D, GameLevel level, State<Game> state) {
+        final boolean cutSceneFollows = level.cutSceneNumber() != 0;
+        final PerspectiveID perspectiveBeforeAnimation = GameUI.PROPERTY_3D_PERSPECTIVE_ID.get();
+
+        final var seq = new SequentialTransition(
+            pauseSecThen(2, () -> {
+                GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
+                maze3D.wallBaseHeightProperty().unbind();
+            }),
+            (cutSceneFollows ? levelCompletedShortAnimation : levelCompletedFullAnimation).animationFX(),
+            pauseSec(0.25)
+        );
+
+        seq.setOnFinished(_ -> {
+            GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(perspectiveBeforeAnimation);
+            maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
+            state.timer().expire();
+        });
+
+        state.timer().resetIndefiniteTime(); // freeze game control until animation ends
+        seq.play();
     }
 }
