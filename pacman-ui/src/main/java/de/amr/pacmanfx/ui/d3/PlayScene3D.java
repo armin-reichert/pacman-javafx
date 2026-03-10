@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
-import de.amr.pacmanfx.ui.sound.PlayingSoundEffects;
+import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import de.amr.pacmanfx.uilib.model3D.Scores3D;
@@ -90,7 +90,7 @@ public class PlayScene3D implements GameScene {
     protected final FadeInAnimation fadeInAnimation;
 
     protected GameLevel3DEventHandler level3D_EventHandler;
-    protected PlayingSoundEffects soundEffects;
+    protected GamePlaySoundEffects soundEffects;
     protected ActionBindingsManager actionBindings = ActionBindingsManager.NO_BINDINGS;
     protected GameUI ui;
     protected GameLevel3D gameLevel3D;
@@ -170,7 +170,7 @@ public class PlayScene3D implements GameScene {
      */
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
-        soundEffects = new PlayingSoundEffects(ui.soundManager());
+        soundEffects = new GamePlaySoundEffects(ui.soundManager());
         soundEffects.setMunchingSoundDelay(ui.currentConfig().munchingSoundDelay());
         level3D_EventHandler = new GameLevel3DEventHandler(ui, soundEffects);
 
@@ -540,7 +540,7 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
         gameLevel3D.livesCounter3D().ifPresent(livesCounter3D -> livesCounter3D.startTracking(pac3D));
 
-        final var animations = new GameLevel3DAnimations(gameLevel3D, ui.soundManager());
+        final var animations = new GameLevel3DAnimations(gameLevel3D, soundEffects);
         gameLevel3D.setAnimations(animations);
         //TODO: reconsider
         gameLevel3D.getChildren().add(animations.ghostLightAnimation().light());

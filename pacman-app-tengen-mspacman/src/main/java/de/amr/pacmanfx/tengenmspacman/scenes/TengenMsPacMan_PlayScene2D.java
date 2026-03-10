@@ -19,7 +19,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
-import de.amr.pacmanfx.ui.sound.PlayingSoundEffects;
+import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -67,7 +67,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private final PlayScene2DCamera dynamicCamera;
     private final PerspectiveCamera fixedCamera;
 
-    private PlayingSoundEffects soundEffects;
+    private GamePlaySoundEffects soundEffects;
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public TengenMsPacMan_PlayScene2D() {
@@ -105,7 +105,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
-        soundEffects = new PlayingSoundEffects(ui.soundManager());
+        soundEffects = new GamePlaySoundEffects(ui.soundManager());
         soundEffects.setMunchingSoundDelay(ui.currentConfig().munchingSoundDelay());
     }
 

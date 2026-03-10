@@ -6,8 +6,7 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.MutableGhost3D;
@@ -20,9 +19,10 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.Random;
+import java.util.List;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
+import static de.amr.pacmanfx.lib.math.RandomNumberSupport.chance;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSecThen;
 import static java.util.Objects.requireNonNull;
@@ -78,59 +78,59 @@ public class GameLevel3DAnimations {
         private static final float SPINNING_SECONDS = 1.5f;
 
         private final GameLevel3D level3D;
-        private final SoundManager soundManager;
+        private final GamePlaySoundEffects soundEffects;
 
-        public LevelCompletedAnimation(AnimationRegistry animationRegistry, GameLevel3D level3D, SoundManager soundManager) {
+        public LevelCompletedAnimation(AnimationRegistry animationRegistry, GameLevel3D level3D, GamePlaySoundEffects soundEffects) {
             super(animationRegistry, "Level_Completed");
             this.level3D = requireNonNull(level3D);
-            this.soundManager = requireNonNull(soundManager);
-            setFactory(this::createAnimationFX);
+            this.soundEffects = requireNonNull(soundEffects);
+            setFactory(() -> createAnimationFX(level3D.level(), level3D.maze3D()));
         }
 
-        private Animation createAnimationFX() {
-            final GameLevel level = level3D.level();
+        private Animation createAnimationFX(GameLevel level, Maze3D maze3D) {
+            final Point3D rotationAxis = chance(0.5) ? Rotate.X_AXIS : Rotate.Z_AXIS;
             return new SequentialTransition(
                 pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),
-                createMazeWallsSwingingAnimation(level3D.maze3D(), level.numFlashes()),
+                createMazeWallsSwingingAnimation(maze3D, level.numFlashes()),
                 pauseSecThen(0.5, () -> level.pac().hide()),
                 pauseSec(0.5),
-                levelSpinningAroundAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
-                pauseSecThen(0.5, () -> soundManager.play(SoundID.LEVEL_COMPLETE)),
+                levelRotation(rotationAxis),
+                pauseSecThen(0.5, soundEffects::playLevelCompleteSound),
                 pauseSec(0.5),
-                wallsAndHouseDisappearing(),
-                pauseSecThen(1.0, () -> soundManager.play(SoundID.LEVEL_CHANGED))
+                mazeWallsAndHouseAnimation(maze3D),
+                pauseSecThen(1.0, soundEffects::playLevelChangedSound)
             );
         }
 
         /**
-         * Creates an animation that gradually lowers the house and maze walls
-         * until they disappear, then hides the maze.
+         * Creates an animation that gradually lowers the house and maze walls until they disappear, then hides the maze.
+         *
+         * @param maze3D the maze whose walls and house are animated
+         * @return the animation
          */
-        private Animation wallsAndHouseDisappearing() {
+        private Animation mazeWallsAndHouseAnimation(Maze3D maze3D) {
             return new Timeline(
-                new KeyFrame(Duration.seconds(0.5),
-                    new KeyValue(level3D.maze3D().house().wallBaseHeightProperty(),
-                        0, Interpolator.EASE_IN)),
-                new KeyFrame(Duration.seconds(1.5),
-                    new KeyValue(level3D.maze3D().wallBaseHeightProperty(), 0, Interpolator.EASE_IN)),
-                new KeyFrame(Duration.seconds(2.5),
-                    _ -> level3D.maze3D().setVisible(false))
+                new KeyFrame(Duration.seconds(0.5), new KeyValue(
+                    maze3D.house().wallBaseHeightProperty(), 0, Interpolator.EASE_IN)),
+                new KeyFrame(Duration.seconds(1.5), new KeyValue(
+                    maze3D.wallBaseHeightProperty(), 0, Interpolator.EASE_IN)),
+                new KeyFrame(Duration.seconds(2.5), _ -> maze3D.setVisible(false))
             );
         }
 
         /**
-         * Spins the entire level around the given axis.
+         * Rotates the entire level around the given axis.
          *
          * @param axis rotation axis
          * @return the animation
          */
-        private Animation levelSpinningAroundAxis(Point3D axis) {
-            var spin360 = new RotateTransition(Duration.seconds(SPINNING_SECONDS), level3D);
-            spin360.setAxis(axis);
-            spin360.setFromAngle(0);
-            spin360.setToAngle(360);
-            spin360.setInterpolator(Interpolator.LINEAR);
-            return spin360;
+        private Animation levelRotation(Point3D axis) {
+            final var rotation = new RotateTransition(Duration.seconds(SPINNING_SECONDS), level3D);
+            rotation.setAxis(axis);
+            rotation.setFromAngle(0);
+            rotation.setToAngle(360);
+            rotation.setInterpolator(Interpolator.LINEAR);
+            return rotation;
         }
     }
 
@@ -223,13 +223,13 @@ public class GameLevel3DAnimations {
      */
     public static class GhostLightAnimation extends ManagedAnimation {
 
-        private final GameLevel3D level3D;
+        private final List<MutableGhost3D> ghosts3D;
         private final PointLight light;
         private byte currentGhostID;
 
-        public GhostLightAnimation(AnimationRegistry animationRegistry, GameLevel3D level3D) {
+        public GhostLightAnimation(AnimationRegistry animationRegistry, List<MutableGhost3D> ghosts3D) {
             super(animationRegistry, "GhostLight");
-            this.level3D = level3D;
+            this.ghosts3D = requireNonNull(ghosts3D);
 
             currentGhostID = RED_GHOST_SHADOW;
 
@@ -254,7 +254,7 @@ public class GameLevel3DAnimations {
          * Moves the spotlight to the given ghost and updates its color.
          */
         private void illuminateGhost(byte ghostID) {
-            MutableGhost3D ghost3D = level3D.ghosts3D().get(ghostID);
+            final MutableGhost3D ghost3D = ghosts3D.get(ghostID);
             light.setColor(ghost3D.colorSet().normal().dress());
             light.translateXProperty().bind(ghost3D.translateXProperty());
             light.translateYProperty().bind(ghost3D.translateYProperty());
@@ -267,13 +267,14 @@ public class GameLevel3DAnimations {
         private Animation createAnimationFX() {
             var timeline = new Timeline(new KeyFrame(Duration.millis(3000), _ -> {
                 Logger.debug("Try to pass light from ghost {} to next", currentGhostID);
-                byte candidate = nextGhostID(currentGhostID);
-                while (candidate != currentGhostID) {
-                    if (level3D.level().ghost(candidate).state() == GhostState.HUNTING_PAC) {
-                        illuminateGhost(candidate);
+                byte id = nextGhostID(currentGhostID);
+                while (id != currentGhostID) {
+                    final Ghost ghost = ghosts3D.get(id).ghost();
+                    if (ghost.state() == GhostState.HUNTING_PAC) {
+                        illuminateGhost(id);
                         return;
                     }
-                    candidate = nextGhostID(candidate);
+                    id = nextGhostID(id);
                 }
                 light.setLightOn(false);
             }));
@@ -303,15 +304,16 @@ public class GameLevel3DAnimations {
      * Creates all animations associated with the given 3D level.
      *
      * @param level3D the 3D level representation
+     * @param soundEffects the playing sound effects
      */
-    public GameLevel3DAnimations(GameLevel3D level3D, SoundManager soundManager) {
+    public GameLevel3DAnimations(GameLevel3D level3D, GamePlaySoundEffects soundEffects) {
         requireNonNull(level3D);
-        requireNonNull(soundManager);
+        requireNonNull(soundEffects);
         final AnimationRegistry animationRegistry = level3D.animationRegistry();
         wallColorFlashingAnimation = new WallColorFlashingAnimation(animationRegistry, level3D);
-        levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry, level3D, soundManager);
+        levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry, level3D, soundEffects);
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationRegistry, level3D);
-        ghostLightAnimation = new GhostLightAnimation(animationRegistry, level3D);
+        ghostLightAnimation = new GhostLightAnimation(animationRegistry, level3D.ghosts3D());
     }
 
     /** @return the ghost‑spotlight animation */

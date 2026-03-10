@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.sound.PlayingSoundEffects;
+import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
 public class GameLevel3DEventHandler {
 
     private final GameUI ui;
-    private final PlayingSoundEffects soundEffects;
+    private final GamePlaySoundEffects soundEffects;
     private final RandomTextPicker<String> pickerGameOverMessages;
 
     /**
@@ -45,7 +45,7 @@ public class GameLevel3DEventHandler {
      * @param ui           reference to the game UI (for config, context, flash messages)
      * @param soundEffects sound playback manager
      */
-    public GameLevel3DEventHandler(GameUI ui, PlayingSoundEffects soundEffects) {
+    public GameLevel3DEventHandler(GameUI ui, GamePlaySoundEffects soundEffects) {
         this.ui = requireNonNull(ui);
         this.soundEffects = requireNonNull(soundEffects);
         this.pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");

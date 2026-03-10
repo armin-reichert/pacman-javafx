@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
  * All sound decisions are centralized here for easier maintenance and debugging.
  * </p>
  */
-public class PlayingSoundEffects {
+public class GamePlaySoundEffects {
 
     /**
      * Volume level for siren sounds (adjusted low to prevent clipping/distortion).
@@ -40,7 +40,7 @@ public class PlayingSoundEffects {
      *
      * @param soundManager the underlying sound playback service (must not be null)
      */
-    public PlayingSoundEffects(SoundManager soundManager) {
+    public GamePlaySoundEffects(SoundManager soundManager) {
         this.soundManager = requireNonNull(soundManager);
     }
 
@@ -135,6 +135,22 @@ public class PlayingSoundEffects {
      */
     public void stopGhostReturningToHouseSound() {
         soundManager.stop(SoundID.GHOST_RETURNS);
+    }
+
+    /**
+     * Stops all sounds and plays the level changed sound (usually at level start).
+     */
+    public void playLevelChangedSound() {
+        stopAll();
+        soundManager.play(SoundID.LEVEL_CHANGED);
+    }
+
+    /**
+     * Stops all sounds and plays the level complete jingle.
+     */
+    public void playLevelCompleteSound() {
+        stopAll();
+        soundManager.play(SoundID.LEVEL_COMPLETE);
     }
 
     /**

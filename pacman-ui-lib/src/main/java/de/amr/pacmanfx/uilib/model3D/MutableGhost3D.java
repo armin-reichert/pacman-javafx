@@ -178,6 +178,10 @@ public class MutableGhost3D extends Group implements Disposable {
         return ghostShape3D;
     }
 
+    public Ghost ghost() {
+        return ghost;
+    }
+
     public GhostColorSet colorSet() {
         return colorSet;
     }

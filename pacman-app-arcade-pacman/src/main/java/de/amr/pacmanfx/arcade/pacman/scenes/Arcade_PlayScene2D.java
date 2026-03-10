@@ -21,7 +21,7 @@ import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
-import de.amr.pacmanfx.ui.sound.PlayingSoundEffects;
+import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import javafx.scene.control.CheckMenuItem;
 import org.tinylog.Logger;
 
@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Arcade_PlayScene2D extends GameScene2D {
 
-    private PlayingSoundEffects soundEffects;
+    private GamePlaySoundEffects soundEffects;
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public Arcade_PlayScene2D() {}
@@ -43,7 +43,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
-        soundEffects = new PlayingSoundEffects(ui.soundManager());
+        soundEffects = new GamePlaySoundEffects(ui.soundManager());
         soundEffects.setMunchingSoundDelay(ui.currentConfig().munchingSoundDelay());
     }
 
