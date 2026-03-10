@@ -11,7 +11,6 @@ import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d3.config.ActorConfig3D;
 import de.amr.pacmanfx.ui.d3.config.LevelCounterConfig3D;
@@ -19,15 +18,12 @@ import de.amr.pacmanfx.ui.d3.config.LivesCounterConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.*;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.Shape3D;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -114,7 +110,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         arrangeChildren();
 
-        PROPERTY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
         setMouseTransparent(true); // this increases performance, they say...
     }
 
@@ -128,7 +123,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void dispose() {
         Logger.info("Disposing game level 3D...");
         animationRegistry.clear();
-        PROPERTY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
         cleanupLight(ambientLight); ambientLight = null;
         if (livesCounterShapes != null) {
             disposeAll(List.of(livesCounterShapes));
@@ -445,22 +439,4 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         disposables.add(messageManager);
     }
 
-    /**
-     * Updates draw mode (wireframe/solid) for all relevant 3D shapes.
-     * Called when {@link GameUI#PROPERTY_3D_DRAW_MODE} changes.
-     */
-    private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode drawMode) {
-        setDrawMode(this, drawMode);
-    }
-
-    private void setDrawMode(Group root, DrawMode drawMode) {
-        for (Node node : root.getChildren()) {
-            if (node instanceof Group) {
-                setDrawMode((Group) node, drawMode);
-            }
-            else if (node instanceof Shape3D shape3D) {
-                shape3D.setDrawMode(drawMode);
-            }
-        }
-    }
 }

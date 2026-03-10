@@ -25,13 +25,13 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.scene.Group;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.SceneAntialiasing;
-import javafx.scene.SubScene;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -40,6 +40,7 @@ import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.GameControl.CommonGameState.*;
+import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_DRAW_MODE;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
@@ -209,6 +210,7 @@ public class PlayScene3D implements GameScene {
         game.hud().score(true).show();
         perspectiveManager.activeIDProperty().bind(GameUI.PROPERTY_3D_PERSPECTIVE_ID);
         subScene.setFill(SCENE_FILL_DARK);
+        PROPERTY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
     }
 
     /**
@@ -223,6 +225,7 @@ public class PlayScene3D implements GameScene {
     public void end(Game game) {
         soundEffects.stopAll();
         perspectiveManager.activeIDProperty().unbind();
+        PROPERTY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
         removeAndDisposeGameLevel3D();
         disposeContextMenu();
     }
@@ -557,4 +560,26 @@ public class PlayScene3D implements GameScene {
             contextMenu.dispose();
         }
     }
+
+    /**
+     * Updates draw mode (wireframe/solid) for all relevant 3D shapes.
+     * Called when {@link GameUI#PROPERTY_3D_DRAW_MODE} changes.
+     */
+    private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode drawMode) {
+        if (gameLevel3D != null) {
+            setDrawMode(gameLevel3D, drawMode);
+        }
+    }
+
+    private static void setDrawMode(Group group, DrawMode drawMode) {
+        for (Node node : group.getChildren()) {
+            if (node instanceof Group) {
+                setDrawMode((Group) node, drawMode);
+            }
+            else if (node instanceof Shape3D shape3D) {
+                shape3D.setDrawMode(drawMode);
+            }
+        }
+    }
+
 }
