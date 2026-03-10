@@ -539,7 +539,11 @@ public class PlayScene3D implements GameScene {
         pac3D.init(level);
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
         gameLevel3D.livesCounter3D().ifPresent(livesCounter3D -> livesCounter3D.startTracking(pac3D));
-        gameLevel3D.setAnimations(new GameLevel3DAnimations(gameLevel3D, ui.soundManager()));
+
+        final var animations = new GameLevel3DAnimations(gameLevel3D, ui.soundManager());
+        gameLevel3D.setAnimations(animations);
+        //TODO: reconsider
+        gameLevel3D.getChildren().add(animations.ghostLightAnimation().light());
 
         gameLevel3DParentGroup.getChildren().setAll(gameLevel3D);
         Logger.info("Created and added new game level 3D to play scene");

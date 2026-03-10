@@ -13,6 +13,7 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.MutableGhost3D;
 import javafx.animation.*;
 import javafx.geometry.Point3D;
+import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
@@ -220,9 +221,10 @@ public class GameLevel3DAnimations {
      * <p>
      * If no ghost is hunting, the light is turned off.
      */
-    private static class GhostLightAnimation extends ManagedAnimation {
+    public static class GhostLightAnimation extends ManagedAnimation {
 
         private final GameLevel3D level3D;
+        private final PointLight light;
         private byte currentGhostID;
 
         public GhostLightAnimation(AnimationRegistry animationRegistry, GameLevel3D level3D) {
@@ -230,12 +232,18 @@ public class GameLevel3DAnimations {
             this.level3D = level3D;
 
             currentGhostID = RED_GHOST_SHADOW;
-            level3D.ghostLight().setColor(Color.WHITE);
-            level3D.ghostLight().setMaxRange(30);
-            level3D.ghostLight().lightOnProperty().addListener((_, _, on) ->
+
+            light = new PointLight();
+            light.setColor(Color.WHITE);
+            light.setMaxRange(30);
+            light.lightOnProperty().addListener((_, _, on) ->
                 Logger.info("Ghost light {}", on ? "ON" : "OFF"));
 
             setFactory(this::createAnimationFX);
+        }
+
+        public PointLight light() {
+            return light;
         }
 
         private static byte nextGhostID(byte id) {
@@ -247,11 +255,11 @@ public class GameLevel3DAnimations {
          */
         private void illuminateGhost(byte ghostID) {
             MutableGhost3D ghost3D = level3D.ghosts3D().get(ghostID);
-            level3D.ghostLight().setColor(ghost3D.colorSet().normal().dress());
-            level3D.ghostLight().translateXProperty().bind(ghost3D.translateXProperty());
-            level3D.ghostLight().translateYProperty().bind(ghost3D.translateYProperty());
-            level3D.ghostLight().setTranslateZ(-25);
-            level3D.ghostLight().setLightOn(true);
+            light.setColor(ghost3D.colorSet().normal().dress());
+            light.translateXProperty().bind(ghost3D.translateXProperty());
+            light.translateYProperty().bind(ghost3D.translateYProperty());
+            light.setTranslateZ(-25);
+            light.setLightOn(true);
             currentGhostID = ghostID;
             Logger.debug("Ghost light passed to ghost {}", currentGhostID);
         }
@@ -267,7 +275,7 @@ public class GameLevel3DAnimations {
                     }
                     candidate = nextGhostID(candidate);
                 }
-                level3D.ghostLight().setLightOn(false);
+                light.setLightOn(false);
             }));
             timeline.setCycleCount(Animation.INDEFINITE);
             return timeline;
@@ -281,7 +289,7 @@ public class GameLevel3DAnimations {
 
         @Override
         public void stop() {
-            level3D.ghostLight().setLightOn(false);
+            light.setLightOn(false);
             super.stop();
         }
     }
@@ -307,7 +315,7 @@ public class GameLevel3DAnimations {
     }
 
     /** @return the ghost‑spotlight animation */
-    public ManagedAnimation ghostLightAnimation() {
+    public GhostLightAnimation ghostLightAnimation() {
         return ghostLightAnimation;
     }
 

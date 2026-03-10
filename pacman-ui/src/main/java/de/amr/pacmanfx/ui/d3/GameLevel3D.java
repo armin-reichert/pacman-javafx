@@ -29,7 +29,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
@@ -83,7 +82,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final List<Disposable> disposables = new ArrayList<>();
 
     private AmbientLight ambientLight;
-    private PointLight ghostLight;
+
     private Maze3D maze3D;
     private LevelCounter3D levelCounter3D;
     private LivesCounter3D livesCounter3D;
@@ -114,7 +113,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .map(mutableGhost3D -> mutableGhost3D.ghost3D().normalMaterialSet().dress()).toList();
         createMaze3D(ghostDressMaterials);
 
-        createLights();
+        createAmbientLight();
         createLevelCounter3D();
         createLivesCounter3D();
         createMessageManager();
@@ -137,7 +136,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         animationRegistry.clear();
         PROPERTY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
         cleanupLight(ambientLight); ambientLight = null;
-        cleanupLight(ghostLight);   ghostLight = null;
         if (livesCounterShapes != null) {
             disposeAll(List.of(livesCounterShapes));
             livesCounterShapes = null;
@@ -176,11 +174,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public GameLevel3DMessageManager messageManager() {
         return messageManager;
-    }
-
-    /** @return point light used for ghost highlighting */
-    public PointLight ghostLight() {
-        return ghostLight;
     }
 
     /** @return optional animations controller for this level */
@@ -367,7 +360,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().add(maze3D.house().doors());
         getChildren().add(maze3D);
         getChildren().add(ambientLight);
-        getChildren().add(ghostLight);
+        //getChildren().add(ghostLight);
     }
 
     /**
@@ -450,13 +443,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     /**
-     * Creates ambient and ghost-specific point lights.
+     * Creates ambient light.
      */
-    private void createLights() {
+    private void createAmbientLight() {
         ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);
-
-        ghostLight = new PointLight();
     }
 
     /**
