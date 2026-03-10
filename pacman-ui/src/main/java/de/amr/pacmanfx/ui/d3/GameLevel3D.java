@@ -17,7 +17,6 @@ import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d3.config.ActorConfig3D;
-import de.amr.pacmanfx.ui.d3.config.Config3D;
 import de.amr.pacmanfx.ui.d3.config.LevelCounterConfig3D;
 import de.amr.pacmanfx.ui.d3.config.LivesCounterConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -154,10 +153,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return animationRegistry;
     }
 
-    public Config3D config3D() {
-        return uiConfig.config3D();
-    }
-
     /** @return the underlying game level model */
     public GameLevel level() {
         return level;
@@ -166,11 +161,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /** @return the maze visualization component */
     public Maze3D maze3D() {
         return maze3D;
-    }
-
-    /** @return level number counter visualization */
-    public LevelCounter3D levelCounter3D() {
-        return levelCounter3D;
     }
 
     public GameLevel3DMessageManager messageManager() {
@@ -322,7 +312,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             getChildren().remove(bonus3D);
             bonus3D.dispose();
         }
-        final ActorConfig3D actorConfig = config3D().actor();
+        final ActorConfig3D actorConfig = uiConfig.config3D().actor();
         bonus3D = new Bonus3D(animationRegistry, bonus,
             uiConfig.bonusSymbolImage(bonus.symbol()), actorConfig.bonusSymbolWidth(),
             uiConfig.bonusValueImage(bonus.symbol()),  actorConfig.bonusPointsWidth());
@@ -334,12 +324,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     /**
      * Rebuilds the level counter visualization using the latest configuration.
-     *
-     * @param config current level counter settings
      */
-    public void rebuildLevelCounter3D(LevelCounterConfig3D config) {
+    public void rebuildLevelCounter3D() {
         if (levelCounter3D != null) {
-            levelCounter3D.rebuild(config, level.game().levelCounterSymbols());
+            levelCounter3D.rebuild(uiConfig.config3D().levelCounter(), level.game().levelCounterSymbols());
         }
     }
 
@@ -371,7 +359,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Creates and initializes the 3D representation of Pac-Man.
      */
     private void createPac3D() {
-        final ActorConfig3D actorConfig = config3D().actor();
+        final ActorConfig3D actorConfig = uiConfig.config3D().actor();
         pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), actorConfig.pacSize());
         pac3D.init(level);
 
@@ -382,7 +370,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Creates and initializes all ghost 3D representations.
      */
     private void createGhosts3D() {
-        ghosts3D = level.ghosts().map(ghost -> createMutableGhost3D(config3D().actor(), ghost)).toList();
+        ghosts3D = level.ghosts().map(ghost -> createMutableGhost3D(uiConfig.config3D().actor(), ghost)).toList();
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
 
         disposables.addAll(ghosts3D);
@@ -418,7 +406,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Creates and initializes the lives counter visualization.
      */
     private void createLivesCounter3D() {
-        final LivesCounterConfig3D config = config3D().livesCounter();
+        final LivesCounterConfig3D config = uiConfig.config3D().livesCounter();
         livesCounterShapes = new Node[config.capacity()];
         for (int i = 0; i < livesCounterShapes.length; ++i) {
             livesCounterShapes[i] = uiConfig.createLivesCounterShape3D(config.shapeSize());
@@ -436,7 +424,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Creates and initializes the level number counter visualization.
      */
     private void createLevelCounter3D() {
-        final LevelCounterConfig3D config = config3D().levelCounter();
+        final LevelCounterConfig3D config = uiConfig.config3D().levelCounter();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
         levelCounter3D.setTranslateX(TS * (terrain.numCols() - 2));
@@ -461,7 +449,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final boolean wallsVeryDark = Color.valueOf(colorScheme.wallFill()).getBrightness() < 0.1;
         if (wallsVeryDark) {
-            final String notTooDarkColor = config3D().maze().darkWallFillColor();
+            final String notTooDarkColor = uiConfig.config3D().maze().darkWallFillColor();
             colorScheme = new WorldMapColorScheme(
                 notTooDarkColor,
                 colorScheme.wallStroke(),
@@ -469,7 +457,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 colorScheme.pellet());
         }
 
-        maze3D = new Maze3D(config3D(), colorScheme, level, animationRegistry, ghostDressMaterials);
+        maze3D = new Maze3D(uiConfig.config3D(), colorScheme, level, animationRegistry, ghostDressMaterials);
         maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
         maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
 
