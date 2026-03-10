@@ -29,6 +29,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
@@ -184,6 +185,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /** Sets the animation controller for level-specific effects */
     public void setAnimations(GameLevel3DAnimations animations) {
         this.animations = requireNonNull(animations);
+        //TODO: reconsider
+        final PointLight ghostLight = animations.ghostLightAnimation().light();
+        getChildren().add(ghostLight);
     }
 
     /**

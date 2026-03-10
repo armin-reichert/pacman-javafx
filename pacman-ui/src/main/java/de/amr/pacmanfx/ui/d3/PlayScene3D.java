@@ -83,7 +83,7 @@ public class PlayScene3D implements GameScene {
     public static final Duration FADE_IN_DURATION = Duration.seconds(3);
 
     protected final Group subSceneRoot = new Group();
-    protected final Group gameLevel3DParentGroup = new Group();
+    protected final Group gameLevel3DParent = new Group();
     protected final PerspectiveManager perspectiveManager;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final SubScene subScene;
@@ -142,7 +142,7 @@ public class PlayScene3D implements GameScene {
         final var axes3D = new CoordinateSystem();
         axes3D.visibleProperty().bind(GameUI.PROPERTY_3D_AXES_VISIBLE);
 
-        subSceneRoot.getChildren().setAll(gameLevel3DParentGroup, axes3D);
+        subSceneRoot.getChildren().setAll(gameLevel3DParent, axes3D);
 
         // Initial size is irrelevant (will be bound to parent scene size later)
         subScene = new SubScene(subSceneRoot, 88, 88, true, SceneAntialiasing.BALANCED);
@@ -159,7 +159,7 @@ public class PlayScene3D implements GameScene {
         actionBindings.dispose();
         perspectiveManager.dispose();
         disposeContextMenu();
-        disposeGameLevel3D();
+        removeAndDisposeGameLevel3D();
     }
 
     /**
@@ -223,7 +223,7 @@ public class PlayScene3D implements GameScene {
     public void end(Game game) {
         soundEffects.stopAll();
         perspectiveManager.activeIDProperty().unbind();
-        disposeGameLevel3D();
+        removeAndDisposeGameLevel3D();
         disposeContextMenu();
     }
 
@@ -507,51 +507,46 @@ public class PlayScene3D implements GameScene {
         subSceneRoot.getChildren().add(scores3D);
     }
 
+    // Scores are always displayed towards viewer, independent of level camera perspective
     private void createScores3D() {
-        scores3D = new Scores3D(
-            ui.translate("score.score"),
-            ui.translate("score.high_score"),
-            GameUI_Resources.FONT_ARCADE_8
-        );
+        scores3D = new Scores3D(ui.translate("score.score"), ui.translate("score.high_score"), GameUI_Resources.FONT_ARCADE_8);
 
-        // Scores always visible in full view, independent of perspective
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
 
-        scores3D.translateXProperty().bind(gameLevel3DParentGroup.translateXProperty().add(TS));
-        scores3D.translateYProperty().bind(gameLevel3DParentGroup.translateYProperty().subtract(4.5 * TS));
-        scores3D.translateZProperty().bind(gameLevel3DParentGroup.translateZProperty().subtract(4.5 * TS));
+        scores3D.translateXProperty().bind(gameLevel3DParent.translateXProperty().add(TS));
+        scores3D.translateYProperty().bind(gameLevel3DParent.translateYProperty().subtract(4.5 * TS));
+        scores3D.translateZProperty().bind(gameLevel3DParent.translateZProperty().subtract(4.5 * TS));
+
         scores3D.setVisible(false);
     }
 
     private void replaceGameLevel3D(GameLevel level) {
+        Logger.info("Replacing game level 3D...");
+
         if (gameLevel3D != null) {
-            Logger.info("Replacing existing game level 3D...");
-            gameLevel3D.getChildren().clear();
             gameLevel3D.dispose();
-            Logger.info("Disposed old game level 3D");
         }
+
         gameLevel3D = createGameLevel3D(level);
 
-        PacBase3D pac3D = gameLevel3D.pac3D().orElseThrow(
-                () -> new IllegalStateException("Pac3D not found in GameLevel3D"));
+        final var animations = new GameLevel3DAnimations(gameLevel3D, soundEffects);
+        gameLevel3D.setAnimations(animations);
+
+        final PacBase3D pac3D = gameLevel3D.pac3D().orElseThrow(
+            () -> new IllegalStateException("Pac3D not found in GameLevel3D"));
 
         pac3D.init(level);
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
         gameLevel3D.livesCounter3D().ifPresent(livesCounter3D -> livesCounter3D.startTracking(pac3D));
 
-        final var animations = new GameLevel3DAnimations(gameLevel3D, soundEffects);
-        gameLevel3D.setAnimations(animations);
-        //TODO: reconsider
-        gameLevel3D.getChildren().add(animations.ghostLightAnimation().light());
-
-        gameLevel3DParentGroup.getChildren().setAll(gameLevel3D);
+        gameLevel3DParent.getChildren().setAll(gameLevel3D);
         Logger.info("Created and added new game level 3D to play scene");
     }
 
-    private void disposeGameLevel3D() {
+    private void removeAndDisposeGameLevel3D() {
         if (gameLevel3D != null) {
-            gameLevel3DParentGroup.getChildren().clear();
+            gameLevel3DParent.getChildren().clear();
             gameLevel3D.dispose();
             gameLevel3D = null;
         }
