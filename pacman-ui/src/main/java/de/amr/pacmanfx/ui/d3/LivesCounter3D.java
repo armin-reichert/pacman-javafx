@@ -3,6 +3,8 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
+import de.amr.pacmanfx.model.GameControl;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -100,6 +102,21 @@ public class LivesCounter3D extends Group implements DisposableGraphicsObject {
         }
     }
 
+    @Override
+    public void dispose() {
+        stopTracking();
+        livesCount.unbind();
+        pillarHeight.unbind();
+        pillarMaterial.unbind();
+        pillarColor.unbind();
+        plateColor.unbind();
+        plateThickness.unbind();
+        plateRadius.unbind();
+        plateMaterial.unbind();
+
+        cleanupGroup(this, true);
+    }
+
     public void startTracking(Node target) {
         for (NodePositionTracker tracker : trackers) {
             tracker.startTrackingTarget(target);
@@ -124,18 +141,19 @@ public class LivesCounter3D extends Group implements DisposableGraphicsObject {
         return plateColor;
     }
 
-    @Override
-    public void dispose() {
-        stopTracking();
-        livesCount.unbind();
-        pillarHeight.unbind();
-        pillarMaterial.unbind();
-        pillarColor.unbind();
-        plateColor.unbind();
-        plateThickness.unbind();
-        plateRadius.unbind();
-        plateMaterial.unbind();
-
-        cleanupGroup(this, true);
+    /**
+     * Updates the lives counter visibility and count based on game state.
+     */
+    public void update(GameLevel level) {
+        final GameControl gameControl = level.game().control();
+        final boolean oneMore = gameControl.state().nameMatches(GameControl.CommonGameState.STARTING_GAME_OR_LEVEL.name())
+            && !level.pac().isVisible();
+        final boolean visible = level.game().canStartNewGame();
+        int lifeCount = level.game().lifeCount() - 1;
+        // when the game starts and Pac-Man is not yet visible, show one more
+        if (oneMore) lifeCount += 1;
+        livesCountProperty().set(lifeCount);
+        setVisible(visible);
     }
+
 }

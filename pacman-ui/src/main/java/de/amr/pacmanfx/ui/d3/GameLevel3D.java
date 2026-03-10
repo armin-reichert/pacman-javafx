@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -233,7 +232,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         if (maze3D != null) {
             maze3D.house().update(level);
         }
-        updateLivesCounter3D();
+        livesCounter3D.update(level);
     }
 
     /**
@@ -478,23 +477,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             Vector2f.of(terrain.numCols() * HTS, (terrain.numRows() - 2) * TS));
 
         disposables.add(messageManager);
-    }
-
-    /**
-     * Updates the lives counter visibility and count based on game state.
-     */
-    private void updateLivesCounter3D() {
-        if (livesCounter3D != null) {
-            final GameControl gameControl = level.game().control();
-            final boolean oneMore = gameControl.state().nameMatches(GameControl.CommonGameState.STARTING_GAME_OR_LEVEL.name())
-                && !level.pac().isVisible();
-            final boolean visible = level.game().canStartNewGame();
-            int lifeCount = level.game().lifeCount() - 1;
-            // when the game starts and Pac-Man is not yet visible, show one more
-            if (oneMore) lifeCount += 1;
-            livesCounter3D.livesCountProperty().set(lifeCount);
-            livesCounter3D.setVisible(visible);
-        }
     }
 
     /**
