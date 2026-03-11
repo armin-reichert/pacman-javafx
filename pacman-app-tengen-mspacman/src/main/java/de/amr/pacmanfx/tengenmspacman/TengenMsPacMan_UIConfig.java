@@ -56,19 +56,17 @@ import static java.util.Objects.requireNonNull;
 public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
 
     Config3D TENGEN_CONFIG_3D = new Config3D(
-        new ActorConfig(
-            new PacConfig(
-                nesColor(0x28),
-                nesColor(0x02),
-                nesColor(0x2d),
-                nesColor(0x05),
-                nesColor(0x02),
-                nesColor(0x28).deriveColor(0, 1.0, 0.96, 1.0),
-                8.0f,
-                16.0f),
-            new GhostConfig(8.0f, 15.5f),
-            new BonusConfig(8.0f, 14.5f)
-        ),
+        new PacConfig(
+            nesColor(0x28),
+            nesColor(0x02),
+            nesColor(0x2d),
+            nesColor(0x05),
+            nesColor(0x02),
+            nesColor(0x28).deriveColor(0, 1.0, 0.96, 1.0),
+            8.0f,
+            16.0f),
+        new GhostConfig(8.0f, 15.5f),
+        new BonusConfig(8.0f, 14.5f),
         new EnergizerConfig3D(3, 3.5f, 6.0f, 0.2f, 1.0f),
         new FloorConfig3D(5f, 0.5f),
         new HouseConfig3D(12.0f, 0.4f, 12.0f, 2.5f),

@@ -6,8 +6,9 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.config.ActorConfig;
 import de.amr.pacmanfx.ui.config.Config3D;
+import de.amr.pacmanfx.ui.config.GhostConfig;
+import de.amr.pacmanfx.ui.config.PacConfig;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.GhostColorSet;
@@ -23,11 +24,11 @@ public interface Factory3D {
      *
      * @param pac               the Pac actor whose animations and state drive the model
      * @param assets            the asset map to retrieve colors and other assets
-     * @param actorConfig     the actor 3D configuration object
+     * @param pacConfig         the actor 3D configuration object
      * @param animationRegistry the registry where animations are stored
      * @return the 3D representation of Pac
      */
-    PacBase3D createPac3D(Pac pac, AssetMap assets, ActorConfig actorConfig, AnimationRegistry animationRegistry);
+    PacBase3D createPac3D(Pac pac, AssetMap assets, PacConfig pacConfig, AnimationRegistry animationRegistry);
 
     /**
      * Creates the 3D representation of a ghost for this game variant, including
@@ -35,13 +36,13 @@ public interface Factory3D {
      *
      * @param ghost             the ghost actor whose animations and state drive the model
      * @param assets            the asset map to retrieve colors and other assets
-     * @param actorConfig     the actor 3D configuration object
+     * @param ghostConfig      the actor 3D configuration object
      * @param colorSet          the color set to use for the ghost's body, eyes, pupils, and eyeballs
      * @param animationRegistry the registry where animations are stored
      * @param numFlashings      the number of flashing states to support for the ghost (e.g., for frightened mode)
      * @return the 3D representation of a ghost
      */
-    MutableGhost3D createMutableGhost3D(Ghost ghost, AssetMap assets, ActorConfig actorConfig, GhostColorSet colorSet, AnimationRegistry animationRegistry, int numFlashings);
+    MutableGhost3D createMutableGhost3D(Ghost ghost, AssetMap assets, GhostConfig ghostConfig, GhostColorSet colorSet, AnimationRegistry animationRegistry, int numFlashings);
 
     /**
      * Creates the 3D representation of the lives counter for this variant.

@@ -6,8 +6,9 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.config.ActorConfig;
 import de.amr.pacmanfx.ui.config.Config3D;
+import de.amr.pacmanfx.ui.config.GhostConfig;
+import de.amr.pacmanfx.ui.config.PacConfig;
 import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -21,15 +22,14 @@ public class ArcadePacMan_Factory3D implements Factory3D {
     public PacMan3D createPac3D(
         Pac pac,
         AssetMap assets,
-        ActorConfig actorConfig,
+        PacConfig pacConfig,
         AnimationRegistry animationRegistry)
     {
         requireNonNull(pac);
         requireNonNull(assets);
-        requireNonNull(actorConfig);
+        requireNonNull(pacConfig);
         requireNonNull(animationRegistry);
 
-        final var pacConfig = actorConfig.pacConfig();
         final var pacMan3D = new PacMan3D(
             animationRegistry,
             pac,
@@ -47,7 +47,7 @@ public class ArcadePacMan_Factory3D implements Factory3D {
     public MutableGhost3D createMutableGhost3D(
         Ghost ghost,
         AssetMap assets,
-        ActorConfig actorConfig,
+        GhostConfig ghostConfig,
         GhostColorSet colorSet,
         AnimationRegistry animationRegistry,
         int numFlashings)
@@ -59,14 +59,14 @@ public class ArcadePacMan_Factory3D implements Factory3D {
             Models3D.GHOST_MODEL.dressMesh(),
             Models3D.GHOST_MODEL.pupilsMesh(),
             Models3D.GHOST_MODEL.eyeballsMesh(),
-            actorConfig.ghostConfig().size3D(),
+            ghostConfig.size3D(),
             numFlashings
         );
     }
 
     @Override
     public PacBody createLivesCounterShape3D(AssetMap assets, Config3D config3D) {
-        final var pacConfig = config3D.actor().pacConfig();
+        final var pacConfig = config3D.pacConfig();
         return Models3D.PAC_MAN_MODEL.createPacBody(
             config3D.livesCounter().shapeSize(),
             pacConfig.headColor(),

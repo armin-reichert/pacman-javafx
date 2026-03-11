@@ -71,19 +71,17 @@ import static de.amr.pacmanfx.ui.ArcadePalette.*;
 public interface UIConfig extends Disposable {
 
     Config3D DEFAULT_CONFIG_3D = new Config3D(
-        new ActorConfig(
-            new PacConfig(
-                ARCADE_YELLOW,
-                Color.grayRgb(33),
-                ARCADE_BROWN,
-                ARCADE_RED,
-                ARCADE_BLUE,
-                ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0),
-                8.0f,
-                16.0f),
-            new GhostConfig(8.0f, 15.5f),
-            new BonusConfig(8.0f, 14.5f)
-        ),
+        new PacConfig(
+            ARCADE_YELLOW,
+            Color.grayRgb(33),
+            ARCADE_BROWN,
+            ARCADE_RED,
+            ARCADE_BLUE,
+            ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0),
+            8.0f,
+            16.0f),
+        new GhostConfig(8.0f, 15.5f),
+        new BonusConfig(8.0f, 14.5f),
         new EnergizerConfig3D(3, 3.5f, 6.0f, 0.2f, 1.0f),
         new FloorConfig3D(5f, 0.5f),
         new HouseConfig3D(12.0f, 0.4f, 12.0f, 2.5f),

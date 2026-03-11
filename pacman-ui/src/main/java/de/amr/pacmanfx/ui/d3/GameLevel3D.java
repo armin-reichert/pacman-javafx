@@ -11,8 +11,8 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.ui.config.ActorConfig;
 import de.amr.pacmanfx.ui.config.BonusConfig;
+import de.amr.pacmanfx.ui.config.GhostConfig;
 import de.amr.pacmanfx.ui.config.LevelCounterConfig3D;
 import de.amr.pacmanfx.ui.config.LivesCounterConfig3D;
 import de.amr.pacmanfx.ui.d3.animation.GameLevel3DAnimations;
@@ -235,7 +235,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             getChildren().remove(bonus3D);
             bonus3D.dispose();
         }
-        final BonusConfig bonusConfig = uiConfig.config3D().actor().bonusConfig();
+        final BonusConfig bonusConfig = uiConfig.config3D().bonusConfig();
         bonus3D = new Bonus3D(animationRegistry, bonus,
             uiConfig.bonusSymbolImage(bonus.symbol()), bonusConfig.bonusSymbolWidth(),
             uiConfig.bonusValueImage(bonus.symbol()),  bonusConfig.bonusPointsWidth());
@@ -275,18 +275,16 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().add(maze3D.house().doors());
         getChildren().add(maze3D);
         getChildren().add(ambientLight);
-        //getChildren().add(ghostLight);
     }
 
     /**
      * Creates and initializes the 3D representation of Pac-Man.
      */
     private void createPac3D() {
-        final ActorConfig actorConfig = uiConfig.config3D().actor();
         pac3D = factory3D.createPac3D(
             level.pac(),
             uiConfig.assets(),
-            actorConfig,
+            uiConfig.config3D().pacConfig(),
             animationRegistry);
 
         pac3D.init(level);
@@ -298,7 +296,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Creates and initializes all ghost 3D representations.
      */
     private void createGhosts3D() {
-        ghosts3D = level.ghosts().map(ghost -> createMutableGhost3D(uiConfig.config3D().actor(), ghost)).toList();
+        ghosts3D = level.ghosts().map(ghost -> createMutableGhost3D(uiConfig.config3D().ghostConfig(), ghost)).toList();
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
 
         disposables.addAll(ghosts3D);
@@ -307,15 +305,15 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates a mutable 3D ghost representation for the given model ghost.
      *
-     * @param actorConfig configuration for actor sizes
+     * @param ghostConfig configuration for actor sizes
      * @param ghost       the model ghost
      * @return the 3D ghost with visibility binding
      */
-    private MutableGhost3D createMutableGhost3D(ActorConfig actorConfig, Ghost ghost) {
+    private MutableGhost3D createMutableGhost3D(GhostConfig ghostConfig, Ghost ghost) {
         final var mutableGhost3D = factory3D.createMutableGhost3D(
             ghost,
             uiConfig.assets(),
-            actorConfig,
+            ghostConfig,
             uiConfig.createGhostColorSet(ghost.personality()),
             animationRegistry,
             level.numFlashes());

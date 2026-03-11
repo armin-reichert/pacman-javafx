@@ -5,12 +5,13 @@
 package de.amr.pacmanfx.ui.config;
 
 public record Config3D(
-    ActorConfig actor,
+    PacConfig pacConfig,
+    GhostConfig ghostConfig,
+    BonusConfig bonusConfig,
     EnergizerConfig3D energizer,
     FloorConfig3D floor,
     HouseConfig3D house,
     LevelCounterConfig3D levelCounter,
     LivesCounterConfig3D livesCounter,
     MazeConfig3D maze,
-    PelletConfig3D pellet
-) {}
+    PelletConfig3D pellet) {}
