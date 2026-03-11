@@ -24,12 +24,10 @@ public class ArcadeMsPacMan_Factory3D implements Factory3D {
     @Override
     public MsPacMan3D createPac3D(
         Pac pac,
-        AssetMap assets,
         PacConfig pacConfig,
         AnimationRegistry animationRegistry)
     {
         requireNonNull(pac);
-        requireNonNull(assets);
         requireNonNull(pacConfig);
         requireNonNull(animationRegistry);
 
@@ -52,7 +50,6 @@ public class ArcadeMsPacMan_Factory3D implements Factory3D {
     @Override
     public MutableGhost3D createMutableGhost3D(
         Ghost ghost,
-        AssetMap assets,
         GhostConfig ghostConfig,
         AnimationRegistry animationRegistry,
         int numFlashings)

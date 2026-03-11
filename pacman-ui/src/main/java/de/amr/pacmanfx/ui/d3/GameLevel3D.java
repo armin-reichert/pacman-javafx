@@ -283,7 +283,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void createPac3D() {
         pac3D = factory3D.createPac3D(
             level.pac(),
-            uiConfig.assets(),
             uiConfig.entityConfig().pacConfig(),
             animationRegistry);
 
@@ -313,7 +312,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private MutableGhost3D createMutableGhost3D(GhostConfig ghostConfig, Ghost ghost) {
         final var mutableGhost3D = factory3D.createMutableGhost3D(
             ghost,
-            uiConfig.assets(),
             ghostConfig,
             animationRegistry,
             level.numFlashes());
