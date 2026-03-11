@@ -82,7 +82,7 @@ public interface UIConfig extends Disposable {
                 8.0f,
                 16.0f),
             new GhostConfig(8.0f, 15.5f),
-            8.0f, 14.5f //TODO BonusConfig
+            new BonusConfig(8.0f, 14.5f)
         ),
         new EnergizerConfig3D(3, 3.5f, 6.0f, 0.2f, 1.0f),
         new FloorConfig3D(5f, 0.5f),

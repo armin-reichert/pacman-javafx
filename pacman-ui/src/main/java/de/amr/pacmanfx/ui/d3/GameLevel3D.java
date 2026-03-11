@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.ActorConfig;
+import de.amr.pacmanfx.ui.config.BonusConfig;
 import de.amr.pacmanfx.ui.config.LevelCounterConfig3D;
 import de.amr.pacmanfx.ui.config.LivesCounterConfig3D;
 import de.amr.pacmanfx.ui.d3.animation.GameLevel3DAnimations;
@@ -234,10 +235,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             getChildren().remove(bonus3D);
             bonus3D.dispose();
         }
-        final ActorConfig actorConfig = uiConfig.config3D().actor();
+        final BonusConfig bonusConfig = uiConfig.config3D().actor().bonusConfig();
         bonus3D = new Bonus3D(animationRegistry, bonus,
-            uiConfig.bonusSymbolImage(bonus.symbol()), actorConfig.bonusSymbolWidth(),
-            uiConfig.bonusValueImage(bonus.symbol()),  actorConfig.bonusPointsWidth());
+            uiConfig.bonusSymbolImage(bonus.symbol()), bonusConfig.bonusSymbolWidth(),
+            uiConfig.bonusValueImage(bonus.symbol()),  bonusConfig.bonusPointsWidth());
         bonus3D.showEdible();
         getChildren().add(bonus3D);
 
