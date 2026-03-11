@@ -48,7 +48,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
-import static de.amr.pacmanfx.ui.ArcadePalette.*;
+import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
@@ -86,18 +86,9 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, GameSceneConfig, R
 
     private void loadAssets() {
         assets.clear();
-
         assets.set("app_icon", loadImage("graphics/icons/mspacman.png"));
         assets.set("logo.midway", loadImage("graphics/midway_logo.png"));
         assets.set("color.game_over_message", ARCADE_RED);
-
-        assets.set("ghost.color.frightened.dress", ARCADE_BLUE);
-        assets.set("ghost.color.frightened.eyeballs", ARCADE_ROSE);
-        assets.set("ghost.color.frightened.pupils", ARCADE_ROSE);
-        assets.set("ghost.color.flashing.dress", ARCADE_WHITE);
-        assets.set("ghost.color.flashing.eyeballs", ARCADE_ROSE);
-        assets.set("ghost.color.flashing.pupils", ARCADE_RED);
-
         assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman_xxl.localized_texts_ms_pacman"));
     }
 

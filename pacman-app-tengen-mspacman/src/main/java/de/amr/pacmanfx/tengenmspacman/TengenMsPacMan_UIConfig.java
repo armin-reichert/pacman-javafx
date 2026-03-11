@@ -52,6 +52,17 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
 
+    public static final Color[] NES_COLORS = IntStream.range(0, 64)
+        .mapToObj(NES_Palette::color).map(Color::web).toArray(Color[]::new);
+
+    /**
+     * @param index NES color palette index
+     * @return RGB color for palette entry
+     */
+    public static Color nesColor(int index) {
+        return NES_COLORS[index];
+    }
+
     public static final EntityConfig TENGEN_ENTITY_CONFIG = new EntityConfig(
         new PacConfig(
             nesColor(0x28),
@@ -63,10 +74,22 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
             8.0f,
             16.0f),
         List.of(
-            new GhostConfig(8.0f, 15.5f, nesColor(0x05), nesColor(0x20), nesColor(0x11)),
-            new GhostConfig(8.0f, 15.5f, nesColor(0x25), nesColor(0x20), nesColor(0x11)),
-            new GhostConfig(8.0f, 15.5f, nesColor(0x11), nesColor(0x20), nesColor(0x11)),
-            new GhostConfig(8.0f, 15.5f, nesColor(0x16), nesColor(0x20), nesColor(0x11))
+            new GhostConfig(8.0f, 15.5f,
+                nesColor(0x05), nesColor(0x20), nesColor(0x11),
+                nesColor(0x01), nesColor(0x20), nesColor(0x20),
+                nesColor(0x20), nesColor(0x20), nesColor(0x20)),
+            new GhostConfig(8.0f, 15.5f,
+                nesColor(0x25), nesColor(0x20), nesColor(0x11),
+                nesColor(0x01), nesColor(0x20), nesColor(0x20),
+                nesColor(0x20), nesColor(0x20), nesColor(0x20)),
+            new GhostConfig(8.0f, 15.5f,
+                nesColor(0x11), nesColor(0x20), nesColor(0x11),
+                nesColor(0x01), nesColor(0x20), nesColor(0x20),
+                nesColor(0x20), nesColor(0x20), nesColor(0x20)),
+            new GhostConfig(8.0f, 15.5f,
+                nesColor(0x16), nesColor(0x20), nesColor(0x11),
+                nesColor(0x01), nesColor(0x20), nesColor(0x20),
+                nesColor(0x20), nesColor(0x20), nesColor(0x20))
         ),
         new BonusConfig(8.0f, 14.5f),
         new EnergizerConfig3D(3, 3.5f, 6.0f, 0.2f, 1.0f),
@@ -140,17 +163,6 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     /** 32/30 = 1.0666 */
     public static final float NES_ASPECT = 32f / 30f;
 
-    private static final Color[] NES_COLORS = IntStream.range(0, 64)
-        .mapToObj(NES_Palette::color).map(Color::web).toArray(Color[]::new);
-
-    /**
-     * @param index NES color palette index
-     * @return RGB color for palette entry
-     */
-    public static Color nesColor(int index) {
-        return NES_COLORS[index];
-    }
-
     private static final Color[] BLUE_SHADES = {
         NES_COLORS[0x01], NES_COLORS[0x11], NES_COLORS[0x21], NES_COLORS[0x31]
     };
@@ -194,23 +206,11 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
 
     private void loadAssets() {
         assets.clear();
-
         assets.set("app_icon",                         LOCAL_RESOURCES.loadImage("graphics/icons/mspacman.png"));
         assets.set("startpage.image1",                 LOCAL_RESOURCES.loadImage("graphics/flyer-page-1.png"));
         assets.set("startpage.image2",                 LOCAL_RESOURCES.loadImage("graphics/flyer-page-2.png"));
-
         assets.set("color.game_over_message",          nesColor(0x11));
         assets.set("color.ready_message",              nesColor(0x28));
-
-        assets.set("ghost.color.frightened.dress",     nesColor(0x01));
-        assets.set("ghost.color.frightened.eyeballs",  nesColor(0x20));
-        assets.set("ghost.color.frightened.pupils",    nesColor(0x20));
-
-        //TODO sprite sheet provides two flashing colors, when to use which?
-        assets.set("ghost.color.flashing.dress",       nesColor(0x20));
-        assets.set("ghost.color.flashing.eyeballs",    nesColor(0x20));
-        assets.set("ghost.color.flashing.pupils",      nesColor(0x20));
-
         assets.setLocalizedTexts(TEXT_BUNDLE);
     }
 

@@ -11,5 +11,11 @@ public record GhostConfig(
     float size3D,
     Color dressColor,
     Color eyeballColor,
-    Color pupilsColor
+    Color pupilsColor,
+    Color frightenedDressColor,
+    Color frightenedEyeballColor,
+    Color frightenedPupilsColor,
+    Color flashinngDressColor,
+    Color flashingEyeballColor,
+    Color flashingPupilsColor
 ) {}

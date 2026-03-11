@@ -83,10 +83,22 @@ public interface UIConfig extends Disposable {
             8.0f,
             16.0f),
         List.of(
-            new GhostConfig(8.0f, 15.5f, ARCADE_RED, ARCADE_WHITE, ARCADE_BLUE),
-            new GhostConfig(8.0f, 15.5f, ARCADE_PINK, ARCADE_WHITE, ARCADE_BLUE),
-            new GhostConfig(8.0f, 15.5f, ARCADE_CYAN, ARCADE_WHITE, ARCADE_BLUE),
-            new GhostConfig(8.0f, 15.5f, ARCADE_ORANGE, ARCADE_WHITE, ARCADE_BLUE)
+            new GhostConfig(8.0f, 15.5f,
+                ARCADE_RED, ARCADE_WHITE, ARCADE_BLUE,
+                ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE,
+                ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED),
+            new GhostConfig(8.0f, 15.5f,
+                ARCADE_PINK, ARCADE_WHITE, ARCADE_BLUE,
+                ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE,
+                ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED),
+            new GhostConfig(8.0f, 15.5f,
+                ARCADE_CYAN, ARCADE_WHITE, ARCADE_BLUE,
+                ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE,
+                ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED),
+            new GhostConfig(8.0f, 15.5f,
+                ARCADE_ORANGE, ARCADE_WHITE, ARCADE_BLUE,
+                ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE,
+                ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED)
         ),
         new BonusConfig(8.0f, 14.5f),
         new EnergizerConfig3D(3, 3.5f, 6.0f, 0.2f, 1.0f),
@@ -259,26 +271,22 @@ public interface UIConfig extends Disposable {
      * @return the color set for normal, frightened, and flashing states
      */
     default GhostColorSet createGhostColorSet(byte personality) {
-        final AssetMap assets = assets();
         final GhostConfig ghostConfig = config3D().ghostConfigs().get(personality);
         return new GhostColorSet(
             new GhostComponentColors(
                 ghostConfig.dressColor(),
                 ghostConfig.pupilsColor(),
                 ghostConfig.eyeballColor()
-                //assets.color("ghost.%d.color.normal.dress".formatted(personality)),
-                //assets.color("ghost.%d.color.normal.pupils".formatted(personality)),
-                //assets.color("ghost.%d.color.normal.eyeballs".formatted(personality))
             ),
             new GhostComponentColors(
-                assets.color("ghost.color.frightened.dress"),
-                assets.color("ghost.color.frightened.pupils"),
-                assets.color("ghost.color.frightened.eyeballs")
+                ghostConfig.frightenedDressColor(),
+                ghostConfig.frightenedPupilsColor(),
+                ghostConfig.frightenedEyeballColor()
             ),
             new GhostComponentColors(
-                assets.color("ghost.color.flashing.dress"),
-                assets.color("ghost.color.flashing.pupils"),
-                assets.color("ghost.color.frightened.eyeballs")
+                ghostConfig.flashinngDressColor(),
+                ghostConfig.flashingPupilsColor(),
+                ghostConfig.flashingEyeballColor()
             )
         );
     }
