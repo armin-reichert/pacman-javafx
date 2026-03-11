@@ -9,7 +9,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
-import de.amr.pacmanfx.ui.d3.TrackingPlayerPerspective;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.PerspectiveCamera;
