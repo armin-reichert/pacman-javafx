@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.config;
 
 public record ActorConfig(
     PacConfig pacConfig,
-    float ghostSize,
+    GhostConfig ghostConfig,
     float bonusSymbolWidth,
     float bonusPointsWidth
 ) {}

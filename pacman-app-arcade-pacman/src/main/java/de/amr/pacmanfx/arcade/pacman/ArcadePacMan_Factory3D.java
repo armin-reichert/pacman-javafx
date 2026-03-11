@@ -59,7 +59,7 @@ public class ArcadePacMan_Factory3D implements Factory3D {
             Models3D.GHOST_MODEL.dressMesh(),
             Models3D.GHOST_MODEL.pupilsMesh(),
             Models3D.GHOST_MODEL.eyeballsMesh(),
-            actorConfig.ghostSize(),
+            actorConfig.ghostConfig().size3D(),
             numFlashings
         );
     }
