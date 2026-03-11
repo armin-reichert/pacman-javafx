@@ -315,7 +315,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             ghost,
             uiConfig.assets(),
             ghostConfig,
-            uiConfig.entityConfig().ghostConfigs().get(ghost.personality()).createGhostColorSet(),
             animationRegistry,
             level.numFlashes());
 
