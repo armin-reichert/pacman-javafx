@@ -179,7 +179,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
 
     @Override
-    public EntityConfig config3D() {
+    public EntityConfig entityConfig() {
         return TENGEN_ENTITY_CONFIG;
     }
 

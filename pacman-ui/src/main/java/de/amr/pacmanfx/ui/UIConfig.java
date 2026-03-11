@@ -14,8 +14,6 @@ import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.model3D.GhostColorSet;
-import de.amr.pacmanfx.uilib.model3D.GhostComponentColors;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.geometry.Rectangle2D;
@@ -146,7 +144,13 @@ public interface UIConfig extends Disposable {
      */
     SpriteSheet<?> spriteSheet();
 
-    default EntityConfig config3D() {
+    /**
+     * Returns the entity configuration containing all parameters for rendering
+     * Pac‑Man, ghosts, bonus items, and other entities in this variant.
+     *
+     * @return the entity configuration for this variant
+     */
+    default EntityConfig entityConfig() {
         return DEFAULT_ENTITY_CONFIG;
     }
 
@@ -262,34 +266,6 @@ public interface UIConfig extends Disposable {
      * @return the animation manager for Pac‑Man
      */
     AnimationManager createPacAnimations();
-
-
-    /**
-     * Creates a color set for a ghost based on its personality.
-     *
-     * @param personality the ghost personality ID (0–3)
-     * @return the color set for normal, frightened, and flashing states
-     */
-    default GhostColorSet createGhostColorSet(byte personality) {
-        final GhostConfig ghostConfig = config3D().ghostConfigs().get(personality);
-        return new GhostColorSet(
-            new GhostComponentColors(
-                ghostConfig.dressColor(),
-                ghostConfig.pupilsColor(),
-                ghostConfig.eyeballColor()
-            ),
-            new GhostComponentColors(
-                ghostConfig.frightenedDressColor(),
-                ghostConfig.frightenedPupilsColor(),
-                ghostConfig.frightenedEyeballColor()
-            ),
-            new GhostComponentColors(
-                ghostConfig.flashinngDressColor(),
-                ghostConfig.flashingPupilsColor(),
-                ghostConfig.flashingEyeballColor()
-            )
-        );
-    }
 
     /**
      * Returns the image representing the points earned for killing a ghost

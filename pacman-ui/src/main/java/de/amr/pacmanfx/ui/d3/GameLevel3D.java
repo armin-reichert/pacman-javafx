@@ -235,7 +235,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             getChildren().remove(bonus3D);
             bonus3D.dispose();
         }
-        final BonusConfig bonusConfig = uiConfig.config3D().bonusConfig();
+        final BonusConfig bonusConfig = uiConfig.entityConfig().bonusConfig();
         bonus3D = new Bonus3D(animationRegistry, bonus,
             uiConfig.bonusSymbolImage(bonus.symbol()), bonusConfig.bonusSymbolWidth(),
             uiConfig.bonusValueImage(bonus.symbol()),  bonusConfig.bonusPointsWidth());
@@ -250,7 +250,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     public void rebuildLevelCounter3D() {
         if (levelCounter3D != null) {
-            levelCounter3D.rebuild(uiConfig.config3D().levelCounter(), level.game().levelCounterSymbols());
+            levelCounter3D.rebuild(uiConfig.entityConfig().levelCounter(), level.game().levelCounterSymbols());
         }
     }
 
@@ -284,7 +284,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         pac3D = factory3D.createPac3D(
             level.pac(),
             uiConfig.assets(),
-            uiConfig.config3D().pacConfig(),
+            uiConfig.entityConfig().pacConfig(),
             animationRegistry);
 
         pac3D.init(level);
@@ -297,7 +297,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     private void createGhosts3D() {
         ghosts3D = level.ghosts()
-            .map(ghost -> createMutableGhost3D(uiConfig.config3D().ghostConfigs().get(ghost.personality()), ghost)).toList();
+            .map(ghost -> createMutableGhost3D(uiConfig.entityConfig().ghostConfigs().get(ghost.personality()), ghost)).toList();
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
 
         disposables.addAll(ghosts3D);
@@ -315,7 +315,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             ghost,
             uiConfig.assets(),
             ghostConfig,
-            uiConfig.createGhostColorSet(ghost.personality()),
+            uiConfig.entityConfig().ghostConfigs().get(ghost.personality()).createGhostColorSet(),
             animationRegistry,
             level.numFlashes());
 
@@ -331,10 +331,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Creates and initializes the lives counter visualization.
      */
     private void createLivesCounter3D() {
-        final LivesCounterConfig3D config = uiConfig.config3D().livesCounter();
+        final LivesCounterConfig3D config = uiConfig.entityConfig().livesCounter();
         livesCounterShapes = new Node[config.capacity()];
         for (int i = 0; i < livesCounterShapes.length; ++i) {
-            livesCounterShapes[i] = factory3D.createLivesCounterShape3D(uiConfig.assets(), uiConfig.config3D());
+            livesCounterShapes[i] = factory3D.createLivesCounterShape3D(uiConfig.assets(), uiConfig.entityConfig());
         }
         livesCounter3D = new LivesCounter3D(animationRegistry, livesCounterShapes);
         livesCounter3D.setTranslateX(2 * TS);
@@ -349,7 +349,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Creates and initializes the level number counter visualization.
      */
     private void createLevelCounter3D() {
-        final LevelCounterConfig3D config = uiConfig.config3D().levelCounter();
+        final LevelCounterConfig3D config = uiConfig.entityConfig().levelCounter();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
         levelCounter3D.setTranslateX(TS * (terrain.numCols() - 2));
@@ -374,7 +374,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final boolean wallsVeryDark = Color.valueOf(colorScheme.wallFill()).getBrightness() < 0.1;
         if (wallsVeryDark) {
-            final String notTooDarkColor = uiConfig.config3D().maze().darkWallFillColor();
+            final String notTooDarkColor = uiConfig.entityConfig().maze().darkWallFillColor();
             colorScheme = new WorldMapColorScheme(
                 notTooDarkColor,
                 colorScheme.wallStroke(),
@@ -382,7 +382,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 colorScheme.pellet());
         }
 
-        maze3D = new Maze3D(uiConfig.config3D(), colorScheme, level, animationRegistry, ghostDressMaterials);
+        maze3D = new Maze3D(uiConfig.entityConfig(), colorScheme, level, animationRegistry, ghostDressMaterials);
         maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
         maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
 
