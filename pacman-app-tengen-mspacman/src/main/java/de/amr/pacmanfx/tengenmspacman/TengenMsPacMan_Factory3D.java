@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.config.Config;
+import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.GhostConfig;
 import de.amr.pacmanfx.ui.config.PacConfig;
 import de.amr.pacmanfx.ui.d3.Factory3D;
@@ -68,10 +68,10 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
     }
 
     @Override
-    public MsPacManBody createLivesCounterShape3D(AssetMap assets, Config config) {
-        final PacConfig pacConfig = config.pacConfig();
+    public MsPacManBody createLivesCounterShape3D(AssetMap assets, EntityConfig entityConfig) {
+        final PacConfig pacConfig = entityConfig.pacConfig();
         return Models3D.PAC_MAN_MODEL.createMsPacManBody(
-            config.livesCounter().shapeSize(),
+            entityConfig.livesCounter().shapeSize(),
             pacConfig.headColor(),
             pacConfig.eyesColor(),
             pacConfig.palateColor(),

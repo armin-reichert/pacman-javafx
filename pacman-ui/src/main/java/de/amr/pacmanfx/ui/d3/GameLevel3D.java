@@ -296,7 +296,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Creates and initializes all ghost 3D representations.
      */
     private void createGhosts3D() {
-        ghosts3D = level.ghosts().map(ghost -> createMutableGhost3D(uiConfig.config3D().ghostConfig(), ghost)).toList();
+        ghosts3D = level.ghosts()
+            .map(ghost -> createMutableGhost3D(uiConfig.config3D().ghostConfigs().get(ghost.personality()), ghost)).toList();
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
 
         disposables.addAll(ghosts3D);

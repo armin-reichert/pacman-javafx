@@ -24,6 +24,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
+import java.util.List;
+
 import static de.amr.pacmanfx.ui.ArcadePalette.*;
 
 /**
@@ -70,7 +72,7 @@ import static de.amr.pacmanfx.ui.ArcadePalette.*;
  */
 public interface UIConfig extends Disposable {
 
-    Config DEFAULT_CONFIG_3D = new Config(
+    EntityConfig DEFAULT_ENTITY_CONFIG = new EntityConfig(
         new PacConfig(
             ARCADE_YELLOW,
             Color.grayRgb(33),
@@ -80,7 +82,12 @@ public interface UIConfig extends Disposable {
             ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0),
             8.0f,
             16.0f),
-        new GhostConfig(8.0f, 15.5f),
+        List.of(
+            new GhostConfig(8.0f, 15.5f, ARCADE_RED, ARCADE_WHITE, ARCADE_BLUE),
+            new GhostConfig(8.0f, 15.5f, ARCADE_PINK, ARCADE_WHITE, ARCADE_BLUE),
+            new GhostConfig(8.0f, 15.5f, ARCADE_CYAN, ARCADE_WHITE, ARCADE_BLUE),
+            new GhostConfig(8.0f, 15.5f, ARCADE_ORANGE, ARCADE_WHITE, ARCADE_BLUE)
+        ),
         new BonusConfig(8.0f, 14.5f),
         new EnergizerConfig3D(3, 3.5f, 6.0f, 0.2f, 1.0f),
         new FloorConfig3D(5f, 0.5f),
@@ -127,8 +134,8 @@ public interface UIConfig extends Disposable {
      */
     SpriteSheet<?> spriteSheet();
 
-    default Config config3D() {
-        return DEFAULT_CONFIG_3D;
+    default EntityConfig config3D() {
+        return DEFAULT_ENTITY_CONFIG;
     }
 
     /**
@@ -253,11 +260,15 @@ public interface UIConfig extends Disposable {
      */
     default GhostColorSet createGhostColorSet(byte personality) {
         final AssetMap assets = assets();
+        final GhostConfig ghostConfig = config3D().ghostConfigs().get(personality);
         return new GhostColorSet(
             new GhostComponentColors(
-                assets.color("ghost.%d.color.normal.dress".formatted(personality)),
-                assets.color("ghost.%d.color.normal.pupils".formatted(personality)),
-                assets.color("ghost.%d.color.normal.eyeballs".formatted(personality))
+                ghostConfig.dressColor(),
+                ghostConfig.pupilsColor(),
+                ghostConfig.eyeballColor()
+                //assets.color("ghost.%d.color.normal.dress".formatted(personality)),
+                //assets.color("ghost.%d.color.normal.pupils".formatted(personality)),
+                //assets.color("ghost.%d.color.normal.eyeballs".formatted(personality))
             ),
             new GhostComponentColors(
                 assets.color("ghost.color.frightened.dress"),

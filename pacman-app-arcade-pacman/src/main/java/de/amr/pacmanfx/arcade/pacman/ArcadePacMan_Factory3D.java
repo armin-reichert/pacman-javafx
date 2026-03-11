@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.config.Config;
+import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.GhostConfig;
 import de.amr.pacmanfx.ui.config.PacConfig;
 import de.amr.pacmanfx.ui.d3.Factory3D;
@@ -65,10 +65,10 @@ public class ArcadePacMan_Factory3D implements Factory3D {
     }
 
     @Override
-    public PacBody createLivesCounterShape3D(AssetMap assets, Config config) {
-        final var pacConfig = config.pacConfig();
+    public PacBody createLivesCounterShape3D(AssetMap assets, EntityConfig entityConfig) {
+        final var pacConfig = entityConfig.pacConfig();
         return Models3D.PAC_MAN_MODEL.createPacBody(
-            config.livesCounter().shapeSize(),
+            entityConfig.livesCounter().shapeSize(),
             pacConfig.headColor(),
             pacConfig.eyesColor(),
             pacConfig.palateColor()

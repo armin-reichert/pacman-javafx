@@ -166,22 +166,6 @@ public class ArcadePacMan_UIConfig implements UIConfig, GameSceneConfig, Resourc
 
         assets.set("maze.bright", UfxImages.recolorImage(spriteSheet().image(SpriteID.MAP_EMPTY), BRIGHT_MAZE_COLOR_CHANGES));
 
-        assets.set("ghost.0.color.normal.dress",      ARCADE_RED);
-        assets.set("ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
-        assets.set("ghost.0.color.normal.pupils",     ARCADE_BLUE);
-
-        assets.set("ghost.1.color.normal.dress",      ARCADE_PINK);
-        assets.set("ghost.1.color.normal.eyeballs",   ARCADE_WHITE);
-        assets.set("ghost.1.color.normal.pupils",     ARCADE_BLUE);
-
-        assets.set("ghost.2.color.normal.dress",      ARCADE_CYAN);
-        assets.set("ghost.2.color.normal.eyeballs",   ARCADE_WHITE);
-        assets.set("ghost.2.color.normal.pupils",     ARCADE_BLUE);
-
-        assets.set("ghost.3.color.normal.dress",      ARCADE_ORANGE);
-        assets.set("ghost.3.color.normal.eyeballs",   ARCADE_WHITE);
-        assets.set("ghost.3.color.normal.pupils",     ARCADE_BLUE);
-
         assets.set("ghost.color.frightened.dress",    ARCADE_BLUE);
         assets.set("ghost.color.frightened.eyeballs", ARCADE_ROSE);
         assets.set("ghost.color.frightened.pupils",   ARCADE_ROSE);

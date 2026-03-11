@@ -19,15 +19,15 @@ open module de.amr.pacmanfx.ui {
     requires de.amr.pacmanfx.mapeditor;
     requires java.desktop;
 
+    exports de.amr.pacmanfx.ui;
+    exports de.amr.pacmanfx.ui.action;
+    exports de.amr.pacmanfx.ui.config;
     exports de.amr.pacmanfx.ui.dashboard;
+    exports de.amr.pacmanfx.ui.d2;
+    exports de.amr.pacmanfx.ui.d3;
+    exports de.amr.pacmanfx.ui.d3.animation;
+    exports de.amr.pacmanfx.ui.d3.camera;
     exports de.amr.pacmanfx.ui.input;
     exports de.amr.pacmanfx.ui.layout;
     exports de.amr.pacmanfx.ui.sound;
-    exports de.amr.pacmanfx.ui.d2;
-    exports de.amr.pacmanfx.ui.d3;
-    exports de.amr.pacmanfx.ui.config;
-    exports de.amr.pacmanfx.ui;
-    exports de.amr.pacmanfx.ui.action;
-    exports de.amr.pacmanfx.ui.d3.animation;
-    exports de.amr.pacmanfx.ui.d3.camera;
 }

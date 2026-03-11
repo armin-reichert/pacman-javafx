@@ -70,35 +70,35 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates a new 3D maze for the given level.
      *
-     * @param config         3D configuration
+     * @param entityConfig         3D configuration
      * @param level            the game level whose world map is rendered
      * @param animationRegistry registry for animations used by 3D components
      * @param ghostMaterials   materials used for ghost-related effects (energizer particles etc.)
      * @throws NullPointerException if any required argument is {@code null}
      */
     public Maze3D(
-        Config config,
+        EntityConfig entityConfig,
         WorldMapColorScheme colorScheme,
         GameLevel level,
         AnimationRegistry animationRegistry,
         List<PhongMaterial> ghostMaterials)
     {
-        requireNonNull(config);
+        requireNonNull(entityConfig);
         requireNonNull(level);
         this.animationRegistry = requireNonNull(animationRegistry);
         requireNonNull(ghostMaterials);
         this.colorScheme = requireNonNull(colorScheme);
 
         createMaterials();
-        createFloor3D(config.floor(), level);
-        createObstacles3D(config.maze(), level);
+        createFloor3D(entityConfig.floor(), level);
+        createObstacles3D(entityConfig.maze(), level);
         level.worldMap().terrainLayer().optHouse()
             .filter(ArcadeHouse.class::isInstance)
             .map(ArcadeHouse.class::cast)
             .ifPresentOrElse(
-                arcadeHouse -> createArcadeHouse3D(config.house(), arcadeHouse),
+                arcadeHouse -> createArcadeHouse3D(entityConfig.house(), arcadeHouse),
                 () -> Logger.error("Currently only Arcade house is supported"));
-        createMazeFood3D(config.pellet(), config.energizer(), level, ghostMaterials);
+        createMazeFood3D(entityConfig.pellet(), entityConfig.energizer(), level, ghostMaterials);
     }
 
     /** @return the property controlling the base height of all walls */

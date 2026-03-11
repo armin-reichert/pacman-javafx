@@ -4,5 +4,12 @@
 
 package de.amr.pacmanfx.ui.config;
 
-public record GhostConfig(float size2D, float size3D) {
-}
+import javafx.scene.paint.Color;
+
+public record GhostConfig(
+    float size2D,
+    float size3D,
+    Color dressColor,
+    Color eyeballColor,
+    Color pupilsColor
+) {}

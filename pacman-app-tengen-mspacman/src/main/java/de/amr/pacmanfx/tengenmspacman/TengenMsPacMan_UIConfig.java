@@ -39,10 +39,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -55,7 +52,7 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
 
-    Config TENGEN_CONFIG_3D = new Config(
+    public static final EntityConfig TENGEN_ENTITY_CONFIG = new EntityConfig(
         new PacConfig(
             nesColor(0x28),
             nesColor(0x02),
@@ -65,7 +62,12 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
             nesColor(0x28).deriveColor(0, 1.0, 0.96, 1.0),
             8.0f,
             16.0f),
-        new GhostConfig(8.0f, 15.5f),
+        List.of(
+            new GhostConfig(8.0f, 15.5f, nesColor(0x05), nesColor(0x20), nesColor(0x11)),
+            new GhostConfig(8.0f, 15.5f, nesColor(0x25), nesColor(0x20), nesColor(0x11)),
+            new GhostConfig(8.0f, 15.5f, nesColor(0x11), nesColor(0x20), nesColor(0x11)),
+            new GhostConfig(8.0f, 15.5f, nesColor(0x16), nesColor(0x20), nesColor(0x11))
+        ),
         new BonusConfig(8.0f, 14.5f),
         new EnergizerConfig3D(3, 3.5f, 6.0f, 0.2f, 1.0f),
         new FloorConfig3D(5f, 0.5f),
@@ -165,8 +167,8 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
 
     @Override
-    public Config config3D() {
-        return TENGEN_CONFIG_3D;
+    public EntityConfig config3D() {
+        return TENGEN_ENTITY_CONFIG;
     }
 
     @Override
@@ -199,22 +201,6 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
 
         assets.set("color.game_over_message",          nesColor(0x11));
         assets.set("color.ready_message",              nesColor(0x28));
-
-        assets.set("ghost.0.color.normal.dress",       nesColor(0x05));
-        assets.set("ghost.0.color.normal.eyeballs",    nesColor(0x20));
-        assets.set("ghost.0.color.normal.pupils",      nesColor(0x16));
-
-        assets.set("ghost.1.color.normal.dress",       nesColor(0x25));
-        assets.set("ghost.1.color.normal.eyeballs",    nesColor(0x20));
-        assets.set("ghost.1.color.normal.pupils",      nesColor(0x11));
-
-        assets.set("ghost.2.color.normal.dress",       nesColor(0x11));
-        assets.set("ghost.2.color.normal.eyeballs",    nesColor(0x20));
-        assets.set("ghost.2.color.normal.pupils",      nesColor(0x11));
-
-        assets.set("ghost.3.color.normal.dress",       nesColor(0x16));
-        assets.set("ghost.3.color.normal.eyeballs",    nesColor(0x20));
-        assets.set("ghost.3.color.normal.pupils",      nesColor(0x05));
 
         assets.set("ghost.color.frightened.dress",     nesColor(0x01));
         assets.set("ghost.color.frightened.eyeballs",  nesColor(0x20));

@@ -4,9 +4,11 @@
 
 package de.amr.pacmanfx.ui.config;
 
-public record Config(
+import java.util.List;
+
+public record EntityConfig(
     PacConfig pacConfig,
-    GhostConfig ghostConfig,
+    List<GhostConfig> ghostConfigs,
     BonusConfig bonusConfig,
     EnergizerConfig3D energizer,
     FloorConfig3D floor,

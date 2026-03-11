@@ -3,5 +3,8 @@
  */
 package de.amr.pacmanfx.uilib.model3D;
 
-public record GhostColorSet(GhostComponentColors normal, GhostComponentColors frightened, GhostComponentColors flashing) {
+public record GhostColorSet(
+    GhostComponentColors normal,
+    GhostComponentColors frightened,
+    GhostComponentColors flashing) {
 }
