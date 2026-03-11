@@ -15,6 +15,10 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.action.ActionBinding;
+import de.amr.pacmanfx.ui.d3.animation.GameLevel3DAnimations;
+import de.amr.pacmanfx.ui.d3.camera.Perspective;
+import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
+import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
@@ -265,9 +269,9 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onScroll(ScrollEvent scrollEvent) {
         if (scrollEvent.getDeltaY() < 0) {
-            perspectiveManager.actionDroneClimb.executeIfEnabled(ui);
+            perspectiveManager.actionDroneClimb().executeIfEnabled(ui);
         } else if (scrollEvent.getDeltaY() > 0) {
-            perspectiveManager.actionDroneDescent.executeIfEnabled(ui);
+            perspectiveManager.actionDroneDescent().executeIfEnabled(ui);
         }
     }
 
@@ -449,12 +453,12 @@ public class PlayScene3D implements GameScene {
      */
     protected void bindSceneActions() {
         final Set<ActionBinding> bindings = Set.of(
-            new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,           alt(KeyCode.LEFT)),
-            new ActionBinding(ACTION_PERSPECTIVE_NEXT,               alt(KeyCode.RIGHT)),
-            new ActionBinding(perspectiveManager.actionDroneClimb,   control(KeyCode.MINUS)),
-            new ActionBinding(perspectiveManager.actionDroneDescent, control(KeyCode.PLUS)),
-            new ActionBinding(perspectiveManager.actionDroneReset,   control(KeyCode.DIGIT0)),
-            new ActionBinding(ACTION_TOGGLE_DRAW_MODE,               alt(KeyCode.W))
+            new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,             alt(KeyCode.LEFT)),
+            new ActionBinding(ACTION_PERSPECTIVE_NEXT,                 alt(KeyCode.RIGHT)),
+            new ActionBinding(perspectiveManager.actionDroneClimb(),   control(KeyCode.MINUS)),
+            new ActionBinding(perspectiveManager.actionDroneDescent(), control(KeyCode.PLUS)),
+            new ActionBinding(perspectiveManager.actionDroneReset(),   control(KeyCode.DIGIT0)),
+            new ActionBinding(ACTION_TOGGLE_DRAW_MODE,                 alt(KeyCode.W))
         );
         actionBindings.registerAllFrom(bindings);
     }

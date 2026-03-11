@@ -28,4 +28,6 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.d3.config;
     exports de.amr.pacmanfx.ui;
     exports de.amr.pacmanfx.ui.action;
+    exports de.amr.pacmanfx.ui.d3.animation;
+    exports de.amr.pacmanfx.ui.d3.camera;
 }

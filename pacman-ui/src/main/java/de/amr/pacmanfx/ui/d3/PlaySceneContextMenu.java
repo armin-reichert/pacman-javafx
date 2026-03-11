@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.RadioMenuItem;

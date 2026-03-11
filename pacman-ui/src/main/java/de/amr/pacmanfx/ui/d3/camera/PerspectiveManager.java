@@ -1,13 +1,15 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.d3;
+package de.amr.pacmanfx.ui.d3.camera;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.GameAction;
+import de.amr.pacmanfx.ui.d3.PlayScene3D;
+import de.amr.pacmanfx.ui.d3.TrackingPlayerPerspective;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.PerspectiveCamera;
@@ -46,12 +48,9 @@ public class PerspectiveManager implements Disposable {
     private final Map<PerspectiveID, Perspective<GameLevel>> perspectivesByID;
     private final ObjectProperty<PerspectiveID> activeID;
 
-    /** Action to make the drone climb (increase height) */
-    final GameAction actionDroneClimb;
-    /** Action to make the drone descend (decrease height) */
-    final GameAction actionDroneDescent;
-    /** Action to reset the drone to its default height */
-    final GameAction actionDroneReset;
+    private final GameAction actionDroneClimb;
+    private final GameAction actionDroneDescent;
+    private final GameAction actionDroneReset;
 
     /**
      * Creates a new perspective manager and initializes all supported camera perspectives.
@@ -99,6 +98,19 @@ public class PerspectiveManager implements Disposable {
     public void dispose() {
         perspectivesByID.clear();
         activeID.set(null);
+    }
+
+
+    public GameAction actionDroneClimb() {
+        return actionDroneClimb;
+    }
+
+    public GameAction actionDroneDescent() {
+        return actionDroneDescent;
+    }
+
+    public GameAction actionDroneReset() {
+        return actionDroneReset;
     }
 
     /**

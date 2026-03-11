@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
-import de.amr.pacmanfx.ui.d3.PerspectiveID;
+import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;

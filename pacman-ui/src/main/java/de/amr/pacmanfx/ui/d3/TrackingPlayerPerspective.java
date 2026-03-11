@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.ui.d3.camera.Perspective;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 

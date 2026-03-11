@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.d3;
+package de.amr.pacmanfx.ui.d3.camera;
 
 /**
  * Implemented by scene camera perspectives (camera controller).
