@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman;
 
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -11,6 +12,7 @@ import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
+import de.amr.pacmanfx.uilib.model3D.MutableGhost3D;
 
 import static java.util.Objects.requireNonNull;
 
@@ -32,6 +34,11 @@ public class ArcadeMsPacMan_Factory3D implements Factory3D {
             assets.color("pac.color.boobs"));
         msPacMan3D.light().setColor(assets.color("pac.color.head").desaturate());
         return msPacMan3D;
+    }
+
+    @Override
+    public MutableGhost3D createMutableGhost3D(AssetMap assets, AnimationRegistry animationRegistry, Ghost ghost, double size) {
+        return null;
     }
 
     @Override

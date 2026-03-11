@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Factory3D;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
@@ -27,8 +28,6 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.model3D.Models3D;
-import de.amr.pacmanfx.uilib.model3D.PacBody;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -55,7 +54,7 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, GameSceneConfig, Res
     }
 
     private final AssetMap assets = new AssetMap();
-    private final Factory3D factory3D = new PacManXXL_PacMan_Factory3D();
+    private final Factory3D factory3D = new ArcadePacMan_Factory3D();
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
 
     @Override

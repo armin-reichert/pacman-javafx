@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman;
 
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -11,6 +12,7 @@ import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
+import de.amr.pacmanfx.uilib.model3D.MutableGhost3D;
 
 public class TengenMsPacMan_Factory3D implements Factory3D {
 
@@ -29,6 +31,11 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
         );
         pac3D.light().setColor(assets.color("pac.color.head").desaturate());
         return pac3D;
+    }
+
+    @Override
+    public MutableGhost3D createMutableGhost3D(AssetMap assets, AnimationRegistry animationRegistry, Ghost ghost, double size) {
+        return null;
     }
 
     @Override
