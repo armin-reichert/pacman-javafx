@@ -312,11 +312,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     private MutableGhost3D createMutableGhost3D(ActorConfig3D actorConfig, Ghost ghost) {
         final var mutableGhost3D = factory3D.createMutableGhost3D(
+            ghost,
             uiConfig.assets(),
+            actorConfig,
             uiConfig.createGhostColorSet(ghost.personality()),
             animationRegistry,
-            ghost,
-            actorConfig.ghostSize(),
             level.numFlashes());
 
         mutableGhost3D.visibleProperty().bind(Bindings.createBooleanBinding(

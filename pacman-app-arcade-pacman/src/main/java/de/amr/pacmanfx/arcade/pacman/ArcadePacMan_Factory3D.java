@@ -42,11 +42,11 @@ public class ArcadePacMan_Factory3D implements Factory3D {
 
     @Override
     public MutableGhost3D createMutableGhost3D(
+        Ghost ghost,
         AssetMap assets,
+        ActorConfig3D actorConfig3D,
         GhostColorSet colorSet,
         AnimationRegistry animationRegistry,
-        Ghost ghost,
-        double size,
         int numFlashings)
     {
         return new MutableGhost3D(
@@ -56,7 +56,7 @@ public class ArcadePacMan_Factory3D implements Factory3D {
             Models3D.GHOST_MODEL.dressMesh(),
             Models3D.GHOST_MODEL.pupilsMesh(),
             Models3D.GHOST_MODEL.eyeballsMesh(),
-            size,
+            actorConfig3D.ghostSize(),
             numFlashings
         );
     }
