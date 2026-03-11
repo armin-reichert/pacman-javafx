@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.d3.config.HouseConfig3D;
+import de.amr.pacmanfx.ui.config.HouseConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
 import javafx.beans.property.DoubleProperty;

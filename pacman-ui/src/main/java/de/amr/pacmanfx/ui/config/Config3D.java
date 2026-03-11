@@ -2,10 +2,10 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.d3.config;
+package de.amr.pacmanfx.ui.config;
 
 public record Config3D(
-    ActorConfig3D actor,
+    ActorConfig actor,
     EnergizerConfig3D energizer,
     FloorConfig3D floor,
     HouseConfig3D house,

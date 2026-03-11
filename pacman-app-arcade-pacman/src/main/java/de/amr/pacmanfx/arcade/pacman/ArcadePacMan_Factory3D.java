@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.config.ActorConfig;
 import de.amr.pacmanfx.ui.d3.Factory3D;
-import de.amr.pacmanfx.ui.d3.config.ActorConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.*;
@@ -20,18 +20,18 @@ public class ArcadePacMan_Factory3D implements Factory3D {
     public PacMan3D createPac3D(
         Pac pac,
         AssetMap assets,
-        ActorConfig3D actorConfig3D,
+        ActorConfig actorConfig,
         AnimationRegistry animationRegistry)
     {
         requireNonNull(pac);
         requireNonNull(assets);
-        requireNonNull(actorConfig3D);
+        requireNonNull(actorConfig);
         requireNonNull(animationRegistry);
 
         final var pacMan3D = new PacMan3D(
             animationRegistry,
             pac,
-            actorConfig3D.pacSize(),
+            actorConfig.pacConfig().size3D(),
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate"));
@@ -44,7 +44,7 @@ public class ArcadePacMan_Factory3D implements Factory3D {
     public MutableGhost3D createMutableGhost3D(
         Ghost ghost,
         AssetMap assets,
-        ActorConfig3D actorConfig3D,
+        ActorConfig actorConfig,
         GhostColorSet colorSet,
         AnimationRegistry animationRegistry,
         int numFlashings)
@@ -56,7 +56,7 @@ public class ArcadePacMan_Factory3D implements Factory3D {
             Models3D.GHOST_MODEL.dressMesh(),
             Models3D.GHOST_MODEL.pupilsMesh(),
             Models3D.GHOST_MODEL.eyeballsMesh(),
-            actorConfig3D.ghostSize(),
+            actorConfig.ghostSize(),
             numFlashings
         );
     }

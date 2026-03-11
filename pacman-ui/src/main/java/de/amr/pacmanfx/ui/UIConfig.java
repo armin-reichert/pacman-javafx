@@ -6,23 +6,19 @@ package de.amr.pacmanfx.ui;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.ui.config.*;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.ui.d3.config.*;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.model3D.GhostColorSet;
 import de.amr.pacmanfx.uilib.model3D.GhostComponentColors;
-import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -73,7 +69,9 @@ import org.tinylog.Logger;
 public interface UIConfig extends Disposable {
 
     Config3D DEFAULT_CONFIG_3D = new Config3D(
-        new ActorConfig3D(16.0f, 15.5f, 8.0f, 14.5f),
+        new ActorConfig(
+            new PacConfig(8.0f, 16.0f),
+            15.5f, 8.0f, 14.5f),
         new EnergizerConfig3D(3, 3.5f, 6.0f, 0.2f, 1.0f),
         new FloorConfig3D(5f, 0.5f),
         new HouseConfig3D(12.0f, 0.4f, 12.0f, 2.5f),

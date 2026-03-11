@@ -11,10 +11,10 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.UIConfig;
+import de.amr.pacmanfx.ui.config.ActorConfig;
+import de.amr.pacmanfx.ui.config.LevelCounterConfig3D;
+import de.amr.pacmanfx.ui.config.LivesCounterConfig3D;
 import de.amr.pacmanfx.ui.d3.animation.GameLevel3DAnimations;
-import de.amr.pacmanfx.ui.d3.config.ActorConfig3D;
-import de.amr.pacmanfx.ui.d3.config.LevelCounterConfig3D;
-import de.amr.pacmanfx.ui.d3.config.LivesCounterConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.*;
 import javafx.beans.binding.Bindings;
@@ -234,7 +234,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             getChildren().remove(bonus3D);
             bonus3D.dispose();
         }
-        final ActorConfig3D actorConfig = uiConfig.config3D().actor();
+        final ActorConfig actorConfig = uiConfig.config3D().actor();
         bonus3D = new Bonus3D(animationRegistry, bonus,
             uiConfig.bonusSymbolImage(bonus.symbol()), actorConfig.bonusSymbolWidth(),
             uiConfig.bonusValueImage(bonus.symbol()),  actorConfig.bonusPointsWidth());
@@ -281,7 +281,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Creates and initializes the 3D representation of Pac-Man.
      */
     private void createPac3D() {
-        final ActorConfig3D actorConfig = uiConfig.config3D().actor();
+        final ActorConfig actorConfig = uiConfig.config3D().actor();
         pac3D = factory3D.createPac3D(
             level.pac(),
             uiConfig.assets(),
@@ -310,7 +310,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * @param ghost       the model ghost
      * @return the 3D ghost with visibility binding
      */
-    private MutableGhost3D createMutableGhost3D(ActorConfig3D actorConfig, Ghost ghost) {
+    private MutableGhost3D createMutableGhost3D(ActorConfig actorConfig, Ghost ghost) {
         final var mutableGhost3D = factory3D.createMutableGhost3D(
             ghost,
             uiConfig.assets(),

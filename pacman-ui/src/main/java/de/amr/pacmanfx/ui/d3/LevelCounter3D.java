@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.ui.d3.config.LevelCounterConfig3D;
+import de.amr.pacmanfx.ui.config.LevelCounterConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
