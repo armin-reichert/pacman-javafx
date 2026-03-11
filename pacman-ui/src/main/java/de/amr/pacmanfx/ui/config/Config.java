@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.config;
 
-public record Config3D(
+public record Config(
     PacConfig pacConfig,
     GhostConfig ghostConfig,
     BonusConfig bonusConfig,

@@ -70,7 +70,7 @@ import static de.amr.pacmanfx.ui.ArcadePalette.*;
  */
 public interface UIConfig extends Disposable {
 
-    Config3D DEFAULT_CONFIG_3D = new Config3D(
+    Config DEFAULT_CONFIG_3D = new Config(
         new PacConfig(
             ARCADE_YELLOW,
             Color.grayRgb(33),
@@ -127,7 +127,7 @@ public interface UIConfig extends Disposable {
      */
     SpriteSheet<?> spriteSheet();
 
-    default Config3D config3D() {
+    default Config config3D() {
         return DEFAULT_CONFIG_3D;
     }
 

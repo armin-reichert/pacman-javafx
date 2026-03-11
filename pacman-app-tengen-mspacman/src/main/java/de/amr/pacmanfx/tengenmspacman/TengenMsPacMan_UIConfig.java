@@ -55,7 +55,7 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
 
-    Config3D TENGEN_CONFIG_3D = new Config3D(
+    Config TENGEN_CONFIG_3D = new Config(
         new PacConfig(
             nesColor(0x28),
             nesColor(0x02),
@@ -165,7 +165,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
 
     @Override
-    public Config3D config3D() {
+    public Config config3D() {
         return TENGEN_CONFIG_3D;
     }
 
