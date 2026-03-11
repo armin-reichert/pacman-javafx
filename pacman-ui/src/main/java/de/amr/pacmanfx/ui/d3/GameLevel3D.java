@@ -65,6 +65,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final GameLevel level;
 
     private final UIConfig uiConfig;
+    private final Factory3D factory3D;
     private final AnimationRegistry animationRegistry;
     private final List<Disposable> disposables = new ArrayList<>();
 
@@ -87,8 +88,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * @param uiConfig global UI configuration (provides 3D settings, colors, models)
      * @param level    the game level to visualize
      */
-    public GameLevel3D(UIConfig uiConfig, GameLevel level) {
+    public GameLevel3D(UIConfig uiConfig, Factory3D factory3D, GameLevel level) {
         this.uiConfig = requireNonNull(uiConfig);
+        this.factory3D = requireNonNull(factory3D);
         this.level = requireNonNull(level);
         this.animationRegistry = new AnimationRegistry();
 
@@ -280,7 +282,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     private void createPac3D() {
         final ActorConfig3D actorConfig = uiConfig.config3D().actor();
-        pac3D = uiConfig.createPac3D(animationRegistry, level.pac(), actorConfig.pacSize());
+        pac3D = factory3D.createPac3D(uiConfig.assets(), animationRegistry, level.pac(), actorConfig.pacSize());
         pac3D.init(level);
 
         disposables.add(pac3D);

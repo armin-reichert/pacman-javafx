@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
@@ -26,15 +25,14 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
+import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
-import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -139,6 +137,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     }
 
     private final AssetMap assets = new AssetMap();
+    private final Factory3D factory3D = new TengenMsPacMan_Factory3D();
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
 
     @Override
@@ -346,23 +345,6 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
         );
     }
 
-    @Override
-    public MsPacMan3D createPac3D(AnimationRegistry animationRegistry, Pac pac, double size) {
-        var pac3D = new MsPacMan3D(
-            animationRegistry,
-            pac,
-            size,
-            assets.color("pac.color.head"),
-            assets.color("pac.color.eyes"),
-            assets.color("pac.color.palate"),
-            assets.color("pac.color.hairbow"),
-            assets.color("pac.color.hairbow.pearls"),
-            assets.color("pac.color.boobs")
-        );
-        pac3D.light().setColor(assets.color("pac.color.head").desaturate());
-        return pac3D;
-    }
-
     // Game scenes
 
     private GameScene createGameScene(SceneID sceneID) {
@@ -372,7 +354,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
             case CommonSceneID.START_SCENE   -> new TengenMsPacMan_OptionsScene();
             case TengenSceneID.HALL_OF_FAME  -> new TengenMsPacMan_CreditsScene();
             case CommonSceneID.PLAY_SCENE_2D -> new TengenMsPacMan_PlayScene2D();
-            case CommonSceneID.PLAY_SCENE_3D -> new TengenMsPacMan_PlayScene3D();
+            case CommonSceneID.PLAY_SCENE_3D -> new TengenMsPacMan_PlayScene3D(factory3D);
             case CommonSceneID.CUTSCENE_1    -> new TengenMsPacMan_CutScene1();
             case CommonSceneID.CUTSCENE_2    -> new TengenMsPacMan_CutScene2();
             case CommonSceneID.CUTSCENE_3    -> new TengenMsPacMan_CutScene3();

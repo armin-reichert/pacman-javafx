@@ -11,6 +11,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
+import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import javafx.scene.canvas.Canvas;
@@ -31,7 +32,9 @@ import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_FLOOR_COLOR;
  */
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
-    public TengenMsPacMan_PlayScene3D() {}
+    public TengenMsPacMan_PlayScene3D(Factory3D factory3D) {
+        super(factory3D);
+    }
 
     @Override
     protected GameLevel3D createGameLevel3D(GameLevel level) {

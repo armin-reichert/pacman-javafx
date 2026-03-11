@@ -93,6 +93,7 @@ public class PlayScene3D implements GameScene {
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final SubScene subScene;
     protected final FadeInAnimation fadeInAnimation;
+    protected final Factory3D factory3D;
 
     protected GameLevel3DEventHandler level3D_EventHandler;
     protected GamePlaySoundEffects soundEffects;
@@ -101,6 +102,7 @@ public class PlayScene3D implements GameScene {
     protected GameLevel3D gameLevel3D;
     protected Scores3D scores3D;
     protected PlaySceneContextMenu contextMenu;
+
 
     /**
      * Inner class managing the fade-in animation of the 3D sub-scene.
@@ -143,7 +145,9 @@ public class PlayScene3D implements GameScene {
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
-    public PlayScene3D() {
+    public PlayScene3D(Factory3D factory3D) {
+        this.factory3D = requireNonNull(factory3D);
+
         final var axes3D = new CoordinateSystem();
         axes3D.visibleProperty().bind(GameUI.PROPERTY_3D_AXES_VISIBLE);
 
@@ -471,7 +475,7 @@ public class PlayScene3D implements GameScene {
      * @return new 3D level instance
      */
     protected GameLevel3D createGameLevel3D(GameLevel level) {
-        return new GameLevel3D(ui.currentConfig(), level);
+        return new GameLevel3D(ui.currentConfig(), factory3D, level);
     }
 
     /**

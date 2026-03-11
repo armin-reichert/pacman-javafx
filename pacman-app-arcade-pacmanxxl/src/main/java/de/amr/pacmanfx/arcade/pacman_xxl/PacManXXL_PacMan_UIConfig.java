@@ -11,7 +11,6 @@ import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
@@ -23,15 +22,13 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
-import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import de.amr.pacmanfx.uilib.model3D.PacBody;
-import de.amr.pacmanfx.uilib.model3D.PacMan3D;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -58,6 +55,7 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, GameSceneConfig, Res
     }
 
     private final AssetMap assets = new AssetMap();
+    private final Factory3D factory3D = new PacManXXL_PacMan_Factory3D();
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
 
     @Override
@@ -246,20 +244,6 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, GameSceneConfig, Res
     }
 
     @Override
-    public PacBase3D createPac3D(AnimationRegistry animationRegistry, Pac pac, double size) {
-        var pacMan3D = new PacMan3D(
-            animationRegistry,
-            pac,
-            size,
-            assets.color("pac.color.head"),
-            assets.color("pac.color.eyes"),
-            assets.color("pac.color.palate")
-        );
-        pacMan3D.light().setColor(assets.color("pac.color.head").desaturate());
-        return pacMan3D;
-    }
-
-    @Override
     public byte munchingSoundDelay() {
         return 9;
     }
@@ -272,7 +256,7 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, GameSceneConfig, Res
             case CommonSceneID.INTRO_SCENE   -> new ArcadePacMan_IntroScene();
             case CommonSceneID.START_SCENE   -> new ArcadePacMan_StartScene();
             case CommonSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D();
-            case CommonSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D();
+            case CommonSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D(factory3D);
             case CommonSceneID.CUTSCENE_1    -> new ArcadePacMan_CutScene1();
             case CommonSceneID.CUTSCENE_2    -> new ArcadePacMan_CutScene2();
             case CommonSceneID.CUTSCENE_3    -> new ArcadePacMan_CutScene3();

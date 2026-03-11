@@ -235,16 +235,6 @@ public interface UIConfig extends Disposable {
      */
     AnimationManager createPacAnimations();
 
-    /**
-     * Creates the 3D representation of Pac‑Man or Ms. Pac‑Man for this game
-     * variant, including model, materials, and animation bindings.
-     *
-     * @param animationRegistry the registry where animations are stored
-     * @param pac the Pac‑Man actor whose animations and state drive the model
-     * @param size the desired size of the 3D model
-     * @return the 3D representation of Pac‑Man
-     */
-    PacBase3D createPac3D(AnimationRegistry animationRegistry, Pac pac, double size);
 
     /**
      * Creates a color set for a ghost based on its personality.
