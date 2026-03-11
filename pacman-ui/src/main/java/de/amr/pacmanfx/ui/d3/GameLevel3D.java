@@ -306,22 +306,20 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * @return the 3D ghost with visibility binding
      */
     private MutableGhost3D createMutableGhost3D(ActorConfig3D actorConfig, Ghost ghost) {
-        final byte id = ghost.personality();
-        final var ghost3D = new MutableGhost3D(
+        final var mutableGhost3D = factory3D.createMutableGhost3D(
+            uiConfig.assets(),
+            uiConfig.createGhostColorSet(ghost.personality()),
             animationRegistry,
             ghost,
-            uiConfig.createGhostColorSet(id),
-            Models3D.GHOST_MODEL.dressMesh(),
-            Models3D.GHOST_MODEL.pupilsMesh(),
-            Models3D.GHOST_MODEL.eyeballsMesh(),
             actorConfig.ghostSize(),
-            level.numFlashes()
-        );
-        ghost3D.visibleProperty().bind(Bindings.createBooleanBinding(
+            level.numFlashes());
+
+        mutableGhost3D.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> ghost.isVisible() && !outsideWorld(ghost),
             ghost.visibleProperty(), ghost.positionProperty()
         ));
-        return ghost3D;
+
+        return mutableGhost3D;
     }
 
     /**
