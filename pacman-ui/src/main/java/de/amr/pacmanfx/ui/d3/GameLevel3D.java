@@ -282,7 +282,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     private void createPac3D() {
         final ActorConfig3D actorConfig = uiConfig.config3D().actor();
-        pac3D = factory3D.createPac3D(uiConfig.assets(), animationRegistry, level.pac(), actorConfig.pacSize());
+        pac3D = factory3D.createPac3D(
+            level.pac(),
+            uiConfig.assets(),
+            actorConfig,
+            animationRegistry);
+
         pac3D.init(level);
 
         disposables.add(pac3D);

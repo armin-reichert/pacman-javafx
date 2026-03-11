@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.d3.Factory3D;
+import de.amr.pacmanfx.ui.d3.config.ActorConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.*;
@@ -16,16 +17,25 @@ import static java.util.Objects.requireNonNull;
 public class ArcadePacMan_Factory3D implements Factory3D {
 
     @Override
-    public PacMan3D createPac3D(AssetMap assets, AnimationRegistry animationRegistry, Pac pac, double size) {
-        requireNonNull(animationRegistry);
+    public PacMan3D createPac3D(
+        Pac pac,
+        AssetMap assets,
+        ActorConfig3D actorConfig3D,
+        AnimationRegistry animationRegistry)
+    {
         requireNonNull(pac);
+        requireNonNull(assets);
+        requireNonNull(actorConfig3D);
+        requireNonNull(animationRegistry);
+
         final var pacMan3D = new PacMan3D(
             animationRegistry,
             pac,
-            size,
+            actorConfig3D.pacSize(),
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate"));
+
         pacMan3D.light().setColor(assets.color("pac.color.head").desaturate());
         return pacMan3D;
     }

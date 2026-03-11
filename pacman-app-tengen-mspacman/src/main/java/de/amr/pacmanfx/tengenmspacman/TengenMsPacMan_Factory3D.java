@@ -7,18 +7,31 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.d3.Factory3D;
+import de.amr.pacmanfx.ui.d3.config.ActorConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.*;
 
+import static java.util.Objects.requireNonNull;
+
 public class TengenMsPacMan_Factory3D implements Factory3D {
 
     @Override
-    public MsPacMan3D createPac3D(AssetMap assets, AnimationRegistry animationRegistry, Pac pac, double size) {
+    public MsPacMan3D createPac3D(
+        Pac pac,
+        AssetMap assets,
+        ActorConfig3D actorConfig3D,
+        AnimationRegistry animationRegistry)
+    {
+        requireNonNull(pac);
+        requireNonNull(assets);
+        requireNonNull(actorConfig3D);
+        requireNonNull(animationRegistry);
+
         var pac3D = new MsPacMan3D(
             animationRegistry,
             pac,
-            size,
+            actorConfig3D.pacSize(),
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate"),
@@ -26,6 +39,7 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
             assets.color("pac.color.hairbow.pearls"),
             assets.color("pac.color.boobs")
         );
+
         pac3D.light().setColor(assets.color("pac.color.head").desaturate());
         return pac3D;
     }
