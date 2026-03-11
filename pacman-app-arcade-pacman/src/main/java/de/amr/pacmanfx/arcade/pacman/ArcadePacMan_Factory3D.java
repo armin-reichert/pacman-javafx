@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -11,7 +10,6 @@ import de.amr.pacmanfx.ui.config.GhostConfig;
 import de.amr.pacmanfx.ui.config.PacConfig;
 import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.MutableGhost3D;
 import de.amr.pacmanfx.uilib.model3D.PacBody;
@@ -51,6 +49,9 @@ public class ArcadePacMan_Factory3D implements Factory3D {
         AnimationRegistry animationRegistry,
         int numFlashings)
     {
+        requireNonNull(ghost);
+        requireNonNull(ghostConfig);
+        requireNonNull(animationRegistry);
         return new MutableGhost3D(
             animationRegistry,
             ghost,
@@ -64,7 +65,8 @@ public class ArcadePacMan_Factory3D implements Factory3D {
     }
 
     @Override
-    public PacBody createLivesCounterShape3D(AssetMap assets, EntityConfig entityConfig) {
+    public PacBody createLivesCounterShape3D(EntityConfig entityConfig) {
+        requireNonNull(entityConfig);
         final var pacConfig = entityConfig.pacConfig();
         return Models3D.PAC_MAN_MODEL.createPacBody(
             entityConfig.livesCounter().shapeSize(),
