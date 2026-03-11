@@ -319,16 +319,6 @@ public class ArcadePacMan_UIConfig implements UIConfig, GameSceneConfig, Resourc
         return spriteSheet().image(sprites[symbol]);
     }
 
-    @Override
-    public PacBody createLivesCounterShape3D(double size) {
-        return Models3D.PAC_MAN_MODEL.createPacBody(
-            size,
-            assets.color("pac.color.head"),
-            assets.color("pac.color.eyes"),
-            assets.color("pac.color.palate")
-        );
-    }
-
     // Game scene config
 
     private GameScene createGameScene(SceneID sceneID) {

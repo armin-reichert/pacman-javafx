@@ -234,16 +234,6 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, GameSceneConfig, Res
     }
 
     @Override
-    public PacBody createLivesCounterShape3D(double size) {
-        return Models3D.PAC_MAN_MODEL.createPacBody(
-            size,
-            assets.color("pac.color.head"),
-            assets.color("pac.color.eyes"),
-            assets.color("pac.color.palate")
-        );
-    }
-
-    @Override
     public byte munchingSoundDelay() {
         return 9;
     }

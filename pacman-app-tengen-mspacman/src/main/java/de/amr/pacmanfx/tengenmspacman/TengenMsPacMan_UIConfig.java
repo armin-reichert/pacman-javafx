@@ -332,19 +332,6 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
         return new TengenMsPacMan_PacAnimations();
     }
 
-    @Override
-    public MsPacManBody createLivesCounterShape3D(double size) {
-        return Models3D.PAC_MAN_MODEL.createMsPacManBody(
-            size,
-            assets.color("pac.color.head"),
-            assets.color("pac.color.eyes"),
-            assets.color("pac.color.palate"),
-            assets.color("pac.color.hairbow"),
-            assets.color("pac.color.hairbow.pearls"),
-            assets.color("pac.color.boobs")
-        );
-    }
-
     // Game scenes
 
     private GameScene createGameScene(SceneID sceneID) {

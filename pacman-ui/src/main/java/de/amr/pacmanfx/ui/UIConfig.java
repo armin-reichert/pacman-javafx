@@ -50,9 +50,6 @@ import org.tinylog.Logger;
  *   <li><strong>Animation factories</strong> – providing animation managers
  *       for Pac‑Man and each ghost personality.</li>
  *
- *   <li><strong>3D model factories</strong> – constructing 3D representations
- *       of Pac‑Man and the lives counter when the 3D play scene is enabled.</li>
- *
  *   <li><strong>Color scheme selection</strong> – returning the appropriate
  *       {@link WorldMapColorScheme} for a given maze.</li>
  *
@@ -262,14 +259,6 @@ public interface UIConfig extends Disposable {
             )
         );
     }
-
-    /**
-     * Creates the 3D representation of the lives counter for this variant.
-     *
-     * @param size the desired size of the 3D shape
-     * @return the 3D node representing a life icon
-     */
-    Node createLivesCounterShape3D(double size);
 
     /**
      * Returns the image representing the points earned for killing a ghost

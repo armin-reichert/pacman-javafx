@@ -8,6 +8,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
+import javafx.scene.Node;
 
 public interface Factory3D {
     /**
@@ -21,4 +22,11 @@ public interface Factory3D {
      */
     PacBase3D createPac3D(AssetMap assets, AnimationRegistry animationRegistry, Pac pac, double size);
 
+    /**
+     * Creates the 3D representation of the lives counter for this variant.
+     *
+     * @param size the desired size of the 3D shape
+     * @return the 3D node representing a life icon
+     */
+    Node createLivesCounterShape3D(AssetMap assets, double size);
 }
