@@ -26,8 +26,6 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.UfxImages;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.model3D.Models3D;
-import de.amr.pacmanfx.uilib.model3D.PacBody;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -167,10 +165,6 @@ public class ArcadePacMan_UIConfig implements UIConfig, GameSceneConfig, Resourc
         assets.set("color.game_over_message", ARCADE_RED);
 
         assets.set("maze.bright", UfxImages.recolorImage(spriteSheet().image(SpriteID.MAP_EMPTY), BRIGHT_MAZE_COLOR_CHANGES));
-
-        assets.set("pac.color.head",   ARCADE_YELLOW);
-        assets.set("pac.color.eyes",   Color.grayRgb(33));
-        assets.set("pac.color.palate", ARCADE_BROWN);
 
         assets.set("ghost.0.color.normal.dress",      ARCADE_RED);
         assets.set("ghost.0.color.normal.eyeballs",   ARCADE_WHITE);

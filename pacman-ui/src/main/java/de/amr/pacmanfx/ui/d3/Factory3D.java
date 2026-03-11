@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.config.ActorConfig;
+import de.amr.pacmanfx.ui.config.Config3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.model3D.GhostColorSet;
@@ -45,8 +46,9 @@ public interface Factory3D {
     /**
      * Creates the 3D representation of the lives counter for this variant.
      *
-     * @param size the desired size of the 3D shape
+     * @param assets the asset map to retrieve colors and other assets
+     * @param config3D the configuration object containing parameters for the lives counter's appearance
      * @return the 3D node representing a life icon
      */
-    Node createLivesCounterShape3D(AssetMap assets, double size);
+    Node createLivesCounterShape3D(AssetMap assets, Config3D config3D);
 }

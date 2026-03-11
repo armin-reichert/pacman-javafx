@@ -7,6 +7,8 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.config.ActorConfig;
+import de.amr.pacmanfx.ui.config.Config3D;
+import de.amr.pacmanfx.ui.config.PacConfig;
 import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -28,19 +30,20 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
         requireNonNull(actorConfig);
         requireNonNull(animationRegistry);
 
+        final PacConfig pacConfig = actorConfig.pacConfig();
         var pac3D = new MsPacMan3D(
             animationRegistry,
             pac,
-            actorConfig.pacConfig().size3D(),
-            assets.color("pac.color.head"),
-            assets.color("pac.color.eyes"),
-            assets.color("pac.color.palate"),
-            assets.color("pac.color.hairbow"),
-            assets.color("pac.color.hairbow.pearls"),
-            assets.color("pac.color.boobs")
+            pacConfig.size3D(),
+            pacConfig.headColor(),
+            pacConfig.eyesColor(),
+            pacConfig.palateColor(),
+            pacConfig.hairbowColor(),
+            pacConfig.hairBowPearlsColor(),
+            pacConfig.boobsColor()
         );
 
-        pac3D.light().setColor(assets.color("pac.color.head").desaturate());
+        pac3D.light().setColor(pacConfig.headColor().desaturate());
         return pac3D;
     }
 
@@ -66,15 +69,16 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
     }
 
     @Override
-    public MsPacManBody createLivesCounterShape3D(AssetMap assets, double size) {
+    public MsPacManBody createLivesCounterShape3D(AssetMap assets, Config3D config3D) {
+        final PacConfig pacConfig = config3D.actor().pacConfig();
         return Models3D.PAC_MAN_MODEL.createMsPacManBody(
-            size,
-            assets.color("pac.color.head"),
-            assets.color("pac.color.eyes"),
-            assets.color("pac.color.palate"),
-            assets.color("pac.color.hairbow"),
-            assets.color("pac.color.hairbow.pearls"),
-            assets.color("pac.color.boobs")
+            config3D.livesCounter().shapeSize(),
+            pacConfig.headColor(),
+            pacConfig.eyesColor(),
+            pacConfig.palateColor(),
+            pacConfig.hairbowColor(),
+            pacConfig.hairBowPearlsColor(),
+            pacConfig.boobsColor()
         );
     }
 }

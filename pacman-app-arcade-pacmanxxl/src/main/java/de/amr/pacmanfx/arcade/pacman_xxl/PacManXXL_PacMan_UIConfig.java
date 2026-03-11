@@ -32,7 +32,6 @@ import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -83,10 +82,6 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, GameSceneConfig, Res
 
         assets.set("app_icon", loadImage("graphics/icons/pacman.png"));
         assets.set("color.game_over_message", ARCADE_RED);
-
-        assets.set("pac.color.head", ARCADE_YELLOW);
-        assets.set("pac.color.eyes", Color.grayRgb(33));
-        assets.set("pac.color.palate", ARCADE_BROWN);
 
         assets.set("ghost.0.color.normal.dress", ARCADE_RED);
         assets.set("ghost.0.color.normal.eyeballs", ARCADE_WHITE);

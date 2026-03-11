@@ -334,7 +334,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final LivesCounterConfig3D config = uiConfig.config3D().livesCounter();
         livesCounterShapes = new Node[config.capacity()];
         for (int i = 0; i < livesCounterShapes.length; ++i) {
-            livesCounterShapes[i] = factory3D.createLivesCounterShape3D(uiConfig.assets(), config.shapeSize());
+            livesCounterShapes[i] = factory3D.createLivesCounterShape3D(uiConfig.assets(), uiConfig.config3D());
         }
         livesCounter3D = new LivesCounter3D(animationRegistry, livesCounterShapes);
         livesCounter3D.setTranslateX(2 * TS);

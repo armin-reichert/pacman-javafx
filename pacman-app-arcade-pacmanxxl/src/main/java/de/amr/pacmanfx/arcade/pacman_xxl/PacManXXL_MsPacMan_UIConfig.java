@@ -38,7 +38,6 @@ import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -91,13 +90,6 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, GameSceneConfig, R
         assets.set("app_icon", loadImage("graphics/icons/mspacman.png"));
         assets.set("logo.midway", loadImage("graphics/midway_logo.png"));
         assets.set("color.game_over_message", ARCADE_RED);
-
-        assets.set("pac.color.head", ARCADE_YELLOW);
-        assets.set("pac.color.eyes", Color.grayRgb(33));
-        assets.set("pac.color.palate", ARCADE_BROWN);
-        assets.set("pac.color.boobs", ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0));
-        assets.set("pac.color.hairbow", ARCADE_RED);
-        assets.set("pac.color.hairbow.pearls", ARCADE_BLUE);
 
         assets.set("ghost.0.color.normal.dress", ARCADE_RED);
         assets.set("ghost.0.color.normal.eyeballs", ARCADE_WHITE);

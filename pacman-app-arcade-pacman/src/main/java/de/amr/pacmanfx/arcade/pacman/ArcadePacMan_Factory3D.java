@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.config.ActorConfig;
+import de.amr.pacmanfx.ui.config.Config3D;
 import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -28,15 +29,17 @@ public class ArcadePacMan_Factory3D implements Factory3D {
         requireNonNull(actorConfig);
         requireNonNull(animationRegistry);
 
+        final var pacConfig = actorConfig.pacConfig();
         final var pacMan3D = new PacMan3D(
             animationRegistry,
             pac,
-            actorConfig.pacConfig().size3D(),
-            assets.color("pac.color.head"),
-            assets.color("pac.color.eyes"),
-            assets.color("pac.color.palate"));
+            pacConfig.size3D(),
+            pacConfig.headColor(),
+            pacConfig.eyesColor(),
+            pacConfig.palateColor()
+        );
 
-        pacMan3D.light().setColor(assets.color("pac.color.head").desaturate());
+        pacMan3D.light().setColor(pacConfig.headColor().desaturate());
         return pacMan3D;
     }
 
@@ -62,12 +65,13 @@ public class ArcadePacMan_Factory3D implements Factory3D {
     }
 
     @Override
-    public PacBody createLivesCounterShape3D(AssetMap assets, double size) {
+    public PacBody createLivesCounterShape3D(AssetMap assets, Config3D config3D) {
+        final var pacConfig = config3D.actor().pacConfig();
         return Models3D.PAC_MAN_MODEL.createPacBody(
-            size,
-            assets.color("pac.color.head"),
-            assets.color("pac.color.eyes"),
-            assets.color("pac.color.palate")
+            config3D.livesCounter().shapeSize(),
+            pacConfig.headColor(),
+            pacConfig.eyesColor(),
+            pacConfig.palateColor()
         );
     }
 }

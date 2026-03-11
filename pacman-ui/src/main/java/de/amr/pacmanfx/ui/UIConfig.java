@@ -24,6 +24,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
+import static de.amr.pacmanfx.ui.ArcadePalette.*;
+
 /**
  * Defines the complete UI configuration for a specific game variant.
  *
@@ -70,13 +72,25 @@ public interface UIConfig extends Disposable {
 
     Config3D DEFAULT_CONFIG_3D = new Config3D(
         new ActorConfig(
-            new PacConfig(8.0f, 16.0f),
+            new PacConfig(
+                ARCADE_YELLOW,
+                Color.grayRgb(33),
+                ARCADE_BROWN,
+                ARCADE_RED,
+                ARCADE_BLUE,
+                ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0),
+                8.0f,
+                16.0f),
             15.5f, 8.0f, 14.5f),
         new EnergizerConfig3D(3, 3.5f, 6.0f, 0.2f, 1.0f),
         new FloorConfig3D(5f, 0.5f),
         new HouseConfig3D(12.0f, 0.4f, 12.0f, 2.5f),
         new LevelCounterConfig3D(10.0f, 6.0f),
-        new LivesCounterConfig3D(5, Color.grayRgb(120), Color.grayRgb(180), 12.0f),
+        new LivesCounterConfig3D(
+            5,
+            Color.grayRgb(120),
+            Color.grayRgb(180),
+            12.0f),
         new MazeConfig3D(4.0f, 4.0f, 1.0f, 2.25f, "0x2a2a2a"),
         new PelletConfig3D(1.0f, 6.0f)
     );

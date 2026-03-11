@@ -23,6 +23,7 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameSceneConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
+import de.amr.pacmanfx.ui.config.*;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d3.Factory3D;
@@ -32,8 +33,6 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.model3D.Models3D;
-import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.media.MediaPlayer;
@@ -55,6 +54,31 @@ import static de.amr.pacmanfx.ui.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
+
+    Config3D TENGEN_CONFIG_3D = new Config3D(
+        new ActorConfig(
+            new PacConfig(
+                nesColor(0x28),
+                nesColor(0x02),
+                nesColor(0x2d),
+                nesColor(0x05),
+                nesColor(0x02),
+                nesColor(0x28).deriveColor(0, 1.0, 0.96, 1.0),
+                8.0f,
+                16.0f),
+            15.5f, 8.0f, 14.5f),
+        new EnergizerConfig3D(3, 3.5f, 6.0f, 0.2f, 1.0f),
+        new FloorConfig3D(5f, 0.5f),
+        new HouseConfig3D(12.0f, 0.4f, 12.0f, 2.5f),
+        new LevelCounterConfig3D(10.0f, 6.0f),
+        new LivesCounterConfig3D(
+            5,
+            Color.grayRgb(120),
+            Color.grayRgb(180),
+            12.0f),
+        new MazeConfig3D(4.0f, 4.0f, 1.0f, 2.25f, "0x2a2a2a"),
+        new PelletConfig3D(1.0f, 6.0f)
+    );
 
     public enum TengenSceneID implements SceneID {
         HALL_OF_FAME
@@ -141,6 +165,11 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
 
     @Override
+    public Config3D config3D() {
+        return TENGEN_CONFIG_3D;
+    }
+
+    @Override
     public void init(GameUI ui) {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
@@ -170,13 +199,6 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
 
         assets.set("color.game_over_message",          nesColor(0x11));
         assets.set("color.ready_message",              nesColor(0x28));
-
-        assets.set("pac.color.head",                   nesColor(0x28));
-        assets.set("pac.color.eyes",                   nesColor(0x02));
-        assets.set("pac.color.palate",                 nesColor(0x2d));
-        assets.set("pac.color.boobs",                  nesColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
-        assets.set("pac.color.hairbow",                nesColor(0x05));
-        assets.set("pac.color.hairbow.pearls",         nesColor(0x02));
 
         assets.set("ghost.0.color.normal.dress",       nesColor(0x05));
         assets.set("ghost.0.color.normal.eyeballs",    nesColor(0x20));
