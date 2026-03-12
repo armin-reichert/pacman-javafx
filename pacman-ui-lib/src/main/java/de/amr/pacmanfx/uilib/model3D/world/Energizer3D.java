@@ -60,8 +60,8 @@ public class Energizer3D implements DisposableGraphicsObject {
     }
 
     private final AnimationRegistry animationRegistry;
-    private final Point3D center;
     private final Vector2i tile;
+    private Point3D center;
 
     private int pumpingFrequency = 3;
     private double inflatedSize = 0.2;
@@ -71,18 +71,16 @@ public class Energizer3D implements DisposableGraphicsObject {
     private Shape3D shape;
     private ManagedAnimation pumpingAnimation;
 
-    public Energizer3D(
-        AnimationRegistry animationRegistry,
-        Vector2i tile,
-        double z)
-    {
+    public Energizer3D(AnimationRegistry animationRegistry, Vector2i tile) {
         this.animationRegistry = requireNonNull(animationRegistry);
         this.tile = requireNonNull(tile);
+        this.shapeFactory = Energizer3D::createDefaultShape;
+        setZ(HTS);
+    }
 
+    public void setZ(double z) {
         final Vector2i tileCenter = tile.scaled(TS).plus(HTS, HTS);
-        this.center = new Point3D(tileCenter.x(), tileCenter.y(), z);
-
-        shapeFactory = Energizer3D::createDefaultShape;
+        center = new Point3D(tileCenter.x(), tileCenter.y(), z);
     }
 
     @Override

@@ -6,19 +6,18 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.config.EntityConfig;
-import de.amr.pacmanfx.ui.config.GhostConfig;
-import de.amr.pacmanfx.ui.config.PacConfig;
-import de.amr.pacmanfx.ui.config.PelletConfig3D;
+import de.amr.pacmanfx.ui.config.*;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.actor.MutableGhost3D;
 import de.amr.pacmanfx.uilib.model3D.actor.PacRepresentation3D;
+import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -69,8 +68,23 @@ public interface Factory3D {
         //TODO fix rotation in OBJ file
         pellet3D.setRotationAxis(Rotate.Z_AXIS);
         pellet3D.setRotate(90);
+
         pellet3D.setTranslateX(tile.x() * TS + HTS);
         pellet3D.setTranslateY(tile.y() * TS + HTS);
+
         return pellet3D;
+    }
+
+    default Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animationRegistry, PhongMaterial material, Vector2i tile) {
+        final var energizer3D = new Energizer3D(animationRegistry, tile);
+        energizer3D.setShapeFactory(() -> {
+            final var shape = new Sphere(config.radius(), 48);
+            shape.setMaterial(material);
+            return shape;
+        });
+        energizer3D.setPumpingFrequency(config.pumpingFrequency());
+        energizer3D.setInflatedSize(config.scalingInflated());
+        energizer3D.setExpandedSize(config.scalingExpanded());
+        return energizer3D;
     }
 }

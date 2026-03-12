@@ -21,15 +21,12 @@ import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Shape3D;
-import javafx.scene.shape.Sphere;
 import org.tinylog.Logger;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -44,7 +41,6 @@ public class MazeFood3D implements Disposable {
     private final FoodLayer foodLayer;
     private final Set<Pellet3D> pellets3D = new HashSet<>();
     private final Set<Energizer3D> energizers3D = new HashSet<>();
-    private final Supplier<Shape3D> energizerShapeFactory;
 
     private EnergizerParticlesAnimation explodedEnergizerParticlesAnimation;
 
@@ -71,14 +67,9 @@ public class MazeFood3D implements Disposable {
 
         final var pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
 
-        energizerShapeFactory = () -> {
-            final var shape = new Sphere(energizerConfig3D.radius(), 48);
-            shape.setMaterial(pelletMaterial);
-            return shape;
-        };
-
         createPellets3D(factory3D, pelletConfig3D, pelletMaterial, maze3D.floorTop() - pelletConfig3D.floorElevation());
-        createEnergizers3D(energizerConfig3D, animationRegistry, maze3D.floorTop() - energizerConfig3D.floorElevation());
+
+        createEnergizers3D(factory3D, energizerConfig3D, animationRegistry, pelletMaterial, maze3D.floorTop() - energizerConfig3D.floorElevation());
 
         // The bottom center positions of the swirls where the particles of exploded energizers eventually are displayed
         final List<Vector2f> swirlBaseCenters = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
@@ -177,26 +168,31 @@ public class MazeFood3D implements Disposable {
             }).forEach(pellets3D::add);
     }
 
-    private void createEnergizers3D(EnergizerConfig3D config, AnimationRegistry animationRegistry, double z) {
+    private void createEnergizers3D(
+        Factory3D factory3D,
+        EnergizerConfig3D config,
+        AnimationRegistry animationRegistry,
+        PhongMaterial material,
+        double z)
+    {
         energizers3D.clear(); // just in case
         foodLayer.tiles()
             .filter(foodLayer::isEnergizerTile)
             .filter(foodLayer::hasFoodAtTile)
-            .map(tile -> createEnergizer3D(config, animationRegistry, tile, z, energizerShapeFactory))
+            .map(tile -> {
+                final Energizer3D energizer3D = factory3D.createEnergizer3D(config, animationRegistry, material, tile);
+                energizer3D.setZ(z);
+                return energizer3D;
+            })
             .forEach(energizers3D::add);
     }
 
-    private Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animationRegistry, Vector2i tile, double z, Supplier<Shape3D> shapeFactory) {
-        final var energizer3D = new Energizer3D(animationRegistry, tile, z);
-        energizer3D.setShapeFactory(shapeFactory);
-        energizer3D.setPumpingFrequency(config.pumpingFrequency());
-        energizer3D.setInflatedSize(config.scalingInflated());
-        energizer3D.setExpandedSize(config.scalingExpanded());
-        return energizer3D;
-    }
-
     private EnergizerParticlesAnimation createEnergizerParticlesAnimation(
-        AnimationRegistry animationRegistry, Maze3D maze3D, List<PhongMaterial> ghostMaterials, List<Vector2f> swirlBaseCenters) {
+        AnimationRegistry animationRegistry,
+        Maze3D maze3D,
+        List<PhongMaterial> ghostMaterials,
+        List<Vector2f> swirlBaseCenters)
+    {
         return new EnergizerParticlesAnimation(
             EnergizerParticlesAnimation.DEFAULT_CONFIG,
             animationRegistry,
