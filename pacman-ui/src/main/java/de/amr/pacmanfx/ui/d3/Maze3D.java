@@ -77,12 +77,14 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
      * @throws NullPointerException if any required argument is {@code null}
      */
     public Maze3D(
+        Factory3D factory3D,
         EntityConfig entityConfig,
         WorldMapColorScheme colorScheme,
         GameLevel level,
         AnimationRegistry animationRegistry,
         List<PhongMaterial> ghostMaterials)
     {
+        requireNonNull(factory3D);
         requireNonNull(entityConfig);
         requireNonNull(level);
         this.animationRegistry = requireNonNull(animationRegistry);
@@ -98,7 +100,7 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
             .ifPresentOrElse(
                 arcadeHouse -> createArcadeHouse3D(entityConfig.house(), arcadeHouse),
                 () -> Logger.error("Currently only Arcade house is supported"));
-        createMazeFood3D(entityConfig.pellet(), entityConfig.energizer(), level, ghostMaterials);
+        createMazeFood3D(factory3D, entityConfig.pellet(), entityConfig.energizer(), level, ghostMaterials);
     }
 
     /** @return the property controlling the base height of all walls */
@@ -197,8 +199,12 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createMazeFood3D(
-        PelletConfig3D pelletConfig, EnergizerConfig3D energizerConfig, GameLevel level, List<PhongMaterial> ghostMaterials)
+        Factory3D factory3D,
+        PelletConfig3D pelletConfig,
+        EnergizerConfig3D energizerConfig,
+        GameLevel level,
+        List<PhongMaterial> ghostMaterials)
     {
-        food3D = new MazeFood3D(pelletConfig, energizerConfig, colorScheme, animationRegistry, level, ghostMaterials, this);
+        food3D = new MazeFood3D(factory3D, pelletConfig, energizerConfig, colorScheme, animationRegistry, level, ghostMaterials, this);
     }
 }

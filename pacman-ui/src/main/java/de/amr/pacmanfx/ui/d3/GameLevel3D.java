@@ -105,7 +105,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final List<PhongMaterial> ghostDressMaterials = ghosts3D.stream()
             .map(mutableGhost3D -> mutableGhost3D.ghost3D().normalMaterialSet().dress())
             .toList();
-        createMaze3D(ghostDressMaterials);
+        createMaze3D(factory3D, ghostDressMaterials);
 
         createAmbientLight();
         createLevelCounter3D(entityConfig.levelCounter());
@@ -345,7 +345,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates and initializes the maze visualization, including color scheme adjustment.
      */
-    private void createMaze3D(List<PhongMaterial> ghostDressMaterials) {
+    private void createMaze3D(Factory3D factory3D, List<PhongMaterial> ghostDressMaterials) {
         WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final boolean wallsVeryDark = Color.valueOf(colorScheme.wallFill()).getBrightness() < 0.1;
         if (wallsVeryDark) {
@@ -357,7 +357,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 colorScheme.pellet());
         }
 
-        maze3D = new Maze3D(uiConfig.entityConfig(), colorScheme, level, animationRegistry, ghostDressMaterials);
+        maze3D = new Maze3D(
+            factory3D,
+            uiConfig.entityConfig(),
+            colorScheme,
+            level,
+            animationRegistry,
+            ghostDressMaterials
+        );
         maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
         maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
 

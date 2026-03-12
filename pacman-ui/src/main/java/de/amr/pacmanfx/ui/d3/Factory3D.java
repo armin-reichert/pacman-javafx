@@ -3,15 +3,26 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.GhostConfig;
 import de.amr.pacmanfx.ui.config.PacConfig;
+import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.actor.MutableGhost3D;
 import de.amr.pacmanfx.uilib.model3D.actor.PacRepresentation3D;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Mesh;
+import javafx.scene.shape.MeshView;
+import javafx.scene.transform.Rotate;
+
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 
 public interface Factory3D {
 
@@ -45,4 +56,21 @@ public interface Factory3D {
      * @return the 3D node representing a life icon
      */
     Node createLivesCounterShape3D(EntityConfig entityConfig);
+
+    default Pellet3D createPellet3D(PelletConfig3D pelletConfig, PhongMaterial material, Vector2i tile) {
+        final Mesh pelletMesh = Models3D.PELLET_MODEL.mesh();
+        final var dummy = new MeshView(pelletMesh);
+        final Bounds bounds = dummy.getBoundsInLocal();
+        final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
+        final double scaling = (2 * pelletConfig.radius()) / maxExtent;
+        final Mesh scaledPelletMesh = Models3D.createScaledMesh(pelletMesh, scaling);
+        final var pellet3D = new Pellet3D(scaledPelletMesh, tile);
+        pellet3D.setMaterial(material);
+        //TODO fix rotation in OBJ file
+        pellet3D.setRotationAxis(Rotate.Z_AXIS);
+        pellet3D.setRotate(90);
+        pellet3D.setTranslateX(tile.x() * TS + HTS);
+        pellet3D.setTranslateY(tile.y() * TS + HTS);
+        return pellet3D;
+    }
 }

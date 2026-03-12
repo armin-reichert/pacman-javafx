@@ -16,18 +16,13 @@ import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerParticlesAnimation;
-import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Mesh;
-import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
-import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
 
 import java.util.Collections;
@@ -54,6 +49,7 @@ public class MazeFood3D implements Disposable {
     private EnergizerParticlesAnimation explodedEnergizerParticlesAnimation;
 
     public MazeFood3D(
+        Factory3D factory3D,
         PelletConfig3D pelletConfig3D,
         EnergizerConfig3D energizerConfig3D,
         WorldMapColorScheme colorScheme,
@@ -62,6 +58,7 @@ public class MazeFood3D implements Disposable {
         List<PhongMaterial> ghostMaterials,
         Maze3D maze3D)
     {
+        requireNonNull(factory3D);
         requireNonNull(pelletConfig3D);
         requireNonNull(energizerConfig3D);
         requireNonNull(colorScheme);
@@ -80,7 +77,7 @@ public class MazeFood3D implements Disposable {
             return shape;
         };
 
-        createPellets3D(pelletConfig3D, pelletMaterial, maze3D.floorTop() - pelletConfig3D.floorElevation());
+        createPellets3D(factory3D, pelletConfig3D, pelletMaterial, maze3D.floorTop() - pelletConfig3D.floorElevation());
         createEnergizers3D(energizerConfig3D, animationRegistry, maze3D.floorTop() - energizerConfig3D.floorElevation());
 
         // The bottom center positions of the swirls where the particles of exploded energizers eventually are displayed
@@ -168,35 +165,16 @@ public class MazeFood3D implements Disposable {
         pauseSecThen(PELLET_EATING_DELAY_SEC, () -> pelletContainer.getChildren().remove(pellet3D)).play();
     }
 
-    private void createPellets3D(PelletConfig3D config, PhongMaterial pelletMaterial, double z) {
-        final Mesh pelletMesh = Models3D.PELLET_MODEL.mesh();
-        final double scaling = computePelletScaling(config, pelletMesh);
-        final Mesh scaledPelletMesh = Models3D.createScaledMesh(pelletMesh, scaling);
+    private void createPellets3D(Factory3D factory3D, PelletConfig3D config, PhongMaterial pelletMaterial, double z) {
         pellets3D.clear(); // just in case
         foodLayer.tiles()
             .filter(foodLayer::hasFoodAtTile)
             .filter(tile -> !foodLayer.isEnergizerTile(tile))
-            .map(tile -> createPelletShape3D(scaledPelletMesh, pelletMaterial, tile, z))
-            .forEach(pellets3D::add);
-    }
-
-    private double computePelletScaling(PelletConfig3D config, Mesh pelletMesh) {
-        final var dummy = new MeshView(pelletMesh);
-        final Bounds bounds = dummy.getBoundsInLocal();
-        final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
-        return (2 * config.radius()) / maxExtent;
-    }
-
-    private Pellet3D createPelletShape3D(Mesh mesh, PhongMaterial material, Vector2i tile, double z) {
-        final var pellet3D = new Pellet3D(mesh, tile);
-        pellet3D.setMaterial(material);
-        //TODO fix rotation in OBJ file
-        pellet3D.setRotationAxis(Rotate.Z_AXIS);
-        pellet3D.setRotate(90);
-        pellet3D.setTranslateX(tile.x() * TS + HTS);
-        pellet3D.setTranslateY(tile.y() * TS + HTS);
-        pellet3D.setTranslateZ(z);
-        return pellet3D;
+            .map(tile -> {
+                final Pellet3D pellet3D = factory3D.createPellet3D(config, pelletMaterial, tile);
+                pellet3D.setTranslateZ(z);
+                return pellet3D;
+            }).forEach(pellets3D::add);
     }
 
     private void createEnergizers3D(EnergizerConfig3D config, AnimationRegistry animationRegistry, double z) {
