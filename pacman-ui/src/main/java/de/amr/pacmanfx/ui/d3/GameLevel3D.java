@@ -54,7 +54,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @see PlayScene3D
  * @see Maze3D
- * @see PacBase3D
+ * @see PacRepresentation3D
  * @see MutableGhost3D
  * @see DisposableGraphicsObject
  */
@@ -72,7 +72,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private Maze3D maze3D;
     private LevelCounter3D levelCounter3D;
     private LivesCounter3D livesCounter3D;
-    private PacBase3D pac3D;
+    private PacRepresentation3D pac3D;
     private List<MutableGhost3D> ghosts3D;
     private Bonus3D bonus3D;
     private Node[] livesCounterShapes;
@@ -175,7 +175,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     /** @return Pac-Man 3D representation */
-    public PacBase3D pac3D() {
+    public PacRepresentation3D pac3D() {
         return pac3D;
     }
 

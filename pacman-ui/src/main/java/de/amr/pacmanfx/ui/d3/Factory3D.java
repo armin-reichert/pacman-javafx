@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -11,7 +10,7 @@ import de.amr.pacmanfx.ui.config.GhostConfig;
 import de.amr.pacmanfx.ui.config.PacConfig;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.MutableGhost3D;
-import de.amr.pacmanfx.uilib.model3D.PacBase3D;
+import de.amr.pacmanfx.uilib.model3D.PacRepresentation3D;
 import javafx.scene.Node;
 
 public interface Factory3D {
@@ -25,7 +24,7 @@ public interface Factory3D {
      * @param animationRegistry the registry where animations are stored
      * @return the 3D representation of Pac
      */
-    PacBase3D createPac3D(Pac pac, PacConfig pacConfig, AnimationRegistry animationRegistry);
+    PacRepresentation3D createPac3D(Pac pac, PacConfig pacConfig, AnimationRegistry animationRegistry);
 
     /**
      * Creates the 3D representation of a ghost for this game variant, including

@@ -21,8 +21,9 @@ import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
-import de.amr.pacmanfx.uilib.model3D.PacBase3D;
+import de.amr.pacmanfx.uilib.model3D.PacRepresentation3D;
 import de.amr.pacmanfx.uilib.model3D.Scores3D;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.animation.Interpolator;
@@ -30,12 +31,14 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.*;
+import javafx.scene.Group;
+import javafx.scene.PerspectiveCamera;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -96,12 +99,12 @@ public class PlayScene3D implements GameScene {
     protected final Factory3D factory3D;
 
     protected GameLevel3DEventHandler level3D_EventHandler = new GameLevel3DEventHandler();
-    protected GamePlaySoundEffects soundEffects;
     protected ActionBindingsManager actionBindings = ActionBindingsManager.NO_BINDINGS;
     protected GameUI ui;
     protected GameLevel3D gameLevel3D;
     protected Scores3D scores3D;
     protected PlaySceneContextMenu contextMenu;
+    protected GamePlaySoundEffects soundEffects;
 
     /**
      * Inner class managing the fade-in animation of the 3D sub-scene.
@@ -417,7 +420,7 @@ public class PlayScene3D implements GameScene {
         });
     }
 
-    private void initPac3D(PacBase3D pac3D, GameLevel level) {
+    private void initPac3D(PacRepresentation3D pac3D, GameLevel level) {
         pac3D.init(level);
         pac3D.update(level);
     }
@@ -565,18 +568,7 @@ public class PlayScene3D implements GameScene {
      */
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode drawMode) {
         if (gameLevel3D != null) {
-            setDrawMode(gameLevel3D, drawMode);
-        }
-    }
-
-    private static void setDrawMode(Group group, DrawMode drawMode) {
-        for (Node node : group.getChildren()) {
-            if (node instanceof Group subGroup) {
-                setDrawMode(subGroup, drawMode);
-            }
-            else if (node instanceof Shape3D shape3D) {
-                shape3D.setDrawMode(drawMode);
-            }
+            Ufx.setDrawMode(gameLevel3D, drawMode);
         }
     }
 }
