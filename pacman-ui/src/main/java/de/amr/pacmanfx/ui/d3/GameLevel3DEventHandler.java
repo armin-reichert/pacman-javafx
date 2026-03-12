@@ -34,20 +34,14 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3DEventHandler {
 
-    private final GameUI ui;
-    private final GamePlaySoundEffects soundEffects;
-    private final RandomTextPicker<String> pickerGameOverMessages;
+    private GamePlaySoundEffects soundEffects;
+    private RandomTextPicker<String> pickerGameOverMessages;
+    private GameUI ui;
 
-    /**
-     * Creates a new 3D event handler.
-     *
-     * @param ui           reference to the game UI (for config, context, flash messages)
-     * @param soundEffects sound playback manager
-     */
-    public GameLevel3DEventHandler(GameUI ui, GamePlaySoundEffects soundEffects) {
+    public void init(GameUI ui, GamePlaySoundEffects soundEffects) {
         this.ui = requireNonNull(ui);
         this.soundEffects = requireNonNull(soundEffects);
-        this.pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");
+        pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");
     }
 
     /**
@@ -57,6 +51,7 @@ public class GameLevel3DEventHandler {
      * @param level3D the current 3D level representation (may be null)
      */
     public void handleGameStateChange(GameStateChangeEvent event, GameLevel3D level3D) {
+        requireNonNull(event);
         if (level3D == null) {
             Logger.warn("Ignoring game state change event: level3D is null");
             return;

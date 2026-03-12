@@ -95,7 +95,7 @@ public class PlayScene3D implements GameScene {
     protected final FadeInAnimation fadeInAnimation;
     protected final Factory3D factory3D;
 
-    protected GameLevel3DEventHandler level3D_EventHandler;
+    protected GameLevel3DEventHandler level3D_EventHandler = new GameLevel3DEventHandler();
     protected GamePlaySoundEffects soundEffects;
     protected ActionBindingsManager actionBindings = ActionBindingsManager.NO_BINDINGS;
     protected GameUI ui;
@@ -178,9 +178,11 @@ public class PlayScene3D implements GameScene {
      */
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
+
         soundEffects = new GamePlaySoundEffects(ui.soundManager());
         soundEffects.setMunchingSoundDelay(ui.currentConfig().munchingSoundDelay());
-        level3D_EventHandler = new GameLevel3DEventHandler(ui, soundEffects);
+
+        level3D_EventHandler.init(ui, soundEffects);
 
         // TODO: reconsider whether scores need recreation here (variant/font change?)
         replaceScores3D();
