@@ -63,7 +63,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final GameLevel level;
 
     private final UIConfig uiConfig;
-    private final Factory3D factory3D;
     private final AnimationRegistry animationRegistry;
     private final List<Disposable> disposables = new ArrayList<>();
 
@@ -89,14 +88,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     public GameLevel3D(UIConfig uiConfig, Factory3D factory3D, GameLevel level) {
         this.uiConfig = requireNonNull(uiConfig);
-        this.factory3D = requireNonNull(factory3D);
+        requireNonNull(factory3D);
         this.level = requireNonNull(level);
         this.animationRegistry = new AnimationRegistry();
 
         final EntityConfig entityConfig = uiConfig.entityConfig();
 
-        createPac3D(entityConfig.pacConfig());
-        createGhosts3D(entityConfig.ghostConfigs());
+        createPac3D(factory3D, entityConfig.pacConfig());
+        createGhosts3D(factory3D, entityConfig.ghostConfigs());
 
         // These materials are used by the energizer particles
         final List<PhongMaterial> ghostDressMaterials = ghosts3D.stream()
@@ -106,7 +105,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         createAmbientLight();
         createLevelCounter3D(entityConfig.levelCounter());
-        createLivesCounter3D(entityConfig.livesCounter());
+        createLivesCounter3D(factory3D, entityConfig.livesCounter());
         createMessageManager();
 
         arrangeEntities();
@@ -263,7 +262,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates and initializes the 3D representation of Pac-Man.
      */
-    private void createPac3D(PacConfig pacConfig) {
+    private void createPac3D(Factory3D factory3D, PacConfig pacConfig) {
         pac3D = factory3D.createPac3D(level.pac(), pacConfig, animationRegistry);
         pac3D.init(level);
 
@@ -273,9 +272,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates and initializes all ghost 3D representations.
      */
-    private void createGhosts3D(List<GhostConfig> ghostConfigs) {
+    private void createGhosts3D(Factory3D factory3D, List<GhostConfig> ghostConfigs) {
         ghosts3D = level.ghosts()
-            .map(ghost -> createMutableGhost3D(ghostConfigs.get(ghost.personality()), ghost))
+            .map(ghost -> createMutableGhost3D(factory3D, ghostConfigs.get(ghost.personality()), ghost))
             .toList();
 
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
@@ -286,7 +285,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates a mutable 3D ghost representation for the given model ghost.
      */
-    private MutableGhost3D createMutableGhost3D(GhostConfig ghostConfig, Ghost ghost) {
+    private MutableGhost3D createMutableGhost3D(Factory3D factory3D, GhostConfig ghostConfig, Ghost ghost) {
         final var mutableGhost3D = factory3D.createMutableGhost3D(
             ghost,
             ghostConfig,
@@ -304,7 +303,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates and initializes the lives counter visualization.
      */
-    private void createLivesCounter3D(LivesCounterConfig3D config) {
+    private void createLivesCounter3D(Factory3D factory3D, LivesCounterConfig3D config) {
         livesCounterShapes = new Node[config.capacity()];
         for (int i = 0; i < livesCounterShapes.length; ++i) {
             livesCounterShapes[i] = factory3D.createLivesCounterShape3D(uiConfig.entityConfig());
