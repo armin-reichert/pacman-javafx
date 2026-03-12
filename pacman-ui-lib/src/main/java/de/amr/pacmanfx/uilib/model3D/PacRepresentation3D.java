@@ -32,12 +32,12 @@ public abstract class PacRepresentation3D extends Group implements Disposable {
     protected final Pac pac;
     protected final double size;
     protected final AnimationRegistry animationRegistry;
+    protected final PointLight light = new PointLight();
 
     protected PacBody body;
     protected PacBodyNoEyes jaw;
-    protected Rotate moveRotation = new Rotate();
 
-    protected PointLight light = new PointLight();
+    protected Rotate moveRotation = new Rotate();
 
     protected ManagedAnimation chewingAnimation;
     protected ManagedAnimation dyingAnimation;
@@ -60,42 +60,38 @@ public abstract class PacRepresentation3D extends Group implements Disposable {
         getTransforms().add(moveRotation);
         setTranslateZ(-0.5 * size);
 
-        chewingAnimation = new ManagedAnimation(animationRegistry, "PacMan_Chewing") {
-            @Override
-            public void stop() {
-                Animation animation = animationFX();
-                animation.stop();
-                if (jaw != null) {
-                    // open mouth when stopped
-                    jaw.setRotationAxis(Rotate.Y_AXIS);
-                    jaw.setRotate(0);
-                }
-            }
-        };
-
-        chewingAnimation.setFactory(() -> {
-            var mouthClosed = new KeyValue[] {
-                new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
-                new KeyValue(jaw.rotateProperty(), -54, Interpolator.LINEAR)
-            };
-            var mouthOpen = new KeyValue[] {
-                new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
-                new KeyValue(jaw.rotateProperty(), 0, Interpolator.LINEAR)
-            };
-            var animation = new Timeline(
-                new KeyFrame(Duration.ZERO,        "Open on Start", mouthOpen),
-                new KeyFrame(Duration.millis(100), "Start Closing", mouthOpen),
-                new KeyFrame(Duration.millis(130), "Closed",        mouthClosed),
-                new KeyFrame(Duration.millis(200), "Start Opening", mouthClosed),
-                new KeyFrame(Duration.millis(280), "Open",          mouthOpen)
-            );
-            animation.setCycleCount(Animation.INDEFINITE);
-            return animation;
-        });
+        chewingAnimation = new ManagedAnimation(animationRegistry, "PacMan_Chewing");
+        chewingAnimation.setFactory(this::createChewingAnimation);
 
         light.translateXProperty().bind(translateXProperty());
         light.translateYProperty().bind(translateYProperty());
         light.setTranslateZ(-30);
+    }
+
+    private Animation createChewingAnimation() {
+        final var mouthClosed = new KeyValue[] {
+            new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
+            new KeyValue(jaw.rotateProperty(), -54, Interpolator.LINEAR)
+        };
+        final var mouthOpen = new KeyValue[] {
+            new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
+            new KeyValue(jaw.rotateProperty(), 0, Interpolator.LINEAR)
+        };
+        final var chewing = new Timeline(
+            new KeyFrame(Duration.ZERO,        "Open on Start", mouthOpen),
+            new KeyFrame(Duration.millis(100), "Start Closing", mouthOpen),
+            new KeyFrame(Duration.millis(130), "Closed",        mouthClosed),
+            new KeyFrame(Duration.millis(200), "Start Opening", mouthClosed),
+            new KeyFrame(Duration.millis(280), "Open",          mouthOpen)
+        );
+        chewing.setCycleCount(Animation.INDEFINITE);
+        chewing.statusProperty().addListener((_, _, newStatus) -> {
+            if (newStatus == Animation.Status.STOPPED) {
+                jaw.setRotationAxis(Rotate.Y_AXIS);
+                jaw.setRotate(0);
+            }
+        });
+        return chewing;
     }
 
     public LightBase light() {
