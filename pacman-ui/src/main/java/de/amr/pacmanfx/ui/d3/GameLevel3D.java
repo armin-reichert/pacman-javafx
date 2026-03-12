@@ -11,10 +11,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.ui.config.BonusConfig;
-import de.amr.pacmanfx.ui.config.GhostConfig;
-import de.amr.pacmanfx.ui.config.LevelCounterConfig3D;
-import de.amr.pacmanfx.ui.config.LivesCounterConfig3D;
+import de.amr.pacmanfx.ui.config.*;
 import de.amr.pacmanfx.ui.d3.animation.GameLevel3DAnimations;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.*;
@@ -87,6 +84,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Creates a new 3D level representation for the given game level.
      *
      * @param uiConfig global UI configuration (provides 3D settings, colors, models)
+     * @param factory3D the factory for creating 3D components based on the configuration
      * @param level    the game level to visualize
      */
     public GameLevel3D(UIConfig uiConfig, Factory3D factory3D, GameLevel level) {
@@ -95,12 +93,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         this.level = requireNonNull(level);
         this.animationRegistry = new AnimationRegistry();
 
-        createPac3D();
-        createGhosts3D();
+        createPac3D(uiConfig.entityConfig().pacConfig());
+        createGhosts3D(uiConfig.entityConfig().ghostConfigs());
 
         // These materials are used by the energizer particles
         final List<PhongMaterial> ghostDressMaterials = ghosts3D.stream()
-            .map(mutableGhost3D -> mutableGhost3D.ghost3D().normalMaterialSet().dress()).toList();
+            .map(mutableGhost3D -> mutableGhost3D.ghost3D().normalMaterialSet().dress())
+            .toList();
         createMaze3D(ghostDressMaterials);
 
         createAmbientLight();
@@ -168,25 +167,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().add(ghostLight);
     }
 
-    /**
-     * Determines if the given ghost's center position is outside the visible world bounds.
-     *
-     * @param ghost the ghost to check
-     * @return true if the ghost is outside the maze bounds
-     */
-    private boolean outsideWorld(Ghost ghost) {
-        Vector2f center = ghost.center();
-        return center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
+    /** @return lives counter visualization */
+    public LivesCounter3D livesCounter3D() {
+        return livesCounter3D;
     }
 
-    /** @return lives counter visualization (optional if not created) */
-    public Optional<LivesCounter3D> livesCounter3D() {
-        return Optional.ofNullable(livesCounter3D);
-    }
-
-    /** @return Pac-Man 3D representation (optional if not created) */
-    public Optional<PacBase3D> pac3D() {
-        return Optional.ofNullable(pac3D);
+    /** @return Pac-Man 3D representation */
+    public PacBase3D pac3D() {
+        return pac3D;
     }
 
     /** @return immutable list of all ghost 3D representations */
@@ -197,11 +185,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /** @return optional bonus visualization */
     public Optional<Bonus3D> bonus3D() {
         return Optional.ofNullable(bonus3D);
-    }
-
-    /** @return animation registry for this level */
-    public AnimationRegistry animationManager() {
-        return animationRegistry;
     }
 
     /** @return UI configuration used for this level */
@@ -280,12 +263,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates and initializes the 3D representation of Pac-Man.
      */
-    private void createPac3D() {
-        pac3D = factory3D.createPac3D(
-            level.pac(),
-            uiConfig.entityConfig().pacConfig(),
-            animationRegistry);
-
+    private void createPac3D(PacConfig pacConfig) {
+        pac3D = factory3D.createPac3D(level.pac(), pacConfig, animationRegistry);
         pac3D.init(level);
 
         disposables.add(pac3D);
@@ -294,9 +273,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates and initializes all ghost 3D representations.
      */
-    private void createGhosts3D() {
+    private void createGhosts3D(List<GhostConfig> ghostConfigs) {
         ghosts3D = level.ghosts()
-            .map(ghost -> createMutableGhost3D(uiConfig.entityConfig().ghostConfigs().get(ghost.personality()), ghost)).toList();
+            .map(ghost -> createMutableGhost3D(ghostConfigs.get(ghost.personality()), ghost))
+            .toList();
+
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
 
         disposables.addAll(ghosts3D);
@@ -402,4 +383,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         disposables.add(messageManager);
     }
 
+    /**
+     * Determines if the given ghost's center position is outside the visible world bounds.
+     *
+     * @param ghost the ghost to check
+     * @return true if the ghost is outside the maze bounds
+     */
+    private boolean outsideWorld(Ghost ghost) {
+        final Vector2f center = ghost.center();
+        return center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
+    }
 }

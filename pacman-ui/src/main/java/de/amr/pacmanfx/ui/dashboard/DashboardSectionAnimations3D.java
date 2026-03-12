@@ -100,7 +100,7 @@ public class DashboardSectionAnimations3D extends DashboardSection {
         super.update(ui);
 
         //TODO use data binding
-        ui.optGameScene().ifPresent(gameScene -> currentAnimationManager.set(observedAnimationManager(gameScene)));
+        ui.optGameScene().ifPresent(gameScene -> currentAnimationManager.set(observedAnimations(gameScene)));
         if (currentAnimationManager.get() == null) {
             tableRows.clear();
             refreshTimer.pause();
@@ -109,9 +109,9 @@ public class DashboardSectionAnimations3D extends DashboardSection {
         }
     }
 
-    private AnimationRegistry observedAnimationManager(GameScene gameScene) {
+    private AnimationRegistry observedAnimations(GameScene gameScene) {
         if (gameScene instanceof PlayScene3D playScene3D) {
-            return playScene3D.level3D().map(GameLevel3D::animationManager).orElse(null);
+            return playScene3D.level3D().map(GameLevel3D::animationRegistry).orElse(null);
         }
         return null;
     }

@@ -16,7 +16,6 @@ import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.MutableGhost3D;
-import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import javafx.animation.SequentialTransition;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -156,7 +155,7 @@ public class GameLevel3DEventHandler {
         final Game game = gameLevel.game();
         soundEffects.stopSiren();
         if (!game.isLevelCompleted(gameLevel)) {
-            level3D.pac3D().ifPresent(pac3D -> pac3D.setMovementPowerMode(true));
+            level3D.pac3D().setMovementPowerMode(true);
             level3D.animations().ifPresent(animations -> animations.wallColorFlashingAnimation().playFromStart());
             soundEffects.playPacPowerSound();
         }
@@ -166,7 +165,7 @@ public class GameLevel3DEventHandler {
      * Handles Pac losing power: stops power animation/sound.
      */
     public void onPacLostPower(PacLostPowerEvent ignoredEvent, GameLevel3D level3D) {
-        level3D.pac3D().ifPresent(pac3D -> pac3D.setMovementPowerMode(false));
+        level3D.pac3D().setMovementPowerMode(false);
         level3D.animations().ifPresent(animations -> animations.wallColorFlashingAnimation().stop());
         soundEffects.stopPacPowerSound();
     }
@@ -184,7 +183,7 @@ public class GameLevel3DEventHandler {
 
     private void onHuntingStart(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
-        level3D.pac3D().ifPresent(pac3D -> pac3D.init(level));
+        level3D.pac3D().init(level);
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
         level3D.maze3D().food().energizers3D().forEach(Energizer3D::startPumping);
         level3D.maze3D().food().startParticlesAnimation();
@@ -203,17 +202,15 @@ public class GameLevel3DEventHandler {
         level3D.ghosts3D().forEach(MutableGhost3D::stopAllAnimations);
         level3D.bonus3D().ifPresent(Bonus3D::expire);
 
-        final PacBase3D pac3D = level3D.pac3D().orElseThrow(() -> new IllegalStateException("No Pac3D in level?"));
-
         // One last update before dying animation
-        pac3D.update(level);
+        level3D.pac3D().update(level);
 
         gameState.timer().resetIndefiniteTime(); // freeze until animation ends
         final var dyingAnimation = new SequentialTransition(
-                pauseSec(1.5),
-                doNow(soundEffects::playPacDeadSound),
-                pac3D.dyingAnimation().animationFX(),
-                pauseSec(0.5)
+            pauseSec(1.5),
+            doNow(soundEffects::playPacDeadSound),
+            level3D.pac3D().dyingAnimation().animationFX(),
+            pauseSec(0.5)
         );
         dyingAnimation.setOnFinished(_ -> gameState.timer().expire());
         dyingAnimation.play();

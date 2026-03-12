@@ -398,10 +398,9 @@ public class PlayScene3D implements GameScene {
             }
             initFood3D(level.worldMap().foodLayer(), level.game().control().state().nameMatches(HUNTING.name(), EATING_GHOST.name()));
 
-            final PacBase3D pac3D = gameLevel3D.pac3D().orElseThrow(() -> new IllegalStateException("Pac3D not found in GameLevel3D"));
-            initPac3D(pac3D, level);
+            initPac3D(gameLevel3D.pac3D(), level);
 
-            gameLevel3D.livesCounter3D().ifPresent(livesCounter3D -> livesCounter3D.startTracking(pac3D));
+            gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
             gameLevel3D.rebuildLevelCounter3D();
 
             updateHUD3D(level);
@@ -544,12 +543,9 @@ public class PlayScene3D implements GameScene {
         final var animations = new GameLevel3DAnimations(gameLevel3D, soundEffects);
         gameLevel3D.setAnimations(animations);
 
-        final PacBase3D pac3D = gameLevel3D.pac3D().orElseThrow(
-            () -> new IllegalStateException("Pac3D not found in GameLevel3D"));
-
-        pac3D.init(level);
+        gameLevel3D.pac3D().init(level);
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
-        gameLevel3D.livesCounter3D().ifPresent(livesCounter3D -> livesCounter3D.startTracking(pac3D));
+        gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
 
         gameLevel3DParent.getChildren().setAll(gameLevel3D);
         Logger.info("Created and added new game level 3D to play scene");
