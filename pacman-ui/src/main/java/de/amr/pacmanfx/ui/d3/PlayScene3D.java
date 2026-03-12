@@ -79,10 +79,10 @@ import static java.util.Objects.requireNonNull;
 public class PlayScene3D implements GameScene {
 
     /** Fill color used at the start of the fade-in animation. */
-    public static final Color SCENE_FILL_DARK = Color.BLACK;
+    public static final Color SCENE_DARK_FILLCOLOR = Color.BLACK;
 
     /** Final fill color after fade-in (fully transparent). */
-    public static final Color SCENE_FILL_BRIGHT = Color.TRANSPARENT;
+    public static final Color SCENE_BRIGHT_FILLCOLOR = Color.TRANSPARENT;
 
     /** Duration of the fade-in animation when the 3D scene becomes active. */
     public static final Duration FADE_IN_DURATION = Duration.seconds(3);
@@ -118,7 +118,7 @@ public class PlayScene3D implements GameScene {
         public FadeInAnimation(Duration fadeInDuration) {
             timeline = new Timeline(
                 new KeyFrame(Duration.ZERO, _ -> {
-                    subScene.setFill(SCENE_FILL_DARK);
+                    subScene.setFill(SCENE_DARK_FILLCOLOR);
                     if (gameLevel3D != null) {
                         gameLevel3D.setVisible(true);
                     }
@@ -129,7 +129,7 @@ public class PlayScene3D implements GameScene {
                     perspectiveManager.currentPerspective().ifPresent(Perspective::startControlling);
                 }),
                 new KeyFrame(fadeInDuration,
-                        new KeyValue(subScene.fillProperty(), SCENE_FILL_BRIGHT, Interpolator.EASE_IN))
+                        new KeyValue(subScene.fillProperty(), SCENE_BRIGHT_FILLCOLOR, Interpolator.EASE_IN))
             );
         }
 
@@ -216,7 +216,7 @@ public class PlayScene3D implements GameScene {
     public void init(Game game) {
         game.hud().score(true).show();
         perspectiveManager.activeIDProperty().bind(GameUI.PROPERTY_3D_PERSPECTIVE_ID);
-        subScene.setFill(SCENE_FILL_DARK);
+        subScene.setFill(SCENE_DARK_FILLCOLOR);
         PROPERTY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
     }
 
