@@ -103,7 +103,6 @@ public class PlayScene3D implements GameScene {
     protected Scores3D scores3D;
     protected PlaySceneContextMenu contextMenu;
 
-
     /**
      * Inner class managing the fade-in animation of the 3D sub-scene.
      * Darkens the background initially and gradually fades to transparent.
@@ -118,19 +117,19 @@ public class PlayScene3D implements GameScene {
          */
         public FadeInAnimation(Duration fadeInDuration) {
             timeline = new Timeline(
-                    new KeyFrame(Duration.ZERO, _ -> {
-                        subScene.setFill(SCENE_FILL_DARK);
-                        if (gameLevel3D != null) {
-                            gameLevel3D.setVisible(true);
-                        }
-                        if (scores3D != null) {
-                            scores3D.setVisible(true);
-                        }
-                        // TODO: Verify if startControlling is required here (may be redundant)
-                        perspectiveManager.currentPerspective().ifPresent(Perspective::startControlling);
-                    }),
-                    new KeyFrame(fadeInDuration,
-                            new KeyValue(subScene.fillProperty(), SCENE_FILL_BRIGHT, Interpolator.EASE_IN))
+                new KeyFrame(Duration.ZERO, _ -> {
+                    subScene.setFill(SCENE_FILL_DARK);
+                    if (gameLevel3D != null) {
+                        gameLevel3D.setVisible(true);
+                    }
+                    if (scores3D != null) {
+                        scores3D.setVisible(true);
+                    }
+                    // TODO: Verify if startControlling is required here (may be redundant)
+                    perspectiveManager.currentPerspective().ifPresent(Perspective::startControlling);
+                }),
+                new KeyFrame(fadeInDuration,
+                        new KeyValue(subScene.fillProperty(), SCENE_FILL_BRIGHT, Interpolator.EASE_IN))
             );
         }
 
@@ -422,18 +421,11 @@ public class PlayScene3D implements GameScene {
     }
 
     private void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
-        final Maze3D maze3D = gameLevel3D.maze3D();
-
-        maze3D.food().pellets3D().forEach(pellet3D ->
-            pellet3D.setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
-
-        maze3D.food().energizers3D().forEach(energizer3D ->
-            energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
-
+        final MazeFood3D food3D = gameLevel3D.maze3D().food();
+        food3D.pellets3D()   .forEach(p3D -> p3D.setVisible(!foodLayer.hasEatenFoodAtTile(p3D.tile())));
+        food3D.energizers3D().forEach(e3D -> e3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(e3D.tile())));
         if (startEnergizerPumping) {
-            maze3D.food().energizers3D().stream()
-                .filter(energizer3D -> energizer3D.shape().isVisible())
-                .forEach(Energizer3D::startPumping);
+            food3D.energizers3D().stream().filter(e3D -> e3D.shape().isVisible()).forEach(Energizer3D::startPumping);
         }
     }
 
@@ -498,7 +490,7 @@ public class PlayScene3D implements GameScene {
             scores3D.showScore(score.points(), score.levelNumber());
         } else {
             // Show "GAME OVER" when score is disabled
-            Color color = ui.currentConfig().assets().color("color.game_over_message");
+            final Color color = ui.currentConfig().assets().color("color.game_over_message");
             scores3D.showTextForScore(ui.translate("score.game_over"), color);
         }
         // High score always visible
@@ -577,13 +569,12 @@ public class PlayScene3D implements GameScene {
 
     private static void setDrawMode(Group group, DrawMode drawMode) {
         for (Node node : group.getChildren()) {
-            if (node instanceof Group) {
-                setDrawMode((Group) node, drawMode);
+            if (node instanceof Group subGroup) {
+                setDrawMode(subGroup, drawMode);
             }
             else if (node instanceof Shape3D shape3D) {
                 shape3D.setDrawMode(drawMode);
             }
         }
     }
-
 }
