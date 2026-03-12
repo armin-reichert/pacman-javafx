@@ -59,10 +59,13 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
         boolean killedInCurrentPhase)
     {
         return switch (ghostState) {
-            case null -> GhostAppearance.NORMAL; //TODO can this happen?
-            case LEAVING_HOUSE, LOCKED -> powerActive && !killedInCurrentPhase ?
-                    frightenedOrFlashing(powerFading) : GhostAppearance.NORMAL;
-            case FRIGHTENED -> frightenedOrFlashing(powerFading);
+            case LEAVING_HOUSE, LOCKED -> {
+                if (powerActive && !killedInCurrentPhase) {
+                    yield powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
+                }
+                yield GhostAppearance.NORMAL;
+            }
+            case FRIGHTENED -> powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
             case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EYES;
             case EATEN -> GhostAppearance.NUMBER;
             default -> GhostAppearance.NORMAL;
@@ -298,7 +301,7 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
     }
 
     private void update3DTransform() {
-        Vector2f center = ghost.center();
+        final Vector2f center = ghost.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-0.5 * size - GHOST_OVER_FLOOR_DIST);
@@ -308,19 +311,15 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
     }
 
     private void updateAppearance(GameLevel gameLevel) {
-        boolean powerActive = gameLevel.pac().powerTimer().isRunning();
-        boolean powerFading = gameLevel.pac().isPowerFading(gameLevel);
+        final boolean powerActive = gameLevel.pac().powerTimer().isRunning();
+        final boolean powerFading = gameLevel.pac().isPowerFading(gameLevel);
         // ghost that got already killed in the current power phase do not look frightened anymore
-        boolean killedInCurrentPhase = gameLevel.energizerVictims().contains(ghost);
-        GhostAppearance newAppearance = selectAppearance(
+        final boolean killedInCurrentPhase = gameLevel.energizerVictims().contains(ghost);
+        final GhostAppearance newAppearance = selectAppearance(
             ghost.state(),
             powerActive,
             powerFading,
             killedInCurrentPhase);
         appearance.set(newAppearance);
-    }
-
-    private static GhostAppearance frightenedOrFlashing(boolean powerFading) {
-        return powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
     }
 }
