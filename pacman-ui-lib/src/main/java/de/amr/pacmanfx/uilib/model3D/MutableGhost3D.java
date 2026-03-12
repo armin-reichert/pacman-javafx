@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
@@ -19,6 +18,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Mesh;
@@ -26,8 +26,8 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
@@ -43,7 +43,7 @@ import static java.util.Objects.requireNonNull;
  * <li>{@link GhostAppearance#NUMBER}: eaten ghost's point value.
  * </ul>
  */
-public class MutableGhost3D extends Group implements Disposable {
+public class MutableGhost3D extends Group implements DisposableGraphicsObject {
 
     private static final int NUMBER_BOX_SIZE_X = 14;
     private static final int NUMBER_BOX_SIZE_Y = 8;
@@ -70,9 +70,9 @@ public class MutableGhost3D extends Group implements Disposable {
 
     private final ObjectProperty<GhostAppearance> appearance = new SimpleObjectProperty<>();
 
-    private final Map<Image, PhongMaterial> numberMaterialCache = new WeakHashMap<>();
+    private final Map<Image, PhongMaterial> numberMaterialCache = new HashMap<>();
     private final Ghost ghost;
-    private final GhostColorSet colorSet;
+    private final Color lightColor;
     private final double size;
     private final int numFlashes;
 
@@ -152,7 +152,7 @@ public class MutableGhost3D extends Group implements Disposable {
     {
         requireNonNull(animationRegistry);
         this.ghost = requireNonNull(ghost);
-        this.colorSet = requireNonNull(colorSet);
+        this.lightColor = requireNonNull(colorSet).normal().dress();
         requireNonNull(dressMesh);
         requireNonNull(pupilsMesh);
         requireNonNull(eyeballsMesh);
@@ -182,8 +182,8 @@ public class MutableGhost3D extends Group implements Disposable {
         return ghost;
     }
 
-    public GhostColorSet colorSet() {
-        return colorSet;
+    public Color lightColor() {
+        return lightColor;
     }
 
     public void stopAllAnimations() {
@@ -311,11 +311,11 @@ public class MutableGhost3D extends Group implements Disposable {
             pointsAnimation.dispose();
             pointsAnimation = null;
         }
-        getChildren().clear();
         if (ghostShape3D != null) {
             ghostShape3D.dispose();
             ghostShape3D = null;
         }
         numberShape3D = null;
+        cleanupGroup(this, true);
     }
 }
