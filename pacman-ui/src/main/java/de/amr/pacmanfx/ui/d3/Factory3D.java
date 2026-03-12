@@ -9,8 +9,8 @@ import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.GhostConfig;
 import de.amr.pacmanfx.ui.config.PacConfig;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.model3D.MutableGhost3D;
-import de.amr.pacmanfx.uilib.model3D.PacRepresentation3D;
+import de.amr.pacmanfx.uilib.model3D.actor.MutableGhost3D;
+import de.amr.pacmanfx.uilib.model3D.actor.PacRepresentation3D;
 import javafx.scene.Node;
 
 public interface Factory3D {

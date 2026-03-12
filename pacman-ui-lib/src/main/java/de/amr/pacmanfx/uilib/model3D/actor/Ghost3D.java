@@ -1,13 +1,14 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.model3D;
+package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.animation.*;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
@@ -71,20 +72,20 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
             final Duration highlightTime = flashEndTime.divide(3);
             final var flashingTimeline = new Timeline(
                 new KeyFrame(highlightTime,
-                    new KeyValue(flashingMaterialSet.dress().diffuseColorProperty(),  colorSet.flashing().dress()),
-                    new KeyValue(flashingMaterialSet.pupils().diffuseColorProperty(), colorSet.flashing().pupils())
+                    new KeyValue(flashingMaterialSet.dress().diffuseColorProperty(),  colorSet.flashing().dressColor()),
+                    new KeyValue(flashingMaterialSet.pupils().diffuseColorProperty(), colorSet.flashing().pupilsColor())
                 ),
                 new KeyFrame(flashEndTime,
-                    new KeyValue(flashingMaterialSet.dress().diffuseColorProperty(),  colorSet.frightened().dress()),
-                    new KeyValue(flashingMaterialSet.pupils().diffuseColorProperty(), colorSet.frightened().pupils())
+                    new KeyValue(flashingMaterialSet.dress().diffuseColorProperty(),  colorSet.frightened().dressColor()),
+                    new KeyValue(flashingMaterialSet.pupils().diffuseColorProperty(), colorSet.frightened().pupilsColor())
                 )
             );
             flashingTimeline.setCycleCount(numFlashes);
             flashingTimeline.setOnFinished(_ -> {
-                flashingMaterialSet.dress().setDiffuseColor(colorSet.frightened().dress());
-                flashingMaterialSet.dress().setSpecularColor(colorSet.frightened().dress().brighter());
-                flashingMaterialSet.pupils().setDiffuseColor(colorSet.frightened().pupils());
-                flashingMaterialSet.pupils().setSpecularColor(colorSet.frightened().pupils().brighter());
+                flashingMaterialSet.dress().setDiffuseColor(colorSet.frightened().dressColor());
+                flashingMaterialSet.dress().setSpecularColor(colorSet.frightened().dressColor().brighter());
+                flashingMaterialSet.pupils().setDiffuseColor(colorSet.frightened().pupilsColor());
+                flashingMaterialSet.pupils().setSpecularColor(colorSet.frightened().pupilsColor().brighter());
             });
             return flashingTimeline;
         }
@@ -120,21 +121,21 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         requireNonNegative(size);
 
         normalMaterialSet = new MaterialSet(
-            coloredPhongMaterial(colorSet.normal().dress()),
-            coloredPhongMaterial(colorSet.normal().eyeballs()),
-            coloredPhongMaterial(colorSet.normal().pupils())
+            coloredPhongMaterial(colorSet.normal().dressColor()),
+            coloredPhongMaterial(colorSet.normal().eyeballsColor()),
+            coloredPhongMaterial(colorSet.normal().pupilsColor())
         );
 
         frightenedMaterialSet = new MaterialSet(
-            coloredPhongMaterial(colorSet.frightened().dress()),
-            coloredPhongMaterial(colorSet.frightened().eyeballs()),
-            coloredPhongMaterial(colorSet.frightened().pupils())
+            coloredPhongMaterial(colorSet.frightened().dressColor()),
+            coloredPhongMaterial(colorSet.frightened().eyeballsColor()),
+            coloredPhongMaterial(colorSet.frightened().pupilsColor())
         );
 
         flashingMaterialSet = new MaterialSet(
-            coloredPhongMaterial(colorSet.flashing().dress()),
-            coloredPhongMaterial(colorSet.flashing().eyeballs()),
-            coloredPhongMaterial(colorSet.flashing().pupils())
+            coloredPhongMaterial(colorSet.flashing().dressColor()),
+            coloredPhongMaterial(colorSet.flashing().eyeballsColor()),
+            coloredPhongMaterial(colorSet.flashing().pupilsColor())
         );
 
         dressGroup = new Group(dressShape);

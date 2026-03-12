@@ -11,9 +11,9 @@ import de.amr.pacmanfx.ui.config.PacConfig;
 import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
-import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
-import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
-import de.amr.pacmanfx.uilib.model3D.MutableGhost3D;
+import de.amr.pacmanfx.uilib.model3D.actor.MsPacMan3D;
+import de.amr.pacmanfx.uilib.model3D.actor.MsPacManBody;
+import de.amr.pacmanfx.uilib.model3D.actor.MutableGhost3D;
 
 import static java.util.Objects.requireNonNull;
 

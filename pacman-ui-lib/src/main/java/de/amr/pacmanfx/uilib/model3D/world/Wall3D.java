@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.model3D;
+package de.amr.pacmanfx.uilib.model3D.world;
 
 import de.amr.pacmanfx.lib.math.Vector2f;
 import javafx.beans.property.DoubleProperty;

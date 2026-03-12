@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.config;
 
-import de.amr.pacmanfx.uilib.model3D.GhostColorSet;
-import de.amr.pacmanfx.uilib.model3D.GhostComponentColors;
+import de.amr.pacmanfx.uilib.model3D.actor.GhostColorSet;
+import de.amr.pacmanfx.uilib.model3D.actor.GhostComponentColors;
 import javafx.scene.paint.Color;
 
 public record GhostConfig(

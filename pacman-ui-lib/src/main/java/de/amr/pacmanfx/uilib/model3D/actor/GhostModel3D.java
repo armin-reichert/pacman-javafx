@@ -2,9 +2,10 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.model3D;
+package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.uilib.model3D.Model3DException;
 import de.amr.pacmanfx.uilib.objimport.Model3D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Mesh;

@@ -3,8 +3,8 @@
  */
 
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.uilib.model3D.GhostAppearance;
-import de.amr.pacmanfx.uilib.model3D.MutableGhost3D;
+import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance;
+import de.amr.pacmanfx.uilib.model3D.actor.MutableGhost3D;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

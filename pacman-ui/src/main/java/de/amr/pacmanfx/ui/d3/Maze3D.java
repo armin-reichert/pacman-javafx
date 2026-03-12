@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.config.*;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.Wall3D;
+import de.amr.pacmanfx.uilib.model3D.world.Wall3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;

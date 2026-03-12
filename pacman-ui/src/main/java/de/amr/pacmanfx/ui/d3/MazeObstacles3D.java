@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.Obstacle;
 import de.amr.pacmanfx.model.world.TerrainLayer;
-import de.amr.pacmanfx.uilib.model3D.TerrainRenderer3D;
+import de.amr.pacmanfx.uilib.model3D.world.TerrainRenderer3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.Group;
 import org.tinylog.Logger;

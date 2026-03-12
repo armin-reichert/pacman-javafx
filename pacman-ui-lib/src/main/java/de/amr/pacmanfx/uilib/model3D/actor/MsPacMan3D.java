@@ -1,11 +1,13 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.model3D;
+package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.model3D.Models3D;
+import de.amr.pacmanfx.uilib.model3D.animation.HipSwayingAnimation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.paint.Color;

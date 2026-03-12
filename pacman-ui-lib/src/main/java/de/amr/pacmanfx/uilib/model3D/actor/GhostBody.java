@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.model3D;
+package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.pacmanfx.lib.Disposable;
 import javafx.geometry.Bounds;

@@ -3,6 +3,9 @@
  */
 package de.amr.pacmanfx.uilib.model3D;
 
+import de.amr.pacmanfx.uilib.model3D.actor.GhostModel3D;
+import de.amr.pacmanfx.uilib.model3D.actor.PacManModel3D;
+import de.amr.pacmanfx.uilib.model3D.world.PelletModel3D;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.TriangleMesh;
 

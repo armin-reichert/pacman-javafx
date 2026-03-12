@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.model3D;
+package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
@@ -9,10 +9,9 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import javafx.animation.Animation;
-import javafx.animation.Interpolator;
-import javafx.animation.RotateTransition;
+import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
+import de.amr.pacmanfx.uilib.model3D.animation.Ghost3DBrakeAnimation;
+import de.amr.pacmanfx.uilib.model3D.animation.Ghost3DPointsAnimation;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -23,8 +22,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.Shape3D;
-import javafx.scene.transform.Rotate;
-import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -80,66 +77,8 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
     private final double size;
     private final int numFlashes;
 
-    private class BrakeAnimation extends ManagedAnimation {
-
-        public BrakeAnimation(AnimationRegistry animationRegistry) {
-            super(animationRegistry, "Ghost_Braking_%s".formatted(ghost.name()));
-            setFactory(this::createAnimationFX);
-        }
-
-        private Animation createAnimationFX() {
-            var rotateTransition = new RotateTransition(Duration.seconds(0.5), MutableGhost3D.this);
-            rotateTransition.setAxis(Rotate.Y_AXIS);
-            rotateTransition.setAutoReverse(true);
-            rotateTransition.setCycleCount(2);
-            rotateTransition.setInterpolator(Interpolator.EASE_OUT);
-            return rotateTransition;
-        }
-
-        @Override
-        public void playFromStart() {
-            var rotateTransition = (RotateTransition) animationFX();
-            rotateTransition.stop();
-            rotateTransition.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
-            rotateTransition.playFromStart();
-        }
-
-        @Override
-        public void playOrContinue() {
-            var rotateTransition = (RotateTransition) animationFX();
-            rotateTransition.stop();
-            rotateTransition.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
-            rotateTransition.play();
-        }
-
-        @Override
-        public void stop() {
-            super.stop();
-            setRotationAxis(Rotate.Y_AXIS);
-            setRotate(0);
-        }
-    }
-
-    private class PointsAnimation extends ManagedAnimation {
-
-        public PointsAnimation(AnimationRegistry animationRegistry) {
-            super(animationRegistry, "Ghost_Points_%s".formatted(ghost.name()));
-            setFactory(this::createAnimationFX);
-        }
-
-        private Animation createAnimationFX() {
-            var numberBoxRotation = new RotateTransition(Duration.seconds(1), numberShape3D());
-            numberBoxRotation.setAxis(Rotate.X_AXIS);
-            numberBoxRotation.setFromAngle(0);
-            numberBoxRotation.setToAngle(360);
-            numberBoxRotation.setInterpolator(Interpolator.LINEAR);
-            numberBoxRotation.setRate(0.75);
-            return numberBoxRotation;
-        }
-    }
-
-    private BrakeAnimation brakeAnimation;
-    private PointsAnimation pointsAnimation;
+    private Ghost3DBrakeAnimation brakeAnimation;
+    private Ghost3DPointsAnimation pointsAnimation;
 
     public MutableGhost3D(
         AnimationRegistry animationRegistry,
@@ -153,7 +92,7 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
     {
         requireNonNull(animationRegistry);
         this.ghost = requireNonNull(ghost);
-        this.lightColor = requireNonNull(colorSet).normal().dress();
+        this.lightColor = requireNonNull(colorSet).normal().dressColor();
         requireNonNull(dressMesh);
         requireNonNull(pupilsMesh);
         requireNonNull(eyeballsMesh);
@@ -164,8 +103,8 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
         final var numberShape3D = new Box(NUMBER_BOX_SIZE_X, NUMBER_BOX_SIZE_Y, NUMBER_BOX_SIZE_Z);
         getChildren().setAll(ghostShape3D, numberShape3D);
 
-        pointsAnimation = new PointsAnimation(animationRegistry);
-        brakeAnimation = new BrakeAnimation(animationRegistry);
+        pointsAnimation = new Ghost3DPointsAnimation(animationRegistry, this);
+        brakeAnimation = new Ghost3DBrakeAnimation(animationRegistry, this);
 
         addListeners();
 

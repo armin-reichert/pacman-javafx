@@ -1,9 +1,8 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.model3D;
+package de.amr.pacmanfx.uilib.model3D.actor;
 
-import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
@@ -11,6 +10,7 @@ import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
