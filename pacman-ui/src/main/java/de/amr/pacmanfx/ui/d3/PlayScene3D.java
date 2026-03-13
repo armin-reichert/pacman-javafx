@@ -458,7 +458,13 @@ public class PlayScene3D implements GameScene {
      * @return new 3D level instance
      */
     protected GameLevel3D createGameLevel3D(GameLevel level) {
-        return new GameLevel3D(ui.currentConfig(), factory3D, level);
+        final var newGameLevel3D = new GameLevel3D(ui.currentConfig(), factory3D, level);
+        newGameLevel3D.pac3D().init(level);
+        newGameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
+        newGameLevel3D.livesCounter3D().startTracking(newGameLevel3D.pac3D());
+        final var animations = new GameLevel3DAnimations(newGameLevel3D, soundEffects);
+        newGameLevel3D.setAnimations(animations);
+        return newGameLevel3D;
     }
 
     /**
@@ -530,21 +536,11 @@ public class PlayScene3D implements GameScene {
     }
 
     private void replaceGameLevel3D(GameLevel level) {
-        Logger.info("Replacing game level 3D...");
-
         if (gameLevel3D != null) {
+            Logger.info("Replacing game level 3D...");
             gameLevel3D.dispose();
         }
-
         gameLevel3D = createGameLevel3D(level);
-
-        final var animations = new GameLevel3DAnimations(gameLevel3D, soundEffects);
-        gameLevel3D.setAnimations(animations);
-
-        gameLevel3D.pac3D().init(level);
-        gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
-        gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
-
         gameLevel3DParent.getChildren().setAll(gameLevel3D);
         Logger.info("Created and added new game level 3D to play scene");
     }
