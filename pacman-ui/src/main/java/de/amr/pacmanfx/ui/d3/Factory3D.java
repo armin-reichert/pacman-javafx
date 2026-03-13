@@ -34,10 +34,9 @@ public interface Factory3D {
      * @param ghost             the ghost actor whose animations and state drive the model
      * @param ghostConfig      the actor 3D configuration object
      * @param animationRegistry the registry where animations are stored
-     * @param numFlashings      the number of flashing states to support for the ghost (e.g., for frightened mode)
      * @return the 3D representation of a ghost
      */
-    MutableGhost3D createMutableGhost3D(Ghost ghost, GhostConfig ghostConfig, AnimationRegistry animationRegistry, int numFlashings);
+    MutableGhost3D createMutableGhost3D(Ghost ghost, GhostConfig ghostConfig, AnimationRegistry animationRegistry);
 
     /**
      * Creates the 3D representation of the lives counter for this variant.

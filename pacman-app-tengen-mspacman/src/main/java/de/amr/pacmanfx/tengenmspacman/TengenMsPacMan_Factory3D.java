@@ -58,8 +58,7 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
     public MutableGhost3D createMutableGhost3D(
         Ghost ghost,
         GhostConfig ghostConfig,
-        AnimationRegistry animationRegistry,
-        int numFlashings)
+        AnimationRegistry animationRegistry)
     {
         requireNonNull(ghost);
         requireNonNull(ghostConfig);
@@ -72,8 +71,7 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
             Models3D.GHOST_MODEL.dressMesh(),
             Models3D.GHOST_MODEL.pupilsMesh(),
             Models3D.GHOST_MODEL.eyeballsMesh(),
-            ghostConfig.size3D(),
-            numFlashings
+            ghostConfig.size3D()
         );
     }
 

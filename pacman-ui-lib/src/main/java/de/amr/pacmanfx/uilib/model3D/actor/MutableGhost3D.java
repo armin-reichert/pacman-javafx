@@ -76,7 +76,7 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
     private final Ghost ghost;
     private final Color lightColor;
     private final double size;
-    private final int numFlashes;
+    private int numFlashes;
 
     private Ghost3DBrakeAnimation brakeAnimation;
     private Ghost3DPointsAnimation pointsAnimation;
@@ -88,8 +88,7 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
         Mesh dressMesh,
         Mesh pupilsMesh,
         Mesh eyeballsMesh,
-        double size,
-        int numFlashes)
+        double size)
     {
         requireNonNull(animationRegistry);
         this.ghost = requireNonNull(ghost);
@@ -98,7 +97,6 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
         requireNonNull(pupilsMesh);
         requireNonNull(eyeballsMesh);
         this.size = requireNonNegative(size);
-        this.numFlashes = requireNonNegativeInt(numFlashes);
 
         final var ghostShape3D = new Ghost3D(animationRegistry, ghost, colorSet, dressMesh, pupilsMesh, eyeballsMesh, size);
         final var numberShape3D = new Box(NUMBER_BOX_SIZE_X, NUMBER_BOX_SIZE_Y, NUMBER_BOX_SIZE_Z);
@@ -112,6 +110,10 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
 
         update3DTransform();
         appearance.set(GhostAppearance.NORMAL);
+    }
+
+    public void setNumFlashes(int numFlashes) {
+        this.numFlashes = requireNonNegativeInt(numFlashes);
     }
 
     @Override

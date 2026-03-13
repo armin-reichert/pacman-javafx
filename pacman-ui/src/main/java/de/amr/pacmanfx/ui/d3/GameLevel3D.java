@@ -288,9 +288,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final var mutableGhost3D = factory3D.createMutableGhost3D(
             ghost,
             ghostConfigs.get(ghost.personality()),
-            animationRegistry,
-            level.numFlashes()
+            animationRegistry
         );
+        mutableGhost3D.setNumFlashes(level.numFlashes());
 
         mutableGhost3D.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> ghost.isVisible() && !outsideWorld(level, ghost),
