@@ -11,7 +11,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_FLOOR_COLOR;
-import static de.amr.pacmanfx.uilib.Ufx.*;
+import static de.amr.pacmanfx.uilib.Ufx.colorBoundPhongMaterial;
+import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 
 public record MazeMaterials3D(PhongMaterial floor, PhongMaterial wallBase, PhongMaterial wallTop) implements Disposable {
 

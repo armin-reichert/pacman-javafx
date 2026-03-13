@@ -59,6 +59,8 @@ public interface GameScene extends GameEventListener, Disposable {
      */
     void end(Game game);
 
+    void onEmbed(GameUI ui);
+
     /**
      * Called when a key combination has been pressed inside this game scene. By default, the first matching action
      * defined in the action bindings is executed.

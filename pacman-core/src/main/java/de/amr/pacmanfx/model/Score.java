@@ -4,15 +4,8 @@
 package de.amr.pacmanfx.model;
 
 import javafx.beans.property.*;
-import org.tinylog.Logger;
 
-import java.io.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Properties;
-
-import static java.util.Objects.requireNonNull;
 
 public class Score {
 

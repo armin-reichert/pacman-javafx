@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.geometry.Rectangle2D;
@@ -36,6 +37,7 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
     public Arcade_BootScene2D_Renderer(
         GameScene2D scene,
         Canvas canvas,
+        PreferencesManager prefs,
         SpriteSheet<?> spriteSheet,
         Rectangle2D spriteRegion)
     {
@@ -44,7 +46,7 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
         this.spriteSheet = requireNonNull(spriteSheet);
         this.spriteRegion = requireNonNull(spriteRegion);
 
-        createDefaultDebugInfoRenderer(scene.ui(), scene, canvas);
+        createDefaultDebugInfoRenderer(scene, canvas, prefs);
     }
 
     @Override

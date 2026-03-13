@@ -41,7 +41,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public Arcade_PlayScene2D() {}
 
     @Override
-    public void setUI(GameUI ui) {
+    public void onEmbed(GameUI ui) {
         this.ui = requireNonNull(ui);
         soundEffects = new GamePlaySoundEffects(ui.soundManager());
         soundEffects.setMunchingSoundDelay(ui.currentConfig().munchingSoundDelay());

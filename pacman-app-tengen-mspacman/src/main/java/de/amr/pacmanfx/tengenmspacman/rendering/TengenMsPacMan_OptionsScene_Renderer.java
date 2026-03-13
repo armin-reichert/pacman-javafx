@@ -9,6 +9,7 @@ import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -32,10 +33,10 @@ public class TengenMsPacMan_OptionsScene_Renderer extends GameScene2D_Renderer
     private static final Color NES_YELLOW = nesColor(0x28);
     private static final Color NES_WHITE = nesColor(0x20);
 
-    public TengenMsPacMan_OptionsScene_Renderer(GameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_OptionsScene_Renderer(GameScene2D scene, Canvas canvas, PreferencesManager prefs) {
         super(canvas);
         requireNonNull(scene);
-        createDefaultDebugInfoRenderer(scene.ui(), scene, canvas);
+        createDefaultDebugInfoRenderer(scene, canvas, prefs);
     }
 
     @Override

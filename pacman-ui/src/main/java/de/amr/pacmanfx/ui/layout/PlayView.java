@@ -16,7 +16,6 @@ import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
@@ -280,13 +279,7 @@ public class PlayView extends StackPane implements View {
             Logger.info("Game scene ended: {}", currentGameScene.getClass().getSimpleName());
         }
 
-        if (intendedGameScene instanceof GameScene2D gameScene2D) {
-            gameScene2D.setUI(ui);
-        }
-        else if (intendedGameScene instanceof PlayScene3D playScene3D) {
-            playScene3D.setUI(ui);
-        }
-
+        intendedGameScene.onEmbed(ui); // Must be called *before* embedding
         embedGameScene(parentScene, intendedGameScene);
         intendedGameScene.init(game);
         Logger.info("Game scene initialized: {}", intendedGameScene.getClass().getSimpleName());

@@ -6,9 +6,9 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
-import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 
 public class Arcade_PlayScene3D extends PlayScene3D {
 

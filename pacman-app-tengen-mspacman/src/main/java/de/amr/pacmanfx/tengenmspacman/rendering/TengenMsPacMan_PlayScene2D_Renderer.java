@@ -16,6 +16,7 @@ import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -38,8 +39,8 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
 
     private static class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
 
-        public PlaySceneDebugInfoRenderer(GameUI ui, Canvas canvas) {
-            super(ui, canvas);
+        public PlaySceneDebugInfoRenderer(Canvas canvas, PreferencesManager prefs) {
+            super(prefs, canvas);
         }
 
         @Override
@@ -70,12 +71,12 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
     private final List<Actor> actorsInZOrder = new ArrayList<>();
     private final Rectangle clipRect;
 
-    public TengenMsPacMan_PlayScene2D_Renderer(GameUI ui, UIConfig uiConfig, GameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_PlayScene2D_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas, PreferencesManager prefs) {
         super(canvas);
 
         levelRenderer = scene.adaptRenderer((TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas));
         actorRenderer = scene.adaptRenderer((TengenMsPacMan_ActorRenderer)     uiConfig.createActorRenderer(canvas));
-        debugRenderer = scene.adaptRenderer(new PlaySceneDebugInfoRenderer(ui, canvas));
+        debugRenderer = scene.adaptRenderer(new PlaySceneDebugInfoRenderer(canvas, prefs));
 
         // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are centered
         // horizontally and 2 tiles on each side are clipped.

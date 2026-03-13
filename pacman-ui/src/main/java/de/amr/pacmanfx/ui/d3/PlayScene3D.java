@@ -173,13 +173,8 @@ public class PlayScene3D implements GameScene {
         removeAndDisposeGameLevel3D();
     }
 
-    /**
-     * Injects the UI reference and initializes dependent components (sound effects,
-     * event handler, scores). Called after construction.
-     *
-     * @param ui the game UI instance (must not be null)
-     */
-    public void setUI(GameUI ui) {
+    @Override
+    public void onEmbed(GameUI ui) {
         this.ui = requireNonNull(ui);
 
         soundEffects = new GamePlaySoundEffects(ui.soundManager());
@@ -420,20 +415,6 @@ public class PlayScene3D implements GameScene {
         });
     }
 
-    private void initPac3D(PacRepresentation3D pac3D, GameLevel level) {
-        pac3D.init(level);
-        pac3D.update(level);
-    }
-
-    private void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
-        final MazeFood3D food3D = gameLevel3D.maze3D().food();
-        food3D.pellets3D()   .forEach(p3D -> p3D.setVisible(!foodLayer.hasEatenFoodAtTile(p3D.tile())));
-        food3D.energizers3D().forEach(e3D -> e3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(e3D.tile())));
-        if (startEnergizerPumping) {
-            food3D.energizers3D().stream().filter(e3D -> e3D.shape().isVisible()).forEach(Energizer3D::startPumping);
-        }
-    }
-
     @Override
     public void onUnspecifiedChange(UnspecifiedChangeEvent event) {
         // TODO: remove (currently only used by GameState.TESTING_CUT_SCENES)
@@ -505,6 +486,20 @@ public class PlayScene3D implements GameScene {
     // ────────────────────────────────────────────────────────────────────────────
     // Private helpers
     // ────────────────────────────────────────────────────────────────────────────
+
+    private void initPac3D(PacRepresentation3D pac3D, GameLevel level) {
+        pac3D.init(level);
+        pac3D.update(level);
+    }
+
+    private void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
+        final MazeFood3D food3D = gameLevel3D.maze3D().food();
+        food3D.pellets3D()   .forEach(p3D -> p3D.setVisible(!foodLayer.hasEatenFoodAtTile(p3D.tile())));
+        food3D.energizers3D().forEach(e3D -> e3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(e3D.tile())));
+        if (startEnergizerPumping) {
+            food3D.energizers3D().stream().filter(e3D -> e3D.shape().isVisible()).forEach(Energizer3D::startPumping);
+        }
+    }
 
     private void replaceScores3D() {
         if (scores3D != null) {

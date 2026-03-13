@@ -54,7 +54,8 @@ public abstract class GameScene2D implements GameScene {
      *
      * @param ui the UI instance, must not be {@code null}
      */
-    public void setUI(GameUI ui) {
+    @Override
+    public void onEmbed(GameUI ui) {
         this.ui = requireNonNull(ui);
     }
 

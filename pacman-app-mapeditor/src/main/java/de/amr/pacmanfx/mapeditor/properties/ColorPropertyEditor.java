@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.mapeditor.properties;
 
-import de.amr.pacmanfx.mapeditor.UfxMapEditor;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
+import de.amr.pacmanfx.mapeditor.UfxMapEditor;
 import de.amr.pacmanfx.model.world.WorldMapLayer;
 import de.amr.pacmanfx.model.world.WorldMapLayerID;
 import javafx.scene.Node;
