@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.config.*;
@@ -22,8 +21,6 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_Factory3D implements Factory3D {
@@ -84,28 +81,25 @@ public class ArcadePacMan_Factory3D implements Factory3D {
     }
 
     @Override
-    public Pellet3D createPellet3D(PelletConfig3D pelletConfig, PhongMaterial material, Vector2i tile) {
+    public Pellet3D createPellet3D(PelletConfig3D pelletConfig, PhongMaterial material) {
         final Mesh pelletMesh = Models3D.PELLET_MODEL.mesh();
         final var dummy = new MeshView(pelletMesh);
         final Bounds bounds = dummy.getBoundsInLocal();
         final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
         final double scaling = (2 * pelletConfig.radius()) / maxExtent;
         final Mesh scaledPelletMesh = Models3D.createScaledMesh(pelletMesh, scaling);
-        final var pellet3D = new Pellet3D(scaledPelletMesh, tile);
+        final var pellet3D = new Pellet3D(scaledPelletMesh);
         pellet3D.setMaterial(material);
         //TODO fix rotation in OBJ file
         pellet3D.setRotationAxis(Rotate.Z_AXIS);
         pellet3D.setRotate(90);
 
-        pellet3D.setTranslateX(tile.x() * TS + HTS);
-        pellet3D.setTranslateY(tile.y() * TS + HTS);
-
         return pellet3D;
     }
 
     @Override
-    public Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animationRegistry, PhongMaterial material, Vector2i tile) {
-        final var energizer3D = new Energizer3D(animationRegistry, tile);
+    public Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animationRegistry, PhongMaterial material) {
+        final var energizer3D = new Energizer3D(animationRegistry);
         energizer3D.setShapeFactory(() -> {
             final var shape = new Sphere(config.radius(), 48);
             shape.setMaterial(material);

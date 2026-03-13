@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.config.*;
@@ -46,7 +45,7 @@ public interface Factory3D {
      */
     Node createLivesCounterShape3D(EntityConfig entityConfig);
 
-    Pellet3D createPellet3D(PelletConfig3D pelletConfig, PhongMaterial material, Vector2i tile);
+    Pellet3D createPellet3D(PelletConfig3D pelletConfig, PhongMaterial material);
 
-    Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animationRegistry, PhongMaterial material, Vector2i tile);
+    Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animationRegistry, PhongMaterial material);
 }

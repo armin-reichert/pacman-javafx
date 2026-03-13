@@ -162,8 +162,8 @@ public class MazeFood3D implements Disposable {
             .filter(foodLayer::hasFoodAtTile)
             .filter(tile -> !foodLayer.isEnergizerTile(tile))
             .map(tile -> {
-                final Pellet3D pellet3D = factory3D.createPellet3D(config, pelletMaterial, tile);
-                pellet3D.setTranslateZ(z);
+                final Pellet3D pellet3D = factory3D.createPellet3D(config, pelletMaterial);
+                pellet3D.setLocation(tile, z);
                 return pellet3D;
             }).forEach(pellets3D::add);
     }
@@ -180,8 +180,8 @@ public class MazeFood3D implements Disposable {
             .filter(foodLayer::isEnergizerTile)
             .filter(foodLayer::hasFoodAtTile)
             .map(tile -> {
-                final Energizer3D energizer3D = factory3D.createEnergizer3D(config, animationRegistry, material, tile);
-                energizer3D.setZ(z);
+                final Energizer3D energizer3D = factory3D.createEnergizer3D(config, animationRegistry, material);
+                energizer3D.setLocation(tile, z);
                 return energizer3D;
             })
             .forEach(energizers3D::add);

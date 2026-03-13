@@ -60,7 +60,7 @@ public class Energizer3D implements DisposableGraphicsObject {
     }
 
     private final AnimationRegistry animationRegistry;
-    private final Vector2i tile;
+    private Vector2i tile;
     private Point3D center;
 
     private int pumpingFrequency = 3;
@@ -71,16 +71,19 @@ public class Energizer3D implements DisposableGraphicsObject {
     private Shape3D shape;
     private ManagedAnimation pumpingAnimation;
 
-    public Energizer3D(AnimationRegistry animationRegistry, Vector2i tile) {
+    public Energizer3D(AnimationRegistry animationRegistry) {
         this.animationRegistry = requireNonNull(animationRegistry);
-        this.tile = requireNonNull(tile);
         this.shapeFactory = Energizer3D::createDefaultShape;
-        setZ(HTS);
+        setLocation(Vector2i.ZERO, HTS);
     }
 
-    public void setZ(double z) {
-        final Vector2i tileCenter = tile.scaled(TS).plus(HTS, HTS);
-        center = new Point3D(tileCenter.x(), tileCenter.y(), z);
+    public void setLocation(Vector2i tile, double centerZ) {
+        this.tile = requireNonNull(tile);
+        final Vector2i centerXY = tile.scaled(TS).plus(HTS, HTS);
+        center = new Point3D(centerXY.x(), centerXY.y(), centerZ);
+        if (shape != null) {
+            updateShapeLocation();
+        }
     }
 
     @Override
@@ -96,9 +99,7 @@ public class Energizer3D implements DisposableGraphicsObject {
     public Shape3D shape() {
         if (shape == null) {
             shape = shapeFactory.get();
-            shape.setTranslateX(center.getX());
-            shape.setTranslateY(center.getY());
-            shape.setTranslateZ(center.getZ());
+            updateShapeLocation();
             if (pumpingAnimation != null) {
                 pumpingAnimation.dispose();
             }
@@ -106,6 +107,12 @@ public class Energizer3D implements DisposableGraphicsObject {
                 shape, pumpingFrequency, inflatedSize, expandedSize);
         }
         return shape;
+    }
+
+    private void updateShapeLocation() {
+        shape.setTranslateX(center.getX());
+        shape.setTranslateY(center.getY());
+        shape.setTranslateZ(center.getZ());
     }
 
     public Vector2i tile() { return tile; }
