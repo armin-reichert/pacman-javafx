@@ -370,7 +370,7 @@ public class PlayScene3D implements GameScene {
                 gameLevel3D.messageManager().showReadyMessage();
             }
         }
-        gameLevel3D.rebuildLevelCounter3D();
+        gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().entityConfig().levelCounter());
         replaceActionBindings(gameLevel);
         fadeInAnimation.play();
     }
@@ -406,7 +406,7 @@ public class PlayScene3D implements GameScene {
             initPac3D(gameLevel3D.pac3D(), level);
 
             gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
-            gameLevel3D.rebuildLevelCounter3D();
+            gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().entityConfig().levelCounter());
 
             updateHUD3D(level);
             replaceActionBindings(level);

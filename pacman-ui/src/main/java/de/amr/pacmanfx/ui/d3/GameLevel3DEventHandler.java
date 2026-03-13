@@ -17,6 +17,7 @@ import de.amr.pacmanfx.uilib.model3D.actor.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.actor.MutableGhost3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.animation.SequentialTransition;
+import javafx.scene.image.Image;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -81,7 +82,7 @@ public class GameLevel3DEventHandler {
      * Handles bonus activation: updates 3D representation and plays sound.
      */
     public void onBonusActivated(BonusActivatedEvent gameEvent, GameLevel3D level3D) {
-        level3D.replaceBonus3D(gameEvent.bonus());
+        level3D.replaceBonus3D(ui.currentConfig(), gameEvent.bonus());
         soundEffects.playBonusActiveSound();
     }
 
@@ -173,7 +174,7 @@ public class GameLevel3DEventHandler {
 
     private void onStartingGame(GameLevel3D level3D) {
         level3D.maze3D().food().energizers3D().forEach(Energizer3D::stopPumping);
-        level3D.rebuildLevelCounter3D();
+        level3D.rebuildLevelCounter3D(ui.currentConfig().entityConfig().levelCounter());
     }
 
     private void onHuntingStart(GameLevel3D level3D) {
@@ -214,10 +215,9 @@ public class GameLevel3DEventHandler {
     private void onEatingGhost(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
         level.game().simulationStep().ghostsKilled.forEach(killedGhost -> {
-            byte personality = killedGhost.personality();
-            int killedIndex = level.energizerVictims().indexOf(killedGhost);
-            level3D.ghosts3D().get(personality).setNumberImage(
-                    level3D.uiConfig().killedGhostPointsImage(killedIndex));
+            final int killedIndex = level.energizerVictims().indexOf(killedGhost);
+            final Image numberImage = ui.currentConfig().killedGhostPointsImage(killedIndex);
+            level3D.ghosts3D().get(killedGhost.personality()).setNumberImage(numberImage);
         });
     }
 

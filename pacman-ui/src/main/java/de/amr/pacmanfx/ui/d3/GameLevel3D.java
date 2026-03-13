@@ -66,7 +66,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private final GameLevel level;
 
-    private final UIConfig uiConfig;
     private final AnimationRegistry animationRegistry;
     private final List<Disposable> disposables = new ArrayList<>();
 
@@ -91,7 +90,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * @param level    the game level to visualize
      */
     public GameLevel3D(UIConfig uiConfig, Factory3D factory3D, GameLevel level) {
-        this.uiConfig = requireNonNull(uiConfig);
+        requireNonNull(uiConfig);
         requireNonNull(factory3D);
         this.level = requireNonNull(level);
         this.animationRegistry = new AnimationRegistry();
@@ -105,11 +104,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final List<PhongMaterial> ghostDressMaterials = ghosts3D.stream()
             .map(mutableGhost3D -> mutableGhost3D.ghost3D().normalMaterialSet().dress())
             .toList();
-        createMaze3D(factory3D, ghostDressMaterials);
+        createMaze3D(uiConfig, factory3D, ghostDressMaterials);
 
         createAmbientLight();
-        createLevelCounter3D(entityConfig.levelCounter());
-        createLivesCounter3D(factory3D, entityConfig.livesCounter());
+        createLevelCounter3D(uiConfig, entityConfig.levelCounter());
+        createLivesCounter3D(uiConfig, factory3D, entityConfig.livesCounter());
         createMessageManager();
 
         arrangeEntities();
@@ -192,11 +191,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return Optional.ofNullable(bonus3D);
     }
 
-    /** @return UI configuration used for this level */
-    public UIConfig uiConfig() {
-        return uiConfig;
-    }
-
     // Lifecycle and updates
 
     /**
@@ -215,9 +209,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Replaces or creates the bonus visualization for the given bonus item.
      *
+     * @param uiConfig the UI configuration
      * @param bonus the new bonus
      */
-    public void replaceBonus3D(Bonus bonus) {
+    public void replaceBonus3D(UIConfig uiConfig, Bonus bonus) {
         requireNonNull(bonus);
         if (bonus3D != null) {
             getChildren().remove(bonus3D);
@@ -236,8 +231,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Rebuilds the level counter visualization using the latest configuration.
      */
-    public void rebuildLevelCounter3D() {
-        levelCounter3D.rebuild(uiConfig.entityConfig().levelCounter(), level.game().levelCounterSymbols());
+    public void rebuildLevelCounter3D(LevelCounterConfig3D levelCounterConfig3D) {
+        levelCounter3D.rebuild(levelCounterConfig3D, level.game().levelCounterSymbols());
     }
 
     // private
@@ -278,7 +273,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     private void createGhosts3D(Factory3D factory3D, List<GhostConfig> ghostConfigs) {
         ghosts3D = level.ghosts()
-            .map(ghost -> createMutableGhost3D(factory3D, ghostConfigs.get(ghost.personality()), ghost))
+            .map(ghost -> createMutableGhost3D(factory3D, ghostConfigs, ghost))
             .toList();
 
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
@@ -289,10 +284,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates a mutable 3D ghost representation for the given model ghost.
      */
-    private MutableGhost3D createMutableGhost3D(Factory3D factory3D, GhostConfig ghostConfig, Ghost ghost) {
+    private MutableGhost3D createMutableGhost3D(Factory3D factory3D, List<GhostConfig> ghostConfigs, Ghost ghost) {
         final var mutableGhost3D = factory3D.createMutableGhost3D(
             ghost,
-            ghostConfig,
+            ghostConfigs.get(ghost.personality()),
             animationRegistry,
             level.numFlashes());
 
@@ -307,7 +302,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates and initializes the lives counter visualization.
      */
-    private void createLivesCounter3D(Factory3D factory3D, LivesCounterConfig3D config) {
+    private void createLivesCounter3D(UIConfig uiConfig, Factory3D factory3D, LivesCounterConfig3D config) {
         livesCounterShapes = new Node[config.capacity()];
         for (int i = 0; i < livesCounterShapes.length; ++i) {
             livesCounterShapes[i] = factory3D.createLivesCounterShape3D(uiConfig.entityConfig());
@@ -324,7 +319,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates and initializes the level number counter visualization.
      */
-    private void createLevelCounter3D(LevelCounterConfig3D config) {
+    private void createLevelCounter3D(UIConfig uiConfig, LevelCounterConfig3D config) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
         levelCounter3D.setTranslateX(TS * (terrain.numCols() - 2));
@@ -345,7 +340,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates and initializes the maze visualization, including color scheme adjustment.
      */
-    private void createMaze3D(Factory3D factory3D, List<PhongMaterial> ghostDressMaterials) {
+    private void createMaze3D(UIConfig uiConfig, Factory3D factory3D, List<PhongMaterial> ghostDressMaterials) {
         WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final boolean wallsVeryDark = Color.valueOf(colorScheme.wallFill()).getBrightness() < 0.1;
         if (wallsVeryDark) {
