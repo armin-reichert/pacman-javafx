@@ -273,7 +273,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     private void createGhosts3D(Factory3D factory3D, List<GhostConfig> ghostConfigs) {
         ghosts3D = level.ghosts()
-            .map(ghost -> createMutableGhost3D(factory3D, animationRegistry, ghostConfigs, level, ghost))
+            .map(ghost -> createMutableGhost3D(factory3D, ghostConfigs, ghost))
             .toList();
 
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
@@ -284,7 +284,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates a mutable 3D ghost representation for the given model ghost.
      */
-    private static MutableGhost3D createMutableGhost3D(Factory3D factory3D, AnimationRegistry animationRegistry, List<GhostConfig> ghostConfigs, GameLevel level, Ghost ghost) {
+    private MutableGhost3D createMutableGhost3D(Factory3D factory3D, List<GhostConfig> ghostConfigs, Ghost ghost) {
         final var mutableGhost3D = factory3D.createMutableGhost3D(
             ghost,
             ghostConfigs.get(ghost.personality()),
