@@ -30,7 +30,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
@@ -105,6 +105,12 @@ public class PlayScene3D implements GameScene {
     protected Scores3D scores3D;
     protected PlaySceneContextMenu contextMenu;
     protected GamePlaySoundEffects soundEffects;
+
+    private final ChangeListener<DrawMode> drawModeChangeListener = (_, _, drawMode) -> {
+        if (gameLevel3D != null) {
+            Ufx.setDrawMode(gameLevel3D, drawMode);
+        }
+    };
 
     /**
      * Inner class managing the fade-in animation of the 3D sub-scene.
@@ -217,7 +223,7 @@ public class PlayScene3D implements GameScene {
         game.hud().score(true).show();
         perspectiveManager.activeIDProperty().bind(GameUI.PROPERTY_3D_PERSPECTIVE_ID);
         subScene.setFill(SCENE_DARK_FILLCOLOR);
-        PROPERTY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
+        PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
     }
 
     /**
@@ -232,8 +238,8 @@ public class PlayScene3D implements GameScene {
     public void end(Game game) {
         soundEffects.stopAll();
         perspectiveManager.activeIDProperty().unbind();
-        PROPERTY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
-        removeAndDisposeGameLevel3D();
+        PROPERTY_3D_DRAW_MODE.removeListener(drawModeChangeListener);
+        //removeAndDisposeGameLevel3D();
         disposeContextMenu();
     }
 
@@ -554,16 +560,6 @@ public class PlayScene3D implements GameScene {
     private void disposeContextMenu() {
         if (contextMenu != null) {
             contextMenu.dispose();
-        }
-    }
-
-    /**
-     * Updates draw mode (wireframe/solid) for all relevant 3D shapes.
-     * Called when {@link GameUI#PROPERTY_3D_DRAW_MODE} changes.
-     */
-    private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode drawMode) {
-        if (gameLevel3D != null) {
-            Ufx.setDrawMode(gameLevel3D, drawMode);
         }
     }
 }
