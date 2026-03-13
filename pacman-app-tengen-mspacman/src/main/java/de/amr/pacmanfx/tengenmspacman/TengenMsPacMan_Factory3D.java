@@ -19,11 +19,29 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
-import javafx.scene.transform.Rotate;
+import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_Factory3D implements Factory3D {
+
+    private double pelletRadius;
+    private Mesh scaledPelletMesh;
+
+    private Mesh scaledPelletMesh(PelletConfig3D pelletConfig) {
+        requireNonNull(pelletConfig);
+        if (scaledPelletMesh == null || pelletConfig.radius() != pelletRadius) {
+            pelletRadius = pelletConfig.radius();
+            final Mesh originalPelletMesh = Models3D.PELLET_MODEL.mesh();
+            final var dummy = new MeshView(originalPelletMesh);
+            final Bounds bounds = dummy.getBoundsInLocal();
+            final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
+            final double scaling = (2 * pelletRadius) / maxExtent;
+            scaledPelletMesh = Models3D.createScaledMesh(originalPelletMesh, scaling);
+            Logger.info("Created scaled pellet mesh, config={}", pelletConfig);
+        }
+        return scaledPelletMesh;
+    }
 
     @Override
     public MsPacMan3D createPac3D(
@@ -90,18 +108,9 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
 
     @Override
     public Pellet3D createPellet3D(PelletConfig3D pelletConfig, PhongMaterial material) {
-        final Mesh pelletMesh = Models3D.PELLET_MODEL.mesh();
-        final var dummy = new MeshView(pelletMesh);
-        final Bounds bounds = dummy.getBoundsInLocal();
-        final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
-        final double scaling = (2 * pelletConfig.radius()) / maxExtent;
-        final Mesh scaledPelletMesh = Models3D.createScaledMesh(pelletMesh, scaling);
-        final var pellet3D = new Pellet3D(scaledPelletMesh);
-        pellet3D.setMaterial(material);
-        //TODO fix rotation in OBJ file
-        pellet3D.setRotationAxis(Rotate.Z_AXIS);
-        pellet3D.setRotate(90);
-
+        final Mesh scaledPelletMesh = scaledPelletMesh(pelletConfig);
+        final var pellet3D = new Pellet3D(new MeshView(scaledPelletMesh));
+        pellet3D.shape().setMaterial(material);
         return pellet3D;
     }
 

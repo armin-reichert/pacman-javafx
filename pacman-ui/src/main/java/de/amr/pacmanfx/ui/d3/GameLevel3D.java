@@ -251,7 +251,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().addAll(pac3D, pac3D.light());
         getChildren().addAll(ghosts3D);
         getChildren().addAll(maze3D.food().energizers3D().stream().map(Energizer3D::shape).toList());
-        getChildren().addAll(maze3D.food().pellets3D());
+        getChildren().addAll(maze3D.food().pellets3D().stream().map(Pellet3D::shape).toList());
         getChildren().add(maze3D.house().root());
         getChildren().add(maze3D.house().doors());
         getChildren().add(maze3D);

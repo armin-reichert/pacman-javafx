@@ -506,7 +506,7 @@ public class PlayScene3D implements GameScene {
 
     private void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
         final MazeFood3D food3D = gameLevel3D.maze3D().food();
-        food3D.pellets3D()   .forEach(p3D -> p3D.setVisible(!foodLayer.hasEatenFoodAtTile(p3D.tile())));
+        food3D.pellets3D()   .forEach(p3D -> p3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(p3D.tile())));
         food3D.energizers3D().forEach(e3D -> e3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(e3D.tile())));
         if (startEnergizerPumping) {
             food3D.energizers3D().stream().filter(e3D -> e3D.shape().isVisible()).forEach(Energizer3D::startPumping);

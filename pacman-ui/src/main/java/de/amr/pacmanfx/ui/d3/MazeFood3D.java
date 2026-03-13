@@ -84,10 +84,7 @@ public class MazeFood3D implements Disposable {
     @Override
     public void dispose() {
         if (!pellets3D.isEmpty()) {
-            pellets3D.forEach(pellet3D -> {
-                pellet3D.setMaterial(null);
-                pellet3D.setMesh(null);
-            });
+            pellets3D.forEach(Pellet3D::dispose);
             Logger.info("Disposed 3D pellets");
         }
         if (!energizers3D.isEmpty()) {
@@ -144,7 +141,7 @@ public class MazeFood3D implements Disposable {
      * Removes all pellet visualizations (used when all pellets are eaten at once).
      */
     public void removeAllPellets3D(Group pelletContainer) {
-        pellets3D().forEach(pellet3D -> pelletContainer.getChildren().remove(pellet3D));
+        pellets3D().forEach(pellet3D -> pelletContainer.getChildren().remove(pellet3D.shape()));
     }
 
     /**
@@ -153,7 +150,7 @@ public class MazeFood3D implements Disposable {
      * @param pellet3D the pellet shape to remove
      */
     private void removePellet3DAfterDelay(Group pelletContainer, Pellet3D pellet3D) {
-        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> pelletContainer.getChildren().remove(pellet3D)).play();
+        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> pelletContainer.getChildren().remove(pellet3D.shape())).play();
     }
 
     private void createPellets3D(Factory3D factory3D, PelletConfig3D config, PhongMaterial pelletMaterial, double z) {

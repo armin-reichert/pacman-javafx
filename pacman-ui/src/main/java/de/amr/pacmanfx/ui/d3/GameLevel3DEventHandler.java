@@ -267,7 +267,7 @@ public class GameLevel3DEventHandler {
             energizer3D.hide();
         });
         // Hide 3D food explicitly (handles cheat-eat-all case)
-        food3D.pellets3D().forEach(pellet3D -> pellet3D.setVisible(false));
+        food3D.pellets3D().forEach(pellet3D -> pellet3D.shape().setVisible(false));
         level3D.maze3D().particlesGroup().getChildren().clear();
     }
 }

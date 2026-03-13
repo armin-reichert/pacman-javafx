@@ -11,7 +11,7 @@ import javafx.scene.shape.Mesh;
 
 public class PelletModel3D implements Disposable {
 
-	private static final String MESH_ID_PELLET = "Pellet";
+	private static final String MESH_ID_PELLET = "pellet";
 
 	private final Model3D model3D;
 
