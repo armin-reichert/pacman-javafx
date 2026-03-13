@@ -32,9 +32,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -215,15 +212,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     protected void storeDefaultPrefValues() {
-        // "Kornblumenblau, sind die Augen der Frauen beim Weine. Hicks!"
-        storeDefaultColor("context_menu.title.fill", Color.CORNFLOWERBLUE);
-        storeDefaultFont("context_menu.title.font", Font.font("Dialog", FontWeight.BLACK, 14.0f));
-
-        storeDefaultColor("debug_text.fill", Color.WHITE);
-        storeDefaultColor("debug_text.stroke", Color.GRAY);
-        storeDefaultFont("debug_text.font", Font.font("Sans", 16.0f));
-
-        storeDefaultEntry("scene2d.max_scaling", 5.0f);
+        // store user preference default values here
     }
 
     // GameUI interface

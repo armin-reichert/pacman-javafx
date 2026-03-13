@@ -36,6 +36,8 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class GameScene2D implements GameScene {
 
+    public static final float MAX_SCALING = 5.0f;
+
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
 

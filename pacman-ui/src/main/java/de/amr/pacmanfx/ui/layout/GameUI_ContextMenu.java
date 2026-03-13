@@ -11,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
@@ -23,6 +24,9 @@ import static java.util.Objects.requireNonNull;
  * Provides convenience methods for building context menus and handles closing of the menu when any action is executed.
  */
 public class GameUI_ContextMenu extends ContextMenu {
+
+    public static final Color DEFAULT_TITLE_COLOR = Color.CORNFLOWERBLUE;
+    public static final Font DEFAULT_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14.0f);
 
     private final GameUI ui;
 
@@ -51,11 +55,9 @@ public class GameUI_ContextMenu extends ContextMenu {
     }
 
     public MenuItem addTitleItem(String itemText) {
-        final Font font = ui.prefs().getFont("context_menu.title.font");
-        final Color fillColor = ui.prefs().getColor("context_menu.title.fill");
         final var text = new Text(itemText);
-        text.setFont(font);
-        text.setFill(fillColor);
+        text.setFont(DEFAULT_TITLE_FONT);
+        text.setFill(DEFAULT_TITLE_COLOR);
         text.getStyleClass().add("custom-menu-title");
         final var item = new CustomMenuItem(text, false);
         getItems().add(item);

@@ -101,6 +101,7 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
 
         final var ghostShape3D = new Ghost3D(animationRegistry, ghost, colorSet, dressMesh, pupilsMesh, eyeballsMesh, size);
         final var numberShape3D = new Box(NUMBER_BOX_SIZE_X, NUMBER_BOX_SIZE_Y, NUMBER_BOX_SIZE_Z);
+
         getChildren().setAll(ghostShape3D, numberShape3D);
 
         pointsAnimation = new Ghost3DPointsAnimation(animationRegistry, this);
@@ -130,10 +131,16 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
     }
 
     public Ghost3D ghost3D() {
+        if (getChildren().isEmpty()) {
+            throw new IllegalStateException("MutableGhost3D already disposed?");
+        }
         return (Ghost3D) getChildren().getFirst();
     }
 
     public Shape3D numberShape3D() {
+        if (getChildren().isEmpty()) {
+            throw new IllegalStateException("MutableGhost3D already disposed?");
+        }
         return (Shape3D) getChildren().getLast();
     }
 
@@ -193,9 +200,9 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
     // private area, no trespassing
 
     private void addListeners() {
-        appearance.addListener(this::handleAppearanceChange);
         ghost.positionProperty().addListener(this::handleGhostPositionChange);
         ghost.wishDirProperty().addListener(this::handleGhostWishDirChange);
+        appearance.addListener(this::handleAppearanceChange);
     }
 
     private void removeListeners() {
@@ -244,9 +251,7 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-0.5 * size - GHOST_OVER_FLOOR_DIST);
-        if (ghost3D() != null) {
-            ghost3D().turnTowards(ghost.wishDir());
-        }
+        ghost3D().turnTowards(ghost.wishDir());
     }
 
     private void updateAppearance(GameLevel gameLevel) {
