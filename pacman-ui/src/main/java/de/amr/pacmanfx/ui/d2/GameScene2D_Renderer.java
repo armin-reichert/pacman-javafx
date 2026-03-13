@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.d2;
 
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
@@ -17,7 +16,7 @@ public abstract class GameScene2D_Renderer extends BaseRenderer {
 
     public abstract void draw(GameScene2D scene);
 
-    protected void createDefaultDebugInfoRenderer(GameScene2D scene, Canvas canvas, PreferencesManager prefs) {
-        debugRenderer = scene.adaptRenderer(new BaseDebugInfoRenderer(prefs, canvas));
+    protected void createDefaultDebugInfoRenderer(GameScene2D scene, Canvas canvas) {
+        debugRenderer = scene.adaptRenderer(new BaseDebugInfoRenderer(canvas));
     }
 }

@@ -6,16 +6,15 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene3;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.TS;
 
 public class ArcadePacMan_CutScene3_Renderer extends ArcadePacMan_CutScene_Renderer {
 
-    public ArcadePacMan_CutScene3_Renderer(GameScene2D scene, Canvas canvas, PreferencesManager prefs) {
+    public ArcadePacMan_CutScene3_Renderer(GameScene2D scene, Canvas canvas) {
         super(scene, canvas);
-        debugRenderer = scene.adaptRenderer(new BaseDebugInfoRenderer(prefs, canvas) {
+        debugRenderer = scene.adaptRenderer(new BaseDebugInfoRenderer(canvas) {
             @Override
             public void draw(GameScene2D scene) {
                 super.draw(scene);

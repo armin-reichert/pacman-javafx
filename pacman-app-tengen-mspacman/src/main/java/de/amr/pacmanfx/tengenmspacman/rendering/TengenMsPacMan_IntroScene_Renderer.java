@@ -28,12 +28,12 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
 
     private final ActorRenderer actorRenderer;
 
-    public TengenMsPacMan_IntroScene_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas, PreferencesManager prefs) {
+    public TengenMsPacMan_IntroScene_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
         requireNonNull(uiConfig);
         requireNonNull(scene);
         actorRenderer = scene.adaptRenderer(uiConfig.createActorRenderer(canvas));
-        createDefaultDebugInfoRenderer(scene, canvas, prefs);
+        createDefaultDebugInfoRenderer(scene, canvas);
     }
 
     @Override

@@ -14,9 +14,9 @@ import static de.amr.pacmanfx.ui.ArcadePalette.*;
 
 public class ArcadePacMan_StartScene_Renderer extends GameScene2D_Renderer {
 
-    public ArcadePacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas, PreferencesManager prefs) {
+    public ArcadePacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
-        createDefaultDebugInfoRenderer(scene, canvas, prefs);
+        createDefaultDebugInfoRenderer(scene, canvas);
     }
 
     public void draw(GameScene2D scene) {

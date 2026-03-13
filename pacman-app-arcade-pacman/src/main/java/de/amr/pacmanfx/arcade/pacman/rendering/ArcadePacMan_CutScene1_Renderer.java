@@ -13,9 +13,9 @@ import static de.amr.pacmanfx.Globals.TS;
 
 public class ArcadePacMan_CutScene1_Renderer extends ArcadePacMan_CutScene_Renderer {
 
-    public ArcadePacMan_CutScene1_Renderer(GameScene2D scene, Canvas canvas, PreferencesManager prefs) {
+    public ArcadePacMan_CutScene1_Renderer(GameScene2D scene, Canvas canvas) {
         super(scene, canvas);
-        debugRenderer = scene.adaptRenderer(new BaseDebugInfoRenderer(prefs, canvas) {
+        debugRenderer = scene.adaptRenderer(new BaseDebugInfoRenderer(canvas) {
             @Override
             public void draw(GameScene2D scene) {
                 super.draw(scene);

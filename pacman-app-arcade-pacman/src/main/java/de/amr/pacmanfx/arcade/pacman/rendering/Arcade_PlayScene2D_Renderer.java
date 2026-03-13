@@ -13,7 +13,6 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
@@ -37,7 +36,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
     private final ActorRenderer actorRenderer;
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
-    public Arcade_PlayScene2D_Renderer(GameScene2D scene, Canvas canvas, PreferencesManager prefs, SpriteSheet<?> spriteSheet) {
+    public Arcade_PlayScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
         requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);
@@ -45,7 +44,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
         final UIConfig uiConfig = scene.ui().currentConfig();
         levelRenderer = scene.adaptRenderer(uiConfig.createGameLevelRenderer(canvas));
         actorRenderer = scene.adaptRenderer(uiConfig.createActorRenderer(canvas));
-        debugRenderer = scene.adaptRenderer(new Arcade_PlayScene2D_DebugInfo_Renderer(prefs, canvas));
+        debugRenderer = scene.adaptRenderer(new Arcade_PlayScene2D_DebugInfo_Renderer(canvas));
     }
 
     @Override
