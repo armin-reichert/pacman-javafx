@@ -66,7 +66,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private final GameLevel level;
 
-    private final AnimationRegistry animationRegistry;
+    private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final List<Disposable> disposables = new ArrayList<>();
 
     private AmbientLight ambientLight;
@@ -93,9 +93,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         requireNonNull(uiConfig);
         requireNonNull(factory3D);
         this.level = requireNonNull(level);
-        this.animationRegistry = new AnimationRegistry();
 
-        final EntityConfig entityConfig = uiConfig.entityConfig();
+        final EntityConfig entityConfig = requireNonNull(uiConfig.entityConfig());
 
         createPac3D(factory3D, entityConfig.pacConfig());
         createGhosts3D(factory3D, entityConfig.ghostConfigs());
@@ -106,14 +105,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .toList();
         createMaze3D(uiConfig, factory3D, ghostDressMaterials);
 
-        createAmbientLight();
         createLevelCounter3D(uiConfig, entityConfig.levelCounter());
         createLivesCounter3D(uiConfig, factory3D, entityConfig.livesCounter());
         createMessageManager();
+        createAmbientLight();
 
         arrangeEntities();
 
-        setMouseTransparent(true); // this increases performance, they say...
+        setMouseTransparent(true); // this increases performance they say...
     }
 
     /**
@@ -126,7 +125,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void dispose() {
         Logger.info("Disposing game level 3D...");
         animationRegistry.clear();
-        cleanupLight(ambientLight); ambientLight = null;
+        cleanupLight(ambientLight);
+        ambientLight = null;
         if (livesCounterShapes != null) {
             disposeAll(List.of(livesCounterShapes));
             livesCounterShapes = null;
@@ -273,7 +273,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     private void createGhosts3D(Factory3D factory3D, List<GhostConfig> ghostConfigs) {
         ghosts3D = level.ghosts()
-            .map(ghost -> createMutableGhost3D(factory3D, ghostConfigs, ghost))
+            .map(ghost -> createMutableGhost3D(factory3D, animationRegistry, ghostConfigs, level, ghost))
             .toList();
 
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
@@ -284,15 +284,16 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates a mutable 3D ghost representation for the given model ghost.
      */
-    private MutableGhost3D createMutableGhost3D(Factory3D factory3D, List<GhostConfig> ghostConfigs, Ghost ghost) {
+    private static MutableGhost3D createMutableGhost3D(Factory3D factory3D, AnimationRegistry animationRegistry, List<GhostConfig> ghostConfigs, GameLevel level, Ghost ghost) {
         final var mutableGhost3D = factory3D.createMutableGhost3D(
             ghost,
             ghostConfigs.get(ghost.personality()),
             animationRegistry,
-            level.numFlashes());
+            level.numFlashes()
+        );
 
         mutableGhost3D.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> ghost.isVisible() && !outsideWorld(ghost),
+            () -> ghost.isVisible() && !outsideWorld(level, ghost),
             ghost.visibleProperty(), ghost.positionProperty()
         ));
 
@@ -388,7 +389,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * @param ghost the ghost to check
      * @return true if the ghost is outside the maze bounds
      */
-    private boolean outsideWorld(Ghost ghost) {
+    private static boolean outsideWorld(GameLevel level, Ghost ghost) {
         final Vector2f center = ghost.center();
         return center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
     }
