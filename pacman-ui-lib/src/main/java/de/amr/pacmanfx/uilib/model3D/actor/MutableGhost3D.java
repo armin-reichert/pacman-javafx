@@ -14,6 +14,7 @@ import de.amr.pacmanfx.uilib.model3D.animation.Ghost3DBrakeAnimation;
 import de.amr.pacmanfx.uilib.model3D.animation.Ghost3DPointsAnimation;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -199,51 +200,45 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
 
     // private area, no trespassing
 
+    private final ChangeListener<Vector2f> positionChangeListener = (_, _, _) -> update3DTransform();
+
+    private final ChangeListener<Direction> wishDirChangeListener = (_, _, _) -> update3DTransform();
+
+    // Cannot use lambda here because it references fields of this class
+    private final ChangeListener<GhostAppearance> appearanceChangeListener = new ChangeListener<>() {
+        @Override
+        public void changed(ObservableValue<? extends GhostAppearance> obs, GhostAppearance oldAppearance, GhostAppearance newAppearance) {
+            if (newAppearance == GhostAppearance.NUMBER) {
+                numberShape3D().setVisible(true);
+                ghost3D().setVisible(false);
+                ghost3D().dressAnimation().stop();
+                pointsAnimation.playFromStart();
+            }
+            else {
+                numberShape3D().setVisible(false);
+                ghost3D().setVisible(true);
+                switch (newAppearance) {
+                    case NORMAL     -> ghost3D().setNormalLook();
+                    case FRIGHTENED -> ghost3D().setFrightenedLook();
+                    case EYES       -> ghost3D().setEyesOnlyLook();
+                    case FLASHING   -> ghost3D().setFlashingLook(numFlashes);
+                }
+                pointsAnimation.stop();
+            }
+            Logger.debug("{} 3D appearance set to {}", ghost.name(), newAppearance);
+        }
+    };
+
     private void addListeners() {
-        ghost.positionProperty().addListener(this::handleGhostPositionChange);
-        ghost.wishDirProperty().addListener(this::handleGhostWishDirChange);
-        appearance.addListener(this::handleAppearanceChange);
+        ghost.positionProperty().addListener(positionChangeListener);
+        ghost.wishDirProperty().addListener(wishDirChangeListener);
+        appearance.addListener(appearanceChangeListener);
     }
 
     private void removeListeners() {
-        ghost.positionProperty().removeListener(this::handleGhostPositionChange);
-        ghost.wishDirProperty().removeListener(this::handleGhostWishDirChange);
-        appearance.removeListener(this::handleAppearanceChange);
-    }
-
-    private void handleAppearanceChange(
-        ObservableValue<? extends GhostAppearance> observableValue,
-        GhostAppearance oldAppearance,
-        GhostAppearance newAppearance)
-    {
-        if (newAppearance == GhostAppearance.NUMBER) {
-            numberShape3D().setVisible(true);
-            ghost3D().setVisible(false);
-            ghost3D().dressAnimation().stop();
-            pointsAnimation.playFromStart();
-        }
-        else {
-            numberShape3D().setVisible(false);
-            ghost3D().setVisible(true);
-            switch (newAppearance) {
-                case NORMAL     -> ghost3D().setNormalLook();
-                case FRIGHTENED -> ghost3D().setFrightenedLook();
-                case EYES       -> ghost3D().setEyesOnlyLook();
-                case FLASHING   -> ghost3D().setFlashingLook(numFlashes);
-            }
-            pointsAnimation.stop();
-        }
-        Logger.debug("{} 3D appearance set to {}", ghost.name(), newAppearance);
-    }
-
-    // Separate method such that listener can be removed
-    private void handleGhostPositionChange(ObservableValue<? extends Vector2f> obs, Vector2f oldPosition, Vector2f newPosition) {
-        update3DTransform();
-    }
-
-    // Separate method such that listener can be removed
-    private void handleGhostWishDirChange(ObservableValue<? extends Direction> obs, Direction oldDir, Direction newDir) {
-        update3DTransform();
+        ghost.positionProperty().removeListener(positionChangeListener);
+        ghost.wishDirProperty().removeListener(wishDirChangeListener);
+        appearance.removeListener(appearanceChangeListener);
     }
 
     private void update3DTransform() {
