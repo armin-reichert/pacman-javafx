@@ -206,6 +206,7 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, GameSceneConfig, Res
     public GamePlaySoundEffects createPlaySoundEffects(GameUI ui) {
         final var soundEffects = new GamePlaySoundEffects(ui.gameContext().clock(), ui.soundManager());
         soundEffects.setMunchingSoundDelay((byte) 9);
+        soundEffects.setSirenVolume(0.33f);
         return soundEffects;
     }
 

@@ -48,6 +48,7 @@ public class GameLevel3DEventHandler {
     /**
      * Dispatches game state change events to the appropriate handler method.
      *
+     * @param ui the game UI
      * @param event   the state change event
      * @param level3D the current 3D level representation (may be null)
      */

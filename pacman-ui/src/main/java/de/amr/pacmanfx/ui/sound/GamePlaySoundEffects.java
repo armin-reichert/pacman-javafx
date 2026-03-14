@@ -26,14 +26,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class GamePlaySoundEffects {
 
-    /**
-     * Volume level for siren sounds (adjusted low to prevent clipping/distortion).
-     */
-    public static final float SIREN_VOLUME = 0.33f;
-
     private final GameClock gameClock;
     private final SoundManager soundManager;
 
+    private float sirenVolume = 1.0f;
     private long lastMunchingSoundPlayedTick;
     private byte munchingSoundDelay;
 
@@ -46,6 +42,10 @@ public class GamePlaySoundEffects {
     public GamePlaySoundEffects(GameClock gameClock, SoundManager soundManager) {
         this.gameClock = requireNonNull(gameClock);
         this.soundManager = requireNonNull(soundManager);
+    }
+
+    public void setSirenVolume(float sirenVolume) {
+        this.sirenVolume = Math.clamp(sirenVolume, 0, 1);
     }
 
     /**
@@ -226,7 +226,7 @@ public class GamePlaySoundEffects {
             // siren numbers are 1..4, hunting phase index = 0..7
             final int huntingPhase = level.huntingTimer().phaseIndex();
             final int sirenNumber = 1 + huntingPhase / 2;
-            soundManager.playSiren(sirenNumber, SIREN_VOLUME);
+            soundManager.playSiren(sirenNumber, sirenVolume);
         }
     }
 

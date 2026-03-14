@@ -170,11 +170,7 @@ public interface UIConfig extends Disposable {
         );
     }
 
-    default GamePlaySoundEffects createPlaySoundEffects(GameUI ui) {
-        final var soundEffects = new GamePlaySoundEffects(ui.gameContext().clock(), ui.soundManager());
-        soundEffects.setMunchingSoundDelay((byte) 0);
-        return soundEffects;
-    }
+    GamePlaySoundEffects createPlaySoundEffects(GameUI ui);
 
     /**
      * Returns the 2D image representing the bonus symbol for the given code.

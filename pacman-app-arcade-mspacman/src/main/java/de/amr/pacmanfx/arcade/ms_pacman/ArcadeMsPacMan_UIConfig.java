@@ -26,6 +26,7 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.UfxImages;
@@ -145,6 +146,14 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, GameSceneConfig, Resou
     @Override
     public Rectangle2D spriteRegionForArcadeBootScene() {
         return new Rectangle2D(380, 0, 204, 208);
+    }
+
+    @Override
+    public GamePlaySoundEffects createPlaySoundEffects(GameUI ui) {
+        final var soundEffects = new GamePlaySoundEffects(ui.gameContext().clock(), ui.soundManager());
+        soundEffects.setMunchingSoundDelay((byte) 0);
+        soundEffects.setSirenVolume(0.33f);
+        return soundEffects;
     }
 
     @Override

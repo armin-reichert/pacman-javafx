@@ -29,6 +29,7 @@ import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.input.Joypad;
+import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -249,6 +250,14 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
             LOCAL_RESOURCES.url("sound/ms-siren2.wav"), // TODO
             LOCAL_RESOURCES.url("sound/ms-siren2.wav")  // TODO
         );
+    }
+
+    @Override
+    public GamePlaySoundEffects createPlaySoundEffects(GameUI ui) {
+        final var soundEffects = new GamePlaySoundEffects(ui.gameContext().clock(), ui.soundManager());
+        soundEffects.setMunchingSoundDelay((byte) 0);
+        soundEffects.setSirenVolume(1.0f);
+        return soundEffects;
     }
 
     @Override

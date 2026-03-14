@@ -274,6 +274,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, GameSceneConfig, Resourc
     public GamePlaySoundEffects createPlaySoundEffects(GameUI ui) {
         final var soundEffects = new GamePlaySoundEffects(ui.gameContext().clock(), ui.soundManager());
         soundEffects.setMunchingSoundDelay((byte) 9);
+        soundEffects.setSirenVolume(0.33f);
         return soundEffects;
     }
 
