@@ -21,6 +21,7 @@ import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.UfxImages;
@@ -270,8 +271,10 @@ public class ArcadePacMan_UIConfig implements UIConfig, GameSceneConfig, Resourc
     }
 
     @Override
-    public byte munchingSoundDelay() {
-        return 9;
+    public GamePlaySoundEffects createPlaySoundEffects(GameUI ui) {
+        final var soundEffects = new GamePlaySoundEffects(ui.gameContext().clock(), ui.soundManager());
+        soundEffects.setMunchingSoundDelay((byte) 9);
+        return soundEffects;
     }
 
     @Override

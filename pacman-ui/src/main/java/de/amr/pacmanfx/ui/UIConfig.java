@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui.config.*;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -169,14 +170,10 @@ public interface UIConfig extends Disposable {
         );
     }
 
-    /**
-     * Returns the minimum number of game ticks that must pass between two
-     * consecutive pellet‑munching sound effects.
-     *
-     * @return the required delay in ticks (0 means no delay)
-     */
-    default byte munchingSoundDelay() {
-        return 0;
+    default GamePlaySoundEffects createPlaySoundEffects(GameUI ui) {
+        final var soundEffects = new GamePlaySoundEffects(ui.gameContext().clock(), ui.soundManager());
+        soundEffects.setMunchingSoundDelay((byte) 0);
+        return soundEffects;
     }
 
     /**

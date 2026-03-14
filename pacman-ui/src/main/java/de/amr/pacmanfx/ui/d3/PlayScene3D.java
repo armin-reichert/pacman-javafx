@@ -182,12 +182,8 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onEmbed(GameUI ui) {
         this.ui = requireNonNull(ui);
-
-        soundEffects = new GamePlaySoundEffects(ui.gameContext().clock(), ui.soundManager());
-        soundEffects.setMunchingSoundDelay(ui.currentConfig().munchingSoundDelay());
-
+        this.soundEffects = ui.currentConfig().createPlaySoundEffects(ui);
         level3D_EventHandler.init(ui, soundEffects);
-
         // TODO: reconsider whether scores need recreation here (variant/font change?)
         replaceScores3D();
     }
