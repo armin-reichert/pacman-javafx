@@ -59,22 +59,22 @@ public class GameLevel3DEventHandler {
         }
 
         final State<Game> gameState = event.newState();
-        if (stateMatches(gameState, STARTING_GAME_OR_LEVEL)) {
+        if (matches(gameState, STARTING_GAME_OR_LEVEL)) {
             onStartingGame(level3D);
-        } else if (stateMatches(gameState, HUNTING)) {
+        } else if (matches(gameState, HUNTING)) {
             onHuntingStart(level3D);
-        } else if (stateMatches(gameState, PACMAN_DYING)) {
+        } else if (matches(gameState, PACMAN_DYING)) {
             onPacManDying(level3D);
-        } else if (stateMatches(gameState, EATING_GHOST)) {
+        } else if (matches(gameState, EATING_GHOST)) {
             onEatingGhost(level3D);
-        } else if (stateMatches(gameState, LEVEL_COMPLETE)) {
-            event.game().optGameLevel().ifPresent(level -> onLevelComplete(level3D, level));
-        } else if (stateMatches(gameState, GAME_OVER)) {
+        } else if (matches(gameState, LEVEL_COMPLETE)) {
+            onLevelComplete(level3D);
+        } else if (matches(gameState, GAME_OVER)) {
             onGameOver(level3D);
         }
     }
 
-    private static boolean stateMatches(State<Game> gameState, GameControl.CommonGameState expected) {
+    private static boolean matches(State<Game> gameState, GameControl.CommonGameState expected) {
         return gameState.nameMatches(expected.name());
     }
 
@@ -221,7 +221,8 @@ public class GameLevel3DEventHandler {
         });
     }
 
-    private void onLevelComplete(GameLevel3D level3D, GameLevel level) {
+    private void onLevelComplete(GameLevel3D level3D) {
+        final GameLevel level = level3D.level();
         final State<Game> gameState = level.game().control().state();
 
         soundEffects.stopAll();
