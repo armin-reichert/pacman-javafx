@@ -70,22 +70,12 @@ public class PlayView extends StackPane implements View {
         Font.font("Sans", 12)
     );
 
-
-    private static final DashboardConfig DASHBOARD_DASHBOARD_CONFIG = new DashboardConfig(
-        DASHBOARD_CONFIG.labelWidth(),
-        DASHBOARD_CONFIG.width(),
-        Color.rgb(0, 0, 0x33),
-        ArcadePalette.ARCADE_WHITE,
-        Font.font("Sans", 12),
-        Font.font("Sans", 12)
-    );
-
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
     private final ActionBindingsManager actionBindingsManager = new ActionBindingsManagerImpl();
     private final GameUI ui;
     private final Scene parentScene;
-    private final Dashboard dashboard = new Dashboard(DASHBOARD_DASHBOARD_CONFIG);
+    private final Dashboard dashboard = new Dashboard(DASHBOARD_CONFIG);
     private final CanvasDecorationPane canvasDecorator = new CanvasDecorationPane();
     private final MiniGameView miniView = new MiniGameView();
     private final BorderPane canvasLayer = new BorderPane();
@@ -404,34 +394,33 @@ public class PlayView extends StackPane implements View {
         contextMenu.show(this, event.getScreenX(), event.getScreenY());
     }
 
-    private void useDecoratedCanvas(GameUI ui, GameScene2D gameScene2D) {
+    private void useDecoratedCanvas(GameScene2D gameScene2D) {
         final Canvas canvas = new Canvas();
-
         canvasDecorator.setCanvas(canvas);
 
         gameScene2D.setCanvas(canvas);
         gameScene2D.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
 
         sceneRenderer = ui.currentConfig().createGameSceneRenderer(gameScene2D, canvas);
-        hudRenderer = ui.currentConfig().createHUDRenderer(gameScene2D, canvas); // may return null!
+        hudRenderer   = ui.currentConfig().createHUDRenderer(gameScene2D, canvas); // may return null!
     }
 
-    private void embedGameScene(Scene parentScene, GameScene gameScene) {
+    private void embedGameScene(Scene parentSceneFX, GameScene gameScene) {
         hudRenderer = null;
         if (gameScene.optSubScene().isPresent()) {
             // 1. Play scene with integrated sub-scene: 3D scene or 2D scene with camera as in Tengen Ms. Pac-Man:
             final SubScene subScene = gameScene.optSubScene().get();
             // Let sub-scene take full size of parent scene
-            subScene.widthProperty().bind(parentScene.widthProperty());
-            subScene.heightProperty().bind(parentScene.heightProperty());
+            subScene.widthProperty().bind(parentSceneFX.widthProperty());
+            subScene.heightProperty().bind(parentSceneFX.heightProperty());
             // Is it a 2D scene with canvas inside sub-scene with camera?
             if (gameScene instanceof GameScene2D gameScene2D) {
-                useDecoratedCanvas(ui, gameScene2D);
+                useDecoratedCanvas(gameScene2D);
             }
             getChildren().set(0, subScene);
         }
         else if (gameScene instanceof GameScene2D gameScene2D) {
-            useDecoratedCanvas(ui, gameScene2D);
+            useDecoratedCanvas(gameScene2D);
             Vector2i gameSceneSizePx = gameScene2D.unscaledSize();
             double aspect = (double) gameSceneSizePx.x() / gameSceneSizePx.y();
             if (ui.currentGameSceneConfig().sceneDecorationRequested(gameScene)) {
@@ -440,15 +429,15 @@ public class PlayView extends StackPane implements View {
                 gameScene2D.scalingProperty().bind(canvasDecorator.scalingProperty().map(
                         scaling -> Math.min(scaling.doubleValue(), maxScaling)));
                 canvasDecorator.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
-                canvasDecorator.resizeTo(parentScene.getWidth(), parentScene.getHeight());
+                canvasDecorator.resizeTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
                 canvasDecorator.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR.map(UfxBackgrounds::paintBackground));
                 canvasLayer.setCenter(canvasDecorator);
             }
             else {
                 // Undecorated game scene taking complete height
-                canvasDecorator.canvas().heightProperty().bind(parentScene.heightProperty());
-                canvasDecorator.canvas().widthProperty().bind(parentScene.heightProperty().map(h -> h.doubleValue() * aspect));
-                gameScene2D.scalingProperty().bind(parentScene.heightProperty().divide(gameSceneSizePx.y()));
+                canvasDecorator.canvas().heightProperty().bind(parentSceneFX.heightProperty());
+                canvasDecorator.canvas().widthProperty().bind(parentSceneFX.heightProperty().map(h -> h.doubleValue() * aspect));
+                gameScene2D.scalingProperty().bind(parentSceneFX.heightProperty().divide(gameSceneSizePx.y()));
                 canvasLayer.setCenter(canvasDecorator.canvas());
             }
             getChildren().set(0, canvasLayer);
