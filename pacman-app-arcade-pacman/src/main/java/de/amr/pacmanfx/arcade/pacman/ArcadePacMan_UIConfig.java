@@ -36,7 +36,6 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState.*;
@@ -307,11 +306,6 @@ public class ArcadePacMan_UIConfig implements UIConfig, GameSceneConfig, Resourc
     }
 
     @Override
-    public Stream<GameScene> gameScenes() {
-        return scenesByID.values().stream();
-    }
-
-    @Override
     public boolean sceneDecorationRequested(GameScene gameScene) {
         return true;
     }
@@ -319,25 +313,20 @@ public class ArcadePacMan_UIConfig implements UIConfig, GameSceneConfig, Resourc
     @Override
     public Optional<GameScene> selectGameScene(Game game) {
         requireNonNull(game);
-        final SceneID sceneID = switch (game.control().state()) {
+        final SceneID sceneID = determineSceneID(game);
+        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
+        return Optional.of(gameScene);
+    }
+
+    private SceneID determineSceneID(Game game) {
+        return switch (game.control().state()) {
             case BOOT -> CommonSceneID.BOOT_SCENE;
             case SETTING_OPTIONS_FOR_START -> CommonSceneID.START_SCENE;
             case INTRO -> CommonSceneID.INTRO_SCENE;
-            case INTERMISSION -> {
-                if (game.optGameLevel().isEmpty()) {
-                    throw new IllegalStateException("Cannot determine cut scene, no game level available");
-                }
-                final int cutSceneNumber = game.level().cutSceneNumber();
-                if (cutSceneNumber == 0) {
-                    throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(game.level().number()));
-                }
-                yield GameSceneConfig.cutSceneID(cutSceneNumber);
-            }
+            case INTERMISSION -> resolveCutSceneID(game);
             case CutScenesTestState testState -> GameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
         };
-        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
-        return Optional.of(gameScene);
     }
 
     @Override

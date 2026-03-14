@@ -8,7 +8,6 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * Defines the configuration and selection logic for all game scenes belonging to a specific
@@ -103,16 +102,6 @@ public interface GameSceneConfig {
     }
 
     /**
-     * Returns a stream of all scenes managed by this configuration.
-     * <p>
-     * Implementations typically create all scenes eagerly and return them here for lookup,
-     * decoration, or lifecycle management.
-     *
-     * @return a stream of all available {@link GameScene} instances
-     */
-    Stream<GameScene> gameScenes();
-
-    /**
      * Checks whether the given scene has the specified identifier.
      * <p>
      * This allows implementations to associate scenes with IDs in a flexible way
@@ -138,6 +127,17 @@ public interface GameSceneConfig {
      * @return the scene to display, or an empty {@code Optional} if no scene applies
      */
     Optional<GameScene> selectGameScene(Game game);
+
+    default SceneID resolveCutSceneID(Game game) {
+        if (game.optGameLevel().isEmpty()) {
+            throw new IllegalStateException("Cannot determine cut scene, no game level available");
+        }
+        final int cutSceneNumber = game.level().cutSceneNumber();
+        if (cutSceneNumber == 0) {
+            throw new IllegalStateException("Cannot determine cut scene following level %d".formatted(game.level().number()));
+        }
+        return GameSceneConfig.cutSceneID(cutSceneNumber);
+    }
 
     /**
      * Indicates whether the given scene should be decorated with additional UI elements

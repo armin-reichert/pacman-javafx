@@ -45,11 +45,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_RED;
+import static de.amr.pacmanfx.ui.GameSceneConfig.cutSceneID;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
@@ -243,30 +243,20 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, GameSceneConfig, R
 
     @Override
     public Optional<GameScene> selectGameScene(Game game) {
-        final SceneID sceneID = switch (game.control().state()) {
-            case ArcadeGameState.BOOT -> CommonSceneID.BOOT_SCENE;
-            case ArcadeGameState.SETTING_OPTIONS_FOR_START -> CommonSceneID.START_SCENE;
-            case ArcadeGameState.INTRO -> CommonSceneID.INTRO_SCENE;
-            case ArcadeGameState.INTERMISSION -> {
-                if (game.optGameLevel().isEmpty()) {
-                    throw new IllegalStateException("Cannot determine cut scene, no game level available");
-                }
-                final int cutSceneNumber = game.level().cutSceneNumber();
-                if (cutSceneNumber == 0) {
-                    throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(game.level().number()));
-                }
-                yield GameSceneConfig.cutSceneID(cutSceneNumber);
-            }
-            case CutScenesTestState testState -> GameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
-            default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
-        };
+        final SceneID sceneID = determineSceneID(game);
         final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
         return Optional.of(gameScene);
     }
 
-    @Override
-    public Stream<GameScene> gameScenes() {
-        return scenesByID.values().stream();
+    private SceneID determineSceneID(Game game) {
+        return switch (game.control().state()) {
+            case ArcadeGameState.BOOT -> CommonSceneID.BOOT_SCENE;
+            case ArcadeGameState.SETTING_OPTIONS_FOR_START -> CommonSceneID.START_SCENE;
+            case ArcadeGameState.INTRO -> CommonSceneID.INTRO_SCENE;
+            case ArcadeGameState.INTERMISSION -> resolveCutSceneID(game);
+            case CutScenesTestState testState -> cutSceneID(testState.testedCutSceneNumber);
+            default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
+        };
     }
 
     @Override

@@ -42,11 +42,11 @@ import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenGameState.*;
+import static de.amr.pacmanfx.ui.GameSceneConfig.cutSceneID;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static java.util.Objects.requireNonNull;
@@ -374,26 +374,21 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
 
     @Override
     public Optional<GameScene> selectGameScene(Game game) {
-        final SceneID sceneID = switch (game.control().state()) {
+        final SceneID sceneID = determineSceneID(game);
+        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
+        return Optional.of(gameScene);
+    }
+
+    private SceneID determineSceneID(Game game) {
+        return switch (game.control().state()) {
             case BOOT -> CommonSceneID.BOOT_SCENE;
             case SETTING_OPTIONS_FOR_START -> CommonSceneID.START_SCENE;
             case SHOWING_HALL_OF_FAME -> TengenSceneID.HALL_OF_FAME;
             case INTRO -> CommonSceneID.INTRO_SCENE;
-            case INTERMISSION -> {
-                if (game.optGameLevel().isEmpty()) {
-                    throw new IllegalStateException("Cannot determine cut scene, no game level available");
-                }
-                final int cutSceneNumber = game.level().cutSceneNumber();
-                if (cutSceneNumber == 0) {
-                    throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(game.level().number()));
-                }
-                yield GameSceneConfig.cutSceneID(cutSceneNumber);
-            }
-            case CutScenesTestState testState -> GameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
+            case INTERMISSION -> resolveCutSceneID(game);
+            case CutScenesTestState testState -> cutSceneID(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
         };
-        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
-        return Optional.of(gameScene);
     }
 
     @Override
@@ -403,8 +398,4 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
         return scenesByID.get(sceneID) == gameScene;
     }
 
-    @Override
-    public Stream<GameScene> gameScenes() {
-        return scenesByID.values().stream();
-    }
 }

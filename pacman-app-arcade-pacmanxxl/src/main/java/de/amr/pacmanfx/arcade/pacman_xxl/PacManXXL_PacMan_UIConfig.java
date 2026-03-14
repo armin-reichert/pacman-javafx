@@ -39,7 +39,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_RED;
@@ -233,25 +232,20 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, GameSceneConfig, Res
 
     @Override
     public Optional<GameScene> selectGameScene(Game game) {
-        final SceneID sceneID = switch (game.control().state()) {
+        final SceneID sceneID = determineSceneID(game);
+        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
+        return Optional.of(gameScene);
+    }
+
+    private SceneID determineSceneID(Game game) {
+        return switch (game.control().state()) {
             case ArcadeGameState.BOOT -> CommonSceneID.BOOT_SCENE;
             case ArcadeGameState.SETTING_OPTIONS_FOR_START -> CommonSceneID.START_SCENE;
             case ArcadeGameState.INTRO -> CommonSceneID.INTRO_SCENE;
-            case ArcadeGameState.INTERMISSION -> {
-                if (game.optGameLevel().isEmpty()) {
-                    throw new IllegalStateException("Cannot determine cut scene, no game level available");
-                }
-                final int cutSceneNumber = game.level().cutSceneNumber();
-                if (cutSceneNumber == 0) {
-                    throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(game.level().number()));
-                }
-                yield GameSceneConfig.cutSceneID(cutSceneNumber);
-            }
+            case ArcadeGameState.INTERMISSION -> resolveCutSceneID(game);
             case CutScenesTestState testState -> GameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
         };
-        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
-        return Optional.of(gameScene);
     }
 
     @Override
@@ -261,8 +255,4 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, GameSceneConfig, Res
         return scenesByID.get(sceneID) == gameScene;
     }
 
-    @Override
-    public Stream<GameScene> gameScenes() {
-        return scenesByID.values().stream();
-    }
 }
