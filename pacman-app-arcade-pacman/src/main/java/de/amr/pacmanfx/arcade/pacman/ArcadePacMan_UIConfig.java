@@ -197,7 +197,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, GameSceneConfig, Resourc
     }
 
     @Override
-    public GameScene2D_Renderer createGameSceneRenderer(GameUI ui, Canvas canvas, GameScene2D gameScene2D) {
+    public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
         requireNonNull(canvas);
         requireNonNull(gameScene2D);
         final GameScene2D_Renderer renderer = switch (gameScene2D) {

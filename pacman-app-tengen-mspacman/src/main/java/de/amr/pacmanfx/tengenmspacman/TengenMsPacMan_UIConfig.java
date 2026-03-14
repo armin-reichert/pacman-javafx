@@ -257,7 +257,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     }
 
     @Override
-    public GameScene2D_Renderer createGameSceneRenderer(GameUI ui, Canvas canvas, GameScene2D gameScene2D) {
+    public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
             case TengenMsPacMan_BootScene    ignored -> new TengenMsPacMan_BootScene_Renderer(this, gameScene2D, canvas);
             case TengenMsPacMan_IntroScene   ignored -> new TengenMsPacMan_IntroScene_Renderer(this, gameScene2D, canvas);

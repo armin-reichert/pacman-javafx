@@ -215,12 +215,11 @@ public interface UIConfig extends Disposable {
     /**
      * Creates a renderer for drawing the specified 2D game scene.
      *
-     * @param ui the owning game UI
      * @param canvas the canvas where the scene will be rendered
      * @param gameScene2D the 2D game scene to render
      * @return a new renderer for the given scene
      */
-    GameScene2D_Renderer createGameSceneRenderer(GameUI ui, Canvas canvas, GameScene2D gameScene2D);
+    GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D);
 
     /**
      * Creates a renderer for drawing the heads‑up display (HUD) of the given

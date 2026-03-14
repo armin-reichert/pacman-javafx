@@ -412,7 +412,7 @@ public class PlayView extends StackPane implements View {
         gameScene2D.setCanvas(canvas);
         gameScene2D.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
 
-        sceneRenderer = ui.currentConfig().createGameSceneRenderer(ui, canvas, gameScene2D);
+        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, gameScene2D);
         hudRenderer = ui.currentConfig().createHUDRenderer(canvas, gameScene2D); // may return null!
     }
 

@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.event.*;
+import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.RandomNumberSupport;
 import de.amr.pacmanfx.model.Game;
@@ -188,7 +189,7 @@ public class GameLevel3DEventHandler {
 
     private void onPacManDying(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
-        final State<Game> gameState = ui.gameContext().currentGameState();
+        final TickTimer stateTimer = level.game().control().state().timer();
 
         soundEffects.stopAll();
         level3D.animations().ifPresent(animations -> {
@@ -201,14 +202,14 @@ public class GameLevel3DEventHandler {
         // One last update before dying animation
         level3D.pac3D().update(level);
 
-        gameState.timer().resetIndefiniteTime(); // freeze until animation ends
+        stateTimer.resetIndefiniteTime(); // freeze until animation ends
         final var dyingAnimation = new SequentialTransition(
             pauseSec(1.5),
             doNow(soundEffects::playPacDeadSound),
             level3D.pac3D().dyingAnimation().animationFX(),
             pauseSec(0.5)
         );
-        dyingAnimation.setOnFinished(_ -> gameState.timer().expire());
+        dyingAnimation.setOnFinished(_ -> stateTimer.expire());
         dyingAnimation.play();
     }
 
@@ -243,7 +244,7 @@ public class GameLevel3DEventHandler {
 
     private void onGameOver(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
-        final State<Game> gameState = ui.gameContext().currentGameState();
+        final State<Game> gameState = level.game().control().state();
 
         gameState.timer().restartSeconds(3);
 
