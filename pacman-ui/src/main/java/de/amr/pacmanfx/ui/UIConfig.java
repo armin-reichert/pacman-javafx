@@ -138,6 +138,8 @@ public interface UIConfig extends Disposable {
      */
     AssetMap assets();
 
+    GameSceneConfig gameSceneConfig();
+
     /**
      * Returns the sprite sheet used by this game variant.
      *

@@ -8,20 +8,15 @@ import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_BootScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
-import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene3D;
 import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameSceneConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
@@ -41,19 +36,13 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import org.tinylog.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_RED;
-import static de.amr.pacmanfx.ui.GameSceneConfig.cutSceneID;
-import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
-import static java.util.Objects.requireNonNull;
 
-public class PacManXXL_MsPacMan_UIConfig implements UIConfig, GameSceneConfig, ResourceManager {
+public class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceManager {
 
     @Override
     public Class<?> resourceRootClass() {
@@ -61,8 +50,12 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, GameSceneConfig, R
     }
 
     private final AssetMap assets = new AssetMap();
-    private final Factory3D factory3D = new ArcadeMsPacMan_Factory3D();
-    private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
+    private final GameSceneConfig gameSceneConfig;
+
+    public PacManXXL_MsPacMan_UIConfig() {
+        final Factory3D factory3D = new ArcadeMsPacMan_Factory3D();
+        gameSceneConfig = new PacManXXL_MsPacMan_GameSceneConfig(factory3D);
+    }
 
     @Override
     public void init(GameUI ui) {
@@ -75,9 +68,12 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, GameSceneConfig, R
     public void dispose() {
         Logger.info("Dispose UI configuration {}:", getClass().getSimpleName());
         disposeAssets();
-        Logger.info("Dispose {} game scenes", scenesByID.size());
-        scenesByID.values().forEach(GameScene::dispose);
-        scenesByID.clear();
+        gameSceneConfig.dispose();
+    }
+
+    @Override
+    public GameSceneConfig gameSceneConfig() {
+        return gameSceneConfig;
     }
 
     @Override
@@ -218,51 +214,5 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, GameSceneConfig, R
     public Image bonusValueImage(byte symbol) {
         final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_VALUES);
         return spriteSheet().image(sprites[symbol]);
-    }
-
-    // Game scenes
-
-    private GameScene createGameScene(SceneID sceneID) {
-        return switch (sceneID) {
-            case CommonSceneID.BOOT_SCENE    -> new Arcade_BootScene2D();
-            case CommonSceneID.INTRO_SCENE   -> new ArcadeMsPacMan_IntroScene();
-            case CommonSceneID.START_SCENE   -> new ArcadeMsPacMan_StartScene();
-            case CommonSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D();
-            case CommonSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D(factory3D);
-            case CommonSceneID.CUTSCENE_1    -> new ArcadeMsPacMan_CutScene1();
-            case CommonSceneID.CUTSCENE_2    -> new ArcadeMsPacMan_CutScene2();
-            case CommonSceneID.CUTSCENE_3    -> new ArcadeMsPacMan_CutScene3();
-            default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
-        };
-    }
-
-    @Override
-    public boolean sceneDecorationRequested(GameScene gameScene) {
-        return true;
-    }
-
-    @Override
-    public Optional<GameScene> selectGameScene(Game game) {
-        final SceneID sceneID = determineSceneID(game);
-        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
-        return Optional.of(gameScene);
-    }
-
-    private SceneID determineSceneID(Game game) {
-        return switch (game.control().state()) {
-            case ArcadeGameState.BOOT -> CommonSceneID.BOOT_SCENE;
-            case ArcadeGameState.SETTING_OPTIONS_FOR_START -> CommonSceneID.START_SCENE;
-            case ArcadeGameState.INTRO -> CommonSceneID.INTRO_SCENE;
-            case ArcadeGameState.INTERMISSION -> resolveCutSceneID(game);
-            case CutScenesTestState testState -> cutSceneID(testState.testedCutSceneNumber);
-            default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
-        };
-    }
-
-    @Override
-    public boolean gameSceneHasID(GameScene gameScene, SceneID sceneID) {
-        requireNonNull(gameScene);
-        requireNonNull(sceneID);
-        return scenesByID.get(sceneID) == gameScene;
     }
 }

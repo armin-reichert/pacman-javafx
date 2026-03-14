@@ -7,9 +7,7 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
@@ -19,7 +17,6 @@ import de.amr.pacmanfx.tengenmspacman.model.actors.Pinky;
 import de.amr.pacmanfx.tengenmspacman.model.actors.Sue;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
-import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameSceneConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
@@ -40,18 +37,15 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
-import static de.amr.pacmanfx.tengenmspacman.model.TengenGameState.*;
-import static de.amr.pacmanfx.ui.GameSceneConfig.cutSceneID;
-import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
-import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
+public class TengenMsPacMan_UIConfig implements UIConfig {
 
     public static final Color[] NES_COLORS = IntStream.range(0, 64)
         .mapToObj(NES_Palette::color).map(Color::web).toArray(Color[]::new);
@@ -106,9 +100,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
         new PelletConfig3D(1.0f, 6.0f)
     );
 
-    public enum TengenSceneID implements SceneID {
-        HALL_OF_FAME
-    }
+    public enum TengenSceneID implements GameSceneConfig.SceneID { HALL_OF_FAME }
 
     public enum TengenMsPacMan_DashboardID implements DashboardID { JOYPAD }
 
@@ -176,12 +168,11 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     }
 
     private final AssetMap assets = new AssetMap();
-    private final Factory3D factory3D = new TengenMsPacMan_Factory3D();
-    private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
+    private final TengenMsPacMan_GameSceneConfig gameSceneConfig;
 
-    @Override
-    public EntityConfig entityConfig() {
-        return TENGEN_ENTITY_CONFIG;
+    public TengenMsPacMan_UIConfig() {
+        final Factory3D factory3D = new TengenMsPacMan_Factory3D();
+        gameSceneConfig = new TengenMsPacMan_GameSceneConfig(factory3D);
     }
 
     @Override
@@ -195,9 +186,12 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     public void dispose() {
         Logger.info("Dispose UI configuration {}:", getClass().getSimpleName());
         disposeAssets();
-        Logger.info("Dispose {} game scenes", scenesByID.size());
-        scenesByID.values().forEach(GameScene::dispose);
-        scenesByID.clear();
+        gameSceneConfig.dispose();
+    }
+
+    @Override
+    public GameSceneConfig gameSceneConfig() {
+        return gameSceneConfig;
     }
 
     @Override
@@ -258,6 +252,11 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
         soundEffects.setMunchingSoundDelay((byte) 0);
         soundEffects.setSirenVolume(1.0f);
         return soundEffects;
+    }
+
+    @Override
+    public EntityConfig entityConfig() {
+        return TENGEN_ENTITY_CONFIG;
     }
 
     @Override
@@ -347,55 +346,6 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     @Override
     public TengenMsPacMan_PacAnimations createPacAnimations() {
         return new TengenMsPacMan_PacAnimations();
-    }
-
-    // Game scenes
-
-    private GameScene createGameScene(SceneID sceneID) {
-        return switch (sceneID) {
-            case CommonSceneID.BOOT_SCENE    -> new TengenMsPacMan_BootScene();
-            case CommonSceneID.INTRO_SCENE   -> new TengenMsPacMan_IntroScene();
-            case CommonSceneID.START_SCENE   -> new TengenMsPacMan_OptionsScene();
-            case TengenSceneID.HALL_OF_FAME  -> new TengenMsPacMan_CreditsScene();
-            case CommonSceneID.PLAY_SCENE_2D -> new TengenMsPacMan_PlayScene2D();
-            case CommonSceneID.PLAY_SCENE_3D -> new TengenMsPacMan_PlayScene3D(factory3D);
-            case CommonSceneID.CUTSCENE_1    -> new TengenMsPacMan_CutScene1();
-            case CommonSceneID.CUTSCENE_2    -> new TengenMsPacMan_CutScene2();
-            case CommonSceneID.CUTSCENE_3    -> new TengenMsPacMan_CutScene3();
-            case CommonSceneID.CUTSCENE_4    -> new TengenMsPacMan_CutScene4();
-            default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
-        };
-    }
-
-    @Override
-    public boolean sceneDecorationRequested(GameScene gameScene) {
-        return false;
-    }
-
-    @Override
-    public Optional<GameScene> selectGameScene(Game game) {
-        final SceneID sceneID = determineSceneID(game);
-        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
-        return Optional.of(gameScene);
-    }
-
-    private SceneID determineSceneID(Game game) {
-        return switch (game.control().state()) {
-            case BOOT -> CommonSceneID.BOOT_SCENE;
-            case SETTING_OPTIONS_FOR_START -> CommonSceneID.START_SCENE;
-            case SHOWING_HALL_OF_FAME -> TengenSceneID.HALL_OF_FAME;
-            case INTRO -> CommonSceneID.INTRO_SCENE;
-            case INTERMISSION -> resolveCutSceneID(game);
-            case CutScenesTestState testState -> cutSceneID(testState.testedCutSceneNumber);
-            default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
-        };
-    }
-
-    @Override
-    public boolean gameSceneHasID(GameScene gameScene, SceneID sceneID) {
-        requireNonNull(gameScene);
-        requireNonNull(sceneID);
-        return scenesByID.get(sceneID) == gameScene;
     }
 
 }

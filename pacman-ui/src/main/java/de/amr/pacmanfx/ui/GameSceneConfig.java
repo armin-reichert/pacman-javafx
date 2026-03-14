@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
@@ -30,7 +31,7 @@ import java.util.Optional;
  * The method {@link #selectGameScene(Game)} determines which scene should be displayed for the
  * current game state. This allows each game variant to define its own scene flow.
  */
-public interface GameSceneConfig {
+public interface GameSceneConfig extends Disposable {
 
     /**
      * Marker interface for scene identifiers.

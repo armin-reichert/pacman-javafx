@@ -245,7 +245,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public GameSceneConfig currentGameSceneConfig() {
-        return currentConfig();
+        return currentConfig().gameSceneConfig();
     }
 
     @Override

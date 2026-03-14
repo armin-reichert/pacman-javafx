@@ -11,15 +11,11 @@ import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_BootScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
-import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene3D;
 import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameSceneConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
@@ -39,21 +35,16 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
-import static de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState.*;
 import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_WHITE;
-import static de.amr.pacmanfx.ui.GameSceneConfig.cutSceneID;
-import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_UIConfig implements UIConfig, GameSceneConfig, ResourceManager {
+public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
 
     @Override
     public Class<?> resourceRootClass() {
@@ -61,8 +52,12 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, GameSceneConfig, Resou
     }
 
     private final AssetMap assets = new AssetMap();
-    private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
-    private final ArcadeMsPacMan_Factory3D factory3D = new ArcadeMsPacMan_Factory3D();
+    private final GameSceneConfig gameSceneConfig;
+
+    public ArcadeMsPacMan_UIConfig() {
+        final var factory3D = new ArcadeMsPacMan_Factory3D();
+        gameSceneConfig = new ArcadeMsPacMan_GameSceneConfig(factory3D);
+    }
 
     @Override
     public void init(GameUI ui) {
@@ -75,9 +70,12 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, GameSceneConfig, Resou
     public void dispose() {
         Logger.info("Dispose UI configuration {}:", getClass().getSimpleName());
         disposeAssets();
-        Logger.info("Dispose {} game scenes", scenesByID.size());
-        scenesByID.values().forEach(GameScene::dispose);
-        scenesByID.clear();
+        gameSceneConfig.dispose();
+    }
+
+    @Override
+    public GameSceneConfig gameSceneConfig() {
+        return gameSceneConfig;
     }
 
     @Override
@@ -92,50 +90,6 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, GameSceneConfig, Resou
         createBrightMazeImages();
         assets.set("color.game_over_message", ARCADE_RED);
         assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts"));
-    }
-
-    private void initSound(SoundManager soundManager) {
-        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,      url("sound/Fruit_Bounce.mp3"));
-        soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      url("sound/Fruit.mp3"));
-        soundManager.registerAudioClipURL(SoundID.COIN_INSERTED,    url("sound/credit.wav"));
-        soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,       url("sound/ExtraLife.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GAME_OVER,         url("sound/game-over.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GAME_READY,        url("sound/Start.mp3"));
-        soundManager.registerAudioClipURL(SoundID.GHOST_EATEN,      url("sound/Ghost.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,     url("sound/GhostEyes.mp3"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_1,    url("sound/Act_1_They_Meet.mp3"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_2,    url("sound/Act_2_The_Chase.mp3"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_3,    url("sound/Act_3_Junior.mp3"));
-        soundManager.registerAudioClipURL(SoundID.LEVEL_CHANGED,    url("sound/sweep.mp3"));
-        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,    url("sound/level-complete.mp3"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,     url("sound/Died.mp3"));
-        soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING, url("sound/munch.wav"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,     url("sound/ScaredGhost.mp3"));
-
-        soundManager.registerSirens(
-            url("sound/GhostNoise1.wav"),
-            url("sound/GhostNoise2.wav"),
-            url("sound/GhostNoise3.wav"),
-            url("sound/GhostNoise4.wav")
-        );
-    }
-
-    private void createBrightMazeImages() {
-        for (int i = 0; i < ArcadeMsPacMan_MapSelector.MAP_COLOR_SCHEMES.length; ++i) {
-            assets.set("maze.bright.%d".formatted(i), createBrightMazeImage(i));
-        }
-    }
-
-    // Creates the maze image used in the flash animation at the end of each level
-    private Image createBrightMazeImage(int index) {
-        final RectShort mazeSprite = spriteSheet().sprites(SpriteID.EMPTY_MAPS)[index];
-        final Image mazeImage = spriteSheet().image(mazeSprite);
-        final WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.MAP_COLOR_SCHEMES[index];
-        final Map<Color, Color> colorChanges = Map.of(
-                Color.valueOf(colorScheme.wallStroke()), ARCADE_WHITE,
-                Color.valueOf(colorScheme.door()), Color.TRANSPARENT
-        );
-        return UfxImages.recolorImage(mazeImage, colorChanges);
     }
 
     @Override
@@ -247,52 +201,49 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, GameSceneConfig, Resou
         return spriteSheet().image(sprites[symbol]);
     }
 
-    // Game scenes
+    // Private
 
-    private GameScene createGameScene(SceneID sceneID) {
-        requireNonNull(sceneID);
-        return switch (sceneID) {
-            case CommonSceneID.BOOT_SCENE    -> new Arcade_BootScene2D();
-            case CommonSceneID.INTRO_SCENE   -> new ArcadeMsPacMan_IntroScene();
-            case CommonSceneID.START_SCENE   -> new ArcadeMsPacMan_StartScene();
-            case CommonSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D();
-            case CommonSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D(factory3D);
-            case CommonSceneID.CUTSCENE_1    -> new ArcadeMsPacMan_CutScene1();
-            case CommonSceneID.CUTSCENE_2    -> new ArcadeMsPacMan_CutScene2();
-            case CommonSceneID.CUTSCENE_3    -> new ArcadeMsPacMan_CutScene3();
-            default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
-        };
+    private void initSound(SoundManager soundManager) {
+        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,      url("sound/Fruit_Bounce.mp3"));
+        soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      url("sound/Fruit.mp3"));
+        soundManager.registerAudioClipURL(SoundID.COIN_INSERTED,    url("sound/credit.wav"));
+        soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,       url("sound/ExtraLife.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GAME_OVER,         url("sound/game-over.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GAME_READY,        url("sound/Start.mp3"));
+        soundManager.registerAudioClipURL(SoundID.GHOST_EATEN,      url("sound/Ghost.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,     url("sound/GhostEyes.mp3"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_1,    url("sound/Act_1_They_Meet.mp3"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_2,    url("sound/Act_2_The_Chase.mp3"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_3,    url("sound/Act_3_Junior.mp3"));
+        soundManager.registerAudioClipURL(SoundID.LEVEL_CHANGED,    url("sound/sweep.mp3"));
+        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,    url("sound/level-complete.mp3"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,     url("sound/Died.mp3"));
+        soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING, url("sound/munch.wav"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,     url("sound/ScaredGhost.mp3"));
+
+        soundManager.registerSirens(
+            url("sound/GhostNoise1.wav"),
+            url("sound/GhostNoise2.wav"),
+            url("sound/GhostNoise3.wav"),
+            url("sound/GhostNoise4.wav")
+        );
     }
 
-    @Override
-    public boolean sceneDecorationRequested(GameScene gameScene) {
-        requireNonNull(gameScene);
-        return true;
+    private void createBrightMazeImages() {
+        for (int i = 0; i < ArcadeMsPacMan_MapSelector.MAP_COLOR_SCHEMES.length; ++i) {
+            assets.set("maze.bright.%d".formatted(i), createBrightMazeImage(i));
+        }
     }
 
-    @Override
-    public Optional<GameScene> selectGameScene(Game game) {
-        requireNonNull(game);
-        final SceneID sceneID = determineSceneID(game);
-        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
-        return Optional.of(gameScene);
-    }
-
-    private SceneID determineSceneID(Game game) {
-        return switch (game.control().state()) {
-            case BOOT -> CommonSceneID.BOOT_SCENE;
-            case SETTING_OPTIONS_FOR_START -> CommonSceneID.START_SCENE;
-            case INTRO -> CommonSceneID.INTRO_SCENE;
-            case INTERMISSION -> resolveCutSceneID(game);
-            case CutScenesTestState testState -> cutSceneID(testState.testedCutSceneNumber);
-            default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
-        };
-    }
-
-    @Override
-    public boolean gameSceneHasID(GameScene gameScene, SceneID sceneID) {
-        requireNonNull(gameScene);
-        requireNonNull(sceneID);
-        return scenesByID.get(sceneID) == gameScene;
+    // Creates the maze image used in the flash animation at the end of each level
+    private Image createBrightMazeImage(int index) {
+        final RectShort mazeSprite = spriteSheet().sprites(SpriteID.EMPTY_MAPS)[index];
+        final Image mazeImage = spriteSheet().image(mazeSprite);
+        final WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.MAP_COLOR_SCHEMES[index];
+        final Map<Color, Color> colorChanges = Map.of(
+            Color.valueOf(colorScheme.wallStroke()), ARCADE_WHITE,
+            Color.valueOf(colorScheme.door()), Color.TRANSPARENT
+        );
+        return UfxImages.recolorImage(mazeImage, colorChanges);
     }
 }
