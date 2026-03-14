@@ -164,7 +164,7 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, GameSceneConfig, Resou
     }
 
     @Override
-    public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
+    public GameScene2D_Renderer createGameSceneRenderer(GameScene2D gameScene2D, Canvas canvas) {
         requireNonNull(canvas);
         requireNonNull(gameScene2D);
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
@@ -187,7 +187,7 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, GameSceneConfig, Resou
     }
 
     @Override
-    public HeadsUpDisplay_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
+    public HeadsUpDisplay_Renderer createHUDRenderer(GameScene2D gameScene2D, Canvas canvas) {
         requireNonNull(canvas);
         requireNonNull(gameScene2D);
         final var hudRenderer = new ArcadeMsPacMan_HeadsUpDisplayRenderer(canvas);

@@ -266,7 +266,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     }
 
     @Override
-    public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
+    public GameScene2D_Renderer createGameSceneRenderer(GameScene2D gameScene2D, Canvas canvas) {
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
             case TengenMsPacMan_BootScene    ignored -> new TengenMsPacMan_BootScene_Renderer(this, gameScene2D, canvas);
             case TengenMsPacMan_IntroScene   ignored -> new TengenMsPacMan_IntroScene_Renderer(this, gameScene2D, canvas);
@@ -290,7 +290,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig, GameSceneConfig {
     }
 
     @Override
-    public TengenMsPacMan_HeadsUpDisplay_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
+    public TengenMsPacMan_HeadsUpDisplay_Renderer createHUDRenderer(GameScene2D gameScene2D, Canvas canvas) {
         return gameScene2D.adaptRenderer(new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas));
     }
 

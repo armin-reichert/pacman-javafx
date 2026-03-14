@@ -208,21 +208,21 @@ public interface UIConfig extends Disposable {
     /**
      * Creates a renderer for drawing the specified 2D game scene.
      *
-     * @param canvas the canvas where the scene will be rendered
      * @param gameScene2D the 2D game scene to render
+     * @param canvas the canvas where the scene will be rendered
      * @return a new renderer for the given scene
      */
-    GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D);
+    GameScene2D_Renderer createGameSceneRenderer(GameScene2D gameScene2D, Canvas canvas);
 
     /**
      * Creates a renderer for drawing the heads‑up display (HUD) of the given
      * 2D game scene.
      *
-     * @param canvas the canvas where the HUD will be rendered
      * @param gameScene2D the game scene whose HUD should be rendered
+     * @param canvas the canvas where the HUD will be rendered
      * @return a new HUD renderer
      */
-    HeadsUpDisplay_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D);
+    HeadsUpDisplay_Renderer createHUDRenderer(GameScene2D gameScene2D, Canvas canvas);
 
     /**
      * Creates a renderer for drawing actors (Pac‑Man, ghosts, bonus items)
