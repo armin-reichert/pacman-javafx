@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
+import de.amr.pacmanfx.uilib.assets.Translator;
 import de.amr.pacmanfx.uilib.model3D.actor.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.actor.MutableGhost3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
@@ -38,12 +39,10 @@ public class GameLevel3DEventHandler {
 
     private GamePlaySoundEffects soundEffects;
     private RandomTextPicker<String> pickerGameOverMessages;
-    private GameUI ui;
 
-    public void init(GameUI ui, GamePlaySoundEffects soundEffects) {
-        this.ui = requireNonNull(ui);
+    public void init(GamePlaySoundEffects soundEffects, Translator translator) {
         this.soundEffects = requireNonNull(soundEffects);
-        pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");
+        pickerGameOverMessages = RandomTextPicker.fromBundle(translator.localizedTexts(), "game.over");
     }
 
     /**
@@ -52,7 +51,7 @@ public class GameLevel3DEventHandler {
      * @param event   the state change event
      * @param level3D the current 3D level representation (may be null)
      */
-    public void handleGameStateChange(GameStateChangeEvent event, GameLevel3D level3D) {
+    public void handleGameStateChange(GameUI ui, GameStateChangeEvent event, GameLevel3D level3D) {
         requireNonNull(event);
         if (level3D == null) {
             Logger.warn("Ignoring game state change event: level3D is null");
@@ -61,17 +60,17 @@ public class GameLevel3DEventHandler {
 
         final State<Game> gameState = event.newState();
         if (matches(gameState, STARTING_GAME_OR_LEVEL)) {
-            onStartingGame(level3D);
+            onStartingGame(ui, level3D);
         } else if (matches(gameState, HUNTING)) {
             onHuntingStart(level3D);
         } else if (matches(gameState, PACMAN_DYING)) {
             onPacManDying(level3D);
         } else if (matches(gameState, EATING_GHOST)) {
-            onEatingGhost(level3D);
+            onEatingGhost(ui, level3D);
         } else if (matches(gameState, LEVEL_COMPLETE)) {
             onLevelComplete(level3D);
         } else if (matches(gameState, GAME_OVER)) {
-            onGameOver(level3D);
+            onGameOver(ui, level3D);
         }
     }
 
@@ -82,7 +81,7 @@ public class GameLevel3DEventHandler {
     /**
      * Handles bonus activation: updates 3D representation and plays sound.
      */
-    public void onBonusActivated(BonusActivatedEvent gameEvent, GameLevel3D level3D) {
+    public void onBonusActivated(GameUI ui, BonusActivatedEvent gameEvent, GameLevel3D level3D) {
         level3D.replaceBonus3D(ui.currentConfig(), gameEvent.bonus());
         soundEffects.playBonusActiveSound();
     }
@@ -173,7 +172,7 @@ public class GameLevel3DEventHandler {
 
     // Private state-specific handlers
 
-    private void onStartingGame(GameLevel3D level3D) {
+    private void onStartingGame(GameUI ui, GameLevel3D level3D) {
         level3D.maze3D().food().energizers3D().forEach(Energizer3D::stopPumping);
         level3D.rebuildLevelCounter3D(ui.currentConfig().entityConfig().levelCounter());
     }
@@ -213,7 +212,7 @@ public class GameLevel3DEventHandler {
         dyingAnimation.play();
     }
 
-    private void onEatingGhost(GameLevel3D level3D) {
+    private void onEatingGhost(GameUI ui, GameLevel3D level3D) {
         final GameLevel level = level3D.level();
         level.game().simulationStep().ghostsKilled.forEach(killedGhost -> {
             final int killedIndex = level.energizerVictims().indexOf(killedGhost);
@@ -242,7 +241,7 @@ public class GameLevel3DEventHandler {
         );
     }
 
-    private void onGameOver(GameLevel3D level3D) {
+    private void onGameOver(GameUI ui, GameLevel3D level3D) {
         final GameLevel level = level3D.level();
         final State<Game> gameState = level.game().control().state();
 

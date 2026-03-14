@@ -183,7 +183,7 @@ public class PlayScene3D implements GameScene {
     public void onEmbed(GameUI ui) {
         this.ui = requireNonNull(ui);
         this.soundEffects = ui.currentConfig().createPlaySoundEffects(ui);
-        level3D_EventHandler.init(ui, soundEffects);
+        level3D_EventHandler.init(soundEffects, ui);
         // TODO: reconsider whether scores need recreation here (variant/font change?)
         replaceScores3D();
     }
@@ -310,12 +310,12 @@ public class PlayScene3D implements GameScene {
             });
             return;
         }
-        level3D_EventHandler.handleGameStateChange(event, gameLevel3D);
+        level3D_EventHandler.handleGameStateChange(ui, event, gameLevel3D);
     }
 
     @Override
     public void onBonusActivated(BonusActivatedEvent event) {
-        level3D_EventHandler.onBonusActivated(event, gameLevel3D);
+        level3D_EventHandler.onBonusActivated(ui, event, gameLevel3D);
     }
 
     @Override
