@@ -43,7 +43,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onEmbed(GameUI ui) {
         this.ui = requireNonNull(ui);
-        soundEffects = new GamePlaySoundEffects(ui.soundManager());
+        soundEffects = new GamePlaySoundEffects(ui.gameContext().clock(), ui.soundManager());
         soundEffects.setMunchingSoundDelay(ui.currentConfig().munchingSoundDelay());
     }
 
@@ -171,7 +171,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        soundEffects.playPacMunchingSound(gameContext().clock().tickCount());
+        soundEffects.playPacMunchingSound();
     }
 
     @Override

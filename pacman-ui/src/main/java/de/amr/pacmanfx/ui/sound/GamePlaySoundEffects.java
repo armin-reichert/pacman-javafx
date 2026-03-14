@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.sound;
 
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -30,6 +31,7 @@ public class GamePlaySoundEffects {
      */
     public static final float SIREN_VOLUME = 0.33f;
 
+    private final GameClock gameClock;
     private final SoundManager soundManager;
 
     private long lastMunchingSoundPlayedTick;
@@ -38,9 +40,11 @@ public class GamePlaySoundEffects {
     /**
      * Creates a new sound effects manager using the given sound manager.
      *
+     * @param gameClock the game clock
      * @param soundManager the underlying sound playback service (must not be null)
      */
-    public GamePlaySoundEffects(SoundManager soundManager) {
+    public GamePlaySoundEffects(GameClock gameClock, SoundManager soundManager) {
+        this.gameClock = requireNonNull(gameClock);
         this.soundManager = requireNonNull(soundManager);
     }
 
@@ -182,10 +186,9 @@ public class GamePlaySoundEffects {
     /**
      * Plays the Pac-Man munching sound if enough simulation ticks have passed
      * since the last playback (to avoid too frequent/repetitive playback).
-     *
-     * @param now current simulation tick count
      */
-    public void playPacMunchingSound(long now) {
+    public void playPacMunchingSound() {
+        long now = gameClock.tickCount();
         long passed = now - lastMunchingSoundPlayedTick;
         Logger.debug("Pac found food, tick={} passed since last time={}", now, passed);
         if (passed > munchingSoundDelay || munchingSoundDelay == 0) {

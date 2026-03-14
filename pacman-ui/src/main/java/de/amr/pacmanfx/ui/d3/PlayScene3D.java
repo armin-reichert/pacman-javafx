@@ -183,7 +183,7 @@ public class PlayScene3D implements GameScene {
     public void onEmbed(GameUI ui) {
         this.ui = requireNonNull(ui);
 
-        soundEffects = new GamePlaySoundEffects(ui.soundManager());
+        soundEffects = new GamePlaySoundEffects(ui.gameContext().clock(), ui.soundManager());
         soundEffects.setMunchingSoundDelay(ui.currentConfig().munchingSoundDelay());
 
         level3D_EventHandler.init(ui, soundEffects);

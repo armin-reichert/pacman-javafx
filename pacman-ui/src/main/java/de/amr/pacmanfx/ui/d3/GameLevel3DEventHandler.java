@@ -114,8 +114,8 @@ public class GameLevel3DEventHandler {
     /**
      * Plays game ready sound unless in demo or test mode.
      */
-    public void onGameStarts(GameStartedEvent ignoredEvent, GameLevel3D ignoredLevel3D) {
-        final Game game = ui.gameContext().currentGame();
+    public void onGameStarts(GameStartedEvent event, GameLevel3D ignoredLevel3D) {
+        final Game game = event.game();
         final State<Game> state = game.control().state();
         final boolean silent = game.level().isDemoLevel() || state instanceof TestState;
         if (!silent) {
@@ -139,7 +139,7 @@ public class GameLevel3DEventHandler {
             mazeFood3D.removeAllPellets3D(level3D);
         } else {
             mazeFood3D.removeFoodAt(level3D, gameEvent.pac().tile());
-            soundEffects.playPacMunchingSound(ui.gameContext().clock().tickCount());
+            soundEffects.playPacMunchingSound();
         }
     }
 
