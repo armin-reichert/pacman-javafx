@@ -28,49 +28,46 @@ import java.util.List;
 import static de.amr.pacmanfx.ui.ArcadePalette.*;
 
 /**
- * Defines the complete UI configuration for a specific game variant.
+ * Central configuration interface for the presentation layer of a specific game variant
+ * (e.g. Arcade Pac-Man, Ms. Pac-Man, etc.).
  *
- * <p>A {@code UIConfig} acts as the variant‑specific theme provider for the
- * {@link GameUI} framework. It supplies all assets, renderers, animations,
- * color schemes, and 3D models required to present the game according to the
- * visual and audio rules of the selected variant (e.g., Arcade Pac‑Man,
- * Ms. Pac‑Man, Tengen, etc.).</p>
- *
- * <p>The configuration is responsible for:</p>
+ * <p>A {@code UIConfig} implementation defines the complete visual and audio appearance
+ * of one game variant within the {@link GameUI} framework. It acts as a theme provider,
+ * supplying:</p>
  *
  * <ul>
- *   <li><strong>Asset management</strong> – loading, exposing, and disposing
- *       images, colors, localized texts, and sprite sheets via an
- *       {@link AssetMap}.</li>
- *
- *   <li><strong>Renderer factories</strong> – creating renderers for 2D game
- *       scenes, game levels, actors, and the heads‑up display.</li>
- *
- *   <li><strong>Animation factories</strong> – providing animation managers
- *       for Pac‑Man and each ghost personality.</li>
- *
- *   <li><strong>Color scheme selection</strong> – returning the appropriate
- *       {@link WorldMapColorScheme} for a given maze.</li>
- *
- *   <li><strong>Variant‑specific UI behavior</strong> – such as defining the
- *       delay between munching sound effects or selecting sprite regions for
- *       special scenes.</li>
+ *   <li>assets (images, sprite sheets, colors, localized strings)</li>
+ *   <li>renderers for scenes, levels, HUD and actors</li>
+ *   <li>animation sets for Pac-Man/Ms. Pac-Man and the four ghosts</li>
+ *   <li>maze color schemes</li>
+ *   <li>variant-specific behavior (sound timing, bonus visuals, boot-screen regions, …)</li>
+ *   <li>3D entity rendering parameters (via {@link #entityConfig()})</li>
  * </ul>
  *
- * <p>The lifecycle of a {@code UIConfig} is:</p>
+ * <p>Implementations are typically created once per game variant and remain active for
+ * the lifetime of the {@link GameUI} instance.</p>
  *
+ * <h2>Lifecycle</h2>
  * <ol>
- *   <li>{@link #init(GameUI)} is called once when the UI is created.</li>
- *   <li>Renderers, assets, and animations are requested on demand.</li>
- *   <li>{@link #dispose()} is called when the UI shuts down, which by default
- *       disposes all loaded assets.</li>
+ *   <li>{@link #init(GameUI)} is called once during UI construction</li>
+ *   <li>Assets are loaded lazily or eagerly during {@code init()}</li>
+ *   <li>Renderer and animation factories are called on demand during rendering</li>
+ *   <li>{@link #dispose()} is called when the UI is shut down
+ *       (default implementation disposes the {@link AssetMap})</li>
  * </ol>
  *
- * <p>Implementations of this interface are expected to be stateless aside from
- * their asset maps and any cached renderers they choose to maintain.</p>
+ * <p>Most implementations maintain internal state only for cached assets and scenes.
+ * The interface is designed to be stateless where possible.</p>
+ *
+ * @see GameSceneConfig  companion interface handling scene creation and selection logic
+ * @see GameUI           owner component that uses this configuration
  */
 public interface UIConfig extends Disposable {
 
+    /**
+     * Default 3D entity rendering configuration used when a variant does not override it.
+     * Values are tuned to the classic Arcade Pac-Man look.
+     */
     EntityConfig DEFAULT_ENTITY_CONFIG = new EntityConfig(
         new PacConfig(
             ARCADE_YELLOW,
@@ -114,159 +111,199 @@ public interface UIConfig extends Disposable {
     );
 
     /**
-     * Initializes this UI configuration. Called once when the {@link GameUI}
-     * is created.
+     * Initializes this configuration. Called exactly once when the owning {@link GameUI}
+     * is constructed.
+     * <p>
+     * Typical tasks performed here:
+     * <ul>
+     *   <li>loading images and sprite sheets into {@link #assets()}</li>
+     *   <li>registering sound effects with the {@link SoundManager}</li>
+     *   <li>preparing any internal caches</li>
+     * </ul>
      *
-     * @param ui the game UI instance that owns this configuration
+     * @param ui the {@code GameUI} instance that owns this configuration
      */
     void init(GameUI ui);
 
     /**
-     * Disposes all assets stored in the {@link AssetMap}. Called automatically
-     * by {@link #dispose()} unless overridden.
+     * Disposes all resources held by this configuration.
+     * <p>
+     * The default implementation disposes the {@link AssetMap} and logs the action.
+     * Subclasses may override to release additional resources (cached renderers, etc.).
+     */
+    @Override
+    default void dispose() {
+        disposeAssets();
+    }
+
+    /**
+     * Disposes all assets currently stored in the {@link AssetMap}.
+     * Called by the default {@link #dispose()} implementation.
      */
     default void disposeAssets() {
-        Logger.info("Dispose {} assets", assets().numAssets());
+        Logger.info("Disposing {} assets in {}", assets().numAssets(), getClass().getSimpleName());
         assets().dispose();
     }
 
     /**
-     * Returns the asset map containing all variant‑specific images, colors,
-     * localized texts, and other resources.
+     * Returns the map holding all variant-specific resources (images, colors,
+     * localized text bundles, etc.).
      *
-     * @return the asset map for this UI configuration
+     * @return the asset map for this variant
      */
     AssetMap assets();
 
+    /**
+     * Returns the scene-configuration object that determines which scene should be
+     * displayed for each game state and manages scene creation/caching.
+     *
+     * @return the associated {@link GameSceneConfig}
+     */
     GameSceneConfig gameSceneConfig();
 
     /**
-     * Returns the sprite sheet used by this game variant.
+     * Returns the sprite sheet used by renderers in this variant.
      *
-     * @return the variant‑specific sprite sheet
+     * @return the sprite sheet instance
      */
     SpriteSheet<?> spriteSheet();
 
     /**
-     * Returns the entity configuration containing all parameters for rendering
-     * Pac‑Man, ghosts, bonus items, and other entities in this variant.
+     * Returns the 3D rendering parameters for entities (Pac-Man, ghosts, pellets, …).
+     * <p>
+     * Most variants can return {@link #DEFAULT_ENTITY_CONFIG}.
      *
-     * @return the entity configuration for this variant
+     * @return 3D entity rendering configuration
      */
     default EntityConfig entityConfig() {
         return DEFAULT_ENTITY_CONFIG;
     }
 
     /**
-     * Returns the sprite sheet region used by the Arcade boot scene to select
-     * random content. Variants may override this to restrict the region.
+     * Returns the sub-region of the sprite sheet to be used by the boot scene
+     * for randomized background content.
+     * <p>
+     * The default implementation returns the full sprite-sheet bounds.
      *
-     * @return the sprite region used by the boot scene
+     * @return rectangle defining the usable sprite region
      */
     default Rectangle2D spriteRegionForArcadeBootScene() {
         return new Rectangle2D(
-            0,
-            0,
+            0, 0,
             spriteSheet().sourceImage().getWidth(),
             spriteSheet().sourceImage().getHeight()
         );
     }
 
+    /**
+     * Factory method for gameplay-specific sound effects handler.
+     *
+     * @param ui the owning UI instance (provides access to clock & sound manager)
+     * @return configured sound-effects controller
+     */
     GamePlaySoundEffects createPlaySoundEffects(GameUI ui);
 
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Bonus symbol & value images
+    // ─────────────────────────────────────────────────────────────────────────────
+
     /**
-     * Returns the 2D image representing the bonus symbol for the given code.
+     * Returns the 2D image of the bonus symbol (cherry, strawberry, …) for the given code.
      *
-     * @param symbol the bonus symbol code
-     * @return the image representing the bonus symbol
+     * @param symbol bonus symbol identifier (usually 0–7)
+     * @return corresponding bonus symbol image
      */
     Image bonusSymbolImage(byte symbol);
 
     /**
-     * Returns the 2D image representing the bonus value (points earned) for
-     * the given bonus symbol code.
+     * Returns the 2D image showing the point value awarded for eating the bonus.
      *
-     * @param symbol the bonus symbol code
-     * @return the image representing the bonus value
+     * @param symbol bonus symbol identifier
+     * @return image displaying the corresponding point value
      */
     Image bonusValueImage(byte symbol);
 
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Color & rendering factories
+    // ─────────────────────────────────────────────────────────────────────────────
+
     /**
-     * Returns the color scheme to use for the given world map (maze).
+     * Returns the wall/door color scheme appropriate for the given maze.
      *
-     * @param worldMap the world map whose colors should be determined
-     * @return the color scheme for the given map
+     * @param worldMap the maze whose colors should be determined
+     * @return color scheme to use when rendering the maze
      */
     WorldMapColorScheme colorScheme(WorldMap worldMap);
 
     /**
-     * Creates a renderer for drawing the game level on the given canvas.
+     * Creates a renderer responsible for drawing the static game level (maze, pellets, …).
      *
-     * @param canvas the canvas where the game level will be rendered
-     * @return a new game level renderer
+     * @param canvas target canvas
+     * @return level renderer instance
      */
     GameLevelRenderer createGameLevelRenderer(Canvas canvas);
 
     /**
-     * Creates a renderer for drawing the specified 2D game scene.
+     * Creates a renderer for the specified 2D game scene.
      *
-     * @param gameScene2D the 2D game scene to render
-     * @param canvas the canvas where the scene will be rendered
-     * @return a new renderer for the given scene
+     * @param gameScene2D the scene to render
+     * @param canvas      target canvas
+     * @return scene-specific renderer
      */
     GameScene2D_Renderer createGameSceneRenderer(GameScene2D gameScene2D, Canvas canvas);
 
     /**
-     * Creates a renderer for drawing the heads‑up display (HUD) of the given
-     * 2D game scene.
+     * Creates the heads-up display renderer (score, lives, level counter, …).
      *
-     * @param gameScene2D the game scene whose HUD should be rendered
-     * @param canvas the canvas where the HUD will be rendered
-     * @return a new HUD renderer
+     * @param gameScene2D the scene whose HUD should be rendered
+     * @param canvas      target canvas
+     * @return HUD renderer instance
      */
     HeadsUpDisplay_Renderer createHUDRenderer(GameScene2D gameScene2D, Canvas canvas);
 
     /**
-     * Creates a renderer for drawing actors (Pac‑Man, ghosts, bonus items)
-     * in a 2D game scene.
+     * Creates the renderer used to draw all dynamic actors (Pac-Man, ghosts, bonus).
      *
-     * @param canvas the canvas where actors will be rendered
-     * @return a new actor renderer
+     * @param canvas target canvas
+     * @return actor renderer instance
      */
     ActorRenderer createActorRenderer(Canvas canvas);
 
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Animation & ghost factories
+    // ─────────────────────────────────────────────────────────────────────────────
+
     /**
-     * Creates a ghost instance with the specified personality and assigns it
-     * the appropriate animation manager for this variant.
+     * Creates a fully configured ghost instance with the correct personality
+     * and assigns it the variant-specific animation set.
      *
-     * @param personality the ghost personality code
-     * @return a new ghost instance configured for this variant
+     * @param personality ghost personality code (e.g. RED_GHOST_SHADOW, …)
+     * @return configured ghost ready to be added to the game
      */
     Ghost createGhostWithAnimations(byte personality);
 
     /**
-     * Creates an animation manager containing all animations for a ghost with
-     * the specified personality.
+     * Creates the animation manager containing all movement & state animations
+     * for a ghost with the given personality.
      *
-     * @param personality the ghost personality code
-     * @return the animation manager for the ghost
+     * @param personality ghost personality code
+     * @return animation manager for that ghost type
      */
     AnimationManager createGhostAnimations(byte personality);
 
     /**
-     * Creates an animation manager containing all animations for Pac‑Man or
-     * Ms. Pac‑Man, depending on the game variant.
+     * Creates the animation manager for Pac-Man (or Ms. Pac-Man in Ms. Pac-Man variants).
      *
-     * @return the animation manager for Pac‑Man
+     * @return Pac-Man animation manager
      */
     AnimationManager createPacAnimations();
 
     /**
-     * Returns the image representing the points earned for killing a ghost
-     * at the given index in the sequence of killed ghosts.
+     * Returns the image showing the points awarded for eating a ghost
+     * (200, 400, 800, 1600).
      *
-     * @param killedIndex the index of the killed ghost (0 = first, 1 = second, ...)
-     * @return the image showing the points value
+     * @param killedIndex 0 = first ghost eaten in sequence, 1 = second, …
+     * @return image displaying the corresponding points value
      */
     Image killedGhostPointsImage(int killedIndex);
 }
