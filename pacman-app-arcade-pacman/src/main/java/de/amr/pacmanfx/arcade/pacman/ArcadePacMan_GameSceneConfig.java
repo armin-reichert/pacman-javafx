@@ -35,6 +35,27 @@ class ArcadePacMan_GameSceneConfig implements GameSceneConfig {
         scenesByID.clear();
     }
 
+    @Override
+    public boolean sceneDecorationRequested(GameScene gameScene) {
+        requireNonNull(gameScene);
+        return true;
+    }
+
+    @Override
+    public Optional<GameScene> selectGameScene(Game game) {
+        requireNonNull(game);
+        final SceneID sceneID = determineSceneID(game);
+        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
+        return Optional.of(gameScene);
+    }
+
+    @Override
+    public boolean gameSceneHasID(GameScene gameScene, SceneID sceneID) {
+        requireNonNull(gameScene);
+        requireNonNull(sceneID);
+        return scenesByID.get(sceneID) == gameScene;
+    }
+
     private GameScene createGameScene(SceneID sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
@@ -50,20 +71,6 @@ class ArcadePacMan_GameSceneConfig implements GameSceneConfig {
         };
     }
 
-    @Override
-    public boolean sceneDecorationRequested(GameScene gameScene) {
-        requireNonNull(gameScene);
-        return true;
-    }
-
-    @Override
-    public Optional<GameScene> selectGameScene(Game game) {
-        requireNonNull(game);
-        final SceneID sceneID = determineSceneID(game);
-        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
-        return Optional.of(gameScene);
-    }
-
     private SceneID determineSceneID(Game game) {
         return switch (game.control().state()) {
             case BOOT -> CommonSceneID.BOOT_SCENE;
@@ -73,12 +80,5 @@ class ArcadePacMan_GameSceneConfig implements GameSceneConfig {
             case CutScenesTestState testState -> GameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
         };
-    }
-
-    @Override
-    public boolean gameSceneHasID(GameScene gameScene, SceneID sceneID) {
-        requireNonNull(gameScene);
-        requireNonNull(sceneID);
-        return scenesByID.get(sceneID) == gameScene;
     }
 }
