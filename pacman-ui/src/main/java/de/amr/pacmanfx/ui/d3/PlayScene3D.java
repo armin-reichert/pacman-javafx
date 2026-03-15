@@ -90,55 +90,35 @@ public class PlayScene3D implements GameScene {
     /** Duration of the fade-in animation when the 3D scene becomes active. */
     public static final Duration FADE_IN_DURATION = Duration.seconds(3);
 
-    protected final Group subSceneRoot = new Group();
-    protected final Group gameLevel3DParent = new Group();
-    protected final PerspectiveManager perspectiveManager;
-    protected final PerspectiveCamera camera = new PerspectiveCamera(true);
-    protected final SubScene subScene;
-    protected final FadeInAnimation fadeInAnimation;
-    protected final Factory3D factory3D;
-
-    protected GameLevel3DEventHandler level3D_EventHandler = new GameLevel3DEventHandler();
-    protected ActionBindingsManager actionBindings = ActionBindingsManager.NO_BINDINGS;
-    protected GameUI ui;
-    protected GameLevel3D gameLevel3D;
-    protected Scores3D scores3D;
-    protected PlaySceneContextMenu contextMenu;
-    protected GamePlaySoundEffects soundEffects;
-
-    private final ChangeListener<DrawMode> drawModeChangeListener = (_, _, drawMode) -> {
-        if (gameLevel3D != null) {
-            Ufx.setDrawMode(gameLevel3D, drawMode);
-        }
-    };
-
     /**
      * Inner class managing the fade-in animation of the 3D sub-scene.
      * Darkens the background initially and gradually fades to transparent.
      */
-    public class FadeInAnimation {
+    public static class FadeInAnimation {
+
         private final Timeline timeline;
 
         /**
          * Creates a new fade-in animation with the specified duration.
          *
          * @param fadeInDuration duration of the fade from dark to transparent
+         * @param playScene3D    the 3D play scene
          */
-        public FadeInAnimation(Duration fadeInDuration) {
+        public FadeInAnimation(Duration fadeInDuration, PlayScene3D playScene3D) {
             timeline = new Timeline(
                 new KeyFrame(Duration.ZERO, _ -> {
-                    subScene.setFill(SCENE_DARK_FILLCOLOR);
-                    if (gameLevel3D != null) {
-                        gameLevel3D.setVisible(true);
+                    playScene3D.subScene.setFill(SCENE_DARK_FILLCOLOR);
+                    if (playScene3D.gameLevel3D != null) {
+                        playScene3D.gameLevel3D.setVisible(true);
                     }
-                    if (scores3D != null) {
-                        scores3D.setVisible(true);
+                    if (playScene3D.scores3D != null) {
+                        playScene3D.scores3D.setVisible(true);
                     }
                     // TODO: Verify if startControlling is required here (may be redundant)
-                    perspectiveManager.currentPerspective().ifPresent(Perspective::startControlling);
+                    playScene3D.perspectiveManager.currentPerspective().ifPresent(Perspective::startControlling);
                 }),
                 new KeyFrame(fadeInDuration,
-                        new KeyValue(subScene.fillProperty(), SCENE_BRIGHT_FILLCOLOR, Interpolator.EASE_IN))
+                    new KeyValue(playScene3D.subScene.fillProperty(), SCENE_BRIGHT_FILLCOLOR, Interpolator.EASE_IN))
             );
         }
 
@@ -150,23 +130,41 @@ public class PlayScene3D implements GameScene {
         }
     }
 
+    protected final Group subSceneRoot = new Group();
+    protected final Group gameLevel3DParent = new Group();
+    protected final PerspectiveManager perspectiveManager;
+    protected final PerspectiveCamera camera = new PerspectiveCamera(true);
+    protected final SubScene subScene;
+    protected final Factory3D factory3D;
+
+    protected GameLevel3DEventHandler level3D_EventHandler = new GameLevel3DEventHandler();
+    protected ActionBindingsManager actionBindings = ActionBindingsManager.NO_BINDINGS;
+    protected GameUI ui;
+    protected GameLevel3D gameLevel3D;
+    protected Scores3D scores3D;
+    protected PlaySceneContextMenu contextMenu;
+    protected GamePlaySoundEffects soundEffects;
+    protected FadeInAnimation fadeInAnimation;
+
+    private final ChangeListener<DrawMode> drawModeChangeListener = (_, _, drawMode) -> {
+        if (gameLevel3D != null) {
+            Ufx.setDrawMode(gameLevel3D, drawMode);
+        }
+    };
+
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
     public PlayScene3D(Factory3D factory3D) {
         this.factory3D = requireNonNull(factory3D);
-
-        final var axes3D = new CoordinateSystem();
-        axes3D.visibleProperty().bind(GameUI.PROPERTY_3D_AXES_VISIBLE);
-
-        subSceneRoot.getChildren().setAll(gameLevel3DParent, axes3D);
-
+        perspectiveManager = new PerspectiveManager(camera);
         // Initial size is irrelevant (will be bound to parent scene size later)
         subScene = new SubScene(subSceneRoot, 88, 88, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
 
-        perspectiveManager = new PerspectiveManager(camera);
-        fadeInAnimation = new FadeInAnimation(FADE_IN_DURATION);
+        final var axes3D = new CoordinateSystem();
+        axes3D.visibleProperty().bind(GameUI.PROPERTY_3D_AXES_VISIBLE);
+        subSceneRoot.getChildren().setAll(gameLevel3DParent, axes3D);
 
         bindSceneActions();
     }
@@ -368,6 +366,7 @@ public class PlayScene3D implements GameScene {
         }
         gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().entityConfig().levelCounter());
         replaceActionBindings(gameLevel);
+        fadeInAnimation = new FadeInAnimation(FADE_IN_DURATION, this);
         fadeInAnimation.play();
     }
 
@@ -413,6 +412,7 @@ public class PlayScene3D implements GameScene {
                 }
             }
 
+            fadeInAnimation = new FadeInAnimation(FADE_IN_DURATION, this);
             fadeInAnimation.play();
         });
     }
