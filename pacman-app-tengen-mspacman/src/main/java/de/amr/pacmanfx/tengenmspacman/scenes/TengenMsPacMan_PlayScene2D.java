@@ -219,8 +219,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void onGameStarts(GameStartedEvent e) {
         final Game game = e.game();
-        final boolean silent = game.optGameLevel().isPresent() && game.level().isDemoLevel()
-            || game.control().state() instanceof TestState;
+        final boolean silent = game.isDemoLevelRunning() || game.control().state() instanceof TestState;
         if (!silent) {
             soundEffects.playGameReadySound();
         }
@@ -231,14 +230,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         final Game game = gameContext().currentGame();
         switch (e.newState()) {
             case TengenGameState.LEVEL_COMPLETE -> {
+                final GameLevel level = game.optGameLevel().orElseThrow();
                 soundEffects.stopAll();
-                playLevelCompleteAnimation(game.level());
+                playLevelCompleteAnimation(level);
             }
             case TengenGameState.GAME_OVER -> {
+                final GameLevel level = game.optGameLevel().orElseThrow();
                 soundEffects.stopAll();
                 dynamicCamera.enterManualMode();
                 dynamicCamera.setToTopPosition();
-                game.level().optMessage().ifPresent(this::startGameOverMessageAnimation);
+                level.optMessage().ifPresent(this::startGameOverMessageAnimation);
             }
             default -> {}
         }

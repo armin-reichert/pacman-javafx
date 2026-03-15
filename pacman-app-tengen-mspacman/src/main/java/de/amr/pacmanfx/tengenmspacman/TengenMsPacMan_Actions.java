@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui.action.GameAction;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
-import static de.amr.pacmanfx.uilib.Ufx.toggle;
+import static de.amr.pacmanfx.uilib.Ufx.toggleBoolean;
 
 public interface TengenMsPacMan_Actions {
 
@@ -36,7 +36,7 @@ public interface TengenMsPacMan_Actions {
         @Override
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.gameContext().currentGame();
-            return game.optGameLevel().isPresent() && game.level().isDemoLevel();
+            return game.isDemoLevelRunning();
         }
     };
 
@@ -66,7 +66,7 @@ public interface TengenMsPacMan_Actions {
     GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY = new GameAction("TOGGLE_JOYPAD_BINDINGS_DISPLAYED") {
         @Override
         public void execute(GameUI ui) {
-            toggle(PROPERTY_JOYPAD_BINDINGS_DISPLAYED);
+            toggleBoolean(PROPERTY_JOYPAD_BINDINGS_DISPLAYED);
         }
     };
 

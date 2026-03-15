@@ -6,9 +6,11 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Direction;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.AbstractHuntingTimer;
-import de.amr.pacmanfx.model.GameControl;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
@@ -38,28 +40,29 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
     public void draw(GameScene2D scene) {
         final Arcade_PlayScene2D playScene = (Arcade_PlayScene2D) scene;
         final GameContext gameContext = playScene.gameContext();
-        final GameControl gameControl = gameContext.currentGame().control();
+        final Game game = gameContext.currentGame();
+        final Vector2i sceneSize = playScene.unscaledSize();
 
-        drawTileGrid(playScene.unscaledSize().x(), playScene.unscaledSize().y(), Color.LIGHTGRAY);
+        drawTileGrid(sceneSize.x(), sceneSize.y(), Color.LIGHTGRAY);
 
-        if (gameContext.currentGame().optGameLevel().isPresent()) {
-            final GameLevel gameLevel = gameContext.currentGame().level();
-
-            // assuming all ghosts have the same set of special terrain tiles
-            gameLevel.ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
-                double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
+        game.optGameLevel().ifPresent(level -> {
+            // We assume all ghosts have the same set of special terrain tiles
+            level.ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
+                final double x = scaled(tile.x() * TS);
+                final double y = scaled(tile.y() * TS + HTS), size = scaled(TS);
                 ctx.setFill(Color.RED);
                 ctx.fillRect(x, y, size, 2);
             });
 
-            // mark intersection tiles
-            TerrainLayer terrainLayer = gameLevel.worldMap().terrainLayer();
-            terrainLayer.tiles().filter(terrainLayer::isIntersection).forEach(tile -> {
-                double cx = tile.x() * TS + HTS, cy = tile.y() * TS + HTS;
+            // Mark intersection tiles
+            final TerrainLayer terrain = level.worldMap().terrainLayer();
+            terrain.tiles().filter(terrain::isIntersection).forEach(tile -> {
+                final double cx = tile.x() * TS + HTS;
+                final double cy = tile.y() * TS + HTS;
                 for (Direction dir : CLOCK_ORDER) {
-                    if (!terrainLayer.isTileBlocked(tile.plus(dir.vector()))) {
-                        double x = cx + dir.vector().x() * HTS;
-                        double y = cy + dir.vector().y() * HTS;
+                    if (!terrain.isTileBlocked(tile.plus(dir.vector()))) {
+                        final double x = cx + dir.vector().x() * HTS;
+                        final double y = cy + dir.vector().y() * HTS;
                         ctx.setFill(Color.gray(0.6));
                         ctx.setLineWidth(1);
                         ctx.strokeLine(scaled(cx), scaled(cy), scaled(x), scaled(y));
@@ -67,10 +70,11 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
                 }
             });
 
-            String gameStateText = gameControl.state().name() + " (Tick %d)".formatted(gameControl.state().timer().tickCount());
+            final State<Game> state = game.control().state();
+            final String gameStateText = state.name() + " (Tick %d)".formatted(state.timer().tickCount());
             String huntingPhaseText = "";
-            if (gameControl.state() == ArcadeGameState.HUNTING) {
-                AbstractHuntingTimer huntingTimer = gameLevel.huntingTimer();
+            if (state == ArcadeGameState.HUNTING) {
+                final AbstractHuntingTimer huntingTimer = level.huntingTimer();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
             }
             ctx.setFill(debugTextFill);
@@ -78,12 +82,12 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
             ctx.setFont(debugTextFont);
             ctx.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, TS(8));
 
-            updateActorDrawingOrder(gameLevel);
+            updateActorDrawingOrder(level);
             actorsInZOrder.stream()
                 .filter(MovingActor.class::isInstance)
                 .map(MovingActor.class::cast)
                 .forEach(this::drawMovingActorInfo);
-        }
+        });
     }
 
     private void updateActorDrawingOrder(GameLevel gameLevel) {

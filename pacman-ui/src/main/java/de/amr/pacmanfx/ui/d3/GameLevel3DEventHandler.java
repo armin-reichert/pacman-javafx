@@ -115,10 +115,11 @@ public class GameLevel3DEventHandler {
     /**
      * Plays game ready sound unless in demo or test mode.
      */
-    public void onGameStarts(GameStartedEvent event, GameLevel3D ignoredLevel3D) {
+    public void onGameStarts(GameStartedEvent event, GameLevel3D gameLevel3D) {
         final Game game = event.game();
+        final GameLevel level = gameLevel3D.level();
         final State<Game> state = game.control().state();
-        final boolean silent = game.level().isDemoLevel() || state instanceof TestState;
+        final boolean silent = level.isDemoLevel() || state instanceof TestState;
         if (!silent) {
             soundEffects.playGameReadySound();
         }

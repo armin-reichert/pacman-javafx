@@ -21,7 +21,7 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.ui.GameUI.*;
-import static de.amr.pacmanfx.uilib.Ufx.toggle;
+import static de.amr.pacmanfx.uilib.Ufx.toggleBoolean;
 
 /**
  * Common actions for all game variants.
@@ -241,7 +241,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_DEBUG_INFO = new GameAction("TOGGLE_DEBUG_INFO") {
         @Override
         public void execute(GameUI ui) {
-            toggle(PROPERTY_DEBUG_INFO_VISIBLE);
+            toggleBoolean(PROPERTY_DEBUG_INFO_VISIBLE);
         }
     };
 
@@ -260,7 +260,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_MINI_VIEW_VISIBILITY = new GameAction("TOGGLE_MINI_VIEW_VISIBILITY") {
         @Override
         public void execute(GameUI ui) {
-            toggle(PROPERTY_MINI_VIEW_ON);
+            toggleBoolean(PROPERTY_MINI_VIEW_ON);
             if (!ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D)) {
                 ui.showFlashMessage(ui.translate(PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
             }
@@ -277,7 +277,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_PAUSED = new GameAction("TOGGLE_PAUSED") {
         @Override
         public void execute(GameUI ui) {
-            toggle(ui.gameContext().clock().pausedProperty());
+            toggleBoolean(ui.gameContext().clock().pausedProperty());
             if (ui.gameContext().clock().isPaused()) {
                 ui.soundManager().stopAll();
             }
@@ -296,7 +296,7 @@ public final class CommonGameActions {
             final Game game = ui.gameContext().currentGame();
             ui.optGameScene().ifPresent(_ -> {
                 ui.gameContext().clock().stop();
-                toggle(PROPERTY_3D_ENABLED);
+                toggleBoolean(PROPERTY_3D_ENABLED);
                 if (ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D) ||
                     ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D))
                 {

@@ -98,12 +98,13 @@ public class Bonus extends MovingActor {
 
     @Override
     public void tick(Game game) {
+        final GameLevel level = game.optGameLevel().orElseThrow();
         timer.doTick();
         switch (state) {
             case EDIBLE -> {
                 boolean reachedExit = false;
                 if (jumpingAnimation != null) {
-                     reachedExit = jumpThroughMaze(game.level());
+                     reachedExit = jumpThroughMaze(level);
                 }
                 if (timer.hasExpired() || reachedExit) {
                     setInactive();

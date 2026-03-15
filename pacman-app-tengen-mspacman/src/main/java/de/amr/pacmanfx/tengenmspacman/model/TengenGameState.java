@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.model;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessageType;
 
 public enum TengenGameState implements State<Game> {
@@ -87,7 +88,8 @@ public enum TengenGameState implements State<Game> {
         public void onUpdate(Game game) {
             final long tick = timer.tickCount();
             if (game.isPlaying()) {
-                game.continuePlaying(game.level(), tick);
+                final GameLevel level = game.optGameLevel().orElseThrow();
+                game.continuePlaying(level, tick);
             } else if (game.canStartNewGame()) {
                 game.startNewGame(tick);
             } else {
@@ -99,14 +101,16 @@ public enum TengenGameState implements State<Game> {
     HUNTING {
         @Override
         public void onEnter(Game game) {
+            final GameLevel level = game.optGameLevel().orElseThrow();
             clearReadyMessage(game);
-            game.startHunting(game.level());
+            game.startHunting(level);
         }
 
         @Override
         public void onUpdate(Game game) {
-            game.whileHunting(game.level());
-            if (game.isLevelCompleted(game.level())) {
+            final GameLevel level = game.optGameLevel().orElseThrow();
+            game.whileHunting(level);
+            if (game.isLevelCompleted(level)) {
                 game.control().enterState(LEVEL_COMPLETE);
             } else if (game.hasPacManBeenKilled()) {
                 game.control().enterState(PACMAN_DYING);
@@ -122,7 +126,8 @@ public enum TengenGameState implements State<Game> {
         }
 
         private void clearReadyMessage(Game game) {
-            game.level().optMessage().filter(message -> message.type() == GameLevelMessageType.READY).ifPresent(_ -> {
+            final GameLevel level = game.optGameLevel().orElseThrow();
+            level.optMessage().filter(message -> message.type() == GameLevelMessageType.READY).ifPresent(_ -> {
                 game.clearLevelMessage(); // leave TEST message alone
             });
         }
@@ -136,20 +141,21 @@ public enum TengenGameState implements State<Game> {
 
         @Override
         public void onUpdate(Game game) {
+            final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.tickCount() == 1) {
-                game.onLevelCompleted(game.level());
+                game.onLevelCompleted(level);
             }
 
-            if (game.level().isDemoLevel()) {
+            if (level.isDemoLevel()) {
                 game.control().enterState(SHOWING_HALL_OF_FAME);
                 return;
             }
 
             if (timer.hasExpired()) {
-                if (game.level().isDemoLevel()) {
+                if (level.isDemoLevel()) {
                     // Just in case: if demo level is completed, go back to intro scene
                     game.control().enterState(INTRO);
-                } else if (game.cutScenesEnabled() && game.level().cutSceneNumber() != 0) {
+                } else if (game.cutScenesEnabled() && level.cutSceneNumber() != 0) {
                     game.control().enterState(INTERMISSION);
                 } else {
                     game.control().enterState(LEVEL_TRANSITION);
@@ -181,10 +187,11 @@ public enum TengenGameState implements State<Game> {
 
         @Override
         public void onUpdate(Game game) {
+            final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.hasExpired()) {
                 game.control().resumePreviousState();
             } else {
-                game.whileEatingGhost(game.level(), timer.tickCount());
+                game.whileEatingGhost(level, timer.tickCount());
             }
         }
     },
@@ -198,15 +205,16 @@ public enum TengenGameState implements State<Game> {
 
         @Override
         public void onUpdate(Game game) {
+            final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.hasExpired()) {
-                if (game.level().isDemoLevel()) {
+                if (level.isDemoLevel()) {
                     game.control().enterState(GAME_OVER);
                 } else {
                     game.addLives(-1);
                     game.control().enterState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
                 }
             } else {
-                game.whilePacManDying(game.level(), game.level().pac(), timer.tickCount());
+                game.whilePacManDying(level, level.pac(), timer.tickCount());
             }
         }
     },
@@ -214,14 +222,16 @@ public enum TengenGameState implements State<Game> {
     GAME_OVER {
         @Override
         public void onEnter(Game game) {
-            timer.restartTicks(game.level().gameOverStateTicks());
+            final GameLevel level = game.optGameLevel().orElseThrow();
+            timer.restartTicks(level.gameOverStateTicks());
             game.onGameOver();
         }
 
         @Override
         public void onUpdate(Game game) {
+            final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.hasExpired()) {
-                if (game.level().isDemoLevel()) {
+                if (level.isDemoLevel()) {
                     game.control().enterState(SHOWING_HALL_OF_FAME);
                 } else {
                     game.control().enterState(game.canContinueOnGameOver() ? SETTING_OPTIONS_FOR_START : INTRO);

@@ -15,32 +15,33 @@ public class LevelMediumTestState extends AbstractState<Game> implements TestSta
     private int lastTestedLevelNumber;
 
     private void configureLevelForTest(Game game) {
-        final GameLevel gameLevel = game.level();
-        gameLevel.pac().usingAutopilotProperty().unbind();
-        gameLevel.pac().setUsingAutopilot(true);
-        gameLevel.pac().optAnimationManager().ifPresent(AnimationManager::play);
-        gameLevel.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
-        gameLevel.showPacAndGhosts();
+        final GameLevel level = game.optGameLevel().orElseThrow();
+        level.pac().usingAutopilotProperty().unbind();
+        level.pac().setUsingAutopilot(true);
+        level.pac().optAnimationManager().ifPresent(AnimationManager::play);
+        level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
+        level.showPacAndGhosts();
         GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
-        message.setPosition(gameLevel.worldMap().terrainLayer().messageCenterPosition());
-        gameLevel.setMessage(message);
+        message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
+        level.setMessage(message);
         game.hud().show();
         game.publishGameEvent(new StopAllSoundsEvent());
     }
 
     @Override
     public void onEnter(Game game) {
+        final GameLevel level = game.optGameLevel().orElseThrow();
         lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();
         timer.restartSeconds(TEST_DURATION_SEC);
         game.prepareNewGame();
         game.buildNormalLevel(1);
-        game.startLevel(game.level());
+        game.startLevel(level);
         configureLevelForTest(game);
     }
 
     @Override
     public void onUpdate(Game game) {
-        final GameLevel level = game.level();
+        final GameLevel level = game.optGameLevel().orElseThrow();
         level.pac().tick(game);
         level.ghosts().forEach(ghost -> ghost.tick(game));
         level.optBonus().ifPresent(bonus -> bonus.tick(game));
@@ -55,7 +56,7 @@ public class LevelMediumTestState extends AbstractState<Game> implements TestSta
                 configureLevelForTest(game);
             }
         }
-        else if (game.isLevelCompleted(game.level())) {
+        else if (game.isLevelCompleted(level)) {
             game.control().enterStateWithName(GameControl.CommonGameState.INTRO.name());
         } else if (game.hasPacManBeenKilled()) {
             timer.expire();

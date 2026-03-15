@@ -127,8 +127,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onGameStarts(GameStartedEvent e) {
         final Game game = e.game();
-        final boolean silent = game.optGameLevel().isPresent() && game.level().isDemoLevel()
-            || game.control().state() instanceof TestState;
+        final boolean silent = game.isDemoLevelRunning() || game.control().state() instanceof TestState;
         if (!silent) {
             soundEffects.playGameReadySound();
         }
@@ -138,8 +137,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public void onGameStateChange(GameStateChangeEvent e) {
         final Game game = gameContext().currentGame();
         if (e.newState() == ArcadeGameState.LEVEL_COMPLETE) {
+            final GameLevel level = game.optGameLevel().orElseThrow();
             soundEffects.stopAll();
-            createAndPlayLevelCompletedAnimation(game.level());
+            createAndPlayLevelCompletedAnimation(level);
         }
         else if (e.newState() == ArcadeGameState.GAME_OVER) {
             soundEffects.playGameOverSound();
@@ -197,7 +197,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     // private
 
     private void setAutopilot(Game game, boolean usingAutopilot) {
-        if (usingAutopilot && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
+        if (usingAutopilot && !game.isDemoLevelRunning()) {
             game.raiseCheatFlag();
         }
         ui.voicePlayer().playVoice(usingAutopilot ? GameUI_Resources.VOICE_AUTOPILOT_ON : GameUI_Resources.VOICE_AUTOPILOT_OFF);
@@ -205,7 +205,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     private void setImmunity(Game game, boolean immune) {
-        if (immune && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
+        if (immune && !game.isDemoLevelRunning()) {
             game.raiseCheatFlag();
         }
         ui.voicePlayer().playVoice(immune ? GameUI_Resources.VOICE_IMMUNITY_ON : GameUI_Resources.VOICE_IMMUNITY_OFF);

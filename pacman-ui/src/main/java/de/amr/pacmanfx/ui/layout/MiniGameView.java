@@ -28,6 +28,7 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -154,22 +155,24 @@ public class MiniGameView extends VBox {
         canvasRenderer.clearCanvas();
 
         final Game game = ui.gameContext().currentGame();
-        if (game.level() != null) {
-            var info = new RenderInfo();
+        final Optional<GameLevel> optGameLevel = game.optGameLevel();
+        if (optGameLevel.isPresent()) {
+            final GameLevel level = optGameLevel.get();
+            final var info = new RenderInfo();
             info.putAll(Map.of(
-                CommonRenderInfoKey.ENERGIZER_VISIBLE, game.level().blinking().state() == Pulse.State.ON,
+                CommonRenderInfoKey.ENERGIZER_VISIBLE, level.blinking().state() == Pulse.State.ON,
                 CommonRenderInfoKey.MAP_BRIGHT, false,
-                CommonRenderInfoKey.MAP_EMPTY, game.level().worldMap().foodLayer().uneatenFoodCount() == 0,
+                CommonRenderInfoKey.MAP_EMPTY, level.worldMap().foodLayer().uneatenFoodCount() == 0,
                 CommonRenderInfoKey.MAP_FLASHING, false,
                 CommonRenderInfoKey.TICK, ui.gameContext().clock().tickCount()
             ));
-            gameLevelRenderer.applyLevelSettings(game.level(), info);
-            gameLevelRenderer.drawLevel(game.level(), info);
+            gameLevelRenderer.applyLevelSettings(level, info);
+            gameLevelRenderer.drawLevel(level, info);
 
-            game.level().optBonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
-            actorRenderer.drawActor(game.level().pac());
+            level.optBonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
+            actorRenderer.drawActor(level.pac());
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
-                .map(game.level()::ghost)
+                .map(level::ghost)
                 .forEach(ghost -> actorRenderer.drawActor(ghost));
         }
 

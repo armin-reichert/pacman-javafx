@@ -301,10 +301,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             publishGameEvent(new GameStartedEvent(this));
         }
         else if (tick == TICK_SHOW_READY) {
-            startLevel(level());
+            final GameLevel level = optGameLevel().orElseThrow();
+            startLevel(level);
         }
         else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
-            level().showPacAndGhosts();
+            final GameLevel level = optGameLevel().orElseThrow();
+            level.showPacAndGhosts();
         }
         else if (tick == TICK_NEW_GAME_START_HUNTING) {
             setPlaying(true);
@@ -352,11 +354,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             buildDemoLevel();
         }
         else if (tick == 2) {
-            startLevel(level());
+            final GameLevel level = optGameLevel().orElseThrow();
+            startLevel(level);
         }
         else if (tick == 3) {
+            final GameLevel level = optGameLevel().orElseThrow();
             // Now, actor animations are available
-            level().showPacAndGhosts();
+            level.showPacAndGhosts();
         }
         else if (tick == TICK_DEMO_LEVEL_START_HUNTING) {
             control().enterState(TengenGameState.HUNTING);
@@ -365,10 +369,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void startNextLevel() {
-        if (level().number() < LAST_LEVEL_NUMBER) {
-            buildNormalLevel(level().number() + 1);
-            startLevel(level());
-            level().showPacAndGhosts();
+        final GameLevel level = optGameLevel().orElseThrow();
+        if (level.number() < LAST_LEVEL_NUMBER) {
+            buildNormalLevel(level.number() + 1);
+            final GameLevel newLevel = optGameLevel().orElseThrow();
+            startLevel(newLevel);
+            newLevel.showPacAndGhosts();
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", LAST_LEVEL_NUMBER);
         }

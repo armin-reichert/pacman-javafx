@@ -122,15 +122,13 @@ public interface Game {
     Optional<GameLevel> optGameLevel();
 
     /**
-     * Convenience method to access the current level.
+     * Returns if the game currently is running the demo level.
      *
-     * <p>Returns {@code null} if no level is active. Use
-     * {@link #optGameLevel()} when you need to handle the absence of a level
-     * safely.</p>
-     *
-     * @return the current {@link GameLevel}, or {@code null} if none exists
+     * @return {@code true} if demo level is running
      */
-    GameLevel level();
+    default boolean isDemoLevelRunning() {
+        return optGameLevel().isPresent() && optGameLevel().get().isDemoLevel();
+    }
 
     /* -----------------------------------------------------------
      *  Lifecycle

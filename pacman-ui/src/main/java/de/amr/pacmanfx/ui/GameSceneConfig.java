@@ -5,6 +5,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 
@@ -130,12 +131,13 @@ public interface GameSceneConfig extends Disposable {
     Optional<GameScene> selectGameScene(Game game);
 
     default SceneID resolveCutSceneID(Game game) {
-        if (game.optGameLevel().isEmpty()) {
+        final Optional<GameLevel> optGameLevel = game.optGameLevel();
+        if (optGameLevel.isEmpty()) {
             throw new IllegalStateException("Cannot determine cut scene, no game level available");
         }
-        final int cutSceneNumber = game.level().cutSceneNumber();
+        final int cutSceneNumber = optGameLevel.get().cutSceneNumber();
         if (cutSceneNumber == 0) {
-            throw new IllegalStateException("Cannot determine cut scene following level %d".formatted(game.level().number()));
+            throw new IllegalStateException("Cannot determine cut scene following level %d".formatted(optGameLevel.get().number()));
         }
         return GameSceneConfig.cutSceneID(cutSceneNumber);
     }

@@ -151,7 +151,7 @@ public class Pac extends MovingActor {
 
     @Override
     public void tick(Game game) {
-        if (game.optGameLevel().isEmpty()) return;
+        final GameLevel level = game.optGameLevel().orElseThrow();
 
         if (isDead() || restingTicks == REST_FOREVER) {
             return;
@@ -163,11 +163,11 @@ public class Pac extends MovingActor {
         }
 
         if (isUsingAutopilot()) {
-            automaticSteering.steer(this, game.level());
+            automaticSteering.steer(this, level);
         }
 
-        setSpeed(powerTimer.isRunning() ? game.pacSpeedWhenHasPower(game.level()) : game.pacSpeed(game.level()));
-        moveThroughThisCruelWorld(game.level());
+        setSpeed(powerTimer.isRunning() ? game.pacSpeedWhenHasPower(level) : game.pacSpeed(level));
+        moveThroughThisCruelWorld(level);
 
         if (moveInfo.moved) {
             optAnimationManager().ifPresent(AnimationManager::play);

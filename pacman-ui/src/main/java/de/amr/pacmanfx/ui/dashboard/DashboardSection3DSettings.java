@@ -147,7 +147,7 @@ public class DashboardSection3DSettings extends DashboardSection {
         }
 
         if (game.optGameLevel().isPresent()) {
-            final WorldMap worldMap = game.level().worldMap();
+            final WorldMap worldMap = game.optGameLevel().get().worldMap();
             return "%dx%d (map size px)".formatted(worldMap.numCols() * TS, worldMap.numRows() * TS);
         }
 

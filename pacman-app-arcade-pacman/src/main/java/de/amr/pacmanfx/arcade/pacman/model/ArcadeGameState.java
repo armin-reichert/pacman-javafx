@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.model;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessageType;
 
 public enum ArcadeGameState implements State<Game> {
@@ -63,7 +64,8 @@ public enum ArcadeGameState implements State<Game> {
         public void onUpdate(Game game) {
             long tick = timer.tickCount();
             if (game.isPlaying()) {
-                game.continuePlaying(game.level(), tick);
+                final GameLevel level = game.optGameLevel().orElseThrow();
+                game.continuePlaying(level, tick);
             } else if (game.canStartNewGame()) {
                 game.startNewGame(tick);
             } else {
@@ -75,17 +77,19 @@ public enum ArcadeGameState implements State<Game> {
     HUNTING {
         @Override
         public void onEnter(Game game) {
+            final GameLevel level = game.optGameLevel().orElseThrow();
             // "GAME_OVER" (demo level) and  "TEST LEVEL XX" messages are not cleared
-            game.level().optMessage()
-                    .filter(message -> message.type() == GameLevelMessageType.READY)
-                    .ifPresent(_ -> game.clearLevelMessage());
-            game.startHunting(game.level());
+            level.optMessage()
+                .filter(message -> message.type() == GameLevelMessageType.READY)
+                .ifPresent(_ -> game.clearLevelMessage());
+            game.startHunting(level);
         }
 
         @Override
         public void onUpdate(Game game) {
-            game.whileHunting(game.level());
-            if (game.isLevelCompleted(game.level())) {
+            final GameLevel level = game.optGameLevel().orElseThrow();
+            game.whileHunting(level);
+            if (game.isLevelCompleted(level)) {
                 game.control().enterState(LEVEL_COMPLETE);
             } else if (game.hasPacManBeenKilled()) {
                 game.control().enterState(PACMAN_DYING);
@@ -103,13 +107,14 @@ public enum ArcadeGameState implements State<Game> {
 
         @Override
         public void onUpdate(Game game) {
+            final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.tickCount() == 1) {
-                game.onLevelCompleted(game.level());
+                game.onLevelCompleted(level);
             } else if (timer.hasExpired()) {
-                if (game.level().isDemoLevel()) {
+                if (level.isDemoLevel()) {
                     // just in case: if demo level was completed, go back to intro scene
                     game.control().enterState(INTRO);
-                } else if (game.cutScenesEnabled() && game.level().cutSceneNumber() != 0) {
+                } else if (game.cutScenesEnabled() && level.cutSceneNumber() != 0) {
                     game.control().enterState(INTERMISSION);
                 } else {
                     game.control().enterState(LEVEL_TRANSITION);
@@ -141,10 +146,11 @@ public enum ArcadeGameState implements State<Game> {
 
         @Override
         public void onUpdate(Game game) {
+            final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.hasExpired()) {
                 game.control().resumePreviousState();
             } else {
-                game.whileEatingGhost(game.level(), timer.tickCount());
+                game.whileEatingGhost(level, timer.tickCount());
             }
         }
     },
@@ -157,15 +163,16 @@ public enum ArcadeGameState implements State<Game> {
 
         @Override
         public void onUpdate(Game game) {
+            final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.hasExpired()) {
-                if (game.level().isDemoLevel()) {
+                if (level.isDemoLevel()) {
                     game.control().enterState(GAME_OVER);
                 } else {
                     game.addLives(-1);
                     game.control().enterState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
                 }
             } else {
-                game.whilePacManDying(game.level(), game.level().pac(), timer.tickCount());
+                game.whilePacManDying(level, level.pac(), timer.tickCount());
             }
         }
     },
@@ -173,7 +180,8 @@ public enum ArcadeGameState implements State<Game> {
     GAME_OVER {
         @Override
         public void onEnter(Game game) {
-            timer.restartTicks(game.level().gameOverStateTicks());
+            final GameLevel level = game.optGameLevel().orElseThrow();
+            timer.restartTicks(level.gameOverStateTicks());
             game.onGameOver();
         }
 

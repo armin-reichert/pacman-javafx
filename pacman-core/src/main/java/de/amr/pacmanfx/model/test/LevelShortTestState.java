@@ -20,53 +20,55 @@ public class LevelShortTestState extends AbstractState<Game> implements TestStat
 
     @Override
     public void onEnter(Game game) {
+        final GameLevel level = game.optGameLevel().orElseThrow();
         coinMechanism.setNumCoins(1);
         lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();
         timer.restartIndefinitely();
         game.prepareNewGame();
         game.buildNormalLevel(1);
-        game.startLevel(game.level());
-        game.level().showPacAndGhosts();
+        game.startLevel(level);
+        level.showPacAndGhosts();
     }
 
     @Override
     public void onUpdate(Game game) {
+        final GameLevel level = game.optGameLevel().orElseThrow();
         final float START = 1.0f;
         if (timer.atSecond(START)) {
-            game.continuePlaying(game.level(), 1);
+            game.continuePlaying(level, 1);
             GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
-            message.setPosition(game.level().worldMap().terrainLayer().messageCenterPosition());
-            game.level().setMessage(message);
-            game.level().blinking().restart();
+            message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
+            level.setMessage(message);
+            level.blinking().restart();
         }
         else if (timer.atSecond(START + 1)) {
             game.clearLevelMessage();
         }
         else if (timer.atSecond(START + 3)) {
-            game.activateNextBonus(game.level());
+            game.activateNextBonus(level);
         }
         else if (timer.atSecond(START + 5)) {
-            game.level().optBonus().ifPresent(bonus -> {
+            level.optBonus().ifPresent(bonus -> {
                 bonus.setEatenSeconds(2);
                 game.publishGameEvent(new BonusEatenEvent(bonus));
             });
         }
         else if (timer.atSecond(START + 6)) {
-            game.activateNextBonus(game.level());
+            game.activateNextBonus(level);
         }
         else if (timer.atSecond(START + 8)) {
-            game.level().optBonus().ifPresent(bonus -> {
+            level.optBonus().ifPresent(bonus -> {
                 bonus.setEatenSeconds(2);
                 game.publishGameEvent(new BonusEatenEvent(bonus));
             });
         }
         else if (timer.atSecond(START + 9)) {
-            game.level().hidePacAndGhosts();
-            game.level().blinking().stop();
-            game.onLevelCompleted(game.level());
+            level.hidePacAndGhosts();
+            level.blinking().stop();
+            game.onLevelCompleted(level);
         }
         else if (timer.atSecond(START + 10)) {
-            if (game.level().number() == lastTestedLevelNumber) {
+            if (level.number() == lastTestedLevelNumber) {
                 coinMechanism.setNumCoins(0);
                 game.boot();
                 game.control().restartStateWithName(GameControl.CommonGameState.BOOT.name());
@@ -74,8 +76,8 @@ public class LevelShortTestState extends AbstractState<Game> implements TestStat
                 timer.restartIndefinitely();
                 game.startNextLevel();
                 GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
-                message.setPosition(game.level().worldMap().terrainLayer().messageCenterPosition());
-                game.level().setMessage(message);
+                message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
+                level.setMessage(message);
             }
         } else {
             game.optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> bonus.tick(game));

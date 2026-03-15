@@ -243,6 +243,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void onGameOver() {
+        final GameLevel level = optGameLevel().orElseThrow();
         setPlaying(false);
         if (!coinMechanism.isEmpty()) {
             coinMechanism.consumeCoin();
@@ -253,7 +254,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         } catch (IOException x) {
             Logger.error(x, "Error updating highscore file {}", highScore.file().getAbsolutePath());
         }
-        Logger.info("Game ended with level number {}", level().number());
+        Logger.info("Game ended with level number {}", level.number());
     }
 
     // GameLifecycle interface
@@ -291,10 +292,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             publishGameEvent(new GameStartedEvent(this));
         }
         else if (tick == 2) {
-            startLevel(level());
+            final GameLevel level = optGameLevel().orElseThrow();
+            startLevel(level);
         }
         else if (tick == Arcade_GameController.TICK_NEW_GAME_SHOW_GUYS) {
-            level().showPacAndGhosts();
+            final GameLevel level = optGameLevel().orElseThrow();
+            level.showPacAndGhosts();
         }
         else if (tick == Arcade_GameController.TICK_NEW_GAME_START_HUNTING) {
             setPlaying(true);
@@ -371,11 +374,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             buildDemoLevel();
         }
         else if (tick == 2) {
-            startLevel(level());
+            final GameLevel level = optGameLevel().orElseThrow();
+            startLevel(level);
         }
         else if (tick == 3) {
+            final GameLevel level = optGameLevel().orElseThrow();
             // Now, actor animations are available
-            level().showPacAndGhosts();
+            level.showPacAndGhosts();
         }
         else if (tick == Arcade_GameController.TICK_RESUME_HUNTING) {
             control().enterState(ArcadeGameState.HUNTING);
@@ -404,8 +409,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void startNextLevel() {
-        buildNormalLevel(level().number() + 1);
-        startLevel(level());
+        final GameLevel level = optGameLevel().orElseThrow();
+        buildNormalLevel(level.number() + 1);
+        final GameLevel newLevel = optGameLevel().orElseThrow();
+        startLevel(newLevel);
     }
 
     @Override

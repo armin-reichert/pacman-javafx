@@ -222,8 +222,8 @@ public class PlayView extends StackPane implements View {
         final Game game = ui.gameContext().currentGame();
         final State<Game> gameState = game.control().state();
         switch (gameEvent) {
-            case LevelCreatedEvent _ -> {
-                final GameLevel level = game.level();
+            case LevelCreatedEvent levelCreatedEvent -> {
+                final GameLevel level = levelCreatedEvent.level();
                 final UIConfig uiConfig = ui.currentConfig();
 
                 //TODO this should be done elsewhere
