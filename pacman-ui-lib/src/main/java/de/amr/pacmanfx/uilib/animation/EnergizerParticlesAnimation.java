@@ -48,6 +48,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     {}
 
     public record AttractionConfig(
+        float acceleration,
         float particleSize,
         float particleMinSpeed,
         float particleMaxSpeed)
@@ -62,7 +63,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
     public static final Config DEFAULT_CONFIG = new Config(
         new ExplosionConfig(new Vector3f(0, 0, 0.1f), 300, 0.25f, 0.05f, 0.4f, 1.5f, 6),
-        new AttractionConfig(0.4f, 0.3f, 0.5f),
+        new AttractionConfig(0.004f, 0.4f, 0.3f, 0.5f),
         new SwirlConfig(4, 20, 0.3f, 0.05f)
     );
 
@@ -132,7 +133,6 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
     public void createEnergizerExplosion(Vector3f origin) {
         requireNonNull(origin);
-        //TODO avoid conversion
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
             final EnergizerParticle particle = obtainParticle();
             particle.setPosition(origin);
@@ -264,6 +264,9 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         final boolean targetReached = dist <= particle.velocity().length();
         if (!targetReached) {
             particle.move();
+            final float newSpeed = particle.velocity().length() + config.attraction().acceleration();
+            final Vector3f newVelocity = particle.velocity().normalized().mul(newSpeed);
+            particle.setVelocity(newVelocity);
         }
         return targetReached;
     }
