@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl.CommonGameState;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import javafx.geometry.Insets;
@@ -20,7 +19,6 @@ import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -28,9 +26,8 @@ public class HelpInfo {
 
     public static HelpInfo build(GameUI ui) {
         final Game game = ui.gameContext().currentGame();
-        final Optional<GameLevel> optGameLevel = game.optGameLevel();
-        final boolean demoLevel = optGameLevel.isPresent() && optGameLevel.get().isDemoLevel();
         final State<Game> state = game.control().state();
+        final boolean demoLevel = game.isDemoLevelRunning();
 
         final HelpInfo helpInfo = new HelpInfo(ui);
         if (state.nameMatches(CommonGameState.INTRO.name())) {

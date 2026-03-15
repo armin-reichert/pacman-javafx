@@ -43,7 +43,7 @@ public interface ArcadeMachineActions {
                 return false;
             }
             final boolean noCredit = ui.gameContext().coinMechanism().isEmpty();
-            final boolean demoLevel = game.optGameLevel().isPresent() && game.optGameLevel().get().isDemoLevel();
+            final boolean demoLevel = game.isDemoLevelRunning();
             final State<Game> gameState = game.control().state();
             return gameState == SETTING_OPTIONS_FOR_START || gameState == INTRO || demoLevel || noCredit;
         }

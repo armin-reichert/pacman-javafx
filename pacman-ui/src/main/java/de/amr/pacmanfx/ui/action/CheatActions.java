@@ -5,14 +5,13 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.event.PacEatsFoodEvent;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameControl;
+import de.amr.pacmanfx.model.GameControl.CommonGameState;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 
 import java.util.List;
-import java.util.Optional;
 
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
@@ -49,8 +48,7 @@ public final class CheatActions {
         @Override
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.gameContext().currentGame();
-            return game.optGameLevel().isPresent() && !game.optGameLevel().get().isDemoLevel()
-                && game.control().state().nameMatches(GameControl.CommonGameState.HUNTING.name());
+            return !game.isDemoLevelRunning() && game.control().state().nameMatches(CommonGameState.HUNTING.name());
         }
     };
 
@@ -66,15 +64,14 @@ public final class CheatActions {
             if (!vulnerableGhosts.isEmpty()) {
                 level.energizerVictims().clear(); // resets value of next killed ghost to 200
                 vulnerableGhosts.forEach(ghost -> game.onEatGhost(level, ghost));
-                game.control().enterStateWithName(GameControl.CommonGameState.EATING_GHOST.name());
+                game.control().enterStateWithName(CommonGameState.EATING_GHOST.name());
             }
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.gameContext().currentGame();
-            return game.control().state().nameMatches(GameControl.CommonGameState.HUNTING.name())
-                && game.optGameLevel().isPresent() && !game.optGameLevel().get().isDemoLevel();
+            return game.control().state().nameMatches(CommonGameState.HUNTING.name()) && !game.isDemoLevelRunning();
         }
     };
 
@@ -86,14 +83,14 @@ public final class CheatActions {
             if (!level.isDemoLevel()) {
                 game.raiseCheatFlag();
             }
-            game.control().enterStateWithName(GameControl.CommonGameState.LEVEL_COMPLETE.name());
+            game.control().enterStateWithName(CommonGameState.LEVEL_COMPLETE.name());
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.gameContext().currentGame();
             return game.isPlaying()
-                && game.control().state().nameMatches(GameControl.CommonGameState.HUNTING.name())
+                && game.control().state().nameMatches(CommonGameState.HUNTING.name())
                 && game.optGameLevel().isPresent()
                 && game.optGameLevel().get().number() < game.lastLevelNumber();
         }
@@ -103,8 +100,7 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().currentGame();
-            final Optional<GameLevel> optGameLevel = game.optGameLevel();
-            if (optGameLevel.isPresent() && !optGameLevel.get().isDemoLevel()) {
+            if (!game.isDemoLevelRunning()) {
                 game.raiseCheatFlag();
             }
             toggleBoolean(game.usingAutopilotProperty());
@@ -118,8 +114,7 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().currentGame();
-            final Optional<GameLevel> optGameLevel = game.optGameLevel();
-            if (optGameLevel.isPresent() && !optGameLevel.get().isDemoLevel()) {
+            if (!game.isDemoLevelRunning()) {
                 game.raiseCheatFlag();
             }
             toggleBoolean(game.immuneProperty());
