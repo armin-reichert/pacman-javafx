@@ -83,7 +83,6 @@ public class WorldMap {
             }
         }
         worldMap.terrainLayer = new TerrainLayer(parseLayer(LayerType.TERRAIN, terrainLayerRows, validTerrainValueTest));
-        worldMap.terrainLayer.buildObstacleList();
 
         worldMap.foodLayer = new FoodLayer(parseLayer(LayerType.FOOD, foodLayerRows, validFoodValueTest));
 
@@ -158,6 +157,11 @@ public class WorldMap {
                     Logger.error("Invalid tile map entry {} at row {}, col {}", entry, row, col);
                 }
             }
+        }
+
+        if (type == LayerType.TERRAIN) {
+            final TerrainLayer terrain = (TerrainLayer) mapLayer;
+            terrain.createObstacles();
         }
         return (T) mapLayer;
     }

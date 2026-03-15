@@ -27,7 +27,7 @@ public final class TerrainLayer extends WorldMapLayer {
     private Vector2f pacStartPosition;
     private HPortal[] hPortals;
     private House house;
-    private Set<Obstacle> obstacles; // uninitialized!
+    private Set<Obstacle> obstacleSet; // uninitialized!
 
     public TerrainLayer(int numRows, int numCols) {
         super(numRows, numCols);
@@ -49,8 +49,8 @@ public final class TerrainLayer extends WorldMapLayer {
         scatterTiles[ORANGE_GHOST_POKEY] = getTilePropertyOrDefault(POS_SCATTER_ORANGE_GHOST, Vector2i.of(numRows() - emptyRowsBelowMaze(), 0));
 
         this.house = layer.house; // TODO make copy
-        if (layer.obstacles != null) {
-            this.obstacles = Set.copyOf(layer.obstacles);
+        if (layer.obstacleSet != null) {
+            this.obstacleSet = Set.copyOf(layer.obstacleSet);
         }
     }
 
@@ -105,31 +105,28 @@ public final class TerrainLayer extends WorldMapLayer {
         return portals.toArray(new HPortal[0]);
     }
 
-    public List<Vector2i> buildObstacleList() {
+    public List<Vector2i> createObstacles() {
         List<Vector2i> tilesWithErrors = new ArrayList<>();
-        obstacles = ObstacleBuilder.buildObstacles(this, tilesWithErrors);
+        obstacleSet = ObstacleBuilder.buildObstacleSet(this, tilesWithErrors);
 
         Vector2i houseMinTile = getTileProperty(WorldMapPropertyName.POS_HOUSE_MIN_TILE);
         if (houseMinTile == null) {
             Logger.info("Could not remove house placeholder from obstacle list, house min tile not set");
         } else {
             Vector2i houseStartPoint = houseMinTile.scaled(TS).plus(TS, HTS);
-            obstacles.stream()
-                    .filter(obstacle -> obstacle.startPoint().equals(houseStartPoint))
-                    .findFirst().ifPresent(houseObstacle -> {
-                        Logger.debug("Removing house placeholder-obstacle starting at tile {}, point {}", houseMinTile, houseStartPoint);
-                        obstacles.remove(houseObstacle);
-                    });
+            obstacleSet.stream()
+                .filter(obstacle -> obstacle.startPoint().equals(houseStartPoint))
+                .findFirst().ifPresent(houseObstacle -> {
+                    Logger.debug("Removing house placeholder-obstacle starting at tile {}, point {}", houseMinTile, houseStartPoint);
+                    obstacleSet.remove(houseObstacle);
+                });
         }
-        Logger.info("{} obstacles found in map ", obstacles.size(), this);
+        Logger.info("{} obstacles found in map ", obstacleSet.size(), this);
         return tilesWithErrors;
     }
 
     public Set<Obstacle> obstacles() {
-        if (obstacles == null) { // first access
-            buildObstacleList();
-        }
-        return Collections.unmodifiableSet(obstacles);
+        return Collections.unmodifiableSet(obstacleSet);
     }
 
     public Stream<Vector2i> neighborTilesOutsideWorld(Vector2i tile) {

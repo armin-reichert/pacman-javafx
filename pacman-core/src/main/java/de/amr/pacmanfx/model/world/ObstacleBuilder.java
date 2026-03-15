@@ -24,8 +24,8 @@ import static java.util.function.Predicate.not;
 public class ObstacleBuilder {
 
     // Public API
-    public static Set<Obstacle> buildObstacles(TerrainLayer terrainLayer, List<Vector2i> tilesWithErrors) {
-        return new ObstacleBuilder(terrainLayer).buildObstacles(tilesWithErrors);
+    public static Set<Obstacle> buildObstacleSet(TerrainLayer terrainLayer, List<Vector2i> tilesWithErrors) {
+        return new ObstacleBuilder(terrainLayer).buildObstacleSet(tilesWithErrors);
     }
 
     static class Cursor {
@@ -90,7 +90,7 @@ public class ObstacleBuilder {
         exploredTiles.set(terrainLayer.indexInRowWiseOrder(tile));
     }
 
-    private Set<Obstacle> buildObstacles(List<Vector2i> tilesWithErrors) {
+    private Set<Obstacle> buildObstacleSet(List<Vector2i> tilesWithErrors) {
         Logger.debug("Find obstacles in map ID={} size={}x{}", terrainLayer.hashCode(), terrainLayer.numRows(), terrainLayer.numCols());
 
         tilesWithErrors.clear();

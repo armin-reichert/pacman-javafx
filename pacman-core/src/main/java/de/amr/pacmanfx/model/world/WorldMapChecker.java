@@ -13,7 +13,7 @@ public interface WorldMapChecker {
     record WorldMapCheckResult(List<Vector2i> tilesWithErrors) {}
 
     static WorldMapCheckResult check(WorldMap worldMap) {
-        var tilesWithErrors = worldMap.terrainLayer().buildObstacleList();
+        var tilesWithErrors = worldMap.terrainLayer().createObstacles();
         return new WorldMapCheckResult(tilesWithErrors);
     }
 }
