@@ -111,7 +111,7 @@ public class DashboardSectionAnimations3D extends DashboardSection {
 
     private AnimationRegistry observedAnimations(GameScene gameScene) {
         if (gameScene instanceof PlayScene3D playScene3D) {
-            return playScene3D.level3D().map(GameLevel3D::animationRegistry).orElse(null);
+            return playScene3D.optGameLevel3D().map(GameLevel3D::animationRegistry).orElse(null);
         }
         return null;
     }

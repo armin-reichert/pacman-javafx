@@ -15,8 +15,8 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.action.ActionBinding;
-import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.d3.animation.GameLevel3DAnimations;
+import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
@@ -118,10 +118,10 @@ public class PlayScene3D implements GameScene {
         subScene = new SubScene(subSceneRoot, 88, 88, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
 
-        final var axes3D = new CoordinateSystem();
-        axes3D.visibleProperty().bind(GameUI.PROPERTY_3D_AXES_VISIBLE);
-        subSceneRoot.getChildren().setAll(gameLevel3DParent, axes3D);
+        final var coordinateSystem = new CoordinateSystem();
+        coordinateSystem.visibleProperty().bind(GameUI.PROPERTY_3D_AXES_VISIBLE);
 
+        subSceneRoot.getChildren().addAll(gameLevel3DParent, coordinateSystem);
         bindSceneActions();
     }
 
@@ -129,6 +129,11 @@ public class PlayScene3D implements GameScene {
         return subScene;
     }
 
+    /**
+     * Returns the current 3D level representation, if present.
+     *
+     * @return optional containing the 3D level or empty if not yet created
+     */
     public Optional<GameLevel3D> optGameLevel3D() {
         return Optional.ofNullable(gameLevel3D);
     }
@@ -156,15 +161,6 @@ public class PlayScene3D implements GameScene {
         level3D_EventHandler.init(soundEffects, ui);
         // TODO: reconsider whether scores need recreation here (variant/font change?)
         replaceScores3D();
-    }
-
-    /**
-     * Returns the current 3D level representation, if present.
-     *
-     * @return optional containing the 3D level or empty if not yet created
-     */
-    public Optional<GameLevel3D> level3D() {
-        return Optional.ofNullable(gameLevel3D);
     }
 
     // ────────────────────────────────────────────────────────────────────────────
