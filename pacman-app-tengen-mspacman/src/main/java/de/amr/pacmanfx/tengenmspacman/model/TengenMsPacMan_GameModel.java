@@ -308,7 +308,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
         else if (tick == TICK_NEW_GAME_START_HUNTING) {
             setPlaying(true);
-            enterState(HUNTING);
+            control().enterState(HUNTING);
         }
     }
 
@@ -319,7 +319,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             level.showPacAndGhosts();
             publishGameEvent(new GameContinuedEvent(this));
         } else if (tick == TICK_RESUME_HUNTING) {
-            enterState(HUNTING);
+            control().enterState(HUNTING);
         }
     }
 
@@ -359,7 +359,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             level().showPacAndGhosts();
         }
         else if (tick == TICK_DEMO_LEVEL_START_HUNTING) {
-            enterState(TengenGameState.HUNTING);
+            control().enterState(TengenGameState.HUNTING);
         }
     }
 

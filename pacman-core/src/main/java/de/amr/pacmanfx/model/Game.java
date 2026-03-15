@@ -5,7 +5,6 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -53,31 +52,6 @@ public interface Game {
      * @return the {@link GameControl} instance for this game
      */
     GameControl control();
-
-    /**
-     * Convenience method for entering a new game state.
-     *
-     * @param gameState the state to enter
-     */
-    default void enterState(State<Game> gameState) {
-        control().enterState(gameState);
-    }
-
-    /**
-     * Resumes the previously active state.
-     */
-    default void resumePreviousState() {
-        control().resumePreviousState();
-    }
-
-    /**
-     * Restarts the given state, reinitializing its timer and internal data.
-     *
-     * @param gameState the state to restart
-     */
-    default void restartState(State<Game> gameState) {
-        control().restartState(gameState);
-    }
 
     /* -----------------------------------------------------------
      *  Simulation and HUD

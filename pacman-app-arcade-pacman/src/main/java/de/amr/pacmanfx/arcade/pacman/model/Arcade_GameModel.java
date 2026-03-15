@@ -298,7 +298,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
         else if (tick == Arcade_GameController.TICK_NEW_GAME_START_HUNTING) {
             setPlaying(true);
-            enterState(ArcadeGameState.HUNTING);
+            control().enterState(ArcadeGameState.HUNTING);
         }
     }
 
@@ -313,7 +313,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             publishGameEvent(new GameContinuedEvent(this));
         }
         else if (tick == Arcade_GameController.TICK_RESUME_HUNTING) {
-            enterState(ArcadeGameState.HUNTING);
+            control().enterState(ArcadeGameState.HUNTING);
         }
     }
 
@@ -378,7 +378,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level().showPacAndGhosts();
         }
         else if (tick == Arcade_GameController.TICK_RESUME_HUNTING) {
-            enterState(ArcadeGameState.HUNTING);
+            control().enterState(ArcadeGameState.HUNTING);
         }
     }
 

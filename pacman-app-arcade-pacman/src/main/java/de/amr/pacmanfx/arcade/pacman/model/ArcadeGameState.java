@@ -25,7 +25,7 @@ public enum ArcadeGameState implements State<Game> {
         @Override
         public void onUpdate(Game game) {
             if (timer.hasExpired()) { // timer is set to expired by UI
-                game.enterState(INTRO);
+                game.control().enterState(INTRO);
             }
         }
     },
@@ -43,7 +43,7 @@ public enum ArcadeGameState implements State<Game> {
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
                 // start demo level (attract mode)
-                game.enterState(STARTING_GAME_OR_LEVEL);
+                game.control().enterState(STARTING_GAME_OR_LEVEL);
             }
         }
     },
@@ -86,11 +86,11 @@ public enum ArcadeGameState implements State<Game> {
         public void onUpdate(Game game) {
             game.whileHunting(game.level());
             if (game.isLevelCompleted(game.level())) {
-                game.enterState(LEVEL_COMPLETE);
+                game.control().enterState(LEVEL_COMPLETE);
             } else if (game.hasPacManBeenKilled()) {
-                game.enterState(PACMAN_DYING);
+                game.control().enterState(PACMAN_DYING);
             } else if (game.hasGhostBeenKilled()) {
-                game.enterState(EATING_GHOST);
+                game.control().enterState(EATING_GHOST);
             }
         }
     },
@@ -108,11 +108,11 @@ public enum ArcadeGameState implements State<Game> {
             } else if (timer.hasExpired()) {
                 if (game.level().isDemoLevel()) {
                     // just in case: if demo level was completed, go back to intro scene
-                    game.enterState(INTRO);
+                    game.control().enterState(INTRO);
                 } else if (game.cutScenesEnabled() && game.level().cutSceneNumber() != 0) {
-                    game.enterState(INTERMISSION);
+                    game.control().enterState(INTERMISSION);
                 } else {
-                    game.enterState(LEVEL_TRANSITION);
+                    game.control().enterState(LEVEL_TRANSITION);
                 }
             }
         }
@@ -128,7 +128,7 @@ public enum ArcadeGameState implements State<Game> {
         @Override
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
-                game.enterState(STARTING_GAME_OR_LEVEL);
+                game.control().enterState(STARTING_GAME_OR_LEVEL);
             }
         }
     },
@@ -142,7 +142,7 @@ public enum ArcadeGameState implements State<Game> {
         @Override
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
-                game.resumePreviousState();
+                game.control().resumePreviousState();
             } else {
                 game.whileEatingGhost(game.level(), timer.tickCount());
             }
@@ -159,10 +159,10 @@ public enum ArcadeGameState implements State<Game> {
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
                 if (game.level().isDemoLevel()) {
-                    game.enterState(GAME_OVER);
+                    game.control().enterState(GAME_OVER);
                 } else {
                     game.addLives(-1);
-                    game.enterState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
+                    game.control().enterState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
                 }
             } else {
                 game.whilePacManDying(game.level(), game.level().pac(), timer.tickCount());
@@ -182,9 +182,9 @@ public enum ArcadeGameState implements State<Game> {
             if (timer.hasExpired()) {
                 game.prepareNewGame();
                 if (game.canStartNewGame()) {
-                    game.enterState(SETTING_OPTIONS_FOR_START);
+                    game.control().enterState(SETTING_OPTIONS_FOR_START);
                 } else {
-                    game.enterState(INTRO);
+                    game.control().enterState(INTRO);
                 }
             }
         }
@@ -205,7 +205,7 @@ public enum ArcadeGameState implements State<Game> {
         @Override
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
-                game.enterState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
+                game.control().enterState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
             }
         }
     };

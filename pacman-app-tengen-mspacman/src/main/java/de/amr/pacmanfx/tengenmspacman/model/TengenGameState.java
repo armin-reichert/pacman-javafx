@@ -25,7 +25,7 @@ public enum TengenGameState implements State<Game> {
         @Override
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
-                game.enterState(INTRO);
+                game.control().enterState(INTRO);
             }
         }
     },
@@ -48,7 +48,7 @@ public enum TengenGameState implements State<Game> {
         @Override
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
-                game.enterState(STARTING_GAME_OR_LEVEL);
+                game.control().enterState(STARTING_GAME_OR_LEVEL);
             }
         }
     },
@@ -77,7 +77,7 @@ public enum TengenGameState implements State<Game> {
         @Override
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
-                game.enterState(INTRO);
+                game.control().enterState(INTRO);
             }
         }
     },
@@ -107,11 +107,11 @@ public enum TengenGameState implements State<Game> {
         public void onUpdate(Game game) {
             game.whileHunting(game.level());
             if (game.isLevelCompleted(game.level())) {
-                game.enterState(LEVEL_COMPLETE);
+                game.control().enterState(LEVEL_COMPLETE);
             } else if (game.hasPacManBeenKilled()) {
-                game.enterState(PACMAN_DYING);
+                game.control().enterState(PACMAN_DYING);
             } else if (game.hasGhostBeenKilled()) {
-                game.enterState(EATING_GHOST);
+                game.control().enterState(EATING_GHOST);
             }
         }
 
@@ -141,18 +141,18 @@ public enum TengenGameState implements State<Game> {
             }
 
             if (game.level().isDemoLevel()) {
-                game.enterState(SHOWING_HALL_OF_FAME);
+                game.control().enterState(SHOWING_HALL_OF_FAME);
                 return;
             }
 
             if (timer.hasExpired()) {
                 if (game.level().isDemoLevel()) {
                     // Just in case: if demo level is completed, go back to intro scene
-                    game.enterState(INTRO);
+                    game.control().enterState(INTRO);
                 } else if (game.cutScenesEnabled() && game.level().cutSceneNumber() != 0) {
-                    game.enterState(INTERMISSION);
+                    game.control().enterState(INTERMISSION);
                 } else {
-                    game.enterState(LEVEL_TRANSITION);
+                    game.control().enterState(LEVEL_TRANSITION);
                 }
             }
         }
@@ -168,7 +168,7 @@ public enum TengenGameState implements State<Game> {
         @Override
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
-                game.enterState(STARTING_GAME_OR_LEVEL);
+                game.control().enterState(STARTING_GAME_OR_LEVEL);
             }
         }
     },
@@ -182,7 +182,7 @@ public enum TengenGameState implements State<Game> {
         @Override
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
-                game.resumePreviousState();
+                game.control().resumePreviousState();
             } else {
                 game.whileEatingGhost(game.level(), timer.tickCount());
             }
@@ -200,10 +200,10 @@ public enum TengenGameState implements State<Game> {
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
                 if (game.level().isDemoLevel()) {
-                    game.enterState(GAME_OVER);
+                    game.control().enterState(GAME_OVER);
                 } else {
                     game.addLives(-1);
-                    game.enterState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
+                    game.control().enterState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
                 }
             } else {
                 game.whilePacManDying(game.level(), game.level().pac(), timer.tickCount());
@@ -222,9 +222,9 @@ public enum TengenGameState implements State<Game> {
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
                 if (game.level().isDemoLevel()) {
-                    game.enterState(SHOWING_HALL_OF_FAME);
+                    game.control().enterState(SHOWING_HALL_OF_FAME);
                 } else {
-                    game.enterState(game.canContinueOnGameOver() ? SETTING_OPTIONS_FOR_START : INTRO);
+                    game.control().enterState(game.canContinueOnGameOver() ? SETTING_OPTIONS_FOR_START : INTRO);
                 }
             }
         }
@@ -245,7 +245,7 @@ public enum TengenGameState implements State<Game> {
         @Override
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
-                game.enterState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
+                game.control().enterState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
             }
         }
     };
