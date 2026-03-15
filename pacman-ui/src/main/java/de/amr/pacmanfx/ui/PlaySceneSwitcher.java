@@ -44,7 +44,7 @@ public interface PlaySceneSwitcher {
     }
 
     static void switchTo2D(GameUI ui, PlayScene3D playScene3D, GameScene2D playScene2D) {
-        final Game game = playScene3D.gameContext().currentGame();
+        final Game game = ui.gameContext().currentGame();
         game.optGameLevel().ifPresent(playScene2D::acceptGameLevel);
         Logger.info("2D scene {} entered from 3D scene {}", playScene2D.getClass().getSimpleName(), playScene3D.getClass().getSimpleName());
     }
