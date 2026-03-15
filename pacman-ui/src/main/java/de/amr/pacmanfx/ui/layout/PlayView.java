@@ -278,14 +278,12 @@ public class PlayView extends StackPane implements View {
         if (currentGameScene != null && ui.gameContext().currentGame().optGameLevel().isPresent()) {
             // Handle switching between 2D and 3D scene variant (play scene)
             final byte sceneSwitchType = identifySceneSwitchType(currentGameScene, intendedGameScene);
-            ui.gameContext().clock().stop();
             switch (sceneSwitchType) {
                 case 23 -> PlaySceneSwitcher.switchTo3D(ui, (GameScene2D) currentGameScene, (PlayScene3D) intendedGameScene);
                 case 32 -> PlaySceneSwitcher.switchTo2D(ui, (PlayScene3D) currentGameScene, (GameScene2D) intendedGameScene);
                 case  0 -> {}
                 default -> throw new IllegalArgumentException("Illegal scene switch type: " + sceneSwitchType);
             }
-            ui.gameContext().clock().start();
         }
 
         currentGameSceneProperty().set(intendedGameScene);

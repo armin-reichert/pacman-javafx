@@ -17,6 +17,8 @@ import static de.amr.pacmanfx.model.GameControl.CommonGameState.HUNTING;
 public interface PlaySceneSwitcher {
 
     static void switchTo3D(GameUI ui, GameScene2D playScene2D, PlayScene3D playScene3D) {
+        ui.gameContext().clock().stop();
+
         final UIConfig uiConfig = ui.currentConfig();
         final Game game = ui.gameContext().currentGame();
         final GameLevel level = game.optGameLevel().orElseThrow();
@@ -40,12 +42,17 @@ public interface PlaySceneSwitcher {
             playScene3D.soundEffects().playPacPowerSound();
         }
 
+        ui.gameContext().clock().start();
         Logger.info("3D scene {} entered from 3D scene {}", playScene3D.getClass().getSimpleName(), playScene2D.getClass().getSimpleName());
     }
 
     static void switchTo2D(GameUI ui, PlayScene3D playScene3D, GameScene2D playScene2D) {
+        ui.gameContext().clock().stop();
+
         final Game game = ui.gameContext().currentGame();
         game.optGameLevel().ifPresent(playScene2D::acceptGameLevel);
+
+        ui.gameContext().clock().start();
         Logger.info("2D scene {} entered from 3D scene {}", playScene2D.getClass().getSimpleName(), playScene3D.getClass().getSimpleName());
     }
 }
