@@ -16,12 +16,9 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -45,7 +42,7 @@ import static java.util.Objects.requireNonNull;
  * </ul>
  * </p>
  */
-public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelCounter {
+public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     public static Blinky createBlinky() {
         return new Blinky();
@@ -67,13 +64,12 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
         return new MsPacMan();
     }
 
-    public static final int MAX_LEVEL_COUNTER_SYMBOLS = 7;
-
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
     protected static final int GAME_OVER_STATE_TICKS = 150;
 
     protected final WorldMapSelector mapSelector;
+    protected LevelCounter levelCounter;
 
     /**
      * Called via reflection by builder.
@@ -89,6 +85,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
         super(coinMechanism, highScoreFile);
 
         this.mapSelector = requireNonNull(mapSelector);
+        this.levelCounter = new ArcadeMsPacMan_LevelCounter();
 
         this.gateKeeper = new GateKeeper();
         this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
@@ -113,6 +110,11 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
     @Override
     public WorldMapSelector mapSelector() {
         return mapSelector;
+    }
+
+    @Override
+    public LevelCounter levelCounter() {
+        return levelCounter;
     }
 
     @Override
@@ -184,7 +186,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        setLevelCounterEnabled(levelNumber < 8);
+        levelCounter.setEnabled(levelNumber < 8);
 
         return level;
     }
@@ -369,40 +371,5 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
 
         bonus.initRoute(route, leftToRight);
         Logger.info("Moving bonus route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
-    }
-
-    // LevelCounter
-
-    private final BooleanProperty levelCounterEnabled = new SimpleBooleanProperty(true);
-    private final List<Byte> levelCounterSymbols = new ArrayList<>();
-
-    @Override
-    public void clearLevelCounter() {
-        levelCounterSymbols.clear();
-    }
-
-    @Override
-    public void updateLevelCounter(int levelNumber, byte symbol) {
-        if (levelNumber == 1) {
-            levelCounterSymbols.clear();
-        }
-        if (levelNumber < MAX_LEVEL_COUNTER_SYMBOLS && isLevelCounterEnabled()) {
-            levelCounterSymbols.add(symbol);
-        }
-    }
-
-    @Override
-    public void setLevelCounterEnabled(boolean enabled) {
-        levelCounterEnabled.set(enabled);
-    }
-
-    @Override
-    public boolean isLevelCounterEnabled() {
-        return levelCounterEnabled.get();
-    }
-
-    @Override
-    public List<Byte> levelCounterSymbols() {
-        return levelCounterSymbols;
     }
 }

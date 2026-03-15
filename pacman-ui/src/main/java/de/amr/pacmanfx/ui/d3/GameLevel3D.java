@@ -232,7 +232,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Rebuilds the level counter visualization using the latest configuration.
      */
     public void rebuildLevelCounter3D(LevelCounterConfig3D levelCounterConfig3D) {
-        levelCounter3D.rebuild(levelCounterConfig3D, level.game().levelCounterSymbols());
+        levelCounter3D.rebuild(levelCounterConfig3D, level.game().levelCounter().symbols());
     }
 
     // private

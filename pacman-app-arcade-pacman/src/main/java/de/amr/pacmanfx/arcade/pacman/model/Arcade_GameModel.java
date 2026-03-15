@@ -263,7 +263,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         setInitialLifeCount(3);
         clearCheatingProperties();
         prepareNewGame();
-        clearLevelCounter();
+        levelCounter().clear();
         hud().hide();
     }
 
@@ -286,7 +286,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void startNewGame(long tick) {
         if (tick == 1) {
             prepareNewGame();
-            clearLevelCounter();
+            levelCounter().clear();
             buildNormalLevel(1);
             publishGameEvent(new GameStartedEvent(this));
         }
@@ -340,7 +340,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void buildNormalLevel(int levelNumber) {
         final GameLevel level = createLevel(levelNumber, false);
         level.setCutSceneNumber(cutSceneNumberAfterLevel(levelNumber));
-        setLevelCounterEnabled(true);
+        levelCounter().setEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
 
@@ -357,7 +357,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         level.pac().setUsingAutopilot(true);
         level.pac().setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
-        setLevelCounterEnabled(true);
+        levelCounter().setEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
 
@@ -393,7 +393,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             Logger.info("Demo level {} started", level.number());
         } else {
             showLevelMessage(GameLevelMessageType.READY);
-            updateLevelCounter(level.number(), level.bonusSymbol(0));
+            levelCounter().update(level.number(), level.bonusSymbol(0));
             score().setEnabled(true);
             updateCheatingProperties(level);
             Logger.info("Level {} started", level.number());

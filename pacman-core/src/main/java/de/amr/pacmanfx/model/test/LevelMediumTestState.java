@@ -66,6 +66,6 @@ public class LevelMediumTestState extends AbstractState<Game> implements TestSta
 
     @Override
     public void onExit(Game game) {
-        game.clearLevelCounter();
+        game.levelCounter().clear();
     }
 }

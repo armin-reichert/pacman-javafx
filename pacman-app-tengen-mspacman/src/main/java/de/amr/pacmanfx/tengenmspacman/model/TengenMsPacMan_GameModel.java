@@ -15,14 +15,10 @@ import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
 import de.amr.pacmanfx.tengenmspacman.model.actors.*;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -41,7 +37,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly">Ms.Pac-Man-NES-Tengen-Disassembly</a>
  */
-public class TengenMsPacMan_GameModel extends AbstractGameModel implements LevelCounter {
+public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     static final short TICK_SHOW_READY = 10;
     static final short TICK_NEW_GAME_SHOW_GUYS = 70;
@@ -66,8 +62,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
 
     public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
     public static final byte GAME_OVER_MESSAGE_DELAY_SEC = 2;
-
-    public static final byte LEVEL_COUNTER_MAX_SIZE = 7;
 
     // Bonus symbols in Arcade, Mini and Big mazes
     public static final byte BONUS_CHERRY      = 0;
@@ -132,6 +126,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
 
     private final TengenMsPacMan_HeadsUpDisplay hud;
     private final TengenMsPacMan_MapSelector mapSelector;
+    private final TengenMsPacMan_LevelCounter levelCounter;
     private final GateKeeper gateKeeper;
     private final Steering automaticSteering;
     private final Steering demoLevelSteering;
@@ -148,6 +143,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         super(highScoreFile);
 
         this.mapSelector = new TengenMsPacMan_MapSelector();
+        this.levelCounter = new TengenMsPacMan_LevelCounter();
         this.hud = new TengenMsPacMan_HeadsUpDisplay();
         this.gateKeeper = new GateKeeper(); //TODO implement original logic from Tengen game
         this.automaticSteering = new RuleBasedPacSteering();
@@ -191,7 +187,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     public void prepareNewGame() {
         lifeCountProperty().set(initialLifeCount());
         levelProperty().set(null);
-        clearLevelCounter();
+        levelCounter.clear();
         setPlaying(false);
         boosterActive = false;
         gateKeeper.reset();
@@ -217,6 +213,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
 
     @Override
     public WorldMapSelector mapSelector() { return mapSelector; }
+
+    @Override
+    public TengenMsPacMan_LevelCounter levelCounter() {
+        return levelCounter;
+    }
 
     public void setPacBooster(PacBooster mode) {
         pacBooster = mode;
@@ -336,7 +337,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
             Logger.info("Demo level {} started", level.number());
         } else {
             showLevelMessage(GameLevelMessageType.READY);
-            updateLevelCounter(level.number(), level.bonusSymbol(0));
+            levelCounter.update(level.number(), level.bonusSymbol(0));
             score().setEnabled(true);
             updateCheatingProperties(level);
             Logger.info("Level {} started", level.number());
@@ -476,7 +477,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
         level.setBonusSymbol(1, computeBonusSymbol(level.number()));
 
-        setLevelCounterEnabled(levelNumber < 8);
+        levelCounter.setEnabled(levelNumber < 8);
 
         return level;
     }
@@ -885,47 +886,4 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         speed += ghostDifficultySpeedDelta(difficulty());
         return 0.4f * speed; //TODO check with @RussianMan or disassembly
     }
-
-    // LevelCounter
-
-    private final BooleanProperty levelCounterEnabled = new SimpleBooleanProperty(true);
-    private final List<Byte> levelCounterSymbols = new ArrayList<>();
-
-    public BooleanProperty levelCounterEnabledProperty() {
-        return levelCounterEnabled;
-    }
-
-    @Override
-    public List<Byte> levelCounterSymbols() {
-        return Collections.unmodifiableList(levelCounterSymbols);
-    }
-
-    @Override
-    public void clearLevelCounter() {
-        levelCounterSymbols.clear();
-    }
-
-    @Override
-    public void updateLevelCounter(int levelNumber, byte symbol) {
-        if (levelNumber == 1) {
-            clearLevelCounter();
-        }
-        if (isLevelCounterEnabled()) {
-            levelCounterSymbols.add(symbol);
-            if (levelCounterSymbols.size() > LEVEL_COUNTER_MAX_SIZE) {
-                levelCounterSymbols.removeFirst();
-            }
-        }
-    }
-
-    @Override
-    public void setLevelCounterEnabled(boolean enabled) {
-        levelCounterEnabledProperty().set(enabled);
-    }
-
-    @Override
-    public boolean isLevelCounterEnabled() {
-        return levelCounterEnabledProperty().get();
-    }
-
 }

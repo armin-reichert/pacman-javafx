@@ -41,7 +41,7 @@ import java.util.Optional;
  *   <li>tracking score, lives, and HUD information</li>
  * </ul>
  */
-public interface Game extends LevelCounter {
+public interface Game {
 
     /* -----------------------------------------------------------
      *  State machine
@@ -102,6 +102,13 @@ public interface Game extends LevelCounter {
     /* -----------------------------------------------------------
      *  Scoring
      * ----------------------------------------------------------- */
+
+    /**
+     * Returns the counter for the game levels that have been completed including the currently played level.
+     *
+     * @return the level counter
+     */
+    LevelCounter levelCounter();
 
     /**
      * Returns the score of the currently running game.

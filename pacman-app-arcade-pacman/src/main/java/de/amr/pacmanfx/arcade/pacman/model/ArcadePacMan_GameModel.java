@@ -14,13 +14,9 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
@@ -45,7 +41,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
-public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCounter {
+public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     public static Blinky createBlinky() {
         return new Blinky();
@@ -67,8 +63,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
         return new PacMan();
     }
 
-    protected static final int MAX_LEVEL_COUNTER_SYMBOLS = 7;
-
     protected static final List<Vector2b> DEMO_LEVEL_ROUTE = List.of(
         vector2b(9, 26), vector2b(9, 29), vector2b(12,29), vector2b(12, 32), vector2b(26,32),
         vector2b(26,29), vector2b(24,29), vector2b(24,26), vector2b(26,26),  vector2b(26,23),
@@ -89,6 +83,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
 
     protected static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
 
+    protected LevelCounter levelCounter;
     protected final WorldMapSelector mapSelector;
 
     public ArcadePacMan_GameModel(CoinMechanism coinMechanism, File highScoreFile) {
@@ -104,6 +99,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
         super(coinMechanism, highScoreFile);
 
         this.mapSelector = requireNonNull(mapSelector);
+        this.levelCounter = new ArcadePacMan_LevelCounter();
 
         this.gateKeeper = new GateKeeper();
         this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
@@ -123,6 +119,11 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
     public LevelData levelData(int levelNumber) {
         final int row = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
         return LEVEL_DATA[row];
+    }
+
+    @Override
+    public LevelCounter levelCounter() {
+        return levelCounter;
     }
 
     @Override
@@ -204,7 +205,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
         level.setBonusSymbol(0, symbol);
         level.setBonusSymbol(1, symbol);
 
-        setLevelCounterEnabled(true);
+        levelCounter.setEnabled(true);
 
         return level;
     }
@@ -273,43 +274,5 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
             case 13 -> 7;     // key
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
-    }
-
-    // LevelCounter
-
-    private final BooleanProperty levelCounterEnabled = new SimpleBooleanProperty(true);
-    private final List<Byte> levelCounterSymbols = new ArrayList<>();
-
-    @Override
-    public void clearLevelCounter() {
-        levelCounterSymbols.clear();
-    }
-
-    @Override
-    public void updateLevelCounter(int levelNumber, byte symbol) {
-        if (levelNumber == 1) {
-            levelCounterSymbols.clear();
-        }
-        if (isLevelCounterEnabled()) {
-            levelCounterSymbols.add(symbol);
-            if (levelCounterSymbols.size() > MAX_LEVEL_COUNTER_SYMBOLS) {
-                levelCounterSymbols.removeFirst();
-            }
-        }
-    }
-
-    @Override
-    public void setLevelCounterEnabled(boolean enabled) {
-        levelCounterEnabled.set(enabled);
-    }
-
-    @Override
-    public boolean isLevelCounterEnabled() {
-        return levelCounterEnabled.get();
-    }
-
-    @Override
-    public List<Byte> levelCounterSymbols() {
-        return Collections.unmodifiableList(levelCounterSymbols);
     }
 }

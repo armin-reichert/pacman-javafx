@@ -86,6 +86,6 @@ public class LevelShortTestState extends AbstractState<Game> implements TestStat
     public void onExit(Game game) {
         coinMechanism.setNumCoins(0);
         game.boot();
-        game.clearLevelCounter();
+        game.levelCounter().clear();
     }
 }
