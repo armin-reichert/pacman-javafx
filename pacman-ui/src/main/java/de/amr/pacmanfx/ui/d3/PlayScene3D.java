@@ -42,7 +42,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.model.GameControl.CommonGameState.*;
+import static de.amr.pacmanfx.model.GameControl.CommonGameState.LEVEL_TRANSITION;
+import static de.amr.pacmanfx.model.GameControl.CommonGameState.STARTING_GAME_OR_LEVEL;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_DRAW_MODE;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
@@ -100,7 +101,6 @@ public class PlayScene3D implements GameScene {
     protected Scores3D scores3D;
     protected PlaySceneContextMenu contextMenu;
     protected GamePlaySoundEffects soundEffects;
-    protected PlaySceneFadeInAnimation fadeInAnimation;
 
     private final ChangeListener<DrawMode> drawModeChangeListener = (_, _, drawMode) -> {
         if (gameLevel3D != null) {
@@ -129,11 +129,6 @@ public class PlayScene3D implements GameScene {
         return subScene;
     }
 
-    /**
-     * Returns the current 3D level representation, if present.
-     *
-     * @return optional containing the 3D level or empty if not yet created
-     */
     public Optional<GameLevel3D> optGameLevel3D() {
         return Optional.ofNullable(gameLevel3D);
     }
@@ -144,6 +139,14 @@ public class PlayScene3D implements GameScene {
 
     public Optional<Scores3D> optScores3D() {
         return Optional.ofNullable(scores3D);
+    }
+
+    public GamePlaySoundEffects soundEffects() {
+        return soundEffects;
+    }
+
+    public void fadeIn() {
+        new PlaySceneFadeInAnimation(FADE_IN_DURATION, this).play();
     }
 
     @Override
@@ -334,8 +337,7 @@ public class PlayScene3D implements GameScene {
         }
         gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().entityConfig().levelCounter());
         replaceActionBindings(gameLevel);
-        fadeInAnimation = new PlaySceneFadeInAnimation(FADE_IN_DURATION, this);
-        fadeInAnimation.play();
+        fadeIn();
     }
 
     @Override
@@ -356,33 +358,6 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
         level3D_EventHandler.onSpecialScoreReached(e, gameLevel3D);
-    }
-
-    @Override
-    public void onSwitch_2D_3D(GameScene scene2D) {
-        optGameLevel().ifPresent(level -> {
-            if (gameLevel3D == null) {
-                replaceGameLevel3D(level);
-            }
-            initFood3D(level.worldMap().foodLayer(), level.game().control().state().nameMatches(HUNTING.name(), EATING_GHOST.name()));
-
-            initPac3D(gameLevel3D.pac3D(), level);
-
-            gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
-            gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().entityConfig().levelCounter());
-
-            updateHUD3D(level);
-            replaceActionBindings(level);
-
-            if (level.game().control().state().nameMatches(HUNTING.name())) {
-                if (level.pac().powerTimer().isRunning()) {
-                    soundEffects.playPacPowerSound();
-                }
-            }
-
-            fadeInAnimation = new PlaySceneFadeInAnimation(FADE_IN_DURATION, this);
-            fadeInAnimation.play();
-        });
     }
 
     @Override
@@ -437,7 +412,7 @@ public class PlayScene3D implements GameScene {
      *
      * @param level the new game level
      */
-    protected void replaceActionBindings(GameLevel level) {
+    public void replaceActionBindings(GameLevel level) {
         // No-op — override in subclasses if variant needs different bindings
     }
 
@@ -446,7 +421,7 @@ public class PlayScene3D implements GameScene {
      *
      * @param level current game level
      */
-    protected void updateHUD3D(GameLevel level) {
+    public void updateHUD3D(GameLevel level) {
         final Score score = level.game().score(), highScore = level.game().highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
@@ -463,12 +438,12 @@ public class PlayScene3D implements GameScene {
     // Private helpers
     // ────────────────────────────────────────────────────────────────────────────
 
-    private void initPac3D(PacRepresentation3D pac3D, GameLevel level) {
+    public void initPac3D(PacRepresentation3D pac3D, GameLevel level) {
         pac3D.init(level);
         pac3D.update(level);
     }
 
-    private void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
+    public void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
         final MazeFood3D food3D = gameLevel3D.maze3D().food();
         food3D.pellets3D()   .forEach(p3D -> p3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(p3D.tile())));
         food3D.energizers3D().forEach(e3D -> e3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(e3D.tile())));
@@ -499,7 +474,7 @@ public class PlayScene3D implements GameScene {
         scores3D.setVisible(false);
     }
 
-    private void replaceGameLevel3D(GameLevel level) {
+    public void replaceGameLevel3D(GameLevel level) {
         if (gameLevel3D != null) {
             Logger.info("Replacing game level 3D...");
             gameLevel3D.dispose();

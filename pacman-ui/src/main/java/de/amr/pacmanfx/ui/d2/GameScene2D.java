@@ -7,6 +7,7 @@ import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.UnspecifiedChangeEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
@@ -103,6 +104,10 @@ public abstract class GameScene2D implements GameScene {
      * @param game the active game instance
      */
     protected abstract void doEnd(Game game);
+
+    public void acceptGameLevel(GameLevel gameLevel) {
+        // implemented by PlayScene2D
+    }
 
     @Override
     public ActionBindingsManager actionBindings() {

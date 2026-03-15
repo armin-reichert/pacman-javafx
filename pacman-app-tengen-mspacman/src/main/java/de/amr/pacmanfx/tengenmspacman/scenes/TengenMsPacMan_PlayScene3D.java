@@ -86,7 +86,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     @Override
-    protected void replaceActionBindings(GameLevel level) {
+    public void replaceActionBindings(GameLevel level) {
         actionBindings = new ActionBindingsManagerImpl();
         if (level.isDemoLevel()) {
             // In demo level, allow going back to options screen
@@ -102,7 +102,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     @Override
-    protected void updateHUD3D(GameLevel level) {
+    public void updateHUD3D(GameLevel level) {
         final Score score = level.game().score(), highScore = level.game().highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());

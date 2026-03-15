@@ -81,20 +81,6 @@ public interface GameScene extends GameEventListener, Disposable {
     }
 
     /**
-     * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.
-     *
-     * @param scene2D 2D scene that was displayed before this scene
-     */
-    default void onSwitch_2D_3D(GameScene scene2D) {}
-
-    /**
-     * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.
-     *
-     * @param scene3D 3D scene that was displayed before this scene
-     */
-    default void onSwitch_3D_2D(GameScene scene3D) {}
-
-    /**
      * @param game the current game
      * @return context menu provided by this game scene which is merged into the view's context menu
      */

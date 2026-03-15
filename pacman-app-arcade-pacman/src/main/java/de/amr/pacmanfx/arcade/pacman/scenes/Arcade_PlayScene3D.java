@@ -17,7 +17,7 @@ public class Arcade_PlayScene3D extends PlayScene3D {
     }
 
     @Override
-    protected void replaceActionBindings(GameLevel level) {
+    public void replaceActionBindings(GameLevel level) {
         actionBindings = new ActionBindingsManagerImpl();
         if (level.isDemoLevel()) {
             actionBindings.registerAllFrom(ArcadePacMan_UIConfig.GAME_START_BINDINGS);

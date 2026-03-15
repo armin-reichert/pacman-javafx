@@ -14,7 +14,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
@@ -188,12 +187,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
         soundEffects.playExtraLifeSound();
     }
 
-    @Override
-    public void onSwitch_3D_2D(GameScene scene3D) {
-        gameContext().currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
-        Logger.info("2D scene {} entered from 3D scene {}", getClass().getSimpleName(), scene3D.getClass().getSimpleName());
-    }
-
     // private
 
     private void setAutopilot(Game game, boolean usingAutopilot) {
@@ -217,7 +210,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
      * scene is not called, so we have to accept the game level again when switching from the 3D scene to this one.
      * @param level game level
      */
-    private void acceptGameLevel(GameLevel level) {
+    public void acceptGameLevel(GameLevel level) {
         final Game game = level.game();
         final boolean demoLevel = level.isDemoLevel();
         if (demoLevel) {

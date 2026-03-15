@@ -16,6 +16,7 @@ import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
@@ -274,13 +275,17 @@ public class PlayView extends StackPane implements View {
         intendedGameScene.init(game);
         Logger.info("Game scene initialized: {}", intendedGameScene.getClass().getSimpleName());
 
-        // Handle switching between 2D and 3D scene variant (play scene)
-        final byte sceneSwitchType = identifySceneSwitchType(currentGameScene, intendedGameScene);
-        switch (sceneSwitchType) {
-            case 23 -> intendedGameScene.onSwitch_2D_3D(currentGameScene);
-            case 32 -> intendedGameScene.onSwitch_3D_2D(currentGameScene);
-            case  0 -> {}
-            default -> throw new IllegalArgumentException("Illegal scene switch type: " + sceneSwitchType);
+        if (currentGameScene != null && ui.gameContext().currentGame().optGameLevel().isPresent()) {
+            // Handle switching between 2D and 3D scene variant (play scene)
+            final byte sceneSwitchType = identifySceneSwitchType(currentGameScene, intendedGameScene);
+            ui.gameContext().clock().stop();
+            switch (sceneSwitchType) {
+                case 23 -> PlaySceneSwitcher.switchTo3D(ui, (GameScene2D) currentGameScene, (PlayScene3D) intendedGameScene);
+                case 32 -> PlaySceneSwitcher.switchTo2D(ui, (PlayScene3D) currentGameScene, (GameScene2D) intendedGameScene);
+                case  0 -> {}
+                default -> throw new IllegalArgumentException("Illegal scene switch type: " + sceneSwitchType);
+            }
+            ui.gameContext().clock().start();
         }
 
         currentGameSceneProperty().set(intendedGameScene);

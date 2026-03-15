@@ -14,7 +14,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.tengenmspacman.model.*;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
@@ -297,18 +296,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onSwitch_3D_2D(GameScene scene3D) {
-        // Switch might occur just during the few ticks when level is not yet available!
-        gameContext().currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
-        dynamicCamera.enterTrackingMode();
-        Logger.info("2D scene {} entered from 3D scene {}", getClass().getSimpleName(), scene3D.getClass().getSimpleName());
-    }
-
-    // private
-
-    private void acceptGameLevel(GameLevel level) {
+    public void acceptGameLevel(GameLevel level) {
         level.game().hud().levelCounter(true).livesCounter(true).show();
 
+        dynamicCamera.enterTrackingMode();
         dynamicCamera.updateRange(level.worldMap());
 
         // Action keyboard bindings
@@ -325,6 +316,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         JOYPAD.setBindings(actionBindings);
         actionBindings.addAll(GameUI.KEYBOARD);
     }
+
+    // private
 
     private void updateScaling() {
         SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();

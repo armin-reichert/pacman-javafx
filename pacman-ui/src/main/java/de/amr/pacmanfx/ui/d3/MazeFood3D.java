@@ -127,8 +127,9 @@ public class MazeFood3D implements Disposable {
             .filter(e3D -> tile.equals(e3D.tile()))
             .findFirst().orElse(null);
         if (energizer3D != null) {
+            energizer3D.stopPumping();
+            energizer3D.hide();
             createEnergizerExplosion(energizer3D);
-            energizer3D.onEaten();
         } else {
             pellets3D().stream()
                 .filter(pellet3D -> tile.equals(pellet3D.tile()))

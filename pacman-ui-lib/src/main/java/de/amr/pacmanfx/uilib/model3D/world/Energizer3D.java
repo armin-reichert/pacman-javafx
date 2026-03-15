@@ -154,9 +154,4 @@ public class Energizer3D implements DisposableGraphicsObject {
             pumpingAnimation.stop();
         }
     }
-
-    public void onEaten() {
-        stopPumping();
-        hide();
-    }
 }
