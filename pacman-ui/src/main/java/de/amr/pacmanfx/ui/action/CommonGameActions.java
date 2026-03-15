@@ -313,10 +313,17 @@ public final class CommonGameActions {
         @Override
         public boolean isEnabled(GameUI ui) {
             final State<?> state = ui.gameContext().currentGameState();
-            if (state.nameMatches(LevelShortTestState.class.getSimpleName(), LevelMediumTestState.class.getSimpleName())) {
+            if (state.nameMatches(
+                LevelShortTestState.class.getSimpleName(),
+                LevelMediumTestState.class.getSimpleName())) {
                 return true;
             }
-            return state.nameMatches(CommonGameState.BOOT.name(), CommonGameState.INTRO.name(), CommonGameState.SETTING_OPTIONS_FOR_START.name(), CommonGameState.HUNTING.name());
+            return state.nameMatches(
+                CommonGameState.BOOT.name(),
+                CommonGameState.INTRO.name(),
+                CommonGameState.SETTING_OPTIONS_FOR_START.name(),
+                CommonGameState.HUNTING.name()
+            );
         }
     };
 }
