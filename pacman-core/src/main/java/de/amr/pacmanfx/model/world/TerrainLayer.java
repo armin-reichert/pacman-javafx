@@ -19,7 +19,7 @@ import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class TerrainLayer extends WorldMapLayer {
+public final class TerrainLayer extends WorldMapLayer {
 
     private static Vector2f halfTileRightOf(Vector2i tile) { return Vector2f.of(tile.x() * TS + HTS, tile.y() * TS); }
 
@@ -33,7 +33,7 @@ public class TerrainLayer extends WorldMapLayer {
         super(numRows, numCols);
     }
 
-    public TerrainLayer(WorldMapLayer layer) {
+    public TerrainLayer(TerrainLayer layer) {
         super(layer);
         hPortals = findHorizontalPortals();
         Vector2i pacTile = getTileProperty(POS_PAC);
@@ -47,6 +47,11 @@ public class TerrainLayer extends WorldMapLayer {
         scatterTiles[PINK_GHOST_SPEEDY]  = getTilePropertyOrDefault(POS_SCATTER_PINK_GHOST,   Vector2i.of(0, 3));
         scatterTiles[CYAN_GHOST_BASHFUL] = getTilePropertyOrDefault(POS_SCATTER_CYAN_GHOST,   Vector2i.of(numRows() - emptyRowsBelowMaze(), numCols() - 1));
         scatterTiles[ORANGE_GHOST_POKEY] = getTilePropertyOrDefault(POS_SCATTER_ORANGE_GHOST, Vector2i.of(numRows() - emptyRowsBelowMaze(), 0));
+
+        this.house = layer.house; // TODO make copy
+        if (layer.obstacles != null) {
+            this.obstacles = Set.copyOf(layer.obstacles);
+        }
     }
 
     public Vector2f pacStartPosition() {

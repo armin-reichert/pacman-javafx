@@ -82,8 +82,10 @@ public class WorldMap {
                 Logger.error("Line skipped: '{}'", line);
             }
         }
-        worldMap.terrainLayer = new TerrainLayer(parseLayer(terrainLayerRows, validTerrainValueTest));
-        worldMap.foodLayer = new FoodLayer(parseLayer(foodLayerRows, validFoodValueTest));
+        worldMap.terrainLayer = new TerrainLayer(parseLayer(LayerType.TERRAIN, terrainLayerRows, validTerrainValueTest));
+        worldMap.terrainLayer.buildObstacleList();
+
+        worldMap.foodLayer = new FoodLayer(parseLayer(LayerType.FOOD, foodLayerRows, validFoodValueTest));
 
         if (worldMap.terrainLayer.numRows() != worldMap.foodLayer.numRows()) {
             throw new WorldMapParseException("Terrain layer has %d rows but food layer has %d rows"
@@ -100,7 +102,10 @@ public class WorldMap {
         return worldMap;
     }
 
-    private static WorldMapLayer parseLayer(List<String> lines, Predicate<Byte> valueAllowed) throws WorldMapParseException {
+    public enum LayerType { TERRAIN, FOOD }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends WorldMapLayer> T parseLayer(LayerType type, List<String> lines, Predicate<Byte> valueAllowed) throws WorldMapParseException {
         // First pass: read property section and determine data section size
         int numDataRows = 0, numDataCols = -1;
         int dataStartIndex = -1;
@@ -129,8 +134,11 @@ public class WorldMap {
         }
 
         // Second pass: read data and build new tile map
-        var tileMap = new WorldMapLayer(numDataRows, numDataCols);
-        tileMap.propertyMap().putAll(parseProperties(propertySection.toString()));
+        var mapLayer = switch (type) {
+            case FOOD -> new FoodLayer(numDataRows, numDataCols);
+            case TERRAIN -> new TerrainLayer(numDataRows, numDataCols);
+        };
+        mapLayer.propertyMap().putAll(parseProperties(propertySection.toString()));
 
         for (int lineIndex = dataStartIndex; lineIndex < lines.size(); ++lineIndex) {
             String line = lines.get(lineIndex);
@@ -141,9 +149,9 @@ public class WorldMap {
                 try {
                     byte value = Byte.decode(entry);
                     if (valueAllowed.test(value)) {
-                        tileMap.setContent(row, col, value);
+                        mapLayer.setContent(row, col, value);
                     } else {
-                        tileMap.setContent(row, col, (byte) 0);
+                        mapLayer.setContent(row, col, (byte) 0);
                         Logger.error("Invalid tile map value {} at row {}, col {}", value, row, col);
                     }
                 } catch (NumberFormatException x) {
@@ -151,7 +159,7 @@ public class WorldMap {
                 }
             }
         }
-        return tileMap;
+        return (T) mapLayer;
     }
 
     private static Map<String, String> parseProperties(String text) {

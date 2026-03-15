@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-public class WorldMapLayer {
+public sealed class WorldMapLayer permits FoodLayer, TerrainLayer {
 
     private int emptyRowsOverMaze = 3;
     private int emptyRowsBelowMaze = 2;

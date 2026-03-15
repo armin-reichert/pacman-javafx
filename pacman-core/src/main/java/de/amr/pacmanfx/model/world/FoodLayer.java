@@ -15,7 +15,7 @@ import static de.amr.pacmanfx.model.world.FoodTile.ENERGIZER;
 import static de.amr.pacmanfx.model.world.FoodTile.PELLET;
 import static java.util.function.Predicate.not;
 
-public class FoodLayer extends WorldMapLayer {
+public final class FoodLayer extends WorldMapLayer {
 
     // instead of Set<Vector2i> we use a bit-set indexed by top-down-left-to-right tile index
     private final BitSet eatenFoodBits;
