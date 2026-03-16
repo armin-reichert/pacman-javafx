@@ -327,8 +327,8 @@ public class PlayView extends StackPane implements View {
 
     private void configurePropertyBindings() {
         pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> ui.gameContext().clock().isPaused(),
-            ui.gameContext().clock().pausedProperty())
+            () -> ui.gameContext().clock().getUpdatesDisabled(),
+            ui.gameContext().clock().updatesDisabledProperty())
         );
 
         GameUI.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smooth) ->

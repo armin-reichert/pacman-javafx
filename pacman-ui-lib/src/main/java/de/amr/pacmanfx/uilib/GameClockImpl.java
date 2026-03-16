@@ -42,7 +42,7 @@ public class GameClockImpl implements GameClock {
      * {@link Timeline}. If the clock was running, it is stopped and restarted
      * with the new timing.
      */
-    private final IntegerProperty targetFrameRate = new SimpleIntegerProperty(DEFAULT_TARGET_FRAME_RATE) {
+    private final IntegerProperty targetFrameRate = new SimpleIntegerProperty(DEFAULT_FRAME_RATE) {
         @Override
         protected void invalidated() {
             final boolean wasRunning = isRunning();
@@ -56,8 +56,8 @@ public class GameClockImpl implements GameClock {
         }
     };
 
-    /** Indicates whether the clock is currently paused. */
-    private final BooleanProperty paused = new SimpleBooleanProperty(false);
+    /** Indicates whether the clock currently processes the "update" action. */
+    private final BooleanProperty updatesDisabled = new SimpleBooleanProperty(false);
 
     /**
      * Enables or disables time‑measurement logging. When enabled, each action
@@ -68,13 +68,13 @@ public class GameClockImpl implements GameClock {
     /** The JavaFX timeline that drives periodic tick execution. */
     private final Timeline clockwork = new Timeline();
 
-    /** Action executed only when the clock is not paused. */
-    private Runnable pausableAction = () -> {};
+    /** Action executed only when the clock allows updates. */
+    private Runnable updateAction = () -> {};
 
     /** Action executed on every tick, regardless of pause state. */
     private Runnable permanentAction = () -> {};
 
-    private long pausableUpdatesCount;
+    private long updateActionCount;
     private long tickCount;
 
     private long fps;
@@ -100,8 +100,8 @@ public class GameClockImpl implements GameClock {
     }
 
     @Override
-    public void setPausableAction(Runnable action) {
-        this.pausableAction = requireNonNull(action);
+    public void setUpdateAction(Runnable action) {
+        this.updateAction = requireNonNull(action);
     }
 
     @Override
@@ -125,22 +125,22 @@ public class GameClockImpl implements GameClock {
     }
 
     @Override
-    public BooleanProperty pausedProperty() { return paused; }
+    public BooleanProperty updatesDisabledProperty() { return updatesDisabled; }
 
     @Override
-    public void setPaused(boolean b) {
-        paused.set(b);
+    public void setUpdatesDisabled(boolean b) {
+        updatesDisabled.set(b);
     }
 
     @Override
-    public boolean isPaused() { return paused.get(); }
+    public boolean getUpdatesDisabled() { return updatesDisabled.get(); }
 
     @Override
     public BooleanProperty timeMeasuredProperty() { return timeMeasured; }
 
     @Override
     public void start() {
-        setPaused(false);
+        setUpdatesDisabled(false);
         clockwork.play();
     }
 
@@ -164,7 +164,7 @@ public class GameClockImpl implements GameClock {
 
     @Override
     public long pausableUpdatesCount() {
-        return pausableUpdatesCount;
+        return updateActionCount;
     }
 
     @Override
@@ -180,8 +180,8 @@ public class GameClockImpl implements GameClock {
     public boolean makeOneStep(boolean pausableActionIncluded) {
         try {
             if (pausableActionIncluded) {
-                execute(pausableAction, "Pausable action took {} milliseconds");
-                pausableUpdatesCount++;
+                execute(updateAction, "Pausable action took {} milliseconds");
+                updateActionCount++;
             }
             execute(permanentAction, "Permanent action took {} milliseconds");
             computeFPS();
@@ -214,7 +214,7 @@ public class GameClockImpl implements GameClock {
      */
     private void createClockwork(double frameRate) {
         final var period = Duration.seconds(1.0 / frameRate);
-        clockwork.getKeyFrames().setAll(new KeyFrame(period, _ -> makeOneStep(!isPaused())));
+        clockwork.getKeyFrames().setAll(new KeyFrame(period, _ -> makeOneStep(!getUpdatesDisabled())));
         clockwork.setCycleCount(Animation.INDEFINITE);
         ticksInFrame = 0;
         countTicksStartTime = System.nanoTime();

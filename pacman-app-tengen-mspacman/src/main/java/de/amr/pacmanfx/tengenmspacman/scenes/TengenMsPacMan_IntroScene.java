@@ -86,7 +86,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void update(Game game) {
-        if (!gameContext().clock().isPaused()) {
+        if (!gameContext().clock().getUpdatesDisabled()) {
             controller.update();
         }
     }

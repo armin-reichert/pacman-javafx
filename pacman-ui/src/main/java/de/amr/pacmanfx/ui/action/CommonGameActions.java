@@ -174,7 +174,7 @@ public final class CommonGameActions {
         }
 
         @Override
-        public boolean isEnabled(GameUI ui) { return ui.gameContext().clock().isPaused(); }
+        public boolean isEnabled(GameUI ui) { return ui.gameContext().clock().getUpdatesDisabled(); }
     };
 
     public static final GameAction ACTION_SIMULATION_TEN_STEPS = new GameAction("SIMULATION_TEN_STEPS") {
@@ -187,7 +187,7 @@ public final class CommonGameActions {
         }
 
         @Override
-        public boolean isEnabled(GameUI ui) { return ui.gameContext().clock().isPaused(); }
+        public boolean isEnabled(GameUI ui) { return ui.gameContext().clock().getUpdatesDisabled(); }
      };
 
     public static final GameAction ACTION_SIMULATION_RESET = new GameAction("SIMULATION_RESET") {
@@ -277,11 +277,11 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_PAUSED = new GameAction("TOGGLE_PAUSED") {
         @Override
         public void execute(GameUI ui) {
-            toggleBoolean(ui.gameContext().clock().pausedProperty());
-            if (ui.gameContext().clock().isPaused()) {
+            toggleBoolean(ui.gameContext().clock().updatesDisabledProperty());
+            if (ui.gameContext().clock().getUpdatesDisabled()) {
                 ui.soundManager().stopAll();
             }
-            Logger.info("Game ({}) {}", ui.gameContext().gameVariantName(), ui.gameContext().clock().isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", ui.gameContext().gameVariantName(), ui.gameContext().clock().getUpdatesDisabled() ? "paused" : "resumed");
         }
 
         @Override

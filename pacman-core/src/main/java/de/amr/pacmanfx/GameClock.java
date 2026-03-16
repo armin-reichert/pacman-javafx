@@ -29,7 +29,7 @@ public interface GameClock {
     /**
      * Default target frame rate in frames per second.
      */
-    int DEFAULT_TARGET_FRAME_RATE = 60;
+    int DEFAULT_FRAME_RATE = 60;
 
     /**
      * Installs an error handler that is invoked when either the permanent or
@@ -47,9 +47,9 @@ public interface GameClock {
      * <p>
      * This action typically contains the simulation update logic.
      *
-     * @param action the pausable action to run on each tick
+     * @param action the action to run on each tick as long as updates are enabled
      */
-    void setPausableAction(Runnable action);
+    void setUpdateAction(Runnable action);
 
     /**
      * Sets the action that is executed on every tick, regardless of pause state.
@@ -89,21 +89,21 @@ public interface GameClock {
      *
      * @return the paused property
      */
-    BooleanProperty pausedProperty();
+    BooleanProperty updatesDisabledProperty();
 
     /**
      * Sets whether the clock is paused.
      *
      * @param b {@code true} to pause the clock, {@code false} to unpause
      */
-    void setPaused(boolean b);
+    void setUpdatesDisabled(boolean b);
 
     /**
      * Returns whether the clock is currently paused.
      *
      * @return {@code true} if paused
      */
-    boolean isPaused();
+    boolean getUpdatesDisabled();
 
     /**
      * Returns the property controlling whether time‑measurement logging is enabled.

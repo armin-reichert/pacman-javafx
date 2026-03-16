@@ -46,8 +46,8 @@ public class DashboardSectionGeneral extends DashboardSection {
         Button btnPlayPause = buttonsSimulationControl[0];
         btnPlayPause.setText(null);
         btnPlayPause.setStyle("-fx-background-color: transparent");
-        btnPlayPause.graphicProperty().bind(ui.gameContext().clock().pausedProperty().map(paused -> paused ? iconPlay : iconStop));
-        btnPlayPause.tooltipProperty().bind(ui.gameContext().clock().pausedProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
+        btnPlayPause.graphicProperty().bind(ui.gameContext().clock().updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
+        btnPlayPause.tooltipProperty().bind(ui.gameContext().clock().updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
         setAction(ui, btnPlayPause, CommonGameActions.ACTION_TOGGLE_PAUSED);
 
         Button btnStep = buttonsSimulationControl[1];
@@ -55,7 +55,7 @@ public class DashboardSectionGeneral extends DashboardSection {
         btnStep.setStyle("-fx-background-color: transparent");
         btnStep.setText(null);
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
-        btnStep.disableProperty().bind(ui.gameContext().clock().pausedProperty().not());
+        btnStep.disableProperty().bind(ui.gameContext().clock().updatesDisabledProperty().not());
         setAction(btnStep, () -> ui.gameContext().clock().makeSteps(PROPERTY_SIMULATION_STEPS.get(), true));
 
         addIntSpinner("Num Steps", 1, 50, PROPERTY_SIMULATION_STEPS);

@@ -94,7 +94,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     private void initGameClock() {
         final GameClock clock = requireNonNull(gameContext.clock(), "Game clock has not been set in game context?");
-        clock.setPausableAction(() -> {
+        clock.setUpdateAction(() -> {
             final Game game = gameContext.game();
             simulate(game);
             optGameScene().ifPresent(gameScene -> gameScene.update(game));
@@ -120,7 +120,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
             () -> {
                 final boolean debug  = PROPERTY_DEBUG_INFO_VISIBLE.get();
                 final boolean is3D   = PROPERTY_3D_ENABLED.get();
-                final boolean paused = gameContext.clock().isPaused();
+                final boolean paused = gameContext.clock().getUpdatesDisabled();
                 final GameScene gameScene = optGameScene().orElse(null);
                 return computeStageTitle(viewManager.currentView(), gameScene, debug, is3D, paused);
             },
@@ -129,7 +129,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
             viewManager.getPlayView().currentGameSceneProperty(),
             PROPERTY_DEBUG_INFO_VISIBLE,
             PROPERTY_3D_ENABLED,
-            gameContext.clock().pausedProperty()
+            gameContext.clock().updatesDisabledProperty()
         );
         stage.titleProperty().bind(titleBinding);
 
@@ -326,7 +326,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public void showEditorView() {
-        if (!gameContext.game().isPlaying() || gameContext.clock().isPaused()) {
+        if (!gameContext.game().isPlaying() || gameContext.clock().getUpdatesDisabled()) {
             stopGame();
             viewManager.selectView(EDITOR_VIEW);
             return;
