@@ -86,27 +86,25 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Creates a new 3D level representation for the given game level.
      *
      * @param uiConfig global UI configuration (provides 3D settings, colors, models)
-     * @param factory3D the factory for creating 3D components based on the configuration
      * @param level    the game level to visualize
      */
-    public GameLevel3D(UIConfig uiConfig, Factory3D factory3D, GameLevel level) {
+    public GameLevel3D(UIConfig uiConfig, GameLevel level) {
         requireNonNull(uiConfig);
-        requireNonNull(factory3D);
         this.level = requireNonNull(level);
 
         final EntityConfig entityConfig = requireNonNull(uiConfig.entityConfig());
 
-        createPac3D(factory3D, entityConfig.pacConfig());
-        createGhosts3D(factory3D, entityConfig.ghostConfigs());
+        createPac3D(uiConfig.factory3D(), entityConfig.pacConfig());
+        createGhosts3D(uiConfig.factory3D(), entityConfig.ghostConfigs());
 
         // These materials are used by the energizer particles
         final List<PhongMaterial> ghostDressMaterials = ghosts3D.stream()
             .map(mutableGhost3D -> mutableGhost3D.ghost3D().normalMaterialSet().dress())
             .toList();
-        createMaze3D(uiConfig, factory3D, ghostDressMaterials);
+        createMaze3D(uiConfig, ghostDressMaterials);
 
         createLevelCounter3D(uiConfig, entityConfig.levelCounter());
-        createLivesCounter3D(uiConfig, factory3D, entityConfig.livesCounter());
+        createLivesCounter3D(uiConfig, entityConfig.livesCounter());
         createMessageManager();
         createAmbientLight();
 
@@ -303,10 +301,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates and initializes the lives counter visualization.
      */
-    private void createLivesCounter3D(UIConfig uiConfig, Factory3D factory3D, LivesCounterConfig3D config) {
+    private void createLivesCounter3D(UIConfig uiConfig, LivesCounterConfig3D config) {
         livesCounterShapes = new Node[config.capacity()];
         for (int i = 0; i < livesCounterShapes.length; ++i) {
-            livesCounterShapes[i] = factory3D.createLivesCounterShape3D(uiConfig.entityConfig());
+            livesCounterShapes[i] = uiConfig.factory3D().createLivesCounterShape3D(uiConfig.entityConfig());
         }
         livesCounter3D = new LivesCounter3D(animationRegistry, livesCounterShapes);
         livesCounter3D.setTranslateX(2 * TS);
@@ -341,7 +339,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates and initializes the maze visualization, including color scheme adjustment.
      */
-    private void createMaze3D(UIConfig uiConfig, Factory3D factory3D, List<PhongMaterial> ghostDressMaterials) {
+    private void createMaze3D(UIConfig uiConfig, List<PhongMaterial> ghostDressMaterials) {
         WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final boolean wallsVeryDark = Color.valueOf(colorScheme.wallFill()).getBrightness() < 0.1;
         if (wallsVeryDark) {
@@ -354,7 +352,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
 
         maze3D = new Maze3D(
-            factory3D,
+            uiConfig.factory3D(),
             uiConfig.entityConfig(),
             colorScheme,
             level,

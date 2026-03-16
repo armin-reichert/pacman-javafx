@@ -33,7 +33,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.ArcadePalette.*;
@@ -112,12 +114,10 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     );
 
     private final AssetMap assets = new AssetMap();
-    private final GameSceneConfig gameSceneConfig;
+    private final ArcadePacMan_Factory3D factory3D = new ArcadePacMan_Factory3D();
+    private final GameSceneConfig gameSceneConfig = new ArcadePacMan_GameSceneConfig();
 
-    public ArcadePacMan_UIConfig() {
-        final var factory3D = new ArcadePacMan_Factory3D();
-        gameSceneConfig = new ArcadePacMan_GameSceneConfig(factory3D);
-    }
+    public ArcadePacMan_UIConfig() {}
 
     @Override
     public Class<?> resourceRootClass() {
@@ -141,6 +141,11 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     @Override
     public AssetMap assets() {
         return assets;
+    }
+
+    @Override
+    public ArcadePacMan_Factory3D factory3D() {
+        return factory3D;
     }
 
     @Override

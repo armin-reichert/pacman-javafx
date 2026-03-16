@@ -23,7 +23,6 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.*;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
@@ -168,11 +167,11 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     }
 
     private final AssetMap assets = new AssetMap();
+    private final TengenMsPacMan_Factory3D factory3D = new TengenMsPacMan_Factory3D();
     private final TengenMsPacMan_GameSceneConfig gameSceneConfig;
 
     public TengenMsPacMan_UIConfig() {
-        final Factory3D factory3D = new TengenMsPacMan_Factory3D();
-        gameSceneConfig = new TengenMsPacMan_GameSceneConfig(factory3D);
+        gameSceneConfig = new TengenMsPacMan_GameSceneConfig();
     }
 
     @Override
@@ -197,6 +196,11 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     @Override
     public AssetMap assets() {
         return assets;
+    }
+
+    @Override
+    public TengenMsPacMan_Factory3D factory3D() {
+        return factory3D;
     }
 
     private void loadAssets() {

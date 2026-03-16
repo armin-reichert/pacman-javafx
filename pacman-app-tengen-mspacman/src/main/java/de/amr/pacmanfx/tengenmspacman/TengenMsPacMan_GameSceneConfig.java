@@ -8,7 +8,6 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameSceneConfig;
-import de.amr.pacmanfx.ui.d3.Factory3D;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -22,11 +21,8 @@ import static java.util.Objects.requireNonNull;
 public class TengenMsPacMan_GameSceneConfig implements GameSceneConfig {
 
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
-    private final Factory3D factory3D;
 
-    public TengenMsPacMan_GameSceneConfig(Factory3D factory3D) {
-        this.factory3D = requireNonNull(factory3D);
-    }
+    public TengenMsPacMan_GameSceneConfig() {}
 
     @Override
     public void dispose() {
@@ -64,7 +60,7 @@ public class TengenMsPacMan_GameSceneConfig implements GameSceneConfig {
             case CommonSceneID.START_SCENE -> new TengenMsPacMan_OptionsScene();
             case TengenMsPacMan_UIConfig.TengenSceneID.HALL_OF_FAME -> new TengenMsPacMan_CreditsScene();
             case CommonSceneID.PLAY_SCENE_2D -> new TengenMsPacMan_PlayScene2D();
-            case CommonSceneID.PLAY_SCENE_3D -> new TengenMsPacMan_PlayScene3D(factory3D);
+            case CommonSceneID.PLAY_SCENE_3D -> new TengenMsPacMan_PlayScene3D();
             case CommonSceneID.CUTSCENE_1 -> new TengenMsPacMan_CutScene1();
             case CommonSceneID.CUTSCENE_2 -> new TengenMsPacMan_CutScene2();
             case CommonSceneID.CUTSCENE_3 -> new TengenMsPacMan_CutScene3();

@@ -33,9 +33,7 @@ import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_FLOOR_COLOR;
  */
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
-    public TengenMsPacMan_PlayScene3D(Factory3D factory3D) {
-        super(factory3D);
-    }
+    public TengenMsPacMan_PlayScene3D() {}
 
     @Override
     protected GameLevel3D createGameLevel3D(GameLevel level) {
@@ -44,7 +42,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         }
 
         // Common stuff
-        final var newLevel3D = new GameLevel3D(ui.currentConfig(), factory3D, level);
+        final var newLevel3D = new GameLevel3D(ui.currentConfig(), level);
         newLevel3D.pac3D().init(level);
         newLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
         newLevel3D.livesCounter3D().startTracking(newLevel3D.pac3D());

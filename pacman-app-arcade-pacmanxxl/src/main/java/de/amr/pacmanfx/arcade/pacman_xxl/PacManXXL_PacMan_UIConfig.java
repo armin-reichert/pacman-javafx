@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -44,12 +43,10 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     private final AssetMap assets = new AssetMap();
-    private final GameSceneConfig gameSceneConfig;
+    private final ArcadePacMan_Factory3D factory3D = new ArcadePacMan_Factory3D();
+    private final GameSceneConfig gameSceneConfig = new PacManXXL_PacMan_GameSceneConfig();
 
-    public PacManXXL_PacMan_UIConfig() {
-        final Factory3D factory3D = new ArcadePacMan_Factory3D();
-        gameSceneConfig = new PacManXXL_PacMan_GameSceneConfig(factory3D);
-    }
+    public PacManXXL_PacMan_UIConfig() {}
 
     @Override
     public void init(GameUI ui) {
@@ -73,6 +70,11 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManager {
     @Override
     public AssetMap assets() {
         return assets;
+    }
+
+    @Override
+    public ArcadePacMan_Factory3D factory3D() {
+        return factory3D;
     }
 
     private void loadAssets() {

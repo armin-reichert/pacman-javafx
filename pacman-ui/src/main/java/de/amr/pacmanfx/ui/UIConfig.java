@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui.config.*;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -153,6 +154,8 @@ public interface UIConfig extends Disposable {
      * @return the asset map for this variant
      */
     AssetMap assets();
+
+    Factory3D factory3D();
 
     /**
      * Returns the scene-configuration object that determines which scene should be

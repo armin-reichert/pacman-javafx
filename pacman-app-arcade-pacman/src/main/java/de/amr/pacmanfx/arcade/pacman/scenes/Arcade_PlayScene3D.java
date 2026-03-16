@@ -7,14 +7,11 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
-import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 
 public class Arcade_PlayScene3D extends PlayScene3D {
 
-    public Arcade_PlayScene3D(Factory3D factory3D) {
-        super(factory3D);
-    }
+    public Arcade_PlayScene3D() {}
 
     @Override
     public void replaceActionBindings(GameLevel level) {

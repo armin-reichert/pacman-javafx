@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameSceneConfig;
-import de.amr.pacmanfx.ui.d3.Factory3D;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -25,11 +24,8 @@ import static java.util.Objects.requireNonNull;
 public class PacManXXL_MsPacMan_GameSceneConfig implements GameSceneConfig {
 
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
-    private final Factory3D factory3D;
 
-    public PacManXXL_MsPacMan_GameSceneConfig(Factory3D factory3D) {
-        this.factory3D = requireNonNull(factory3D);
-    }
+    public PacManXXL_MsPacMan_GameSceneConfig() {}
 
     @Override
     public void dispose() {
@@ -66,7 +62,7 @@ public class PacManXXL_MsPacMan_GameSceneConfig implements GameSceneConfig {
             case CommonSceneID.INTRO_SCENE -> new ArcadeMsPacMan_IntroScene();
             case CommonSceneID.START_SCENE -> new ArcadeMsPacMan_StartScene();
             case CommonSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D();
-            case CommonSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D(factory3D);
+            case CommonSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D();
             case CommonSceneID.CUTSCENE_1 -> new ArcadeMsPacMan_CutScene1();
             case CommonSceneID.CUTSCENE_2 -> new ArcadeMsPacMan_CutScene2();
             case CommonSceneID.CUTSCENE_3 -> new ArcadeMsPacMan_CutScene3();

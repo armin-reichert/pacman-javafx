@@ -92,7 +92,6 @@ public class PlayScene3D implements GameScene {
     protected final PerspectiveManager perspectiveManager;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final SubScene subScene;
-    protected final Factory3D factory3D;
 
     protected GameLevel3DEventHandler level3D_EventHandler = new GameLevel3DEventHandler();
     protected ActionBindingsManager actionBindings = ActionBindingsManager.NO_BINDINGS;
@@ -111,8 +110,7 @@ public class PlayScene3D implements GameScene {
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
-    public PlayScene3D(Factory3D factory3D) {
-        this.factory3D = requireNonNull(factory3D);
+    public PlayScene3D() {
         perspectiveManager = new PerspectiveManager(camera);
         // Initial size is irrelevant (will be bound to parent scene size later)
         subScene = new SubScene(subSceneRoot, 88, 88, true, SceneAntialiasing.BALANCED);
@@ -397,7 +395,7 @@ public class PlayScene3D implements GameScene {
      * @return new 3D level instance
      */
     protected GameLevel3D createGameLevel3D(GameLevel level) {
-        final var newGameLevel3D = new GameLevel3D(ui.currentConfig(), factory3D, level);
+        final var newGameLevel3D = new GameLevel3D(ui.currentConfig(), level);
         newGameLevel3D.pac3D().init(level);
         newGameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
         newGameLevel3D.livesCounter3D().startTracking(newGameLevel3D.pac3D());
