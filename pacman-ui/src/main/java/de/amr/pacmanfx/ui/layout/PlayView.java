@@ -200,7 +200,7 @@ public class PlayView extends StackPane implements View {
 
     @Override
     public void render() {
-        final Game game = ui.gameContext().currentGame();
+        final Game game = ui.gameContext().game();
         optGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(gameScene2D -> {
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D);
@@ -220,7 +220,7 @@ public class PlayView extends StackPane implements View {
 
     @Override
     public void onGameEvent(GameEvent gameEvent) {
-        final Game game = ui.gameContext().currentGame();
+        final Game game = ui.gameContext().game();
         final State<Game> gameState = game.control().state();
         switch (gameEvent) {
             case LevelCreatedEvent levelCreatedEvent -> {
@@ -243,7 +243,7 @@ public class PlayView extends StackPane implements View {
             }
             default -> {}
         }
-        updateGameScene(ui.gameContext().currentGame(), false);
+        updateGameScene(ui.gameContext().game(), false);
 
         optGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
     }
@@ -275,7 +275,7 @@ public class PlayView extends StackPane implements View {
         intendedGameScene.init(game);
         Logger.info("Game scene initialized: {}", intendedGameScene.getClass().getSimpleName());
 
-        if (currentGameScene != null && ui.gameContext().currentGame().optGameLevel().isPresent()) {
+        if (currentGameScene != null && ui.gameContext().game().optGameLevel().isPresent()) {
             // Handle switching between 2D and 3D scene variant (play scene)
             final byte sceneSwitchType = identifySceneSwitchType(currentGameScene, intendedGameScene);
             switch (sceneSwitchType) {
@@ -391,7 +391,7 @@ public class PlayView extends StackPane implements View {
                 contextMenu.addLocalizedTitleItem("scene_display");
                 contextMenu.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
             }
-            gameScene.supplyContextMenu(ui.gameContext().currentGame()).ifPresent(menu -> contextMenu.addAll(menu.itemsCopy()));
+            gameScene.supplyContextMenu(ui.gameContext().game()).ifPresent(menu -> contextMenu.addAll(menu.itemsCopy()));
         });
         contextMenu.requestFocus();
         contextMenu.show(this, event.getScreenX(), event.getScreenY());

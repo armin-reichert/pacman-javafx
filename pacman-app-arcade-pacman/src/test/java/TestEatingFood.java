@@ -35,10 +35,10 @@ public class TestEatingFood {
 
     @BeforeEach
     public void createGameLevel() {
-        gameBox.currentGame().buildNormalLevel(1);
+        gameBox.game().buildNormalLevel(1);
     }
 
-    private ArcadePacMan_GameModel theGame() { return gameBox.currentGame(); }
+    private ArcadePacMan_GameModel theGame() { return gameBox.game(); }
 
     private GameLevel theGameLevel() {
         return theGame().level();

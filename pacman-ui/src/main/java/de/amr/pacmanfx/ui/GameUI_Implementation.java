@@ -95,7 +95,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private void initGameClock() {
         final GameClock clock = requireNonNull(gameContext.clock(), "Game clock has not been set in game context?");
         clock.setPausableAction(() -> {
-            final Game game = gameContext.currentGame();
+            final Game game = gameContext.game();
             simulate(game);
             optGameScene().ifPresent(gameScene -> gameScene.update(game));
         });
@@ -143,7 +143,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         ));
 
         gameContext.gameVariantNameProperty().addListener((_, _, _) -> {
-            final Game game = gameContext.currentGame();
+            final Game game = gameContext.game();
             statusIconBox.iconAutopilot().visibleProperty().bind(game.usingAutopilotProperty());
             statusIconBox.iconCheated()  .visibleProperty().bind(game.cheatUsedProperty());
             statusIconBox.iconImmune()   .visibleProperty().bind(game.immuneProperty());
@@ -285,7 +285,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public void quitCurrentGameScene() {
-        final Game game = gameContext.currentGame();
+        final Game game = gameContext.game();
         //TODO this is game-specific and should not be here
         optGameScene().ifPresent(gameScene -> {
             boolean shouldConsumeCoin = game.control().state().name().equals("STARTING_GAME_OR_LEVEL")
@@ -304,7 +304,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     @Override
     public void restart() {
         stopGame();
-        gameContext.currentGame().control().restartStateWithName(GameControl.CommonGameState.BOOT.name());
+        gameContext.game().control().restartStateWithName(GameControl.CommonGameState.BOOT.name());
         Platform.runLater(gameContext.clock()::start);
     }
 
@@ -326,7 +326,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public void showEditorView() {
-        if (!gameContext.currentGame().isPlaying() || gameContext.clock().isPaused()) {
+        if (!gameContext.game().isPlaying() || gameContext.clock().isPaused()) {
             stopGame();
             viewManager.selectView(EDITOR_VIEW);
             return;
@@ -362,7 +362,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public void stopGame() {
-        optGameScene().ifPresent(gameScene -> gameScene.end(gameContext.currentGame()));
+        optGameScene().ifPresent(gameScene -> gameScene.end(gameContext.game()));
         soundManager.stopAll();
         gameContext.clock().stop();
         gameContext.clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);

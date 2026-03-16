@@ -136,7 +136,7 @@ public class DashboardSection3DSettings extends DashboardSection {
     }
 
     private String sceneSizeInfo(GameUI ui) {
-        final Game game = ui.gameContext().currentGame();
+        final Game game = ui.gameContext().game();
         final GameScene gameScene = ui.optGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
 

@@ -142,8 +142,6 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void update(Game game) {
-        final int tick = (int) gameContext().currentGameState().timer().tickCount();
-
         clapperboard.tick();
 
         pacMan.move();
@@ -160,83 +158,87 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             }
         }
 
-        switch (tick) {
-            case 130 -> {
-                pacMan.setSpeed(SPEED_CHASING);
-                pacMan.playAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
-                pacMan.show();
+        final long tick = game.control().state().timer().tickCount();
+        if (tick <= 775) {
+            final int eventTick = (int) tick;
+            switch (eventTick) {
+                case 130 -> {
+                    pacMan.setSpeed(SPEED_CHASING);
+                    pacMan.playAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
+                    pacMan.show();
 
-                msPacMan.setSpeed(SPEED_CHASING);
-                msPacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
-                msPacMan.show();
-            }
-            case 160 -> {
-                inky.setSpeed(SPEED_CHASING);
-                inky.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
-                inky.show();
+                    msPacMan.setSpeed(SPEED_CHASING);
+                    msPacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
+                    msPacMan.show();
+                }
+                case 160 -> {
+                    inky.setSpeed(SPEED_CHASING);
+                    inky.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
+                    inky.show();
 
-                pinky.setSpeed(SPEED_CHASING);
-                pinky.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
-                pinky.show();
-            }
-            case 400 -> {
-                msPacMan.setPosition(LEFT_BORDER, MIDDLE_LANE);
-                msPacMan.setMoveDir(Direction.RIGHT);
+                    pinky.setSpeed(SPEED_CHASING);
+                    pinky.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
+                    pinky.show();
+                }
+                case 400 -> {
+                    msPacMan.setPosition(LEFT_BORDER, MIDDLE_LANE);
+                    msPacMan.setMoveDir(Direction.RIGHT);
 
-                pacMan.setPosition(RIGHT_BORDER, MIDDLE_LANE);
-                pacMan.setMoveDir(Direction.LEFT);
+                    pacMan.setPosition(RIGHT_BORDER, MIDDLE_LANE);
+                    pacMan.setMoveDir(Direction.LEFT);
 
-                pinky.setPosition(msPacMan.x() - TS * 11, msPacMan.y());
-                pinky.setMoveDir(Direction.RIGHT);
-                pinky.setWishDir(Direction.RIGHT);
+                    pinky.setPosition(msPacMan.x() - TS * 11, msPacMan.y());
+                    pinky.setMoveDir(Direction.RIGHT);
+                    pinky.setWishDir(Direction.RIGHT);
 
-                inky.setPosition(pacMan.x() + TS * 11, pacMan.y());
-                inky.setMoveDir(Direction.LEFT);
-                inky.setWishDir(Direction.LEFT);
-            }
-            case 454 -> {
-                pacMan.setMoveDir(Direction.UP);
-                pacMan.setSpeed(SPEED_RISING);
-                msPacMan.setMoveDir(Direction.UP);
-                msPacMan.setSpeed(SPEED_RISING);
-            }
-            case 498 -> {
-                collided = true;
+                    inky.setPosition(pacMan.x() + TS * 11, pacMan.y());
+                    inky.setMoveDir(Direction.LEFT);
+                    inky.setWishDir(Direction.LEFT);
+                }
+                case 454 -> {
+                    pacMan.setMoveDir(Direction.UP);
+                    pacMan.setSpeed(SPEED_RISING);
+                    msPacMan.setMoveDir(Direction.UP);
+                    msPacMan.setSpeed(SPEED_RISING);
+                }
+                case 498 -> {
+                    collided = true;
 
-                inky.setMoveDir(Direction.RIGHT);
-                inky.setWishDir(Direction.RIGHT);
-                inky.setSpeed(SPEED_AFTER_COLLISION);
-                inky.setVelocity(inky.velocity().minus(0, 2.0f));
-                inky.setAcceleration(0, 0.4f);
+                    inky.setMoveDir(Direction.RIGHT);
+                    inky.setWishDir(Direction.RIGHT);
+                    inky.setSpeed(SPEED_AFTER_COLLISION);
+                    inky.setVelocity(inky.velocity().minus(0, 2.0f));
+                    inky.setAcceleration(0, 0.4f);
 
-                pinky.setMoveDir(Direction.LEFT);
-                pinky.setWishDir(Direction.LEFT);
-                pinky.setSpeed(SPEED_AFTER_COLLISION);
-                pinky.setVelocity(pinky.velocity().minus(0, 2.0f));
-                pinky.setAcceleration(0, 0.4f);
+                    pinky.setMoveDir(Direction.LEFT);
+                    pinky.setWishDir(Direction.LEFT);
+                    pinky.setSpeed(SPEED_AFTER_COLLISION);
+                    pinky.setVelocity(pinky.velocity().minus(0, 2.0f));
+                    pinky.setAcceleration(0, 0.4f);
+                }
+                case 530 -> {
+                    inky.hide();
+                    pinky.hide();
+                    pacMan.setSpeed(0);
+                    pacMan.setMoveDir(Direction.LEFT);
+                    msPacMan.setSpeed(0);
+                    msPacMan.setMoveDir(Direction.RIGHT);
+                }
+                case 545 -> {
+                    pacMan.optAnimationManager().ifPresent(AnimationManager::reset);
+                    msPacMan.optAnimationManager().ifPresent(AnimationManager::reset);
+                }
+                case 560 -> {
+                    heart.setPosition(0.5f * (pacMan.x() + msPacMan.x()), pacMan.y() - TS(2));
+                    heart.show();
+                }
+                case 760 -> {
+                    pacMan.hide();
+                    msPacMan.hide();
+                    heart.hide();
+                }
+                case 775 -> game.control().state().timer().expire();
             }
-            case 530 -> {
-                inky.hide();
-                pinky.hide();
-                pacMan.setSpeed(0);
-                pacMan.setMoveDir(Direction.LEFT);
-                msPacMan.setSpeed(0);
-                msPacMan.setMoveDir(Direction.RIGHT);
-            }
-            case 545 -> {
-                pacMan.optAnimationManager().ifPresent(AnimationManager::reset);
-                msPacMan.optAnimationManager().ifPresent(AnimationManager::reset);
-            }
-            case 560 -> {
-                heart.setPosition(0.5f * (pacMan.x() + msPacMan.x()), pacMan.y() - TS(2));
-                heart.show();
-            }
-            case 760 -> {
-                pacMan.hide();
-                msPacMan.hide();
-                heart.hide();
-            }
-            case 775 -> game.control().state().timer().expire();
         }
     }
 

@@ -216,7 +216,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final Game game = scene.gameContext().currentGame();
+                final Game game = scene.gameContext().game();
                 scene.marquee.timer().doTick();
                 if (sceneTimer.atSecond(2.0) && !game.canStartNewGame()) {
                     game.control().enterState(ArcadeGameState.STARTING_GAME_OR_LEVEL); // demo level

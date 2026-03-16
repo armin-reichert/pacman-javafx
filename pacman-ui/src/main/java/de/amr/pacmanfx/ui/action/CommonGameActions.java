@@ -54,7 +54,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("LET_GAME_STATE_EXPIRE") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().currentGame().control().state().timer().expire();
+            ui.gameContext().game().control().state().timer().expire();
         }
     };
 
@@ -93,7 +93,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_QUIT_GAME_SCENE = new GameAction("QUIT_GAME_SCENE") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.gameContext().currentGame();
+            final Game game = ui.gameContext().game();
             game.clearCheatFlag(); //TODO needed?
             ui.quitCurrentGameScene();
         }
@@ -103,7 +103,7 @@ public final class CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             ui.stopGame();
-            final Game game = ui.gameContext().currentGame();
+            final Game game = ui.gameContext().game();
             boolean isLevelShortTest = game.control().state() instanceof LevelShortTestState;
             if (isLevelShortTest) {
                 game.control().state().onExit(game); //TODO exit other states too?
@@ -206,7 +206,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_COLLISION_STRATEGY = new GameAction("TOGGLE_COLLISION_STRATEGY") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.gameContext().currentGame();
+            final Game game = ui.gameContext().game();
             CollisionStrategy collisionStrategy = game.collisionStrategy();
             if (collisionStrategy == CollisionStrategy.CENTER_DISTANCE) {
                 game.setCollisionStrategy(CollisionStrategy.SAME_TILE);
@@ -293,7 +293,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction("TOGGLE_PLAY_SCENE_2D_3D") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.gameContext().currentGame();
+            final Game game = ui.gameContext().game();
             ui.optGameScene().ifPresent(_ -> {
                 ui.gameContext().clock().stop();
                 toggleBoolean(PROPERTY_3D_ENABLED);
@@ -312,7 +312,7 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final State<?> state = ui.gameContext().currentGameState();
+            final State<?> state = ui.gameContext().game().control().state();
             if (state.nameMatches(
                 LevelShortTestState.class.getSimpleName(),
                 LevelMediumTestState.class.getSimpleName())) {

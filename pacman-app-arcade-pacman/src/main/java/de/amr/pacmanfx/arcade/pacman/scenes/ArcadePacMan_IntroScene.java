@@ -307,7 +307,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                final Game game = scene.gameContext().currentGame();
+                final Game game = scene.gameContext().game();
                 if (timer.atSecond(0.75)) {
                     scene.ghosts.get(ORANGE_GHOST_POKEY).hide();
                     if (!game.canStartNewGame()) {

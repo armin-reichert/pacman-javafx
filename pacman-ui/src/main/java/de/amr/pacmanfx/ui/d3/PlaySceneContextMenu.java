@@ -68,7 +68,7 @@ public class PlaySceneContextMenu extends GameUI_ContextMenu implements Disposab
     public PlaySceneContextMenu(GameUI ui) {
         super(ui);
 
-        final Game game = ui.gameContext().currentGame();
+        final Game game = ui.gameContext().game();
 
         addLocalizedTitleItem("scene_display");
         addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");

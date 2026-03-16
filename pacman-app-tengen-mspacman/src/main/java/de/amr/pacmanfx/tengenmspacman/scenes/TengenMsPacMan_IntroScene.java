@@ -151,7 +151,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.marquee.update(scene.gameContext().currentGameState().timer().tickCount());
+                scene.marquee.update(scene.gameContext().game().control().state().timer().tickCount());
                 if (timer.atSecond(1)) {
                     scene.sceneController.enterState(GHOSTS_MARCHING_IN);
                 }
@@ -167,7 +167,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                long tick = scene.gameContext().currentGameState().timer().tickCount();
+                long tick = scene.gameContext().game().control().state().timer().tickCount();
                 scene.marquee.update(tick);
                 boolean reachedEndPosition = letGhostMarchIn(scene);
                 if (reachedEndPosition) {
@@ -221,7 +221,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                long tick = scene.gameContext().currentGameState().timer().tickCount();
+                long tick = scene.gameContext().game().control().state().timer().tickCount();
                 scene.marquee.update(tick);
                 Logger.debug("Tick {}: {} marching in", scene.gameContext().clock().tickCount(), scene.msPacMan.name());
                 scene.msPacMan.move();
@@ -231,7 +231,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options
-                    TengenMsPacMan_GameModel game = scene.gameContext().currentGame();
+                    TengenMsPacMan_GameModel game = scene.gameContext().game();
                     if (game.allOptionsDefault()) {
                         game.setCanStartNewGame(false); // TODO check this
                         game.control().restartState(TengenGameState.STARTING_GAME_OR_LEVEL);

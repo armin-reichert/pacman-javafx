@@ -14,39 +14,39 @@ public class TestActions {
     public static final GameAction ACTION_CUT_SCENES_TEST = new GameAction("TEST_CUT_SCENES") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().currentGame().control().enterStateWithName(CutScenesTestState.class.getSimpleName());
+            ui.gameContext().game().control().enterStateWithName(CutScenesTestState.class.getSimpleName());
             ui.showFlashMessage("Cut scenes test"); //TODO localize
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.gameContext().currentGame().control().optState(CutScenesTestState.class.getSimpleName()).isPresent();
+            return ui.gameContext().game().control().optState(CutScenesTestState.class.getSimpleName()).isPresent();
         }
     };
 
     public static final GameAction ACTION_SHORT_LEVEL_TEST = new GameAction("TEST_LEVELS_SHORT") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().currentGame().control().restartStateWithName(LevelShortTestState.class.getSimpleName());
+            ui.gameContext().game().control().restartStateWithName(LevelShortTestState.class.getSimpleName());
             ui.showFlashMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.gameContext().currentGame().control().optState(LevelShortTestState.class.getSimpleName()).isPresent();
+            return ui.gameContext().game().control().optState(LevelShortTestState.class.getSimpleName()).isPresent();
         }
     };
 
     public static final GameAction ACTION_MEDIUM_LEVEL_TEST = new GameAction("TEST_LEVELS_MEDIUM") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().currentGame().control().restartStateWithName(LevelMediumTestState.class.getSimpleName());
+            ui.gameContext().game().control().restartStateWithName(LevelMediumTestState.class.getSimpleName());
             ui.showFlashMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.gameContext().currentGame().control().optState(LevelMediumTestState.class.getSimpleName()).isPresent();
+            return ui.gameContext().game().control().optState(LevelMediumTestState.class.getSimpleName()).isPresent();
         }
     };
 }

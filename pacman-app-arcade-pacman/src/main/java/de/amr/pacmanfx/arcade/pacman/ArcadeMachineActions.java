@@ -22,30 +22,20 @@ public interface ArcadeMachineActions {
     GameAction ACTION_INSERT_COIN = new GameAction("INSERT_COIN") {
         @Override
         public void execute(GameUI ui) {
-            final CoinMechanism coinMechanism = ui.gameContext().coinMechanism();
-            final boolean acceptsCoin = coinMechanism.numCoins() < coinMechanism.maxCoins();
-            if (acceptsCoin) {
-                coinMechanism.insertCoin();
-                ui.soundManager().setEnabled(true);
-                ui.voicePlayer().stopVoice();
-                final Game game = ui.gameContext().currentGame();
-                if (game.control().state() != SETTING_OPTIONS_FOR_START) {
-                    game.control().enterState(SETTING_OPTIONS_FOR_START);
-                }
-                game.publishGameEvent(new CreditAddedEvent(1));
-            }
+            final CoinMechanism slot = ui.gameContext().coinMechanism();
+            final Game game = ui.gameContext().game();
+            ui.voicePlayer().stopVoice();
+            ui.soundManager().setEnabled(true);
+            slot.insertCoin();
+            game.control().enterState(SETTING_OPTIONS_FOR_START);
+            game.publishGameEvent(new CreditAddedEvent(1));
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final Game game = ui.gameContext().currentGame();
-            if (game.isPlaying()) {
-                return false;
-            }
-            final boolean noCredit = ui.gameContext().coinMechanism().isEmpty();
-            final boolean demoLevel = game.isDemoLevelRunning();
-            final State<Game> gameState = game.control().state();
-            return gameState == SETTING_OPTIONS_FOR_START || gameState == INTRO || demoLevel || noCredit;
+            final CoinMechanism slot = ui.gameContext().coinMechanism();
+            final State<Game> state = ui.gameContext().game().control().state();
+            return slot.isEmpty() || (state == SETTING_OPTIONS_FOR_START && !slot.isFull());
         }
     };
 
@@ -53,16 +43,16 @@ public interface ArcadeMachineActions {
         @Override
         public void execute(GameUI ui) {
             ui.voicePlayer().stopVoice();
-            ui.gameContext().currentGame().control().enterState(ArcadeGameState.STARTING_GAME_OR_LEVEL);
+            ui.gameContext().game().control().enterState(ArcadeGameState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final Game game = ui.gameContext().currentGame();
-            boolean hasCredit = !ui.gameContext().coinMechanism().isEmpty();
-            final State<Game> gameState = game.control().state();
-            return hasCredit
-                && (gameState == INTRO || gameState == SETTING_OPTIONS_FOR_START)
+            final CoinMechanism slot = ui.gameContext().coinMechanism();
+            final Game game = ui.gameContext().game();
+            final State<Game> state = ui.gameContext().game().control().state();
+            return !slot.isEmpty()
+                && (state == INTRO || state == SETTING_OPTIONS_FOR_START)
                 && game.canStartNewGame();
         }
     };

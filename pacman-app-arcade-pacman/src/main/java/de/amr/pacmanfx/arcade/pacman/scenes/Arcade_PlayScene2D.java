@@ -73,7 +73,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
      */
     @Override
     public Vector2i unscaledSize() {
-        return gameContext().currentGame().optGameLevel().map(GameLevel::worldMap).map(WorldMap::terrainLayer)
+        return gameContext().game().optGameLevel().map(GameLevel::worldMap).map(WorldMap::terrainLayer)
             .map(TerrainLayer::sizeInPixel).orElse(ARCADE_MAP_SIZE_IN_PIXELS);
     }
 
@@ -134,7 +134,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
-        final Game game = gameContext().currentGame();
+        final Game game = gameContext().game();
         if (e.newState() == ArcadeGameState.LEVEL_COMPLETE) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             soundEffects.stopAll();
@@ -159,7 +159,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onPacDead(PacDeadEvent e) {
         // Trigger end of game state PACMAN_DYING after dying animation has finished
-        gameContext().currentGame().control().state().timer().expire();
+        gameContext().game().control().state().timer().expire();
     }
 
     @Override

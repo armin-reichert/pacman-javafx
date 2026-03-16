@@ -25,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 public class HelpInfo {
 
     public static HelpInfo build(GameUI ui) {
-        final Game game = ui.gameContext().currentGame();
+        final Game game = ui.gameContext().game();
         final State<Game> state = game.control().state();
         final boolean demoLevel = game.isDemoLevelRunning();
 
@@ -78,13 +78,13 @@ public class HelpInfo {
         pane.setBackground(UfxBackgrounds.roundedBackground(backgroundColor, 10));
 
         // add default entries:
-        if (ui.gameContext().currentGame().isUsingAutopilot()) {
+        if (ui.gameContext().game().isUsingAutopilot()) {
             var autoPilotEntry = text(ui.translate("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
-        if (ui.gameContext().currentGame().isImmune()) {
+        if (ui.gameContext().game().isImmune()) {
             var immunityEntry = text(ui.translate("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);

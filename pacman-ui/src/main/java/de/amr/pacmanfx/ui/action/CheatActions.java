@@ -22,23 +22,23 @@ public final class CheatActions {
     public static final GameAction ACTION_ADD_LIVES = new GameAction("CHEAT_ADD_LIVES") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.gameContext().currentGame();
+            final Game game = ui.gameContext().game();
             final GameLevel level = game.optGameLevel().orElseThrow();
             if (!level.isDemoLevel()) {
                 game.raiseCheatFlag();
             }
             game.addLives(3);
-            ui.showFlashMessage(ui.translate("cheat_add_lives", ui.gameContext().currentGame().lifeCount()));
+            ui.showFlashMessage(ui.translate("cheat_add_lives", ui.gameContext().game().lifeCount()));
         }
 
         @Override
-        public boolean isEnabled(GameUI ui) { return ui.gameContext().currentGame().optGameLevel().isPresent(); }
+        public boolean isEnabled(GameUI ui) { return ui.gameContext().game().optGameLevel().isPresent(); }
     };
 
     public static final GameAction ACTION_EAT_ALL_PELLETS = new GameAction("CHEAT_EAT_ALL_PELLETS") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.gameContext().currentGame();
+            final Game game = ui.gameContext().game();
             final GameLevel level = game.optGameLevel().orElseThrow();
             level.worldMap().foodLayer().eatPellets();
             game.raiseCheatFlag();
@@ -47,7 +47,7 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final Game game = ui.gameContext().currentGame();
+            final Game game = ui.gameContext().game();
             return !game.isDemoLevelRunning() && game.control().state().nameMatches(CommonGameState.HUNTING.name());
         }
     };
@@ -55,7 +55,7 @@ public final class CheatActions {
     public static final GameAction ACTION_KILL_GHOSTS = new GameAction("CHEAT_KILL_GHOSTS") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.gameContext().currentGame();
+            final Game game = ui.gameContext().game();
             final GameLevel level = game.optGameLevel().orElseThrow();
             if (!level.isDemoLevel()) {
                 game.raiseCheatFlag();
@@ -70,7 +70,7 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final Game game = ui.gameContext().currentGame();
+            final Game game = ui.gameContext().game();
             return game.control().state().nameMatches(CommonGameState.HUNTING.name()) && !game.isDemoLevelRunning();
         }
     };
@@ -78,7 +78,7 @@ public final class CheatActions {
     public static final GameAction ACTION_ENTER_NEXT_LEVEL = new GameAction("CHEAT_ENTER_NEXT_LEVEL") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.gameContext().currentGame();
+            final Game game = ui.gameContext().game();
             final GameLevel level = game.optGameLevel().orElseThrow();
             if (!level.isDemoLevel()) {
                 game.raiseCheatFlag();
@@ -88,7 +88,7 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final Game game = ui.gameContext().currentGame();
+            final Game game = ui.gameContext().game();
             return game.isPlaying()
                 && game.control().state().nameMatches(CommonGameState.HUNTING.name())
                 && game.optGameLevel().isPresent()
@@ -99,7 +99,7 @@ public final class CheatActions {
     public static final GameAction ACTION_TOGGLE_AUTOPILOT = new GameAction("TOGGLE_AUTOPILOT") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.gameContext().currentGame();
+            final Game game = ui.gameContext().game();
             if (!game.isDemoLevelRunning()) {
                 game.raiseCheatFlag();
             }
@@ -113,7 +113,7 @@ public final class CheatActions {
     public static final GameAction ACTION_TOGGLE_IMMUNITY = new GameAction("TOGGLE_IMMUNITY") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.gameContext().currentGame();
+            final Game game = ui.gameContext().game();
             if (!game.isDemoLevelRunning()) {
                 game.raiseCheatFlag();
             }

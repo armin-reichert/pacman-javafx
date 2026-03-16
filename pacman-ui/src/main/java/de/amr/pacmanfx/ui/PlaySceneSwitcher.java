@@ -20,7 +20,7 @@ public interface PlaySceneSwitcher {
         ui.gameContext().clock().stop();
 
         final UIConfig uiConfig = ui.currentConfig();
-        final Game game = ui.gameContext().currentGame();
+        final Game game = ui.gameContext().game();
         final GameLevel level = game.optGameLevel().orElseThrow();
         final State<Game> state = game.control().state();
 
@@ -49,7 +49,7 @@ public interface PlaySceneSwitcher {
     static void switchTo2D(GameUI ui, PlayScene3D playScene3D, GameScene2D playScene2D) {
         ui.gameContext().clock().stop();
 
-        final Game game = ui.gameContext().currentGame();
+        final Game game = ui.gameContext().game();
         game.optGameLevel().ifPresent(playScene2D::acceptGameLevel);
 
         ui.gameContext().clock().start();

@@ -361,7 +361,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onUnspecifiedChange(UnspecifiedChangeEvent event) {
         // TODO: remove (currently only used by GameState.TESTING_CUT_SCENES)
-        ui.views().getPlayView().updateGameScene(gameContext().currentGame(), true);
+        ui.views().getPlayView().updateGameScene(gameContext().game(), true);
     }
 
     // ────────────────────────────────────────────────────────────────────────────
@@ -369,7 +369,7 @@ public class PlayScene3D implements GameScene {
     // ────────────────────────────────────────────────────────────────────────────
 
     protected Optional<GameLevel> optGameLevel() {
-        return gameContext().currentGame().optGameLevel();
+        return gameContext().game().optGameLevel();
     }
 
     /**

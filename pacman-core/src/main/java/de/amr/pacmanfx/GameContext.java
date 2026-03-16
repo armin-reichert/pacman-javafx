@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx;
 
-import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
@@ -92,16 +91,7 @@ public interface GameContext {
      * @return the game model of the active game variant
      * @throws ClassCastException if the registered game model type does not match the expected type
      */
-    <T extends Game> T currentGame();
-
-    /**
-     * Returns the state of the current game.
-     *
-     * @return current state of game control (state machine)
-     */
-    default State<Game> currentGameState()  {
-        return currentGame().control().state();
-    }
+    <T extends Game> T game();
 
     /**
      * Returns the coin mechanism associated with the game box.

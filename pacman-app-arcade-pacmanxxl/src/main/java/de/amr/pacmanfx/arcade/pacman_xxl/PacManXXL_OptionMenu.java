@@ -108,7 +108,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     public void init(GameUI ui) {
         this.ui = requireNonNull(ui);
 
-        final Game game = ui.gameContext().currentGame();
+        final Game game = ui.gameContext().game();
         final GameVariant gameVariant = GameVariant.valueOf(ui.gameContext().gameVariantName());
 
         if (!(game.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {

@@ -154,7 +154,7 @@ public class MiniGameView extends VBox {
         }
         canvasRenderer.clearCanvas();
 
-        final Game game = ui.gameContext().currentGame();
+        final Game game = ui.gameContext().game();
         final Optional<GameLevel> optGameLevel = game.optGameLevel();
         if (optGameLevel.isPresent()) {
             final GameLevel level = optGameLevel.get();

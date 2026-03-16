@@ -75,6 +75,10 @@ public interface CoinMechanism {
      */
     IntegerProperty numCoinsProperty();
 
+    default boolean isFull() {
+        return numCoins() == maxCoins();
+    }
+
     /**
      * Returns the current number of coins stored in the mechanism.
      *
