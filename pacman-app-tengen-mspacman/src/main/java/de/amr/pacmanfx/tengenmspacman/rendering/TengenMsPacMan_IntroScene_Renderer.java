@@ -10,7 +10,6 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -51,11 +50,11 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
         clearCanvas();
 
         final TengenMsPacMan_IntroScene introScene = (TengenMsPacMan_IntroScene) scene;
-        final long tick = introScene.sceneController.state().timer().tickCount();
+        final long tick = introScene.controller.state().timer().tickCount();
 
         ctx.setFont(arcadeFont8());
         ctx.setImageSmoothing(false);
-        switch (introScene.sceneController.state()) {
+        switch (introScene.controller.state()) {
             case SceneState.WAITING_FOR_START -> {
                 if (!introScene.dark) {
                     boolean showPressStart = tick % 60 < 30;

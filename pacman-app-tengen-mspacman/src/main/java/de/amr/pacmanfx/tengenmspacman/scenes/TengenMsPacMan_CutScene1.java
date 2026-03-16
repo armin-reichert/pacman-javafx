@@ -38,6 +38,8 @@ import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_LET_GAME_STATE_
  */
 public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
+    public static final int TICK_EXPIRES = 775;
+
     private static final int UPPER_LANE   = TS * 8;
     private static final int LOWER_LANE   = TS * 24;
     private static final int MIDDLE_LANE  = TS * 16;
@@ -159,8 +161,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         }
 
         final long tick = game.control().state().timer().tickCount();
-        if (tick <= 775) {
-            final int eventTick = (int) tick;
+        if (tick <= TICK_EXPIRES) {
+            final short eventTick = (short) tick;
             switch (eventTick) {
                 case 130 -> {
                     pacMan.setSpeed(SPEED_CHASING);

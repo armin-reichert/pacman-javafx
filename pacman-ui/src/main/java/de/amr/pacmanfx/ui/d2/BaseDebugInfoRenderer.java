@@ -4,9 +4,10 @@
 package de.amr.pacmanfx.ui.d2;
 
 import de.amr.pacmanfx.lib.TickTimer;
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.model.GameControl;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -33,12 +34,11 @@ public class BaseDebugInfoRenderer extends GameScene2D_Renderer {
 
     @Override
     public void draw(GameScene2D scene) {
-        final GameControl gameControl = scene.ui().gameContext().game().control();
-        final TickTimer stateTimer = gameControl.state().timer();
+        final State<Game> state = scene.ui().gameContext().game().control().state();
         final String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
-            gameControl.state().name(),
-            stateTimer.tickCount(),
-            stateTimer.durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(stateTimer.tickCount())
+            state.name(),
+            state.timer().tickCount(),
+            state.timer().durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(state.timer().tickCount())
         );
         ctx.setFill(debugTextFill);
         ctx.setStroke(debugTextStroke);

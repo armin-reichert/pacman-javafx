@@ -34,6 +34,8 @@ import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_LET_GAME_STATE_
  */
 public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
+    public static final int TICK_EXPIRES = 660;
+
     private static final int GROUND_Y = TS * 24;
     private static final int RIGHT_BORDER = TS * 30;
 
@@ -110,47 +112,50 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void update(Game game) {
-        final int tick = (int) game.control().state().timer().tickCount();
         clapperboard.tick();
 
-        switch (tick) {
-            case 130 -> {
-                pacMan.setMoveDir(Direction.RIGHT);
-                pacMan.setPosition(TS * 3, GROUND_Y - 4);
-                pacMan.setSpeed(0);
-                pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
-                pacMan.show();
+        final long tick = game.control().state().timer().tickCount();
+        if (tick <= TICK_EXPIRES) {
+            final short eventTick = (short) tick;
+            switch (eventTick) {
+                case 130 -> {
+                    pacMan.setMoveDir(Direction.RIGHT);
+                    pacMan.setPosition(TS * 3, GROUND_Y - 4);
+                    pacMan.setSpeed(0);
+                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
+                    pacMan.show();
 
-                msPacMan.setMoveDir(Direction.RIGHT);
-                msPacMan.setPosition(TS * 5, GROUND_Y - 4);
-                msPacMan.setSpeed(0);
-                msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
-                msPacMan.show();
+                    msPacMan.setMoveDir(Direction.RIGHT);
+                    msPacMan.setPosition(TS * 5, GROUND_Y - 4);
+                    msPacMan.setSpeed(0);
+                    msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+                    msPacMan.show();
 
-                stork.setPosition(RIGHT_BORDER, TS * 7);
-                stork.setVelocity(-0.8f, 0);
-                stork.setBagReleasedFromBeak(false);
-                stork.playAnimation(Stork.AnimationID.FLYING);
-                stork.show();
+                    stork.setPosition(RIGHT_BORDER, TS * 7);
+                    stork.setVelocity(-0.8f, 0);
+                    stork.setBagReleasedFromBeak(false);
+                    stork.playAnimation(Stork.AnimationID.FLYING);
+                    stork.show();
+                }
+                case 240 -> {
+                    // stork releases bag, bag starts falling
+                    stork.setVelocity(-1f, 0); // faster, no bag to carry!
+                    stork.setBagReleasedFromBeak(true);
+                    flyingBag.setPosition(stork.x() - 15, stork.y() + 8);
+                    flyingBag.setVelocity(-0.5f, 0);
+                    flyingBag.setAcceleration(0, 0.1f);
+                    flyingBag.show();
+                }
+                case 320 -> // reaches ground, starts bouncing
+                    flyingBag.setVelocity(-0.5f, flyingBag.velocity().y());
+                case 380 -> {
+                    flyingBag.setOpen(true);
+                    flyingBag.setVelocity(Vector2f.ZERO);
+                    flyingBag.setAcceleration(Vector2f.ZERO);
+                }
+                case 640 -> darkness = true;
+                case TICK_EXPIRES -> game.control().state().timer().expire();
             }
-            case 240 -> {
-                // stork releases bag, bag starts falling
-                stork.setVelocity(-1f, 0); // faster, no bag to carry!
-                stork.setBagReleasedFromBeak(true);
-                flyingBag.setPosition(stork.x() - 15, stork.y() + 8);
-                flyingBag.setVelocity(-0.5f, 0);
-                flyingBag.setAcceleration(0, 0.1f);
-                flyingBag.show();
-            }
-            case 320 -> // reaches ground, starts bouncing
-                flyingBag.setVelocity(-0.5f, flyingBag.velocity().y());
-            case 380 -> {
-                flyingBag.setOpen(true);
-                flyingBag.setVelocity(Vector2f.ZERO);
-                flyingBag.setAcceleration(Vector2f.ZERO);
-            }
-            case 640 -> darkness = true;
-            case 660 -> game.control().state().timer().expire();
         }
 
         stork.move();

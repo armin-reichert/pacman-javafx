@@ -85,15 +85,15 @@ public class DashboardSectionGameInfo extends DashboardSection {
     }
 
     private String stateTimerInfo(Game game) {
-        TickTimer t = game.control().state().timer();
-        boolean indefinite = t.durationTicks() == TickTimer.INDEFINITE;
-        if (t.isStopped()) {
-            return "Stopped at tick %s of %s".formatted(t.tickCount(), indefinite ? "∞" : t.durationTicks());
+        final TickTimer timer = game.control().state().timer();
+        final boolean indefinite = timer.durationTicks() == TickTimer.INDEFINITE;
+        if (timer.isStopped()) {
+            return "Stopped at tick %s of %s".formatted(timer.tickCount(), indefinite ? "∞" : timer.durationTicks());
         }
         if (indefinite) {
-            return "Tick %s of ∞".formatted(t.tickCount());
+            return "Tick %s of ∞".formatted(timer.tickCount());
         }
-        return "Tick %d of %d. Remaining: %d".formatted(t.tickCount(), t.durationTicks(), t.remainingTicks());
+        return "Tick %d of %d. Remaining: %d".formatted(timer.tickCount(), timer.durationTicks(), timer.remainingTicks());
     }
 
     private String fmtCollisionMode(GameLevel level) {

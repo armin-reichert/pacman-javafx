@@ -158,16 +158,20 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (timer.tickCount() == 1) {
                     scene.ghostImageVisible[scene.ghostIndex] = true;
-                } else if (timer.atSecond(1.0)) {
+                }
+                else if (timer.atSecond(1.0)) {
                     scene.ghostCharacterVisible[scene.ghostIndex] = true;
-                } else if (timer.atSecond(1.5)) {
+                }
+                else if (timer.atSecond(1.5)) {
                     scene.ghostNicknameVisible[scene.ghostIndex] = true;
-                } else if (timer.atSecond(2.0)) {
+                }
+                else if (timer.atSecond(2.0)) {
                     if (scene.ghostIndex < scene.ghosts.size() - 1) {
                         timer.resetIndefiniteTime();
                     }
                     scene.ghostIndex += 1;
-                } else if (timer.atSecond(2.5)) {
+                }
+                else if (timer.atSecond(2.5)) {
                     scene.sceneController.enterState(SHOWING_POINTS);
                 }
             }
@@ -223,11 +227,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                         ghost.setWishDir(Direction.RIGHT);
                         ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
                     });
-                } else if (timer.tickCount() == 236) {
+                }
+                else if (timer.tickCount() == 236) {
                     // Pac-Man moves again a bit
                     scene.pacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
                     scene.pacMan.setSpeed(CHASING_SPEED);
-                } else if (timer.tickCount() == 240) {
+                }
+                else if (timer.tickCount() == 240) {
                     scene.sceneController.enterState(CHASING_GHOSTS);
                 }
                 scene.blinking.tick();
@@ -241,7 +247,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 if (frame == 2) {
                     pinkGhost.setX(pinkGhost.x() + 0.5);
                     cyanGhost.setX(cyanGhost.x() - 0.5);
-                } else if (frame == 5) {
+                }
+                else if (frame == 5) {
                     pinkGhost.setX(pinkGhost.x() - 0.5);
                     cyanGhost.setX(cyanGhost.x() + 0.5);
                 }
