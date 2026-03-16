@@ -3,9 +3,10 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.lib.TickTimer;
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
@@ -54,18 +55,18 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
 
     @Override
     public void draw(GameScene2D scene) {
-        final TickTimer stateTimer = scene.gameContext().game().control().state().timer();
-        final boolean fourthTick = stateTimer.tickCount() % 4 == 0;
-        if (stateTimer.tickCount() == 1) {
+        final State<Game> state = scene.gameContext().game().control().state();
+        final boolean onEveryFourthTick = state.timer().tickCount() % 4 == 0;
+        if (state.timer().tickCount() == 1) {
             clearCanvas();
         }
-        else if (stateTimer.betweenSeconds(1, 2) && fourthTick) {
+        else if (state.timer().betweenSeconds(1, 2) && onEveryFourthTick) {
             showRandomHexDigits(scene);
         }
-        else if (stateTimer.betweenSeconds(2, 3.5) && fourthTick) {
+        else if (state.timer().betweenSeconds(2, 3.5) && onEveryFourthTick) {
             showRandomSpriteFragments(scene);
         }
-        else if (stateTimer.atSecond(3.5)) {
+        else if (state.timer().atSecond(3.5)) {
             showGrid(scene);
         }
         if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
