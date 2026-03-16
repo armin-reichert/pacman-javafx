@@ -36,23 +36,23 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         switch (actor) {
             case Bonus bonus -> drawBonus(bonus);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            default -> actor.optAnimationManager()
+            default ->
+                actor.optAnimationManager()
                     .map(animations -> animations.currentSprite(actor))
                     .ifPresent(sprite -> drawSpriteCentered(actor.center(), sprite));
-
         }
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
-        RectShort[] sprites = spriteSheet().sprites(SpriteID.CLAPPERBOARD);
-        int index = clapperboard.state();
-        if (0 <= index && index < sprites.length) {
-            RectShort sprite = sprites[index];
+        final RectShort[] sprites = spriteSheet().sprites(SpriteID.CLAPPERBOARD);
+        final int spriteIndex = clapperboard.state();
+        if (0 <= spriteIndex && spriteIndex < sprites.length) {
+            final RectShort sprite = sprites[spriteIndex];
             drawSpriteCentered(clapperboard.center(), sprite);
             // Draw number and title
-            double numberX = scaled(clapperboard.x() + sprite.width() - 25);
-            double textX = scaled(clapperboard.x() + sprite.width());
-            double y = scaled(clapperboard.y() + 18);
+            final double numberX = scaled(clapperboard.x() + sprite.width() - 25);
+            final double textX = scaled(clapperboard.x() + sprite.width());
+            final double y = scaled(clapperboard.y() + 18);
             ctx.setFont(clapperboard.font());
             ctx.setFill(ARCADE_WHITE);
             ctx.fillText(clapperboard.number(), numberX, y);
@@ -70,11 +70,11 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         }
     }
 
-    private void drawBonusSprite(Vector2f center, RectShort[] sprites, int index) {
-        if (0 <= index && index < sprites.length) {
-            drawSpriteCentered(center, sprites[index]);
+    private void drawBonusSprite(Vector2f center, RectShort[] sprites, int spriteIndex) {
+        if (0 <= spriteIndex && spriteIndex < sprites.length) {
+            drawSpriteCentered(center, sprites[spriteIndex]);
         } else {
-            Logger.error("Cannot render bonus with symbol code {}", index);
+            Logger.error("Cannot render bonus with symbol code {}", spriteIndex);
         }
     }
 }
