@@ -152,23 +152,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
         addPacMan(level);
         addGhosts(level, house);
-
-        final int totalFoodCount = worldMap.foodLayer().totalFoodCount();
-        if (totalFoodCount == TOTAL_FOOD_COUNT_ARCADE_PAC_MAN) {
-            // Original Arcade map
-            bonus1PelletsEaten = BONUS_1_PELLETS_EATEN;
-            bonus2PelletsEaten = BONUS_2_PELLETS_EATEN;
-        } else {
-            // XXL maps may have different food count, use heuristic values
-            bonus1PelletsEaten = totalFoodCount / 4;
-            bonus2PelletsEaten = totalFoodCount * 3 / 4;
-        }
-
-        // Each level has a single bonus symbol appearing twice during the level.
-        // From level 13 on, the same symbol (code=7, "key") appears. Klingt komisch? Is' aber so!
-        final byte symbol = bonusSymbol(Math.min(levelNumber, 13));
-        level.setBonusSymbol(0, symbol);
-        level.setBonusSymbol(1, symbol);
+        initBoni(level);
 
         levelCounter.setEnabled(true);
 
@@ -259,6 +243,25 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
             huntingTimer.logPhase();
         });
         return huntingTimer;
+    }
+
+    protected void initBoni(GameLevel level) {
+        final int totalFoodCount = level.worldMap().foodLayer().totalFoodCount();
+        if (totalFoodCount == TOTAL_FOOD_COUNT_ARCADE_PAC_MAN) {
+            // Original Arcade map
+            bonus1PelletsEaten = BONUS_1_PELLETS_EATEN;
+            bonus2PelletsEaten = BONUS_2_PELLETS_EATEN;
+        } else {
+            // XXL maps may have different food count, use heuristic values
+            bonus1PelletsEaten = totalFoodCount / 4;
+            bonus2PelletsEaten = totalFoodCount * 3 / 4;
+        }
+
+        // Each level has a single bonus symbol appearing twice during the level.
+        // From level 13 on, the same symbol (code=7, "key") appears. Klingt komisch? Is' aber so!
+        final byte symbol = bonusSymbol(Math.min(level.number(), 13));
+        level.setBonusSymbol(0, symbol);
+        level.setBonusSymbol(1, symbol);
     }
 
     protected int bonusValue(byte symbolCode) {
