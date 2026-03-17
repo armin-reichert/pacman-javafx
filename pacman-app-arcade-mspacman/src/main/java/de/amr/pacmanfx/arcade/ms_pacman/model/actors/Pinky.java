@@ -16,19 +16,18 @@ import de.amr.pacmanfx.model.HuntingPhase;
  */
 public class Pinky extends de.amr.pacmanfx.arcade.pacman.model.actors.Pinky {
 
-    public Pinky() {}
-
-    @Override
-    public void hunt(GameLevel gameLevel, float speed) {
-        setSpeed(speed);
-        if (gameLevel.huntingTimer().phaseIndex() == 0) {
-            // first scatter phase
-            roam(gameLevel);
-        } else {
-            Vector2i targetTile = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING
-                ? chasingTargetTile(gameLevel)
-                : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
-            tryMovingTowardsTargetTile(gameLevel, targetTile);
-        }
+    public Pinky() {
+        setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
+            setSpeed(speed);
+            if (gameLevel.huntingTimer().phaseIndex() == 0) {
+                // first scatter phase
+                roam(gameLevel);
+            } else {
+                final Vector2i targetTile = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING
+                    ? chasingTargetTile(gameLevel)
+                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
+                tryMovingTowardsTargetTile(gameLevel, targetTile);
+            }
+        });
     }
 }

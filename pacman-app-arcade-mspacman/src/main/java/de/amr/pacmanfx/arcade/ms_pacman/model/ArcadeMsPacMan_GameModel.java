@@ -6,6 +6,9 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 import de.amr.pacmanfx.arcade.ms_pacman.model.actors.*;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
+import de.amr.pacmanfx.arcade.pacman.model.actors.Clyde;
+import de.amr.pacmanfx.arcade.pacman.model.actors.ElroyState;
+import de.amr.pacmanfx.arcade.pacman.model.actors.Inky;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -53,7 +56,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             case RED_GHOST_SHADOW -> new Blinky();
             case PINK_GHOST_SPEEDY -> new Pinky();
             case CYAN_GHOST_BASHFUL -> new Inky();
-            case ORANGE_GHOST_POKEY -> new Sue();
+            case ORANGE_GHOST_POKEY -> new Clyde("Sue");
             default -> throw new IllegalArgumentException();
         };
     }
@@ -259,9 +262,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         this.gateKeeper = new GateKeeper();
         this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
             if (prisoner.personality() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW) instanceof Blinky blinky) {
-                if (blinky.elroyMode() != Blinky.ElroyMode.NONE && !blinky.isCruiseElroyEnabled()) {
+                if (blinky.elroyState().mode() != ElroyState.Mode.ZERO && !blinky.elroyState().enabled()) {
                     Logger.debug("Re-enable Blinky 'Cruise Elroy' mode because {} got released:", prisoner.name());
-                    blinky.setCruiseElroyEnabled(true);
+                    blinky.elroyState().setEnabled(true);
                 }
             }
         });

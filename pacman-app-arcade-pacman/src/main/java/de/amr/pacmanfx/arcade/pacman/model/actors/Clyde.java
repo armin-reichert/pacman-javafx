@@ -16,13 +16,10 @@ public class Clyde extends Ghost {
         reset();
     }
 
-    protected Clyde(String name) {
-        super(ORANGE_GHOST_POKEY, name);
+    public Clyde(String alias) {
+        super(ORANGE_GHOST_POKEY, alias);
         reset();
     }
-
-    @Override
-    public void onPacKilled(GameLevel gameLevel) {}
 
     @Override
     public Vector2i chasingTargetTile(GameLevel gameLevel) {

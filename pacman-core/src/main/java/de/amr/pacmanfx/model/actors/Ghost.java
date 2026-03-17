@@ -20,10 +20,13 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.BiConsumer;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.Validations.*;
+import static de.amr.pacmanfx.Validations.differsAtMost;
+import static de.amr.pacmanfx.Validations.stateIsOneOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.math.Direction.*;
 import static java.util.Objects.requireNonNull;
@@ -31,7 +34,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common ghost base class. The specific ghosts differ in their hunting behavior and their look.
  */
-public abstract class Ghost extends MovingActor {
+public class Ghost extends MovingActor {
 
     public enum AnimationID {GHOST_FRIGHTENED, GHOST_EYES, GHOST_FLASHING, GHOST_POINTS, GHOST_NORMAL}
 
@@ -43,24 +46,40 @@ public abstract class Ghost extends MovingActor {
     private Vector2f startPosition;
     private House home;
 
-    protected Ghost(byte personality, String name) {
+    /**
+     * Default hunting behavior is to retreat towards the scatter tile in scatter phase
+     * and to go towards current target tile in chasing phase.
+     */
+    private BiConsumer<GameLevel, Float> huntingStrategy = (GameLevel level, Float speed) -> {
+        requireNonNull(level);
+        requireNonNull(speed);
+        setSpeed(speed);
+        final Vector2i targetTile = level.huntingTimer().phase() == HuntingPhase.CHASING
+            ? chasingTargetTile(level)
+            : level.worldMap().terrainLayer().ghostScatterTile(personality());
+        tryMovingTowardsTargetTile(level, targetTile);
+    };
+
+    public Ghost(byte personality, String name) {
         super(name);
         this.personality = Validations.requireValidGhostPersonality(personality);
         corneringSpeedDelta = -1.0f;
     }
 
-    /**
-     * Notifies this ghost about Pac-Man's assassination so he can react accordingly (send condolence message etc.)
-     * @param level the game level where this happens
-     */
-    public abstract void onPacKilled(GameLevel level);
+    public BiConsumer<GameLevel, Float> huntingStrategy() {
+        return huntingStrategy;
+    }
+
+    public void setHuntingStrategy(BiConsumer<GameLevel, Float> huntingStrategy) {
+        this.huntingStrategy = huntingStrategy;
+    }
 
     public void setHome(House home) {
         this.home = home;
     }
 
-    public House home() {
-        return home;
+    public Optional<House> optHome() {
+        return Optional.ofNullable(home);
     }
 
     /**
@@ -68,7 +87,7 @@ public abstract class Ghost extends MovingActor {
      * {@link de.amr.pacmanfx.Globals#PINK_GHOST_SPEEDY}, {@link de.amr.pacmanfx.Globals#CYAN_GHOST_BASHFUL} and
      * {@link de.amr.pacmanfx.Globals#ORANGE_GHOST_POKEY}.
      */
-    public final byte personality() {
+    public byte personality() {
         return personality;
     }
 
@@ -107,22 +126,15 @@ public abstract class Ghost extends MovingActor {
                 '}';
     }
 
-    /**
-     * Default hunting behavior is to retreat towards the scatter tile in scatter phase
-     * and to go towards current target tile in chasing phase.
-     *
-     * @param level the game level this ghost lives in
-     * @param speed the speed in pixel                  
-     */
     public void hunt(GameLevel level, float speed) {
-        requireNonNull(level);
-        requireNonNegative(speed);
-        setSpeed(speed);
-        final Vector2i targetTile = level.huntingTimer().phase() == HuntingPhase.CHASING
-            ? chasingTargetTile(level)
-            : level.worldMap().terrainLayer().ghostScatterTile(personality());
-        tryMovingTowardsTargetTile(level, targetTile);
+        huntingStrategy.accept(level, speed);
     }
+
+    /**
+     * Notifies this ghost about Pac-Man's assassination so he can react accordingly (send condolence message etc.)
+     * @param ignored the game level where this happens
+     */
+    public void onPacKilled(GameLevel ignored) {}
 
     /**
      * Subclasses implement this method to define the target tile of the ghost when hunting Pac-Man through
@@ -131,7 +143,9 @@ public abstract class Ghost extends MovingActor {
      * @param level the game level this ghost lives in
      * @return the current target tile when chasing Pac-Man
      */
-    public abstract Vector2i chasingTargetTile(GameLevel level);
+    public Vector2i chasingTargetTile(GameLevel level) {
+        return level.pac().tile();
+    }
 
     /**
      * Lets the ghost roam through the current level's world.
@@ -206,7 +220,7 @@ public abstract class Ghost extends MovingActor {
 
     // Here begins the state machine part
 
-    public final ObjectProperty<GhostState> stateProperty() {
+    public ObjectProperty<GhostState> stateProperty() {
         if (state == null) {
             state = new SimpleObjectProperty<>(DEFAULT_STATE);
         }
@@ -428,7 +442,7 @@ public abstract class Ghost extends MovingActor {
      * When an eaten ghost has arrived at the ghost house door, he falls down to the center of the house,
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
-    private void updateStateEnteringHouse(GameLevel level, float speed) {
+    private void updateStateEnteringHouse(GameLevel ignored, float speed) {
         final Vector2f position = position();
         final Vector2f revivalPosition = halfTileRightOf(home.ghostRevivalTile(personality()));
         if (position.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {

@@ -7,38 +7,33 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.actors.Ghost;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
-import static java.util.Objects.requireNonNull;
 
 public class Blinky extends Ghost {
 
-    public enum ElroyMode {NONE, _1, _2}
-
-    private boolean cruiseElroyEnabled;
-    private ElroyMode elroyMode;
+    private final ElroyState elroyState = new ElroyState();
 
     public Blinky() {
         super(RED_GHOST_SHADOW, "Blinky");
+        setHuntingStrategy((GameLevel level, Float speed) -> {
+            setSpeed(speed);
+            final boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || elroyState.enabled();
+            final Vector2i targetTile = chase
+                ? chasingTargetTile(level)
+                : level.worldMap().terrainLayer().ghostScatterTile(personality());
+            tryMovingTowardsTargetTile(level, targetTile);
+        });
         reset();
-        cruiseElroyEnabled = false;
-        elroyMode = ElroyMode.NONE;
     }
 
-    public ElroyMode elroyMode() { return elroyMode; }
-
-    public boolean isCruiseElroyEnabled() { return cruiseElroyEnabled; }
-
-    public void setCruiseElroyEnabled(boolean on) {
-        cruiseElroyEnabled = on;
-        Logger.info("Cruise Elroy speed increase is: {}, active: {}", elroyMode, cruiseElroyEnabled);
+    @Override
+    public void reset() {
+        super.reset();
+        elroyState.reset();
     }
 
-    public void setElroyMode(ElroyMode mode) {
-        elroyMode = requireNonNull(mode);
-        Logger.info("Cruise Elroy is: {}, active: {}", elroyMode, cruiseElroyEnabled);
-    }
+    public ElroyState elroyState() { return elroyState; }
 
     /**
      * When Pac-Man is killed, Blinky disables his Cruise Elroy mode.
@@ -47,23 +42,7 @@ public class Blinky extends Ghost {
      */
     @Override
     public void onPacKilled(GameLevel level) {
-        setCruiseElroyEnabled(false);
-    }
-
-    /**
-     * Blinky overrides method to take "Cruise Elroy" mode into account.
-     *
-     * @param level the current game level
-     * @param speed speed in pixel/tick
-     */
-    @Override
-    public void hunt(GameLevel level, float speed) {
-        boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || isCruiseElroyEnabled();
-        Vector2i targetTile = chase
-            ? chasingTargetTile(level)
-            : level.worldMap().terrainLayer().ghostScatterTile(personality());
-        setSpeed(level.game().ghostSpeed(level, this));
-        tryMovingTowardsTargetTile(level, targetTile);
+        elroyState.setEnabled(false);
     }
 
     /**

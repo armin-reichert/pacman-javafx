@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
+import de.amr.pacmanfx.arcade.pacman.model.actors.ElroyState;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -151,9 +152,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         final LevelData data = levelData(level.number());
         final int uneatenFoodCount = level.worldMap().foodLayer().uneatenFoodCount();
         if (uneatenFoodCount == data.numDotsLeftElroy1()) {
-            optBlinky(level).ifPresent(blinky -> blinky.setElroyMode(Blinky.ElroyMode._1));
+            optBlinky(level).ifPresent(blinky -> blinky.elroyState().setMode(ElroyState.Mode.ONE));
         } else if (uneatenFoodCount == data.numDotsLeftElroy2()) {
-            optBlinky(level).ifPresent(blinky -> blinky.setElroyMode(Blinky.ElroyMode._2));
+            optBlinky(level).ifPresent(blinky -> blinky.elroyState().setMode(ElroyState.Mode.TWO));
         }
     }
 
@@ -482,10 +483,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         final int levelNumber = level.number();
         final LevelData data = levelData(levelNumber);
         if (ghost instanceof Blinky blinky) {
-            return switch (blinky.elroyMode()) {
-                case NONE -> data.pctGhostSpeed() * BASE_SPEED_1_PERCENT;
-                case _1 -> data.pctElroy1Speed() * BASE_SPEED_1_PERCENT;
-                case _2 -> data.pctElroy2Speed() * BASE_SPEED_1_PERCENT;
+            return switch (blinky.elroyState().mode()) {
+                case ZERO -> data.pctGhostSpeed()  * BASE_SPEED_1_PERCENT;
+                case ONE -> data.pctElroy1Speed() * BASE_SPEED_1_PERCENT;
+                case TWO -> data.pctElroy2Speed() * BASE_SPEED_1_PERCENT;
             };
         } else {
             return data.pctGhostSpeed() * BASE_SPEED_1_PERCENT;

@@ -7,29 +7,28 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 
+/**
+ * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
+ * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
+ * only the scatter target of Blinky and Pinky would have been affected. Who knows?
+ *
+ * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
+ */
 public class Blinky extends de.amr.pacmanfx.arcade.pacman.model.actors.Blinky {
 
-    public Blinky() {}
-
-    /**
-     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
-     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
-     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
-     *
-     * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
-     */
-    @Override
-    public void hunt(GameLevel gameLevel, float speed) {
-        setSpeed(speed);
-        if (gameLevel.huntingTimer().phaseIndex() == 0) {
-            // first scatter phase
-            roam(gameLevel);
-        } else {
-            boolean chase = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING || isCruiseElroyEnabled();
-            Vector2i targetTile = chase
-                ? chasingTargetTile(gameLevel)
-                : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
-            tryMovingTowardsTargetTile(gameLevel, targetTile);
-        }
+    public Blinky() {
+        setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
+            setSpeed(speed);
+            if (gameLevel.huntingTimer().phaseIndex() == 0) {
+                // first scatter phase
+                roam(gameLevel);
+            } else {
+                boolean chase = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING || elroyState().enabled();
+                final Vector2i targetTile = chase
+                    ? chasingTargetTile(gameLevel)
+                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
+                tryMovingTowardsTargetTile(gameLevel, targetTile);
+            }
+        });
     }
 }

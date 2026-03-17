@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-
 import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
+import de.amr.pacmanfx.arcade.pacman.model.actors.ElroyState;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.world.FoodLayer;
@@ -41,7 +41,7 @@ public class TestEatingFood {
     private ArcadePacMan_GameModel theGame() { return gameBox.game(); }
 
     private GameLevel theGameLevel() {
-        return theGame().level();
+        return theGame().optGameLevel().orElseThrow();
     }
 
     private void eatNextPellet() {
@@ -102,25 +102,25 @@ public class TestEatingFood {
         final FoodLayer foodLayer = theGameLevel().worldMap().foodLayer();
         final LevelData data = theGame().levelData(theGameLevel().number());
         while (foodLayer.uneatenFoodCount() > data.numDotsLeftElroy1()) {
-            assertEquals(Blinky.ElroyMode.NONE, blinky.elroyMode());
+            assertEquals(ElroyState.Mode.ZERO, blinky.elroyState().mode());
             eatNextPellet();
         }
-        assertEquals(Blinky.ElroyMode._1, blinky.elroyMode());
+        assertEquals(ElroyState.Mode.ONE, blinky.elroyState().mode());
         while (foodLayer.uneatenFoodCount() > data.numDotsLeftElroy2()) {
-            assertEquals(Blinky.ElroyMode._1, blinky.elroyMode());
+            assertEquals(ElroyState.Mode.ONE, blinky.elroyState().mode());
             eatNextPellet();
         }
-        assertEquals(Blinky.ElroyMode._2, blinky.elroyMode());
+        assertEquals(ElroyState.Mode.TWO, blinky.elroyState().mode());
         while (foodLayer.uneatenFoodCount() > foodLayer.energizerTiles().size()) {
-            assertEquals(Blinky.ElroyMode._2, blinky.elroyMode());
+            assertEquals(ElroyState.Mode.TWO, blinky.elroyState().mode());
             eatNextPellet();
         }
-        assertEquals(Blinky.ElroyMode._2, blinky.elroyMode());
+        assertEquals(ElroyState.Mode.TWO, blinky.elroyState().mode());
         while (foodLayer.uneatenFoodCount() > 0) {
-            assertEquals(Blinky.ElroyMode._2, blinky.elroyMode());
+            assertEquals(ElroyState.Mode.TWO, blinky.elroyState().mode());
             eatNextEnergizer(theGameLevel());
         }
-        assertEquals(Blinky.ElroyMode._2, blinky.elroyMode());
+        assertEquals(ElroyState.Mode.TWO, blinky.elroyState().mode());
     }
 
     @Test

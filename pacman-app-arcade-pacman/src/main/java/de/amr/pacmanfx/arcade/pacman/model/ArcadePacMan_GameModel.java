@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.arcade.pacman.model.actors.*;
+import de.amr.pacmanfx.arcade.pacman.model.actors.ElroyState;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -222,8 +223,9 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
                 if (!(level.ghost(RED_GHOST_SHADOW) instanceof Blinky blinky)) {
                     throw new IllegalStateException("Red ghost is not blinky? WTF!");
                 }
-                if (blinky.elroyMode() != Blinky.ElroyMode.NONE && !blinky.isCruiseElroyEnabled()) {
-                    blinky.setCruiseElroyEnabled(true);
+                final ElroyState elroyState = blinky.elroyState();
+                if (elroyState.mode() != ElroyState.Mode.ZERO && !elroyState.enabled()) {
+                    elroyState.setEnabled(true);
                     Logger.debug("Re-enabled Blinky 'Cruise Elroy' mode because {} got released:", prisoner.name());
                 }
             }
