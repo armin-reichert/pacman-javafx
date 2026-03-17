@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
-import de.amr.pacmanfx.arcade.ms_pacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.arcade.pacman.model.actors.*;
@@ -11,10 +10,7 @@ import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.*;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.BonusState;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -45,8 +41,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
-    public static MsPacMan createMsPacMan() {
-        return new MsPacMan();
+    public static Pac createMsPacMan() {
+        return new Pac("Ms. Pac-Man");
     }
 
     public static Ghost createGhost(byte personality) {
@@ -316,7 +312,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     private void addMsPacMan(GameLevel level) {
-        final MsPacMan msPacMan = createMsPacMan();
+        final Pac msPacMan = createMsPacMan();
         msPacMan.setAutomaticSteering(automaticSteering);
         level.setPac(msPacMan);
     }

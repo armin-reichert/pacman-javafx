@@ -19,7 +19,6 @@ open module de.amr.pacmanfx.arcade.ms_pacman {
     exports de.amr.pacmanfx.arcade.ms_pacman;
     exports de.amr.pacmanfx.arcade.ms_pacman.app;
     exports de.amr.pacmanfx.arcade.ms_pacman.model;
-    exports de.amr.pacmanfx.arcade.ms_pacman.model.actors;
     exports de.amr.pacmanfx.arcade.ms_pacman.rendering;
     exports de.amr.pacmanfx.arcade.ms_pacman.scenes;
 }
