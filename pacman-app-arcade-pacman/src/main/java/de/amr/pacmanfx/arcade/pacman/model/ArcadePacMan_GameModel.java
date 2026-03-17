@@ -42,6 +42,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
+    public static final int TOTAL_FOOD_COUNT_ARCADE_PAC_MAN = 244;
+    public static final int BONUS_1_PELLETS_EATEN = 70;
+    public static final int BONUS_2_PELLETS_EATEN = 170;
+
     public static Ghost createGhost(byte personality) {
         return switch (personality) {
             case RED_GHOST_SHADOW -> new Blinky();
@@ -143,15 +147,13 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         final ArcadeHouse house = new ArcadeHouse(houseMinTile);
         terrain.setHouse(house);
 
-
         final AbstractHuntingTimer huntingTimer = createHuntingTimer();
-        final int numFlashes = levelData.numFlashes();
 
-        final GameLevel level = new GameLevel(this, levelNumber, worldMap, huntingTimer, numFlashes);
+        final GameLevel level = new GameLevel(this, levelNumber, worldMap, huntingTimer, levelData.numFlashes());
         level.setDemoLevel(demoLevel);
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
         level.setPacPowerSeconds(levelData.secPacPower());
-        level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
+        level.setPacPowerFadingSeconds(0.5f * levelData.numFlashes()); //TODO correct?
 
         final PacMan pacMan = createPacMan();
         pacMan.setAutomaticSteering(automaticSteering);
@@ -182,10 +184,10 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         level.ghosts().forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
 
         final int totalFoodCount = worldMap.foodLayer().totalFoodCount();
-        if (totalFoodCount == 244) {
+        if (totalFoodCount == TOTAL_FOOD_COUNT_ARCADE_PAC_MAN) {
             // Original Arcade map
-            bonus1PelletsEaten = 70;
-            bonus2PelletsEaten = 170;
+            bonus1PelletsEaten = BONUS_1_PELLETS_EATEN;
+            bonus2PelletsEaten = BONUS_2_PELLETS_EATEN;
         } else {
             // XXL maps may have different food count
             bonus1PelletsEaten = totalFoodCount / 4;
