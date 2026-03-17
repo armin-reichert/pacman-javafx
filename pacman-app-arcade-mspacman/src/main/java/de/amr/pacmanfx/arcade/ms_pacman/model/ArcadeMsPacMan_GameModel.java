@@ -3,12 +3,10 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
-import de.amr.pacmanfx.arcade.ms_pacman.model.actors.*;
+import de.amr.pacmanfx.arcade.ms_pacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
-import de.amr.pacmanfx.arcade.pacman.model.actors.Clyde;
-import de.amr.pacmanfx.arcade.pacman.model.actors.ElroyState;
-import de.amr.pacmanfx.arcade.pacman.model.actors.Inky;
+import de.amr.pacmanfx.arcade.pacman.model.actors.*;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -53,12 +51,69 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     public static Ghost createGhost(byte personality) {
         return switch (personality) {
-            case RED_GHOST_SHADOW -> new Blinky();
-            case PINK_GHOST_SPEEDY -> new Pinky();
-            case CYAN_GHOST_BASHFUL -> new Inky();
-            case ORANGE_GHOST_POKEY -> new Clyde("Sue");
+            case RED_GHOST_SHADOW -> createBlinky();
+            case PINK_GHOST_SPEEDY -> createPinky();
+            case CYAN_GHOST_BASHFUL -> createInky();
+            case ORANGE_GHOST_POKEY -> createSue();
             default -> throw new IllegalArgumentException();
         };
+    }
+
+    /**
+     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
+     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
+     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
+     *
+     * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
+     */
+    public static Ghost createBlinky() {
+        final var blinky = new Blinky();
+        blinky.setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
+            blinky.setSpeed(speed);
+            if (gameLevel.huntingTimer().phaseIndex() == 0) {
+                // first scatter phase
+                blinky.roam(gameLevel);
+            } else {
+                boolean chase = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING || blinky.elroyState().enabled();
+                final Vector2i targetTile = chase
+                    ? blinky.chasingTargetTile(gameLevel)
+                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(blinky.personality());
+                blinky.tryMovingTowardsTargetTile(gameLevel, targetTile);
+            }
+        });
+        return blinky;
+    }
+
+    /**
+     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
+     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
+     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
+     *
+     * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
+     */
+    public static Ghost createPinky() {
+        final var pinky = new Pinky();
+        pinky.setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
+            pinky.setSpeed(speed);
+            if (gameLevel.huntingTimer().phaseIndex() == 0) {
+                // first scatter phase
+                pinky.roam(gameLevel);
+            } else {
+                final Vector2i targetTile = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING
+                    ? pinky.chasingTargetTile(gameLevel)
+                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(pinky.personality());
+                pinky.tryMovingTowardsTargetTile(gameLevel, targetTile);
+            }
+        });
+        return pinky;
+    }
+
+    public static Ghost createInky() {
+        return new Inky();
+    }
+
+    public static Ghost createSue() {
+        return new Clyde("Sue");
     }
 
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
