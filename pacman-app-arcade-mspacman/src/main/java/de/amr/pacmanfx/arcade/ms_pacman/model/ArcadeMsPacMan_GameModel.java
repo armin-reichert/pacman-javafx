@@ -51,10 +51,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     public static Ghost createGhost(byte personality) {
         return switch (personality) {
-            case RED_GHOST_SHADOW -> createBlinky();
-            case PINK_GHOST_SPEEDY -> createPinky();
-            case CYAN_GHOST_BASHFUL -> createInky();
-            case ORANGE_GHOST_POKEY -> createSue();
+            case RED_GHOST_SHADOW -> assignShadowBehavior(new RedGhostShadow("Blinky"));
+            case PINK_GHOST_SPEEDY -> assignAmbushBehavior(new PinkGhostAmbusher("Pinky"));
+            case CYAN_GHOST_BASHFUL -> new CyanGhostBashful("Inky");
+            case ORANGE_GHOST_POKEY -> new OrangeGhostPokey("Sue");
             default -> throw new IllegalArgumentException();
         };
     }
@@ -66,22 +66,21 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      *
      * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
      */
-    public static Ghost createBlinky() {
-        final var blinky = new Blinky();
-        blinky.setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
-            blinky.setSpeed(speed);
+    private static Ghost assignShadowBehavior(RedGhostShadow ghost) {
+        ghost.setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
+            ghost.setSpeed(speed);
             if (gameLevel.huntingTimer().phaseIndex() == 0) {
                 // first scatter phase
-                blinky.roam(gameLevel);
+                ghost.roam(gameLevel);
             } else {
-                boolean chase = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING || blinky.elroyState().enabled();
+                boolean chase = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING || ghost.elroyState().enabled();
                 final Vector2i targetTile = chase
-                    ? blinky.chasingTargetTile(gameLevel)
-                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(blinky.personality());
-                blinky.tryMovingTowardsTargetTile(gameLevel, targetTile);
+                    ? ghost.chasingTargetTile(gameLevel)
+                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
+                ghost.tryMovingTowardsTargetTile(gameLevel, targetTile);
             }
         });
-        return blinky;
+        return ghost;
     }
 
     /**
@@ -91,29 +90,20 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      *
      * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
      */
-    public static Ghost createPinky() {
-        final var pinky = new Pinky();
-        pinky.setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
-            pinky.setSpeed(speed);
+    private static Ghost assignAmbushBehavior(Ghost ghost) {
+        ghost.setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
+            ghost.setSpeed(speed);
             if (gameLevel.huntingTimer().phaseIndex() == 0) {
                 // first scatter phase
-                pinky.roam(gameLevel);
+                ghost.roam(gameLevel);
             } else {
                 final Vector2i targetTile = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING
-                    ? pinky.chasingTargetTile(gameLevel)
-                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(pinky.personality());
-                pinky.tryMovingTowardsTargetTile(gameLevel, targetTile);
+                    ? ghost.chasingTargetTile(gameLevel)
+                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
+                ghost.tryMovingTowardsTargetTile(gameLevel, targetTile);
             }
         });
-        return pinky;
-    }
-
-    public static Ghost createInky() {
-        return new Inky();
-    }
-
-    public static Ghost createSue() {
-        return new Clyde("Sue");
+        return ghost;
     }
 
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
@@ -316,7 +306,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     private void createGateKeeper() {
         this.gateKeeper = new GateKeeper();
         this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
-            if (prisoner.personality() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW) instanceof Blinky blinky) {
+            if (prisoner.personality() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW) instanceof RedGhostShadow blinky) {
                 if (blinky.elroyState().mode() != ElroyState.Mode.ZERO && !blinky.elroyState().enabled()) {
                     Logger.debug("Re-enable Blinky 'Cruise Elroy' mode because {} got released:", prisoner.name());
                     blinky.elroyState().setEnabled(true);

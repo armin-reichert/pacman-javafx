@@ -9,22 +9,21 @@ import de.amr.pacmanfx.model.actors.Ghost;
 
 import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
 
-public class Clyde extends Ghost {
+/**
+ * The orange ghost attacks Pac-Man directly or retreats towards scatter target if Pac is nearby.
+ */
+public class OrangeGhostPokey extends Ghost {
 
-    public Clyde() {
-        super(ORANGE_GHOST_POKEY, "Clyde");
-        reset();
-    }
+    public static final int ESCAPE_DISTANCE_IN_TILES = 8;
 
-    public Clyde(String alias) {
-        super(ORANGE_GHOST_POKEY, alias);
+    public OrangeGhostPokey(String name) {
+        super(ORANGE_GHOST_POKEY, name);
         reset();
     }
 
     @Override
     public Vector2i chasingTargetTile(GameLevel gameLevel) {
-        // Attacks directly or retreats towards scatter target if Pac is near
-        return tile().euclideanDist(gameLevel.pac().tile()) < 8
+        return tile().euclideanDist(gameLevel.pac().tile()) < ESCAPE_DISTANCE_IN_TILES
             ? gameLevel.worldMap().terrainLayer().ghostScatterTile(personality())
             : gameLevel.pac().tile();
     }

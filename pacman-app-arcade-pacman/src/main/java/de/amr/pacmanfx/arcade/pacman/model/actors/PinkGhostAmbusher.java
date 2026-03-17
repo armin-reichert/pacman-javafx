@@ -9,19 +9,18 @@ import de.amr.pacmanfx.model.actors.Ghost;
 
 import static de.amr.pacmanfx.Globals.PINK_GHOST_SPEEDY;
 
-public class Pinky extends Ghost {
+/**
+ * The pink ghost ambushes Pac-Man.
+ */
+public class PinkGhostAmbusher extends Ghost {
 
-    public Pinky() {
-        super(PINK_GHOST_SPEEDY, "Pinky");
+    public PinkGhostAmbusher(String name) {
+        super(PINK_GHOST_SPEEDY, name);
         reset();
     }
 
     @Override
-    public void onPacKilled(GameLevel gameLevel) {}
-
-    @Override
     public Vector2i chasingTargetTile(GameLevel gameLevel) {
-        // Pinky (pink ghost) ambushes Pac-Man
         return gameLevel.pac().tilesAheadWithOverflowBug(4);
     }
 }

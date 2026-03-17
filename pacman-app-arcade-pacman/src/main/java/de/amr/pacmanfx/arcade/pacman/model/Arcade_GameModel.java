@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.arcade.pacman.model;
 
-import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.arcade.pacman.model.actors.ElroyState;
+import de.amr.pacmanfx.arcade.pacman.model.actors.RedGhostShadow;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -158,8 +158,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
     }
 
-    private Optional<Blinky> optBlinky(GameLevel level) {
-        return level.ghosts().filter(Blinky.class::isInstance).map(Blinky.class::cast).findAny();
+    private Optional<RedGhostShadow> optBlinky(GameLevel level) {
+        return level.ghosts().filter(RedGhostShadow.class::isInstance).map(RedGhostShadow.class::cast).findAny();
     }
 
     // GameEvents interface
@@ -482,7 +482,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public float ghostSpeedAttacking(GameLevel level, Ghost ghost) {
         final int levelNumber = level.number();
         final LevelData data = levelData(levelNumber);
-        if (ghost instanceof Blinky blinky) {
+        if (ghost instanceof RedGhostShadow blinky) {
             return switch (blinky.elroyState().mode()) {
                 case ZERO -> data.pctGhostSpeed()  * BASE_SPEED_1_PERCENT;
                 case ONE -> data.pctElroy1Speed() * BASE_SPEED_1_PERCENT;

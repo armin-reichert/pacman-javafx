@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
-import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.arcade.pacman.model.actors.ElroyState;
+import de.amr.pacmanfx.arcade.pacman.model.actors.RedGhostShadow;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.world.FoodLayer;
@@ -98,7 +99,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Cruise Elroy Mode")
     public void testCruiseElroyMode() {
-        final Blinky blinky = (Blinky) theGameLevel().ghost(RED_GHOST_SHADOW);
+        final RedGhostShadow blinky = (RedGhostShadow) theGameLevel().ghost(RED_GHOST_SHADOW);
         final FoodLayer foodLayer = theGameLevel().worldMap().foodLayer();
         final LevelData data = theGame().levelData(theGameLevel().number());
         while (foodLayer.uneatenFoodCount() > data.numDotsLeftElroy1()) {

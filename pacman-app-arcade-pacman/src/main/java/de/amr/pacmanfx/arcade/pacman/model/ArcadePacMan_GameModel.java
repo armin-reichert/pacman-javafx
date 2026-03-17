@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.arcade.pacman.model.actors.*;
-import de.amr.pacmanfx.arcade.pacman.model.actors.ElroyState;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -54,10 +53,10 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     public static Ghost createGhost(byte personality) {
         return switch (personality) {
-            case RED_GHOST_SHADOW -> new Blinky();
-            case PINK_GHOST_SPEEDY -> new Pinky();
-            case CYAN_GHOST_BASHFUL -> new Inky();
-            case ORANGE_GHOST_POKEY -> new Clyde();
+            case RED_GHOST_SHADOW -> new RedGhostShadow("Blinky");
+            case PINK_GHOST_SPEEDY -> new PinkGhostAmbusher("Pinky");
+            case CYAN_GHOST_BASHFUL -> new CyanGhostBashful("Inky");
+            case ORANGE_GHOST_POKEY -> new OrangeGhostPokey("Clyde");
             default -> throw new IllegalArgumentException("Illegal ghost personality: %d".formatted(personality));
         };
     }
@@ -220,7 +219,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         gateKeeper = new GateKeeper();
         gateKeeper.setOnGhostReleased((level, prisoner) -> {
             if (prisoner.personality() == ORANGE_GHOST_POKEY) {
-                if (!(level.ghost(RED_GHOST_SHADOW) instanceof Blinky blinky)) {
+                if (!(level.ghost(RED_GHOST_SHADOW) instanceof RedGhostShadow blinky)) {
                     throw new IllegalStateException("Red ghost is not blinky? WTF!");
                 }
                 final ElroyState elroyState = blinky.elroyState();

@@ -10,12 +10,15 @@ import de.amr.pacmanfx.model.actors.Ghost;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 
-public class Blinky extends Ghost {
+/**
+ * The red ghost attacks Pac-Man directly and follows him like a shadow.
+ */
+public class RedGhostShadow extends Ghost {
 
     private final ElroyState elroyState = new ElroyState();
 
-    public Blinky() {
-        super(RED_GHOST_SHADOW, "Blinky");
+    public RedGhostShadow(String name) {
+        super(RED_GHOST_SHADOW, name);
         setHuntingStrategy((GameLevel level, Float speed) -> {
             setSpeed(speed);
             final boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || elroyState.enabled();
@@ -45,10 +48,6 @@ public class Blinky extends Ghost {
         elroyState.setEnabled(false);
     }
 
-    /**
-     * Blinky (red ghost) attacks Pac-Man directly.
-     * @return Pac-Man's current tile position
-     */
     @Override
     public Vector2i chasingTargetTile(GameLevel level) {
         return level.pac().tile();

@@ -10,19 +10,18 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import static de.amr.pacmanfx.Globals.CYAN_GHOST_BASHFUL;
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 
-public class Inky extends Ghost {
+/**
+ * The cyan ghost attacks Pac-Man from the opposite side of the red ghost.
+ */
+public class CyanGhostBashful extends Ghost {
 
-    public Inky() {
-        super(CYAN_GHOST_BASHFUL, "Inky");
+    public CyanGhostBashful(String name) {
+        super(CYAN_GHOST_BASHFUL, name);
         reset();
     }
 
     @Override
-    public void onPacKilled(GameLevel gameLevel) {}
-
-    @Override
     public Vector2i chasingTargetTile(GameLevel gameLevel) {
-        // Inky (cyan ghost) attacks from opposite side as Blinky
         return gameLevel.pac().tilesAheadWithOverflowBug(2).scaled(2).minus(gameLevel.ghost(RED_GHOST_SHADOW).tile());
     }
 }
