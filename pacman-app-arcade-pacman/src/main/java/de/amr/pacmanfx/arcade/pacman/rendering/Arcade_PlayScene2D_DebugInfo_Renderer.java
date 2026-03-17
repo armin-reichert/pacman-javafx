@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Direction;
@@ -73,7 +73,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
             final State<Game> state = game.control().state();
             final String gameStateText = state.name() + " (Tick %d)".formatted(state.timer().tickCount());
             String huntingPhaseText = "";
-            if (state == ArcadeGameState.HUNTING) {
+            if (state == Arcade_GameState.HUNTING) {
                 final AbstractHuntingTimer huntingTimer = level.huntingTimer();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
             }

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.CoinMechanism;
@@ -11,8 +11,8 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.GameAction;
 
-import static de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState.INTRO;
-import static de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState.SETTING_OPTIONS_FOR_START;
+import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.INTRO;
+import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.SETTING_OPTIONS_FOR_START;
 
 public interface ArcadeMachineActions {
 
@@ -43,7 +43,7 @@ public interface ArcadeMachineActions {
         @Override
         public void execute(GameUI ui) {
             ui.voicePlayer().stopVoice();
-            ui.gameContext().game().control().enterState(ArcadeGameState.STARTING_GAME_OR_LEVEL);
+            ui.gameContext().game().control().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override

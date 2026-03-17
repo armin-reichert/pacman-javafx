@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
@@ -135,12 +135,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
         final Game game = gameContext().game();
-        if (e.newState() == ArcadeGameState.LEVEL_COMPLETE) {
+        if (e.newState() == Arcade_GameState.LEVEL_COMPLETE) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             soundEffects.stopAll();
             createAndPlayLevelCompletedAnimation(level);
         }
-        else if (e.newState() == ArcadeGameState.GAME_OVER) {
+        else if (e.newState() == Arcade_GameState.GAME_OVER) {
             soundEffects.playGameOverSound();
             game.hud().credit(true);
         }
@@ -230,7 +230,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private void updateHUD(GameLevel level) {
         final Game game = level.game();
         // While Pac-Man is still invisible on level start, one Pac symbol more is shown in the lives counter
-        final boolean oneExtra = game.control().state() == ArcadeGameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
+        final boolean oneExtra = game.control().state() == Arcade_GameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
         final int lifeCountDisplayed = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
         game.hud().setVisibleLifeCount(Math.clamp(lifeCountDisplayed, 0, game.hud().maxLivesDisplayed()));
     }

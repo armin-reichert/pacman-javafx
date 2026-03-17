@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene3D;
@@ -72,10 +72,10 @@ public class PacManXXL_MsPacMan_GameSceneConfig implements GameSceneConfig {
 
     private SceneID determineSceneID(Game game) {
         return switch (game.control().state()) {
-            case ArcadeGameState.BOOT -> CommonSceneID.BOOT_SCENE;
-            case ArcadeGameState.SETTING_OPTIONS_FOR_START -> CommonSceneID.START_SCENE;
-            case ArcadeGameState.INTRO -> CommonSceneID.INTRO_SCENE;
-            case ArcadeGameState.INTERMISSION -> resolveCutSceneID(game);
+            case Arcade_GameState.BOOT -> CommonSceneID.BOOT_SCENE;
+            case Arcade_GameState.SETTING_OPTIONS_FOR_START -> CommonSceneID.START_SCENE;
+            case Arcade_GameState.INTRO -> CommonSceneID.INTRO_SCENE;
+            case Arcade_GameState.INTERMISSION -> resolveCutSceneID(game);
             case CutScenesTestState testState -> GameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
         };

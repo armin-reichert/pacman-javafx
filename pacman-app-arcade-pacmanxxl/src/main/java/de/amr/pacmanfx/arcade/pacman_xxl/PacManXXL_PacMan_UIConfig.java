@@ -32,7 +32,6 @@ import org.tinylog.Logger;
 
 import java.util.ResourceBundle;
 
-import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_RED;
 
 public class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManager {
@@ -179,13 +178,7 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManager {
 
     @Override
     public Ghost createGhostWithAnimations(byte personality) {
-        final Ghost ghost = switch (personality) {
-            case RED_GHOST_SHADOW   -> ArcadePacMan_GameModel.createBlinky();
-            case PINK_GHOST_SPEEDY  -> ArcadePacMan_GameModel.createPinky();
-            case CYAN_GHOST_BASHFUL -> ArcadePacMan_GameModel.createInky();
-            case ORANGE_GHOST_POKEY -> ArcadePacMan_GameModel.createClyde();
-            default -> throw new IllegalArgumentException("Illegal ghost personality: " + personality);
-        };
+        final Ghost ghost = ArcadePacMan_GameModel.createGhost(personality);
         ghost.setAnimationManager(createGhostAnimations(personality));
         ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
         return ghost;

@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadeGameState;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.State;
@@ -219,9 +219,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 final Game game = scene.gameContext().game();
                 scene.marquee.timer().doTick();
                 if (sceneTimer.atSecond(2.0) && !game.canStartNewGame()) {
-                    game.control().enterState(ArcadeGameState.STARTING_GAME_OR_LEVEL); // demo level
+                    game.control().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL); // demo level
                 } else if (sceneTimer.atSecond(5)) {
-                    game.control().enterState(ArcadeGameState.SETTING_OPTIONS_FOR_START);
+                    game.control().enterState(Arcade_GameState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };

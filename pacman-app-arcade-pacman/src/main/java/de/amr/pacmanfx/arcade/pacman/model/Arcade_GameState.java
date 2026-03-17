@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.lib.TickTimer;
@@ -10,7 +9,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessageType;
 
-public enum ArcadeGameState implements State<Game> {
+public enum Arcade_GameState implements State<Game> {
 
     /**
      * Corresponds to the screen showing all these random symbols from the Arcade video memory.

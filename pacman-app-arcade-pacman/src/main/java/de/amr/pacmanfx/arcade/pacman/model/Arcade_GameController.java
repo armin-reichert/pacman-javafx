@@ -20,7 +20,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
 
     public Arcade_GameController() {
         setName("Arcade Pac-Man Games State Machine");
-        addStates(ArcadeGameState.values());
+        addStates(Arcade_GameState.values());
     }
 
     @Override
