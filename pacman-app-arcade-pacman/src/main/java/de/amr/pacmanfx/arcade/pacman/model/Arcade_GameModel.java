@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 public abstract class Arcade_GameModel extends AbstractGameModel {
 
     // Level data as given in the "Pac-Man Dossier"
-    protected static final LevelData[] LEVEL_DATA = {
+    protected static final LevelData[] LEVEL_DATA_TABLE = {
         /* 1*/ LevelData.of( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5),
         /* 2*/ LevelData.of( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5),
         /* 3*/ LevelData.of( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5),

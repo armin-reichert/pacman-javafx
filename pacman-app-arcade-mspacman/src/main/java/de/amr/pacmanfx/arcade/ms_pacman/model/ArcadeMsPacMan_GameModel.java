@@ -96,8 +96,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     @Override
     public LevelData levelData(int levelNumber) {
-        int row = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
-        return LEVEL_DATA[row];
+        int row = Math.min(levelNumber - 1, LEVEL_DATA_TABLE.length - 1);
+        return LEVEL_DATA_TABLE[row];
     }
 
     @Override

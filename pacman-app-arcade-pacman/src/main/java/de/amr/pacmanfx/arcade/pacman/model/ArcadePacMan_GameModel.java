@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomFloat;
 import static de.amr.pacmanfx.lib.math.Vector2b.vector2b;
@@ -27,13 +28,13 @@ import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Classic Arcade Pac-Man.
+ * Classic Arcade Pac-Man game.
  *
- * <p>There are however some differences to the original.
+ * <p>There are still some differences to the original.
  *     <ul>
  *         <li>Only single player mode supported</li>
- *         <li>Attract mode (demo level) not identical to Arcade version because frightened ghosts move randomly</li>
- *         <li>Pac-Man steering more suitable for keyboard because next direction can be selected before intersection is reached</li>
+ *         <li>Attract mode (demo level) differs from original (frightened ghosts move "really" randomly)</li>
+ *         <li>Pac-Man steering: Next move direction can be pre-selected before an intersection is reached</li>
  *         <li>Cornering not implemented as in original game, just some slowdown for ghosts going around corners</li>
  *     </ul>
  * </p>
@@ -46,18 +47,18 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     public static final int BONUS_1_PELLETS_EATEN = 70;
     public static final int BONUS_2_PELLETS_EATEN = 170;
 
+    public static PacMan createPacMan() {
+        return new PacMan();
+    }
+
     public static Ghost createGhost(byte personality) {
         return switch (personality) {
             case RED_GHOST_SHADOW -> new Blinky();
             case PINK_GHOST_SPEEDY -> new Pinky();
             case CYAN_GHOST_BASHFUL -> new Inky();
             case ORANGE_GHOST_POKEY -> new Clyde();
-            default -> throw new IllegalArgumentException();
+            default -> throw new IllegalArgumentException("Illegal ghost personality: %d".formatted(personality));
         };
-    }
-
-    public static PacMan createPacMan() {
-        return new PacMan();
     }
 
     protected static final List<Vector2b> DEMO_LEVEL_ROUTE = List.of(
@@ -80,9 +81,13 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     protected static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
 
-    protected LevelCounter levelCounter;
+    protected final LevelCounter levelCounter;
     protected final WorldMapSelector mapSelector;
 
+    /**
+     * @param coinMechanism the coin mechanism
+     * @param highScoreFile file where high score is stored
+     */
     public ArcadePacMan_GameModel(CoinMechanism coinMechanism, File highScoreFile) {
         this(coinMechanism, new ArcadePacMan_MapSelector(), highScoreFile);
     }
@@ -94,28 +99,18 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
      */
     public ArcadePacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector, File highScoreFile) {
         super(coinMechanism, highScoreFile);
-
         this.mapSelector = requireNonNull(mapSelector);
         this.levelCounter = new ArcadePacMan_LevelCounter();
-
-        this.gateKeeper = new GateKeeper();
-        this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
-            if (prisoner.personality() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW) instanceof Blinky blinky) {
-                if (blinky.elroyMode() != Blinky.ElroyMode.NONE && !blinky.isCruiseElroyEnabled()) {
-                    Logger.debug("Re-enable Blinky 'Cruise Elroy' mode because {} got released:", prisoner.name());
-                    blinky.setCruiseElroyEnabled(true);
-                }
-            }
-        });
-
         this.demoLevelSteering = new RouteBasedSteering(DEMO_LEVEL_ROUTE);
         this.automaticSteering = new RuleBasedPacSteering();
+        createGateKeeper();
     }
 
     @Override
     public LevelData levelData(int levelNumber) {
-        final int row = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
-        return LEVEL_DATA[row];
+        requireValidLevelNumber(levelNumber);
+        final int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA_TABLE.length - 1);
+        return LEVEL_DATA_TABLE[rowIndex];
     }
 
     @Override
@@ -135,18 +130,18 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     @Override
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
-        final LevelData levelData = levelData(levelNumber);
+        requireValidLevelNumber(levelNumber);
 
-        final WorldMap worldMap;
-        worldMap = mapSelector.supplyWorldMap(levelNumber);
+        final WorldMap worldMap = mapSelector.supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
+
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
-        // Just in case, property is not set in terrain layer:
         terrain.propertyMap().put(POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
 
         final ArcadeHouse house = new ArcadeHouse(houseMinTile);
         terrain.setHouse(house);
 
+        final LevelData levelData = levelData(levelNumber);
         final AbstractHuntingTimer huntingTimer = createHuntingTimer();
 
         final GameLevel level = new GameLevel(this, levelNumber, worldMap, huntingTimer, levelData.numFlashes());
@@ -155,33 +150,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         level.setPacPowerSeconds(levelData.secPacPower());
         level.setPacPowerFadingSeconds(0.5f * levelData.numFlashes()); //TODO correct?
 
-        final PacMan pacMan = createPacMan();
-        pacMan.setAutomaticSteering(automaticSteering);
-        level.setPac(pacMan);
-
-        final Ghost blinky = createGhost(RED_GHOST_SHADOW);
-        blinky.setHome(house);
-        setGhostStartPosition(blinky, terrain.getTileProperty(POS_GHOST_1_RED));
-
-        final Ghost pinky = createGhost(PINK_GHOST_SPEEDY);
-        pinky.setHome(house);
-        setGhostStartPosition(pinky, terrain.getTileProperty(POS_GHOST_2_PINK));
-
-        final Ghost inky = createGhost(CYAN_GHOST_BASHFUL);
-        inky.setHome(house);
-        setGhostStartPosition(inky, terrain.getTileProperty(POS_GHOST_3_CYAN));
-
-        final Ghost clyde = createGhost(ORANGE_GHOST_POKEY);
-        clyde.setHome(house);
-        setGhostStartPosition(clyde, terrain.getTileProperty(POS_GHOST_4_ORANGE));
-
-        level.setGhosts(blinky, pinky, inky, clyde);
-
-        // Special tiles where attacking ghosts cannot move up
-        final List<Vector2i> oneWayDownTiles = terrain.tiles()
-            .filter(tile -> terrain.content(tile) == TerrainTile.ONE_WAY_DOWN.$)
-            .toList();
-        level.ghosts().forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
+        addPacMan(level);
+        addGhosts(level, house);
 
         final int totalFoodCount = worldMap.foodLayer().totalFoodCount();
         if (totalFoodCount == TOTAL_FOOD_COUNT_ARCADE_PAC_MAN) {
@@ -189,13 +159,13 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
             bonus1PelletsEaten = BONUS_1_PELLETS_EATEN;
             bonus2PelletsEaten = BONUS_2_PELLETS_EATEN;
         } else {
-            // XXL maps may have different food count
+            // XXL maps may have different food count, use heuristic values
             bonus1PelletsEaten = totalFoodCount / 4;
             bonus2PelletsEaten = totalFoodCount * 3 / 4;
         }
 
-        // Each level has a single bonus symbol appearing twice during the level. From level 13 on, the same symbol
-        // (code=7, "key") appears. Klingt komisch? Is aber so!
+        // Each level has a single bonus symbol appearing twice during the level.
+        // From level 13 on, the same symbol (code=7, "key") appears. Klingt komisch? Is' aber so!
         final byte symbol = bonusSymbol(Math.min(levelNumber, 13));
         level.setBonusSymbol(0, symbol);
         level.setBonusSymbol(1, symbol);
@@ -205,20 +175,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         return level;
     }
 
-    protected AbstractHuntingTimer createHuntingTimer() {
-        final var huntingTimer = new ArcadePacMan_HuntingTimer();
-        huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
-            optGameLevel().ifPresent(level -> {
-                if (newPhaseIndex.intValue() > 0) {
-                    level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
-                        .forEach(Ghost::requestTurnBack);
-                }
-            });
-            huntingTimer.logPhase();
-        });
-        return huntingTimer;
-    }
-
     @Override
     protected boolean isPacSafeInDemoLevel(GameLevel demoLevel) {
         return false;
@@ -226,8 +182,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     @Override
     public boolean isBonusReached(GameLevel level) {
-        final int eaten = level.worldMap().foodLayer().eatenFoodCount();
-        return eaten == bonus1PelletsEaten || eaten == bonus2PelletsEaten;
+        final int pelletsEaten = level.worldMap().foodLayer().eatenFoodCount();
+        return pelletsEaten == bonus1PelletsEaten || pelletsEaten == bonus2PelletsEaten;
     }
 
     @Override
@@ -241,6 +197,68 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         bonus.setEdibleSeconds(randomFloat(9, 10));
         level.setBonus(bonus);
         publishGameEvent(new BonusActivatedEvent(bonus));
+    }
+
+    // helpers
+
+    protected void addPacMan(GameLevel level) {
+        final PacMan pacMan = createPacMan();
+        pacMan.setAutomaticSteering(automaticSteering);
+        level.setPac(pacMan);
+    }
+
+    protected void addGhosts(GameLevel level, House house) {
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+
+        // Special tiles where attacking ghosts cannot move up
+        final List<Vector2i> oneWayDownTiles = terrain.tiles()
+            .filter(tile -> terrain.content(tile) == TerrainTile.ONE_WAY_DOWN.$)
+            .toList();
+
+        final Ghost blinky = createGhost(RED_GHOST_SHADOW,   terrain, house, POS_GHOST_1_RED,    oneWayDownTiles);
+        final Ghost pinky  = createGhost(PINK_GHOST_SPEEDY,  terrain, house, POS_GHOST_2_PINK,   oneWayDownTiles);
+        final Ghost inky   = createGhost(CYAN_GHOST_BASHFUL, terrain, house, POS_GHOST_3_CYAN,   oneWayDownTiles);
+        final Ghost clyde  = createGhost(ORANGE_GHOST_POKEY, terrain, house, POS_GHOST_4_ORANGE, oneWayDownTiles);
+
+        level.setGhosts(blinky, pinky, inky, clyde);
+    }
+
+    protected Ghost createGhost(byte personality, TerrainLayer terrain, House house, String startTileProperty, List<Vector2i> specialTiles) {
+        final Ghost ghost = createGhost(personality);
+        ghost.setHome(house);
+        ghost.setSpecialTerrainTiles(specialTiles);
+        setGhostStartPosition(ghost, terrain.getTileProperty(startTileProperty));
+        return ghost;
+    }
+
+    protected void createGateKeeper() {
+        gateKeeper = new GateKeeper();
+        gateKeeper.setOnGhostReleased((level, prisoner) -> {
+            if (prisoner.personality() == ORANGE_GHOST_POKEY) {
+                if (!(level.ghost(RED_GHOST_SHADOW) instanceof Blinky blinky)) {
+                    throw new IllegalStateException("Red ghost is not blinky? WTF!");
+                }
+                if (blinky.elroyMode() != Blinky.ElroyMode.NONE && !blinky.isCruiseElroyEnabled()) {
+                    blinky.setCruiseElroyEnabled(true);
+                    Logger.debug("Re-enabled Blinky 'Cruise Elroy' mode because {} got released:", prisoner.name());
+                }
+            }
+        });
+    }
+
+    protected AbstractHuntingTimer createHuntingTimer() {
+        final var huntingTimer = new ArcadePacMan_HuntingTimer();
+        // On each phase start (except the initial phase), the ghosts reverse their move direction
+        huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
+            optGameLevel().ifPresent(level -> {
+                if (newPhaseIndex.intValue() > 0) {
+                    level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
+                        .forEach(Ghost::requestTurnBack);
+                }
+            });
+            huntingTimer.logPhase();
+        });
+        return huntingTimer;
     }
 
     protected int bonusValue(byte symbolCode) {
