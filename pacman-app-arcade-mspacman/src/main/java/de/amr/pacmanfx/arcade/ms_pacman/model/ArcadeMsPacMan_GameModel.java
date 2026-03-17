@@ -22,8 +22,7 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
-import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
@@ -44,20 +43,14 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
-    public static Blinky createBlinky() {
-        return new Blinky();
-    }
-
-    public static Sue createSue() {
-        return new Sue();
-    }
-
-    public static Inky createInky() {
-        return new Inky();
-    }
-
-    public static Pinky createPinky() {
-        return new Pinky();
+    public static Ghost createGhost(byte personality) {
+        return switch (personality) {
+            case RED_GHOST_SHADOW -> new Blinky();
+            case PINK_GHOST_SPEEDY -> new Pinky();
+            case CYAN_GHOST_BASHFUL -> new Inky();
+            case ORANGE_GHOST_POKEY -> new Sue();
+            default -> throw new IllegalArgumentException();
+        };
     }
 
     public static MsPacMan createMsPacMan() {
@@ -149,19 +142,19 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         msPacMan.setAutomaticSteering(automaticSteering);
         level.setPac(msPacMan);
 
-        final Blinky blinky = createBlinky();
+        final Ghost blinky = createGhost(RED_GHOST_SHADOW);
         blinky.setHome(house);
         setGhostStartPosition(blinky, terrain.getTileProperty(POS_GHOST_1_RED));
 
-        final Pinky pinky = createPinky();
+        final Ghost pinky = createGhost(PINK_GHOST_SPEEDY);
         pinky.setHome(house);
         setGhostStartPosition(pinky, terrain.getTileProperty(POS_GHOST_2_PINK));
 
-        final Inky inky = createInky();
+        final Ghost inky = createGhost(CYAN_GHOST_BASHFUL);
         inky.setHome(house);
         setGhostStartPosition(inky, terrain.getTileProperty(POS_GHOST_3_CYAN));
 
-        final Sue sue = createSue();
+        final Ghost sue = createGhost(ORANGE_GHOST_POKEY);
         sue.setHome(house);
         setGhostStartPosition(sue, terrain.getTileProperty(POS_GHOST_4_ORANGE));
 
