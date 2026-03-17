@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
@@ -76,18 +77,16 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     public ArcadeMsPacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector, File highScoreFile) {
         super(coinMechanism, highScoreFile);
-
         this.mapSelector = requireNonNull(mapSelector);
         this.levelCounter = new ArcadeMsPacMan_LevelCounter();
-
-        createGateKeeper();
-
         this.demoLevelSteering = new RuleBasedPacSteering();
         this.automaticSteering = new RuleBasedPacSteering();
+        createGateKeeper();
     }
 
     @Override
     public LevelData levelData(int levelNumber) {
+        requireValidLevelNumber(levelNumber);
         int row = Math.min(levelNumber - 1, LEVEL_DATA_TABLE.length - 1);
         return LEVEL_DATA_TABLE[row];
     }
@@ -109,13 +108,12 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     @Override
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
-        final LevelData levelData = levelData(levelNumber);
+        requireValidLevelNumber(levelNumber);
 
         final WorldMap worldMap = mapSelector.supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
-        // Just in case, property was not set in terrain layer
         terrain.propertyMap().put(POS_HOUSE_MIN_TILE,  houseMinTile.toString());
 
         final var house = new ArcadeHouse(houseMinTile);
@@ -124,7 +122,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         final AbstractHuntingTimer huntingTimer = createHuntingTimer();
         final int numFlashes = levelData(levelNumber).numFlashes();
 
-        final var level = new GameLevel(this, levelNumber, worldMap, huntingTimer, numFlashes);
+        final LevelData levelData = levelData(levelNumber);
+        final GameLevel level = new GameLevel(this, levelNumber, worldMap, huntingTimer, numFlashes);
         level.setDemoLevel(demoLevel);
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
         level.setPacPowerSeconds(levelData.secPacPower());
@@ -139,61 +138,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         levelCounter.setEnabled(levelNumber < 8);
 
         return level;
-    }
-
-    private void addMsPacMan(GameLevel level) {
-        final MsPacMan msPacMan = createMsPacMan();
-        msPacMan.setAutomaticSteering(automaticSteering);
-        level.setPac(msPacMan);
-    }
-
-    private void initBoni(GameLevel level) {
-        final int totalFoodCount = level.worldMap().foodLayer().totalFoodCount();
-        switch (totalFoodCount) {
-            case 224, 238, 242, 244 -> {
-                // Original Arcade maps
-                bonus1PelletsEaten = 64;
-                bonus2PelletsEaten = 176;
-            }
-            default -> {
-                // XXL maps might be much larger
-                bonus1PelletsEaten = totalFoodCount / 4;
-                bonus2PelletsEaten = totalFoodCount * 3 / 4;
-            }
-        }
-
-        level.setBonusSymbol(0, computeBonusSymbol(level.number()));
-        level.setBonusSymbol(1, computeBonusSymbol(level.number()));
-    }
-
-    private void addGhosts(GameLevel level, ArcadeHouse house) {
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final Ghost blinky = createGhost(RED_GHOST_SHADOW, terrain, house, POS_GHOST_1_RED);
-        final Ghost pinky  = createGhost(PINK_GHOST_SPEEDY, terrain, house, POS_GHOST_2_PINK);
-        final Ghost inky = createGhost(CYAN_GHOST_BASHFUL, terrain, house, POS_GHOST_3_CYAN);
-        final Ghost sue = createGhost(ORANGE_GHOST_POKEY, terrain, house, POS_GHOST_4_ORANGE);
-        level.setGhosts(blinky, pinky, inky, sue);
-    }
-
-    private Ghost createGhost(byte personality, TerrainLayer terrain, House house, String startTileProperty) {
-        final Ghost ghost = createGhost(personality);
-        ghost.setHome(house);
-        setGhostStartPosition(ghost, terrain.getTileProperty(startTileProperty));
-        return ghost;
-    }
-
-    private AbstractHuntingTimer createHuntingTimer() {
-        final var huntingTimer = new ArcadeMsPacMan_HuntingTimer();
-        huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
-            optGameLevel().ifPresent(level -> {
-                if (newPhaseIndex.intValue() > 0) {
-                    level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
-                        .forEach(Ghost::requestTurnBack);
-                }
-            });
-            huntingTimer.logPhase();
-        });
-        return huntingTimer;
     }
 
     @Override
@@ -309,6 +253,76 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         publishGameEvent(new BonusActivatedEvent(bonus));
     }
 
+    // Helpers
+
+    private void createGateKeeper() {
+        this.gateKeeper = new GateKeeper();
+        this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
+            if (prisoner.personality() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW) instanceof Blinky blinky) {
+                if (blinky.elroyMode() != Blinky.ElroyMode.NONE && !blinky.isCruiseElroyEnabled()) {
+                    Logger.debug("Re-enable Blinky 'Cruise Elroy' mode because {} got released:", prisoner.name());
+                    blinky.setCruiseElroyEnabled(true);
+                }
+            }
+        });
+    }
+
+    private void addMsPacMan(GameLevel level) {
+        final MsPacMan msPacMan = createMsPacMan();
+        msPacMan.setAutomaticSteering(automaticSteering);
+        level.setPac(msPacMan);
+    }
+
+    private void addGhosts(GameLevel level, ArcadeHouse house) {
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final Ghost blinky = createGhost(RED_GHOST_SHADOW, terrain, house, POS_GHOST_1_RED);
+        final Ghost pinky  = createGhost(PINK_GHOST_SPEEDY, terrain, house, POS_GHOST_2_PINK);
+        final Ghost inky = createGhost(CYAN_GHOST_BASHFUL, terrain, house, POS_GHOST_3_CYAN);
+        final Ghost sue = createGhost(ORANGE_GHOST_POKEY, terrain, house, POS_GHOST_4_ORANGE);
+        level.setGhosts(blinky, pinky, inky, sue);
+    }
+
+    private Ghost createGhost(byte personality, TerrainLayer terrain, House house, String startTileProperty) {
+        final Ghost ghost = createGhost(personality);
+        ghost.setHome(house);
+        setGhostStartPosition(ghost, terrain.getTileProperty(startTileProperty));
+        return ghost;
+    }
+
+    private AbstractHuntingTimer createHuntingTimer() {
+        final var huntingTimer = new ArcadeMsPacMan_HuntingTimer();
+        huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
+            optGameLevel().ifPresent(level -> {
+                if (newPhaseIndex.intValue() > 0) {
+                    level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
+                        .forEach(Ghost::requestTurnBack);
+                }
+            });
+            huntingTimer.logPhase();
+        });
+        return huntingTimer;
+    }
+
+    private void initBoni(GameLevel level) {
+        final int totalFoodCount = level.worldMap().foodLayer().totalFoodCount();
+        switch (totalFoodCount) {
+            case 224, 238, 242, 244 -> {
+                // Original Arcade maps
+                bonus1PelletsEaten = 64;
+                bonus2PelletsEaten = 176;
+            }
+            default -> {
+                // XXL maps might be much larger
+                bonus1PelletsEaten = totalFoodCount / 4;
+                bonus2PelletsEaten = totalFoodCount * 3 / 4;
+            }
+        }
+
+        level.setBonusSymbol(0, computeBonusSymbol(level.number()));
+        level.setBonusSymbol(1, computeBonusSymbol(level.number()));
+    }
+
+
     protected int bonusValue(byte symbolCode) {
         return switch (symbolCode) {
             case 0 -> 100;  // cherries
@@ -362,17 +376,5 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         bonus.initRoute(route, leftToRight);
         Logger.info("Moving bonus route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
-    }
-
-    private void createGateKeeper() {
-        this.gateKeeper = new GateKeeper();
-        this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
-            if (prisoner.personality() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW) instanceof Blinky blinky) {
-                if (blinky.elroyMode() != Blinky.ElroyMode.NONE && !blinky.isCruiseElroyEnabled()) {
-                    Logger.debug("Re-enable Blinky 'Cruise Elroy' mode because {} got released:", prisoner.name());
-                    blinky.setCruiseElroyEnabled(true);
-                }
-            }
-        });
     }
 }
