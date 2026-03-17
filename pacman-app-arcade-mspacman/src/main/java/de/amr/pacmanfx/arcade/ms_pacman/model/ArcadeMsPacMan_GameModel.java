@@ -43,6 +43,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
+    public static MsPacMan createMsPacMan() {
+        return new MsPacMan();
+    }
+
     public static Ghost createGhost(byte personality) {
         return switch (personality) {
             case RED_GHOST_SHADOW -> new Blinky();
@@ -53,16 +57,12 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         };
     }
 
-    public static MsPacMan createMsPacMan() {
-        return new MsPacMan();
-    }
-
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
     protected static final int GAME_OVER_STATE_TICKS = 150;
 
     protected final WorldMapSelector mapSelector;
-    protected LevelCounter levelCounter;
+    protected final LevelCounter levelCounter;
 
     /**
      * Called via reflection by builder.
@@ -80,15 +80,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         this.mapSelector = requireNonNull(mapSelector);
         this.levelCounter = new ArcadeMsPacMan_LevelCounter();
 
-        this.gateKeeper = new GateKeeper();
-        this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
-            if (prisoner.personality() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW) instanceof Blinky blinky) {
-                if (blinky.elroyMode() != Blinky.ElroyMode.NONE && !blinky.isCruiseElroyEnabled()) {
-                    Logger.debug("Re-enable Blinky 'Cruise Elroy' mode because {} got released:", prisoner.name());
-                    blinky.setCruiseElroyEnabled(true);
-                }
-            }
-        });
+        createGateKeeper();
 
         this.demoLevelSteering = new RuleBasedPacSteering();
         this.automaticSteering = new RuleBasedPacSteering();
@@ -138,29 +130,25 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         level.setPacPowerSeconds(levelData.secPacPower());
         level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
 
+        addMsPacMan(level);
+        addGhosts(level, house);
+        initBoni(level);
+
+        /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
+         * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
+        levelCounter.setEnabled(levelNumber < 8);
+
+        return level;
+    }
+
+    private void addMsPacMan(GameLevel level) {
         final MsPacMan msPacMan = createMsPacMan();
         msPacMan.setAutomaticSteering(automaticSteering);
         level.setPac(msPacMan);
+    }
 
-        final Ghost blinky = createGhost(RED_GHOST_SHADOW);
-        blinky.setHome(house);
-        setGhostStartPosition(blinky, terrain.getTileProperty(POS_GHOST_1_RED));
-
-        final Ghost pinky = createGhost(PINK_GHOST_SPEEDY);
-        pinky.setHome(house);
-        setGhostStartPosition(pinky, terrain.getTileProperty(POS_GHOST_2_PINK));
-
-        final Ghost inky = createGhost(CYAN_GHOST_BASHFUL);
-        inky.setHome(house);
-        setGhostStartPosition(inky, terrain.getTileProperty(POS_GHOST_3_CYAN));
-
-        final Ghost sue = createGhost(ORANGE_GHOST_POKEY);
-        sue.setHome(house);
-        setGhostStartPosition(sue, terrain.getTileProperty(POS_GHOST_4_ORANGE));
-
-        level.setGhosts(blinky, pinky, inky, sue);
-
-        final int totalFoodCount = worldMap.foodLayer().totalFoodCount();
+    private void initBoni(GameLevel level) {
+        final int totalFoodCount = level.worldMap().foodLayer().totalFoodCount();
         switch (totalFoodCount) {
             case 224, 238, 242, 244 -> {
                 // Original Arcade maps
@@ -174,14 +162,24 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             }
         }
 
-        level.setBonusSymbol(0, computeBonusSymbol(levelNumber));
-        level.setBonusSymbol(1, computeBonusSymbol(levelNumber));
+        level.setBonusSymbol(0, computeBonusSymbol(level.number()));
+        level.setBonusSymbol(1, computeBonusSymbol(level.number()));
+    }
 
-        /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
-         * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        levelCounter.setEnabled(levelNumber < 8);
+    private void addGhosts(GameLevel level, ArcadeHouse house) {
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final Ghost blinky = createGhost(RED_GHOST_SHADOW, terrain, house, POS_GHOST_1_RED);
+        final Ghost pinky  = createGhost(PINK_GHOST_SPEEDY, terrain, house, POS_GHOST_2_PINK);
+        final Ghost inky = createGhost(CYAN_GHOST_BASHFUL, terrain, house, POS_GHOST_3_CYAN);
+        final Ghost sue = createGhost(ORANGE_GHOST_POKEY, terrain, house, POS_GHOST_4_ORANGE);
+        level.setGhosts(blinky, pinky, inky, sue);
+    }
 
-        return level;
+    private Ghost createGhost(byte personality, TerrainLayer terrain, House house, String startTileProperty) {
+        final Ghost ghost = createGhost(personality);
+        ghost.setHome(house);
+        setGhostStartPosition(ghost, terrain.getTileProperty(startTileProperty));
+        return ghost;
     }
 
     private AbstractHuntingTimer createHuntingTimer() {
@@ -364,5 +362,17 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         bonus.initRoute(route, leftToRight);
         Logger.info("Moving bonus route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
+    }
+
+    private void createGateKeeper() {
+        this.gateKeeper = new GateKeeper();
+        this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
+            if (prisoner.personality() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW) instanceof Blinky blinky) {
+                if (blinky.elroyMode() != Blinky.ElroyMode.NONE && !blinky.isCruiseElroyEnabled()) {
+                    Logger.debug("Re-enable Blinky 'Cruise Elroy' mode because {} got released:", prisoner.name());
+                    blinky.setCruiseElroyEnabled(true);
+                }
+            }
+        });
     }
 }
