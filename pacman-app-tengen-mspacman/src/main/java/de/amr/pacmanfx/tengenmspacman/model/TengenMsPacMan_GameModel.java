@@ -38,8 +38,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
-    //TODO I do not know if the ghosts in Tengen behave exactly as the ghosts in Arcade Ms. Pac-Man
-    public static boolean BEHAVE_AS_ARCADE_MS_PACMAN = true;
+    //TODO: I am not sure if the ghosts should behave like the ghosts in Arcade Ms. Pac-Man or like in Pac-Man.
+    //      However, the Copilot AI says they definitely behave like in Pac-Man.
+    public static boolean ARCADE_MS_PACMAN_GHOST_BEHAVIOUR = false;
 
     public static Pac createPacMan() {
         final var pacMan = new Pac("Pac-Man");
@@ -55,10 +56,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public static Ghost createGhost(byte personality) {
         return switch (personality) {
-            case RED_GHOST_SHADOW -> BEHAVE_AS_ARCADE_MS_PACMAN
+            case RED_GHOST_SHADOW -> ARCADE_MS_PACMAN_GHOST_BEHAVIOUR
                 ? modifyShadowBehavior(new RedGhostShadow("Blinky"))
                 : new RedGhostShadow("Blinky");
-            case PINK_GHOST_SPEEDY -> BEHAVE_AS_ARCADE_MS_PACMAN
+            case PINK_GHOST_SPEEDY -> ARCADE_MS_PACMAN_GHOST_BEHAVIOUR
                 ? modifyAmbushBehavior(new PinkGhostAmbusher("Pinky"))
                 : new PinkGhostAmbusher("Pinky");
             case CYAN_GHOST_BASHFUL -> new CyanGhostBashful("Inky");
