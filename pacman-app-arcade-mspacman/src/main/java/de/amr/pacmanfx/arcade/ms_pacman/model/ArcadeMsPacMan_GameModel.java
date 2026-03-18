@@ -5,8 +5,8 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
-import de.amr.pacmanfx.arcade.pacman.model.actors.*;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.*;
@@ -47,8 +47,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     public static Ghost createGhost(byte personality) {
         return switch (personality) {
-            case RED_GHOST_SHADOW -> assignShadowBehavior(new RedGhostShadow("Blinky"));
-            case PINK_GHOST_SPEEDY -> assignAmbushBehavior(new PinkGhostAmbusher("Pinky"));
+            case RED_GHOST_SHADOW -> modifyShadowBehavior(new RedGhostShadow("Blinky"));
+            case PINK_GHOST_SPEEDY -> modifyAmbushBehavior(new PinkGhostAmbusher("Pinky"));
             case CYAN_GHOST_BASHFUL -> new CyanGhostBashful("Inky");
             case ORANGE_GHOST_POKEY -> new OrangeGhostPokey("Sue");
             default -> throw new IllegalArgumentException();
@@ -62,21 +62,48 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      *
      * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
      */
-    private static Ghost assignShadowBehavior(RedGhostShadow ghost) {
-        ghost.setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
+    private static Ghost modifyShadowBehavior(RedGhostShadow ghost) {
+        ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             ghost.setSpeed(speed);
-            if (gameLevel.huntingTimer().phaseIndex() == 0) {
-                // first scatter phase
-                ghost.roam(gameLevel);
+            final boolean firstScatterPhase = level.huntingTimer().phaseIndex() == 0;
+            final boolean randomChoice = ghost.isNewTileEntered() && level.worldMap().terrainLayer().isIntersection(ghost.tile());
+            if (firstScatterPhase && randomChoice) {
+                Logger.info("{} hits randomizer node at {}", ghost.name(), ghost.tile());
+                selectRandomWishDir(ghost, level);
+                ghost.moveThroughThisCruelWorld(level);
             } else {
-                boolean chase = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING || ghost.elroyState().enabled();
+                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || ghost.elroyState().enabled();
                 final Vector2i targetTile = chase
-                    ? ghost.chasingTargetTile(gameLevel)
-                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
-                ghost.tryMovingTowardsTargetTile(gameLevel, targetTile);
+                    ? ghost.chasingTargetTile(level)
+                    : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
+                ghost.tryMovingTowardsTargetTile(level, targetTile);
             }
         });
         return ghost;
+    }
+
+    private static void selectRandomWishDir(Ghost ghost, GameLevel level) {
+        final Vector2i tile = ghost.tile();
+        final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
+        if (teleporting) {
+            return;
+        }
+        int dirsTried = 0;
+        Direction dir = Direction.random();
+        while (++dirsTried <= 4) {
+            if (isAcceptableWishDir(level, ghost, dir)) {
+                ghost.setWishDir(dir);
+                Logger.info("Ghost {} takes random wish direction {}", ghost.name(), dir);
+                break;
+            }
+            Logger.info("{} rejects wish dir {}", ghost.name(), dir);
+            dir = dir.nextClockwise();
+        }
+    }
+
+    private static boolean isAcceptableWishDir(GameLevel level, Ghost ghost, Direction dir) {
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        return dir != ghost.moveDir().opposite() && !terrain.isTileBlocked(ghost.tile().plus(dir.vector()));
     }
 
     /**
@@ -86,17 +113,19 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      *
      * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
      */
-    private static Ghost assignAmbushBehavior(Ghost ghost) {
-        ghost.setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
+    private static Ghost modifyAmbushBehavior(Ghost ghost) {
+        ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             ghost.setSpeed(speed);
-            if (gameLevel.huntingTimer().phaseIndex() == 0) {
-                // first scatter phase
-                ghost.roam(gameLevel);
+            final boolean firstScatterPhase = level.huntingTimer().phaseIndex() == 0;
+            final boolean randomChoice = ghost.isNewTileEntered() && level.worldMap().terrainLayer().isIntersection(ghost.tile());
+            if (firstScatterPhase && randomChoice) {
+                Logger.info("{} hits randomizer node at {}", ghost.name(), ghost.tile());
+                ghost.roam(level);
             } else {
-                final Vector2i targetTile = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING
-                    ? ghost.chasingTargetTile(gameLevel)
-                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
-                ghost.tryMovingTowardsTargetTile(gameLevel, targetTile);
+                final Vector2i targetTile = level.huntingTimer().phase() == HuntingPhase.CHASING
+                    ? ghost.chasingTargetTile(level)
+                    : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
+                ghost.tryMovingTowardsTargetTile(level, targetTile);
             }
         });
         return ghost;

@@ -13,7 +13,6 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
-import de.amr.pacmanfx.tengenmspacman.model.actors.*;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import org.tinylog.Logger;
 
@@ -38,6 +37,63 @@ import static java.util.Objects.requireNonNull;
  * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly">Ms.Pac-Man-NES-Tengen-Disassembly</a>
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
+
+    public static Pac createPacMan() {
+        final var pacMan = new Pac("Pac-Man");
+        pacMan.reset();
+        return pacMan;
+    }
+
+    public static Pac createMsPacMan() {
+        final var msPacMan = new Pac("Ms. Pac-Man");
+        msPacMan.reset();
+        return msPacMan;
+    }
+
+    public static Ghost createGhost(byte personality) {
+        return switch (personality) {
+            case RED_GHOST_SHADOW -> modifyShadowBehavior(new RedGhostShadow("Blinky"));
+            case PINK_GHOST_SPEEDY -> modifyAmbushBehavior(new PinkGhostAmbusher("Pinky"));
+            case CYAN_GHOST_BASHFUL -> new CyanGhostBashful("Inky");
+            case ORANGE_GHOST_POKEY -> new OrangeGhostPokey("Sue");
+            default -> throw new IllegalArgumentException();
+        };
+    }
+
+    private static Ghost modifyShadowBehavior(RedGhostShadow ghost) {
+        ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
+            final AbstractHuntingTimer huntingTimer = level.huntingTimer();
+            ghost.setSpeed(speed);
+            if (huntingTimer.phaseIndex() == 0) { // first scatter phase: move randomly
+                ghost.roam(level);
+            } else {
+                // Copilot claims, there is no "cruise elroy" behavior in Tengen Ms. Pac-Man!
+                final boolean chaseMsPacMan = huntingTimer.phase() == HuntingPhase.CHASING;
+                final Vector2i targetTile = chaseMsPacMan
+                    ? ghost.chasingTargetTile(level)
+                    : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
+                ghost.tryMovingTowardsTargetTile(level, targetTile);
+            }
+        });
+        return ghost;
+    }
+
+    private static Ghost modifyAmbushBehavior(Ghost ghost) {
+        ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
+            final AbstractHuntingTimer huntingTimer = level.huntingTimer();
+            ghost.setSpeed(speed);
+            if (huntingTimer.phaseIndex() == 0) { // first scatter phase
+                ghost.roam(level);
+            } else {
+                final Vector2i targetTile = huntingTimer.phase() == HuntingPhase.CHASING
+                    ? ghost.chasingTargetTile(level)
+                    : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
+                ghost.tryMovingTowardsTargetTile(level, targetTile);
+            }
+        });
+        return ghost;
+    }
+
 
     static final short TICK_SHOW_READY = 10;
     static final short TICK_NEW_GAME_SHOW_GUYS = 70;
@@ -451,11 +507,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         level.setGameOverStateTicks(mapCategory == MapCategory.ARCADE
             ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
 
-        final MsPacMan msPacMan = new MsPacMan();
+        final Pac msPacMan = createMsPacMan();
         msPacMan.setAutomaticSteering(automaticSteering);
         activatePacBooster(msPacMan, pacBooster == PacBooster.ALWAYS_ON);
 
-        final Blinky blinky = new Blinky();
+        final RedGhostShadow blinky = new RedGhostShadow("Blinky");
         blinky.setHome(house);
         final Vector2i blinkyStartTile = terrain.getTileProperty(POS_GHOST_1_RED);
         if (blinkyStartTile != null) {
@@ -465,15 +521,15 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             blinky.setStartPosition(house.entryPosition());
         }
 
-        final Pinky pinky = new Pinky();
+        final PinkGhostAmbusher pinky = new PinkGhostAmbusher("Pinky");
         pinky.setHome(house);
         setGhostStartPosition(pinky, terrain.getTileProperty(POS_GHOST_2_PINK));
 
-        final Inky inky = new Inky();
+        final CyanGhostBashful inky = new CyanGhostBashful("Inky");
         inky.setHome(house);
         setGhostStartPosition(inky, terrain.getTileProperty(POS_GHOST_3_CYAN));
 
-        final Sue sue = new Sue();
+        final OrangeGhostPokey sue = new OrangeGhostPokey("Sue");
         sue.setHome(house);
         setGhostStartPosition(sue, terrain.getTileProperty(POS_GHOST_4_ORANGE));
 

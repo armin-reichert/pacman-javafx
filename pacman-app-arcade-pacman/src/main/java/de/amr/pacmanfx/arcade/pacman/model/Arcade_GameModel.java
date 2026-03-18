@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.arcade.pacman.model;
 
-import de.amr.pacmanfx.arcade.pacman.model.actors.ElroyState;
-import de.amr.pacmanfx.arcade.pacman.model.actors.RedGhostShadow;
+import de.amr.pacmanfx.model.actors.ElroyState;
+import de.amr.pacmanfx.model.actors.RedGhostShadow;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Vector2i;

@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Base class for all actors which know how to move through a level's world.
  */
-public abstract class MovingActor extends Actor {
+public class MovingActor extends Actor {
 
     public static final Direction DEFAULT_MOVE_DIR = RIGHT;
     public static final Direction DEFAULT_WISH_DIR = RIGHT;
@@ -37,8 +37,7 @@ public abstract class MovingActor extends Actor {
     public static final List<Direction> NAVIGATION_ORDER = List.of(Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT);
 
     protected final MoveInfo moveInfo = new MoveInfo();
-
-    private final String name;
+    protected final String name;
 
     protected ObjectProperty<Direction> moveDir;
     protected ObjectProperty<Direction> wishDir;
@@ -52,6 +51,9 @@ public abstract class MovingActor extends Actor {
     //TODO this is just a primitive way to provide cornering speed differences
     protected float corneringSpeedDelta;
 
+    /**
+     * @param name readable name, not null
+     */
     protected MovingActor(String name) {
         this.name = requireNonNull(name);
     }
@@ -61,7 +63,7 @@ public abstract class MovingActor extends Actor {
      *
      * @param game the game
      */
-    public abstract void tick(Game game);
+    public void tick(Game game) {}
 
     /**
      * @return readable name, used in UI and logging
@@ -75,16 +77,20 @@ public abstract class MovingActor extends Actor {
      * @param tile some tile inside or outside the world
      * @return if this actor can access the given tile in its game context
      */
-    public abstract boolean canAccessTile(GameLevel gameLevel, Vector2i tile);
+    public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
+        return true;
+    }
 
     /**
      * @return {@code true} if this actor can reverse ist direction in its current state
      */
-    public abstract boolean canTurnBack();
+    public boolean canTurnBack() {
+        return false;
+    }
 
     @Override
     public String toString() {
-        return "WorldMovingActor{" +
+        return "MovingActor{" +
             "visible=" + isVisible() +
             ", position=" + position() +
             ", velocity=" + velocity() +
@@ -142,7 +148,7 @@ public abstract class MovingActor extends Actor {
      * @return current target tile. Can be null, an inaccessible tile or a tile outside the world.
      */
     public Vector2i targetTile() {
-        return targetTile != null ? targetTileProperty().get() : DEFAULT_TARGET_TILE;
+        return targetTile != null ? targetTile.get() : DEFAULT_TARGET_TILE;
     }
 
     /**
@@ -208,7 +214,7 @@ public abstract class MovingActor extends Actor {
      * @return The current move direction.
      */
     public Direction moveDir() {
-        return moveDir != null ? moveDirProperty().get() : DEFAULT_MOVE_DIR;
+        return moveDir != null ? moveDir.get() : DEFAULT_MOVE_DIR;
     }
 
     public final ObjectProperty<Direction> wishDirProperty() {
@@ -233,7 +239,7 @@ public abstract class MovingActor extends Actor {
      * @return The wish direction. Will be taken as soon as possible.
      */
     public Direction wishDir() {
-        return wishDir != null ? wishDirProperty().get() : DEFAULT_WISH_DIR;
+        return wishDir != null ? wishDir.get() : DEFAULT_WISH_DIR;
     }
 
     /**

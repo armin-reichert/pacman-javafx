@@ -10,8 +10,6 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.model.TengenGameState;
-import de.amr.pacmanfx.tengenmspacman.model.actors.MsPacMan;
-import de.amr.pacmanfx.tengenmspacman.model.actors.PacMan;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -26,6 +24,8 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_TILES;
+import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.createMsPacMan;
+import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.createPacMan;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
@@ -71,10 +71,10 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         clapperboard.setVisible(true);
         clapperboard.startAnimation();
 
-        msPacMan = new MsPacMan();
+        msPacMan = createMsPacMan();
         msPacMan.setAnimationManager(uiConfig.createPacAnimations());
 
-        pacMan = new PacMan();
+        pacMan = createPacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations());
 
         juniors = new ArrayList<>();
@@ -161,7 +161,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     private void spawnJunior(int tick) {
-        var junior = new PacMan();
+        var junior = createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         junior.setPosition((float) randomX, unscaledSize().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
