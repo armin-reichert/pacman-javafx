@@ -11,10 +11,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengenmspacman.model.actors.Blinky;
-import de.amr.pacmanfx.tengenmspacman.model.actors.Inky;
-import de.amr.pacmanfx.tengenmspacman.model.actors.Pinky;
-import de.amr.pacmanfx.tengenmspacman.model.actors.Sue;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
 import de.amr.pacmanfx.ui.GameSceneConfig;
@@ -40,8 +36,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.IntStream;
 
-import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
 
 public class TengenMsPacMan_UIConfig implements UIConfig {
@@ -329,14 +323,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
 
     @Override
     public Ghost createGhostWithAnimations(byte personality) {
-        requireValidGhostPersonality(personality);
-        final Ghost ghost = switch (personality) {
-            case RED_GHOST_SHADOW   -> new Blinky();
-            case PINK_GHOST_SPEEDY  -> new Pinky();
-            case CYAN_GHOST_BASHFUL -> new Inky();
-            case ORANGE_GHOST_POKEY -> new Sue();
-            default -> throw new IllegalArgumentException("Illegal ghost personality " + personality);
-        };
+        final Ghost ghost = TengenMsPacMan_GameModel.createGhost(personality);
         ghost.setAnimationManager(createGhostAnimations(personality));
         ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
         return ghost;

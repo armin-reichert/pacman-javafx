@@ -13,10 +13,6 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
-import de.amr.pacmanfx.tengenmspacman.model.actors.Blinky;
-import de.amr.pacmanfx.tengenmspacman.model.actors.Inky;
-import de.amr.pacmanfx.tengenmspacman.model.actors.Pinky;
-import de.amr.pacmanfx.tengenmspacman.model.actors.Sue;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import org.tinylog.Logger;
 
@@ -42,6 +38,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
+    //TODO I do not know if the ghosts in Tengen behave exactly as the ghosts in Arcade Ms. Pac-Man
+    public static boolean BEHAVE_AS_ARCADE_MS_PACMAN = true;
+
     public static Pac createPacMan() {
         final var pacMan = new Pac("Pac-Man");
         pacMan.reset();
@@ -54,16 +53,67 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         return msPacMan;
     }
 
-    //TODO I do not know if the ghosts in Tengen behave exactly as the ghosts in Arcade Ms. Pac-Man
     public static Ghost createGhost(byte personality) {
         return switch (personality) {
-            case RED_GHOST_SHADOW -> new RedGhostShadow("Blinky");
-            case PINK_GHOST_SPEEDY -> new PinkGhostAmbusher("Pinky");
+            case RED_GHOST_SHADOW -> BEHAVE_AS_ARCADE_MS_PACMAN
+                ? modifyShadowBehavior(new RedGhostShadow("Blinky"))
+                : new RedGhostShadow("Blinky");
+            case PINK_GHOST_SPEEDY -> BEHAVE_AS_ARCADE_MS_PACMAN
+                ? modifyAmbushBehavior(new PinkGhostAmbusher("Pinky"))
+                : new PinkGhostAmbusher("Pinky");
             case CYAN_GHOST_BASHFUL -> new CyanGhostBashful("Inky");
             case ORANGE_GHOST_POKEY -> new OrangeGhostPokey("Sue");
             default -> throw new IllegalArgumentException();
         };
     }
+
+    /**
+     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
+     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
+     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
+     *
+     * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
+     */
+    private static Ghost modifyShadowBehavior(RedGhostShadow ghost) {
+        ghost.setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
+            ghost.setSpeed(speed);
+            if (gameLevel.huntingTimer().phaseIndex() == 0) {
+                // first scatter phase
+                ghost.roam(gameLevel);
+            } else {
+                boolean chase = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING || ghost.elroyState().enabled();
+                final Vector2i targetTile = chase
+                    ? ghost.chasingTargetTile(gameLevel)
+                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
+                ghost.tryMovingTowardsTargetTile(gameLevel, targetTile);
+            }
+        });
+        return ghost;
+    }
+
+    /**
+     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
+     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
+     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
+     *
+     * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
+     */
+    private static Ghost modifyAmbushBehavior(Ghost ghost) {
+        ghost.setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
+            ghost.setSpeed(speed);
+            if (gameLevel.huntingTimer().phaseIndex() == 0) {
+                // first scatter phase
+                ghost.roam(gameLevel);
+            } else {
+                final Vector2i targetTile = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING
+                    ? ghost.chasingTargetTile(gameLevel)
+                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
+                ghost.tryMovingTowardsTargetTile(gameLevel, targetTile);
+            }
+        });
+        return ghost;
+    }
+
 
     static final short TICK_SHOW_READY = 10;
     static final short TICK_NEW_GAME_SHOW_GUYS = 70;
@@ -481,7 +531,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         msPacMan.setAutomaticSteering(automaticSteering);
         activatePacBooster(msPacMan, pacBooster == PacBooster.ALWAYS_ON);
 
-        final Blinky blinky = new Blinky();
+        final RedGhostShadow blinky = new RedGhostShadow("Blinky");
         blinky.setHome(house);
         final Vector2i blinkyStartTile = terrain.getTileProperty(POS_GHOST_1_RED);
         if (blinkyStartTile != null) {
@@ -491,15 +541,15 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             blinky.setStartPosition(house.entryPosition());
         }
 
-        final Pinky pinky = new Pinky();
+        final PinkGhostAmbusher pinky = new PinkGhostAmbusher("Pinky");
         pinky.setHome(house);
         setGhostStartPosition(pinky, terrain.getTileProperty(POS_GHOST_2_PINK));
 
-        final Inky inky = new Inky();
+        final CyanGhostBashful inky = new CyanGhostBashful("Inky");
         inky.setHome(house);
         setGhostStartPosition(inky, terrain.getTileProperty(POS_GHOST_3_CYAN));
 
-        final Sue sue = new Sue();
+        final OrangeGhostPokey sue = new OrangeGhostPokey("Sue");
         sue.setHome(house);
         setGhostStartPosition(sue, terrain.getTileProperty(POS_GHOST_4_ORANGE));
 

@@ -46,8 +46,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     public static Ghost createGhost(byte personality) {
         return switch (personality) {
-            case RED_GHOST_SHADOW -> assignShadowBehavior(new RedGhostShadow("Blinky"));
-            case PINK_GHOST_SPEEDY -> assignAmbushBehavior(new PinkGhostAmbusher("Pinky"));
+            case RED_GHOST_SHADOW -> modifyShadowBehavior(new RedGhostShadow("Blinky"));
+            case PINK_GHOST_SPEEDY -> modifyAmbushBehavior(new PinkGhostAmbusher("Pinky"));
             case CYAN_GHOST_BASHFUL -> new CyanGhostBashful("Inky");
             case ORANGE_GHOST_POKEY -> new OrangeGhostPokey("Sue");
             default -> throw new IllegalArgumentException();
@@ -61,7 +61,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      *
      * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
      */
-    private static Ghost assignShadowBehavior(RedGhostShadow ghost) {
+    private static Ghost modifyShadowBehavior(RedGhostShadow ghost) {
         ghost.setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
             ghost.setSpeed(speed);
             if (gameLevel.huntingTimer().phaseIndex() == 0) {
@@ -85,7 +85,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      *
      * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
      */
-    private static Ghost assignAmbushBehavior(Ghost ghost) {
+    private static Ghost modifyAmbushBehavior(Ghost ghost) {
         ghost.setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
             ghost.setSpeed(speed);
             if (gameLevel.huntingTimer().phaseIndex() == 0) {
