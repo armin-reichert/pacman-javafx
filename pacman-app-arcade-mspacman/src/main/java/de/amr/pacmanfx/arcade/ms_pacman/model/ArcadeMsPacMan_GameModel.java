@@ -319,11 +319,12 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     private void addGhosts(GameLevel level, ArcadeHouse house) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final Ghost blinky = createGhost(RED_GHOST_SHADOW, terrain, house, POS_GHOST_1_RED);
-        final Ghost pinky  = createGhost(PINK_GHOST_SPEEDY, terrain, house, POS_GHOST_2_PINK);
-        final Ghost inky = createGhost(CYAN_GHOST_BASHFUL, terrain, house, POS_GHOST_3_CYAN);
-        final Ghost sue = createGhost(ORANGE_GHOST_POKEY, terrain, house, POS_GHOST_4_ORANGE);
-        level.setGhosts(blinky, pinky, inky, sue);
+        level.setGhosts(
+            createGhost(RED_GHOST_SHADOW, terrain, house, POS_GHOST_1_RED),
+            createGhost(PINK_GHOST_SPEEDY, terrain, house, POS_GHOST_2_PINK),
+            createGhost(CYAN_GHOST_BASHFUL, terrain, house, POS_GHOST_3_CYAN),
+            createGhost(ORANGE_GHOST_POKEY, terrain, house, POS_GHOST_4_ORANGE)
+        );
     }
 
     private Ghost createGhost(byte personality, TerrainLayer terrain, House house, String startTileProperty) {
