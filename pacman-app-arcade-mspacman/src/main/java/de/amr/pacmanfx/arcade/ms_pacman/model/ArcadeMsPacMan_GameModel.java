@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.*;
@@ -16,7 +17,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -66,11 +66,11 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             ghost.setSpeed(speed);
             final boolean firstScatterPhase = level.huntingTimer().phaseIndex() == 0;
-            final Set<Vector2i> randomizerNodes = randomizerNodes(level);
-            final boolean enteredRandomizerNode = ghost.isNewTileEntered() && randomizerNodes.contains(ghost.tile());
-            if (firstScatterPhase && enteredRandomizerNode) {
+            final boolean randomChoice = ghost.isNewTileEntered() && level.worldMap().terrainLayer().isIntersection(ghost.tile());
+            if (firstScatterPhase && randomChoice) {
                 Logger.info("{} hits randomizer node at {}", ghost.name(), ghost.tile());
-                ghost.roam(level);
+                selectRandomWishDir(ghost, level);
+                ghost.moveThroughThisCruelWorld(level);
             } else {
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || ghost.elroyState().enabled();
                 final Vector2i targetTile = chase
@@ -80,6 +80,30 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             }
         });
         return ghost;
+    }
+
+    private static void selectRandomWishDir(Ghost ghost, GameLevel level) {
+        final Vector2i tile = ghost.tile();
+        final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
+        if (teleporting) {
+            return;
+        }
+        int dirsTried = 0;
+        Direction dir = Direction.random();
+        while (++dirsTried <= 4) {
+            if (isAcceptableWishDir(level, ghost, dir)) {
+                ghost.setWishDir(dir);
+                Logger.info("Ghost {} takes random wish direction {}", ghost.name(), dir);
+                break;
+            }
+            Logger.info("{} rejects wish dir {}", ghost.name(), dir);
+            dir = dir.nextClockwise();
+        }
+    }
+
+    private static boolean isAcceptableWishDir(GameLevel level, Ghost ghost, Direction dir) {
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        return dir != ghost.moveDir().opposite() && !terrain.isTileBlocked(ghost.tile().plus(dir.vector()));
     }
 
     /**
@@ -93,9 +117,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             ghost.setSpeed(speed);
             final boolean firstScatterPhase = level.huntingTimer().phaseIndex() == 0;
-            final Set<Vector2i> randomizerNodes = randomizerNodes(level);
-            final boolean enteredRandomizerNode = ghost.isNewTileEntered() && randomizerNodes.contains(ghost.tile());
-            if (firstScatterPhase && enteredRandomizerNode) {
+            final boolean randomChoice = ghost.isNewTileEntered() && level.worldMap().terrainLayer().isIntersection(ghost.tile());
+            if (firstScatterPhase && randomChoice) {
                 Logger.info("{} hits randomizer node at {}", ghost.name(), ghost.tile());
                 ghost.roam(level);
             } else {
@@ -111,74 +134,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
     protected static final int GAME_OVER_STATE_TICKS = 150;
-
-    // Copilot AI claims that there are "randomizer nodes" in the maps that are used during the first scatter phase
-    // to randomize the movement of Blinky and Pinky. I believe that for now and implement it accordingly.
-
-    public static final Set<Vector2i> RANDOMIZER_NODES_MAZE_1 = Set.of(
-        new Vector2i(10, 3),
-        new Vector2i(17, 3),
-        new Vector2i(10, 7),
-        new Vector2i(17, 7),
-        new Vector2i(10, 17),
-        new Vector2i(13, 17),
-        new Vector2i(14, 17),
-        new Vector2i(17, 17),
-        new Vector2i(10, 23),
-        new Vector2i(17, 23)
-    );
-
-    public static final Set<Vector2i> RANDOMIZER_NODES_MAZE_2 = Set.of(
-        new Vector2i(10, 3),
-        new Vector2i(17, 3),
-        new Vector2i(10, 7),
-        new Vector2i(17, 7),
-        new Vector2i(10, 11),
-        new Vector2i(17, 11),
-        new Vector2i(10, 17),
-        new Vector2i(17, 17),
-        new Vector2i(10, 23),
-        new Vector2i(17, 23)
-    );
-
-    public static final Set<Vector2i> RANDOMIZER_NODES_MAZE_3 = Set.of(
-        new Vector2i(10, 3),
-        new Vector2i(17, 3),
-        new Vector2i(10, 7),
-        new Vector2i(17, 7),
-        new Vector2i(10, 13),
-        new Vector2i(17, 13),
-        new Vector2i(10, 17),
-        new Vector2i(17, 17),
-        new Vector2i(10, 23),
-        new Vector2i(17, 23)
-    );
-
-    public static final Set<Vector2i> RANDOMIZER_NODES_MAZE_4 = Set.of(
-        new Vector2i(10, 3),
-        new Vector2i(17, 3),
-        new Vector2i(10, 7),
-        new Vector2i(17, 7),
-        new Vector2i(10, 11),
-        new Vector2i(17, 11),
-        new Vector2i(10, 17),
-        new Vector2i(17, 17),
-        new Vector2i(10, 21),
-        new Vector2i(17, 21),
-        new Vector2i(10, 25),
-        new Vector2i(17, 25)
-    );
-
-    private static Set<Vector2i> randomizerNodes(GameLevel level) {
-        final int mapNumber = ArcadeMsPacMan_MapSelector.mapNumber(level.number());
-        return switch (mapNumber) {
-            case 1 -> RANDOMIZER_NODES_MAZE_1;
-            case 2 -> RANDOMIZER_NODES_MAZE_2;
-            case 3 -> RANDOMIZER_NODES_MAZE_3;
-            case 4 -> RANDOMIZER_NODES_MAZE_4;
-            default -> throw new IllegalArgumentException("Illegal map number: %d".formatted(mapNumber));
-        };
-    }
 
     protected final WorldMapSelector mapSelector;
     protected final LevelCounter levelCounter;
