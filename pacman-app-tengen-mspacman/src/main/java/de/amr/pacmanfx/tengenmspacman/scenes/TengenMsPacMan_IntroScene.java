@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengenmspacman.model.TengenGameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengenmspacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.GhostConfig;
@@ -28,6 +27,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGE
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_ENTER_START_SCREEN;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
+import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.createMsPacMan;
 
 public class TengenMsPacMan_IntroScene extends GameScene2D {
 
@@ -122,7 +122,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
                 UIConfig uiConfig = scene.ui.currentConfig();
 
-                scene.msPacMan = new MsPacMan();
+                scene.msPacMan = createMsPacMan();
                 scene.msPacMan.setAnimationManager(scene.ui.currentConfig().createPacAnimations());
                 scene.msPacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
 

@@ -13,7 +13,10 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
-import de.amr.pacmanfx.tengenmspacman.model.actors.*;
+import de.amr.pacmanfx.tengenmspacman.model.actors.Blinky;
+import de.amr.pacmanfx.tengenmspacman.model.actors.Inky;
+import de.amr.pacmanfx.tengenmspacman.model.actors.Pinky;
+import de.amr.pacmanfx.tengenmspacman.model.actors.Sue;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import org.tinylog.Logger;
 
@@ -38,6 +41,29 @@ import static java.util.Objects.requireNonNull;
  * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly">Ms.Pac-Man-NES-Tengen-Disassembly</a>
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
+
+    public static Pac createPacMan() {
+        final var pacMan = new Pac("Pac-Man");
+        pacMan.reset();
+        return pacMan;
+    }
+
+    public static Pac createMsPacMan() {
+        final var msPacMan = new Pac("Ms. Pac-Man");
+        msPacMan.reset();
+        return msPacMan;
+    }
+
+    //TODO I do not know if the ghosts in Tengen behave exactly as the ghosts in Arcade Ms. Pac-Man
+    public static Ghost createGhost(byte personality) {
+        return switch (personality) {
+            case RED_GHOST_SHADOW -> new RedGhostShadow("Blinky");
+            case PINK_GHOST_SPEEDY -> new PinkGhostAmbusher("Pinky");
+            case CYAN_GHOST_BASHFUL -> new CyanGhostBashful("Inky");
+            case ORANGE_GHOST_POKEY -> new OrangeGhostPokey("Sue");
+            default -> throw new IllegalArgumentException();
+        };
+    }
 
     static final short TICK_SHOW_READY = 10;
     static final short TICK_NEW_GAME_SHOW_GUYS = 70;
@@ -451,7 +477,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         level.setGameOverStateTicks(mapCategory == MapCategory.ARCADE
             ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
 
-        final MsPacMan msPacMan = new MsPacMan();
+        final Pac msPacMan = createMsPacMan();
         msPacMan.setAutomaticSteering(automaticSteering);
         activatePacBooster(msPacMan, pacBooster == PacBooster.ALWAYS_ON);
 

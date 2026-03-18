@@ -5,8 +5,8 @@
 import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
-import de.amr.pacmanfx.arcade.pacman.model.actors.ElroyState;
-import de.amr.pacmanfx.arcade.pacman.model.actors.RedGhostShadow;
+import de.amr.pacmanfx.model.actors.ElroyState;
+import de.amr.pacmanfx.model.actors.RedGhostShadow;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.world.FoodLayer;
