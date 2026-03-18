@@ -38,10 +38,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
-    //TODO: I am not sure if the ghosts should behave like the ghosts in Arcade Ms. Pac-Man or like in Pac-Man.
-    //      However, the Copilot AI says they definitely behave like in Pac-Man.
-    public static boolean ARCADE_MS_PACMAN_GHOST_BEHAVIOUR = false;
-
     public static Pac createPacMan() {
         final var pacMan = new Pac("Pac-Man");
         pacMan.reset();
@@ -56,60 +52,43 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public static Ghost createGhost(byte personality) {
         return switch (personality) {
-            case RED_GHOST_SHADOW -> ARCADE_MS_PACMAN_GHOST_BEHAVIOUR
-                ? modifyShadowBehavior(new RedGhostShadow("Blinky"))
-                : new RedGhostShadow("Blinky");
-            case PINK_GHOST_SPEEDY -> ARCADE_MS_PACMAN_GHOST_BEHAVIOUR
-                ? modifyAmbushBehavior(new PinkGhostAmbusher("Pinky"))
-                : new PinkGhostAmbusher("Pinky");
+            case RED_GHOST_SHADOW -> modifyShadowBehavior(new RedGhostShadow("Blinky"));
+            case PINK_GHOST_SPEEDY -> modifyAmbushBehavior(new PinkGhostAmbusher("Pinky"));
             case CYAN_GHOST_BASHFUL -> new CyanGhostBashful("Inky");
             case ORANGE_GHOST_POKEY -> new OrangeGhostPokey("Sue");
             default -> throw new IllegalArgumentException();
         };
     }
 
-    /**
-     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
-     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
-     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
-     *
-     * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
-     */
     private static Ghost modifyShadowBehavior(RedGhostShadow ghost) {
-        ghost.setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
+        ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
+            final AbstractHuntingTimer huntingTimer = level.huntingTimer();
             ghost.setSpeed(speed);
-            if (gameLevel.huntingTimer().phaseIndex() == 0) {
-                // first scatter phase
-                ghost.roam(gameLevel);
+            if (huntingTimer.phaseIndex() == 0) { // first scatter phase: move randomly
+                ghost.roam(level);
             } else {
-                boolean chase = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING || ghost.elroyState().enabled();
-                final Vector2i targetTile = chase
-                    ? ghost.chasingTargetTile(gameLevel)
-                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
-                ghost.tryMovingTowardsTargetTile(gameLevel, targetTile);
+                // Copilot claims, there is no "cruise elroy" behavior in Tengen Ms. Pac-Man!
+                final boolean chaseMsPacMan = huntingTimer.phase() == HuntingPhase.CHASING;
+                final Vector2i targetTile = chaseMsPacMan
+                    ? ghost.chasingTargetTile(level)
+                    : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
+                ghost.tryMovingTowardsTargetTile(level, targetTile);
             }
         });
         return ghost;
     }
 
-    /**
-     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
-     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
-     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
-     *
-     * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
-     */
     private static Ghost modifyAmbushBehavior(Ghost ghost) {
-        ghost.setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
+        ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
+            final AbstractHuntingTimer huntingTimer = level.huntingTimer();
             ghost.setSpeed(speed);
-            if (gameLevel.huntingTimer().phaseIndex() == 0) {
-                // first scatter phase
-                ghost.roam(gameLevel);
+            if (huntingTimer.phaseIndex() == 0) { // first scatter phase
+                ghost.roam(level);
             } else {
-                final Vector2i targetTile = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING
-                    ? ghost.chasingTargetTile(gameLevel)
-                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
-                ghost.tryMovingTowardsTargetTile(gameLevel, targetTile);
+                final Vector2i targetTile = huntingTimer.phase() == HuntingPhase.CHASING
+                    ? ghost.chasingTargetTile(level)
+                    : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
+                ghost.tryMovingTowardsTargetTile(level, targetTile);
             }
         });
         return ghost;

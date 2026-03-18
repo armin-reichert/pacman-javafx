@@ -46,9 +46,4 @@ public class RedGhostShadow extends Ghost {
     public void onPacKilled(GameLevel level) {
         elroyState.setEnabled(false);
     }
-
-    @Override
-    public Vector2i chasingTargetTile(GameLevel level) {
-        return level.pac().tile();
-    }
 }
