@@ -16,6 +16,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -62,17 +63,20 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
      */
     private static Ghost modifyShadowBehavior(RedGhostShadow ghost) {
-        ghost.setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
+        ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             ghost.setSpeed(speed);
-            if (gameLevel.huntingTimer().phaseIndex() == 0) {
-                // first scatter phase
-                ghost.roam(gameLevel);
+            final boolean firstScatterPhase = level.huntingTimer().phaseIndex() == 0;
+            final Set<Vector2i> randomizerNodes = randomizerNodes(level);
+            final boolean enteredRandomizerNode = ghost.isNewTileEntered() && randomizerNodes.contains(ghost.tile());
+            if (firstScatterPhase && enteredRandomizerNode) {
+                Logger.info("{} hits randomizer node at {}", ghost.name(), ghost.tile());
+                ghost.roam(level);
             } else {
-                boolean chase = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING || ghost.elroyState().enabled();
+                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || ghost.elroyState().enabled();
                 final Vector2i targetTile = chase
-                    ? ghost.chasingTargetTile(gameLevel)
-                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
-                ghost.tryMovingTowardsTargetTile(gameLevel, targetTile);
+                    ? ghost.chasingTargetTile(level)
+                    : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
+                ghost.tryMovingTowardsTargetTile(level, targetTile);
             }
         });
         return ghost;
@@ -86,16 +90,19 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
      */
     private static Ghost modifyAmbushBehavior(Ghost ghost) {
-        ghost.setHuntingStrategy((GameLevel gameLevel, Float speed) -> {
+        ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             ghost.setSpeed(speed);
-            if (gameLevel.huntingTimer().phaseIndex() == 0) {
-                // first scatter phase
-                ghost.roam(gameLevel);
+            final boolean firstScatterPhase = level.huntingTimer().phaseIndex() == 0;
+            final Set<Vector2i> randomizerNodes = randomizerNodes(level);
+            final boolean enteredRandomizerNode = ghost.isNewTileEntered() && randomizerNodes.contains(ghost.tile());
+            if (firstScatterPhase && enteredRandomizerNode) {
+                Logger.info("{} hits randomizer node at {}", ghost.name(), ghost.tile());
+                ghost.roam(level);
             } else {
-                final Vector2i targetTile = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING
-                    ? ghost.chasingTargetTile(gameLevel)
-                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
-                ghost.tryMovingTowardsTargetTile(gameLevel, targetTile);
+                final Vector2i targetTile = level.huntingTimer().phase() == HuntingPhase.CHASING
+                    ? ghost.chasingTargetTile(level)
+                    : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
+                ghost.tryMovingTowardsTargetTile(level, targetTile);
             }
         });
         return ghost;
@@ -104,6 +111,74 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
     protected static final int GAME_OVER_STATE_TICKS = 150;
+
+    // Copilot AI claims that there are "randomizer nodes" in the maps that are used during the first scatter phase
+    // to randomize the movement of Blinky and Pinky. I believe that for now and implement it accordingly.
+
+    public static final Set<Vector2i> RANDOMIZER_NODES_MAZE_1 = Set.of(
+        new Vector2i(10, 3),
+        new Vector2i(17, 3),
+        new Vector2i(10, 7),
+        new Vector2i(17, 7),
+        new Vector2i(10, 17),
+        new Vector2i(13, 17),
+        new Vector2i(14, 17),
+        new Vector2i(17, 17),
+        new Vector2i(10, 23),
+        new Vector2i(17, 23)
+    );
+
+    public static final Set<Vector2i> RANDOMIZER_NODES_MAZE_2 = Set.of(
+        new Vector2i(10, 3),
+        new Vector2i(17, 3),
+        new Vector2i(10, 7),
+        new Vector2i(17, 7),
+        new Vector2i(10, 11),
+        new Vector2i(17, 11),
+        new Vector2i(10, 17),
+        new Vector2i(17, 17),
+        new Vector2i(10, 23),
+        new Vector2i(17, 23)
+    );
+
+    public static final Set<Vector2i> RANDOMIZER_NODES_MAZE_3 = Set.of(
+        new Vector2i(10, 3),
+        new Vector2i(17, 3),
+        new Vector2i(10, 7),
+        new Vector2i(17, 7),
+        new Vector2i(10, 13),
+        new Vector2i(17, 13),
+        new Vector2i(10, 17),
+        new Vector2i(17, 17),
+        new Vector2i(10, 23),
+        new Vector2i(17, 23)
+    );
+
+    public static final Set<Vector2i> RANDOMIZER_NODES_MAZE_4 = Set.of(
+        new Vector2i(10, 3),
+        new Vector2i(17, 3),
+        new Vector2i(10, 7),
+        new Vector2i(17, 7),
+        new Vector2i(10, 11),
+        new Vector2i(17, 11),
+        new Vector2i(10, 17),
+        new Vector2i(17, 17),
+        new Vector2i(10, 21),
+        new Vector2i(17, 21),
+        new Vector2i(10, 25),
+        new Vector2i(17, 25)
+    );
+
+    private static Set<Vector2i> randomizerNodes(GameLevel level) {
+        final int mapNumber = ArcadeMsPacMan_MapSelector.mapNumber(level.number());
+        return switch (mapNumber) {
+            case 1 -> RANDOMIZER_NODES_MAZE_1;
+            case 2 -> RANDOMIZER_NODES_MAZE_2;
+            case 3 -> RANDOMIZER_NODES_MAZE_3;
+            case 4 -> RANDOMIZER_NODES_MAZE_4;
+            default -> throw new IllegalArgumentException("Illegal map number: %d".formatted(mapNumber));
+        };
+    }
 
     protected final WorldMapSelector mapSelector;
     protected final LevelCounter levelCounter;

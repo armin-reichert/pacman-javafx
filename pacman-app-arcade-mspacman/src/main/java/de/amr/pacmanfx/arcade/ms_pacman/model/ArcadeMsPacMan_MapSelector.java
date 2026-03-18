@@ -30,7 +30,7 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
         new WorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff")
     };
 
-    private static int mapNumber(int levelNumber) {
+    public static int mapNumber(int levelNumber) {
         return switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
