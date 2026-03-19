@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.dashboard;
 import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.model.world.WorldMapParseException;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -18,10 +17,10 @@ import javafx.scene.control.TableView;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
@@ -159,14 +158,12 @@ public class DashboardSectionCustomMaps extends DashboardSection {
             Logger.info("{} custom map(s) found", mapFiles.length);
         }
         for (File file : mapFiles) {
-            try {
-                final WorldMap worldMap = WorldMap.loadFromFile(file);
-                customMaps.add(worldMap);
+            final Optional<WorldMap> worldMap = WorldMap.loadFromFile(file);
+            if (worldMap.isPresent()) {
+                customMaps.add(worldMap.get());
                 Logger.info("Custom map loaded from file {}", file);
-            } catch (IOException x) {
-                Logger.error("Could not open world map");
             }
-            catch (WorldMapParseException x) {
+            else {
                 Logger.error("Could not parse world map");
             }
         }

@@ -9,6 +9,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Optional;
 
 public class Action_SelectNextMapFile extends EditorAction<File> {
 
@@ -30,7 +31,7 @@ public class Action_SelectNextMapFile extends EditorAction<File> {
             Logger.error("Cannot load next map file for {}, parent is NULL", currentFile);
             return null;
         }
-        File[] mapFiles = dir.listFiles((folder, name) -> name.endsWith(".world"));
+        File[] mapFiles = dir.listFiles((_, name) -> name.endsWith(".world"));
         if (mapFiles == null) {
             Logger.warn("No map files found in directory {}", dir);
             return null;
@@ -45,16 +46,17 @@ public class Action_SelectNextMapFile extends EditorAction<File> {
                 next = index > 0 ? index - 1: mapFiles.length - 1;
             }
             File file = mapFiles[next];
-            try {
-                WorldMap worldMap = WorldMap.loadFromFile(file);
-                editor.setCurrentWorldMap(worldMap);
+            final Optional<WorldMap> worldMap = WorldMap.loadFromFile(file);
+            if (worldMap.isPresent()) {
+                editor.setCurrentWorldMap(worldMap.get());
                 editor.setCurrentDirectory(file.getParentFile());
                 editor.setCurrentFile(file);
                 Logger.info("World map file changed to {}", file);
-            } catch (Exception x) {
-                Logger.error(x, "Could not load map file '%s'".formatted(file));
+                return file;
+            } else {
+                Logger.error("Could not load world map from file {}", file);
+                return null;
             }
-            return file;
         }
         return null;
     }

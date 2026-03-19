@@ -147,6 +147,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         this.demoLevelSteering = new RuleBasedPacSteering();
         this.automaticSteering = new RuleBasedPacSteering();
         createGateKeeper();
+        mapSelector.loadMapPrototypes();
     }
 
     @Override

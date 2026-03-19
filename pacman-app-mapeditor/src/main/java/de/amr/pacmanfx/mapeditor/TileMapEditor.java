@@ -67,9 +67,10 @@ public class TileMapEditor {
     }
 
     public void editFile(File worldMapFile) throws WorldMapParseException, IOException {
-        final WorldMap map = WorldMap.loadFromFile(worldMapFile);
-        setCurrentWorldMap(map);
-        setCurrentFile(worldMapFile);
+        WorldMap.loadFromFile(worldMapFile).ifPresent(worldMap -> {
+            setCurrentWorldMap(worldMap);
+            setCurrentFile(worldMapFile);
+        });
     }
 
     public void quit() {

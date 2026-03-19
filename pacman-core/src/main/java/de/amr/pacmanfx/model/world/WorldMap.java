@@ -192,9 +192,13 @@ public class WorldMap {
         }
     }
 
-    public static WorldMap loadFromFile(File file) throws WorldMapParseException, IOException {
-        requireNonNull(file);
-        return create(file.toURI().toURL());
+    public static Optional<WorldMap> loadFromFile(File file) {
+        try {
+            return Optional.of(create(file.toURI().toURL()));
+        } catch (Exception x) {
+            Logger.error(x, "Unable to load world map from file {}", file);
+            return Optional.empty();
+        }
     }
 
     /**

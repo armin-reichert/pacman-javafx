@@ -5,11 +5,10 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.model.world.WorldMapParseException;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -25,25 +24,22 @@ public class Action_ReplaceCurrentWorldMapChecked extends EditorUIAction<Boolean
     @Override
     public Boolean execute() {
         requireNonNull(file);
-        boolean success = false;
         if (file.getName().endsWith(".world")) {
-            try {
-                WorldMap worldMap = WorldMap.loadFromFile(file);
+            final Optional<WorldMap> worldMap = WorldMap.loadFromFile(file);
+            if (worldMap.isPresent()) {
                 ui.afterCheckForUnsavedChanges(() -> {
-                    editor.setCurrentWorldMap(worldMap);
+                    editor.setCurrentWorldMap(worldMap.get());
                     editor.setCurrentDirectory(file.getParentFile());
                     editor.setCurrentFile(file);
                 });
-                success = true;
-            } catch (IOException x) {
-                Logger.error("Could not open world map");
-                throw new RuntimeException(x);
+                return true;
             }
-            catch (WorldMapParseException x) {
-                Logger.error("Could not parse world map");
-                throw new RuntimeException(x);
+            else {
+                Logger.error("Could not load world map from file '{}'", file);
+                return false;
             }
         }
-        return success;
+        Logger.error("World map file '{}' has wrong extension", file);
+        return false;
     }
 }
