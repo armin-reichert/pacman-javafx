@@ -30,26 +30,6 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
         new WorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff")
     };
 
-    public static int mapNumber(int levelNumber) {
-        return switch (levelNumber) {
-            case 1, 2 -> 1;
-            case 3, 4, 5 -> 2;
-            case 6, 7, 8, 9 -> 3;
-            case 10, 11, 12, 13 -> 4;
-            default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
-        };
-    }
-
-    private static int colorMapIndex(int levelNumber) {
-        return switch (levelNumber) {
-            case 1, 2 -> 0;
-            case 3, 4, 5 -> 1;
-            case 6, 7, 8, 9 -> 2;
-            case 10, 11, 12, 13 -> 3;
-            default -> (levelNumber - 14) % 8 < 4 ? 4 : 5;
-        };
-    }
-
     private List<WorldMap> mapPrototypes = List.of();
 
     @Override
@@ -90,12 +70,27 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
         if (mapPrototypes.isEmpty()) {
             loadMapPrototypes();
         }
-        final int mapNumber = mapNumber(levelNumber);
+        final int mapNumber = switch (levelNumber) {
+            case 1, 2 -> 1;
+            case 3, 4, 5 -> 2;
+            case 6, 7, 8, 9 -> 3;
+            case 10, 11, 12, 13 -> 4;
+            default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
+        };
+
+        final int colorMapIndex = switch (levelNumber) {
+            case 1, 2 -> 0;
+            case 3, 4, 5 -> 1;
+            case 6, 7, 8, 9 -> 2;
+            case 10, 11, 12, 13 -> 3;
+            default -> (levelNumber - 14) % 8 < 4 ? 4 : 5;
+        };
+
         final WorldMap prototype = mapPrototypes.get(mapNumber - 1);
 
         final WorldMap worldMap = new WorldMap(prototype);
         worldMap.setConfigValue(WorldMapConfigKey.MAP_NUMBER, mapNumber);
-        worldMap.setConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX, colorMapIndex(levelNumber));
+        worldMap.setConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX, colorMapIndex);
         return worldMap;
     }
 }
