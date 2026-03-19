@@ -110,7 +110,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         while (++dirsTried <= 4) {
             if (isAcceptableWishDir(level, ghost, dir)) {
                 ghost.setWishDir(dir);
-                Logger.info("{} takes random wish direction {}", ghost.name(), dir);
+                Logger.info("{} selects random wish direction {}", ghost.name(), dir);
                 break;
             }
             Logger.debug("{} rejects wish dir {}", ghost.name(), dir);
@@ -119,8 +119,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     private static boolean isAcceptableWishDir(GameLevel level, Ghost ghost, Direction dir) {
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        return dir != ghost.moveDir().opposite() && !terrain.isTileBlocked(ghost.tile().plus(dir.vector()));
+        final Vector2i neighborTile = ghost.tile().plus(dir.vector());
+        return dir != ghost.moveDir().opposite() && ghost.canAccessTile(level, neighborTile);
     }
 
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
