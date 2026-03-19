@@ -45,37 +45,54 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         return new Pac("Ms. Pac-Man");
     }
 
+    /**
+     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
+     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
+     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
+     */
     public static Ghost createGhost(byte personality) {
         return switch (personality) {
-            case RED_GHOST_SHADOW -> modifyShadowBehavior(new RedGhostShadow("Blinky"));
-            case PINK_GHOST_SPEEDY -> modifyAmbushBehavior(new PinkGhostAmbusher("Pinky"));
+            case RED_GHOST_SHADOW -> applyModifiedShadowBehavior(new RedGhostShadow("Blinky"));
+            case PINK_GHOST_SPEEDY -> applyModifiedAmbushBehavior(new PinkGhostAmbusher("Pinky"));
             case CYAN_GHOST_BASHFUL -> new CyanGhostBashful("Inky");
             case ORANGE_GHOST_POKEY -> new OrangeGhostPokey("Sue");
             default -> throw new IllegalArgumentException();
         };
     }
 
-    /**
-     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
-     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
-     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
-     *
-     * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
-     */
-    private static Ghost modifyShadowBehavior(RedGhostShadow ghost) {
+    private static Ghost applyModifiedShadowBehavior(RedGhostShadow ghost) {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
-            ghost.setSpeed(speed);
+            final TerrainLayer terrain = level.worldMap().terrainLayer();
             final boolean firstScatterPhase = level.huntingTimer().phaseIndex() == 0;
-            final boolean randomChoice = ghost.isNewTileEntered() && level.worldMap().terrainLayer().isIntersection(ghost.tile());
-            if (firstScatterPhase && randomChoice) {
-                Logger.info("{} hits randomizer node at {}", ghost.name(), ghost.tile());
+            final boolean takeRandomDir = ghost.isNewTileEntered() && terrain.isIntersection(ghost.tile());
+            if (firstScatterPhase && takeRandomDir) {
                 selectRandomWishDir(ghost, level);
+                ghost.setSpeed(speed);
                 ghost.moveThroughThisCruelWorld(level);
             } else {
-                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || ghost.elroyState().enabled();
-                final Vector2i targetTile = chase
-                    ? ghost.chasingTargetTile(level)
-                    : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
+                // Normal behavior of red ghost
+                final boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || ghost.elroyState().enabled();
+                final Vector2i targetTile = chase ? ghost.chasingTargetTile(level) : terrain.ghostScatterTile(ghost.personality());
+                ghost.setSpeed(speed);
+                ghost.tryMovingTowardsTargetTile(level, targetTile);
+            }
+        });
+        return ghost;
+    }
+
+    private static Ghost applyModifiedAmbushBehavior(Ghost ghost) {
+        ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
+            final TerrainLayer terrain = level.worldMap().terrainLayer();
+            final boolean firstScatterPhase = level.huntingTimer().phaseIndex() == 0;
+            final boolean takeRandomDir = ghost.isNewTileEntered() && terrain.isIntersection(ghost.tile());
+            if (firstScatterPhase && takeRandomDir) {
+                selectRandomWishDir(ghost, level);
+                ghost.setSpeed(speed);
+                ghost.moveThroughThisCruelWorld(level);
+            } else {
+                final boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
+                final Vector2i targetTile = chase ? ghost.chasingTargetTile(level) : terrain.ghostScatterTile(ghost.personality());
+                ghost.setSpeed(speed);
                 ghost.tryMovingTowardsTargetTile(level, targetTile);
             }
         });
@@ -93,10 +110,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         while (++dirsTried <= 4) {
             if (isAcceptableWishDir(level, ghost, dir)) {
                 ghost.setWishDir(dir);
-                Logger.info("Ghost {} takes random wish direction {}", ghost.name(), dir);
+                Logger.info("{} takes random wish direction {}", ghost.name(), dir);
                 break;
             }
-            Logger.info("{} rejects wish dir {}", ghost.name(), dir);
+            Logger.debug("{} rejects wish dir {}", ghost.name(), dir);
             dir = dir.nextClockwise();
         }
     }
@@ -104,31 +121,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     private static boolean isAcceptableWishDir(GameLevel level, Ghost ghost, Direction dir) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         return dir != ghost.moveDir().opposite() && !terrain.isTileBlocked(ghost.tile().plus(dir.vector()));
-    }
-
-    /**
-     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
-     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
-     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
-     *
-     * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
-     */
-    private static Ghost modifyAmbushBehavior(Ghost ghost) {
-        ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
-            ghost.setSpeed(speed);
-            final boolean firstScatterPhase = level.huntingTimer().phaseIndex() == 0;
-            final boolean randomChoice = ghost.isNewTileEntered() && level.worldMap().terrainLayer().isIntersection(ghost.tile());
-            if (firstScatterPhase && randomChoice) {
-                Logger.info("{} hits randomizer node at {}", ghost.name(), ghost.tile());
-                ghost.roam(level);
-            } else {
-                final Vector2i targetTile = level.huntingTimer().phase() == HuntingPhase.CHASING
-                    ? ghost.chasingTargetTile(level)
-                    : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
-                ghost.tryMovingTowardsTargetTile(level, targetTile);
-            }
-        });
-        return ghost;
     }
 
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
