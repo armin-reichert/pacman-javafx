@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessageType;
+import org.tinylog.Logger;
 
 public enum Arcade_GameState implements State<Game> {
 
@@ -17,13 +18,13 @@ public enum Arcade_GameState implements State<Game> {
     BOOT { // "Das muss das Boot abkönnen!"
         @Override
         public void onEnter(Game game) {
-            timer.restartIndefinitely();
+            timer.restartIndefinitely(); // UI triggers timer expiration
             game.init();
         }
 
         @Override
         public void onUpdate(Game game) {
-            if (timer.hasExpired()) { // timer is set to expired by UI
+            if (timer.hasExpired()) {
                 game.control().enterState(INTRO);
             }
         }
@@ -52,15 +53,20 @@ public enum Arcade_GameState implements State<Game> {
      */
     SETTING_OPTIONS_FOR_START {
         @Override
+        public void onEnter(Game game) {
+            timer.restartIndefinitely();
+        }
+
+        @Override
         public void onUpdate(Game game) {
-            // wait for user interaction to start playing
+            // wait for user interaction (e.g. key press)
         }
     },
 
     STARTING_GAME_OR_LEVEL {
         @Override
         public void onUpdate(Game game) {
-            long tick = timer.tickCount();
+            final long tick = timer.tickCount();
             if (game.isPlaying()) {
                 final GameLevel level = game.optGameLevel().orElseThrow();
                 game.continuePlaying(level, tick);
@@ -216,7 +222,12 @@ public enum Arcade_GameState implements State<Game> {
         }
     };
 
-    final TickTimer timer = new TickTimer("Timer-" + name());
+    final TickTimer timer;
+
+    Arcade_GameState() {
+        timer = new TickTimer("Timer-" + name());
+        Logger.info("Game state {} created", name());
+    }
 
     @Override
     public TickTimer timer() {
