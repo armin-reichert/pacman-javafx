@@ -64,7 +64,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final Vector2i tile = ghost.tile();
-            if (terrain.isTileInPortalSpace(tile)) {
+            final boolean teleporting = terrain.isTileInPortalSpace(tile);
+            if (teleporting) {
+                ghost.setSpeed(speed);
+                ghost.moveThroughThisCruelWorld(level);
                 return;
             }
             final boolean takeRandomDir = level.huntingTimer().phaseIndex() == 0
@@ -89,7 +92,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final Vector2i tile = ghost.tile();
-            if (terrain.isTileInPortalSpace(tile)) {
+            final boolean teleporting = terrain.isTileInPortalSpace(tile);
+            if (teleporting) {
+                ghost.setSpeed(speed);
+                ghost.moveThroughThisCruelWorld(level);
                 return;
             }
             final boolean takeRandomDir = level.huntingTimer().phaseIndex() == 0
