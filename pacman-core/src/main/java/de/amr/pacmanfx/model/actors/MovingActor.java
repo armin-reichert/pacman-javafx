@@ -46,7 +46,6 @@ public class MovingActor extends Actor {
     protected boolean newTileEntered;
     protected boolean turnBackRequested;
     protected boolean canTeleport = DEFAULT_CAN_TELEPORT;
-    protected boolean teleporting;
 
     //TODO this is just a primitive way to provide cornering speed differences
     protected float corneringSpeedDelta;
@@ -73,11 +72,11 @@ public class MovingActor extends Actor {
     }
 
     /**
-     * @param gameLevel the game level we are in (not null)
+     * @param level the game level we are in (not null)
      * @param tile some tile inside or outside the world
      * @return if this actor can access the given tile in its game context
      */
-    public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
+    public boolean canAccessTile(GameLevel level, Vector2i tile) {
         return true;
     }
 
@@ -101,7 +100,6 @@ public class MovingActor extends Actor {
             ", newTileEntered=" + newTileEntered +
             ", turnBackRequested=" + turnBackRequested +
             ", canTeleport=" + canTeleport +
-            ", teleporting=" + teleporting +
             ", corneringSpeedDelta" + corneringSpeedDelta +
             '}';
     }
@@ -119,7 +117,6 @@ public class MovingActor extends Actor {
             setTargetTile(DEFAULT_TARGET_TILE);
         }
         canTeleport = DEFAULT_CAN_TELEPORT;
-        teleporting = false;
         newTileEntered = true;
         turnBackRequested = false;
     }
@@ -294,15 +291,15 @@ public class MovingActor extends Actor {
         return newTileEntered;
     }
 
-    public void navigateTowardsTarget(GameLevel gameLevel) {
-        requireNonNull(gameLevel);
+    public void navigateTowardsTarget(GameLevel level) {
+        requireNonNull(level);
 
         if (!newTileEntered && moveInfo.moved || targetTile() == null) {
             return; // we don't need no navigation, dim dit didit didit...
         }
 
         final Vector2i currentTile = tile();
-        if (gameLevel.worldMap().terrainLayer().isTileInPortalSpace(currentTile)) {
+        if (level.worldMap().terrainLayer().isTileInPortalSpace(currentTile)) {
             return;
         }
         Direction candidateDir = null;
@@ -312,7 +309,7 @@ public class MovingActor extends Actor {
                 continue; // reversing the move direction is not allowed  (except to get out of dead-ends, see below)
             }
             final Vector2i neighborTile = currentTile.plus(dir.vector());
-            if (canAccessTile(gameLevel, neighborTile)) {
+            if (canAccessTile(level, neighborTile)) {
                 double dist = neighborTile.euclideanDist(targetTile());
                 if (dist < minDistToTarget) {
                     minDistToTarget = dist;
@@ -327,15 +324,15 @@ public class MovingActor extends Actor {
     /**
      * Lets an actor move towards the given target tile.
      *
-     * @param gameLevel the game level we are in
+     * @param level the game level we are in
      * @param targetTile target tile this actor tries to reach
      */
-    public void tryMovingTowardsTargetTile(GameLevel gameLevel, Vector2i targetTile) {
-        requireNonNull(gameLevel);
+    public void tryMovingTowardsTargetTile(GameLevel level, Vector2i targetTile) {
+        requireNonNull(level);
         if (targetTile != null) {
             setTargetTile(targetTile);
-            navigateTowardsTarget(gameLevel);
-            tryMovingOrTeleporting(gameLevel);
+            navigateTowardsTarget(level);
+            tryMovingOrTeleporting(level);
         }
     }
 
@@ -351,8 +348,8 @@ public class MovingActor extends Actor {
         requireNonNull(level);
         moveInfo.clear();
         if (canTeleport) {
-            final boolean teleported = tryTeleporting(level.worldMap().terrainLayer());
-            if (teleported) {
+            moveInfo.teleported = tryTeleporting(level.worldMap().terrainLayer());
+            if (moveInfo.teleported) {
                 return;
             }
         }
@@ -380,13 +377,13 @@ public class MovingActor extends Actor {
         return false; // no vertical teleporting yet
     }
 
-    private void tryMovingTowards(GameLevel gameLevel, Vector2i tileBeforeMoving, Direction dir) {
+    private void tryMovingTowards(GameLevel level, Vector2i tileBeforeMoving, Direction dir) {
         final Vector2f newVelocity = dir.vector().scaled(velocity().length());
         final Vector2f touchPosition = center().plus(dir.vector().scaled((float) HTS)).plus(newVelocity);
         final Vector2i touchedTile = tileAt(touchPosition);
         final boolean turn = dir.vector().isOrthogonalTo(moveDir().vector());
 
-        if (!canAccessTile(gameLevel, touchedTile)) {
+        if (!canAccessTile(level, touchedTile)) {
             if (!turn) {
                 placeAtTile(tile()); // adjust over tile (would move forward against wall)
             }
@@ -421,7 +418,7 @@ public class MovingActor extends Actor {
         newTileEntered = !tileBeforeMoving.equals(tileAfterMoving);
 
         moveInfo.moved = true;
-        TerrainLayer terrainLayer = gameLevel.worldMap().terrainLayer();
+        TerrainLayer terrainLayer = level.worldMap().terrainLayer();
         moveInfo.tunnelEntered = terrainLayer.isTunnel(tileAfterMoving)
             && !terrainLayer.isTunnel(tileBeforeMoving)
             && !terrainLayer.isTileInPortalSpace(tileBeforeMoving);
@@ -429,7 +426,7 @@ public class MovingActor extends Actor {
             && terrainLayer.isTunnel(tileBeforeMoving)
             && !terrainLayer.isTileInPortalSpace(tileAfterMoving);
 
-        Logger.info("%5s (%.2f pixels)".formatted(dir, newVelocity.length()));
+        Logger.debug("%5s (%.2f pixels)".formatted(dir, newVelocity.length()));
         if (moveInfo.tunnelEntered) { Logger.trace("{} entered tunnel", name()); }
         if (moveInfo.tunnelLeft)    { Logger.trace("{} left tunnel", name()); }
     }
