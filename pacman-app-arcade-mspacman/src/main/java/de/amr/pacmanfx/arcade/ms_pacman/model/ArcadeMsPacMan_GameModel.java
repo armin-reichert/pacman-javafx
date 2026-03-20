@@ -56,16 +56,21 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             case PINK_GHOST_SPEEDY -> applyModifiedAmbushBehavior(new PinkGhostAmbusher("Pinky"));
             case CYAN_GHOST_BASHFUL -> new CyanGhostBashful("Inky");
             case ORANGE_GHOST_POKEY -> new OrangeGhostPokey("Sue");
-            default -> throw new IllegalArgumentException();
+            default -> throw new IllegalArgumentException("Illegal ghost personality: %d".formatted(personality));
         };
     }
 
     private static Ghost applyModifiedShadowBehavior(RedGhostShadow ghost) {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
-            final boolean firstScatterPhase = level.huntingTimer().phaseIndex() == 0;
-            final boolean takeRandomDir = ghost.isNewTileEntered() && terrain.isIntersection(ghost.tile());
-            if (firstScatterPhase && takeRandomDir) {
+            final Vector2i tile = ghost.tile();
+            if (terrain.isTileInPortalSpace(tile)) {
+                return;
+            }
+            final boolean takeRandomDir = level.huntingTimer().phaseIndex() == 0
+                && ghost.isNewTileEntered()
+                && terrain.isIntersection(tile);
+            if (takeRandomDir) {
                 selectRandomWishDir(ghost, level);
                 ghost.setSpeed(speed);
                 ghost.moveThroughThisCruelWorld(level);
@@ -83,9 +88,14 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     private static Ghost applyModifiedAmbushBehavior(Ghost ghost) {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
-            final boolean firstScatterPhase = level.huntingTimer().phaseIndex() == 0;
-            final boolean takeRandomDir = ghost.isNewTileEntered() && terrain.isIntersection(ghost.tile());
-            if (firstScatterPhase && takeRandomDir) {
+            final Vector2i tile = ghost.tile();
+            if (terrain.isTileInPortalSpace(tile)) {
+                return;
+            }
+            final boolean takeRandomDir = level.huntingTimer().phaseIndex() == 0
+                && ghost.isNewTileEntered()
+                && terrain.isIntersection(tile);
+            if (takeRandomDir) {
                 selectRandomWishDir(ghost, level);
                 ghost.setSpeed(speed);
                 ghost.moveThroughThisCruelWorld(level);
@@ -100,21 +110,13 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     private static void selectRandomWishDir(Ghost ghost, GameLevel level) {
-        final Vector2i tile = ghost.tile();
-        final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
-        if (teleporting) {
-            return;
-        }
-        int dirsTried = 0;
-        Direction dir = Direction.random();
-        while (++dirsTried <= 4) {
+        for (final Direction dir : Direction.shuffled()) {
             if (isAcceptableWishDir(level, ghost, dir)) {
                 ghost.setWishDir(dir);
-                Logger.info("{} selects random wish direction {}", ghost.name(), dir);
-                break;
+                Logger.debug("{} selects random wish direction {}", ghost.name(), dir);
+                return;
             }
             Logger.debug("{} rejects wish dir {}", ghost.name(), dir);
-            dir = dir.nextClockwise();
         }
     }
 
