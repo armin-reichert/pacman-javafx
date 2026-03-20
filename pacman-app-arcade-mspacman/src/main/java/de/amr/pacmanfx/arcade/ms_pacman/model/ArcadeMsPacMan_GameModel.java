@@ -111,18 +111,15 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     private static void selectRandomWishDir(Ghost ghost, GameLevel level) {
         for (final Direction dir : Direction.shuffled()) {
-            if (isAcceptableWishDir(level, ghost, dir)) {
+            final Vector2i neighbor = ghost.tile().plus(dir.vector());
+            final boolean acceptable = dir != ghost.moveDir().opposite() && ghost.canAccessTile(level, neighbor);
+            if (acceptable) {
                 ghost.setWishDir(dir);
                 Logger.debug("{} selects random wish direction {}", ghost.name(), dir);
-                return;
+                break;
             }
             Logger.debug("{} rejects wish dir {}", ghost.name(), dir);
         }
-    }
-
-    private static boolean isAcceptableWishDir(GameLevel level, Ghost ghost, Direction dir) {
-        final Vector2i neighborTile = ghost.tile().plus(dir.vector());
-        return dir != ghost.moveDir().opposite() && ghost.canAccessTile(level, neighborTile);
     }
 
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
