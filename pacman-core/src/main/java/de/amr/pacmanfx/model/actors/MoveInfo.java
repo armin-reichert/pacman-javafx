@@ -7,19 +7,22 @@ public class MoveInfo {
     public boolean moved;
     public boolean tunnelEntered;
     public boolean tunnelLeft;
+    public boolean teleported;
 
     public void clear() {
         moved = false;
         tunnelEntered = false;
         tunnelLeft = false;
+        teleported = false;
     }
 
     @Override
     public String toString() {
-        var sb = new StringBuilder();
-        sb.append(tunnelEntered ? " entered tunnel" : "");
-        sb.append(tunnelLeft    ? " left tunnel" : "");
-        sb.append(moved         ? " moved" : "");
-        return sb.isEmpty() ? "" : "[" + sb.toString().trim() + "]";
+        final var s = new StringBuilder();
+        s.append(tunnelEntered ? " entered tunnel" : "");
+        s.append(tunnelLeft    ? " left tunnel" : "");
+        s.append(moved         ? " moved" : "");
+        s.append(teleported    ? " teleported" : "");
+        return s.isEmpty() ? "" : "[" + s.toString().trim() + "]";
     }
 }
