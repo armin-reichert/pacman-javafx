@@ -67,7 +67,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             final boolean teleporting = terrain.isTileInPortalSpace(tile);
             if (teleporting) {
                 ghost.setSpeed(speed);
-                ghost.moveThroughThisCruelWorld(level);
+                ghost.tryMovingOrTeleporting(level);
                 return;
             }
             final boolean takeRandomDir = level.huntingTimer().phaseIndex() == 0
@@ -76,7 +76,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             if (takeRandomDir) {
                 selectRandomWishDir(ghost, level);
                 ghost.setSpeed(speed);
-                ghost.moveThroughThisCruelWorld(level);
+                ghost.tryMovingOrTeleporting(level);
             } else {
                 // Normal behavior of red ghost
                 final boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || ghost.elroyState().enabled();
@@ -95,7 +95,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             final boolean teleporting = terrain.isTileInPortalSpace(tile);
             if (teleporting) {
                 ghost.setSpeed(speed);
-                ghost.moveThroughThisCruelWorld(level);
+                ghost.tryMovingOrTeleporting(level);
                 return;
             }
             final boolean takeRandomDir = level.huntingTimer().phaseIndex() == 0
@@ -104,7 +104,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             if (takeRandomDir) {
                 selectRandomWishDir(ghost, level);
                 ghost.setSpeed(speed);
-                ghost.moveThroughThisCruelWorld(level);
+                ghost.tryMovingOrTeleporting(level);
             } else {
                 final boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                 final Vector2i targetTile = chase ? ghost.chasingTargetTile(level) : terrain.ghostScatterTile(ghost.personality());

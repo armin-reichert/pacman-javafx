@@ -167,7 +167,7 @@ public class Pac extends MovingActor {
         }
 
         setSpeed(powerTimer.isRunning() ? game.pacSpeedWhenHasPower(level) : game.pacSpeed(level));
-        moveThroughThisCruelWorld(level);
+        tryMovingOrTeleporting(level);
 
         if (moveInfo.moved) {
             optAnimationManager().ifPresent(AnimationManager::play);

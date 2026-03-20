@@ -12,7 +12,7 @@ import org.tinylog.Logger;
  * A horizontal portal connects two border tiles on the left and right map border. Traveling through the portal
  * corresponds to moving <code>portalDepth</code> tiles into the "portal space", wrapping around and traveling
  * <code>portalDepth</code> tiles back into the maze. So an actor moving through a portal moves in total
- * <code>2*portalDepth - 1</code> tiles outside the maze.
+ * <code>2 * portalDepth - 1</code> tiles outside the maze.
  */
 public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTile, int depth) {
 
@@ -32,6 +32,10 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
             }
         }
         return false;
+    }
+
+    public int tileY() {
+        return leftBorderEntryTile.y();
     }
 
     public boolean tryTeleporting(MovingActor actor) {

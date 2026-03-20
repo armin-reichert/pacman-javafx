@@ -335,23 +335,23 @@ public class MovingActor extends Actor {
         if (targetTile != null) {
             setTargetTile(targetTile);
             navigateTowardsTarget(gameLevel);
-            moveThroughThisCruelWorld(gameLevel);
+            tryMovingOrTeleporting(gameLevel);
         }
     }
 
     /**
-     * Tries moving through the current level's world.
+     * Tries moving or teleporting through the current level's world.
      * <p>
      * First checks if the actor can be teleported, then if the actor can move to its wish direction. If this is not
      * possible, it keeps moving to its current move direction.
      *
-     * @param gameLevel the game level we are in
+     * @param level the game level we are in
      */
-    public void moveThroughThisCruelWorld(GameLevel gameLevel) {
-        requireNonNull(gameLevel);
+    public void tryMovingOrTeleporting(GameLevel level) {
+        requireNonNull(level);
         moveInfo.clear();
         if (canTeleport) {
-            boolean teleported = tryHorizontalTeleport(gameLevel.worldMap().terrainLayer());
+            final boolean teleported = tryTeleporting(level.worldMap().terrainLayer());
             if (teleported) {
                 return;
             }
@@ -361,23 +361,23 @@ public class MovingActor extends Actor {
             Logger.trace("{}: turned back at tile {}", name(), tile());
             turnBackRequested = false;
         }
-        tryMovingTowards(gameLevel, tile(), wishDir());
+        tryMovingTowards(level, tile(), wishDir());
         if (moveInfo.moved) {
             setMoveDir(wishDir());
         } else {
-            tryMovingTowards(gameLevel, tile(), moveDir());
+            tryMovingTowards(level, tile(), moveDir());
         }
     }
 
-    private boolean tryHorizontalTeleport(TerrainLayer terrain) {
-        if (moveDir().isVertical()) {
-            return false;
+    private boolean tryTeleporting(TerrainLayer terrain) {
+        if (moveDir().isHorizontal()) {
+            return terrain.horizontalPortals().stream()
+                .filter(portal -> portal.tileY() == tile().y())
+                .findFirst()
+                .map(portal -> portal.tryTeleporting(this))
+                .orElse(false);
         }
-        return terrain.horizontalPortals().stream()
-            .filter(portal -> portal.leftBorderEntryTile().y() == tile().y())
-            .findFirst()
-            .map(portal -> portal.tryTeleporting(this))
-            .orElse(false);
+        return false; // no vertical teleporting yet
     }
 
     private void tryMovingTowards(GameLevel gameLevel, Vector2i tileBeforeMoving, Direction dir) {

@@ -77,7 +77,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             if (firstScatterPhase && takeRandomDir) {
                 selectRandomWishDir(ghost, level);
                 ghost.setSpeed(speed);
-                ghost.moveThroughThisCruelWorld(level);
+                ghost.tryMovingOrTeleporting(level);
             } else {
                 // Normal behavior of red ghost
                 final boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || ghost.elroyState().enabled();
@@ -97,7 +97,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             if (firstScatterPhase && takeRandomDir) {
                 selectRandomWishDir(ghost, level);
                 ghost.setSpeed(speed);
-                ghost.moveThroughThisCruelWorld(level);
+                ghost.tryMovingOrTeleporting(level);
             } else {
                 final boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                 final Vector2i targetTile = chase ? ghost.chasingTargetTile(level) : terrain.ghostScatterTile(ghost.personality());

@@ -165,7 +165,7 @@ public class Ghost extends MovingActor {
         if ((newTileEntered || stuck) && !teleporting) {
             selectRandomWishDir(level, tile);
         }
-        moveThroughThisCruelWorld(level);
+        tryMovingOrTeleporting(level);
     }
 
     private void selectRandomWishDir(GameLevel level, Vector2i tile) {
@@ -438,7 +438,7 @@ public class Ghost extends MovingActor {
             setSpeed(speed);
             setTargetTile(home.leftDoorTile());
             navigateTowardsTarget(level);
-            moveThroughThisCruelWorld(level);
+            tryMovingOrTeleporting(level);
         }
     }
 

@@ -126,7 +126,7 @@ public class Bonus extends MovingActor {
         boolean reachedExit = steering.isComplete() || gameLevel.worldMap().terrainLayer().isTileInPortalSpace(tile());
         if (!reachedExit) {
             navigateTowardsTarget(gameLevel);
-            moveThroughThisCruelWorld(gameLevel);
+            tryMovingOrTeleporting(gameLevel);
             jumpingAnimation.tick();
         }
         return reachedExit;
