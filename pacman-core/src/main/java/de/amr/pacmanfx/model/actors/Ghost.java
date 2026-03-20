@@ -163,16 +163,11 @@ public class Ghost extends MovingActor {
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
         final boolean stuck = !moveInfo.moved;
         if ((newTileEntered || stuck) && !teleporting) {
-            selectRandomWishDir(level, tile);
+            final Direction dir = computeRoamingDirection(level, tile);
+            setWishDir(dir);
+            Logger.info("Ghost {} takes random wish direction {}", name, dir);
         }
         tryMovingOrTeleporting(level);
-    }
-
-    private void selectRandomWishDir(GameLevel level, Vector2i tile) {
-        final Direction dir = computeRoamingDirection(level, tile);
-        setWishDir(dir);
-        Logger.info("Ghost {} takes random wish direction {}", name, dir);
-
     }
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
