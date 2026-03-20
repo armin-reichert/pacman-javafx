@@ -20,7 +20,7 @@ public enum TengenGameState implements State<Game> {
         @Override
         public void onEnter(Game game) {
             timer.restartIndefinitely();
-            game.boot();
+            game.init();
         }
 
         @Override

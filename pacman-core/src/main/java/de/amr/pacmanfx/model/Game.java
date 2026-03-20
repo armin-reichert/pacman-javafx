@@ -135,7 +135,7 @@ public interface Game {
      * ----------------------------------------------------------- */
 
     /** Initializes the game model before any gameplay begins. */
-    void boot();
+    void init();
 
     /** Prepares the game for a new play session. */
     void prepareNewGame();

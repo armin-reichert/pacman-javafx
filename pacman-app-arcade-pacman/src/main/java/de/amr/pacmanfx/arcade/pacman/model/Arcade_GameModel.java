@@ -261,7 +261,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     // GameLifecycle interface
 
     @Override
-    public void boot() {
+    public void init() {
         setInitialLifeCount(3);
         clearCheatingProperties();
         prepareNewGame();

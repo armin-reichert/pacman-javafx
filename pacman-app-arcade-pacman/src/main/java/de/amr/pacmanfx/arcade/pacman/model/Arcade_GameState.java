@@ -14,12 +14,11 @@ public enum Arcade_GameState implements State<Game> {
     /**
      * Corresponds to the screen showing all these random symbols from the Arcade video memory.
      */
-    BOOT {
-        // "Das muss das Boot abkönnen!"
+    BOOT { // "Das muss das Boot abkönnen!"
         @Override
         public void onEnter(Game game) {
             timer.restartIndefinitely();
-            game.boot();
+            game.init();
         }
 
         @Override
