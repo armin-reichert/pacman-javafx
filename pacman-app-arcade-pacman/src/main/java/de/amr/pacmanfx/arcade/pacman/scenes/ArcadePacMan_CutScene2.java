@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.model.actors.PacMan;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.lib.math.Direction;
@@ -18,6 +17,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimations.AnimationID.BLINKY_DAMAGED;
 
 /**
@@ -68,7 +68,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
         game.hud().credit(false).score(true).levelCounter(true).livesCounter(false).show();
 
-        pacMan = new PacMan();
+        pacMan = createPacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations());
 
         blinky = uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW);

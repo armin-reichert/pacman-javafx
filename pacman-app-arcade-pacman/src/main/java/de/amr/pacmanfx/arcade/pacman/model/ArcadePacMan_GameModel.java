@@ -44,8 +44,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     public static final int BONUS_1_PELLETS_EATEN = 70;
     public static final int BONUS_2_PELLETS_EATEN = 170;
 
-    public static PacMan createPacMan() {
-        return new PacMan();
+    public static Pac createPacMan() {
+        return new Pac("Pac-Man");
     }
 
     public static Ghost createGhost(byte personality) {
@@ -183,7 +183,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     // helpers
 
     protected void addPacMan(GameLevel level) {
-        final PacMan pacMan = createPacMan();
+        final Pac pacMan = createPacMan();
         pacMan.setAutomaticSteering(automaticSteering);
         level.setPac(pacMan);
     }
