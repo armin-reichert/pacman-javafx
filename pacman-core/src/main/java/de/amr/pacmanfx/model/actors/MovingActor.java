@@ -390,7 +390,7 @@ public class MovingActor extends Actor {
             if (!turn) {
                 placeAtTile(tile()); // adjust over tile (would move forward against wall)
             }
-            moveInfo.log(String.format("Cannot move %s into tile %s", dir, touchedTile));
+            Logger.debug("Cannot move %s into tile %s".formatted(dir, touchedTile));
             return;
         }
 
@@ -401,7 +401,7 @@ public class MovingActor extends Actor {
                 Logger.trace("Reached turn position ({})", name());
                 placeAtTile(tile()); // adjust over tile (starts moving around corner)
             } else {
-                moveInfo.log(String.format("Wants to take corner towards %s but not at turn position", dir));
+                Logger.debug("Wants to take corner towards %s but not at turn position".formatted(dir));
                 return;
             }
         }
@@ -429,7 +429,7 @@ public class MovingActor extends Actor {
             && terrainLayer.isTunnel(tileBeforeMoving)
             && !terrainLayer.isTileInPortalSpace(tileAfterMoving);
 
-        moveInfo.log(String.format("%5s (%.2f pixels)", dir, newVelocity.length()));
+        Logger.info("%5s (%.2f pixels)".formatted(dir, newVelocity.length()));
         if (moveInfo.tunnelEntered) { Logger.trace("{} entered tunnel", name()); }
         if (moveInfo.tunnelLeft)    { Logger.trace("{} left tunnel", name()); }
     }
