@@ -9,14 +9,14 @@ import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessageType;
+import org.tinylog.Logger;
 
 public enum TengenGameState implements State<Game> {
 
     /**
      * Corresponds to the screen showing the "TENGEN PRESENTS" text and the red ghost running over the screen.
      */
-    BOOT {
-        // "Das muss das Boot abkönnen!"
+    BOOT { // "Das muss das Boot abkönnen!"
         @Override
         public void onEnter(Game game) {
             timer.restartIndefinitely();
@@ -260,7 +260,12 @@ public enum TengenGameState implements State<Game> {
         }
     };
 
-    final TickTimer timer = new TickTimer("Timer-" + name());
+    final TickTimer timer;
+
+    TengenGameState() {
+        timer = new TickTimer("Timer-" + name());
+        Logger.info("Game state {} created", name());
+    }
 
     @Override
     public TickTimer timer() {
