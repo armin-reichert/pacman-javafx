@@ -45,7 +45,9 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     public static final int BONUS_2_PELLETS_EATEN = 170;
 
     public static Pac createPacMan() {
-        return new Pac("Pac-Man");
+        final var pacMan = new Pac("Pac-Man");
+        pacMan.reset();
+        return pacMan;
     }
 
     public static Ghost createGhost(byte personality) {

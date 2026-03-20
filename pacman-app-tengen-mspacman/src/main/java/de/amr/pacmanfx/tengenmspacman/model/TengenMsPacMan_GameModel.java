@@ -235,16 +235,25 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public TengenMsPacMan_GameModel(File highScoreFile) {
         super(highScoreFile);
 
-        this.mapSelector = new TengenMsPacMan_MapSelector();
-        this.levelCounter = new TengenMsPacMan_LevelCounter();
-        this.hud = new TengenMsPacMan_HeadsUpDisplay();
-        this.gateKeeper = new GateKeeper(); //TODO implement original logic from Tengen game
-        this.automaticSteering = new RuleBasedPacSteering();
-        this.demoLevelSteering = new RuleBasedPacSteering();
-        this.pelletPoints = 10;
-        this.energizerPoints = 50;
+        mapSelector = new TengenMsPacMan_MapSelector();
+        levelCounter = new TengenMsPacMan_LevelCounter();
+        hud = new TengenMsPacMan_HeadsUpDisplay();
+        gameControl = createGameControl();
+        //TODO implement original logic from Tengen game
+        gateKeeper = new GateKeeper();
+        automaticSteering = new RuleBasedPacSteering();
+        demoLevelSteering = new RuleBasedPacSteering();
+        pelletPoints = 10;
+        energizerPoints = 50;
         setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
-        setGameControl(new TengenMsPacMan_GameController());
+    }
+
+    private TengenMsPacMan_GameController createGameControl() {
+        final var stateMachine = new TengenMsPacMan_GameController();
+        stateMachine.setContext(this);
+        stateMachine.addStateChangeListener((oldState, newState) -> publishGameEvent(
+            new GameStateChangeEvent(this, oldState, newState)));
+        return stateMachine;
     }
 
     public boolean allOptionsDefault() {

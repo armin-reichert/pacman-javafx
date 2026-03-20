@@ -105,21 +105,6 @@ public abstract class AbstractGameModel implements Game {
     }
 
     /**
-     * Assigns the {@link GameControl} (state machine) to this model.
-     *
-     * <p>The state machine receives this model as its context, and all state transitions
-     * are forwarded as {@link GameEvent}s.</p>
-     *
-     * @param gameControl the game control instance
-     */
-    public void setGameControl(GameControl gameControl) {
-        this.gameControl = requireNonNull(gameControl);
-        gameControl.stateMachine().setContext(this);
-        gameControl.stateMachine().addStateChangeListener(
-            (oldState, newState) -> publishGameEvent(new GameStateChangeEvent(this, oldState, newState)));
-    }
-
-    /**
      * @return property controlling whether collisions are double-checked each tick
      */
     public BooleanProperty collisionDoubleCheckedProperty() {

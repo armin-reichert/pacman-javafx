@@ -3,8 +3,6 @@
  */
 package de.amr.pacmanfx.arcade.pacman.model;
 
-import de.amr.pacmanfx.model.actors.ElroyState;
-import de.amr.pacmanfx.model.actors.RedGhostShadow;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -77,16 +75,22 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         super(highscoreFile);
 
         this.coinMechanism = requireNonNull(coinMechanism);
-        this.hud = new HeadsUpDisplay(coinMechanism);
-
+        hud = new HeadsUpDisplay(coinMechanism);
+        gameControl = createGameControl();
         pelletPoints = 10;
         energizerPoints = 50;
         restingTicksAfterPelletEaten = 1;
         restingTicksAfterEnergizerEaten = 3;
         setExtraLifeScores(10_000);
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
+    }
 
-        setGameControl(new Arcade_GameController());
+    protected Arcade_GameController createGameControl() {
+        final var stateMachine = new Arcade_GameController();
+        stateMachine.setContext(this);
+        stateMachine.addStateChangeListener((oldState, newState) -> publishGameEvent(
+            new GameStateChangeEvent(this, oldState, newState)));
+        return stateMachine;
     }
 
     protected int cutSceneNumberAfterLevel(int levelNumber) {
