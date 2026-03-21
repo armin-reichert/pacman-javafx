@@ -8,6 +8,7 @@ import de.amr.pacmanfx.mapeditor.actions.Action_SaveMapFileInteractively;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapChecker;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
+import de.amr.pacmanfx.model.world.WorldMapWriter;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -39,7 +40,10 @@ public class TileMapEditor {
         requireNonNull(stage);
         ui = new TileMapEditorUI(stage, this);
         currentWorldMap.addListener((_, _, _) -> setWorldMapChanged());
-        sourceCodeLineNumbers.addListener((_, _, lineNumbers) -> sourceCode.set(currentWorldMap().sourceCode(lineNumbers)));
+        sourceCodeLineNumbers.addListener((_, _, lineNumbers) -> {
+            final String source = WorldMapWriter.createSourceCode(currentWorldMap(), lineNumbers);
+            sourceCode.set(source);
+        });
         updateTimer = createAnimationTimer();
     }
 
@@ -164,7 +168,8 @@ public class TileMapEditor {
             foodMapPropertyChanged = false;
         }
         if (sourceNeedsUpdate) {
-            sourceCode.set(currentWorldMap().sourceCode(sourceCodeLineNumbers.get()));
+            final String source = WorldMapWriter.createSourceCode(currentWorldMap(), sourceCodeLineNumbers.get());
+            sourceCode.set(source);
         }
     }
 

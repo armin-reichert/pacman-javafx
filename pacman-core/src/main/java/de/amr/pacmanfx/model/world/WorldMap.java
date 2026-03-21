@@ -21,14 +21,14 @@ import static java.util.Objects.requireNonNull;
 
 public class WorldMap {
 
-    private static final Charset CHARSET = StandardCharsets.UTF_8;
+    public static final Charset CHARSET = StandardCharsets.UTF_8;
 
-    private static final Pattern TILE_PATTERN = Pattern.compile("\\((\\d+),(\\d+)\\)");
-    private static final String COMMENT_PREFIX = "#";
+    public static final Pattern TILE_PATTERN = Pattern.compile("\\((\\d+),(\\d+)\\)");
+    public static final String COMMENT_PREFIX = "#";
 
-    private static final String MARKER_BEGIN_TERRAIN_LAYER = "!terrain";
-    private static final String MARKER_BEGIN_FOOD_LAYER = "!food";
-    private static final String MARKER_BEGIN_DATA_SECTION = "!data";
+    public static final String MARKER_BEGIN_TERRAIN_LAYER = "!terrain";
+    public static final String MARKER_BEGIN_FOOD_LAYER = "!food";
+    public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
     public static Optional<Vector2i> parseTile(String s) {
         requireNonNull(s);
@@ -208,8 +208,8 @@ public class WorldMap {
      * @return {@code true} if saving succeeded
      */
     public boolean saveToFile(File file) {
-        try (var pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            pw.print(sourceCode(false));
+        try (var fileWriter = new PrintWriter(file, StandardCharsets.UTF_8)) {
+            fileWriter.println(WorldMapWriter.createSourceCode(this, false));
             return true;
         } catch (IOException x) {
             Logger.error(x, "Could not save world map to file {}", file);
@@ -233,13 +233,13 @@ public class WorldMap {
         foodLayer = new FoodLayer(tilesY, tilesX);
     }
 
-    public WorldMap(WorldMap template) {
-        numRows = template.numRows;
-        numCols = template.numCols;
-        url = template.url;
-        terrainLayer = new TerrainLayer(template.terrainLayer);
-        foodLayer = new FoodLayer(template.foodLayer);
-        configMap = new HashMap<>(template.configMap);
+    public WorldMap(WorldMap prototype) {
+        numRows = prototype.numRows;
+        numCols = prototype.numCols;
+        url = prototype.url;
+        terrainLayer = new TerrainLayer(prototype.terrainLayer);
+        foodLayer = new FoodLayer(prototype.foodLayer);
+        configMap = new HashMap<>(prototype.configMap);
     }
 
     @Override
@@ -359,53 +359,4 @@ public class WorldMap {
         return configMap;
     }
 
-    private void printDataSection(PrintWriter pw, WorldMapLayer layer) {
-        pw.println(MARKER_BEGIN_DATA_SECTION);
-        for (int row = 0; row < layer.numRows(); ++row) {
-            final StringJoiner joiner = new StringJoiner(",");
-            for (int col = 0; col < layer.numCols(); ++col) {
-                final byte content = layer.content(row, col);
-                joiner.add("#%02X".formatted(content));
-            }
-            pw.println(joiner);
-        }
-    }
-
-    private void printCommentLine(PrintWriter pw, String comment) {
-        pw.println(COMMENT_PREFIX + comment);
-    }
-
-    private void printLayerProperties(PrintWriter pw, WorldMapLayer layer) {
-        layer.propertiesSortedByName()
-            .map(entry -> "%s=%s".formatted(entry.getKey(), entry.getValue()))
-            .forEach(pw::println);
-    }
-
-    public String sourceCode(boolean lineNumbers) {
-        final var sw = new StringWriter();
-        final var pw = new PrintWriter(sw);
-
-        pw.println(MARKER_BEGIN_TERRAIN_LAYER);
-        printLayerProperties(pw, terrainLayer);
-        printDataSection(pw, terrainLayer);
-
-        pw.println(MARKER_BEGIN_FOOD_LAYER);
-        printCommentLine(pw, " Pellets (total): %d".formatted(foodLayer.totalFoodCount()));
-        printCommentLine(pw, " Energizers: %d".formatted(foodLayer.energizerTiles().size()));
-        printLayerProperties(pw, foodLayer);
-        printDataSection(pw, foodLayer);
-
-        final String source = sw.toString();
-        if (lineNumbers) {
-            final var sb = new StringBuilder();
-            final String[] lines = source.split("\\R");
-            for (int lineNum = 1; lineNum <= lines.length; ++lineNum) {
-                sb.append("%5d: %s\n".formatted(lineNum, lines[lineNum-1]));
-            }
-            return sb.toString();
-        }
-        else {
-            return source;
-        }
-    }
 }
