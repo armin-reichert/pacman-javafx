@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.steering;
 
-import de.amr.pacmanfx.lib.math.Vector2b;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import org.tinylog.Logger;
@@ -17,11 +17,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class RouteBasedSteering implements Steering {
 
-    private final List<Vector2b> route;
+    private final List<Vector2i> route;
     private int targetIndex;
     private boolean complete;
 
-    public RouteBasedSteering(List<Vector2b> route) {
+    public RouteBasedSteering(List<Vector2i> route) {
         this.route = requireNonNull(route);
         init();
     }
@@ -42,10 +42,10 @@ public class RouteBasedSteering implements Steering {
         if (targetIndex == route.size()) {
             complete = true;
         } else if (movingActor.optTargetTile().isEmpty()) {
-            movingActor.setTargetTile(currentTarget().toVector2i());
+            movingActor.setTargetTile(currentTarget());
             movingActor.navigateTowardsTarget(gameLevel);
             Logger.trace("New target tile for {}={}s", movingActor.name(), movingActor.targetTile());
-        } else if (movingActor.tile().equals(currentTarget().toVector2i())) {
+        } else if (movingActor.tile().equals(currentTarget())) {
             nextTarget(gameLevel, movingActor);
             Logger.trace("New target tile for {}={}", movingActor.name(), movingActor.targetTile());
         }
@@ -54,12 +54,12 @@ public class RouteBasedSteering implements Steering {
     private void nextTarget(GameLevel gameLevel, MovingActor movingActor) {
         ++targetIndex;
         if (targetIndex < route.size()) {
-            movingActor.setTargetTile(currentTarget().toVector2i());
+            movingActor.setTargetTile(currentTarget());
             movingActor.navigateTowardsTarget(gameLevel);
         }
     }
 
-    private Vector2b currentTarget() {
+    private Vector2i currentTarget() {
         return route.get(targetIndex);
     }
 }

@@ -132,15 +132,15 @@ public class Bonus extends MovingActor {
         return reachedExit;
     }
 
-    public void initRoute(List<Vector2b> waypoints, boolean leftToRight) {
+    public void initRoute(List<Vector2i> waypoints, boolean leftToRight) {
         requireNonNull(waypoints);
         if (waypoints.isEmpty()) {
             Logger.error("Bonus route must not be empty");
             return;
         }
         var route = new ArrayList<>(waypoints);
-        Vector2b first = route.removeFirst();
-        placeAtTile(first.toVector2i());
+        Vector2i first = route.removeFirst();
+        placeAtTile(first);
         setMoveDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
         setWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
         steering = new RouteBasedSteering(route);

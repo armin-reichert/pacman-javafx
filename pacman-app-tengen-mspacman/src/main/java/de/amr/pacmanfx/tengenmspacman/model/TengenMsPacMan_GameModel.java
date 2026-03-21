@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.model;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.*;
@@ -21,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.inClosedRange;
@@ -691,13 +689,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         HPortal entryPortal = portals.get(new Random().nextInt(portals.size()));
         HPortal exitPortal  = portals.get(new Random().nextInt(portals.size()));
-        List<Vector2b> route = Stream.of(
+        List<Vector2i> route = List.of(
             leftToRight ? entryPortal.leftBorderEntryTile() : entryPortal.rightBorderEntryTile(),
             houseEntry,
             houseEntryOpposite,
             houseEntry,
             leftToRight ? exitPortal.rightBorderEntryTile().plus(1, 0) : exitPortal.leftBorderEntryTile().minus(1, 0)
-        ).map(Vector2b::new).toList();
+        );
 
         level.selectNextBonus();
         byte symbol = level.bonusSymbol(level.currentBonusIndex());

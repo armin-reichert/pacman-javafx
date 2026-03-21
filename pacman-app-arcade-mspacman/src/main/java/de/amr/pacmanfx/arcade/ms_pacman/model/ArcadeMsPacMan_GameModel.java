@@ -200,8 +200,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         level.setPacPowerSeconds(levelData.secPacPower());
         level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
 
-        addMsPacMan(level);
-        addGhosts(level, house);
+        setMsPacMan(level);
+        setGhosts(level, house);
         initBoni(level);
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
@@ -326,25 +326,13 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     // Helpers
 
-    private void createGateKeeper() {
-        this.gateKeeper = new GateKeeper();
-        this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
-            if (prisoner.personality() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW) instanceof RedGhostShadow blinky) {
-                if (blinky.elroyState().mode() != ElroyState.Mode.ZERO && !blinky.elroyState().enabled()) {
-                    Logger.debug("Re-enable Blinky 'Cruise Elroy' mode because {} got released:", prisoner.name());
-                    blinky.elroyState().setEnabled(true);
-                }
-            }
-        });
-    }
-
-    private void addMsPacMan(GameLevel level) {
+    private void setMsPacMan(GameLevel level) {
         final Pac msPacMan = createMsPacMan();
         msPacMan.setAutomaticSteering(automaticSteering);
         level.setPac(msPacMan);
     }
 
-    private void addGhosts(GameLevel level, ArcadeHouse house) {
+    private void setGhosts(GameLevel level, ArcadeHouse house) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         level.setGhosts(
             createGhost(RED_GHOST_SHADOW, terrain, house, POS_GHOST_1_RED),
@@ -359,6 +347,18 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         ghost.setHome(house);
         setGhostStartPosition(ghost, terrain.getTileProperty(startTileProperty));
         return ghost;
+    }
+
+    private void createGateKeeper() {
+        this.gateKeeper = new GateKeeper();
+        this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
+            if (prisoner.personality() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW) instanceof RedGhostShadow blinky) {
+                if (blinky.elroyState().mode() != ElroyState.Mode.ZERO && !blinky.elroyState().enabled()) {
+                    Logger.debug("Re-enable Blinky 'Cruise Elroy' mode because {} got released:", prisoner.name());
+                    blinky.elroyState().setEnabled(true);
+                }
+            }
+        });
     }
 
     private AbstractHuntingTimer createHuntingTimer() {
@@ -444,7 +444,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         final Vector2i houseEntry = tileAt(house.entryPosition());
         final Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
-        final List<Vector2b> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).map(Vector2b::new).toList();
+        final List<Vector2i> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).toList();
 
         bonus.initRoute(route, leftToRight);
         Logger.info("Moving bonus route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
