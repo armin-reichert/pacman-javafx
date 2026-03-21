@@ -17,8 +17,9 @@ public class WorldMapWriter {
 
         final StringWriter sw = new StringWriter();
         final WorldMapWriter w = new WorldMapWriter(worldMap, sw);
-        w.printTerrainLayer();
-        w.printFoodLayer();
+        w.printWorldMap();
+
+        // Maybe add line numbers
         final String source = sw.toString();
         if (lineNumbers) {
             final var sb = new StringBuilder();
@@ -41,24 +42,21 @@ public class WorldMapWriter {
         this.pw = new PrintWriter(requireNonNull(w));
     }
 
-    private void printTerrainLayer() {
+    public void printWorldMap() {
         final TerrainLayer terrain = worldMap.terrainLayer();
         pw.println(WorldMap.MARKER_BEGIN_TERRAIN_LAYER);
         printLayerProperties(terrain);
-        printDataSection(terrain);
+        printLayerData(terrain);
 
-    }
-
-    private void printFoodLayer() {
         final FoodLayer foodLayer = worldMap.foodLayer();
         pw.println(WorldMap.MARKER_BEGIN_FOOD_LAYER);
-        printCommentLine(" Pellets (total): %d".formatted(foodLayer.totalFoodCount()));
-        printCommentLine(" Energizers: %d".formatted(foodLayer.energizerTiles().size()));
+        printComment(" Pellets (total): %d".formatted(foodLayer.totalFoodCount()));
+        printComment(" Energizers: %d".formatted(foodLayer.energizerTiles().size()));
         printLayerProperties(foodLayer);
-        printDataSection(foodLayer);
+        printLayerData(foodLayer);
     }
 
-    private void printDataSection(WorldMapLayer layer) {
+    private void printLayerData(WorldMapLayer layer) {
         pw.println(WorldMap.MARKER_BEGIN_DATA_SECTION);
         for (int row = 0; row < layer.numRows(); ++row) {
             final StringJoiner joiner = new StringJoiner(",");
@@ -70,13 +68,13 @@ public class WorldMapWriter {
         }
     }
 
-    private void printCommentLine(String comment) {
-        pw.println(WorldMap.COMMENT_PREFIX + comment);
-    }
-
     private void printLayerProperties(WorldMapLayer layer) {
         layer.propertiesSortedByName()
             .map(entry -> "%s=%s".formatted(entry.getKey(), entry.getValue()))
             .forEach(pw::println);
+    }
+
+    private void printComment(String comment) {
+        pw.println(WorldMap.COMMENT_PREFIX + comment);
     }
 }
