@@ -6,22 +6,53 @@ package de.amr.pacmanfx.model.world;
 
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 class WorldMapParser {
 
-    public static WorldMap parse(
+
+    public enum ParsingState { START, TERRAIN_LAYER, FOOD_LAYER}
+
+    public static Optional<WorldMap> parse(
         Stream<String> linesStream,
         Predicate<Byte> validTerrainValueTest,
-        Predicate<Byte> validFoodValueTest
-    ) throws WorldMapParseException {
+        Predicate<Byte> validFoodValueTest) {
 
-        final var lines = new ArrayList<>(linesStream.toList()); // modifiable list!
+        final WorldMapParser parser = new WorldMapParser();
+        try {
+            final WorldMap worldMap = parser.parse(new ArrayList<>(linesStream.toList()), validTerrainValueTest, validFoodValueTest);
+            return Optional.of(worldMap);
+        } catch (WorldMapParseException x) {
+            Logger.error(x, "Could not parse world map");
+            return Optional.empty();
+        }
+    }
+
+    private static boolean isTerrainSectionStart(String line) {
+        return line.startsWith(WorldMap.MARKER_BEGIN_TERRAIN_LAYER);
+    }
+
+    private static boolean isFoodSectionStart(String line) {
+        return line.startsWith(WorldMap.MARKER_BEGIN_FOOD_LAYER);
+    }
+
+    private static boolean isDataSectionStart(String line) {
+        return line.startsWith(WorldMap.MARKER_BEGIN_DATA_SECTION);
+    }
+
+    private final List<String> terrainLayerSection = new ArrayList<String>();
+    private final List<String> foodLayerSection = new ArrayList<String>();
+    private ParsingState state;
+
+    public WorldMapParser() {
+        state = ParsingState.START;
+    }
+
+    private WorldMap parse(List<String> lines, Predicate<Byte> validTerrainValueTest, Predicate<Byte> validFoodValueTest)
+        throws WorldMapParseException
+    {
         final WorldMap worldMap = new WorldMap();
 
         // delete empty lines at end
@@ -36,10 +67,6 @@ class WorldMapParser {
             Logger.info("{} empty line(s) at end of map file removed", count);
         }
 
-        var terrainLayerSection = new ArrayList<String>();
-        var foodLayerSection = new ArrayList<String>();
-
-        ParsingState state = ParsingState.START;
         for (String line : lines) {
             switch (state) {
                 case START -> {
@@ -87,20 +114,8 @@ class WorldMapParser {
         return worldMap;
     }
 
-    private static boolean isTerrainSectionStart(String line) {
-        return line.startsWith(WorldMap.MARKER_BEGIN_TERRAIN_LAYER);
-    }
-
-    private static boolean isFoodSectionStart(String line) {
-        return line.startsWith(WorldMap.MARKER_BEGIN_FOOD_LAYER);
-    }
-
-    private static boolean isDataSectionStart(String line) {
-        return line.startsWith(WorldMap.MARKER_BEGIN_DATA_SECTION);
-    }
-
     @SuppressWarnings("unchecked")
-    private static <T extends WorldMapLayer> T parseLayer(WorldMap.LayerType type, List<String> lines, Predicate<Byte> valueAllowed) throws WorldMapParseException {
+    private <T extends WorldMapLayer> T parseLayer(WorldMap.LayerType type, List<String> lines, Predicate<Byte> valueAllowed) throws WorldMapParseException {
         // First pass: read property section and determine data section size
         int numDataRows = 0, numDataCols = -1;
         int dataSectionStartIndex = -1;
@@ -161,7 +176,7 @@ class WorldMapParser {
         return (T) mapLayer;
     }
 
-    private static Map<String, String> parseProperties(String text) {
+    private Map<String, String> parseProperties(String text) {
         var properties = new HashMap<String, String>();
         String[] lines = text.split("\n");
         for (String line : lines) {
@@ -177,6 +192,4 @@ class WorldMapParser {
         }
         return properties;
     }
-
-    public enum ParsingState { START, TERRAIN_LAYER, FOOD_LAYER}
 }

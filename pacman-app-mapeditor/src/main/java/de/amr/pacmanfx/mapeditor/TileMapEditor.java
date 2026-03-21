@@ -304,16 +304,7 @@ public class TileMapEditor {
             Logger.error("Could not access resource with URL path '{}'", path);
             return Optional.empty();
         }
-        try {
-            return Optional.of(WorldMap.create(url));
-        } catch (IOException x) {
-            Logger.error(x, "Could not load world map from URL '{}'", url);
-            return Optional.empty();
-        }
-        catch (WorldMapParseException x) {
-            Logger.error(x, "Could not parse world map");
-            return Optional.empty();
-        }
+        return WorldMap.create(url);
     }
 
 

@@ -5,11 +5,9 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import org.tinylog.Logger;
 
-import java.io.IOException;
 import java.net.URL;
 
 public class ArcadePacMan_MapSelector implements WorldMapSelector {
@@ -26,17 +24,9 @@ public class ArcadePacMan_MapSelector implements WorldMapSelector {
             Logger.error(errorMsg);
             throw new IllegalStateException(errorMsg);
         }
-        try {
-            prototype = WorldMap.create(url);
-            Logger.info("Loaded world map '{}'", url);
-        } catch (IOException x) {
-            Logger.error("Could not open world map");
-            throw new RuntimeException(x);
-        }
-        catch (WorldMapParseException x) {
-            Logger.error("Could not parse world map");
-            throw new RuntimeException(x);
-        }
+        WorldMap.create(url).ifPresentOrElse(worldMap -> prototype = worldMap,
+            () -> Logger.error("Could not load map prototype from URL {}", url)
+        );
     }
 
     /**

@@ -211,15 +211,10 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                 final URL url = PacManXXL_MapSelector.class.getResource(path);
                 if (url != null) {
                     final File targetFile = new File(customMapDir, mapName);
-                    try {
-                        WorldMap map = WorldMap.create(url);
-                        map.saveToFile(targetFile);
-                    } catch (IOException x) {
-                        Logger.error(x, "Could not save map with URL {} to file ''", url, targetFile);
-                    }
-                    catch (WorldMapParseException x) {
-                        Logger.error(x, "Could not parse world map");
-                    }
+                    WorldMap.create(url).ifPresentOrElse(
+                        worldMap -> worldMap.saveToFile(targetFile),
+                        () -> Logger.error("Could not load world map from URL '{}'", url)
+                    );
                 } else {
                     // Not all of these maps exits, just log them
                     Logger.warn("Could not access map with path '{}'", path);

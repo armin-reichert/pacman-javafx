@@ -48,18 +48,21 @@ public class WorldMap {
         }
     }
 
-    public static WorldMap create(URL url) throws IOException, WorldMapParseException {
+    public static Optional<WorldMap> create(URL url) {
         requireNonNull(url);
         try (var br = new BufferedReader(new InputStreamReader(url.openStream(), CHARSET))) {
-            WorldMap worldMap = WorldMapParser.parse(br.lines(), TerrainTile::isValidCode, FoodTile::isValidCode);
-            worldMap.url = url.toExternalForm();
+            final Optional<WorldMap> worldMap = WorldMapParser.parse(br.lines(), TerrainTile::isValidCode, FoodTile::isValidCode);
+            worldMap.ifPresent(wm -> wm.url = url.toExternalForm());
             return worldMap;
+        } catch (Exception x) {
+            Logger.error(x);
+            return Optional.empty();
         }
     }
 
     public static Optional<WorldMap> loadFromFile(File file) {
         try {
-            return Optional.of(create(file.toURI().toURL()));
+            return create(file.toURI().toURL());
         } catch (Exception x) {
             Logger.error(x, "Unable to load world map from file {}", file);
             return Optional.empty();
