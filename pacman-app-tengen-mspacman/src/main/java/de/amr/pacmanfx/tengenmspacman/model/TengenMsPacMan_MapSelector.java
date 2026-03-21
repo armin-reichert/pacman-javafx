@@ -17,7 +17,6 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.nes.NES_ColorScheme.*;
-import static de.amr.pacmanfx.model.world.WorldMapSelector.loadMaps;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MAPS_FOLDER;
 import static de.amr.pacmanfx.tengenmspacman.model.MapCategory.*;
 
@@ -33,63 +32,40 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     private List<WorldMap> bigMapPrototypes;
     private List<WorldMap> strangeMapPrototypes;
 
+    private List<WorldMap> loadMaps(String path, int n) {
+        try {
+            return WorldMapSelector.loadMaps(getClass(), path, n);
+        } catch (IOException x) {
+            Logger.error(x, "Could not open world map");
+            throw new RuntimeException(x);
+        }
+        catch (WorldMapParseException x) {
+            Logger.error(x, "Could not parse world map");
+            throw new RuntimeException(x);
+        }
+    }
+
     private void ensureArcadeMapPrototypesLoaded() {
         if (arcadeMapPrototypes == null) {
-            try {
-            arcadeMapPrototypes = loadMaps(getClass(), MAPS_FOLDER + "arcade%d.world", 4);
-            } catch (IOException x) {
-                Logger.error("Could not open world map");
-                throw new RuntimeException(x);
-            }
-            catch (WorldMapParseException x) {
-                Logger.error("Could not parse world map");
-                throw new RuntimeException(x);
-            }
+            arcadeMapPrototypes = loadMaps(MAPS_FOLDER + "arcade%d.world", 4);
         }
     }
 
     private void ensureMiniMapPrototypesLoaded() {
         if (miniMapPrototypes == null) {
-            try {
-            miniMapPrototypes = loadMaps(getClass(), MAPS_FOLDER + "mini%d.world", 6);
-            } catch (IOException x) {
-                Logger.error("Could not open world map");
-                throw new RuntimeException(x);
-            }
-            catch (WorldMapParseException x) {
-                Logger.error("Could not parse world map");
-                throw new RuntimeException(x);
-            }
+            miniMapPrototypes = loadMaps(MAPS_FOLDER + "mini%d.world", 6);
         }
     }
 
     private void ensureBigMapPrototypesLoaded() {
         if (bigMapPrototypes == null) {
-            try {
-                bigMapPrototypes = loadMaps(getClass(), MAPS_FOLDER + "big%02d.world", 11);
-            } catch (IOException x) {
-                Logger.error("Could not open world map");
-                throw new RuntimeException(x);
-            }
-            catch (WorldMapParseException x) {
-                Logger.error("Could not parse world map");
-                throw new RuntimeException(x);
-            }
+            bigMapPrototypes = loadMaps(MAPS_FOLDER + "big%02d.world", 11);
         }
     }
 
     private void ensureStrangeMapPrototypesLoaded() {
         if (strangeMapPrototypes == null) {
-            try {
-                strangeMapPrototypes = loadMaps(getClass(), MAPS_FOLDER + "strange%02d.world", 15);
-            } catch (IOException x) {
-                Logger.error("Could not open world map");
-                throw new RuntimeException(x);
-            }
-            catch (WorldMapParseException x) {
-                Logger.error("Could not parse world map");
-                throw new RuntimeException(x);
-            }
+            strangeMapPrototypes = loadMaps(MAPS_FOLDER + "strange%02d.world", 15);
         }
     }
 
@@ -109,7 +85,6 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
         }
         if (!(args[0] instanceof MapCategory mapCategory)) {
             throw new IllegalArgumentException("Supplied argument '%s' is not a map category".formatted(args[0]));
-
         }
 
         // Ensure *all* prototypes are loaded! STRANGE maps for example uses BIG maps list etc.
