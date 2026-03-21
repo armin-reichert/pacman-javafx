@@ -19,7 +19,6 @@ import java.util.Map;
 
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.nes.NES_ColorScheme.*;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MAPS_FOLDER;
 import static de.amr.pacmanfx.tengenmspacman.model.MapCategory.*;
 
 /**
@@ -29,34 +28,24 @@ import static de.amr.pacmanfx.tengenmspacman.model.MapCategory.*;
  */
 public class TengenMsPacMan_MapSelector implements WorldMapSelector {
 
-    private final Map<MapCategory, List<WorldMap>> mapPrototypes = new EnumMap<>(MapCategory.class);
+    private record PrototypeConfig(String path, int numMaps) {}
 
-    private List<WorldMap> loadMaps(String path, int n) {
-        try {
-            return WorldMapSelector.loadMaps(getClass(), path, n);
-        } catch (IOException x) {
-            Logger.error(x, "Could not open world map");
-            throw new RuntimeException(x);
-        }
-        catch (WorldMapParseException x) {
-            Logger.error(x, "Could not parse world map");
-            throw new RuntimeException(x);
-        }
-    }
+    private static final Map<MapCategory, PrototypeConfig> PROTOTYPE_CONFIG_MAP = Map.of(
+        ARCADE,  new PrototypeConfig(TengenMsPacMan_UIConfig.MAPS_FOLDER + "arcade%d.world", 4),
+        MINI,    new PrototypeConfig(TengenMsPacMan_UIConfig.MAPS_FOLDER + "mini%d.world", 6),
+        BIG,     new PrototypeConfig(TengenMsPacMan_UIConfig.MAPS_FOLDER + "big%02d.world", 11),
+        STRANGE, new PrototypeConfig(TengenMsPacMan_UIConfig.MAPS_FOLDER + "strange%02d.world", 15)
+    );
+
+    private final Map<MapCategory, List<WorldMap>> mapPrototypes = new EnumMap<>(MapCategory.class);
 
     @Override
     public void loadMapPrototypes() {
-        if (mapPrototypes.get(ARCADE) == null) {
-            mapPrototypes.put(ARCADE, loadMaps(MAPS_FOLDER + "arcade%d.world", 4));
-        }
-        if (mapPrototypes.get(MINI) == null) {
-            mapPrototypes.put(MINI, loadMaps(MAPS_FOLDER + "mini%d.world", 6));
-        }
-        if (mapPrototypes.get(BIG) == null) {
-            mapPrototypes.put(BIG, loadMaps(MAPS_FOLDER + "big%02d.world", 11));
-        }
-        if (mapPrototypes.get(STRANGE) == null) {
-            mapPrototypes.put(STRANGE,  loadMaps(MAPS_FOLDER + "strange%02d.world", 15));
+        for (MapCategory category : MapCategory.values()) {
+            if (mapPrototypes.get(category) == null) {
+                final PrototypeConfig cfg = PROTOTYPE_CONFIG_MAP.get(category);
+                mapPrototypes.put(category, loadMaps(cfg.path(), cfg.numMaps()));
+            }
         }
     }
 
@@ -84,6 +73,21 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
                 yield strangeMap;
             }
         };
+    }
+
+    // Helpers
+
+    private List<WorldMap> loadMaps(String path, int n) {
+        try {
+            return WorldMapSelector.loadMaps(getClass(), path, n);
+        } catch (IOException x) {
+            Logger.error(x, "Could not open world map");
+            throw new RuntimeException(x);
+        }
+        catch (WorldMapParseException x) {
+            Logger.error(x, "Could not parse world map");
+            throw new RuntimeException(x);
+        }
     }
 
     private WorldMap configuredMap(MapCategory category, int number, NES_ColorScheme nesColorScheme) {
