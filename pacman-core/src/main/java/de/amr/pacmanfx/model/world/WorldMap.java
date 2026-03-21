@@ -30,6 +30,8 @@ public class WorldMap {
     public static final String MARKER_BEGIN_FOOD_LAYER = "!food";
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
+    private enum ParsingState { START, TERRAIN_LAYER, FOOD_LAYER}
+
     public static Optional<Vector2i> parseTile(String s) {
         requireNonNull(s);
         Matcher m = TILE_PATTERN.matcher(s);
@@ -65,26 +67,42 @@ public class WorldMap {
         if (count > 0) {
             Logger.info("{} empty line(s) at end of map file removed", count);
         }
-        var terrainLayerRows = new ArrayList<String>();
-        var foodLayerRows = new ArrayList<String>();
-        boolean insideTerrainLayer = false, insideFoodLayer = false;
+
+        var terrainLayerSection = new ArrayList<String>();
+        var foodLayerSection = new ArrayList<String>();
+
+        ParsingState state = ParsingState.START;
         for (String line : lines) {
-            if (WorldMap.MARKER_BEGIN_TERRAIN_LAYER.equals(line)) {
-                insideTerrainLayer = true;
-            } else if (WorldMap.MARKER_BEGIN_FOOD_LAYER.equals(line)) {
-                insideTerrainLayer = false;
-                insideFoodLayer = true;
-            } else if (insideTerrainLayer) {
-                terrainLayerRows.add(line);
-            } else if (insideFoodLayer) {
-                foodLayerRows.add(line);
-            } else {
-                Logger.error("Line skipped: '{}'", line);
+            switch (state) {
+                case START -> {
+                    if (isTerrainSectionStart(line)) {
+                        state = ParsingState.TERRAIN_LAYER;
+                    } else {
+                        Logger.warn("Unexpected section start line: {}", line);
+                    }
+                }
+                case TERRAIN_LAYER -> {
+                    if (isFoodSectionStart(line)) {
+                        state = ParsingState.FOOD_LAYER;
+                    } else if (isTerrainSectionStart(line)) {
+                        Logger.warn("Unexpected terrain section start line: {}", line);
+                    } else {
+                        terrainLayerSection.add(line);
+                    }
+                }
+                case FOOD_LAYER -> {
+                    if (isTerrainSectionStart(line)) {
+                        Logger.warn("Unexpected terrain section start line: {}", line);
+                    } else if (isFoodSectionStart(line)) {
+                        Logger.warn("Unexpected food section start line: {}", line);
+                    } else {
+                        foodLayerSection.add(line);
+                    }
+                }
             }
         }
-        worldMap.terrainLayer = new TerrainLayer(parseLayer(LayerType.TERRAIN, terrainLayerRows, validTerrainValueTest));
-
-        worldMap.foodLayer = new FoodLayer(parseLayer(LayerType.FOOD, foodLayerRows, validFoodValueTest));
+        worldMap.terrainLayer = new TerrainLayer(parseLayer(LayerType.TERRAIN, terrainLayerSection, validTerrainValueTest));
+        worldMap.foodLayer    = new FoodLayer(parseLayer(LayerType.FOOD, foodLayerSection, validFoodValueTest));
 
         if (worldMap.terrainLayer.numRows() != worldMap.foodLayer.numRows()) {
             throw new WorldMapParseException("Terrain layer has %d rows but food layer has %d rows"
@@ -101,20 +119,32 @@ public class WorldMap {
         return worldMap;
     }
 
+    private static boolean isTerrainSectionStart(String line) {
+        return line.startsWith(MARKER_BEGIN_TERRAIN_LAYER);
+    }
+
+    private static boolean isFoodSectionStart(String line) {
+        return line.startsWith(MARKER_BEGIN_FOOD_LAYER);
+    }
+
+    private static boolean isDataSectionStart(String line) {
+        return line.startsWith(MARKER_BEGIN_DATA_SECTION);
+    }
+
     public enum LayerType { TERRAIN, FOOD }
 
     @SuppressWarnings("unchecked")
     public static <T extends WorldMapLayer> T parseLayer(LayerType type, List<String> lines, Predicate<Byte> valueAllowed) throws WorldMapParseException {
         // First pass: read property section and determine data section size
         int numDataRows = 0, numDataCols = -1;
-        int dataStartIndex = -1;
+        int dataSectionStartIndex = -1;
         StringBuilder propertySection = new StringBuilder();
         for (int lineIndex = 0; lineIndex < lines.size(); ++lineIndex) {
             String line = lines.get(lineIndex);
-            if (WorldMap.MARKER_BEGIN_DATA_SECTION.equals(line)) {
-                dataStartIndex = lineIndex + 1;
+            if (isDataSectionStart(line)) {
+                dataSectionStartIndex = lineIndex + 1;
             }
-            else if (dataStartIndex == -1) {
+            else if (dataSectionStartIndex == -1) {
                 propertySection.append(line).append("\n");
             } else {
                 numDataRows++;
@@ -139,9 +169,9 @@ public class WorldMap {
         };
         mapLayer.propertyMap().putAll(parseProperties(propertySection.toString()));
 
-        for (int lineIndex = dataStartIndex; lineIndex < lines.size(); ++lineIndex) {
+        for (int lineIndex = dataSectionStartIndex; lineIndex < lines.size(); ++lineIndex) {
             String line = lines.get(lineIndex);
-            int row = lineIndex -dataStartIndex;
+            int row = lineIndex -dataSectionStartIndex;
             String[] columns = line.split(",");
             for (int col = 0; col < columns.length; ++col) {
                 String entry = columns[col].trim();
