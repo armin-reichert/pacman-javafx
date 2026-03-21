@@ -96,16 +96,16 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
 
         ctx.save();
         ctx.scale(scaling(), scaling());
-        drawPellets(worldMap, pelletColor);
-        drawEnergizers(worldMap, pelletColor, blinkingOn);
+        drawPellets(worldMap.foodLayer(), pelletColor);
+        drawEnergizers(worldMap.foodLayer(), pelletColor, blinkingOn);
         ctx.restore();
     }
 
-    private void drawPellets(WorldMap worldMap, Color pelletColor) {
-        final FoodLayer foodLayer = worldMap.foodLayer();
+    private void drawPellets(FoodLayer foodLayer, Color pelletColor) {
         foodLayer.tiles()
             .filter(foodLayer::isFoodTile)
             .filter(not(foodLayer::isEnergizerTile)).forEach(tile -> {
+                // overpaint the pellet from the map image
                 ctx.setFill(backgroundColor());
                 fillSquareAtTileCenter(tile, 4);
                 if (!foodLayer.hasEatenFoodAtTile(tile)) {
@@ -116,20 +116,23 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         });
     }
 
-    private void drawEnergizers(WorldMap worldMap, Color pelletColor, boolean blinkingOn) {
-        final FoodLayer foodLayer = worldMap.foodLayer();
+    private void drawEnergizers(FoodLayer foodLayer, Color pelletColor, boolean blinkingOn) {
         final double size = TS;
-        final double offset = 0.5 * HTS;
+        final double centerOffset = 0.5 * HTS;
         foodLayer.tiles().filter(foodLayer::isEnergizerTile).forEach(tile -> {
+            // overpaint energizer pixels from map image
             ctx.setFill(backgroundColor());
             fillSquareAtTileCenter(tile, TS + 2);
+            // draw energizer if not eaten and blinking is in ON phase
             if (!foodLayer.hasEatenFoodAtTile(tile) && blinkingOn) {
-                final double cx = tile.x() * TS, cy = tile.y() * TS;
-                // draw pixelated "circle". TODO use sprite instead?
+                final int x = tile.x() * TS;
+                final int y = tile.y() * TS;
+                // draw pixelated "circle"
+                // TODO use sprite instead?
                 ctx.setFill(pelletColor);
-                ctx.fillRect(cx + offset, cy, HTS, size);
-                ctx.fillRect(cx, cy + offset, size, HTS);
-                ctx.fillRect(cx + 1, cy + 1, size - 2, size - 2);
+                ctx.fillRect(x + centerOffset, y, HTS, size);
+                ctx.fillRect(x, y + centerOffset, size, HTS);
+                ctx.fillRect(x + 1, y + 1, size - 2, size - 2);
             }
         });
     }
