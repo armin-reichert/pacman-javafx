@@ -30,7 +30,7 @@ import javafx.util.Duration;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.math.Vector2f.vec_float;
+import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static de.amr.pacmanfx.uilib.UfxColors.colorWithOpacity;
 import static java.util.Objects.requireNonNull;
@@ -118,12 +118,12 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         float xMax = house.maxTile().x() * TS + HTS, yMax = house.maxTile().y() * TS + HTS;
 
         // Define wall corner points
-        Vector2f p0 = vec_float(xMin, yMin);
+        Vector2f p0 = vec2_float(xMin, yMin);
         Vector2f p1 = house.leftDoorTile().scaled((float) TS).plus(0, HTS);
         Vector2f p2 = house.rightDoorTile().scaled((float) TS).plus(TS, HTS);
-        Vector2f p3 = vec_float(xMax, yMin);
-        Vector2f p4 = vec_float(xMin, yMax);
-        Vector2f p5 = vec_float(xMax, yMax);
+        Vector2f p3 = vec2_float(xMax, yMin);
+        Vector2f p4 = vec2_float(xMin, yMax);
+        Vector2f p5 = vec2_float(xMax, yMax);
 
         // Configure wall creation callback
         r3D.setOnWallCreated(wall3D -> {

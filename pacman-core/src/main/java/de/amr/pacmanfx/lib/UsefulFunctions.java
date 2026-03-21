@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.math.Vector2f.vec_float;
+import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
 import static java.util.Objects.requireNonNull;
 
 public interface UsefulFunctions {
@@ -29,7 +29,7 @@ public interface UsefulFunctions {
     static Vector2i tileAt(float x, float y) {
         float tx = x >= 0 ? x / TS : (x - TS) / TS;
         float ty = y >= 0 ? y / TS : (y - TS) / TS;
-        return Vector2i.of((int) tx, (int) ty);
+        return Vector2i.vec2_int((int) tx, (int) ty);
     }
 
     /**
@@ -38,7 +38,7 @@ public interface UsefulFunctions {
      * @return position (scaled by tile size) half tile right of tile origin
      */
     static Vector2f halfTileRightOf(int tileX, int tileY) {
-        return vec_float(TS * tileX + HTS, TS * tileY);
+        return vec2_float(TS * tileX + HTS, TS * tileY);
     }
 
     /**

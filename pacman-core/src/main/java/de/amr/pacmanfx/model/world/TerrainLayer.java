@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
-import static de.amr.pacmanfx.lib.math.Vector2f.vec_float;
+import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.model.world.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.model.world.TerrainTile.isBlocked;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
@@ -22,7 +22,7 @@ import static java.util.function.Predicate.not;
 
 public final class TerrainLayer extends WorldMapLayer {
 
-    private static Vector2f halfTileRightOf(Vector2i tile) { return vec_float(tile.x() * TS + HTS, tile.y() * TS); }
+    private static Vector2f halfTileRightOf(Vector2i tile) { return vec2_float(tile.x() * TS + HTS, tile.y() * TS); }
 
     private final Vector2i[] scatterTiles = new Vector2i[4];
     private Vector2f pacStartPosition;
@@ -44,10 +44,10 @@ public final class TerrainLayer extends WorldMapLayer {
         } else {
             pacStartPosition = halfTileRightOf(pacTile);
         }
-        scatterTiles[RED_GHOST_SHADOW]   = getTilePropertyOrDefault(POS_SCATTER_RED_GHOST,    Vector2i.of(0, numCols() - 3));
-        scatterTiles[PINK_GHOST_SPEEDY]  = getTilePropertyOrDefault(POS_SCATTER_PINK_GHOST,   Vector2i.of(0, 3));
-        scatterTiles[CYAN_GHOST_BASHFUL] = getTilePropertyOrDefault(POS_SCATTER_CYAN_GHOST,   Vector2i.of(numRows() - emptyRowsBelowMaze(), numCols() - 1));
-        scatterTiles[ORANGE_GHOST_POKEY] = getTilePropertyOrDefault(POS_SCATTER_ORANGE_GHOST, Vector2i.of(numRows() - emptyRowsBelowMaze(), 0));
+        scatterTiles[RED_GHOST_SHADOW]   = getTilePropertyOrDefault(POS_SCATTER_RED_GHOST,    Vector2i.vec2_int(0, numCols() - 3));
+        scatterTiles[PINK_GHOST_SPEEDY]  = getTilePropertyOrDefault(POS_SCATTER_PINK_GHOST,   Vector2i.vec2_int(0, 3));
+        scatterTiles[CYAN_GHOST_BASHFUL] = getTilePropertyOrDefault(POS_SCATTER_CYAN_GHOST,   Vector2i.vec2_int(numRows() - emptyRowsBelowMaze(), numCols() - 1));
+        scatterTiles[ORANGE_GHOST_POKEY] = getTilePropertyOrDefault(POS_SCATTER_ORANGE_GHOST, Vector2i.vec2_int(numRows() - emptyRowsBelowMaze(), 0));
 
         this.house = layer.house; // TODO make copy
         if (layer.obstacleSet != null) {
@@ -83,11 +83,11 @@ public final class TerrainLayer extends WorldMapLayer {
             Vector2i houseSize = house.sizeInTiles();
             float cx = TS(house.minTile().x() + houseSize.x() * 0.5f);
             float cy = TS(house.minTile().y() + houseSize.y() + 1);
-            return vec_float(cx, cy);
+            return vec2_float(cx, cy);
         }
         else {
             Vector2i worldSize = sizeInPixel();
-            return vec_float(worldSize.x() * 0.5f, worldSize.y() * 0.5f); // should not happen
+            return vec2_float(worldSize.x() * 0.5f, worldSize.y() * 0.5f); // should not happen
         }
     }
 
@@ -97,8 +97,8 @@ public final class TerrainLayer extends WorldMapLayer {
         var portals = new ArrayList<HPortal>();
         int firstColumn = 0, lastColumn = numCols() - 1;
         for (int row = 0; row < numRows(); ++row) {
-            Vector2i leftBorderTile = Vector2i.of(firstColumn, row);
-            Vector2i rightBorderTile = Vector2i.of(lastColumn, row);
+            Vector2i leftBorderTile = Vector2i.vec2_int(firstColumn, row);
+            Vector2i rightBorderTile = Vector2i.vec2_int(lastColumn, row);
             if (content(row, firstColumn) == TUNNEL.$ && content(row, lastColumn) == TUNNEL.$) {
                 portals.add(new HPortal(leftBorderTile, rightBorderTile, 2));
             }

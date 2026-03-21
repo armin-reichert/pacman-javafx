@@ -20,7 +20,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomFloat;
-import static de.amr.pacmanfx.lib.math.Vector2b.vec_byte;
+import static de.amr.pacmanfx.lib.math.Vector2b.vec2_byte;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
@@ -61,19 +61,19 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     protected static final List<Vector2b> DEMO_LEVEL_ROUTE = List.of(
-        vec_byte(9, 26), vec_byte(9, 29), vec_byte(12,29), vec_byte(12, 32), vec_byte(26,32),
-        vec_byte(26,29), vec_byte(24,29), vec_byte(24,26), vec_byte(26,26),  vec_byte(26,23),
-        vec_byte(21,23), vec_byte(18,23), vec_byte(18,14), vec_byte(9,14),   vec_byte(9,17),
-        vec_byte(6,17),  vec_byte(6,4),   vec_byte(1,4),   vec_byte(1,8),    vec_byte(12,8),
-        vec_byte(12,4),  vec_byte(6,4),   vec_byte(6,11),  vec_byte(1,11),   vec_byte(1,8),
-        vec_byte(9,8),   vec_byte(9,11),  vec_byte(12,11), vec_byte(12,14),  vec_byte(9,14),
-        vec_byte(9,17),  vec_byte(0,17), /*warp tunnel*/   vec_byte(21,17),  vec_byte(21,29),
-        vec_byte(26,29), vec_byte(26,32), vec_byte(1,32),  vec_byte(1,29),   vec_byte(3,29),
-        vec_byte(3,26),  vec_byte(1,26),  vec_byte(1,23),  vec_byte(12,23),  vec_byte(12,26),
-        vec_byte(15,26), vec_byte(15,23), vec_byte(26,23), vec_byte(26,26),  vec_byte(24,26),
-        vec_byte(24,29), vec_byte(26,29), vec_byte(26,32), vec_byte(1,32),
-        vec_byte(1,29),  vec_byte(3,29),  vec_byte(3,26),  vec_byte(1,26),   vec_byte(1,23),
-        vec_byte(6,23)   /* Pac-Man gets eaten at tile (3,23) in Arcade game demo level */
+        vec2_byte(9, 26), vec2_byte(9, 29), vec2_byte(12,29), vec2_byte(12, 32), vec2_byte(26,32),
+        vec2_byte(26,29), vec2_byte(24,29), vec2_byte(24,26), vec2_byte(26,26),  vec2_byte(26,23),
+        vec2_byte(21,23), vec2_byte(18,23), vec2_byte(18,14), vec2_byte(9,14),   vec2_byte(9,17),
+        vec2_byte(6,17),  vec2_byte(6,4),   vec2_byte(1,4),   vec2_byte(1,8),    vec2_byte(12,8),
+        vec2_byte(12,4),  vec2_byte(6,4),   vec2_byte(6,11),  vec2_byte(1,11),   vec2_byte(1,8),
+        vec2_byte(9,8),   vec2_byte(9,11),  vec2_byte(12,11), vec2_byte(12,14),  vec2_byte(9,14),
+        vec2_byte(9,17),  vec2_byte(0,17), /*warp tunnel*/   vec2_byte(21,17),  vec2_byte(21,29),
+        vec2_byte(26,29), vec2_byte(26,32), vec2_byte(1,32),  vec2_byte(1,29),   vec2_byte(3,29),
+        vec2_byte(3,26),  vec2_byte(1,26),  vec2_byte(1,23),  vec2_byte(12,23),  vec2_byte(12,26),
+        vec2_byte(15,26), vec2_byte(15,23), vec2_byte(26,23), vec2_byte(26,26),  vec2_byte(24,26),
+        vec2_byte(24,29), vec2_byte(26,29), vec2_byte(26,32), vec2_byte(1,32),
+        vec2_byte(1,29),  vec2_byte(3,29),  vec2_byte(3,26),  vec2_byte(1,26),   vec2_byte(1,23),
+        vec2_byte(6,23)   /* Pac-Man gets eaten at tile (3,23) in Arcade game demo level */
     );
 
     protected static final int GAME_OVER_STATE_TICKS = 90;

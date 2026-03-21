@@ -145,7 +145,7 @@ public class Obstacle {
         for (ObstacleSegment segment : segments) {
             Vector2i v = segment.vector();
             if (v.x() != 0 && v.y() != 0) { // diagonal
-                Vector2i e = segment.isNWCorner() || segment.isSECorner() ? Vector2i.of(0, v.y()) : Vector2i.of(v.x(), 0);
+                Vector2i e = segment.isNWCorner() || segment.isSECorner() ? Vector2i.vec2_int(0, v.y()) : Vector2i.vec2_int(v.x(), 0);
                 edges.add(e);
                 edges.add(v.minus(e));
             } else {

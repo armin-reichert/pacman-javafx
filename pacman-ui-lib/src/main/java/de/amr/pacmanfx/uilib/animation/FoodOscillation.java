@@ -11,14 +11,14 @@ import javafx.scene.Group;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.lib.math.Vector2f.vec_float;
+import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
 
 /**
  * Oszillation animation for pellets (unused).
  */
 public class FoodOscillation extends Transition {
 
-    private static final Vector2f CENTER = vec_float(28 * HTS, 36 * HTS);
+    private static final Vector2f CENTER = vec2_float(28 * HTS, 36 * HTS);
 
     private final Group foodGroup;
 

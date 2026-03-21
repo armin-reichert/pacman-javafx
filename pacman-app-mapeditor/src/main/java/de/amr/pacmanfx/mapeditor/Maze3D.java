@@ -189,8 +189,8 @@ public class Maze3D extends Group {
         if (houseMinTile == null || houseMaxTile == null) {
             return;
         }
-        Vector2i houseRightUpper = Vector2i.of(houseMaxTile.x(), houseMinTile.y());
-        Vector2i houseLeftLower = Vector2i.of(houseMinTile.x(), houseMaxTile.y());
+        Vector2i houseRightUpper = Vector2i.vec2_int(houseMaxTile.x(), houseMinTile.y());
+        Vector2i houseLeftLower = Vector2i.vec2_int(houseMinTile.x(), houseMaxTile.y());
 
         PhongMaterial wallBaseMaterial = Ufx.coloredPhongMaterial(colorWithOpacity(wallBaseColor, 0.4));
         PhongMaterial wallTopMaterial = Ufx.coloredPhongMaterial(wallTopColor);

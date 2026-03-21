@@ -12,7 +12,7 @@ public record Vector2f(float x, float y) {
 
     public static final Vector2f ZERO = new Vector2f(0, 0);
 
-    public static Vector2f vec_float(double x, double y) {
+    public static Vector2f vec2_float(double x, double y) {
         return new Vector2f((float) x, (float) y);
     }
 

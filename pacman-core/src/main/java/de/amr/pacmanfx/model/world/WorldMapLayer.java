@@ -96,7 +96,7 @@ public sealed class WorldMapLayer permits FoodLayer, TerrainLayer {
      * @return tile with given index
      */
     public Vector2i tileAtIndex(int index) {
-        return Vector2i.of(index % numCols(), index / numCols());
+        return Vector2i.vec2_int(index % numCols(), index / numCols());
     }
 
     /**
@@ -105,7 +105,7 @@ public sealed class WorldMapLayer permits FoodLayer, TerrainLayer {
      */
     public Vector2i mirrorPosition(Vector2i tile) {
         assertInsideWorld(tile);
-        return Vector2i.of(numCols() - 1 - tile.x(), tile.y());
+        return Vector2i.vec2_int(numCols() - 1 - tile.x(), tile.y());
     }
 
     public byte content(int row, int col) {

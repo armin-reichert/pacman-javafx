@@ -148,7 +148,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public static final String READY_MESSAGE_TEXT = "READY!";
     public static final String LEVEL_TEST_MESSAGE_TEXT_PATTERN = "TEST    L%02d";
 
-    public static final Vector2i HOUSE_MIN_TILE = Vector2i.of(10, 15);
+    public static final Vector2i HOUSE_MIN_TILE = Vector2i.vec2_int(10, 15);
 
     public static final byte FIRST_LEVEL_NUMBER = 1;
     public static final byte LAST_LEVEL_NUMBER = 32;

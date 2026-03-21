@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.lib.math;
 
-import static de.amr.pacmanfx.lib.math.Vector2f.vec_float;
+import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
 
 /**
  * A rectangular area with short integer precision.
@@ -34,5 +34,5 @@ public record RectShort(short x, short y, short width, short height) {
         return this.x <= x && x < xMax() &&  this.y <= y && y < yMax();
     }
 
-    public Vector2f center() { return vec_float(x + width * 0.5f, y + height * 0.5f); }
+    public Vector2f center() { return vec2_float(x + width * 0.5f, y + height * 0.5f); }
 }

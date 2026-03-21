@@ -54,7 +54,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     /**
      * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
      */
-    public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = Vector2i.of(10, 15);
+    public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = Vector2i.vec2_int(10, 15);
 
     private static final float BONUS_EATEN_SECONDS = 2;
 

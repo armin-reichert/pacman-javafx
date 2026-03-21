@@ -52,7 +52,7 @@ class TilePropertyEditor extends AbstractPropertyEditor {
 
     @Override
     protected String formattedValue() {
-        return MapEditorPropertyType.TILE.format(Vector2i.of(spinnerX.getValue(), spinnerY.getValue()));
+        return MapEditorPropertyType.TILE.format(Vector2i.vec2_int(spinnerX.getValue(), spinnerY.getValue()));
     }
 
     @Override

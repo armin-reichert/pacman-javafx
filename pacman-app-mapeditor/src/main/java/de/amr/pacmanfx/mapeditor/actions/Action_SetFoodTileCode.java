@@ -25,7 +25,7 @@ public class Action_SetFoodTileCode extends EditorAction<Void> {
     }
 
     public Action_SetFoodTileCode(TileMapEditor editor, int row, int col, byte code) {
-        this(editor, Vector2i.of(col, row), code);
+        this(editor, Vector2i.vec2_int(col, row), code);
     }
 
     @Override

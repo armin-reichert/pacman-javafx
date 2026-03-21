@@ -65,13 +65,13 @@ public class ObstacleBuilder {
 
 
     // Arcs are represented by "diagonal" vectors
-    private static final Vector2i SEG_ARC_NW_UP   = Vector2i.of(HTS, -HTS);
+    private static final Vector2i SEG_ARC_NW_UP   = Vector2i.vec2_int(HTS, -HTS);
     private static final Vector2i SEG_ARC_NW_DOWN = SEG_ARC_NW_UP.inverse();
-    private static final Vector2i SEG_ARC_SW_UP   = Vector2i.of(-HTS, -HTS);
+    private static final Vector2i SEG_ARC_SW_UP   = Vector2i.vec2_int(-HTS, -HTS);
     private static final Vector2i SEG_ARC_SW_DOWN = SEG_ARC_SW_UP.inverse();
-    private static final Vector2i SEG_ARC_SE_UP   = Vector2i.of(HTS, -HTS);
+    private static final Vector2i SEG_ARC_SE_UP   = Vector2i.vec2_int(HTS, -HTS);
     private static final Vector2i SEG_ARC_SE_DOWN = SEG_ARC_SE_UP.inverse();
-    private static final Vector2i SEG_ARC_NE_UP   = Vector2i.of(-HTS, -HTS);
+    private static final Vector2i SEG_ARC_NE_UP   = Vector2i.vec2_int(-HTS, -HTS);
     private static final Vector2i SEG_ARC_NE_DOWN = SEG_ARC_NE_UP.inverse();
 
     private final TerrainLayer terrainLayer;
