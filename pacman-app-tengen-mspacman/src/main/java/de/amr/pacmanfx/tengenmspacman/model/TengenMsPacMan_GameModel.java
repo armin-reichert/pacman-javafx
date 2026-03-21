@@ -19,13 +19,12 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.inClosedRange;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
-import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomByte;
+import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
 import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenGameState.HUNTING;
@@ -118,7 +117,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         while (++dirsTried <= 4) {
             if (isAcceptableWishDir(level, ghost, dir)) {
                 ghost.setWishDir(dir);
-                Logger.info("{} selects random wish direction {}", ghost.name(), dir);
+                Logger.debug("{} selects random wish direction {}", ghost.name(), dir);
                 break;
             }
             Logger.debug("{} rejects wish dir {}", ghost.name(), dir);
@@ -524,11 +523,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     protected void setGhostStartPosition(Ghost ghost, Vector2i tile) {
-        if (tile != null) {
-            // Ghosts inside house sit at bottom of house
-            ghost.setStartPosition(halfTileRightOf(tile).plus(0, HTS));
+        if (ghost.personality() == RED_GHOST_SHADOW) {
+            ghost.setStartPosition(halfTileRightOf(tile));
         } else {
-            Logger.error("{} start tile not specified", ghost.name());
+            // The ghosts starting inside the house sit at the *bottom*!
+            ghost.setStartPosition(halfTileRightOf(tile).plus(0, HTS));
         }
     }
 
@@ -552,34 +551,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         level.setGameOverStateTicks(mapCategory == MapCategory.ARCADE
             ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
 
-        final Pac msPacMan = createMsPacMan();
-        msPacMan.setAutomaticSteering(automaticSteering);
-        activatePacBooster(msPacMan, pacBooster == PacBooster.ALWAYS_ON);
+        setMsPacMan(level);
+        setGhosts(level, house);
 
-        final RedGhostShadow blinky = new RedGhostShadow("Blinky");
-        blinky.setHome(house);
-        final Vector2i blinkyStartTile = terrain.getTileProperty(POS_GHOST_1_RED);
-        if (blinkyStartTile != null) {
-            blinky.setStartPosition(halfTileRightOf(blinkyStartTile));
-        } else {
-            Logger.error("No start position in map specified for {}", blinky.name());
-            blinky.setStartPosition(house.entryPosition());
-        }
-
-        final PinkGhostAmbusher pinky = new PinkGhostAmbusher("Pinky");
-        pinky.setHome(house);
-        setGhostStartPosition(pinky, terrain.getTileProperty(POS_GHOST_2_PINK));
-
-        final CyanGhostBashful inky = new CyanGhostBashful("Inky");
-        inky.setHome(house);
-        setGhostStartPosition(inky, terrain.getTileProperty(POS_GHOST_3_CYAN));
-
-        final OrangeGhostPokey sue = new OrangeGhostPokey("Sue");
-        sue.setHome(house);
-        setGhostStartPosition(sue, terrain.getTileProperty(POS_GHOST_4_ORANGE));
-
-        level.setPac(msPacMan);
-        level.setGhosts(blinky, pinky, inky, sue);
         //TODO not sure about this:
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
         level.setBonusSymbol(1, computeBonusSymbol(level.number()));
@@ -587,20 +561,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         levelCounter.setEnabled(levelNumber < 8);
 
         return level;
-    }
-
-    private AbstractHuntingTimer createHuntingTimer() {
-        final var huntingTimer = new TengenMsPacMan_HuntingTimer();
-        huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
-            optGameLevel().ifPresent(level -> {
-                if (newPhaseIndex.intValue() > 0) {
-                    level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
-                        .forEach(Ghost::requestTurnBack);
-                }
-            });
-            huntingTimer.logPhase();
-        });
-        return huntingTimer;
     }
 
     @Override
@@ -672,24 +632,28 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             return;
         }
 
-        // compute possible bonus route
-        if (level.worldMap().terrainLayer().horizontalPortals().isEmpty()) {
-            Logger.error("No portal found in current maze");
-            return; // TODO: can this happen?
-        }
-        House house = level.worldMap().terrainLayer().optHouse().orElse(null);
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+
+        final House house = terrain.optHouse().orElse(null);
         if (house == null) {
-            Logger.error("No house exists in game level!");
+            Logger.error("\"Cannot activate next bonus: No house exists in game level!");
             return;
         }
 
-        List<HPortal> portals = level.worldMap().terrainLayer().horizontalPortals();
-        boolean leftToRight = new Random().nextBoolean();
-        Vector2i houseEntry = tileAt(house.entryPosition());
-        Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
-        HPortal entryPortal = portals.get(new Random().nextInt(portals.size()));
-        HPortal exitPortal  = portals.get(new Random().nextInt(portals.size()));
-        List<Vector2i> route = List.of(
+        if (terrain.horizontalPortals().isEmpty()) {
+            Logger.error("Cannot activate next bonus: No portal exists in game level");
+            return;
+        }
+
+        final Vector2i houseEntry = tileAt(house.entryPosition());
+        final Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
+
+        final List<HPortal> portals = terrain.horizontalPortals();
+        final HPortal entryPortal = portals.get(randomInt(0, portals.size()));
+        final HPortal exitPortal  = portals.get(randomInt(0, portals.size()));
+
+        final boolean leftToRight = randomBoolean();
+        final List<Vector2i> route = List.of(
             leftToRight ? entryPortal.leftBorderEntryTile() : entryPortal.rightBorderEntryTile(),
             houseEntry,
             houseEntryOpposite,
@@ -698,8 +662,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         );
 
         level.selectNextBonus();
-        byte symbol = level.bonusSymbol(level.currentBonusIndex());
-        var bonus = new Bonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+
+        final byte symbol = level.bonusSymbol(level.currentBonusIndex());
+        final Bonus bonus = new Bonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         bonus.initRoute(route, leftToRight);
         bonus.setEdibleAndStartJumpingAtSpeed(level.game().bonusSpeed(level));
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
@@ -732,7 +697,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             if (powerSeconds > 0) {
                 level.huntingTimer().stop();
                 Logger.debug("Hunting stopped (Pac-Man got power)");
-                long ticks = TickTimer.secToTicks(powerSeconds);
+                final long ticks = TickTimer.secToTicks(powerSeconds);
                 level.pac().powerTimer().restartTicks(ticks);
                 Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
                 level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
@@ -818,6 +783,46 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
             level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
         }
+    }
+
+    // Helpers
+
+    private void setMsPacMan(GameLevel level) {
+        final Pac msPacMan = createMsPacMan();
+        msPacMan.setAutomaticSteering(automaticSteering);
+        activatePacBooster(msPacMan, pacBooster == PacBooster.ALWAYS_ON);
+        level.setPac(msPacMan);
+    }
+
+    private void setGhosts(GameLevel level, House house) {
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        level.setGhosts(
+            createGhost(RED_GHOST_SHADOW,   house, terrain, POS_GHOST_1_RED),
+            createGhost(PINK_GHOST_SPEEDY,  house, terrain, POS_GHOST_2_PINK),
+            createGhost(CYAN_GHOST_BASHFUL, house, terrain, POS_GHOST_3_CYAN),
+            createGhost(ORANGE_GHOST_POKEY, house, terrain, POS_GHOST_4_ORANGE)
+        );
+    }
+
+    private Ghost createGhost(byte personality, House house, TerrainLayer terrain, String startTileProperty) {
+        final Ghost ghost = createGhost(personality);
+        ghost.setHome(house);
+        setGhostStartPosition(ghost, terrain.getTileProperty(startTileProperty));
+        return ghost;
+    }
+
+    private AbstractHuntingTimer createHuntingTimer() {
+        final var huntingTimer = new TengenMsPacMan_HuntingTimer();
+        huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
+            optGameLevel().ifPresent(level -> {
+                if (newPhaseIndex.intValue() > 0) {
+                    level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
+                        .forEach(Ghost::requestTurnBack);
+                }
+            });
+            huntingTimer.logPhase();
+        });
+        return huntingTimer;
     }
 
     // ActorSpeedControl interface
