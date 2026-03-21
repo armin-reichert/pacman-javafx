@@ -35,21 +35,21 @@ public class WorldMapWriter {
     }
 
     private final WorldMap worldMap;
-    private final PrintWriter pw;
+    private final PrintWriter printer;
 
-    public WorldMapWriter(WorldMap worldMap, Writer w) {
+    public WorldMapWriter(WorldMap worldMap, Writer writer) {
         this.worldMap = requireNonNull(worldMap);
-        this.pw = new PrintWriter(requireNonNull(w));
+        this.printer = new PrintWriter(requireNonNull(writer));
     }
 
     public void printWorldMap() {
         final TerrainLayer terrain = worldMap.terrainLayer();
-        pw.println(WorldMap.MARKER_BEGIN_TERRAIN_LAYER);
+        printer.println(WorldMap.MARKER_BEGIN_TERRAIN_LAYER);
         printLayerProperties(terrain);
         printLayerData(terrain);
 
         final FoodLayer foodLayer = worldMap.foodLayer();
-        pw.println(WorldMap.MARKER_BEGIN_FOOD_LAYER);
+        printer.println(WorldMap.MARKER_BEGIN_FOOD_LAYER);
         printComment(" Pellets (total): %d".formatted(foodLayer.totalFoodCount()));
         printComment(" Energizers: %d".formatted(foodLayer.energizerTiles().size()));
         printLayerProperties(foodLayer);
@@ -57,24 +57,24 @@ public class WorldMapWriter {
     }
 
     private void printLayerData(WorldMapLayer layer) {
-        pw.println(WorldMap.MARKER_BEGIN_DATA_SECTION);
+        printer.println(WorldMap.MARKER_BEGIN_DATA_SECTION);
         for (int row = 0; row < layer.numRows(); ++row) {
             final StringJoiner joiner = new StringJoiner(",");
             for (int col = 0; col < layer.numCols(); ++col) {
                 final byte content = layer.content(row, col);
                 joiner.add("#%02X".formatted(content));
             }
-            pw.println(joiner);
+            printer.println(joiner);
         }
     }
 
     private void printLayerProperties(WorldMapLayer layer) {
         layer.propertiesSortedByName()
             .map(entry -> "%s=%s".formatted(entry.getKey(), entry.getValue()))
-            .forEach(pw::println);
+            .forEach(printer::println);
     }
 
     private void printComment(String comment) {
-        pw.println(WorldMap.COMMENT_PREFIX + comment);
+        printer.println(WorldMap.COMMENT_PREFIX + comment);
     }
 }
