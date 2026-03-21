@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
+import static de.amr.pacmanfx.lib.math.Vector2f.vec_float;
 import static de.amr.pacmanfx.model.world.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.model.world.TerrainTile.isBlocked;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
@@ -21,7 +22,7 @@ import static java.util.function.Predicate.not;
 
 public final class TerrainLayer extends WorldMapLayer {
 
-    private static Vector2f halfTileRightOf(Vector2i tile) { return Vector2f.of(tile.x() * TS + HTS, tile.y() * TS); }
+    private static Vector2f halfTileRightOf(Vector2i tile) { return vec_float(tile.x() * TS + HTS, tile.y() * TS); }
 
     private final Vector2i[] scatterTiles = new Vector2i[4];
     private Vector2f pacStartPosition;
@@ -82,11 +83,11 @@ public final class TerrainLayer extends WorldMapLayer {
             Vector2i houseSize = house.sizeInTiles();
             float cx = TS(house.minTile().x() + houseSize.x() * 0.5f);
             float cy = TS(house.minTile().y() + houseSize.y() + 1);
-            return Vector2f.of(cx, cy);
+            return vec_float(cx, cy);
         }
         else {
             Vector2i worldSize = sizeInPixel();
-            return Vector2f.of(worldSize.x() * 0.5f, worldSize.y() * 0.5f); // should not happen
+            return vec_float(worldSize.x() * 0.5f, worldSize.y() * 0.5f); // should not happen
         }
     }
 

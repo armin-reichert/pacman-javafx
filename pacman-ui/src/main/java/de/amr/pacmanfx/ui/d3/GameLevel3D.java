@@ -34,6 +34,7 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.lib.math.Vector2f.vec_float;
 import static de.amr.pacmanfx.ui.GameUI.*;
 import static java.util.Objects.requireNonNull;
 
@@ -373,10 +374,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             () -> {
                 Logger.error("No house in this game level! WTF?");
                 final double x = terrain.numCols() * HTS, y = terrain.numRows() * HTS;
-                messageManager.setReadyMessageCenter(Vector2f.of(x, y));
+                messageManager.setReadyMessageCenter(vec_float(x, y));
             });
         messageManager.setTestMessageCenter(
-            Vector2f.of(terrain.numCols() * HTS, (terrain.numRows() - 2) * TS));
+            vec_float(terrain.numCols() * HTS, (terrain.numRows() - 2) * TS));
 
         disposables.add(messageManager);
     }

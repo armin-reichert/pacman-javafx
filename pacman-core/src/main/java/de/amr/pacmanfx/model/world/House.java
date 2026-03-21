@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.lib.math.Vector2f.vec_float;
 import static java.util.Objects.requireNonNull;
 
 public interface House {
@@ -47,7 +48,7 @@ public interface House {
      */
     default Vector2f centerPositionUnderHouse() {
         Vector2i sizeTiles = sizeInTiles();
-        return Vector2f.of(
+        return vec_float(
             TS * (minTile().x() + 0.5f * sizeTiles.x()),
             TS * (minTile().y() +        sizeTiles.y())
         );
