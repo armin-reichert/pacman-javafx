@@ -15,6 +15,8 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
@@ -67,7 +69,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         vec2_byte(6,17),  vec2_byte(6,4),   vec2_byte(1,4),   vec2_byte(1,8),    vec2_byte(12,8),
         vec2_byte(12,4),  vec2_byte(6,4),   vec2_byte(6,11),  vec2_byte(1,11),   vec2_byte(1,8),
         vec2_byte(9,8),   vec2_byte(9,11),  vec2_byte(12,11), vec2_byte(12,14),  vec2_byte(9,14),
-        vec2_byte(9,17),  vec2_byte(0,17), /*warp tunnel*/   vec2_byte(21,17),  vec2_byte(21,29),
+        vec2_byte(9,17),  vec2_byte(0,17),  /*warp tunnel*/   vec2_byte(21,17),  vec2_byte(21,29),
         vec2_byte(26,29), vec2_byte(26,32), vec2_byte(1,32),  vec2_byte(1,29),   vec2_byte(3,29),
         vec2_byte(3,26),  vec2_byte(1,26),  vec2_byte(1,23),  vec2_byte(12,23),  vec2_byte(12,26),
         vec2_byte(15,26), vec2_byte(15,23), vec2_byte(26,23), vec2_byte(26,26),  vec2_byte(24,26),
@@ -194,19 +196,19 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         // Special tiles where attacking ghosts cannot move up
-        final List<Vector2i> oneWayDownTiles = terrain.tiles()
+        final Set<Vector2i> oneWayDownTiles = terrain.tiles()
             .filter(tile -> terrain.content(tile) == TerrainTile.ONE_WAY_DOWN.$)
-            .toList();
+            .collect(Collectors.toUnmodifiableSet());
 
-        final Ghost blinky = createGhost(RED_GHOST_SHADOW,   terrain, house, POS_GHOST_1_RED,    oneWayDownTiles);
-        final Ghost pinky  = createGhost(PINK_GHOST_SPEEDY,  terrain, house, POS_GHOST_2_PINK,   oneWayDownTiles);
-        final Ghost inky   = createGhost(CYAN_GHOST_BASHFUL, terrain, house, POS_GHOST_3_CYAN,   oneWayDownTiles);
-        final Ghost clyde  = createGhost(ORANGE_GHOST_POKEY, terrain, house, POS_GHOST_4_ORANGE, oneWayDownTiles);
-
-        level.setGhosts(blinky, pinky, inky, clyde);
+        level.setGhosts(
+            createGhost(RED_GHOST_SHADOW,   terrain, house, POS_GHOST_1_RED,    oneWayDownTiles),
+            createGhost(PINK_GHOST_SPEEDY,  terrain, house, POS_GHOST_2_PINK,   oneWayDownTiles),
+            createGhost(CYAN_GHOST_BASHFUL, terrain, house, POS_GHOST_3_CYAN,   oneWayDownTiles),
+            createGhost(ORANGE_GHOST_POKEY, terrain, house, POS_GHOST_4_ORANGE, oneWayDownTiles)
+        );
     }
 
-    protected Ghost createGhost(byte personality, TerrainLayer terrain, House house, String startTileProperty, List<Vector2i> specialTiles) {
+    protected Ghost createGhost(byte personality, TerrainLayer terrain, House house, String startTileProperty, Set<Vector2i> specialTiles) {
         final Ghost ghost = createGhost(personality);
         ghost.setHome(house);
         ghost.setSpecialTerrainTiles(specialTiles);

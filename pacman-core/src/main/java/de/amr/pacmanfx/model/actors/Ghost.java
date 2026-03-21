@@ -18,9 +18,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -42,7 +41,7 @@ public class Ghost extends MovingActor {
 
     private final byte personality;
     private ObjectProperty<GhostState> state;
-    private List<Vector2i> specialTerrainTiles = List.of();
+    private Set<Vector2i> specialTerrainTiles = Set.of();
     private Vector2f startPosition;
     private House home;
 
@@ -91,11 +90,11 @@ public class Ghost extends MovingActor {
         return personality;
     }
 
-    public void setSpecialTerrainTiles(List<Vector2i> tiles) {
-        specialTerrainTiles = new ArrayList<>(tiles);
+    public void setSpecialTerrainTiles(Set<Vector2i> tiles) {
+        specialTerrainTiles = Set.copyOf(tiles);
     }
 
-    public List<Vector2i> specialTerrainTiles() {
+    public Set<Vector2i> specialTerrainTiles() {
         return specialTerrainTiles;
     }
 
