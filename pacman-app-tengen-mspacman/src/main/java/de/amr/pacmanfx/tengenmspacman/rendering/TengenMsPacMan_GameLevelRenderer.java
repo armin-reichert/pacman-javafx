@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.geometry.Rectangle2D;
@@ -31,6 +32,15 @@ import static java.util.function.Predicate.not;
 
 public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements SpriteRenderer, GameLevelRenderer {
 
+    /**
+     * Strange map #15 (maze #32) has a "psychedelic" animation:
+     * Frame pattern: (00000000 11111111 22222222 11111111)+, numFrames = 4, frameDuration = 8
+     */
+    private static int strangeMap15AnimationFrame(long tick) {
+        final long phase = (tick % 32) / 8;
+        return (int) (phase < 3 ? phase : 1);
+    }
+
     private final TengenMsPacMan_UIConfig uiConfig;
 
     public TengenMsPacMan_GameLevelRenderer(Canvas canvas, TengenMsPacMan_UIConfig uiConfig) {
@@ -47,10 +57,10 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     public void applyLevelSettings(GameLevel level, RenderInfo info) {
         final WorldMap worldMap = level.worldMap();
         // store the maze sprite set with the correct colors for this level in the map configuration:
-        if (!worldMap.hasConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MAP_IMAGE_SET)) {
+        if (!worldMap.hasConfigValue(MapConfigKey.MAP_IMAGE_SET)) {
             final int numFlashes = level.numFlashes();
             final MapImageSet mapImageSet = TengenMsPacMan_MapRepository.instance().createMazeSpriteSet(worldMap, numFlashes);
-            worldMap.setConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MAP_IMAGE_SET, mapImageSet);
+            worldMap.setConfigValue(MapConfigKey.MAP_IMAGE_SET, mapImageSet);
             Logger.debug("Maze sprite set created: {}", mapImageSet);
         }
     }
@@ -61,11 +71,11 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         applyLevelSettings(level, info);
         if (info.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
             final int flashingIndex = info.get(CommonRenderInfoKey.MAZE_FLASHING_INDEX, Integer.class);
-            configureHighlightedMazeRenderInfo(info, level, flashingIndex);
+            configureHighlightedMapRenderInfo(info, worldMap, flashingIndex);
         } else {
             final long tick = info.get(CommonRenderInfoKey.TICK, Long.class);
-            final MapCategory mapCategory = info.get(TengenMsPacMan_UIConfig.MapConfigKey.MAP_CATEGORY, MapCategory.class);
-            configureNormalMazeRenderInfo(info, mapCategory, worldMap, tick);
+            final MapCategory mapCategory = info.get(MapConfigKey.MAP_CATEGORY, MapCategory.class);
+            configureNormalMapRenderInfo(info, mapCategory, worldMap, tick);
         }
         final Image mazeImage = info.get(CommonRenderInfoKey.MAZE_IMAGE, Image.class);
         final RectShort mazeSprite = info.get(CommonRenderInfoKey.MAZE_SPRITE, RectShort.class);
@@ -89,7 +99,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     private void drawFood(GameLevel level) {
         requireNonNull(level);
         final WorldMap worldMap = level.worldMap();
-        final MapImageSet recoloredMazeSprites = worldMap.getConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MAP_IMAGE_SET);
+        final MapImageSet recoloredMazeSprites = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
         final NES_ColorScheme colorScheme = recoloredMazeSprites.mapImage().colorScheme();
         final Color pelletColor = Color.valueOf(colorScheme.pelletColorRGB());
         final boolean blinkingOn = level.blinking().state() == Pulse.State.ON;
@@ -138,7 +148,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     private void drawGameOverMessage(GameLevel level, GameLevelMessage message) {
-        final NES_ColorScheme colorScheme = level.worldMap().getConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.NES_COLOR_SCHEME);
+        final NES_ColorScheme colorScheme = level.worldMap().getConfigValue(MapConfigKey.NES_COLOR_SCHEME);
         final Color color = level.isDemoLevel()
             ? Color.valueOf(colorScheme.strokeColorRGB())
             : uiConfig.assets().color("color.game_over_message");
@@ -159,12 +169,12 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         if (house == null) {
             return;
         }
-        final MapImageSet recoloredMaze = worldMap.getConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MAP_IMAGE_SET);
-        final Color doorColor = Color.valueOf(recoloredMaze.mapImage().colorScheme().strokeColorRGB());
+        final MapImageSet recoloredImageSet = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
+        final Color strokeColor = Color.valueOf(recoloredImageSet.mapImage().colorScheme().strokeColorRGB());
         final double scaledTileSize = scaled(TS);
         final double xMin = house.leftDoorTile().x() * scaledTileSize;
         final double yMin = house.leftDoorTile().y() * scaledTileSize + scaled(5); // 5 pixels down
-        ctx.setFill(doorColor);
+        ctx.setFill(strokeColor);
         ctx.fillRect(xMin, yMin, 2 * scaledTileSize, scaled(2));
     }
 
@@ -206,34 +216,23 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
             overPaintSize, overPaintSize);
     }
 
-    private void configureHighlightedMazeRenderInfo(RenderInfo info, GameLevel gameLevel, int flashingIndex) {
-        final WorldMap worldMap = gameLevel.worldMap();
-        final MapImageSet mapImageSet = worldMap.getConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MAP_IMAGE_SET);
-        // Just to be safe:
-        final int imageIndex = Math.clamp(flashingIndex, 0, mapImageSet.flashingMapImages().size() - 1);
-        final ColorSchemedImage flashingMazeSprite = mapImageSet.flashingMapImages().get(imageIndex);
-        info.put(CommonRenderInfoKey.MAZE_IMAGE, flashingMazeSprite.spriteSheetImage());
-        info.put(CommonRenderInfoKey.MAZE_SPRITE, flashingMazeSprite.sprite());
+    private void configureHighlightedMapRenderInfo(RenderInfo info, WorldMap worldMap, int flashingIndex) {
+        final MapImageSet imageSet = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
+        final int i = Math.clamp(flashingIndex, 0, imageSet.flashingMapImages().size() - 1);
+        final ColorSchemedImage flashingMapImage = imageSet.flashingMapImages().get(i);
+        info.put(CommonRenderInfoKey.MAZE_IMAGE, flashingMapImage.spriteSheetImage());
+        info.put(CommonRenderInfoKey.MAZE_SPRITE, flashingMapImage.sprite());
     }
 
-    private void configureNormalMazeRenderInfo(RenderInfo info, MapCategory mapCategory, WorldMap worldMap, long tick) {
+    private void configureNormalMapRenderInfo(RenderInfo info, MapCategory mapCategory, WorldMap worldMap, long tick) {
+        final MapImageSet imageSet = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
+        info.put(CommonRenderInfoKey.MAZE_IMAGE, imageSet.mapImage().spriteSheetImage());
         final int mapNumber = worldMap.getConfigValue(WorldMapConfigKey.MAP_NUMBER);
-        final MapImageSet mapImageSet = worldMap.getConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MAP_IMAGE_SET);
-        info.put(CommonRenderInfoKey.MAZE_IMAGE, mapImageSet.mapImage().spriteSheetImage());
         if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
             final int spriteIndex = strangeMap15AnimationFrame(tick);
             info.put(CommonRenderInfoKey.MAZE_SPRITE, NonArcadeMapsSpriteSheet.instance().sprites(MAP32_ANIMATED)[spriteIndex]);
         } else {
-            info.put(CommonRenderInfoKey.MAZE_SPRITE, mapImageSet.mapImage().sprite());
+            info.put(CommonRenderInfoKey.MAZE_SPRITE, imageSet.mapImage().sprite());
         }
-    }
-
-    /**
-     * Strange map #15 (maze #32): psychedelic animation:
-     * Frame pattern: (00000000 11111111 22222222 11111111)+, numFrames = 4, frameDuration = 8
-     */
-    private int strangeMap15AnimationFrame(long tick) {
-        final long block = (tick % 32) / 8;
-        return (int) (block < 3 ? block : 1);
     }
 }
