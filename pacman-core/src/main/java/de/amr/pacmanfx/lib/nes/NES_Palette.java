@@ -8,7 +8,7 @@ package de.amr.pacmanfx.lib.nes;
  */
 public interface NES_Palette {
 
-    String[] COLORS = {
+    String[] RGB_COLORS = {
         // 00,     01,      02,        03,      04,       05,       06,       07
         "666666", "002a88", "1412a7", "3b00a4", "5c007e", "6e0040", "6c0600", "561d00",
 
@@ -40,14 +40,14 @@ public interface NES_Palette {
      * @param index byte number from range {@code 00} to {@code 3F}
      * @return color in RGB hex string notation e.g. "bcbe00"
      */
-    static String color(int index) {
+    static String rgbColor(int index) {
         if (isValidIndex(index)) {
-            return COLORS[index];
+            return RGB_COLORS[index];
         }
         throw new IllegalArgumentException("Illegal NES palette index: " + index);
     }
 
     static boolean isValidIndex(int index) {
-        return 0 <= index && index < COLORS.length;
+        return 0 <= index && index < RGB_COLORS.length;
     }
 }

@@ -11,7 +11,6 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
-import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.d3.animation.GameLevel3DAnimations;
@@ -105,7 +104,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         } else {
-            scores3D.showTextForScore(ui.translate("score.game_over"), Color.valueOf(NES_Palette.color(0x16)));
+            scores3D.showTextForScore(ui.translate("score.game_over"), Color.valueOf(NES_Palette.rgbColor(0x16)));
         }
         // Always show high score
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());

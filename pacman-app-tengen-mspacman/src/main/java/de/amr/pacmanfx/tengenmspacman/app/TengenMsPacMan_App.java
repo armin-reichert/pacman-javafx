@@ -22,11 +22,11 @@ import javafx.stage.Stage;
 import java.io.File;
 
 import static de.amr.pacmanfx.model.GameVariant.TENGEN_MS_PACMAN;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_ASPECT;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_ASPECT_RATIO;
 
 public class TengenMsPacMan_App extends Application {
 
-    private static final float ASPECT_RATIO    = NES_ASPECT; // 32:30
+    private static final float ASPECT_RATIO    = NES_SCREEN_ASPECT_RATIO; // 32:30
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
 
     private static final File HIGH_SCORE_FILE = GameContext.highScoreFile(TENGEN_MS_PACMAN);

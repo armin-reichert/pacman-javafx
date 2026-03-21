@@ -26,7 +26,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_ENTER_START_SCREEN;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_PIXELS;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.createMsPacMan;
 
 public class TengenMsPacMan_IntroScene extends GameScene2D {
@@ -92,7 +92,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public Vector2i unscaledSize() { return NES_SIZE_PX; }
+    public Vector2i unscaledSize() { return NES_SCREEN_PIXELS; }
 
     public enum SceneState implements State<TengenMsPacMan_IntroScene> {
 

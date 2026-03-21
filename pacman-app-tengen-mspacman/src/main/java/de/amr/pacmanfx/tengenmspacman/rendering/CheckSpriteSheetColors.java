@@ -31,7 +31,7 @@ public class CheckSpriteSheetColors {
     }
 
     private static void runChecks() {
-        final Set<Color> NES_colors = Stream.of(NES_Palette.COLORS).map(Color::valueOf).collect(Collectors.toSet());
+        final Set<Color> NES_colors = Stream.of(NES_Palette.RGB_COLORS).map(Color::valueOf).collect(Collectors.toSet());
 
         Logger.info("Checking non-Arcade maps spritesheet");
         checkForIllegalPixels(NonArcadeMapsSpriteSheet.instance().sourceImage(), NES_colors);

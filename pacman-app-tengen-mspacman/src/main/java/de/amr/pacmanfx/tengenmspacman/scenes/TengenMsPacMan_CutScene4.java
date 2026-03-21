@@ -22,8 +22,8 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_TILES;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_PIXELS;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_TILES;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.createPacMan;
 
@@ -32,7 +32,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     public static final int TICK_EXPIRES = 1512;
 
     private static final int LEFT_BORDER = TS;
-    private static final int RIGHT_BORDER = TS * (NES_TILES.x() - 2);
+    private static final int RIGHT_BORDER = TS * (NES_SCREEN_TILES.x() - 2);
 
     private static final int LOWER_LANE = TS * 21; // TODO not sure
 
@@ -214,5 +214,5 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     @Override
-    public Vector2i unscaledSize() { return NES_SIZE_PX; }
+    public Vector2i unscaledSize() { return NES_SCREEN_PIXELS; }
 }

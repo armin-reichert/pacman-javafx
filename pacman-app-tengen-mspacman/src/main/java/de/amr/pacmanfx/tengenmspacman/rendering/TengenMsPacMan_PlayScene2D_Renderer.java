@@ -8,7 +8,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.ConfigKey;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_PlayScene2D;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
@@ -126,7 +126,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
         renderInfo.clear();
         // this is needed for drawing animated maze with different images:
         renderInfo.put(CommonRenderInfoKey.TICK, tick);
-        renderInfo.put(ConfigKey.MAP_CATEGORY, worldMap.getConfigValue(ConfigKey.MAP_CATEGORY));
+        renderInfo.put(MapConfigKey.MAP_CATEGORY, worldMap.getConfigValue(MapConfigKey.MAP_CATEGORY));
         renderInfo.put(CommonRenderInfoKey.MAP_BRIGHT, false);
         renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, -1);
         playScene2D.optLevelCompletedAnimation().flatMap(LevelCompletedAnimation::flashingState).ifPresent(flashingState -> {

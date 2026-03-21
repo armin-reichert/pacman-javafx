@@ -51,7 +51,7 @@ public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     private TengenMsPacMan_SpriteSheet() {
         final ResourceManager moduleResources = () -> TengenMsPacMan_UIConfig.class;
-        image = moduleResources.loadImage(TengenMsPacMan_UIConfig.SPRITE_SHEET_PATH);
+        image = moduleResources.loadImage(TengenMsPacMan_UIConfig.REL_PATH_SPRITE_SHEET_IMAGE);
 
         spriteMap.add(LARGE_MS_PAC_MAN_TEXT, rect(15, 191, 152, 40));
         spriteMap.add(INFO_FRAME,            rect(175, 125, 126, 7));

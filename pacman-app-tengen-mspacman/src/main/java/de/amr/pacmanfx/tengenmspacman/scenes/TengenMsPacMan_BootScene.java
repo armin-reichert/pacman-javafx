@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_PIXELS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.shadeOfBlue;
 
 /**
@@ -87,7 +87,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     public Vector2i unscaledSize() {
-        return NES_SIZE_PX;
+        return NES_SCREEN_PIXELS;
     }
 
     private void gray(boolean b)  { gray = b; }

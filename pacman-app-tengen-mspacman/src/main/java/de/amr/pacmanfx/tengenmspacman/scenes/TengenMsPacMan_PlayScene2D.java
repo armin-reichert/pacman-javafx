@@ -42,7 +42,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGE
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.JOYPAD;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_PIXELS;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
 import static de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplayMode.SCROLLING;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
@@ -54,11 +54,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
-    public static final double CANVAS_WIDTH_UNSCALED = NES_SIZE_PX.x();
+    public static final double CANVAS_WIDTH_UNSCALED = NES_SCREEN_PIXELS.x();
 
     private static final Font GAME_OVER_MESSAGE_FONT = Font.font(BaseRenderer.DEFAULT_ARCADE_FONT.getFamily(), TS);
 
-    private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.y());
+    private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SCREEN_PIXELS.y());
 
     private final StackPane rootPane;
     private final SubScene subScene;
@@ -185,7 +185,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public Vector2i unscaledSize() {
-        return gameContext().game().optGameLevel().map(level -> level.worldMap().terrainLayer().sizeInPixel()).orElse(NES_SIZE_PX);
+        return gameContext().game().optGameLevel().map(level -> level.worldMap().terrainLayer().sizeInPixel()).orElse(NES_SCREEN_PIXELS);
     }
 
     // Game event handlers
@@ -323,7 +323,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
         scalingProperty().set(switch (displayMode) {
             case SCALED_TO_FIT -> subScene.getHeight() / canvasHeightUnscaled.get();
-            case SCROLLING -> subScene.getHeight() / NES_SIZE_PX.y();
+            case SCROLLING -> subScene.getHeight() / NES_SCREEN_PIXELS.y();
         });
         Logger.debug("Tengen 2D play scene sub-scene: w={0.00} h={0.00} scaling={0.00}",
             subScene.getWidth(), subScene.getHeight(), scaling());

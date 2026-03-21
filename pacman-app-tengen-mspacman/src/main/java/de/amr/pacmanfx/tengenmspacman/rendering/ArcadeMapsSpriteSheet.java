@@ -55,7 +55,7 @@ public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSprite
     public Image sourceImage() {
         if (image == null) {
             final ResourceManager moduleResources = () -> TengenMsPacMan_UIConfig.class;
-            image = moduleResources.loadImage(TengenMsPacMan_UIConfig.ARCADE_MAPS_IMAGE_PATH);
+            image = moduleResources.loadImage(TengenMsPacMan_UIConfig.REL_PATH_ARCADE_MAPS_IMAGE);
         }
         return image;
     }

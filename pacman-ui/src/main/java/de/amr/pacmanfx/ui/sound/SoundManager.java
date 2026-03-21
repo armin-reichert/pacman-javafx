@@ -90,16 +90,8 @@ public class SoundManager implements Disposable {
         register(key, mediaPlayer);
     }
 
-    public void registerMedia(Object key, URL url) {
-        requireNonNull(key);
-        requireNonNull(url);
-        var media = new Media(url.toExternalForm());
-        Logger.info("Media: key='{}', URL='{}'", key, url);
-        register(key, media);
-    }
-
-    public void registerSirens(URL... sirenURLs) {
-        sirenPlayer = new SirenPlayer(sirenURLs);
+    public void createSirenPlayer(URL... urls) {
+        sirenPlayer = new SirenPlayer(urls);
         sirenPlayer.muteProperty().bind(muteProperty);
     }
 

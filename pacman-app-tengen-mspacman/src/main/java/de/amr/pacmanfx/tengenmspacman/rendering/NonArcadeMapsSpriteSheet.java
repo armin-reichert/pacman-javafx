@@ -92,7 +92,7 @@ public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMaps
     public Image sourceImage() {
         if (image == null) {
             final ResourceManager moduleResources = () -> TengenMsPacMan_UIConfig.class;
-            image = moduleResources.loadImage(TengenMsPacMan_UIConfig.NON_ARCADE_MAPS_IMAGE_PATH);
+            image = moduleResources.loadImage(TengenMsPacMan_UIConfig.REL_PATH_NON_ARCADE_MAPS_IMAGE);
         }
         return image;
     }

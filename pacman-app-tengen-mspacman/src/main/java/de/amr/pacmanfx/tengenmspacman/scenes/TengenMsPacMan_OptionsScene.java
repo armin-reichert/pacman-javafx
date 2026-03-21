@@ -21,7 +21,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGE
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_START_PLAYING;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.JOYPAD;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_PIXELS;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 
 /**
@@ -105,7 +105,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public Vector2i unscaledSize() { return NES_SIZE_PX; }
+    public Vector2i unscaledSize() { return NES_SCREEN_PIXELS; }
 
     private TengenMsPacMan_GameModel tengenGame() { return gameContext().game(); }
     

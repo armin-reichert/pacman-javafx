@@ -18,7 +18,7 @@ import java.util.List;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.nes.NES_ColorScheme.*;
 import static de.amr.pacmanfx.model.world.WorldMapSelector.loadMaps;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MAPS_PATH;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MAPS_FOLDER;
 import static de.amr.pacmanfx.tengenmspacman.model.MapCategory.*;
 
 /**
@@ -36,7 +36,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     private void ensureArcadeMapPrototypesLoaded() {
         if (arcadeMapPrototypes == null) {
             try {
-            arcadeMapPrototypes = loadMaps(getClass(), MAPS_PATH + "arcade%d.world", 4);
+            arcadeMapPrototypes = loadMaps(getClass(), MAPS_FOLDER + "arcade%d.world", 4);
             } catch (IOException x) {
                 Logger.error("Could not open world map");
                 throw new RuntimeException(x);
@@ -51,7 +51,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     private void ensureMiniMapPrototypesLoaded() {
         if (miniMapPrototypes == null) {
             try {
-            miniMapPrototypes = loadMaps(getClass(), MAPS_PATH + "mini%d.world", 6);
+            miniMapPrototypes = loadMaps(getClass(), MAPS_FOLDER + "mini%d.world", 6);
             } catch (IOException x) {
                 Logger.error("Could not open world map");
                 throw new RuntimeException(x);
@@ -66,7 +66,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     private void ensureBigMapPrototypesLoaded() {
         if (bigMapPrototypes == null) {
             try {
-                bigMapPrototypes = loadMaps(getClass(), MAPS_PATH + "big%02d.world", 11);
+                bigMapPrototypes = loadMaps(getClass(), MAPS_FOLDER + "big%02d.world", 11);
             } catch (IOException x) {
                 Logger.error("Could not open world map");
                 throw new RuntimeException(x);
@@ -81,7 +81,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     private void ensureStrangeMapPrototypesLoaded() {
         if (strangeMapPrototypes == null) {
             try {
-                strangeMapPrototypes = loadMaps(getClass(), MAPS_PATH + "strange%02d.world", 15);
+                strangeMapPrototypes = loadMaps(getClass(), MAPS_FOLDER + "strange%02d.world", 15);
             } catch (IOException x) {
                 Logger.error("Could not open world map");
                 throw new RuntimeException(x);
@@ -122,7 +122,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
                 final WorldMap strangeMap = configuredStrangeMap(levelNumber);
                 // Store maze ID in map properties to make renderer happy
                 final var mapID = NonArcadeMapsSpriteSheet.MapID.values()[levelNumber - 1];
-                strangeMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_ID, mapID);
+                strangeMap.setConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MAP_ID, mapID);
                 yield strangeMap;
             }
         };
@@ -137,15 +137,15 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
         };
         final var worldMap = new WorldMap(prototypes.get(number - 1));
         worldMap.setConfigValue(WorldMapConfigKey.MAP_NUMBER, number);
-        worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY, category);
-        worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.NES_COLOR_SCHEME, nesColorScheme);
-        worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MULTIPLE_FLASH_COLORS, false);
+        worldMap.setConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MAP_CATEGORY, category);
+        worldMap.setConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.NES_COLOR_SCHEME, nesColorScheme);
+        worldMap.setConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MULTIPLE_FLASH_COLORS, false);
         return worldMap;
     }
 
     private WorldMap randomlyConfiguredMap(MapCategory category, int number) {
         final WorldMap worldMap = configuredMap(category, number, NES_ColorScheme.randomScheme());
-        worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MULTIPLE_FLASH_COLORS, true);
+        worldMap.setConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MULTIPLE_FLASH_COLORS, true);
         return worldMap;
     }
 

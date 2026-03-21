@@ -187,7 +187,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING, url("sound/munch.wav"));
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,     url("sound/ghost-turn-to-blue.mp3"));
 
-        soundManager.registerSirens(
+        soundManager.createSirenPlayer(
             url("sound/siren_1.mp3"),
             url("sound/siren_2.mp3"),
             url("sound/siren_3.mp3"),

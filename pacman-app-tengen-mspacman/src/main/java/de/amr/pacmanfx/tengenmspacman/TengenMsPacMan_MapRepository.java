@@ -36,18 +36,18 @@ public class TengenMsPacMan_MapRepository {
      * the recolored maze images are stored.
      */
     public MapImageSet createMazeSpriteSet(WorldMap worldMap, int flashCount) {
-        final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY);
+        final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MAP_CATEGORY);
         final int mapNumber = worldMap.getConfigValue(WorldMapConfigKey.MAP_NUMBER);
-        final NES_ColorScheme requestedColorScheme = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.NES_COLOR_SCHEME);
+        final NES_ColorScheme requestedColorScheme = worldMap.getConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.NES_COLOR_SCHEME);
         // for randomly colored maps (levels 28-31, non-ARCADE maps), multiple random flash colors appear
-        final boolean randomFlashColors = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MULTIPLE_FLASH_COLORS);
+        final boolean randomFlashColors = worldMap.getConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MULTIPLE_FLASH_COLORS);
 
         return switch (mapCategory) {
             case ARCADE  -> arcadeMazeSpriteSet(mapNumber, requestedColorScheme, flashCount);
             case MINI    -> miniMazeSpriteSet(mapNumber, requestedColorScheme, flashCount, randomFlashColors);
             case BIG     -> bigMazeSpriteSet(mapNumber, requestedColorScheme, flashCount, randomFlashColors);
             case STRANGE -> {
-                final NonArcadeMapsSpriteSheet.MapID mapID = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_ID); // set by map selector!
+                final NonArcadeMapsSpriteSheet.MapID mapID = worldMap.getConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MAP_ID); // set by map selector!
                 yield strangeMazeSpriteSet(
                         mapID,
                         randomFlashColors ? requestedColorScheme : null,
