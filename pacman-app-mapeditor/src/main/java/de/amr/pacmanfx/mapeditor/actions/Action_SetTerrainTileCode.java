@@ -9,6 +9,7 @@ import de.amr.pacmanfx.model.world.FoodTile;
 import de.amr.pacmanfx.model.world.TerrainTile;
 import de.amr.pacmanfx.model.world.WorldMap;
 
+import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -25,7 +26,7 @@ public class Action_SetTerrainTileCode extends EditorAction<Void> {
     }
 
     public Action_SetTerrainTileCode(TileMapEditor editor, int row, int col, byte code) {
-        this(editor, Vector2i.vec2_int(col, row), code);
+        this(editor, vec2_int(col, row), code);
     }
 
     public Action_SetTerrainTileCode(TileMapEditor editor, WorldMap worldMap, Vector2i tile, byte code) {

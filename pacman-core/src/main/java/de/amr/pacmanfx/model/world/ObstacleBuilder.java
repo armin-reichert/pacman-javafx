@@ -11,6 +11,7 @@ import java.util.*;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.model.world.TerrainTile.*;
 import static java.util.function.Predicate.not;
 
@@ -65,13 +66,13 @@ public class ObstacleBuilder {
 
 
     // Arcs are represented by "diagonal" vectors
-    private static final Vector2i SEG_ARC_NW_UP   = Vector2i.vec2_int(HTS, -HTS);
+    private static final Vector2i SEG_ARC_NW_UP   = vec2_int(HTS, -HTS);
     private static final Vector2i SEG_ARC_NW_DOWN = SEG_ARC_NW_UP.inverse();
-    private static final Vector2i SEG_ARC_SW_UP   = Vector2i.vec2_int(-HTS, -HTS);
+    private static final Vector2i SEG_ARC_SW_UP   = vec2_int(-HTS, -HTS);
     private static final Vector2i SEG_ARC_SW_DOWN = SEG_ARC_SW_UP.inverse();
-    private static final Vector2i SEG_ARC_SE_UP   = Vector2i.vec2_int(HTS, -HTS);
+    private static final Vector2i SEG_ARC_SE_UP   = vec2_int(HTS, -HTS);
     private static final Vector2i SEG_ARC_SE_DOWN = SEG_ARC_SE_UP.inverse();
-    private static final Vector2i SEG_ARC_NE_UP   = Vector2i.vec2_int(-HTS, -HTS);
+    private static final Vector2i SEG_ARC_NE_UP   = vec2_int(-HTS, -HTS);
     private static final Vector2i SEG_ARC_NE_DOWN = SEG_ARC_NE_UP.inverse();
 
     private final TerrainLayer terrainLayer;

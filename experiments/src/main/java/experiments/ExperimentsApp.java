@@ -26,6 +26,7 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static java.lang.Math.TAU;
 
 public class ExperimentsApp extends Application {
@@ -136,19 +137,19 @@ public class ExperimentsApp extends Application {
                 addHorizontalWall(segment, currentPoint, endPoint);
             }
             else if (segment.isRoundedNWCorner()) {
-                endPoint = currentPoint.plus(segment.ccw() ? Vector2i.vec2_int(-HTS, HTS) : Vector2i.vec2_int(HTS, -HTS));
+                endPoint = currentPoint.plus(segment.ccw() ? vec2_int(-HTS, HTS) : vec2_int(HTS, -HTS));
                 addCorner(segment, prevSegment, nextSegment, currentPoint, endPoint);
             }
             else if (segment.isRoundedSWCorner()) {
-                endPoint = currentPoint.plus(segment.ccw() ? Vector2i.vec2_int(HTS, HTS) : Vector2i.vec2_int(-HTS, -HTS));
+                endPoint = currentPoint.plus(segment.ccw() ? vec2_int(HTS, HTS) : vec2_int(-HTS, -HTS));
                 addCorner(segment, prevSegment, nextSegment, currentPoint, endPoint);
             }
             else if (segment.isRoundedSECorner()) {
-                endPoint = currentPoint.plus(segment.ccw() ? Vector2i.vec2_int(HTS, -HTS) : Vector2i.vec2_int(-HTS, HTS));
+                endPoint = currentPoint.plus(segment.ccw() ? vec2_int(HTS, -HTS) : vec2_int(-HTS, HTS));
                 addCorner(segment, prevSegment, nextSegment, currentPoint, endPoint);
             }
             else if (segment.isRoundedNECorner()) {
-                endPoint = currentPoint.plus(segment.ccw() ? Vector2i.vec2_int(-HTS, -HTS) : Vector2i.vec2_int(HTS, HTS));
+                endPoint = currentPoint.plus(segment.ccw() ? vec2_int(-HTS, -HTS) : vec2_int(HTS, HTS));
                 addCorner(segment, prevSegment, nextSegment, currentPoint, endPoint);
             }
             currentPoint = endPoint;

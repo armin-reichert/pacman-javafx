@@ -12,6 +12,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
 
+import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
+
 class TilePropertyEditor extends AbstractPropertyEditor {
 
     private final Spinner<Integer> spinnerX;
@@ -52,7 +54,7 @@ class TilePropertyEditor extends AbstractPropertyEditor {
 
     @Override
     protected String formattedValue() {
-        return MapEditorPropertyType.TILE.format(Vector2i.vec2_int(spinnerX.getValue(), spinnerY.getValue()));
+        return MapEditorPropertyType.TILE.format(vec2_int(spinnerX.getValue(), spinnerY.getValue()));
     }
 
     @Override

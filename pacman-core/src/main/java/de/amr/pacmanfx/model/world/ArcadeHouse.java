@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.model.world.TerrainTile.*;
 import static java.util.Objects.requireNonNull;
 
@@ -20,7 +21,7 @@ public class ArcadeHouse implements House {
     /**
      * Size of house in tiles (x=width, y=height).
      */
-    public static final Vector2i SIZE_IN_TILES = Vector2i.vec2_int(8, 5);
+    public static final Vector2i SIZE_IN_TILES = vec2_int(8, 5);
 
     public static final byte[][] CONTENT = {
         { ARC_NW.$, WALL_H.$, WALL_H.$, DOOR.$,   DOOR.$,   WALL_H.$, WALL_H.$, ARC_NE.$ },

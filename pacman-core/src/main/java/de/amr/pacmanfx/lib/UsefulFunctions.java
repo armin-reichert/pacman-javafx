@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
+import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static java.util.Objects.requireNonNull;
 
 public interface UsefulFunctions {
@@ -29,7 +30,7 @@ public interface UsefulFunctions {
     static Vector2i tileAt(float x, float y) {
         float tx = x >= 0 ? x / TS : (x - TS) / TS;
         float ty = y >= 0 ? y / TS : (y - TS) / TS;
-        return Vector2i.vec2_int((int) tx, (int) ty);
+        return vec2_int((int) tx, (int) ty);
     }
 
     /**

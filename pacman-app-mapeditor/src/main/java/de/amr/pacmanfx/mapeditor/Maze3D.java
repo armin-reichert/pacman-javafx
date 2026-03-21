@@ -32,6 +32,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
 import static de.amr.pacmanfx.uilib.UfxColors.colorWithOpacity;
 
@@ -189,8 +190,8 @@ public class Maze3D extends Group {
         if (houseMinTile == null || houseMaxTile == null) {
             return;
         }
-        Vector2i houseRightUpper = Vector2i.vec2_int(houseMaxTile.x(), houseMinTile.y());
-        Vector2i houseLeftLower = Vector2i.vec2_int(houseMinTile.x(), houseMaxTile.y());
+        Vector2i houseRightUpper = vec2_int(houseMaxTile.x(), houseMinTile.y());
+        Vector2i houseLeftLower = vec2_int(houseMinTile.x(), houseMaxTile.y());
 
         PhongMaterial wallBaseMaterial = Ufx.coloredPhongMaterial(colorWithOpacity(wallBaseColor, 0.4));
         PhongMaterial wallTopMaterial = Ufx.coloredPhongMaterial(wallTopColor);
