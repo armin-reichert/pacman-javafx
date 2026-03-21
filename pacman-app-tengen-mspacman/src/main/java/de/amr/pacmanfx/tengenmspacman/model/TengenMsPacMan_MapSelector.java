@@ -41,8 +41,8 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
 
     @Override
     public void loadMapPrototypes() {
-        for (MapCategory category : MapCategory.values()) {
-            if (mapPrototypes.get(category) == null) {
+        if (mapPrototypes.isEmpty()) {
+            for (MapCategory category : MapCategory.values()) {
                 final PrototypeConfig cfg = PROTOTYPE_CONFIG_MAP.get(category);
                 mapPrototypes.put(category, loadMaps(cfg.path(), cfg.numMaps()));
             }
