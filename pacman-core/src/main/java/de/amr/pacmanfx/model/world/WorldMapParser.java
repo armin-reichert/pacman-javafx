@@ -20,13 +20,13 @@ public class WorldMapParser {
 
     public static Vector2i parseTile(String s) {
         requireNonNull(s);
-        Matcher m = WorldMap.TILE_PATTERN.matcher(s);
+        final Matcher m = WorldMap.TILE_PATTERN.matcher(s);
         if (!m.matches()) {
             throw new IllegalArgumentException("Cannot create tile from '%s'".formatted(s));
         }
         try {
-            int x = Integer.parseInt(m.group(1));
-            int y = Integer.parseInt(m.group(2));
+            final int x = Integer.parseInt(m.group(1));
+            final int y = Integer.parseInt(m.group(2));
             return new Vector2i(x, y);
         } catch (NumberFormatException x) {
             Logger.error(x, "Could not parse tile from text '{}'", s);
@@ -137,24 +137,26 @@ public class WorldMapParser {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends WorldMapLayer> T parseLayer(WorldMap.LayerType type, List<String> lines, Predicate<Byte> valueAllowed) throws WorldMapParseException {
+    private <T extends WorldMapLayer> T parseLayer(WorldMap.LayerType type, List<String> lines, Predicate<Byte> valueValidator)
+        throws WorldMapParseException {
+
         // First pass: read property section and determine data section size
         int numDataRows = 0, numDataCols = -1;
         int dataSectionStartIndex = -1;
-        StringBuilder propertySection = new StringBuilder();
+        final StringBuilder propertySection = new StringBuilder();
         for (int lineIndex = 0; lineIndex < lines.size(); ++lineIndex) {
-            String line = lines.get(lineIndex);
+            final String line = lines.get(lineIndex);
             if (isDataSectionStart(line)) {
                 dataSectionStartIndex = lineIndex + 1;
             } else if (dataSectionStartIndex == -1) {
                 propertySection.append(line).append("\n");
             } else {
                 numDataRows++;
-                String[] columns = line.split(",");
+                final String[] entries = line.split(",");
                 if (numDataCols == -1) {
-                    numDataCols = columns.length;
-                } else if (columns.length != numDataCols) {
-                    final String msg = "Inconsistent tile map data: found %d column(s), expected %d".formatted(columns.length, numDataCols);
+                    numDataCols = entries.length;
+                } else if (entries.length != numDataCols) {
+                    final String msg = "Inconsistent tile map data: found %d column(s), expected %d".formatted(entries.length, numDataCols);
                     throw new WorldMapParseException(msg, null, lineIndex, line);
                 }
             }
@@ -165,21 +167,21 @@ public class WorldMapParser {
         }
 
         // Second pass: read data and build new tile map
-        var mapLayer = switch (type) {
+        final WorldMapLayer mapLayer = switch (type) {
             case FOOD -> new FoodLayer(numDataRows, numDataCols);
             case TERRAIN -> new TerrainLayer(numDataRows, numDataCols);
         };
         mapLayer.propertyMap().putAll(parseProperties(propertySection.toString()));
 
         for (int lineIndex = dataSectionStartIndex; lineIndex < lines.size(); ++lineIndex) {
-            String line = lines.get(lineIndex);
-            int row = lineIndex - dataSectionStartIndex;
-            String[] columns = line.split(",");
-            for (int col = 0; col < columns.length; ++col) {
-                String entry = columns[col].trim();
+            final String line = lines.get(lineIndex);
+            final int row = lineIndex - dataSectionStartIndex;
+            final String[] entries = line.split(",");
+            for (int col = 0; col < entries.length; ++col) {
+                final String entry = entries[col].trim();
                 try {
-                    byte value = Byte.decode(entry);
-                    if (valueAllowed.test(value)) {
+                    final byte value = Byte.decode(entry);
+                    if (valueValidator.test(value)) {
                         mapLayer.setContent(row, col, value);
                     } else {
                         mapLayer.setContent(row, col, (byte) 0);
@@ -199,16 +201,15 @@ public class WorldMapParser {
     }
 
     private Map<String, String> parseProperties(String text) {
-        var properties = new HashMap<String, String>();
-        String[] lines = text.split("\n");
+        final var properties = new HashMap<String, String>();
+        final String[] lines = text.split("\n");
         for (String line : lines) {
-            if (line.startsWith(WorldMap.MARKER_COMMENT))
-                continue;
-            String[] sides = line.split("=");
+            if (line.startsWith(WorldMap.MARKER_COMMENT)) continue;
+            final String[] sides = line.split("=");
             if (sides.length != 2) {
                 Logger.error("Invalid line inside property section: {}", line);
             } else {
-                String lhs = sides[0].trim(), rhs = sides[1].trim();
+                final String lhs = sides[0].trim(), rhs = sides[1].trim();
                 properties.put(lhs, rhs);
             }
         }
