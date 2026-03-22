@@ -195,7 +195,7 @@ public final class TerrainLayer extends WorldMapLayer {
         String value = propertyMap().get(propertyName);
         if (value == null) return defaultTile;
         try {
-            return WorldMap.parseTile(value);
+            return WorldMapParser.parseTile(value);
         } catch (IllegalArgumentException x) {
             return defaultTile;
         }

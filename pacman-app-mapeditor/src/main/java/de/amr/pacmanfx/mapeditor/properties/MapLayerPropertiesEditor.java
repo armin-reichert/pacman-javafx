@@ -139,7 +139,10 @@ public class MapLayerPropertiesEditor extends BorderPane {
     }
 
     private WorldMapLayer layer() {
-        return worldMap().layer(layerID);
+        return switch (layerID) {
+            case FOOD -> worldMap().foodLayer();
+            case TERRAIN -> worldMap().terrainLayer();
+        };
     }
 
     private MapEditorProperty addEditorProperty(String propertyName, MapEditorPropertyType type, String initialValue) {

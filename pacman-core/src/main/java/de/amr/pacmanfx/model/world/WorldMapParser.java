@@ -4,15 +4,35 @@
 
 package de.amr.pacmanfx.model.world;
 
+import de.amr.pacmanfx.lib.math.Vector2i;
 import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
-class WorldMapParser {
+import static java.util.Objects.requireNonNull;
+
+public class WorldMapParser {
 
     public enum ParsingState { START, TERRAIN_LAYER, FOOD_LAYER}
+
+    public static Vector2i parseTile(String s) {
+        requireNonNull(s);
+        Matcher m = WorldMap.TILE_PATTERN.matcher(s);
+        if (!m.matches()) {
+            throw new IllegalArgumentException("Cannot create tile from '%s'".formatted(s));
+        }
+        try {
+            int x = Integer.parseInt(m.group(1));
+            int y = Integer.parseInt(m.group(2));
+            return new Vector2i(x, y);
+        } catch (NumberFormatException x) {
+            Logger.error(x, "Could not parse tile from text '{}'", s);
+            throw new IllegalArgumentException("Cannot create tile from '%s'".formatted(s));
+        }
+    }
 
     public static Optional<WorldMap> parse(
         Stream<String> linesStream,

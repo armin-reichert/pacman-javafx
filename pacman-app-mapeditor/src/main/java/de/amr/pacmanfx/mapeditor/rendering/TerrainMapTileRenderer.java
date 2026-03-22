@@ -7,10 +7,7 @@ import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.model.world.Obstacle;
-import de.amr.pacmanfx.model.world.ObstacleSegment;
-import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.model.world.WorldMapPropertyName;
+import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapRenderer;
@@ -217,7 +214,7 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
         if (properties.containsKey(propertyName)) {
             final String value = properties.get(propertyName);
             try {
-                final Vector2i tile = WorldMap.parseTile(value);
+                final Vector2i tile = WorldMapParser.parseTile(value);
                 return Optional.of(tile);
             } catch (IllegalArgumentException x) {
                 return Optional.empty();

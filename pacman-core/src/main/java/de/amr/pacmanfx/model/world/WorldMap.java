@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.model.world;
 
-import de.amr.pacmanfx.lib.math.Vector2i;
 import org.tinylog.Logger;
 
 import java.io.*;
@@ -13,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
@@ -31,22 +29,6 @@ public class WorldMap {
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
     public enum LayerType { TERRAIN, FOOD }
-
-    public static Vector2i parseTile(String s) {
-        requireNonNull(s);
-        Matcher m = TILE_PATTERN.matcher(s);
-        if (!m.matches()) {
-            throw new IllegalArgumentException("Cannot create tile from '%s'".formatted(s));
-        }
-        try {
-            int x = Integer.parseInt(m.group(1));
-            int y = Integer.parseInt(m.group(2));
-            return new Vector2i(x, y);
-        } catch (NumberFormatException x) {
-            Logger.error(x, "Could not parse tile from text '{}'", s);
-            throw new IllegalArgumentException("Cannot create tile from '%s'".formatted(s));
-        }
-    }
 
     public static Optional<WorldMap> fromURL(URL url) {
         requireNonNull(url);
@@ -101,14 +83,19 @@ public class WorldMap {
     /** Make accessible for WorldMapParser */
     WorldMap() {}
 
+    /**
+     * @param tilesX number of tiles horizontally (columns)
+     * @param tilesY number of tiles vertically (rows)
+     */
     public WorldMap(int tilesX, int tilesY) {
         numRows = requireNonNegativeInt(tilesY);
         numCols = requireNonNegativeInt(tilesX);
-        terrainLayer = new TerrainLayer(tilesY, tilesX);
-        foodLayer = new FoodLayer(tilesY, tilesX);
+        terrainLayer = new TerrainLayer(numRows, numCols);
+        foodLayer = new FoodLayer(numRows, numCols);
     }
 
     public WorldMap(WorldMap prototype) {
+        requireNonNull(prototype);
         numRows = prototype.numRows;
         numCols = prototype.numCols;
         url = prototype.url;
@@ -117,24 +104,12 @@ public class WorldMap {
         configMap = new HashMap<>(prototype.configMap);
     }
 
-    @Override
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        s.append("WorldMap{");
-        if (terrainLayer != null) {
-            s.append("numRows=").append(numRows);
-            s.append(", numCols=").append(numCols);
-        }
-        s.append(", url=").append(url);
-        s.append("}");
-        return s.toString();
-    }
-
+    //TODO What happens with the entries in the config map if the map coordinates change?
     public WorldMap insertRowBeforeIndex(int rowIndex) {
         if (rowIndex < 0 || rowIndex > numRows) {
             throw new IllegalArgumentException("Illegal row index for inserting row: " + rowIndex);
         }
-        WorldMap newMap = new WorldMap(numCols, numRows + 1);
+        final WorldMap newMap = new WorldMap(numCols, numRows + 1);
         newMap.terrainLayer.replacePropertyMap(terrainLayer.propertyMap());
         newMap.foodLayer.replacePropertyMap(foodLayer.propertyMap());
         for (int row = 0; row < newMap.numRows; ++row) {
@@ -157,14 +132,16 @@ public class WorldMap {
                 newMap.foodLayer.setContent(row, col, foodValue);
             }
         }
+        newMap.configMap = new HashMap<>(configMap);
         return newMap;
     }
 
+    //TODO What happens with the entries in the config map if the map coordinates change?
     public WorldMap deleteRowAtIndex(int rowIndexToDelete) {
         if (rowIndexToDelete < 0 || rowIndexToDelete > numRows - 1) {
             throw new IllegalArgumentException("Illegal row index for deleting row: " + rowIndexToDelete);
         }
-        WorldMap newMap = new WorldMap(numCols, numRows - 1);
+        final WorldMap newMap = new WorldMap(numCols, numRows - 1);
         newMap.terrainLayer.replacePropertyMap(terrainLayer.propertyMap());
         newMap.foodLayer.replacePropertyMap(foodLayer.propertyMap());
         for (int row = 0; row < newMap.numRows; ++row) {
@@ -178,6 +155,7 @@ public class WorldMap {
                 }
             }
         }
+        newMap.configMap = new HashMap<>(configMap);
         return newMap;
     }
 
@@ -187,13 +165,6 @@ public class WorldMap {
 
     public FoodLayer foodLayer() {
         return foodLayer;
-    }
-
-    public WorldMapLayer layer(WorldMapLayerID id) {
-        return switch (id) {
-            case TERRAIN -> terrainLayer;
-            case FOOD -> foodLayer;
-        };
     }
 
     public int numCols() {
@@ -213,24 +184,17 @@ public class WorldMap {
     public void setConfigValue(Object key, Object value) {
         requireNonNull(key);
         requireNonNull(value);
-        configMapCreateIfNull().put(key, value);
+        configMap.put(key, value);
     }
 
     @SuppressWarnings("unchecked")
     public <T> T getConfigValue(Object key) {
         requireNonNull(key);
-        return (T) configMapCreateIfNull().get(key);
+        return (T) configMap.get(key);
     }
 
     public boolean hasConfigValue(Object key) {
         requireNonNull(key);
         return configMap != null && configMap.containsKey(key);
-    }
-
-    private Map<Object, Object> configMapCreateIfNull() {
-        if (configMap == null) {
-            configMap = new HashMap<>();
-        }
-        return configMap;
     }
 }

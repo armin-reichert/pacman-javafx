@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.world.TerrainTile;
 import de.amr.pacmanfx.model.world.WorldMap;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.model.world.WorldMap.parseTile;
+import static de.amr.pacmanfx.model.world.WorldMapParser.parseTile;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.POS_HOUSE_MAX_TILE;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.POS_HOUSE_MIN_TILE;
 import static java.util.Objects.requireNonNull;

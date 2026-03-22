@@ -5,9 +5,9 @@ package de.amr.pacmanfx.mapeditor.properties;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
-import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapLayer;
 import de.amr.pacmanfx.model.world.WorldMapLayerID;
+import de.amr.pacmanfx.model.world.WorldMapParser;
 import javafx.scene.Node;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
@@ -34,7 +34,7 @@ class TilePropertyEditor extends AbstractPropertyEditor {
 
         final String value = property.value();
         try {
-            final Vector2i tile = WorldMap.parseTile(value);
+            final Vector2i tile = WorldMapParser.parseTile(value);
             spinnerX.getValueFactory().setValue(tile.x());
             spinnerY.getValueFactory().setValue(tile.y());
 
@@ -55,7 +55,7 @@ class TilePropertyEditor extends AbstractPropertyEditor {
         final String value = property().value();
         if (value != null) {
             try {
-                final Vector2i tile = WorldMap.parseTile(value);
+                final Vector2i tile = WorldMapParser.parseTile(value);
                 spinnerX.getValueFactory().setValue(tile.x());
                 spinnerY.getValueFactory().setValue(tile.y());
             } catch (IllegalArgumentException x) {
