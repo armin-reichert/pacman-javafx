@@ -25,7 +25,7 @@ public class Action_ReplaceCurrentWorldMapChecked extends EditorUIAction<Boolean
     public Boolean execute() {
         requireNonNull(file);
         if (file.getName().endsWith(".world")) {
-            final Optional<WorldMap> worldMap = WorldMap.loadFromFile(file);
+            final Optional<WorldMap> worldMap = WorldMap.fromFile(file);
             if (worldMap.isPresent()) {
                 ui.afterCheckForUnsavedChanges(() -> {
                     editor.setCurrentWorldMap(worldMap.get());

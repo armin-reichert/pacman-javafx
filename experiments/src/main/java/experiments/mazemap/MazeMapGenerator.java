@@ -8,10 +8,7 @@ import de.amr.pacmanfx.lib.graph.GridGraph;
 import de.amr.pacmanfx.lib.graph.GridGraphImpl;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.model.world.FoodTile;
-import de.amr.pacmanfx.model.world.TerrainTile;
-import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.model.world.WorldMapPropertyName;
+import de.amr.pacmanfx.model.world.*;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -150,7 +147,7 @@ public class MazeMapGenerator {
 
     private static boolean saveWorldMap(WorldMap worldMap,File file) {
         try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            pw.print(worldMap.sourceCode(false));
+            pw.print(WorldMapWriter.createSourceCode(worldMap, false));
             return true;
         } catch (IOException x) {
             Logger.error(x, "World map could not be saved to file '{}'", file);

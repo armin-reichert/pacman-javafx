@@ -75,6 +75,6 @@ public class WorldMapWriter {
     }
 
     private void printComment(String comment) {
-        printer.println(WorldMap.COMMENT_PREFIX + comment);
+        printer.println(WorldMap.MARKER_COMMENT + comment);
     }
 }

@@ -123,12 +123,11 @@ public final class TerrainLayer extends WorldMapLayer {
                     obstacleSet.remove(houseObstacle);
                 });
         }
-        Logger.info("{} obstacles found in map ", obstacleSet.size(), this);
         return tilesWithErrors;
     }
 
     public Set<Obstacle> obstacles() {
-        return Collections.unmodifiableSet(obstacleSet);
+        return obstacleSet == null ? Set.of() : Collections.unmodifiableSet(obstacleSet);
     }
 
     public Stream<Vector2i> neighborTilesOutsideWorld(Vector2i tile) {
@@ -194,9 +193,12 @@ public final class TerrainLayer extends WorldMapLayer {
     public Vector2i getTilePropertyOrDefault(String propertyName, Vector2i defaultTile) {
         requireNonNull(propertyName);
         String value = propertyMap().get(propertyName);
-        return value != null
-            ? WorldMap.parseTile(value).orElse(defaultTile)
-            : defaultTile;
+        if (value == null) return defaultTile;
+        try {
+            return WorldMap.parseTile(value);
+        } catch (IllegalArgumentException x) {
+            return defaultTile;
+        }
     }
 
     /**

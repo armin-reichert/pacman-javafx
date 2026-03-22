@@ -213,8 +213,15 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
     }
 
     private Optional<Vector2i> specialTile(WorldMap worldMap, String propertyName) {
-        if (worldMap.terrainLayer().propertyMap().containsKey(propertyName)) {
-            return WorldMap.parseTile(worldMap.terrainLayer().propertyMap().get(propertyName));
+        final Map<String, String> properties = worldMap.terrainLayer().propertyMap();
+        if (properties.containsKey(propertyName)) {
+            final String value = properties.get(propertyName);
+            try {
+                final Vector2i tile = WorldMap.parseTile(value);
+                return Optional.of(tile);
+            } catch (IllegalArgumentException x) {
+                return Optional.empty();
+            }
         }
         return Optional.empty();
     }

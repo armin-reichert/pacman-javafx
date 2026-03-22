@@ -71,7 +71,7 @@ public class TileMapEditor {
     }
 
     public void editFile(File worldMapFile) throws WorldMapParseException, IOException {
-        WorldMap.loadFromFile(worldMapFile).ifPresent(worldMap -> {
+        WorldMap.fromFile(worldMapFile).ifPresent(worldMap -> {
             setCurrentWorldMap(worldMap);
             setCurrentFile(worldMapFile);
         });
@@ -304,7 +304,7 @@ public class TileMapEditor {
             Logger.error("Could not access resource with URL path '{}'", path);
             return Optional.empty();
         }
-        return WorldMap.create(url);
+        return WorldMap.fromURL(url);
     }
 
 

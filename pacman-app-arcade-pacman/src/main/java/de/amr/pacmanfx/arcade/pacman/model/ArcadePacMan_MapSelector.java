@@ -24,7 +24,7 @@ public class ArcadePacMan_MapSelector implements WorldMapSelector {
             Logger.error(errorMsg);
             throw new IllegalStateException(errorMsg);
         }
-        WorldMap.create(url).ifPresentOrElse(worldMap -> prototype = worldMap,
+        WorldMap.fromURL(url).ifPresentOrElse(worldMap -> prototype = worldMap,
             () -> Logger.error("Could not load map prototype from URL {}", url)
         );
     }

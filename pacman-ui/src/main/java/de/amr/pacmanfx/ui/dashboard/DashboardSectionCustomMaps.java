@@ -158,7 +158,7 @@ public class DashboardSectionCustomMaps extends DashboardSection {
             Logger.info("{} custom map(s) found", mapFiles.length);
         }
         for (File file : mapFiles) {
-            final Optional<WorldMap> worldMap = WorldMap.loadFromFile(file);
+            final Optional<WorldMap> worldMap = WorldMap.fromFile(file);
             if (worldMap.isPresent()) {
                 customMaps.add(worldMap.get());
                 Logger.info("Custom map loaded from file {}", file);

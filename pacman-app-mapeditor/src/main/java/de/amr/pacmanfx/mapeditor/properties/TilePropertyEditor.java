@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.world.WorldMapLayerID;
 import javafx.scene.Node;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
+import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 
@@ -31,10 +32,15 @@ class TilePropertyEditor extends AbstractPropertyEditor {
         spinnerY.setMaxWidth(60);
         spinnerY.disableProperty().bind(enabled.not());
 
-        WorldMap.parseTile(property.value()).ifPresent(tile -> {
+        final String value = property.value();
+        try {
+            final Vector2i tile = WorldMap.parseTile(value);
             spinnerX.getValueFactory().setValue(tile.x());
             spinnerY.getValueFactory().setValue(tile.y());
-        });
+
+        } catch (IllegalArgumentException x) {
+            Logger.error(x, "Could not parse tile value '{}'", value);
+        }
 
         spinnerX.valueProperty().addListener((_, _, _) -> storeValueInMapLayer());
         spinnerY.valueProperty().addListener((_, _, _) -> storeValueInMapLayer());
@@ -46,10 +52,16 @@ class TilePropertyEditor extends AbstractPropertyEditor {
 
     @Override
     public void updateState() {
-        WorldMap.parseTile(property().value()).ifPresent(tile -> {
-            spinnerX.getValueFactory().setValue(tile.x());
-            spinnerY.getValueFactory().setValue(tile.y());
-        });
+        final String value = property().value();
+        if (value != null) {
+            try {
+                final Vector2i tile = WorldMap.parseTile(value);
+                spinnerX.getValueFactory().setValue(tile.x());
+                spinnerY.getValueFactory().setValue(tile.y());
+            } catch (IllegalArgumentException x) {
+                Logger.error(x, "Could not parse tile value '{}'", value);
+            }
+        }
     }
 
     @Override

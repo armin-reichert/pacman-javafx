@@ -12,7 +12,6 @@ import java.util.stream.Stream;
 
 class WorldMapParser {
 
-
     public enum ParsingState { START, TERRAIN_LAYER, FOOD_LAYER}
 
     public static Optional<WorldMap> parse(
@@ -42,8 +41,8 @@ class WorldMapParser {
         return line.startsWith(WorldMap.MARKER_BEGIN_DATA_SECTION);
     }
 
-    private final List<String> terrainLayerSection = new ArrayList<String>();
-    private final List<String> foodLayerSection = new ArrayList<String>();
+    private final List<String> terrainLayerSection = new ArrayList<>();
+    private final List<String> foodLayerSection = new ArrayList<>();
     private ParsingState state;
 
     public WorldMapParser() {
@@ -96,8 +95,11 @@ class WorldMapParser {
                 }
             }
         }
-        worldMap.terrainLayer = new TerrainLayer(parseLayer(WorldMap.LayerType.TERRAIN, terrainLayerSection, validTerrainValueTest));
-        worldMap.foodLayer = new FoodLayer(parseLayer(WorldMap.LayerType.FOOD, foodLayerSection, validFoodValueTest));
+        worldMap.terrainLayer = new TerrainLayer(
+            parseLayer(WorldMap.LayerType.TERRAIN, terrainLayerSection, validTerrainValueTest));
+
+        worldMap.foodLayer = new FoodLayer(
+            parseLayer(WorldMap.LayerType.FOOD, foodLayerSection, validFoodValueTest));
 
         if (worldMap.terrainLayer.numRows() != worldMap.foodLayer.numRows()) {
             throw new WorldMapParseException("Terrain layer has %d rows but food layer has %d rows"
@@ -180,7 +182,7 @@ class WorldMapParser {
         var properties = new HashMap<String, String>();
         String[] lines = text.split("\n");
         for (String line : lines) {
-            if (line.startsWith(WorldMap.COMMENT_PREFIX))
+            if (line.startsWith(WorldMap.MARKER_COMMENT))
                 continue;
             String[] sides = line.split("=");
             if (sides.length != 2) {

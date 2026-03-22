@@ -7,6 +7,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.world.TerrainTile;
 import de.amr.pacmanfx.model.world.WorldMap;
+import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.model.world.WorldMap.parseTile;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.POS_HOUSE_MAX_TILE;
@@ -24,12 +25,12 @@ public class Action_ClearFoodAroundHouse extends EditorAction<Void> {
 
     @Override
     public Void execute() {
-        String minTileValue = worldMap.terrainLayer().propertyMap().get(POS_HOUSE_MIN_TILE);
-        String maxTileValue = worldMap.terrainLayer().propertyMap().get(POS_HOUSE_MAX_TILE);
+        final String minTileValue = worldMap.terrainLayer().propertyMap().get(POS_HOUSE_MIN_TILE);
+        final String maxTileValue = worldMap.terrainLayer().propertyMap().get(POS_HOUSE_MAX_TILE);
         if (minTileValue != null && maxTileValue != null) {
-            Vector2i minTile = parseTile(minTileValue).orElse(null);
-            Vector2i maxTile = parseTile(maxTileValue).orElse(null);
-            if (minTile != null && maxTile != null) {
+            try {
+                final Vector2i minTile = parseTile(minTileValue);
+                final Vector2i maxTile = parseTile(maxTileValue);
                 for (int col = minTile.x() - 1; col <= maxTile.x() + 1; ++col) {
                     for (int row = minTile.y() - 1; row <= maxTile.y() + 1; ++row) {
                         if (worldMap.foodLayer().outOfBounds(row, col)) continue;
@@ -38,6 +39,8 @@ public class Action_ClearFoodAroundHouse extends EditorAction<Void> {
                         editor.setEdited(true);
                     }
                 }
+            } catch (IllegalArgumentException x) {
+                Logger.error(x, "Action {} not executed", getClass().getSimpleName());
             }
         }
         return null;

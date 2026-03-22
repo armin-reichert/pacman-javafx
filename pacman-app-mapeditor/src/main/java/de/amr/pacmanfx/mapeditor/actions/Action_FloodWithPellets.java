@@ -10,11 +10,9 @@ import de.amr.pacmanfx.model.world.FoodTile;
 import de.amr.pacmanfx.model.world.TerrainTile;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapPropertyName;
+import org.tinylog.Logger;
 
-import java.util.ArrayDeque;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static de.amr.pacmanfx.mapeditor.UfxMapEditor.canPlaceFoodAtTile;
 
@@ -93,8 +91,14 @@ public class Action_FloodWithPellets extends EditorAction<Void> {
     }
 
     private Optional<Vector2i> actorTile(WorldMap worldMap, String actorPosProperty) {
-        var terrainProperties = worldMap.terrainLayer().propertyMap();
-        String posString = terrainProperties.getOrDefault(actorPosProperty, null);
-        return posString != null ? WorldMap.parseTile(posString) : Optional.empty();
+        final Map<String, String> properties = worldMap.terrainLayer().propertyMap();
+        final String posValue = properties.get(actorPosProperty);
+        if (posValue == null) return Optional.empty();
+        try {
+            return Optional.of(WorldMap.parseTile(posValue));
+        } catch (IllegalArgumentException x) {
+            Logger.error(x, "Could not parse actor tile");
+            return Optional.empty();
+        }
     }
 }

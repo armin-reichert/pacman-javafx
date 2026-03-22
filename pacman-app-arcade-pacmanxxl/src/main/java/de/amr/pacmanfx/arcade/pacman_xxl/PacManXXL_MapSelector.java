@@ -64,7 +64,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
             }
             if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
                 // A new map file has appeared
-                final Optional<WorldMap> worldMap = WorldMap.loadFromFile(file);
+                final Optional<WorldMap> worldMap = WorldMap.fromFile(file);
                 if (worldMap.isPresent()) {
                     customMapPrototypes.add(worldMap.get());
                     Logger.info("Added new custom map from file '{}'", file);
@@ -89,7 +89,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                 try {
                     final URL url = file.toURI().toURL();
                     findCustomMapPrototype(url).ifPresent(customMapPrototypes::remove);
-                    final Optional<WorldMap> worldMap = WorldMap.loadFromFile(file);
+                    final Optional<WorldMap> worldMap = WorldMap.fromFile(file);
                     if (worldMap.isPresent()) {
                         customMapPrototypes.add(worldMap.get());
                         Logger.info("Updated custom map from file '{}'", file);
@@ -129,7 +129,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
             Logger.info("Found {} custom map(s)", worldMapFiles.length);
         }
         for (File file : worldMapFiles) {
-            final Optional<WorldMap> worldMap = WorldMap.loadFromFile(file);
+            final Optional<WorldMap> worldMap = WorldMap.fromFile(file);
             if (worldMap.isPresent()) {
                 customMapPrototypes.add(worldMap.get());
                 Logger.info("Custom map loaded from file '{}'", file);
@@ -211,7 +211,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                 final URL url = PacManXXL_MapSelector.class.getResource(path);
                 if (url != null) {
                     final File targetFile = new File(customMapDir, mapName);
-                    WorldMap.create(url).ifPresentOrElse(
+                    WorldMap.fromURL(url).ifPresentOrElse(
                         worldMap -> worldMap.saveToFile(targetFile),
                         () -> Logger.error("Could not load world map from URL '{}'", url)
                     );

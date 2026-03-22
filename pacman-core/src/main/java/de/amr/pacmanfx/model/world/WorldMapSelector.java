@@ -52,7 +52,7 @@ public interface WorldMapSelector {
                 Logger.error("Map not found for resource name='{}'", name);
                 throw new IllegalArgumentException("Illegal map pattern: " + name);
             }
-            WorldMap.create(url).ifPresentOrElse(worldMap -> {
+            WorldMap.fromURL(url).ifPresentOrElse(worldMap -> {
                 maps.add(worldMap);
                 Logger.info("Map loaded, URL='{}'", url);
             }, () -> Logger.error("Could not load map from URL {}", url));

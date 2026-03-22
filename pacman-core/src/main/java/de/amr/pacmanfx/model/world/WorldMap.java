@@ -24,48 +24,54 @@ public class WorldMap {
     public static final Charset CHARSET = StandardCharsets.UTF_8;
 
     public static final Pattern TILE_PATTERN = Pattern.compile("\\((\\d+),(\\d+)\\)");
-    public static final String COMMENT_PREFIX = "#";
 
+    public static final String MARKER_COMMENT = "#";
     public static final String MARKER_BEGIN_TERRAIN_LAYER = "!terrain";
     public static final String MARKER_BEGIN_FOOD_LAYER = "!food";
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
     public enum LayerType { TERRAIN, FOOD }
 
-    public static Optional<Vector2i> parseTile(String s) {
+    public static Vector2i parseTile(String s) {
         requireNonNull(s);
         Matcher m = TILE_PATTERN.matcher(s);
         if (!m.matches()) {
-            return Optional.empty();
+            throw new IllegalArgumentException("Cannot create tile from '%s'".formatted(s));
         }
         try {
             int x = Integer.parseInt(m.group(1));
             int y = Integer.parseInt(m.group(2));
-            return Optional.of(new Vector2i(x, y));
+            return new Vector2i(x, y);
         } catch (NumberFormatException x) {
-            Logger.error("Could not parse tile from text '{}'", s);
-            return Optional.empty();
+            Logger.error(x, "Could not parse tile from text '{}'", s);
+            throw new IllegalArgumentException("Cannot create tile from '%s'".formatted(s));
         }
     }
 
-    public static Optional<WorldMap> create(URL url) {
+    public static Optional<WorldMap> fromURL(URL url) {
         requireNonNull(url);
-        try (var br = new BufferedReader(new InputStreamReader(url.openStream(), CHARSET))) {
-            final Optional<WorldMap> worldMap = WorldMapParser.parse(br.lines(), TerrainTile::isValidCode, FoodTile::isValidCode);
-            worldMap.ifPresent(wm -> wm.url = url.toExternalForm());
-            return worldMap;
-        } catch (Exception x) {
+        try {
+            return fromStream(url.openStream());
+        } catch (IOException x) {
             Logger.error(x);
             return Optional.empty();
         }
     }
 
-    public static Optional<WorldMap> loadFromFile(File file) {
+    public static Optional<WorldMap> fromFile(File file) {
+        requireNonNull(file);
         try {
-            return create(file.toURI().toURL());
-        } catch (Exception x) {
-            Logger.error(x, "Unable to load world map from file {}", file);
+            return fromStream(new FileInputStream(file));
+        } catch (IOException x) {
+            Logger.error(x);
             return Optional.empty();
+        }
+    }
+
+    private static Optional<WorldMap> fromStream(InputStream is) throws IOException {
+        requireNonNull(is);
+        try (var rdr = new BufferedReader(new InputStreamReader(is, CHARSET))) {
+            return WorldMapParser.parse(rdr.lines(), TerrainTile::isValidCode, FoodTile::isValidCode);
         }
     }
 
@@ -76,7 +82,7 @@ public class WorldMap {
      * @return {@code true} if saving succeeded
      */
     public boolean saveToFile(File file) {
-        try (var fileWriter = new PrintWriter(file, StandardCharsets.UTF_8)) {
+        try (var fileWriter = new PrintWriter(file, CHARSET)) {
             fileWriter.println(WorldMapWriter.createSourceCode(this, false));
             return true;
         } catch (IOException x) {
@@ -227,5 +233,4 @@ public class WorldMap {
         }
         return configMap;
     }
-
 }
