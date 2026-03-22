@@ -35,7 +35,6 @@ public class Action_ReplaceCurrentWorldMapChecked extends EditorUIAction<Boolean
                 return true;
             }
             else {
-                Logger.error("Could not load world map from file '{}'", file);
                 return false;
             }
         }

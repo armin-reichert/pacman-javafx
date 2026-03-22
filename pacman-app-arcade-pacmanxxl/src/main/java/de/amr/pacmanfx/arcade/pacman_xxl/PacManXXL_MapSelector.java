@@ -68,8 +68,6 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                 if (worldMap.isPresent()) {
                     customMapPrototypes.add(worldMap.get());
                     Logger.info("Added new custom map from file '{}'", file);
-                } else {
-                    Logger.error("Could not load world map from file '{}'", file);
                 }
             }
             else if (event.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
@@ -93,8 +91,6 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                     if (worldMap.isPresent()) {
                         customMapPrototypes.add(worldMap.get());
                         Logger.info("Updated custom map from file '{}'", file);
-                    } else {
-                        Logger.info("Could not load world map from file '{}'", file);
                     }
                 } catch (IOException x) {
                     Logger.error(x, "Could not load world map");
@@ -129,13 +125,10 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
             Logger.info("Found {} custom map(s)", worldMapFiles.length);
         }
         for (File file : worldMapFiles) {
-            final Optional<WorldMap> worldMap = WorldMap.fromFile(file);
-            if (worldMap.isPresent()) {
-                customMapPrototypes.add(worldMap.get());
+            WorldMap.fromFile(file).ifPresent(worldMap -> {
+                customMapPrototypes.add(worldMap);
                 Logger.info("Custom map loaded from file '{}'", file);
-            } else {
-                Logger.error("Could not load world map from file '{}'", file);
-            }
+            });
         }
     }
 

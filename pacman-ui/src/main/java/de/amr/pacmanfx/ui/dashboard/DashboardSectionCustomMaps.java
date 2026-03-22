@@ -20,7 +20,6 @@ import java.io.File;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
@@ -158,14 +157,10 @@ public class DashboardSectionCustomMaps extends DashboardSection {
             Logger.info("{} custom map(s) found", mapFiles.length);
         }
         for (File file : mapFiles) {
-            final Optional<WorldMap> worldMap = WorldMap.fromFile(file);
-            if (worldMap.isPresent()) {
-                customMaps.add(worldMap.get());
+            WorldMap.fromFile(file).ifPresent(worldMap -> {
+                customMaps.add(worldMap);
                 Logger.info("Custom map loaded from file {}", file);
-            }
-            else {
-                Logger.error("Could not parse world map");
-            }
+            });
         }
     }
 }

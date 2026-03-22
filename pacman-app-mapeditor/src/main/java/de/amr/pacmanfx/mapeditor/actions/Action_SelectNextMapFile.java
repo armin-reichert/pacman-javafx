@@ -54,7 +54,6 @@ public class Action_SelectNextMapFile extends EditorAction<File> {
                 Logger.info("World map file changed to {}", file);
                 return file;
             } else {
-                Logger.error("Could not load world map from file {}", file);
                 return null;
             }
         }
