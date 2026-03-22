@@ -64,8 +64,8 @@ public class WorldMap {
      */
     public void saveToFile(File file) throws IOException {
         requireNonNull(file);
+        final String source = WorldMapWriter.createSourceCode(this, false);
         try (var fileWriter = new PrintWriter(file, CHARSET)) {
-            final String source = WorldMapWriter.createSourceCode(this, false);
             fileWriter.println(source);
         }
     }
