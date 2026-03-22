@@ -28,8 +28,6 @@ public class WorldMap {
     public static final String MARKER_BEGIN_FOOD_LAYER = "!food";
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
-    public enum LayerType { TERRAIN, FOOD }
-
     public static Optional<WorldMap> fromURL(URL url) {
         requireNonNull(url);
         try {

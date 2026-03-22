@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import org.tinylog.Logger;
 
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
@@ -116,10 +117,10 @@ public class WorldMapParser {
             }
         }
         worldMap.terrainLayer = new TerrainLayer(
-            parseLayer(WorldMap.LayerType.TERRAIN, terrainLayerSection, validTerrainValueTest));
+            parseLayer(TerrainLayer::new, terrainLayerSection, validTerrainValueTest));
 
         worldMap.foodLayer = new FoodLayer(
-            parseLayer(WorldMap.LayerType.FOOD, foodLayerSection, validFoodValueTest));
+            parseLayer(FoodLayer::new, foodLayerSection, validFoodValueTest));
 
         if (worldMap.terrainLayer.numRows() != worldMap.foodLayer.numRows()) {
             throw new WorldMapParseException("Terrain layer has %d rows but food layer has %d rows"
@@ -137,7 +138,7 @@ public class WorldMapParser {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends WorldMapLayer> T parseLayer(WorldMap.LayerType type, List<String> lines, Predicate<Byte> valueValidator)
+    private <T extends WorldMapLayer> T parseLayer(BiFunction<Integer, Integer, WorldMapLayer> layerFactory, List<String> lines, Predicate<Byte> valueValidator)
         throws WorldMapParseException {
 
         // First pass: read property section and determine data section size
@@ -167,10 +168,8 @@ public class WorldMapParser {
         }
 
         // Second pass: read data and build new tile map
-        final WorldMapLayer mapLayer = switch (type) {
-            case FOOD -> new FoodLayer(numDataRows, numDataCols);
-            case TERRAIN -> new TerrainLayer(numDataRows, numDataCols);
-        };
+        final WorldMapLayer mapLayer = layerFactory.apply(numDataRows, numDataCols);
+
         mapLayer.propertyMap().putAll(parseProperties(propertySection.toString()));
 
         for (int lineIndex = dataSectionStartIndex; lineIndex < lines.size(); ++lineIndex) {
@@ -193,8 +192,7 @@ public class WorldMapParser {
             }
         }
 
-        if (type == WorldMap.LayerType.TERRAIN) {
-            final TerrainLayer terrain = (TerrainLayer) mapLayer;
+        if (mapLayer instanceof TerrainLayer terrain) {
             terrain.createObstacles();
         }
         return (T) mapLayer;
