@@ -30,26 +30,22 @@ public class WorldMap {
 
     public static Optional<WorldMap> fromURL(URL url) {
         requireNonNull(url);
-        InputStream is;
         try {
-            is = url.openStream();
+            return fromStream(url.openStream());
         } catch (IOException x) {
             Logger.error(x, "Error opening url " + url);
             return Optional.empty();
         }
-        return fromStream(is);
     }
 
     public static Optional<WorldMap> fromFile(File file) {
         requireNonNull(file);
-        InputStream is;
         try {
-            is = new FileInputStream(file);
+            return fromStream(new FileInputStream(file));
         } catch (IOException x) {
             Logger.error(x, "Error opening file: " + file.getAbsolutePath());
             return Optional.empty();
         }
-        return fromStream(is);
     }
 
     private static Optional<WorldMap> fromStream(InputStream is) {
