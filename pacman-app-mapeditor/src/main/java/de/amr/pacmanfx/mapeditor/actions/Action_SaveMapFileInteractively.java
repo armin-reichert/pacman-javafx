@@ -9,6 +9,7 @@ import javafx.stage.FileChooser;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.io.IOException;
 
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
 
@@ -25,8 +26,8 @@ public class Action_SaveMapFileInteractively extends EditorUIAction<File> {
         if (file != null) {
             editor.setCurrentDirectory(file.getParentFile());
             if (file.getName().endsWith(".world")) {
-                boolean saveSuccess = editor.currentWorldMap().saveToFile(file);
-                if (saveSuccess) {
+                try {
+                    editor.currentWorldMap().saveToFile(file);
                     editor.setEdited(false);
                     boolean replaceSuccess = new Action_ReplaceCurrentWorldMapChecked(ui, file).execute();
                     if (replaceSuccess) {
@@ -34,12 +35,12 @@ public class Action_SaveMapFileInteractively extends EditorUIAction<File> {
                     } else {
                         ui.messageDisplay().showMessage("Current map could not be replaced!", 4, MessageType.ERROR);
                     }
-                } else {
+                } catch (IOException x) {
                     ui.messageDisplay().showMessage("Map could not be saved!", 4, MessageType.ERROR);
                 }
             } else {
-                Logger.error("No .world file selected");
-                ui.messageDisplay().showMessage("No .world file selected", 2, MessageType.WARNING);
+                Logger.error("No world map file selected");
+                ui.messageDisplay().showMessage("No world map file selected", 2, MessageType.WARNING);
             }
         }
         return file;

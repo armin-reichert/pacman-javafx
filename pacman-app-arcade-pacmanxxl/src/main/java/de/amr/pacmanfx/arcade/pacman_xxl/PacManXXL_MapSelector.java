@@ -212,7 +212,13 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                 if (url != null) {
                     final File targetFile = new File(customMapDir, mapName);
                     WorldMap.fromURL(url).ifPresentOrElse(
-                        worldMap -> worldMap.saveToFile(targetFile),
+                        worldMap -> {
+                            try {
+                                worldMap.saveToFile(targetFile);
+                            } catch (IOException x) {
+                                Logger.error(x, "Could not save world map file {}", targetFile);
+                            }
+                        },
                         () -> Logger.error("Could not load world map from URL '{}'", url)
                     );
                 } else {

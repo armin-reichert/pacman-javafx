@@ -61,15 +61,12 @@ public class WorldMap {
      * Saves this map to given file (UTF-8 character encoding).
      *
      * @param file file to save to
-     * @return {@code true} if saving succeeded
      */
-    public boolean saveToFile(File file) {
+    public void saveToFile(File file) throws IOException {
+        requireNonNull(file);
         try (var fileWriter = new PrintWriter(file, CHARSET)) {
-            fileWriter.println(WorldMapWriter.createSourceCode(this, false));
-            return true;
-        } catch (IOException x) {
-            Logger.error(x, "Could not save world map to file {}", file);
-            return false;
+            final String source = WorldMapWriter.createSourceCode(this, false);
+            fileWriter.println(source);
         }
     }
 
