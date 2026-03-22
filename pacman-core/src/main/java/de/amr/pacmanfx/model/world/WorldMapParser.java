@@ -7,7 +7,10 @@ package de.amr.pacmanfx.model.world;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -35,21 +38,6 @@ public class WorldMapParser {
         }
     }
 
-    public static Optional<WorldMap> parse(
-        Stream<String> linesStream,
-        Predicate<Byte> validTerrainValueTest,
-        Predicate<Byte> validFoodValueTest) {
-
-        final WorldMapParser parser = new WorldMapParser();
-        try {
-            final WorldMap worldMap = parser.parse(new ArrayList<>(linesStream.toList()), validTerrainValueTest, validFoodValueTest);
-            return Optional.of(worldMap);
-        } catch (WorldMapParseException x) {
-            Logger.error(x, "Could not parse world map");
-            return Optional.empty();
-        }
-    }
-
     private static boolean isTerrainSectionStart(String line) {
         return line.startsWith(WorldMap.MARKER_BEGIN_TERRAIN_LAYER);
     }
@@ -70,9 +58,10 @@ public class WorldMapParser {
         state = ParsingState.START;
     }
 
-    private WorldMap parse(List<String> lines, Predicate<Byte> validTerrainValueTest, Predicate<Byte> validFoodValueTest)
+    public WorldMap parse(Stream<String> linesStream, Predicate<Byte> terrainValueValidator, Predicate<Byte> foodValueValidator)
         throws WorldMapParseException
     {
+        final List<String> lines = new ArrayList<>(linesStream.toList());
         final WorldMap worldMap = new WorldMap();
 
         // delete empty lines at end
@@ -117,10 +106,10 @@ public class WorldMapParser {
             }
         }
         worldMap.terrainLayer = new TerrainLayer(
-            (TerrainLayer) parseLayer(TerrainLayer::new, terrainLayerSection, validTerrainValueTest));
+            (TerrainLayer) parseLayer(TerrainLayer::new, terrainLayerSection, terrainValueValidator));
 
         worldMap.foodLayer = new FoodLayer(
-            (FoodLayer) parseLayer(FoodLayer::new, foodLayerSection, validFoodValueTest));
+            (FoodLayer) parseLayer(FoodLayer::new, foodLayerSection, foodValueValidator));
 
         if (worldMap.terrainLayer.numRows() != worldMap.foodLayer.numRows()) {
             throw new WorldMapParseException("Terrain layer has %d rows but food layer has %d rows"

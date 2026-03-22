@@ -30,28 +30,37 @@ public class WorldMap {
 
     public static Optional<WorldMap> fromURL(URL url) {
         requireNonNull(url);
+        InputStream is;
         try {
-            return fromStream(url.openStream());
+            is = url.openStream();
         } catch (IOException x) {
-            Logger.error(x);
+            Logger.error(x, "Error opening url " + url);
             return Optional.empty();
         }
+        return fromStream(is);
     }
 
     public static Optional<WorldMap> fromFile(File file) {
         requireNonNull(file);
+        InputStream is;
         try {
-            return fromStream(new FileInputStream(file));
+            is = new FileInputStream(file);
         } catch (IOException x) {
-            Logger.error(x);
+            Logger.error(x, "Error opening file: " + file.getAbsolutePath());
             return Optional.empty();
         }
+        return fromStream(is);
     }
 
-    private static Optional<WorldMap> fromStream(InputStream is) throws IOException {
+    private static Optional<WorldMap> fromStream(InputStream is) {
         requireNonNull(is);
+        final WorldMapParser parser = new WorldMapParser();
         try (var rdr = new BufferedReader(new InputStreamReader(is, CHARSET))) {
-            return WorldMapParser.parse(rdr.lines(), TerrainTile::isValidCode, FoodTile::isValidCode);
+            final WorldMap worldMap = parser.parse(rdr.lines(), TerrainTile::isValidCode, FoodTile::isValidCode);
+            return Optional.of(worldMap);
+        } catch (Exception x) {
+            Logger.error(x, "Could not parse world map file");
+            return Optional.empty();
         }
     }
 
