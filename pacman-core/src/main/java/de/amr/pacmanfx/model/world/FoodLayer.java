@@ -29,7 +29,7 @@ public final class FoodLayer extends WorldMapLayer {
         updateFoodCount();
     }
 
-    public FoodLayer(WorldMapLayer layer) {
+    public FoodLayer(FoodLayer layer) {
         super(layer);
         eatenFoodBits = new BitSet(numCols() * numRows());
         updateFoodCount();

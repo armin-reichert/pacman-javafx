@@ -117,10 +117,10 @@ public class WorldMapParser {
             }
         }
         worldMap.terrainLayer = new TerrainLayer(
-            parseLayer(TerrainLayer::new, terrainLayerSection, validTerrainValueTest));
+            (TerrainLayer) parseLayer(TerrainLayer::new, terrainLayerSection, validTerrainValueTest));
 
         worldMap.foodLayer = new FoodLayer(
-            parseLayer(FoodLayer::new, foodLayerSection, validFoodValueTest));
+            (FoodLayer) parseLayer(FoodLayer::new, foodLayerSection, validFoodValueTest));
 
         if (worldMap.terrainLayer.numRows() != worldMap.foodLayer.numRows()) {
             throw new WorldMapParseException("Terrain layer has %d rows but food layer has %d rows"
@@ -137,8 +137,7 @@ public class WorldMapParser {
         return worldMap;
     }
 
-    @SuppressWarnings("unchecked")
-    private <T extends WorldMapLayer> T parseLayer(BiFunction<Integer, Integer, WorldMapLayer> layerFactory, List<String> lines, Predicate<Byte> valueValidator)
+    private WorldMapLayer parseLayer(BiFunction<Integer, Integer, WorldMapLayer> layerFactory, List<String> lines, Predicate<Byte> valueValidator)
         throws WorldMapParseException {
 
         // First pass: read property section and determine data section size
@@ -195,7 +194,7 @@ public class WorldMapParser {
         if (mapLayer instanceof TerrainLayer terrain) {
             terrain.createObstacles();
         }
-        return (T) mapLayer;
+        return mapLayer;
     }
 
     private Map<String, String> parseProperties(String text) {
