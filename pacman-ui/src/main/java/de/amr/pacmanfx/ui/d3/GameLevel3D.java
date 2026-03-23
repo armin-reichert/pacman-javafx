@@ -362,10 +362,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
 
         maze3D = new Maze3D(
+            level,
             uiConfig.factory3D(),
             uiConfig.entityConfig(),
             colorScheme,
-            level,
             animationRegistry
         );
         maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);

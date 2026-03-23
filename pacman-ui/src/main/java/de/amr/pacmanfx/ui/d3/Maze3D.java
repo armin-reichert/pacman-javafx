@@ -50,8 +50,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class Maze3D extends Group implements DisposableGraphicsObject {
 
-    private final AnimationRegistry animationRegistry;
-
     /** Base height of walls in world units. Can be externally bound. */
     private final DoubleProperty wallBaseHeight = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
 
@@ -68,33 +66,29 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates a new 3D maze for the given level.
      *
-     * @param entityConfig         3D configuration
-     * @param level            the game level whose world map is rendered
+     * @param level         the game level whose world map is rendered
+     * @param factory3D     the factory for 3D entities
+     * @param entityConfig  3D configuration
+     * @param colorScheme   the map color scheme
      * @param animationRegistry registry for animations used by 3D components
+     *
      * @throws NullPointerException if any required argument is {@code null}
      */
     public Maze3D(
+        GameLevel level,
         Factory3D factory3D,
         EntityConfig entityConfig,
         WorldMapColorScheme colorScheme,
-        GameLevel level,
         AnimationRegistry animationRegistry)
     {
         requireNonNull(factory3D);
         requireNonNull(entityConfig);
         requireNonNull(level);
-        this.animationRegistry = requireNonNull(animationRegistry);
 
         createMaterials(colorScheme);
         createFloor3D(entityConfig.floor(), level);
         createObstacles3D(entityConfig.maze(), level);
-
-        level.worldMap().terrainLayer().optHouse()
-            .filter(ArcadeHouse.class::isInstance)
-            .map(ArcadeHouse.class::cast)
-            .ifPresentOrElse(
-                arcadeHouse -> createArcadeHouse3D(entityConfig.house(), arcadeHouse, colorScheme),
-                () -> Logger.error("Currently only Arcade house is supported"));
+        createArcadeHouse3D(animationRegistry, entityConfig.house(), level, colorScheme);
     }
 
     /** @return the property controlling the base height of all walls */
@@ -177,7 +171,11 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
         floor3D = new MazeFloor3D(materials3D.floor(), width, height, floorConfig.thickness(), floorConfig.padding());
     }
 
-    private void createArcadeHouse3D(HouseConfig3D houseConfig, ArcadeHouse house, WorldMapColorScheme colorScheme) {
-        house3D = new MazeHouse3D(colorScheme, houseConfig, animationRegistry, house);
+    private void createArcadeHouse3D(AnimationRegistry animationRegistry, HouseConfig3D houseConfig, GameLevel level, WorldMapColorScheme colorScheme) {
+        level.worldMap().terrainLayer().optHouse()
+            .filter(ArcadeHouse.class::isInstance)
+            .map(ArcadeHouse.class::cast)
+            .ifPresentOrElse(arcadeHouse -> house3D = new MazeHouse3D(colorScheme, houseConfig, animationRegistry, arcadeHouse),
+                () -> Logger.error("Currently only Arcade house is supported"));
     }
 }
