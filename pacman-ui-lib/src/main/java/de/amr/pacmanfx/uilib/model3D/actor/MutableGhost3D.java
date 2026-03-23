@@ -22,7 +22,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Mesh;
 import javafx.scene.shape.Shape3D;
 import org.tinylog.Logger;
 
@@ -87,18 +86,14 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
         AnimationRegistry animationRegistry,
         Ghost ghost,
         GhostColorSet colorSet,
-        Mesh dressMesh,
-        Mesh pupilsMesh,
-        Mesh eyeballsMesh,
+        GhostMeshes meshes,
         GhostMaterials materials,
         double size)
     {
         requireNonNull(animationRegistry);
         this.ghost = requireNonNull(ghost);
         this.lightColor = requireNonNull(colorSet).normal().dressColor();
-        requireNonNull(dressMesh);
-        requireNonNull(pupilsMesh);
-        requireNonNull(eyeballsMesh);
+        requireNonNull(meshes);
         requireNonNull(materials);
         this.size = requireNonNegative(size);
 
@@ -106,9 +101,7 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
             animationRegistry,
             ghost,
             colorSet,
-            dressMesh,
-            pupilsMesh,
-            eyeballsMesh,
+            meshes,
             materials,
             size
         );

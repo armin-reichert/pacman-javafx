@@ -80,16 +80,24 @@ public class ArcadeMsPacMan_Factory3D implements Factory3D {
         requireNonNull(animationRegistry);
 
         final GhostColorSet colorSet = ghostConfig.createGhostColorSet();
+        final GhostMaterials materials = createGhostMaterials(colorSet);
+        final GhostMeshes meshes = createGhostMeshes();
 
         return new MutableGhost3D(
             animationRegistry,
             ghost,
             colorSet,
+            meshes,
+            materials,
+            ghostConfig.size3D()
+        );
+    }
+
+    private GhostMeshes createGhostMeshes() {
+        return new GhostMeshes(
             Models3D.GHOST_MODEL.dressMesh(),
             Models3D.GHOST_MODEL.pupilsMesh(),
-            Models3D.GHOST_MODEL.eyeballsMesh(),
-            createGhostMaterials(colorSet),
-            ghostConfig.size3D()
+            Models3D.GHOST_MODEL.eyeballsMesh()
         );
     }
 

@@ -13,7 +13,6 @@ import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
 import javafx.animation.*;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -102,18 +101,16 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         AnimationRegistry animationRegistry,
         Ghost ghost,
         GhostColorSet colorSet,
-        Mesh dressMesh,
-        Mesh pupilsMesh,
-        Mesh eyeballsMesh,
+        GhostMeshes meshes,
         GhostMaterials materials,
         double size)
     {
         requireNonNull(animationRegistry);
         this.ghost         = requireNonNull(ghost);
         this.colorSet      = requireNonNull(colorSet);
-        this.dressShape    = new MeshView(requireNonNull(dressMesh));
-        this.pupilsShape   = new MeshView(requireNonNull(pupilsMesh));
-        this.eyeballsShape = new MeshView(requireNonNull(eyeballsMesh));
+        this.dressShape    = new MeshView(requireNonNull(meshes.dress()));
+        this.pupilsShape   = new MeshView(requireNonNull(meshes.pupils()));
+        this.eyeballsShape = new MeshView(requireNonNull(meshes.eyeballs()));
         this.materials     = requireNonNull(materials);
         requireNonNegative(size);
 
