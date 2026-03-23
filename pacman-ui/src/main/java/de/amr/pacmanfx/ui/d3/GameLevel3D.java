@@ -9,6 +9,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.*;
@@ -106,7 +107,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .map(mutableGhost3D -> mutableGhost3D.ghost3D().normalMaterialSet().dress())
             .toList();
 
-        createMaze3D(uiConfig);
+        final WorldMapColorScheme colorScheme = maybeAdjustColorScheme(level.worldMap(), uiConfig);
+
+        createMaze3D(uiConfig, colorScheme);
         createFood3D(uiConfig, ghostDressMaterials);
 
         createLevelCounter3D(uiConfig, entityConfig.levelCounter());
@@ -245,6 +248,19 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // private
 
+    private WorldMapColorScheme maybeAdjustColorScheme(WorldMap worldMap, UIConfig uiConfig) {
+        WorldMapColorScheme colorScheme = uiConfig.colorScheme(worldMap);
+        final Color wallFillColor = Color.valueOf(colorScheme.wallFill());
+        if (wallFillColor.getBrightness() < 0.1) {
+            return new WorldMapColorScheme(
+                uiConfig.entityConfig().maze().darkWallFillColor(),
+                colorScheme.wallStroke(),
+                colorScheme.door(),
+                colorScheme.pellet());
+        }
+        return colorScheme;
+    }
+
     /**
      * Arranges all direct children in the correct rendering order.
      * <p>
@@ -349,18 +365,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates and initializes the maze visualization, including color scheme adjustment.
      */
-    private void createMaze3D(UIConfig uiConfig) {
-        WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
-        final boolean wallsVeryDark = Color.valueOf(colorScheme.wallFill()).getBrightness() < 0.1;
-        if (wallsVeryDark) {
-            final String notTooDarkColor = uiConfig.entityConfig().maze().darkWallFillColor();
-            colorScheme = new WorldMapColorScheme(
-                notTooDarkColor,
-                colorScheme.wallStroke(),
-                colorScheme.door(),
-                colorScheme.pellet());
-        }
-
+    private void createMaze3D(UIConfig uiConfig, WorldMapColorScheme colorScheme) {
         maze3D = new Maze3D(
             level,
             uiConfig.factory3D(),
