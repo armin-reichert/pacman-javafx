@@ -19,9 +19,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Box;
 import javafx.scene.shape.Shape3D;
 import org.tinylog.Logger;
+
+import java.util.Optional;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
@@ -38,10 +39,6 @@ import static java.util.Objects.requireNonNull;
  * </ul>
  */
 public class MutableGhost3D extends Group implements DisposableGraphicsObject {
-
-    private static final int NUMBER_BOX_SIZE_X = 14;
-    private static final int NUMBER_BOX_SIZE_Y = 8;
-    private static final int NUMBER_BOX_SIZE_Z = 8;
 
     private static final double GHOST_OVER_FLOOR_DIST = 2.0;
 
@@ -70,6 +67,8 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
     private final Ghost ghost;
     private final Color lightColor;
     private final double size;
+
+    private Shape3D numberShape3D;
     private int numFlashes;
 
     private Ghost3DBrakeAnimation brakeAnimation;
@@ -99,9 +98,7 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
             size
         );
 
-        final var numberShape3D = new Box(NUMBER_BOX_SIZE_X, NUMBER_BOX_SIZE_Y, NUMBER_BOX_SIZE_Z);
-
-        getChildren().setAll(ghostShape3D, numberShape3D);
+        getChildren().setAll(ghostShape3D);
 
         pointsAnimation = new Ghost3DPointsAnimation(animationRegistry, this);
         brakeAnimation = new Ghost3DBrakeAnimation(animationRegistry, this);
@@ -139,11 +136,18 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
         return (Ghost3D) getChildren().getFirst();
     }
 
-    public Shape3D numberShape3D() {
-        if (getChildren().isEmpty()) {
-            throw new IllegalStateException("MutableGhost3D already disposed?");
+    public void setNumberShape3D(Shape3D numberShape3D) {
+        this.numberShape3D = numberShape3D;
+        if (getChildren().size() == 1) {
+            getChildren().add(numberShape3D);
+        } else {
+            getChildren().set(1, numberShape3D);
         }
-        return (Shape3D) getChildren().getLast();
+        numberShape3D.setVisible(false);
+    }
+
+    public Optional<Shape3D> optNumberShape3D() {
+        return Optional.ofNullable(numberShape3D);
     }
 
     public Ghost ghost() {
@@ -201,13 +205,20 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
         @Override
         public void changed(ObservableValue<? extends GhostAppearance> obs, GhostAppearance oldAppearance, GhostAppearance newAppearance) {
             if (newAppearance == GhostAppearance.NUMBER) {
-                numberShape3D().setVisible(true);
+                if (numberShape3D != null) {
+                    numberShape3D.setVisible(true);
+                }
+                else {
+                    Logger.error("Number shape 3D not set for ghost {}, cannot show points", ghost.name());
+                }
                 ghost3D().setVisible(false);
                 ghost3D().dressAnimation().stop();
                 pointsAnimation.playFromStart();
             }
             else {
-                numberShape3D().setVisible(false);
+                if (numberShape3D != null) {
+                    numberShape3D.setVisible(false);
+                }
                 ghost3D().setVisible(true);
                 switch (newAppearance) {
                     case NORMAL     -> ghost3D().setNormalLook();

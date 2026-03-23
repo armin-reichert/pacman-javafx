@@ -19,6 +19,7 @@ import de.amr.pacmanfx.uilib.model3D.actor.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.actor.MutableGhost3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.animation.SequentialTransition;
+import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -217,8 +218,8 @@ public class GameLevel3DEventHandler {
         level.game().simulationStep().ghostsKilled.forEach(killedGhost -> {
             final int killedIndex = level.energizerVictims().indexOf(killedGhost);
             final MutableGhost3D mutableGhost3D = level3D.ghosts3D().get(killedGhost.personality());
-            mutableGhost3D.numberShape3D().setMaterial(
-                ui.currentConfig().factory3D().getGhostNumberMaterial(ui.currentConfig(), killedIndex));
+            final Shape3D numberShape3D = ui.currentConfig().factory3D().createNumberShape3D(ui.currentConfig(), killedIndex);
+            mutableGhost3D.setNumberShape3D(numberShape3D);
         });
     }
 

@@ -17,9 +17,7 @@ import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.geometry.Bounds;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Mesh;
-import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Sphere;
+import javafx.scene.shape.*;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -29,6 +27,10 @@ import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_Factory3D implements Factory3D {
+
+    private static final int NUMBER_BOX_SIZE_X = 14;
+    private static final int NUMBER_BOX_SIZE_Y = 8;
+    private static final int NUMBER_BOX_SIZE_Z = 8;
 
     private final Map<GhostColorSet, GhostMaterials> ghostMaterialsCache = new HashMap<>();
 
@@ -174,10 +176,12 @@ public class ArcadePacMan_Factory3D implements Factory3D {
     }
 
     @Override
-    public PhongMaterial getGhostNumberMaterial(UIConfig uiConfig, int numberIndex) {
+    public Shape3D createNumberShape3D(UIConfig uiConfig, int numberIndex) {
         final Image image = uiConfig.killedGhostPointsImage(numberIndex);
         final PhongMaterial material = new PhongMaterial();
         material.setDiffuseMap(image);
-        return material;
+        final var numberShape3D = new Box(NUMBER_BOX_SIZE_X, NUMBER_BOX_SIZE_Y, NUMBER_BOX_SIZE_Z);
+        numberShape3D.setMaterial(material);
+        return numberShape3D;
     }
 }

@@ -10,8 +10,11 @@ import de.amr.pacmanfx.uilib.model3D.actor.MutableGhost3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -26,12 +29,18 @@ public class Ghost3DPointsAnimation extends ManagedAnimation {
     }
 
     private Animation createAnimationFX() {
-        var numberBoxRotation = new RotateTransition(Duration.seconds(1), mutableGhost3D.numberShape3D());
-        numberBoxRotation.setAxis(Rotate.X_AXIS);
-        numberBoxRotation.setFromAngle(0);
-        numberBoxRotation.setToAngle(360);
-        numberBoxRotation.setInterpolator(Interpolator.LINEAR);
-        numberBoxRotation.setRate(0.75);
-        return numberBoxRotation;
+        final Optional<Shape3D> optNumberShape = mutableGhost3D.optNumberShape3D();
+        if (optNumberShape.isPresent()) {
+            var numberBoxRotation = new RotateTransition(Duration.seconds(1), optNumberShape.get());
+            numberBoxRotation.setAxis(Rotate.X_AXIS);
+            numberBoxRotation.setFromAngle(0);
+            numberBoxRotation.setToAngle(360);
+            numberBoxRotation.setInterpolator(Interpolator.LINEAR);
+            numberBoxRotation.setRate(0.75);
+            return numberBoxRotation;
+        }
+        else {
+            throw new IllegalStateException("No number shape 3D found!");
+        }
     }
 }

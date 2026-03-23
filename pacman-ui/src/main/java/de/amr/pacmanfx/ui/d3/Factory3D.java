@@ -14,6 +14,7 @@ import de.amr.pacmanfx.uilib.model3D.actor.PacRepresentation3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Shape3D;
 
 public interface Factory3D extends Disposable {
 
@@ -51,6 +52,5 @@ public interface Factory3D extends Disposable {
 
     Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animationRegistry, PhongMaterial material);
 
-    //TODO rethink parameters
-    PhongMaterial getGhostNumberMaterial(UIConfig uiConfig, int numberIndex);
+    Shape3D createNumberShape3D(UIConfig uiConfig, int numberIndex);
 }
