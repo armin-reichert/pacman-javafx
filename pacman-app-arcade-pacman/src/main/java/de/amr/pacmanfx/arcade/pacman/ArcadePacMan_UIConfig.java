@@ -268,8 +268,8 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public GamePlaySoundEffects createPlaySoundEffects(GameUI ui) {
-        final var soundEffects = new GamePlaySoundEffects(ui.gameContext().clock(), ui.soundManager());
+    public GamePlaySoundEffects getGamePlaySoundEffects(SoundManager soundManager) {
+        final var soundEffects = new GamePlaySoundEffects(soundManager);
         soundEffects.setMunchingSoundDelay((byte) 9);
         soundEffects.setSirenVolume(0.33f);
         return soundEffects;

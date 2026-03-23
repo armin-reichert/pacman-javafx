@@ -212,8 +212,8 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     }
 
     @Override
-    public GamePlaySoundEffects createPlaySoundEffects(GameUI ui) {
-        final var soundFX = new GamePlaySoundEffects(ui.gameContext().clock(), ui.soundManager());
+    public GamePlaySoundEffects getGamePlaySoundEffects(SoundManager soundManager) {
+        final var soundFX = new GamePlaySoundEffects(soundManager);
         soundFX.setMunchingSoundDelay((byte) 0);
         soundFX.setSirenVolume(1.0f);
         return soundFX;

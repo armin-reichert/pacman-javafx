@@ -104,7 +104,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void onEmbed(GameUI ui) {
         this.ui = requireNonNull(ui);
-        this.soundEffects = ui.currentConfig().createPlaySoundEffects(ui);
+        this.soundEffects = ui.currentConfig().getGamePlaySoundEffects(ui.soundManager());
     }
 
     @Override

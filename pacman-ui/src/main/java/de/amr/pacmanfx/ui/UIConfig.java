@@ -214,10 +214,10 @@ public interface UIConfig extends Disposable {
     /**
      * Factory method for gameplay-specific sound effects handler.
      *
-     * @param ui the owning UI instance (provides access to clock & sound manager)
+     * @param soundManager the sound manager
      * @return configured sound-effects controller
      */
-    GamePlaySoundEffects createPlaySoundEffects(GameUI ui);
+    GamePlaySoundEffects getGamePlaySoundEffects(SoundManager soundManager);
 
     // ─────────────────────────────────────────────────────────────────────────────
     // Bonus symbol & value images

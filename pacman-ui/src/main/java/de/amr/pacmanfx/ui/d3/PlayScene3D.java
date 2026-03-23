@@ -155,7 +155,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onEmbed(GameUI ui) {
         this.ui = requireNonNull(ui);
-        this.soundEffects = ui.currentConfig().createPlaySoundEffects(ui);
+        this.soundEffects = ui.currentConfig().getGamePlaySoundEffects(ui.soundManager());
         level3D_EventHandler.init(soundEffects, ui);
         // TODO: reconsider whether scores need recreation here (variant/font change?)
         replaceScores3D();
@@ -337,7 +337,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        level3D_EventHandler.onPacEatsFood(e, gameLevel3D);
+        level3D_EventHandler.onPacEatsFood(e, gameLevel3D, gameContext().clock().tickCount());
     }
 
     @Override

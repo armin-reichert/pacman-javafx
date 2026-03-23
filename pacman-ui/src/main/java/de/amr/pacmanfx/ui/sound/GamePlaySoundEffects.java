@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.sound;
 
-import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -26,7 +25,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class GamePlaySoundEffects {
 
-    private final GameClock gameClock;
     private final SoundManager soundManager;
 
     private float sirenVolume = 1.0f;
@@ -36,11 +34,9 @@ public class GamePlaySoundEffects {
     /**
      * Creates a new sound effects manager using the given sound manager.
      *
-     * @param gameClock the game clock
      * @param soundManager the underlying sound playback service (must not be null)
      */
-    public GamePlaySoundEffects(GameClock gameClock, SoundManager soundManager) {
-        this.gameClock = requireNonNull(gameClock);
+    public GamePlaySoundEffects(SoundManager soundManager) {
         this.soundManager = requireNonNull(soundManager);
     }
 
@@ -187,13 +183,12 @@ public class GamePlaySoundEffects {
      * Plays the Pac-Man munching sound if enough simulation ticks have passed
      * since the last playback (to avoid too frequent/repetitive playback).
      */
-    public void playPacMunchingSound() {
-        long now = gameClock.tickCount();
-        long passed = now - lastMunchingSoundPlayedTick;
-        Logger.debug("Pac found food, tick={} passed since last time={}", now, passed);
+    public void playPacMunchingSound(long tick) {
+        long passed = tick - lastMunchingSoundPlayedTick;
+        Logger.debug("Pac found food, tick={} passed since last time={}", tick, passed);
         if (passed > munchingSoundDelay || munchingSoundDelay == 0) {
             soundManager.play(SoundID.PAC_MAN_MUNCHING);
-            lastMunchingSoundPlayedTick = now;
+            lastMunchingSoundPlayedTick = tick;
         }
     }
 
