@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
+import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
 import de.amr.pacmanfx.uilib.model3D.animation.Ghost3DBrakeAnimation;
 import de.amr.pacmanfx.uilib.model3D.animation.Ghost3DPointsAnimation;
 import javafx.beans.property.ObjectProperty;
@@ -72,9 +73,7 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
 
     private final ObjectProperty<GhostAppearance> appearance = new SimpleObjectProperty<>();
 
-    private GhostMaterialSet normalMaterialSet;
-    private GhostMaterialSet frightenedMaterialSet;
-    private GhostMaterialSet flashingMaterialSet;
+    private GhostMaterials materials;
 
     private final Map<Image, PhongMaterial> numberMaterialCache = new HashMap<>();
 
@@ -93,9 +92,7 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
         Mesh dressMesh,
         Mesh pupilsMesh,
         Mesh eyeballsMesh,
-        GhostMaterialSet normalMaterialSet,
-        GhostMaterialSet frightenedMaterialSet,
-        GhostMaterialSet flashingMaterialSet,
+        GhostMaterials materials,
         double size)
     {
         requireNonNull(animationRegistry);
@@ -104,9 +101,7 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
         requireNonNull(dressMesh);
         requireNonNull(pupilsMesh);
         requireNonNull(eyeballsMesh);
-        this.normalMaterialSet = requireNonNull(normalMaterialSet);
-        this.frightenedMaterialSet = requireNonNull(frightenedMaterialSet);
-        this.flashingMaterialSet = requireNonNull(flashingMaterialSet);
+        this.materials = requireNonNull(materials);
         this.size = requireNonNegative(size);
 
         final var ghostShape3D = new Ghost3D(
@@ -116,9 +111,7 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
             dressMesh,
             pupilsMesh,
             eyeballsMesh,
-            normalMaterialSet,
-            frightenedMaterialSet,
-            flashingMaterialSet,
+            materials,
             size
         );
 

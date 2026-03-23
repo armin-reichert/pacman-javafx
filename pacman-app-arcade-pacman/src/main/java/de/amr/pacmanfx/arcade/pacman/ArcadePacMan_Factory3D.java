@@ -9,6 +9,7 @@ import de.amr.pacmanfx.ui.config.*;
 import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.d3.Pellet3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
@@ -77,24 +78,6 @@ public class ArcadePacMan_Factory3D implements Factory3D {
 
         final GhostColorSet colorSet = ghostConfig.createGhostColorSet();
 
-        var normalMaterialSet = new GhostMaterialSet(
-            coloredPhongMaterial(colorSet.normal().dressColor()),
-            coloredPhongMaterial(colorSet.normal().eyeballsColor()),
-            coloredPhongMaterial(colorSet.normal().pupilsColor())
-        );
-
-        var frightenedMaterialSet = new GhostMaterialSet(
-            coloredPhongMaterial(colorSet.frightened().dressColor()),
-            coloredPhongMaterial(colorSet.frightened().eyeballsColor()),
-            coloredPhongMaterial(colorSet.frightened().pupilsColor())
-        );
-
-        var flashingMaterialSet = new GhostMaterialSet(
-            coloredPhongMaterial(colorSet.flashing().dressColor()),
-            coloredPhongMaterial(colorSet.flashing().eyeballsColor()),
-            coloredPhongMaterial(colorSet.flashing().pupilsColor())
-        );
-
         return new MutableGhost3D(
             animationRegistry,
             ghost,
@@ -102,11 +85,31 @@ public class ArcadePacMan_Factory3D implements Factory3D {
             Models3D.GHOST_MODEL.dressMesh(),
             Models3D.GHOST_MODEL.pupilsMesh(),
             Models3D.GHOST_MODEL.eyeballsMesh(),
-            normalMaterialSet,
-            frightenedMaterialSet,
-            flashingMaterialSet,
+            createGhostMaterials(colorSet),
             ghostConfig.size3D()
         );
+    }
+
+    private GhostMaterials createGhostMaterials(GhostColorSet colorSet) {
+        final var normalMaterials = new GhostComponentMaterials(
+            coloredPhongMaterial(colorSet.normal().dressColor()),
+            coloredPhongMaterial(colorSet.normal().eyeballsColor()),
+            coloredPhongMaterial(colorSet.normal().pupilsColor())
+        );
+
+        final var frightenedMaterials = new GhostComponentMaterials(
+            coloredPhongMaterial(colorSet.frightened().dressColor()),
+            coloredPhongMaterial(colorSet.frightened().eyeballsColor()),
+            coloredPhongMaterial(colorSet.frightened().pupilsColor())
+        );
+
+        final var flashingMaterials = new GhostComponentMaterials(
+            coloredPhongMaterial(colorSet.flashing().dressColor()),
+            coloredPhongMaterial(colorSet.flashing().eyeballsColor()),
+            coloredPhongMaterial(colorSet.flashing().pupilsColor())
+        );
+
+        return new GhostMaterials(normalMaterials, frightenedMaterials, flashingMaterials);
     }
 
     @Override

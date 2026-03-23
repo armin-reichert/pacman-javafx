@@ -104,7 +104,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         // These materials are used by the energizer particles
         final List<PhongMaterial> ghostDressMaterials = ghosts3D.stream()
-            .map(mutableGhost3D -> mutableGhost3D.ghost3D().normalMaterialSet().dress())
+            .map(mutableGhost3D -> mutableGhost3D.ghost3D().materials().normal().dress())
             .toList();
 
         final WorldMapColorScheme colorScheme = maybeAdjustColorScheme(level.worldMap(), uiConfig);
