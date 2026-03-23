@@ -285,7 +285,8 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
         final NES_ColorScheme scheme = worldMap.getConfigValue(MapConfigKey.NES_COLOR_SCHEME);
-        return new WorldMapColorScheme(scheme.fillColorRGB(), scheme.strokeColorRGB(), scheme.strokeColorRGB(), scheme.pelletColorRGB());
+        final WorldMapColorScheme colorScheme = new WorldMapColorScheme(scheme.fillColorRGB(), scheme.strokeColorRGB(), scheme.strokeColorRGB(), scheme.pelletColorRGB());
+        return enhanceContrast(colorScheme);
     }
 
     @Override

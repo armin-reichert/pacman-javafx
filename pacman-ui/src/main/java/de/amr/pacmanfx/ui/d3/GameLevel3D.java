@@ -9,7 +9,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.TerrainLayer;
-import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.*;
@@ -25,7 +24,6 @@ import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import org.tinylog.Logger;
 
@@ -107,8 +105,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .map(mutableGhost3D -> mutableGhost3D.ghost3D().materials().normal().dress())
             .toList();
 
-        final WorldMapColorScheme colorScheme = maybeAdjustColorScheme(level.worldMap(), uiConfig);
-
+        final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         createMaze3D(uiConfig, colorScheme);
         createFood3D(uiConfig, ghostDressMaterials);
 
@@ -247,19 +244,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     // private
-
-    private WorldMapColorScheme maybeAdjustColorScheme(WorldMap worldMap, UIConfig uiConfig) {
-        WorldMapColorScheme colorScheme = uiConfig.colorScheme(worldMap);
-        final Color wallFillColor = Color.valueOf(colorScheme.wallFill());
-        if (wallFillColor.getBrightness() < 0.1) {
-            return new WorldMapColorScheme(
-                uiConfig.entityConfig().maze().darkWallFillColor(),
-                colorScheme.wallStroke(),
-                colorScheme.door(),
-                colorScheme.pellet());
-        }
-        return colorScheme;
-    }
 
     /**
      * Arranges all direct children in the correct rendering order.

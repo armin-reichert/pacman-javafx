@@ -135,7 +135,7 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceManager {
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        return worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
+        return enhanceContrast(worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME));
     }
 
     @Override

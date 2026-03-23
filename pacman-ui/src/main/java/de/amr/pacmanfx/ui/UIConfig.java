@@ -199,6 +199,18 @@ public interface UIConfig extends Disposable {
         );
     }
 
+    default WorldMapColorScheme enhanceContrast(WorldMapColorScheme colorScheme) {
+        final Color wallFillColor = Color.valueOf(colorScheme.wallFill());
+        if (wallFillColor.getBrightness() < 0.1) {
+            return new WorldMapColorScheme(
+                entityConfig().maze().darkWallFillColor(),
+                colorScheme.wallStroke(),
+                colorScheme.door(),
+                colorScheme.pellet());
+        }
+        return colorScheme;
+    }
+
     /**
      * Factory method for gameplay-specific sound effects handler.
      *

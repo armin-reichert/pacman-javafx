@@ -198,7 +198,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
         requireNonNull(worldMap);
-        return WORLD_MAP_COLOR_SCHEME;
+        return enhanceContrast(WORLD_MAP_COLOR_SCHEME);
     }
 
     @Override
