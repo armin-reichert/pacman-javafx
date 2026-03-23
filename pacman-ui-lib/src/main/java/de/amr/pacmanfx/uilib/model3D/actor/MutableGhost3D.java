@@ -73,8 +73,6 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
 
     private final ObjectProperty<GhostAppearance> appearance = new SimpleObjectProperty<>();
 
-    private GhostMaterials materials;
-
     private final Map<Image, PhongMaterial> numberMaterialCache = new HashMap<>();
 
     private final Ghost ghost;
@@ -101,7 +99,7 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
         requireNonNull(dressMesh);
         requireNonNull(pupilsMesh);
         requireNonNull(eyeballsMesh);
-        this.materials = requireNonNull(materials);
+        requireNonNull(materials);
         this.size = requireNonNegative(size);
 
         final var ghostShape3D = new Ghost3D(
