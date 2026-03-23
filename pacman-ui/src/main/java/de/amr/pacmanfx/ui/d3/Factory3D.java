@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.*;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.actor.MutableGhost3D;
@@ -49,4 +50,7 @@ public interface Factory3D extends Disposable {
     Pellet3D createPellet3D(PelletConfig3D pelletConfig, PhongMaterial material);
 
     Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animationRegistry, PhongMaterial material);
+
+    //TODO rethink parameters
+    PhongMaterial getGhostNumberMaterial(UIConfig uiConfig, int numberIndex);
 }

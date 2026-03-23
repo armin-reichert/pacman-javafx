@@ -18,15 +18,11 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Shape3D;
 import org.tinylog.Logger;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
@@ -71,8 +67,6 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
     }
 
     private final ObjectProperty<GhostAppearance> appearance = new SimpleObjectProperty<>();
-
-    private final Map<Image, PhongMaterial> numberMaterialCache = new HashMap<>();
 
     private final Ghost ghost;
     private final Color lightColor;
@@ -126,7 +120,6 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
     @Override
     public void dispose() {
         removeListeners();
-        numberMaterialCache.clear();
 
         stopAllAnimations();
         if (brakeAnimation != null) {
@@ -198,13 +191,8 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
         }
     }
 
-    public void setNumberImage(Image numberImage) {
-        if (!numberMaterialCache.containsKey(numberImage)) {
-            var numberMaterial = new PhongMaterial();
-            numberMaterial.setDiffuseMap(numberImage);
-            numberMaterialCache.put(numberImage, numberMaterial);
-        }
-        numberShape3D().setMaterial(numberMaterialCache.get(numberImage));
+    public void setNumberTexture(PhongMaterial material) {
+        numberShape3D().setMaterial(material);
     }
 
     // private area, no trespassing

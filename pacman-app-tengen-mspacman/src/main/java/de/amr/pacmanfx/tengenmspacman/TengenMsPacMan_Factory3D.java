@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.*;
 import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.d3.Pellet3D;
@@ -14,6 +15,7 @@ import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.geometry.Bounds;
+import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
@@ -176,5 +178,13 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
         energizer3D.setInflatedSize(config.scalingInflated());
         energizer3D.setExpandedSize(config.scalingExpanded());
         return energizer3D;
+    }
+
+    @Override
+    public PhongMaterial getGhostNumberMaterial(UIConfig uiConfig, int numberIndex) {
+        final Image image = uiConfig.killedGhostPointsImage(numberIndex);
+        final PhongMaterial material = new PhongMaterial();
+        material.setDiffuseMap(image);
+        return material;
     }
 }
