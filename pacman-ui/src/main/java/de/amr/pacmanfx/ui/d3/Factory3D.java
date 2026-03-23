@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.config.*;
@@ -13,7 +14,7 @@ import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 
-public interface Factory3D {
+public interface Factory3D extends Disposable {
 
     /**
      * Creates the 3D representation of Pac for this game variant, including model,

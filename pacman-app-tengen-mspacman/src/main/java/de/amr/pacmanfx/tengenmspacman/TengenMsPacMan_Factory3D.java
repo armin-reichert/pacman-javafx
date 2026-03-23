@@ -20,10 +20,52 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import org.tinylog.Logger;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_Factory3D implements Factory3D {
+
+    private final Map<GhostColorSet, GhostMaterials> ghostMaterialsCache = new HashMap<>();
+
+    private GhostMeshes createGhostMeshes() {
+        return new GhostMeshes(
+            Models3D.GHOST_MODEL.dressMesh(),
+            Models3D.GHOST_MODEL.pupilsMesh(),
+            Models3D.GHOST_MODEL.eyeballsMesh()
+        );
+    }
+
+    private GhostMaterials getOrCreateGhostMaterials(GhostColorSet colorSet) {
+        GhostMaterials materials = ghostMaterialsCache.get(colorSet);
+        if (materials == null) {
+            final var normalMaterials = new GhostComponentMaterials(
+                coloredPhongMaterial(colorSet.normal().dressColor()),
+                coloredPhongMaterial(colorSet.normal().eyeballsColor()),
+                coloredPhongMaterial(colorSet.normal().pupilsColor())
+            );
+
+            final var frightenedMaterials = new GhostComponentMaterials(
+                coloredPhongMaterial(colorSet.frightened().dressColor()),
+                coloredPhongMaterial(colorSet.frightened().eyeballsColor()),
+                coloredPhongMaterial(colorSet.frightened().pupilsColor())
+            );
+
+            final var flashingMaterials = new GhostComponentMaterials(
+                coloredPhongMaterial(colorSet.flashing().dressColor()),
+                coloredPhongMaterial(colorSet.flashing().eyeballsColor()),
+                coloredPhongMaterial(colorSet.flashing().pupilsColor())
+            );
+
+            materials = new GhostMaterials(normalMaterials, frightenedMaterials, flashingMaterials);
+            ghostMaterialsCache.put(colorSet, materials);
+
+            Logger.info("Added ghost materials into cache for color set {}", colorSet);
+        }
+        return materials;
+    }
 
     private double pelletRadius;
     private Mesh scaledPelletMesh;
@@ -41,6 +83,11 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
             Logger.info("Created scaled pellet mesh, config={}", pelletConfig);
         }
         return scaledPelletMesh;
+    }
+
+    @Override
+    public void dispose() {
+        ghostMaterialsCache.clear();
     }
 
     @Override
@@ -80,7 +127,7 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
         requireNonNull(animationRegistry);
 
         final GhostColorSet colorSet = ghostConfig.createGhostColorSet();
-        final GhostMaterials materials = createGhostMaterials(colorSet);
+        final GhostMaterials materials = getOrCreateGhostMaterials(colorSet);
         final GhostMeshes meshes = createGhostMeshes();
 
         return new MutableGhost3D(
@@ -91,36 +138,6 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
             materials,
             ghostConfig.size3D()
         );
-    }
-
-    private GhostMeshes createGhostMeshes() {
-        return new GhostMeshes(
-            Models3D.GHOST_MODEL.dressMesh(),
-            Models3D.GHOST_MODEL.pupilsMesh(),
-            Models3D.GHOST_MODEL.eyeballsMesh()
-        );
-    }
-
-    private GhostMaterials createGhostMaterials(GhostColorSet colorSet) {
-        final var normalMaterials = new GhostComponentMaterials(
-            coloredPhongMaterial(colorSet.normal().dressColor()),
-            coloredPhongMaterial(colorSet.normal().eyeballsColor()),
-            coloredPhongMaterial(colorSet.normal().pupilsColor())
-        );
-
-        final var frightenedMaterials = new GhostComponentMaterials(
-            coloredPhongMaterial(colorSet.frightened().dressColor()),
-            coloredPhongMaterial(colorSet.frightened().eyeballsColor()),
-            coloredPhongMaterial(colorSet.frightened().pupilsColor())
-        );
-
-        final var flashingMaterials = new GhostComponentMaterials(
-            coloredPhongMaterial(colorSet.flashing().dressColor()),
-            coloredPhongMaterial(colorSet.flashing().eyeballsColor()),
-            coloredPhongMaterial(colorSet.flashing().pupilsColor())
-        );
-
-        return new GhostMaterials(normalMaterials, frightenedMaterials, flashingMaterials);
     }
 
     @Override
