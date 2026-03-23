@@ -72,7 +72,12 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
 
     private final ObjectProperty<GhostAppearance> appearance = new SimpleObjectProperty<>();
 
+    private GhostMaterialSet normalMaterialSet;
+    private GhostMaterialSet frightenedMaterialSet;
+    private GhostMaterialSet flashingMaterialSet;
+
     private final Map<Image, PhongMaterial> numberMaterialCache = new HashMap<>();
+
     private final Ghost ghost;
     private final Color lightColor;
     private final double size;
@@ -88,6 +93,9 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
         Mesh dressMesh,
         Mesh pupilsMesh,
         Mesh eyeballsMesh,
+        GhostMaterialSet normalMaterialSet,
+        GhostMaterialSet frightenedMaterialSet,
+        GhostMaterialSet flashingMaterialSet,
         double size)
     {
         requireNonNull(animationRegistry);
@@ -96,9 +104,24 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
         requireNonNull(dressMesh);
         requireNonNull(pupilsMesh);
         requireNonNull(eyeballsMesh);
+        this.normalMaterialSet = requireNonNull(normalMaterialSet);
+        this.frightenedMaterialSet = requireNonNull(frightenedMaterialSet);
+        this.flashingMaterialSet = requireNonNull(flashingMaterialSet);
         this.size = requireNonNegative(size);
 
-        final var ghostShape3D = new Ghost3D(animationRegistry, ghost, colorSet, dressMesh, pupilsMesh, eyeballsMesh, size);
+        final var ghostShape3D = new Ghost3D(
+            animationRegistry,
+            ghost,
+            colorSet,
+            dressMesh,
+            pupilsMesh,
+            eyeballsMesh,
+            normalMaterialSet,
+            frightenedMaterialSet,
+            flashingMaterialSet,
+            size
+        );
+
         final var numberShape3D = new Box(NUMBER_BOX_SIZE_X, NUMBER_BOX_SIZE_Y, NUMBER_BOX_SIZE_Z);
 
         getChildren().setAll(ghostShape3D, numberShape3D);

@@ -12,7 +12,6 @@ import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.animation.*;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
@@ -21,15 +20,12 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
-import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
 /**
  * 3D representation of a ghost.
  */
 public class Ghost3D extends Group implements DisposableGraphicsObject {
-
-    public record MaterialSet(PhongMaterial dress, PhongMaterial eyeballs, PhongMaterial pupils) {}
 
     public class DressAnimation extends ManagedAnimation {
 
@@ -93,9 +89,9 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
 
     private final Ghost ghost;
     private final GhostColorSet colorSet;
-    private MaterialSet normalMaterialSet;
-    private MaterialSet frightenedMaterialSet;
-    private MaterialSet flashingMaterialSet;
+    private GhostMaterialSet normalMaterialSet;
+    private GhostMaterialSet frightenedMaterialSet;
+    private GhostMaterialSet flashingMaterialSet;
     private MeshView dressShape;
     private MeshView pupilsShape;
     private MeshView eyeballsShape;
@@ -110,6 +106,9 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         Mesh dressMesh,
         Mesh pupilsMesh,
         Mesh eyeballsMesh,
+        GhostMaterialSet normalMaterialSet,
+        GhostMaterialSet frightenedMaterialSet,
+        GhostMaterialSet flashingMaterialSet,
         double size)
     {
         requireNonNull(animationRegistry);
@@ -118,25 +117,10 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         this.dressShape    = new MeshView(requireNonNull(dressMesh));
         this.pupilsShape   = new MeshView(requireNonNull(pupilsMesh));
         this.eyeballsShape = new MeshView(requireNonNull(eyeballsMesh));
+        this.normalMaterialSet = requireNonNull(normalMaterialSet);
+        this.frightenedMaterialSet = requireNonNull(frightenedMaterialSet);
+        this.flashingMaterialSet = requireNonNull(flashingMaterialSet);
         requireNonNegative(size);
-
-        normalMaterialSet = new MaterialSet(
-            coloredPhongMaterial(colorSet.normal().dressColor()),
-            coloredPhongMaterial(colorSet.normal().eyeballsColor()),
-            coloredPhongMaterial(colorSet.normal().pupilsColor())
-        );
-
-        frightenedMaterialSet = new MaterialSet(
-            coloredPhongMaterial(colorSet.frightened().dressColor()),
-            coloredPhongMaterial(colorSet.frightened().eyeballsColor()),
-            coloredPhongMaterial(colorSet.frightened().pupilsColor())
-        );
-
-        flashingMaterialSet = new MaterialSet(
-            coloredPhongMaterial(colorSet.flashing().dressColor()),
-            coloredPhongMaterial(colorSet.flashing().eyeballsColor()),
-            coloredPhongMaterial(colorSet.flashing().pupilsColor())
-        );
 
         dressGroup = new Group(dressShape);
         final var eyesGroup = new Group(pupilsShape, eyeballsShape);
@@ -171,7 +155,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         flashingAnimation = new FlashingAnimation(animationRegistry);
     }
 
-    public MaterialSet normalMaterialSet() {
+    public GhostMaterialSet normalMaterialSet() {
         return normalMaterialSet;
     }
 
@@ -207,10 +191,10 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         flashingAnimation.playFromStart();
     }
 
-    private void setMaterialSet(MaterialSet materialSet) {
-        dressShape.setMaterial(materialSet.dress);
-        pupilsShape.setMaterial(materialSet.pupils);
-        eyeballsShape.setMaterial(materialSet.eyeballs);
+    private void setMaterialSet(GhostMaterialSet materialSet) {
+        dressShape.setMaterial(materialSet.dress());
+        pupilsShape.setMaterial(materialSet.pupils());
+        eyeballsShape.setMaterial(materialSet.eyeballs());
     }
 
     public void setNormalLook() {

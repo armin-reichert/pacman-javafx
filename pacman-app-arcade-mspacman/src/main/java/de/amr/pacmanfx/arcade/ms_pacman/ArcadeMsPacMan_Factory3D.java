@@ -10,9 +10,7 @@ import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.d3.Pellet3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
-import de.amr.pacmanfx.uilib.model3D.actor.MsPacMan3D;
-import de.amr.pacmanfx.uilib.model3D.actor.MsPacManBody;
-import de.amr.pacmanfx.uilib.model3D.actor.MutableGhost3D;
+import de.amr.pacmanfx.uilib.model3D.actor.*;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.geometry.Bounds;
 import javafx.scene.paint.PhongMaterial;
@@ -21,6 +19,7 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import org.tinylog.Logger;
 
+import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_Factory3D implements Factory3D {
@@ -79,13 +78,36 @@ public class ArcadeMsPacMan_Factory3D implements Factory3D {
         requireNonNull(ghostConfig);
         requireNonNull(animationRegistry);
 
+        final GhostColorSet colorSet = ghostConfig.createGhostColorSet();
+
+        var normalMaterialSet = new GhostMaterialSet(
+            coloredPhongMaterial(colorSet.normal().dressColor()),
+            coloredPhongMaterial(colorSet.normal().eyeballsColor()),
+            coloredPhongMaterial(colorSet.normal().pupilsColor())
+        );
+
+        var frightenedMaterialSet = new GhostMaterialSet(
+            coloredPhongMaterial(colorSet.frightened().dressColor()),
+            coloredPhongMaterial(colorSet.frightened().eyeballsColor()),
+            coloredPhongMaterial(colorSet.frightened().pupilsColor())
+        );
+
+        var flashingMaterialSet = new GhostMaterialSet(
+            coloredPhongMaterial(colorSet.flashing().dressColor()),
+            coloredPhongMaterial(colorSet.flashing().eyeballsColor()),
+            coloredPhongMaterial(colorSet.flashing().pupilsColor())
+        );
+
         return new MutableGhost3D(
             animationRegistry,
             ghost,
-            ghostConfig.createGhostColorSet(),
+            colorSet,
             Models3D.GHOST_MODEL.dressMesh(),
             Models3D.GHOST_MODEL.pupilsMesh(),
             Models3D.GHOST_MODEL.eyeballsMesh(),
+            normalMaterialSet,
+            frightenedMaterialSet,
+            flashingMaterialSet,
             ghostConfig.size3D()
         );
     }
