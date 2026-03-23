@@ -10,10 +10,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.FoodLayer;
-import de.amr.pacmanfx.ui.ActionBindingsManager;
-import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_Resources;
+import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.d3.animation.GameLevel3DAnimations;
 import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
@@ -325,7 +322,7 @@ public class PlayScene3D implements GameScene {
         final State<Game> state = gameLevel.game().control().state();
         if (state instanceof TestState) {
             replaceGameLevel3D(gameLevel);
-            gameLevel3D.maze3D().food().energizers3D().forEach(Energizer3D::startPumping);
+            gameLevel3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
             gameLevel3D.messageManager().showLevelTestMessage(gameLevel);
         } else {
             if (!gameLevel.isDemoLevel() &&
@@ -394,13 +391,15 @@ public class PlayScene3D implements GameScene {
      * @param level the logical game level
      * @return new 3D level instance
      */
-    protected GameLevel3D createGameLevel3D(GameLevel level) {
-        final var newGameLevel3D = new GameLevel3D(ui.currentConfig(), level);
+    protected GameLevel3D createGameLevel3D(GameLevel level, UIConfig uiConfig) {
+        final var newGameLevel3D = new GameLevel3D(uiConfig, level);
         newGameLevel3D.pac3D().init(level);
         newGameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
         newGameLevel3D.livesCounter3D().startTracking(newGameLevel3D.pac3D());
-        final var animations = new GameLevel3DAnimations(newGameLevel3D, soundEffects);
+
+        final var animations = new GameLevel3DAnimations(newGameLevel3D, uiConfig.colorScheme(level.worldMap()), soundEffects);
         newGameLevel3D.setAnimations(animations);
+
         return newGameLevel3D;
     }
 
@@ -442,7 +441,7 @@ public class PlayScene3D implements GameScene {
     }
 
     public void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
-        final MazeFood3D food3D = gameLevel3D.maze3D().food();
+        final MazeFood3D food3D = gameLevel3D.food3D();
         food3D.pellets3D()   .forEach(p3D -> p3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(p3D.tile())));
         food3D.energizers3D().forEach(e3D -> e3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(e3D.tile())));
         if (startEnergizerPumping) {
@@ -477,7 +476,7 @@ public class PlayScene3D implements GameScene {
             Logger.info("Replacing game level 3D...");
             gameLevel3D.dispose();
         }
-        gameLevel3D = createGameLevel3D(level);
+        gameLevel3D = createGameLevel3D(level, ui.currentConfig());
         gameLevel3DParent.getChildren().setAll(gameLevel3D);
         Logger.info("Created and added new game level 3D to play scene");
     }

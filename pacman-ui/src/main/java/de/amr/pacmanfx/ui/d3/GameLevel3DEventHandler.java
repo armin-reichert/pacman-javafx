@@ -135,7 +135,7 @@ public class GameLevel3DEventHandler {
      * Handles Pac eating food: updates 3D food and plays munching sound (with rate limiting).
      */
     public void onPacEatsFood(PacEatsFoodEvent gameEvent, GameLevel3D level3D) {
-        final MazeFood3D mazeFood3D = level3D.maze3D().food();
+        final MazeFood3D mazeFood3D = level3D.food3D();
         if (gameEvent.allPellets()) {
             mazeFood3D.removeAllPellets3D(level3D);
         } else {
@@ -174,7 +174,7 @@ public class GameLevel3DEventHandler {
     // Private state-specific handlers
 
     private void onStartingGame(GameUI ui, GameLevel3D level3D) {
-        level3D.maze3D().food().energizers3D().forEach(Energizer3D::stopPumping);
+        level3D.food3D().energizers3D().forEach(Energizer3D::stopPumping);
         level3D.rebuildLevelCounter3D(ui.currentConfig().entityConfig().levelCounter());
     }
 
@@ -182,8 +182,8 @@ public class GameLevel3DEventHandler {
         final GameLevel level = level3D.level();
         level3D.pac3D().init(level);
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
-        level3D.maze3D().food().energizers3D().forEach(Energizer3D::startPumping);
-        level3D.maze3D().food().startParticlesAnimation();
+        level3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
+        level3D.food3D().startParticlesAnimation();
         level3D.animations().ifPresent(animations -> animations.ghostLightAnimation().playFromStart());
     }
 
@@ -262,7 +262,7 @@ public class GameLevel3DEventHandler {
     }
 
     private static void cleanupFoodAndParticles(GameLevel3D level3D) {
-        final MazeFood3D food3D = level3D.maze3D().food();
+        final MazeFood3D food3D = level3D.food3D();
         food3D.stopParticlesAnimation();
         food3D.energizers3D().forEach(energizer3D -> {
             energizer3D.stopPumping();

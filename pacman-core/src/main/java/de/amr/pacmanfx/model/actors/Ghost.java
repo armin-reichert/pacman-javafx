@@ -164,7 +164,7 @@ public class Ghost extends MovingActor {
         if ((newTileEntered || stuck) && !teleporting) {
             final Direction dir = computeRoamingDirection(level, tile);
             setWishDir(dir);
-            Logger.info("Ghost {} takes random wish direction {}", name, dir);
+            Logger.debug("Ghost {} takes random wish direction {}", name, dir);
         }
         tryMovingOrTeleporting(level);
     }

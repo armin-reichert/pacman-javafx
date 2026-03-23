@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.d3.animation;
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.Maze3D;
@@ -43,13 +44,14 @@ public class GameLevel3DAnimations {
      * Creates all animations associated with the given 3D level.
      *
      * @param level3D the 3D level representation
+     * @param colorScheme the used map color scheme
      * @param soundEffects the playing sound effects
      */
-    public GameLevel3DAnimations(GameLevel3D level3D, GamePlaySoundEffects soundEffects) {
+    public GameLevel3DAnimations(GameLevel3D level3D, WorldMapColorScheme colorScheme, GamePlaySoundEffects soundEffects) {
         requireNonNull(level3D);
         requireNonNull(soundEffects);
         final AnimationRegistry animationRegistry = level3D.animationRegistry();
-        wallColorFlashingAnimation = new WallColorFlashingAnimation(animationRegistry, level3D);
+        wallColorFlashingAnimation = new WallColorFlashingAnimation(animationRegistry, level3D, colorScheme);
         levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry, level3D, soundEffects);
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationRegistry, level3D);
         ghostLightAnimation = new GhostLightAnimation(animationRegistry, level3D.ghosts3D());

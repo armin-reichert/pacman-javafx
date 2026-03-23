@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.d3.animation;
 
+import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.Maze3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -13,6 +14,8 @@ import javafx.animation.Transition;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Animation that continuously interpolates the maze wall color between
@@ -24,14 +27,16 @@ import javafx.util.Duration;
 public class WallColorFlashingAnimation extends ManagedAnimation {
 
     private final GameLevel3D level3D;
+    private final WorldMapColorScheme colorScheme;
     private final Color fromColor;
     private final Color toColor;
 
-    public WallColorFlashingAnimation(AnimationRegistry animationRegistry, GameLevel3D level3D) {
+    public WallColorFlashingAnimation(AnimationRegistry animationRegistry, GameLevel3D level3D, WorldMapColorScheme colorScheme) {
         super(animationRegistry, "WallColorFlashing");
-        this.level3D = level3D;
-        this.fromColor = Color.valueOf(level3D.maze3D().colorScheme().wallFill());
-        this.toColor = Color.valueOf(level3D.maze3D().colorScheme().wallStroke());
+        this.level3D = requireNonNull(level3D);
+        this.colorScheme = requireNonNull(colorScheme);
+        this.fromColor = Color.valueOf(colorScheme.wallFill());
+        this.toColor = Color.valueOf(colorScheme.wallStroke());
         setFactory(this::createAnimationFX);
     }
 
@@ -55,9 +60,10 @@ public class WallColorFlashingAnimation extends ManagedAnimation {
     @Override
     public void stop() {
         super.stop();
+
         // reset wall colors
         final Maze3D maze3D = level3D.maze3D();
-        final Color wallFillColor = Color.valueOf(maze3D.colorScheme().wallFill());
+        final Color wallFillColor = Color.valueOf(colorScheme.wallFill());
         final PhongMaterial wallTopMaterial = maze3D.materials().wallTop();
         wallTopMaterial.setDiffuseColor(wallFillColor);
         wallTopMaterial.setSpecularColor(wallFillColor.brighter());

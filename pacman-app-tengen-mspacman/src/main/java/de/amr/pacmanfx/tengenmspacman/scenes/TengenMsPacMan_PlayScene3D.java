@@ -10,6 +10,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
@@ -35,17 +36,17 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     public TengenMsPacMan_PlayScene3D() {}
 
     @Override
-    protected GameLevel3D createGameLevel3D(GameLevel level) {
+    protected GameLevel3D createGameLevel3D(GameLevel level, UIConfig uiConfig) {
         if (!(level.game() instanceof TengenMsPacMan_GameModel game)) {
             throw new IllegalArgumentException("Game must be Tengen Ms. Pac-Man");
         }
 
         // Common stuff
-        final var newLevel3D = new GameLevel3D(ui.currentConfig(), level);
+        final var newLevel3D = new GameLevel3D(uiConfig, level);
         newLevel3D.pac3D().init(level);
         newLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
         newLevel3D.livesCounter3D().startTracking(newLevel3D.pac3D());
-        final var animations = new GameLevel3DAnimations(newLevel3D, soundEffects);
+        final var animations = new GameLevel3DAnimations(newLevel3D, uiConfig.colorScheme(level.worldMap()), soundEffects);
         newLevel3D.setAnimations(animations);
 
         // Tengen-specific stuff: level info

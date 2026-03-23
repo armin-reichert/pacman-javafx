@@ -8,17 +8,17 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.config.*;
+import de.amr.pacmanfx.ui.config.EntityConfig;
+import de.amr.pacmanfx.ui.config.FloorConfig3D;
+import de.amr.pacmanfx.ui.config.HouseConfig3D;
+import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.world.Wall3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
-import javafx.scene.paint.PhongMaterial;
 import org.tinylog.Logger;
-
-import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
@@ -50,7 +50,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class Maze3D extends Group implements DisposableGraphicsObject {
 
-    private final WorldMapColorScheme colorScheme;
     private final AnimationRegistry animationRegistry;
 
     /** Base height of walls in world units. Can be externally bound. */
@@ -63,7 +62,6 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
     private MazeObstacles3D obstacles3D;
     private MazeFloor3D floor3D;
     private MazeHouse3D house3D;
-    private MazeFood3D food3D;
 
     private final Group particlesGroup = new Group();
 
@@ -73,7 +71,6 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
      * @param entityConfig         3D configuration
      * @param level            the game level whose world map is rendered
      * @param animationRegistry registry for animations used by 3D components
-     * @param ghostMaterials   materials used for ghost-related effects (energizer particles etc.)
      * @throws NullPointerException if any required argument is {@code null}
      */
     public Maze3D(
@@ -81,26 +78,23 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
         EntityConfig entityConfig,
         WorldMapColorScheme colorScheme,
         GameLevel level,
-        AnimationRegistry animationRegistry,
-        List<PhongMaterial> ghostMaterials)
+        AnimationRegistry animationRegistry)
     {
         requireNonNull(factory3D);
         requireNonNull(entityConfig);
         requireNonNull(level);
         this.animationRegistry = requireNonNull(animationRegistry);
-        requireNonNull(ghostMaterials);
-        this.colorScheme = requireNonNull(colorScheme);
 
-        createMaterials();
+        createMaterials(colorScheme);
         createFloor3D(entityConfig.floor(), level);
         createObstacles3D(entityConfig.maze(), level);
+
         level.worldMap().terrainLayer().optHouse()
             .filter(ArcadeHouse.class::isInstance)
             .map(ArcadeHouse.class::cast)
             .ifPresentOrElse(
-                arcadeHouse -> createArcadeHouse3D(entityConfig.house(), arcadeHouse),
+                arcadeHouse -> createArcadeHouse3D(entityConfig.house(), arcadeHouse, colorScheme),
                 () -> Logger.error("Currently only Arcade house is supported"));
-        createMazeFood3D(factory3D, entityConfig.pellet(), entityConfig.energizer(), level, ghostMaterials);
     }
 
     /** @return the property controlling the base height of all walls */
@@ -111,11 +105,6 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
     /** @return the property controlling the opacity of all wall materials */
     public DoubleProperty wallOpacityProperty() {
         return wallOpacity;
-    }
-
-    /** @return the effective color scheme used for this maze (possibly contrast-adjusted) */
-    public WorldMapColorScheme colorScheme() {
-        return colorScheme;
     }
 
     /** @return the shared materials used by all maze components */
@@ -131,11 +120,6 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
     /** @return the ghost house component, or {@code null} if the map has no house */
     public MazeHouse3D house() {
         return house3D;
-    }
-
-    /** @return the food component (pellets, energizers, etc.) */
-    public MazeFood3D food() {
-        return food3D;
     }
 
     /** @return the group for dynamic particle effects (energizer explosions etc.) */
@@ -163,7 +147,6 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
         if (floor3D != null)     { floor3D.dispose();     floor3D = null; }
         if (obstacles3D != null) { obstacles3D.dispose(); obstacles3D = null; }
         if (house3D != null)     { house3D.dispose();     house3D = null; }
-        if (food3D != null)      { food3D.dispose();      food3D = null; }
 
         cleanupGroup(particlesGroup, true);
         cleanupGroup(this, true);
@@ -175,7 +158,7 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
     // Private creation helpers (no Javadoc changes needed)
     // ──────────────────────────────────────────────────────────────
 
-    private void createMaterials() {
+    private void createMaterials(WorldMapColorScheme colorScheme) {
         materials3D = MazeMaterials3D.create(colorScheme, wallOpacityProperty());
     }
 
@@ -194,17 +177,7 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
         floor3D = new MazeFloor3D(materials3D.floor(), width, height, floorConfig.thickness(), floorConfig.padding());
     }
 
-    private void createArcadeHouse3D(HouseConfig3D houseConfig, ArcadeHouse house) {
+    private void createArcadeHouse3D(HouseConfig3D houseConfig, ArcadeHouse house, WorldMapColorScheme colorScheme) {
         house3D = new MazeHouse3D(colorScheme, houseConfig, animationRegistry, house);
-    }
-
-    private void createMazeFood3D(
-        Factory3D factory3D,
-        PelletConfig3D pelletConfig,
-        EnergizerConfig3D energizerConfig,
-        GameLevel level,
-        List<PhongMaterial> ghostMaterials)
-    {
-        food3D = new MazeFood3D(factory3D, pelletConfig, energizerConfig, colorScheme, animationRegistry, level, ghostMaterials, this);
     }
 }
