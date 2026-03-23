@@ -16,8 +16,11 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.world.Wall3D;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
+import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -56,6 +59,8 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
     /** Opacity applied to all wall materials. Can be externally bound. */
     private final DoubleProperty wallOpacity = new SimpleDoubleProperty(1);
 
+    private final ObjectProperty<Color> floorColor = new SimpleObjectProperty<>(Color.GRAY);
+
     private MazeMaterials3D materials3D;
     private MazeObstacles3D obstacles3D;
     private MazeFloor3D floor3D;
@@ -85,7 +90,7 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
         requireNonNull(entityConfig);
         requireNonNull(level);
 
-        createMaterials(colorScheme);
+        materials3D = factory3D.createMazeMaterials(colorScheme, wallOpacity, floorColor);
         createFloor3D(entityConfig.floor(), level);
         createObstacles3D(entityConfig.maze(), level);
         createArcadeHouse3D(animationRegistry, entityConfig.house(), level, colorScheme);
@@ -99,6 +104,10 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
     /** @return the property controlling the opacity of all wall materials */
     public DoubleProperty wallOpacityProperty() {
         return wallOpacity;
+    }
+
+    public ObjectProperty<Color> floorColorProperty() {
+        return floorColor;
     }
 
     /** @return the shared materials used by all maze components */
@@ -137,7 +146,8 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
         wallBaseHeight.unbind();
         wallOpacity.unbind();
 
-        if (materials3D != null) { materials3D.dispose(); materials3D = null; }
+        materials3D = null;
+
         if (floor3D != null)     { floor3D.dispose();     floor3D = null; }
         if (obstacles3D != null) { obstacles3D.dispose(); obstacles3D = null; }
         if (house3D != null)     { house3D.dispose();     house3D = null; }
@@ -151,10 +161,6 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
     // ──────────────────────────────────────────────────────────────
     // Private creation helpers (no Javadoc changes needed)
     // ──────────────────────────────────────────────────────────────
-
-    private void createMaterials(WorldMapColorScheme colorScheme) {
-        materials3D = MazeMaterials3D.create(colorScheme, wallOpacityProperty());
-    }
 
     private void createObstacles3D(MazeConfig3D mazeConfig, GameLevel level) {
         obstacles3D = new MazeObstacles3D();
