@@ -19,7 +19,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Shape3D;
 import org.tinylog.Logger;
@@ -189,10 +188,6 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
         if (ghost.moveInfo().tunnelEntered && !brakeAnimation.isRunning()) {
             brakeAnimation.playFromStart();
         }
-    }
-
-    public void setNumberTexture(PhongMaterial material) {
-        numberShape3D().setMaterial(material);
     }
 
     // private area, no trespassing

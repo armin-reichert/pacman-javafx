@@ -217,7 +217,7 @@ public class GameLevel3DEventHandler {
         level.game().simulationStep().ghostsKilled.forEach(killedGhost -> {
             final int killedIndex = level.energizerVictims().indexOf(killedGhost);
             final MutableGhost3D mutableGhost3D = level3D.ghosts3D().get(killedGhost.personality());
-            mutableGhost3D.setNumberTexture(
+            mutableGhost3D.numberShape3D().setMaterial(
                 ui.currentConfig().factory3D().getGhostNumberMaterial(ui.currentConfig(), killedIndex));
         });
     }
