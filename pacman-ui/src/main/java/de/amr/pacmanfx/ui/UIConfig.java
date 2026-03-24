@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.model3D.actor.PacComponentColors;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.geometry.Rectangle2D;
@@ -72,9 +73,11 @@ public interface UIConfig extends Disposable {
      */
     EntityConfig DEFAULT_ENTITY_CONFIG = new EntityConfig(
         new PacConfig(
-            ARCADE_YELLOW,
-            Color.grayRgb(33),
-            ARCADE_BROWN,
+            new PacComponentColors(
+                ARCADE_YELLOW, // head
+                ARCADE_BROWN,  // palate
+                Color.grayRgb(33) // eyes
+            ),
             ARCADE_RED,
             ARCADE_BLUE,
             ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0),

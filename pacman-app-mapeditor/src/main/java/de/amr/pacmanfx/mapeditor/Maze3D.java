@@ -9,6 +9,7 @@ import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.actor.GhostBody;
+import de.amr.pacmanfx.uilib.model3D.actor.PacComponentColors;
 import de.amr.pacmanfx.uilib.model3D.world.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Wall3D;
 import javafx.beans.property.BooleanProperty;
@@ -105,7 +106,7 @@ public class Maze3D extends Group {
 
         foodGroup.visibleProperty().bind(foodVisible);
 
-        pacmanShape3D = Models3D.PAC_MAN_MODEL.createPacBody(ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
+        pacmanShape3D = Models3D.PAC_MAN_MODEL.createPacBody(ACTOR_SIZE, new PacComponentColors(Color.YELLOW, Color.BLACK, Color.GRAY));
         pacmanShape3D.visibleProperty().bind(actorsVisibleProperty());
 
         ghostShapes = new GhostBody[] {

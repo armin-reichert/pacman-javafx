@@ -4,12 +4,11 @@
 
 package de.amr.pacmanfx.ui.config;
 
+import de.amr.pacmanfx.uilib.model3D.actor.PacComponentColors;
 import javafx.scene.paint.Color;
 
 public record PacConfig(
-    Color headColor,
-    Color eyesColor,
-    Color palateColor,
+    PacComponentColors colors,
     Color hairbowColor,
     Color hairBowPearlsColor,
     Color boobsColor,

@@ -104,16 +104,9 @@ public class ArcadePacMan_Factory3D implements Factory3D {
         requireNonNull(pacConfig);
         requireNonNull(animationRegistry);
 
-        final var pacMan3D = new PacMan3D(
-            animationRegistry,
-            pac,
-            pacConfig.size3D(),
-            pacConfig.headColor(),
-            pacConfig.eyesColor(),
-            pacConfig.palateColor()
-        );
+        final var pacMan3D = new PacMan3D(animationRegistry, pac, pacConfig.size3D(), pacConfig.colors());
 
-        pacMan3D.light().setColor(pacConfig.headColor().desaturate());
+        pacMan3D.light().setColor(pacConfig.colors().head().desaturate());
         return pacMan3D;
     }
 
@@ -144,13 +137,8 @@ public class ArcadePacMan_Factory3D implements Factory3D {
     @Override
     public PacBody createLivesCounterShape3D(EntityConfig entityConfig) {
         requireNonNull(entityConfig);
-        final var pacConfig = entityConfig.pacConfig();
-        return Models3D.PAC_MAN_MODEL.createPacBody(
-            entityConfig.livesCounter().shapeSize(),
-            pacConfig.headColor(),
-            pacConfig.eyesColor(),
-            pacConfig.palateColor()
-        );
+        final PacConfig pacConfig = entityConfig.pacConfig();
+        return Models3D.PAC_MAN_MODEL.createPacBody(entityConfig.livesCounter().shapeSize(), pacConfig.colors());
     }
 
     @Override

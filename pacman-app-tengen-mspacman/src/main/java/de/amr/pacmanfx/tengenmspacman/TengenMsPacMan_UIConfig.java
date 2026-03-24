@@ -26,6 +26,7 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.pacmanfx.uilib.model3D.actor.PacComponentColors;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.media.MediaPlayer;
@@ -56,9 +57,11 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
 
     public static final EntityConfig TENGEN_ENTITY_CONFIG = new EntityConfig(
         new PacConfig(
-            nesColor(0x28),
-            nesColor(0x02),
-            nesColor(0x2d),
+            new PacComponentColors(
+                nesColor(0x28), // head
+                nesColor(0x2d), // palate
+                nesColor(0x02)  // eyes
+            ),
             nesColor(0x05),
             nesColor(0x02),
             nesColor(0x28).deriveColor(0, 1.0, 0.96, 1.0),

@@ -108,15 +108,13 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
             animationRegistry,
             pac,
             pacConfig.size3D(),
-            pacConfig.headColor(),
-            pacConfig.eyesColor(),
-            pacConfig.palateColor(),
+            pacConfig.colors(),
             pacConfig.hairbowColor(),
             pacConfig.hairBowPearlsColor(),
             pacConfig.boobsColor()
         );
 
-        pac3D.light().setColor(pacConfig.headColor().desaturate());
+        pac3D.light().setColor(pacConfig.colors().head().desaturate());
         return pac3D;
     }
 
@@ -151,9 +149,7 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
         final PacConfig pacConfig = entityConfig.pacConfig();
         return Models3D.PAC_MAN_MODEL.createMsPacManBody(
             entityConfig.livesCounter().shapeSize(),
-            pacConfig.headColor(),
-            pacConfig.eyesColor(),
-            pacConfig.palateColor(),
+            pacConfig.colors(),
             pacConfig.hairbowColor(),
             pacConfig.hairBowPearlsColor(),
             pacConfig.boobsColor()

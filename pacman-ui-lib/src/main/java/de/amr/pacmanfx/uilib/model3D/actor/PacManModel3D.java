@@ -85,26 +85,30 @@ public class PacManModel3D implements Disposable {
 	/**
 	 * Creates a fully assembled Pac-Man body with head, eyes, and palate.
 	 *
-	 * @param size        the overall size (scale) of the model
-	 * @param headColor   color of the head mesh
-	 * @param eyesColor   color of the eyes mesh
-	 * @param palateColor color of the palate mesh
+	 * @param size   the overall size (scale) of the model
+	 * @param colors the colors used
 	 * @return a new {@link PacBody} instance
 	 */
-	public PacBody createPacBody(double size, Color headColor, Color eyesColor, Color palateColor) {
-		return new PacBody(size, headMesh(), headColor, eyesMesh(), eyesColor, palateMesh(), palateColor);
+	public PacBody createPacBody(double size, PacComponentColors colors) {
+		return new PacBody(size,
+			headMesh(), colors.head(),
+			eyesMesh(), colors.eyes(),
+			palateMesh(), colors.palate()
+		);
 	}
 
 	/**
 	 * Creates a Pac-Man body without eyes (used for blinking or special effects).
 	 *
 	 * @param size        the overall size (scale)
-	 * @param headColor   color of the head mesh
-	 * @param palateColor color of the palate mesh
+	 * @param colors      Pac component colors
 	 * @return a new {@link PacBodyNoEyes} instance
 	 */
-	public PacBodyNoEyes createBlindPacBody(double size, Color headColor, Color palateColor) {
-		return new PacBodyNoEyes(size, headMesh(), headColor, palateMesh(), palateColor);
+	public PacBodyNoEyes createBlindPacBody(double size, PacComponentColors colors) {
+		return new PacBodyNoEyes(size,
+			headMesh(), colors.head(),
+			palateMesh(), colors.palate()
+		);
 	}
 
 	/**
@@ -130,20 +134,18 @@ public class PacManModel3D implements Disposable {
 	 * plus the additional female parts.
 	 *
 	 * @param size                overall size (scale)
-	 * @param headColor           color of the head mesh
-	 * @param eyesColor           color of the eyes mesh
-	 * @param palateColor         color of the palate mesh
+	 * @param colors              common Pac component colors
 	 * @param hairBowColor        color of the hair bow
 	 * @param hairBowPearlsColor  color of the bow pearls
 	 * @param boobsColor          color of the chest decorations
 	 * @return a new {@link MsPacManBody} instance
 	 */
 	public MsPacManBody createMsPacManBody(
-			double size,
-			Color headColor, Color eyesColor, Color palateColor,
-			Color hairBowColor, Color hairBowPearlsColor, Color boobsColor)
+		double size,
+		PacComponentColors colors,
+		Color hairBowColor, Color hairBowPearlsColor, Color boobsColor)
 	{
-		final var body = createPacBody(size, headColor, eyesColor, palateColor);
+		final var body = createPacBody(size, colors);
 		final var femaleParts = createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor);
 		return new MsPacManBody(body, femaleParts);
 	}

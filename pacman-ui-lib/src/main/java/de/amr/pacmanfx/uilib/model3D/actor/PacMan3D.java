@@ -20,12 +20,12 @@ public class PacMan3D extends Pac3D {
         AnimationRegistry animationRegistry,
         Pac pac,
         double size,
-        Color headColor, Color eyesColor, Color palateColor)
+        PacComponentColors colors)
     {
         super(animationRegistry, pac, size);
 
-        setBody(Models3D.PAC_MAN_MODEL.createPacBody(size, headColor, eyesColor, palateColor));
-        setJaw(Models3D.PAC_MAN_MODEL.createBlindPacBody(size, headColor, palateColor));
+        setBody(Models3D.PAC_MAN_MODEL.createPacBody(size, colors));
+        setJaw(Models3D.PAC_MAN_MODEL.createBlindPacBody(size, colors));
 
         dyingAnimation = new ManagedAnimation(animationRegistry, "PacMan_Dying");
         dyingAnimation.setFactory(() -> {

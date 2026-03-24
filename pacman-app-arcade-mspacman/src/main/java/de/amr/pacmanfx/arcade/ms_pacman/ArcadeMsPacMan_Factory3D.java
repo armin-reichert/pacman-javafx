@@ -108,15 +108,13 @@ public class ArcadeMsPacMan_Factory3D implements Factory3D {
             animationRegistry,
             pac,
             pacConfig.size3D(),
-            pacConfig.headColor(),
-            pacConfig.eyesColor(),
-            pacConfig.palateColor(),
+            pacConfig.colors(),
             pacConfig.hairbowColor(),
             pacConfig.hairBowPearlsColor(),
             pacConfig.boobsColor()
         );
 
-        msPacMan3D.light().setColor(pacConfig.headColor().desaturate());
+        msPacMan3D.light().setColor(pacConfig.colors().head().desaturate());
         return msPacMan3D;
     }
 
@@ -151,9 +149,7 @@ public class ArcadeMsPacMan_Factory3D implements Factory3D {
         final var pacConfig = entityConfig.pacConfig();
         return Models3D.PAC_MAN_MODEL.createMsPacManBody(
             entityConfig.livesCounter().shapeSize(),
-            pacConfig.headColor(),
-            pacConfig.eyesColor(),
-            pacConfig.palateColor(),
+            pacConfig.colors(),
             pacConfig.hairbowColor(),
             pacConfig.hairBowPearlsColor(),
             pacConfig.boobsColor()

@@ -22,13 +22,13 @@ public class MsPacMan3D extends Pac3D {
         AnimationRegistry animationRegistry,
         Pac msPacMan,
         double size,
-        Color headColor, Color eyesColor, Color palateColor,
+        PacComponentColors colors,
         Color hairBowColor, Color hairBowPearlsColor, Color boobsColor)
     {
         super(animationRegistry, msPacMan, size);
 
-        setBody(Models3D.PAC_MAN_MODEL.createPacBody(size, headColor, eyesColor, palateColor));
-        setJaw(Models3D.PAC_MAN_MODEL.createBlindPacBody(size, headColor, palateColor));
+        setBody(Models3D.PAC_MAN_MODEL.createPacBody(size, colors));
+        setJaw(Models3D.PAC_MAN_MODEL.createBlindPacBody(size, colors));
 
         femaleBodyParts = Models3D.PAC_MAN_MODEL.createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor);
         getChildren().add(femaleBodyParts);
