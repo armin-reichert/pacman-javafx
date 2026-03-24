@@ -108,6 +108,7 @@ public class GameLevel3DEventHandler {
      */
     public void onGameContinues(GameContinuedEvent ignoredEvent, GameLevel3D level3D) {
         if (level3D != null) {
+            level3D.initActorsZPosition();
             level3D.messageManager().showReadyMessage();
         }
     }
@@ -115,12 +116,15 @@ public class GameLevel3DEventHandler {
     /**
      * Plays game ready sound unless in demo or test mode.
      */
-    public void onGameStarts(GameStartedEvent event, GameLevel3D ignored) {
+    public void onGameStarts(GameStartedEvent event, GameLevel3D level3D) {
         final Game game = event.game();
         final State<Game> state = game.control().state();
         final boolean silent = game.isDemoLevelRunning() || state instanceof TestState;
         if (!silent) {
             soundEffects.playGameReadySound();
+        }
+        if (level3D != null) {
+            level3D.initActorsZPosition();
         }
     }
 
@@ -209,7 +213,11 @@ public class GameLevel3DEventHandler {
             level3D.pac3D().dyingAnimation().animationFX(),
             pauseSec(0.5)
         );
-        dyingAnimation.setOnFinished(_ -> stateTimer.expire());
+        dyingAnimation.setOnFinished(_ -> {
+            level3D.pac3D().setVisible(false);
+            level3D.initActorsZPosition();
+            stateTimer.expire();
+        });
         dyingAnimation.play();
     }
 

@@ -18,7 +18,7 @@ public class MsPacMan3D extends Pac3D {
     private MsPacManFemaleParts femaleBodyParts;
 
     public MsPacMan3D(AnimationRegistry animationRegistry, Pac msPacMan, PacConfig pacConfig) {
-        super(animationRegistry, msPacMan, pacConfig.size3D());
+        super(animationRegistry, msPacMan);
 
         setBody(Models3D.PAC_MAN_MODEL.createPacBody(pacConfig));
         setJaw(Models3D.PAC_MAN_MODEL.createBlindPacBody(pacConfig));

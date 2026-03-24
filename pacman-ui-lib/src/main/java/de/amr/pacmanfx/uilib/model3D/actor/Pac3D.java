@@ -42,12 +42,11 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
     protected ManagedAnimation dyingAnimation;
     protected ManagedAnimation movementAnimation;
 
-    protected Pac3D(AnimationRegistry animationRegistry, Pac pac, double size) {
+    protected Pac3D(AnimationRegistry animationRegistry, Pac pac) {
         this.animationRegistry = requireNonNull(animationRegistry);
         this.pac = requireNonNull(pac);
 
         getTransforms().add(moveRotation);
-        setTranslateZ(-0.5 * size);
 
         chewingAnimation = new ManagedAnimation(animationRegistry, "PacMan_Chewing");
         chewingAnimation.setFactory(this::createChewingAnimation);

@@ -12,7 +12,10 @@ import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.ui.config.*;
+import de.amr.pacmanfx.ui.config.BonusConfig;
+import de.amr.pacmanfx.ui.config.EntityConfig;
+import de.amr.pacmanfx.ui.config.LevelCounterConfig3D;
+import de.amr.pacmanfx.ui.config.LivesCounterConfig3D;
 import de.amr.pacmanfx.ui.d3.animation.GameLevel3DAnimations;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -113,9 +116,16 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createLivesCounter3D(uiConfig, entityConfig.livesCounter());
         createMessageManager();
 
+        initActorsZPosition();
         arrangeEntities();
 
         setMouseTransparent(true); // this increases performance they say...
+    }
+
+    public void initActorsZPosition() {
+        // Set height over floor. Top of floor is at z=0.
+        pac3D.setTranslateZ(-0.5 * pac3D.getBoundsInLocal().getDepth());
+        ghosts3D.forEach(ghost3D -> ghost3D.setTranslateZ(-0.5 * ghost3D.getBoundsInLocal().getDepth() - 1));
     }
 
     /**

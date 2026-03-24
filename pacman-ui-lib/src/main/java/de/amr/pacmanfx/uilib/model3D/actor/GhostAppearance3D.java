@@ -125,6 +125,7 @@ public class GhostAppearance3D extends Group implements DisposableGraphicsObject
         if (ghost().moveInfo().tunnelEntered) {
             brakeAnimation.playFromStart();
         }
+        ghost3D.shakeDress(ghost3D.isVisible());
     }
 
     public void setNumFlashes(int numFlashes) {
@@ -163,8 +164,6 @@ public class GhostAppearance3D extends Group implements DisposableGraphicsObject
 
     // private area, no trespassing
 
-    private final ChangeListener<Boolean> visibleChangeListener = (_, _, visible) -> handleGhostVisibilityChange(visible);
-
     private final ChangeListener<Vector2f> positionChangeListener = (_, _, _) -> updateTransform(ghost());
 
     private final ChangeListener<Direction> wishDirChangeListener = (_, _, _) -> updateTransform(ghost());
@@ -195,6 +194,7 @@ public class GhostAppearance3D extends Group implements DisposableGraphicsObject
             numberShape3D.setVisible(false);
         }
         ghost3D.setVisible(true);
+        ghost3D.dressAnimation().playFromStart();
         switch (appearance) {
             case NORMAL     -> ghost3D.setNormalLook();
             case FRIGHTENED -> ghost3D.setFrightenedLook();
@@ -205,14 +205,12 @@ public class GhostAppearance3D extends Group implements DisposableGraphicsObject
 
     private void addPropertyChangeListeners() {
         ghost().positionProperty().addListener(positionChangeListener);
-        ghost().visibleProperty().addListener(visibleChangeListener);
         ghost().wishDirProperty().addListener(wishDirChangeListener);
         appearance.addListener(appearanceChangeListener);
     }
 
     private void removePropertyChangeListeners() {
         ghost().positionProperty().removeListener(positionChangeListener);
-        ghost().visibleProperty().removeListener(visibleChangeListener);
         ghost().wishDirProperty().removeListener(wishDirChangeListener);
         appearance.removeListener(appearanceChangeListener);
     }
@@ -235,15 +233,5 @@ public class GhostAppearance3D extends Group implements DisposableGraphicsObject
             powerFading,
             killedInCurrentPhase);
         appearance.set(newAppearance);
-    }
-
-    private void handleGhostVisibilityChange(boolean visible) {
-        if (visible) {
-            ghost3D.dressAnimation().playFromStart();
-            Logger.info("Dress animation for {} started", ghost().name());
-        } else {
-            ghost3D.dressAnimation().stop();
-            Logger.info("Dress animation for {} stopped", ghost().name());
-        }
     }
 }

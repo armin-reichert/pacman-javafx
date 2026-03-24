@@ -250,4 +250,13 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
             flashingAnimation.stop();
         }
     }
+
+    public void shakeDress(boolean on) {
+        if (dressAnimation == null) return;
+        if (on) {
+            dressAnimation.playOrContinue();
+        } else {
+            dressAnimation.stop();
+        }
+    }
 }
