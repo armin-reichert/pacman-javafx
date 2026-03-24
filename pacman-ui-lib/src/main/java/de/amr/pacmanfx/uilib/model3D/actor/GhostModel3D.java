@@ -15,11 +15,17 @@ public class GhostModel3D implements Disposable {
 	private static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
 	private static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
 
-	private final Model3D model3D;
+    private final Model3D model3D;
+	private final Mesh dressMesh;
+    private final Mesh eyeballsMesh;
+    private final Mesh pupilsMesh;
 
 	public GhostModel3D() {
 		try {
 			model3D = Model3D.fromWavefrontFile(getClass().getResource("/de/amr/pacmanfx/uilib/model3D/ghost.obj"));
+            dressMesh = model3D.mesh(MESH_ID_GHOST_DRESS).orElseThrow();
+            eyeballsMesh = model3D.mesh(MESH_ID_GHOST_EYEBALLS).orElseThrow();
+            pupilsMesh = model3D.mesh(MESH_ID_GHOST_PUPILS).orElseThrow();
 		} catch (Model3DException x) {
 			throw new RuntimeException(x);
 		}
@@ -31,15 +37,14 @@ public class GhostModel3D implements Disposable {
 	}
 
 	public Mesh dressMesh() {
-		return model3D.mesh(MESH_ID_GHOST_DRESS).orElseThrow();
+		return dressMesh;
 	}
 
 	public Mesh eyeballsMesh() {
-		return model3D.mesh(MESH_ID_GHOST_EYEBALLS).orElseThrow();
+		return eyeballsMesh;
 	}
 
 	public Mesh pupilsMesh() {
-		return model3D.mesh(MESH_ID_GHOST_PUPILS).orElseThrow();
+		return pupilsMesh;
 	}
-
 }
