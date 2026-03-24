@@ -118,7 +118,7 @@ public class ArcadePacMan_Factory3D implements Factory3D {
     }
 
     @Override
-    public GhostAppearance3D createMutableGhost3D(
+    public GhostAppearance3D createGhostAppearance3D(
         Ghost ghost,
         GhostConfig ghostConfig,
         AnimationRegistry animationRegistry)

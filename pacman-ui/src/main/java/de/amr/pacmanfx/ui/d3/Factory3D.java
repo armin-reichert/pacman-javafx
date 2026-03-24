@@ -46,7 +46,7 @@ public interface Factory3D extends Disposable {
      * @param animationRegistry the registry where animations are stored
      * @return the 3D representation of a ghost
      */
-    GhostAppearance3D createMutableGhost3D(Ghost ghost, GhostConfig ghostConfig, AnimationRegistry animationRegistry);
+    GhostAppearance3D createGhostAppearance3D(Ghost ghost, GhostConfig ghostConfig, AnimationRegistry animationRegistry);
 
     /**
      * Creates the 3D representation of the lives counter for this variant.

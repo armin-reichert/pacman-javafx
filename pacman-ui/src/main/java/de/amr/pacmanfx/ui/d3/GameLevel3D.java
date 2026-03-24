@@ -9,6 +9,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.*;
@@ -20,6 +21,7 @@ import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
 import de.amr.pacmanfx.uilib.model3D.actor.PacRepresentation3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -281,7 +283,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     private void createGhosts3D(Factory3D factory3D, List<GhostConfig> ghostConfigs) {
         ghosts3D = level.ghosts()
-            .map(ghost -> createMutableGhost3D(factory3D, ghostConfigs, ghost))
+            .map(ghost -> createGhostAppearance3D(factory3D, ghostConfigs, ghost))
             .toList();
 
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
@@ -290,22 +292,21 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     /**
-     * Creates a mutable 3D ghost representation for the given model ghost.
+     * Creates a 3D ghost representation for the given model ghost.
      */
-    private GhostAppearance3D createMutableGhost3D(Factory3D factory3D, List<GhostConfig> ghostConfigs, Ghost ghost) {
-        final var mutableGhost3D = factory3D.createMutableGhost3D(
+    private GhostAppearance3D createGhostAppearance3D(Factory3D factory3D, List<GhostConfig> ghostConfigs, Ghost ghost) {
+        final var ghostAppearance3D = factory3D.createGhostAppearance3D(
             ghost,
             ghostConfigs.get(ghost.personality()),
             animationRegistry
         );
-        mutableGhost3D.setNumFlashes(level.numFlashes());
-
-        mutableGhost3D.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> ghost.isVisible() && !outsideWorld(level, ghost),
+        ghostAppearance3D.setNumFlashes(level.numFlashes());
+        final BooleanBinding visibleInsideWorld = Bindings.createBooleanBinding(
+            () -> ghost.isVisible() && !outsideWorld(level.worldMap(), ghost),
             ghost.visibleProperty(), ghost.positionProperty()
-        ));
-
-        return mutableGhost3D;
+        );
+        ghostAppearance3D.visibleProperty().bind(visibleInsideWorld);
+        return ghostAppearance3D;
     }
 
     /**
@@ -396,11 +397,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Determines if the given ghost's center position is outside the visible world bounds.
      *
+     * @param worldMap the world map
      * @param ghost the ghost to check
-     * @return true if the ghost is outside the maze bounds
+     * @return true if the ghost is outside the world bounds
      */
-    private static boolean outsideWorld(GameLevel level, Ghost ghost) {
+    private static boolean outsideWorld(WorldMap worldMap, Ghost ghost) {
         final Vector2f center = ghost.center();
-        return center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
+        return center.x() < HTS || center.x() > worldMap.numCols() * TS - HTS;
     }
 }
