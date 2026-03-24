@@ -31,7 +31,7 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
 
     protected final Pac pac;
 
-    protected PointLight light;
+    protected PointLight powerLight;
 
     protected PacBody body;
     protected PacBodyNoEyes jaw;
@@ -84,7 +84,7 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
             dyingAnimation.dispose();
             dyingAnimation = null;
         }
-        cleanupLight(light);
+        cleanupLight(powerLight);
         cleanupGroup(this, true);
     }
 
@@ -123,7 +123,7 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
     }
 
     public Optional<PointLight> light() {
-        return Optional.ofNullable(light);
+        return Optional.ofNullable(powerLight);
     }
 
     public ManagedAnimation dyingAnimation() {
@@ -204,27 +204,27 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
     }
 
     public void createPowerLight(PacConfig pacConfig) {
-        light = new PointLight();
-        light.setColor(pacConfig.colors().head().desaturate());
-        light.translateXProperty().bind(translateXProperty());
-        light.translateYProperty().bind(translateYProperty());
-        light.setTranslateZ(-30);
+        powerLight = new PointLight();
+        powerLight.setColor(pacConfig.colors().head().desaturate());
+        powerLight.translateXProperty().bind(translateXProperty());
+        powerLight.translateYProperty().bind(translateYProperty());
+        powerLight.setTranslateZ(-30);
     }
 
     /**
      * When empowered, Pac-Man is lighted, light range shrinks with ceasing power.
      */
     public void updatePowerLight() {
-        if (light == null) return;
+        if (powerLight == null) return;
         final TickTimer powerTimer = pac.powerTimer();
         if (powerTimer.isRunning() && pac.isVisible()) {
-            light.setLightOn(true);
+            powerLight.setLightOn(true);
             final long remainingTicks = powerTimer.remainingTicks();
             final float maxRange = (remainingTicks / (float) powerTimer.durationTicks()) * 60 + 30;
-            light.setMaxRange(maxRange);
+            powerLight.setMaxRange(maxRange);
             Logger.debug("Power remaining: {}, light max range: {0.00}", remainingTicks, maxRange);
         } else {
-            light.setLightOn(false);
+            powerLight.setLightOn(false);
         }
     }
 }
