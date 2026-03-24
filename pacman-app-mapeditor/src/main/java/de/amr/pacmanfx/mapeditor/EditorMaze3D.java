@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
-import de.amr.pacmanfx.uilib.model3D.actor.GhostBody;
 import de.amr.pacmanfx.uilib.model3D.actor.MsPacManComponentColors;
 import de.amr.pacmanfx.uilib.model3D.actor.PacComponentColors;
 import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
@@ -108,7 +107,7 @@ public class EditorMaze3D extends Group {
     private final PerspectiveCamera camera;
 
     private final Node pacmanShape3D;
-    private final GhostBody[] ghostShapes;
+    private final Group[] ghostShapes;
 
     public EditorMaze3D() {
         camera = new PerspectiveCamera(true);
@@ -126,7 +125,7 @@ public class EditorMaze3D extends Group {
         pacmanShape3D = Models3D.PAC_MAN_MODEL.createPacBody(PAC_CONFIG);
         pacmanShape3D.visibleProperty().bind(actorsVisibleProperty());
 
-        ghostShapes = new GhostBody[] {
+        ghostShapes = new Group[] {
             Models3D.GHOST_MODEL.createGhostBody(GHOST_SIZE, Color.RED,      0),
             Models3D.GHOST_MODEL.createGhostBody(GHOST_SIZE, Color.PINK,    90),
             Models3D.GHOST_MODEL.createGhostBody(GHOST_SIZE, Color.CYAN,   270),
