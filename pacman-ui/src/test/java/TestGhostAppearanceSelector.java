@@ -27,7 +27,7 @@ public class TestGhostAppearanceSelector {
     @Test
     public void testLeavingHouse() {
         for (AppearanceResult r : GHOST_LEAVING_HOUSE_APPEARANCES) {
-            GhostAppearance appearance = MutableGhost3D.selectAppearance(GhostState.LEAVING_HOUSE, r.power, r.fading, r.killed);
+            GhostAppearance appearance = MutableGhost3D.computeAppearance(GhostState.LEAVING_HOUSE, r.power, r.fading, r.killed);
             assertEquals(r.appearance, appearance, "powerActive=%s powerFading=%s killed=%s".formatted(r.power, r.fading, r.killed));
         }
     }
