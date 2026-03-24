@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.model3D.actor;
 
-import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
 import javafx.animation.*;
 import javafx.scene.Group;
@@ -28,10 +29,11 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common base class for (Ms.) Pac-Man 3D representations.
  */
-public abstract class Pac3D extends Group implements Disposable {
+public abstract class Pac3D extends Group implements DisposableGraphicsObject {
 
     protected final Pac pac;
     protected final double size;
+
     protected final AnimationRegistry animationRegistry;
     protected final PointLight light = new PointLight();
 
@@ -50,14 +52,18 @@ public abstract class Pac3D extends Group implements Disposable {
         double size,
         Color headColor, Color eyesColor, Color palateColor)
     {
-        this.pac = requireNonNull(pac);
-        this.size = size;
         this.animationRegistry = requireNonNull(animationRegistry);
+        this.pac = requireNonNull(pac);
+        this.size = Validations.requireNonNegative(size);
+        requireNonNull(headColor);
+        requireNonNull(eyesColor);
+        requireNonNull(palateColor);
 
         body = Models3D.PAC_MAN_MODEL.createPacBody(size, headColor, eyesColor, palateColor);
         jaw = Models3D.PAC_MAN_MODEL.createBlindPacBody(size, headColor, palateColor);
 
         getChildren().setAll(jaw, body);
+
         getTransforms().add(moveRotation);
         setTranslateZ(-0.5 * size);
 
@@ -69,7 +75,71 @@ public abstract class Pac3D extends Group implements Disposable {
         light.setTranslateZ(-30);
     }
 
-    private Animation createChewingAnimation() {
+    @Override
+    public void dispose() {
+        if (chewingAnimation != null) {
+            chewingAnimation.dispose();
+            chewingAnimation = null;
+        }
+        if (movementAnimation != null) {
+            movementAnimation.dispose();
+            movementAnimation = null;
+        }
+        if (dyingAnimation != null) {
+            dyingAnimation.dispose();
+            dyingAnimation = null;
+        }
+        cleanupLight(light);
+        cleanupGroup(this, true);
+    }
+
+    public void init(GameLevel level) {
+        requireNonNull(level);
+        stopAnimations();
+        setScaleX(1.0);
+        setScaleY(1.0);
+        setScaleZ(1.0);
+        updatePositionAndRotation();
+        updateVisibility(level.worldMap());
+        setMovementPowerMode(false);
+    }
+
+    public void update(GameLevel level) {
+        requireNonNull(level);
+        if (pac.isAlive()) {
+            updatePositionAndRotation();
+            updateVisibility(level.worldMap());
+            updateLight();
+            if (movementAnimation != null) {
+                movementAnimation.playOrContinue();
+                updateMovementAnimation();
+            }
+            if (chewingAnimation != null) {
+                if (pac.isParalyzed()) {
+                    chewingAnimation.stop();
+                } else {
+                    chewingAnimation.playOrContinue();
+                }
+            }
+        } else {
+            stopMovementAnimation();
+            stopChewingAnimation();
+        }
+    }
+
+    public LightBase light() {
+        return light;
+    }
+
+    public ManagedAnimation dyingAnimation() {
+        return dyingAnimation;
+    }
+
+    public void setMovementPowerMode(boolean power) {}
+
+    public abstract void updateMovementAnimation();
+
+    protected Animation createChewingAnimation() {
         final var mouthClosed = new KeyValue[] {
             new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
             new KeyValue(jaw.rotateProperty(), -54, Interpolator.LINEAR)
@@ -95,68 +165,36 @@ public abstract class Pac3D extends Group implements Disposable {
         return chewing;
     }
 
-    public LightBase light() {
-        return light;
-    }
-
-    public ManagedAnimation dyingAnimation() {
-        return dyingAnimation;
-    }
-
-    public void setMovementPowerMode(boolean power) {}
-
-    public abstract void updateMovementAnimation();
-
-    public void init(GameLevel gameLevel) {
+    protected void stopChewingAnimation() {
         if (chewingAnimation != null) {
             chewingAnimation.stop();
         }
+    }
+
+    protected void stopMovementAnimation() {
         if (movementAnimation != null) {
             movementAnimation.stop();
         }
+    }
+
+    protected void stopDyingAnimation() {
         if (dyingAnimation != null) {
             dyingAnimation.stop();
         }
-        setScaleX(1.0);
-        setScaleY(1.0);
-        setScaleZ(1.0);
-        updatePositionAndRotation();
-        updateVisibility(gameLevel);
-        setMovementPowerMode(false);
     }
 
-    public void update(GameLevel gameLevel) {
-        if (pac.isAlive()) {
-            updatePositionAndRotation();
-            updateVisibility(gameLevel);
-            updateLight();
-            if (movementAnimation != null) {
-                movementAnimation.playOrContinue();
-                updateMovementAnimation();
-            }
-            if (chewingAnimation != null) {
-                if (pac.isParalyzed()) {
-                    chewingAnimation.stop();
-                } else {
-                    chewingAnimation.playOrContinue();
-                }
-            }
-        } else {
-            if (movementAnimation != null) {
-                movementAnimation.stop();
-            }
-            if (chewingAnimation != null) {
-                chewingAnimation.stop();
-            }
-        }
+    protected void stopAnimations() {
+        stopChewingAnimation();
+        stopMovementAnimation();
+        stopDyingAnimation();
     }
 
     protected void updatePositionAndRotation() {
-        Vector2f center = pac.center();
+        final Vector2f center = pac.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-0.5 * size);
-        double angle = switch (pac.moveDir()) {
+        final double angle = switch (pac.moveDir()) {
             case LEFT  -> 0;
             case UP    -> 90;
             case RIGHT -> 180;
@@ -166,15 +204,9 @@ public abstract class Pac3D extends Group implements Disposable {
         moveRotation.setAngle(angle);
     }
 
-    protected void updateVisibility(GameLevel gameLevel) {
-        if (gameLevel != null) {
-            WorldMap worldMap = gameLevel.worldMap();
-            boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * worldMap.numCols() - HTS;
-            setVisible(pac.isVisible() && !outsideWorld);
-        }
-        else {
-            setVisible(pac.isVisible());
-        }
+    protected void updateVisibility(WorldMap worldMap) {
+        final boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * worldMap.numCols() - HTS;
+        setVisible(pac.isVisible() && !outsideWorld);
     }
 
     /**
@@ -190,36 +222,6 @@ public abstract class Pac3D extends Group implements Disposable {
             Logger.debug("Power remaining: {}, light max range: {0.00}", remainingTicks, maxRange);
         } else {
             light.setLightOn(false);
-        }
-    }
-
-    // Experimental:
-
-    @Override
-    public void dispose() {
-        if (chewingAnimation != null) {
-            chewingAnimation.dispose();
-            chewingAnimation = null;
-        }
-        if (movementAnimation != null) {
-            movementAnimation.dispose();
-            movementAnimation = null;
-        }
-        if (dyingAnimation != null) {
-            dyingAnimation.dispose();
-            dyingAnimation = null;
-        }
-        light.translateXProperty().unbind();
-        light.translateYProperty().unbind();
-        light.translateZProperty().unbind();
-        getChildren().clear();
-        if (body != null) {
-            body.dispose();
-            body = null;
-        }
-        if (jaw != null) {
-            jaw.dispose();
-            jaw = null;
         }
     }
 }
