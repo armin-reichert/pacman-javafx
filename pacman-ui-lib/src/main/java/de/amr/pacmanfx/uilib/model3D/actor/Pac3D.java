@@ -12,12 +12,10 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.Models3D;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.LightBase;
 import javafx.scene.PointLight;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -46,18 +44,10 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
     protected ManagedAnimation dyingAnimation;
     protected ManagedAnimation movementAnimation;
 
-    protected Pac3D(
-        AnimationRegistry animationRegistry,
-        Pac pac,
-        double size,
-        Color headColor, Color eyesColor, Color palateColor)
-    {
+    protected Pac3D(AnimationRegistry animationRegistry, Pac pac, double size) {
         this.animationRegistry = requireNonNull(animationRegistry);
         this.pac = requireNonNull(pac);
         this.size = Validations.requireNonNegative(size);
-        requireNonNull(headColor);
-        requireNonNull(eyesColor);
-        requireNonNull(palateColor);
 
         getTransforms().add(moveRotation);
         setTranslateZ(-0.5 * size);

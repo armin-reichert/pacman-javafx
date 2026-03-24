@@ -22,7 +22,7 @@ public class PacMan3D extends Pac3D {
         double size,
         Color headColor, Color eyesColor, Color palateColor)
     {
-        super(animationRegistry, pac, size, headColor, eyesColor, palateColor);
+        super(animationRegistry, pac, size);
 
         setBody(Models3D.PAC_MAN_MODEL.createPacBody(size, headColor, eyesColor, palateColor));
         setJaw(Models3D.PAC_MAN_MODEL.createBlindPacBody(size, headColor, palateColor));
