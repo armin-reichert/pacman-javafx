@@ -90,10 +90,12 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
     private final Ghost ghost;
     private final GhostColorSet colorSet;
     private GhostMaterials materials;
+
     private MeshView dressShape;
     private MeshView pupilsShape;
     private MeshView eyeballsShape;
     private Group dressGroup;
+
     private DressAnimation dressAnimation;
     private FlashingAnimation flashingAnimation;
 
@@ -145,6 +147,28 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
 
         dressAnimation = new DressAnimation(animationRegistry);
         flashingAnimation = new FlashingAnimation(animationRegistry);
+    }
+
+    @Override
+    public void dispose() {
+        materials = null;
+
+        cleanupGroup(this, true);
+
+        dressShape = null;
+        pupilsShape = null;
+        eyeballsShape = null;
+        dressGroup = null;
+
+        if (dressAnimation != null) {
+            dressAnimation.dispose();
+            dressAnimation = null;
+
+        }
+        if (flashingAnimation != null) {
+            flashingAnimation.dispose();
+            flashingAnimation = null;
+        }
     }
 
     public GhostMaterials materials() {
@@ -210,25 +234,12 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         setMaterials(materials.normal());
     }
 
-    @Override
-    public void dispose() {
-        materials = null;
-
-        cleanupGroup(this, true);
-
-        dressShape = null;
-        pupilsShape = null;
-        eyeballsShape = null;
-        dressGroup = null;
-
+    public void stopAnimations() {
         if (dressAnimation != null) {
-            dressAnimation.dispose();
-            dressAnimation = null;
-
+            dressAnimation.stop();
         }
         if (flashingAnimation != null) {
-            flashingAnimation.dispose();
-            flashingAnimation = null;
+            flashingAnimation.stop();
         }
     }
 }
