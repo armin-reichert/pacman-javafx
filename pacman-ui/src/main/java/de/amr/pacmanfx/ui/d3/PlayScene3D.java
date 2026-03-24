@@ -19,15 +19,13 @@ import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.actor.PacRepresentation3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Scores3D;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.beans.value.ChangeListener;
-import javafx.scene.Group;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.SceneAntialiasing;
-import javafx.scene.SubScene;
+import javafx.scene.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
@@ -42,6 +40,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.GameControl.CommonGameState.LEVEL_TRANSITION;
 import static de.amr.pacmanfx.model.GameControl.CommonGameState.STARTING_GAME_OR_LEVEL;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_DRAW_MODE;
+import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_LIGHT_COLOR;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
@@ -73,7 +72,7 @@ import static java.util.Objects.requireNonNull;
  * <p>Instances are created and managed by {@link GameUI}. The scene is activated when switching
  * from 2D to 3D view and remains active until the user switches back or the game ends.</p>
  */
-public class PlayScene3D implements GameScene {
+public class PlayScene3D implements GameScene, DisposableGraphicsObject {
 
     /** Fill color used at the start of the fade-in animation. */
     public static final Color SCENE_DARK_FILLCOLOR = Color.BLACK;
@@ -97,6 +96,7 @@ public class PlayScene3D implements GameScene {
     protected Scores3D scores3D;
     protected PlaySceneContextMenu contextMenu;
     protected GamePlaySoundEffects soundEffects;
+    protected AmbientLight ambientLight;
 
     private final ChangeListener<DrawMode> drawModeChangeListener = (_, _, drawMode) -> {
         if (gameLevel3D != null) {
@@ -116,7 +116,10 @@ public class PlayScene3D implements GameScene {
         final var coordinateSystem = new CoordinateSystem();
         coordinateSystem.visibleProperty().bind(GameUI.PROPERTY_3D_AXES_VISIBLE);
 
-        subSceneRoot.getChildren().addAll(gameLevel3DParent, coordinateSystem);
+        ambientLight = new AmbientLight();
+        ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);
+
+        subSceneRoot.getChildren().addAll(gameLevel3DParent, coordinateSystem, ambientLight);
         bindSceneActions();
     }
 
@@ -150,6 +153,8 @@ public class PlayScene3D implements GameScene {
         perspectiveManager.dispose();
         disposeContextMenu();
         removeAndDisposeGameLevel3D();
+        cleanupLight(ambientLight);
+        ambientLight = null;
     }
 
     @Override

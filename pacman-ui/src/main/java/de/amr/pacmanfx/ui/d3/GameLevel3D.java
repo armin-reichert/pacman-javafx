@@ -22,7 +22,6 @@ import de.amr.pacmanfx.uilib.model3D.actor.PacRepresentation3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
@@ -71,8 +70,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final List<Disposable> disposables = new ArrayList<>();
 
-    private AmbientLight ambientLight;
-
     private LevelCounter3D levelCounter3D;
 
     private LivesCounter3D livesCounter3D;
@@ -114,7 +111,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createLevelCounter3D(uiConfig, entityConfig.levelCounter());
         createLivesCounter3D(uiConfig, entityConfig.livesCounter());
         createMessageManager();
-        createAmbientLight();
 
         arrangeEntities();
 
@@ -131,8 +127,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void dispose() {
         Logger.info("Disposing game level 3D...");
         animationRegistry.clear();
-        cleanupLight(ambientLight);
-        ambientLight = null;
         if (livesCounterShapes != null) {
             disposeAll(List.of(livesCounterShapes));
             livesCounterShapes = null;
@@ -265,7 +259,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().add(maze3D.house().root());
         getChildren().add(maze3D.house().doors());
         getChildren().add(maze3D);
-        getChildren().add(ambientLight);
     }
 
     /**
@@ -337,14 +330,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         levelCounter3D.setTranslateZ(-config.elevation());
 
         disposables.add(levelCounter3D);
-    }
-
-    /**
-     * Creates ambient light.
-     */
-    private void createAmbientLight() {
-        ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);
     }
 
     /**
