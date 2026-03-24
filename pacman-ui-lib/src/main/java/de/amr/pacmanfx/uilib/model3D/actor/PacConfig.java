@@ -9,4 +9,8 @@ public record PacConfig(
     MsPacManComponentColors msColors,
     float size2D,
     float size3D)
-{}
+{
+    public PacConfig withModifiedSize3D(float newSize) {
+        return new PacConfig(colors, msColors, size2D, newSize);
+    }
+}

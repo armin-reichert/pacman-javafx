@@ -138,16 +138,8 @@ public class ArcadeMsPacMan_Factory3D implements Factory3D {
     @Override
     public MsPacManBody createLivesCounterShape3D(EntityConfig entityConfig) {
         requireNonNull(entityConfig);
-
-        final var pacConfig = entityConfig.pacConfig();
+        final PacConfig pacConfig = entityConfig.pacConfig().withModifiedSize3D(entityConfig.livesCounter().shapeSize());
         return Models3D.PAC_MAN_MODEL.createMsPacManBody(pacConfig);
-/*
-        return Models3D.PAC_MAN_MODEL.createMsPacManBody(
-            entityConfig.livesCounter().shapeSize(),
-            pacConfig.colors(),
-            pacConfig.msColors()
-        );
- */
     }
 
     @Override
