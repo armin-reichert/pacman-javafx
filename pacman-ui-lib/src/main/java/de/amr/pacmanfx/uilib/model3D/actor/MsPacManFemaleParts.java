@@ -14,39 +14,39 @@ import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 
 public class MsPacManFemaleParts extends Group implements DisposableGraphicsObject {
 
-    public MsPacManFemaleParts(double pacSize, MsPacManComponentColors colors) {
+    public MsPacManFemaleParts(PacConfig pacConfig) {
         final int sphereDivisions = 16; // 64 is default
 
-        final PhongMaterial bowMaterial = coloredPhongMaterial(colors.hairBow());
+        final PhongMaterial bowMaterial = coloredPhongMaterial(pacConfig.msColors().hairBow());
 
         final Sphere bowLeft = new Sphere(1.2, sphereDivisions);
         bowLeft.setMaterial(bowMaterial);
-        bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -pacSize * 0.55));
+        bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -pacConfig.size3D() * 0.55));
 
         final Sphere bowRight = new Sphere(1.2, sphereDivisions);
         bowRight.setMaterial(bowMaterial);
-        bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -pacSize * 0.55));
+        bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -pacConfig.size3D() * 0.55));
 
-        final PhongMaterial pearlMaterial = coloredPhongMaterial(colors.hairBowPearls());
+        final PhongMaterial pearlMaterial = coloredPhongMaterial(pacConfig.msColors().hairBowPearls());
 
         final Sphere pearlLeft = new Sphere(0.4, sphereDivisions);
         pearlLeft.setMaterial(pearlMaterial);
-        pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacSize * 0.58));
+        pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacConfig.size3D() * 0.58));
 
         final Sphere pearlRight = new Sphere(0.4, sphereDivisions);
         pearlRight.setMaterial(pearlMaterial);
-        pearlRight.getTransforms().addAll(new Translate(2, -0.5, -pacSize * 0.58));
+        pearlRight.getTransforms().addAll(new Translate(2, -0.5, -pacConfig.size3D() * 0.58));
 
         final PhongMaterial beautySpotMaterial = coloredPhongMaterial(Color.rgb(120, 120, 120));
         final Sphere beautySpot = new Sphere(0.5, sphereDivisions);
-        beautySpot.getTransforms().addAll(new Translate(-0.33 * pacSize, -0.4 * pacSize, -0.14 * pacSize));
+        beautySpot.getTransforms().addAll(new Translate(-0.33 * pacConfig.size3D(), -0.4 * pacConfig.size3D(), -0.14 * pacConfig.size3D()));
         beautySpot.setMaterial(beautySpotMaterial);
 
-        final PhongMaterial silicone = coloredPhongMaterial(colors.boobs());
+        final PhongMaterial silicone = coloredPhongMaterial(pacConfig.msColors().boobs());
 
-        final double bx = -0.2 * pacSize; // forward
+        final double bx = -0.2 * pacConfig.size3D(); // forward
         final double by = 1.6; // or - 1.6 // sidewards
-        final double bz = 0.4 * pacSize; // up/down
+        final double bz = 0.4 * pacConfig.size3D(); // up/down
 
         final Sphere boobLeft = new Sphere(1.8, sphereDivisions);
         boobLeft.setMaterial(silicone);

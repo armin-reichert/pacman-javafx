@@ -5,7 +5,6 @@ package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
@@ -19,20 +18,15 @@ import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 public class PacBody extends Group implements DisposableGraphicsObject {
 
     // TODO Adapt mesh position and rotation in OBJ file
-    public PacBody(
-        double size,
-        Mesh headMesh,   Color headColor,
-        Mesh eyesMesh,   Color eyesColor,
-        Mesh palateMesh, Color palateColor)
-    {
+    public PacBody(PacConfig pacConfig, Mesh headMesh, Mesh eyesMesh, Mesh palateMesh) {
         final var head = new MeshView(headMesh);
-        head.setMaterial(coloredPhongMaterial(headColor));
+        head.setMaterial(coloredPhongMaterial(pacConfig.colors().head()));
 
         final var eyes = new MeshView(eyesMesh);
-        eyes.setMaterial(coloredPhongMaterial(eyesColor));
+        eyes.setMaterial(coloredPhongMaterial(pacConfig.colors().eyes()));
 
         final var palate = new MeshView(palateMesh);
-        palate.setMaterial(coloredPhongMaterial(palateColor));
+        palate.setMaterial((coloredPhongMaterial(pacConfig.colors().palate())));
 
         getChildren().addAll(head, eyes, palate);
 
@@ -45,6 +39,7 @@ public class PacBody extends Group implements DisposableGraphicsObject {
         getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
 
         final var bounds = getBoundsInLocal();
+        final float size = pacConfig.size3D();
         final var scaleToSize = new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
         getTransforms().add(scaleToSize);
     }

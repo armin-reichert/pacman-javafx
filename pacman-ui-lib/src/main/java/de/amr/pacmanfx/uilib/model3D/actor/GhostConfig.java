@@ -2,10 +2,8 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.config;
+package de.amr.pacmanfx.uilib.model3D.actor;
 
-import de.amr.pacmanfx.uilib.model3D.actor.GhostColorSet;
-import de.amr.pacmanfx.uilib.model3D.actor.GhostComponentColors;
 import javafx.scene.paint.Color;
 
 public record GhostConfig(

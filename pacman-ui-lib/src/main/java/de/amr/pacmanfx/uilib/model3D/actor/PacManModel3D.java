@@ -84,53 +84,41 @@ public class PacManModel3D implements Disposable {
 	/**
 	 * Creates a fully assembled Pac-Man body with head, eyes, and palate.
 	 *
-	 * @param size   the overall size (scale) of the model
-	 * @param colors the colors used
+	 * @param pacConfig the Pac configuration
 	 * @return a new {@link PacBody} instance
 	 */
-	public PacBody createPacBody(double size, PacComponentColors colors) {
-		return new PacBody(size,
-			headMesh(), colors.head(),
-			eyesMesh(), colors.eyes(),
-			palateMesh(), colors.palate()
-		);
+	public PacBody createPacBody(PacConfig pacConfig) {
+		return new PacBody(pacConfig, headMesh(), eyesMesh(), palateMesh());
 	}
 
 	/**
 	 * Creates a Pac-Man body without eyes (used for blinking or special effects).
 	 *
-	 * @param size        the overall size (scale)
-	 * @param colors      Pac component colors
+	 * @param pacConfig the Pac configuration
 	 * @return a new {@link PacBodyNoEyes} instance
 	 */
-	public PacBodyNoEyes createBlindPacBody(double size, PacComponentColors colors) {
-		return new PacBodyNoEyes(size,
-			headMesh(), colors.head(),
-			palateMesh(), colors.palate()
-		);
+	public PacBodyNoEyes createBlindPacBody(PacConfig pacConfig) {
+		return new PacBodyNoEyes(pacConfig, headMesh(), palateMesh());
 	}
 
 	/**
 	 * Creates the additional female parts used for Ms. Pac-Man (hair bow, pearls, etc.).
 	 *
-	 * @param pacSize              size of the base Pac-Man body
-     * @param msColors             Ms. Pac-Man specific colors
+	 * @param pacConfig Pac configuration
 	 * @return a new {@link MsPacManFemaleParts} instance
 	 */
-	public MsPacManFemaleParts createFemaleBodyParts(double pacSize, MsPacManComponentColors msColors) {
-		return new MsPacManFemaleParts(pacSize, msColors);
+	public MsPacManFemaleParts createFemaleBodyParts(PacConfig pacConfig) {
+		return new MsPacManFemaleParts(pacConfig);
 	}
 
 	/**
 	 * Creates a complete Ms. Pac-Man body consisting of a Pac-Man base body
 	 * plus the additional female parts.
 	 *
-	 * @param size                overall size (scale)
-	 * @param colors              common Pac component colors
-	 * @param msColors            NMs. Pac-Man specific colors
+	 * @param pacConfig Pac configuration
 	 * @return a new {@link MsPacManBody} instance
 	 */
-	public MsPacManBody createMsPacManBody(double size, PacComponentColors colors, MsPacManComponentColors msColors) {
-		return new MsPacManBody(createPacBody(size, colors), createFemaleBodyParts(size, msColors));
+	public MsPacManBody createMsPacManBody(PacConfig pacConfig) {
+		return new MsPacManBody(createPacBody(pacConfig), createFemaleBodyParts(pacConfig));
 	}
 }

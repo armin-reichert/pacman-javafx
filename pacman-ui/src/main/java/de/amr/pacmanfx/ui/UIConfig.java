@@ -19,6 +19,8 @@ import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.model3D.actor.MsPacManComponentColors;
 import de.amr.pacmanfx.uilib.model3D.actor.PacComponentColors;
+import de.amr.pacmanfx.uilib.model3D.actor.GhostConfig;
+import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.geometry.Rectangle2D;
@@ -91,15 +93,15 @@ public interface UIConfig extends Disposable {
                 ARCADE_RED, ARCADE_WHITE, ARCADE_BLUE,
                 ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE,
                 ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED),
-            new GhostConfig(8.0f, 15.5f,
+            new de.amr.pacmanfx.uilib.model3D.actor.GhostConfig(8.0f, 15.5f,
                 ARCADE_PINK, ARCADE_WHITE, ARCADE_BLUE,
                 ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE,
                 ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED),
-            new GhostConfig(8.0f, 15.5f,
+            new de.amr.pacmanfx.uilib.model3D.actor.GhostConfig(8.0f, 15.5f,
                 ARCADE_CYAN, ARCADE_WHITE, ARCADE_BLUE,
                 ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE,
                 ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED),
-            new GhostConfig(8.0f, 15.5f,
+            new de.amr.pacmanfx.uilib.model3D.actor.GhostConfig(8.0f, 15.5f,
                 ARCADE_ORANGE, ARCADE_WHITE, ARCADE_BLUE,
                 ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE,
                 ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED)

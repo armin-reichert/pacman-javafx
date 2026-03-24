@@ -3,9 +3,8 @@
  */
 package de.amr.pacmanfx.uilib.model3D.actor;
 
-import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
@@ -17,24 +16,19 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 
-public class PacBodyNoEyes extends Group implements Disposable {
+public class PacBodyNoEyes extends Group implements DisposableGraphicsObject {
 
-    private MeshView headMeshView;
-    private MeshView palateMeshView;
-    private PhongMaterial headMaterial;
-    private PhongMaterial palateMaterial;
-
-    public PacBodyNoEyes(double size, Mesh headMesh, Color headColor, Mesh palateMesh, Color palateColor) {
-        headMaterial = coloredPhongMaterial(headColor);
-        headMeshView = new MeshView(headMesh);
+    public PacBodyNoEyes(PacConfig pacConfig, Mesh headMesh, Mesh palateMesh) {
+        final PhongMaterial headMaterial = coloredPhongMaterial(pacConfig.colors().head());
+        final var headMeshView = new MeshView(headMesh);
         headMeshView.setMaterial(headMaterial);
 
-        palateMaterial = coloredPhongMaterial(palateColor);
-        palateMeshView = new MeshView(palateMesh);
+        final PhongMaterial palateMaterial = coloredPhongMaterial(pacConfig.colors().palate());
+        final var palateMeshView = new MeshView(palateMesh);
         palateMeshView.setMaterial(palateMaterial);
 
-        var bounds = headMeshView.getBoundsInLocal();
-        var centeredOverOrigin = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
+        final var bounds = headMeshView.getBoundsInLocal();
+        final var centeredOverOrigin = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
         Stream.of(headMeshView, palateMeshView).forEach(node -> node.getTransforms().add(centeredOverOrigin));
 
         getChildren().addAll(headMeshView, palateMeshView);
@@ -44,24 +38,13 @@ public class PacBodyNoEyes extends Group implements Disposable {
         getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
         getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
 
-        var rootBounds = getBoundsInLocal();
-        getTransforms().add(new Scale(size / rootBounds.getWidth(), size / rootBounds.getHeight(), size / rootBounds.getDepth()));
+        final var extent = getBoundsInLocal();
+        final float size = pacConfig.size3D();
+        getTransforms().add(new Scale(size / extent.getWidth(), size / extent.getHeight(), size / extent.getDepth()));
     }
 
     @Override
     public void dispose() {
-        getChildren().clear();
-        if (headMeshView != null) {
-            headMeshView.setMaterial(null);
-            headMeshView.setMesh(null);
-            headMeshView = null;
-        }
-        headMaterial = null;
-        if (palateMeshView != null) {
-            palateMeshView.setMaterial(null);
-            palateMeshView.setMesh(null);
-            palateMeshView = null;
-        }
-        palateMaterial = null;
+        cleanupGroup(this, true);
     }
 }

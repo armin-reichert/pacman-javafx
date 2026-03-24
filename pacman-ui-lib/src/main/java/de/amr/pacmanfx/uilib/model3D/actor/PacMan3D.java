@@ -16,16 +16,11 @@ import javafx.util.Duration;
 
 public class PacMan3D extends Pac3D {
 
-    public PacMan3D(
-        AnimationRegistry animationRegistry,
-        Pac pac,
-        double size,
-        PacComponentColors colors)
-    {
-        super(animationRegistry, pac, size);
+    public PacMan3D(AnimationRegistry animationRegistry, Pac pac, PacConfig pacConfig) {
+        super(animationRegistry, pac, pacConfig.size3D());
 
-        setBody(Models3D.PAC_MAN_MODEL.createPacBody(size, colors));
-        setJaw(Models3D.PAC_MAN_MODEL.createBlindPacBody(size, colors));
+        setBody(Models3D.PAC_MAN_MODEL.createPacBody(pacConfig));
+        setJaw(Models3D.PAC_MAN_MODEL.createBlindPacBody(pacConfig));
 
         dyingAnimation = new ManagedAnimation(animationRegistry, "PacMan_Dying");
         dyingAnimation.setFactory(() -> {

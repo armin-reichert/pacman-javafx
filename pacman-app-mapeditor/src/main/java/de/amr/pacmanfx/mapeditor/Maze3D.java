@@ -9,7 +9,9 @@ import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.actor.GhostBody;
+import de.amr.pacmanfx.uilib.model3D.actor.MsPacManComponentColors;
 import de.amr.pacmanfx.uilib.model3D.actor.PacComponentColors;
+import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
 import de.amr.pacmanfx.uilib.model3D.world.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Wall3D;
 import javafx.beans.property.BooleanProperty;
@@ -38,6 +40,20 @@ import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
 import static de.amr.pacmanfx.uilib.UfxColors.colorWithOpacity;
 
 public class Maze3D extends Group {
+
+    private static final PacConfig PAC_CONFIG = new PacConfig(
+            new PacComponentColors(
+                Color.YELLOW, // head
+                Color.BLACK,  // palate
+                Color.grayRgb(33) // eyes
+            ),
+            new MsPacManComponentColors(
+                Color.RED, // hair bow
+                Color.BLUE, // hair bow pearls
+                Color.YELLOW.deriveColor(0, 1.0, 0.96, 1.0) // boobs
+            ),
+            12.0f,
+            16.0f);
 
     public static final float ACTOR_SIZE = 12.0f;
     public static final float HOUSE_WALL_HEIGHT = 12;
@@ -106,7 +122,7 @@ public class Maze3D extends Group {
 
         foodGroup.visibleProperty().bind(foodVisible);
 
-        pacmanShape3D = Models3D.PAC_MAN_MODEL.createPacBody(ACTOR_SIZE, new PacComponentColors(Color.YELLOW, Color.BLACK, Color.GRAY));
+        pacmanShape3D = Models3D.PAC_MAN_MODEL.createPacBody(PAC_CONFIG);
         pacmanShape3D.visibleProperty().bind(actorsVisibleProperty());
 
         ghostShapes = new GhostBody[] {

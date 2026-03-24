@@ -17,19 +17,13 @@ public class MsPacMan3D extends Pac3D {
 
     private MsPacManFemaleParts femaleBodyParts;
 
-    public MsPacMan3D(
-        AnimationRegistry animationRegistry,
-        Pac msPacMan,
-        double size,
-        PacComponentColors colors,
-        MsPacManComponentColors msColors)
-    {
-        super(animationRegistry, msPacMan, size);
+    public MsPacMan3D(AnimationRegistry animationRegistry, Pac msPacMan, PacConfig pacConfig) {
+        super(animationRegistry, msPacMan, pacConfig.size3D());
 
-        setBody(Models3D.PAC_MAN_MODEL.createPacBody(size, colors));
-        setJaw(Models3D.PAC_MAN_MODEL.createBlindPacBody(size, colors));
+        setBody(Models3D.PAC_MAN_MODEL.createPacBody(pacConfig));
+        setJaw(Models3D.PAC_MAN_MODEL.createBlindPacBody(pacConfig));
 
-        femaleBodyParts = Models3D.PAC_MAN_MODEL.createFemaleBodyParts(size, msColors);
+        femaleBodyParts = Models3D.PAC_MAN_MODEL.createFemaleBodyParts(pacConfig);
         getChildren().add(femaleBodyParts);
 
         dyingAnimation = new ManagedAnimation(animationRegistry, "Ms_PacMan_Dying");

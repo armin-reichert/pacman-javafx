@@ -13,6 +13,7 @@ import de.amr.pacmanfx.uilib.UfxColors;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
 import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
+import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -46,7 +47,7 @@ public interface Factory3D extends Disposable {
      * @param animationRegistry the registry where animations are stored
      * @return the 3D representation of a ghost
      */
-    GhostAppearance3D createGhostAppearance3D(Ghost ghost, GhostConfig ghostConfig, AnimationRegistry animationRegistry);
+    GhostAppearance3D createGhostAppearance3D(Ghost ghost, de.amr.pacmanfx.uilib.model3D.actor.GhostConfig ghostConfig, AnimationRegistry animationRegistry);
 
     /**
      * Creates the 3D representation of the lives counter for this variant.

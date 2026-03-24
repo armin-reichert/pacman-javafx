@@ -4,6 +4,9 @@
 
 package de.amr.pacmanfx.ui.config;
 
+import de.amr.pacmanfx.uilib.model3D.actor.GhostConfig;
+import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
+
 import java.util.List;
 
 public record EntityConfig(

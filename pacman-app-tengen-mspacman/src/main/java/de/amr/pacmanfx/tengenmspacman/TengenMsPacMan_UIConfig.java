@@ -28,6 +28,7 @@ import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.model3D.actor.MsPacManComponentColors;
 import de.amr.pacmanfx.uilib.model3D.actor.PacComponentColors;
+import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.media.MediaPlayer;
@@ -71,19 +72,19 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
             8.0f,
             16.0f),
         List.of(
-            new GhostConfig(8.0f, 15.5f,
+            new de.amr.pacmanfx.uilib.model3D.actor.GhostConfig(8.0f, 15.5f,
                 nesColor(0x05), nesColor(0x20), nesColor(0x11),
                 nesColor(0x01), nesColor(0x20), nesColor(0x20),
                 nesColor(0x20), nesColor(0x20), nesColor(0x20)),
-            new GhostConfig(8.0f, 15.5f,
+            new de.amr.pacmanfx.uilib.model3D.actor.GhostConfig(8.0f, 15.5f,
                 nesColor(0x25), nesColor(0x20), nesColor(0x11),
                 nesColor(0x01), nesColor(0x20), nesColor(0x20),
                 nesColor(0x20), nesColor(0x20), nesColor(0x20)),
-            new GhostConfig(8.0f, 15.5f,
+            new de.amr.pacmanfx.uilib.model3D.actor.GhostConfig(8.0f, 15.5f,
                 nesColor(0x11), nesColor(0x20), nesColor(0x11),
                 nesColor(0x01), nesColor(0x20), nesColor(0x20),
                 nesColor(0x20), nesColor(0x20), nesColor(0x20)),
-            new GhostConfig(8.0f, 15.5f,
+            new de.amr.pacmanfx.uilib.model3D.actor.GhostConfig(8.0f, 15.5f,
                 nesColor(0x16), nesColor(0x20), nesColor(0x11),
                 nesColor(0x01), nesColor(0x20), nesColor(0x20),
                 nesColor(0x20), nesColor(0x20), nesColor(0x20))

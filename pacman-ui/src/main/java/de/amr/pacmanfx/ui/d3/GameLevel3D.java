@@ -19,6 +19,7 @@ import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.actor.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
 import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
+import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -274,7 +275,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates and initializes all ghost 3D representations.
      */
-    private void createGhosts3D(Factory3D factory3D, List<GhostConfig> ghostConfigs) {
+    private void createGhosts3D(Factory3D factory3D, List<de.amr.pacmanfx.uilib.model3D.actor.GhostConfig> ghostConfigs) {
         ghosts3D = level.ghosts()
             .map(ghost -> createGhostAppearance3D(factory3D, ghostConfigs, ghost))
             .toList();
@@ -287,7 +288,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates a 3D ghost representation for the given model ghost.
      */
-    private GhostAppearance3D createGhostAppearance3D(Factory3D factory3D, List<GhostConfig> ghostConfigs, Ghost ghost) {
+    private GhostAppearance3D createGhostAppearance3D(Factory3D factory3D, List<de.amr.pacmanfx.uilib.model3D.actor.GhostConfig> ghostConfigs, Ghost ghost) {
         final var ghostAppearance3D = factory3D.createGhostAppearance3D(
             ghost,
             ghostConfigs.get(ghost.personality()),
