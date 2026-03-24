@@ -17,7 +17,7 @@ import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 
 /**
  * Third cut scene in Arcade Pac-Man game:<br>
- * Red ghost in damaged dressColor chases Pac-Man from right to left over the screen.
+ * Red ghost in damaged dress chases Pac-Man from right to left over the screen.
  * After they have disappeared, a naked, shaking ghost runs from left over the screen.
  */
 public class ArcadePacMan_CutScene3 extends GameScene2D {

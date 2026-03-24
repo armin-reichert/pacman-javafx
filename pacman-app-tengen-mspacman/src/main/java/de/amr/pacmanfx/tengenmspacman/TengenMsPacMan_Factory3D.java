@@ -48,21 +48,21 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
         GhostMaterials materials = ghostMaterialsCache.get(colorSet);
         if (materials == null) {
             final var normalMaterials = new GhostComponentMaterials(
-                coloredPhongMaterial(colorSet.normal().dressColor()),
-                coloredPhongMaterial(colorSet.normal().eyeballsColor()),
-                coloredPhongMaterial(colorSet.normal().pupilsColor())
+                coloredPhongMaterial(colorSet.normal().dress()),
+                coloredPhongMaterial(colorSet.normal().eyeballs()),
+                coloredPhongMaterial(colorSet.normal().pupils())
             );
 
             final var frightenedMaterials = new GhostComponentMaterials(
-                coloredPhongMaterial(colorSet.frightened().dressColor()),
-                coloredPhongMaterial(colorSet.frightened().eyeballsColor()),
-                coloredPhongMaterial(colorSet.frightened().pupilsColor())
+                coloredPhongMaterial(colorSet.frightened().dress()),
+                coloredPhongMaterial(colorSet.frightened().eyeballs()),
+                coloredPhongMaterial(colorSet.frightened().pupils())
             );
 
             final var flashingMaterials = new GhostComponentMaterials(
-                coloredPhongMaterial(colorSet.flashing().dressColor()),
-                coloredPhongMaterial(colorSet.flashing().eyeballsColor()),
-                coloredPhongMaterial(colorSet.flashing().pupilsColor())
+                coloredPhongMaterial(colorSet.flashing().dress()),
+                coloredPhongMaterial(colorSet.flashing().eyeballs()),
+                coloredPhongMaterial(colorSet.flashing().pupils())
             );
 
             materials = new GhostMaterials(normalMaterials, frightenedMaterials, flashingMaterials);

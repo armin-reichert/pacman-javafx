@@ -68,20 +68,20 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
             final Duration highlightTime = flashEndTime.divide(3);
             final var flashingTimeline = new Timeline(
                 new KeyFrame(highlightTime,
-                    new KeyValue(materials.flashing().dress().diffuseColorProperty(),  colorSet.flashing().dressColor()),
-                    new KeyValue(materials.flashing().pupils().diffuseColorProperty(), colorSet.flashing().pupilsColor())
+                    new KeyValue(materials.flashing().dress().diffuseColorProperty(),  colorSet.flashing().dress()),
+                    new KeyValue(materials.flashing().pupils().diffuseColorProperty(), colorSet.flashing().pupils())
                 ),
                 new KeyFrame(flashEndTime,
-                    new KeyValue(materials.flashing().dress().diffuseColorProperty(),  colorSet.frightened().dressColor()),
-                    new KeyValue(materials.flashing().pupils().diffuseColorProperty(), colorSet.frightened().pupilsColor())
+                    new KeyValue(materials.flashing().dress().diffuseColorProperty(),  colorSet.frightened().dress()),
+                    new KeyValue(materials.flashing().pupils().diffuseColorProperty(), colorSet.frightened().pupils())
                 )
             );
             flashingTimeline.setCycleCount(numFlashes);
             flashingTimeline.setOnFinished(_ -> {
-                materials.flashing().dress().setDiffuseColor(colorSet.frightened().dressColor());
-                materials.flashing().dress().setSpecularColor(colorSet.frightened().dressColor().brighter());
-                materials.flashing().pupils().setDiffuseColor(colorSet.frightened().pupilsColor());
-                materials.flashing().pupils().setSpecularColor(colorSet.frightened().pupilsColor().brighter());
+                materials.flashing().dress().setDiffuseColor(colorSet.frightened().dress());
+                materials.flashing().dress().setSpecularColor(colorSet.frightened().dress().brighter());
+                materials.flashing().pupils().setDiffuseColor(colorSet.frightened().pupils());
+                materials.flashing().pupils().setSpecularColor(colorSet.frightened().pupils().brighter());
             });
             return flashingTimeline;
         }

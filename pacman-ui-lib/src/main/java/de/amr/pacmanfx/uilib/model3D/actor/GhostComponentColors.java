@@ -5,4 +5,4 @@ package de.amr.pacmanfx.uilib.model3D.actor;
 
 import javafx.scene.paint.Color;
 
-public record GhostComponentColors(Color dressColor, Color pupilsColor, Color eyeballsColor) {}
+public record GhostComponentColors(Color dress, Color eyeballs, Color pupils) {}

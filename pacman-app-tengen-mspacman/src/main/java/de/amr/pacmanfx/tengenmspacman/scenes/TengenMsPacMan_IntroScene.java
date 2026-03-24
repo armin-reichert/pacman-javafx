@@ -14,8 +14,8 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenGameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.uilib.model3D.actor.GhostConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
+import de.amr.pacmanfx.uilib.model3D.actor.GhostConfig;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -68,7 +68,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
         final List<GhostConfig> ghostConfigs = uiConfig.entityConfig().ghostConfigs();
         ghostColors = Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
-            .map(personality -> ghostConfigs.get(personality).dressColor())
+            .map(personality -> ghostConfigs.get(personality).normalColors().dress())
             .toArray(Color[]::new);
 
         marquee = new Marquee();

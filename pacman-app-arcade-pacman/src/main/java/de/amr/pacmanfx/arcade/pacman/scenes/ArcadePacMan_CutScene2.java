@@ -23,7 +23,7 @@ import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimatio
 /**
  * Second cut scene in Arcade Pac-Man game:<br>
  * Red ghost chases Pac-Man from right to left over screen, at the middle of the screen, a nail
- * is stopping the red ghost, its dressColor gets stretched and eventually raptures.
+ * is stopping the red ghost, its dress gets stretched and eventually raptures.
  */
 public class ArcadePacMan_CutScene2 extends GameScene2D {
 

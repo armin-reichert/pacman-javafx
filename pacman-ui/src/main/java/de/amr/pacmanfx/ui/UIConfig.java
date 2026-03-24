@@ -17,10 +17,7 @@ import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.model3D.actor.MsPacManComponentColors;
-import de.amr.pacmanfx.uilib.model3D.actor.PacComponentColors;
-import de.amr.pacmanfx.uilib.model3D.actor.GhostConfig;
-import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
+import de.amr.pacmanfx.uilib.model3D.actor.*;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.geometry.Rectangle2D;
@@ -90,21 +87,25 @@ public interface UIConfig extends Disposable {
             16.0f),
         List.of(
             new GhostConfig(8.0f, 15.5f,
-                ARCADE_RED, ARCADE_WHITE, ARCADE_BLUE,
-                ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE,
-                ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED),
-            new de.amr.pacmanfx.uilib.model3D.actor.GhostConfig(8.0f, 15.5f,
-                ARCADE_PINK, ARCADE_WHITE, ARCADE_BLUE,
-                ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE,
-                ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED),
-            new de.amr.pacmanfx.uilib.model3D.actor.GhostConfig(8.0f, 15.5f,
-                ARCADE_CYAN, ARCADE_WHITE, ARCADE_BLUE,
-                ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE,
-                ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED),
-            new de.amr.pacmanfx.uilib.model3D.actor.GhostConfig(8.0f, 15.5f,
-                ARCADE_ORANGE, ARCADE_WHITE, ARCADE_BLUE,
-                ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE,
-                ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED)
+                new GhostComponentColors(ARCADE_RED, ARCADE_WHITE, ARCADE_BLUE),
+                new GhostComponentColors(ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE),
+                new GhostComponentColors(ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED)
+            ),
+            new GhostConfig(8.0f, 15.5f,
+                new GhostComponentColors(ARCADE_PINK, ARCADE_WHITE, ARCADE_BLUE),
+                new GhostComponentColors(ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE),
+                new GhostComponentColors(ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED)
+            ),
+            new GhostConfig(8.0f, 15.5f,
+                new GhostComponentColors(ARCADE_CYAN, ARCADE_WHITE, ARCADE_BLUE),
+                new GhostComponentColors(ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE),
+                new GhostComponentColors(ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED)
+            ),
+            new GhostConfig(8.0f, 15.5f,
+                new GhostComponentColors(ARCADE_ORANGE, ARCADE_WHITE, ARCADE_BLUE),
+                new GhostComponentColors(ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE),
+                new GhostComponentColors(ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED)
+            )
         ),
         new BonusConfig(8.0f, 14.5f),
         new EnergizerConfig3D(3, 3.5f, 6.0f, 0.2f, 1.0f),
