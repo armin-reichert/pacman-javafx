@@ -17,6 +17,7 @@ import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.geometry.Bounds;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.*;
@@ -130,7 +131,7 @@ public class ArcadePacMan_Factory3D implements Factory3D {
     }
 
     @Override
-    public PacBody createLivesCounterShape3D(EntityConfig entityConfig) {
+    public Group createLivesCounterShape3D(EntityConfig entityConfig) {
         requireNonNull(entityConfig);
         final PacConfig pacConfig = entityConfig.pacConfig().withModifiedSize3D(entityConfig.livesCounter().shapeSize());
         return Models3D.PAC_MAN_MODEL.createPacBody(pacConfig);

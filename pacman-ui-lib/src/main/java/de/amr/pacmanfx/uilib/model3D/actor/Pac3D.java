@@ -33,7 +33,7 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
 
     protected PointLight powerLight;
 
-    protected PacBody body;
+    protected Group body;
     protected PacBodyNoEyes jaw;
 
     protected Rotate moveRotation = new Rotate();
@@ -52,7 +52,7 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
         chewingAnimation.setFactory(this::createChewingAnimation);
     }
 
-    public void setBody(PacBody body) {
+    public void setBody(Group body) {
         this.body = requireNonNull(body);
         if (jaw == null) {
             getChildren().setAll(body);
