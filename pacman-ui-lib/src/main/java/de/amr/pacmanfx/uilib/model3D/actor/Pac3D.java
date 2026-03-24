@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.uilib.model3D.actor;
 
-import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
@@ -30,7 +29,6 @@ import static java.util.Objects.requireNonNull;
 public abstract class Pac3D extends Group implements DisposableGraphicsObject {
 
     protected final Pac pac;
-    protected final double size;
 
     protected final AnimationRegistry animationRegistry;
     protected final PointLight light = new PointLight();
@@ -47,7 +45,6 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
     protected Pac3D(AnimationRegistry animationRegistry, Pac pac, double size) {
         this.animationRegistry = requireNonNull(animationRegistry);
         this.pac = requireNonNull(pac);
-        this.size = Validations.requireNonNegative(size);
 
         getTransforms().add(moveRotation);
         setTranslateZ(-0.5 * size);
@@ -196,7 +193,6 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
         final Vector2f center = pac.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
-        setTranslateZ(-0.5 * size);
         final double angle = switch (pac.moveDir()) {
             case LEFT  -> 0;
             case UP    -> 90;
