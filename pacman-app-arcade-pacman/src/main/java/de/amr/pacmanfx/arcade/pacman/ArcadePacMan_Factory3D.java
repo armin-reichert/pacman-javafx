@@ -118,7 +118,7 @@ public class ArcadePacMan_Factory3D implements Factory3D {
     }
 
     @Override
-    public MutableGhost3D createMutableGhost3D(
+    public GhostAppearance3D createMutableGhost3D(
         Ghost ghost,
         GhostConfig ghostConfig,
         AnimationRegistry animationRegistry)
@@ -131,7 +131,7 @@ public class ArcadePacMan_Factory3D implements Factory3D {
         final GhostMaterials materials = getOrCreateGhostMaterials(colorSet);
         final GhostMeshes meshes = createGhostMeshes();
 
-        return new MutableGhost3D(
+        return new GhostAppearance3D(
             animationRegistry,
             ghost,
             colorSet,

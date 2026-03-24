@@ -7,7 +7,7 @@ package de.amr.pacmanfx.uilib.model3D.animation;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.model3D.actor.MutableGhost3D;
+import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -18,16 +18,16 @@ import static java.util.Objects.requireNonNull;
 
 public class Ghost3DBrakeAnimation extends ManagedAnimation {
 
-    private final MutableGhost3D mutableGhost3D;
+    private final GhostAppearance3D ghostAppearance3D;
 
-    public Ghost3DBrakeAnimation(AnimationRegistry animationRegistry, MutableGhost3D mutableGhost3D) {
-        super(animationRegistry, "Ghost_Braking_%s".formatted(mutableGhost3D.ghost().name()));
-        this.mutableGhost3D = requireNonNull(mutableGhost3D);
+    public Ghost3DBrakeAnimation(AnimationRegistry animationRegistry, GhostAppearance3D ghostAppearance3D) {
+        super(animationRegistry, "Ghost_Braking_%s".formatted(ghostAppearance3D.ghost().name()));
+        this.ghostAppearance3D = requireNonNull(ghostAppearance3D);
         setFactory(this::createAnimationFX);
     }
 
     private Animation createAnimationFX() {
-        var rotateTransition = new RotateTransition(Duration.seconds(0.5), mutableGhost3D);
+        var rotateTransition = new RotateTransition(Duration.seconds(0.5), ghostAppearance3D);
         rotateTransition.setAxis(Rotate.Y_AXIS);
         rotateTransition.setAutoReverse(true);
         rotateTransition.setCycleCount(2);
@@ -39,7 +39,7 @@ public class Ghost3DBrakeAnimation extends ManagedAnimation {
     public void playFromStart() {
         var rotateTransition = (RotateTransition) animationFX();
         rotateTransition.stop();
-        rotateTransition.setByAngle(mutableGhost3D.ghost().moveDir() == Direction.LEFT ? -35 : 35);
+        rotateTransition.setByAngle(ghostAppearance3D.ghost().moveDir() == Direction.LEFT ? -35 : 35);
         rotateTransition.playFromStart();
     }
 
@@ -47,14 +47,14 @@ public class Ghost3DBrakeAnimation extends ManagedAnimation {
     public void playOrContinue() {
         var rotateTransition = (RotateTransition) animationFX();
         rotateTransition.stop();
-        rotateTransition.setByAngle(mutableGhost3D.ghost().moveDir() == Direction.LEFT ? -35 : 35);
+        rotateTransition.setByAngle(ghostAppearance3D.ghost().moveDir() == Direction.LEFT ? -35 : 35);
         rotateTransition.play();
     }
 
     @Override
     public void stop() {
         super.stop();
-        mutableGhost3D.setRotationAxis(Rotate.Y_AXIS);
-        mutableGhost3D.setRotate(0);
+        ghostAppearance3D.setRotationAxis(Rotate.Y_AXIS);
+        ghostAppearance3D.setRotate(0);
     }
 }

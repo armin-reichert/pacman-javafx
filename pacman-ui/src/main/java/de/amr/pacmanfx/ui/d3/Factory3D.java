@@ -11,7 +11,7 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.*;
 import de.amr.pacmanfx.uilib.UfxColors;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.model3D.actor.MutableGhost3D;
+import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
 import de.amr.pacmanfx.uilib.model3D.actor.PacRepresentation3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.beans.property.DoubleProperty;
@@ -46,7 +46,7 @@ public interface Factory3D extends Disposable {
      * @param animationRegistry the registry where animations are stored
      * @return the 3D representation of a ghost
      */
-    MutableGhost3D createMutableGhost3D(Ghost ghost, GhostConfig ghostConfig, AnimationRegistry animationRegistry);
+    GhostAppearance3D createMutableGhost3D(Ghost ghost, GhostConfig ghostConfig, AnimationRegistry animationRegistry);
 
     /**
      * Creates the 3D representation of the lives counter for this variant.

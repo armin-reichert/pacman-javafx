@@ -4,7 +4,7 @@
 
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance;
-import de.amr.pacmanfx.uilib.model3D.actor.MutableGhost3D;
+import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,7 +27,7 @@ public class TestGhostAppearanceSelector {
     @Test
     public void testLeavingHouse() {
         for (AppearanceResult r : GHOST_LEAVING_HOUSE_APPEARANCES) {
-            GhostAppearance appearance = MutableGhost3D.computeAppearance(GhostState.LEAVING_HOUSE, r.power, r.fading, r.killed);
+            GhostAppearance appearance = GhostAppearance3D.computeAppearance(GhostState.LEAVING_HOUSE, r.power, r.fading, r.killed);
             assertEquals(r.appearance, appearance, "powerActive=%s powerFading=%s killed=%s".formatted(r.power, r.fading, r.killed));
         }
     }

@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.assets.Translator;
 import de.amr.pacmanfx.uilib.model3D.actor.Bonus3D;
-import de.amr.pacmanfx.uilib.model3D.actor.MutableGhost3D;
+import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.animation.SequentialTransition;
 import javafx.scene.shape.Shape3D;
@@ -196,7 +196,7 @@ public class GameLevel3DEventHandler {
             animations.ghostLightAnimation().stop();
             animations.wallColorFlashingAnimation().stop();
         });
-        level3D.ghosts3D().forEach(MutableGhost3D::stopAllAnimations);
+        level3D.ghosts3D().forEach(GhostAppearance3D::stopAllAnimations);
         level3D.bonus3D().ifPresent(Bonus3D::expire);
 
         // One last update before dying animation
@@ -217,9 +217,9 @@ public class GameLevel3DEventHandler {
         final GameLevel level = level3D.level();
         level.game().simulationStep().ghostsKilled.forEach(killedGhost -> {
             final int killedIndex = level.energizerVictims().indexOf(killedGhost);
-            final MutableGhost3D mutableGhost3D = level3D.ghosts3D().get(killedGhost.personality());
+            final GhostAppearance3D ghostAppearance3D = level3D.ghosts3D().get(killedGhost.personality());
             final Shape3D numberShape3D = ui.currentConfig().factory3D().createNumberShape3D(ui.currentConfig(), killedIndex);
-            mutableGhost3D.setNumberShape3D(numberShape3D);
+            ghostAppearance3D.setNumberShape3D(numberShape3D);
         });
     }
 

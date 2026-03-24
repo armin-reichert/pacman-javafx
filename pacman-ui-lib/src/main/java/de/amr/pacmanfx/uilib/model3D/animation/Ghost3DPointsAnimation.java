@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.model3D.actor.MutableGhost3D;
+import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -20,16 +20,16 @@ import static java.util.Objects.requireNonNull;
 
 public class Ghost3DPointsAnimation extends ManagedAnimation {
 
-    private final MutableGhost3D mutableGhost3D;
+    private final GhostAppearance3D ghostAppearance3D;
 
-    public Ghost3DPointsAnimation(AnimationRegistry animationRegistry, MutableGhost3D mutableGhost3D) {
-        super(animationRegistry, "Ghost_Points_%s".formatted(mutableGhost3D.ghost().name()));
-        this.mutableGhost3D = requireNonNull(mutableGhost3D);
+    public Ghost3DPointsAnimation(AnimationRegistry animationRegistry, GhostAppearance3D ghostAppearance3D) {
+        super(animationRegistry, "Ghost_Points_%s".formatted(ghostAppearance3D.ghost().name()));
+        this.ghostAppearance3D = requireNonNull(ghostAppearance3D);
         setFactory(this::createAnimationFX);
     }
 
     private Animation createAnimationFX() {
-        final Optional<Shape3D> optNumberShape = mutableGhost3D.optNumberShape3D();
+        final Optional<Shape3D> optNumberShape = ghostAppearance3D.optNumberShape3D();
         if (optNumberShape.isPresent()) {
             var numberBoxRotation = new RotateTransition(Duration.seconds(1), optNumberShape.get());
             numberBoxRotation.setAxis(Rotate.X_AXIS);

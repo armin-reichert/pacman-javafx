@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.d3.animation.GameLevel3DAnimations;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.actor.Bonus3D;
-import de.amr.pacmanfx.uilib.model3D.actor.MutableGhost3D;
+import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
 import de.amr.pacmanfx.uilib.model3D.actor.PacRepresentation3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.beans.binding.Bindings;
@@ -59,7 +59,7 @@ import static java.util.Objects.requireNonNull;
  * @see PlayScene3D
  * @see Maze3D
  * @see PacRepresentation3D
- * @see MutableGhost3D
+ * @see GhostAppearance3D
  * @see DisposableGraphicsObject
  */
 public class GameLevel3D extends Group implements DisposableGraphicsObject {
@@ -79,7 +79,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private Maze3D maze3D;
     private MazeFood3D food3D;
     private PacRepresentation3D pac3D;
-    private List<MutableGhost3D> ghosts3D;
+    private List<GhostAppearance3D> ghosts3D;
     private Bonus3D bonus3D;
 
     private GameLevel3DAnimations animations;
@@ -190,7 +190,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     /** @return immutable list of all ghost 3D representations */
-    public List<MutableGhost3D> ghosts3D() {
+    public List<GhostAppearance3D> ghosts3D() {
         return List.copyOf(ghosts3D);
     }
 
@@ -292,7 +292,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates a mutable 3D ghost representation for the given model ghost.
      */
-    private MutableGhost3D createMutableGhost3D(Factory3D factory3D, List<GhostConfig> ghostConfigs, Ghost ghost) {
+    private GhostAppearance3D createMutableGhost3D(Factory3D factory3D, List<GhostConfig> ghostConfigs, Ghost ghost) {
         final var mutableGhost3D = factory3D.createMutableGhost3D(
             ghost,
             ghostConfigs.get(ghost.personality()),

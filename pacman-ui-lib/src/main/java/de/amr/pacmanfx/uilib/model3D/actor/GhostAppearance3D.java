@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
  * <li>{@link GhostAppearance#NUMBER}: eaten ghost's point value.
  * </ul>
  */
-public class MutableGhost3D extends Group implements DisposableGraphicsObject {
+public class GhostAppearance3D extends Group implements DisposableGraphicsObject {
 
     private static final double HEIGHT_OVER_FLOOR = 2.0;
 
@@ -70,7 +70,7 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
     private Ghost3DBrakeAnimation brakeAnimation;
     private Ghost3DPointsAnimation pointsAnimation;
 
-    public MutableGhost3D(
+    public GhostAppearance3D(
         AnimationRegistry animationRegistry,
         Ghost ghost,
         GhostColorSet colorSet,
@@ -87,12 +87,12 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
 
         ghost3D = new Ghost3D(animationRegistry, ghost, colorSet, meshes, materials, size);
 
-        pointsAnimation = new Ghost3DPointsAnimation(animationRegistry, this);
         brakeAnimation = new Ghost3DBrakeAnimation(animationRegistry, this);
+        pointsAnimation = new Ghost3DPointsAnimation(animationRegistry, this);
 
         getChildren().add(ghost3D);
         addPropertyChangeListeners();
-        updateTransform();
+        updateTransform(ghost);
         setTranslateZ(-0.5 * size - HEIGHT_OVER_FLOOR);
 
         appearance.set(GhostAppearance.NORMAL);
@@ -115,22 +115,13 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
 
     public void init(GameLevel level) {
         stopAllAnimations();
-        updateTransform();
+        updateTransform(ghost());
         updateAppearance(level);
     }
 
-    /**
-     * Called on each clock tick (frame).
-     *
-     * @param level the game level
-     */
     public void update(GameLevel level) {
+        updateTransform(ghost());
         updateAppearance(level);
-        if (ghost().isVisible()) {
-            ghost3D.dressAnimation().playOrContinue();
-        } else {
-            ghost3D.dressAnimation().stop();
-        }
         if (ghost().moveInfo().tunnelEntered) {
             brakeAnimation.playFromStart();
         }
@@ -172,9 +163,11 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
 
     // private area, no trespassing
 
-    private final ChangeListener<Vector2f> positionChangeListener = (_, _, _) -> updateTransform();
+    private final ChangeListener<Boolean> visibleChangeListener = (_, _, visible) -> handleGhostVisibilityChange(visible);
 
-    private final ChangeListener<Direction> wishDirChangeListener = (_, _, _) -> updateTransform();
+    private final ChangeListener<Vector2f> positionChangeListener = (_, _, _) -> updateTransform(ghost());
+
+    private final ChangeListener<Direction> wishDirChangeListener = (_, _, _) -> updateTransform(ghost());
 
     private final ChangeListener<GhostAppearance> appearanceChangeListener = (_, _, ghostAppearance) -> {
         if (requireNonNull(ghostAppearance) == GhostAppearance.NUMBER) {
@@ -212,33 +205,45 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
 
     private void addPropertyChangeListeners() {
         ghost().positionProperty().addListener(positionChangeListener);
+        ghost().visibleProperty().addListener(visibleChangeListener);
         ghost().wishDirProperty().addListener(wishDirChangeListener);
         appearance.addListener(appearanceChangeListener);
     }
 
     private void removePropertyChangeListeners() {
         ghost().positionProperty().removeListener(positionChangeListener);
+        ghost().visibleProperty().removeListener(visibleChangeListener);
         ghost().wishDirProperty().removeListener(wishDirChangeListener);
         appearance.removeListener(appearanceChangeListener);
     }
 
-    private void updateTransform() {
-        final Vector2f center = ghost().center();
+    private void updateTransform(Ghost ghost) {
+        final Vector2f center = ghost.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
-        ghost3D.turnTowards(ghost().wishDir());
+        ghost3D.turnTowards(ghost.wishDir());
     }
 
-    private void updateAppearance(GameLevel gameLevel) {
-        final boolean powerActive = gameLevel.pac().powerTimer().isRunning();
-        final boolean powerFading = gameLevel.pac().isPowerFading(gameLevel);
-        // ghost that got already killed in the current power phase do not look frightened anymore
-        final boolean killedInCurrentPhase = gameLevel.energizerVictims().contains(ghost());
+    private void updateAppearance(GameLevel level) {
+        final boolean powerActive = level.pac().powerTimer().isRunning();
+        final boolean powerFading = level.pac().isPowerFading(level);
+        // ghosts that already got killed in the current power phase do not look frightened anymore
+        final boolean killedInCurrentPhase = level.energizerVictims().contains(ghost());
         final GhostAppearance newAppearance = computeAppearance(
             ghost().state(),
             powerActive,
             powerFading,
             killedInCurrentPhase);
         appearance.set(newAppearance);
+    }
+
+    private void handleGhostVisibilityChange(boolean visible) {
+        if (visible) {
+            ghost3D.dressAnimation().playFromStart();
+            Logger.info("Dress animation for {} started", ghost().name());
+        } else {
+            ghost3D.dressAnimation().stop();
+            Logger.info("Dress animation for {} stopped", ghost().name());
+        }
     }
 }
