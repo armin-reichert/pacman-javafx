@@ -7,7 +7,6 @@ package de.amr.pacmanfx.uilib.model3D.actor;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.uilib.model3D.Model3DException;
 import de.amr.pacmanfx.uilib.objimport.Model3D;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Mesh;
 
 /**
@@ -115,18 +114,11 @@ public class PacManModel3D implements Disposable {
 	 * Creates the additional female parts used for Ms. Pac-Man (hair bow, pearls, etc.).
 	 *
 	 * @param pacSize              size of the base Pac-Man body
-	 * @param hairBowColor         color of the hair bow
-	 * @param hairBowPearlsColor   color of the bow pearls
-	 * @param boobsColor           color of the chest decorations
+     * @param msColors             Ms. Pac-Man specific colors
 	 * @return a new {@link MsPacManFemaleParts} instance
 	 */
-	public MsPacManFemaleParts createFemaleBodyParts(
-			double pacSize,
-			Color hairBowColor,
-			Color hairBowPearlsColor,
-			Color boobsColor)
-	{
-		return new MsPacManFemaleParts(pacSize, hairBowColor, hairBowPearlsColor, boobsColor);
+	public MsPacManFemaleParts createFemaleBodyParts(double pacSize, MsPacManComponentColors msColors) {
+		return new MsPacManFemaleParts(pacSize, msColors);
 	}
 
 	/**
@@ -135,18 +127,10 @@ public class PacManModel3D implements Disposable {
 	 *
 	 * @param size                overall size (scale)
 	 * @param colors              common Pac component colors
-	 * @param hairBowColor        color of the hair bow
-	 * @param hairBowPearlsColor  color of the bow pearls
-	 * @param boobsColor          color of the chest decorations
+	 * @param msColors            NMs. Pac-Man specific colors
 	 * @return a new {@link MsPacManBody} instance
 	 */
-	public MsPacManBody createMsPacManBody(
-		double size,
-		PacComponentColors colors,
-		Color hairBowColor, Color hairBowPearlsColor, Color boobsColor)
-	{
-		final var body = createPacBody(size, colors);
-		final var femaleParts = createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor);
-		return new MsPacManBody(body, femaleParts);
+	public MsPacManBody createMsPacManBody(double size, PacComponentColors colors, MsPacManComponentColors msColors) {
+		return new MsPacManBody(createPacBody(size, colors), createFemaleBodyParts(size, msColors));
 	}
 }

@@ -10,7 +10,6 @@ import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.animation.HipSwayingAnimation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -23,14 +22,14 @@ public class MsPacMan3D extends Pac3D {
         Pac msPacMan,
         double size,
         PacComponentColors colors,
-        Color hairBowColor, Color hairBowPearlsColor, Color boobsColor)
+        MsPacManComponentColors msColors)
     {
         super(animationRegistry, msPacMan, size);
 
         setBody(Models3D.PAC_MAN_MODEL.createPacBody(size, colors));
         setJaw(Models3D.PAC_MAN_MODEL.createBlindPacBody(size, colors));
 
-        femaleBodyParts = Models3D.PAC_MAN_MODEL.createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor);
+        femaleBodyParts = Models3D.PAC_MAN_MODEL.createFemaleBodyParts(size, msColors);
         getChildren().add(femaleBodyParts);
 
         dyingAnimation = new ManagedAnimation(animationRegistry, "Ms_PacMan_Dying");

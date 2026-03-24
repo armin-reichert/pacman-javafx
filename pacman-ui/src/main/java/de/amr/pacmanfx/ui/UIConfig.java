@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.model3D.actor.MsPacManComponentColors;
 import de.amr.pacmanfx.uilib.model3D.actor.PacComponentColors;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
@@ -78,9 +79,11 @@ public interface UIConfig extends Disposable {
                 ARCADE_BROWN,  // palate
                 Color.grayRgb(33) // eyes
             ),
-            ARCADE_RED,
-            ARCADE_BLUE,
-            ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0),
+            new MsPacManComponentColors(
+                ARCADE_RED, // hair bow
+                ARCADE_BLUE, // hair bow pearls
+                ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0) // boobs
+            ),
             8.0f,
             16.0f),
         List.of(

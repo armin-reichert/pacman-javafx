@@ -4,14 +4,12 @@
 
 package de.amr.pacmanfx.ui.config;
 
+import de.amr.pacmanfx.uilib.model3D.actor.MsPacManComponentColors;
 import de.amr.pacmanfx.uilib.model3D.actor.PacComponentColors;
-import javafx.scene.paint.Color;
 
 public record PacConfig(
     PacComponentColors colors,
-    Color hairbowColor,
-    Color hairBowPearlsColor,
-    Color boobsColor,
+    MsPacManComponentColors msColors,
     float size2D,
     float size3D)
 {}
