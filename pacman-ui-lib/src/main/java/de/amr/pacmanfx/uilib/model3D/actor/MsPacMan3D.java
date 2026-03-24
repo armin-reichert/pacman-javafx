@@ -10,12 +10,11 @@ import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.animation.HipSwayingAnimation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 public class MsPacMan3D extends Pac3D {
-
-    private MsPacManFemaleParts femaleBodyParts;
 
     public MsPacMan3D(AnimationRegistry animationRegistry, Pac msPacMan, PacConfig pacConfig) {
         super(animationRegistry, msPacMan);
@@ -23,7 +22,7 @@ public class MsPacMan3D extends Pac3D {
         setBody(Models3D.PAC_MAN_MODEL.createPacBody(pacConfig));
         setJaw(Models3D.PAC_MAN_MODEL.createBlindPacBody(pacConfig));
 
-        femaleBodyParts = Models3D.PAC_MAN_MODEL.createFemaleBodyParts(pacConfig);
+        final Group femaleBodyParts = Models3D.PAC_MAN_MODEL.createFemaleBodyParts(pacConfig);
         getChildren().add(femaleBodyParts);
 
         dyingAnimation = new ManagedAnimation(animationRegistry, "Ms_PacMan_Dying");
@@ -39,15 +38,6 @@ public class MsPacMan3D extends Pac3D {
 
         movementAnimation = new HipSwayingAnimation(animationRegistry, this);
         setMovementPowerMode(false);
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        if (femaleBodyParts != null) {
-            femaleBodyParts.dispose();
-            femaleBodyParts = null;
-        }
     }
 
     @Override

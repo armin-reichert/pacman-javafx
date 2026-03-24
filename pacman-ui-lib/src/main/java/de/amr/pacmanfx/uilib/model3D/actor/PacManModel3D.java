@@ -8,9 +8,11 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.uilib.model3D.Model3DException;
 import de.amr.pacmanfx.uilib.objimport.Model3D;
 import javafx.scene.Group;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
@@ -131,7 +133,7 @@ public class PacManModel3D implements Disposable {
 	 * Creates a Pac-Man body without eyes (used for blinking or special effects).
 	 *
 	 * @param pacConfig the Pac configuration
-	 * @return a new {@link PacBodyNoEyes} instance
+	 * @return a new Pac body without eyeballs
 	 */
 	public Group createBlindPacBody(PacConfig pacConfig) {
 		//return new PacBodyNoEyes(pacConfig, headMesh(), palateMesh());
@@ -168,11 +170,55 @@ public class PacManModel3D implements Disposable {
 	 * Creates the additional female parts used for Ms. Pac-Man (hair bow, pearls, etc.).
 	 *
 	 * @param pacConfig Pac configuration
-	 * @return a new {@link MsPacManFemaleParts} instance
+	 * @return a new female parts group
 	 */
-	public MsPacManFemaleParts createFemaleBodyParts(PacConfig pacConfig) {
-		return new MsPacManFemaleParts(pacConfig);
-	}
+	public Group createFemaleBodyParts(PacConfig pacConfig) {
+        final Group parts = new Group();
+
+        final int sphereDivisions = 16; // 64 is default
+
+        final PhongMaterial bowMaterial = coloredPhongMaterial(pacConfig.msColors().hairBow());
+
+        final Sphere bowLeft = new Sphere(1.2, sphereDivisions);
+        bowLeft.setMaterial(bowMaterial);
+        bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -pacConfig.size3D() * 0.55));
+
+        final Sphere bowRight = new Sphere(1.2, sphereDivisions);
+        bowRight.setMaterial(bowMaterial);
+        bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -pacConfig.size3D() * 0.55));
+
+        final PhongMaterial pearlMaterial = coloredPhongMaterial(pacConfig.msColors().hairBowPearls());
+
+        final Sphere pearlLeft = new Sphere(0.4, sphereDivisions);
+        pearlLeft.setMaterial(pearlMaterial);
+        pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacConfig.size3D() * 0.58));
+
+        final Sphere pearlRight = new Sphere(0.4, sphereDivisions);
+        pearlRight.setMaterial(pearlMaterial);
+        pearlRight.getTransforms().addAll(new Translate(2, -0.5, -pacConfig.size3D() * 0.58));
+
+        final PhongMaterial beautySpotMaterial = coloredPhongMaterial(Color.rgb(120, 120, 120));
+        final Sphere beautySpot = new Sphere(0.5, sphereDivisions);
+        beautySpot.getTransforms().addAll(new Translate(-0.33 * pacConfig.size3D(), -0.4 * pacConfig.size3D(), -0.14 * pacConfig.size3D()));
+        beautySpot.setMaterial(beautySpotMaterial);
+
+        final PhongMaterial silicone = coloredPhongMaterial(pacConfig.msColors().boobs());
+
+        final double bx = -0.2 * pacConfig.size3D(); // forward
+        final double by = 1.6; // or - 1.6 // sidewards
+        final double bz = 0.4 * pacConfig.size3D(); // up/down
+
+        final Sphere boobLeft = new Sphere(1.8, sphereDivisions);
+        boobLeft.setMaterial(silicone);
+        boobLeft.getTransforms().addAll(new Translate(bx, -by, bz));
+
+        final Sphere boobRight = new Sphere(1.8, sphereDivisions);
+        boobRight.setMaterial(silicone);
+        boobRight.getTransforms().addAll(new Translate(bx, by, bz));
+
+        parts.getChildren().addAll(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
+        return parts;
+    }
 
 	/**
 	 * Creates a complete Ms. Pac-Man body consisting of a Pac-Man base body

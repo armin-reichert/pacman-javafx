@@ -9,17 +9,12 @@ import javafx.scene.Group;
 
 public class MsPacManBody extends Group implements DisposableGraphicsObject {
 
-    private MsPacManFemaleParts femaleParts;
-
-    public MsPacManBody(Group body, MsPacManFemaleParts femaleParts) {
-        this.femaleParts = femaleParts;
+    public MsPacManBody(Group body, Group femaleParts) {
         getChildren().addAll(body, femaleParts);
     }
 
     @Override
     public void dispose() {
         cleanupGroup(this, true);
-        femaleParts.dispose();
-        femaleParts = null;
     }
 }
