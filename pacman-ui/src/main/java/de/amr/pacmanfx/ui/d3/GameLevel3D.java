@@ -18,7 +18,7 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.actor.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
-import de.amr.pacmanfx.uilib.model3D.actor.PacRepresentation3D;
+import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -59,7 +59,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @see PlayScene3D
  * @see Maze3D
- * @see PacRepresentation3D
+ * @see Pac3D
  * @see GhostAppearance3D
  * @see DisposableGraphicsObject
  */
@@ -77,7 +77,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private Maze3D maze3D;
     private MazeFood3D food3D;
-    private PacRepresentation3D pac3D;
+    private Pac3D pac3D;
     private List<GhostAppearance3D> ghosts3D;
     private Bonus3D bonus3D;
 
@@ -181,7 +181,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     /** @return Pac-Man 3D representation */
-    public PacRepresentation3D pac3D() {
+    public Pac3D pac3D() {
         return pac3D;
     }
 

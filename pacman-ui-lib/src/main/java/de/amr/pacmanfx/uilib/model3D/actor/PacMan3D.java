@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-public class PacMan3D extends PacRepresentation3D {
+public class PacMan3D extends Pac3D {
 
     public PacMan3D(
         AnimationRegistry animationRegistry,

@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common base class for (Ms.) Pac-Man 3D representations.
  */
-public abstract class PacRepresentation3D extends Group implements Disposable {
+public abstract class Pac3D extends Group implements Disposable {
 
     protected final Pac pac;
     protected final double size;
@@ -44,7 +44,7 @@ public abstract class PacRepresentation3D extends Group implements Disposable {
     protected ManagedAnimation dyingAnimation;
     protected ManagedAnimation movementAnimation;
 
-    protected PacRepresentation3D(
+    protected Pac3D(
         AnimationRegistry animationRegistry,
         Pac pac,
         double size,

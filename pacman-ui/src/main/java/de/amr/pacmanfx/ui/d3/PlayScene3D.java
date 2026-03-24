@@ -20,7 +20,7 @@ import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.actor.PacRepresentation3D;
+import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Scores3D;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
@@ -440,7 +440,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     // Private helpers
     // ────────────────────────────────────────────────────────────────────────────
 
-    public void initPac3D(PacRepresentation3D pac3D, GameLevel level) {
+    public void initPac3D(Pac3D pac3D, GameLevel level) {
         pac3D.init(level);
         pac3D.update(level);
     }
