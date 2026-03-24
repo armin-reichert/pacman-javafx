@@ -39,23 +39,24 @@ import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
 import static de.amr.pacmanfx.uilib.UfxColors.colorWithOpacity;
 
-public class Maze3D extends Group {
+public class EditorMaze3D extends Group {
 
-    private static final PacConfig PAC_CONFIG = new PacConfig(
+    private static final PacConfig PAC_CONFIG =
+        new PacConfig(
             new PacComponentColors(
                 Color.YELLOW, // head
-                Color.BLACK,  // palate
-                Color.grayRgb(33) // eyes
+                Color.SADDLEBROWN,  // palate
+                Color.BLACK // eyes
             ),
             new MsPacManComponentColors(
                 Color.RED, // hair bow
                 Color.BLUE, // hair bow pearls
                 Color.YELLOW.deriveColor(0, 1.0, 0.96, 1.0) // boobs
             ),
-            12.0f,
-            16.0f);
+            12.0f, 14.0f
+        );
 
-    public static final float ACTOR_SIZE = 12.0f;
+    public static final float GHOST_SIZE = 14.0f;
     public static final float HOUSE_WALL_HEIGHT = 12;
     public static final float HOUSE_DOOR_HEIGHT = 10;
     public static final float OBSTACLE_HEIGHT = 4;
@@ -109,7 +110,7 @@ public class Maze3D extends Group {
     private final Node pacmanShape3D;
     private final GhostBody[] ghostShapes;
 
-    public Maze3D() {
+    public EditorMaze3D() {
         camera = new PerspectiveCamera(true);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
@@ -126,10 +127,10 @@ public class Maze3D extends Group {
         pacmanShape3D.visibleProperty().bind(actorsVisibleProperty());
 
         ghostShapes = new GhostBody[] {
-            Models3D.GHOST_MODEL.createGhostBody(ACTOR_SIZE, Color.RED, 0),
-            Models3D.GHOST_MODEL.createGhostBody(ACTOR_SIZE, Color.PINK, 90),
-            Models3D.GHOST_MODEL.createGhostBody(ACTOR_SIZE, Color.CYAN, 270),
-            Models3D.GHOST_MODEL.createGhostBody(ACTOR_SIZE, Color.ORANGE, 270)
+            Models3D.GHOST_MODEL.createGhostBody(GHOST_SIZE, Color.RED,      0),
+            Models3D.GHOST_MODEL.createGhostBody(GHOST_SIZE, Color.PINK,    90),
+            Models3D.GHOST_MODEL.createGhostBody(GHOST_SIZE, Color.CYAN,   270),
+            Models3D.GHOST_MODEL.createGhostBody(GHOST_SIZE, Color.ORANGE, 270)
         };
         for (var ghostShape : ghostShapes) {
             ghostShape.visibleProperty().bind(actorsVisibleProperty());
@@ -250,7 +251,7 @@ public class Maze3D extends Group {
         Vector2f center = tile.scaled(TS).toVector2f().plus(TS, HTS);
         actorShape.setTranslateX(center.x());
         actorShape.setTranslateY(center.y());
-        actorShape.setTranslateZ(-0.5 * ACTOR_SIZE);
+        actorShape.setTranslateZ(-0.5 * GHOST_SIZE);
         mazeGroup.getChildren().add(actorShape);
     }
 

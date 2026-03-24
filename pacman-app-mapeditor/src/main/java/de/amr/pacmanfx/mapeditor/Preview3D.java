@@ -32,7 +32,7 @@ public class Preview3D {
 
     private final SubScene subScene;
 
-    private final Maze3D maze3D;
+    private final EditorMaze3D editorMaze3D;
 
     // for rotating 3D preview
     private double anchorX;
@@ -42,14 +42,14 @@ public class Preview3D {
         requireNonNull(ui);
         requireNonNull(ui.editor());
 
-        maze3D = new Maze3D();
-        maze3D.actorsVisibleProperty().bind(ui.actorsVisibleProperty());
-        maze3D.worldMapProperty().bind(ui.editor().currentWorldMapProperty());
-        maze3D.foodVisibleProperty().bind(foodVisible);
-        maze3D.terrainVisibleProperty().bind(terrainVisible);
+        editorMaze3D = new EditorMaze3D();
+        editorMaze3D.actorsVisibleProperty().bind(ui.actorsVisibleProperty());
+        editorMaze3D.worldMapProperty().bind(ui.editor().currentWorldMapProperty());
+        editorMaze3D.foodVisibleProperty().bind(foodVisible);
+        editorMaze3D.terrainVisibleProperty().bind(terrainVisible);
 
-        subScene = new SubScene(maze3D, width, height, true, SceneAntialiasing.BALANCED);
-        subScene.setCamera(maze3D.camera());
+        subScene = new SubScene(editorMaze3D, width, height, true, SceneAntialiasing.BALANCED);
+        subScene.setCamera(editorMaze3D.camera());
         subScene.setFill(Color.CORNFLOWERBLUE);
 
         subScene.setOnMouseClicked(e -> {
@@ -58,10 +58,10 @@ public class Preview3D {
         });
         subScene.setOnMousePressed(e -> {
             anchorX = e.getSceneX();
-            anchorAngle = maze3D.getRotate();
+            anchorAngle = editorMaze3D.getRotate();
         });
-        subScene.setOnMouseDragged(e -> maze3D.setRotate(anchorAngle + anchorX - e.getSceneX()));
-        subScene.setOnScroll(e -> maze3D.setTranslateY(maze3D.getTranslateY() + e.getDeltaY() * DEFAULT_SCROLL_SPEED));
+        subScene.setOnMouseDragged(e -> editorMaze3D.setRotate(anchorAngle + anchorX - e.getSceneX()));
+        subScene.setOnScroll(e -> editorMaze3D.setTranslateY(editorMaze3D.getTranslateY() + e.getDeltaY() * DEFAULT_SCROLL_SPEED));
         subScene.setOnKeyPressed(this::onKeyPressed);
         subScene.setOnKeyTyped(this::onKeyTyped);
     }
@@ -87,15 +87,15 @@ public class Preview3D {
     }
 
     public void updateFood() {
-        maze3D.updateFood();
+        editorMaze3D.updateFood();
     }
 
     public void updateMaze() {
-        maze3D.rebuildMaze();
+        editorMaze3D.rebuildMaze();
     }
 
     public void reset() {
-        PerspectiveCamera camera = maze3D.camera();
+        PerspectiveCamera camera = editorMaze3D.camera();
         camera.setRotationAxis(Rotate.X_AXIS);
         camera.setRotate(DEFAULT_CAMERA_ROTATE);
         if (worldMap() != null) {
@@ -104,9 +104,9 @@ public class Preview3D {
             camera.setTranslateX(mapWidth * 0.5);
             camera.setTranslateY(mapHeight);
             camera.setTranslateZ(-mapWidth * 0.5);
-            maze3D.setRotate(0);
-            maze3D.setTranslateX(0);
-            maze3D.setTranslateY(-0.5 * mapHeight);
+            editorMaze3D.setRotate(0);
+            editorMaze3D.setTranslateX(0);
+            editorMaze3D.setTranslateY(-0.5 * mapHeight);
         }
     }
 
@@ -114,18 +114,18 @@ public class Preview3D {
         boolean control = keyEvent.isControlDown(), shift = keyEvent.isShiftDown();
         switch (keyEvent.getCode()) {
             case KeyCode.LEFT -> {
-                if (control && shift) maze3D.actionMoveLeft.run();
-                else if (control)     maze3D.actionRotateLeft.run();
+                if (control && shift) editorMaze3D.actionMoveLeft.run();
+                else if (control)     editorMaze3D.actionRotateLeft.run();
             }
             case KeyCode.RIGHT -> {
-                if (control && shift) maze3D.actionMoveRight.run();
-                else if (control)     maze3D.actionRotateRight.run();
+                if (control && shift) editorMaze3D.actionMoveRight.run();
+                else if (control)     editorMaze3D.actionRotateRight.run();
             }
             case KeyCode.UP -> {
-                if (control && shift) maze3D.actionMoveTowardsUser.run();
+                if (control && shift) editorMaze3D.actionMoveTowardsUser.run();
             }
             case KeyCode.DOWN -> {
-                if (control && shift) maze3D.actionMoveAwayFromUser.run();
+                if (control && shift) editorMaze3D.actionMoveAwayFromUser.run();
             }
         }
     }
@@ -133,7 +133,7 @@ public class Preview3D {
     private void onKeyTyped(KeyEvent e) {
         String key = e.getCharacter();
         if (key.equals("w")) {
-            maze3D.actionToggleWireframe.run();
+            editorMaze3D.actionToggleWireframe.run();
         }
     }
 }
