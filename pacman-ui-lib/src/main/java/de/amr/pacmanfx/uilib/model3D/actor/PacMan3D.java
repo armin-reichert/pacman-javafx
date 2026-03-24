@@ -7,6 +7,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.AnimationSupport;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.animation.HeadBangingAnimation;
 import javafx.animation.*;
 import javafx.scene.paint.Color;
@@ -22,6 +23,9 @@ public class PacMan3D extends Pac3D {
         Color headColor, Color eyesColor, Color palateColor)
     {
         super(animationRegistry, pac, size, headColor, eyesColor, palateColor);
+
+        setBody(Models3D.PAC_MAN_MODEL.createPacBody(size, headColor, eyesColor, palateColor));
+        setJaw(Models3D.PAC_MAN_MODEL.createBlindPacBody(size, headColor, palateColor));
 
         dyingAnimation = new ManagedAnimation(animationRegistry, "PacMan_Dying");
         dyingAnimation.setFactory(() -> {

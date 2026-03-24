@@ -59,11 +59,6 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
         requireNonNull(eyesColor);
         requireNonNull(palateColor);
 
-        body = Models3D.PAC_MAN_MODEL.createPacBody(size, headColor, eyesColor, palateColor);
-        jaw = Models3D.PAC_MAN_MODEL.createBlindPacBody(size, headColor, palateColor);
-
-        getChildren().setAll(jaw, body);
-
         getTransforms().add(moveRotation);
         setTranslateZ(-0.5 * size);
 
@@ -73,6 +68,24 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
         light.translateXProperty().bind(translateXProperty());
         light.translateYProperty().bind(translateYProperty());
         light.setTranslateZ(-30);
+    }
+
+    public void setBody(PacBody body) {
+        this.body = requireNonNull(body);
+        if (jaw == null) {
+            getChildren().setAll(body);
+        } else {
+            getChildren().setAll(body, jaw);
+        }
+    }
+
+    public void setJaw(PacBodyNoEyes jaw) {
+        this.jaw = requireNonNull(jaw);
+        if (body == null) {
+            getChildren().setAll(jaw);
+        } else {
+            getChildren().setAll(body, jaw);
+        }
     }
 
     @Override
