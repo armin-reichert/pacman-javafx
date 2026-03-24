@@ -225,9 +225,9 @@ public class PacManModel3D implements Disposable {
 	 * plus the additional female parts.
 	 *
 	 * @param pacConfig Pac configuration
-	 * @return a new {@link MsPacManBody} instance
+	 * @return a new Ms Pac-Man body instance
 	 */
-	public MsPacManBody createMsPacManBody(PacConfig pacConfig) {
-		return new MsPacManBody(createPacBody(pacConfig), createFemaleBodyParts(pacConfig));
+	public Group createMsPacManBody(PacConfig pacConfig) {
+		return new Group(createPacBody(pacConfig), createFemaleBodyParts(pacConfig));
 	}
 }
