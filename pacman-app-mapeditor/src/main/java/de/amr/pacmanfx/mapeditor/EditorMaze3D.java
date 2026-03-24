@@ -17,6 +17,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -24,11 +25,10 @@ import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.Shape3D;
-import javafx.scene.shape.Sphere;
+import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 
 import java.util.stream.Stream;
 
@@ -36,6 +36,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
+import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static de.amr.pacmanfx.uilib.UfxColors.colorWithOpacity;
 
 public class EditorMaze3D extends Group {
@@ -126,10 +127,10 @@ public class EditorMaze3D extends Group {
         pacmanShape3D.visibleProperty().bind(actorsVisibleProperty());
 
         ghostShapes = new Group[] {
-            Models3D.GHOST_MODEL.createGhostBody(GHOST_SIZE, Color.RED,      0),
-            Models3D.GHOST_MODEL.createGhostBody(GHOST_SIZE, Color.PINK,    90),
-            Models3D.GHOST_MODEL.createGhostBody(GHOST_SIZE, Color.CYAN,   270),
-            Models3D.GHOST_MODEL.createGhostBody(GHOST_SIZE, Color.ORANGE, 270)
+            createGhostBody(Color.RED,      0),
+            createGhostBody(Color.PINK,    90),
+            createGhostBody(Color.CYAN,   270),
+            createGhostBody(Color.ORANGE, 270)
         };
         for (var ghostShape : ghostShapes) {
             ghostShape.visibleProperty().bind(actorsVisibleProperty());
@@ -200,6 +201,37 @@ public class EditorMaze3D extends Group {
         addActorShape(ghostShapes[2], WorldMapPropertyName.POS_GHOST_3_CYAN);
         addActorShape(ghostShapes[3], WorldMapPropertyName.POS_GHOST_4_ORANGE);
     }
+
+    private Group createGhostBody(Color dressColor, double rotateY) {
+        final Group body = new Group();
+
+        final MeshView dressMeshView = new MeshView(Models3D.GHOST_MODEL.dressMesh());
+        dressMeshView.setMaterial(coloredPhongMaterial(dressColor));
+
+        final MeshView pupilsMeshView = new MeshView(Models3D.GHOST_MODEL.pupilsMesh());
+        pupilsMeshView.setMaterial(coloredPhongMaterial(Color.BLUE));
+
+        final MeshView eyeballsMeshView = new MeshView(Models3D.GHOST_MODEL.eyeballsMesh());
+        eyeballsMeshView.setMaterial(coloredPhongMaterial(Color.WHITE));
+
+        final var dressGroup = new Group(dressMeshView);
+        final var eyesGroup = new Group(pupilsMeshView, eyeballsMeshView);
+        body.getChildren().addAll(dressGroup, eyesGroup);
+
+        final Bounds dressBounds = dressMeshView.getBoundsInLocal();
+        final Bounds bounds = body.getBoundsInLocal();
+        final var centeredOverOrigin = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
+
+        dressMeshView.getTransforms().add(centeredOverOrigin);
+        eyesGroup.getTransforms().add(centeredOverOrigin);
+
+        body.getTransforms().add(new Rotate(270, Rotate.X_AXIS));
+        body.getTransforms().add(new Rotate(rotateY, Rotate.Y_AXIS));
+        body.getTransforms().add(new Scale(GHOST_SIZE / bounds.getWidth(), GHOST_SIZE / bounds.getHeight(), GHOST_SIZE / bounds.getDepth()));
+
+        return body;
+    }
+
 
     private void addHouse(Color wallBaseColor, Color wallTopColor) {
         Vector2i houseMinTile = worldMap().terrainLayer().getTileProperty(WorldMapPropertyName.POS_HOUSE_MIN_TILE);
