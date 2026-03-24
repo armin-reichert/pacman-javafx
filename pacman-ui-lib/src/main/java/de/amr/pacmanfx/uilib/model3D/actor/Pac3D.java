@@ -34,7 +34,7 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
     protected PointLight powerLight;
 
     protected Group body;
-    protected PacBodyNoEyes jaw;
+    protected Group jaw;
 
     protected Rotate moveRotation = new Rotate();
 
@@ -61,7 +61,7 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
         }
     }
 
-    public void setJaw(PacBodyNoEyes jaw) {
+    public void setJaw(Group jaw) {
         this.jaw = requireNonNull(jaw);
         if (body == null) {
             getChildren().setAll(jaw);

@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.uilib.model3D.Model3DException;
 import de.amr.pacmanfx.uilib.objimport.Model3D;
 import javafx.scene.Group;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
@@ -94,7 +95,7 @@ public class PacManModel3D implements Disposable {
 	 * Creates a fully assembled Pac-Man body with head, eyes, and palate.
 	 *
 	 * @param pacConfig the Pac configuration
-	 * @return a new {@link PacBody} instance
+	 * @return a new Pac body group
 	 */
 	public Group createPacBody(PacConfig pacConfig) {
         final Group body = new Group();
@@ -132,9 +133,36 @@ public class PacManModel3D implements Disposable {
 	 * @param pacConfig the Pac configuration
 	 * @return a new {@link PacBodyNoEyes} instance
 	 */
-	public PacBodyNoEyes createBlindPacBody(PacConfig pacConfig) {
-		return new PacBodyNoEyes(pacConfig, headMesh(), palateMesh());
-	}
+	public Group createBlindPacBody(PacConfig pacConfig) {
+		//return new PacBodyNoEyes(pacConfig, headMesh(), palateMesh());
+        final Group body = new Group();
+
+        final PhongMaterial headMaterial = coloredPhongMaterial(pacConfig.colors().head());
+        final var headMeshView = new MeshView(headMesh());
+        headMeshView.setMaterial(headMaterial);
+
+        final PhongMaterial palateMaterial = coloredPhongMaterial(pacConfig.colors().palate());
+        final var palateMeshView = new MeshView(palateMesh());
+        palateMeshView.setMaterial(palateMaterial);
+
+        final var headBounds = headMeshView.getBoundsInLocal();
+        final var centeredOverOrigin = new Translate(-headBounds.getCenterX(), -headBounds.getCenterY(), -headBounds.getCenterZ());
+        Stream.of(headMeshView, palateMeshView).forEach(node -> node.getTransforms().add(centeredOverOrigin));
+
+        body.getChildren().addAll(headMeshView, palateMeshView);
+
+        // TODO check/fix Pac-Man mesh position and rotation in OBJ file
+        body.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+        body.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
+        body.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+
+        final var bodyBounds = body.getBoundsInLocal();
+        final float size = pacConfig.size3D();
+        body.getTransforms().add(
+            new Scale(size / bodyBounds.getWidth(), size / bodyBounds.getHeight(), size / bodyBounds.getDepth()));
+
+        return body;
+    }
 
 	/**
 	 * Creates the additional female parts used for Ms. Pac-Man (hair bow, pearls, etc.).

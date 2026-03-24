@@ -1,6 +1,8 @@
 package experiments;
 
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
+import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.control.Menu;
@@ -18,6 +20,8 @@ import org.tinylog.Logger;
 import java.io.File;
 
 public class ModelViewer extends Application {
+
+    static final PacConfig PAC_CONFIG = UIConfig.DEFAULT_ENTITY_CONFIG.pacConfig();
 
     static final String REPOSITORY_DIR = System.getProperty("user.home") + "/git/pacman-javafx/";
     static final String DIR = REPOSITORY_DIR + "pacman-ui-lib/src/main/resources/de/amr/pacmanfx/uilib/model3D";
@@ -87,7 +91,7 @@ public class ModelViewer extends Application {
         if (selectedFile != null) {
             Logger.info("File {} selected", selectedFile);
             try {
-                Node shape = Models3D.PAC_MAN_MODEL.createPacBody(16, Color.YELLOW, Color.BLACK, Color.PINK);
+                Node shape = Models3D.PAC_MAN_MODEL.createPacBody(PAC_CONFIG);
                 //allMeshViewsUnder(shape).forEach(meshView -> meshView.setDrawMode(DrawMode.LINE));
                 setCurrentNode(new Group(shape));
             } catch (Exception x) {
