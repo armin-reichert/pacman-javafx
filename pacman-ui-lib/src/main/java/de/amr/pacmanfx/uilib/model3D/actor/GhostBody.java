@@ -3,11 +3,10 @@
  */
 package de.amr.pacmanfx.uilib.model3D.actor;
 
-import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
@@ -16,64 +15,39 @@ import javafx.scene.transform.Translate;
 
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 
-public class GhostBody extends Group implements Disposable {
-    private PhongMaterial dressMaterial;
-    private PhongMaterial pupilsMaterial;
-    private PhongMaterial eyeballsMaterial;
-    private MeshView dressMeshView;
-    private MeshView pupilsMeshView;
-    private MeshView eyeballsMeshView;
+public class GhostBody extends Group implements DisposableGraphicsObject {
 
     public GhostBody(
         Mesh dressMesh, Mesh pupilsMesh, Mesh eyeballsMesh,
         double size, Color dressColor, double rotateY)
     {
-        dressMaterial = coloredPhongMaterial(dressColor);
-        dressMeshView = new MeshView(dressMesh);
-        dressMeshView.setMaterial(dressMaterial);
-        Bounds dressBounds = dressMeshView.getBoundsInLocal();
-        var centeredOverOrigin = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
-        dressMeshView.getTransforms().add(centeredOverOrigin);
+        final MeshView dressMeshView = new MeshView(dressMesh);
+        dressMeshView.setMaterial(coloredPhongMaterial(dressColor));
 
-        pupilsMaterial = coloredPhongMaterial(Color.BLUE);
-        pupilsMeshView = new MeshView(pupilsMesh);
-        pupilsMeshView.setMaterial(pupilsMaterial);
+        final MeshView pupilsMeshView = new MeshView(pupilsMesh);
+        pupilsMeshView.setMaterial(coloredPhongMaterial(Color.BLUE));
 
-        eyeballsMaterial = coloredPhongMaterial(Color.WHITE);
-        eyeballsMeshView = new MeshView(eyeballsMesh);
-        eyeballsMeshView.setMaterial(eyeballsMaterial);
+        final MeshView eyeballsMeshView = new MeshView(eyeballsMesh);
+        eyeballsMeshView.setMaterial(coloredPhongMaterial(Color.WHITE));
 
-        var dressGroup = new Group(dressMeshView);
-        var eyesGroup = new Group(pupilsMeshView, eyeballsMeshView);
-        eyesGroup.getTransforms().add(centeredOverOrigin);
+        final var dressGroup = new Group(dressMeshView);
+        final var eyesGroup = new Group(pupilsMeshView, eyeballsMeshView);
         getChildren().addAll(dressGroup, eyesGroup);
+
+        final Bounds dressBounds = dressMeshView.getBoundsInLocal();
+        final Bounds bounds = getBoundsInLocal();
+        final var centeredOverOrigin = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
+
+        dressMeshView.getTransforms().add(centeredOverOrigin);
+        eyesGroup.getTransforms().add(centeredOverOrigin);
 
         getTransforms().add(new Rotate(270, Rotate.X_AXIS));
         getTransforms().add(new Rotate(rotateY, Rotate.Y_AXIS));
-        Bounds bounds = getBoundsInLocal();
         getTransforms().add(new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth()));
     }
 
     @Override
     public void dispose() {
-        getChildren().clear();
-        if (dressMeshView != null) {
-            dressMeshView.setMesh(null);
-            dressMeshView.setMaterial(null);
-            dressMeshView = null;
-            dressMaterial = null;
-        }
-        if (pupilsMeshView != null) {
-            pupilsMeshView.setMesh(null);
-            pupilsMeshView.setMaterial(null);
-            pupilsMeshView = null;
-            pupilsMaterial = null;
-        }
-        if (eyeballsMeshView != null) {
-            eyeballsMeshView.setMesh(null);
-            eyeballsMeshView.setMaterial(null);
-            eyeballsMeshView = null;
-            eyeballsMaterial = null;
-        }
+        cleanupGroup(this, true);
     }
 }
