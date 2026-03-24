@@ -102,9 +102,7 @@ public class ArcadePacMan_Factory3D implements Factory3D {
         requireNonNull(pacConfig);
         requireNonNull(animationRegistry);
 
-        final var pacMan3D = new PacMan3D(animationRegistry, pac, pacConfig);
-        pacMan3D.light().setColor(pacConfig.colors().head().desaturate());
-        return pacMan3D;
+        return new PacMan3D(animationRegistry, pac, pacConfig);
     }
 
     @Override

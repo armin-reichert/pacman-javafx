@@ -263,7 +263,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().addAll(maze3D.particlesGroup());
         getChildren().add(levelCounter3D);
         getChildren().add(livesCounter3D);
-        getChildren().addAll(pac3D, pac3D.light());
+        getChildren().add(pac3D);
+        pac3D.light().ifPresent(pacLight -> getChildren().add(pacLight));
         getChildren().addAll(ghosts3D);
         getChildren().addAll(food3D.energizers3D().stream().map(Energizer3D::shape).toList());
         getChildren().addAll(food3D.pellets3D().stream().map(Pellet3D::shape).toList());
@@ -278,7 +279,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void createPac3D(Factory3D factory3D, PacConfig pacConfig) {
         pac3D = factory3D.createPac3D(level.pac(), pacConfig, animationRegistry);
         pac3D.init(level);
-
+        pac3D.createPowerLight(pacConfig);
         disposables.add(pac3D);
     }
 

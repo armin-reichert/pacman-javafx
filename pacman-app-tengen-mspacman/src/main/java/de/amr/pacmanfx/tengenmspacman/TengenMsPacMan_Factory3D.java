@@ -97,23 +97,11 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
     }
 
     @Override
-    public MsPacMan3D createPac3D(
-        Pac pac,
-        PacConfig pacConfig,
-        AnimationRegistry animationRegistry)
-    {
+    public MsPacMan3D createPac3D(Pac pac, PacConfig pacConfig, AnimationRegistry animationRegistry) {
         requireNonNull(pac);
         requireNonNull(pacConfig);
         requireNonNull(animationRegistry);
-
-        var pac3D = new MsPacMan3D(
-            animationRegistry,
-            pac,
-            pacConfig
-        );
-
-        pac3D.light().setColor(pacConfig.colors().head().desaturate());
-        return pac3D;
+        return new MsPacMan3D(animationRegistry, pac, pacConfig);
     }
 
     @Override

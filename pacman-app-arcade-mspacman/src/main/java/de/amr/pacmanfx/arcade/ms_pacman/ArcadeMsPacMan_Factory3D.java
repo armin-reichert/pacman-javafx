@@ -106,9 +106,7 @@ public class ArcadeMsPacMan_Factory3D implements Factory3D {
         requireNonNull(pacConfig);
         requireNonNull(animationRegistry);
 
-        final var msPacMan3D = new MsPacMan3D(animationRegistry, pac, pacConfig);
-        msPacMan3D.light().setColor(pacConfig.colors().head().desaturate());
-        return msPacMan3D;
+        return new MsPacMan3D(animationRegistry, pac, pacConfig);
     }
 
     @Override

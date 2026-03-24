@@ -13,11 +13,12 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.animation.*;
 import javafx.scene.Group;
-import javafx.scene.LightBase;
 import javafx.scene.PointLight;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
+
+import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -30,7 +31,7 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
 
     protected final Pac pac;
 
-    protected final PointLight light = new PointLight();
+    protected PointLight light;
 
     protected PacBody body;
     protected PacBodyNoEyes jaw;
@@ -49,10 +50,6 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
 
         chewingAnimation = new ManagedAnimation(animationRegistry, "PacMan_Chewing");
         chewingAnimation.setFactory(this::createChewingAnimation);
-
-        light.translateXProperty().bind(translateXProperty());
-        light.translateYProperty().bind(translateYProperty());
-        light.setTranslateZ(-30);
     }
 
     public void setBody(PacBody body) {
@@ -107,7 +104,7 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
         if (pac.isAlive()) {
             updatePositionAndRotation();
             updateVisibility(level.worldMap());
-            updateLight();
+            updatePowerLight();
             if (movementAnimation != null) {
                 movementAnimation.playOrContinue();
                 updateMovementAnimation();
@@ -125,8 +122,8 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
         }
     }
 
-    public LightBase light() {
-        return light;
+    public Optional<PointLight> light() {
+        return Optional.ofNullable(light);
     }
 
     public ManagedAnimation dyingAnimation() {
@@ -206,15 +203,24 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
         setVisible(pac.isVisible() && !outsideWorld);
     }
 
+    public void createPowerLight(PacConfig pacConfig) {
+        light = new PointLight();
+        light.setColor(pacConfig.colors().head().desaturate());
+        light.translateXProperty().bind(translateXProperty());
+        light.translateYProperty().bind(translateYProperty());
+        light.setTranslateZ(-30);
+    }
+
     /**
      * When empowered, Pac-Man is lighted, light range shrinks with ceasing power.
      */
-    protected void updateLight() {
-        TickTimer powerTimer = pac.powerTimer();
+    public void updatePowerLight() {
+        if (light == null) return;
+        final TickTimer powerTimer = pac.powerTimer();
         if (powerTimer.isRunning() && pac.isVisible()) {
             light.setLightOn(true);
-            long remainingTicks = powerTimer.remainingTicks();
-            float maxRange = (remainingTicks / (float) powerTimer.durationTicks()) * 60 + 30;
+            final long remainingTicks = powerTimer.remainingTicks();
+            final float maxRange = (remainingTicks / (float) powerTimer.durationTicks()) * 60 + 30;
             light.setMaxRange(maxRange);
             Logger.debug("Power remaining: {}, light max range: {0.00}", remainingTicks, maxRange);
         } else {
