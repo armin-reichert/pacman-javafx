@@ -30,7 +30,6 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
 
     protected final Pac pac;
 
-    protected final AnimationRegistry animationRegistry;
     protected final PointLight light = new PointLight();
 
     protected PacBody body;
@@ -43,7 +42,7 @@ public abstract class Pac3D extends Group implements DisposableGraphicsObject {
     protected ManagedAnimation movementAnimation;
 
     protected Pac3D(AnimationRegistry animationRegistry, Pac pac) {
-        this.animationRegistry = requireNonNull(animationRegistry);
+        requireNonNull(animationRegistry);
         this.pac = requireNonNull(pac);
 
         getTransforms().add(moveRotation);
