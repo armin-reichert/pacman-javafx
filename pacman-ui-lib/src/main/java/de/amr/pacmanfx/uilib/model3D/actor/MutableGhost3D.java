@@ -17,7 +17,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape3D;
 import org.tinylog.Logger;
 
@@ -63,8 +62,6 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
 
     private final ObjectProperty<GhostAppearance> appearance = new SimpleObjectProperty<>();
 
-    private final Color lightColor;
-
     private final Ghost3D ghost3D;
     private Shape3D numberShape3D;
 
@@ -89,7 +86,6 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
         requireNonNegative(size);
 
         ghost3D = new Ghost3D(animationRegistry, ghost, colorSet, meshes, materials, size);
-        lightColor = colorSet.normal().dressColor();
 
         pointsAnimation = new Ghost3DPointsAnimation(animationRegistry, this);
         brakeAnimation = new Ghost3DBrakeAnimation(animationRegistry, this);
@@ -164,10 +160,6 @@ public class MutableGhost3D extends Group implements DisposableGraphicsObject {
 
     public Ghost ghost() {
         return ghost3D.ghost();
-    }
-
-    public Color lightColor() {
-        return lightColor;
     }
 
     public void stopAllAnimations() {

@@ -175,6 +175,10 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         return ghost;
     }
 
+    public GhostColorSet colorSet() {
+        return colorSet;
+    }
+
     public GhostMaterials materials() {
         return materials;
     }
