@@ -399,8 +399,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
      */
     protected GameLevel3D createGameLevel3D(GameLevel level, UIConfig uiConfig) {
         final var newGameLevel3D = new GameLevel3D(uiConfig, level);
-        newGameLevel3D.pac3D().init(level);
-        newGameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
+        newGameLevel3D.init(level);
         newGameLevel3D.livesCounter3D().startTracking(newGameLevel3D.pac3D());
 
         final var animations = new GameLevel3DAnimations(newGameLevel3D, uiConfig.colorScheme(level.worldMap()), soundEffects);

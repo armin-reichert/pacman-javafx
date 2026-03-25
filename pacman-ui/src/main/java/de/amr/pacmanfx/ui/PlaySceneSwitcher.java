@@ -20,7 +20,6 @@ public interface PlaySceneSwitcher {
         // Pause simulation while switching
         ui.gameContext().clock().setUpdatesDisabled(true);
 
-        final UIConfig uiConfig = ui.currentConfig();
         final Game game = ui.gameContext().game();
         final GameLevel level = game.optGameLevel().orElseThrow();
         final State<Game> state = game.control().state();

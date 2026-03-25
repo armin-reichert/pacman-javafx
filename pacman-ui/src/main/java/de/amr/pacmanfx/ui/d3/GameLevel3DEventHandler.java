@@ -108,7 +108,7 @@ public class GameLevel3DEventHandler {
      */
     public void onGameContinues(GameContinuedEvent ignoredEvent, GameLevel3D level3D) {
         if (level3D != null) {
-            level3D.initActorsZPosition();
+            level3D.initPacZPosition();
             level3D.messageManager().showReadyMessage();
         }
     }
@@ -124,7 +124,7 @@ public class GameLevel3DEventHandler {
             soundEffects.playGameReadySound();
         }
         if (level3D != null) {
-            level3D.initActorsZPosition();
+            level3D.initPacZPosition();
         }
     }
 
@@ -185,7 +185,7 @@ public class GameLevel3DEventHandler {
     private void onHuntingStart(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
         level3D.pac3D().init(level);
-        level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
+        level3D.ghostAppearances3D().forEach(ghost3D -> ghost3D.init(level));
         level3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
         level3D.food3D().startParticlesAnimation();
         level3D.animations().ifPresent(animations -> animations.ghostLightAnimation().playFromStart());
@@ -200,7 +200,7 @@ public class GameLevel3DEventHandler {
             animations.ghostLightAnimation().stop();
             animations.wallColorFlashingAnimation().stop();
         });
-        level3D.ghosts3D().forEach(GhostAppearance3D::stopAllAnimations);
+        level3D.ghostAppearances3D().forEach(GhostAppearance3D::stopAllAnimations);
         level3D.bonus3D().ifPresent(Bonus3D::expire);
 
         // One last update before dying animation
@@ -215,7 +215,7 @@ public class GameLevel3DEventHandler {
         );
         dyingAnimation.setOnFinished(_ -> {
             level3D.pac3D().setVisible(false);
-            level3D.initActorsZPosition();
+            level3D.initPacZPosition();
             stateTimer.expire();
         });
         dyingAnimation.play();
@@ -225,7 +225,7 @@ public class GameLevel3DEventHandler {
         final GameLevel level = level3D.level();
         level.game().simulationStep().ghostsKilled.forEach(killedGhost -> {
             final int killedIndex = level.energizerVictims().indexOf(killedGhost);
-            final GhostAppearance3D ghostAppearance3D = level3D.ghosts3D().get(killedGhost.personality());
+            final GhostAppearance3D ghostAppearance3D = level3D.ghostAppearances3D().get(killedGhost.personality());
             final Shape3D numberShape3D = ui.currentConfig().factory3D().createNumberShape3D(ui.currentConfig(), killedIndex);
             ghostAppearance3D.setNumberShape3D(numberShape3D);
         });
