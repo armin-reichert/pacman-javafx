@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelAware;
+import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.config.HouseConfig3D;
@@ -19,7 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-public class MazeHouse3D implements GameLevelAware, Disposable {
+public class MazeHouse3D implements GameLevelEntity, Disposable {
 
     /** The 3D model of the ghost house. */
     private final ArcadeHouse3D arcadeHouse3D;

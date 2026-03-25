@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.model;
 
-public interface GameLevelAware {
+public interface GameLevelEntity {
 
     void init(GameLevel level);
 

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelAware;
+import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.config.EntityConfig;
@@ -52,7 +52,7 @@ import static java.util.Objects.requireNonNull;
  * @see MazeFood3D
  * @see MazeMaterials3D
  */
-public class Maze3D extends Group implements GameLevelAware, DisposableGraphicsObject {
+public class Maze3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
     /** Base height of walls in world units. Can be externally bound. */
     private final DoubleProperty wallBaseHeight = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);

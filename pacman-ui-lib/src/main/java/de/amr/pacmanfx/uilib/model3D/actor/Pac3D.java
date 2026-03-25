@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.actor;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelAware;
+import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common base class for (Ms.) Pac-Man 3D representations.
  */
-public abstract class Pac3D extends Group implements GameLevelAware, DisposableGraphicsObject {
+public abstract class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
     protected final Pac pac;
 

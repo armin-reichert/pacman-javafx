@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelAware;
+import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.LevelCounterConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -28,7 +28,7 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.HTS;
 import static java.util.Objects.requireNonNull;
 
-public class LevelCounter3D extends Group implements GameLevelAware, DisposableGraphicsObject {
+public class LevelCounter3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
     private final UIConfig uiConfig;
     private final AnimationRegistry animationRegistry;

@@ -6,7 +6,8 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelAware;
+import de.amr.pacmanfx.model.GameLevelEntity;
+import de.amr.pacmanfx.model.GameLevelEntitySet;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.TerrainLayer;
@@ -64,15 +65,18 @@ import static java.util.Objects.requireNonNull;
  * @see GhostAppearance3D
  * @see DisposableGraphicsObject
  */
-public class GameLevel3D extends Group implements GameLevelAware, DisposableGraphicsObject {
+public class GameLevel3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
     private final GameLevel level;
 
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
-    private final Set<GameLevelAware> entities = new HashSet<>();
+    private final GameLevelEntitySet entities = new GameLevelEntitySet();
 
     private Node[] livesCounterShapes;
 
+    private Pac3D pac3D;
+    private List<GhostAppearance3D> ghostAppearances3D;
+    private Bonus3D bonus3D;
     private LevelCounter3D levelCounter3D;
     private LivesCounter3D livesCounter3D;
     private Maze3D maze3D;
@@ -123,8 +127,7 @@ public class GameLevel3D extends Group implements GameLevelAware, DisposableGrap
             messageManager.dispose();
             messageManager = null;
         }
-        entities.stream().filter(Disposable.class::isInstance).map(Disposable.class::cast).forEach(Disposable::dispose);
-        entities.clear();
+        entities.dispose();
 
         cleanupGroup(this, true);
         Logger.info("Cleaned and removed all nodes under game level 3D");
@@ -175,24 +178,24 @@ public class GameLevel3D extends Group implements GameLevelAware, DisposableGrap
 
     /** @return Pac-Man 3D representation */
     public Pac3D pac3D() {
-        return entities.stream().filter(Pac3D.class::isInstance).map(Pac3D.class::cast).findFirst().orElseThrow();
+        return pac3D;
     }
 
     /** @return stream of all ghost 3D representations */
     public Stream<GhostAppearance3D> ghostAppearances3D() {
-        return entities.stream().filter(GhostAppearance3D.class::isInstance).map(GhostAppearance3D.class::cast);
+        return ghostAppearances3D.stream();
     }
 
     /** @return optional bonus visualization */
     public Optional<Bonus3D> bonus3D() {
-        return entities.stream().filter(Bonus3D.class::isInstance).map(Bonus3D.class::cast).findFirst();
+        return Optional.ofNullable(bonus3D);
     }
 
     // GameLevelAware interface
 
     @Override
     public void init(GameLevel level) {
-        entities.forEach(entity -> entity.init(level));
+        entities.init(level);
     }
 
     /**
@@ -200,7 +203,7 @@ public class GameLevel3D extends Group implements GameLevelAware, DisposableGrap
      */
     @Override
     public void update(GameLevel level) {
-        entities.forEach(entity -> entity.update(level));
+        entities.update(level);
     }
 
     // Others
@@ -215,17 +218,17 @@ public class GameLevel3D extends Group implements GameLevelAware, DisposableGrap
         requireNonNull(uiConfig);
         requireNonNull(bonus);
         final BonusConfig bonusConfig = uiConfig.entityConfig().bonusConfig();
-        bonus3D().ifPresent(bonus3D -> {
+        if (bonus3D != null) {
             bonus3D.dispose();
-            entities.remove(bonus3D);
+            entities.removeEntity(bonus3D);
             getChildren().remove(bonus3D);
-        });
-        final var bonus3D = new Bonus3D(animationRegistry, bonus,
+        }
+        bonus3D = new Bonus3D(animationRegistry, bonus,
             uiConfig.bonusSymbolImage(bonus.symbol()), bonusConfig.bonusSymbolWidth(),
             uiConfig.bonusValueImage(bonus.symbol()),  bonusConfig.bonusPointsWidth());
         bonus3D.showEdible();
 
-        entities.add(bonus3D);
+        entities.addEntity(bonus3D);
         getChildren().add(bonus3D);
     }
 
@@ -276,14 +279,14 @@ public class GameLevel3D extends Group implements GameLevelAware, DisposableGrap
     }
 
     private void createPac3D(Factory3D factory3D, PacConfig pacConfig) {
-        final Pac3D pac3D = factory3D.createPac3D(level.pac(), pacConfig, animationRegistry);
+        pac3D = factory3D.createPac3D(level.pac(), pacConfig, animationRegistry);
         pac3D.createPowerLight(pacConfig);
         initPacZPosition(pac3D);
-        entities.add(pac3D);
+        entities.addEntity(pac3D);
     }
 
     private void createGhostAppearances3D(Factory3D factory3D, List<GhostConfig> ghostConfigs) {
-        final List<GhostAppearance3D> ghostAppearances3D = level.ghosts()
+        ghostAppearances3D = level.ghosts()
             .map(ghost -> {
                 final var ghostAppearance3D = createGhostAppearance3D(factory3D, ghostConfigs, ghost);
                 ghostAppearance3D.init(level);
@@ -291,7 +294,7 @@ public class GameLevel3D extends Group implements GameLevelAware, DisposableGrap
                 return ghostAppearance3D;
             })
             .toList();
-        entities.addAll(ghostAppearances3D);
+        entities.addAllEntities(ghostAppearances3D);
     }
 
     private GhostAppearance3D createGhostAppearance3D(Factory3D factory3D, List<GhostConfig> ghostConfigs, Ghost ghost) {
@@ -319,7 +322,7 @@ public class GameLevel3D extends Group implements GameLevelAware, DisposableGrap
         livesCounter3D.setTranslateY(2 * TS);
         livesCounter3D.pillarColorProperty().set(config.pillarColor());
         livesCounter3D.plateColorProperty().set(config.plateColor());
-        entities.add(livesCounter3D);
+        entities.addEntity(livesCounter3D);
     }
 
     private void createLevelCounter3D(UIConfig uiConfig, LevelCounterConfig3D config) {
@@ -328,12 +331,12 @@ public class GameLevel3D extends Group implements GameLevelAware, DisposableGrap
         levelCounter3D.setTranslateX(TS * (terrain.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.setTranslateZ(-config.elevation());
-        entities.add(levelCounter3D);
+        entities.addEntity(levelCounter3D);
     }
 
     private void createMaze3D(UIConfig uiConfig, WorldMapColorScheme colorScheme) {
         maze3D = uiConfig.factory3D().createMaze3D(level, uiConfig.entityConfig(), colorScheme, animationRegistry);
-        entities.add(maze3D);
+        entities.addEntity(maze3D);
     }
 
     private void createFood3D(UIConfig uiConfig, List<PhongMaterial> ghostMaterials) {
