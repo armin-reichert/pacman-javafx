@@ -241,19 +241,16 @@ public class GameLevel3DEventHandler {
     private void onLevelComplete(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
         final State<Game> gameState = level.game().control().state();
+        final Maze3D maze3D = level3D.maze3D().orElseThrow();
 
         soundEffects.stopAll();
         level3D.animationRegistry().stopAllAnimations();
-
         cleanupFoodAndParticles(level3D);
-
-        level3D.maze3D().house().hideDoors();
+        maze3D.house().hideDoors();
         level3D.bonus3D().ifPresent(Bonus3D::expire);
-
         level3D.messageManager().hideMessage();
-
         level3D.animations().ifPresentOrElse(
-            animations -> animations.playLevelEndAnimation(level3D.maze3D(), level, gameState),
+            animations -> animations.playLevelEndAnimation(maze3D, level, gameState),
             () -> pauseSecThen(2, () -> gameState.timer().expire()).play()
         );
     }
@@ -286,6 +283,6 @@ public class GameLevel3DEventHandler {
         });
         // Hide 3D food explicitly (handles cheat-eat-all case)
         food3D.pellets3D().forEach(pellet3D -> pellet3D.shape().setVisible(false));
-        level3D.maze3D().particlesGroup().getChildren().clear();
+        level3D.maze3D().ifPresent(maze3D -> maze3D.particlesGroup().getChildren().clear());
     }
 }

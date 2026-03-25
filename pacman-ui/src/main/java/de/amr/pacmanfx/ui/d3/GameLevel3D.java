@@ -74,10 +74,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final GameLevelEntitySet entities = new GameLevelEntitySet();
 
     private Node[] livesCounterShapes;
-
-    private Maze3D maze3D;
     private MazeFood3D food3D;
-
     private GameLevel3DAnimations animations;
     private GameLevel3DMessageManager messageManager;
 
@@ -142,8 +139,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     /** @return the maze visualization component */
-    public Maze3D maze3D() {
-        return maze3D;
+    public Optional<Maze3D> maze3D() {
+        return entities.entitiesOfType(Maze3D.class).findFirst();
     }
 
     public MazeFood3D food3D() {
@@ -257,19 +254,26 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * in front of walls/house.
      */
     private void addChildrenInRightOrder() {
-        getChildren().add(maze3D.floor());
-        getChildren().addAll(maze3D.particlesGroup());
+        maze3D().ifPresent(maze3D -> {
+            getChildren().add(maze3D.floor());
+            getChildren().addAll(maze3D.particlesGroup());
+        });
+
         getChildren().add(levelCounter3D().orElseThrow());
         getChildren().add(livesCounter3D().orElseThrow());
         final Pac3D pac3D = pac3D().orElseThrow();
         getChildren().add(pac3D);
         pac3D.light().ifPresent(pacLight -> getChildren().add(pacLight));
         getChildren().addAll(ghostAppearances3D().toList());
+
         getChildren().addAll(food3D.energizers3D().stream().map(Energizer3D::shape).toList());
         getChildren().addAll(food3D.pellets3D().stream().map(Pellet3D::shape).toList());
-        getChildren().add(maze3D.house().root());
-        getChildren().add(maze3D.house().doors());
-        getChildren().add(maze3D);
+
+        maze3D().ifPresent(maze3D -> {
+            getChildren().add(maze3D.house().root());
+            getChildren().add(maze3D.house().doors());
+            getChildren().add(maze3D);
+        });
     }
 
     private void createEntities(UIConfig uiConfig) {
@@ -282,7 +286,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createLevelCounter3D(uiConfig, entityConfig.levelCounter());
         createLivesCounter3D(uiConfig, entityConfig.livesCounter());
         // food is added to the scene children list
-        createFood3D(uiConfig, dressMaterials(ghostAppearances3D().toList()));
+        createFood3D(uiConfig, dressMaterials(ghostAppearances3D().toList()), maze3D().orElseThrow());
         createMessageManager();
     }
 
@@ -343,11 +347,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createMaze3D(UIConfig uiConfig, WorldMapColorScheme colorScheme) {
-        maze3D = uiConfig.factory3D().createMaze3D(level, uiConfig.entityConfig(), colorScheme, animationRegistry);
+        final var maze3D = uiConfig.factory3D().createMaze3D(level, uiConfig.entityConfig(), colorScheme, animationRegistry);
         entities.addEntity(maze3D);
     }
 
-    private void createFood3D(UIConfig uiConfig, List<PhongMaterial> ghostMaterials) {
+    private void createFood3D(UIConfig uiConfig, List<PhongMaterial> ghostMaterials, Maze3D maze3D) {
         food3D = new MazeFood3D(
             uiConfig.factory3D(),
             uiConfig.entityConfig().pellet(),

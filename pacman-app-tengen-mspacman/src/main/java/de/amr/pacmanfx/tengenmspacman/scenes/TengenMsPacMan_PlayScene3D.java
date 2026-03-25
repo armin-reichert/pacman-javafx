@@ -13,6 +13,8 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
+import de.amr.pacmanfx.ui.d3.Maze3D;
+import de.amr.pacmanfx.ui.d3.MazeFloor3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.d3.animation.GameLevel3DAnimations;
 import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
@@ -44,10 +46,14 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
         // Common stuff
         final var newLevel3D = new GameLevel3D(uiConfig, level);
+        final Maze3D maze3D = newLevel3D.maze3D().orElseThrow();
+        final MazeFloor3D floor3D = maze3D.floor();
         final Pac3D pac3D = newLevel3D.pac3D().orElseThrow();
+
         pac3D.init(level);
         newLevel3D.ghostAppearances3D().forEach(ghost3D -> ghost3D.init(level));
         newLevel3D.startTrackingPac();
+
         final var animations = new GameLevel3DAnimations(newLevel3D, uiConfig.colorScheme(level.worldMap()), soundEffects);
         newLevel3D.setAnimations(animations);
 
@@ -62,8 +68,8 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
                 .map(color -> createLevelInfo(game, level.number(), width, height, color)));
 
             // Display the level info at front side of floor just over the surface
-            levelInfo.setTranslateY(newLevel3D.maze3D().floor().getHeight() - levelInfo.getFitHeight());
-            levelInfo.setTranslateZ(-newLevel3D.maze3D().floor().getDepth());
+            levelInfo.setTranslateY(floor3D.getHeight() - levelInfo.getFitHeight());
+            levelInfo.setTranslateZ(-floor3D.getDepth());
             newLevel3D.getChildren().add(levelInfo);
         }
 

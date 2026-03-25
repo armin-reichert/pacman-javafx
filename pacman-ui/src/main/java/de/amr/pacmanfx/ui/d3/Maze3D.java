@@ -99,7 +99,6 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
 
     @Override
     public void init(GameLevel level) {
-
     }
 
     @Override

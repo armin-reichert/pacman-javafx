@@ -64,10 +64,12 @@ public class LevelCompletedAnimation extends ManagedAnimation {
         super(animationRegistry, "Level_Completed");
         this.level3D = requireNonNull(level3D);
         this.soundEffects = requireNonNull(soundEffects);
-        setFactory(() -> createAnimationFX(level3D.level(), level3D.maze3D()));
+        setFactory(this::createAnimationFX);
     }
 
-    private Animation createAnimationFX(GameLevel level, Maze3D maze3D) {
+    private Animation createAnimationFX() {
+        final GameLevel level = level3D.level();
+        final Maze3D maze3D = level3D.maze3D().orElseThrow();
         final Point3D rotationAxis = chance(0.5) ? Rotate.X_AXIS : Rotate.Z_AXIS;
         return new SequentialTransition(
             pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),

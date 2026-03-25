@@ -41,7 +41,7 @@ public class LevelCompletedAnimationShort extends ManagedAnimation {
         return new SequentialTransition(
             pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),
             pauseSec(0.5),
-            createMazeWallsSwingingAnimation(level3D.maze3D(), level.numFlashes()),
+            createMazeWallsSwingingAnimation(level3D.maze3D().orElseThrow(), level.numFlashes()),
             pauseSecThen(0.5, () -> level.pac().hide())
         );
     }

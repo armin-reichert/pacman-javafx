@@ -7,12 +7,12 @@ package de.amr.pacmanfx.ui.d3.animation;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.Maze3D;
+import de.amr.pacmanfx.ui.d3.MazeMaterials3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
@@ -50,9 +50,11 @@ public class WallColorFlashingAnimation extends ManagedAnimation {
 
             @Override
             protected void interpolate(double t) {
-                Color color = fromColor.interpolate(toColor, t);
-                level3D.maze3D().materials().wallTop().setDiffuseColor(color);
-                level3D.maze3D().materials().wallTop().setSpecularColor(color.brighter());
+                level3D.maze3D().map(Maze3D::materials).map(MazeMaterials3D::wallTop).ifPresent(wallTopMaterial -> {
+                    final Color color = fromColor.interpolate(toColor, t);
+                    wallTopMaterial.setDiffuseColor(color);
+                    wallTopMaterial.setSpecularColor(color.brighter());
+                });
             }
         };
     }
@@ -60,12 +62,11 @@ public class WallColorFlashingAnimation extends ManagedAnimation {
     @Override
     public void stop() {
         super.stop();
-
         // reset wall colors
-        final Maze3D maze3D = level3D.maze3D();
-        final Color wallFillColor = Color.valueOf(colorScheme.wallFill());
-        final PhongMaterial wallTopMaterial = maze3D.materials().wallTop();
-        wallTopMaterial.setDiffuseColor(wallFillColor);
-        wallTopMaterial.setSpecularColor(wallFillColor.brighter());
+        level3D.maze3D().map(Maze3D::materials).map(MazeMaterials3D::wallTop).ifPresent(wallTopMaterial -> {
+            final Color wallFillColor = Color.valueOf(colorScheme.wallFill());
+            wallTopMaterial.setDiffuseColor(wallFillColor);
+            wallTopMaterial.setSpecularColor(wallFillColor.brighter());
+        });
     }
 }
