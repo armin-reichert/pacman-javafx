@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.GameLevelEntitySet;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -67,7 +66,7 @@ import static java.util.Objects.requireNonNull;
  * @see GhostAppearance3D
  * @see DisposableGraphicsObject
  */
-public class GameLevel3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
+public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private final GameLevel level;
 
@@ -203,9 +202,6 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
         return entities.entitiesOfType(Bonus3D.class).findFirst();
     }
 
-    // GameLevelAware interface
-
-    @Override
     public void init(GameLevel level) {
         entities.init(level);
     }
@@ -213,7 +209,6 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
     /**
      * Called once per game tick/frame to update all dynamic elements.
      */
-    @Override
     public void update(GameLevel level) {
         entities.update(level);
     }
