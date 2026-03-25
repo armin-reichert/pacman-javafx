@@ -19,9 +19,6 @@ public class ArcadeMsPacMan_Factory3D extends DefaultFactory3D {
 
     @Override
     public Pac3D createPac3D(Pac pac, PacConfig pacConfig, AnimationRegistry animationRegistry) {
-        requireNonNull(pac);
-        requireNonNull(pacConfig);
-        requireNonNull(animationRegistry);
         return new MsPacMan3D(animationRegistry, pac, pacConfig);
     }
 

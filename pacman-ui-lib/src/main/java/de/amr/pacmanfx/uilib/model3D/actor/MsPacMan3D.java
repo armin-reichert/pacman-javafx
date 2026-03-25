@@ -14,16 +14,20 @@ import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import static java.util.Objects.requireNonNull;
+
 public class MsPacMan3D extends Pac3D {
 
     public MsPacMan3D(AnimationRegistry animationRegistry, Pac msPacMan, PacConfig pacConfig) {
         super(animationRegistry, msPacMan);
 
+        requireNonNull(pacConfig);
+
         setBody(Models3D.PAC_MAN_MODEL.createPacBody(pacConfig));
         setJaw(Models3D.PAC_MAN_MODEL.createBlindPacBody(pacConfig));
 
-        final Group femaleBodyParts = Models3D.PAC_MAN_MODEL.createFemaleBodyParts(pacConfig);
-        getChildren().add(femaleBodyParts);
+        final Group femaleParts = Models3D.PAC_MAN_MODEL.createFemaleBodyParts(pacConfig);
+        getChildren().add(femaleParts);
 
         dyingAnimation = new ManagedAnimation(animationRegistry, "Ms_PacMan_Dying");
         dyingAnimation.setFactory(() -> {

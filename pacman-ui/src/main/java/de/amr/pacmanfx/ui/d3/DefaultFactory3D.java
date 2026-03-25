@@ -37,35 +37,28 @@ public class DefaultFactory3D implements Factory3D {
     protected double pelletRadius;
     protected Mesh scaledPelletMesh;
 
-    protected GhostMaterials getOrCreateGhostMaterials(GhostColorSet colorSet) {
-        GhostMaterials materials = ghostMaterialsCache.get(colorSet);
-        if (materials == null) {
-            final var normalMaterials = new GhostComponentMaterials(
-                coloredPhongMaterial(colorSet.normal().dress()),
-                coloredPhongMaterial(colorSet.normal().eyeballs()),
-                coloredPhongMaterial(colorSet.normal().pupils())
-            );
+    protected GhostMaterials createGhostMaterial(GhostColorSet colorSet) {
+        final var normalMaterials = new GhostComponentMaterials(
+            coloredPhongMaterial(colorSet.normal().dress()),
+            coloredPhongMaterial(colorSet.normal().eyeballs()),
+            coloredPhongMaterial(colorSet.normal().pupils())
+        );
 
-            final var frightenedMaterials = new GhostComponentMaterials(
-                coloredPhongMaterial(colorSet.frightened().dress()),
-                coloredPhongMaterial(colorSet.frightened().eyeballs()),
-                coloredPhongMaterial(colorSet.frightened().pupils())
-            );
+        final var frightenedMaterials = new GhostComponentMaterials(
+            coloredPhongMaterial(colorSet.frightened().dress()),
+            coloredPhongMaterial(colorSet.frightened().eyeballs()),
+            coloredPhongMaterial(colorSet.frightened().pupils())
+        );
 
-            final var flashingMaterials = new GhostComponentMaterials(
-                coloredPhongMaterial(colorSet.flashing().dress()),
-                coloredPhongMaterial(colorSet.flashing().eyeballs()),
-                coloredPhongMaterial(colorSet.flashing().pupils())
-            );
+        final var flashingMaterials = new GhostComponentMaterials(
+            coloredPhongMaterial(colorSet.flashing().dress()),
+            coloredPhongMaterial(colorSet.flashing().eyeballs()),
+            coloredPhongMaterial(colorSet.flashing().pupils())
+        );
 
-            materials = new GhostMaterials(normalMaterials, frightenedMaterials, flashingMaterials);
-            ghostMaterialsCache.put(colorSet, materials);
-
-            Logger.info("Added ghost materials into cache for color set {}", colorSet);
-        }
-        return materials;
+        Logger.info("Created ghost materials for color set {}", colorSet);
+        return new GhostMaterials(normalMaterials, frightenedMaterials, flashingMaterials);
     }
-
 
     protected Mesh scaledPelletMesh(PelletConfig3D pelletConfig) {
         requireNonNull(pelletConfig);
@@ -107,7 +100,7 @@ public class DefaultFactory3D implements Factory3D {
         requireNonNull(animationRegistry);
 
         final GhostColorSet colorSet = ghostConfig.createGhostColorSet();
-        final GhostMaterials materials = getOrCreateGhostMaterials(colorSet);
+        final GhostMaterials materials = ghostMaterialsCache.computeIfAbsent(colorSet, this::createGhostMaterial);
         final GhostMeshes meshes = new GhostMeshes(
             Models3D.GHOST_MODEL.dressMesh(),
             Models3D.GHOST_MODEL.pupilsMesh(),
