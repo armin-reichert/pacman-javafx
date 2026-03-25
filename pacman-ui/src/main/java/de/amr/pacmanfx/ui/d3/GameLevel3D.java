@@ -76,7 +76,6 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
 
     private Node[] livesCounterShapes;
 
-    private List<GhostAppearance3D> ghostAppearances3D;
     private Maze3D maze3D;
     private MazeFood3D food3D;
 
@@ -196,7 +195,7 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
 
     /** @return stream of all ghost 3D representations */
     public Stream<GhostAppearance3D> ghostAppearances3D() {
-        return ghostAppearances3D.stream();
+        return entities.entitiesOfType(GhostAppearance3D.class);
     }
 
     /** @return optional bonus visualization */
@@ -300,7 +299,7 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
     }
 
     private void createGhostAppearances3D(Factory3D factory3D, List<GhostConfig> ghostConfigs) {
-        ghostAppearances3D = level.ghosts()
+        final var ghostAppearances3D = level.ghosts()
             .map(ghost -> {
                 final var ghostAppearance3D = createGhostAppearance3D(factory3D, ghostConfigs, ghost);
                 ghostAppearance3D.init(level);
