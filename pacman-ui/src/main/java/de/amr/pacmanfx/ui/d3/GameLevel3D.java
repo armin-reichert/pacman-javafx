@@ -32,7 +32,9 @@ import javafx.scene.PointLight;
 import javafx.scene.paint.PhongMaterial;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -75,7 +77,6 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
     private Node[] livesCounterShapes;
 
     private List<GhostAppearance3D> ghostAppearances3D;
-    private Bonus3D bonus3D;
     private LevelCounter3D levelCounter3D;
     private LivesCounter3D livesCounter3D;
     private Maze3D maze3D;
@@ -187,7 +188,7 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
 
     /** @return optional bonus visualization */
     public Optional<Bonus3D> bonus3D() {
-        return Optional.ofNullable(bonus3D);
+        return entities.entitiesOfType(Bonus3D.class).findFirst();
     }
 
     // GameLevelAware interface
@@ -217,12 +218,12 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
         requireNonNull(uiConfig);
         requireNonNull(bonus);
         final BonusConfig bonusConfig = uiConfig.entityConfig().bonusConfig();
-        if (bonus3D != null) {
+        bonus3D().ifPresent(bonus3D -> {
             bonus3D.dispose();
             entities.removeEntity(bonus3D);
             getChildren().remove(bonus3D);
-        }
-        bonus3D = new Bonus3D(animationRegistry, bonus,
+        });
+        final var bonus3D = new Bonus3D(animationRegistry, bonus,
             uiConfig.bonusSymbolImage(bonus.symbol()), bonusConfig.bonusSymbolWidth(),
             uiConfig.bonusValueImage(bonus.symbol()),  bonusConfig.bonusPointsWidth());
         bonus3D.showEdible();
