@@ -77,7 +77,6 @@ public class GameLevel3D extends Group implements GameLevelAware, DisposableGrap
     private LivesCounter3D livesCounter3D;
     private Maze3D maze3D;
     private MazeFood3D food3D;
-    private Bonus3D bonus3D;
 
     private GameLevel3DAnimations animations;
     private GameLevel3DMessageManager messageManager;
@@ -186,7 +185,7 @@ public class GameLevel3D extends Group implements GameLevelAware, DisposableGrap
 
     /** @return optional bonus visualization */
     public Optional<Bonus3D> bonus3D() {
-        return Optional.ofNullable(bonus3D);
+        return entities.stream().filter(Bonus3D.class::isInstance).map(Bonus3D.class::cast).findFirst();
     }
 
     // GameLevelAware interface
@@ -216,12 +215,12 @@ public class GameLevel3D extends Group implements GameLevelAware, DisposableGrap
         requireNonNull(uiConfig);
         requireNonNull(bonus);
         final BonusConfig bonusConfig = uiConfig.entityConfig().bonusConfig();
-        if (bonus3D != null) {
+        bonus3D().ifPresent(bonus3D -> {
             bonus3D.dispose();
             entities.remove(bonus3D);
             getChildren().remove(bonus3D);
-        }
-        bonus3D = new Bonus3D(animationRegistry, bonus,
+        });
+        final var bonus3D = new Bonus3D(animationRegistry, bonus,
             uiConfig.bonusSymbolImage(bonus.symbol()), bonusConfig.bonusSymbolWidth(),
             uiConfig.bonusValueImage(bonus.symbol()),  bonusConfig.bonusPointsWidth());
         bonus3D.showEdible();
