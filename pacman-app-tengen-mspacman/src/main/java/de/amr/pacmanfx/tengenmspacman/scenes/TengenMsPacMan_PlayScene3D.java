@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.d3.animation.GameLevel3DAnimations;
+import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -43,9 +44,10 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
         // Common stuff
         final var newLevel3D = new GameLevel3D(uiConfig, level);
-        newLevel3D.pac3D().init(level);
+        final Pac3D pac3D = newLevel3D.pac3D().orElseThrow();
+        pac3D.init(level);
         newLevel3D.ghostAppearances3D().forEach(ghost3D -> ghost3D.init(level));
-        newLevel3D.livesCounter3D().startTracking(newLevel3D.pac3D());
+        newLevel3D.livesCounter3D().startTracking(pac3D);
         final var animations = new GameLevel3DAnimations(newLevel3D, uiConfig.colorScheme(level.worldMap()), soundEffects);
         newLevel3D.setAnimations(animations);
 

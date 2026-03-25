@@ -9,6 +9,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
+import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.model.GameControl.CommonGameState.EATING_GHOST;
@@ -29,10 +30,11 @@ public interface PlaySceneSwitcher {
         }
 
         final GameLevel3D gameLevel3D = playScene3D.optGameLevel3D().orElseThrow();
-        gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
+        final Pac3D pac3D = gameLevel3D.pac3D().orElseThrow();
+        gameLevel3D.livesCounter3D().startTracking(pac3D);
 
         playScene3D.initFood3D(level.worldMap().foodLayer(), state.nameMatches(HUNTING.name(), EATING_GHOST.name()));
-        playScene3D.initPac3D(gameLevel3D.pac3D(), level);
+        playScene3D.initPac3D(pac3D, level);
         playScene3D.updateHUD3D(level);
         playScene3D.replaceActionBindings(level);
         playScene3D.fadeIn();

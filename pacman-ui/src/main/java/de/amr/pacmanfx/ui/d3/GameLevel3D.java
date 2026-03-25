@@ -74,7 +74,6 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
 
     private Node[] livesCounterShapes;
 
-    private Pac3D pac3D;
     private List<GhostAppearance3D> ghostAppearances3D;
     private Bonus3D bonus3D;
     private LevelCounter3D levelCounter3D;
@@ -99,7 +98,7 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
         setMouseTransparent(true); // this increases performance they say...
     }
 
-    public void initPacZPosition(Pac3D pac3D) {
+    public void resetPacZPosition(Pac3D pac3D) {
         // Set height over floor. Top of floor is at z=0.
         pac3D.setTranslateZ(-0.5 * pac3D.getBoundsInLocal().getDepth());
     }
@@ -177,8 +176,8 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
     }
 
     /** @return Pac-Man 3D representation */
-    public Pac3D pac3D() {
-        return pac3D;
+    public Optional<Pac3D> pac3D() {
+        return entities.entitiesOfType(Pac3D.class).findFirst();
     }
 
     /** @return stream of all ghost 3D representations */
@@ -254,8 +253,9 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
         getChildren().addAll(maze3D.particlesGroup());
         getChildren().add(levelCounter3D);
         getChildren().add(livesCounter3D);
-        getChildren().add(pac3D());
-        pac3D().light().ifPresent(pacLight -> getChildren().add(pacLight));
+        final Pac3D pac3D = pac3D().orElseThrow();
+        getChildren().add(pac3D);
+        pac3D.light().ifPresent(pacLight -> getChildren().add(pacLight));
         getChildren().addAll(ghostAppearances3D().toList());
         getChildren().addAll(food3D.energizers3D().stream().map(Energizer3D::shape).toList());
         getChildren().addAll(food3D.pellets3D().stream().map(Pellet3D::shape).toList());
@@ -279,9 +279,9 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
     }
 
     private void createPac3D(Factory3D factory3D, PacConfig pacConfig) {
-        pac3D = factory3D.createPac3D(level.pac(), pacConfig, animationRegistry);
+        final var pac3D = factory3D.createPac3D(level.pac(), pacConfig, animationRegistry);
         pac3D.createPowerLight(pacConfig);
-        initPacZPosition(pac3D);
+        resetPacZPosition(pac3D);
         entities.addEntity(pac3D);
     }
 
