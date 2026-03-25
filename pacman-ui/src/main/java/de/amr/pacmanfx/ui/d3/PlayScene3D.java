@@ -232,7 +232,8 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
         }
 
         final GameLevel level = optGameLevel().get();
-        gameLevel3D.update();
+
+        gameLevel3D.update(level);
         updateHUD3D(level);
         perspectiveManager.updatePerspective(level);
 
@@ -319,24 +320,24 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
 
     @Override
     public void onLevelStarts(LevelStartedEvent event) {
-        final GameLevel gameLevel = event.level();
+        final GameLevel level = event.level();
         if (gameLevel3D == null) {
             Logger.warn("Level starts but no 3D level exists? Creating one...");
-            replaceGameLevel3D(gameLevel);
+            replaceGameLevel3D(level);
         }
-        final State<Game> state = gameLevel.game().control().state();
+        final State<Game> state = level.game().control().state();
         if (state instanceof TestState) {
-            replaceGameLevel3D(gameLevel);
+            replaceGameLevel3D(level);
             gameLevel3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
-            gameLevel3D.messageManager().showLevelTestMessage(gameLevel);
+            gameLevel3D.messageManager().showLevelTestMessage(level);
         } else {
-            if (!gameLevel.isDemoLevel() &&
+            if (!level.isDemoLevel() &&
                     state.nameMatches(STARTING_GAME_OR_LEVEL.name(), LEVEL_TRANSITION.name())) {
                 gameLevel3D.messageManager().showReadyMessage();
             }
         }
-        gameLevel3D.rebuildLevelCounter3D(ui.currentConfig().entityConfig().levelCounter());
-        replaceActionBindings(gameLevel);
+        gameLevel3D.init(level);
+        replaceActionBindings(level);
         fadeIn();
     }
 

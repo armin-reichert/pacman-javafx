@@ -5,6 +5,7 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameLevelAware;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -25,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Displays for each remaining live a Pac-Man sitting on a pillar tracking the Pac-Man in the maze.
  */
-public class LivesCounter3D extends Group implements DisposableGraphicsObject {
+public class LivesCounter3D extends Group implements GameLevelAware, DisposableGraphicsObject {
 
     private final ObjectProperty<Color> pillarColor = new SimpleObjectProperty<>(Color.grayRgb(120));
     private final ObjectProperty<PhongMaterial> pillarMaterial = new SimpleObjectProperty<>(new PhongMaterial());
@@ -141,9 +142,14 @@ public class LivesCounter3D extends Group implements DisposableGraphicsObject {
         return plateColor;
     }
 
+    @Override
+    public void init(GameLevel level) {
+    }
+
     /**
      * Updates the lives counter visibility and count based on game state.
      */
+    @Override
     public void update(GameLevel level) {
         final GameControl gameControl = level.game().control();
         final boolean oneMore = gameControl.state().nameMatches(GameControl.CommonGameState.STARTING_GAME_OR_LEVEL.name())
@@ -155,5 +161,4 @@ public class LivesCounter3D extends Group implements DisposableGraphicsObject {
         livesCountProperty().set(lifeCount);
         setVisible(visible);
     }
-
 }

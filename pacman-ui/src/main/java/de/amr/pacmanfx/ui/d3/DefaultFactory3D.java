@@ -3,8 +3,10 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.EntityConfig;
@@ -24,6 +26,7 @@ import org.tinylog.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
@@ -78,6 +81,20 @@ public class DefaultFactory3D implements Factory3D {
     @Override
     public void dispose() {
         ghostMaterialsCache.clear();
+    }
+
+    @Override
+    public Maze3D createMaze3D(
+        GameLevel level,
+        EntityConfig entityConfig,
+        WorldMapColorScheme colorScheme,
+        AnimationRegistry animationRegistry)
+    {
+        final Maze3D maze3D = new Maze3D(level, this, entityConfig, colorScheme, animationRegistry);
+        maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
+        maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
+        maze3D.floorColorProperty().bind(PROPERTY_3D_FLOOR_COLOR);
+        return maze3D;
     }
 
     @Override

@@ -3,6 +3,8 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameLevelAware;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.LevelCounterConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -26,7 +28,7 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.HTS;
 import static java.util.Objects.requireNonNull;
 
-public class LevelCounter3D extends Group implements DisposableGraphicsObject {
+public class LevelCounter3D extends Group implements GameLevelAware, DisposableGraphicsObject {
 
     private final UIConfig uiConfig;
     private final AnimationRegistry animationRegistry;
@@ -37,8 +39,11 @@ public class LevelCounter3D extends Group implements DisposableGraphicsObject {
         this.uiConfig = requireNonNull(uiConfig);
     }
 
-    public void rebuild(LevelCounterConfig3D config, List<Byte> symbols) {
+    @Override
+    public void init(GameLevel level) {
+        final LevelCounterConfig3D config = uiConfig.entityConfig().levelCounter();
         final float cubeSize = config.symbolSize();
+        final List<Byte> symbols = level.game().levelCounter().symbols();
         getChildren().clear();
         for (int i = 0; i < symbols.size(); ++i) {
             final Byte symbol = symbols.get(i);
@@ -72,6 +77,10 @@ public class LevelCounter3D extends Group implements DisposableGraphicsObject {
             return cubesAnimation;
         });
         spinningAnimation.playFromStart();
+    }
+
+    @Override
+    public void update(GameLevel level) {
     }
 
     @Override

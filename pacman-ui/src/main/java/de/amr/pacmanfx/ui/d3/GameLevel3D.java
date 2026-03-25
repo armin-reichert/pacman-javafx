@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameLevelAware;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.TerrainLayer;
@@ -19,10 +20,8 @@ import de.amr.pacmanfx.ui.config.LivesCounterConfig3D;
 import de.amr.pacmanfx.ui.d3.animation.GameLevel3DAnimations;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.actor.Bonus3D;
-import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
-import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
-import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
+import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
+import de.amr.pacmanfx.uilib.model3D.actor.*;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -32,14 +31,11 @@ import javafx.scene.PointLight;
 import javafx.scene.paint.PhongMaterial;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
-import static de.amr.pacmanfx.ui.GameUI.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -67,18 +63,17 @@ import static java.util.Objects.requireNonNull;
  * @see GhostAppearance3D
  * @see DisposableGraphicsObject
  */
-public class GameLevel3D extends Group implements DisposableGraphicsObject {
+public class GameLevel3D extends Group implements GameLevelAware, DisposableGraphicsObject {
 
     private final GameLevel level;
 
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
-    private final List<Disposable> disposables = new ArrayList<>();
+    private final Set<GameLevelAware> levelAwares = new HashSet<>();
 
-    private LevelCounter3D levelCounter3D;
-
-    private LivesCounter3D livesCounter3D;
     private Node[] livesCounterShapes;
 
+    private LevelCounter3D levelCounter3D;
+    private LivesCounter3D livesCounter3D;
     private Maze3D maze3D;
     private MazeFood3D food3D;
     private Pac3D pac3D;
@@ -99,27 +94,29 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         this.level = requireNonNull(level);
 
         final EntityConfig entityConfig = requireNonNull(uiConfig.entityConfig());
+        final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
 
         createPac3D(uiConfig.factory3D(), entityConfig.pacConfig());
-        createGhosts3D(uiConfig.factory3D(), entityConfig.ghostConfigs());
-
-        // These materials are used by the energizer particles
-        final List<PhongMaterial> ghostDressMaterials = ghosts3D.stream()
-            .map(mutableGhost3D -> mutableGhost3D.ghost3D().materials().normal().dress())
-            .toList();
-
-        final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
+        createGhostAppearances3D(uiConfig.factory3D(), entityConfig.ghostConfigs());
         createMaze3D(uiConfig, colorScheme);
-        createFood3D(uiConfig, ghostDressMaterials);
-
+        createFood3D(uiConfig, dressMaterials(ghosts3D));
         createLevelCounter3D(uiConfig, entityConfig.levelCounter());
         createLivesCounter3D(uiConfig, entityConfig.livesCounter());
         createMessageManager();
 
         initActorsZPosition();
-        arrangeEntities();
+        arrangeChildren();
 
         setMouseTransparent(true); // this increases performance they say...
+    }
+
+    private List<PhongMaterial> dressMaterials(Collection<GhostAppearance3D> ghostsAppearances) {
+        return ghostsAppearances.stream()
+            .map(GhostAppearance3D::ghost3D)
+            .map(Ghost3D::materials)
+            .map(GhostMaterials::normal)
+            .map(GhostComponentMaterials::dress)
+            .toList();
     }
 
     public void initActorsZPosition() {
@@ -138,12 +135,22 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void dispose() {
         Logger.info("Disposing game level 3D...");
         animationRegistry.clear();
+
         if (livesCounterShapes != null) {
             disposeAll(List.of(livesCounterShapes));
             livesCounterShapes = null;
         }
-        disposables.forEach(Disposable::dispose);
-        disposables.clear();
+        if (food3D != null) {
+            food3D.dispose();
+            food3D = null;
+        }
+        if (messageManager != null) {
+            messageManager.dispose();
+            messageManager = null;
+        }
+        levelAwares.stream().filter(Disposable.class::isInstance).map(Disposable.class::cast).forEach(Disposable::dispose);
+        levelAwares.clear();
+
         cleanupGroup(this, true);
         Logger.info("Cleaned and removed all nodes under game level 3D");
     }
@@ -206,20 +213,22 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return Optional.ofNullable(bonus3D);
     }
 
-    // Lifecycle and updates
+    // GameLevelAware interface
+
+    @Override
+    public void init(GameLevel level) {
+        levelAwares.forEach(entity -> entity.init(level));
+    }
 
     /**
      * Called once per game tick/frame to update all dynamic elements.
      */
-    public void update() {
-        pac3D.update(level);
-        ghosts3D.forEach(ghost3D -> ghost3D.update(level));
-        bonus3D().ifPresent(bonus3D -> bonus3D.update(level));
-        if (maze3D.house() != null) {
-            maze3D.house().update(level);
-        }
-        livesCounter3D.update(level);
+    @Override
+    public void update(GameLevel level) {
+        levelAwares.forEach(entity -> entity.update(level));
     }
+
+    // Others
 
     /**
      * Replaces or creates the bonus visualization for the given bonus item.
@@ -227,27 +236,21 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * @param uiConfig the UI configuration
      * @param bonus the new bonus
      */
-    public void replaceBonus3D(UIConfig uiConfig, Bonus bonus) {
+    public void addOrReplaceBonus3D(UIConfig uiConfig, Bonus bonus) {
+        requireNonNull(uiConfig);
         requireNonNull(bonus);
+        final BonusConfig bonusConfig = uiConfig.entityConfig().bonusConfig();
         if (bonus3D != null) {
             getChildren().remove(bonus3D);
             bonus3D.dispose();
         }
-        final BonusConfig bonusConfig = uiConfig.entityConfig().bonusConfig();
         bonus3D = new Bonus3D(animationRegistry, bonus,
             uiConfig.bonusSymbolImage(bonus.symbol()), bonusConfig.bonusSymbolWidth(),
             uiConfig.bonusValueImage(bonus.symbol()),  bonusConfig.bonusPointsWidth());
         bonus3D.showEdible();
+
         getChildren().add(bonus3D);
-
-        disposables.add(bonus3D);
-    }
-
-    /**
-     * Rebuilds the level counter visualization using the latest configuration.
-     */
-    public void rebuildLevelCounter3D(LevelCounterConfig3D levelCounterConfig3D) {
-        levelCounter3D.rebuild(levelCounterConfig3D, level.game().levelCounter().symbols());
+        levelAwares.add(bonus3D);
     }
 
     // private
@@ -258,7 +261,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Order matters for correct transparency: actors and effects must appear
      * in front of walls/house.
      */
-    private void arrangeEntities() {
+    private void arrangeChildren() {
         getChildren().add(maze3D.floor());
         getChildren().addAll(maze3D.particlesGroup());
         getChildren().add(levelCounter3D);
@@ -278,28 +281,30 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     private void createPac3D(Factory3D factory3D, PacConfig pacConfig) {
         pac3D = factory3D.createPac3D(level.pac(), pacConfig, animationRegistry);
-        pac3D.init(level);
         pac3D.createPowerLight(pacConfig);
-        disposables.add(pac3D);
+
+        levelAwares.add(pac3D);
     }
 
     /**
      * Creates and initializes all ghost 3D representations.
      */
-    private void createGhosts3D(Factory3D factory3D, List<de.amr.pacmanfx.uilib.model3D.actor.GhostConfig> ghostConfigs) {
+    private void createGhostAppearances3D(Factory3D factory3D, List<GhostConfig> ghostConfigs) {
         ghosts3D = level.ghosts()
-            .map(ghost -> createGhostAppearance3D(factory3D, ghostConfigs, ghost))
+            .map(ghost -> {
+                final var ghostAppearance3D = createGhostAppearance3D(factory3D, ghostConfigs, ghost);
+                ghostAppearance3D.init(level);
+                return ghostAppearance3D;
+            })
             .toList();
 
-        ghosts3D.forEach(ghost3D -> ghost3D.init(level));
-
-        disposables.addAll(ghosts3D);
+        levelAwares.addAll(ghosts3D);
     }
 
     /**
      * Creates a 3D ghost representation for the given model ghost.
      */
-    private GhostAppearance3D createGhostAppearance3D(Factory3D factory3D, List<de.amr.pacmanfx.uilib.model3D.actor.GhostConfig> ghostConfigs, Ghost ghost) {
+    private GhostAppearance3D createGhostAppearance3D(Factory3D factory3D, List<GhostConfig> ghostConfigs, Ghost ghost) {
         final var ghostAppearance3D = factory3D.createGhostAppearance3D(
             ghost,
             ghostConfigs.get(ghost.personality()),
@@ -328,7 +333,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         livesCounter3D.pillarColorProperty().set(config.pillarColor());
         livesCounter3D.plateColorProperty().set(config.plateColor());
 
-        disposables.add(livesCounter3D);
+        levelAwares.add(livesCounter3D);
     }
 
     /**
@@ -341,29 +346,18 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.setTranslateZ(-config.elevation());
 
-        disposables.add(levelCounter3D);
+        levelAwares.add(levelCounter3D);
     }
 
     /**
      * Creates and initializes the maze visualization, including color scheme adjustment.
      */
     private void createMaze3D(UIConfig uiConfig, WorldMapColorScheme colorScheme) {
-        maze3D = new Maze3D(
-            level,
-            uiConfig.factory3D(),
-            uiConfig.entityConfig(),
-            colorScheme,
-            animationRegistry
-        );
-        maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
-        maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
-        maze3D.floorColorProperty().bind(PROPERTY_3D_FLOOR_COLOR);
-
-        disposables.add(maze3D);
+        maze3D = uiConfig.factory3D().createMaze3D(level, uiConfig.entityConfig(), colorScheme, animationRegistry);
+        levelAwares.add(maze3D);
     }
 
     private void createFood3D(UIConfig uiConfig, List<PhongMaterial> ghostMaterials) {
-
         food3D = new MazeFood3D(
             uiConfig.factory3D(),
             uiConfig.entityConfig().pellet(),
@@ -371,8 +365,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             uiConfig.colorScheme(level.worldMap()),
             animationRegistry, level, ghostMaterials,
             maze3D);
-
-        disposables.add(food3D);
     }
 
     private void createMessageManager() {
@@ -387,8 +379,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             });
         messageManager.setTestMessageCenter(
             vec2_float(terrain.numCols() * HTS, (terrain.numRows() - 2) * TS));
-
-        disposables.add(messageManager);
     }
 
     /**

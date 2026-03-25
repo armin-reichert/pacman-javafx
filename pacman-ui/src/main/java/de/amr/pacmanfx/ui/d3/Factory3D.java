@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
@@ -26,6 +27,12 @@ import static de.amr.pacmanfx.uilib.Ufx.colorBoundPhongMaterial;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 
 public interface Factory3D extends Disposable {
+
+    Maze3D createMaze3D(
+        GameLevel level,
+        EntityConfig entityConfig,
+        WorldMapColorScheme colorScheme,
+        AnimationRegistry animationRegistry);
 
     /**
      * Creates the 3D representation of Pac for this game variant, including model,

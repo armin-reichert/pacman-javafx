@@ -61,7 +61,7 @@ public class GameLevel3DEventHandler {
 
         final State<Game> gameState = event.newState();
         if (matches(gameState, STARTING_GAME_OR_LEVEL)) {
-            onStartingGame(ui, level3D);
+            onStartingGame(level3D);
         } else if (matches(gameState, HUNTING)) {
             onHuntingStart(level3D);
         } else if (matches(gameState, PACMAN_DYING)) {
@@ -83,7 +83,7 @@ public class GameLevel3DEventHandler {
      * Handles bonus activation: updates 3D representation and plays sound.
      */
     public void onBonusActivated(GameUI ui, BonusActivatedEvent gameEvent, GameLevel3D level3D) {
-        level3D.replaceBonus3D(ui.currentConfig(), gameEvent.bonus());
+        level3D.addOrReplaceBonus3D(ui.currentConfig(), gameEvent.bonus());
         soundEffects.playBonusActiveSound();
     }
 
@@ -177,9 +177,9 @@ public class GameLevel3DEventHandler {
 
     // Private state-specific handlers
 
-    private void onStartingGame(GameUI ui, GameLevel3D level3D) {
+    private void onStartingGame(GameLevel3D level3D) {
         level3D.food3D().energizers3D().forEach(Energizer3D::stopPumping);
-        level3D.rebuildLevelCounter3D(ui.currentConfig().entityConfig().levelCounter());
+        level3D.init(level3D.level());
     }
 
     private void onHuntingStart(GameLevel3D level3D) {

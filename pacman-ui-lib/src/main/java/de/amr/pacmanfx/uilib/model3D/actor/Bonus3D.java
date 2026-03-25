@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.actor;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameLevelAware;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -35,7 +36,7 @@ import static java.util.Objects.requireNonNull;
  * on each of its faces. When eaten, the bonus symbol is replaced by the points earned for eating the bonus.
  * For a moving bonus, the rotating cube moves through the world and rotates towards its current move direction.</p>
  */
-public class Bonus3D extends Box implements DisposableGraphicsObject {
+public class Bonus3D extends Box implements GameLevelAware, DisposableGraphicsObject {
 
     private final Bonus bonus;
 
@@ -131,12 +132,22 @@ public class Bonus3D extends Box implements DisposableGraphicsObject {
         cleanupShape3D(this);
     }
 
+    @Override
+    public void init(GameLevel level) {
+    }
+
+    @Override
     public void update(GameLevel gameLevel) {
-        Vector2f center = bonus.center();
-        setTranslateX(center.x());
-        setTranslateY(center.y());
-        setTranslateZ(-HTS);
-        edibleAnimation.update(gameLevel);
+        switch (bonus.state()) {
+            case INACTIVE, EATEN -> {}
+            case EDIBLE -> {
+                final Vector2f center = bonus.center();
+                setTranslateX(center.x());
+                setTranslateY(center.y());
+                setTranslateZ(-HTS);
+                edibleAnimation.update(gameLevel);
+            }
+        }
     }
 
     public void showEdible() {

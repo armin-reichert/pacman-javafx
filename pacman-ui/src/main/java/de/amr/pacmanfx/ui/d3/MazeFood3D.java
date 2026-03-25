@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.lib.Disposable;
@@ -66,9 +65,7 @@ public class MazeFood3D implements Disposable {
         this.foodLayer = level.worldMap().foodLayer();
 
         final var pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
-
         createPellets3D(factory3D, pelletConfig3D, pelletMaterial, maze3D.floorTop() - pelletConfig3D.floorElevation());
-
         createEnergizers3D(factory3D, energizerConfig3D, animationRegistry, pelletMaterial, maze3D.floorTop() - energizerConfig3D.floorElevation());
 
         // The bottom center positions of the swirls where the particles of exploded energizers eventually are displayed

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.actor;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameLevelAware;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -36,7 +37,7 @@ import static java.util.Objects.requireNonNull;
  * <li>{@link GhostAppearance#NUMBER}: eaten ghost's point value.
  * </ul>
  */
-public class GhostAppearance3D extends Group implements DisposableGraphicsObject {
+public class GhostAppearance3D extends Group implements GameLevelAware, DisposableGraphicsObject {
 
     private static final double HEIGHT_OVER_FLOOR = 2.0;
 
@@ -113,12 +114,14 @@ public class GhostAppearance3D extends Group implements DisposableGraphicsObject
         cleanupGroup(this, true);
     }
 
+    @Override
     public void init(GameLevel level) {
         stopAllAnimations();
         updateTransform(ghost());
         updateAppearance(level);
     }
 
+    @Override
     public void update(GameLevel level) {
         updateTransform(ghost());
         updateAppearance(level);
