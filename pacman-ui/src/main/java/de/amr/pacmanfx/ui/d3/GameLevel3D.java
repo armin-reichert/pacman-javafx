@@ -32,6 +32,7 @@ import javafx.scene.paint.PhongMaterial;
 import org.tinylog.Logger;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -77,7 +78,6 @@ public class GameLevel3D extends Group implements GameLevelAware, DisposableGrap
     private Maze3D maze3D;
     private MazeFood3D food3D;
     private Pac3D pac3D;
-    private List<GhostAppearance3D> ghostAppearances3D;
     private Bonus3D bonus3D;
 
     private GameLevel3DAnimations animations;
@@ -180,9 +180,9 @@ public class GameLevel3D extends Group implements GameLevelAware, DisposableGrap
         return pac3D;
     }
 
-    /** @return immutable list of all ghost 3D representations */
-    public List<GhostAppearance3D> ghostAppearances3D() {
-        return List.copyOf(ghostAppearances3D);
+    /** @return stream of all ghost 3D representations */
+    public Stream<GhostAppearance3D> ghostAppearances3D() {
+        return entities.stream().filter(GhostAppearance3D.class::isInstance).map(GhostAppearance3D.class::cast);
     }
 
     /** @return optional bonus visualization */
@@ -255,7 +255,7 @@ public class GameLevel3D extends Group implements GameLevelAware, DisposableGrap
         getChildren().add(livesCounter3D);
         getChildren().add(pac3D);
         pac3D.light().ifPresent(pacLight -> getChildren().add(pacLight));
-        getChildren().addAll(ghostAppearances3D);
+        getChildren().addAll(ghostAppearances3D().toList());
         getChildren().addAll(food3D.energizers3D().stream().map(Energizer3D::shape).toList());
         getChildren().addAll(food3D.pellets3D().stream().map(Pellet3D::shape).toList());
         getChildren().add(maze3D.house().root());
@@ -273,7 +273,7 @@ public class GameLevel3D extends Group implements GameLevelAware, DisposableGrap
         createLevelCounter3D(uiConfig, entityConfig.levelCounter());
         createLivesCounter3D(uiConfig, entityConfig.livesCounter());
         // food is added to the scene children list
-        createFood3D(uiConfig, dressMaterials(ghostAppearances3D));
+        createFood3D(uiConfig, dressMaterials(ghostAppearances3D().toList()));
         createMessageManager();
     }
 
@@ -285,7 +285,7 @@ public class GameLevel3D extends Group implements GameLevelAware, DisposableGrap
     }
 
     private void createGhostAppearances3D(Factory3D factory3D, List<GhostConfig> ghostConfigs) {
-        ghostAppearances3D = level.ghosts()
+        final List<GhostAppearance3D> ghostAppearances3D = level.ghosts()
             .map(ghost -> {
                 final var ghostAppearance3D = createGhostAppearance3D(factory3D, ghostConfigs, ghost);
                 ghostAppearance3D.init(level);

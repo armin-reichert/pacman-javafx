@@ -54,7 +54,7 @@ public class GameLevel3DAnimations {
         wallColorFlashingAnimation = new WallColorFlashingAnimation(animationRegistry, level3D, colorScheme);
         levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry, level3D, soundEffects);
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationRegistry, level3D);
-        ghostLightAnimation = new GhostLightAnimation(animationRegistry, level3D.ghostAppearances3D());
+        ghostLightAnimation = new GhostLightAnimation(animationRegistry, level3D.ghostAppearances3D().toList());
     }
 
     /** @return the ghost‑spotlight animation */
