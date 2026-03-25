@@ -6,6 +6,8 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
+import de.amr.pacmanfx.ui.UIConfig;
+import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -68,9 +70,11 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
         }
     }
 
-    public LivesCounter3D(AnimationRegistry animationRegistry, Node[] pacShapes) {
+    public LivesCounter3D(UIConfig uiConfig, AnimationRegistry animationRegistry) {
+        requireNonNull(uiConfig);
         requireNonNull(animationRegistry);
-        requireNonNull(pacShapes);
+
+        final EntityConfig entityConfig = uiConfig.entityConfig();
 
         pillarMaterial.bind(pillarColor.map(Ufx::coloredPhongMaterial));
         plateMaterial.bind((plateColor.map(Ufx::coloredPhongMaterial)));
@@ -78,7 +82,13 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
         final var standsGroup = new Group();
         getChildren().add(standsGroup);
 
-        for (int i = 0; i < pacShapes.length; ++i) {
+        final var counterShapes = new Node[entityConfig.livesCounter().capacity()];
+        for (int i = 0; i < counterShapes.length; ++i) {
+            counterShapes[i] = uiConfig.factory3D().createLivesCounterShape3D(uiConfig.entityConfig());
+        }
+        for (int i = 0; i < counterShapes.length; ++i) {
+            final Node shape = counterShapes[i];
+
             final float x = i * TS(2);
             final int lift = i % 2 == 0 ? 0 : 4;
 
@@ -87,19 +97,18 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
             stand.setTranslateX(x);
             standsGroup.getChildren().add(stand);
 
-            final Node pacShape = pacShapes[i];
-            pacShape.setUserData(i);
-            pacShape.setTranslateX(x);
-            pacShape.setTranslateY(0);
+            shape.setUserData(i);
+            shape.setTranslateX(x);
+            shape.setTranslateY(0);
             // let Pac shape sit on top of plate
-            final double shapeRadius = 0.5 * pacShape.getBoundsInParent().getHeight(); // take scale transform into account!
-            pacShape.translateZProperty().bind(stand.pillar.heightProperty().add(plateThickness).add(shapeRadius).negate());
-            pacShape.visibleProperty().bind(livesCount.map(count -> count.intValue() > (int) pacShape.getUserData()));
-            getChildren().add(pacShape);
+            final double shapeRadius = 0.5 * shape.getBoundsInParent().getHeight(); // take scale transform into account!
+            shape.translateZProperty().bind(stand.pillar.heightProperty().add(plateThickness).add(shapeRadius).negate());
+            shape.visibleProperty().bind(livesCount.map(count -> count.intValue() > (int) shape.getUserData()));
+            getChildren().add(shape);
         }
 
-        for (Node pacShape : pacShapes) {
-            trackers.add(new NodePositionTracker(pacShape));
+        for (Node shape : counterShapes) {
+            trackers.add(new NodePositionTracker(shape));
         }
     }
 

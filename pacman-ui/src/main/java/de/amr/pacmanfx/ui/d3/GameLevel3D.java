@@ -26,7 +26,6 @@ import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.PhongMaterial;
 import org.tinylog.Logger;
@@ -73,7 +72,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final GameLevelEntitySet entities = new GameLevelEntitySet();
 
-    private Node[] livesCounterShapes;
     private MazeFood3D food3D;
     private GameLevel3DAnimations animations;
     private GameLevel3DMessageManager messageManager;
@@ -107,11 +105,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void dispose() {
         Logger.info("Disposing game level 3D...");
         animationRegistry.clear();
-
-        if (livesCounterShapes != null) {
-            disposeAll(List.of(livesCounterShapes));
-            livesCounterShapes = null;
-        }
         if (food3D != null) {
             food3D.dispose();
             food3D = null;
@@ -326,11 +319,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createLivesCounter3D(UIConfig uiConfig, LivesCounterConfig3D config) {
-        livesCounterShapes = new Node[config.capacity()];
-        for (int i = 0; i < livesCounterShapes.length; ++i) {
-            livesCounterShapes[i] = uiConfig.factory3D().createLivesCounterShape3D(uiConfig.entityConfig());
-        }
-        final var livesCounter3D = new LivesCounter3D(animationRegistry, livesCounterShapes);
+        final var livesCounter3D = new LivesCounter3D(uiConfig, animationRegistry);
         livesCounter3D.setTranslateX(2 * TS);
         livesCounter3D.setTranslateY(2 * TS);
         livesCounter3D.pillarColorProperty().set(config.pillarColor());
