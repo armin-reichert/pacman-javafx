@@ -286,7 +286,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createLevelCounter3D(uiConfig, entityConfig.levelCounter());
         createLivesCounter3D(uiConfig, entityConfig.livesCounter());
         // food is added to the scene children list
-        createFood3D(uiConfig, dressMaterials(ghostAppearances3D().toList()), maze3D().orElseThrow());
+        food3D = new MazeFood3D(uiConfig, animationRegistry, level, dressMaterials(ghostAppearances3D().toList()),
+            maze3D().orElseThrow());
         createMessageManager();
     }
 
@@ -349,15 +350,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void createMaze3D(UIConfig uiConfig, WorldMapColorScheme colorScheme) {
         final var maze3D = uiConfig.factory3D().createMaze3D(level, uiConfig.entityConfig(), colorScheme, animationRegistry);
         entities.addEntity(maze3D);
-    }
-
-    private void createFood3D(UIConfig uiConfig, List<PhongMaterial> ghostMaterials, Maze3D maze3D) {
-        food3D = new MazeFood3D(
-            uiConfig,
-            animationRegistry,
-            level,
-            ghostMaterials,
-            maze3D);
     }
 
     private void createMessageManager() {
