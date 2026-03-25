@@ -108,7 +108,7 @@ public class GameLevel3DEventHandler {
      */
     public void onGameContinues(GameContinuedEvent ignoredEvent, GameLevel3D level3D) {
         if (level3D != null) {
-            level3D.initPacZPosition();
+            level3D.initPacZPosition(level3D.pac3D());
             level3D.messageManager().showReadyMessage();
         }
     }
@@ -124,7 +124,7 @@ public class GameLevel3DEventHandler {
             soundEffects.playGameReadySound();
         }
         if (level3D != null) {
-            level3D.initPacZPosition();
+            level3D.initPacZPosition(level3D.pac3D());
         }
     }
 
@@ -215,7 +215,7 @@ public class GameLevel3DEventHandler {
         );
         dyingAnimation.setOnFinished(_ -> {
             level3D.pac3D().setVisible(false);
-            level3D.initPacZPosition();
+            level3D.initPacZPosition(level3D.pac3D());
             stateTimer.expire();
         });
         dyingAnimation.play();
