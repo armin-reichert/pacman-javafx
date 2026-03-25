@@ -37,14 +37,6 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
 
     private final Map<GhostColorSet, GhostMaterials> ghostMaterialsCache = new HashMap<>();
 
-    private GhostMeshes createGhostMeshes() {
-        return new GhostMeshes(
-            Models3D.GHOST_MODEL.dressMesh(),
-            Models3D.GHOST_MODEL.pupilsMesh(),
-            Models3D.GHOST_MODEL.eyeballsMesh()
-        );
-    }
-
     private GhostMaterials getOrCreateGhostMaterials(GhostColorSet colorSet) {
         GhostMaterials materials = ghostMaterialsCache.get(colorSet);
         if (materials == null) {
@@ -117,7 +109,11 @@ public class TengenMsPacMan_Factory3D implements Factory3D {
 
         final GhostColorSet colorSet = ghostConfig.createGhostColorSet();
         final GhostMaterials materials = getOrCreateGhostMaterials(colorSet);
-        final GhostMeshes meshes = createGhostMeshes();
+        final GhostMeshes meshes = new GhostMeshes(
+            Models3D.GHOST_MODEL.dressMesh(),
+            Models3D.GHOST_MODEL.pupilsMesh(),
+            Models3D.GHOST_MODEL.eyeballsMesh()
+        );
 
         return new GhostAppearance3D(
             animationRegistry,
