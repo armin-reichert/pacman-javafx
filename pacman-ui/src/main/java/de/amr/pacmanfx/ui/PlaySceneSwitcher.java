@@ -31,8 +31,7 @@ public interface PlaySceneSwitcher {
 
         final GameLevel3D gameLevel3D = playScene3D.optGameLevel3D().orElseThrow();
         final Pac3D pac3D = gameLevel3D.pac3D().orElseThrow();
-        gameLevel3D.livesCounter3D().startTracking(pac3D);
-
+        gameLevel3D.startTrackingPac();
         playScene3D.initFood3D(level.worldMap().foodLayer(), state.nameMatches(HUNTING.name(), EATING_GHOST.name()));
         playScene3D.initPac3D(pac3D, level);
         playScene3D.updateHUD3D(level);

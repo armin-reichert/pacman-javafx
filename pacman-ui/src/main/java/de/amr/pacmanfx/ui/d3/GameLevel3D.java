@@ -77,8 +77,6 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
     private Node[] livesCounterShapes;
 
     private List<GhostAppearance3D> ghostAppearances3D;
-    private LevelCounter3D levelCounter3D;
-    private LivesCounter3D livesCounter3D;
     private Maze3D maze3D;
     private MazeFood3D food3D;
 
@@ -171,9 +169,24 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
         getChildren().add(ghostLight);
     }
 
+    public void startTrackingPac() {
+        if (livesCounter3D().isEmpty()) {
+            Logger.error("Cannot track Pac-Man, no 3D lives counter exists");
+            return;
+        }
+        if (pac3D().isEmpty()) {
+            Logger.error("Cannot track Pac-Man, no 3D Pac-Man exists");
+        }
+        livesCounter3D().get().startTracking(pac3D().get());
+    }
+
+    public Optional<LevelCounter3D> levelCounter3D() {
+        return entities.entitiesOfType(LevelCounter3D.class).findFirst();
+    }
+
     /** @return lives counter visualization */
-    public LivesCounter3D livesCounter3D() {
-        return livesCounter3D;
+    public Optional<LivesCounter3D> livesCounter3D() {
+        return entities.entitiesOfType(LivesCounter3D.class).findFirst();
     }
 
     /** @return Pac-Man 3D representation */
@@ -252,8 +265,8 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
     private void addChildrenInRightOrder() {
         getChildren().add(maze3D.floor());
         getChildren().addAll(maze3D.particlesGroup());
-        getChildren().add(levelCounter3D);
-        getChildren().add(livesCounter3D);
+        getChildren().add(levelCounter3D().orElseThrow());
+        getChildren().add(livesCounter3D().orElseThrow());
         final Pac3D pac3D = pac3D().orElseThrow();
         getChildren().add(pac3D);
         pac3D.light().ifPresent(pacLight -> getChildren().add(pacLight));
@@ -318,7 +331,7 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
         for (int i = 0; i < livesCounterShapes.length; ++i) {
             livesCounterShapes[i] = uiConfig.factory3D().createLivesCounterShape3D(uiConfig.entityConfig());
         }
-        livesCounter3D = new LivesCounter3D(animationRegistry, livesCounterShapes);
+        final var livesCounter3D = new LivesCounter3D(animationRegistry, livesCounterShapes);
         livesCounter3D.setTranslateX(2 * TS);
         livesCounter3D.setTranslateY(2 * TS);
         livesCounter3D.pillarColorProperty().set(config.pillarColor());
@@ -328,7 +341,7 @@ public class GameLevel3D extends Group implements GameLevelEntity, DisposableGra
 
     private void createLevelCounter3D(UIConfig uiConfig, LevelCounterConfig3D config) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
+        final var levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
         levelCounter3D.setTranslateX(TS * (terrain.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.setTranslateZ(-config.elevation());

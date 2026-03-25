@@ -47,7 +47,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final Pac3D pac3D = newLevel3D.pac3D().orElseThrow();
         pac3D.init(level);
         newLevel3D.ghostAppearances3D().forEach(ghost3D -> ghost3D.init(level));
-        newLevel3D.livesCounter3D().startTracking(pac3D);
+        newLevel3D.startTrackingPac();
         final var animations = new GameLevel3DAnimations(newLevel3D, uiConfig.colorScheme(level.worldMap()), soundEffects);
         newLevel3D.setAnimations(animations);
 
