@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -44,19 +45,13 @@ public class MazeFood3D implements Disposable {
     private EnergizerParticlesAnimation explodedEnergizerParticlesAnimation;
 
     public MazeFood3D(
-        Factory3D factory3D,
-        PelletConfig3D pelletConfig3D,
-        EnergizerConfig3D energizerConfig3D,
-        WorldMapColorScheme colorScheme,
+        UIConfig uiConfig,
         AnimationRegistry animationRegistry,
         GameLevel level,
         List<PhongMaterial> ghostMaterials,
         Maze3D maze3D)
     {
-        requireNonNull(factory3D);
-        requireNonNull(pelletConfig3D);
-        requireNonNull(energizerConfig3D);
-        requireNonNull(colorScheme);
+        requireNonNull(uiConfig);
         requireNonNull(animationRegistry);
         requireNonNull(level);
         requireNonNull(ghostMaterials);
@@ -64,7 +59,12 @@ public class MazeFood3D implements Disposable {
 
         this.foodLayer = level.worldMap().foodLayer();
 
+        final Factory3D factory3D = uiConfig.factory3D();
+        final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final var pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
+        final PelletConfig3D pelletConfig3D = uiConfig.entityConfig().pellet();
+        final EnergizerConfig3D energizerConfig3D = uiConfig.entityConfig().energizer();
+
         createPellets3D(factory3D, pelletConfig3D, pelletMaterial, maze3D.floorTop() - pelletConfig3D.floorElevation());
         createEnergizers3D(factory3D, energizerConfig3D, animationRegistry, pelletMaterial, maze3D.floorTop() - energizerConfig3D.floorElevation());
 

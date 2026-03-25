@@ -353,11 +353,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createFood3D(UIConfig uiConfig, List<PhongMaterial> ghostMaterials, Maze3D maze3D) {
         food3D = new MazeFood3D(
-            uiConfig.factory3D(),
-            uiConfig.entityConfig().pellet(),
-            uiConfig.entityConfig().energizer(),
-            uiConfig.colorScheme(level.worldMap()),
-            animationRegistry, level, ghostMaterials,
+            uiConfig,
+            animationRegistry,
+            level,
+            ghostMaterials,
             maze3D);
     }
 
