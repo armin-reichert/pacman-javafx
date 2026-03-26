@@ -209,10 +209,15 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         }
         setMaterials(materials.flashing());
         dressShape.setVisible(true);
-        flashingAnimation.setNumFlashes(numFlashes);
-        // TODO (fixme): Total flashing time must be shorter than Pac power fading time (2s)!
-        flashingAnimation.setTotalDuration(Duration.millis(1990));
-        flashingAnimation.playFromStart();
+
+
+        // TODO: this is crap
+        if (flashingAnimation.numFlashes != numFlashes) {
+            flashingAnimation.stop();
+            flashingAnimation.setNumFlashes(numFlashes);
+            flashingAnimation.setTotalDuration(Duration.millis(1990));
+        }
+        flashingAnimation.playOrContinue();
     }
 
     private void setMaterials(GhostComponentMaterials materialSet) {

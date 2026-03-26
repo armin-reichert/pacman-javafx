@@ -3,4 +3,4 @@
  */
 package de.amr.pacmanfx.uilib.model3D.actor;
 
-public enum GhostAppearance {NORMAL, FRIGHTENED, FLASHING, EYES, NUMBER}
+public enum GhostAppearance {NORMAL, FRIGHTENED, FLASHING, EYES}

@@ -187,6 +187,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return entities.entitiesOfType(GhostAppearance3D.class);
     }
 
+    public Optional<GhostAppearance3D> ghostAppearance3D(byte personality) {
+        return ghostAppearances3D().filter(ga3D -> ga3D.ghost().personality() == personality).findFirst();
+    }
+
     /** @return optional bonus visualization */
     public Optional<Bonus3D> bonus3D() {
         return entities.entitiesOfType(Bonus3D.class).findFirst();

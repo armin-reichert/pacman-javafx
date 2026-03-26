@@ -14,8 +14,6 @@ import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
 import de.amr.pacmanfx.uilib.model3D.animation.Ghost3DBrakeAnimation;
 import de.amr.pacmanfx.uilib.model3D.animation.Ghost3DPointsAnimation;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
 import javafx.scene.shape.Shape3D;
@@ -34,34 +32,11 @@ import static java.util.Objects.requireNonNull;
  * <li>{@link GhostAppearance#FRIGHTENED}: blue ghost, empty, "pinkish" eyes (looking blind),
  * <li>{@link GhostAppearance#FLASHING}: blue-white flashing skin, pink-red flashing eyes,
  * <li>{@link GhostAppearance#EYES} eyes only,
- * <li>{@link GhostAppearance#NUMBER}: eaten ghost's point value.
  * </ul>
  */
 public class GhostAppearance3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
     private static final double HEIGHT_OVER_FLOOR = 2.0;
-
-    public static GhostAppearance computeAppearance(
-        GhostState ghostState,
-        boolean powerActive,
-        boolean powerFading,
-        boolean killedInCurrentPowerPhase)
-    {
-        return switch (ghostState) {
-            case LEAVING_HOUSE, LOCKED -> {
-                if (powerActive && !killedInCurrentPowerPhase) {
-                    yield powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
-                }
-                yield GhostAppearance.NORMAL;
-            }
-            case FRIGHTENED -> powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
-            case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EYES;
-            case EATEN -> GhostAppearance.NUMBER;
-            default -> GhostAppearance.NORMAL;
-        };
-    }
-
-    private final ObjectProperty<GhostAppearance> appearance = new SimpleObjectProperty<>();
 
     private final Ghost3D ghost3D;
     private Shape3D numberShape3D;
@@ -69,7 +44,7 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
     private int numFlashes;
 
     private Ghost3DBrakeAnimation brakeAnimation;
-    private Ghost3DPointsAnimation pointsAnimation;
+    private Ghost3DPointsAnimation numberAnimation;
 
     public GhostAppearance3D(
         AnimationRegistry animationRegistry,
@@ -89,14 +64,16 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
         ghost3D = new Ghost3D(animationRegistry, ghost, colorSet, meshes, materials, size);
 
         brakeAnimation = new Ghost3DBrakeAnimation(animationRegistry, this);
-        pointsAnimation = new Ghost3DPointsAnimation(animationRegistry, this);
+        numberAnimation = new Ghost3DPointsAnimation(animationRegistry, this);
 
         getChildren().add(ghost3D);
-        addPropertyChangeListeners();
         updateTransform(ghost);
         setTranslateZ(-0.5 * size - HEIGHT_OVER_FLOOR);
 
-        appearance.set(GhostAppearance.NORMAL);
+        addPropertyChangeListeners();
+
+        setGhostAppearance(GhostAppearance.NORMAL);
+        disableNumberAppearance();
     }
 
     @Override
@@ -107,9 +84,9 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
             brakeAnimation.dispose();
             brakeAnimation = null;
         }
-        if (pointsAnimation != null) {
-            pointsAnimation.dispose();
-            pointsAnimation = null;
+        if (numberAnimation != null) {
+            numberAnimation.dispose();
+            numberAnimation = null;
         }
         cleanupGroup(this, true);
     }
@@ -118,7 +95,7 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
     public void init(GameLevel level) {
         stopAllAnimations();
         updateTransform(ghost());
-        updateAppearance(level);
+        setGhostAppearance(GhostAppearance.NORMAL);
     }
 
     @Override
@@ -131,22 +108,25 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
         ghost3D.shakeDress(ghost3D.isVisible());
     }
 
+    public void showAsNumber(Shape3D numberShape3D) {
+        this.numberShape3D = requireNonNull(numberShape3D);
+        if (getChildren().size() == 1) {
+            getChildren().add(numberShape3D);
+        } else {
+            getChildren().set(1, numberShape3D);
+        }
+        ghost3D.stopAnimations();
+        ghost3D.setVisible(false);
+
+        enableNumberAppearance();
+    }
+
     public void setNumFlashes(int numFlashes) {
         this.numFlashes = requireNonNegativeInt(numFlashes);
     }
 
     public Ghost3D ghost3D() {
         return ghost3D;
-    }
-
-    public void setNumberShape3D(Shape3D numberShape3D) {
-        this.numberShape3D = requireNonNull(numberShape3D);
-        numberShape3D.setVisible(false);
-        if (getChildren().size() == 1) {
-            getChildren().add(numberShape3D);
-        } else {
-            getChildren().set(1, numberShape3D);
-        }
     }
 
     public Optional<Shape3D> optNumberShape3D() {
@@ -159,7 +139,7 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
 
     public void stopAllAnimations() {
         if (brakeAnimation != null)  brakeAnimation.stop();
-        if (pointsAnimation != null) pointsAnimation.stop();
+        if (numberAnimation != null) numberAnimation.stop();
         if (ghost3D != null) {
             ghost3D.stopAnimations();
         }
@@ -171,51 +151,45 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
 
     private final ChangeListener<Direction> wishDirChangeListener = (_, _, _) -> updateTransform(ghost());
 
-    private final ChangeListener<GhostAppearance> appearanceChangeListener = (_, _, ghostAppearance) -> {
-        if (requireNonNull(ghostAppearance) == GhostAppearance.NUMBER) {
-            setNumberAppearance();
-        } else {
-            setGhostAppearance(ghostAppearance);
+    private void disableNumberAppearance() {
+        if (numberShape3D != null) {
+            numberShape3D.setVisible(false);
+            numberAnimation.stop();
         }
-        Logger.debug("{} 3D appearance set to {}", ghost().name(), ghostAppearance);
-    };
+    }
 
-    private void setNumberAppearance() {
-        if (numberShape3D == null) {
-            Logger.error("Number shape 3D not set for ghost {}, cannot show points", ghost().name());
-            return;
+    private void enableNumberAppearance() {
+        if (numberShape3D != null) {
+            numberShape3D.setVisible(true);
+            numberAnimation.playFromStart();
+            Logger.info("Ghost {} is now shown as number", ghost3D.ghost().name());
         }
-        ghost3D.stopAnimations();
-        ghost3D.setVisible(false);
-        numberShape3D.setVisible(true);
-        pointsAnimation.playFromStart();
+        else Logger.error("Cannot enable number appearance: no number shape exists");
     }
 
     private void setGhostAppearance(GhostAppearance appearance) {
-        if (numberShape3D != null) {
-            pointsAnimation.stop();
-            numberShape3D.setVisible(false);
-        }
-        ghost3D.setVisible(true);
-        ghost3D.dressAnimation().playFromStart();
+        disableNumberAppearance();
+
         switch (appearance) {
             case NORMAL     -> ghost3D.setNormalLook();
             case FRIGHTENED -> ghost3D.setFrightenedLook();
             case EYES       -> ghost3D.setEyesOnlyLook();
             case FLASHING   -> ghost3D.setFlashingLook(numFlashes);
         }
+        ghost3D.setVisible(true);
+        ghost3D.dressAnimation().playFromStart();
+
+        Logger.debug("Ghost appearance for {} is now {}", ghost3D.ghost().name(), appearance);
     }
 
     private void addPropertyChangeListeners() {
         ghost().positionProperty().addListener(positionChangeListener);
         ghost().wishDirProperty().addListener(wishDirChangeListener);
-        appearance.addListener(appearanceChangeListener);
     }
 
     private void removePropertyChangeListeners() {
         ghost().positionProperty().removeListener(positionChangeListener);
         ghost().wishDirProperty().removeListener(wishDirChangeListener);
-        appearance.removeListener(appearanceChangeListener);
     }
 
     private void updateTransform(Ghost ghost) {
@@ -226,15 +200,36 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
     }
 
     private void updateAppearance(GameLevel level) {
+        if (ghost().state() == GhostState.EATEN) return;
+
         final boolean powerActive = level.pac().powerTimer().isRunning();
         final boolean powerFading = level.pac().isPowerFading(level);
         // ghosts that already got killed in the current power phase do not look frightened anymore
-        final boolean killedInCurrentPhase = level.energizerVictims().contains(ghost());
-        final GhostAppearance newAppearance = computeAppearance(
-            ghost().state(),
-            powerActive,
-            powerFading,
-            killedInCurrentPhase);
-        appearance.set(newAppearance);
+        final boolean killedAlready = level.energizerVictims().contains(ghost());
+        final GhostAppearance newAppearance = computeAppearance(ghost().state(), powerActive, powerFading, killedAlready);
+        if (newAppearance != null) {
+            setGhostAppearance(newAppearance);
+        }
+    }
+
+    private GhostAppearance computeAppearance(
+        GhostState ghostState,
+        boolean powerActive,
+        boolean powerFading,
+        boolean killedInCurrentPowerPhase)
+    {
+        return switch (ghostState) {
+            case EATEN -> null; // shown as number
+            case LOCKED, LEAVING_HOUSE -> powerActive && !killedInCurrentPowerPhase
+                ? frightenedAppearance(powerFading)
+                : GhostAppearance.NORMAL;
+            case FRIGHTENED -> frightenedAppearance(powerFading);
+            case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EYES;
+            default -> GhostAppearance.NORMAL;
+        };
+    }
+
+    private GhostAppearance frightenedAppearance(boolean powerFading) {
+        return powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
     }
 }

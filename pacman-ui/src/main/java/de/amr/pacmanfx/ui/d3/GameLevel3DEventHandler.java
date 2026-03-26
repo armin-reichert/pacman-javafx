@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.assets.Translator;
@@ -231,10 +232,11 @@ public class GameLevel3DEventHandler {
     private void onEatingGhost(GameUI ui, GameLevel3D level3D) {
         final GameLevel level = level3D.level();
         level.game().simulationStep().ghostsKilled.forEach(killedGhost -> {
-            final int killedIndex = level.energizerVictims().indexOf(killedGhost);
-            final GhostAppearance3D ghostAppearance3D = level3D.ghostAppearances3D().toList().get(killedGhost.personality());
-            final Shape3D numberShape3D = ui.currentConfig().factory3D().createNumberShape3D(ui.currentConfig(), killedIndex);
-            ghostAppearance3D.setNumberShape3D(numberShape3D);
+            final GhostAppearance3D ga3D = level3D.ghostAppearance3D(killedGhost.personality()).orElseThrow();
+            final int numberIndex = level.energizerVictims().indexOf(killedGhost);
+            final UIConfig uiConfig = ui.currentConfig();
+            final Shape3D numberShape3D = uiConfig.factory3D().createNumberShape3D(uiConfig, numberIndex);
+            ga3D.showAsNumber(numberShape3D);
         });
     }
 
