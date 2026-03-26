@@ -35,9 +35,9 @@ public class GhostLightAnimation extends ManagedAnimation {
     private final PointLight light = new PointLight();
     private byte currentGhostID = RED_GHOST_SHADOW;
 
-    public GhostLightAnimation(AnimationRegistry animationRegistry, List<GhostAppearance3D> ghosts3D) {
+    public GhostLightAnimation(AnimationRegistry animationRegistry, List<GhostAppearance3D> ghosts3DInOrder) {
         super(animationRegistry, "GhostLight");
-        this.ghosts3D = requireNonNull(ghosts3D);
+        this.ghosts3D = requireNonNull(ghosts3DInOrder);
         light.setMaxRange(LIGHT_MAX_RANGE);
         setFactory(this::createAnimationFX);
     }

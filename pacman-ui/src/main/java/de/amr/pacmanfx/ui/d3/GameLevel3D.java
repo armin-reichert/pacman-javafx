@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.TickTimer;
@@ -206,14 +207,15 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return entities.firstOfType(Pac3D.class);
     }
 
-    /** @return stream of all ghost 3D representations in the order RED, PINK, CYAN, ORANGE */
-    public Stream<GhostAppearance3D> ghostAppearances3D() {
+    /** @return Stream of all ghost 3D representations in the order RED, PINK, CYAN, ORANGE */
+    public Stream<GhostAppearance3D> ghostAppearances3DInOrder() {
         return entities.allOfType(GhostAppearance3D.class)
             .sorted(Comparator.comparingInt(appearance -> appearance.ghost().personality()));
     }
 
     public Optional<GhostAppearance3D> ghostAppearance3D(byte personality) {
-        return ghostAppearances3D().filter(ga3D -> ga3D.ghost().personality() == personality).findFirst();
+        Validations.requireValidGhostPersonality(personality);
+        return entities.allOfType(GhostAppearance3D.class).filter(ga3D -> ga3D.ghost().personality() == personality).findFirst();
     }
 
     /** @return optional bonus visualization */
@@ -286,7 +288,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Pac3D pac3D = pac3D().orElseThrow();
         getChildren().add(pac3D);
         pac3D.light().ifPresent(pacLight -> getChildren().add(pacLight));
-        ghostAppearances3D().forEach(getChildren()::add);
+        ghostAppearances3DInOrder().forEach(getChildren()::add);
 
         food3D.energizers3D().stream().map(Energizer3D::shape).forEach(getChildren()::add);
         food3D.pellets3D().stream().map(Pellet3D::shape).forEach(getChildren()::add);
@@ -308,7 +310,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createLevelCounter3D(uiConfig, entityConfig.levelCounter());
         createLivesCounter3D(uiConfig, entityConfig.livesCounter());
         // food is added to the scene children list
-        food3D = new MazeFood3D(uiConfig, animationRegistry, level, dressMaterials(ghostAppearances3D().toList()),
+        food3D = new MazeFood3D(uiConfig, animationRegistry, level, dressMaterials(ghostAppearances3DInOrder().toList()),
             maze3D().orElseThrow());
         createMessageManager();
     }
@@ -530,7 +532,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void onHuntingStart(Pac3D pac3D) {
         pac3D.init(level);
-        ghostAppearances3D().forEach(ghost3D -> ghost3D.init(level));
+        ghostAppearances3DInOrder().forEach(ghost3D -> ghost3D.init(level));
         food3D.energizers3D().forEach(Energizer3D::startPumping);
         food3D.startParticlesAnimation();
         animations().ifPresent(animations -> animations.ghostLightAnimation().playFromStart());
@@ -545,7 +547,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             animations.ghostLightAnimation().stop();
             animations.wallColorFlashingAnimation().stop();
         });
-        ghostAppearances3D().forEach(GhostAppearance3D::stopAllAnimations);
+        ghostAppearances3DInOrder().forEach(GhostAppearance3D::stopAllAnimations);
         bonus3D().ifPresent(Bonus3D::expire);
 
         // One last update before dying animation
