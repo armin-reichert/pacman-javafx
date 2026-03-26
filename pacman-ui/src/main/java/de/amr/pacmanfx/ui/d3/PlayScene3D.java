@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui.action.ActionBinding;
-import de.amr.pacmanfx.ui.d3.animation.GameLevel3DAnimations;
 import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
@@ -399,10 +398,6 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
         final var newGameLevel3D = new GameLevel3D(level, uiConfig, soundEffects, ui.localizedTexts());
         newGameLevel3D.init(level);
         newGameLevel3D.startTrackingPac();
-
-        final var animations = new GameLevel3DAnimations(newGameLevel3D, uiConfig.colorScheme(level.worldMap()), soundEffects);
-        newGameLevel3D.setAnimations(animations);
-
         return newGameLevel3D;
     }
 

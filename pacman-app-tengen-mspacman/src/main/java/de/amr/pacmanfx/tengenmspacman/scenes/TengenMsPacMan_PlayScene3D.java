@@ -16,7 +16,6 @@ import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.Maze3D;
 import de.amr.pacmanfx.ui.d3.MazeFloor3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
-import de.amr.pacmanfx.ui.d3.animation.GameLevel3DAnimations;
 import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -53,9 +52,6 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         pac3D.init(level);
         newLevel3D.ghostAppearances3DInOrder().forEach(ghost3D -> ghost3D.init(level));
         newLevel3D.startTrackingPac();
-
-        final var animations = new GameLevel3DAnimations(newLevel3D, uiConfig.colorScheme(level.worldMap()), soundEffects);
-        newLevel3D.setAnimations(animations);
 
         // Tengen-specific stuff: level info
         if (!game.allOptionsDefault()) {
