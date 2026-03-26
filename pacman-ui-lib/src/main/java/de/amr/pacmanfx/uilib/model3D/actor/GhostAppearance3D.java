@@ -198,33 +198,24 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
     }
 
     private void updateAppearance(GameLevel level) {
-        if (ghost().state() == GhostState.EATEN) return;
+        final GhostState ghostState = ghost().state();
+
+        // Let ghost shown as number alone
+        if (ghostState == GhostState.EATEN) return;
 
         final boolean powerActive = level.pac().powerTimer().isRunning();
         final boolean powerFading = level.pac().isPowerFading(level);
         // ghosts that already got killed in the current power phase do not look frightened anymore
         final boolean killedAlready = level.energizerVictims().contains(ghost());
-        final GhostAppearance newAppearance = computeAppearance(ghost().state(), powerActive, powerFading, killedAlready);
-        if (newAppearance != null) {
-            setGhostAppearance(newAppearance);
-        }
-    }
 
-    private GhostAppearance computeAppearance(
-        GhostState ghostState,
-        boolean powerActive,
-        boolean powerFading,
-        boolean killedInCurrentPowerPhase)
-    {
-        return switch (ghostState) {
-            case EATEN -> null; // shown as number
-            case LOCKED, LEAVING_HOUSE -> powerActive && !killedInCurrentPowerPhase
+        setGhostAppearance(switch (ghostState) {
+            case LOCKED, LEAVING_HOUSE -> powerActive && !killedAlready
                 ? frightenedAppearance(powerFading)
                 : GhostAppearance.NORMAL;
             case FRIGHTENED -> frightenedAppearance(powerFading);
             case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EYES;
             default -> GhostAppearance.NORMAL;
-        };
+        });
     }
 
     private GhostAppearance frightenedAppearance(boolean powerFading) {
