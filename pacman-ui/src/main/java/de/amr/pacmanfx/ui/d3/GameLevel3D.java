@@ -584,7 +584,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         soundEffects.stopAll();
         animationRegistry().stopAllAnimations();
-        cleanupFoodAndParticles();
+        cleanupFoodAndParticles(maze3D);
         maze3D.house().hideDoors();
         bonus3D().ifPresent(Bonus3D::expire);
         messageManager.hideMessage();
@@ -596,23 +596,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void onGameOver(GameUI ui) {
         final State<Game> gameState = level.game().control().state();
-
         gameState.timer().restartSeconds(3);
-
         animations().ifPresent(animations -> animations.ghostLightAnimation().stop());
-
-        cleanupFoodAndParticles();
+        cleanupFoodAndParticles(maze3D().orElseThrow());
         bonus3D().ifPresent(Bonus3D::expire);
-
-        soundEffects.playGameOverSound();
-
-        final boolean showMsg = RandomNumberSupport.chance(0.25);
-        if (!level.isDemoLevel() && showMsg) {
+        if (!level.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
             ui.showFlashMessage(Duration.seconds(2.5), pickerGameOverMessages.nextText());
         }
+        soundEffects.playGameOverSound();
     }
 
-    private void cleanupFoodAndParticles() {
+    private void cleanupFoodAndParticles(Maze3D maze3D) {
         food3D.stopParticlesAnimation();
         food3D.energizers3D().forEach(energizer3D -> {
             energizer3D.stopPumping();
@@ -620,6 +614,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         });
         // Hide 3D food explicitly (handles cheat-eat-all case)
         food3D.pellets3D().forEach(pellet3D -> pellet3D.shape().setVisible(false));
-        maze3D().ifPresent(maze3D -> maze3D.particlesGroup().getChildren().clear());
+        maze3D.particlesGroup().getChildren().clear();
     }
 }
