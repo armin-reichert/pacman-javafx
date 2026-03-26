@@ -43,10 +43,7 @@ import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -209,9 +206,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return entities.firstOfType(Pac3D.class);
     }
 
-    /** @return stream of all ghost 3D representations */
+    /** @return stream of all ghost 3D representations in the order RED, PINK, CYAN, ORANGE */
     public Stream<GhostAppearance3D> ghostAppearances3D() {
-        return entities.allOfType(GhostAppearance3D.class);
+        return entities.allOfType(GhostAppearance3D.class)
+            .sorted(Comparator.comparingInt(appearance -> appearance.ghost().personality()));
     }
 
     public Optional<GhostAppearance3D> ghostAppearance3D(byte personality) {
@@ -288,10 +286,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Pac3D pac3D = pac3D().orElseThrow();
         getChildren().add(pac3D);
         pac3D.light().ifPresent(pacLight -> getChildren().add(pacLight));
-        getChildren().addAll(ghostAppearances3D().toList());
+        ghostAppearances3D().forEach(getChildren()::add);
 
-        getChildren().addAll(food3D.energizers3D().stream().map(Energizer3D::shape).toList());
-        getChildren().addAll(food3D.pellets3D().stream().map(Pellet3D::shape).toList());
+        food3D.energizers3D().stream().map(Energizer3D::shape).forEach(getChildren()::add);
+        food3D.pellets3D().stream().map(Pellet3D::shape).forEach(getChildren()::add);
 
         maze3D().ifPresent(maze3D -> {
             getChildren().add(maze3D.house().root());
