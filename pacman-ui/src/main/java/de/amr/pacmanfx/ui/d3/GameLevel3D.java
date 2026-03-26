@@ -125,14 +125,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createAnimations(uiConfig.colorScheme(level.worldMap()));
     }
 
-    private void createAnimations(WorldMapColorScheme colorScheme) {
-        wallColorFlashingAnimation = new WallColorFlashingAnimation(animationRegistry, this, colorScheme);
-        levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry, this, soundEffects);
-        levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationRegistry, this);
-        ghostLightAnimation = new GhostLightAnimation(animationRegistry, ghostAppearances3DInOrder().toList());
-        getChildren().add(ghostLightAnimation.light());
-    }
-
     public void resetPacZPosition(Pac3D pac3D) {
         // Set height over floor. Top of floor is at z=0.
         pac3D.setTranslateZ(-0.5 * pac3D.getBoundsInLocal().getDepth());
@@ -621,6 +613,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     // Animations
+
+    private void createAnimations(WorldMapColorScheme colorScheme) {
+        wallColorFlashingAnimation = new WallColorFlashingAnimation(animationRegistry, this, colorScheme);
+        levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry, this, soundEffects);
+        levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationRegistry, this);
+        ghostLightAnimation = new GhostLightAnimation(animationRegistry, ghostAppearances3DInOrder().toList());
+        getChildren().add(ghostLightAnimation.light());
+    }
 
     /**
      * Plays the level completion animation sequence and resets game timer.
