@@ -89,7 +89,6 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final SubScene subScene;
 
-    protected GameLevel3DEventHandler level3D_EventHandler = new GameLevel3DEventHandler();
     protected ActionBindingsManager actionBindings = ActionBindingsManager.NO_BINDINGS;
     protected GameUI ui;
     protected GameLevel3D gameLevel3D;
@@ -161,7 +160,6 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     public void onEmbed(GameUI ui) {
         this.ui = requireNonNull(ui);
         this.soundEffects = ui.currentConfig().getGamePlaySoundEffects(ui.soundManager());
-        level3D_EventHandler.init(soundEffects, ui);
         // TODO: reconsider whether scores need recreation here (variant/font change?)
         replaceScores3D();
     }
@@ -280,37 +278,37 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
             });
             return;
         }
-        level3D_EventHandler.handleGameStateChange(ui, event, gameLevel3D);
+        gameLevel3D.handleGameStateChange(ui, event);
     }
 
     @Override
     public void onBonusActivated(BonusActivatedEvent event) {
-        level3D_EventHandler.onBonusActivated(ui, event, gameLevel3D);
+        gameLevel3D.onBonusActivated(ui, event);
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent event) {
-        level3D_EventHandler.onBonusEaten(event, gameLevel3D);
+        gameLevel3D.onBonusEaten(event);
     }
 
     @Override
-    public void onBonusExpired(BonusExpiredEvent event) {
-        level3D_EventHandler.onBonusExpired(event, gameLevel3D);
+    public void onBonusExpired(BonusExpiredEvent event)  {
+        gameLevel3D.onBonusExpired(event);
     }
 
     @Override
     public void onGameContinues(GameContinuedEvent event) {
-        level3D_EventHandler.onGameContinues(event, gameLevel3D);
+        gameLevel3D.onGameContinues(event);
     }
 
     @Override
     public void onGameStarts(GameStartedEvent event) {
-        level3D_EventHandler.onGameStarts(event, gameLevel3D);
+        gameLevel3D.onGameStarts(event);
     }
 
     @Override
     public void onGhostEaten(GhostEatenEvent event) {
-        level3D_EventHandler.onGhostEaten(event, gameLevel3D);
+        gameLevel3D.onGhostEaten(event);
     }
 
     @Override
@@ -343,22 +341,22 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        level3D_EventHandler.onPacEatsFood(e, gameLevel3D, gameContext().clock().tickCount());
+        gameLevel3D.onPacEatsFood(e, gameContext().clock().tickCount());
     }
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        level3D_EventHandler.onPacGetsPower(e, gameLevel3D);
+        gameLevel3D.onPacGetsPower(e);
     }
 
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
-        level3D_EventHandler.onPacLostPower(e, gameLevel3D);
+        gameLevel3D.onPacLostPower(e);
     }
 
     @Override
     public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
-        level3D_EventHandler.onSpecialScoreReached(e, gameLevel3D);
+        gameLevel3D.onSpecialScoreReached(e);
     }
 
     @Override
@@ -398,8 +396,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
      * @return new 3D level instance
      */
     protected GameLevel3D createGameLevel3D(GameLevel level, UIConfig uiConfig) {
-        final var newGameLevel3D = new GameLevel3D(uiConfig, level);
-        final Pac3D pac3D = newGameLevel3D.pac3D().orElseThrow();
+        final var newGameLevel3D = new GameLevel3D(uiConfig, level, soundEffects, ui);
         newGameLevel3D.init(level);
         newGameLevel3D.startTrackingPac();
 

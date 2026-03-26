@@ -3,31 +3,45 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
+import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.lib.TickTimer;
+import de.amr.pacmanfx.lib.fsm.State;
+import de.amr.pacmanfx.lib.math.RandomNumberSupport;
 import de.amr.pacmanfx.lib.math.Vector2f;
+import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntitySet;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.BonusConfig;
 import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.LevelCounterConfig3D;
 import de.amr.pacmanfx.ui.config.LivesCounterConfig3D;
 import de.amr.pacmanfx.ui.d3.animation.GameLevel3DAnimations;
+import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
+import de.amr.pacmanfx.uilib.assets.Translator;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
+import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Shape3D;
+import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.Collection;
@@ -38,6 +52,8 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
+import static de.amr.pacmanfx.model.GameControl.CommonGameState.*;
+import static de.amr.pacmanfx.uilib.animation.AnimationSupport.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -69,6 +85,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private final GameLevel level;
 
+    private final GamePlaySoundEffects soundEffects;
+    private final RandomTextPicker<String> pickerGameOverMessages;
+
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final GameLevelEntitySet entities = new GameLevelEntitySet();
 
@@ -82,13 +101,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * @param uiConfig global UI configuration (provides 3D settings, colors, models)
      * @param level    the game level to visualize
      */
-    public GameLevel3D(UIConfig uiConfig, GameLevel level) {
+    public GameLevel3D(UIConfig uiConfig, GameLevel level, GamePlaySoundEffects soundEffects, Translator translator) {
         requireNonNull(uiConfig);
         this.level = requireNonNull(level);
         createEntities(uiConfig);
         addChildrenInRightOrder();
         setMouseTransparent(true); // this increases performance they say...
+
+        this.soundEffects = requireNonNull(soundEffects);
+        pickerGameOverMessages = RandomTextPicker.fromBundle(translator.localizedTexts(), "game.over");
     }
+
 
     public void resetPacZPosition(Pac3D pac3D) {
         // Set height over floor. Top of floor is at z=0.
@@ -372,5 +395,232 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private static boolean outsideWorld(WorldMap worldMap, Ghost ghost) {
         final Vector2f center = ghost.center();
         return center.x() < HTS || center.x() > worldMap.numCols() * TS - HTS;
+    }
+
+    // Event handling
+
+    /**
+     * Dispatches game state change events to the appropriate handler method.
+     *
+     * @param ui the game UI
+     * @param event   the state change event
+     */
+    public void handleGameStateChange(GameUI ui, GameStateChangeEvent event) {
+        requireNonNull(event);
+
+        final State<Game> gameState = event.newState();
+        if (matches(gameState, STARTING_GAME_OR_LEVEL)) {
+            onStartingGame();
+        } else if (matches(gameState, HUNTING)) {
+            onHuntingStart();
+        } else if (matches(gameState, PACMAN_DYING)) {
+            onPacManDying();
+        } else if (matches(gameState, EATING_GHOST)) {
+            onEatingGhost(ui);
+        } else if (matches(gameState, LEVEL_COMPLETE)) {
+            onLevelComplete();
+        } else if (matches(gameState, GAME_OVER)) {
+            onGameOver(ui);
+        }
+    }
+
+    private static boolean matches(State<Game> gameState, GameControl.CommonGameState expected) {
+        return gameState.nameMatches(expected.name());
+    }
+
+    /**
+     * Handles bonus activation: updates 3D representation and plays sound.
+     */
+    public void onBonusActivated(GameUI ui, BonusActivatedEvent gameEvent) {
+        addOrReplaceBonus3D(ui.currentConfig(), gameEvent.bonus());
+        soundEffects.playBonusActiveSound();
+    }
+
+    /**
+     * Handles bonus eaten: shows eaten animation and plays sound.
+     */
+    public void onBonusEaten(BonusEatenEvent ignoredEvent) {
+        bonus3D().ifPresent(Bonus3D::showEaten);
+        soundEffects.playBonusEatenSound();
+    }
+
+    /**
+     * Handles bonus expiration: expires 3D bonus and plays sound.
+     */
+    public void onBonusExpired(BonusExpiredEvent ignoredEvent) {
+        bonus3D().ifPresent(Bonus3D::expire);
+        soundEffects.playBonusExpiredSound();
+    }
+
+    /**
+     * Shows the "READY!" message when the game continues.
+     */
+    public void onGameContinues(GameContinuedEvent ignoredEvent) {
+        final Pac3D pac3D = pac3D().orElseThrow();
+        resetPacZPosition(pac3D);
+        messageManager().showReadyMessage();
+    }
+
+    /**
+     * Plays game ready sound unless in demo or test mode.
+     */
+    public void onGameStarts(GameStartedEvent event) {
+        final Game game = event.game();
+        final State<Game> state = game.control().state();
+        final boolean silent = game.isDemoLevelRunning() || state instanceof TestState;
+        if (!silent) {
+            soundEffects.playGameReadySound();
+        }
+        final Pac3D pac3D = pac3D().orElseThrow();
+        resetPacZPosition(pac3D);
+    }
+
+    /**
+     * Plays sound when a ghost is eaten.
+     */
+    public void onGhostEaten(GhostEatenEvent ignoredEvent) {
+        soundEffects.playGhostEatenSound();
+    }
+
+    /**
+     * Handles Pac eating food: updates 3D food and plays munching sound (with rate limiting).
+     */
+    public void onPacEatsFood(PacEatsFoodEvent gameEvent, long tick) {
+        if (gameEvent.allPellets()) {
+            food3D.removeAllPellets3D(this);
+        } else {
+            food3D.removeFoodAt(this, gameEvent.pac().tile());
+            soundEffects.playPacMunchingSound(tick);
+        }
+    }
+
+    /**
+     * Handles Pac gaining power: stops siren, starts power animation/sound.
+     */
+    public void onPacGetsPower(PacGetsPowerEvent ignoredEvent) {
+        final GameLevel level = level();
+        final Game game = level.game();
+        soundEffects.stopSiren();
+        if (!game.isLevelCompleted(level)) {
+            final Pac3D pac3D = pac3D().orElseThrow();
+            pac3D.setMovementPowerMode(true);
+            animations().ifPresent(animations -> animations.wallColorFlashingAnimation().playFromStart());
+            soundEffects.playPacPowerSound();
+        }
+    }
+
+    /**
+     * Handles Pac losing power: stops power animation/sound.
+     */
+    public void onPacLostPower(PacLostPowerEvent ignoredEvent) {
+        final Pac3D pac3D = pac3D().orElseThrow();
+        pac3D.setMovementPowerMode(false);
+        animations().ifPresent(animations -> animations.wallColorFlashingAnimation().stop());
+        soundEffects.stopPacPowerSound();
+    }
+
+    public void onSpecialScoreReached(SpecialScoreReachedEvent ignoredEvent) {
+        soundEffects.playExtraLifeSound();
+    }
+
+    // Private state-specific handlers
+
+    private void onStartingGame() {
+        food3D().energizers3D().forEach(Energizer3D::stopPumping);
+        init(level());
+    }
+
+    private void onHuntingStart() {
+        final Pac3D pac3D = pac3D().orElseThrow();
+        pac3D.init(level);
+        ghostAppearances3D().forEach(ghost3D -> ghost3D.init(level));
+        food3D.energizers3D().forEach(Energizer3D::startPumping);
+        food3D.startParticlesAnimation();
+        animations().ifPresent(animations -> animations.ghostLightAnimation().playFromStart());
+    }
+
+    private void onPacManDying() {
+        final TickTimer stateTimer = level.game().control().state().timer();
+        final Pac3D pac3D = pac3D().orElseThrow();
+
+        soundEffects.stopAll();
+        animations().ifPresent(animations -> {
+            animations.ghostLightAnimation().stop();
+            animations.wallColorFlashingAnimation().stop();
+        });
+        ghostAppearances3D().forEach(GhostAppearance3D::stopAllAnimations);
+        bonus3D().ifPresent(Bonus3D::expire);
+
+        // One last update before dying animation
+        pac3D.update(level);
+
+        stateTimer.resetIndefiniteTime(); // freeze until animation ends
+        final var dyingAnimation = new SequentialTransition(
+            pauseSec(1.5),
+            doNow(soundEffects::playPacDeadSound),
+            pac3D.dyingAnimation().animationFX(),
+            pauseSec(0.5)
+        );
+        dyingAnimation.setOnFinished(_ -> {
+            pac3D.setVisible(false);
+            resetPacZPosition(pac3D);
+            stateTimer.expire();
+        });
+        dyingAnimation.play();
+    }
+
+    private void onEatingGhost(GameUI ui) {
+        level.game().simulationStep().ghostsKilled.forEach(killedGhost -> {
+            final GhostAppearance3D ga3D = ghostAppearance3D(killedGhost.personality()).orElseThrow();
+            final int numberIndex = level.energizerVictims().indexOf(killedGhost);
+            final UIConfig uiConfig = ui.currentConfig();
+            final Shape3D numberShape3D = uiConfig.factory3D().createNumberShape3D(uiConfig, numberIndex);
+            ga3D.showAsNumber(numberShape3D);
+        });
+    }
+
+    private void onLevelComplete() {
+        final State<Game> gameState = level.game().control().state();
+        final Maze3D maze3D = maze3D().orElseThrow();
+
+        soundEffects.stopAll();
+        animationRegistry().stopAllAnimations();
+        cleanupFoodAndParticles();
+        maze3D.house().hideDoors();
+        bonus3D().ifPresent(Bonus3D::expire);
+        messageManager.hideMessage();
+        animations().ifPresentOrElse(
+            animations -> animations.playLevelEndAnimation(maze3D, level, gameState),
+            () -> pauseSecThen(2, () -> gameState.timer().expire()).play()
+        );
+    }
+
+    private void onGameOver(GameUI ui) {
+        final State<Game> gameState = level.game().control().state();
+
+        gameState.timer().restartSeconds(3);
+
+        animations().ifPresent(animations -> animations.ghostLightAnimation().stop());
+
+        cleanupFoodAndParticles();
+        bonus3D().ifPresent(Bonus3D::expire);
+
+        soundEffects.playGameOverSound();
+
+        final boolean showMsg = RandomNumberSupport.chance(0.25);
+        if (!level.isDemoLevel() && showMsg) {
+            ui.showFlashMessage(Duration.seconds(2.5), pickerGameOverMessages.nextText());
+        }
+    }
+
+    private void cleanupFoodAndParticles() {
+        food3D.stopParticlesAnimation();
+        food3D.energizers3D().forEach(energizer3D -> {
+            energizer3D.stopPumping();
+            energizer3D.hide();
+        });
+        // Hide 3D food explicitly (handles cheat-eat-all case)
+        food3D.pellets3D().forEach(pellet3D -> pellet3D.shape().setVisible(false));
+        maze3D().ifPresent(maze3D -> maze3D.particlesGroup().getChildren().clear());
     }
 }
