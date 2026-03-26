@@ -133,7 +133,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     /** @return the maze visualization component */
     public Optional<Maze3D> maze3D() {
-        return entities.entitiesOfType(Maze3D.class).findFirst();
+        return entities.firstOfType(Maze3D.class);
     }
 
     public MazeFood3D food3D() {
@@ -157,6 +157,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().add(ghostLight);
     }
 
+    /**
+     * Starts the lives counter symbols following Pac-Man with their eyes.
+     */
     public void startTrackingPac() {
         if (livesCounter3D().isEmpty()) {
             Logger.error("Cannot track Pac-Man, no 3D lives counter exists");
@@ -169,22 +172,22 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     public Optional<LevelCounter3D> levelCounter3D() {
-        return entities.entitiesOfType(LevelCounter3D.class).findFirst();
+        return entities.firstOfType(LevelCounter3D.class);
     }
 
     /** @return lives counter visualization */
     public Optional<LivesCounter3D> livesCounter3D() {
-        return entities.entitiesOfType(LivesCounter3D.class).findFirst();
+        return entities.firstOfType(LivesCounter3D.class);
     }
 
     /** @return Pac-Man 3D representation */
     public Optional<Pac3D> pac3D() {
-        return entities.entitiesOfType(Pac3D.class).findFirst();
+        return entities.firstOfType(Pac3D.class);
     }
 
     /** @return stream of all ghost 3D representations */
     public Stream<GhostAppearance3D> ghostAppearances3D() {
-        return entities.entitiesOfType(GhostAppearance3D.class);
+        return entities.allOfType(GhostAppearance3D.class);
     }
 
     public Optional<GhostAppearance3D> ghostAppearance3D(byte personality) {
@@ -193,7 +196,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     /** @return optional bonus visualization */
     public Optional<Bonus3D> bonus3D() {
-        return entities.entitiesOfType(Bonus3D.class).findFirst();
+        return entities.firstOfType(Bonus3D.class);
     }
 
     public void init(GameLevel level) {

@@ -7,7 +7,7 @@ import de.amr.pacmanfx.lib.Disposable;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -31,7 +31,7 @@ public class GameLevelEntitySet implements GameLevelEntity, Disposable {
 
     @Override
     public void dispose() {
-        entitiesOfType(Disposable.class).forEach(Disposable::dispose);
+        allOfType(Disposable.class).forEach(Disposable::dispose);
         entities.clear();
     }
 
@@ -39,8 +39,13 @@ public class GameLevelEntitySet implements GameLevelEntity, Disposable {
         return entities.stream();
     }
 
-    public <T> Stream<T> entitiesOfType(Class<? extends T> type) {
+    public <T> Stream<T> allOfType(Class<T> type) {
+        requireNonNull(type);
         return entities.stream().filter(type::isInstance).map(type::cast);
+    }
+
+    public <T> Optional<T> firstOfType(Class<T> type) {
+        return allOfType(type).findFirst();
     }
 
     public void clear() {
