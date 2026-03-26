@@ -29,7 +29,6 @@ import de.amr.pacmanfx.ui.d3.animation.GameLevel3DAnimations;
 import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
-import de.amr.pacmanfx.uilib.assets.Translator;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
@@ -47,6 +46,7 @@ import org.tinylog.Logger;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -98,20 +98,21 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates a new 3D level representation for the given game level.
      *
-     * @param uiConfig global UI configuration (provides 3D settings, colors, models)
-     * @param level    the game level to visualize
+     * @param level          the game level to visualize
+     * @param uiConfig       the global UI configuration (provides 3D settings, colors, models)
+     * @param soundEffects   the play sound effects
+     * @param localizedTexts the resource bundle containing the localized UI texts
      */
-    public GameLevel3D(UIConfig uiConfig, GameLevel level, GamePlaySoundEffects soundEffects, Translator translator) {
-        requireNonNull(uiConfig);
+    public GameLevel3D(GameLevel level, UIConfig uiConfig, GamePlaySoundEffects soundEffects, ResourceBundle localizedTexts) {
         this.level = requireNonNull(level);
+        requireNonNull(uiConfig);
+        this.soundEffects = requireNonNull(soundEffects);
+        pickerGameOverMessages = RandomTextPicker.fromBundle(localizedTexts, "game.over");
+
         createEntities(uiConfig);
         addChildrenInRightOrder();
         setMouseTransparent(true); // this increases performance they say...
-
-        this.soundEffects = requireNonNull(soundEffects);
-        pickerGameOverMessages = RandomTextPicker.fromBundle(translator.localizedTexts(), "game.over");
     }
-
 
     public void resetPacZPosition(Pac3D pac3D) {
         // Set height over floor. Top of floor is at z=0.
@@ -412,7 +413,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         if (matches(gameState, STARTING_GAME_OR_LEVEL)) {
             onStartingGame();
         } else if (matches(gameState, HUNTING)) {
-            onHuntingStart();
+            onHuntingStart(pac3D().orElseThrow());
         } else if (matches(gameState, PACMAN_DYING)) {
             onPacManDying();
         } else if (matches(gameState, EATING_GHOST)) {
@@ -498,7 +499,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Handles Pac gaining power: stops siren, starts power animation/sound.
      */
     public void onPacGetsPower(PacGetsPowerEvent ignoredEvent) {
-        final GameLevel level = level();
         final Game game = level.game();
         soundEffects.stopSiren();
         if (!game.isLevelCompleted(level)) {
@@ -526,12 +526,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // Private state-specific handlers
 
     private void onStartingGame() {
-        food3D().energizers3D().forEach(Energizer3D::stopPumping);
-        init(level());
+        init(level);
+        food3D.energizers3D().forEach(Energizer3D::stopPumping);
     }
 
-    private void onHuntingStart() {
-        final Pac3D pac3D = pac3D().orElseThrow();
+    private void onHuntingStart(Pac3D pac3D) {
         pac3D.init(level);
         ghostAppearances3D().forEach(ghost3D -> ghost3D.init(level));
         food3D.energizers3D().forEach(Energizer3D::startPumping);
