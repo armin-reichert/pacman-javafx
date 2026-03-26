@@ -73,7 +73,6 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
         addPropertyChangeListeners();
 
         setGhostAppearance(GhostAppearance.NORMAL);
-        disableNumberAppearance();
     }
 
     @Override
@@ -167,19 +166,18 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
         else Logger.error("Cannot enable number appearance: no number shape exists");
     }
 
-    private void setGhostAppearance(GhostAppearance appearance) {
+    private void setGhostAppearance(GhostAppearance ghostAppearance) {
         disableNumberAppearance();
-
-        switch (appearance) {
+        switch (ghostAppearance) {
             case NORMAL     -> ghost3D.setNormalLook();
             case FRIGHTENED -> ghost3D.setFrightenedLook();
             case EYES       -> ghost3D.setEyesOnlyLook();
             case FLASHING   -> ghost3D.setFlashingLook(numFlashes);
         }
         ghost3D.setVisible(true);
-        ghost3D.dressAnimation().playFromStart();
+        ghost3D.dressAnimation().playOrContinue();
 
-        Logger.debug("Ghost appearance for {} is now {}", ghost3D.ghost().name(), appearance);
+        Logger.debug("Ghost appearance for {} is now {}", ghost3D.ghost().name(), ghostAppearance);
     }
 
     private void addPropertyChangeListeners() {
