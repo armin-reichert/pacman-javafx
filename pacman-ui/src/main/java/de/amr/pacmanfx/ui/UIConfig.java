@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.d3.Factory3D;
-import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -226,7 +226,7 @@ public interface UIConfig extends Disposable {
      * @param soundManager the sound manager
      * @return configured sound-effects controller
      */
-    GamePlaySoundEffects getGamePlaySoundEffects(SoundManager soundManager);
+    GameSoundEffects getGameSoundEffects(SoundManager soundManager);
 
     // ─────────────────────────────────────────────────────────────────────────────
     // Bonus symbol & value images

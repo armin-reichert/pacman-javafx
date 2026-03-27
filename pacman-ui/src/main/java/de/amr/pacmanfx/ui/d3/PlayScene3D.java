@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
-import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
@@ -93,7 +93,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     protected GameLevel3D gameLevel3D;
     protected Scores3D scores3D;
     protected PlaySceneContextMenu contextMenu;
-    protected GamePlaySoundEffects soundEffects;
+    protected GameSoundEffects soundEffects;
     protected AmbientLight ambientLight;
 
     private final ChangeListener<DrawMode> drawModeChangeListener = (_, _, drawMode) -> {
@@ -137,7 +137,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
         return Optional.ofNullable(scores3D);
     }
 
-    public GamePlaySoundEffects soundEffects() {
+    public GameSoundEffects soundEffects() {
         return soundEffects;
     }
 
@@ -158,7 +158,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     @Override
     public void onEmbed(GameUI ui) {
         this.ui = requireNonNull(ui);
-        this.soundEffects = ui.currentConfig().getGamePlaySoundEffects(ui.soundManager());
+        this.soundEffects = ui.currentConfig().getGameSoundEffects(ui.soundManager());
         // TODO: reconsider whether scores need recreation here (variant/font change?)
         replaceScores3D();
     }

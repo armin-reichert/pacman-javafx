@@ -8,7 +8,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.Maze3D;
-import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.*;
@@ -58,9 +58,9 @@ public class LevelCompletedAnimation extends ManagedAnimation {
     }
 
     private final GameLevel3D level3D;
-    private final GamePlaySoundEffects soundEffects;
+    private final GameSoundEffects soundEffects;
 
-    public LevelCompletedAnimation(AnimationRegistry animationRegistry, GameLevel3D level3D, GamePlaySoundEffects soundEffects) {
+    public LevelCompletedAnimation(AnimationRegistry animationRegistry, GameLevel3D level3D, GameSoundEffects soundEffects) {
         super(animationRegistry, "Level_Completed");
         this.level3D = requireNonNull(level3D);
         this.soundEffects = requireNonNull(soundEffects);

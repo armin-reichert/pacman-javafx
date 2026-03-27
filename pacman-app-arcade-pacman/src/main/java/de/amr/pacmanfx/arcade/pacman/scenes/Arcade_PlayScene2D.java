@@ -20,7 +20,7 @@ import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
-import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.control.CheckMenuItem;
 import org.tinylog.Logger;
 
@@ -34,7 +34,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Arcade_PlayScene2D extends GameScene2D {
 
-    private GamePlaySoundEffects soundEffects;
+    private GameSoundEffects soundEffects;
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public Arcade_PlayScene2D() {}
@@ -42,7 +42,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onEmbed(GameUI ui) {
         this.ui = requireNonNull(ui);
-        this.soundEffects = ui.currentConfig().getGamePlaySoundEffects(ui.soundManager());
+        this.soundEffects = ui.currentConfig().getGameSoundEffects(ui.soundManager());
     }
 
     public Optional<LevelCompletedAnimation> optLevelCompletedAnimation() {

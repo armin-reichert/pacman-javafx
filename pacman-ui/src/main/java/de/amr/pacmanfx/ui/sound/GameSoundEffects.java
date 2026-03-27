@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
  * All sound decisions are centralized here for easier maintenance and debugging.
  * </p>
  */
-public class GamePlaySoundEffects {
+public class GameSoundEffects {
 
     private final SoundManager soundManager;
 
@@ -36,7 +36,7 @@ public class GamePlaySoundEffects {
      *
      * @param soundManager the underlying sound playback service (must not be null)
      */
-    public GamePlaySoundEffects(SoundManager soundManager) {
+    public GameSoundEffects(SoundManager soundManager) {
         this.soundManager = requireNonNull(soundManager);
     }
 

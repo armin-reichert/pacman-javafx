@@ -23,7 +23,7 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
@@ -126,8 +126,8 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public GamePlaySoundEffects getGamePlaySoundEffects(SoundManager soundManager) {
-        final var soundEffects = new GamePlaySoundEffects(soundManager);
+    public GameSoundEffects getGameSoundEffects(SoundManager soundManager) {
+        final var soundEffects = new GameSoundEffects(soundManager);
         soundEffects.setMunchingSoundDelay((byte) 0);
         soundEffects.setSirenVolume(0.33f);
         return soundEffects;

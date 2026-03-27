@@ -31,7 +31,7 @@ import de.amr.pacmanfx.ui.d3.animation.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.d3.animation.LevelCompletedAnimationShort;
 import de.amr.pacmanfx.ui.d3.animation.WallColorFlashingAnimation;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
-import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -90,7 +90,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private final GameLevel level;
 
-    private final GamePlaySoundEffects soundEffects;
+    private final GameSoundEffects soundEffects;
     private final RandomTextPicker<String> pickerGameOverMessages;
 
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
@@ -112,7 +112,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * @param soundEffects   the play sound effects
      * @param localizedTexts the resource bundle containing the localized UI texts
      */
-    public GameLevel3D(GameLevel level, UIConfig uiConfig, GamePlaySoundEffects soundEffects, ResourceBundle localizedTexts) {
+    public GameLevel3D(GameLevel level, UIConfig uiConfig, GameSoundEffects soundEffects, ResourceBundle localizedTexts) {
         this.level = requireNonNull(level);
         requireNonNull(uiConfig);
         this.soundEffects = requireNonNull(soundEffects);

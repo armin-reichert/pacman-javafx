@@ -21,7 +21,7 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.input.Joypad;
-import de.amr.pacmanfx.ui.sound.GamePlaySoundEffects;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -221,8 +221,8 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     }
 
     @Override
-    public GamePlaySoundEffects getGamePlaySoundEffects(SoundManager soundManager) {
-        final var soundFX = new GamePlaySoundEffects(soundManager);
+    public GameSoundEffects getGameSoundEffects(SoundManager soundManager) {
+        final var soundFX = new GameSoundEffects(soundManager);
         soundFX.setMunchingSoundDelay((byte) 0);
         soundFX.setSirenVolume(1.0f);
         return soundFX;
