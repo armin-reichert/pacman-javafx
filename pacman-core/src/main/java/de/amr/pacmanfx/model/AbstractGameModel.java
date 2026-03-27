@@ -414,6 +414,33 @@ public abstract class AbstractGameModel implements Game {
      * ---------------------------------------------------------------------- */
 
     /**
+     * Resets Pac-Man and the ghosts and places them at their start positions in their start states. Pac-Man initially
+     * wants to move to the left.
+     */
+    protected void makeReadyForPlaying(GameLevel level) {
+        final Pac pac = level.pac();
+        pac.reset(); // initially invisible!
+        pac.setPosition(level.worldMap().terrainLayer().pacStartPosition());
+        pac.setMoveDir(Direction.LEFT);
+        pac.setWishDir(Direction.LEFT);
+        pac.powerTimer().resetIndefiniteTime();
+        pac.optAnimationManager().ifPresent(AnimationManager::reset);
+
+        level.ghosts().forEach(ghost -> {
+            ghost.reset(); // initially invisible!
+            ghost.setPosition(ghost.startPosition());
+            final Direction startDir = level.worldMap().terrainLayer().house().ghostStartDirection(ghost.personality());
+            ghost.setMoveDir(startDir);
+            ghost.setWishDir(startDir);
+            ghost.setState(GhostState.LOCKED);
+            ghost.optAnimationManager().ifPresent(AnimationManager::reset);
+        });
+
+        level.blinking().setStartState(Pulse.State.ON); // Energizers are visible when ON
+        level.blinking().reset();
+    }
+
+    /**
      * Sets the start position for the given ghost.
      *
      * @param ghost the ghost

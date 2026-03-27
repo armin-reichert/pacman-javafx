@@ -417,7 +417,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void continuePlaying(GameLevel level, long tick) {
         if (tick == 1) {
-            level.getReadyToPlay();
+            makeReadyForPlaying(level);
             level.showPacAndGhosts();
             publishGameEvent(new GameContinuedEvent(this));
         } else if (tick == TICK_RESUME_HUNTING) {
@@ -428,7 +428,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void startLevel(GameLevel level) {
         level.recordStartTime(System.currentTimeMillis());
-        level.getReadyToPlay();
+        makeReadyForPlaying(level);
         if (pacBooster == PacBooster.ALWAYS_ON) {
             activatePacBooster(level.pac(), true);
         }

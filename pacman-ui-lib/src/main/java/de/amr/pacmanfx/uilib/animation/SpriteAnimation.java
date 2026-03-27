@@ -20,17 +20,14 @@ import static java.util.Objects.requireNonNull;
  */
 public class SpriteAnimation extends Transition {
 
+    public static final int FPS = 60;
+
     public static class Builder {
 
         private final SpriteAnimation anim;
 
         private Builder() {
             anim = new SpriteAnimation();
-        }
-
-        public Builder fps(int fps) {
-            anim.fps = fps;
-            return this;
         }
 
         public Builder ticksPerFrame(int ticks) {
@@ -60,7 +57,7 @@ public class SpriteAnimation extends Transition {
         }
 
         private SpriteAnimation build(int cycleCount) {
-            anim.setCycleDuration(Duration.seconds(1.0 / anim.fps * anim.frameTicks));
+            anim.setCycleDuration(Duration.seconds(1.0 / FPS * anim.frameTicks));
             anim.setCycleCount(cycleCount);
             anim.setInterpolator(Interpolator.LINEAR);
             Logger.debug("New sprite animation '{}'", anim);
@@ -73,7 +70,6 @@ public class SpriteAnimation extends Transition {
     }
 
     private RectShort[] sprites = new RectShort[0];
-    private int fps = 60;
     private int frameTicks = 1;
     private int frameIndex;
 

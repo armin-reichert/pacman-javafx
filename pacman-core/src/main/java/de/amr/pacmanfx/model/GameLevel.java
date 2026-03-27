@@ -4,8 +4,10 @@
 package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.lib.Pulse;
-import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
 
 import java.util.ArrayList;
@@ -140,29 +142,6 @@ public class GameLevel {
      */
     public AbstractHuntingTimer huntingTimer() {
         return huntingTimer;
-    }
-
-    /**
-     * Resets Pac-Man and the ghosts and places them at their start positions in their start states. Pac-Man initially
-     * wants to move to the left.
-     */
-    public void getReadyToPlay() {
-        pac.reset(); // initially invisible!
-        pac.setPosition(worldMap.terrainLayer().pacStartPosition());
-        pac.setMoveDir(Direction.LEFT);
-        pac.setWishDir(Direction.LEFT);
-        pac.powerTimer().resetIndefiniteTime();
-        ghosts().forEach(ghost -> {
-            ghost.reset(); // initially invisible!
-            ghost.setPosition(ghost.startPosition());
-            final Direction startDir = worldMap.terrainLayer().house().ghostStartDirection(ghost.personality());
-            ghost.setMoveDir(startDir);
-            ghost.setWishDir(startDir);
-            ghost.setState(GhostState.LOCKED);
-            ghost.optAnimationManager().ifPresent(AnimationManager::stop);
-        });
-        blinking.setStartState(Pulse.State.ON); // Energizers are visible when ON
-        blinking.reset();
     }
 
     /**

@@ -314,7 +314,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void continuePlaying(GameLevel level, long tick) {
         if (tick == 1) {
-            level.getReadyToPlay();
+            makeReadyForPlaying(level);
             level.showPacAndGhosts();
             showLevelMessage(GameLevelMessageType.READY);
         }
@@ -396,7 +396,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void startLevel(GameLevel level) {
         level.recordStartTime(System.currentTimeMillis());
-        level.getReadyToPlay();
+        makeReadyForPlaying(level);
         if (level.isDemoLevel()) {
             showLevelMessage(GameLevelMessageType.GAME_OVER);
             score().setEnabled(false);
@@ -487,8 +487,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public float ghostSpeedAttacking(GameLevel level, Ghost ghost) {
         final int levelNumber = level.number();
         final LevelData data = levelData(levelNumber);
-        if (ghost instanceof RedGhostShadow blinky) {
-            return switch (blinky.elroyState().mode()) {
+        if (ghost instanceof RedGhostShadow redGhostShadow) {
+            return switch (redGhostShadow.elroyState().mode()) {
                 case ZERO -> data.pctGhostSpeed()  * BASE_SPEED_1_PERCENT;
                 case ONE -> data.pctElroy1Speed() * BASE_SPEED_1_PERCENT;
                 case TWO -> data.pctElroy2Speed() * BASE_SPEED_1_PERCENT;
