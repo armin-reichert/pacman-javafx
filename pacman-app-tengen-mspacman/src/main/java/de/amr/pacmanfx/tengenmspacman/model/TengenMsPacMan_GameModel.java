@@ -687,6 +687,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
+        final Pac pac = level.pac();
+
         scorePoints(level, energizerPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
@@ -698,11 +700,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                 level.huntingTimer().stop();
                 Logger.debug("Hunting stopped (Pac-Man got power)");
                 final long ticks = TickTimer.secToTicks(powerSeconds);
-                level.pac().powerTimer().restartTicks(ticks);
+                pac.powerTimer().restartTicks(ticks);
                 Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
                 level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
                 simStep.pacGotPower = true;
-                publishGameEvent(new PacGetsPowerEvent());
+                publishGameEvent(new PacGetsPowerEvent(pac));
             }
         }
     }

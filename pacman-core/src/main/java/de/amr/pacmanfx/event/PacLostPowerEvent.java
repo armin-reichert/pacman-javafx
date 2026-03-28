@@ -4,4 +4,6 @@
 
 package de.amr.pacmanfx.event;
 
-public record PacLostPowerEvent() implements GameEvent {}
+import de.amr.pacmanfx.model.actors.Pac;
+
+public record PacLostPowerEvent(Pac pac) implements GameEvent {}

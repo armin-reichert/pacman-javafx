@@ -121,9 +121,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
+        final Pac pac = level.pac();
+
         scorePoints(level, energizerPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
-        level.pac().setRestingTicks(restingTicksAfterEnergizerEaten);
+        pac.setRestingTicks(restingTicksAfterEnergizerEaten);
         checkCruiseElroyActivation(level);
 
         if (!isLevelCompleted(level)) {
@@ -134,11 +136,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
                 level.huntingTimer().stop();
                 Logger.debug("Hunting stopped (Pac-Man got power)");
                 final long powerTicks = TickTimer.secToTicks(powerSeconds);
-                level.pac().powerTimer().restartTicks(powerTicks);
+                pac.powerTimer().restartTicks(powerTicks);
                 Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, powerSeconds);
                 level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
                 simStep.pacGotPower = true;
-                publishGameEvent(new PacGetsPowerEvent());
+                publishGameEvent(new PacGetsPowerEvent(pac));
             }
         }
     }

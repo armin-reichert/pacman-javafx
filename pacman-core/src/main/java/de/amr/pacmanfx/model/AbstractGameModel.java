@@ -675,7 +675,7 @@ public abstract class AbstractGameModel implements Game {
             pac.powerTimer().doTick();
             if (pac.isPowerFadingStarting(level)) {
                 simStep.pacStartsLosingPower = true;
-                publishGameEvent(new PacStartsLosingPowerEvent());
+                publishGameEvent(new PacStartsLosingPowerEvent(pac));
             } else if (pac.powerTimer().hasExpired()) {
                 simStep.pacLostPower = true;
                 pac.powerTimer().stop();
@@ -683,7 +683,7 @@ public abstract class AbstractGameModel implements Game {
                 level.energizerVictims().clear();
                 level.huntingTimer().start();
                 level.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-                publishGameEvent(new PacLostPowerEvent());
+                publishGameEvent(new PacLostPowerEvent(pac));
             }
         }
     }

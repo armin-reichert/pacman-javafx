@@ -47,7 +47,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final var newLevel3D = new GameLevel3D(level, uiConfig, soundEffects, ui.localizedTexts());
         final Maze3D maze3D = newLevel3D.entities().first(Maze3D.class).orElseThrow();
         final MazeFloor3D floor3D = maze3D.floor();
-        final Pac3D pac3D = newLevel3D.pac3D().orElseThrow();
+        final Pac3D pac3D = newLevel3D.entities().first(Pac3D.class).orElseThrow();
 
         pac3D.init(level);
         newLevel3D.ghostAppearances3DInOrder().forEach(ghost3D -> ghost3D.init(level));
