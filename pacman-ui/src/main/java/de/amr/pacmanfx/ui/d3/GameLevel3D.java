@@ -199,14 +199,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .filter(ga3D -> ga3D.ghost().personality() == personality).findFirst();
     }
 
-    public void initEntities(GameLevel level) {
-        entities.init(level);
-    }
-
-    public void updateEntities(GameLevel level) {
-        entities.update(level);
-    }
-
     // Others
 
     /**
@@ -610,8 +602,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // Private state-specific handlers
 
     private void onStartingGame() {
-        initEntities(level);
-        energizers3D().forEach(Energizer3D::stopPumping);
+        entities.all().forEach(e -> e.init(level));
     }
 
     private void onHuntingStart(Pac3D pac3D) {
