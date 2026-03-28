@@ -57,8 +57,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
-import static de.amr.pacmanfx.Globals.PINK_GHOST_SPEEDY;
 import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.model.GameControl.CommonGameState.*;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_WALL_HEIGHT;
@@ -165,14 +163,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Starts the lives counter symbols following Pac-Man with their eyes.
      */
     public void startTrackingPac() {
-        if (livesCounter3D().isEmpty()) {
-            Logger.error("Cannot track Pac-Man, no 3D lives counter exists");
-            return;
-        }
-        if (pac3D().isEmpty()) {
-            Logger.error("Cannot track Pac-Man, no 3D Pac-Man exists");
-        }
-        livesCounter3D().get().startTracking(pac3D().get());
+        entities.first(LivesCounter3D.class).ifPresent(livesCounter3D -> {
+            if (pac3D().isEmpty()) {
+                Logger.error("Cannot track Pac-Man, no 3D Pac-Man exists");
+            }
+            livesCounter3D.startTracking(pac3D().get());
+        });
     }
 
     // Accessors
@@ -189,41 +185,32 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     /** @return the maze visualization component */
     public Optional<Maze3D> maze3D() {
-        return entities.firstOfType(Maze3D.class);
+        return entities.first(Maze3D.class);
     }
 
     public GameLevel3DMessageManager messageManager() {
         return messageManager;
     }
 
-    public Optional<LevelCounter3D> levelCounter3D() {
-        return entities.firstOfType(LevelCounter3D.class);
-    }
-
-    /** @return lives counter visualization */
-    public Optional<LivesCounter3D> livesCounter3D() {
-        return entities.firstOfType(LivesCounter3D.class);
-    }
-
     /** @return Pac-Man 3D representation */
     public Optional<Pac3D> pac3D() {
-        return entities.firstOfType(Pac3D.class);
+        return entities.first(Pac3D.class);
     }
 
     /** @return Stream of all ghost 3D representations in the order RED, PINK, CYAN, ORANGE */
     public Stream<GhostAppearance3D> ghostAppearances3DInOrder() {
-        return entities.allOfType(GhostAppearance3D.class)
+        return entities.all(GhostAppearance3D.class)
             .sorted(Comparator.comparingInt(appearance -> appearance.ghost().personality()));
     }
 
     public Optional<GhostAppearance3D> ghostAppearance3D(byte personality) {
         Validations.requireValidGhostPersonality(personality);
-        return entities.allOfType(GhostAppearance3D.class).filter(ga3D -> ga3D.ghost().personality() == personality).findFirst();
+        return entities.all(GhostAppearance3D.class).filter(ga3D -> ga3D.ghost().personality() == personality).findFirst();
     }
 
     /** @return optional bonus visualization */
     public Optional<Bonus3D> bonus3D() {
-        return entities.firstOfType(Bonus3D.class);
+        return entities.first(Bonus3D.class);
     }
 
     public void initEntities(GameLevel level) {
@@ -283,8 +270,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             getChildren().addAll(maze3D.particlesGroup());
         });
 
-        getChildren().add(levelCounter3D().orElseThrow());
-        getChildren().add(livesCounter3D().orElseThrow());
+        getChildren().add(entities.first(LevelCounter3D.class).orElseThrow());
+        getChildren().add(entities.first(LivesCounter3D.class).orElseThrow());
         final Pac3D pac3D = pac3D().orElseThrow();
         getChildren().add(pac3D);
         pac3D.light().ifPresent(pacLight -> getChildren().add(pacLight));
@@ -399,9 +386,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public static final double PELLET_EATING_DELAY_SEC = 0.05;
 
-    public Stream<Pellet3D> pellets3D() { return entities.allOfType(Pellet3D.class); }
+    public Stream<Pellet3D> pellets3D() { return entities.all(Pellet3D.class); }
 
-    public Stream<Energizer3D> energizers3D() { return entities.allOfType(Energizer3D.class); }
+    public Stream<Energizer3D> energizers3D() { return entities.all(Energizer3D.class); }
 
     private void createFood3D(UIConfig uiConfig) {
         final Factory3D factory3D = uiConfig.factory3D();
@@ -453,7 +440,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * @param tile the tile where food was eaten
      */
     public void removeFoodAt(Group pelletContainer, Vector2i tile) {
-        final Energizer3D energizer3D = entities.allOfType(Energizer3D.class)
+        final Energizer3D energizer3D = entities.all(Energizer3D.class)
             .filter(e3D -> tile.equals(e3D.tile()))
             .findFirst().orElse(null);
         if (energizer3D != null) {
@@ -461,7 +448,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             energizer3D.hide();
             createEnergizerExplosion(energizer3D);
         } else {
-            entities.allOfType(Pellet3D.class)
+            entities.all(Pellet3D.class)
                 .filter(pellet3D -> tile.equals(pellet3D.tile()))
                 .findFirst()
                 .ifPresent(pellet3D -> removePellet3DAfterDelay(pelletContainer, pellet3D));
@@ -481,7 +468,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Removes all pellet visualizations (used when all pellets are eaten at once).
      */
     public void removeAllPellets3D(Group pelletContainer) {
-        entities.allOfType(Pellet3D.class).forEach(pellet3D -> pelletContainer.getChildren().remove(pellet3D.shape()));
+        entities.all(Pellet3D.class).forEach(pellet3D -> pelletContainer.getChildren().remove(pellet3D.shape()));
     }
 
     // Particles animation
@@ -763,5 +750,4 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         state.timer().resetIndefiniteTime(); // freeze game control until animation ends
         seq.play();
     }
-
 }

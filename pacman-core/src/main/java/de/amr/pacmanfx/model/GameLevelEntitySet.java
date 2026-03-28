@@ -31,21 +31,21 @@ public class GameLevelEntitySet implements GameLevelEntity, Disposable {
 
     @Override
     public void dispose() {
-        allOfType(Disposable.class).forEach(Disposable::dispose);
+        all(Disposable.class).forEach(Disposable::dispose);
         entities.clear();
     }
 
-    public Stream<GameLevelEntity> entities() {
+    public Stream<GameLevelEntity> all() {
         return entities.stream();
     }
 
-    public <T> Stream<T> allOfType(Class<T> type) {
+    public <T> Stream<T> all(Class<T> type) {
         requireNonNull(type);
-        return entities.stream().filter(type::isInstance).map(type::cast);
+        return all().filter(type::isInstance).map(type::cast);
     }
 
-    public <T> Optional<T> firstOfType(Class<T> type) {
-        return allOfType(type).findFirst();
+    public <T> Optional<T> first(Class<T> type) {
+        return all(type).findFirst();
     }
 
     public void clear() {
