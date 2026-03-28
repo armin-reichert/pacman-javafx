@@ -25,7 +25,6 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.ui.config.BonusConfig;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.ui.d3.animation.GhostLightAnimation;
@@ -53,10 +52,7 @@ import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -129,7 +125,15 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         gameOverMessagePicker = RandomTextPicker.fromBundle(localizedTexts, "game.over");
 
         final WorldMapColorScheme mapColorScheme = uiConfig.colorScheme(level.worldMap());
-        createEntitiesAndAddToGroup(mapColorScheme);
+        createPac3D();
+        createGhostAppearances3D();
+        createMaze3D(mapColorScheme);
+        createLevelCounter3D();
+        createLivesCounter3D();
+        createFood3D();
+        createMessageManager();
+        addChildrenToGroup();
+
         // Maze3D must exist when energizer animations are created:
         final Maze3D maze3D = entities().first(Maze3D.class).orElseThrow();
         createAnimations(maze3D, mapColorScheme);
@@ -195,31 +199,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .filter(ga3D -> ga3D.ghost().personality() == personality).findFirst();
     }
 
-    // Others
-
-    /**
-     * Replaces or creates the bonus visualization for the given bonus item.
-     *
-     * @param bonus the new bonus
-     */
-    public void addOrReplaceBonus3D(Bonus bonus) {
-        requireNonNull(uiConfig);
-        requireNonNull(bonus);
-        final BonusConfig bonusConfig = uiConfig.entityConfig().bonusConfig();
-        entities.first(Bonus3D.class).ifPresent(bonus3D -> {
-            bonus3D.dispose();
-            entities.remove(bonus3D);
-            getChildren().remove(bonus3D);
-        });
-        final var bonus3D = new Bonus3D(animationRegistry, bonus,
-            uiConfig.bonusSymbolImage(bonus.symbol()), bonusConfig.bonusSymbolWidth(),
-            uiConfig.bonusValueImage(bonus.symbol()),  bonusConfig.bonusPointsWidth());
-        bonus3D.showEdible();
-
-        entities.add(bonus3D);
-        addChild(bonus3D);
-    }
-
     // private
 
     private List<PhongMaterial> dressMaterials(List<GhostAppearance3D> ghostsAppearances) {
@@ -237,7 +216,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Order matters for correct transparency: actors and effects must appear
      * in front of walls/house.
      */
-    private void addChildrenInRightOrder() {
+    private void addChildrenToGroup() {
         entities().first(Maze3D.class).ifPresent(maze3D -> addChildren(maze3D.floor(), maze3D.particlesGroup()));
 
         addChild(entities.first(LevelCounter3D.class).orElseThrow());
@@ -261,17 +240,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void addChildren(Node... children) {
         getChildren().addAll(children);
-    }
-
-    private void createEntitiesAndAddToGroup(WorldMapColorScheme colorScheme) {
-        createPac3D();
-        createGhostAppearances3D();
-        createMaze3D(colorScheme);
-        createLevelCounter3D();
-        createLivesCounter3D();
-        createFood3D();
-        createMessageManager();
-        addChildrenInRightOrder();
     }
 
     private void createPac3D() {
@@ -352,6 +320,36 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private static boolean outsideWorld(WorldMap worldMap, Ghost ghost) {
         final Vector2f center = ghost.center();
         return center.x() < HTS || center.x() > worldMap.numCols() * TS - HTS;
+    }
+
+    // Bonus
+
+    /**
+     * Replaces or creates the bonus visualization for the given bonus item.
+     *
+     * @param bonus the new bonus
+     */
+    private void addOrReplaceBonus3D(Bonus bonus) {
+        requireNonNull(uiConfig);
+        requireNonNull(bonus);
+        // Avoid exception when removing inside for-each
+        final List<Bonus3D> existing = new ArrayList<>(entities.all(Bonus3D.class).toList());
+        existing.forEach(bonus3D -> {
+            bonus3D.dispose();
+            entities.remove(bonus3D);
+            getChildren().remove(bonus3D);
+        });
+        addChild(createBonus3D(bonus));
+    }
+
+    private Bonus3D createBonus3D(Bonus bonus) {
+        final var bonusConfig = uiConfig.entityConfig().bonusConfig();
+        final var bonus3D = new Bonus3D(animationRegistry, bonus,
+            uiConfig.bonusSymbolImage(bonus.symbol()), bonusConfig.bonusSymbolWidth(),
+            uiConfig.bonusValueImage(bonus.symbol()),  bonusConfig.bonusPointsWidth());
+        bonus3D.showEdible();
+        entities.add(bonus3D);
+        return bonus3D;
     }
 
     // Food (pellets and energizers)
