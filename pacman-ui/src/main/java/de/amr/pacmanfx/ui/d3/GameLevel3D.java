@@ -364,7 +364,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Maze3D maze3D = entities().first(Maze3D.class).orElseThrow();
 
         addPellets3D(factory3D, pelletConfig3D, pelletMaterial, maze3D.floorTop() - pelletConfig3D.floorElevation());
-        createEnergizers3D(factory3D, energizerConfig3D, animationRegistry, pelletMaterial, maze3D.floorTop() - energizerConfig3D.floorElevation());
+        createEnergizers3D(factory3D, energizerConfig3D, animationRegistry, pelletMaterial);
+        final double z = maze3D.floorTop() - energizerConfig3D.floorElevation();
+        entities.all(Energizer3D.class).forEach(e3D -> e3D.setLocation(e3D.tile(), z));
     }
 
     private void addPellets3D(Factory3D factory3D, PelletConfig3D config, PhongMaterial pelletMaterial, double z) {
@@ -383,8 +385,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         Factory3D factory3D,
         EnergizerConfig3D config,
         AnimationRegistry animationRegistry,
-        PhongMaterial material,
-        double z)
+        PhongMaterial material)
     {
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         foodLayer.tiles()
@@ -392,7 +393,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .filter(foodLayer::hasFoodAtTile)
             .map(tile -> {
                 final Energizer3D energizer3D = factory3D.createEnergizer3D(config, animationRegistry, material);
-                energizer3D.setLocation(tile, z);
+                energizer3D.setLocation(tile, -HTS);
                 return energizer3D;
             })
             .forEach(entities::add);
