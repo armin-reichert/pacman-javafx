@@ -53,6 +53,16 @@ public class GameLevelEntitySet implements GameLevelEntity, Disposable {
         return Optional.empty();
     }
 
+    /**
+     * @param type entity class
+     * @return first entity with given class in entity set. If there is none,
+     *         a {@link java.util.NoSuchElementException} exception is thrown.
+     * @param <T> type of entity
+     */
+    public <T> T first$$$(Class<T> type) {
+        return first(type).orElseThrow();
+    }
+
     public void clear() {
         entities.clear();
     }
