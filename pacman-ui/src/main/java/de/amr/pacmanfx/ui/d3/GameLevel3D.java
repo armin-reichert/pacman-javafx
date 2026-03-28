@@ -124,7 +124,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         addChildrenInRightOrder();
         setMouseTransparent(true); // this increases performance they say...
 
-        createAnimations(maze3D().orElseThrow(), uiConfig.colorScheme(level.worldMap()));
+        createAnimations(entities().first(Maze3D.class).orElseThrow(), uiConfig.colorScheme(level.worldMap()));
         resetPacZPosition();
     }
 
@@ -173,6 +173,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Accessors
 
+    public GameLevelEntitySet entities() {
+        return entities;
+    }
+
     /** @return registry for all level-specific animations */
     public AnimationRegistry animationRegistry() {
         return animationRegistry;
@@ -181,11 +185,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /** @return the underlying game level model */
     public GameLevel level() {
         return level;
-    }
-
-    /** @return the maze visualization component */
-    public Optional<Maze3D> maze3D() {
-        return entities.first(Maze3D.class);
     }
 
     public GameLevel3DMessageManager messageManager() {
@@ -265,7 +264,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * in front of walls/house.
      */
     private void addChildrenInRightOrder() {
-        maze3D().ifPresent(maze3D -> {
+        entities().first(Maze3D.class).ifPresent(maze3D -> {
             getChildren().add(maze3D.floor());
             getChildren().addAll(maze3D.particlesGroup());
         });
@@ -280,7 +279,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         energizers3D().map(Energizer3D::shape).forEach(getChildren()::add);
         pellets3D().map(Pellet3D::shape).forEach(getChildren()::add);
 
-        maze3D().ifPresent(maze3D -> {
+        entities().first(Maze3D.class).ifPresent(maze3D -> {
             getChildren().add(maze3D.house().root());
             getChildren().add(maze3D.house().doors());
             getChildren().add(maze3D);
@@ -396,7 +395,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final var pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
         final PelletConfig3D pelletConfig3D = uiConfig.entityConfig().pellet();
         final EnergizerConfig3D energizerConfig3D = uiConfig.entityConfig().energizer();
-        final Maze3D maze3D = maze3D().orElseThrow();
+        final Maze3D maze3D = entities().first(Maze3D.class).orElseThrow();
 
         addPellets3D(factory3D, pelletConfig3D, pelletMaterial, maze3D.floorTop() - pelletConfig3D.floorElevation());
         createEnergizers3D(factory3D, energizerConfig3D, animationRegistry, pelletMaterial, maze3D.floorTop() - energizerConfig3D.floorElevation());
@@ -676,7 +675,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void onLevelComplete() {
         final State<Game> gameState = level.game().control().state();
-        final Maze3D maze3D = maze3D().orElseThrow();
+        final Maze3D maze3D = entities().first(Maze3D.class).orElseThrow();
 
         soundEffects.stopAll();
         animationRegistry().stopAllAnimations();
@@ -691,7 +690,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final State<Game> gameState = level.game().control().state();
         gameState.timer().restartSeconds(3);
         ghostLightAnimation.stop();
-        cleanupFoodAndParticles(maze3D().orElseThrow());
+        cleanupFoodAndParticles(entities().first(Maze3D.class).orElseThrow());
         bonus3D().ifPresent(Bonus3D::expire);
         if (!level.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
             ui.showFlashMessage(Duration.seconds(2.5), pickerGameOverMessages.nextText());

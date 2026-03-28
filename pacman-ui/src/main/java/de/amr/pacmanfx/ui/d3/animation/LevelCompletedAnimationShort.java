@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.d3.animation;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
+import de.amr.pacmanfx.ui.d3.Maze3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
@@ -37,11 +38,12 @@ public class LevelCompletedAnimationShort extends ManagedAnimation {
     }
 
     private Animation createAnimationFX() {
+        final Maze3D maze3D = level3D.entities().first(Maze3D.class).orElseThrow();
         final GameLevel level = level3D.level();
         return new SequentialTransition(
             pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),
             pauseSec(0.5),
-            createMazeWallsSwingingAnimation(level3D.maze3D().orElseThrow(), level.numFlashes()),
+            createMazeWallsSwingingAnimation(maze3D, level.numFlashes()),
             pauseSecThen(0.5, () -> level.pac().hide())
         );
     }
