@@ -44,6 +44,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
@@ -90,6 +91,9 @@ import static java.util.Objects.requireNonNull;
  * @see DisposableGraphicsObject
  */
 public class GameLevel3D extends Group implements DisposableGraphicsObject {
+
+    private static final Comparator<GhostAppearance3D> BY_GHOST_PERSONALITY =
+        Comparator.comparingInt(ga3D -> ga3D.ghost().personality());
 
     private final GameLevel level;
 
@@ -187,12 +191,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return messageManager;
     }
 
-    /** @return Stream of all ghost 3D representations in their natural order RED, PINK, CYAN, ORANGE */
-    public Stream<GhostAppearance3D> ghostAppearances3DInOrder() {
-        return entities.all(GhostAppearance3D.class)
-            .sorted(Comparator.comparingInt(appearance -> appearance.ghost().personality()));
-    }
-
     public Optional<GhostAppearance3D> ghostAppearance3D(byte personality) {
         Validations.requireValidGhostPersonality(personality);
         return entities.all(GhostAppearance3D.class)
@@ -222,13 +220,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         bonus3D.showEdible();
 
         entities.addEntity(bonus3D);
-        getChildren().add(bonus3D);
+        addChild(bonus3D);
     }
 
     // private
 
-    private List<PhongMaterial> dressMaterials(Stream<GhostAppearance3D> ghostsAppearances) {
-        return ghostsAppearances
+    private List<PhongMaterial> dressMaterials(List<GhostAppearance3D> ghostsAppearances) {
+        return ghostsAppearances.stream()
             .map(GhostAppearance3D::ghost3D)
             .map(Ghost3D::materials)
             .map(GhostMaterials::normal)
@@ -243,26 +241,29 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * in front of walls/house.
      */
     private void addChildrenInRightOrder() {
-        entities().first(Maze3D.class).ifPresent(maze3D -> {
-            getChildren().add(maze3D.floor());
-            getChildren().addAll(maze3D.particlesGroup());
-        });
+        entities().first(Maze3D.class).ifPresent(maze3D -> addChildren(maze3D.floor(), maze3D.particlesGroup()));
 
-        getChildren().add(entities.first(LevelCounter3D.class).orElseThrow());
-        getChildren().add(entities.first(LivesCounter3D.class).orElseThrow());
+        addChild(entities.first(LevelCounter3D.class).orElseThrow());
+        addChild(entities.first(LivesCounter3D.class).orElseThrow());
+
         final Pac3D pac3D = entities.first(Pac3D.class).orElseThrow();
-        getChildren().add(pac3D);
-        pac3D.light().ifPresent(pacLight -> getChildren().add(pacLight));
-        ghostAppearances3DInOrder().forEach(getChildren()::add);
+        addChild(pac3D);
+        pac3D.light().ifPresent(this::addChild);
 
-        energizers3D().map(Energizer3D::shape).forEach(getChildren()::add);
-        pellets3D().map(Pellet3D::shape).forEach(getChildren()::add);
+        entities.all(GhostAppearance3D.class).sorted(BY_GHOST_PERSONALITY).forEach(this::addChild);
 
-        entities().first(Maze3D.class).ifPresent(maze3D -> {
-            getChildren().add(maze3D.house().root());
-            getChildren().add(maze3D.house().doors());
-            getChildren().add(maze3D);
-        });
+        energizers3D().map(Energizer3D::shape).forEach(this::addChild);
+        pellets3D().map(Pellet3D::shape).forEach(this::addChild);
+
+        entities().first(Maze3D.class).ifPresent(maze3D -> addChildren(maze3D, maze3D.house().root(), maze3D.house().doors()));
+    }
+
+    private void addChild(Node child) {
+        getChildren().add(child);
+    }
+
+    private void addChildren(Node... children) {
+        getChildren().addAll(children);
     }
 
     private void createEntities(UIConfig uiConfig) {
@@ -491,7 +492,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         if (matches(gameState, STARTING_GAME_OR_LEVEL)) {
             onStartingGame();
         } else if (matches(gameState, HUNTING)) {
-            onHuntingStart(entities.first(Pac3D.class).orElseThrow());
+            onHuntingStart();
         } else if (matches(gameState, PACMAN_DYING)) {
             onPacManDying();
         } else if (matches(gameState, EATING_GHOST)) {
@@ -605,9 +606,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         entities.all().forEach(e -> e.init(level));
     }
 
-    private void onHuntingStart(Pac3D pac3D) {
-        pac3D.init(level);
-        ghostAppearances3DInOrder().forEach(ghost3D -> ghost3D.init(level));
+    private void onHuntingStart() {
+        entities.first(Pac3D.class).ifPresent(pac3D -> pac3D.init(level));
+        entities.all(GhostAppearance3D.class).forEach(ghost3D -> ghost3D.init(level));
         energizers3D().forEach(Energizer3D::startPumping);
         particlesAnimation.playFromStart();
         ghostLightAnimation.playFromStart();
@@ -620,7 +621,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         soundEffects.stopAll();
         ghostLightAnimation.stop();
         wallColorFlashingAnimation.stop();
-        ghostAppearances3DInOrder().forEach(GhostAppearance3D::stopAllAnimations);
+        entities.all(GhostAppearance3D.class).forEach(GhostAppearance3D::stopAllAnimations);
         entities.first(Bonus3D.class).ifPresent(Bonus3D::expire);
 
         // One last update before dying animation
@@ -690,12 +691,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // Animations
 
     private void createAnimations(Maze3D maze3D, WorldMapColorScheme colorScheme) {
+        final List<GhostAppearance3D> ghostAppearances3D = entities.all(GhostAppearance3D.class).sorted(BY_GHOST_PERSONALITY).toList();
         wallColorFlashingAnimation = new WallColorFlashingAnimation(animationRegistry, this, colorScheme);
         levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry, this, soundEffects);
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationRegistry, this);
-        ghostLightAnimation = new GhostLightAnimation(animationRegistry, ghostAppearances3DInOrder().toList());
-        getChildren().add(ghostLightAnimation.light());
-        createParticlesAnimation(maze3D, dressMaterials(ghostAppearances3DInOrder()));
+        ghostLightAnimation = new GhostLightAnimation(animationRegistry, ghostAppearances3D);
+        addChild(ghostLightAnimation.light());
+        createParticlesAnimation(maze3D, dressMaterials(ghostAppearances3D));
     }
 
     /**
