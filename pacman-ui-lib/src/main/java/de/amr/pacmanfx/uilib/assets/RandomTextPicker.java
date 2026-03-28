@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.assets;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -12,34 +12,28 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Selects entries randomly from a list without repetitions.
- *
- * @author Armin Reichert
  */
 public class RandomTextPicker<T> {
 
     public static RandomTextPicker<String> fromBundle(ResourceBundle bundle, String prefix) {
         requireNonNull(bundle);
-        return new RandomTextPicker<>(bundle.keySet().stream()//
-            .filter(key -> key.startsWith(prefix))//
-            .sorted()//
-            .map(bundle::getString)//
-            .toArray(String[]::new));
+        requireNonNull(prefix);
+        final List<String> messages = bundle.keySet().stream()
+            .filter(key -> key.startsWith(prefix))
+            .map(bundle::getString)
+            .toList();
+        return new RandomTextPicker<>(messages);
     }
 
     private List<T> entries = List.of();
     private int current;
 
-    @SuppressWarnings("unchecked")
-    public RandomTextPicker(T... items) {
-        if (items.length > 0) {
-            entries = Arrays.asList(Arrays.copyOf(items, items.length));
-            Collections.shuffle(entries);
+    public RandomTextPicker(List<T> entries) {
+        if (!entries.isEmpty()) {
+            this.entries = new ArrayList<>(entries);
+            Collections.shuffle(this.entries);
         }
         current = 0;
-    }
-
-    public boolean hasEntries() {
-        return !entries.isEmpty();
     }
 
     public T nextText() {
