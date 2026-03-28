@@ -123,11 +123,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         setMouseTransparent(true); // this increases performance they say...
 
         createAnimations(uiConfig.colorScheme(level.worldMap()));
-    }
-
-    public void resetPacZPosition(Pac3D pac3D) {
-        // Set height over floor. Top of floor is at z=0.
-        pac3D.setTranslateZ(-0.5 * pac3D.getBoundsInLocal().getDepth());
+        resetPacZPosition();
     }
 
     /**
@@ -154,6 +150,25 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         Logger.info("Cleaned and removed all nodes under game level 3D");
     }
 
+    // Set height over floor. Top of floor is at z=0.
+    public void resetPacZPosition() {
+        pac3D().ifPresent(pac3D -> pac3D.setTranslateZ(-0.5 * pac3D.getBoundsInLocal().getDepth()));
+    }
+
+    /**
+     * Starts the lives counter symbols following Pac-Man with their eyes.
+     */
+    public void startTrackingPac() {
+        if (livesCounter3D().isEmpty()) {
+            Logger.error("Cannot track Pac-Man, no 3D lives counter exists");
+            return;
+        }
+        if (pac3D().isEmpty()) {
+            Logger.error("Cannot track Pac-Man, no 3D Pac-Man exists");
+        }
+        livesCounter3D().get().startTracking(pac3D().get());
+    }
+
     // Accessors
 
     /** @return registry for all level-specific animations */
@@ -177,20 +192,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public GameLevel3DMessageManager messageManager() {
         return messageManager;
-    }
-
-    /**
-     * Starts the lives counter symbols following Pac-Man with their eyes.
-     */
-    public void startTrackingPac() {
-        if (livesCounter3D().isEmpty()) {
-            Logger.error("Cannot track Pac-Man, no 3D lives counter exists");
-            return;
-        }
-        if (pac3D().isEmpty()) {
-            Logger.error("Cannot track Pac-Man, no 3D Pac-Man exists");
-        }
-        livesCounter3D().get().startTracking(pac3D().get());
     }
 
     public Optional<LevelCounter3D> levelCounter3D() {
@@ -318,7 +319,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void createPac3D(Factory3D factory3D, PacConfig pacConfig) {
         final var pac3D = factory3D.createPac3D(level.pac(), pacConfig, animationRegistry);
         pac3D.createPowerLight(pacConfig);
-        resetPacZPosition(pac3D);
         entities.addEntity(pac3D);
     }
 
@@ -457,8 +457,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Shows the "READY!" message when the game continues.
      */
     public void onGameContinues(GameContinuedEvent ignoredEvent) {
-        final Pac3D pac3D = pac3D().orElseThrow();
-        resetPacZPosition(pac3D);
+        resetPacZPosition();
         messageManager().showReadyMessage();
     }
 
@@ -472,8 +471,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         if (!silent) {
             soundEffects.playGameReadySound();
         }
-        final Pac3D pac3D = pac3D().orElseThrow();
-        resetPacZPosition(pac3D);
+        resetPacZPosition();
     }
 
     /**
@@ -560,7 +558,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         );
         dyingAnimation.setOnFinished(_ -> {
             pac3D.setVisible(false);
-            resetPacZPosition(pac3D);
+            resetPacZPosition();
             stateTimer.expire();
         });
         dyingAnimation.play();
