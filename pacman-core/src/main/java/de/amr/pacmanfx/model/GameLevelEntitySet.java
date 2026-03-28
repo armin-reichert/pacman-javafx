@@ -45,7 +45,12 @@ public class GameLevelEntitySet implements GameLevelEntity, Disposable {
     }
 
     public <T> Optional<T> first(Class<T> type) {
-        return all(type).findFirst();
+        for (var e : entities) {
+            if (type.isInstance(e)) {
+                return Optional.of(type.cast(e));
+            }
+        }
+        return Optional.empty();
     }
 
     public void clear() {
@@ -57,7 +62,8 @@ public class GameLevelEntitySet implements GameLevelEntity, Disposable {
         entities.add(entity);
     }
 
-    public void addAllEntities(Collection<? extends GameLevelEntity> entityCollection) {
+    public void addEntities(Collection<? extends GameLevelEntity> entityCollection) {
+        requireNonNull(entityCollection);
         entities.addAll(entityCollection);
     }
 

@@ -98,7 +98,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final GameLevel level;
 
     private final GameSoundEffects soundEffects;
-    private final RandomTextPicker<String> pickerGameOverMessages;
+    private final RandomTextPicker<String> gameOverMessagePicker;
 
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final GameLevelEntitySet entities = new GameLevelEntitySet();
@@ -109,6 +109,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private LevelCompletedAnimation levelCompletedFullAnimation;
     private LevelCompletedAnimationShort levelCompletedShortAnimation;
     private GhostLightAnimation ghostLightAnimation;
+    private EnergizerParticlesAnimation particlesAnimation;
 
     /**
      * Creates a new 3D level representation for the given game level.
@@ -122,14 +123,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         this.level = requireNonNull(level);
         requireNonNull(uiConfig);
         this.soundEffects = requireNonNull(soundEffects);
-        pickerGameOverMessages = RandomTextPicker.fromBundle(localizedTexts, "game.over");
+        gameOverMessagePicker = RandomTextPicker.fromBundle(localizedTexts, "game.over");
 
-        createEntities(uiConfig);
-        addChildrenInRightOrder();
-        setMouseTransparent(true); // this increases performance they say...
-
+        createAndAddEntities(uiConfig);
         createAnimations(entities().first(Maze3D.class).orElseThrow(), uiConfig.colorScheme(level.worldMap()));
+
         resetPacZPosition();
+        setMouseTransparent(true); // this increases performance they say...
     }
 
     /**
@@ -140,22 +140,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     @Override
     public void dispose() {
-        Logger.info("Disposing game level 3D...");
         animationRegistry.clear();
-        //TODO
-        if (particlesAnimation != null) {
-            particlesAnimation.dispose();
-            particlesAnimation = null;
-        }
-
         entities.dispose();
+        cleanupGroup(this, true);
         if (messageManager != null) {
             messageManager.dispose();
             messageManager = null;
         }
-
-        cleanupGroup(this, true);
-        Logger.info("Cleaned and removed all nodes under game level 3D");
+        Logger.info("Cleaned game level 3D");
     }
 
     // Set height over floor. Top of floor is at z=0.
@@ -266,17 +258,15 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().addAll(children);
     }
 
-    private void createEntities(UIConfig uiConfig) {
-        entities.clear();
-        final EntityConfig entityConfig = requireNonNull(uiConfig.entityConfig());
-        final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
-        createPac3D(uiConfig.factory3D(), entityConfig.pacConfig());
-        createGhostAppearances3D(uiConfig.factory3D(), entityConfig.ghostConfigs());
-        createMaze3D(uiConfig, colorScheme);
-        createLevelCounter3D(uiConfig, entityConfig.levelCounter());
-        createLivesCounter3D(uiConfig, entityConfig.livesCounter());
+    private void createAndAddEntities(UIConfig uiConfig) {
+        createPac3D(uiConfig.factory3D(), uiConfig.entityConfig().pacConfig());
+        createGhostAppearances3D(uiConfig.factory3D(), uiConfig.entityConfig().ghostConfigs());
+        createMaze3D(uiConfig, uiConfig.colorScheme(level.worldMap()));
+        createLevelCounter3D(uiConfig, uiConfig.entityConfig().levelCounter());
+        createLivesCounter3D(uiConfig, uiConfig.entityConfig().livesCounter());
         createFood3D(uiConfig);
         createMessageManager();
+        addChildrenInRightOrder();
     }
 
     private void createPac3D(Factory3D factory3D, PacConfig pacConfig) {
@@ -294,7 +284,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 return ghostAppearance3D;
             })
             .toList();
-        entities.addAllEntities(ghostAppearances3D);
+        entities.addEntities(ghostAppearances3D);
     }
 
     private GhostAppearance3D createGhostAppearance3D(Factory3D factory3D, List<GhostConfig> ghostConfigs, Ghost ghost) {
@@ -447,8 +437,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     // Particles animation
-
-    private EnergizerParticlesAnimation particlesAnimation;
 
     private void createParticlesAnimation(Maze3D maze3D, List<PhongMaterial> ghostMaterials) {
         // The bottom center positions of the swirls where the particles of exploded energizers eventually are displayed
@@ -668,7 +656,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         cleanupFoodAndParticles(entities().first(Maze3D.class).orElseThrow());
         entities.first(Bonus3D.class).ifPresent(Bonus3D::expire);
         if (!level.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
-            ui.showFlashMessage(Duration.seconds(2.5), pickerGameOverMessages.nextText());
+            ui.showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.nextText());
         }
         soundEffects.playGameOverSound();
     }
