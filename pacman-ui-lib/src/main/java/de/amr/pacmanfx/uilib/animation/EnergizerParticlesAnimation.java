@@ -131,7 +131,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         pool.clear();
     }
 
-    public void createEnergizerExplosion(Vector3f origin) {
+    public void addEnergizerExplosion(Vector3f origin) {
         requireNonNull(origin);
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
             final EnergizerParticle particle = obtainParticle();

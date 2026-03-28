@@ -230,7 +230,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
 
         final GameLevel level = optGameLevel().get();
 
-        gameLevel3D.update(level);
+        gameLevel3D.updateEntities(level);
         updateHUD3D(level);
         perspectiveManager.updatePerspective(level);
 
@@ -333,7 +333,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
                 gameLevel3D.messageManager().showReadyMessage();
             }
         }
-        gameLevel3D.init(level);
+        gameLevel3D.initEntities(level);
         replaceActionBindings(level);
         fadeIn();
     }
@@ -396,7 +396,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
      */
     protected GameLevel3D createGameLevel3D(GameLevel level, UIConfig uiConfig) {
         final var newGameLevel3D = new GameLevel3D(level, uiConfig, soundEffects, ui.localizedTexts());
-        newGameLevel3D.init(level);
+        newGameLevel3D.initEntities(level);
         newGameLevel3D.startTrackingPac();
         return newGameLevel3D;
     }
