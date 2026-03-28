@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.uilib.model3D.world;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -23,7 +24,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class Energizer3D implements DisposableGraphicsObject {
+public class Energizer3D implements GameLevelEntity, DisposableGraphicsObject {
 
     private static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial(Color.WHITE);
 

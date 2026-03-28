@@ -325,7 +325,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
         final State<Game> state = level.game().control().state();
         if (state instanceof TestState) {
             replaceGameLevel3D(level);
-            gameLevel3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
+            gameLevel3D.energizers3D().forEach(Energizer3D::startPumping);
             gameLevel3D.messageManager().showLevelTestMessage(level);
         } else {
             if (!level.isDemoLevel() &&
@@ -439,11 +439,10 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     }
 
     public void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
-        final MazeFood3D food3D = gameLevel3D.food3D();
-        food3D.pellets3D()   .forEach(p3D -> p3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(p3D.tile())));
-        food3D.energizers3D().forEach(e3D -> e3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(e3D.tile())));
+        gameLevel3D.pellets3D()   .forEach(p3D -> p3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(p3D.tile())));
+        gameLevel3D.energizers3D().forEach(e3D -> e3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(e3D.tile())));
         if (startEnergizerPumping) {
-            food3D.energizers3D().stream().filter(e3D -> e3D.shape().isVisible()).forEach(Energizer3D::startPumping);
+            gameLevel3D.energizers3D().filter(e3D -> e3D.shape().isVisible()).forEach(Energizer3D::startPumping);
         }
     }
 

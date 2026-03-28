@@ -22,12 +22,8 @@ import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import org.tinylog.Logger;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -40,8 +36,7 @@ public class MazeFood3D implements Disposable {
     public static final double PELLET_EATING_DELAY_SEC = 0.05;
 
     private final FoodLayer foodLayer;
-    private final GameLevelEntitySet entitySet;
-    private final Set<Energizer3D> energizers3D = new HashSet<>();
+    private final GameLevelEntitySet entities;
 
     private EnergizerParticlesAnimation explodedEnergizerParticlesAnimation;
 
@@ -49,14 +44,14 @@ public class MazeFood3D implements Disposable {
         UIConfig uiConfig,
         AnimationRegistry animationRegistry,
         GameLevel level,
-        GameLevelEntitySet entitySet,
+        GameLevelEntitySet entities,
         List<PhongMaterial> ghostMaterials,
         Maze3D maze3D)
     {
         requireNonNull(uiConfig);
         requireNonNull(animationRegistry);
         requireNonNull(level);
-        this.entitySet = requireNonNull(entitySet);
+        this.entities = requireNonNull(entities);
         requireNonNull(ghostMaterials);
         requireNonNull(maze3D);
 
@@ -83,20 +78,11 @@ public class MazeFood3D implements Disposable {
 
     @Override
     public void dispose() {
-        if (!energizers3D.isEmpty()) {
-            energizers3D.forEach(Energizer3D::dispose);
-            energizers3D.clear();
-            Logger.info("Disposed 3D energizers");
-        }
         if (explodedEnergizerParticlesAnimation != null) {
             explodedEnergizerParticlesAnimation.dispose();
             explodedEnergizerParticlesAnimation = null;
         }
     }
-
-    public Stream<Pellet3D> pellets3D() { return entitySet.allOfType(Pellet3D.class); }
-
-    public Set<Energizer3D> energizers3D() { return Collections.unmodifiableSet(energizers3D); }
 
     public void startParticlesAnimation() {
         explodedEnergizerParticlesAnimation.playFromStart();
@@ -119,7 +105,7 @@ public class MazeFood3D implements Disposable {
      * @param tile the tile where food was eaten
      */
     public void removeFoodAt(Group pelletContainer, Vector2i tile) {
-        final Energizer3D energizer3D = energizers3D().stream()
+        final Energizer3D energizer3D = entities.allOfType(Energizer3D.class)
             .filter(e3D -> tile.equals(e3D.tile()))
             .findFirst().orElse(null);
         if (energizer3D != null) {
@@ -127,7 +113,7 @@ public class MazeFood3D implements Disposable {
             energizer3D.hide();
             createEnergizerExplosion(energizer3D);
         } else {
-            pellets3D()
+            entities.allOfType(Pellet3D.class)
                 .filter(pellet3D -> tile.equals(pellet3D.tile()))
                 .findFirst()
                 .ifPresent(pellet3D -> removePellet3DAfterDelay(pelletContainer, pellet3D));
@@ -138,7 +124,7 @@ public class MazeFood3D implements Disposable {
      * Removes all pellet visualizations (used when all pellets are eaten at once).
      */
     public void removeAllPellets3D(Group pelletContainer) {
-        pellets3D().forEach(pellet3D -> pelletContainer.getChildren().remove(pellet3D.shape()));
+        entities.allOfType(Pellet3D.class).forEach(pellet3D -> pelletContainer.getChildren().remove(pellet3D.shape()));
     }
 
     /**
@@ -158,7 +144,7 @@ public class MazeFood3D implements Disposable {
                 final Pellet3D pellet3D = factory3D.createPellet3D(config, pelletMaterial);
                 pellet3D.setLocation(tile, z);
                 return pellet3D;
-            }).forEach(entitySet::addEntity);
+            }).forEach(entities::addEntity);
     }
 
     private void createEnergizers3D(
@@ -168,7 +154,6 @@ public class MazeFood3D implements Disposable {
         PhongMaterial material,
         double z)
     {
-        energizers3D.clear(); // just in case
         foodLayer.tiles()
             .filter(foodLayer::isEnergizerTile)
             .filter(foodLayer::hasFoodAtTile)
@@ -177,7 +162,7 @@ public class MazeFood3D implements Disposable {
                 energizer3D.setLocation(tile, z);
                 return energizer3D;
             })
-            .forEach(energizers3D::add);
+            .forEach(entities::addEntity);
     }
 
     private EnergizerParticlesAnimation createEnergizerParticlesAnimation(

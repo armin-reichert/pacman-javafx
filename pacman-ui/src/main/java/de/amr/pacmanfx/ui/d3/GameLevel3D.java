@@ -190,6 +190,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return food3D;
     }
 
+    public Stream<Pellet3D> pellets3D() { return entities.allOfType(Pellet3D.class); }
+
+    public Stream<Energizer3D> energizers3D() { return entities.allOfType(Energizer3D.class); }
+
+
     public GameLevel3DMessageManager messageManager() {
         return messageManager;
     }
@@ -291,8 +296,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         pac3D.light().ifPresent(pacLight -> getChildren().add(pacLight));
         ghostAppearances3DInOrder().forEach(getChildren()::add);
 
-        food3D.energizers3D().stream().map(Energizer3D::shape).forEach(getChildren()::add);
-        food3D.pellets3D().map(Pellet3D::shape).forEach(getChildren()::add);
+        energizers3D().map(Energizer3D::shape).forEach(getChildren()::add);
+        pellets3D().map(Pellet3D::shape).forEach(getChildren()::add);
 
         maze3D().ifPresent(maze3D -> {
             getChildren().add(maze3D.house().root());
@@ -525,13 +530,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void onStartingGame() {
         init(level);
-        food3D.energizers3D().forEach(Energizer3D::stopPumping);
+        energizers3D().forEach(Energizer3D::stopPumping);
     }
 
     private void onHuntingStart(Pac3D pac3D) {
         pac3D.init(level);
         ghostAppearances3DInOrder().forEach(ghost3D -> ghost3D.init(level));
-        food3D.energizers3D().forEach(Energizer3D::startPumping);
+        energizers3D().forEach(Energizer3D::startPumping);
         food3D.startParticlesAnimation();
         ghostLightAnimation.playFromStart();
     }
@@ -601,12 +606,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void cleanupFoodAndParticles(Maze3D maze3D) {
         food3D.stopParticlesAnimation();
-        food3D.energizers3D().forEach(energizer3D -> {
+        energizers3D().forEach(energizer3D -> {
             energizer3D.stopPumping();
             energizer3D.hide();
         });
         // Hide 3D food explicitly (handles cheat-eat-all case)
-        food3D.pellets3D().forEach(pellet3D -> pellet3D.shape().setVisible(false));
+        pellets3D().forEach(pellet3D -> pellet3D.shape().setVisible(false));
         maze3D.particlesGroup().getChildren().clear();
     }
 
