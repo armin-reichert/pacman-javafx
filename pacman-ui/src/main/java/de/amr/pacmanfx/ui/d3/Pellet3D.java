@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.scene.shape.Shape3D;
 
@@ -12,7 +13,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class Pellet3D implements DisposableGraphicsObject {
+public class Pellet3D implements GameLevelEntity, DisposableGraphicsObject {
 
     private Shape3D shape;
     private Vector2i tile;

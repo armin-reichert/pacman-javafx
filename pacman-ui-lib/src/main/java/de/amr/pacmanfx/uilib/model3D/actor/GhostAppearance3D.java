@@ -46,6 +46,9 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
     private Ghost3DBrakeAnimation brakeAnimation;
     private Ghost3DPointsAnimation numberAnimation;
 
+    private ChangeListener<Vector2f> positionChangeListener = (_, _, _) -> updateTransform(ghost());
+    private ChangeListener<Direction> wishDirChangeListener = (_, _, _) -> updateTransform(ghost());
+
     public GhostAppearance3D(
         AnimationRegistry animationRegistry,
         Ghost ghost,
@@ -78,6 +81,8 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
     @Override
     public void dispose() {
         removePropertyChangeListeners();
+        positionChangeListener = null;
+        wishDirChangeListener = null;
         stopAllAnimations();
         if (brakeAnimation != null) {
             brakeAnimation.dispose();
@@ -145,10 +150,6 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
     }
 
     // private area, no trespassing
-
-    private final ChangeListener<Vector2f> positionChangeListener = (_, _, _) -> updateTransform(ghost());
-
-    private final ChangeListener<Direction> wishDirChangeListener = (_, _, _) -> updateTransform(ghost());
 
     private void disableNumberAppearance() {
         if (numberShape3D != null) {

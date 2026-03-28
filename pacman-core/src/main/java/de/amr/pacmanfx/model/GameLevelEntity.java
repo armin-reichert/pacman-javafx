@@ -5,7 +5,7 @@ package de.amr.pacmanfx.model;
 
 public interface GameLevelEntity {
 
-    void init(GameLevel level);
+    default void init(GameLevel level) {}
 
-    void update(GameLevel level);
+    default void update(GameLevel level) {};
 }

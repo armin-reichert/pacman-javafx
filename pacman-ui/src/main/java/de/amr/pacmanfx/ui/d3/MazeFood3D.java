@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.math.Vector3f;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameLevelEntitySet;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
@@ -39,7 +40,7 @@ public class MazeFood3D implements Disposable {
     public static final double PELLET_EATING_DELAY_SEC = 0.05;
 
     private final FoodLayer foodLayer;
-    private final Set<Pellet3D> pellets3D = new HashSet<>();
+    private final GameLevelEntitySet entitySet;
     private final Set<Energizer3D> energizers3D = new HashSet<>();
 
     private EnergizerParticlesAnimation explodedEnergizerParticlesAnimation;
@@ -48,12 +49,14 @@ public class MazeFood3D implements Disposable {
         UIConfig uiConfig,
         AnimationRegistry animationRegistry,
         GameLevel level,
+        GameLevelEntitySet entitySet,
         List<PhongMaterial> ghostMaterials,
         Maze3D maze3D)
     {
         requireNonNull(uiConfig);
         requireNonNull(animationRegistry);
         requireNonNull(level);
+        this.entitySet = requireNonNull(entitySet);
         requireNonNull(ghostMaterials);
         requireNonNull(maze3D);
 
@@ -65,7 +68,7 @@ public class MazeFood3D implements Disposable {
         final PelletConfig3D pelletConfig3D = uiConfig.entityConfig().pellet();
         final EnergizerConfig3D energizerConfig3D = uiConfig.entityConfig().energizer();
 
-        createPellets3D(factory3D, pelletConfig3D, pelletMaterial, maze3D.floorTop() - pelletConfig3D.floorElevation());
+        addPellets3D(factory3D, pelletConfig3D, pelletMaterial, maze3D.floorTop() - pelletConfig3D.floorElevation());
         createEnergizers3D(factory3D, energizerConfig3D, animationRegistry, pelletMaterial, maze3D.floorTop() - energizerConfig3D.floorElevation());
 
         // The bottom center positions of the swirls where the particles of exploded energizers eventually are displayed
@@ -80,10 +83,6 @@ public class MazeFood3D implements Disposable {
 
     @Override
     public void dispose() {
-        if (!pellets3D.isEmpty()) {
-            pellets3D.forEach(Pellet3D::dispose);
-            Logger.info("Disposed 3D pellets");
-        }
         if (!energizers3D.isEmpty()) {
             energizers3D.forEach(Energizer3D::dispose);
             energizers3D.clear();
@@ -95,7 +94,7 @@ public class MazeFood3D implements Disposable {
         }
     }
 
-    public Set<Pellet3D> pellets3D() { return Collections.unmodifiableSet(pellets3D); }
+    public Stream<Pellet3D> pellets3D() { return entitySet.allOfType(Pellet3D.class); }
 
     public Set<Energizer3D> energizers3D() { return Collections.unmodifiableSet(energizers3D); }
 
@@ -128,7 +127,7 @@ public class MazeFood3D implements Disposable {
             energizer3D.hide();
             createEnergizerExplosion(energizer3D);
         } else {
-            pellets3D().stream()
+            pellets3D()
                 .filter(pellet3D -> tile.equals(pellet3D.tile()))
                 .findFirst()
                 .ifPresent(pellet3D -> removePellet3DAfterDelay(pelletContainer, pellet3D));
@@ -151,8 +150,7 @@ public class MazeFood3D implements Disposable {
         pauseSecThen(PELLET_EATING_DELAY_SEC, () -> pelletContainer.getChildren().remove(pellet3D.shape())).play();
     }
 
-    private void createPellets3D(Factory3D factory3D, PelletConfig3D config, PhongMaterial pelletMaterial, double z) {
-        pellets3D.clear(); // just in case
+    private void addPellets3D(Factory3D factory3D, PelletConfig3D config, PhongMaterial pelletMaterial, double z) {
         foodLayer.tiles()
             .filter(foodLayer::hasFoodAtTile)
             .filter(tile -> !foodLayer.isEnergizerTile(tile))
@@ -160,7 +158,7 @@ public class MazeFood3D implements Disposable {
                 final Pellet3D pellet3D = factory3D.createPellet3D(config, pelletMaterial);
                 pellet3D.setLocation(tile, z);
                 return pellet3D;
-            }).forEach(pellets3D::add);
+            }).forEach(entitySet::addEntity);
     }
 
     private void createEnergizers3D(

@@ -136,6 +136,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void dispose() {
         Logger.info("Disposing game level 3D...");
         animationRegistry.clear();
+        entities.dispose();
         if (food3D != null) {
             food3D.dispose();
             food3D = null;
@@ -144,7 +145,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             messageManager.dispose();
             messageManager = null;
         }
-        entities.dispose();
 
         cleanupGroup(this, true);
         Logger.info("Cleaned and removed all nodes under game level 3D");
@@ -292,7 +292,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         ghostAppearances3DInOrder().forEach(getChildren()::add);
 
         food3D.energizers3D().stream().map(Energizer3D::shape).forEach(getChildren()::add);
-        food3D.pellets3D().stream().map(Pellet3D::shape).forEach(getChildren()::add);
+        food3D.pellets3D().map(Pellet3D::shape).forEach(getChildren()::add);
 
         maze3D().ifPresent(maze3D -> {
             getChildren().add(maze3D.house().root());
@@ -311,7 +311,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createLevelCounter3D(uiConfig, entityConfig.levelCounter());
         createLivesCounter3D(uiConfig, entityConfig.livesCounter());
         // food is added to the scene children list
-        food3D = new MazeFood3D(uiConfig, animationRegistry, level, dressMaterials(ghostAppearances3DInOrder()),
+        food3D = new MazeFood3D(uiConfig, animationRegistry, level, entities, dressMaterials(ghostAppearances3DInOrder()),
             maze3D().orElseThrow());
         createMessageManager();
     }
