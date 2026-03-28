@@ -156,19 +156,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Set height over floor. Top of floor is at z=0.
     public void resetPacZPosition() {
-        pac3D().ifPresent(pac3D -> pac3D.setTranslateZ(-0.5 * pac3D.getBoundsInLocal().getDepth()));
+        entities.first(Pac3D.class).ifPresent(pac3D -> pac3D.setTranslateZ(-0.5 * pac3D.getBoundsInLocal().getDepth()));
     }
 
     /**
      * Starts the lives counter symbols following Pac-Man with their eyes.
      */
     public void startTrackingPac() {
-        entities.first(LivesCounter3D.class).ifPresent(livesCounter3D -> {
-            if (pac3D().isEmpty()) {
-                Logger.error("Cannot track Pac-Man, no 3D Pac-Man exists");
-            }
-            livesCounter3D.startTracking(pac3D().get());
-        });
+        entities.first(LivesCounter3D.class).ifPresent(livesCounter3D ->
+            entities.first(Pac3D.class).ifPresentOrElse(
+                livesCounter3D::startTracking,
+                () -> Logger.error("Lives counter cannot track Pac-Man: 3D Pac-Man not existing")));
     }
 
     // Accessors
@@ -177,12 +175,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return entities;
     }
 
-    /** @return registry for all level-specific animations */
     public AnimationRegistry animationRegistry() {
         return animationRegistry;
     }
 
-    /** @return the underlying game level model */
     public GameLevel level() {
         return level;
     }
@@ -191,12 +187,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return messageManager;
     }
 
-    /** @return Pac-Man 3D representation */
-    public Optional<Pac3D> pac3D() {
-        return entities.first(Pac3D.class);
-    }
-
-    /** @return Stream of all ghost 3D representations in the order RED, PINK, CYAN, ORANGE */
+    /** @return Stream of all ghost 3D representations in their natural order RED, PINK, CYAN, ORANGE */
     public Stream<GhostAppearance3D> ghostAppearances3DInOrder() {
         return entities.all(GhostAppearance3D.class)
             .sorted(Comparator.comparingInt(appearance -> appearance.ghost().personality()));
@@ -204,12 +195,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public Optional<GhostAppearance3D> ghostAppearance3D(byte personality) {
         Validations.requireValidGhostPersonality(personality);
-        return entities.all(GhostAppearance3D.class).filter(ga3D -> ga3D.ghost().personality() == personality).findFirst();
-    }
-
-    /** @return optional bonus visualization */
-    public Optional<Bonus3D> bonus3D() {
-        return entities.first(Bonus3D.class);
+        return entities.all(GhostAppearance3D.class)
+            .filter(ga3D -> ga3D.ghost().personality() == personality).findFirst();
     }
 
     public void initEntities(GameLevel level) {
@@ -232,7 +219,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         requireNonNull(uiConfig);
         requireNonNull(bonus);
         final BonusConfig bonusConfig = uiConfig.entityConfig().bonusConfig();
-        bonus3D().ifPresent(bonus3D -> {
+        entities.first(Bonus3D.class).ifPresent(bonus3D -> {
             bonus3D.dispose();
             entities.removeEntity(bonus3D);
             getChildren().remove(bonus3D);
@@ -271,7 +258,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         getChildren().add(entities.first(LevelCounter3D.class).orElseThrow());
         getChildren().add(entities.first(LivesCounter3D.class).orElseThrow());
-        final Pac3D pac3D = pac3D().orElseThrow();
+        final Pac3D pac3D = entities.first(Pac3D.class).orElseThrow();
         getChildren().add(pac3D);
         pac3D.light().ifPresent(pacLight -> getChildren().add(pacLight));
         ghostAppearances3DInOrder().forEach(getChildren()::add);
@@ -512,7 +499,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         if (matches(gameState, STARTING_GAME_OR_LEVEL)) {
             onStartingGame();
         } else if (matches(gameState, HUNTING)) {
-            onHuntingStart(pac3D().orElseThrow());
+            onHuntingStart(entities.first(Pac3D.class).orElseThrow());
         } else if (matches(gameState, PACMAN_DYING)) {
             onPacManDying();
         } else if (matches(gameState, EATING_GHOST)) {
@@ -540,7 +527,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Handles bonus eaten: shows eaten animation and plays sound.
      */
     public void onBonusEaten(BonusEatenEvent ignoredEvent) {
-        bonus3D().ifPresent(Bonus3D::showEaten);
+        entities.first(Bonus3D.class).ifPresent(Bonus3D::showEaten);
         soundEffects.playBonusEatenSound();
     }
 
@@ -548,7 +535,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Handles bonus expiration: expires 3D bonus and plays sound.
      */
     public void onBonusExpired(BonusExpiredEvent ignoredEvent) {
-        bonus3D().ifPresent(Bonus3D::expire);
+        entities.first(Bonus3D.class).ifPresent(Bonus3D::expire);
         soundEffects.playBonusExpiredSound();
     }
 
@@ -596,10 +583,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Handles Pac gaining power: stops siren, starts power animation/sound.
      */
     public void onPacGetsPower(PacGetsPowerEvent ignoredEvent) {
+        final Pac3D pac3D = entities.first(Pac3D.class).orElseThrow();
         final Game game = level.game();
         soundEffects.stopSiren();
         if (!game.isLevelCompleted(level)) {
-            final Pac3D pac3D = pac3D().orElseThrow();
             pac3D.setMovementPowerMode(true);
             wallColorFlashingAnimation.playFromStart();
             soundEffects.playPacPowerSound();
@@ -610,7 +597,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Handles Pac losing power: stops power animation/sound.
      */
     public void onPacLostPower(PacLostPowerEvent ignoredEvent) {
-        final Pac3D pac3D = pac3D().orElseThrow();
+        final Pac3D pac3D = entities.first(Pac3D.class).orElseThrow();
         pac3D.setMovementPowerMode(false);
         wallColorFlashingAnimation.stop();
         soundEffects.stopPacPowerSound();
@@ -636,14 +623,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void onPacManDying() {
+        final Pac3D pac3D = entities.first(Pac3D.class).orElseThrow();
         final TickTimer stateTimer = level.game().control().state().timer();
-        final Pac3D pac3D = pac3D().orElseThrow();
 
         soundEffects.stopAll();
         ghostLightAnimation.stop();
         wallColorFlashingAnimation.stop();
         ghostAppearances3DInOrder().forEach(GhostAppearance3D::stopAllAnimations);
-        bonus3D().ifPresent(Bonus3D::expire);
+        entities.first(Bonus3D.class).ifPresent(Bonus3D::expire);
 
         // One last update before dying animation
         pac3D.update(level);
@@ -681,7 +668,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         animationRegistry().stopAllAnimations();
         cleanupFoodAndParticles(maze3D);
         maze3D.house().hideDoors();
-        bonus3D().ifPresent(Bonus3D::expire);
+        entities.first(Bonus3D.class).ifPresent(Bonus3D::expire);
         messageManager.hideMessage();
         playLevelEndAnimation(maze3D, level, gameState);
     }
@@ -691,7 +678,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         gameState.timer().restartSeconds(3);
         ghostLightAnimation.stop();
         cleanupFoodAndParticles(entities().first(Maze3D.class).orElseThrow());
-        bonus3D().ifPresent(Bonus3D::expire);
+        entities.first(Bonus3D.class).ifPresent(Bonus3D::expire);
         if (!level.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
             ui.showFlashMessage(Duration.seconds(2.5), pickerGameOverMessages.nextText());
         }
