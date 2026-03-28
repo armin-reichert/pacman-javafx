@@ -195,8 +195,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public Optional<GhostAppearance3D> ghostAppearance3D(byte personality) {
         Validations.requireValidGhostPersonality(personality);
-        return entities.all(GhostAppearance3D.class)
-            .filter(ga3D -> ga3D.ghost().personality() == personality).findFirst();
+        return entities.where(GhostAppearance3D.class, ga3D -> ga3D.ghost().personality() == personality).findFirst();
     }
 
     // private
@@ -393,20 +392,20 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * @param tile the tile where food was eaten
      */
     public void removeFoodAt(Group pelletContainer, Vector2i tile) {
-        final Energizer3D energizer3D = entities.all(Energizer3D.class)
-            .filter(e3D -> tile.equals(e3D.tile()))
+        final Energizer3D energizer3D = entities.where(Energizer3D.class, e3D -> tile.equals(e3D.tile()))
             .findFirst()
             .orElse(null);
 
         if (energizer3D != null) {
             energizer3D.stopPumping();
             energizer3D.hide();
-            createEnergizerExplosion(energizer3D);
+            final Point3D point = energizer3D.shape().localToScene(Point3D.ZERO);
+            final Vector3f origin = new Vector3f(point.getX(), point.getY(), point.getZ());
+            particlesAnimation.addEnergizerExplosion(origin);
         } else {
-            entities.all(Pellet3D.class)
-                .filter(pellet3D -> tile.equals(pellet3D.tile()))
+            entities.where(Pellet3D.class, p3D -> tile.equals(p3D.tile()))
                 .findFirst()
-                .ifPresent(pellet3D -> removePelletAfterDelay(pelletContainer, pellet3D));
+                .ifPresent(p3D -> removePelletAfterDelay(pelletContainer, p3D));
         }
     }
 
@@ -441,12 +440,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             ghostMaterials,
             maze3D.floor(),
             maze3D.particlesGroup());
-    }
-
-    public void createEnergizerExplosion(Energizer3D energizer) {
-        final Point3D point = energizer.shape().localToScene(Point3D.ZERO);
-        final Vector3f origin = new Vector3f(point.getX(), point.getY(), point.getZ());
-        particlesAnimation.addEnergizerExplosion(origin);
     }
 
     // Event handling

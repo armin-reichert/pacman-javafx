@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
@@ -42,6 +43,11 @@ public class GameLevelEntitySet implements GameLevelEntity, Disposable {
     public <T> Stream<T> all(Class<T> type) {
         requireNonNull(type);
         return all().filter(type::isInstance).map(type::cast);
+    }
+
+    public <T> Stream<T> where(Class<T> type, Predicate<T> condition) {
+        requireNonNull(condition);
+        return all(type).filter(condition);
     }
 
     public <T> Optional<T> first(Class<T> type) {

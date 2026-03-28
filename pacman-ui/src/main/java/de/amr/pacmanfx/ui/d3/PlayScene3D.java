@@ -442,8 +442,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
         level3D.entities().all(Energizer3D.class)
             .forEach(e3D -> e3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(e3D.tile())));
         if (startEnergizerPumping) {
-            level3D.entities().all(Energizer3D.class)
-                .filter(e3D -> e3D.shape().isVisible())
+            level3D.entities().where(Energizer3D.class, e3D -> e3D.shape().isVisible())
                 .forEach(Energizer3D::startPumping);
         }
     }

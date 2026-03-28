@@ -134,13 +134,13 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     public void addEnergizerExplosion(Vector3f origin) {
         requireNonNull(origin);
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
-            final EnergizerParticle particle = obtainParticle();
-            particle.setPosition(origin);
-            particle.setVelocity(randomParticleVelocity(config.explosion()));
-            particle.setState(FragmentState.FLYING);
-            particle.shape().setVisible(true);
-            particles.add(particle);
-            particleShapesGroup.getChildren().add(particle.shape());
+            final EnergizerParticle p = getParticleFromPool();
+            p.setPosition(origin);
+            p.setVelocity(randomParticleVelocity(config.explosion()));
+            p.setState(FragmentState.FLYING);
+            p.shape().setVisible(true);
+            particles.add(p);
+            particleShapesGroup.getChildren().add(p.shape());
         }
     }
 
@@ -152,7 +152,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         Logger.info("Particle pool prefilled! Pool size={}", pool.size());
     }
 
-    private EnergizerParticle obtainParticle() {
+    private EnergizerParticle getParticleFromPool() {
         EnergizerParticle particle = pool.poll();
         if (particle == null) {
             particle = createExplosionParticle();
