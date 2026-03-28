@@ -9,6 +9,7 @@ import de.amr.pacmanfx.uilib.animation.EnergizerParticle.FragmentState;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -131,11 +132,11 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         pool.clear();
     }
 
-    public void addEnergizerExplosion(Vector3f origin) {
-        requireNonNull(origin);
+    public void triggerEnergizerExplosion(Point3D center) {
+        requireNonNull(center);
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
             final EnergizerParticle p = getParticleFromPool();
-            p.setPosition(origin);
+            p.setPosition(new Vector3f(center.getX(), center.getY(), center.getZ()));
             p.setVelocity(randomParticleVelocity(config.explosion()));
             p.setState(FragmentState.FLYING);
             p.shape().setVisible(true);

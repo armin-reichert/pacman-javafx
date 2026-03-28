@@ -11,7 +11,6 @@ import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.RandomNumberSupport;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.math.Vector3f;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
@@ -385,28 +384,16 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .forEach(entities::add);
     }
 
-    /**
-     * Handles Pac-Man eating food at the given tile (pellet or energizer).
-     *
-     * @param pelletContainer the JavaFX group containing the pellet shapes (used for removing eaten pellets)
-     * @param tile the tile where food was eaten
-     */
-    public void removeFoodAt(Group pelletContainer, Vector2i tile) {
-        final Energizer3D energizer3D = entities.where(Energizer3D.class, e3D -> tile.equals(e3D.tile()))
-            .findFirst()
-            .orElse(null);
-
-        if (energizer3D != null) {
+    private void eatFood(Group pelletContainer, Vector2i tile) {
+        final Optional<Energizer3D> eatenEnergizer3D = entities.where(Energizer3D.class, e3D -> tile.equals(e3D.tile())).findAny();
+        eatenEnergizer3D.ifPresentOrElse(energizer3D -> {
             energizer3D.stopPumping();
             energizer3D.hide();
-            final Point3D point = energizer3D.shape().localToScene(Point3D.ZERO);
-            final Vector3f origin = new Vector3f(point.getX(), point.getY(), point.getZ());
-            particlesAnimation.addEnergizerExplosion(origin);
-        } else {
-            entities.where(Pellet3D.class, p3D -> tile.equals(p3D.tile()))
-                .findFirst()
-                .ifPresent(p3D -> removePelletAfterDelay(pelletContainer, p3D));
-        }
+            final Point3D center = energizer3D.shape().localToScene(Point3D.ZERO);
+            particlesAnimation.triggerEnergizerExplosion(center);
+        }, () -> entities.where(Pellet3D.class, p3D -> tile.equals(p3D.tile()))
+            .findFirst()
+            .ifPresent(p3D -> removePelletAfterDelay(pelletContainer, p3D)));
     }
 
     private void removePelletAfterDelay(Group pelletContainer, Pellet3D pellet3D) {
@@ -532,7 +519,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         if (gameEvent.allPellets()) {
             removeAllPellets3D(this);
         } else {
-            removeFoodAt(this, gameEvent.pac().tile());
+            eatFood(this, gameEvent.pac().tile());
             soundEffects.playPacMunchingSound(tick);
         }
     }
