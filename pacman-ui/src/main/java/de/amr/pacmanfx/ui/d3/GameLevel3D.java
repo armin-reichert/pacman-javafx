@@ -356,44 +356,30 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public static final double PELLET_EATING_DELAY_SEC = 0.05;
 
     private void createFood3D(UIConfig uiConfig) {
-        final Factory3D factory3D = uiConfig.factory3D();
-        final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
-        final var pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
-        final PelletConfig3D pelletConfig3D = uiConfig.entityConfig().pellet();
-        final EnergizerConfig3D energizerConfig3D = uiConfig.entityConfig().energizer();
+        final FoodLayer foodLayer = level.worldMap().foodLayer();
         final Maze3D maze3D = entities().first(Maze3D.class).orElseThrow();
 
-        addPellets3D(factory3D, pelletConfig3D, pelletMaterial, maze3D.floorTop() - pelletConfig3D.floorElevation());
-        createEnergizers3D(factory3D, energizerConfig3D, animationRegistry, pelletMaterial);
-        final double z = maze3D.floorTop() - energizerConfig3D.floorElevation();
-        entities.all(Energizer3D.class).forEach(e3D -> e3D.setLocation(e3D.tile(), z));
-    }
-
-    private void addPellets3D(Factory3D factory3D, PelletConfig3D config, PhongMaterial pelletMaterial, double z) {
-        final FoodLayer foodLayer = level.worldMap().foodLayer();
+        final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
+        final PelletConfig3D pelletConfig3D = uiConfig.entityConfig().pellet();
+        final var pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
+        final double pelletZ = maze3D.floorTop() - pelletConfig3D.floorElevation();
         foodLayer.tiles()
             .filter(foodLayer::hasFoodAtTile)
             .filter(tile -> !foodLayer.isEnergizerTile(tile))
             .map(tile -> {
-                final Pellet3D pellet3D = factory3D.createPellet3D(config, pelletMaterial);
-                pellet3D.setLocation(tile, z);
+                final Pellet3D pellet3D = uiConfig.factory3D().createPellet3D(pelletConfig3D, pelletMaterial);
+                pellet3D.setLocation(tile, pelletZ);
                 return pellet3D;
             }).forEach(entities::add);
-    }
 
-    private void createEnergizers3D(
-        Factory3D factory3D,
-        EnergizerConfig3D config,
-        AnimationRegistry animationRegistry,
-        PhongMaterial material)
-    {
-        final FoodLayer foodLayer = level.worldMap().foodLayer();
+        final EnergizerConfig3D energizerConfig3D = uiConfig.entityConfig().energizer();
+        final double energizerZ = maze3D.floorTop() - energizerConfig3D.floorElevation();
         foodLayer.tiles()
             .filter(foodLayer::isEnergizerTile)
             .filter(foodLayer::hasFoodAtTile)
             .map(tile -> {
-                final Energizer3D energizer3D = factory3D.createEnergizer3D(config, animationRegistry, material);
-                energizer3D.setLocation(tile, -HTS);
+                final Energizer3D energizer3D = uiConfig.factory3D().createEnergizer3D(energizerConfig3D, animationRegistry, pelletMaterial);
+                energizer3D.setLocation(tile, energizerZ);
                 return energizer3D;
             })
             .forEach(entities::add);
@@ -408,7 +394,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void removeFoodAt(Group pelletContainer, Vector2i tile) {
         final Energizer3D energizer3D = entities.all(Energizer3D.class)
             .filter(e3D -> tile.equals(e3D.tile()))
-            .findFirst().orElse(null);
+            .findFirst()
+            .orElse(null);
+
         if (energizer3D != null) {
             energizer3D.stopPumping();
             energizer3D.hide();
@@ -417,24 +405,22 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             entities.all(Pellet3D.class)
                 .filter(pellet3D -> tile.equals(pellet3D.tile()))
                 .findFirst()
-                .ifPresent(pellet3D -> removePellet3DAfterDelay(pelletContainer, pellet3D));
+                .ifPresent(pellet3D -> removePelletAfterDelay(pelletContainer, pellet3D));
         }
     }
 
-    /**
-     * Schedules removal of a single pellet after a short delay (visual feedback).
-     *
-     * @param pellet3D the pellet shape to remove
-     */
-    private void removePellet3DAfterDelay(Group pelletContainer, Pellet3D pellet3D) {
-        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> pelletContainer.getChildren().remove(pellet3D.shape())).play();
+    private void removePelletAfterDelay(Group pelletContainer, Pellet3D pellet3D) {
+        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> pelletContainer.getChildren().remove(pellet3D.shape()))
+            .play();
     }
 
     /**
      * Removes all pellet visualizations (used when all pellets are eaten at once).
      */
     public void removeAllPellets3D(Group pelletContainer) {
-        entities.all(Pellet3D.class).forEach(pellet3D -> pelletContainer.getChildren().remove(pellet3D.shape()));
+        entities.all(Pellet3D.class)
+            .map(Pellet3D::shape)
+            .forEach(shape -> pelletContainer.getChildren().remove(shape));
     }
 
     // Particles animation
