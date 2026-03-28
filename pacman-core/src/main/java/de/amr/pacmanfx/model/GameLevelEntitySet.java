@@ -57,17 +57,17 @@ public class GameLevelEntitySet implements GameLevelEntity, Disposable {
         entities.clear();
     }
 
-    public void addEntity(GameLevelEntity entity) {
+    public void add(GameLevelEntity entity) {
         requireNonNull(entity);
         entities.add(entity);
     }
 
-    public void addEntities(Collection<? extends GameLevelEntity> entityCollection) {
+    public void addAll(Collection<? extends GameLevelEntity> entityCollection) {
         requireNonNull(entityCollection);
         entities.addAll(entityCollection);
     }
 
-    public void removeEntity(GameLevelEntity entity) {
+    public void remove(GameLevelEntity entity) {
         requireNonNull(entity);
         entities.remove(entity);
     }

@@ -203,7 +203,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final BonusConfig bonusConfig = uiConfig.entityConfig().bonusConfig();
         entities.first(Bonus3D.class).ifPresent(bonus3D -> {
             bonus3D.dispose();
-            entities.removeEntity(bonus3D);
+            entities.remove(bonus3D);
             getChildren().remove(bonus3D);
         });
         final var bonus3D = new Bonus3D(animationRegistry, bonus,
@@ -211,7 +211,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             uiConfig.bonusValueImage(bonus.symbol()),  bonusConfig.bonusPointsWidth());
         bonus3D.showEdible();
 
-        entities.addEntity(bonus3D);
+        entities.add(bonus3D);
         addChild(bonus3D);
     }
 
@@ -272,7 +272,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void createPac3D(Factory3D factory3D, PacConfig pacConfig) {
         final var pac3D = factory3D.createPac3D(level.pac(), pacConfig, animationRegistry);
         pac3D.createPowerLight(pacConfig);
-        entities.addEntity(pac3D);
+        entities.add(pac3D);
     }
 
     private void createGhostAppearances3D(Factory3D factory3D, List<GhostConfig> ghostConfigs) {
@@ -284,7 +284,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 return ghostAppearance3D;
             })
             .toList();
-        entities.addEntities(ghostAppearances3D);
+        entities.addAll(ghostAppearances3D);
     }
 
     private GhostAppearance3D createGhostAppearance3D(Factory3D factory3D, List<GhostConfig> ghostConfigs, Ghost ghost) {
@@ -308,7 +308,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         livesCounter3D.setTranslateY(2 * TS);
         livesCounter3D.pillarColorProperty().set(config.pillarColor());
         livesCounter3D.plateColorProperty().set(config.plateColor());
-        entities.addEntity(livesCounter3D);
+        entities.add(livesCounter3D);
     }
 
     private void createLevelCounter3D(UIConfig uiConfig, LevelCounterConfig3D config) {
@@ -317,12 +317,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         levelCounter3D.setTranslateX(TS * (terrain.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.setTranslateZ(-config.elevation());
-        entities.addEntity(levelCounter3D);
+        entities.add(levelCounter3D);
     }
 
     private void createMaze3D(UIConfig uiConfig, WorldMapColorScheme colorScheme) {
         final var maze3D = uiConfig.factory3D().createMaze3D(level, uiConfig.entityConfig(), colorScheme, animationRegistry);
-        entities.addEntity(maze3D);
+        entities.add(maze3D);
     }
 
     private void createMessageManager() {
@@ -376,7 +376,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 final Pellet3D pellet3D = factory3D.createPellet3D(config, pelletMaterial);
                 pellet3D.setLocation(tile, z);
                 return pellet3D;
-            }).forEach(entities::addEntity);
+            }).forEach(entities::add);
     }
 
     private void createEnergizers3D(
@@ -395,7 +395,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 energizer3D.setLocation(tile, z);
                 return energizer3D;
             })
-            .forEach(entities::addEntity);
+            .forEach(entities::add);
     }
 
     /**
