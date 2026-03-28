@@ -280,7 +280,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
 
     @Override
     public void onBonusActivated(BonusActivatedEvent event) {
-        level3D.onBonusActivated(ui, event);
+        level3D.onBonusActivated(event);
     }
 
     @Override
