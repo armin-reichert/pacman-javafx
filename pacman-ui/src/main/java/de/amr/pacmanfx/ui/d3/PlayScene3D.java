@@ -73,12 +73,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class PlayScene3D implements GameScene, DisposableGraphicsObject {
 
-    /** Fill color used at the start of the fade-in animation. */
-    public static final Color SCENE_DARK_FILLCOLOR = Color.BLACK;
-
-    /** Final fill color after fade-in (fully transparent). */
-    public static final Color SCENE_BRIGHT_FILLCOLOR = Color.TRANSPARENT;
-
     /** Duration of the fade-in animation when the 3D scene becomes active. */
     public static final Duration FADE_IN_DURATION = Duration.seconds(3);
 
@@ -184,7 +178,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     public void init(Game game) {
         game.hud().score(true).show();
         perspectiveManager.activeIDProperty().bind(GameUI.PROPERTY_3D_PERSPECTIVE_ID);
-        subScene.setFill(SCENE_DARK_FILLCOLOR);
+        subScene.setFill(Color.BLACK);
         PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
     }
 

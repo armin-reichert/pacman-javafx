@@ -9,6 +9,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 /**
@@ -28,14 +29,14 @@ public class PlaySceneFadeInAnimation {
     public PlaySceneFadeInAnimation(Duration fadeInDuration, PlayScene3D playScene3D) {
         timeline = new Timeline(
             new KeyFrame(Duration.ZERO, _ -> {
-                playScene3D.subScene().setFill(PlayScene3D.SCENE_DARK_FILLCOLOR);
+                playScene3D.subScene().setFill(Color.BLACK);
                 playScene3D.optGameLevel3D().ifPresent(level3D -> level3D.setVisible(true));
                 playScene3D.optScores3D().ifPresent(scores3D -> scores3D.setVisible(true));
                 // TODO: Verify if startControlling is required here (may be redundant)
                 playScene3D.perspectiveManager().currentPerspective().ifPresent(Perspective::startControlling);
             }),
             new KeyFrame(fadeInDuration,
-                new KeyValue(playScene3D.subScene().fillProperty(), PlayScene3D.SCENE_BRIGHT_FILLCOLOR, Interpolator.EASE_IN))
+                new KeyValue(playScene3D.subScene().fillProperty(), Color.TRANSPARENT, Interpolator.EASE_IN))
         );
     }
 
