@@ -90,15 +90,15 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
 
     protected ActionBindingsManager actionBindings = ActionBindingsManager.NO_BINDINGS;
     protected GameUI ui;
-    protected GameLevel3D gameLevel3D;
+    protected GameLevel3D level3D;
     protected Scores3D scores3D;
     protected PlaySceneContextMenu contextMenu;
     protected GameSoundEffects soundEffects;
     protected AmbientLight ambientLight;
 
     private final ChangeListener<DrawMode> drawModeChangeListener = (_, _, drawMode) -> {
-        if (gameLevel3D != null) {
-            Ufx.setDrawMode(gameLevel3D, drawMode);
+        if (level3D != null) {
+            Ufx.setDrawMode(level3D, drawMode);
         }
     };
 
@@ -126,7 +126,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     }
 
     public Optional<GameLevel3D> optGameLevel3D() {
-        return Optional.ofNullable(gameLevel3D);
+        return Optional.ofNullable(level3D);
     }
 
     public PerspectiveManager perspectiveManager() {
@@ -223,13 +223,13 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
             return;
         }
 
-        if (gameLevel3D == null) {
+        if (level3D == null) {
             Logger.info("Tick #{}: 3D game level not yet created, update ignored", tick);
             return;
         }
 
         final GameLevel level = optGameLevel().get();
-        gameLevel3D.entities().all().forEach(e -> e.update(level));
+        level3D.entities().all().forEach(e -> e.update(level));
         updateHUD3D(level);
         perspectiveManager.updatePerspective(level);
         soundEffects.setEnabled(!level.isDemoLevel());
@@ -270,42 +270,42 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
         if (event.newState() instanceof TestState) {
             optGameLevel().ifPresent(level -> {
                 replaceGameLevel3D(level);
-                gameLevel3D.messageManager().showLevelTestMessage(level);
+                level3D.messageManager().showLevelTestMessage(level);
                 GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
             });
             return;
         }
-        gameLevel3D.handleGameStateChange(ui, event);
+        level3D.handleGameStateChange(ui, event);
     }
 
     @Override
     public void onBonusActivated(BonusActivatedEvent event) {
-        gameLevel3D.onBonusActivated(ui, event);
+        level3D.onBonusActivated(ui, event);
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent event) {
-        gameLevel3D.onBonusEaten(event);
+        level3D.onBonusEaten(event);
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent event)  {
-        gameLevel3D.onBonusExpired(event);
+        level3D.onBonusExpired(event);
     }
 
     @Override
     public void onGameContinues(GameContinuedEvent event) {
-        gameLevel3D.onGameContinues(event);
+        level3D.onGameContinues(event);
     }
 
     @Override
     public void onGameStarts(GameStartedEvent event) {
-        gameLevel3D.onGameStarts(event);
+        level3D.onGameStarts(event);
     }
 
     @Override
     public void onGhostEaten(GhostEatenEvent event) {
-        gameLevel3D.onGhostEaten(event);
+        level3D.onGhostEaten(event);
     }
 
     @Override
@@ -316,44 +316,44 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     @Override
     public void onLevelStarts(LevelStartedEvent event) {
         final GameLevel level = event.level();
-        if (gameLevel3D == null) {
+        if (level3D == null) {
             Logger.warn("Level starts but no 3D level exists? Creating one...");
             replaceGameLevel3D(level);
         }
         final State<Game> state = level.game().control().state();
         if (state instanceof TestState) {
             replaceGameLevel3D(level);
-            gameLevel3D.energizers3D().forEach(Energizer3D::startPumping);
-            gameLevel3D.messageManager().showLevelTestMessage(level);
+            level3D.entities().all(Energizer3D.class).forEach(Energizer3D::startPumping);
+            level3D.messageManager().showLevelTestMessage(level);
         } else {
             if (!level.isDemoLevel() &&
                     state.nameMatches(STARTING_GAME_OR_LEVEL.name(), LEVEL_TRANSITION.name())) {
-                gameLevel3D.messageManager().showReadyMessage();
+                level3D.messageManager().showReadyMessage();
             }
         }
-        gameLevel3D.entities().all().forEach(e -> e.init(level));
+        level3D.entities().all().forEach(e -> e.init(level));
         replaceActionBindings(level);
         fadeIn();
     }
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        gameLevel3D.onPacEatsFood(e, gameContext().clock().tickCount());
+        level3D.onPacEatsFood(e, gameContext().clock().tickCount());
     }
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        gameLevel3D.onPacGetsPower(e);
+        level3D.onPacGetsPower(e);
     }
 
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
-        gameLevel3D.onPacLostPower(e);
+        level3D.onPacLostPower(e);
     }
 
     @Override
     public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
-        gameLevel3D.onSpecialScoreReached(e);
+        level3D.onSpecialScoreReached(e);
     }
 
     @Override
@@ -437,10 +437,14 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     }
 
     public void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
-        gameLevel3D.pellets3D()   .forEach(p3D -> p3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(p3D.tile())));
-        gameLevel3D.energizers3D().forEach(e3D -> e3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(e3D.tile())));
+        level3D.entities().all(Pellet3D.class)
+            .forEach(p3D -> p3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(p3D.tile())));
+        level3D.entities().all(Energizer3D.class)
+            .forEach(e3D -> e3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(e3D.tile())));
         if (startEnergizerPumping) {
-            gameLevel3D.energizers3D().filter(e3D -> e3D.shape().isVisible()).forEach(Energizer3D::startPumping);
+            level3D.entities().all(Energizer3D.class)
+                .filter(e3D -> e3D.shape().isVisible())
+                .forEach(Energizer3D::startPumping);
         }
     }
 
@@ -467,20 +471,20 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     }
 
     public void replaceGameLevel3D(GameLevel level) {
-        if (gameLevel3D != null) {
+        if (level3D != null) {
             Logger.info("Replacing game level 3D...");
-            gameLevel3D.dispose();
+            level3D.dispose();
         }
-        gameLevel3D = createGameLevel3D(level, ui.currentConfig());
-        gameLevel3DParent.getChildren().setAll(gameLevel3D);
+        level3D = createGameLevel3D(level, ui.currentConfig());
+        gameLevel3DParent.getChildren().setAll(level3D);
         Logger.info("Created and added new game level 3D to play scene");
     }
 
     private void removeAndDisposeGameLevel3D() {
-        if (gameLevel3D != null) {
+        if (level3D != null) {
             gameLevel3DParent.getChildren().clear();
-            gameLevel3D.dispose();
-            gameLevel3D = null;
+            level3D.dispose();
+            level3D = null;
         }
     }
 
