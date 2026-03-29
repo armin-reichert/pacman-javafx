@@ -170,7 +170,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 () -> Logger.error("Lives counter cannot track Pac-Man: 3D Pac-Man not existing")));
     }
 
-    // Accessors
+    // Public accessors
 
     public UIConfig uiConfig() {
         return uiConfig;
@@ -180,7 +180,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return entities;
     }
 
-    public AnimationRegistry animationRegistry() {
+    public AnimationRegistry animations() {
         return animations;
     }
 
@@ -192,12 +192,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return messageManager;
     }
 
-    public Optional<GhostAppearance3D> ghostAppearance3D(byte personality) {
+    // Private area, no trespassing
+
+    private Optional<GhostAppearance3D> ghostAppearance3D(byte personality) {
         Validations.requireValidGhostPersonality(personality);
         return entities.where(GhostAppearance3D.class, ga3D -> ga3D.ghost().personality() == personality).findFirst();
     }
-
-    // private
 
     private List<PhongMaterial> dressMaterials(List<GhostAppearance3D> ghostsAppearances) {
         return ghostsAppearances.stream()
@@ -606,7 +606,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Maze3D maze3D = entities().theOne(Maze3D.class);
 
         uiConfig.soundEffects().ifPresent(GameSoundEffects::stopAll);
-        animationRegistry().stopAllAnimations();
+        animations().stopAllAnimations();
         cleanupFoodAndParticles(maze3D);
         maze3D.house().hideDoors();
         entities.first(Bonus3D.class).ifPresent(Bonus3D::expire);
