@@ -30,11 +30,12 @@ public class LevelMediumTestState extends AbstractState<Game> implements TestSta
 
     @Override
     public void onEnter(Game game) {
-        final GameLevel level = game.optGameLevel().orElseThrow();
         lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();
         timer.restartSeconds(TEST_DURATION_SEC);
         game.prepareNewGame();
         game.buildNormalLevel(1);
+
+        final GameLevel level = game.optGameLevel().orElseThrow();
         game.startLevel(level);
         configureLevelForTest(game);
     }

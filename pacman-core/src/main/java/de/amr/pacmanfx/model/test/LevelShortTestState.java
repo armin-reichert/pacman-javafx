@@ -20,12 +20,13 @@ public class LevelShortTestState extends AbstractState<Game> implements TestStat
 
     @Override
     public void onEnter(Game game) {
-        final GameLevel level = game.optGameLevel().orElseThrow();
         coinMechanism.setNumCoins(1);
         lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();
         timer.restartIndefinitely();
         game.prepareNewGame();
         game.buildNormalLevel(1);
+
+        final GameLevel level = game.optGameLevel().orElseThrow();
         game.startLevel(level);
         level.showPacAndGhosts();
     }
