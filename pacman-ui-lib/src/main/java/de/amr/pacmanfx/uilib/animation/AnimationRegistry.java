@@ -28,6 +28,27 @@ public class AnimationRegistry {
         Logger.info("Animation '{}' registered, key='{}'", animation.label(), key);
     }
 
+    @SuppressWarnings("unchecked")
+    public <T extends ManagedAnimation> T animation(String key, Class<T> type) {
+        requireNonNull(key);
+        requireNonNull(type);
+        final ManagedAnimation managedAnimation = animationMap.get(key);
+        if (managedAnimation == null) {
+            Logger.error("No animation with key '{}' exists");
+            throw new NoSuchElementException();
+        }
+        if (type.isInstance(managedAnimation)) {
+            return (T) managedAnimation;
+        }
+        Logger.error("Animation with key '{}' has wrong type: {}, expected: {}",
+            key, managedAnimation.getClass().getSimpleName(), type.getSimpleName());
+        throw new NoSuchElementException();
+    }
+
+    public ManagedAnimation animation(String key) {
+        return animationMap.get(key);
+    }
+
     public void clear() {
         stopAllAnimations();
         animationMap.values().forEach(ManagedAnimation::dispose);
