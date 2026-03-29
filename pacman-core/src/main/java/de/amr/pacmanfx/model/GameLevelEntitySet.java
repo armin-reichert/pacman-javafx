@@ -65,7 +65,7 @@ public class GameLevelEntitySet implements GameLevelEntity, Disposable {
      *         a {@link java.util.NoSuchElementException} exception is thrown.
      * @param <T> type of entity
      */
-    public <T> T first$$$(Class<T> type) {
+    public <T> T first$(Class<T> type) {
         return first(type).orElseThrow();
     }
 
