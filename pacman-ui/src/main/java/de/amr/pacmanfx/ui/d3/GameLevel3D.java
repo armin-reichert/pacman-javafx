@@ -215,21 +215,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * in front of walls/house.
      */
     private void addChildrenToGroup() {
-        entities().first(Maze3D.class).ifPresent(maze3D -> addChildren(maze3D.floor(), maze3D.particlesGroup()));
-
+        final Maze3D maze3D = entities().first$$$(Maze3D.class);
+        final Pac3D pac3D = entities.first$$$(Pac3D.class);
+        addChildren(maze3D.floor(), maze3D.particlesGroup());
         addChild(entities.first$$$(LevelCounter3D.class));
         addChild(entities.first$$$(LivesCounter3D.class));
-
-        final Pac3D pac3D = entities.first$$$(Pac3D.class);
         addChild(pac3D);
         pac3D.light().ifPresent(this::addChild);
-
         entities.all(GhostAppearance3D.class).sorted(BY_GHOST_PERSONALITY).forEach(this::addChild);
-
         entities.all(Energizer3D.class).map(Energizer3D::shape).forEach(this::addChild);
         entities.all(Pellet3D.class).map(Pellet3D::shape).forEach(this::addChild);
-
-        entities().first(Maze3D.class).ifPresent(maze3D -> addChildren(maze3D, maze3D.house().root(), maze3D.house().doors()));
+        addChildren(maze3D, maze3D.house().root(), maze3D.house().doors());
     }
 
     private void addChild(Node child) {
