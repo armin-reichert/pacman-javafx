@@ -1,12 +1,10 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-
 package de.amr.pacmanfx.uilib.objimport;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableFloatArray;
-import javafx.scene.shape.ObservableFaceArray;
 import javafx.scene.shape.TriangleMesh;
 import org.tinylog.Logger;
 
@@ -46,36 +44,6 @@ public class ObjFileImporter {
 
     private static List<Integer> restOf(ArrayList<Integer> list, int start) {
         return list.subList(start, list.size());
-    }
-
-    public static void validateTriangleMesh(TriangleMesh mesh) {
-        int numPoints = mesh.getPoints().size() / mesh.getPointElementSize();
-        int numTexCoords = mesh.getTexCoords().size() / mesh.getTexCoordElementSize();
-        int numFaces = mesh.getFaces().size() / mesh.getFaceElementSize();
-        if (numPoints == 0 || numPoints * mesh.getPointElementSize() != mesh.getPoints().size()) {
-            throw new AssertionError("Points array size is not correct: " + mesh.getPoints().size());
-        }
-        if (numTexCoords == 0 || numTexCoords * mesh.getTexCoordElementSize() != mesh.getTexCoords().size()) {
-            throw new AssertionError("Tex-Coords array size is not correct: " + mesh.getPoints().size());
-        }
-        if (numFaces == 0 || numFaces * mesh.getFaceElementSize() != mesh.getFaces().size()) {
-            throw new AssertionError("Faces array size is not correct: " + mesh.getPoints().size());
-        }
-        if (numFaces != mesh.getFaceSmoothingGroups().size() && mesh.getFaceSmoothingGroups().size() > 0) {
-            throw new AssertionError(
-                "FaceSmoothingGroups array size is not correct: " + mesh.getPoints().size() + ", numFaces = " + numFaces);
-        }
-        ObservableFaceArray faces = mesh.getFaces();
-        for (int i = 0; i < faces.size(); i += 2) {
-            int pointIndex = faces.get(i);
-            if (pointIndex < 0 || pointIndex > numPoints) {
-                throw new AssertionError("Incorrect point index: " + pointIndex + ", numPoints = " + numPoints);
-            }
-            int texCoordIndex = faces.get(i + 1);
-            if (texCoordIndex < 0 || texCoordIndex > numTexCoords) {
-                throw new AssertionError("Incorrect texture coordinate index: " + texCoordIndex + ", numTexCoords = " + numTexCoords);
-            }
-        }
     }
 
     public static Model3D importObjFile(URL url, Charset charset) throws IOException {
