@@ -35,11 +35,21 @@ public class ObjFileImporter {
     }
 
     private static int[] toIntArray(List<Integer> list) {
-        return list.stream().mapToInt(Integer::intValue).toArray();
+        final int[] arr = new int[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            arr[i] = list.get(i);
+        }
+        return arr;
+        // Perhaps more elegant, but not as performant:
+        // return list.stream().mapToInt(Integer::intValue).toArray();
     }
 
-    private static float[] toFloatArray(ObservableFloatArray observableFloatArray) {
-        return observableFloatArray.toArray(new float[observableFloatArray.size()]);
+    private static float[] toFloatArray(ObservableFloatArray ofa) {
+        final float[] arr = new float[ofa.size()];
+        ofa.copyTo(0, arr, 0, ofa.size());
+        return arr;
+        // Perhaps more elegant, but not as performant:
+        // return ofa.toArray(new float[ofa.size()]);
     }
 
     private static List<Integer> restOf(ArrayList<Integer> list, int start) {
