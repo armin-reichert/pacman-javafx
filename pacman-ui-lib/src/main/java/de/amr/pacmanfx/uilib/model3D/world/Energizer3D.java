@@ -27,6 +27,14 @@ import static java.util.Objects.requireNonNull;
 
 public class Energizer3D implements GameLevelEntity, DisposableGraphicsObject {
 
+    public enum AnimationID {
+        ENERGIZER_PUMPING;
+
+        public String atTile(Vector2i tile) {
+            return "%s_%d_%d".formatted(name(), tile.x(), tile.y());
+        }
+    }
+
     private static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial(Color.WHITE);
 
     private static Shape3D createDefaultShape() {
@@ -35,7 +43,7 @@ public class Energizer3D implements GameLevelEntity, DisposableGraphicsObject {
         return shape;
     }
 
-    private static ManagedAnimation createPumpingAnimation(
+    private ManagedAnimation createPumpingAnimation(
         String label,
         Shape3D shape3D,
         int pumpingFrequency,
@@ -60,7 +68,7 @@ public class Energizer3D implements GameLevelEntity, DisposableGraphicsObject {
         return animation;
     }
 
-    private final AnimationRegistry animationRegistry;
+    private final AnimationRegistry animations;
     private Vector2i tile;
     private Point3D center;
 
@@ -70,10 +78,9 @@ public class Energizer3D implements GameLevelEntity, DisposableGraphicsObject {
 
     private Supplier<Shape3D> shapeFactory;
     private Shape3D shape;
-    private ManagedAnimation pumpingAnimation;
 
-    public Energizer3D(AnimationRegistry animationRegistry) {
-        this.animationRegistry = requireNonNull(animationRegistry);
+    public Energizer3D(AnimationRegistry animations) {
+        this.animations = requireNonNull(animations);
         this.shapeFactory = Energizer3D::createDefaultShape;
         setLocation(Vector2i.ZERO, HTS);
     }
@@ -96,22 +103,17 @@ public class Energizer3D implements GameLevelEntity, DisposableGraphicsObject {
     public void dispose() {
         cleanupShape3D(shape);
         shape = null;
-        if (pumpingAnimation != null) {
-            pumpingAnimation.dispose();
-            pumpingAnimation = null;
-        }
+        animations.optAnimation(AnimationID.ENERGIZER_PUMPING.atTile(tile)).ifPresent(ManagedAnimation::dispose);
     }
 
     public Shape3D shape() {
         if (shape == null) {
             shape = shapeFactory.get();
             updateShapeLocation();
-            if (pumpingAnimation != null) {
-                pumpingAnimation.dispose();
-            }
-            pumpingAnimation = createPumpingAnimation("Energizer_Pumping_%s".formatted(tile),
-                shape, pumpingFrequency, inflatedSize, expandedSize);
-            animationRegistry.register("Energizer_Pumping_%s".formatted(tile), pumpingAnimation);
+            final String animationID = AnimationID.ENERGIZER_PUMPING.atTile(tile);
+            animations.optAnimation(animationID).ifPresent(ManagedAnimation::dispose);
+            final var pumping = createPumpingAnimation("Energizer Pumping, Tile %s".formatted(tile), shape, pumpingFrequency, inflatedSize, expandedSize);
+            animations.register(animationID, pumping);
         }
         return shape;
     }
@@ -151,14 +153,10 @@ public class Energizer3D implements GameLevelEntity, DisposableGraphicsObject {
     }
 
     public void startPumping() {
-        if (pumpingAnimation != null) {
-            pumpingAnimation.playOrContinue();
-        }
+        animations.optAnimation(AnimationID.ENERGIZER_PUMPING.atTile(tile)).ifPresent(ManagedAnimation::playOrContinue);
     }
 
     public void stopPumping() {
-        if (pumpingAnimation != null) {
-            pumpingAnimation.stop();
-        }
+        animations.optAnimation(AnimationID.ENERGIZER_PUMPING.atTile(tile)).ifPresent(ManagedAnimation::stop);
     }
 }
