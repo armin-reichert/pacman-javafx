@@ -112,7 +112,7 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
         if (ghost().moveInfo().tunnelEntered) {
             brakeAnimation.playFromStart();
         }
-        ghost3D.shakeDress(ghost3D.isVisible());
+        ghost3D.animateDress(ghost3D.isVisible());
     }
 
     public void showAsNumber(Shape3D numberShape3D) {
@@ -179,7 +179,7 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
             case FLASHING   -> ghost3D.setFlashingLook(numFlashes);
         }
         ghost3D.setVisible(true);
-        ghost3D.dressAnimation().playOrContinue();
+        ghost3D.animateDress(true);
 
         Logger.debug("Ghost appearance for {} is now {}", ghost3D.ghost().name(), ghostAppearance);
     }

@@ -103,12 +103,11 @@ public class Bonus3D extends Box implements GameLevelEntity, DisposableGraphicsO
         pointsImageView.setFitWidth(pointsWidth);
         pointsTexture = new PhongMaterial(Color.GHOSTWHITE, pointsImageView.getImage(), null, null, null);
 
-        final var edibleAnimation = new EdibleAnimation();
-        animations.register(AnimationID.EDIBLE, edibleAnimation);
+        animations.register(AnimationID.EDIBLE, new EdibleAnimation());
 
         final var eatenAnimation = new ManagedAnimation("Bonus (Eaten, Points)");
         eatenAnimation.setFactory(() -> {
-            var animation = new RotateTransition(Duration.seconds(1), Bonus3D.this);
+            final var animation = new RotateTransition(Duration.seconds(1), Bonus3D.this);
             animation.setAxis(Rotate.X_AXIS);
             animation.setByAngle(360);
             animation.setInterpolator(Interpolator.LINEAR);

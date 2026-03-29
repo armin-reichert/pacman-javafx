@@ -50,7 +50,11 @@ public class AnimationRegistry {
     }
 
     public Optional<ManagedAnimation> optAnimation(Object key) {
-        return Optional.ofNullable(animationMap.get(key));
+        return Optional.ofNullable(animation(key));
+    }
+
+    public <T extends ManagedAnimation> Optional<T> optAnimation(Object key, Class<T> type) {
+        return Optional.ofNullable(animation(key, type));
     }
 
     public void dispose() {

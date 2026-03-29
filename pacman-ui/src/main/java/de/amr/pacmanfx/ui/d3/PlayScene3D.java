@@ -269,7 +269,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
             });
             return;
         }
-        level3D.handleGameStateChange(ui, event);
+        if (level3D != null) level3D.handleGameStateChange(ui, event);
     }
 
     @Override

@@ -27,10 +27,19 @@ import static java.util.Objects.requireNonNull;
  */
 public class Ghost3D extends Group implements DisposableGraphicsObject {
 
+    public enum AnimationID {
+        DRESS, FLASHING;
+
+        public String forGhost(Ghost ghost) {
+            requireNonNull(ghost);
+            return "%s_%d".formatted(name(), ghost.personality());
+        }
+    }
+
     public class DressAnimation extends ManagedAnimation {
 
         public DressAnimation() {
-            super("Ghost_DressAnimation_%s".formatted(ghost.name()));
+            super("Ghost Dress Animation (%s)".formatted(ghost.name()));
             setFactory(() -> {
                 final var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
                 // TODO: I expected this should be the z-axis but...
@@ -49,7 +58,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         private int numFlashes = 5;
 
         public FlashingAnimation() {
-            super("Ghost_Flashing_%s".formatted(ghost.name()));
+            super("Ghost Flashing (%s)".formatted(ghost.name()));
             setFactory(this::createAnimationFX);
         }
 
@@ -89,31 +98,29 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
 
     private final Ghost ghost;
     private final GhostColorSet colorSet;
-    private GhostMaterials materials;
+    private final AnimationRegistry animations;
 
+    private GhostMaterials materials;
     private MeshView dressShape;
     private MeshView pupilsShape;
     private MeshView eyeballsShape;
     private Group dressGroup;
 
-    private DressAnimation dressAnimation;
-    private FlashingAnimation flashingAnimation;
-
     public Ghost3D(
-        AnimationRegistry animationRegistry,
+        AnimationRegistry animations,
         Ghost ghost,
         GhostColorSet colorSet,
         GhostMeshes meshes,
         GhostMaterials materials,
         double size)
     {
-        requireNonNull(animationRegistry);
-        this.ghost         = requireNonNull(ghost);
-        this.colorSet      = requireNonNull(colorSet);
-        this.dressShape    = new MeshView(requireNonNull(meshes.dress()));
-        this.pupilsShape   = new MeshView(requireNonNull(meshes.pupils()));
-        this.eyeballsShape = new MeshView(requireNonNull(meshes.eyeballs()));
-        this.materials     = requireNonNull(materials);
+        this.animations = requireNonNull(animations);
+        this.ghost             = requireNonNull(ghost);
+        this.colorSet          = requireNonNull(colorSet);
+        this.dressShape        = new MeshView(requireNonNull(meshes.dress()));
+        this.pupilsShape       = new MeshView(requireNonNull(meshes.pupils()));
+        this.eyeballsShape     = new MeshView(requireNonNull(meshes.eyeballs()));
+        this.materials         = requireNonNull(materials);
         requireNonNegative(size);
 
         dressGroup = new Group(dressShape);
@@ -145,33 +152,20 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
                 size / bounds.getDepth())
         );
 
-        dressAnimation = new DressAnimation();
-        animationRegistry.register("Ghost_DressAnimation_%s".formatted(ghost.name()), dressAnimation);
-
-        flashingAnimation = new FlashingAnimation();
-        animationRegistry.register("Ghost_Flashing_%s".formatted(ghost.name()), flashingAnimation);
+        animations.register(AnimationID.DRESS.forGhost(ghost),    new DressAnimation());
+        animations.register(AnimationID.FLASHING.forGhost(ghost), new FlashingAnimation());
     }
 
     @Override
     public void dispose() {
-        materials = null;
-
+        animations.optAnimation(AnimationID.DRESS.forGhost(ghost)).ifPresent(ManagedAnimation::dispose);
+        animations.optAnimation(AnimationID.FLASHING.forGhost(ghost)).ifPresent(ManagedAnimation::dispose);
         cleanupGroup(this, true);
-
+        materials = null;
         dressShape = null;
         pupilsShape = null;
         eyeballsShape = null;
         dressGroup = null;
-
-        if (dressAnimation != null) {
-            dressAnimation.dispose();
-            dressAnimation = null;
-
-        }
-        if (flashingAnimation != null) {
-            flashingAnimation.dispose();
-            flashingAnimation = null;
-        }
     }
 
     public Ghost ghost() {
@@ -184,14 +178,6 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
 
     public GhostMaterials materials() {
         return materials;
-    }
-
-    public ManagedAnimation dressAnimation() {
-        return dressAnimation;
-    }
-
-    public FlashingAnimation flashingAnimation() {
-        return flashingAnimation;
     }
 
     public void turnTowards(Direction dir) {
@@ -213,14 +199,15 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         setMaterials(materials.flashing());
         dressShape.setVisible(true);
 
-
-        // TODO: this is crap
-        if (flashingAnimation.numFlashes != numFlashes) {
-            flashingAnimation.stop();
-            flashingAnimation.setNumFlashes(numFlashes);
-            flashingAnimation.setTotalDuration(Duration.millis(1990));
-        }
-        flashingAnimation.playOrContinue();
+        animations.optAnimation(AnimationID.FLASHING.forGhost(ghost), FlashingAnimation.class).ifPresent(flashing -> {
+            // TODO: this is crap
+            if (flashing.numFlashes != numFlashes) {
+                flashing.stop();
+                flashing.setNumFlashes(numFlashes);
+                flashing.setTotalDuration(Duration.millis(1990));
+            }
+            flashing.playOrContinue();
+        });
     }
 
     private void setMaterials(GhostComponentMaterials materialSet) {
@@ -230,41 +217,38 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
     }
 
     public void setNormalLook() {
-        flashingAnimation.stop();
-        dressAnimation.playOrContinue();
+        animations.animation(AnimationID.FLASHING.forGhost(ghost)).stop();
+        animations.animation(AnimationID.DRESS.forGhost(ghost)).playOrContinue();
         dressShape.setVisible(true);
         setMaterials(materials.normal());
     }
 
     public void setFrightenedLook() {
-        flashingAnimation.stop();
-        dressAnimation.playOrContinue();
+        animations.animation(AnimationID.FLASHING.forGhost(ghost)).stop();
+        animations.animation(AnimationID.DRESS.forGhost(ghost)).playOrContinue();
         dressShape.setVisible(true);
         setMaterials(materials.frightened());
     }
 
     public void setEyesOnlyLook() {
-        flashingAnimation.stop();
-        dressAnimation.pause();
+        animations.animation(AnimationID.FLASHING.forGhost(ghost)).stop();
+        animations.animation(AnimationID.DRESS.forGhost(ghost)).stop();
         dressShape.setVisible(false);
         setMaterials(materials.normal());
     }
 
     public void stopAnimations() {
-        if (dressAnimation != null) {
-            dressAnimation.stop();
-        }
-        if (flashingAnimation != null) {
-            flashingAnimation.stop();
-        }
+        animations.optAnimation(AnimationID.FLASHING.forGhost(ghost)).ifPresent(ManagedAnimation::stop);
+        animations.optAnimation(AnimationID.DRESS.forGhost(ghost)).ifPresent(ManagedAnimation::stop);
     }
 
-    public void shakeDress(boolean on) {
-        if (dressAnimation == null) return;
-        if (on) {
-            dressAnimation.playOrContinue();
-        } else {
-            dressAnimation.stop();
-        }
+    public void animateDress(boolean on) {
+        animations.optAnimation(AnimationID.DRESS.forGhost(ghost)).ifPresent(dressAnimation -> {
+            if (on) {
+                dressAnimation.playOrContinue();
+            } else {
+                dressAnimation.stop();
+            }
+        });
     }
 }
