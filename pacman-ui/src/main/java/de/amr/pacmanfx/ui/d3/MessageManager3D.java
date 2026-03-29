@@ -88,7 +88,10 @@ public class MessageManager3D implements DisposableGraphicsObject {
     public void showMessage(MessageType messageType, Object... args) {
         switch (messageType) {
             case READY ->  showAnimatedMessage(messageCenters.get(MessageType.READY), READY_MESSAGE_TEXT, READY_MESSAGE_DISPLAY_SECONDS);
-            case TEST -> showAnimatedMessage(messageCenters.get(MessageType.TEST), TEST_MESSAGE_TEXT.formatted((int)args[0]), 5);
+            case TEST -> {
+                final int levelNumber = (args.length == 0 || args[0] == null) ?  0 : Integer.parseInt(args[0].toString());
+                showAnimatedMessage(messageCenters.get(MessageType.TEST), TEST_MESSAGE_TEXT.formatted(levelNumber), 5);
+            }
         }
     }
 
