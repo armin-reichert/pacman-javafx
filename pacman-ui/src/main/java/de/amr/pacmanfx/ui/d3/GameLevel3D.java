@@ -420,11 +420,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         particlesAnimation = new EnergizerParticlesAnimation(
             EnergizerParticlesAnimation.DEFAULT_CONFIG,
-            animationRegistry,
             swirlBaseCenters,
             ghostMaterials,
             maze3D.floor(),
             maze3D.particlesGroup());
+
+        animationRegistry.register("ParticlesAnimation", particlesAnimation);
     }
 
     // Event handling
@@ -641,10 +642,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createAnimations(Maze3D maze3D, WorldMapColorScheme colorScheme) {
         final List<GhostAppearance3D> ghostAppearances3D = entities.all(GhostAppearance3D.class).sorted(BY_GHOST_PERSONALITY).toList();
-        wallColorFlashingAnimation = new WallColorFlashingAnimation(animationRegistry, this, colorScheme);
-        levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry, this, soundEffects);
-        levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationRegistry, this);
-        ghostLightAnimation = new GhostLightAnimation(animationRegistry, ghostAppearances3D);
+        wallColorFlashingAnimation = new WallColorFlashingAnimation(this, colorScheme);
+        animationRegistry.register("WallColorFlashing", wallColorFlashingAnimation);
+        levelCompletedFullAnimation = new LevelCompletedAnimation(this, soundEffects);
+        animationRegistry.register("Level_Completed_Full", levelCompletedFullAnimation);
+        levelCompletedShortAnimation = new LevelCompletedAnimationShort(this);
+        animationRegistry.register("Level_Completed_Short", levelCompletedShortAnimation);
+        ghostLightAnimation = new GhostLightAnimation(ghostAppearances3D);
+        animationRegistry.register("GhostLight", ghostLightAnimation);
         addChild(ghostLightAnimation.light());
         createParticlesAnimation(maze3D, dressMaterials(ghostAppearances3D));
     }

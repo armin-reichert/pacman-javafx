@@ -5,9 +5,7 @@ package de.amr.pacmanfx.uilib.animation;
 
 import org.tinylog.Logger;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
@@ -16,35 +14,37 @@ import static java.util.Objects.requireNonNull;
  */
 public class AnimationRegistry {
 
-    private final Set<ManagedAnimation> registered = new HashSet<>();
+    private final Map<Object, ManagedAnimation> animationMap = new HashMap<>();
 
-    public void register(ManagedAnimation animation) {
+    public void register(Object key, ManagedAnimation animation) {
+        requireNonNull(key);
         requireNonNull(animation);
-        if (registered.contains(animation)) {
-            Logger.warn("Animation '{}' is already registered", animation.label());
-        } else {
-            registered.add(animation);
-            Logger.info("Animation '{}' registered", animation.label());
+        final ManagedAnimation managedAnimation = animationMap.get(key);
+        if (managedAnimation != null) {
+            Logger.warn("Animation '{}' is already registered, will be disposed and overwritten", animation.label());
+            managedAnimation.dispose();
         }
+        animationMap.put(key, animation);
+        Logger.info("Animation '{}' registered, key='{}'", animation.label(), key);
     }
 
     public void clear() {
         stopAllAnimations();
-        registered.forEach(ManagedAnimation::dispose);
+        animationMap.values().forEach(ManagedAnimation::dispose);
         garbageCollect();
     }
 
     public void garbageCollect() {
-        var disposedAnimations = registered.stream().filter(ManagedAnimation::disposed).toList();
-        disposedAnimations.forEach(registered::remove);
+        var disposedAnimations = animationMap.values().stream().filter(ManagedAnimation::disposed).toList();
+        disposedAnimations.forEach(animationMap::remove);
         Logger.info("Removed {} disposed animations", disposedAnimations.size());
     }
 
     public void stopAllAnimations() {
-        registered.forEach(ManagedAnimation::stop);
+        animationMap.values().forEach(ManagedAnimation::stop);
     }
 
-    public Set<ManagedAnimation> animations() {
-        return Collections.unmodifiableSet(registered);
+    public Collection<ManagedAnimation> animations() {
+        return Collections.unmodifiableCollection(animationMap.values());
     }
 }

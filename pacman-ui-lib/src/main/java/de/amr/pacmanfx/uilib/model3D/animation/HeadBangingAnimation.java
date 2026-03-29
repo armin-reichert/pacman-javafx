@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -25,8 +24,8 @@ public class HeadBangingAnimation extends ManagedAnimation {
 
     private final Node node;
 
-    public HeadBangingAnimation(AnimationRegistry animationRegistry, Node node) {
-        super(animationRegistry, "Pac_Man_Head_Banging");
+    public HeadBangingAnimation( Node node) {
+        super("Pac_Man_Head_Banging");
         this.node = requireNonNull(node);
         setFactory(this::createAnimationFX);
     }

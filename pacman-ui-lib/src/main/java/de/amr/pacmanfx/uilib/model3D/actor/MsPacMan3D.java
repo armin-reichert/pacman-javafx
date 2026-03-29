@@ -29,7 +29,7 @@ public class MsPacMan3D extends Pac3D {
         final Group femaleParts = Models3D.PAC_MAN_MODEL.createFemaleBodyParts(pacConfig);
         getChildren().add(femaleParts);
 
-        dyingAnimation = new ManagedAnimation(animationRegistry, "Ms_PacMan_Dying");
+        dyingAnimation = new ManagedAnimation("Ms_PacMan_Dying");
         dyingAnimation.setFactory(() -> {
             var spinning = new RotateTransition(Duration.seconds(0.25), MsPacMan3D.this);
             spinning.setAxis(Rotate.Z_AXIS);
@@ -39,8 +39,11 @@ public class MsPacMan3D extends Pac3D {
             spinning.setCycleCount(4);
             return spinning;
         });
+        animationRegistry.register("Ms_PacMan_Dying", dyingAnimation);
 
-        movementAnimation = new HipSwayingAnimation(animationRegistry, this);
+        movementAnimation = new HipSwayingAnimation(this);
+        animationRegistry.register("Ms_PacMan_Movement", movementAnimation);
+
         setMovementPowerMode(false);
     }
 

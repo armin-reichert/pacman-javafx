@@ -13,14 +13,13 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A lazily created JavaFX animation that is registered in an {@link AnimationRegistry}.
+ * A lazily created JavaFX animation that can be registered in an {@link AnimationRegistry}.
  * <p>
  * A {@code ManagedAnimation} encapsulates:
  * <ul>
- *   <li>a unique label identifying the animation</li>
+ *   <li>a descriptive label for the animation</li>
  *   <li>a factory that creates the underlying JavaFX {@link Animation}</li>
  *   <li>lifecycle management (play, pause, stop, dispose)</li>
- *   <li>automatic registration in the associated {@link AnimationRegistry}</li>
  * </ul>
  * <p>
  * The embedded JavaFX animation is created on demand via {@link #animationFX()}.
@@ -43,27 +42,21 @@ public class ManagedAnimation implements Disposable {
      * Creates a registered animation without an initial factory.
      * A factory must be provided later via {@link #setFactory(Supplier)}.
      *
-     * @param registry the animation registry
      * @param label    unique label for this animation
      */
-    public ManagedAnimation(AnimationRegistry registry, String label) {
-        requireNonNull(registry);
+    public ManagedAnimation(String label) {
         this.label = requireNonNull(label);
-        registry.register(this);
     }
 
     /**
      * Creates a registered animation with a factory for lazy instantiation.
      *
-     * @param registry the animation registry
      * @param label    unique label for this animation
      * @param factory  factory that creates the JavaFX animation
      */
-    public ManagedAnimation(AnimationRegistry registry, String label, Supplier<Animation> factory) {
-        requireNonNull(registry);
+    public ManagedAnimation(String label, Supplier<Animation> factory) {
         this.label = requireNonNull(label);
         this.factory = requireNonNull(factory);
-        registry.register(this);
     }
 
     /**

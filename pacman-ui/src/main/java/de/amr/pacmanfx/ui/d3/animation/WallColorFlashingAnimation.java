@@ -34,8 +34,8 @@ public class WallColorFlashingAnimation extends ManagedAnimation {
     private final Color fromColor;
     private final Color toColor;
 
-    public WallColorFlashingAnimation(AnimationRegistry animationRegistry, GameLevel3D level3D, WorldMapColorScheme colorScheme) {
-        super(animationRegistry, "WallColorFlashing");
+    public WallColorFlashingAnimation(GameLevel3D level3D, WorldMapColorScheme colorScheme) {
+        super("WallColorFlashing");
         this.level3D = requireNonNull(level3D);
         this.colorScheme = requireNonNull(colorScheme);
         this.fromColor = Color.valueOf(colorScheme.wallFill());

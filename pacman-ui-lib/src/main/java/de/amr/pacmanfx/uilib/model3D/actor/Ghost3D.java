@@ -29,8 +29,8 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
 
     public class DressAnimation extends ManagedAnimation {
 
-        public DressAnimation(AnimationRegistry animationRegistry) {
-            super(animationRegistry, "Ghost_DressAnimation_%s".formatted(ghost.name()));
+        public DressAnimation() {
+            super("Ghost_DressAnimation_%s".formatted(ghost.name()));
             setFactory(() -> {
                 final var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
                 // TODO: I expected this should be the z-axis but...
@@ -48,8 +48,8 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         private Duration totalDuration = Duration.seconds(3);
         private int numFlashes = 5;
 
-        public FlashingAnimation(AnimationRegistry animationRegistry) {
-            super(animationRegistry, "Ghost_Flashing_%s".formatted(ghost.name()));
+        public FlashingAnimation() {
+            super("Ghost_Flashing_%s".formatted(ghost.name()));
             setFactory(this::createAnimationFX);
         }
 
@@ -145,8 +145,11 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
                 size / bounds.getDepth())
         );
 
-        dressAnimation = new DressAnimation(animationRegistry);
-        flashingAnimation = new FlashingAnimation(animationRegistry);
+        dressAnimation = new DressAnimation();
+        animationRegistry.register("Ghost_DressAnimation_%s".formatted(ghost.name()), dressAnimation);
+
+        flashingAnimation = new FlashingAnimation();
+        animationRegistry.register("Ghost_Flashing_%s".formatted(ghost.name()), flashingAnimation);
     }
 
     @Override

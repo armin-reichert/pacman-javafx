@@ -60,8 +60,8 @@ public class LevelCompletedAnimation extends ManagedAnimation {
     private final GameLevel3D level3D;
     private final GameSoundEffects soundEffects;
 
-    public LevelCompletedAnimation(AnimationRegistry animationRegistry, GameLevel3D level3D, GameSoundEffects soundEffects) {
-        super(animationRegistry, "Level_Completed");
+    public LevelCompletedAnimation(GameLevel3D level3D, GameSoundEffects soundEffects) {
+        super("Level_Completed");
         this.level3D = requireNonNull(level3D);
         this.soundEffects = requireNonNull(soundEffects);
         setFactory(this::createAnimationFX);

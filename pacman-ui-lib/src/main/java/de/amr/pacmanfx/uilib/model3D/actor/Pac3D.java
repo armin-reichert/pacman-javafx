@@ -49,8 +49,9 @@ public abstract class Pac3D extends Group implements GameLevelEntity, Disposable
 
         getTransforms().add(moveRotation);
 
-        chewingAnimation = new ManagedAnimation(animationRegistry, "PacMan_Chewing");
+        chewingAnimation = new ManagedAnimation("PacMan_Chewing");
         chewingAnimation.setFactory(this::createChewingAnimation);
+        animationRegistry.register("PacMan_Chewing", chewingAnimation);
     }
 
     public void setBody(Group body) {

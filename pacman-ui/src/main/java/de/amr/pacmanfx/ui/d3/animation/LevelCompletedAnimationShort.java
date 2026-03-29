@@ -31,8 +31,8 @@ public class LevelCompletedAnimationShort extends ManagedAnimation {
 
     private final GameLevel3D level3D;
 
-    public LevelCompletedAnimationShort(AnimationRegistry animationRegistry, GameLevel3D level3D) {
-        super(animationRegistry, "Level_Complete_Short_Animation");
+    public LevelCompletedAnimationShort(GameLevel3D level3D) {
+        super("Level_Completed_Short_Animation");
         this.level3D = level3D;
         setFactory(this::createAnimationFX);
     }

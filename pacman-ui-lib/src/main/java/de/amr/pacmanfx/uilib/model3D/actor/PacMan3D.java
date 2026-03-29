@@ -21,7 +21,7 @@ public class PacMan3D extends Pac3D {
         setBody(Models3D.PAC_MAN_MODEL.createPacBody(pacConfig));
         setJaw(Models3D.PAC_MAN_MODEL.createBlindPacBody(pacConfig));
 
-        dyingAnimation = new ManagedAnimation(animationRegistry, "PacMan_Dying");
+        dyingAnimation = new ManagedAnimation("PacMan_Dying");
         dyingAnimation.setFactory(() -> {
             Duration duration = Duration.seconds(1.5);
             byte numSpins = 5;
@@ -54,8 +54,11 @@ public class PacMan3D extends Pac3D {
                 })
             );
         });
+        animationRegistry.register("PacMan_Dying", dyingAnimation);
 
-        movementAnimation = new HeadBangingAnimation(animationRegistry, PacMan3D.this);
+        movementAnimation = new HeadBangingAnimation(PacMan3D.this);
+        animationRegistry.register("PacMan_Movement", movementAnimation);
+
         setMovementPowerMode(false);
     }
 

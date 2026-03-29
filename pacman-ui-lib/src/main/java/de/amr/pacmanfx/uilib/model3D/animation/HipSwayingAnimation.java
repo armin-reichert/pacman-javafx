@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -24,8 +23,8 @@ public class HipSwayingAnimation extends ManagedAnimation {
 
     private final Node node;
 
-    public HipSwayingAnimation(AnimationRegistry animationRegistry, Node node) {
-        super(animationRegistry, "MsPacMan_HipSwaying");
+    public HipSwayingAnimation( Node node) {
+        super("MsPacMan_HipSwaying");
         this.node = requireNonNull(node);
         setFactory(this::createWrappedAnimation);
     }

@@ -62,7 +62,7 @@ public class LevelCounter3D extends Group implements GameLevelEntity, Disposable
             spinningAnimation.stop();
             spinningAnimation.dispose();
         }
-        spinningAnimation = new ManagedAnimation(animationRegistry, "LevelCounter_Spinning");
+        spinningAnimation = new ManagedAnimation("LevelCounter_Spinning");
         spinningAnimation.setFactory(() -> {
             final var cubesAnimation = new ParallelTransition();
             for (int i = 0; i < getChildren().size(); ++i) {
@@ -76,11 +76,8 @@ public class LevelCounter3D extends Group implements GameLevelEntity, Disposable
             }
             return cubesAnimation;
         });
+        animationRegistry.register("LevelCounter_Spinning", spinningAnimation);
         spinningAnimation.playFromStart();
-    }
-
-    @Override
-    public void update(GameLevel level) {
     }
 
     @Override

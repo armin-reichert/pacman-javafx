@@ -66,8 +66,11 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
 
         ghost3D = new Ghost3D(animationRegistry, ghost, colorSet, meshes, materials, size);
 
-        brakeAnimation = new Ghost3DBrakeAnimation(animationRegistry, this);
-        numberAnimation = new Ghost3DPointsAnimation(animationRegistry, this);
+        brakeAnimation = new Ghost3DBrakeAnimation(this);
+        animationRegistry.register("Ghost_Braking_%d".formatted(ghost().personality()), brakeAnimation);
+
+        numberAnimation = new Ghost3DPointsAnimation(this);
+        animationRegistry.register("Ghost_Points_%d".formatted(ghost().personality()), numberAnimation);
 
         getChildren().add(ghost3D);
         updateTransform(ghost);

@@ -36,14 +36,13 @@ public class Energizer3D implements GameLevelEntity, DisposableGraphicsObject {
     }
 
     private static ManagedAnimation createPumpingAnimation(
-        AnimationRegistry animationRegistry,
         String label,
         Shape3D shape3D,
         int pumpingFrequency,
         double inflatedSize,
         double expandedSize)
     {
-        final var animation = new ManagedAnimation(animationRegistry, label);
+        final var animation = new ManagedAnimation(label);
         animation.setFactory(() -> {
             final Duration duration = Duration.seconds(1).divide(2 * pumpingFrequency);
             final var pumping = new ScaleTransition(duration, shape3D);
@@ -110,8 +109,9 @@ public class Energizer3D implements GameLevelEntity, DisposableGraphicsObject {
             if (pumpingAnimation != null) {
                 pumpingAnimation.dispose();
             }
-            pumpingAnimation = createPumpingAnimation(animationRegistry, "Energizer_Pumping_%s".formatted(tile),
+            pumpingAnimation = createPumpingAnimation("Energizer_Pumping_%s".formatted(tile),
                 shape, pumpingFrequency, inflatedSize, expandedSize);
+            animationRegistry.register("Energizer_Pumping_%s".formatted(tile), pumpingAnimation);
         }
         return shape;
     }

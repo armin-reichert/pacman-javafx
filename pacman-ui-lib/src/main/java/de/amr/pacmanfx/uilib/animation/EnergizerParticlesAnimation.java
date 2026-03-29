@@ -93,13 +93,12 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
     public EnergizerParticlesAnimation(
         Config config,
-        AnimationRegistry animationRegistry,
         List<Vector2f> swirlBaseCentersXY,
         List<PhongMaterial> ghostDressMaterials,
         Box floor3D,
         Group particleShapesGroup)
     {
-        super(animationRegistry, "Energizers_ParticlesAnimation");
+        super("Energizers_ParticlesAnimation");
 
         this.config = requireNonNull(config);
         requireNonNull(swirlBaseCentersXY);

@@ -94,8 +94,8 @@ public class MessageView extends ImageView implements Disposable {
 
     private class MoveInOutAnimation extends ManagedAnimation {
 
-        public MoveInOutAnimation(AnimationRegistry animationRegistry) {
-            super(animationRegistry, "Message_Movement");
+        public MoveInOutAnimation() {
+            super("Message_Movement");
             setFactory(this::createAnimationFX);
         }
 
@@ -136,7 +136,8 @@ public class MessageView extends ImageView implements Disposable {
         setRotationAxis(Rotate.X_AXIS);
         setRotate(90);
         displaySeconds = builder.displaySeconds;
-        moveInOutAnimation = new MoveInOutAnimation(animationRegistry);
+        moveInOutAnimation = new MoveInOutAnimation();
+        animationRegistry.register("Message_Movement", moveInOutAnimation);
     }
 
     @Override

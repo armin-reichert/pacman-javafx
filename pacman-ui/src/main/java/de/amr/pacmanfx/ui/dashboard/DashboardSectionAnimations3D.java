@@ -23,9 +23,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 public class DashboardSectionAnimations3D extends DashboardSection {
 
@@ -119,14 +119,14 @@ public class DashboardSectionAnimations3D extends DashboardSection {
     private void updateTableData() {
         tableRows.clear();
         if (currentAnimationManager.get() != null) {
-            final Set<ManagedAnimation> animations = currentAnimationManager.get().animations();
+            final Collection<ManagedAnimation> animations = currentAnimationManager.get().animations();
             tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.RUNNING));
             tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.PAUSED));
             tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.STOPPED));
         }
     }
 
-    private List<TableRow> animationDataSortedByLabel(Set<ManagedAnimation> animations, Animation.Status status) {
+    private List<TableRow> animationDataSortedByLabel(Collection<ManagedAnimation> animations, Animation.Status status) {
         return animations.stream()
             .filter(animation -> hasStatus(animation, status))
             .sorted(Comparator.comparing(ManagedAnimation::label))
