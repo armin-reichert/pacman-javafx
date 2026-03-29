@@ -185,8 +185,15 @@ public class ObjFileImporter {
                 n2 = data.normalIndex(triplets[i][2]);
                 n3 = data.normalIndex(triplets[i + 1][2]);
             }
-            data.facesList.addAll(List.of(v1, uv1, v2, uv2, v3, uv3));
-            data.faceNormalsList.addAll(List.of(n1, n2, n3));
+            data.facesList.add(v1);
+            data.facesList.add(uv1);
+            data.facesList.add(v2);
+            data.facesList.add(uv2);
+            data.facesList.add(v3);
+            data.facesList.add(uv3);
+            data.faceNormalsList.add(n1);
+            data.faceNormalsList.add(n2);
+            data.faceNormalsList.add(n3);
             data.smoothingGroupList.add(currentSmoothingGroup);
         }
     }
