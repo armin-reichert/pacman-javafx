@@ -91,20 +91,18 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private static final Comparator<GhostAppearance3D> BY_GHOST_PERSONALITY = Comparator.comparingInt(ga3D -> ga3D.ghost().personality());
 
-    public static final String ANIM_WALL_COLOR_FLASHING = "WallColorFlashing";
+    public static final String ANIM_GHOST_LIGHT = "GhostLight";
     public static final String ANIM_LEVEL_COMPLETED_FULL = "Level_Completed_Full";
     public static final String ANIM_LEVEL_COMPLETED_SHORT = "Level_Completed_Short";
-    public static final String ANIM_GHOST_LIGHT = "GhostLight";
     public static final String ANIM_PARTICLES = "Particles";
+    public static final String ANIM_WALL_COLOR_FLASHING = "WallColorFlashing";
 
     private final GameLevel level;
-
+    private final GameLevelEntitySet entities = new GameLevelEntitySet();
+    private final AnimationRegistry animations = new AnimationRegistry();
     private final UIConfig uiConfig;
     private final GameSoundEffects soundEffects;
     private final RandomTextPicker<String> gameOverMessagePicker;
-
-    private final AnimationRegistry animationRegistry = new AnimationRegistry();
-    private final GameLevelEntitySet entities = new GameLevelEntitySet();
 
     private GameLevel3DMessageManager messageManager;
 
@@ -148,7 +146,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     @Override
     public void dispose() {
-        animationRegistry.clear();
+        animations.dispose();
         entities.dispose();
         cleanupGroup(this, true);
         if (messageManager != null) {
@@ -180,7 +178,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     public AnimationRegistry animationRegistry() {
-        return animationRegistry;
+        return animations;
     }
 
     public GameLevel level() {
@@ -239,7 +237,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createPac3D() {
         final PacConfig pacConfig = uiConfig.entityConfig().pacConfig();
-        final var pac3D = uiConfig.factory3D().createPac3D(level.pac(), pacConfig, animationRegistry);
+        final var pac3D = uiConfig.factory3D().createPac3D(level.pac(), pacConfig, animations);
         pac3D.createPowerLight(pacConfig);
         entities.add(pac3D);
     }
@@ -257,7 +255,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final var ghostAppearance3D = uiConfig.factory3D().createGhostAppearance3D(
             ghost,
             ghostConfig,
-            animationRegistry
+            animations
         );
         ghostAppearance3D.setNumFlashes(level.numFlashes());
         final BooleanBinding visibleInsideWorld = Bindings.createBooleanBinding(
@@ -269,7 +267,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createLivesCounter3D() {
-        final var livesCounter3D = new LivesCounter3D(uiConfig, animationRegistry);
+        final var livesCounter3D = new LivesCounter3D(uiConfig, animations);
         livesCounter3D.setTranslateX(2 * TS);
         livesCounter3D.setTranslateY(2 * TS);
         livesCounter3D.pillarColorProperty().set(uiConfig.entityConfig().livesCounter().pillarColor());
@@ -279,7 +277,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createLevelCounter3D() {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final var levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
+        final var levelCounter3D = new LevelCounter3D(animations, uiConfig);
         levelCounter3D.setTranslateX(TS * (terrain.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.setTranslateZ(-uiConfig.entityConfig().levelCounter().elevation());
@@ -287,12 +285,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createMaze3D(WorldMapColorScheme colorScheme) {
-        final var maze3D = uiConfig.factory3D().createMaze3D(level, uiConfig.entityConfig(), colorScheme, animationRegistry);
+        final var maze3D = uiConfig.factory3D().createMaze3D(level, uiConfig.entityConfig(), colorScheme, animations);
         entities.add(maze3D);
     }
 
     private void createMessageManager() {
-        this.messageManager = new GameLevel3DMessageManager(animationRegistry, this);
+        this.messageManager = new GameLevel3DMessageManager(animations, this);
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         terrain.optHouse().ifPresentOrElse(
             house -> messageManager.setReadyMessageCenter(house.centerPositionUnderHouse()),
@@ -339,7 +337,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private Bonus3D createBonus3D(Bonus bonus) {
         final var bonusConfig = uiConfig.entityConfig().bonusConfig();
-        final var bonus3D = new Bonus3D(animationRegistry, bonus,
+        final var bonus3D = new Bonus3D(animations, bonus,
             uiConfig.bonusSymbolImage(bonus.symbol()), bonusConfig.bonusSymbolWidth(),
             uiConfig.bonusValueImage(bonus.symbol()),  bonusConfig.bonusPointsWidth());
         bonus3D.showEdible();
@@ -374,7 +372,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .filter(foodLayer::isEnergizerTile)
             .filter(foodLayer::hasFoodAtTile)
             .map(tile -> {
-                final Energizer3D energizer3D = uiConfig.factory3D().createEnergizer3D(energizerConfig3D, animationRegistry, pelletMaterial);
+                final Energizer3D energizer3D = uiConfig.factory3D().createEnergizer3D(energizerConfig3D, animations, pelletMaterial);
                 energizer3D.setLocation(tile, energizerZ);
                 return energizer3D;
             })
@@ -387,7 +385,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             energizer3D.stopPumping();
             energizer3D.hide();
             final Point3D center = energizer3D.shape().localToScene(Point3D.ZERO);
-            animationRegistry.animation(ANIM_PARTICLES, EnergizerParticlesAnimation.class).triggerEnergizerExplosion(center);
+            animations.animation(ANIM_PARTICLES, EnergizerParticlesAnimation.class).triggerEnergizerExplosion(center);
         }, () -> entities.where(Pellet3D.class, p3D -> tile.equals(p3D.tile()))
             .findFirst()
             .ifPresent(p3D -> removePelletAfterDelay(pelletContainer, p3D)));
@@ -529,7 +527,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         soundEffects.stopSiren();
         if (!game.isLevelCompleted(level)) {
             pac3D.setMovementPowerMode(true);
-            animationRegistry.animation(ANIM_WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).playFromStart();
+            animations.animation(ANIM_WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).playFromStart();
             soundEffects.playPacPowerSound();
         }
     }
@@ -540,7 +538,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void onPacLostPower(PacLostPowerEvent ignoredEvent) {
         final Pac3D pac3D = entities.theOne(Pac3D.class);
         pac3D.setMovementPowerMode(false);
-        animationRegistry.animation(ANIM_WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).stop();
+        animations.animation(ANIM_WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).stop();
         soundEffects.stopPacPowerSound();
     }
 
@@ -558,8 +556,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         entities.first(Pac3D.class).ifPresent(pac3D -> pac3D.init(level));
         entities.all(GhostAppearance3D.class).forEach(ghost3D -> ghost3D.init(level));
         entities.all(Energizer3D.class).forEach(Energizer3D::startPumping);
-        animationRegistry.animation(ANIM_PARTICLES).playFromStart();
-        animationRegistry.animation(ANIM_GHOST_LIGHT).playFromStart();
+        animations.animation(ANIM_PARTICLES).playFromStart();
+        animations.animation(ANIM_GHOST_LIGHT).playFromStart();
     }
 
     private void onPacManDying() {
@@ -567,8 +565,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final TickTimer stateTimer = level.game().control().state().timer();
 
         soundEffects.stopAll();
-        animationRegistry.animation(ANIM_GHOST_LIGHT).stop();
-        animationRegistry.animation(ANIM_WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).stop();
+        animations.animation(ANIM_GHOST_LIGHT).stop();
+        animations.animation(ANIM_WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).stop();
         entities.all(GhostAppearance3D.class).forEach(GhostAppearance3D::stopAllAnimations);
         entities.first(Bonus3D.class).ifPresent(Bonus3D::expire);
 
@@ -615,7 +613,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void onGameOver(GameUI ui) {
         final State<Game> gameState = level.game().control().state();
         gameState.timer().restartSeconds(3);
-        animationRegistry.animation(ANIM_GHOST_LIGHT).stop();
+        animations.animation(ANIM_GHOST_LIGHT).stop();
         cleanupFoodAndParticles(entities().theOne(Maze3D.class));
         entities.first(Bonus3D.class).ifPresent(Bonus3D::expire);
         if (!level.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
@@ -625,7 +623,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void cleanupFoodAndParticles(Maze3D maze3D) {
-        animationRegistry.animation(ANIM_PARTICLES).stop();
+        animations.animation(ANIM_PARTICLES).stop();
         entities.all(Energizer3D.class).forEach(energizer3D -> {
             energizer3D.stopPumping();
             energizer3D.hide();
@@ -638,14 +636,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // Animations
 
     private void createAnimations(Maze3D maze3D, WorldMapColorScheme colorScheme) {
-        animationRegistry.register(ANIM_WALL_COLOR_FLASHING, new WallColorFlashingAnimation(this, colorScheme));
-        animationRegistry.register(ANIM_LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this, soundEffects));
-        animationRegistry.register(ANIM_LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
-        animationRegistry.register(ANIM_GHOST_LIGHT, new GhostLightAnimation(ghostAppearancesByPersonality()));
-        animationRegistry.register(ANIM_PARTICLES, createParticlesAnimation(maze3D, dressMaterials(ghostAppearancesByPersonality())));
+        animations.register(ANIM_WALL_COLOR_FLASHING, new WallColorFlashingAnimation(this, colorScheme));
+        animations.register(ANIM_LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this, soundEffects));
+        animations.register(ANIM_LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
+        animations.register(ANIM_GHOST_LIGHT, new GhostLightAnimation(ghostAppearancesByPersonality()));
+        animations.register(ANIM_PARTICLES, createParticlesAnimation(maze3D, dressMaterials(ghostAppearancesByPersonality())));
 
         //TODO: this looks ugly
-        addChild(animationRegistry.animation(ANIM_GHOST_LIGHT, GhostLightAnimation.class).light());
+        addChild(animations.animation(ANIM_GHOST_LIGHT, GhostLightAnimation.class).light());
     }
     
     private List<GhostAppearance3D> ghostAppearancesByPersonality() {
@@ -668,7 +666,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
                 maze3D.wallBaseHeightProperty().unbind();
             }),
-            animationRegistry.animation(cutScene ? ANIM_LEVEL_COMPLETED_SHORT: ANIM_LEVEL_COMPLETED_FULL).animationFX(),
+            animations.animation(cutScene ? ANIM_LEVEL_COMPLETED_SHORT: ANIM_LEVEL_COMPLETED_FULL).animationFX(),
             pauseSec(0.25)
         );
 

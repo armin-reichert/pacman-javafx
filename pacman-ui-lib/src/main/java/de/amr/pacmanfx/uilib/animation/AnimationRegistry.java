@@ -49,16 +49,16 @@ public class AnimationRegistry {
         return animationMap.get(key);
     }
 
-    public void clear() {
-        stopAllAnimations();
-        animationMap.values().forEach(ManagedAnimation::dispose);
-        garbageCollect();
+    public Optional<ManagedAnimation> optAnimation(String key) {
+        return Optional.ofNullable(animationMap.get(key));
     }
 
-    public void garbageCollect() {
-        var disposedAnimations = animationMap.values().stream().filter(ManagedAnimation::disposed).toList();
-        disposedAnimations.forEach(animationMap::remove);
-        Logger.info("Removed {} disposed animations", disposedAnimations.size());
+    public void dispose() {
+        final int count = animationMap.size();
+        stopAllAnimations();
+        animationMap.values().forEach(ManagedAnimation::dispose);
+        animationMap.clear();
+        Logger.info("Disposed {} animations", count);
     }
 
     public void stopAllAnimations() {
