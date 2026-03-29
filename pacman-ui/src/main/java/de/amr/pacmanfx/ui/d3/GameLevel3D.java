@@ -105,7 +105,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final UIConfig uiConfig;
     private final RandomTextPicker<String> gameOverMessagePicker;
 
-    private GameLevel3DMessageManager messageManager;
+    private MessageManager3D messageManager;
 
     /**
      * Creates a new 3D level representation for the given game level.
@@ -188,7 +188,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return level;
     }
 
-    public GameLevel3DMessageManager messageManager() {
+    public MessageManager3D messageManager() {
         return messageManager;
     }
 
@@ -293,16 +293,16 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createMessageManager() {
-        this.messageManager = new GameLevel3DMessageManager(animations, this);
+        this.messageManager = new MessageManager3D(animations, this);
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         terrain.optHouse().ifPresentOrElse(
-            house -> messageManager.setReadyMessageCenter(house.centerPositionUnderHouse()),
+            house -> messageManager.setMessageCenter(MessageManager3D.MessageType.READY, house.centerPositionUnderHouse()),
             () -> {
                 Logger.error("No house in this game level! WTF?");
                 final double x = terrain.numCols() * HTS, y = terrain.numRows() * HTS;
-                messageManager.setReadyMessageCenter(vec2_float(x, y));
+                messageManager.setMessageCenter(MessageManager3D.MessageType.READY, vec2_float(x, y));
             });
-        messageManager.setTestMessageCenter(
+        messageManager.setMessageCenter(MessageManager3D.MessageType.TEST,
             vec2_float(terrain.numCols() * HTS, (terrain.numRows() - 2) * TS));
     }
 
@@ -486,7 +486,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     public void onGameContinues(GameContinuedEvent ignoredEvent) {
         resetPacZPosition();
-        messageManager().showReadyMessage();
+        messageManager().showMessage(MessageManager3D.MessageType.READY);
     }
 
     /**

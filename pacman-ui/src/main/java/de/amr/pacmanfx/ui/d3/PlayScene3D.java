@@ -260,7 +260,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
         if (event.newState() instanceof TestState) {
             optGameLevel().ifPresent(level -> {
                 replaceGameLevel3D(level);
-                level3D.messageManager().showLevelTestMessage(level);
+                level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level.number());
                 GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
             });
             return;
@@ -314,11 +314,11 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
         if (state instanceof TestState) {
             replaceGameLevel3D(level);
             level3D.entities().all(Energizer3D.class).forEach(Energizer3D::startPumping);
-            level3D.messageManager().showLevelTestMessage(level);
+            level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level.number());
         } else {
             if (!level.isDemoLevel() &&
                     state.nameMatches(STARTING_GAME_OR_LEVEL.name(), LEVEL_TRANSITION.name())) {
-                level3D.messageManager().showReadyMessage();
+                level3D.messageManager().showMessage(MessageManager3D.MessageType.READY);
             }
         }
         level3D.entities().all().forEach(e -> e.init(level));

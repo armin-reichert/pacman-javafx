@@ -4,13 +4,15 @@
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
@@ -27,7 +29,9 @@ import static java.util.Objects.requireNonNull;
  * @see MessageView
  * @see DisposableGraphicsObject
  */
-public class GameLevel3DMessageManager implements DisposableGraphicsObject {
+public class MessageManager3D implements DisposableGraphicsObject {
+
+    public enum MessageType { READY, TEST }
 
     /** Standard "READY!" message shown at level start */
     public static final String READY_MESSAGE_TEXT = "READY!";
@@ -39,39 +43,32 @@ public class GameLevel3DMessageManager implements DisposableGraphicsObject {
     public static final float READY_MESSAGE_DISPLAY_SECONDS = 2.5f;
 
     private final AnimationRegistry animationRegistry;
-    private final Group messageContainer;
+    private final Group messageParent;
     private MessageView messageView;
 
-    private Vector2f readyMessageCenter = Vector2f.ZERO;
-    private Vector2f testMessageCenter = Vector2f.ZERO;
+    private final Map<MessageType, Vector2f> messageCenters = new EnumMap<>(MessageType.class);
 
     /**
      * Creates a new message manager for the given animation registry and container group.
      *
      * @param animationRegistry registry for message animations
-     * @param messageContainer  the group to which messages are added/removed
+     * @param messageParent  the group to which messages are added/removed
      */
-    public GameLevel3DMessageManager(AnimationRegistry animationRegistry, Group messageContainer) {
+    public MessageManager3D(AnimationRegistry animationRegistry, Group messageParent) {
         this.animationRegistry = requireNonNull(animationRegistry);
-        this.messageContainer = requireNonNull(messageContainer);
+        this.messageParent = requireNonNull(messageParent);
     }
 
     /**
      * Sets the world position where the "READY!" message should appear (centered).
      *
-     * @param readyMessageCenter center position in world coordinates
+     * @param messageType the message type
+     * @param center center position in world coordinates
      */
-    public void setReadyMessageCenter(Vector2f readyMessageCenter) {
-        this.readyMessageCenter = readyMessageCenter;
-    }
-
-    /**
-     * Sets the world position where the test mode message should appear (centered).
-     *
-     * @param testMessageCenter center position in world coordinates
-     */
-    public void setTestMessageCenter(Vector2f testMessageCenter) {
-        this.testMessageCenter = testMessageCenter;
+    public void setMessageCenter(MessageType messageType, Vector2f center) {
+        requireNonNull(messageType);
+        requireNonNull(center);
+        messageCenters.put(messageType, center);
     }
 
     /**
@@ -87,20 +84,12 @@ public class GameLevel3DMessageManager implements DisposableGraphicsObject {
         }
     }
 
-    /**
-     * Displays the "READY!" message centered under the ghost house.
-     */
-    public void showReadyMessage() {
-        showAnimatedMessage(readyMessageCenter, READY_MESSAGE_TEXT, READY_MESSAGE_DISPLAY_SECONDS);
-    }
-
-    /**
-     * Displays the level test mode overlay message.
-     *
-     * @param level the current game level (used for number formatting)
-     */
-    public void showLevelTestMessage(GameLevel level) {
-        showAnimatedMessage(testMessageCenter, TEST_MESSAGE_TEXT.formatted(level.number()), 5);
+    //TODO this is ugly
+    public void showMessage(MessageType messageType, Object... args) {
+        switch (messageType) {
+            case READY ->  showAnimatedMessage(messageCenters.get(MessageType.READY), READY_MESSAGE_TEXT, READY_MESSAGE_DISPLAY_SECONDS);
+            case TEST -> showAnimatedMessage(messageCenters.get(MessageType.TEST), TEST_MESSAGE_TEXT.formatted((int)args[0]), 5);
+        }
     }
 
     /**
@@ -122,7 +111,7 @@ public class GameLevel3DMessageManager implements DisposableGraphicsObject {
     public void showAnimatedMessage(Vector2f centerPos, String messageText, float displaySeconds) {
         if (messageView != null) {
             messageView.dispose();
-            messageContainer.getChildren().remove(messageView);
+            messageParent.getChildren().remove(messageView);
         }
         messageView = MessageView.builder()
             .backgroundColor(Color.BLACK)
@@ -134,6 +123,6 @@ public class GameLevel3DMessageManager implements DisposableGraphicsObject {
             .build(animationRegistry);
 
         messageView.showCenteredAt(centerPos.x(), centerPos.y());
-        messageContainer.getChildren().add(messageView);
+        messageParent.getChildren().add(messageView);
     }
 }
