@@ -134,7 +134,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         addChildrenToGroup();
 
         // Maze3D must exist when energizer animations are created:
-        final Maze3D maze3D = entities().first$(Maze3D.class);
+        final Maze3D maze3D = entities().theOne(Maze3D.class);
         createAnimations(maze3D, mapColorScheme);
 
         resetPacZPosition();
@@ -215,10 +215,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * in front of walls/house.
      */
     private void addChildrenToGroup() {
-        final Maze3D maze3D = entities().first$(Maze3D.class);
-        final Pac3D pac3D = entities.first$(Pac3D.class);
-        final LevelCounter3D levelCounter3D = entities.first$(LevelCounter3D.class);
-        final LivesCounter3D livesCounter3D = entities.first$(LivesCounter3D.class);
+        final Maze3D maze3D = entities().theOne(Maze3D.class);
+        final Pac3D pac3D = entities.theOne(Pac3D.class);
+        final LevelCounter3D levelCounter3D = entities.theOne(LevelCounter3D.class);
+        final LivesCounter3D livesCounter3D = entities.theOne(LivesCounter3D.class);
         addChildren(maze3D.floor(), maze3D.particlesGroup());
         addChild(levelCounter3D);
         addChild(livesCounter3D);
@@ -354,7 +354,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createFood3D() {
         final FoodLayer foodLayer = level.worldMap().foodLayer();
-        final Maze3D maze3D = entities().first$(Maze3D.class);
+        final Maze3D maze3D = entities().theOne(Maze3D.class);
 
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final PelletConfig3D pelletConfig3D = uiConfig.entityConfig().pellet();
@@ -526,7 +526,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Handles Pac gaining power: stops siren, starts power animation/sound.
      */
     public void onPacGetsPower(PacGetsPowerEvent ignoredEvent) {
-        final Pac3D pac3D = entities.first$(Pac3D.class);
+        final Pac3D pac3D = entities.theOne(Pac3D.class);
         final Game game = level.game();
         soundEffects.stopSiren();
         if (!game.isLevelCompleted(level)) {
@@ -540,7 +540,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Handles Pac losing power: stops power animation/sound.
      */
     public void onPacLostPower(PacLostPowerEvent ignoredEvent) {
-        final Pac3D pac3D = entities.first$(Pac3D.class);
+        final Pac3D pac3D = entities.theOne(Pac3D.class);
         pac3D.setMovementPowerMode(false);
         wallColorFlashingAnimation.stop();
         soundEffects.stopPacPowerSound();
@@ -565,7 +565,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void onPacManDying() {
-        final Pac3D pac3D = entities.first$(Pac3D.class);
+        final Pac3D pac3D = entities.theOne(Pac3D.class);
         final TickTimer stateTimer = level.game().control().state().timer();
 
         soundEffects.stopAll();
@@ -603,7 +603,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void onLevelComplete() {
         final State<Game> gameState = level.game().control().state();
-        final Maze3D maze3D = entities().first$(Maze3D.class);
+        final Maze3D maze3D = entities().theOne(Maze3D.class);
 
         soundEffects.stopAll();
         animationRegistry().stopAllAnimations();
@@ -618,7 +618,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final State<Game> gameState = level.game().control().state();
         gameState.timer().restartSeconds(3);
         ghostLightAnimation.stop();
-        cleanupFoodAndParticles(entities().first$(Maze3D.class));
+        cleanupFoodAndParticles(entities().theOne(Maze3D.class));
         entities.first(Bonus3D.class).ifPresent(Bonus3D::expire);
         if (!level.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
             ui.showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.nextText());
