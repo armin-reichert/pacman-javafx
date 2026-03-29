@@ -21,7 +21,7 @@ public class PacMan3D extends Pac3D {
         setBody(Models3D.PAC_MAN_MODEL.createPacBody(pacConfig));
         setJaw(Models3D.PAC_MAN_MODEL.createBlindPacBody(pacConfig));
 
-        dyingAnimation = new ManagedAnimation("PacMan_Dying");
+        final var dyingAnimation = new ManagedAnimation("PacMan_Dying");
         dyingAnimation.setFactory(() -> {
             Duration duration = Duration.seconds(1.5);
             byte numSpins = 5;
@@ -54,25 +54,21 @@ public class PacMan3D extends Pac3D {
                 })
             );
         });
-        animationRegistry.register("PacMan_Dying", dyingAnimation);
+        animationRegistry.register(AnimationID.PAC_DYING, dyingAnimation);
+        animationRegistry.register(AnimationID.PAC_MOVING, new HeadBangingAnimation(PacMan3D.this));
 
-        movementAnimation = new HeadBangingAnimation(PacMan3D.this);
-        animationRegistry.register("PacMan_Movement", movementAnimation);
-
-        setMovementPowerMode(false);
+        setMovementAnimationPowerMode(false);
     }
 
     @Override
     public void updateMovementAnimation() {
-        if (movementAnimation instanceof HeadBangingAnimation headBangingAnimation) {
-            headBangingAnimation.update(pac);
-        }
+        animations.optAnimation(Pac3D.AnimationID.PAC_MOVING, HeadBangingAnimation.class)
+            .ifPresent(hba -> hba.update(pac));
     }
 
     @Override
-    public void setMovementPowerMode(boolean power) {
-        if (movementAnimation instanceof HeadBangingAnimation headBangingAnimation) {
-            headBangingAnimation.setPowerMode(power);
-        }
+    public void setMovementAnimationPowerMode(boolean power) {
+        animations.optAnimation(Pac3D.AnimationID.PAC_MOVING, HeadBangingAnimation.class)
+            .ifPresent(hba -> hba.setPowerMode(power));
     }
 }

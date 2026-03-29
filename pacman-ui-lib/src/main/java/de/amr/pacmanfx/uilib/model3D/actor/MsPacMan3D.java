@@ -29,7 +29,7 @@ public class MsPacMan3D extends Pac3D {
         final Group femaleParts = Models3D.PAC_MAN_MODEL.createFemaleBodyParts(pacConfig);
         getChildren().add(femaleParts);
 
-        dyingAnimation = new ManagedAnimation("Ms_PacMan_Dying");
+        final var dyingAnimation = new ManagedAnimation("Ms. Pac-Man Dying");
         dyingAnimation.setFactory(() -> {
             var spinning = new RotateTransition(Duration.seconds(0.25), MsPacMan3D.this);
             spinning.setAxis(Rotate.Z_AXIS);
@@ -39,25 +39,21 @@ public class MsPacMan3D extends Pac3D {
             spinning.setCycleCount(4);
             return spinning;
         });
-        animationRegistry.register("Ms_PacMan_Dying", dyingAnimation);
+        animationRegistry.register(Pac3D.AnimationID.PAC_DYING, dyingAnimation);
 
-        movementAnimation = new HipSwayingAnimation(this);
-        animationRegistry.register("Ms_PacMan_Movement", movementAnimation);
+        final var movementAnimation = new HipSwayingAnimation(this);
+        animationRegistry.register(AnimationID.PAC_MOVING, movementAnimation);
 
-        setMovementPowerMode(false);
-    }
-
-    @Override
-    public void setMovementPowerMode(boolean power) {
-        if (movementAnimation instanceof HipSwayingAnimation hipSwayingAnimation) {
-            hipSwayingAnimation.setPowerMode(power);
-        }
+        setMovementAnimationPowerMode(false);
     }
 
     @Override
     public void updateMovementAnimation() {
-        if (movementAnimation instanceof HipSwayingAnimation hipSwayingAnimation) {
-            hipSwayingAnimation.update(pac);
-        }
+        animations.optAnimation(AnimationID.PAC_MOVING, HipSwayingAnimation.class).ifPresent(hsa -> hsa.update(pac));
+    }
+
+    @Override
+    public void setMovementAnimationPowerMode(boolean power) {
+        animations.optAnimation(AnimationID.PAC_MOVING, HipSwayingAnimation.class).ifPresent(hsa -> hsa.setPowerMode(power));
     }
 }

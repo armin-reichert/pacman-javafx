@@ -528,7 +528,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Game game = level.game();
         soundEffects.stopSiren();
         if (!game.isLevelCompleted(level)) {
-            pac3D.setMovementPowerMode(true);
+            pac3D.setMovementAnimationPowerMode(true);
             animations.animation(AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).playFromStart();
             soundEffects.playPacPowerSound();
         }
@@ -539,7 +539,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     public void onPacLostPower(PacLostPowerEvent ignoredEvent) {
         final Pac3D pac3D = entities.theOne(Pac3D.class);
-        pac3D.setMovementPowerMode(false);
+        pac3D.setMovementAnimationPowerMode(false);
         animations.animation(AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).stop();
         soundEffects.stopPacPowerSound();
     }

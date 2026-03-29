@@ -30,7 +30,10 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
+    public enum AnimationID {PAC_CHEWING, PAC_DYING, PAC_MOVING }
+
     protected final Pac pac;
+    protected final AnimationRegistry animations;
 
     protected PointLight powerLight;
 
@@ -39,19 +42,15 @@ public abstract class Pac3D extends Group implements GameLevelEntity, Disposable
 
     protected Rotate moveRotation = new Rotate();
 
-    protected ManagedAnimation chewingAnimation;
-    protected ManagedAnimation dyingAnimation;
-    protected ManagedAnimation movementAnimation;
-
-    protected Pac3D(AnimationRegistry animationRegistry, Pac pac) {
-        requireNonNull(animationRegistry);
+    protected Pac3D(AnimationRegistry animations, Pac pac) {
+        this.animations = requireNonNull(animations);
         this.pac = requireNonNull(pac);
 
         getTransforms().add(moveRotation);
 
-        chewingAnimation = new ManagedAnimation("PacMan_Chewing");
-        chewingAnimation.setFactory(this::createChewingAnimation);
-        animationRegistry.register("PacMan_Chewing", chewingAnimation);
+        final var chewing = new ManagedAnimation("Pac-Man Chewing");
+        chewing.setFactory(this::createChewingAnimation);
+        animations.register(AnimationID.PAC_CHEWING, chewing);
     }
 
     public void setBody(Group body) {
@@ -74,18 +73,9 @@ public abstract class Pac3D extends Group implements GameLevelEntity, Disposable
 
     @Override
     public void dispose() {
-        if (chewingAnimation != null) {
-            chewingAnimation.dispose();
-            chewingAnimation = null;
-        }
-        if (movementAnimation != null) {
-            movementAnimation.dispose();
-            movementAnimation = null;
-        }
-        if (dyingAnimation != null) {
-            dyingAnimation.dispose();
-            dyingAnimation = null;
-        }
+        animations.optAnimation(AnimationID.PAC_CHEWING).ifPresent(ManagedAnimation::dispose);
+        animations.optAnimation(AnimationID.PAC_DYING).ifPresent(ManagedAnimation::dispose);
+        animations.optAnimation(AnimationID.PAC_MOVING).ifPresent(ManagedAnimation::dispose);
         cleanupLight(powerLight);
         cleanupGroup(this, true);
     }
@@ -99,7 +89,7 @@ public abstract class Pac3D extends Group implements GameLevelEntity, Disposable
         setScaleZ(1.0);
         updatePositionAndRotation();
         updateVisibility(level.worldMap());
-        setMovementPowerMode(false);
+        setMovementAnimationPowerMode(false);
     }
 
     @Override
@@ -109,17 +99,17 @@ public abstract class Pac3D extends Group implements GameLevelEntity, Disposable
             updatePositionAndRotation();
             updateVisibility(level.worldMap());
             updatePowerLight();
-            if (movementAnimation != null) {
+            animations.optAnimation(AnimationID.PAC_MOVING).ifPresent(movementAnimation -> {
                 movementAnimation.playOrContinue();
                 updateMovementAnimation();
-            }
-            if (chewingAnimation != null) {
+            });
+            animations.optAnimation(AnimationID.PAC_CHEWING).ifPresent(chewingAnimation -> {
                 if (pac.isParalyzed()) {
                     chewingAnimation.stop();
                 } else {
                     chewingAnimation.playOrContinue();
                 }
-            }
+            });
         } else {
             stopMovementAnimation();
             stopChewingAnimation();
@@ -130,11 +120,7 @@ public abstract class Pac3D extends Group implements GameLevelEntity, Disposable
         return Optional.ofNullable(powerLight);
     }
 
-    public ManagedAnimation dyingAnimation() {
-        return dyingAnimation;
-    }
-
-    public void setMovementPowerMode(boolean power) {}
+    public void setMovementAnimationPowerMode(boolean power) {}
 
     public abstract void updateMovementAnimation();
 
@@ -165,21 +151,15 @@ public abstract class Pac3D extends Group implements GameLevelEntity, Disposable
     }
 
     protected void stopChewingAnimation() {
-        if (chewingAnimation != null) {
-            chewingAnimation.stop();
-        }
+        animations.optAnimation(AnimationID.PAC_CHEWING).ifPresent(ManagedAnimation::stop);
     }
 
     protected void stopMovementAnimation() {
-        if (movementAnimation != null) {
-            movementAnimation.stop();
-        }
+        animations.optAnimation(AnimationID.PAC_MOVING).ifPresent(ManagedAnimation::stop);
     }
 
     protected void stopDyingAnimation() {
-        if (dyingAnimation != null) {
-            dyingAnimation.stop();
-        }
+        animations.optAnimation(AnimationID.PAC_DYING).ifPresent(ManagedAnimation::stop);
     }
 
     protected void stopAnimations() {
