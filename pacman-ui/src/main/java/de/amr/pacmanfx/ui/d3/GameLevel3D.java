@@ -579,7 +579,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final var dyingAnimation = new SequentialTransition(
             pauseSec(1.5),
             doNow(soundEffects::playPacDeadSound),
-            pac3D.dyingAnimation().animationFX(),
+            //TODO can we assume that this animation always exists?
+            animations.animation(Pac3D.AnimationID.PAC_DYING).animationFX(),
             pauseSec(0.5)
         );
         dyingAnimation.setOnFinished(_ -> {

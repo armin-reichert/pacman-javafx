@@ -59,7 +59,7 @@ public class MazeHouse3D implements GameLevelEntity, Disposable {
         // Door animation listener
         houseOpenListener = (_, _, open) -> {
             if (open) {
-                arcadeHouse3D.doorsOpenCloseAnimation().playFromStart();
+                arcadeHouse3D.playDoorsMeltingAnimation();
             }
         };
         arcadeHouse3D.openProperty().addListener(houseOpenListener);
@@ -88,10 +88,6 @@ public class MazeHouse3D implements GameLevelEntity, Disposable {
      */
     public Group doors() {
         return arcadeHouse3D.doors();
-    }
-
-    @Override
-    public void init(GameLevel level) {
     }
 
     /**

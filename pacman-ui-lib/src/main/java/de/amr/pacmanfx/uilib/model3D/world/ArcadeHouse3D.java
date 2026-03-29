@@ -52,6 +52,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
 
+    public enum AnimationID { HOUSE_DOORS_MELTING }
+
     private static final int DOOR_VERTICAL_BAR_COUNT = 4;
 
     /** Thickness of the vertical door bars. Animated during the melting effect. */
@@ -62,6 +64,8 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
 
     /** Height of the lower wall segment. */
     private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty();
+
+    private final AnimationRegistry animations;
 
     private final float barThickness;
     private final double wallBaseOpacity;
@@ -80,26 +84,23 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
     /** Distance threshold for detecting ghosts near the house entry. */
     private float doorSensitivity = 10;
 
-    /** Animation that shrinks and regrows the door bars. */
-    private ManagedAnimation doorsMeltingAnimation;
-
     /**
      * Creates a 3D ghost house representation.
      *
-     * @param animationRegistry registry used to register the door animation
+     * @param animations registry used to register the door animation
      * @param house             logical house model defining geometry and door positions
      * @param baseHeight        height of the lower wall segment
      * @param wallThickness     thickness of the wall cylinders
      * @param opacity           opacity of the wall base material
      */
     public ArcadeHouse3D(
-        AnimationRegistry animationRegistry,
+        AnimationRegistry animations,
         ArcadeHouse house,
         double baseHeight,
         double wallThickness,
         double opacity)
     {
-        requireNonNull(animationRegistry);
+        this.animations = requireNonNull(animations);
         requireNonNull(house);
 
         r3D = new TerrainRenderer3D();
@@ -159,12 +160,12 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         light.translateZProperty().bind(wallBaseHeightProperty.multiply(-1));
 
         // Door melting animation
-        doorsMeltingAnimation = new ManagedAnimation("Doors_Melting");
+        final var doorsMeltingAnimation = new ManagedAnimation("Doors_Melting");
         doorsMeltingAnimation.setFactory(() -> new Timeline(
             new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessProperty, 0)),
             new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessProperty, barThickness)))
         );
-        animationRegistry.register("Doors_Melting", doorsMeltingAnimation);
+        animations.register(AnimationID.HOUSE_DOORS_MELTING, doorsMeltingAnimation);
     }
 
     /**
@@ -281,9 +282,8 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         doors.setVisible(visible);
     }
 
-    /** Returns the animation that melts and regrows the door bars. */
-    public ManagedAnimation doorsOpenCloseAnimation() {
-        return doorsMeltingAnimation;
+    public void playDoorsMeltingAnimation() {
+        animations.optAnimation(AnimationID.HOUSE_DOORS_MELTING).ifPresent(ManagedAnimation::playFromStart);
     }
 
     /** Returns the interior point light. */
@@ -291,26 +291,17 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         return light;
     }
 
-    /**
-     * Disposes all 3D resources created by this house.
-     * <p>
-     * This method:
-     * <ul>
-     *   <li>Unbinds all properties</li>
-     *   <li>Stops and disposes animations</li>
-     *   <li>Clears materials and geometry</li>
-     *   <li>Removes all children from the scene graph</li>
-     * </ul>
-     */
     @Override
     public void dispose() {
         r3D.setOnWallCreated(null);
         openProperty().unbind();
         wallBaseHeightProperty().unbind();
         barMaterial = wallBaseMaterial = wallTopMaterial = null;
-        doorsMeltingAnimation.dispose(); doorsMeltingAnimation = null;
+        animations.optAnimation(AnimationID.HOUSE_DOORS_MELTING).ifPresent(ManagedAnimation::dispose);
+        cleanupGroup(doors, true);
+        leftDoor = rightDoor = doors = null;
+        cleanupLight(light);
+        light = null;
         cleanupGroup(this, true);
-        cleanupGroup(doors, true); leftDoor = rightDoor = doors = null;
-        cleanupLight(light); light = null;
     }
 }
