@@ -30,6 +30,25 @@ import static java.util.Objects.requireNonNull;
  */
 public class ObjFileImporter {
 
+    public static Model3D importObjFile(URL url, Charset charset) throws IOException {
+        requireNonNull(url);
+        requireNonNull(charset);
+        final ObjFileImporter importer = new ObjFileImporter(url);
+        try (InputStream is = url.openStream()) {
+            final var reader = new BufferedReader(new InputStreamReader(is, charset));
+            importer.parse(reader);
+            Logger.info("OBJ file parsed: {} vertices, {} uvs, {} faces, {} smoothing groups. URL={}",
+                importer.data.vertexArray.size() / 3,
+                importer.data.uvArray.size() / 2,
+                importer.data.facesList.size() / 6,
+                importer.data.smoothingGroupList.size(),
+                url);
+            return importer.data;
+        }
+    }
+
+    // Private stuff
+
     private static String[] splitBySpace(String line) {
         return line.trim().split("\\s+");
     }
@@ -54,23 +73,6 @@ public class ObjFileImporter {
 
     private static List<Integer> restOf(ArrayList<Integer> list, int start) {
         return list.subList(start, list.size());
-    }
-
-    public static Model3D importObjFile(URL url, Charset charset) throws IOException {
-        requireNonNull(url);
-        requireNonNull(charset);
-        try (final InputStream is = url.openStream()) {
-            final var reader = new BufferedReader(new InputStreamReader(is, charset));
-            final ObjFileImporter importer = new ObjFileImporter(url);
-            importer.parse(reader);
-            Logger.info("OBJ file parsed: {} vertices, {} uvs, {} faces, {} smoothing groups. URL={}",
-                importer.data.vertexArray.size() / 3,
-                importer.data.uvArray.size() / 2,
-                importer.data.facesList.size() / 6,
-                importer.data.smoothingGroupList.size(),
-                url);
-            return importer.data;
-        }
     }
 
     private int facesStart = 0;
