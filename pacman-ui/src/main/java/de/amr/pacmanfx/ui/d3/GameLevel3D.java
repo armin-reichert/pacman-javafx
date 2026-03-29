@@ -249,17 +249,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createGhostAppearances3D() {
         level.ghosts().map(ghost -> {
-            final var ga3D = createGhostAppearance3D(uiConfig.factory3D(), uiConfig.entityConfig().ghostConfigs(), ghost);
+            final var ga3D = createGhostAppearance3D(uiConfig.entityConfig().ghostConfigs().get(ghost.personality()), ghost);
             ga3D.init(level);
             ga3D.setTranslateZ(-0.5 * ga3D.getBoundsInLocal().getDepth() - 1);
             return ga3D;
         }).forEach(entities::add);
     }
 
-    private GhostAppearance3D createGhostAppearance3D(Factory3D factory3D, List<GhostConfig> ghostConfigs, Ghost ghost) {
-        final var ghostAppearance3D = factory3D.createGhostAppearance3D(
+    private GhostAppearance3D createGhostAppearance3D(GhostConfig ghostConfig, Ghost ghost) {
+        final var ghostAppearance3D = uiConfig.factory3D().createGhostAppearance3D(
             ghost,
-            ghostConfigs.get(ghost.personality()),
+            ghostConfig,
             animationRegistry
         );
         ghostAppearance3D.setNumFlashes(level.numFlashes());
