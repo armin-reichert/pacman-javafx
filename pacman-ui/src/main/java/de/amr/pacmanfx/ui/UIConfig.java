@@ -27,6 +27,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.List;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.ui.ArcadePalette.*;
 
@@ -166,6 +167,8 @@ public interface UIConfig extends Disposable {
 
     Factory3D factory3D();
 
+    Optional<GameSoundEffects> soundEffects();
+
     /**
      * Returns the scene-configuration object that determines which scene should be
      * displayed for each game state and manages scene creation/caching.
@@ -219,14 +222,6 @@ public interface UIConfig extends Disposable {
         }
         return colorScheme;
     }
-
-    /**
-     * Factory method for gameplay-specific sound effects handler.
-     *
-     * @param soundManager the sound manager
-     * @return configured sound-effects controller
-     */
-    GameSoundEffects getGameSoundEffects(SoundManager soundManager);
 
     // ─────────────────────────────────────────────────────────────────────────────
     // Bonus symbol & value images

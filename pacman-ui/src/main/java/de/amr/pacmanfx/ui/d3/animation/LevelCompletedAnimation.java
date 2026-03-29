@@ -57,12 +57,10 @@ public class LevelCompletedAnimation extends ManagedAnimation {
     }
 
     private final GameLevel3D level3D;
-    private final GameSoundEffects soundEffects;
 
-    public LevelCompletedAnimation(GameLevel3D level3D, GameSoundEffects soundEffects) {
+    public LevelCompletedAnimation(GameLevel3D level3D) {
         super("Level Completed");
         this.level3D = requireNonNull(level3D);
-        this.soundEffects = requireNonNull(soundEffects);
         setFactory(this::createAnimationFX);
     }
 
@@ -76,10 +74,10 @@ public class LevelCompletedAnimation extends ManagedAnimation {
             pauseSecThen(0.5, () -> level.pac().hide()),
             pauseSec(0.5),
             levelRotation(rotationAxis),
-            pauseSecThen(0.5, soundEffects::playLevelCompleteSound),
+            pauseSecThen(0.5, () -> level3D.uiConfig().soundEffects().ifPresent(GameSoundEffects::playLevelCompleteSound)),
             pauseSec(0.5),
             mazeWallsAndHouseAnimation(maze3D),
-            pauseSecThen(1.0, soundEffects::playLevelChangedSound)
+            pauseSecThen(1.0, () -> level3D.uiConfig().soundEffects().ifPresent(GameSoundEffects::playLevelChangedSound))
         );
     }
 

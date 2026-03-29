@@ -37,6 +37,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
@@ -54,6 +55,7 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
     private final AssetMap assets = new AssetMap();
     private final Factory3D factory3D = new ArcadeMsPacMan_Factory3D();
     private final GameSceneConfig gameSceneConfig = new ArcadeMsPacMan_GameSceneConfig();
+    private GameSoundEffects soundEffects;
 
     public ArcadeMsPacMan_UIConfig() {}
 
@@ -106,11 +108,8 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public GameSoundEffects getGameSoundEffects(SoundManager soundManager) {
-        final var soundEffects = new GameSoundEffects(soundManager);
-        soundEffects.setMunchingSoundDelay((byte) 0);
-        soundEffects.setSirenVolume(0.33f);
-        return soundEffects;
+    public Optional<GameSoundEffects> soundEffects() {
+        return Optional.ofNullable(soundEffects);
     }
 
     @Override
@@ -223,6 +222,10 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
             url("sound/GhostNoise3.wav"),
             url("sound/GhostNoise4.wav")
         );
+
+        soundEffects = new GameSoundEffects(soundManager);
+        soundEffects.setMunchingSoundDelay((byte) 0);
+        soundEffects.setSirenVolume(0.33f);
     }
 
     private void createBrightMazeImages() {

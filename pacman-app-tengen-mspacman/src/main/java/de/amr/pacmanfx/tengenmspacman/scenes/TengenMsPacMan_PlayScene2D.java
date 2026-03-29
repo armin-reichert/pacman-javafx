@@ -66,7 +66,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private final PlayScene2DCamera dynamicCamera;
     private final PerspectiveCamera fixedCamera;
 
-    private GameSoundEffects soundEffects;
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public TengenMsPacMan_PlayScene2D() {
@@ -99,12 +98,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     public Optional<LevelCompletedAnimation> optLevelCompletedAnimation() {
         return Optional.ofNullable(levelCompletedAnimation);
-    }
-
-    @Override
-    public void onEmbed(GameUI ui) {
-        this.ui = requireNonNull(ui);
-        this.soundEffects = ui.currentConfig().getGameSoundEffects(ui.soundManager());
     }
 
     @Override
@@ -146,8 +139,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
                 dynamicCamera.update(TS(level.worldMap().numRows()), level.pac());
             }
             updateHUD(level);
-            soundEffects.setEnabled(!level.isDemoLevel());
-            soundEffects.playLevelPlayingSound(level);
+            ui.currentConfig().soundEffects().ifPresent(soundEffects -> {
+                soundEffects.setEnabled(!level.isDemoLevel());
+                soundEffects.playLevelPlayingSound(level);
+            });
         });
     }
 
@@ -192,17 +187,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onBonusActivated(BonusActivatedEvent e) {
-        soundEffects.playBonusActiveSound();
+        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
-        soundEffects.playBonusEatenSound();
+        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent e) {
-        soundEffects.playBonusExpiredSound();
+        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
     @Override
@@ -220,7 +215,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         final Game game = e.game();
         final boolean silent = game.isDemoLevelRunning() || game.control().state() instanceof TestState;
         if (!silent) {
-            soundEffects.playGameReadySound();
+            ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
     }
 
@@ -230,12 +225,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         switch (e.newState()) {
             case TengenGameState.LEVEL_COMPLETE -> {
                 final GameLevel level = game.optGameLevel().orElseThrow();
-                soundEffects.stopAll();
+                ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::stopAll);
                 playLevelCompleteAnimation(level);
             }
             case TengenGameState.GAME_OVER -> {
                 final GameLevel level = game.optGameLevel().orElseThrow();
-                soundEffects.stopAll();
+                ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::stopAll);
                 dynamicCamera.enterManualMode();
                 dynamicCamera.setToTopPosition();
                 level.optMessage().ifPresent(this::startGameOverMessageAnimation);
@@ -246,7 +241,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGhostEaten(GhostEatenEvent e) {
-        soundEffects.playGhostEatenSound();
+        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
     }
 
     @Override
@@ -269,7 +264,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void onPacDying(PacDyingEvent e) {
         dynamicCamera.enterManualMode();
-        soundEffects.playPacDeadSound();
+        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
     }
 
     @Override
@@ -282,17 +277,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        soundEffects.playPacPowerSound();
+        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
     }
 
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
-        soundEffects.stopPacPowerSound();
+        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
 
     @Override
     public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
-        soundEffects.playExtraLifeSound();
+        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
 
     @Override

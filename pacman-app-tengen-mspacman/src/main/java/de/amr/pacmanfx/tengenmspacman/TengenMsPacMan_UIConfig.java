@@ -34,6 +34,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
@@ -186,6 +187,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     private final AssetMap assets = new AssetMap();
     private final TengenMsPacMan_Factory3D factory3D = new TengenMsPacMan_Factory3D();
     private final TengenMsPacMan_GameSceneConfig gameSceneConfig = new TengenMsPacMan_GameSceneConfig();
+    private GameSoundEffects soundEffects;
 
     public TengenMsPacMan_UIConfig() {
         Logger.info("Created Tengen UI configuration {}:", getClass().getSimpleName());
@@ -221,11 +223,8 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     }
 
     @Override
-    public GameSoundEffects getGameSoundEffects(SoundManager soundManager) {
-        final var soundFX = new GameSoundEffects(soundManager);
-        soundFX.setMunchingSoundDelay((byte) 0);
-        soundFX.setSirenVolume(1.0f);
-        return soundFX;
+    public Optional<GameSoundEffects> soundEffects() {
+        return Optional.ofNullable(soundEffects);
     }
 
     @Override
@@ -363,5 +362,9 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
             LOCAL_RESOURCES.url("sound/ms-siren2.wav"), // TODO
             LOCAL_RESOURCES.url("sound/ms-siren2.wav")  // TODO
         );
+
+        soundEffects = new GameSoundEffects(soundManager);
+        soundEffects.setMunchingSoundDelay((byte) 0);
+        soundEffects.setSirenVolume(1.0f);
     }
 }

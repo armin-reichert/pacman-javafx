@@ -9,6 +9,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
 import org.tinylog.Logger;
 
@@ -39,7 +40,7 @@ public interface PlaySceneSwitcher {
         playScene3D.fadeIn();
 
         if (state.nameMatches(HUNTING.name()) && level.pac().powerTimer().isRunning()) {
-            playScene3D.soundEffects().playPacPowerSound();
+            ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
 
         ui.gameContext().clock().setUpdatesDisabled(false);

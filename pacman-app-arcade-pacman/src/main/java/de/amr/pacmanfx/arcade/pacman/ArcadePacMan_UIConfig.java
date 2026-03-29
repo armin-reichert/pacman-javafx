@@ -34,6 +34,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -115,6 +116,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     private final AssetMap assets = new AssetMap();
     private final ArcadePacMan_Factory3D factory3D = new ArcadePacMan_Factory3D();
     private final GameSceneConfig gameSceneConfig = new ArcadePacMan_GameSceneConfig();
+    private GameSoundEffects soundEffects;
 
     public ArcadePacMan_UIConfig() {}
 
@@ -193,6 +195,10 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             url("sound/siren_3.mp3"),
             url("sound/siren_4.mp3")
         );
+
+        soundEffects = new GameSoundEffects(soundManager);
+        soundEffects.setMunchingSoundDelay((byte) 9);
+        soundEffects.setSirenVolume(0.33f);
     }
 
     @Override
@@ -268,11 +274,8 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public GameSoundEffects getGameSoundEffects(SoundManager soundManager) {
-        final var soundEffects = new GameSoundEffects(soundManager);
-        soundEffects.setMunchingSoundDelay((byte) 9);
-        soundEffects.setSirenVolume(0.33f);
-        return soundEffects;
+    public Optional<GameSoundEffects> soundEffects() {
+        return Optional.ofNullable(soundEffects);
     }
 
     @Override

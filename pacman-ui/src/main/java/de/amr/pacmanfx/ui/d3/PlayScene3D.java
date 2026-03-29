@@ -87,7 +87,6 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     protected GameLevel3D level3D;
     protected Scores3D scores3D;
     protected PlaySceneContextMenu contextMenu;
-    protected GameSoundEffects soundEffects;
     protected AmbientLight ambientLight;
 
     private final ChangeListener<DrawMode> drawModeChangeListener = (_, _, drawMode) -> {
@@ -131,10 +130,6 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
         return Optional.ofNullable(scores3D);
     }
 
-    public GameSoundEffects soundEffects() {
-        return soundEffects;
-    }
-
     public void fadeIn() {
         new PlaySceneFadeInAnimation(FADE_IN_DURATION, this).play();
     }
@@ -152,7 +147,6 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     @Override
     public void onEmbed(GameUI ui) {
         this.ui = requireNonNull(ui);
-        this.soundEffects = ui.currentConfig().getGameSoundEffects(ui.soundManager());
         // TODO: reconsider whether scores need recreation here (variant/font change?)
         replaceScores3D();
     }
@@ -192,7 +186,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
      */
     @Override
     public void end(Game game) {
-        soundEffects.stopAll();
+        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::stopAll);
         perspectiveManager.activeIDProperty().unbind();
         PROPERTY_3D_DRAW_MODE.removeListener(drawModeChangeListener);
         //removeAndDisposeGameLevel3D();
@@ -226,8 +220,10 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
         level3D.entities().all().forEach(e -> e.update(level));
         updateHUD3D(level);
         perspectiveManager.updatePerspective(level);
-        soundEffects.setEnabled(!level.isDemoLevel());
-        soundEffects.playLevelPlayingSound(level);
+        ui.currentConfig().soundEffects().ifPresent(soundEffects -> {
+            soundEffects.setEnabled(!level.isDemoLevel());
+            soundEffects.playLevelPlayingSound(level);
+        });
     }
 
     @Override
@@ -387,7 +383,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
      * @return new 3D level instance
      */
     protected GameLevel3D createGameLevel3D(GameLevel level, UIConfig uiConfig) {
-        final var level3D = new GameLevel3D(level, uiConfig, soundEffects, ui.localizedTexts());
+        final var level3D = new GameLevel3D(level, uiConfig, ui.localizedTexts());
         level3D.entities().all().forEach(e -> e.init(level));
         level3D.startTrackingPac();
         return level3D;
