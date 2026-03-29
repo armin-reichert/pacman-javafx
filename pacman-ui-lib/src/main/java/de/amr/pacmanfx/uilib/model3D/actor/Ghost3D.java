@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 public class Ghost3D extends Group implements DisposableGraphicsObject {
 
     public enum AnimationID {
-        DRESS, FLASHING;
+        GHOST_DRESS, GHOST_FLASHING;
 
         public String forGhost(Ghost ghost) {
             requireNonNull(ghost);
@@ -152,14 +152,14 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
                 size / bounds.getDepth())
         );
 
-        animations.register(AnimationID.DRESS.forGhost(ghost),    new DressAnimation());
-        animations.register(AnimationID.FLASHING.forGhost(ghost), new FlashingAnimation());
+        animations.register(AnimationID.GHOST_DRESS.forGhost(ghost),    new DressAnimation());
+        animations.register(AnimationID.GHOST_FLASHING.forGhost(ghost), new FlashingAnimation());
     }
 
     @Override
     public void dispose() {
-        animations.optAnimation(AnimationID.DRESS.forGhost(ghost)).ifPresent(ManagedAnimation::dispose);
-        animations.optAnimation(AnimationID.FLASHING.forGhost(ghost)).ifPresent(ManagedAnimation::dispose);
+        animations.optAnimation(AnimationID.GHOST_DRESS.forGhost(ghost)).ifPresent(ManagedAnimation::dispose);
+        animations.optAnimation(AnimationID.GHOST_FLASHING.forGhost(ghost)).ifPresent(ManagedAnimation::dispose);
         cleanupGroup(this, true);
         materials = null;
         dressShape = null;
@@ -199,7 +199,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         setMaterials(materials.flashing());
         dressShape.setVisible(true);
 
-        animations.optAnimation(AnimationID.FLASHING.forGhost(ghost), FlashingAnimation.class).ifPresent(flashing -> {
+        animations.optAnimation(AnimationID.GHOST_FLASHING.forGhost(ghost), FlashingAnimation.class).ifPresent(flashing -> {
             // TODO: this is crap
             if (flashing.numFlashes != numFlashes) {
                 flashing.stop();
@@ -217,33 +217,33 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
     }
 
     public void setNormalLook() {
-        animations.animation(AnimationID.FLASHING.forGhost(ghost)).stop();
-        animations.animation(AnimationID.DRESS.forGhost(ghost)).playOrContinue();
+        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
+        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).playOrContinue();
         dressShape.setVisible(true);
         setMaterials(materials.normal());
     }
 
     public void setFrightenedLook() {
-        animations.animation(AnimationID.FLASHING.forGhost(ghost)).stop();
-        animations.animation(AnimationID.DRESS.forGhost(ghost)).playOrContinue();
+        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
+        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).playOrContinue();
         dressShape.setVisible(true);
         setMaterials(materials.frightened());
     }
 
     public void setEyesOnlyLook() {
-        animations.animation(AnimationID.FLASHING.forGhost(ghost)).stop();
-        animations.animation(AnimationID.DRESS.forGhost(ghost)).stop();
+        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
+        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).stop();
         dressShape.setVisible(false);
         setMaterials(materials.normal());
     }
 
     public void stopAnimations() {
-        animations.optAnimation(AnimationID.FLASHING.forGhost(ghost)).ifPresent(ManagedAnimation::stop);
-        animations.optAnimation(AnimationID.DRESS.forGhost(ghost)).ifPresent(ManagedAnimation::stop);
+        animations.optAnimation(AnimationID.GHOST_FLASHING.forGhost(ghost)).ifPresent(ManagedAnimation::stop);
+        animations.optAnimation(AnimationID.GHOST_DRESS.forGhost(ghost)).ifPresent(ManagedAnimation::stop);
     }
 
     public void animateDress(boolean on) {
-        animations.optAnimation(AnimationID.DRESS.forGhost(ghost)).ifPresent(dressAnimation -> {
+        animations.optAnimation(AnimationID.GHOST_DRESS.forGhost(ghost)).ifPresent(dressAnimation -> {
             if (on) {
                 dressAnimation.playOrContinue();
             } else {

@@ -95,7 +95,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         GHOST_LIGHT, 
         LEVEL_COMPLETED_FULL, 
         LEVEL_COMPLETED_SHORT,
-        PARTICLES,
+        EXPLOSION_PARTICLES,
         WALL_COLOR_FLASHING
     }
 
@@ -387,7 +387,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             energizer3D.stopPumping();
             energizer3D.hide();
             final Point3D center = energizer3D.shape().localToScene(Point3D.ZERO);
-            animations.animation(AnimationID.PARTICLES, EnergizerParticlesAnimation.class).triggerEnergizerExplosion(center);
+            animations.animation(AnimationID.EXPLOSION_PARTICLES, EnergizerParticlesAnimation.class).triggerEnergizerExplosion(center);
         }, () -> entities.where(Pellet3D.class, p3D -> tile.equals(p3D.tile()))
             .findFirst()
             .ifPresent(p3D -> removePelletAfterDelay(pelletContainer, p3D)));
@@ -558,7 +558,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         entities.first(Pac3D.class).ifPresent(pac3D -> pac3D.init(level));
         entities.all(GhostAppearance3D.class).forEach(ghost3D -> ghost3D.init(level));
         entities.all(Energizer3D.class).forEach(Energizer3D::startPumping);
-        animations.animation(AnimationID.PARTICLES).playFromStart();
+        animations.animation(AnimationID.EXPLOSION_PARTICLES).playFromStart();
         animations.animation(AnimationID.GHOST_LIGHT).playFromStart();
     }
 
@@ -625,7 +625,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void cleanupFoodAndParticles(Maze3D maze3D) {
-        animations.animation(AnimationID.PARTICLES).stop();
+        animations.animation(AnimationID.EXPLOSION_PARTICLES).stop();
         entities.all(Energizer3D.class).forEach(energizer3D -> {
             energizer3D.stopPumping();
             energizer3D.hide();
@@ -642,7 +642,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         animations.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this, soundEffects));
         animations.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
         animations.register(AnimationID.GHOST_LIGHT, new GhostLightAnimation(ghostAppearancesByPersonality()));
-        animations.register(AnimationID.PARTICLES, createParticlesAnimation(maze3D, dressMaterials(ghostAppearancesByPersonality())));
+        animations.register(AnimationID.EXPLOSION_PARTICLES, createParticlesAnimation(maze3D, dressMaterials(ghostAppearancesByPersonality())));
 
         //TODO: this looks ugly
         addChild(animations.animation(AnimationID.GHOST_LIGHT, GhostLightAnimation.class).light());

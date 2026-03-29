@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
 import de.amr.pacmanfx.uilib.model3D.animation.Ghost3DBrakeAnimation;
@@ -36,41 +37,45 @@ import static java.util.Objects.requireNonNull;
  */
 public class GhostAppearance3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
+    public enum AnimationID {
+        GHOST_BRAKING, GHOST_POINTS;
+
+        public String forGhost(Ghost ghost) {
+            requireNonNull(ghost);
+            return "%s_%d".formatted(name(), ghost.personality());
+        }
+    }
+
     private static final double HEIGHT_OVER_FLOOR = 2.0;
 
+    private final AnimationRegistry animations;
     private final Ghost3D ghost3D;
     private Shape3D numberShape3D;
 
     private int numFlashes;
 
-    private Ghost3DBrakeAnimation brakeAnimation;
-    private Ghost3DPointsAnimation numberAnimation;
-
     private ChangeListener<Vector2f> positionChangeListener = (_, _, _) -> updateTransform(ghost());
     private ChangeListener<Direction> wishDirChangeListener = (_, _, _) -> updateTransform(ghost());
 
     public GhostAppearance3D(
-        AnimationRegistry animationRegistry,
+        AnimationRegistry animations,
         Ghost ghost,
         GhostColorSet colorSet,
         GhostMeshes meshes,
         GhostMaterials materials,
         double size)
     {
-        requireNonNull(animationRegistry);
+        this.animations = requireNonNull(animations);
         requireNonNull(ghost);
         requireNonNull(colorSet);
         requireNonNull(meshes);
         requireNonNull(materials);
         requireNonNegative(size);
 
-        ghost3D = new Ghost3D(animationRegistry, ghost, colorSet, meshes, materials, size);
+        ghost3D = new Ghost3D(animations, ghost, colorSet, meshes, materials, size);
 
-        brakeAnimation = new Ghost3DBrakeAnimation(this);
-        animationRegistry.register("Ghost_Braking_%d".formatted(ghost().personality()), brakeAnimation);
-
-        numberAnimation = new Ghost3DPointsAnimation(this);
-        animationRegistry.register("Ghost_Points_%d".formatted(ghost().personality()), numberAnimation);
+        animations.register(AnimationID.GHOST_BRAKING.forGhost(ghost), new Ghost3DBrakeAnimation(this));
+        animations.register(AnimationID.GHOST_POINTS.forGhost(ghost), new Ghost3DPointsAnimation(this));
 
         getChildren().add(ghost3D);
         updateTransform(ghost);
@@ -87,14 +92,8 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
         positionChangeListener = null;
         wishDirChangeListener = null;
         stopAllAnimations();
-        if (brakeAnimation != null) {
-            brakeAnimation.dispose();
-            brakeAnimation = null;
-        }
-        if (numberAnimation != null) {
-            numberAnimation.dispose();
-            numberAnimation = null;
-        }
+        animations.optAnimation(AnimationID.GHOST_BRAKING.forGhost(ghost())).ifPresent(ManagedAnimation::dispose);
+        animations.optAnimation(AnimationID.GHOST_POINTS.forGhost(ghost())).ifPresent(ManagedAnimation::dispose);
         cleanupGroup(this, true);
     }
 
@@ -110,7 +109,7 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
         updateTransform(ghost());
         updateAppearance(level);
         if (ghost().moveInfo().tunnelEntered) {
-            brakeAnimation.playFromStart();
+            animations.animation(AnimationID.GHOST_BRAKING.forGhost(ghost())).playFromStart();
         }
         ghost3D.animateDress(ghost3D.isVisible());
     }
@@ -145,8 +144,8 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
     }
 
     public void stopAllAnimations() {
-        if (brakeAnimation != null)  brakeAnimation.stop();
-        if (numberAnimation != null) numberAnimation.stop();
+        animations.optAnimation(AnimationID.GHOST_BRAKING.forGhost(ghost())).ifPresent(ManagedAnimation::stop);
+        animations.optAnimation(AnimationID.GHOST_POINTS.forGhost(ghost())).ifPresent(ManagedAnimation::stop);
         if (ghost3D != null) {
             ghost3D.stopAnimations();
         }
@@ -157,14 +156,14 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
     private void disableNumberAppearance() {
         if (numberShape3D != null) {
             numberShape3D.setVisible(false);
-            numberAnimation.stop();
+            animations.optAnimation(AnimationID.GHOST_POINTS.forGhost(ghost())).ifPresent(ManagedAnimation::stop);
         }
     }
 
     private void enableNumberAppearance() {
         if (numberShape3D != null) {
             numberShape3D.setVisible(true);
-            numberAnimation.playFromStart();
+            animations.optAnimation(AnimationID.GHOST_POINTS.forGhost(ghost())).ifPresent(ManagedAnimation::playFromStart);
             Logger.info("Ghost {} is now shown as number", ghost3D.ghost().name());
         }
         else Logger.error("Cannot enable number appearance: no number shape exists");
