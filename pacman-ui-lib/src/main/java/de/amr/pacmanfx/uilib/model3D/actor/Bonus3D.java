@@ -38,8 +38,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class Bonus3D extends Box implements GameLevelEntity, DisposableGraphicsObject {
 
-    public static final String ANIM_BONUS_EDIBLE = "Bonus_Edible";
-    public static final String ANIM_BONUS_EATEN = "Bonus_Eaten";
+    public enum AnimationID { EDIBLE, EATEN }
+
     private final Bonus bonus;
     private final AnimationRegistry animations;
 
@@ -104,7 +104,7 @@ public class Bonus3D extends Box implements GameLevelEntity, DisposableGraphicsO
         pointsTexture = new PhongMaterial(Color.GHOSTWHITE, pointsImageView.getImage(), null, null, null);
 
         final var edibleAnimation = new EdibleAnimation();
-        animations.register(ANIM_BONUS_EDIBLE, edibleAnimation);
+        animations.register(AnimationID.EDIBLE, edibleAnimation);
 
         final var eatenAnimation = new ManagedAnimation("Bonus (Eaten, Points)");
         eatenAnimation.setFactory(() -> {
@@ -116,15 +116,15 @@ public class Bonus3D extends Box implements GameLevelEntity, DisposableGraphicsO
             animation.setCycleCount(2);
             return animation;
         });
-        animations.register(ANIM_BONUS_EATEN, eatenAnimation);
+        animations.register(AnimationID.EATEN, eatenAnimation);
     }
 
     @Override
     public void dispose() {
         symbolTexture = null;
         pointsTexture = null;
-        animations.optAnimation(ANIM_BONUS_EDIBLE).ifPresent(ManagedAnimation::dispose);
-        animations.optAnimation(ANIM_BONUS_EATEN).ifPresent(ManagedAnimation::dispose);
+        animations.optAnimation(AnimationID.EDIBLE).ifPresent(ManagedAnimation::dispose);
+        animations.optAnimation(AnimationID.EATEN).ifPresent(ManagedAnimation::dispose);
         cleanupShape3D(this);
     }
 
@@ -137,7 +137,7 @@ public class Bonus3D extends Box implements GameLevelEntity, DisposableGraphicsO
                 setTranslateX(center.x());
                 setTranslateY(center.y());
                 setTranslateZ(-HTS);
-                animations.animation(ANIM_BONUS_EDIBLE, EdibleAnimation.class).update(gameLevel);
+                animations.animation(AnimationID.EDIBLE, EdibleAnimation.class).update(gameLevel);
             }
         }
     }
@@ -146,22 +146,22 @@ public class Bonus3D extends Box implements GameLevelEntity, DisposableGraphicsO
         setVisible(true);
         setWidth(symbolWidth);
         setMaterial(symbolTexture);
-        animations.animation(ANIM_BONUS_EDIBLE).playFromStart();
+        animations.animation(AnimationID.EDIBLE).playFromStart();
     }
 
     public void showEaten() {
-        animations.animation(ANIM_BONUS_EDIBLE).stop();
+        animations.animation(AnimationID.EDIBLE).stop();
         setVisible(true);
         setWidth(pointsWidth);
         setMaterial(pointsTexture);
         setRotationAxis(Rotate.X_AXIS);
         setRotate(0);
-        animations.animation(ANIM_BONUS_EATEN).playFromStart();
+        animations.animation(AnimationID.EATEN).playFromStart();
     }
 
     public void expire() {
-        animations.optAnimation(ANIM_BONUS_EDIBLE).ifPresent(ManagedAnimation::stop);
-        animations.optAnimation(ANIM_BONUS_EATEN).ifPresent(ManagedAnimation::stop);
+        animations.optAnimation(AnimationID.EDIBLE).ifPresent(ManagedAnimation::stop);
+        animations.optAnimation(AnimationID.EATEN).ifPresent(ManagedAnimation::stop);
         setVisible(false);
     }
 }

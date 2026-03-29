@@ -29,7 +29,7 @@ public class AnimationRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends ManagedAnimation> T animation(String key, Class<T> type) {
+    public <T extends ManagedAnimation> T animation(Object key, Class<T> type) {
         requireNonNull(key);
         requireNonNull(type);
         final ManagedAnimation managedAnimation = animationMap.get(key);
@@ -45,11 +45,11 @@ public class AnimationRegistry {
         throw new NoSuchElementException();
     }
 
-    public ManagedAnimation animation(String key) {
+    public ManagedAnimation animation(Object key) {
         return animationMap.get(key);
     }
 
-    public Optional<ManagedAnimation> optAnimation(String key) {
+    public Optional<ManagedAnimation> optAnimation(Object key) {
         return Optional.ofNullable(animationMap.get(key));
     }
 
