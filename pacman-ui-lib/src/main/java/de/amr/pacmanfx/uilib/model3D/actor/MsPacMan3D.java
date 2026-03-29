@@ -39,7 +39,7 @@ public class MsPacMan3D extends Pac3D {
             spinning.setCycleCount(4);
             return spinning;
         });
-        animationRegistry.register(Pac3D.AnimationID.PAC_DYING, dyingAnimation);
+        animationRegistry.register(AnimationID.PAC_DYING, dyingAnimation);
 
         final var movementAnimation = new HipSwayingAnimation(this);
         animationRegistry.register(AnimationID.PAC_MOVING, movementAnimation);

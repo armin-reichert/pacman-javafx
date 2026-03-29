@@ -9,7 +9,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.*;
 import javafx.geometry.Point3D;
@@ -61,7 +60,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
     private final GameSoundEffects soundEffects;
 
     public LevelCompletedAnimation(GameLevel3D level3D, GameSoundEffects soundEffects) {
-        super("Level_Completed");
+        super("Level Completed");
         this.level3D = requireNonNull(level3D);
         this.soundEffects = requireNonNull(soundEffects);
         setFactory(this::createAnimationFX);

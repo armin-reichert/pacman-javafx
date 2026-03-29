@@ -8,7 +8,6 @@ import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.Maze3D;
 import de.amr.pacmanfx.ui.d3.MazeMaterials3D;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
@@ -35,7 +34,7 @@ public class WallColorFlashingAnimation extends ManagedAnimation {
     private final Color toColor;
 
     public WallColorFlashingAnimation(GameLevel3D level3D, WorldMapColorScheme colorScheme) {
-        super("WallColorFlashing");
+        super("Wall Color Flashing");
         this.level3D = requireNonNull(level3D);
         this.colorScheme = requireNonNull(colorScheme);
         this.fromColor = Color.valueOf(colorScheme.wallFill());

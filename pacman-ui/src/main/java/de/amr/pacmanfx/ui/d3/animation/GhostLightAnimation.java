@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.ui.d3.animation;
 
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
 import javafx.animation.Animation;
@@ -36,7 +35,7 @@ public class GhostLightAnimation extends ManagedAnimation {
     private byte currentGhostID = RED_GHOST_SHADOW;
 
     public GhostLightAnimation(List<GhostAppearance3D> ghosts3DInOrder) {
-        super("GhostLight");
+        super("Ghost Light");
         this.ghosts3D = requireNonNull(ghosts3DInOrder);
         light.setMaxRange(LIGHT_MAX_RANGE);
         setFactory(this::createAnimationFX);

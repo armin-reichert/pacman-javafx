@@ -8,7 +8,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.Maze3D;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
@@ -32,7 +31,7 @@ public class LevelCompletedAnimationShort extends ManagedAnimation {
     private final GameLevel3D level3D;
 
     public LevelCompletedAnimationShort(GameLevel3D level3D) {
-        super("Level_Completed_Short_Animation");
+        super("Level Completed (Short Animation)");
         this.level3D = level3D;
         setFactory(this::createAnimationFX);
     }

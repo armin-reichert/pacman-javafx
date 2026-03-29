@@ -25,6 +25,8 @@ import static java.util.Objects.requireNonNull;
 
 public class MessageView extends ImageView implements Disposable {
 
+    public enum AnimationID { MESSAGE_MOVING }
+
     public static class Builder {
         private Color borderColor = Color.BLUE;
         private Color backgroundColor = Color.grayRgb(88);
@@ -92,10 +94,10 @@ public class MessageView extends ImageView implements Disposable {
         return canvas.snapshot(null, null);
     }
 
-    private class MoveInOutAnimation extends ManagedAnimation {
+        private class MoveInOutAnimation extends ManagedAnimation {
 
         public MoveInOutAnimation() {
-            super("Message_Movement");
+            super("Level Message Movement");
             setFactory(this::createAnimationFX);
         }
 
@@ -116,39 +118,42 @@ public class MessageView extends ImageView implements Disposable {
         }
     }
 
-    private double hiddenZPosition() {
-        return 0.5 * getBoundsInLocal().getHeight();
-    }
-
-    private final ManagedAnimation moveInOutAnimation;
+    private final AnimationRegistry animations;
     private final float displaySeconds;
 
-    private MessageView(AnimationRegistry animationRegistry, Builder builder) {
-        Text dummy = new Text(builder.text);
+    private MessageView(AnimationRegistry animations, Builder builder) {
+        this.animations = requireNonNull(animations);
+        this.displaySeconds = builder.displaySeconds;
+
+        final Text dummy = new Text(builder.text);
         dummy.setFont(builder.font);
         double width = dummy.getLayoutBounds().getWidth() + MARGIN;
         double height = dummy.getLayoutBounds().getHeight() + MARGIN;
-        Image image = createImage(width, height, builder.text, builder.font,
+
+        final Image image = createImage(width, height, builder.text, builder.font,
             builder.backgroundColor, builder.textColor, builder.borderColor);
         setImage(image);
         setFitWidth(width);
         setFitHeight(height);
         setRotationAxis(Rotate.X_AXIS);
         setRotate(90);
-        displaySeconds = builder.displaySeconds;
-        moveInOutAnimation = new MoveInOutAnimation();
-        animationRegistry.register("Message_Movement", moveInOutAnimation);
+
+        animations.register(AnimationID.MESSAGE_MOVING, new MoveInOutAnimation());
     }
 
     @Override
     public void dispose() {
-        moveInOutAnimation.dispose();
+        animations.optAnimation(AnimationID.MESSAGE_MOVING).ifPresent(ManagedAnimation::dispose);
+    }
+
+    private double hiddenZPosition() {
+        return 0.5 * getBoundsInLocal().getHeight();
     }
 
     public void showCenteredAt(double centerX, double centerY) {
         setTranslateX(centerX - 0.5 * getFitWidth());
         setTranslateY(centerY);
         setTranslateZ(hiddenZPosition());
-        moveInOutAnimation.playFromStart();
+        animations.optAnimation(AnimationID.MESSAGE_MOVING).ifPresent(ManagedAnimation::playFromStart);
     }
 }

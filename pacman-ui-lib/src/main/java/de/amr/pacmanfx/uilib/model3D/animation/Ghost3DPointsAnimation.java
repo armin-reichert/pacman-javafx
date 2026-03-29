@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.uilib.model3D.animation;
 
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
 import javafx.animation.Animation;
@@ -23,7 +22,7 @@ public class Ghost3DPointsAnimation extends ManagedAnimation {
     private final GhostAppearance3D ghostAppearance3D;
 
     public Ghost3DPointsAnimation( GhostAppearance3D ghostAppearance3D) {
-        super("Ghost_Points_%s".formatted(ghostAppearance3D.ghost().name()));
+        super("Ghost Points (%s)".formatted(ghostAppearance3D.ghost().name()));
         this.ghostAppearance3D = requireNonNull(ghostAppearance3D);
         setFactory(this::createAnimationFX);
     }

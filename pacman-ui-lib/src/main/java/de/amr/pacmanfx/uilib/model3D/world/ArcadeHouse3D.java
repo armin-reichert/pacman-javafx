@@ -160,7 +160,7 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         light.translateZProperty().bind(wallBaseHeightProperty.multiply(-1));
 
         // Door melting animation
-        final var doorsMeltingAnimation = new ManagedAnimation("Doors_Melting");
+        final var doorsMeltingAnimation = new ManagedAnimation("House Doors Melting");
         doorsMeltingAnimation.setFactory(() -> new Timeline(
             new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessProperty, 0)),
             new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessProperty, barThickness)))
