@@ -9,7 +9,6 @@ import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.beans.property.*;
 import javafx.scene.Group;
@@ -70,9 +69,8 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
         }
     }
 
-    public LivesCounter3D(UIConfig uiConfig, AnimationRegistry animationRegistry) {
+    public LivesCounter3D(UIConfig uiConfig) {
         requireNonNull(uiConfig);
-        requireNonNull(animationRegistry);
 
         final EntityConfig entityConfig = uiConfig.entityConfig();
 
@@ -149,10 +147,6 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
 
     public ObjectProperty<Color> plateColorProperty() {
         return plateColor;
-    }
-
-    @Override
-    public void init(GameLevel level) {
     }
 
     /**

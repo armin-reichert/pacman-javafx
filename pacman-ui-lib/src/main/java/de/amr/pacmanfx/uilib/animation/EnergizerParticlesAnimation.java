@@ -98,7 +98,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         Box floor3D,
         Group particleShapesGroup)
     {
-        super("Energizers_ParticlesAnimation");
+        super("Energizer Particles Animation");
 
         this.config = requireNonNull(config);
         requireNonNull(swirlBaseCentersXY);

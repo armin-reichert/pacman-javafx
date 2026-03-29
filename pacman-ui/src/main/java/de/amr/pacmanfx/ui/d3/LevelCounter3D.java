@@ -30,12 +30,13 @@ import static java.util.Objects.requireNonNull;
 
 public class LevelCounter3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
-    private final UIConfig uiConfig;
-    private final AnimationRegistry animationRegistry;
-    private ManagedAnimation spinningAnimation;
+    public enum AnimationID { LEVEL_COUNTER_SPINNING }
 
-    public LevelCounter3D(AnimationRegistry animationRegistry, UIConfig uiConfig) {
-        this.animationRegistry = requireNonNull(animationRegistry);
+    private final AnimationRegistry animations;
+    private final UIConfig uiConfig;
+
+    public LevelCounter3D(AnimationRegistry animations, UIConfig uiConfig) {
+        this.animations = requireNonNull(animations);
         this.uiConfig = requireNonNull(uiConfig);
     }
 
@@ -58,11 +59,8 @@ public class LevelCounter3D extends Group implements GameLevelEntity, Disposable
             getChildren().add(cube);
         }
 
-        if (spinningAnimation != null) {
-            spinningAnimation.stop();
-            spinningAnimation.dispose();
-        }
-        spinningAnimation = new ManagedAnimation("LevelCounter_Spinning");
+        animations.optAnimation(AnimationID.LEVEL_COUNTER_SPINNING).ifPresent(ManagedAnimation::dispose);
+        final var spinningAnimation = new ManagedAnimation("Level Counter Spinning");
         spinningAnimation.setFactory(() -> {
             final var cubesAnimation = new ParallelTransition();
             for (int i = 0; i < getChildren().size(); ++i) {
@@ -76,16 +74,13 @@ public class LevelCounter3D extends Group implements GameLevelEntity, Disposable
             }
             return cubesAnimation;
         });
-        animationRegistry.register("LevelCounter_Spinning", spinningAnimation);
+        animations.register(AnimationID.LEVEL_COUNTER_SPINNING, spinningAnimation);
         spinningAnimation.playFromStart();
     }
 
     @Override
     public void dispose() {
-        if (spinningAnimation != null) {
-            spinningAnimation.dispose();
-            spinningAnimation = null;
-        }
+        animations.optAnimation(AnimationID.LEVEL_COUNTER_SPINNING).ifPresent(ManagedAnimation::dispose);
         cleanupGroup(this, true);
     }
 }

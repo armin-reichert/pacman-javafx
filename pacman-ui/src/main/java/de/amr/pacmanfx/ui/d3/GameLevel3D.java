@@ -269,7 +269,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createLivesCounter3D() {
-        final var livesCounter3D = new LivesCounter3D(uiConfig, animations);
+        final var livesCounter3D = new LivesCounter3D(uiConfig);
         livesCounter3D.setTranslateX(2 * TS);
         livesCounter3D.setTranslateY(2 * TS);
         livesCounter3D.pillarColorProperty().set(uiConfig.entityConfig().livesCounter().pillarColor());
