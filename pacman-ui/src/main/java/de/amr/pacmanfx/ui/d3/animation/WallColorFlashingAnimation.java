@@ -6,8 +6,8 @@ package de.amr.pacmanfx.ui.d3.animation;
 
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
-import de.amr.pacmanfx.ui.d3.Maze3D;
 import de.amr.pacmanfx.ui.d3.MazeMaterials3D;
+import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Transition;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.d3;
+package de.amr.pacmanfx.ui.d3.entities;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -13,6 +13,8 @@ import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.FloorConfig3D;
 import de.amr.pacmanfx.ui.config.HouseConfig3D;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
+import de.amr.pacmanfx.ui.d3.Factory3D;
+import de.amr.pacmanfx.ui.d3.MazeMaterials3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.world.Wall3D;

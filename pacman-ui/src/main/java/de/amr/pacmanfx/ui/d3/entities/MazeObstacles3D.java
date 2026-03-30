@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.d3;
+package de.amr.pacmanfx.ui.d3.entities;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.StopWatch;
@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.Obstacle;
 import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.ui.d3.MazeMaterials3D;
 import de.amr.pacmanfx.uilib.model3D.world.TerrainRenderer3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.Group;
