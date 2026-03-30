@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.d3.entities;
+package de.amr.pacmanfx.uilib.model3D.world;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevelEntity;

@@ -37,7 +37,6 @@ import static java.util.Objects.requireNonNull;
  *   <li>{@link MazeFloor3D} – the floor plane</li>
  *   <li>{@link MazeObstacles3D} – walls, corners and static obstacles</li>
  *   <li>{@link MazeHouse3D} – the ghost house (if the map contains one)</li>
- *   <li>{@link MazeParticlesAnimation} – pellets, energizers and related animations</li>
  * </ul>
  * <p>
  * It also exposes a dedicated {@link #particlesGroup()} for dynamic effects such as energizer explosions.
@@ -51,7 +50,6 @@ import static java.util.Objects.requireNonNull;
  * @see MazeFloor3D
  * @see MazeObstacles3D
  * @see MazeHouse3D
- * @see MazeParticlesAnimation
  * @see MazeMaterials3D
  */
 public class Maze3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
