@@ -9,7 +9,9 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.ui.config.*;
+import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
+import de.amr.pacmanfx.ui.config.EntityConfig;
+import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.uilib.UfxColors;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
@@ -32,7 +34,7 @@ public interface Factory3D extends Disposable {
         GameLevel level,
         EntityConfig entityConfig,
         WorldMapColorScheme colorScheme,
-        AnimationRegistry animationRegistry);
+        AnimationRegistry animations);
 
     /**
      * Creates the 3D representation of Pac for this game variant, including model,
@@ -40,10 +42,10 @@ public interface Factory3D extends Disposable {
      *
      * @param pac               the Pac actor whose animations and state drive the model
      * @param pacConfig         the actor 3D configuration object
-     * @param animationRegistry the registry where animations are stored
+     * @param animations the registry where animations are stored
      * @return the 3D representation of Pac
      */
-    Pac3D createPac3D(Pac pac, PacConfig pacConfig, AnimationRegistry animationRegistry);
+    Pac3D createPac3D(Pac pac, PacConfig pacConfig, AnimationRegistry animations);
 
     /**
      * Creates the 3D representation of a ghost for this game variant, including
@@ -51,10 +53,10 @@ public interface Factory3D extends Disposable {
      *
      * @param ghost             the ghost actor whose animations and state drive the model
      * @param ghostConfig      the actor 3D configuration object
-     * @param animationRegistry the registry where animations are stored
+     * @param animations the registry where animations are stored
      * @return the 3D representation of a ghost
      */
-    GhostAppearance3D createGhostAppearance3D(Ghost ghost, de.amr.pacmanfx.uilib.model3D.actor.GhostConfig ghostConfig, AnimationRegistry animationRegistry);
+    GhostAppearance3D createGhostAppearance3D(Ghost ghost, de.amr.pacmanfx.uilib.model3D.actor.GhostConfig ghostConfig, AnimationRegistry animations);
 
     /**
      * Creates the 3D representation of the lives counter for this variant.
@@ -66,7 +68,7 @@ public interface Factory3D extends Disposable {
 
     Pellet3D createPellet3D(PelletConfig3D pelletConfig, PhongMaterial material);
 
-    Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animationRegistry, PhongMaterial material);
+    Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animations, PhongMaterial material);
 
     Shape3D createNumberShape3D(UIConfig uiConfig, int numberIndex);
 

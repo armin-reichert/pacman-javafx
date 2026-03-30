@@ -76,7 +76,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
      * @param factory3D     the factory for 3D entities
      * @param entityConfig  3D configuration
      * @param colorScheme   the map color scheme
-     * @param animationRegistry registry for animations used by 3D components
+     * @param animations registry for animations used by 3D components
      *
      * @throws NullPointerException if any required argument is {@code null}
      */
@@ -85,7 +85,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         Factory3D factory3D,
         EntityConfig entityConfig,
         WorldMapColorScheme colorScheme,
-        AnimationRegistry animationRegistry)
+        AnimationRegistry animations)
     {
         requireNonNull(factory3D);
         requireNonNull(entityConfig);
@@ -94,11 +94,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         materials3D = factory3D.createMazeMaterials(colorScheme, wallOpacity, floorColor);
         createFloor3D(entityConfig.floor(), level);
         createObstacles3D(entityConfig.maze(), level);
-        createArcadeHouse3D(animationRegistry, entityConfig.house(), level, colorScheme);
-    }
-
-    @Override
-    public void init(GameLevel level) {
+        createArcadeHouse3D(animations, entityConfig.house(), level, colorScheme);
     }
 
     @Override
@@ -187,11 +183,11 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         floor3D = new MazeFloor3D(materials3D.floor(), width, height, floorConfig.thickness(), floorConfig.padding());
     }
 
-    private void createArcadeHouse3D(AnimationRegistry animationRegistry, HouseConfig3D houseConfig, GameLevel level, WorldMapColorScheme colorScheme) {
+    private void createArcadeHouse3D(AnimationRegistry animations, HouseConfig3D houseConfig, GameLevel level, WorldMapColorScheme colorScheme) {
         level.worldMap().terrainLayer().optHouse()
             .filter(ArcadeHouse.class::isInstance)
             .map(ArcadeHouse.class::cast)
-            .ifPresentOrElse(arcadeHouse -> house3D = new MazeHouse3D(colorScheme, houseConfig, animationRegistry, arcadeHouse),
+            .ifPresentOrElse(arcadeHouse -> house3D = new MazeHouse3D(colorScheme, houseConfig, animations, arcadeHouse),
                 () -> Logger.error("Currently only Arcade house is supported"));
     }
 }

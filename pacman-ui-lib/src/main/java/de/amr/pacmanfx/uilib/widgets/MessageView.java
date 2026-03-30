@@ -65,8 +65,8 @@ public class MessageView extends ImageView implements Disposable {
             return this;
         }
 
-        public MessageView build(AnimationRegistry animationRegistry) {
-            return new MessageView(animationRegistry, this);
+        public MessageView build(AnimationRegistry animations) {
+            return new MessageView(animations, this);
         }
     }
 

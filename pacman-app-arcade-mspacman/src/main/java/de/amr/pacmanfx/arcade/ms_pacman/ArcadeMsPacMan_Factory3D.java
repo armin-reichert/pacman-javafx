@@ -18,8 +18,8 @@ import static java.util.Objects.requireNonNull;
 public class ArcadeMsPacMan_Factory3D extends DefaultFactory3D {
 
     @Override
-    public Pac3D createPac3D(Pac pac, PacConfig pacConfig, AnimationRegistry animationRegistry) {
-        return new MsPacMan3D(animationRegistry, pac, pacConfig);
+    public Pac3D createPac3D(Pac pac, PacConfig pacConfig, AnimationRegistry animations) {
+        return new MsPacMan3D(animations, pac, pacConfig);
     }
 
     @Override

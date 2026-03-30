@@ -32,17 +32,17 @@ public class MazeHouse3D implements GameLevelEntity, Disposable {
      * ghost revival tiles.
      *
      * @param colorScheme      color scheme of the world map
-     * @param animationRegistry registry for creating and tracking animations
+     * @param animations registry for creating and tracking animations
      * @param house            the logical ghost house from the game world
      */
     public MazeHouse3D(
         WorldMapColorScheme colorScheme,
         HouseConfig3D config3D,
-        AnimationRegistry animationRegistry,
+        AnimationRegistry animations,
         ArcadeHouse house)
     {
         arcadeHouse3D = new ArcadeHouse3D(
-            animationRegistry,
+            animations,
             house,
             config3D.baseHeight(),
             config3D.wallThickness(),

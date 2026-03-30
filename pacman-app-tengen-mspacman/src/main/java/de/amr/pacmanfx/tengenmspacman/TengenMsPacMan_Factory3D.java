@@ -18,11 +18,11 @@ import static java.util.Objects.requireNonNull;
 public class TengenMsPacMan_Factory3D extends DefaultFactory3D {
 
     @Override
-    public Pac3D createPac3D(Pac pac, PacConfig pacConfig, AnimationRegistry animationRegistry) {
+    public Pac3D createPac3D(Pac pac, PacConfig pacConfig, AnimationRegistry animations) {
         requireNonNull(pac);
         requireNonNull(pacConfig);
-        requireNonNull(animationRegistry);
-        return new MsPacMan3D(animationRegistry, pac, pacConfig);
+        requireNonNull(animations);
+        return new MsPacMan3D(animations, pac, pacConfig);
     }
 
     @Override

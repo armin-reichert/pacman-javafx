@@ -42,7 +42,7 @@ public class MessageManager3D implements DisposableGraphicsObject {
     /** Default display duration for READY! message */
     public static final float READY_MESSAGE_DISPLAY_SECONDS = 2.5f;
 
-    private final AnimationRegistry animationRegistry;
+    private final AnimationRegistry animations;
     private final Group messageParent;
     private MessageView messageView;
 
@@ -51,11 +51,11 @@ public class MessageManager3D implements DisposableGraphicsObject {
     /**
      * Creates a new message manager for the given animation registry and container group.
      *
-     * @param animationRegistry registry for message animations
+     * @param animations registry for message animations
      * @param messageParent  the group to which messages are added/removed
      */
-    public MessageManager3D(AnimationRegistry animationRegistry, Group messageParent) {
-        this.animationRegistry = requireNonNull(animationRegistry);
+    public MessageManager3D(AnimationRegistry animations, Group messageParent) {
+        this.animations = requireNonNull(animations);
         this.messageParent = requireNonNull(messageParent);
     }
 
@@ -123,7 +123,7 @@ public class MessageManager3D implements DisposableGraphicsObject {
             .font(GameUI_Resources.FONT_ARCADE_6)
             .text(messageText)
             .textColor(Color.YELLOW)
-            .build(animationRegistry);
+            .build(animations);
 
         messageView.showCenteredAt(centerPos.x(), centerPos.y());
         messageParent.getChildren().add(messageView);

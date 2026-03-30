@@ -19,8 +19,8 @@ import static java.util.Objects.requireNonNull;
 
 public class MsPacMan3D extends Pac3D {
 
-    public MsPacMan3D(AnimationRegistry animationRegistry, Pac msPacMan, PacConfig pacConfig) {
-        super(animationRegistry, msPacMan);
+    public MsPacMan3D(AnimationRegistry animations, Pac msPacMan, PacConfig pacConfig) {
+        super(animations, msPacMan);
 
         requireNonNull(pacConfig);
 
@@ -30,7 +30,7 @@ public class MsPacMan3D extends Pac3D {
         final Group femaleParts = Models3D.PAC_MAN_MODEL.createFemaleBodyParts(pacConfig);
         getChildren().add(femaleParts);
 
-        animations.register(AnimationID.PAC_CHEWING, new Pac3DChewingAnimation(this));
+        this.animations.register(AnimationID.PAC_CHEWING, new Pac3DChewingAnimation(this));
 
         final var dyingAnimation = new ManagedAnimation("Ms. Pac-Man Dying");
         dyingAnimation.setFactory(() -> {
@@ -42,10 +42,10 @@ public class MsPacMan3D extends Pac3D {
             spinning.setCycleCount(4);
             return spinning;
         });
-        animationRegistry.register(AnimationID.PAC_DYING, dyingAnimation);
+        animations.register(AnimationID.PAC_DYING, dyingAnimation);
 
         final var movementAnimation = new HipSwayingAnimation(this);
-        animationRegistry.register(AnimationID.PAC_MOVING, movementAnimation);
+        animations.register(AnimationID.PAC_MOVING, movementAnimation);
 
         setMovementAnimationPowerMode(false);
     }

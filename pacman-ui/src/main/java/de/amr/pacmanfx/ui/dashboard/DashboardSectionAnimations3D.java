@@ -54,7 +54,7 @@ public class DashboardSectionAnimations3D extends DashboardSection {
     private final Timeline refreshTimer;
     private final TableView<TableRow> tableView = new TableView<>();
 
-    private final ObjectProperty<AnimationRegistry> currentAnimationManager = new SimpleObjectProperty<>();
+    private final ObjectProperty<AnimationRegistry> currentAnimations = new SimpleObjectProperty<>();
 
     public DashboardSectionAnimations3D(Dashboard dashboard) {
         super(dashboard);
@@ -100,8 +100,8 @@ public class DashboardSectionAnimations3D extends DashboardSection {
         super.update(ui);
 
         //TODO use data binding
-        ui.optGameScene().ifPresent(gameScene -> currentAnimationManager.set(observedAnimations(gameScene)));
-        if (currentAnimationManager.get() == null) {
+        ui.optGameScene().ifPresent(gameScene -> currentAnimations.set(observedAnimations(gameScene)));
+        if (currentAnimations.get() == null) {
             tableRows.clear();
             refreshTimer.pause();
         } else {
@@ -118,8 +118,8 @@ public class DashboardSectionAnimations3D extends DashboardSection {
 
     private void updateTableData() {
         tableRows.clear();
-        if (currentAnimationManager.get() != null) {
-            final Collection<ManagedAnimation> animations = currentAnimationManager.get().animations();
+        if (currentAnimations.get() != null) {
+            final Collection<ManagedAnimation> animations = currentAnimations.get().animations();
             tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.RUNNING));
             tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.PAUSED));
             tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.STOPPED));

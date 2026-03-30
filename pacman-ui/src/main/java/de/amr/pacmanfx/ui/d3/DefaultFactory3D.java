@@ -88,9 +88,9 @@ public class DefaultFactory3D implements Factory3D {
         GameLevel level,
         EntityConfig entityConfig,
         WorldMapColorScheme colorScheme,
-        AnimationRegistry animationRegistry)
+        AnimationRegistry animations)
     {
-        final Maze3D maze3D = new Maze3D(level, this, entityConfig, colorScheme, animationRegistry);
+        final Maze3D maze3D = new Maze3D(level, this, entityConfig, colorScheme, animations);
         maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
         maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
         maze3D.floorColorProperty().bind(PROPERTY_3D_FLOOR_COLOR);
@@ -98,23 +98,23 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Pac3D createPac3D(Pac pac, PacConfig pacConfig, AnimationRegistry animationRegistry) {
+    public Pac3D createPac3D(Pac pac, PacConfig pacConfig, AnimationRegistry animations) {
         requireNonNull(pac);
         requireNonNull(pacConfig);
-        requireNonNull(animationRegistry);
+        requireNonNull(animations);
 
-        return new PacMan3D(animationRegistry, pac, pacConfig);
+        return new PacMan3D(animations, pac, pacConfig);
     }
 
     @Override
     public GhostAppearance3D createGhostAppearance3D(
         Ghost ghost,
         GhostConfig ghostConfig,
-        AnimationRegistry animationRegistry)
+        AnimationRegistry animations)
     {
         requireNonNull(ghost);
         requireNonNull(ghostConfig);
-        requireNonNull(animationRegistry);
+        requireNonNull(animations);
 
         final GhostColorSet colorSet = ghostConfig.createGhostColorSet();
         final GhostMaterials materials = ghostMaterialsCache.computeIfAbsent(colorSet, this::createGhostMaterial);
@@ -125,7 +125,7 @@ public class DefaultFactory3D implements Factory3D {
         );
 
         return new GhostAppearance3D(
-            animationRegistry,
+            animations,
             ghost,
             colorSet,
             meshes,
@@ -150,8 +150,8 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animationRegistry, PhongMaterial material) {
-        final var energizer3D = new Energizer3D(animationRegistry);
+    public Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animations, PhongMaterial material) {
+        final var energizer3D = new Energizer3D(animations);
         energizer3D.setShapeFactory(() -> {
             final var shape = new Sphere(config.radius(), 48);
             shape.setMaterial(material);
