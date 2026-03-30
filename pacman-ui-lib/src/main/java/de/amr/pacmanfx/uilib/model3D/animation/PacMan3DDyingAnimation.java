@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-
 package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -25,30 +24,30 @@ public class PacMan3DDyingAnimation extends ManagedAnimation {
     }
 
     private Animation createAnimation() {
-        Duration duration = Duration.seconds(1.5);
+        final Duration duration = Duration.seconds(1.5);
         byte numSpins = 5;
 
-        var spinning = new RotateTransition(duration.divide(numSpins), pacMan3D);
+        final var spinning = new RotateTransition(duration.divide(numSpins), pacMan3D);
         spinning.setAxis(Rotate.Z_AXIS);
         spinning.setByAngle(360);
         spinning.setCycleCount(numSpins);
         spinning.setInterpolator(Interpolator.LINEAR);
 
-        var shrinking = new ScaleTransition(duration.multiply(0.5), pacMan3D);
+        final var shrinking = new ScaleTransition(duration.multiply(0.5), pacMan3D);
         shrinking.setToX(0.25);
         shrinking.setToY(0.25);
         shrinking.setToZ(0.02);
 
-        var expanding = new ScaleTransition(duration.multiply(0.5), pacMan3D);
+        final var expanding = new ScaleTransition(duration.multiply(0.5), pacMan3D);
         expanding.setToX(0.75);
         expanding.setToY(0.75);
 
-        var sinking = new TranslateTransition(duration, pacMan3D);
+        final var sinking = new TranslateTransition(duration, pacMan3D);
         sinking.setToZ(0);
 
         final var deathFight = new ParallelTransition(spinning, new SequentialTransition(shrinking, expanding), sinking);
         return new SequentialTransition(
-            doNow(() -> pacMan3D.light().ifPresent(light -> light.setLightOn(false))),
+            doNow(() -> pacMan3D.powerLight().ifPresent(light -> light.setLightOn(false))),
             deathFight,
             pauseSecThen(1.0, () -> {
                 pacMan3D.setVisible(false);

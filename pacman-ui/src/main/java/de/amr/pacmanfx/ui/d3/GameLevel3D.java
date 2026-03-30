@@ -223,7 +223,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         addChild(levelCounter3D);
         addChild(livesCounter3D);
         addChild(pac3D);
-        pac3D.light().ifPresent(this::addChild);
+        pac3D.powerLight().ifPresent(this::addChild);
         entities.all(GhostAppearance3D.class).sorted(BY_GHOST_PERSONALITY).forEach(this::addChild);
         entities.all(Energizer3D.class).map(Energizer3D::shape).forEach(this::addChild);
         entities.all(Pellet3D.class).map(Pellet3D::shape).forEach(this::addChild);

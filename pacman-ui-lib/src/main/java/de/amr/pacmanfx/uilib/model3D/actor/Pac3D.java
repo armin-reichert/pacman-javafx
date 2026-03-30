@@ -48,7 +48,6 @@ public abstract class Pac3D extends Group implements GameLevelEntity, Disposable
         this.animations = requireNonNull(animations);
         this.pac = requireNonNull(pac);
         getTransforms().add(moveRotation);
-//        animations.register(AnimationID.PAC_CHEWING, new Pac3DChewingAnimation(this));
     }
 
     public void setBody(Group body) {
@@ -114,7 +113,7 @@ public abstract class Pac3D extends Group implements GameLevelEntity, Disposable
         }
     }
 
-    public Optional<PointLight> light() {
+    public Optional<PointLight> powerLight() {
         return Optional.ofNullable(powerLight);
     }
 
