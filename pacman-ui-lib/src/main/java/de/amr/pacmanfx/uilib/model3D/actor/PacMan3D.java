@@ -9,6 +9,7 @@ import de.amr.pacmanfx.uilib.animation.AnimationSupport;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.animation.HeadBangingAnimation;
+import de.amr.pacmanfx.uilib.model3D.animation.Pac3DChewingAnimation;
 import javafx.animation.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -20,6 +21,8 @@ public class PacMan3D extends Pac3D {
 
         setBody(Models3D.PAC_MAN_MODEL.createPacBody(pacConfig));
         setJaw(Models3D.PAC_MAN_MODEL.createBlindPacBody(pacConfig));
+
+        animations.register(AnimationID.PAC_CHEWING, new Pac3DChewingAnimation(this));
 
         final var dyingAnimation = new ManagedAnimation("PacMan_Dying");
         dyingAnimation.setFactory(() -> {

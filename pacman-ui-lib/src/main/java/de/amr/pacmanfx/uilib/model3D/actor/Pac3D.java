@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.animation.Pac3DChewingAnimation;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.transform.Rotate;
@@ -49,7 +48,7 @@ public abstract class Pac3D extends Group implements GameLevelEntity, Disposable
         this.animations = requireNonNull(animations);
         this.pac = requireNonNull(pac);
         getTransforms().add(moveRotation);
-        animations.register(AnimationID.PAC_CHEWING, new Pac3DChewingAnimation(this));
+//        animations.register(AnimationID.PAC_CHEWING, new Pac3DChewingAnimation(this));
     }
 
     public void setBody(Group body) {

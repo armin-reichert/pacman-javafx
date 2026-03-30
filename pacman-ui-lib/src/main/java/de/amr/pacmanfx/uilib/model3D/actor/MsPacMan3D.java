@@ -8,6 +8,7 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.animation.HipSwayingAnimation;
+import de.amr.pacmanfx.uilib.model3D.animation.Pac3DChewingAnimation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
@@ -28,6 +29,8 @@ public class MsPacMan3D extends Pac3D {
 
         final Group femaleParts = Models3D.PAC_MAN_MODEL.createFemaleBodyParts(pacConfig);
         getChildren().add(femaleParts);
+
+        animations.register(AnimationID.PAC_CHEWING, new Pac3DChewingAnimation(this));
 
         final var dyingAnimation = new ManagedAnimation("Ms. Pac-Man Dying");
         dyingAnimation.setFactory(() -> {
