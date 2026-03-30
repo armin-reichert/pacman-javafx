@@ -24,7 +24,7 @@ public class HeadBangingAnimation extends ManagedAnimation {
 
     private final Node node;
 
-    public HeadBangingAnimation( Node node) {
+    public HeadBangingAnimation(Node node) {
         super("Pac-Man Head Banging");
         this.node = requireNonNull(node);
         setFactory(this::createAnimationFX);

@@ -24,7 +24,7 @@ public class HipSwayingAnimation extends ManagedAnimation {
 
     private final Node node;
 
-    public HipSwayingAnimation( Node node) {
+    public HipSwayingAnimation(Node node) {
         super("Ms. Pac-Man Hip Swaying");
         this.node = requireNonNull(node);
         setFactory(this::createWrappedAnimation);

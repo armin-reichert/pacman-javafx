@@ -12,11 +12,10 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import javafx.animation.*;
+import de.amr.pacmanfx.uilib.model3D.animation.Pac3DChewingAnimation;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.transform.Rotate;
-import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.Optional;
@@ -42,47 +41,15 @@ public abstract class Pac3D extends Group implements GameLevelEntity, Disposable
 
     protected Rotate moveRotation = new Rotate();
 
-    public class ChewingAnimation extends ManagedAnimation {
-
-        public ChewingAnimation() {
-            super("Pac-Man Chewing");
-            setFactory(this::createChewingAnimation);
-        }
-
-        private Animation createChewingAnimation() {
-            final var mouthClosed = new KeyValue[] {
-                new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
-                new KeyValue(jaw.rotateProperty(), -54, Interpolator.LINEAR)
-            };
-            final var mouthOpen = new KeyValue[] {
-                new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
-                new KeyValue(jaw.rotateProperty(), 0, Interpolator.LINEAR)
-            };
-            final var chewing = new Timeline(
-                new KeyFrame(Duration.ZERO,        "Open on Start", mouthOpen),
-                new KeyFrame(Duration.millis(100), "Start Closing", mouthOpen),
-                new KeyFrame(Duration.millis(130), "Closed",        mouthClosed),
-                new KeyFrame(Duration.millis(200), "Start Opening", mouthClosed),
-                new KeyFrame(Duration.millis(280), "Open",          mouthOpen)
-            );
-            chewing.setCycleCount(Animation.INDEFINITE);
-            chewing.statusProperty().addListener((_, _, newStatus) -> {
-                if (newStatus == Animation.Status.STOPPED) {
-                    jaw.setRotationAxis(Rotate.Y_AXIS);
-                    jaw.setRotate(0);
-                }
-            });
-            return chewing;
-        }
+    public Group jaw() {
+        return jaw;
     }
 
     protected Pac3D(AnimationRegistry animations, Pac pac) {
         this.animations = requireNonNull(animations);
         this.pac = requireNonNull(pac);
-
         getTransforms().add(moveRotation);
-
-        animations.register(AnimationID.PAC_CHEWING, new ChewingAnimation());
+        animations.register(AnimationID.PAC_CHEWING, new Pac3DChewingAnimation(this));
     }
 
     public void setBody(Group body) {
