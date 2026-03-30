@@ -172,7 +172,7 @@ public abstract class Pac3D extends Group implements GameLevelEntity, Disposable
     public void updatePowerLight() {
         if (powerLight == null) return;
         final TickTimer powerTimer = pac.powerTimer();
-        if (powerTimer.isRunning() && pac.isVisible()) {
+        if (powerTimer.isRunning() && pac.isVisible() && !pac.isDead()) {
             powerLight.setLightOn(true);
             final long remainingTicks = powerTimer.remainingTicks();
             final float maxRange = (remainingTicks / (float) powerTimer.durationTicks()) * 60 + 30;
