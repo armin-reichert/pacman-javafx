@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
-    public enum AnimationID {PAC_CHEWING, PAC_DYING, PAC_MOVING }
+    public enum AnimationID { PAC_CHEWING, PAC_DYING, PAC_MOVING }
 
     protected final Pac pac;
     protected final AnimationRegistry animations;
@@ -70,9 +70,9 @@ public abstract class Pac3D extends Group implements GameLevelEntity, Disposable
 
     @Override
     public void dispose() {
-        animations.optAnimation(AnimationID.PAC_CHEWING).ifPresent(ManagedAnimation::dispose);
-        animations.optAnimation(AnimationID.PAC_DYING).ifPresent(ManagedAnimation::dispose);
-        animations.optAnimation(AnimationID.PAC_MOVING).ifPresent(ManagedAnimation::dispose);
+        for (var animID : AnimationID.values()) {
+            animations.optAnimation(animID).ifPresent(ManagedAnimation::dispose);
+        }
         cleanupLight(powerLight);
         cleanupGroup(this, true);
     }
