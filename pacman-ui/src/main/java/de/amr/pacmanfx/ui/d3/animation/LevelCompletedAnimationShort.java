@@ -37,7 +37,7 @@ public class LevelCompletedAnimationShort extends ManagedAnimation {
     }
 
     private Animation createAnimationFX() {
-        final Maze3D maze3D = level3D.entities().theOne(Maze3D.class);
+        final Maze3D maze3D = level3D.entities().unique(Maze3D.class);
         final GameLevel level = level3D.level();
         return new SequentialTransition(
             pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),

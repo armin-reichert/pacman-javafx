@@ -5,35 +5,30 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.lib.Disposable;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameLevelEntitySet implements GameLevelEntity, Disposable {
+public class GameLevelEntitySet implements Disposable {
 
     private final Set<GameLevelEntity> entities = new HashSet<>();
-
-    @Override
-    public void init(GameLevel level) {
-        requireNonNull(level);
-        entities.forEach(e -> e.init(level));
-    }
-
-    @Override
-    public void update(GameLevel level) {
-        requireNonNull(level);
-        entities.forEach(e -> e.update(level));
-    }
 
     @Override
     public void dispose() {
         all(Disposable.class).forEach(Disposable::dispose);
         entities.clear();
+    }
+
+    public void init(GameLevel level) {
+        requireNonNull(level);
+        entities.forEach(e -> e.init(level));
+    }
+
+    public void update(GameLevel level) {
+        requireNonNull(level);
+        entities.forEach(e -> e.update(level));
     }
 
     public Stream<GameLevelEntity> all() {
@@ -45,7 +40,7 @@ public class GameLevelEntitySet implements GameLevelEntity, Disposable {
         return all().filter(type::isInstance).map(type::cast);
     }
 
-    public <T> Stream<T> where(Class<T> type, Predicate<T> condition) {
+    public <T> Stream<T> allWhere(Class<T> type, Predicate<T> condition) {
         requireNonNull(condition);
         return all(type).filter(condition);
     }
@@ -61,11 +56,18 @@ public class GameLevelEntitySet implements GameLevelEntity, Disposable {
 
     /**
      * @param type entity class
-     * @return first entity with given class in entity set. If there is none,
+     * @return the single entity with given class in entity set. If there is none,
      *         a {@link java.util.NoSuchElementException} exception is thrown.
      * @param <T> type of entity
      */
-    public <T> T theOne(Class<T> type) {
+    public <T> T unique(Class<T> type) {
+        final long count = all(type).count();
+        if (count == 0) {
+            throw new NoSuchElementException("There are no entities of type '%s'".formatted(type.getSimpleName()));
+        }
+        if (count > 1) {
+            throw new NoSuchElementException("There are more than one entities of type '%s'".formatted(type.getSimpleName()));
+        }
         return first(type).orElseThrow();
     }
 

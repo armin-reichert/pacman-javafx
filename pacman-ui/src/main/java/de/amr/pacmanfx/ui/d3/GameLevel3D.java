@@ -91,11 +91,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private static final Comparator<GhostAppearance3D> BY_GHOST_PERSONALITY = Comparator.comparingInt(ga3D -> ga3D.ghost().personality());
 
-    public enum AnimationID { 
-        GHOST_LIGHT, 
+    public enum AnimationID {
+        EXPLOSION_PARTICLES,
+        GHOST_LIGHT,
         LEVEL_COMPLETED_FULL, 
         LEVEL_COMPLETED_SHORT,
-        EXPLOSION_PARTICLES,
         WALL_COLOR_FLASHING
     }
 
@@ -130,7 +130,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         addChildrenToGroup();
 
         // Maze3D must exist when energizer animations are created:
-        final Maze3D maze3D = entities().theOne(Maze3D.class);
+        final Maze3D maze3D = entities().unique(Maze3D.class);
         createAnimations(maze3D, mapColorScheme);
 
         resetPacZPosition();
@@ -196,7 +196,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private Optional<GhostAppearance3D> ghostAppearance3D(byte personality) {
         Validations.requireValidGhostPersonality(personality);
-        return entities.where(GhostAppearance3D.class, ga3D -> ga3D.ghost().personality() == personality).findFirst();
+        return entities.allWhere(GhostAppearance3D.class, ga3D -> ga3D.ghost().personality() == personality).findFirst();
     }
 
     private List<PhongMaterial> dressMaterials(List<GhostAppearance3D> ghostsAppearances) {
@@ -215,10 +215,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * in front of walls/house.
      */
     private void addChildrenToGroup() {
-        final Maze3D maze3D = entities().theOne(Maze3D.class);
-        final Pac3D pac3D = entities.theOne(Pac3D.class);
-        final LevelCounter3D levelCounter3D = entities.theOne(LevelCounter3D.class);
-        final LivesCounter3D livesCounter3D = entities.theOne(LivesCounter3D.class);
+        final Maze3D maze3D = entities().unique(Maze3D.class);
+        final Pac3D pac3D = entities.unique(Pac3D.class);
+        final LevelCounter3D levelCounter3D = entities.unique(LevelCounter3D.class);
+        final LivesCounter3D livesCounter3D = entities.unique(LivesCounter3D.class);
         addChildren(maze3D.floor(), maze3D.particlesGroup());
         addChild(levelCounter3D);
         addChild(livesCounter3D);
@@ -354,7 +354,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createFood3D() {
         final FoodLayer foodLayer = level.worldMap().foodLayer();
-        final Maze3D maze3D = entities().theOne(Maze3D.class);
+        final Maze3D maze3D = entities().unique(Maze3D.class);
 
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final PelletConfig3D pelletConfig3D = uiConfig.entityConfig().pellet();
@@ -383,13 +383,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void eatFood(Group pelletContainer, Vector2i tile) {
-        final Optional<Energizer3D> eatenEnergizer3D = entities.where(Energizer3D.class, e3D -> tile.equals(e3D.tile())).findAny();
+        final Optional<Energizer3D> eatenEnergizer3D = entities.allWhere(Energizer3D.class, e3D -> tile.equals(e3D.tile())).findAny();
         eatenEnergizer3D.ifPresentOrElse(energizer3D -> {
             energizer3D.stopPumping();
             energizer3D.hide();
             final Point3D center = energizer3D.shape().localToScene(Point3D.ZERO);
             animations.animation(AnimationID.EXPLOSION_PARTICLES, EnergizerParticlesAnimation.class).triggerEnergizerExplosion(center);
-        }, () -> entities.where(Pellet3D.class, p3D -> tile.equals(p3D.tile()))
+        }, () -> entities.allWhere(Pellet3D.class, p3D -> tile.equals(p3D.tile()))
             .findFirst()
             .ifPresent(p3D -> removePelletAfterDelay(pelletContainer, p3D)));
     }
@@ -525,7 +525,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Handles Pac gaining power: stops siren, starts power animation/sound.
      */
     public void onPacGetsPower(PacGetsPowerEvent ignoredEvent) {
-        final Pac3D pac3D = entities.theOne(Pac3D.class);
+        final Pac3D pac3D = entities.unique(Pac3D.class);
         final Game game = level.game();
         uiConfig.soundEffects().ifPresent(GameSoundEffects::stopSiren);
         if (!game.isLevelCompleted(level)) {
@@ -539,7 +539,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Handles Pac losing power: stops power animation/sound.
      */
     public void onPacLostPower(PacLostPowerEvent ignoredEvent) {
-        final Pac3D pac3D = entities.theOne(Pac3D.class);
+        final Pac3D pac3D = entities.unique(Pac3D.class);
         pac3D.setMovementAnimationPowerMode(false);
         animations.animation(AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).stop();
         uiConfig.soundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
@@ -564,7 +564,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void onPacManDying() {
-        final Pac3D pac3D = entities.theOne(Pac3D.class);
+        final Pac3D pac3D = entities.unique(Pac3D.class);
         final TickTimer stateTimer = level.game().control().state().timer();
 
         uiConfig.soundEffects().ifPresent(GameSoundEffects::stopAll);
@@ -603,7 +603,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void onLevelComplete() {
         final State<Game> gameState = level.game().control().state();
-        final Maze3D maze3D = entities().theOne(Maze3D.class);
+        final Maze3D maze3D = entities().unique(Maze3D.class);
 
         uiConfig.soundEffects().ifPresent(GameSoundEffects::stopAll);
         animations().stopAllAnimations();
@@ -618,7 +618,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final State<Game> gameState = level.game().control().state();
         gameState.timer().restartSeconds(3);
         animations.animation(AnimationID.GHOST_LIGHT).stop();
-        cleanupFoodAndParticles(entities().theOne(Maze3D.class));
+        cleanupFoodAndParticles(entities().unique(Maze3D.class));
         entities.first(Bonus3D.class).ifPresent(Bonus3D::expire);
         if (!level.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
             ui.showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.nextText());

@@ -66,7 +66,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
 
     private Animation createAnimationFX() {
         final GameLevel level = level3D.level();
-        final Maze3D maze3D = level3D.entities().theOne(Maze3D.class);
+        final Maze3D maze3D = level3D.entities().unique(Maze3D.class);
         final Point3D rotationAxis = chance(0.5) ? Rotate.X_AXIS : Rotate.Z_AXIS;
         return new SequentialTransition(
             pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),
