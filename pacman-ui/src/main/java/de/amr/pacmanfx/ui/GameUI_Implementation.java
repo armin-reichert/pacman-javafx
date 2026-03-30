@@ -14,13 +14,13 @@ import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
+import de.amr.pacmanfx.ui.d3.DefaultFactory3D;
 import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
-import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.application.Platform;
@@ -413,8 +413,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     private void load3DModels() {
-        Logger.info("Loaded {}", Models3D.PAC_MAN_MODEL);
-        Logger.info("Loaded {}", Models3D.GHOST_MODEL);
-        Logger.info("Loaded {}", Models3D.PELLET_MODEL);
+        Logger.info("Loaded {}", DefaultFactory3D.PAC_MAN_MODEL);
+        Logger.info("Loaded {}", DefaultFactory3D.GHOST_MODEL);
+        Logger.info("Loaded {}", DefaultFactory3D.PELLET_MODEL);
     }
 }

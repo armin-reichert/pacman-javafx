@@ -15,9 +15,10 @@ import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.d3.entities.Pellet3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
-import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
+import de.amr.pacmanfx.uilib.model3D.world.PelletModel3D;
+import de.amr.pacmanfx.uilib.objimport.MeshHelper;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -33,6 +34,15 @@ import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
 public class DefaultFactory3D implements Factory3D {
+
+    /** Shared 3D model instance for Pac-Man. */
+    public static final PacManModel3D PAC_MAN_MODEL = new PacManModel3D();
+
+    /** Shared 3D model instance for ghosts. */
+    public static final GhostModel3D GHOST_MODEL = new GhostModel3D();
+
+    /** Shared 3D model instance for pellets. */
+    public static final PelletModel3D PELLET_MODEL = new PelletModel3D();
 
     public static final int DEFAULT_NUMBER_BOX_SIZE_X = 14;
     public static final int DEFAULT_NUMBER_BOX_SIZE_Y = 8;
@@ -65,16 +75,15 @@ public class DefaultFactory3D implements Factory3D {
         return new GhostMaterials(normalMaterials, frightenedMaterials, flashingMaterials);
     }
 
-    protected Mesh scaledPelletMesh(PelletConfig3D pelletConfig) {
+    protected Mesh scaledPelletMesh(Mesh originalPelletMesh, PelletConfig3D pelletConfig) {
         requireNonNull(pelletConfig);
         if (scaledPelletMesh == null || pelletConfig.radius() != pelletRadius) {
             pelletRadius = pelletConfig.radius();
-            final Mesh originalPelletMesh = Models3D.PELLET_MODEL.mesh();
             final var dummy = new MeshView(originalPelletMesh);
             final Bounds bounds = dummy.getBoundsInLocal();
             final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
             final double scaling = (2 * pelletRadius) / maxExtent;
-            scaledPelletMesh = Models3D.createScaledMesh(originalPelletMesh, scaling);
+            scaledPelletMesh = MeshHelper.createScaledMesh(originalPelletMesh, scaling);
             Logger.info("Created scaled pellet mesh, config={}", pelletConfig);
         }
         return scaledPelletMesh;
@@ -105,7 +114,7 @@ public class DefaultFactory3D implements Factory3D {
         requireNonNull(pacConfig);
         requireNonNull(animations);
 
-        return new PacMan3D(animations, pac, pacConfig);
+        return new PacMan3D(animations, PAC_MAN_MODEL, pac, pacConfig);
     }
 
     @Override
@@ -121,9 +130,9 @@ public class DefaultFactory3D implements Factory3D {
         final GhostColorSet colorSet = ghostConfig.createGhostColorSet();
         final GhostMaterials materials = ghostMaterialsCache.computeIfAbsent(colorSet, this::createGhostMaterial);
         final GhostMeshes meshes = new GhostMeshes(
-            Models3D.GHOST_MODEL.dressMesh(),
-            Models3D.GHOST_MODEL.pupilsMesh(),
-            Models3D.GHOST_MODEL.eyeballsMesh()
+            GHOST_MODEL.dressMesh(),
+            GHOST_MODEL.pupilsMesh(),
+            GHOST_MODEL.eyeballsMesh()
         );
 
         return new GhostAppearance3D(
@@ -140,12 +149,12 @@ public class DefaultFactory3D implements Factory3D {
     public Group createLivesCounterShape3D(EntityConfig entityConfig) {
         requireNonNull(entityConfig);
         final PacConfig pacConfig = entityConfig.pacConfig().withModifiedSize3D(entityConfig.livesCounter().shapeSize());
-        return Models3D.PAC_MAN_MODEL.createPacBody(pacConfig);
+        return PAC_MAN_MODEL.createPacBody(pacConfig);
     }
 
     @Override
     public Pellet3D createPellet3D(PelletConfig3D pelletConfig, PhongMaterial material) {
-        final Mesh scaledPelletMesh = scaledPelletMesh(pelletConfig);
+        final Mesh scaledPelletMesh = scaledPelletMesh(PELLET_MODEL.mesh(), pelletConfig);
         final var pellet3D = new Pellet3D(new MeshView(scaledPelletMesh));
         pellet3D.shape().setMaterial(material);
         return pellet3D;

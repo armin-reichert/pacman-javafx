@@ -11,6 +11,9 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapLayer;
 import de.amr.pacmanfx.model.world.WorldMapLayerID;
 import de.amr.pacmanfx.model.world.WorldMapPropertyName;
+import de.amr.pacmanfx.uilib.model3D.actor.GhostModel3D;
+import de.amr.pacmanfx.uilib.model3D.actor.PacManModel3D;
+import de.amr.pacmanfx.uilib.model3D.world.PelletModel3D;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -45,6 +48,15 @@ import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
 import static java.util.Objects.requireNonNull;
 
 public class TileMapEditorUI {
+
+    /** Shared 3D model instance for Pac-Man. */
+    public static final PacManModel3D PAC_MAN_MODEL = new PacManModel3D();
+
+    /** Shared 3D model instance for ghosts. */
+    public static final GhostModel3D GHOST_MODEL = new GhostModel3D();
+
+    /** Shared 3D model instance for pellets. */
+    public static final PelletModel3D PELLET_MODEL = new PelletModel3D();
 
     private final TileMapEditor editor;
 

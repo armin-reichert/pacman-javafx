@@ -45,7 +45,7 @@ public class Model3D implements Disposable {
             }
             for (TriangleMesh mesh : content.meshMap().values()) {
                 try {
-                    MeshValidator.validateTriangleMesh(mesh);
+                    MeshHelper.validateTriangleMesh(mesh);
                 } catch (AssertionError error) {
                     Logger.error("Invalid OBJ file data: {}, URL: '{}'", error.getMessage(), modelURL);
                 }

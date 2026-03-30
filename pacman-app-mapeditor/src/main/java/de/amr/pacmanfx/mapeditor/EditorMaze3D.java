@@ -7,7 +7,6 @@ import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.model3D.Models3D;
 import de.amr.pacmanfx.uilib.model3D.actor.MsPacManComponentColors;
 import de.amr.pacmanfx.uilib.model3D.actor.PacComponentColors;
 import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
@@ -123,7 +122,7 @@ public class EditorMaze3D extends Group {
 
         foodGroup.visibleProperty().bind(foodVisible);
 
-        pacmanShape3D = Models3D.PAC_MAN_MODEL.createPacBody(PAC_CONFIG);
+        pacmanShape3D = TileMapEditorUI.PAC_MAN_MODEL.createPacBody(PAC_CONFIG);
         pacmanShape3D.visibleProperty().bind(actorsVisibleProperty());
 
         ghostShapes = new Group[] {
@@ -205,13 +204,13 @@ public class EditorMaze3D extends Group {
     private Group createGhostBody(Color dressColor, double rotateY) {
         final Group body = new Group();
 
-        final MeshView dressMeshView = new MeshView(Models3D.GHOST_MODEL.dressMesh());
+        final MeshView dressMeshView = new MeshView(TileMapEditorUI.GHOST_MODEL.dressMesh());
         dressMeshView.setMaterial(coloredPhongMaterial(dressColor));
 
-        final MeshView pupilsMeshView = new MeshView(Models3D.GHOST_MODEL.pupilsMesh());
+        final MeshView pupilsMeshView = new MeshView(TileMapEditorUI.GHOST_MODEL.pupilsMesh());
         pupilsMeshView.setMaterial(coloredPhongMaterial(Color.BLUE));
 
-        final MeshView eyeballsMeshView = new MeshView(Models3D.GHOST_MODEL.eyeballsMesh());
+        final MeshView eyeballsMeshView = new MeshView(TileMapEditorUI.GHOST_MODEL.eyeballsMesh());
         eyeballsMeshView.setMaterial(coloredPhongMaterial(Color.WHITE));
 
         final var dressGroup = new Group(dressMeshView);

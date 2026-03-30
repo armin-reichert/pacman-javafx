@@ -1,7 +1,7 @@
 package experiments;
 
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.uilib.model3D.Models3D;
+import de.amr.pacmanfx.ui.d3.DefaultFactory3D;
 import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
 import javafx.application.Application;
 import javafx.scene.*;
@@ -91,7 +91,7 @@ public class ModelViewer extends Application {
         if (selectedFile != null) {
             Logger.info("File {} selected", selectedFile);
             try {
-                Node shape = Models3D.PAC_MAN_MODEL.createPacBody(PAC_CONFIG);
+                Node shape = DefaultFactory3D.PAC_MAN_MODEL.createPacBody(PAC_CONFIG);
                 //allMeshViewsUnder(shape).forEach(meshView -> meshView.setDrawMode(DrawMode.LINE));
                 setCurrentNode(new Group(shape));
             } catch (Exception x) {
