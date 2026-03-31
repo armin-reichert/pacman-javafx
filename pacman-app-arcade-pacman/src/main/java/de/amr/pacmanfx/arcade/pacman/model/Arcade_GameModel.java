@@ -86,12 +86,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
     }
 
-    protected Arcade_GameController createGameControl() {
-        final var stateMachine = new Arcade_GameController();
-        stateMachine.setContext(this);
-        stateMachine.addStateChangeListener((oldState, newState) -> publishGameEvent(
+    protected GameControl createGameControl() {
+        final var gameControl = new Arcade_GameControl();
+        gameControl.stateMachine().setContext(this);
+        gameControl.stateMachine().addStateChangeListener((oldState, newState) -> publishGameEvent(
             new GameStateChangeEvent(this, oldState, newState)));
-        return stateMachine;
+        return gameControl;
     }
 
     protected int cutSceneNumberAfterLevel(int levelNumber) {
