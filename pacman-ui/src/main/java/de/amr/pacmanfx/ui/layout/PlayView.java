@@ -16,10 +16,13 @@ import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
+import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
 import de.amr.pacmanfx.uilib.widgets.CanvasDecorationPane;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -46,6 +49,8 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.pacmanfx.model.GameControl.CommonGameState.EATING_GHOST;
+import static de.amr.pacmanfx.model.GameControl.CommonGameState.HUNTING;
 import static de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
 import static de.amr.pacmanfx.ui.GameSceneConfig.identifySceneSwitchType;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
@@ -279,8 +284,8 @@ public class PlayView extends StackPane implements View {
             // Handle switching between 2D and 3D scene variant (play scene)
             final byte sceneSwitchType = identifySceneSwitchType(currentGameScene, intendedGameScene);
             switch (sceneSwitchType) {
-                case 23 -> PlaySceneSwitcher.switchTo3D(ui, (GameScene2D) currentGameScene, (PlayScene3D) intendedGameScene);
-                case 32 -> PlaySceneSwitcher.switchTo2D(ui, (PlayScene3D) currentGameScene, (GameScene2D) intendedGameScene);
+                case 23 -> switchPlaySceneTo3D(currentGameScene, intendedGameScene);
+                case 32 -> switchPlaySceneTo2D(currentGameScene, intendedGameScene);
                 case  0 -> {}
                 default -> throw new IllegalArgumentException("Illegal scene switch type: " + sceneSwitchType);
             }
@@ -448,5 +453,54 @@ public class PlayView extends StackPane implements View {
         else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }
+    }
+
+    private void switchPlaySceneTo3D(GameScene currentScene, GameScene nextScene) {
+        if (!(nextScene instanceof PlayScene3D playScene3D)) {
+            throw new IllegalArgumentException("Expected PlayScene3D, but scene has class %s"
+                .formatted(nextScene.getClass().getSimpleName()));
+        }
+
+        // Pause simulation while switching
+        ui.gameContext().clock().setUpdatesDisabled(true);
+
+        final Game game = ui.gameContext().game();
+        final GameLevel level = game.optGameLevel().orElseThrow();
+        final State<Game> state = game.control().state();
+
+        if (playScene3D.optGameLevel3D().isEmpty()) {
+            playScene3D.replaceGameLevel3D(level);
+        }
+
+        final GameLevel3D gameLevel3D = playScene3D.optGameLevel3D().orElseThrow();
+        final Pac3D pac3D = gameLevel3D.entities().unique(Pac3D.class);
+        gameLevel3D.startTrackingPac();
+        playScene3D.initFood3D(level.worldMap().foodLayer(), state.nameMatches(HUNTING.name(), EATING_GHOST.name()));
+        playScene3D.initPac3D(pac3D, level);
+        playScene3D.updateHUD3D(level);
+        playScene3D.replaceActionBindings(level);
+        playScene3D.fadeIn();
+
+        if (state.nameMatches(HUNTING.name()) && level.pac().powerTimer().isRunning()) {
+            ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+        }
+
+        ui.gameContext().clock().setUpdatesDisabled(false);
+        Logger.info("3D scene {} entered from 3D scene {}", playScene3D.getClass().getSimpleName(), currentScene.getClass().getSimpleName());
+    }
+
+    private void switchPlaySceneTo2D(GameScene currentScene, GameScene nextScene) {
+        if (!(nextScene instanceof GameScene2D playScene2D)) {
+            throw new IllegalArgumentException("Expected GameScene2D, but scene has class %s"
+                .formatted(nextScene.getClass().getSimpleName()));
+        }
+        // Pause simulation while switching
+        ui.gameContext().clock().setUpdatesDisabled(true);
+
+        final Game game = ui.gameContext().game();
+        game.optGameLevel().ifPresent(playScene2D::acceptGameLevel);
+
+        ui.gameContext().clock().setUpdatesDisabled(false);
+        Logger.info("2D scene {} entered from 3D scene {}", playScene2D.getClass().getSimpleName(), currentScene.getClass().getSimpleName());
     }
 }

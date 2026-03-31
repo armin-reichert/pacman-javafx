@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.model.GameControl.CommonGameState.HUNTING;
 
 public interface PlaySceneSwitcher {
 
-    static void switchTo3D(GameUI ui, GameScene2D playScene2D, PlayScene3D playScene3D) {
+    static void switchToPlayScene3D(GameUI ui, GameScene2D playScene2D, PlayScene3D playScene3D) {
         // Pause simulation while switching
         ui.gameContext().clock().setUpdatesDisabled(true);
 
@@ -47,7 +47,7 @@ public interface PlaySceneSwitcher {
         Logger.info("3D scene {} entered from 3D scene {}", playScene3D.getClass().getSimpleName(), playScene2D.getClass().getSimpleName());
     }
 
-    static void switchTo2D(GameUI ui, PlayScene3D playScene3D, GameScene2D playScene2D) {
+    static void switchToPlayScene2D(GameUI ui, PlayScene3D playScene3D, GameScene2D playScene2D) {
         // Pause simulation while switching
         ui.gameContext().clock().setUpdatesDisabled(true);
 

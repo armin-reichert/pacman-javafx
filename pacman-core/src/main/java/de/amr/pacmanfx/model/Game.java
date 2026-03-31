@@ -42,20 +42,12 @@ import java.util.Optional;
  */
 public interface Game {
 
-    /* -----------------------------------------------------------
-     *  State machine
-     * ----------------------------------------------------------- */
-
     /**
-     * Returns the state machine controlling the game flow.
+     * Returns the controller of the game flow.
      *
      * @return the {@link GameControl} instance for this game
      */
     GameControl control();
-
-    /* -----------------------------------------------------------
-     *  Simulation and HUD
-     * ----------------------------------------------------------- */
 
     /**
      * Returns the simulation step information for the current frame.
@@ -72,10 +64,6 @@ public interface Game {
      * @return the {@link HeadsUpDisplay} instance
      */
     HeadsUpDisplay hud();
-
-    /* -----------------------------------------------------------
-     *  Scoring
-     * ----------------------------------------------------------- */
 
     /**
      * Returns the counter for the game levels that have been completed including the currently played level.
@@ -98,10 +86,6 @@ public interface Game {
      */
     PersistentScore highScore();
 
-    /* -----------------------------------------------------------
-     *  World map selection
-     * ----------------------------------------------------------- */
-
     /**
      * Returns the map selector that determines which world map is used
      * for each level.
@@ -109,10 +93,6 @@ public interface Game {
      * @return the {@link WorldMapSelector} for this game
      */
     WorldMapSelector mapSelector();
-
-    /* -----------------------------------------------------------
-     *  Game levels
-     * ----------------------------------------------------------- */
 
     /**
      * Returns the current game level, if one is active.
@@ -129,10 +109,6 @@ public interface Game {
     default boolean isDemoLevelRunning() {
         return optGameLevel().isPresent() && optGameLevel().get().isDemoLevel();
     }
-
-    /* -----------------------------------------------------------
-     *  Lifecycle
-     * ----------------------------------------------------------- */
 
     /** Initializes the game model before any gameplay begins. */
     void init();
@@ -207,20 +183,17 @@ public interface Game {
     /** Starts the next level in sequence. */
     void startNextLevel();
 
-    /* -----------------------------------------------------------
-     *  Gameplay flow
-     * ----------------------------------------------------------- */
-
     void startHunting(GameLevel level);
-    void whileHunting(GameLevel level);
-    void activateNextBonus(GameLevel level);
-    boolean isBonusReached(GameLevel level);
-    boolean hasPacManBeenKilled();
-    boolean hasGhostBeenKilled();
 
-    /* -----------------------------------------------------------
-     *  Game event system
-     * ----------------------------------------------------------- */
+    void whileHunting(GameLevel level);
+
+    void activateNextBonus(GameLevel level);
+
+    boolean isBonusReached(GameLevel level);
+
+    boolean hasPacManBeenKilled();
+
+    boolean hasGhostBeenKilled();
 
     /** Registers a listener for game events. */
     void addGameEventListener(GameEventListener listener);
@@ -231,19 +204,15 @@ public interface Game {
     /** Publishes a game event to all registered listeners. */
     void publishGameEvent(GameEvent event);
 
-    /* -----------------------------------------------------------
-     *  Event callbacks
-     * ----------------------------------------------------------- */
-
     void onLevelCompleted(GameLevel level);
-    void whilePacManDying(GameLevel level, Pac pac, long tick);
-    void onEatGhost(GameLevel level, Ghost ghost);
-    void whileEatingGhost(GameLevel level, long tick);
-    void onGameOver();
 
-    /* -----------------------------------------------------------
-     *  Collision strategy
-     * ----------------------------------------------------------- */
+    void whilePacManDying(GameLevel level, Pac pac, long tick);
+
+    void onEatGhost(GameLevel level, Ghost ghost);
+
+    void whileEatingGhost(GameLevel level, long tick);
+
+    void onGameOver();
 
     /**
      * Returns the collision strategy used to detect interactions between
@@ -255,10 +224,6 @@ public interface Game {
 
     /** Sets the collision strategy. */
     void setCollisionStrategy(CollisionStrategy collisionStrategy);
-
-    /* -----------------------------------------------------------
-     *  Lives
-     * ----------------------------------------------------------- */
 
     /** @return the number of lives the player starts with */
     int initialLifeCount();
@@ -275,18 +240,13 @@ public interface Game {
     /** Adds the given number of lives. */
     void addLives(int numLives);
 
-    /* -----------------------------------------------------------
-     *  Actor speeds (pixels per tick)
-     * ----------------------------------------------------------- */
-
     float bonusSpeed(GameLevel level);
-    float ghostSpeed(GameLevel level, Ghost ghost);
-    float pacSpeed(GameLevel level);
-    float pacSpeedWhenHasPower(GameLevel level);
 
-    /* -----------------------------------------------------------
-     *  Cut scenes
-     * ----------------------------------------------------------- */
+    float ghostSpeed(GameLevel level, Ghost ghost);
+
+    float pacSpeed(GameLevel level);
+
+    float pacSpeedWhenHasPower(GameLevel level);
 
     /** @return {@code true} if cut scenes are enabled */
     boolean cutScenesEnabled();
@@ -296,10 +256,6 @@ public interface Game {
 
     /** @return the number of the last cut scene shown */
     int lastCutSceneNumber();
-
-    /* -----------------------------------------------------------
-     *  Cheating flags
-     * ----------------------------------------------------------- */
 
     /** Marks that a cheat has been used in this game session. */
     default void raiseCheatFlag() {
