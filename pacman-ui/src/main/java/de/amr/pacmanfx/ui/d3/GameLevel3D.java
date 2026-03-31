@@ -141,12 +141,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         setMouseTransparent(true); // this increases performance they say...
     }
 
-    /**
-     * Releases all resources held by this level.
-     * <p>
-     * Clears animations, unbinds listeners, disposes all registered components,
-     * cleans lights and the entire scene graph, and removes all children.
-     */
     @Override
     public void dispose() {
         animations.dispose();
@@ -504,6 +498,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             uiConfig.soundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
         resetPacZPosition();
+        messageManager().showMessage(MessageManager3D.MessageType.READY);
     }
 
     /**

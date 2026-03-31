@@ -316,11 +316,6 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
             replaceGameLevel3D(level);
             level3D.entities().all(Energizer3D.class).forEach(Energizer3D::startPumping);
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level.number());
-        } else {
-            if (!level.isDemoLevel() &&
-                    state.nameMatches(STARTING_GAME_OR_LEVEL.name(), LEVEL_TRANSITION.name())) {
-                level3D.messageManager().showMessage(MessageManager3D.MessageType.READY);
-            }
         }
         level3D.entities().all().forEach(e -> e.init(level));
         replaceActionBindings(level);

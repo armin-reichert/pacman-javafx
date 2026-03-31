@@ -278,24 +278,24 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void prepareNewGame() {
-        score().reset();
+        score.reset();
         try {
             highScore.load();
+            highScore.setEnabled(true);
         } catch (IOException x) {
-            Logger.error(x, "Error updating highscore file {}", highScore.file().getAbsolutePath());
+            Logger.error(x, "Error loading highscore file {}", highScore.file().getAbsolutePath());
         }
-        highScore.setEnabled(true);
         gateKeeper.reset();
         levelProperty().set(null);
-        setPlaying(false);
         lifeCountProperty().set(initialLifeCount());
+        levelCounter().clear();
+        setPlaying(false);
     }
 
     @Override
     public void startNewGame(long tick) {
         if (tick == 1) {
             prepareNewGame();
-            levelCounter().clear();
             buildNormalLevel(1);
             publishGameEvent(new GameStartedEvent(this));
         }
