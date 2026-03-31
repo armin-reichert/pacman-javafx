@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.TickTimer;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
@@ -26,6 +27,15 @@ import static java.util.Objects.requireNonNull;
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
 public abstract class Arcade_GameModel extends AbstractGameModel {
+
+    protected static GameControl createGameControl(Game game) {
+        final var stateMachine = new StateMachine<Game>();
+        stateMachine.setName("Arcade Pac-Man (common) Game Control");
+        stateMachine.setContext(game);
+        stateMachine.addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
+        stateMachine.addStates(Arcade_GameState.values());
+        return () -> stateMachine;
+    }
 
     // Level data as given in the "Pac-Man Dossier"
     protected static final LevelData[] LEVEL_DATA_TABLE = {
@@ -77,21 +87,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         this.coinMechanism = requireNonNull(coinMechanism);
         hud = new HeadsUpDisplay(coinMechanism);
-        gameControl = createGameControl();
+        gameControl = createGameControl(this);
         pelletPoints = 10;
         energizerPoints = 50;
         restingTicksAfterPelletEaten = 1;
         restingTicksAfterEnergizerEaten = 3;
         setExtraLifeScores(10_000);
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
-    }
-
-    protected GameControl createGameControl() {
-        final var gameControl = new Arcade_GameControl();
-        gameControl.stateMachine().setContext(this);
-        gameControl.stateMachine().addStateChangeListener((oldState, newState) -> publishGameEvent(
-            new GameStateChangeEvent(this, oldState, newState)));
-        return gameControl;
     }
 
     protected int cutSceneNumberAfterLevel(int levelNumber) {
