@@ -346,19 +346,25 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     }
 
     /**
-     * Creates the 3D level representation. Can be overridden by 3D scenes that e.g. decorate the 3D level with
-     * additional stuff as done by the Tengen Ms. Pac-Man game that displays the game difficulty, map category etc.
+     * Creates the 3D level representation.
      *
      * @param level the game level
      * @param uiConfig the UI configuration
      * @return the 3D game level
      */
-    protected GameLevel3D createGameLevel3D(GameLevel level, UIConfig uiConfig) {
+    protected final GameLevel3D createGameLevel3D(GameLevel level, UIConfig uiConfig) {
         final var level3D = new GameLevel3D(level, uiConfig, ui.localizedTexts());
         level3D.entities().all().forEach(e -> e.init(level));
         level3D.startTrackingPac();
+        decorateGameLevel3D(level3D);
         return level3D;
     }
+
+    /**
+     * Can be overridden by 3D scenes that e.g. decorate the 3D level with
+     * additional stuff as done by the Tengen Ms. Pac-Man game that displays the game difficulty, map category etc.
+     */
+    protected void decorateGameLevel3D(GameLevel3D level3D) {}
 
     /**
      * Hook for replacing action bindings when a new level starts.

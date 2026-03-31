@@ -4,19 +4,17 @@
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.pacmanfx.lib.nes.NES_Palette;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
-import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
-import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -38,40 +36,32 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     public TengenMsPacMan_PlayScene3D() {}
 
     @Override
-    protected GameLevel3D createGameLevel3D(GameLevel level, UIConfig uiConfig) {
-        if (!(level.game() instanceof TengenMsPacMan_GameModel game)) {
-            throw new IllegalArgumentException("Game must be Tengen Ms. Pac-Man");
+    protected void decorateGameLevel3D(GameLevel3D level3D) {
+        final Game game = gameContext().game();
+        if (!(game instanceof TengenMsPacMan_GameModel tengenGame)) {
+            throw new IllegalStateException("Cannot use Tengen play scene 3D in game of class %s"
+                .formatted(game.getClass().getSimpleName()));
         }
-
-        // Common stuff
-        final var newLevel3D = new GameLevel3D(level, uiConfig, ui.localizedTexts());
-        final Maze3D maze3D = newLevel3D.entities().unique(Maze3D.class);
-        final Pac3D pac3D = newLevel3D.entities().unique(Pac3D.class);
-
-        pac3D.init(level);
-        newLevel3D.entities().all(GhostAppearance3D.class).forEach(ga3D -> ga3D.init(level));
-        newLevel3D.startTrackingPac();
-
-        // Tengen-specific stuff: level info
-        if (!game.allOptionsDefault()) {
-            final double width = TS(level.worldMap().numCols());
-            final double height = TS(2);
-            final ImageView levelInfo = new ImageView();
-            levelInfo.setFitWidth(width);
-            levelInfo.setFitHeight(height);
-            levelInfo.imageProperty().bind(PROPERTY_3D_FLOOR_COLOR
-                .map(color -> createLevelInfo(game, level.number(), width, height, color)));
-
-            // Display the level info at front side of floor just over the surface
-            levelInfo.setTranslateY(maze3D.floor().getHeight() - levelInfo.getFitHeight());
-            levelInfo.setTranslateZ(-maze3D.floor().getDepth());
-            newLevel3D.getChildren().add(levelInfo);
-        }
-
-        return newLevel3D;
+        // If any of the default level settings has been changed, display the level info
+        tengenGame.optGameLevel().ifPresent(level -> {
+            if (!tengenGame.allOptionsDefault()) {
+                final ImageView levelInfo = new ImageView();
+                final double infoWidth = TS(level.worldMap().numCols());
+                final double infoHeight = TS(2);
+                levelInfo.setFitWidth(infoWidth);
+                levelInfo.setFitHeight(infoHeight);
+                levelInfo.imageProperty().bind(PROPERTY_3D_FLOOR_COLOR.map(
+                    color -> createLevelInfoImage(tengenGame, level.number(), infoWidth, infoHeight, color)));
+                // Display the level info at front side of floor just over the surface
+                final Maze3D maze3D = level3D.entities().unique(Maze3D.class);
+                levelInfo.setTranslateY(maze3D.floor().getHeight() - levelInfo.getFitHeight());
+                levelInfo.setTranslateZ(-maze3D.floor().getDepth());
+                level3D.getChildren().add(levelInfo);
+            }
+        });
     }
 
-    private Image createLevelInfo(TengenMsPacMan_GameModel game, int levelNumber, double width, double height, Color backgroundColor) {
+    private Image createLevelInfoImage(TengenMsPacMan_GameModel game, int levelNumber, double width, double height, Color backgroundColor) {
         final double quality = 6;
         final var canvas = new Canvas(quality * width, quality * height);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important for crisp image!
