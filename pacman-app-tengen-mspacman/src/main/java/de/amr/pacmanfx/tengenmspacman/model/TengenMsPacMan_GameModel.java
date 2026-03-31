@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.TickTimer;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -36,6 +37,16 @@ import static java.util.Objects.requireNonNull;
  * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly">Ms.Pac-Man-NES-Tengen-Disassembly</a>
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
+
+    private static GameControl createGameControl(Game game) {
+        final var stateMachine = new StateMachine<Game>();
+        stateMachine.setName("Tengen Ms. Pac-Man Game State Machine");
+        stateMachine.addStates(TengenGameState.values());
+        stateMachine.setContext(game);
+        stateMachine.addStateChangeListener((oldState, newState) -> game.publishGameEvent(
+            new GameStateChangeEvent(game, oldState, newState)));
+        return () -> stateMachine;
+    }
 
     public static Pac createPacMan() {
         final var pacMan = new Pac("Pac-Man");
@@ -236,7 +247,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
         hud = new TengenMsPacMan_HeadsUpDisplay();
-        gameControl = createGameControl();
+        gameControl = createGameControl(this);
         //TODO implement original logic from Tengen game
         gateKeeper = new GateKeeper();
         automaticSteering = new RuleBasedPacSteering();
@@ -244,14 +255,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         pelletPoints = 10;
         energizerPoints = 50;
         setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
-    }
-
-    private GameControl createGameControl() {
-        final var gameControl = new TengenMsPacMan_GameControl();
-        gameControl.stateMachine().setContext(this);
-        gameControl.stateMachine().addStateChangeListener((oldState, newState) -> publishGameEvent(
-            new GameStateChangeEvent(this, oldState, newState)));
-        return gameControl;
     }
 
     public boolean allOptionsDefault() {
