@@ -145,7 +145,7 @@ public enum Arcade_GameState implements State<Game> {
     EATING_GHOST {
         @Override
         public void onEnter(Game game) {
-            timer.restartTicks(Arcade_GameController.TICK_EATING_GHOST_COMPLETE);
+            timer.restartTicks(TICK_EATING_GHOST_COMPLETE);
         }
 
         @Override
@@ -221,6 +221,15 @@ public enum Arcade_GameState implements State<Game> {
             }
         }
     };
+
+    public static final short TICK_EATING_GHOST_COMPLETE = 60;
+    public static final short TICK_NEW_GAME_SHOW_GUYS = 60;
+    public static final short TICK_NEW_GAME_START_HUNTING = 240;
+    public static final short TICK_RESUME_HUNTING = 120;
+    public static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
+    public static final short TICK_PACMAN_DYING_START_ANIMATION = 90;
+    public static final short TICK_PACMAN_DYING_HIDE_PAC = 190;
+    public static final short TICK_PACMAN_DYING_PAC_DEAD = 210;
 
     final TickTimer timer;
 

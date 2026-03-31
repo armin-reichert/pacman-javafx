@@ -193,22 +193,22 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level.ghosts().forEach(ghost -> ghost.onPacKilled(level));
             publishGameEvent(new StopAllSoundsEvent());
         }
-        else if (tick == Arcade_GameController.TICK_PACMAN_DYING_HIDE_GHOSTS) {
+        else if (tick == Arcade_GameState.TICK_PACMAN_DYING_HIDE_GHOSTS) {
             level.ghosts().forEach(Ghost::hide);
             pac.optAnimationManager().ifPresent(am -> {
                 am.select(Pac.AnimationID.PAC_DYING);
                 am.reset();
             });
         }
-        else if (tick == Arcade_GameController.TICK_PACMAN_DYING_START_ANIMATION) {
+        else if (tick == Arcade_GameState.TICK_PACMAN_DYING_START_ANIMATION) {
             pac.optAnimationManager().ifPresent(AnimationManager::play);
             publishGameEvent(new PacDyingEvent(pac));
         }
-        else if (tick == Arcade_GameController.TICK_PACMAN_DYING_HIDE_PAC) {
+        else if (tick == Arcade_GameState.TICK_PACMAN_DYING_HIDE_PAC) {
             pac.hide();
             level.optBonus().ifPresent(Bonus::setInactive); //TODO check this
         }
-        else if (tick == Arcade_GameController.TICK_PACMAN_DYING_PAC_DEAD) {
+        else if (tick == Arcade_GameState.TICK_PACMAN_DYING_PAC_DEAD) {
             publishGameEvent(new PacDeadEvent(pac));
         }
         else {
@@ -237,12 +237,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void whileEatingGhost(GameLevel level, long tick) {
-        if (tick < Arcade_GameController.TICK_EATING_GHOST_COMPLETE) {
+        if (tick < Arcade_GameState.TICK_EATING_GHOST_COMPLETE) {
             level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                 .forEach(ghost -> ghost.tick(this));
             level.blinking().tick();
         }
-        else if (tick == Arcade_GameController.TICK_EATING_GHOST_COMPLETE) {
+        else if (tick == Arcade_GameState.TICK_EATING_GHOST_COMPLETE) {
             level.pac().show();
             level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
             level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
@@ -303,11 +303,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             final GameLevel level = optGameLevel().orElseThrow();
             startLevel(level);
         }
-        else if (tick == Arcade_GameController.TICK_NEW_GAME_SHOW_GUYS) {
+        else if (tick == Arcade_GameState.TICK_NEW_GAME_SHOW_GUYS) {
             final GameLevel level = optGameLevel().orElseThrow();
             level.showPacAndGhosts();
         }
-        else if (tick == Arcade_GameController.TICK_NEW_GAME_START_HUNTING) {
+        else if (tick == Arcade_GameState.TICK_NEW_GAME_START_HUNTING) {
             setPlaying(true);
             control().enterState(Arcade_GameState.HUNTING);
         }
@@ -323,7 +323,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         else if (tick == 60) {
             publishGameEvent(new GameContinuedEvent(this));
         }
-        else if (tick == Arcade_GameController.TICK_RESUME_HUNTING) {
+        else if (tick == Arcade_GameState.TICK_RESUME_HUNTING) {
             control().enterState(Arcade_GameState.HUNTING);
         }
     }
@@ -390,7 +390,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             // Now, actor animations are available
             level.showPacAndGhosts();
         }
-        else if (tick == Arcade_GameController.TICK_RESUME_HUNTING) {
+        else if (tick == Arcade_GameState.TICK_RESUME_HUNTING) {
             control().enterState(Arcade_GameState.HUNTING);
         }
     }
