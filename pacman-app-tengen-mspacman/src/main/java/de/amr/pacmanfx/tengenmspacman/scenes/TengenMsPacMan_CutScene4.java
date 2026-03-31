@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.tengenmspacman.model.TengenGameState;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -155,7 +155,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                     msPacMan.hide();
                 }
                 case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(tick);
-                case TICK_EXPIRES -> game.control().enterState(TengenGameState.SETTING_OPTIONS_FOR_START);
+                case TICK_EXPIRES -> game.control().enterState(TengenMsPacMan_GameState.SETTING_OPTIONS_FOR_START);
             }
         }
     }

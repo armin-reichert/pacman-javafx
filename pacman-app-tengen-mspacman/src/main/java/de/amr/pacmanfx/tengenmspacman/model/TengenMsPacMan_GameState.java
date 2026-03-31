@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessageType;
 import org.tinylog.Logger;
 
-public enum TengenGameState implements State<Game> {
+public enum TengenMsPacMan_GameState implements State<Game> {
 
     /**
      * Corresponds to the screen showing the "TENGEN PRESENTS" text and the red ghost running over the screen.
@@ -262,7 +262,7 @@ public enum TengenGameState implements State<Game> {
 
     final TickTimer timer;
 
-    TengenGameState() {
+    TengenMsPacMan_GameState() {
         timer = new TickTimer("Timer-" + name());
         Logger.info("Game state {} created", name());
     }

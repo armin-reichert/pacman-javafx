@@ -10,7 +10,7 @@ import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.tengenmspacman.model.TengenGameState;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.UIConfig;
@@ -232,9 +232,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     TengenMsPacMan_GameModel game = scene.gameContext().game();
                     if (game.allOptionsDefault()) {
                         game.setCanStartNewGame(false); // TODO check this
-                        game.control().restartState(TengenGameState.STARTING_GAME_OR_LEVEL);
+                        game.control().restartState(TengenMsPacMan_GameState.STARTING_GAME_OR_LEVEL);
                     } else {
-                        game.control().enterState(TengenGameState.SETTING_OPTIONS_FOR_START);
+                        game.control().enterState(TengenMsPacMan_GameState.SETTING_OPTIONS_FOR_START);
                     }
                 }
             }

@@ -28,7 +28,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
 import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
-import static de.amr.pacmanfx.tengenmspacman.model.TengenGameState.HUNTING;
+import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState.HUNTING;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -41,7 +41,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private static GameControl createGameControl(Game game) {
         final var stateMachine = new StateMachine<Game>();
         stateMachine.setName("Tengen Ms. Pac-Man Game State Machine");
-        stateMachine.addStates(TengenGameState.values());
+        stateMachine.addStates(TengenMsPacMan_GameState.values());
         stateMachine.setContext(game);
         stateMachine.addStateChangeListener((oldState, newState) -> game.publishGameEvent(
             new GameStateChangeEvent(game, oldState, newState)));
@@ -466,7 +466,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             level.showPacAndGhosts();
         }
         else if (tick == TICK_DEMO_LEVEL_START_HUNTING) {
-            control().enterState(TengenGameState.HUNTING);
+            control().enterState(TengenMsPacMan_GameState.HUNTING);
         }
     }
 
