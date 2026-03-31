@@ -246,12 +246,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
     }
 
-    private TengenMsPacMan_GameController createGameControl() {
-        final var stateMachine = new TengenMsPacMan_GameController();
-        stateMachine.setContext(this);
-        stateMachine.addStateChangeListener((oldState, newState) -> publishGameEvent(
+    private GameControl createGameControl() {
+        final var gameControl = new TengenMsPacMan_GameControl();
+        gameControl.stateMachine().setContext(this);
+        gameControl.stateMachine().addStateChangeListener((oldState, newState) -> publishGameEvent(
             new GameStateChangeEvent(this, oldState, newState)));
-        return stateMachine;
+        return gameControl;
     }
 
     public boolean allOptionsDefault() {
