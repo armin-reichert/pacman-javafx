@@ -34,15 +34,23 @@ In each [release](https://github.com/armin-reichert/pacman-javafx/releases) you 
 
 ## How to build
 
-Prerequisites: You need to have a Java 25 compiler and [Git](https://github.com/git-guides/install-git) installed on your computer.
+Prerequisites: You need to have a Java 25+ compiler and [Git](https://github.com/git-guides/install-git) installed on your computer.
 
-- `git clone https://github.com/armin-reichert/pacman-javafx.git`
-- `cd pacman-javafx`
-- `./gradlew jpackage` or `./gradlew clean jpackage` (clean build)
-- On Windows, you can also call
-  - `make` or `make clean`
-- and on Linux
-  - `./make.sh` or `./make.sh clean`
+First clone this repository from GitHub:
+
+```
+git clone https://github.com/armin-reichert/pacman-javafx.git
+cd pacman-javafx
+```
+
+Then call the Gradle build script using one of
+
+```./gradlew clean jpackage``` (Any OS)
+
+```make clean``` (Windows)
+
+```./make.sh clean``` (Linux)
+
 
 On Linux (Ubuntu 24), I first had to install also
 - binutils: `sudo apt-get install binutils`
