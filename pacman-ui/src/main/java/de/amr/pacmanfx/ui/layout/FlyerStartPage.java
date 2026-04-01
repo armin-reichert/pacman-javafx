@@ -22,7 +22,7 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW;
 import static java.util.Objects.requireNonNull;
 
-public abstract class FlyerStartPage extends StackPane implements StartPage {
+public class FlyerStartPage extends StackPane implements StartPage {
 
     public static final Font  DEFAULT_START_BUTTON_FONT = Ufx.deriveFont(GameUI_Resources.FONT_ARCADE_8, 32);
     public static final Color DEFAULT_START_BUTTON_BGCOLOR = Color.rgb(0, 155, 252, 0.7);
@@ -40,20 +40,18 @@ public abstract class FlyerStartPage extends StackPane implements StartPage {
     }
 
     protected final Flyer flyer = new Flyer();
-    protected String title;
+    protected final String title;
     protected Node startButton;
 
-    protected FlyerStartPage() {
-
+    protected FlyerStartPage(String title) {
+        this.title = requireNonNull(title);
         getChildren().add(flyer);
-
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> flyer.nextFlyerPage();
                 case UP -> flyer.prevFlyerPage();
             }
         });
-
         addEventHandler(ScrollEvent.SCROLL, e-> {
             if (e.getDeltaY() < 0) {
                 flyer.nextFlyerPage();
@@ -63,14 +61,17 @@ public abstract class FlyerStartPage extends StackPane implements StartPage {
         });
     }
 
-    public Flyer flyer() {
-        return flyer;
+    @Override
+    public Region layoutRoot() {
+        return this;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    @Override
+    public String title() {
+        return title;
     }
 
+    @Override
     public void init(GameUI ui) {
         requireNonNull(ui);
         startButton = createStartButton(ui);
@@ -83,10 +84,11 @@ public abstract class FlyerStartPage extends StackPane implements StartPage {
         });
     }
 
-    protected Node createStartButton(GameUI ui) {
-        final Node button = new DefaultStartButton(ui.translate("play_button"), () -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
-        button.setTranslateY(-50);
-        return button;
+    @Override
+    public void onEnterStartPage(GameUI ui) {
+        if (startButton != null) {
+            startButton.requestFocus();
+        }
     }
 
     @Override
@@ -94,13 +96,9 @@ public abstract class FlyerStartPage extends StackPane implements StartPage {
         ui.voicePlayer().stopVoice();
     }
 
-    @Override
-    public Region layoutRoot() {
-        return this;
-    }
-
-    @Override
-    public String title() {
-        return title;
+    protected Node createStartButton(GameUI ui) {
+        final Node button = new DefaultStartButton(ui.translate("play_button"), () -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
+        button.setTranslateY(-50);
+        return button;
     }
 }

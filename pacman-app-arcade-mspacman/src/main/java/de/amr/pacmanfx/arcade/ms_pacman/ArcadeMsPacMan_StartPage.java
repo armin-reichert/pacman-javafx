@@ -14,7 +14,7 @@ public class ArcadeMsPacMan_StartPage extends FlyerStartPage implements Resource
     private final Media flyerTextSpeech = loadMedia("sound/flyer-text.mp3");
 
     public ArcadeMsPacMan_StartPage() {
-        setTitle("Ms. Pac-Man (Arcade)");
+        super("Ms. Pac-Man (Arcade)");
         flyer.setImages(
             loadImage("graphics/flyer-page-1.jpg"),
             loadImage("graphics/flyer-page-2.jpg")
