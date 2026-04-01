@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui.action.ActionBinding;
+import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;

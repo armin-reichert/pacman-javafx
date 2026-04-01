@@ -12,11 +12,14 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
+import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.d3.DefaultFactory3D;
 import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
+import de.amr.pacmanfx.ui.layout.View;
+import de.amr.pacmanfx.ui.layout.ViewManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -41,7 +44,7 @@ import java.io.IOException;
 import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
-import static de.amr.pacmanfx.ui.ViewManager.ViewID.*;
+import static de.amr.pacmanfx.ui.layout.ViewManager.ViewID.*;
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
 

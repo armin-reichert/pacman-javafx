@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.ui.layout.ViewManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;

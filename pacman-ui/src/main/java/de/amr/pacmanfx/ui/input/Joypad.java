@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.input;
 
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.ui.ActionBindingsManager;
+import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import org.tinylog.Logger;

@@ -1,9 +1,11 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.event.GameEventListener;
+import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import javafx.scene.Node;
 
 import java.util.Optional;

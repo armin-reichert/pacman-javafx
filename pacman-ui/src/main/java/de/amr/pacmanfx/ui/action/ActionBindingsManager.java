@@ -1,11 +1,9 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.ui.action.ActionBinding;
-import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.input.KeyCombination;
 
@@ -44,7 +42,7 @@ public interface ActionBindingsManager extends Disposable {
     /**
      * The global null-object instance.
      */
-    ActionBindingsManager NO_BINDINGS = new EmptyBindingsManager();
+    ActionBindingsManager NO_BINDINGS = new NullActionBindingsManager();
 
     /**
      * Returns an immutable view of all key combinations currently bound to actions.

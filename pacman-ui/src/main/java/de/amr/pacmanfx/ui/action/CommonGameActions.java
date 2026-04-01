@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.ViewManager.ViewID;
+import de.amr.pacmanfx.ui.layout.ViewManager.ViewID;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;

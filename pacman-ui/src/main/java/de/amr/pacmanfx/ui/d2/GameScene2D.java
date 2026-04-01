@@ -8,7 +8,7 @@ import de.amr.pacmanfx.event.UnspecifiedChangeEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.ActionBindingsManager;
+import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;

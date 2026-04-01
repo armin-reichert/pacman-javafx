@@ -1,10 +1,8 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.ui.action.ActionBinding;
-import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.input.KeyCombination;
 
@@ -19,7 +17,7 @@ import java.util.Set;
  * It is useful when a subsystem expects a bindings manager but no actual bindings
  * should be active.
  */
-public class EmptyBindingsManager implements ActionBindingsManager {
+public class NullActionBindingsManager implements ActionBindingsManager {
 
     @Override
     public void dispose() {

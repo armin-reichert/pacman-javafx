@@ -1,12 +1,10 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.GameBox;
-import de.amr.pacmanfx.ui.layout.EditorView;
-import de.amr.pacmanfx.ui.layout.PlayView;
-import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;

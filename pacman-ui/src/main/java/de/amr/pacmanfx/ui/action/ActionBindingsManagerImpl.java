@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.input.KeyCombination;
 import org.tinylog.Logger;
