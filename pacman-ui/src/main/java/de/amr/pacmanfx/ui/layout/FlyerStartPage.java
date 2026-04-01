@@ -30,13 +30,14 @@ public class FlyerStartPage extends StackPane implements StartPage {
 
     public static final KeyCode SHUT_UP_KEYCODE = KeyCode.S;
 
-    public static class DefaultStartButton extends FancyButton {
-
-        public DefaultStartButton(String text, Runnable action) {
-            super(text, DEFAULT_START_BUTTON_FONT, DEFAULT_START_BUTTON_BGCOLOR, DEFAULT_START_BUTTON_FILLCOLOR);
-            StackPane.setAlignment(this, Pos.BOTTOM_CENTER);
-            setAction(action);
-        }
+    public static Node createStartButton(GameUI ui) {
+        final var startButton = new FancyButton(
+            ui.translate("play_button"),
+            DEFAULT_START_BUTTON_FONT, DEFAULT_START_BUTTON_BGCOLOR, DEFAULT_START_BUTTON_FILLCOLOR);
+        startButton.setAction(() -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
+        startButton.setTranslateY(-50);
+        StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
+        return startButton;
     }
 
     protected final Flyer flyer = new Flyer();
@@ -94,11 +95,5 @@ public class FlyerStartPage extends StackPane implements StartPage {
     @Override
     public void onExitStartPage(GameUI ui) {
         ui.voicePlayer().stopVoice();
-    }
-
-    protected Node createStartButton(GameUI ui) {
-        final Node button = new DefaultStartButton(ui.translate("play_button"), () -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
-        button.setTranslateY(-50);
-        return button;
     }
 }
