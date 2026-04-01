@@ -29,7 +29,7 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.ui.ArcadePalette.*;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
 /**
  * Central configuration interface for the presentation layer of a specific game variant

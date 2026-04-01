@@ -89,7 +89,7 @@ public class PlayView extends StackPane implements View {
     private final BorderPane widgetLayer = new BorderPane();
     private final HelpLayer helpLayer;
     private final GameUI_ContextMenu contextMenu;
-    private final FontIcon pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
+    private final FontIcon pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE);
 
     private GameScene2D_Renderer sceneRenderer;
     private HeadsUpDisplay_Renderer hudRenderer;
@@ -103,7 +103,7 @@ public class PlayView extends StackPane implements View {
 
         canvasDecorator.setMinScaling(0.5);
         canvasDecorator.setUnscaledCanvasSize(ARCADE_MAP_SIZE_IN_PIXELS.x(), ARCADE_MAP_SIZE_IN_PIXELS.y());
-        canvasDecorator.setBorderColor(ArcadePalette.ARCADE_WHITE);
+        canvasDecorator.setBorderColor(de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE);
 
         composeLayout();
         configureActionBindings();

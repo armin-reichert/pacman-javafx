@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.model.GameVariant;
-import de.amr.pacmanfx.ui.ArcadePalette;
+import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.uilib.Ufx;

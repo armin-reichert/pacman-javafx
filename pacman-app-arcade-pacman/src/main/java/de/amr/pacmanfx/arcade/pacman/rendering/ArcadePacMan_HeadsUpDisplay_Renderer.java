@@ -18,8 +18,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_WHITE;
-import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_YELLOW;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implements SpriteRenderer, HeadsUpDisplay_Renderer {

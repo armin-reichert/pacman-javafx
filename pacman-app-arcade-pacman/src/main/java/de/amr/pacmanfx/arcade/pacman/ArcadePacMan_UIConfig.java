@@ -38,7 +38,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.ArcadePalette.*;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static java.util.Objects.requireNonNull;
 

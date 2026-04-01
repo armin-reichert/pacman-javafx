@@ -14,7 +14,7 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {

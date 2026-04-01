@@ -18,7 +18,7 @@ import javafx.scene.paint.Color;
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene.*;
-import static de.amr.pacmanfx.ui.ArcadePalette.*;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
 public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer {
 

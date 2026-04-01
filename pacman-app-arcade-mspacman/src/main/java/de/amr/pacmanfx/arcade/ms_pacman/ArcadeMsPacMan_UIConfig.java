@@ -41,8 +41,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
-import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_RED;
-import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {

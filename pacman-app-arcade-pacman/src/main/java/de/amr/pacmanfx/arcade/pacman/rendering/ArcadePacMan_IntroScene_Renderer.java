@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
-import static de.amr.pacmanfx.ui.ArcadePalette.*;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
 public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
 
