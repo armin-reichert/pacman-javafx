@@ -3,12 +3,11 @@
  */
 package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
-import de.amr.pacmanfx.GameBox;
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.GameVariant;
+import de.amr.pacmanfx.ui.GameBox;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
@@ -25,8 +24,8 @@ public class PacManXXL_App extends Application {
     private static final double ASPECT_RATIO    = 1.6;
     private static final double HEIGHT_FRACTION = 0.8;
 
-    private static final File HIGH_SCORE_FILE_PACMAN_XXL = GameContext.highScoreFile(GameVariant.ARCADE_PACMAN_XXL);
-    private static final File HIGH_SCORE_FILE_MS_PACMAN_XXL = GameContext.highScoreFile(GameVariant.ARCADE_MS_PACMAN_XXL);
+    private static final File HIGH_SCORE_FILE_PACMAN_XXL = GameBox.highScoreFile(GameVariant.ARCADE_PACMAN_XXL);
+    private static final File HIGH_SCORE_FILE_MS_PACMAN_XXL = GameBox.highScoreFile(GameVariant.ARCADE_MS_PACMAN_XXL);
 
     private final GameBox gameBox = new GameBox();
     private GameUI ui;

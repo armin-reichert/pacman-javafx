@@ -22,16 +22,6 @@ import static java.util.Objects.requireNonNull;
  */
 public interface GameContext {
 
-    static File highScoreFile(String gameVariantName) {
-        requireNonNull(gameVariantName);
-        final String fileName = "highscore-%s.xml".formatted(gameVariantName).toLowerCase();
-        return new File(GameBox.HOME_DIR, fileName);
-    }
-
-    static File highScoreFile(GameVariant gameVariant) {
-        return highScoreFile(gameVariant.name());
-    }
-
     /**
      * The property holding the name (identifier) of the currently selected game variant.
      *

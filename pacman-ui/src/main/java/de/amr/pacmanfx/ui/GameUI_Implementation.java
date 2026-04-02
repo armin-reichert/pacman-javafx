@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;

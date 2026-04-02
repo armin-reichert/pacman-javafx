@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.allgames.app;
 
-import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
@@ -23,6 +22,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.ui.GameBox;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
@@ -40,7 +40,6 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.List;
 
-import static de.amr.pacmanfx.GameContext.highScoreFile;
 import static de.amr.pacmanfx.model.GameVariant.*;
 
 /**
@@ -89,23 +88,23 @@ public class PacManGames3dApp extends Application {
                     .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
 
                     .game(ARCADE_PACMAN,
-                        () -> new ArcadePacMan_GameModel(gameBox.coinMechanism(), highScoreFile(ARCADE_PACMAN)),
+                        () -> new ArcadePacMan_GameModel(gameBox.coinMechanism(), GameBox.highScoreFile(ARCADE_PACMAN)),
                         ArcadePacMan_UIConfig::new)
 
                     .game(ARCADE_MS_PACMAN,
-                        () ->new ArcadeMsPacMan_GameModel(gameBox.coinMechanism(), highScoreFile(ARCADE_MS_PACMAN)),
+                        () ->new ArcadeMsPacMan_GameModel(gameBox.coinMechanism(), GameBox.highScoreFile(ARCADE_MS_PACMAN)),
                         ArcadeMsPacMan_UIConfig::new)
 
                     .game(TENGEN_MS_PACMAN,
-                        () -> new TengenMsPacMan_GameModel(highScoreFile(TENGEN_MS_PACMAN)),
+                        () -> new TengenMsPacMan_GameModel(GameBox.highScoreFile(TENGEN_MS_PACMAN)),
                         TengenMsPacMan_UIConfig::new)
 
                     .game(ARCADE_PACMAN_XXL,
-                        () -> new PacManXXL_PacMan_GameModel(gameBox.coinMechanism(), xxlMapSelector, highScoreFile(ARCADE_PACMAN_XXL)),
+                        () -> new PacManXXL_PacMan_GameModel(gameBox.coinMechanism(), xxlMapSelector, GameBox.highScoreFile(ARCADE_PACMAN_XXL)),
                         PacManXXL_PacMan_UIConfig::new)
 
                     .game(ARCADE_MS_PACMAN_XXL,
-                        () -> new PacManXXL_MsPacMan_GameModel(gameBox.coinMechanism(), xxlMapSelector, highScoreFile(ARCADE_MS_PACMAN_XXL)),
+                        () -> new PacManXXL_MsPacMan_GameModel(gameBox.coinMechanism(), xxlMapSelector, GameBox.highScoreFile(ARCADE_MS_PACMAN_XXL)),
                         PacManXXL_MsPacMan_UIConfig::new)
 
                     .startPage(ArcadePacMan_StartPage::new)
@@ -158,7 +157,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void registerGame(GameVariant gameVariant, PacManXXL_MapSelector xxlMapSelector) {
-        final File highScoreFile = highScoreFile(gameVariant);
+        final File highScoreFile = GameBox.highScoreFile(gameVariant);
         final Game game = switch (gameVariant) {
             case ARCADE_PACMAN        -> new ArcadePacMan_GameModel(gameBox.coinMechanism(), highScoreFile);
             case ARCADE_MS_PACMAN     -> new ArcadeMsPacMan_GameModel(gameBox.coinMechanism(), highScoreFile);

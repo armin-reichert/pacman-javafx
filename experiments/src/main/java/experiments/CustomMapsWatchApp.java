@@ -1,6 +1,6 @@
 package experiments;
 
-import de.amr.pacmanfx.GameBox;
+import de.amr.pacmanfx.ui.GameBox;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import javafx.application.Application;
 import javafx.application.Platform;

@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.Game;

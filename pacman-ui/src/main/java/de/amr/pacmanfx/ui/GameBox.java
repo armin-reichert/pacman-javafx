@@ -1,10 +1,16 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx;
 
+package de.amr.pacmanfx.ui;
+
+import de.amr.pacmanfx.GameClock;
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameVariant;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.tinylog.Logger;
@@ -19,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Container for the playable games. Each game variant is represented by an instance of its game model (see {@link Game}).
  */
-public class GameBox implements GameContext {
+public class GameBox implements GameContext, CoinMechanism {
 
     /**
      * Game variant names must match this pattern (e.g. "MS_PACMAN_2024").
@@ -39,11 +45,19 @@ public class GameBox implements GameContext {
 
     private static final boolean DIRECTORY_CHECK_OK = initUserDirectories();
 
+    public static File highScoreFile(String gameVariantName) {
+        requireNonNull(gameVariantName);
+        final String fileName = "highscore-%s.xml".formatted(gameVariantName).toLowerCase();
+        return new File(GameBox.HOME_DIR, fileName);
+    }
+
+    public static File highScoreFile(GameVariant gameVariant) {
+        return highScoreFile(gameVariant.name());
+    }
+
     private final Map<String, Game> gamesByVariantName = new HashMap<>();
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
-
-    private final CoinMechanism coinMechanism = new SimpleCoinMechanism();
 
     private GameClock clock;
 
@@ -72,6 +86,46 @@ public class GameBox implements GameContext {
         final Game previousGame = gamesByVariantName.putIfAbsent(variantName, game);
         if (previousGame != null) {
             Logger.warn("Game ({}) was already registered for variant {}", previousGame.getClass().getName(), variantName);
+        }
+    }
+
+    // CoinMechanism implementation
+
+    private final IntegerProperty numCoins = new SimpleIntegerProperty(0);
+
+    @Override
+    public IntegerProperty numCoinsProperty() { return numCoins; }
+
+    public int numCoins() {
+        return numCoinsProperty().get();
+    }
+
+    @Override
+    public int maxCoins() {
+        return 99;
+    }
+
+    public boolean isEmpty() {
+        return numCoins() == 0;
+    }
+
+    public void setNumCoins(int n) {
+        if (n >= 0 && n <= maxCoins()) {
+            numCoinsProperty().set(n);
+        } else {
+            Logger.error("Cannot set number of coins to {}", n);
+        }
+    }
+
+    public void insertCoin() {
+        if (numCoins() +1 <= maxCoins()) {
+            setNumCoins(numCoins() + 1);
+        }
+    }
+
+    public void consumeCoin() {
+        if (numCoins() > 0) {
+            setNumCoins(numCoins() - 1);
         }
     }
 
@@ -113,7 +167,7 @@ public class GameBox implements GameContext {
 
     @Override
     public CoinMechanism coinMechanism() {
-        return coinMechanism;
+        return this;
     }
 
     // other stuff

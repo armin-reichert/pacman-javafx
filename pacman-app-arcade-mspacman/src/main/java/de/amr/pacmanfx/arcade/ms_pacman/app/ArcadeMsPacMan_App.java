@@ -3,13 +3,12 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.app;
 
-import de.amr.pacmanfx.GameBox;
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameVariant;
+import de.amr.pacmanfx.ui.GameBox;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
@@ -24,7 +23,7 @@ public class ArcadeMsPacMan_App extends Application {
     private static final float ASPECT_RATIO    = 1.2f; // 12:10
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
-    private static final File HIGH_SCORE_FILE = GameContext.highScoreFile(GameVariant.ARCADE_MS_PACMAN);
+    private static final File HIGH_SCORE_FILE = GameBox.highScoreFile(GameVariant.ARCADE_MS_PACMAN);
 
     private final GameBox gameBox = new GameBox();
     private GameUI ui;

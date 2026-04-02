@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.GameBox;
+import de.amr.pacmanfx.ui.GameBox;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.beans.property.SimpleIntegerProperty;
