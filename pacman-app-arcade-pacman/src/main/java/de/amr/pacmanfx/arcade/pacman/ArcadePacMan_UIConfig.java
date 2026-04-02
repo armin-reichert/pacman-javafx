@@ -5,9 +5,14 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
+import de.amr.pacmanfx.event.CreditAddedEvent;
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.RectShort;
+import de.amr.pacmanfx.model.CoinMechanism;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
@@ -16,6 +21,7 @@ import de.amr.pacmanfx.ui.GameSceneConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.action.ActionBinding;
+import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
@@ -38,6 +44,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.INTRO;
+import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.SETTING_OPTIONS_FOR_START;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static java.util.Objects.requireNonNull;
@@ -99,9 +107,50 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
 
+    /**
+     * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
+     */
+    public static final GameAction ACTION_INSERT_COIN = new GameAction("INSERT_COIN") {
+        @Override
+        public void execute(GameUI ui) {
+            final CoinMechanism slot = ui.gameContext().coinMechanism();
+            final Game game = ui.gameContext().game();
+            ui.voicePlayer().stopVoice();
+            ui.soundManager().setEnabled(true);
+            slot.insertCoin();
+            game.control().enterState(SETTING_OPTIONS_FOR_START);
+            game.publishGameEvent(new CreditAddedEvent(1));
+        }
+
+        @Override
+        public boolean isEnabled(GameUI ui) {
+            final CoinMechanism slot = ui.gameContext().coinMechanism();
+            final State<Game> state = ui.gameContext().game().control().state();
+            return slot.isEmpty() || (state == SETTING_OPTIONS_FOR_START && !slot.isFull());
+        }
+    };
+
+    public static final GameAction ACTION_START_GAME = new GameAction("START_GAME") {
+        @Override
+        public void execute(GameUI ui) {
+            ui.voicePlayer().stopVoice();
+            ui.gameContext().game().control().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
+        }
+
+        @Override
+        public boolean isEnabled(GameUI ui) {
+            final CoinMechanism slot = ui.gameContext().coinMechanism();
+            final Game game = ui.gameContext().game();
+            final State<Game> state = ui.gameContext().game().control().state();
+            return !slot.isEmpty()
+                && (state == INTRO || state == SETTING_OPTIONS_FOR_START)
+                && game.canStartNewGame();
+        }
+    };
+
     public static final Set<ActionBinding> GAME_START_BINDINGS = Set.of(
-        new ActionBinding(ArcadeMachineActions.ACTION_INSERT_COIN, bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
-        new ActionBinding(ArcadeMachineActions.ACTION_START_GAME,  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
+        new ActionBinding(ACTION_INSERT_COIN, bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
+        new ActionBinding(ACTION_START_GAME,  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
     );
 
     public static final WorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new WorldMapColorScheme(
