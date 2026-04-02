@@ -31,7 +31,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public Optional<GameScene> selectGameScene(Game game) {
+    public final Optional<GameScene> selectGameScene(Game game) {
         requireNonNull(game);
         final SceneID sceneID = determineSceneID(game);
         final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
@@ -39,7 +39,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public boolean gameSceneHasID(GameScene gameScene, SceneID sceneID) {
+    public final boolean gameSceneHasID(GameScene gameScene, SceneID sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
         return scenesByID.get(sceneID) == gameScene;

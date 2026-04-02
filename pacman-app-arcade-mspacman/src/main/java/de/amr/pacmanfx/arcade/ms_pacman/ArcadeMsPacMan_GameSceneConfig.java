@@ -13,8 +13,6 @@ import de.amr.pacmanfx.ui.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameSceneConfig;
 
-import java.util.Optional;
-
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.*;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
@@ -22,14 +20,6 @@ import static java.util.Objects.requireNonNull;
 class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
     public ArcadeMsPacMan_GameSceneConfig() {}
-
-    @Override
-    public Optional<GameScene> selectGameScene(Game game) {
-        requireNonNull(game);
-        final SceneID sceneID = determineSceneID(game);
-        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
-        return Optional.of(gameScene);
-    }
 
     @Override
     protected GameScene createGameScene(SceneID sceneID) {

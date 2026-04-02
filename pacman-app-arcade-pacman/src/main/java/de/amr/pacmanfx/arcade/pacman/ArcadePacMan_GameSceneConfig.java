@@ -21,14 +21,6 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
     public ArcadePacMan_GameSceneConfig() {}
 
     @Override
-    public Optional<GameScene> selectGameScene(Game game) {
-        requireNonNull(game);
-        final SceneID sceneID = determineSceneID(game);
-        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
-        return Optional.of(gameScene);
-    }
-
-    @Override
     protected GameScene createGameScene(SceneID sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
