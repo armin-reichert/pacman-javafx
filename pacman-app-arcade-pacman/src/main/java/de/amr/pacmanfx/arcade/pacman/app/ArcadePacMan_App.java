@@ -22,7 +22,6 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.util.List;
 
 public class ArcadePacMan_App extends Application {
@@ -41,8 +40,6 @@ public class ArcadePacMan_App extends Application {
         CommonDashboardID.KEYS_LOCAL,
         CommonDashboardID.ABOUT
     );
-
-    private static final File HIGH_SCORE_FILE = GameBox.highScoreFile(GameVariant.ARCADE_PACMAN);
 
     private final GameBox gameBox = new GameBox();
     private GameUI ui;
@@ -68,7 +65,7 @@ public class ArcadePacMan_App extends Application {
     }
 
     private void createUIUsingAPI(Stage primaryStage, Vector2i size) {
-        final Game game = new ArcadePacMan_GameModel(gameBox, HIGH_SCORE_FILE);
+        final Game game = new ArcadePacMan_GameModel(gameBox, GameBox.highScoreFile(GameVariant.ARCADE_PACMAN));
         gameBox.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
         gameBox.setClock(new GameClockImpl());
 
@@ -88,7 +85,7 @@ public class ArcadePacMan_App extends Application {
         ui = GameUI_Builder
             .newUI(primaryStage, size.x(), size.y(), gameBox)
             .game(GameVariant.ARCADE_PACMAN,
-                () -> new ArcadePacMan_GameModel(gameBox, HIGH_SCORE_FILE), ArcadePacMan_UIConfig::new)
+                () -> new ArcadePacMan_GameModel(gameBox, GameBox.highScoreFile(GameVariant.ARCADE_PACMAN)), ArcadePacMan_UIConfig::new)
             .startPage(ArcadePacMan_StartPage::new)
             .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
             .build();

@@ -16,14 +16,10 @@ import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.io.File;
-
 public class ArcadeMsPacMan_App extends Application {
 
     private static final float ASPECT_RATIO    = 1.2f; // 12:10
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
-
-    private static final File HIGH_SCORE_FILE = GameBox.highScoreFile(GameVariant.ARCADE_MS_PACMAN);
 
     private final GameBox gameBox = new GameBox();
     private GameUI ui;
@@ -34,7 +30,7 @@ public class ArcadeMsPacMan_App extends Application {
         ui = GameUI_Builder
             .newUI(primaryStage, screenSize.x(), screenSize.y(), gameBox)
             .game(GameVariant.ARCADE_MS_PACMAN,
-                () -> new ArcadeMsPacMan_GameModel(gameBox, HIGH_SCORE_FILE),
+                () -> new ArcadeMsPacMan_GameModel(gameBox, GameBox.highScoreFile(GameVariant.ARCADE_MS_PACMAN)),
                 ArcadeMsPacMan_UIConfig::new)
             .startPage(ArcadeMsPacMan_StartPage::new)
             .dashboard(

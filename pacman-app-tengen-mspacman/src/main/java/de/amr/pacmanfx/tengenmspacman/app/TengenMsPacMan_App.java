@@ -18,8 +18,6 @@ import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.io.File;
-
 import static de.amr.pacmanfx.model.GameVariant.TENGEN_MS_PACMAN;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_ASPECT_RATIO;
 
@@ -27,8 +25,6 @@ public class TengenMsPacMan_App extends Application {
 
     private static final float ASPECT_RATIO    = NES_SCREEN_ASPECT_RATIO; // 32:30
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
-
-    private static final File HIGH_SCORE_FILE = GameBox.highScoreFile(TENGEN_MS_PACMAN);
 
     private final GameBox gameBox = new GameBox();
     private GameUI ui;
@@ -39,7 +35,7 @@ public class TengenMsPacMan_App extends Application {
 
         ui = GameUI_Builder
             .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
-            .game(TENGEN_MS_PACMAN, () -> new TengenMsPacMan_GameModel(HIGH_SCORE_FILE), TengenMsPacMan_UIConfig::new)
+            .game(TENGEN_MS_PACMAN, () -> new TengenMsPacMan_GameModel(GameBox.highScoreFile(TENGEN_MS_PACMAN)), TengenMsPacMan_UIConfig::new)
             .startPage(TengenMsPacMan_StartPage::new)
             .dashboard(
                 CommonDashboardID.GENERAL,
