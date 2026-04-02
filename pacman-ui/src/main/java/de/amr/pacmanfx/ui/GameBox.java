@@ -9,7 +9,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
-import de.amr.pacmanfx.uilib.GameClockImpl;
+import de.amr.pacmanfx.uilib.GameClockFX;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -50,7 +50,7 @@ public class GameBox implements GameContext, CoinMechanism {
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
-    private final GameClock clock = new GameClockImpl();
+    private final GameClock clock = new GameClockFX();
 
     public GameBox() {
         if (!DIRECTORY_CHECK_OK) {
