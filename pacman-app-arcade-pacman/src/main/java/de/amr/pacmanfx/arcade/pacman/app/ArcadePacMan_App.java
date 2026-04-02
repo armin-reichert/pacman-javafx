@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.arcade.pacman.app;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
@@ -21,6 +22,7 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.List;
 
 public class ArcadePacMan_App extends Application {
@@ -40,16 +42,25 @@ public class ArcadePacMan_App extends Application {
         CommonDashboardID.ABOUT
     );
 
-    private final GameBox gameBox = new GameBox();
     private GameUI ui;
 
     @Override
     public void start(Stage primaryStage) {
+        final var gameBox = new GameBox();
+        final File highScoreFile = gameBox.highScoreFile(GameVariant.ARCADE_PACMAN);
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         try {
             final boolean useBuilder = Boolean.parseBoolean(getParameters().getNamed().getOrDefault("use_builder", "true"));
-            if (useBuilder) createUIUsingBuilder(primaryStage, sceneSize);
-            else            createUIUsingAPI(primaryStage, sceneSize);
+            if (useBuilder) {
+                ui = GameUI_Builder
+                    .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
+                    .game(GameVariant.ARCADE_PACMAN,
+                        () -> new ArcadePacMan_GameModel(gameBox, highScoreFile), ArcadePacMan_UIConfig::new)
+                    .startPage(ArcadePacMan_StartPage::new)
+                    .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
+                    .build();
+            }
+            else createUI(primaryStage, gameBox, highScoreFile, sceneSize);
             ui.show();
         }
         catch (RuntimeException x) {
@@ -63,29 +74,20 @@ public class ArcadePacMan_App extends Application {
         ui.terminate();
     }
 
-    private void createUIUsingAPI(Stage primaryStage, Vector2i size) {
-        final Game game = new ArcadePacMan_GameModel(gameBox, gameBox.highScoreFile(GameVariant.ARCADE_PACMAN));
+    private void createUI(Stage stage, GameBox gameBox, File highScoreFile, Vector2i size) {
+        final Game game = new ArcadePacMan_GameModel(gameBox, highScoreFile);
         gameBox.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
 
-        ui = new GameUI_Implementation(gameBox, primaryStage, size.x(), size.y());
+        ui = new GameUI_Implementation(gameBox, stage, size.x(), size.y());
         ui.uiConfigManager().addFactory(GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
-        final StartPagesCarousel startPagesView = ui.views().getStartPagesView();
         final ArcadePacMan_StartPage startPage = new ArcadePacMan_StartPage();
-        startPagesView.addStartPage(startPage);
         startPage.init(ui);
+
+        final StartPagesCarousel startPagesView = ui.views().getStartPagesView();
+        startPagesView.addStartPage(startPage);
         startPagesView.setSelectedIndex(0);
 
         ui.dashboard().addCommonSections(ui, DASHBOARD_IDs);
-    }
-
-    private void createUIUsingBuilder(Stage primaryStage, Vector2i size) {
-        ui = GameUI_Builder
-            .newUI(primaryStage, size.x(), size.y(), gameBox)
-            .game(GameVariant.ARCADE_PACMAN,
-                () -> new ArcadePacMan_GameModel(gameBox, gameBox.highScoreFile(GameVariant.ARCADE_PACMAN)), ArcadePacMan_UIConfig::new)
-            .startPage(ArcadePacMan_StartPage::new)
-            .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
-            .build();
     }
 }
