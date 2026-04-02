@@ -94,6 +94,11 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         initScene();
         initStage();
         initGameClock();
+
+        Logger.info("Loading 3D models...");
+        Logger.info("- Pac-Man Model: {}", DefaultFactory3D.PAC_MAN_MODEL);
+        Logger.info("- Ghost Model:   {}", DefaultFactory3D.GHOST_MODEL);
+        Logger.info("- Pellet Model:  {}", DefaultFactory3D.PELLET_MODEL);
     }
 
     private void initGameClock() {
@@ -319,7 +324,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         PROPERTY_3D_WALL_OPACITY.set(currentConfig().entityConfig().maze().obstacleOpacity());
 
         logPreferences();
-        load3DModels(); // fail fast
         viewManager.getPlayView().dashboard().init(this);
         viewManager.selectView(START_VIEW);
         stage.centerOnScreen();
@@ -414,11 +418,5 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         return gameScene == null || !debug
             ? normalTitle
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
-    }
-
-    private void load3DModels() {
-        Logger.info("Loaded {}", DefaultFactory3D.PAC_MAN_MODEL);
-        Logger.info("Loaded {}", DefaultFactory3D.GHOST_MODEL);
-        Logger.info("Loaded {}", DefaultFactory3D.PELLET_MODEL);
     }
 }
