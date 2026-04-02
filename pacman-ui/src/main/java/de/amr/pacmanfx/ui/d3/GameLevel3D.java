@@ -380,21 +380,31 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .forEach(entities::add);
     }
 
-    private void eatFood(Group pelletContainer, Vector2i tile) {
-        final Optional<Energizer3D> eatenEnergizer3D = entities.allWhere(Energizer3D.class, e3D -> tile.equals(e3D.tile())).findAny();
-        eatenEnergizer3D.ifPresentOrElse(energizer3D -> {
-            energizer3D.stopPumping();
-            energizer3D.hide();
-            final Point3D center = energizer3D.shape().localToScene(Point3D.ZERO);
-            animations.animation(AnimationID.EXPLOSION_PARTICLES, EnergizerParticlesAnimation.class).triggerEnergizerExplosion(center);
-        }, () -> entities.allWhere(Pellet3D.class, p3D -> tile.equals(p3D.tile()))
-            .findFirst()
-            .ifPresent(p3D -> removePelletAfterDelay(pelletContainer, p3D)));
+    private void eatFoodAtTile(Group pelletContainer, Vector2i tile) {
+        final boolean energizerEaten = level.worldMap().foodLayer().isEnergizerTile(tile);
+        if (energizerEaten) {
+            energizer3DAt(tile).ifPresent(energizer3D -> {
+                Logger.info("Eat energizer 3D at tile " + tile);
+                energizer3D.stopPumping();
+                energizer3D.hide();
+                final Point3D center = energizer3D.shape().localToScene(Point3D.ZERO);
+                animations.animation(AnimationID.EXPLOSION_PARTICLES, EnergizerParticlesAnimation.class).triggerEnergizerExplosion(center);
+            });
+        } else {
+            pellet3DAtTile(tile).ifPresent(p3D -> removePelletAfterDelay(pelletContainer, p3D));
+        }
+    }
+
+    private Optional<Energizer3D> energizer3DAt(Vector2i tile) {
+        return entities.allWhere(Energizer3D.class, e3D -> tile.equals(e3D.tile())).findFirst();
+    }
+
+    private Optional<Pellet3D> pellet3DAtTile(Vector2i tile) {
+        return entities.allWhere(Pellet3D.class, p3D -> tile.equals(p3D.tile())).findFirst();
     }
 
     private void removePelletAfterDelay(Group pelletContainer, Pellet3D pellet3D) {
-        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> pelletContainer.getChildren().remove(pellet3D.shape()))
-            .play();
+        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> pelletContainer.getChildren().remove(pellet3D.shape())).play();
     }
 
     /**
@@ -515,7 +525,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         if (gameEvent.allPellets()) {
             removeAllPellets3D(this);
         } else {
-            eatFood(this, gameEvent.pac().tile());
+            eatFoodAtTile(this, gameEvent.pac().tile());
             uiConfig.soundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
         }
     }
