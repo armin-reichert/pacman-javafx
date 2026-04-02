@@ -89,14 +89,14 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     private final List<PhongMaterial> ghostDressMaterials;
     private final Queue<EnergizerParticle> pool = new ArrayDeque<>();
     private final List<EnergizerParticle> particles = new ArrayList<>();
-    private final Group particleShapesGroup;
+    private final Group particlesGroup;
 
     public EnergizerParticlesAnimation(
         Config config,
         List<Vector2f> swirlBaseCentersXY,
         List<PhongMaterial> ghostDressMaterials,
         Box floor3D,
-        Group particleShapesGroup)
+        Group particlesGroup)
     {
         super("Energizer Particles Animation");
 
@@ -104,7 +104,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         requireNonNull(swirlBaseCentersXY);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
         this.floor3D = requireNonNull(floor3D);
-        this.particleShapesGroup = requireNonNull(particleShapesGroup);
+        this.particlesGroup = requireNonNull(particlesGroup);
 
         this.swirlBaseCenters = swirlBaseCentersXY.stream().map(xy -> new Vector3f(xy.x(), xy.y(), floorSurfaceZ())).toList();
         setFactory(this::createAnimationDriver);
@@ -127,12 +127,13 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
             particles.clear();
             Logger.info("Disposed {} particles", particleCount);
         }
-        particleShapesGroup.getChildren().clear();
+        particlesGroup.getChildren().clear();
         pool.clear();
     }
 
     public void triggerEnergizerExplosion(Point3D center) {
         requireNonNull(center);
+        Logger.info("Trigger energizer explosion at point {}", center);
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
             final EnergizerParticle p = getParticleFromPool();
             p.setPosition(new Vector3f(center.getX(), center.getY(), center.getZ()));
@@ -140,7 +141,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
             p.setState(FragmentState.FLYING);
             p.shape().setVisible(true);
             particles.add(p);
-            particleShapesGroup.getChildren().add(p.shape());
+            particlesGroup.getChildren().add(p.shape());
         }
     }
 
@@ -164,7 +165,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
 
     private void releaseParticle(EnergizerParticle particle) {
         particles.remove(particle);
-        particleShapesGroup.getChildren().remove(particle.shape());
+        particlesGroup.getChildren().remove(particle.shape());
         pool.offer(particle);
         particle.reset();
         particle.shape().setVisible(false);
