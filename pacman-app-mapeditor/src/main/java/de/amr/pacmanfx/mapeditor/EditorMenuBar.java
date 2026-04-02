@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.mapeditor;
 
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.actions.*;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.*;

@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import javafx.scene.input.KeyCombination;
 

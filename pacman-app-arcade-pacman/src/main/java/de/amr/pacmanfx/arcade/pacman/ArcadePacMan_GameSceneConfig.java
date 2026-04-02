@@ -10,8 +10,6 @@ import de.amr.pacmanfx.ui.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameSceneConfig;
 
-import java.util.Optional;
-
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.*;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;

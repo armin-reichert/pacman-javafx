@@ -2,14 +2,14 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-import de.amr.pacmanfx.ui.GameBox;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
-import de.amr.pacmanfx.model.actors.ElroyState;
-import de.amr.pacmanfx.model.actors.RedGhostShadow;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameVariant;
+import de.amr.pacmanfx.model.actors.ElroyState;
+import de.amr.pacmanfx.model.actors.RedGhostShadow;
 import de.amr.pacmanfx.model.world.FoodLayer;
+import de.amr.pacmanfx.ui.GameBox;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

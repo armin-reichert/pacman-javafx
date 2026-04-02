@@ -46,8 +46,8 @@ import java.util.Set;
 
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.INTRO;
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.SETTING_OPTIONS_FOR_START;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.bare;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 
 /**

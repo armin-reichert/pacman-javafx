@@ -4,7 +4,9 @@
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_Resources;
+import de.amr.pacmanfx.ui.StartPage;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.action.CommonGameActions;

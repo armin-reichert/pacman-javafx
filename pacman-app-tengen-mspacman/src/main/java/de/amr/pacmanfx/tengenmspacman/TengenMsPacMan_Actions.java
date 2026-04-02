@@ -5,8 +5,8 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplayMode;
 import de.amr.pacmanfx.ui.GameSceneConfig;
 import de.amr.pacmanfx.ui.GameUI;
