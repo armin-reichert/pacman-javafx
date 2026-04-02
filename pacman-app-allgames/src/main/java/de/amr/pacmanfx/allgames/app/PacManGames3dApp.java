@@ -30,7 +30,6 @@ import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardSectionCustomMaps;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
-import de.amr.pacmanfx.uilib.GameClockImpl;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -119,7 +118,6 @@ public class PacManGames3dApp extends Application {
                 for (GameVariant variant : GameVariant.values()) {
                     registerGame(variant, xxlMapSelector);
                 }
-                gameBox.setClock(new GameClockImpl());
                 ui = new GameUI_Implementation(gameBox, primaryStage, sceneSize.x(), sceneSize.y());
 
                 ui.uiConfigManager().addFactory(ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new);
