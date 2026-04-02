@@ -21,11 +21,11 @@ public class ArcadeMsPacMan_App extends Application {
     private static final float ASPECT_RATIO    = 1.2f; // 12:10
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
-    private final GameBox gameBox = new GameBox();
     private GameUI ui;
 
     @Override
     public void start(Stage primaryStage) {
+        final var gameBox = new GameBox();
         final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         ui = GameUI_Builder
             .newUI(primaryStage, screenSize.x(), screenSize.y(), gameBox)
