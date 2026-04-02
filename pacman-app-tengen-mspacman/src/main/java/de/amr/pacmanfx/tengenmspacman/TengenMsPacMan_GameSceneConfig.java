@@ -6,30 +6,17 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
+import de.amr.pacmanfx.ui.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameSceneConfig;
-import org.tinylog.Logger;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState.*;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_GameSceneConfig implements GameSceneConfig {
-
-    private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
+public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
     public TengenMsPacMan_GameSceneConfig() {}
-
-    @Override
-    public void dispose() {
-        Logger.info("Dispose {} game scenes", scenesByID.size());
-        scenesByID.values().forEach(GameScene::dispose);
-        scenesByID.clear();
-    }
 
     @Override
     public boolean sceneDecorationRequested(GameScene gameScene) {
@@ -38,21 +25,7 @@ public class TengenMsPacMan_GameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public Optional<GameScene> selectGameScene(Game game) {
-        requireNonNull(game);
-        final SceneID sceneID = determineSceneID(game);
-        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
-        return Optional.of(gameScene);
-    }
-
-    @Override
-    public boolean gameSceneHasID(GameScene gameScene, SceneID sceneID) {
-        requireNonNull(gameScene);
-        requireNonNull(sceneID);
-        return scenesByID.get(sceneID) == gameScene;
-    }
-
-    private GameScene createGameScene(SceneID sceneID) {
+    protected GameScene createGameScene(SceneID sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
             case CommonSceneID.BOOT_SCENE -> new TengenMsPacMan_BootScene();
@@ -69,7 +42,8 @@ public class TengenMsPacMan_GameSceneConfig implements GameSceneConfig {
         };
     }
 
-    private SceneID determineSceneID(Game game) {
+    @Override
+    protected SceneID determineSceneID(Game game) {
         return switch (game.control().state()) {
             case BOOT -> CommonSceneID.BOOT_SCENE;
             case SETTING_OPTIONS_FOR_START -> CommonSceneID.START_SCENE;
