@@ -5,7 +5,6 @@ package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.GameBox;
 import de.amr.pacmanfx.ui.GameUI;
@@ -34,14 +33,13 @@ public class PacManXXL_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         final var mapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
-        final CoinMechanism coinMechanism = gameBox.coinMechanism();
         ui = GameUI_Builder
             .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
             .game(GameVariant.ARCADE_PACMAN_XXL,
-                () -> new PacManXXL_PacMan_GameModel(coinMechanism, mapSelector, HIGH_SCORE_FILE_PACMAN_XXL),
+                () -> new PacManXXL_PacMan_GameModel(gameBox, mapSelector, HIGH_SCORE_FILE_PACMAN_XXL),
                 PacManXXL_PacMan_UIConfig::new)
             .game(GameVariant.ARCADE_MS_PACMAN_XXL,
-                () -> new PacManXXL_MsPacMan_GameModel(coinMechanism, mapSelector, HIGH_SCORE_FILE_MS_PACMAN_XXL),
+                () -> new PacManXXL_MsPacMan_GameModel(gameBox, mapSelector, HIGH_SCORE_FILE_MS_PACMAN_XXL),
                 PacManXXL_MsPacMan_UIConfig::new)
             .dashboard(
                 CommonDashboardID.README,

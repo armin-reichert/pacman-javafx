@@ -68,7 +68,7 @@ public class ArcadePacMan_App extends Application {
     }
 
     private void createUIUsingAPI(Stage primaryStage, Vector2i size) {
-        final Game game = new ArcadePacMan_GameModel(gameBox.coinMechanism(), HIGH_SCORE_FILE);
+        final Game game = new ArcadePacMan_GameModel(gameBox, HIGH_SCORE_FILE);
         gameBox.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
         gameBox.setClock(new GameClockImpl());
 
@@ -88,7 +88,7 @@ public class ArcadePacMan_App extends Application {
         ui = GameUI_Builder
             .newUI(primaryStage, size.x(), size.y(), gameBox)
             .game(GameVariant.ARCADE_PACMAN,
-                () -> new ArcadePacMan_GameModel(gameBox.coinMechanism(), HIGH_SCORE_FILE), ArcadePacMan_UIConfig::new)
+                () -> new ArcadePacMan_GameModel(gameBox, HIGH_SCORE_FILE), ArcadePacMan_UIConfig::new)
             .startPage(ArcadePacMan_StartPage::new)
             .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
             .build();

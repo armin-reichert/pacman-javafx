@@ -30,7 +30,7 @@ public class TestEatingFood {
         final String variantName = GameVariant.ARCADE_PACMAN.name();
         final File highScoreFile = new File("");
         gameBox = new GameBox();
-        gameBox.registerGame(variantName, new ArcadePacMan_GameModel(gameBox.coinMechanism(), highScoreFile));
+        gameBox.registerGame(variantName, new ArcadePacMan_GameModel(gameBox, highScoreFile));
         gameBox.gameVariantNameProperty().set(variantName);
     }
 
