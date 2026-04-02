@@ -88,23 +88,23 @@ public class PacManGames3dApp extends Application {
                     .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
 
                     .game(ARCADE_PACMAN,
-                        () -> new ArcadePacMan_GameModel(gameBox, GameBox.highScoreFile(ARCADE_PACMAN)),
+                        () -> new ArcadePacMan_GameModel(gameBox, gameBox.highScoreFile(ARCADE_PACMAN)),
                         ArcadePacMan_UIConfig::new)
 
                     .game(ARCADE_MS_PACMAN,
-                        () ->new ArcadeMsPacMan_GameModel(gameBox, GameBox.highScoreFile(ARCADE_MS_PACMAN)),
+                        () ->new ArcadeMsPacMan_GameModel(gameBox, gameBox.highScoreFile(ARCADE_MS_PACMAN)),
                         ArcadeMsPacMan_UIConfig::new)
 
                     .game(TENGEN_MS_PACMAN,
-                        () -> new TengenMsPacMan_GameModel(GameBox.highScoreFile(TENGEN_MS_PACMAN)),
+                        () -> new TengenMsPacMan_GameModel(gameBox.highScoreFile(TENGEN_MS_PACMAN)),
                         TengenMsPacMan_UIConfig::new)
 
                     .game(ARCADE_PACMAN_XXL,
-                        () -> new PacManXXL_PacMan_GameModel(gameBox, xxlMapSelector, GameBox.highScoreFile(ARCADE_PACMAN_XXL)),
+                        () -> new PacManXXL_PacMan_GameModel(gameBox, xxlMapSelector, gameBox.highScoreFile(ARCADE_PACMAN_XXL)),
                         PacManXXL_PacMan_UIConfig::new)
 
                     .game(ARCADE_MS_PACMAN_XXL,
-                        () -> new PacManXXL_MsPacMan_GameModel(gameBox, xxlMapSelector, GameBox.highScoreFile(ARCADE_MS_PACMAN_XXL)),
+                        () -> new PacManXXL_MsPacMan_GameModel(gameBox, xxlMapSelector, gameBox.highScoreFile(ARCADE_MS_PACMAN_XXL)),
                         PacManXXL_MsPacMan_UIConfig::new)
 
                     .startPage(ArcadePacMan_StartPage::new)
@@ -157,7 +157,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void registerGame(GameVariant gameVariant, PacManXXL_MapSelector xxlMapSelector) {
-        final File highScoreFile = GameBox.highScoreFile(gameVariant);
+        final File highScoreFile = gameBox.highScoreFile(gameVariant);
         final Game game = switch (gameVariant) {
             case ARCADE_PACMAN        -> new ArcadePacMan_GameModel(gameBox, highScoreFile);
             case ARCADE_MS_PACMAN     -> new ArcadeMsPacMan_GameModel(gameBox, highScoreFile);

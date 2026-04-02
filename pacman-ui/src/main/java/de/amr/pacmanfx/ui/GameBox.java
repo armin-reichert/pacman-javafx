@@ -45,16 +45,6 @@ public class GameBox implements GameContext, CoinMechanism {
 
     private static final boolean DIRECTORY_CHECK_OK = initUserDirectories();
 
-    public static File highScoreFile(String gameVariantName) {
-        requireNonNull(gameVariantName);
-        final String fileName = "highscore-%s.xml".formatted(gameVariantName).toLowerCase();
-        return new File(GameBox.HOME_DIR, fileName);
-    }
-
-    public static File highScoreFile(GameVariant gameVariant) {
-        return highScoreFile(gameVariant.name());
-    }
-
     private final Map<String, Game> gamesByVariantName = new HashMap<>();
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
@@ -66,6 +56,17 @@ public class GameBox implements GameContext, CoinMechanism {
             throw new IllegalStateException("User directory check failed");
         }
     }
+
+    public File highScoreFile(String gameVariantName) {
+        requireNonNull(gameVariantName);
+        final String fileName = "highscore-%s.xml".formatted(gameVariantName).toLowerCase();
+        return new File(GameBox.HOME_DIR, fileName);
+    }
+
+    public File highScoreFile(GameVariant gameVariant) {
+        return highScoreFile(gameVariant.name());
+    }
+
 
     public void setClock(GameClock clock) {
         this.clock = requireNonNull(clock);

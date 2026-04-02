@@ -30,7 +30,7 @@ public class ArcadeMsPacMan_App extends Application {
         ui = GameUI_Builder
             .newUI(primaryStage, screenSize.x(), screenSize.y(), gameBox)
             .game(GameVariant.ARCADE_MS_PACMAN,
-                () -> new ArcadeMsPacMan_GameModel(gameBox, GameBox.highScoreFile(GameVariant.ARCADE_MS_PACMAN)),
+                () -> new ArcadeMsPacMan_GameModel(gameBox, gameBox.highScoreFile(GameVariant.ARCADE_MS_PACMAN)),
                 ArcadeMsPacMan_UIConfig::new)
             .startPage(ArcadeMsPacMan_StartPage::new)
             .dashboard(

@@ -31,10 +31,10 @@ public class PacManXXL_App extends Application {
         ui = GameUI_Builder
             .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
             .game(GameVariant.ARCADE_PACMAN_XXL,
-                () -> new PacManXXL_PacMan_GameModel(gameBox, mapSelector, GameBox.highScoreFile(GameVariant.ARCADE_PACMAN_XXL)),
+                () -> new PacManXXL_PacMan_GameModel(gameBox, mapSelector, gameBox.highScoreFile(GameVariant.ARCADE_PACMAN_XXL)),
                 PacManXXL_PacMan_UIConfig::new)
             .game(GameVariant.ARCADE_MS_PACMAN_XXL,
-                () -> new PacManXXL_MsPacMan_GameModel(gameBox, mapSelector, GameBox.highScoreFile(GameVariant.ARCADE_MS_PACMAN_XXL)),
+                () -> new PacManXXL_MsPacMan_GameModel(gameBox, mapSelector, gameBox.highScoreFile(GameVariant.ARCADE_MS_PACMAN_XXL)),
                 PacManXXL_MsPacMan_UIConfig::new)
             .dashboard(
                 CommonDashboardID.README,
