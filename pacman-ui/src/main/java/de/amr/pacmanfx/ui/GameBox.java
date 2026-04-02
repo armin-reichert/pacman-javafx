@@ -68,14 +68,10 @@ public class GameBox implements GameContext, CoinMechanism {
         return homeDir;
     }
 
-    public File highScoreFile(String gameVariantName) {
-        requireNonNull(gameVariantName);
-        final String fileName = "highscore-%s.xml".formatted(gameVariantName).toLowerCase();
-        return new File(GameBox.DEFAULT_HOME_DIR, fileName);
-    }
-
     public File highScoreFile(GameVariant gameVariant) {
-        return highScoreFile(gameVariant.name());
+        requireNonNull(gameVariant);
+        final String fileName = "highscore-%s.xml".formatted(gameVariant.name()).toLowerCase();
+        return new File(homeDir, fileName);
     }
 
     /**
@@ -180,16 +176,14 @@ public class GameBox implements GameContext, CoinMechanism {
     // other stuff
 
     private boolean validateUserDirs() {
-        final String homeDirDesc = "Home directory";
-        final String customMapDirDesc = "Custom map directory";
-        final boolean success = ensureDirExistsAndWritable(DEFAULT_HOME_DIR, homeDirDesc);
-        if (success) {
-            return ensureDirExistsAndWritable(DEFAULT_CUSTOM_MAP_DIR, customMapDirDesc);
+        final boolean ok = ensureExistsAndWritable(DEFAULT_HOME_DIR, "Home directory");
+        if (ok) {
+            return ensureExistsAndWritable(DEFAULT_CUSTOM_MAP_DIR, "Custom map directory");
         }
         return false;
     }
 
-    private static boolean ensureDirExistsAndWritable(File dir, String description) {
+    private static boolean ensureExistsAndWritable(File dir, String description) {
         if (!dir.exists() && !dir.mkdirs()) {
             Logger.error("{} could not be created", description);
             return false;
