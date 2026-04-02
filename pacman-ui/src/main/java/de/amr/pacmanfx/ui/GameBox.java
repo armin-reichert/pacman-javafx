@@ -37,14 +37,12 @@ public class GameBox implements GameContext, CoinMechanism {
      * Directory under which the user specific files are stored.
      * <p>Default: <code>$HOME/.pacmanfx</code> (Unix) or <code>%USERPROFILE%\.pacmanfx</code> (MS Windows)</p>
      */
-    public static final File HOME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
+    private static final File DEFAULT_HOME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
 
     /**
      * Directory where custom maps are stored (default: <code>&lt;home_dir&gt;/maps</code>).
      */
-    public static final File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
-
-    private static final boolean DIRECTORY_CHECK_OK = initUserDirectories();
+    private static final File DEFAULT_CUSTOM_MAP_DIR = new File(DEFAULT_HOME_DIR, "maps");
 
     private final Map<String, Game> gamesByVariantName = new HashMap<>();
 
@@ -52,16 +50,28 @@ public class GameBox implements GameContext, CoinMechanism {
 
     private final GameClock clock = new GameClockFX();
 
+    private final File homeDir = DEFAULT_HOME_DIR;
+    private final File customMapDir = DEFAULT_CUSTOM_MAP_DIR;
+
     public GameBox() {
-        if (!DIRECTORY_CHECK_OK) {
-            throw new IllegalStateException("User directory check failed");
+        final boolean ok = validateUserDirs();
+        if (!ok) {
+            throw new IllegalStateException("GameBox: User directory validation failed");
         }
+    }
+
+    public File customMapDir() {
+        return customMapDir;
+    }
+
+    public File homeDir() {
+        return homeDir;
     }
 
     public File highScoreFile(String gameVariantName) {
         requireNonNull(gameVariantName);
         final String fileName = "highscore-%s.xml".formatted(gameVariantName).toLowerCase();
-        return new File(GameBox.HOME_DIR, fileName);
+        return new File(GameBox.DEFAULT_HOME_DIR, fileName);
     }
 
     public File highScoreFile(GameVariant gameVariant) {
@@ -169,12 +179,12 @@ public class GameBox implements GameContext, CoinMechanism {
 
     // other stuff
 
-    private static boolean initUserDirectories() {
+    private boolean validateUserDirs() {
         final String homeDirDesc = "Home directory";
         final String customMapDirDesc = "Custom map directory";
-        final boolean success = ensureDirExistsAndWritable(HOME_DIR, homeDirDesc);
+        final boolean success = ensureDirExistsAndWritable(DEFAULT_HOME_DIR, homeDirDesc);
         if (success) {
-            return ensureDirExistsAndWritable(CUSTOM_MAP_DIR, customMapDirDesc);
+            return ensureDirExistsAndWritable(DEFAULT_CUSTOM_MAP_DIR, customMapDirDesc);
         }
         return false;
     }

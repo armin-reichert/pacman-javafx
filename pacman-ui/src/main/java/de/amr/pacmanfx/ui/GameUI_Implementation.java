@@ -58,7 +58,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
 
-    private final DirectoryWatchdog customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
+    private final DirectoryWatchdog customDirWatchdog;
     private final UIConfigManager uiConfigManager = new UIConfigManager();
     private final ActionBindingsManager actionBindingsManager = new ActionBindingsManagerImpl();
     private final SoundManager soundManager = new SoundManager();
@@ -76,15 +76,17 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     private StringBinding titleBinding;
 
-    public GameUI_Implementation(GameContext gameContext, Stage stage, int mainSceneWidth, int mainSceneHeight) {
+    public GameUI_Implementation(GameBox gameBox, Stage stage, int mainSceneWidth, int mainSceneHeight) {
         super(GameUI_Implementation.class);
 
         requireNonNegative(mainSceneWidth);
         requireNonNegative(mainSceneHeight);
 
-        this.gameContext = requireNonNull(gameContext);
+        this.gameContext = requireNonNull(gameBox);
+        this.customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
+
         this.stage = requireNonNull(stage);
-        this.viewManager = new ViewManager(this, scene, this::createEditorView, flashMessageView);
+        this.viewManager = new ViewManager(this, scene, this::createEditorView, gameBox.customMapDir(), flashMessageView);
 
         initLayout(mainSceneWidth,mainSceneHeight);
         initActionBindings();

@@ -27,7 +27,7 @@ public class PacManXXL_App extends Application {
     @Override
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-        final var mapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
+        final var mapSelector = new PacManXXL_MapSelector(gameBox.customMapDir());
         ui = GameUI_Builder
             .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
             .game(GameVariant.ARCADE_PACMAN_XXL,

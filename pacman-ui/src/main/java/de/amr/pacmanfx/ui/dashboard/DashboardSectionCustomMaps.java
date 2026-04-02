@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.ui.GameBox;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -61,12 +60,6 @@ public class DashboardSectionCustomMaps extends DashboardSection {
         tableView.setItems(customMaps);
 
         addRow(tableView);
-
-        expandedProperty().addListener((_, _, expanded) -> {
-            if (expanded) {
-                updateCustomMapList();
-            }
-        });
     }
 
     public void setCustomDirWatchDog(DirectoryWatchdog watchdog) {
@@ -75,7 +68,12 @@ public class DashboardSectionCustomMaps extends DashboardSection {
                 eventList.stream()
                     .map(watchEvent -> String.format("%s: '%s'", watchEvent.kind(), watchEvent.context()))
                     .toList());
-            updateCustomMapList();
+            updateWorldMapList(watchdog.watchedDir());
+        });
+        expandedProperty().addListener((_, _, expanded) -> {
+            if (expanded) {
+                updateWorldMapList(watchdog.watchedDir());
+            }
         });
     }
 
@@ -144,11 +142,11 @@ public class DashboardSectionCustomMaps extends DashboardSection {
         return column;
     }
 
-    private void updateCustomMapList() {
+    private void updateWorldMapList(File customMapDir) {
         customMaps.clear();
-        final File[] mapFiles = GameBox.CUSTOM_MAP_DIR.listFiles((_, name) -> name.endsWith(".world"));
+        final File[] mapFiles = customMapDir.listFiles((_, name) -> name.endsWith(".world"));
         if (mapFiles == null) {
-            Logger.error("An error occurred accessing custom map directory {}", GameBox.CUSTOM_MAP_DIR);
+            Logger.error("An error occurred accessing custom map directory {}", customMapDir);
             return;
         }
         if (mapFiles.length == 0) {

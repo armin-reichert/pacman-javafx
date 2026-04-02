@@ -31,7 +31,10 @@ public class WorldMap {
     public static Optional<WorldMap> fromURL(URL url) {
         requireNonNull(url);
         try {
-            return fromStream(url.openStream());
+            final Optional<WorldMap> optWorldMap = fromStream(url.openStream());
+            optWorldMap.ifPresent(worldMap -> worldMap.url = url.toExternalForm());
+            return optWorldMap;
+
         } catch (IOException x) {
             Logger.error(x, "Error opening url " + url);
             return Optional.empty();
@@ -41,7 +44,8 @@ public class WorldMap {
     public static Optional<WorldMap> fromFile(File file) {
         requireNonNull(file);
         try {
-            return fromStream(new FileInputStream(file));
+            // Use fromURL such that URL is stored inside map! This is needed to load map via link in UI!
+            return fromURL(file.toURI().toURL());
         } catch (IOException x) {
             Logger.error(x, "Error opening file: " + file.getAbsolutePath());
             return Optional.empty();

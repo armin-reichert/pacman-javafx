@@ -81,7 +81,7 @@ public class PacManGames3dApp extends Application {
         try {
             final boolean useBuilder = Boolean.parseBoolean(getParameters().getNamed().getOrDefault("use_builder", "true"));
             // Shared map selector used by Pac-Man XXL and Ms. Pac-Man XXL
-            final var xxlMapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
+            final var xxlMapSelector = new PacManXXL_MapSelector(gameBox.customMapDir());
             if (useBuilder) {
                 ui = GameUI_Builder
                     .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)

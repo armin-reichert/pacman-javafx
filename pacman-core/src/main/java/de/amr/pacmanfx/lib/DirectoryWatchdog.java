@@ -49,6 +49,10 @@ public class DirectoryWatchdog {
         listeners.remove(listener);
     }
 
+    public File watchedDir() {
+        return watchedDir;
+    }
+
     public void startWatching() {
         if (watchThread.isAlive()) return;
         watching = true;

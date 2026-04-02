@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.ui.GameBox;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.property.ObjectProperty;
@@ -13,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import org.tinylog.Supplier;
 
+import java.io.File;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
@@ -50,25 +50,30 @@ public class ViewManager {
     private final ObjectProperty<ViewID> selectedID = new SimpleObjectProperty<>();
     private final ObjectProperty<View> currentView = new SimpleObjectProperty<>();
     private final Supplier<EditorView> editorViewFactory;
+    private final File editorWorkDir;
 
     /**
      * Creates a new {@code ViewManager}.
      *
-     * @param ui                the game UI context
+     * @param ui                the game UI
      * @param scene             the JavaFX scene whose root must be a {@link Pane}
      * @param editorViewFactory factory for lazily creating the editor view
+     * @param editorWorkDir     editor work directory
      * @param flashMessageView  view used for displaying transient messages
      */
     public ViewManager(
         GameUI ui,
         Scene scene,
         Supplier<EditorView> editorViewFactory,
+        File editorWorkDir,
         FlashMessageView flashMessageView)
     {
         requireNonNull(ui);
         requireNonNull(scene);
         this.editorViewFactory = requireNonNull(editorViewFactory);
+        this.editorWorkDir = requireNonNull(editorWorkDir);
         requireNonNull(flashMessageView);
+
 
         viewMap.put(ViewID.START_VIEW, new StartPagesCarousel(ui));
         viewMap.put(ViewID.PLAY_VIEW, new PlayView(ui, scene));
@@ -118,11 +123,18 @@ public class ViewManager {
     public void selectView(ViewID id) {
         requireNonNull(id);
         if (id == ViewID.EDITOR_VIEW) {
-            createEditorViewIfMissing();
-            getView(ViewID.EDITOR_VIEW, EditorView.class).editor().start();
+            final EditorView editorView = (EditorView) viewMap.computeIfAbsent(id, _ -> createEditorView());
+            editorView.editor().start();
         }
         selectedID.set(id);
     }
+
+    private EditorView createEditorView() {
+        final var editorView = editorViewFactory.get();
+        editorView.editor().init(editorWorkDir);
+        return editorView;
+    }
+
 
     /**
      * @return the property representing the currently selected view ID
@@ -197,17 +209,5 @@ public class ViewManager {
      */
     public Optional<EditorView> optEditorView() {
         return Optional.ofNullable((EditorView) viewMap.get(ViewID.EDITOR_VIEW));
-    }
-
-    /**
-     * Lazily creates the editor view if it does not yet exist.
-     */
-    private void createEditorViewIfMissing() {
-        var editorView = (EditorView) viewMap.get(ViewID.EDITOR_VIEW);
-        if (editorView == null) {
-            editorView = editorViewFactory.get();
-            editorView.editor().init(GameBox.CUSTOM_MAP_DIR);
-            viewMap.put(ViewID.EDITOR_VIEW, editorView);
-        }
     }
 }
