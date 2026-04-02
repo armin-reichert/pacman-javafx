@@ -14,7 +14,6 @@ import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.d3.DefaultFactory3D;
 import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.ui.layout.View;
@@ -94,11 +93,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         initScene();
         initStage();
         initGameClock();
-
-        Logger.info("Loading 3D models...");
-        Logger.info("- Pac-Man Model: {}", DefaultFactory3D.PAC_MAN_MODEL);
-        Logger.info("- Ghost Model:   {}", DefaultFactory3D.GHOST_MODEL);
-        Logger.info("- Pellet Model:  {}", DefaultFactory3D.PELLET_MODEL);
     }
 
     private void initGameClock() {
