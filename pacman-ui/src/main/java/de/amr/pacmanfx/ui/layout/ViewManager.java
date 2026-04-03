@@ -4,15 +4,12 @@
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import org.tinylog.Supplier;
 
 import java.io.File;
@@ -61,7 +58,6 @@ public class ViewManager {
      *
      * @param ui                the game UI
      * @param scene             the JavaFX scene whose root must be a {@link Pane}
-     * @param editorViewFactory factory for lazily creating the editor view
      * @param editorWorkDir     editor work directory
      * @param flashMessageView  view used for displaying transient messages
      */
@@ -188,7 +184,7 @@ public class ViewManager {
      * @throws IllegalArgumentException if no view is registered or the type does not match
      */
     @SuppressWarnings("unchecked")
-    private <V extends View> V getView(ViewID id, Class<V> viewClass) {
+    public  <V extends View> V getView(ViewID id, Class<V> viewClass) {
         requireNonNull(id);
         requireNonNull(viewClass);
 
@@ -204,14 +200,6 @@ public class ViewManager {
         throw new IllegalArgumentException(
             "View with ID '%s' has type %s (expected: %s)"
                 .formatted(id, view.getClass(), viewClass));
-    }
-
-    public PlayView getPlayView() {
-        return getView(ViewID.PLAY_VIEW, PlayView.class);
-    }
-
-    public StartPagesCarousel getStartPagesView() {
-        return getView(ViewID.START_VIEW, StartPagesCarousel.class);
     }
 
     /**

@@ -327,7 +327,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     @Override
     public void onUnspecifiedChange(UnspecifiedChangeEvent event) {
         // TODO: remove (currently only used by GameState.TESTING_CUT_SCENES)
-        ui.views().getPlayView().forceGameSceneUpdate();
+        ui.forceGameSceneUpdate();
     }
 
     // Other stuff

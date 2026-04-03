@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.ui.layout.MiniGameView;
 import de.amr.pacmanfx.ui.layout.ViewManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
@@ -264,13 +265,13 @@ public interface GameUI extends Translator {
      */
     boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID);
 
+    void forceGameSceneUpdate();
+
     /**
      * Returns the current game scene if existing.
      * @return (optional) game scene
      */
-    default Optional<GameScene> optGameScene() {
-        return views().getPlayView().optCurrentGameScene();
-    }
+    Optional<GameScene> optGameScene();
 
     // ---------------------------------------------------------------------------------------------
     // View Access
@@ -293,10 +294,10 @@ public interface GameUI extends Translator {
     /**
      * Convenience accessor for the dashboard inside the play view.
      */
-    default Dashboard dashboard() {
-        return views().getPlayView().dashboard();
-    }
+    Dashboard dashboard();
 
+    MiniGameView miniView();
+    
     // ---------------------------------------------------------------------------------------------
     // Config
     // ---------------------------------------------------------------------------------------------

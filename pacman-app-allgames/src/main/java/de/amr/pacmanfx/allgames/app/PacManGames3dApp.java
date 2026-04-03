@@ -30,6 +30,7 @@ import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardSectionCustomMaps;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
+import de.amr.pacmanfx.ui.layout.ViewManager;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -126,13 +127,13 @@ public class PacManGames3dApp extends Application {
                 ui.uiConfigManager().addFactory(ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_UIConfig::new);
                 ui.uiConfigManager().addFactory(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_UIConfig::new);
 
-                final StartPagesCarousel startPages = ui.views().getStartPagesView();
-                startPages.addStartPage(new ArcadePacMan_StartPage());
-                startPages.addStartPage(new ArcadeMsPacMan_StartPage());
-                startPages.addStartPage(new TengenMsPacMan_StartPage());
-                startPages.addStartPage(new PacManXXL_StartPage());
-                startPages.startPages().forEach(startPage -> startPage.init(ui));
-                startPages.setSelectedIndex(0);
+                final StartPagesCarousel startPagesCarousel = ui.views().getView(ViewManager.ViewID.START_VIEW, StartPagesCarousel.class);
+                startPagesCarousel.addStartPage(new ArcadePacMan_StartPage());
+                startPagesCarousel.addStartPage(new ArcadeMsPacMan_StartPage());
+                startPagesCarousel.addStartPage(new TengenMsPacMan_StartPage());
+                startPagesCarousel.addStartPage(new PacManXXL_StartPage());
+                startPagesCarousel.startPages().forEach(startPage -> startPage.init(ui));
+                startPagesCarousel.setSelectedIndex(0);
 
                 ui.dashboard().addCommonSections(ui, DASHBOARD_IDs);
             }

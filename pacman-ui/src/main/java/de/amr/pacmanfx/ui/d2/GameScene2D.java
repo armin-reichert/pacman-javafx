@@ -140,7 +140,7 @@ public abstract class GameScene2D implements GameScene {
      */
     @Override
     public void onUnspecifiedChange(UnspecifiedChangeEvent event) {
-        ui.views().getPlayView().forceGameSceneUpdate();
+        ui.forceGameSceneUpdate();
     }
 
     @Override

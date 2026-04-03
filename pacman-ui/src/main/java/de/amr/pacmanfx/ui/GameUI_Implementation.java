@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
+import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -39,6 +40,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
@@ -142,7 +144,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
             },
             gameContext.gameVariantNameProperty(),
             viewManager.currentViewProperty(),
-            viewManager.getPlayView().gameSceneProperty(),
+            playView().gameSceneProperty(),
             PROPERTY_DEBUG_INFO_VISIBLE,
             PROPERTY_3D_ENABLED,
             gameContext.clock().updatesDisabledProperty()
@@ -155,7 +157,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
                 : GameUI_Resources.BACKGROUND_PAC_MAN_WALLPAPER,
             // depends on:
             viewManager.currentViewProperty(),
-            viewManager.getPlayView().gameSceneProperty()
+            playView().gameSceneProperty()
         ));
 
         gameContext.gameVariantNameProperty().addListener((_, _, _) -> {
@@ -164,6 +166,10 @@ public final class GameUI_Implementation extends PreferencesManager implements G
             statusIconBox.iconCheated()  .visibleProperty().bind(game.cheatUsedProperty());
             statusIconBox.iconImmune()   .visibleProperty().bind(game.immuneProperty());
         });
+    }
+
+    private PlayView playView() {
+        return views().getView(ViewManager.ViewID.PLAY_VIEW, PlayView.class);
     }
 
     private EditorView createEditorView() {
@@ -239,11 +245,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
-    public GameContext gameContext() {
-        return gameContext;
-    }
-
-    @Override
     public boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID) {
         final GameScene currentGameScene = optGameScene().orElse(null);
         return currentGameScene != null && currentGameSceneConfig().gameSceneHasID(currentGameScene, sceneID);
@@ -270,6 +271,31 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
+    public Dashboard dashboard() {
+        return playView().dashboard();
+    }
+
+    @Override
+    public void forceGameSceneUpdate() {
+        playView().forceGameSceneUpdate();
+    }
+
+    @Override
+    public GameContext gameContext() {
+        return gameContext;
+    }
+
+    @Override
+    public ResourceBundle localizedTexts() {
+        return GameUI_Resources.LOCALIZED_TEXTS;
+    }
+
+    @Override
+    public MiniGameView miniView() {
+        return playView().miniView();
+    }
+
+    @Override
     public void openWorldMapFileInEditor(File worldMapFile) {
         requireNonNull(worldMapFile);
         viewManager.selectView(EDITOR_VIEW); // this ensures the editor view is created!
@@ -288,10 +314,9 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         });
     }
 
-
     @Override
-    public ResourceBundle localizedTexts() {
-        return GameUI_Resources.LOCALIZED_TEXTS;
+    public Optional<GameScene> optGameScene() {
+        return playView().optCurrentGameScene();
     }
 
     @Override
@@ -331,7 +356,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         PROPERTY_3D_WALL_OPACITY.set(currentConfig().entityConfig().maze().obstacleOpacity());
 
         logPreferences();
-        viewManager.getPlayView().dashboard().init(this);
+        dashboard().init(this);
         viewManager.selectView(START_VIEW);
         stage.centerOnScreen();
         stage.show();

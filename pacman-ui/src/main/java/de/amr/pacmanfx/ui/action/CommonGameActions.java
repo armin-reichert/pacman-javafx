@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
+import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.ViewManager.ViewID;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
@@ -116,7 +117,8 @@ public final class CommonGameActions {
     public static final GameAction ACTION_SHOW_HELP = new GameAction("SHOW_HELP") {
         @Override
         public void execute(GameUI ui) {
-            ui.views().getPlayView().showHelp(ui);
+            final PlayView playView = ui.views().getView(ViewID.PLAY_VIEW, PlayView.class);
+            playView.showHelp(ui);
         }
 
         @Override
@@ -224,7 +226,8 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_DASHBOARD = new GameAction("TOGGLE_DASHBOARD") {
         @Override
         public void execute(GameUI ui) {
-            ui.views().getPlayView().dashboard().toggleVisibility();
+            final PlayView playView = ui.views().getView(ViewID.PLAY_VIEW, PlayView.class);
+            playView.dashboard().toggleVisibility();
         }
 
         @Override
@@ -300,9 +303,10 @@ public final class CommonGameActions {
                 ui.showFlashMessage(ui.translate(usePlayScene3D ? "use_3D_scene" : "use_2D_scene"));
             }
             if (canSwitchSceneNow(game)) {
+                final PlayView playView = ui.views().getView(ViewID.PLAY_VIEW, PlayView.class);
                 final GameClock gameClock = ui.gameContext().clock();
                 gameClock.stop();
-                ui.views().getPlayView().forceGameSceneUpdate();
+                playView.forceGameSceneUpdate();
                 gameClock.start();
             }
         }

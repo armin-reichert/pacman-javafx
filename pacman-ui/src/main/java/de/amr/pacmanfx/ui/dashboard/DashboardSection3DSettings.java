@@ -105,7 +105,7 @@ public class DashboardSection3DSettings extends DashboardSection {
 
         comboPerspectives.setValue(PROPERTY_3D_PERSPECTIVE_ID.get());
         sliderMiniViewSceneHeight.setValue(PROPERTY_MINI_VIEW_HEIGHT.get());
-        sliderMiniViewSceneHeight.setDisable(ui.views().getPlayView().miniView().isMoving());
+        sliderMiniViewSceneHeight.setDisable(ui.miniView().isMoving());
         sliderMiniViewOpacityPercentage.setValue(PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
         sliderWallHeight.setValue(PROPERTY_3D_WALL_HEIGHT.get());
         sliderWallOpacity.setValue(PROPERTY_3D_WALL_OPACITY.get());
