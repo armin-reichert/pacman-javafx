@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.lib.fsm.State;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl.CommonGameState;
@@ -294,36 +294,39 @@ public final class CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
-            ui.optGameScene().ifPresent(_ -> {
-                ui.gameContext().clock().stop();
-                toggleBoolean(PROPERTY_3D_ENABLED);
-                if (ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D) ||
-                    ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D))
-                {
-                    ui.views().getPlayView().updateGameScene(game, true);
-                    game.control().stateMachine().update(); //TODO needed?
-                }
-                if (!game.isPlaying()) {
-                    ui.showFlashMessage(ui.translate(PROPERTY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
-                }
-                ui.gameContext().clock().start();
-            });
+            toggleBoolean(PROPERTY_3D_ENABLED);
+            if (!isPlaySceneActive(ui)) {
+                final boolean usePlayScene3D = PROPERTY_3D_ENABLED.get();
+                ui.showFlashMessage(ui.translate(usePlayScene3D ? "use_3D_scene" : "use_2D_scene"));
+            }
+            if (canSwitchSceneNow(game)) {
+                final GameClock gameClock = ui.gameContext().clock();
+                gameClock.stop();
+                ui.views().getPlayView().forceGameSceneUpdate();
+                gameClock.start();
+            }
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final State<?> state = ui.gameContext().game().control().state();
-            if (state.nameMatches(
+            if (!ui.views().isSelected(ViewID.PLAY_VIEW)) return false;
+            if (isTestModeRunning(ui.gameContext().game())) return true;
+            return isPlaySceneActive(ui);
+        }
+
+        private boolean isPlaySceneActive(GameUI ui) {
+            return ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D)
+                || ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D);
+        }
+
+        private boolean isTestModeRunning(Game game) {
+            return game.control().state().nameMatches(
                 LevelShortTestState.class.getSimpleName(),
-                LevelMediumTestState.class.getSimpleName())) {
-                return true;
-            }
-            return state.nameMatches(
-                CommonGameState.BOOT.name(),
-                CommonGameState.INTRO.name(),
-                CommonGameState.SETTING_OPTIONS_FOR_START.name(),
-                CommonGameState.HUNTING.name()
-            );
+                LevelMediumTestState.class.getSimpleName());
+        }
+
+        private boolean canSwitchSceneNow(Game game) {
+            return game.control().state().nameMatches(CommonGameState.HUNTING.name());
         }
     };
 }

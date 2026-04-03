@@ -14,7 +14,6 @@ import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
-import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
@@ -291,15 +290,14 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     @Override
     public void onLevelStarts(LevelStartedEvent event) {
         final GameLevel level = event.level();
-        if (level3D == null) {
-            Logger.warn("Level starts but no 3D level exists? Creating one...");
-            replaceGameLevel3D(level);
-        }
         final State<Game> state = level.game().control().state();
         if (state instanceof TestState) {
             replaceGameLevel3D(level);
             level3D.entities().all(Energizer3D.class).forEach(Energizer3D::startPumping);
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level.number());
+        }
+        if (level3D == null) {
+            throw new IllegalStateException("Level starts but no 3D level exists?");
         }
         level3D.entities().all().forEach(e -> e.init(level));
         replaceActionBindings(level);
@@ -329,7 +327,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     @Override
     public void onUnspecifiedChange(UnspecifiedChangeEvent event) {
         // TODO: remove (currently only used by GameState.TESTING_CUT_SCENES)
-        ui.views().getPlayView().updateGameScene(gameContext().game(), true);
+        ui.views().getPlayView().forceGameSceneUpdate();
     }
 
     // Other stuff
@@ -347,21 +345,6 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
             new ActionBinding(ACTION_TOGGLE_DRAW_MODE,                 alt(KeyCode.W))
         );
         actionBindings.registerAllFrom(bindings);
-    }
-
-    /**
-     * Creates the 3D level representation.
-     *
-     * @param level the game level
-     * @param uiConfig the UI configuration
-     * @return the 3D game level
-     */
-    protected final GameLevel3D createGameLevel3D(GameLevel level, UIConfig uiConfig) {
-        final var level3D = new GameLevel3D(level, uiConfig, ui.localizedTexts());
-        level3D.entities().all().forEach(e -> e.init(level));
-        level3D.startTrackingPac();
-        decorateGameLevel3D(level3D);
-        return level3D;
     }
 
     /**
@@ -420,8 +403,11 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
             Logger.info("Replacing game level 3D...");
             level3D.dispose();
         }
-        level3D = createGameLevel3D(level, ui.currentConfig());
+        level3D = new GameLevel3D(level, ui.currentConfig(), ui.localizedTexts());
+        decorateGameLevel3D(level3D);
         level3DParent.getChildren().setAll(level3D);
+        level3D.entities().all().forEach(e -> e.init(level));
+        level3D.startTrackingPac();
         Logger.info("Created and added new game level 3D to play scene");
     }
 

@@ -44,7 +44,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
-import javafx.util.Duration;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
@@ -52,8 +51,6 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.model.GameControl.CommonGameState.EATING_GHOST;
-import static de.amr.pacmanfx.model.GameControl.CommonGameState.HUNTING;
 import static de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
 import static de.amr.pacmanfx.ui.GameSceneConfig.identifySceneSwitchType;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
@@ -155,7 +152,7 @@ public class PlayView extends StackPane implements View {
         return currentGameScene;
     }
 
-    public Optional<GameScene> optGameScene() {
+    public Optional<GameScene> optCurrentGameScene() {
         return Optional.ofNullable(currentGameScene.get());
     }
 
@@ -185,7 +182,7 @@ public class PlayView extends StackPane implements View {
     public void onKeyboardInput(GameUI ui) {
         actionBindingsManager.findMatchingAction(GameUI.KEYBOARD).ifPresentOrElse(
             action -> action.execute(ui),
-            () -> optGameScene().ifPresent(GameScene::onKeyboardInput)
+            () -> optCurrentGameScene().ifPresent(GameScene::onKeyboardInput)
         );
     }
 
@@ -209,7 +206,7 @@ public class PlayView extends StackPane implements View {
     @Override
     public void render() {
         final Game game = ui.gameContext().game();
-        optGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(gameScene2D -> {
+        optCurrentGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(gameScene2D -> {
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D);
             }
@@ -242,7 +239,7 @@ public class PlayView extends StackPane implements View {
                 miniView.onLevelCreated(level);
                 miniView.slideIn();
                 // size of game scene might have changed, so re-embed
-                optGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
+                optCurrentGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
             }
             case GameStateChangeEvent _ -> {
                 if (gameState.nameMatches(GameControl.CommonGameState.LEVEL_COMPLETE.name())) {
@@ -251,50 +248,50 @@ public class PlayView extends StackPane implements View {
             }
             default -> {}
         }
-        updateGameScene(ui.gameContext().game(), false);
 
-        optGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
+        updateGameSceneForced(false);
+        optCurrentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
     }
 
-    /**
-     * @param game the current game
-     * @param forcedReload if {@code true} the game scene is (re-)embedded even if it doesn't change
-     */
-    public void updateGameScene(Game game, boolean forcedReload) {
-        final GameScene currentGameScene = optGameScene().orElse(null);
-        final GameScene intendedGameScene = ui.currentGameSceneConfig().selectGameScene(game).orElse(null);
+    public void forceGameSceneUpdate() {
+        updateGameSceneForced(true);
+    }
 
-        if (intendedGameScene == null) {
-            ui.showFlashMessage(Duration.seconds(30), "Katastrophe! Could not determine game scene!");
+    public void updateGameScene() {
+        updateGameSceneForced(false);
+    }
+
+    private void updateGameSceneForced(boolean forcedReload) {
+        final Game game = ui.gameContext().game();
+        final GameScene prevGameScene = optCurrentGameScene().orElse(null);
+        final GameScene nextGameScene = ui.currentGameSceneConfig().selectGameScene(game).orElseThrow();
+
+        if (nextGameScene == prevGameScene && !forcedReload) {
             return;
         }
 
-        if (!forcedReload && intendedGameScene == currentGameScene) {
-            return;
+        if (prevGameScene != null) {
+            prevGameScene.end(game);
+            Logger.info("Game scene ended: {}", prevGameScene.getClass().getSimpleName());
         }
 
-        if (currentGameScene != null) {
-            currentGameScene.end(game);
-            Logger.info("Game scene ended: {}", currentGameScene.getClass().getSimpleName());
-        }
+        nextGameScene.onEmbed(ui); // Must be called *before* embedding
+        embedGameScene(parentScene, nextGameScene);
+        nextGameScene.init(game);
+        Logger.info("Game scene initialized: {}", nextGameScene.getClass().getSimpleName());
 
-        intendedGameScene.onEmbed(ui); // Must be called *before* embedding
-        embedGameScene(parentScene, intendedGameScene);
-        intendedGameScene.init(game);
-        Logger.info("Game scene initialized: {}", intendedGameScene.getClass().getSimpleName());
-
-        if (currentGameScene != null && ui.gameContext().game().optGameLevel().isPresent()) {
-            // Handle switching between 2D and 3D scene variant (play scene)
-            final byte sceneSwitchType = identifySceneSwitchType(currentGameScene, intendedGameScene);
+        // Handle switching between 2D and 3D play scene view
+        game.optGameLevel().ifPresent(level -> {
+            final byte sceneSwitchType = identifySceneSwitchType(prevGameScene, nextGameScene);
             switch (sceneSwitchType) {
-                case 23 -> switchPlaySceneTo3D(currentGameScene, intendedGameScene);
-                case 32 -> switchPlaySceneTo2D(currentGameScene, intendedGameScene);
+                case 23 -> switchPlaySceneTo3D(level, prevGameScene, nextGameScene);
+                case 32 -> switchPlaySceneTo2D(prevGameScene, nextGameScene);
                 case  0 -> {}
                 default -> throw new IllegalArgumentException("Illegal scene switch type: " + sceneSwitchType);
             }
-        }
+        });
 
-        currentGameSceneProperty().set(intendedGameScene);
+        currentGameSceneProperty().set(nextGameScene);
     }
 
     // Others
@@ -394,7 +391,7 @@ public class PlayView extends StackPane implements View {
 
     private void handleContextMenuRequest(ContextMenuEvent event) {
         contextMenu.clear();
-        optGameScene().ifPresent(gameScene -> {
+        optCurrentGameScene().ifPresent(gameScene -> {
             if (ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D)) {
                 contextMenu.addLocalizedTitleItem("scene_display");
                 contextMenu.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
@@ -458,7 +455,7 @@ public class PlayView extends StackPane implements View {
         }
     }
 
-    private void switchPlaySceneTo3D(GameScene currentScene, GameScene nextScene) {
+    private void switchPlaySceneTo3D(GameLevel level, GameScene currentScene, GameScene nextScene) {
         if (!(nextScene instanceof PlayScene3D playScene3D)) {
             throw new IllegalArgumentException("Expected PlayScene3D, but scene has class %s"
                 .formatted(nextScene.getClass().getSimpleName()));
@@ -467,24 +464,18 @@ public class PlayView extends StackPane implements View {
         // Pause simulation while switching
         ui.gameContext().clock().setUpdatesDisabled(true);
 
-        final Game game = ui.gameContext().game();
-        final GameLevel level = game.optGameLevel().orElseThrow();
-        final State<Game> state = game.control().state();
-
-        if (playScene3D.optGameLevel3D().isEmpty()) {
-            playScene3D.replaceGameLevel3D(level);
-        }
+        playScene3D.replaceGameLevel3D(level);
 
         final GameLevel3D gameLevel3D = playScene3D.optGameLevel3D().orElseThrow();
         final Pac3D pac3D = gameLevel3D.entities().unique(Pac3D.class);
         gameLevel3D.startTrackingPac();
-        playScene3D.initFood3D(level.worldMap().foodLayer(), state.nameMatches(HUNTING.name(), EATING_GHOST.name()));
+        playScene3D.initFood3D(level.worldMap().foodLayer(), true);
         playScene3D.initPac3D(pac3D, level);
         playScene3D.updateHUD3D(level);
         playScene3D.replaceActionBindings(level);
         playScene3D.fadeIn();
 
-        if (state.nameMatches(HUNTING.name()) && level.pac().powerTimer().isRunning()) {
+        if (level.pac().powerTimer().isRunning()) {
             ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
 

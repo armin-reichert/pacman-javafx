@@ -269,7 +269,7 @@ public interface GameUI extends Translator {
      * @return (optional) game scene
      */
     default Optional<GameScene> optGameScene() {
-        return views().getPlayView().optGameScene();
+        return views().getPlayView().optCurrentGameScene();
     }
 
     // ---------------------------------------------------------------------------------------------
