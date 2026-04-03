@@ -230,7 +230,7 @@ public class RuleBasedPacSteering implements Steering {
                 }
                 if (gameLevel.worldMap().foodLayer().isEnergizerTile(tile)
                     && gameLevel.pac().powerTimer().remainingTicks() > 2 * Globals.NUM_TICKS_PER_SEC
-                    && foodLayer.uneatenFoodCount() > 1) {
+                    && foodLayer.remainingFoodCount() > 1) {
                     continue;
                 }
                 float dist = pacManTile.manhattanDist(tile);

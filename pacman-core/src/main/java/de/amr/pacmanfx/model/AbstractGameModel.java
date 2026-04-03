@@ -313,7 +313,7 @@ public abstract class AbstractGameModel implements Game {
      */
     @Override
     public boolean isLevelCompleted(GameLevel level) {
-        return level.worldMap().foodLayer().uneatenFoodCount() == 0;
+        return level.worldMap().foodLayer().remainingFoodCount() == 0;
     }
 
     /**
@@ -584,7 +584,7 @@ public abstract class AbstractGameModel implements Game {
         if (simStep.foodTile == null) {
             pac.continueStarving();
         } else {
-            level.worldMap().foodLayer().registerFoodEatenAt(simStep.foodTile);
+            level.worldMap().foodLayer().markFoodEatenAt(simStep.foodTile);
             pac.endStarving();
             if (simStep.energizerFound) {
                 eatEnergizer(level, simStep.foodTile);

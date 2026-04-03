@@ -20,54 +20,53 @@ public final class FoodLayer extends WorldMapLayer {
     // instead of Set<Vector2i> we use a bit-set indexed by top-down-left-to-right tile index
     private final BitSet eatenFoodBits;
     private int totalFoodCount;
-    private int uneatenFoodCount;
+    private int remainingFoodCount;
     private Set<Vector2i> energizerTiles;
 
     public FoodLayer(int numRows, int numCols) {
         super(numRows, numCols);
         eatenFoodBits = new BitSet(numCols() * numRows());
-        updateFoodCount();
+        initFoodCount();
     }
 
     public FoodLayer(FoodLayer layer) {
         super(layer);
         eatenFoodBits = new BitSet(numCols() * numRows());
-        updateFoodCount();
+        initFoodCount();
     }
 
-    public void updateFoodCount() {
+    public void initFoodCount() {
         energizerTiles = tilesContaining(ENERGIZER.$).collect(Collectors.toSet());
-        totalFoodCount = (int) tilesContaining(PELLET.$).count() + energizerTiles.size();
-        uneatenFoodCount = totalFoodCount;
+        remainingFoodCount = totalFoodCount = (int) tilesContaining(PELLET.$).count() + energizerTiles.size();
     }
 
     public int totalFoodCount() {
         return totalFoodCount;
     }
 
-    public int uneatenFoodCount() {
-        return uneatenFoodCount;
+    public int remainingFoodCount() {
+        return remainingFoodCount;
     }
 
     public int eatenFoodCount() {
-        return totalFoodCount - uneatenFoodCount;
+        return totalFoodCount - remainingFoodCount;
     }
 
-    public void registerFoodEatenAt(Vector2i tile) {
+    public void markFoodEatenAt(Vector2i tile) {
         if (hasFoodAtTile(tile)) {
             eatenFoodBits.set(indexInRowWiseOrder(tile));
-            --uneatenFoodCount;
+            --remainingFoodCount;
         } else {
             Logger.warn("Attempt to eat foot at tile {} that has none", tile);
         }
     }
 
-    public void eatPellets() {
-        tiles().filter(this::hasFoodAtTile).filter(not(this::isEnergizerTile)).forEach(this::registerFoodEatenAt);
+    public void eatAll() {
+        tiles().filter(this::hasFoodAtTile).forEach(this::markFoodEatenAt);
     }
 
-    public void eatAll() {
-        tiles().filter(this::hasFoodAtTile).forEach(this::registerFoodEatenAt);
+    public void eatPellets() {
+        tiles().filter(this::hasFoodAtTile).filter(not(this::isEnergizerTile)).forEach(this::markFoodEatenAt);
     }
 
     public Set<Vector2i> energizerTiles() { return Collections.unmodifiableSet(energizerTiles); }

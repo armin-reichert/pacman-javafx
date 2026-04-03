@@ -355,6 +355,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Maze3D maze3D = entities().unique(Maze3D.class);
 
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
+
+        // Pellets
         final PelletConfig3D pelletConfig3D = uiConfig.entityConfig().pellet();
         final var pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
         final double pelletZ = maze3D.floorTop() - pelletConfig3D.floorElevation();
@@ -367,11 +369,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 return pellet3D;
             }).forEach(entities::add);
 
+        // Energizers
+        // TODO: Use different material?
         final EnergizerConfig3D energizerConfig3D = uiConfig.entityConfig().energizer();
         final double energizerZ = maze3D.floorTop() - energizerConfig3D.floorElevation();
         foodLayer.tiles()
-            .filter(foodLayer::isEnergizerTile)
             .filter(foodLayer::hasFoodAtTile)
+            .filter(foodLayer::isEnergizerTile)
             .map(tile -> {
                 final Energizer3D energizer3D = uiConfig.factory3D().createEnergizer3D(energizerConfig3D, animations, pelletMaterial);
                 energizer3D.setLocation(tile, energizerZ);
@@ -658,7 +662,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         //TODO: this looks ugly
         addChild(animations.animation(AnimationID.GHOST_LIGHT, GhostLightAnimation.class).light());
     }
-    
+
     private List<GhostAppearance3D> ghostAppearancesByPersonality() {
         return entities.all(GhostAppearance3D.class).sorted(BY_GHOST_PERSONALITY).toList();
     }

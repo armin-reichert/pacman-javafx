@@ -162,7 +162,7 @@ public class MiniGameView extends VBox {
             info.putAll(Map.of(
                 CommonRenderInfoKey.ENERGIZER_VISIBLE, level.blinking().state() == Pulse.State.ON,
                 CommonRenderInfoKey.MAP_BRIGHT, false,
-                CommonRenderInfoKey.MAP_EMPTY, level.worldMap().foodLayer().uneatenFoodCount() == 0,
+                CommonRenderInfoKey.MAP_EMPTY, level.worldMap().foodLayer().remainingFoodCount() == 0,
                 CommonRenderInfoKey.MAP_FLASHING, false,
                 CommonRenderInfoKey.TICK, ui.gameContext().clock().tickCount()
             ));

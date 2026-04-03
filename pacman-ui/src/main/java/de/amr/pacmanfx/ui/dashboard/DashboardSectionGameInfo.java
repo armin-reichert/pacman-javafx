@@ -134,7 +134,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
     private String fmtPelletCount(GameLevel level) {
         FoodLayer foodLayer = level.worldMap().foodLayer();
         return "%d of %d (%d energizers)".formatted(
-                foodLayer.uneatenFoodCount(),
+                foodLayer.remainingFoodCount(),
                 foodLayer.totalFoodCount(),
                 foodLayer.energizerTiles().size()
         );
