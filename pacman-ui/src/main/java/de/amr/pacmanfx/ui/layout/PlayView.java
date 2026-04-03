@@ -26,6 +26,7 @@ import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
+import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.CanvasDecorationPane;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -65,30 +66,30 @@ import static java.util.Objects.requireNonNull;
  */
 public class PlayView extends StackPane implements View {
 
-    private static final int PAUSE_ICON_SIZE = 80;
+    private static final FontIcon PAUSED_ICON = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
 
     public static final DashboardConfig DASHBOARD_CONFIG = new DashboardConfig(
-        110,
-        320,
-        Color.rgb(0, 0, 50, 1.0),
-        Color.WHITE,
-        Font.font("Sans", 12),
-        Font.font("Sans", 12)
+        110, // label width
+        320, // width
+        Color.rgb(0, 0, 50, 1.0), // background
+        Color.WHITE, // text
+        Font.font("Sans", 12), // label font
+        Font.font("Sans", 12) // content font
     );
 
-    private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
+    private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
 
-    private final ActionBindingsManager actionBindingsManager = new ActionBindingsManagerImpl();
+    private final ActionBindingsManager actionBindings = new ActionBindingsManagerImpl();
+
     private final GameUI ui;
     private final Scene parentScene;
     private final Dashboard dashboard = new Dashboard(DASHBOARD_CONFIG);
-    private final CanvasDecorationPane canvasDecorator = new CanvasDecorationPane();
+    private final CanvasDecorationPane canvasDecorationPane = new CanvasDecorationPane();
     private final MiniGameView miniView = new MiniGameView();
     private final BorderPane canvasLayer = new BorderPane();
     private final BorderPane widgetLayer = new BorderPane();
     private final HelpLayer helpLayer;
     private final GameUI_ContextMenu contextMenu;
-    private final FontIcon pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE);
 
     private GameScene2D_Renderer sceneRenderer;
     private HeadsUpDisplay_Renderer hudRenderer;
@@ -98,11 +99,11 @@ public class PlayView extends StackPane implements View {
         this.parentScene = requireNonNull(parentScene);
 
         this.contextMenu = new GameUI_ContextMenu(ui);
-        this.helpLayer = new HelpLayer(canvasDecorator);
+        this.helpLayer = new HelpLayer(canvasDecorationPane);
 
-        canvasDecorator.setMinScaling(0.5);
-        canvasDecorator.setUnscaledCanvasSize(ARCADE_MAP_SIZE_IN_PIXELS.x(), ARCADE_MAP_SIZE_IN_PIXELS.y());
-        canvasDecorator.setBorderColor(de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE);
+        canvasDecorationPane.setMinScaling(0.5);
+        canvasDecorationPane.setUnscaledCanvasSize(ARCADE_MAP_SIZE_IN_PIXELS.x(), ARCADE_MAP_SIZE_IN_PIXELS.y());
+        canvasDecorationPane.setBorderColor(de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE);
 
         composeLayout();
         configureActionBindings();
@@ -110,50 +111,55 @@ public class PlayView extends StackPane implements View {
         configureContextMenu();
 
         dashboard.setVisible(false);
-
         miniView.setUI(ui);
         ui.gameContext().gameVariantNameProperty().addListener(
-            (_, oldVariantName, newVariantName) -> handleGameVariantChange(oldVariantName, newVariantName));
+            (_, oldVariantName, newVariantName) -> handleGameVariantNameChange(oldVariantName, newVariantName));
     }
 
-    private void handleGameVariantChange(String oldName, String newName) {
-        if (oldName != null) {
-            ui.gameContext().gameByVariantName(oldName).removeGameEventListener(this);
-            ui.uiConfigManager().dispose(oldName);
+    private void handleGameVariantNameChange(String oldGameVariantName, String newGameVariantName) {
+        if (oldGameVariantName != null) {
+            Logger.info("Cleanup game variant {}...", oldGameVariantName);
+            final Game game = ui.gameContext().gameByVariantName(oldGameVariantName);
+            game.removeGameEventListener(this);
+            ui.uiConfigManager().dispose(oldGameVariantName);
+            ui.soundManager().dispose();
+            ui.stage().getIcons().removeAll();
+            Logger.info("Cleanup of game variant {} complete.", oldGameVariantName);
         }
-        if (newName != null) {
-            final Game game = ui.gameContext().gameByVariantName(newName);
+        if (newGameVariantName != null) {
+            Logger.info("Initialize game variant {}...", oldGameVariantName);
+            final Game game = ui.gameContext().gameByVariantName(newGameVariantName);
             game.addGameEventListener(this);
 
-            ui.soundManager().dispose();
-            final UIConfig uiConfig = ui.config(newName);
+            final UIConfig uiConfig = ui.config(newGameVariantName);
             uiConfig.init(ui);
 
             final Image icon = uiConfig.assets().image("app_icon");
             if (icon != null) {
                 ui.stage().getIcons().setAll(icon);
             } else {
-                Logger.error("Could not find application icon for game variant {}", newName);
+                Logger.error("Could not find application icon for game variant {}", newGameVariantName);
             }
+            Logger.info("Initialization of game variant {} complete.", newGameVariantName);
         } else {
             Logger.error("No game selected");
         }
     }
 
     private void composeLayout() {
-        StackPane.setAlignment(pausedIcon, Pos.CENTER);
+        StackPane.setAlignment(PAUSED_ICON, Pos.CENTER);
         widgetLayer.setLeft(dashboard);
         widgetLayer.setRight(miniView);
-        canvasLayer.setCenter(canvasDecorator);
-        getChildren().addAll(canvasLayer, widgetLayer, helpLayer, pausedIcon);
+        canvasLayer.setCenter(canvasDecorationPane);
+        getChildren().addAll(canvasLayer, widgetLayer, helpLayer, PAUSED_ICON);
     }
 
-    public ObjectProperty<GameScene> currentGameSceneProperty() {
-        return currentGameScene;
+    public ObjectProperty<GameScene> gameSceneProperty() {
+        return gameScene;
     }
 
     public Optional<GameScene> optCurrentGameScene() {
-        return Optional.ofNullable(currentGameScene.get());
+        return Optional.ofNullable(gameScene.get());
     }
 
     public MiniGameView miniView() {
@@ -165,7 +171,7 @@ public class PlayView extends StackPane implements View {
     }
 
     public void showHelp(GameUI ui) {
-        final double scaling = canvasDecorator.scalingProperty().get();
+        final double scaling = canvasDecorationPane.scalingProperty().get();
         helpLayer.showHelpPopup(ui, scaling, ui.gameContext().gameVariantName());
     }
 
@@ -175,12 +181,12 @@ public class PlayView extends StackPane implements View {
 
     @Override
     public ActionBindingsManager actionBindingsManager() {
-        return actionBindingsManager;
+        return actionBindings;
     }
 
     @Override
     public void onKeyboardInput(GameUI ui) {
-        actionBindingsManager.findMatchingAction(GameUI.KEYBOARD).ifPresentOrElse(
+        actionBindings.findMatchingAction(GameUI.KEYBOARD).ifPresentOrElse(
             action -> action.execute(ui),
             () -> optCurrentGameScene().ifPresent(GameScene::onKeyboardInput)
         );
@@ -190,7 +196,7 @@ public class PlayView extends StackPane implements View {
     public void onEnter() {
         requestFocus();
         addListeners();
-        canvasDecorator.updateLayout();
+        canvasDecorationPane.updateLayout();
     }
 
     @Override
@@ -249,19 +255,19 @@ public class PlayView extends StackPane implements View {
             default -> {}
         }
 
-        updateGameSceneForced(false);
+        updateGameScene();
         optCurrentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
     }
 
     public void forceGameSceneUpdate() {
-        updateGameSceneForced(true);
+        updateGameScene(true);
     }
 
     public void updateGameScene() {
-        updateGameSceneForced(false);
+        updateGameScene(false);
     }
 
-    private void updateGameSceneForced(boolean forcedReload) {
+    private void updateGameScene(boolean forcedReload) {
         final Game game = ui.gameContext().game();
         final GameScene prevGameScene = optCurrentGameScene().orElse(null);
         final GameScene nextGameScene = ui.currentGameSceneConfig().selectGameScene(game).orElseThrow();
@@ -291,7 +297,7 @@ public class PlayView extends StackPane implements View {
             }
         });
 
-        currentGameSceneProperty().set(nextGameScene);
+        gameSceneProperty().set(nextGameScene);
     }
 
     // Others
@@ -309,18 +315,18 @@ public class PlayView extends StackPane implements View {
                 embedGameScene(parentScene, gameScene);
             }
         };
-        currentGameSceneProperty().addListener(gameSceneChangeListener);
+        gameSceneProperty().addListener(gameSceneChangeListener);
 
-        parentSceneWidthListener = (_, _, w) -> canvasDecorator.resizeTo(w.doubleValue(), parentScene.getHeight());
+        parentSceneWidthListener = (_, _, w) -> canvasDecorationPane.resizeTo(w.doubleValue(), parentScene.getHeight());
         parentScene.widthProperty() .addListener(parentSceneWidthListener);
 
-        parentSceneHeightListener = (_, _, h) -> canvasDecorator.resizeTo(parentScene.getWidth(), h.doubleValue());
+        parentSceneHeightListener = (_, _, h) -> canvasDecorationPane.resizeTo(parentScene.getWidth(), h.doubleValue());
         parentScene.heightProperty().addListener(parentSceneHeightListener);
     }
 
     private void removeListeners() {
         if (gameSceneChangeListener != null) {
-            currentGameSceneProperty().removeListener(gameSceneChangeListener);
+            gameSceneProperty().removeListener(gameSceneChangeListener);
         }
         if (parentSceneWidthListener != null) {
             parentScene.widthProperty().removeListener(parentSceneWidthListener);
@@ -331,13 +337,13 @@ public class PlayView extends StackPane implements View {
     }
 
     private void configurePropertyBindings() {
-        pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
+        PAUSED_ICON.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> ui.gameContext().clock().getUpdatesDisabled(),
             ui.gameContext().clock().updatesDisabledProperty())
         );
 
         GameUI.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smooth) ->
-            canvasDecorator.canvas().getGraphicsContext2D().setFontSmoothingType(
+            canvasDecorationPane.canvas().getGraphicsContext2D().setFontSmoothingType(
                 smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
 
         GameUI.PROPERTY_DEBUG_INFO_VISIBLE.addListener((_, _, debug) -> {
@@ -352,7 +358,7 @@ public class PlayView extends StackPane implements View {
 
         miniView.visibleProperty().bind(Bindings.createObjectBinding(
             () -> GameUI.PROPERTY_MINI_VIEW_ON.get() && ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D),
-            GameUI.PROPERTY_MINI_VIEW_ON, currentGameScene
+            GameUI.PROPERTY_MINI_VIEW_ON, gameScene
         ));
     }
 
@@ -367,26 +373,26 @@ public class PlayView extends StackPane implements View {
     }
 
     private void configureActionBindings() {
-        actionBindingsManager.registerAnyFrom(ACTION_BOOT_SHOW_PLAY_VIEW, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_QUIT_GAME_SCENE, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_SHOW_HELP, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_SIMULATION_SLOWER, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_SIMULATION_SLOWEST, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_SIMULATION_FASTER, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_SIMULATION_FASTEST, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_SIMULATION_RESET, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_SIMULATION_ONE_STEP, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_SIMULATION_TEN_STEPS, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_AUTOPILOT, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_DEBUG_INFO, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_MUTED, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_PAUSED, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_COLLISION_STRATEGY, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_DASHBOARD, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_IMMUNITY, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_BOOT_SHOW_PLAY_VIEW, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_QUIT_GAME_SCENE, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_SHOW_HELP, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_SIMULATION_SLOWER, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_SIMULATION_SLOWEST, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_SIMULATION_FASTER, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_SIMULATION_FASTEST, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_SIMULATION_RESET, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_SIMULATION_ONE_STEP, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_SIMULATION_TEN_STEPS, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_TOGGLE_AUTOPILOT, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_TOGGLE_DEBUG_INFO, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_TOGGLE_MUTED, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_TOGGLE_PAUSED, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_TOGGLE_COLLISION_STRATEGY, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_TOGGLE_DASHBOARD, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_TOGGLE_IMMUNITY, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, GameUI.COMMON_BINDINGS);
+        actionBindings.registerAnyFrom(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GameUI.COMMON_BINDINGS);
     }
 
     private void handleContextMenuRequest(ContextMenuEvent event) {
@@ -404,7 +410,7 @@ public class PlayView extends StackPane implements View {
 
     private void useDecoratedCanvas(GameScene2D gameScene2D) {
         final Canvas canvas = new Canvas();
-        canvasDecorator.setCanvas(canvas);
+        canvasDecorationPane.setCanvas(canvas);
 
         gameScene2D.setCanvas(canvas);
         gameScene2D.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
@@ -434,19 +440,19 @@ public class PlayView extends StackPane implements View {
             if (ui.currentGameSceneConfig().sceneDecorationRequested(gameScene)) {
                 final float maxScaling = GameScene2D.MAX_SCALING;
                 // Decorated game scene scaled-down to give space for the decoration
-                gameScene2D.scalingProperty().bind(canvasDecorator.scalingProperty().map(
+                gameScene2D.scalingProperty().bind(canvasDecorationPane.scalingProperty().map(
                         scaling -> Math.min(scaling.doubleValue(), maxScaling)));
-                canvasDecorator.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
-                canvasDecorator.resizeTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
-                canvasDecorator.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR.map(UfxBackgrounds::paintBackground));
-                canvasLayer.setCenter(canvasDecorator);
+                canvasDecorationPane.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
+                canvasDecorationPane.resizeTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
+                canvasDecorationPane.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR.map(UfxBackgrounds::paintBackground));
+                canvasLayer.setCenter(canvasDecorationPane);
             }
             else {
                 // Undecorated game scene taking complete height
-                canvasDecorator.canvas().heightProperty().bind(parentSceneFX.heightProperty());
-                canvasDecorator.canvas().widthProperty().bind(parentSceneFX.heightProperty().map(h -> h.doubleValue() * aspect));
+                canvasDecorationPane.canvas().heightProperty().bind(parentSceneFX.heightProperty());
+                canvasDecorationPane.canvas().widthProperty().bind(parentSceneFX.heightProperty().map(h -> h.doubleValue() * aspect));
                 gameScene2D.scalingProperty().bind(parentSceneFX.heightProperty().divide(gameSceneSizePx.y()));
-                canvasLayer.setCenter(canvasDecorator.canvas());
+                canvasLayer.setCenter(canvasDecorationPane.canvas());
             }
             getChildren().set(0, canvasLayer);
         }

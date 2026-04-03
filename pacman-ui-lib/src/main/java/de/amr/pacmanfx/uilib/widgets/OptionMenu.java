@@ -65,7 +65,7 @@ public class OptionMenu {
         canvas.widthProperty() .bind(scaling.multiply(numTilesX * TS));
         canvas.heightProperty().bind(scaling.multiply(numTilesY * TS));
 
-        canvas.focusedProperty().addListener((_, _, _) -> Logger.info("Option menu canvas has focus"));
+        canvas.focusedProperty().addListener((_, _, _) -> Logger.debug("Option menu canvas has focus"));
 
         renderer = new OptionMenuRenderer(canvas);
         renderer.scalingProperty().bind(scalingProperty());
@@ -106,7 +106,7 @@ public class OptionMenu {
         final Canvas canvas = renderer.ctx().getCanvas();
         if (!canvas.isFocused()) {
             canvas.requestFocus();
-            Logger.info("Focus now on {}", canvas);
+            Logger.debug("Focus now on {}", canvas);
         }
     }
 
