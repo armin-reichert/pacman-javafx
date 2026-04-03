@@ -552,8 +552,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Handles Pac losing power: stops power animation/sound.
      */
     public void onPacLostPower(PacLostPowerEvent ignoredEvent) {
-        final Pac3D pac3D = entities.unique(Pac3D.class);
-        pac3D.setMovementAnimationPowerMode(false);
+        entities.unique(Pac3D.class).setMovementAnimationPowerMode(false);
         animations.animation(AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).stop();
         uiConfig.soundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
@@ -569,7 +568,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void onHuntingStart() {
-        entities.first(Pac3D.class).ifPresent(pac3D -> pac3D.init(level));
+        entities.unique(Pac3D.class).init(level);
         entities.all(GhostAppearance3D.class).forEach(ghost3D -> ghost3D.init(level));
         entities.all(Energizer3D.class).forEach(Energizer3D::startPumping);
         animations.animation(AnimationID.ENERGIZER_PARTICLES_MOVEMENT).playFromStart();
@@ -586,11 +585,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         entities.all(GhostAppearance3D.class).forEach(GhostAppearance3D::stopAllAnimations);
         entities.first(Bonus3D.class).ifPresent(Bonus3D::expire);
 
-        // One last update before dying animation
-        pac3D.update(level);
-
         stateTimer.resetIndefiniteTime(); // freeze until animation ends
         final var dyingAnimation = new SequentialTransition(
+            // One last update before dying animation
+            doNow(() -> pac3D.update(level)),
             pauseSec(1.5),
             doNow(() -> uiConfig.soundEffects().ifPresent(GameSoundEffects::playPacDeadSound)),
             //TODO can we assume that this animation always exists?
