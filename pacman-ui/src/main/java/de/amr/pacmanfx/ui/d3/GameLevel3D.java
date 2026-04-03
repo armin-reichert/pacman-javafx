@@ -420,7 +420,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .map(pos -> pos.plus(HTS, HTS))
             .toList();
 
-        final List<PhongMaterial> dressMaterials= ghostAppearancesByPersonality().stream()
+        final List<PhongMaterial> dressMaterials = ghostAppearancesByPersonality()
             .map(GhostAppearance3D::ghost3D)
             .map(Ghost3D::materials)
             .map(GhostMaterials::normal)
@@ -654,15 +654,15 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         animations.register(AnimationID.WALL_COLOR_FLASHING, new WallColorFlashingAnimation(this, colorScheme));
         animations.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this));
         animations.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
-        animations.register(AnimationID.GHOST_LIGHT, new GhostLightAnimation(ghostAppearancesByPersonality()));
+        animations.register(AnimationID.GHOST_LIGHT, new GhostLightAnimation(ghostAppearancesByPersonality().toList()));
         animations.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, createParticlesAnimation());
 
         //TODO: this looks ugly
         addChild(animations.animation(AnimationID.GHOST_LIGHT, GhostLightAnimation.class).light());
     }
 
-    private List<GhostAppearance3D> ghostAppearancesByPersonality() {
-        return entities.all(GhostAppearance3D.class).sorted(BY_GHOST_PERSONALITY).toList();
+    private Stream<GhostAppearance3D> ghostAppearancesByPersonality() {
+        return entities.all(GhostAppearance3D.class).sorted(BY_GHOST_PERSONALITY);
     }
 
     /**
