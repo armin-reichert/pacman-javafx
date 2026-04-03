@@ -134,7 +134,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         addChildrenToGroup();
 
         // Maze3D must exist when energizer animations are created:
-        final Maze3D maze3D = entities().unique(Maze3D.class);
+        final Maze3D maze3D = entities.unique(Maze3D.class);
         createAnimations(maze3D, mapColorScheme);
 
         resetPacZPosition();
@@ -213,7 +213,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * in front of walls/house.
      */
     private void addChildrenToGroup() {
-        final Maze3D maze3D = entities().unique(Maze3D.class);
+        final Maze3D maze3D = entities.unique(Maze3D.class);
         final Pac3D pac3D = entities.unique(Pac3D.class);
         final LevelCounter3D levelCounter3D = entities.unique(LevelCounter3D.class);
         final LivesCounter3D livesCounter3D = entities.unique(LivesCounter3D.class);
@@ -352,7 +352,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createFood3D() {
         final FoodLayer foodLayer = level.worldMap().foodLayer();
-        final Maze3D maze3D = entities().unique(Maze3D.class);
+        final Maze3D maze3D = entities.unique(Maze3D.class);
 
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
 
@@ -616,7 +616,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void onLevelComplete() {
         final State<Game> gameState = level.game().control().state();
-        final Maze3D maze3D = entities().unique(Maze3D.class);
+        final Maze3D maze3D = entities.unique(Maze3D.class);
 
         uiConfig.soundEffects().ifPresent(GameSoundEffects::stopAll);
         animations().stopAllAnimations();
@@ -628,10 +628,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void onGameOver(GameUI ui) {
-        final State<Game> gameState = level.game().control().state();
-        gameState.timer().restartSeconds(3);
         animations.animation(AnimationID.GHOST_LIGHT).stop();
-        cleanupFoodAndParticles(entities().unique(Maze3D.class));
+        cleanupFoodAndParticles(entities.unique(Maze3D.class));
         entities.first(Bonus3D.class).ifPresent(Bonus3D::expire);
         if (!level.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
             ui.showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.nextText());
