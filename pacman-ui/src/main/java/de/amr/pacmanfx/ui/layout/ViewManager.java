@@ -4,12 +4,15 @@
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import org.tinylog.Supplier;
 
 import java.io.File;
@@ -49,7 +52,8 @@ public class ViewManager {
     private final Map<ViewID, View> viewMap = new EnumMap<>(ViewID.class);
     private final ObjectProperty<ViewID> selectedID = new SimpleObjectProperty<>();
     private final ObjectProperty<View> currentView = new SimpleObjectProperty<>();
-    private final Supplier<EditorView> editorViewFactory;
+
+    private Supplier<EditorView> editorViewFactory;
     private final File editorWorkDir;
 
     /**
@@ -64,22 +68,28 @@ public class ViewManager {
     public ViewManager(
         GameUI ui,
         Scene scene,
-        Supplier<EditorView> editorViewFactory,
         File editorWorkDir,
         FlashMessageView flashMessageView)
     {
         requireNonNull(ui);
         requireNonNull(scene);
-        this.editorViewFactory = requireNonNull(editorViewFactory);
-        this.editorWorkDir = requireNonNull(editorWorkDir);
         requireNonNull(flashMessageView);
-
-
-        viewMap.put(ViewID.START_VIEW, new StartPagesCarousel(ui));
-        viewMap.put(ViewID.PLAY_VIEW, new PlayView(ui, scene));
+        this.editorWorkDir = requireNonNull(editorWorkDir);
 
         selectedID.addListener((_, oldID, newID) ->
             changeView(scene, flashMessageView, oldID, newID));
+    }
+
+    public void setPlayView(View playView) {
+        viewMap.put(ViewID.PLAY_VIEW, requireNonNull(playView));
+    }
+
+    public void setStartView(View startView) {
+        viewMap.put(ViewID.START_VIEW, requireNonNull(startView));
+    }
+
+    public void setEditorViewFactory(Supplier<EditorView> factory) {
+        this.editorViewFactory = requireNonNull(factory);
     }
 
     /**

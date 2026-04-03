@@ -43,7 +43,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -68,22 +67,10 @@ public class PlayView extends StackPane implements View {
 
     private static final FontIcon PAUSED_ICON = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
 
-    public static final DashboardConfig DASHBOARD_CONFIG = new DashboardConfig(
-        110, // label width
-        320, // width
-        Color.rgb(0, 0, 50, 1.0), // background
-        Color.WHITE, // text
-        Font.font("Sans", 12), // label font
-        Font.font("Sans", 12) // content font
-    );
-
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
-
-    private final ActionBindingsManager actionBindings = new ActionBindingsManagerImpl();
 
     private final GameUI ui;
     private final Scene parentScene;
-    private final Dashboard dashboard = new Dashboard(DASHBOARD_CONFIG);
     private final CanvasDecorationPane canvasDecorationPane = new CanvasDecorationPane();
     private final MiniGameView miniView = new MiniGameView();
     private final BorderPane canvasLayer = new BorderPane();
@@ -91,67 +78,34 @@ public class PlayView extends StackPane implements View {
     private final HelpLayer helpLayer;
     private final GameUI_ContextMenu contextMenu;
 
+    private final ActionBindingsManager actionBindings = new ActionBindingsManagerImpl();
+
+    private ChangeListener<GameScene> gameSceneChangeListener;
+    private ChangeListener<? super Number> parentSceneWidthListener;
+    private ChangeListener<? super Number> parentSceneHeightListener;
+
     private GameScene2D_Renderer sceneRenderer;
     private HeadsUpDisplay_Renderer hudRenderer;
 
-    public PlayView(GameUI ui, Scene parentScene) {
+    private Dashboard dashboard;
+
+    public PlayView(GameUI ui, Scene parentScene, DashboardConfig dashboardConfig) {
         this.ui = requireNonNull(ui);
         this.parentScene = requireNonNull(parentScene);
 
         this.contextMenu = new GameUI_ContextMenu(ui);
         this.helpLayer = new HelpLayer(canvasDecorationPane);
 
-        canvasDecorationPane.setMinScaling(0.5);
-        canvasDecorationPane.setUnscaledCanvasSize(ARCADE_MAP_SIZE_IN_PIXELS.x(), ARCADE_MAP_SIZE_IN_PIXELS.y());
-        canvasDecorationPane.setBorderColor(de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE);
-
+        createDashboard(requireNonNull(dashboardConfig));
+        configureCanvasDecorationPane();
         composeLayout();
         configureActionBindings();
         configurePropertyBindings();
         configureContextMenu();
 
-        dashboard.setVisible(false);
         miniView.setUI(ui);
         ui.gameContext().gameVariantNameProperty().addListener(
             (_, oldVariantName, newVariantName) -> handleGameVariantNameChange(oldVariantName, newVariantName));
-    }
-
-    private void handleGameVariantNameChange(String oldGameVariantName, String newGameVariantName) {
-        if (oldGameVariantName != null) {
-            Logger.info("Cleanup game variant {}...", oldGameVariantName);
-            final Game game = ui.gameContext().gameByVariantName(oldGameVariantName);
-            game.removeGameEventListener(this);
-            ui.uiConfigManager().dispose(oldGameVariantName);
-            ui.soundManager().dispose();
-            ui.stage().getIcons().removeAll();
-            Logger.info("Cleanup of game variant {} complete.", oldGameVariantName);
-        }
-        if (newGameVariantName != null) {
-            Logger.info("Initialize game variant {}...", oldGameVariantName);
-            final Game game = ui.gameContext().gameByVariantName(newGameVariantName);
-            game.addGameEventListener(this);
-
-            final UIConfig uiConfig = ui.config(newGameVariantName);
-            uiConfig.init(ui);
-
-            final Image icon = uiConfig.assets().image("app_icon");
-            if (icon != null) {
-                ui.stage().getIcons().setAll(icon);
-            } else {
-                Logger.error("Could not find application icon for game variant {}", newGameVariantName);
-            }
-            Logger.info("Initialization of game variant {} complete.", newGameVariantName);
-        } else {
-            Logger.error("No game selected");
-        }
-    }
-
-    private void composeLayout() {
-        StackPane.setAlignment(PAUSED_ICON, Pos.CENTER);
-        widgetLayer.setLeft(dashboard);
-        widgetLayer.setRight(miniView);
-        canvasLayer.setCenter(canvasDecorationPane);
-        getChildren().addAll(canvasLayer, widgetLayer, helpLayer, PAUSED_ICON);
     }
 
     public ObjectProperty<GameScene> gameSceneProperty() {
@@ -173,6 +127,14 @@ public class PlayView extends StackPane implements View {
     public void showHelp(GameUI ui) {
         final double scaling = canvasDecorationPane.scalingProperty().get();
         helpLayer.showHelpPopup(ui, scaling, ui.gameContext().gameVariantName());
+    }
+
+    public void forceGameSceneUpdate() {
+        updateGameScene(true);
+    }
+
+    public void updateGameScene() {
+        updateGameScene(false);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -227,7 +189,7 @@ public class PlayView extends StackPane implements View {
         }
     }
 
-    // GameEventListener
+    // GameEventListener interface
 
     @Override
     public void onGameEvent(GameEvent gameEvent) {
@@ -259,13 +221,7 @@ public class PlayView extends StackPane implements View {
         optCurrentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
     }
 
-    public void forceGameSceneUpdate() {
-        updateGameScene(true);
-    }
-
-    public void updateGameScene() {
-        updateGameScene(false);
-    }
+    // ---
 
     private void updateGameScene(boolean forcedReload) {
         final Game game = ui.gameContext().game();
@@ -302,10 +258,6 @@ public class PlayView extends StackPane implements View {
 
     // Others
 
-    private ChangeListener<GameScene> gameSceneChangeListener;
-    private ChangeListener<? super Number> parentSceneWidthListener;
-    private ChangeListener<? super Number> parentSceneHeightListener;
-
     private void addListeners() {
         removeListeners();
 
@@ -334,6 +286,55 @@ public class PlayView extends StackPane implements View {
         if (parentSceneHeightListener != null) {
             parentScene.heightProperty().removeListener(parentSceneHeightListener);
         }
+    }
+
+    private void handleGameVariantNameChange(String oldGameVariantName, String newGameVariantName) {
+        if (oldGameVariantName != null) {
+            Logger.info("Cleanup game variant {}...", oldGameVariantName);
+            final Game game = ui.gameContext().gameByVariantName(oldGameVariantName);
+            game.removeGameEventListener(this);
+            ui.uiConfigManager().dispose(oldGameVariantName);
+            ui.soundManager().dispose();
+            ui.stage().getIcons().removeAll();
+            Logger.info("Cleanup of game variant {} complete.", oldGameVariantName);
+        }
+        if (newGameVariantName != null) {
+            Logger.info("Initialize game variant {}...", oldGameVariantName);
+            final Game game = ui.gameContext().gameByVariantName(newGameVariantName);
+            game.addGameEventListener(this);
+
+            final UIConfig uiConfig = ui.config(newGameVariantName);
+            uiConfig.init(ui);
+
+            final Image icon = uiConfig.assets().image("app_icon");
+            if (icon != null) {
+                ui.stage().getIcons().setAll(icon);
+            } else {
+                Logger.error("Could not find application icon for game variant {}", newGameVariantName);
+            }
+            Logger.info("Initialization of game variant {} complete.", newGameVariantName);
+        } else {
+            Logger.error("No game selected");
+        }
+    }
+
+    private void createDashboard(DashboardConfig dashboardConfig) {
+        dashboard = new Dashboard(dashboardConfig);
+        dashboard.setVisible(false);
+    }
+
+    private void configureCanvasDecorationPane() {
+        canvasDecorationPane.setMinScaling(0.5);
+        canvasDecorationPane.setUnscaledCanvasSize(ARCADE_MAP_SIZE_IN_PIXELS.x(), ARCADE_MAP_SIZE_IN_PIXELS.y());
+        canvasDecorationPane.setBorderColor(ArcadePalette.ARCADE_WHITE);
+    }
+
+    private void composeLayout() {
+        StackPane.setAlignment(PAUSED_ICON, Pos.CENTER);
+        widgetLayer.setLeft(dashboard);
+        widgetLayer.setRight(miniView);
+        canvasLayer.setCenter(canvasDecorationPane);
+        getChildren().addAll(canvasLayer, widgetLayer, helpLayer, PAUSED_ICON);
     }
 
     private void configurePropertyBindings() {
@@ -419,6 +420,7 @@ public class PlayView extends StackPane implements View {
         hudRenderer   = ui.currentConfig().createHUDRenderer(gameScene2D, canvas); // may return null!
     }
 
+    //TODO simplify
     private void embedGameScene(Scene parentSceneFX, GameScene gameScene) {
         hudRenderer = null;
         if (gameScene.optSubScene().isPresent()) {

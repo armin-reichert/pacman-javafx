@@ -14,10 +14,8 @@ import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.layout.EditorView;
-import de.amr.pacmanfx.ui.layout.StatusIconBox;
-import de.amr.pacmanfx.ui.layout.View;
-import de.amr.pacmanfx.ui.layout.ViewManager;
+import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
+import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -33,6 +31,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -50,6 +50,15 @@ import static javafx.beans.binding.Bindings.createStringBinding;
  * User interface for the Pac-Man game suite. Shows a carousel with a start page for each game variant.
  */
 public final class GameUI_Implementation extends PreferencesManager implements GameUI {
+
+    private static final DashboardConfig DEFAULT_DASHBOARD_CONFIG = new DashboardConfig(
+        110, // label width
+        320, // width
+        Color.rgb(0, 0, 50, 1.0), // background
+        Color.WHITE, // text
+        Font.font("Sans", 12), // label font
+        Font.font("Sans", 12) // content font
+    );
 
     // Oh no, my program!
     private static final String SOMEONE_CALL_AN_AMBULANCE = "KA-TA-STRO-PHE!\nSOMEONE CALL AN AMBULANCE!";
@@ -85,7 +94,11 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         this.customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
 
         this.stage = requireNonNull(stage);
-        this.viewManager = new ViewManager(this, scene, this::createEditorView, gameBox.customMapDir(), flashMessageView);
+        this.viewManager = new ViewManager(this, scene, gameBox.customMapDir(), flashMessageView);
+
+        viewManager.setStartView(new StartPagesCarousel(this));
+        viewManager.setPlayView(new PlayView(this, scene, DEFAULT_DASHBOARD_CONFIG));
+        viewManager.setEditorViewFactory(this::createEditorView);
 
         initLayout(mainSceneWidth,mainSceneHeight);
         initActionBindings();
