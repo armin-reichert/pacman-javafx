@@ -13,36 +13,41 @@ import static java.util.Objects.requireNonNull;
 /**
  * Selects entries randomly from a list without repetitions.
  */
-public class RandomTextPicker<T> {
+public class RandomTextPicker {
 
-    public static RandomTextPicker<String> fromBundle(ResourceBundle bundle, String prefix) {
+    private List<String> entries = List.of();
+    private int current;
+
+    public RandomTextPicker(List<String> messages) {
+        requireNonNull(messages);
+        createFromMessages(messages);
+    }
+
+    public RandomTextPicker(ResourceBundle bundle, String prefix) {
         requireNonNull(bundle);
         requireNonNull(prefix);
         final List<String> messages = bundle.keySet().stream()
             .filter(key -> key.startsWith(prefix))
             .map(bundle::getString)
             .toList();
-        return new RandomTextPicker<>(messages);
+        createFromMessages(messages);
     }
 
-    private List<T> entries = List.of();
-    private int current;
-
-    public RandomTextPicker(List<T> entries) {
-        if (!entries.isEmpty()) {
-            this.entries = new ArrayList<>(entries);
+    private void createFromMessages(List<String> messages) {
+        if (!messages.isEmpty()) {
+            this.entries = new ArrayList<>(messages); // shuffle() needs a mutable list
             Collections.shuffle(this.entries);
         }
         current = 0;
     }
 
-    public T nextText() {
+    public String nextText() {
         if (entries.size() == 1) {
             return entries.getFirst();
         }
-        T result = entries.get(current);
+        String result = entries.get(current);
         if (++current == entries.size()) {
-            T last = entries.getLast();
+            String last = entries.getLast();
             do {
                 Collections.shuffle(entries);
             } while (last.equals(entries.getFirst()));

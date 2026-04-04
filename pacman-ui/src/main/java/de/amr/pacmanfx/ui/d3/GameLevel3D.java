@@ -106,7 +106,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final GameLevelEntitySet entities3D = new GameLevelEntitySet();
     private final AnimationRegistry animations3D = new AnimationRegistry();
     private final UIConfig uiConfig;
-    private final RandomTextPicker<String> gameOverMessagePicker;
+    private final RandomTextPicker gameOverMessagePicker;
 
     private MessageManager3D messageManager;
 
@@ -120,7 +120,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public GameLevel3D(GameLevel level, UIConfig uiConfig, ResourceBundle localizedTexts) {
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
-        gameOverMessagePicker = RandomTextPicker.fromBundle(localizedTexts, "game.over");
+        requireNonNull(localizedTexts);
+
+        gameOverMessagePicker = new RandomTextPicker(localizedTexts, "game.over");
 
         final WorldMapColorScheme mapColorScheme = uiConfig.colorScheme(level.worldMap());
         createPac3D();
