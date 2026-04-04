@@ -70,9 +70,11 @@ public enum Arcade_GameState implements State<Game> {
             if (game.isPlaying()) {
                 final GameLevel level = game.optGameLevel().orElseThrow();
                 game.continuePlaying(level, tick);
-            } else if (game.canStartNewGame()) {
+            }
+            else if (game.canStartNewGame()) {
                 game.startNewGame(tick);
-            } else {
+            }
+            else {
                 game.startDemoLevel(tick);
             }
         }
@@ -95,9 +97,11 @@ public enum Arcade_GameState implements State<Game> {
             game.whileHunting(level);
             if (game.isLevelCompleted(level)) {
                 game.control().enterState(LEVEL_COMPLETE);
-            } else if (game.hasPacManBeenKilled()) {
+            }
+            else if (game.hasPacManBeenKilled()) {
                 game.control().enterState(PACMAN_DYING);
-            } else if (game.hasGhostBeenKilled()) {
+            }
+            else if (game.hasGhostBeenKilled()) {
                 game.control().enterState(EATING_GHOST);
             }
         }
@@ -117,9 +121,11 @@ public enum Arcade_GameState implements State<Game> {
                 if (level.isDemoLevel()) {
                     // just in case: if demo level was completed, go back to intro scene
                     game.control().enterState(INTRO);
-                } else if (game.cutScenesEnabled() && level.cutSceneNumber() != 0) {
+                }
+                else if (game.cutScenesEnabled() && level.cutSceneNumber() != 0) {
                     game.control().enterState(INTERMISSION);
-                } else {
+                }
+                else {
                     game.control().enterState(LEVEL_TRANSITION);
                 }
             }
