@@ -622,7 +622,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         cleanupFoodAndParticles();
         entities3D.first(Bonus3D.class).ifPresent(Bonus3D::expire);
         if (!level.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
-            ui.showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.nextMessage());
+            ui.showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
         }
         uiConfig.soundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }

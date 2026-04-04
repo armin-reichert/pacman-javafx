@@ -15,12 +15,12 @@ import static java.util.Objects.requireNonNull;
  */
 public class RandomTextPicker {
 
-    private List<String> messages = List.of();
+    private List<String> texts = List.of();
     private int currentIndex;
 
-    public RandomTextPicker(List<String> messages) {
-        requireNonNull(messages);
-        create(messages);
+    public RandomTextPicker(List<String> texts) {
+        requireNonNull(texts);
+        create(texts);
     }
 
     public RandomTextPicker(ResourceBundle bundle, String prefix) {
@@ -35,22 +35,22 @@ public class RandomTextPicker {
 
     private void create(List<String> messages) {
         if (!messages.isEmpty()) {
-            this.messages = new ArrayList<>(messages); // shuffle() needs a mutable list
-            Collections.shuffle(this.messages);
+            this.texts = new ArrayList<>(messages); // shuffle() needs a mutable list
+            Collections.shuffle(this.texts);
         }
         currentIndex = 0;
     }
 
-    public String nextMessage() {
-        if (messages.size() == 1) {
-            return messages.getFirst();
+    public String selectNextText() {
+        if (texts.size() == 1) {
+            return texts.getFirst();
         }
-        String result = messages.get(currentIndex);
-        if (++currentIndex == messages.size()) {
-            String last = messages.getLast();
+        String result = texts.get(currentIndex);
+        if (++currentIndex == texts.size()) {
+            String last = texts.getLast();
             do {
-                Collections.shuffle(messages);
-            } while (last.equals(messages.getFirst()));
+                Collections.shuffle(texts);
+            } while (last.equals(texts.getFirst()));
             currentIndex = 0;
         }
         return result;
