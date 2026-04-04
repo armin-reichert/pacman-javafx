@@ -12,7 +12,6 @@ import de.amr.pacmanfx.lib.math.RandomNumberSupport;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntitySet;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -243,36 +242,32 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private GhostAppearance3D createGhostAppearance3D(GhostConfig ghostConfig, Ghost ghost) {
-        final var ghostAppearance3D = uiConfig.factory3D().createGhostAppearance3D(
-            ghost,
-            ghostConfig,
-            animations
-        );
-        ghostAppearance3D.setNumFlashes(level.numFlashes());
-        final BooleanBinding visibleInsideWorld = Bindings.createBooleanBinding(
+        final var ghost3D = uiConfig.factory3D().createGhostAppearance3D(ghost, ghostConfig, animations);
+        ghost3D.setNumFlashes(level.numFlashes());
+        final BooleanBinding visibleAndInsideWorld = Bindings.createBooleanBinding(
             () -> ghost.isVisible() && !outsideWorld(level.worldMap(), ghost),
             ghost.visibleProperty(), ghost.positionProperty()
         );
-        ghostAppearance3D.visibleProperty().bind(visibleInsideWorld);
-        return ghostAppearance3D;
+        ghost3D.visibleProperty().bind(visibleAndInsideWorld);
+        return ghost3D;
     }
 
     private void createLivesCounter3D() {
-        final var livesCounter3D = new LivesCounter3D(uiConfig);
-        livesCounter3D.setTranslateX(2 * TS);
-        livesCounter3D.setTranslateY(2 * TS);
-        livesCounter3D.pillarColorProperty().set(uiConfig.entityConfig().livesCounter().pillarColor());
-        livesCounter3D.plateColorProperty().set(uiConfig.entityConfig().livesCounter().plateColor());
-        entities.add(livesCounter3D);
+        final var counter3D = new LivesCounter3D(uiConfig);
+        counter3D.setTranslateX(2 * TS);
+        counter3D.setTranslateY(2 * TS);
+        counter3D.pillarColorProperty().set(uiConfig.entityConfig().livesCounter().pillarColor());
+        counter3D.plateColorProperty().set(uiConfig.entityConfig().livesCounter().plateColor());
+        entities.add(counter3D);
     }
 
     private void createLevelCounter3D() {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final var levelCounter3D = new LevelCounter3D(animations, uiConfig);
-        levelCounter3D.setTranslateX(TS * (terrain.numCols() - 2));
-        levelCounter3D.setTranslateY(2 * TS);
-        levelCounter3D.setTranslateZ(-uiConfig.entityConfig().levelCounter().elevation());
-        entities.add(levelCounter3D);
+        final var counter3D = new LevelCounter3D(animations, uiConfig);
+        counter3D.setTranslateX(TS(terrain.numCols() - 2));
+        counter3D.setTranslateY(TS(2));
+        counter3D.setTranslateZ(-uiConfig.entityConfig().levelCounter().elevation());
+        entities.add(counter3D);
     }
 
     private void createMaze3D(WorldMapColorScheme colorScheme) {
@@ -414,7 +409,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private EnergizerParticlesAnimation createParticlesAnimation() {
         // The bottom center positions of the swirls where the particles of exploded energizers eventually are displayed
-        final List<Vector2f> swirlBaseCenters = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
+        final List<Vector2f> swirlCenters = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
             .map(level::ghost)
             .map(Ghost::startPosition)
             .map(pos -> pos.plus(HTS, HTS))
@@ -431,7 +426,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         return new EnergizerParticlesAnimation(
             EnergizerParticlesAnimation.DEFAULT_CONFIG,
-            swirlBaseCenters,
+            swirlCenters,
             dressMaterials,
             maze3D.floor(),
             maze3D.particlesGroup()
@@ -443,30 +438,26 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Dispatches game state change events to the appropriate handler method.
      *
-     * @param ui the game UI
-     * @param event   the state change event
+     * @param ui    the game UI
+     * @param event the state change event
      */
     public void handleGameStateChange(GameUI ui, GameStateChangeEvent event) {
+        requireNonNull(ui);
         requireNonNull(event);
-
         final State<Game> gameState = event.newState();
-        if (matches(gameState, STARTING_GAME_OR_LEVEL)) {
+        if (gameState.nameMatches(STARTING_GAME_OR_LEVEL.name())) {
             onStartingGame();
-        } else if (matches(gameState, HUNTING)) {
+        } else if (gameState.nameMatches(HUNTING.name())) {
             onHuntingStart();
-        } else if (matches(gameState, PACMAN_DYING)) {
+        } else if (gameState.nameMatches(PACMAN_DYING.name())) {
             onPacManDying();
-        } else if (matches(gameState, EATING_GHOST)) {
+        } else if (gameState.nameMatches(EATING_GHOST.name())) {
             onEatingGhost();
-        } else if (matches(gameState, LEVEL_COMPLETE)) {
+        } else if (gameState.nameMatches(LEVEL_COMPLETE.name())) {
             onLevelComplete();
-        } else if (matches(gameState, GAME_OVER)) {
+        } else if (gameState.nameMatches(GAME_OVER.name())) {
             onGameOver(ui);
         }
-    }
-
-    private static boolean matches(State<Game> gameState, GameControl.CommonGameState expected) {
-        return gameState.nameMatches(expected.name());
     }
 
     /**
