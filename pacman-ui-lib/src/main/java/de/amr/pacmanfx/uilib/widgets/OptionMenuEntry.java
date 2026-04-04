@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.uilib.widgets;
 
 import javafx.beans.property.ObjectProperty;
@@ -18,7 +19,6 @@ public class OptionMenuEntry<T> {
     protected final String text;
     protected final ObjectProperty<T> value = new SimpleObjectProperty<>();
     protected final List<T> valueList;
-    protected int selectedValueIndex;
     protected boolean enabled;
 
     private Function<T, String> valueFormatter = value -> (value != null) ? String.valueOf(value) : "No value";
@@ -37,11 +37,10 @@ public class OptionMenuEntry<T> {
         value.set(requireNonNull(initialValue));
         value.addListener((_, oldValue, newValue) -> onValueChanged(oldValue, newValue));
 
-        selectedValueIndex = valueList.indexOf(initialValue);
+        final int selectedValueIndex = valueList.indexOf(initialValue);
         if (selectedValueIndex == -1) {
-            Logger.error("Initial value {} is not contained in values list, using first value instead");
+            Logger.error("Initial value {} is not contained in value list, select first value instead");
             value.set(valueList.getFirst());
-            selectedValueIndex = 0;
         }
 
         enabled = true;
@@ -52,7 +51,17 @@ public class OptionMenuEntry<T> {
     }
 
     public T value() {
-        return valueProperty().get();
+        return value.get();
+    }
+
+    public void setValue(T newValue) {
+        value.set(requireNonNull(newValue));
+    }
+
+    public void setNextValue() {
+        final int index = valueList.indexOf(value());
+        final int nextIndex = index < valueList.size() - 1 ? index + 1 : 0;
+        setValue(valueAt(nextIndex));
     }
 
     public void onValueChanged(T oldValue, T newValue) {
@@ -63,27 +72,12 @@ public class OptionMenuEntry<T> {
         valueFormatter = requireNonNull(formatter);
     }
 
-    public String selectedValueFormatted() {
-        return valueFormatter.apply(getSelectedValue());
+    public String valueFormatted() {
+        return valueFormatter.apply(value());
     }
 
-    protected void onValueSelectionChange() {
-        value.set(getSelectedValue());
-    }
-
-    public void selectValue(T value) {
-        requireNonNull(value);
-        for (int i = 0; i < valueList.size(); ++i) {
-            if (valueList.get(i).equals(value)) {
-                selectedValueIndex = i;
-                return;
-            }
-        }
-        throw new IllegalArgumentException("Cannot select value " + value);
-    }
-
-    public T getSelectedValue() {
-        return valueList.get(selectedValueIndex);
+    public T valueAt(int index) {
+        return valueList.get(index);
     }
 
     public boolean enabled() {

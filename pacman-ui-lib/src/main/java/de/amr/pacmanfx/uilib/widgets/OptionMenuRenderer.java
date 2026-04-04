@@ -53,7 +53,7 @@ public class OptionMenuRenderer extends BaseRenderer {
                 fillText(">", style.entryTextFill(), scaledTextFont, col + HTS, y);
             }
             fillText(entry.text(), style.entryTextFill(), scaledTextFont, menu.textColumn() * TS, y);
-            fillText(entry.selectedValueFormatted(),
+            fillText(entry.valueFormatted(),
                 entry.enabled() ? style.entryValueFill() : style.entryValueDisabledFill(),
                 scaledTextFont,
                 menu.valueColumn() * TS, y);

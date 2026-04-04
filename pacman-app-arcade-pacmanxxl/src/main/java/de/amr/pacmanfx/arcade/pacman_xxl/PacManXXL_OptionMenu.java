@@ -73,7 +73,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         addEntry(entryPlay3D);
 
         entryCutScenesEnabled = new OptionMenuEntry<>("CUTSCENES", List.of(true, false), true);
-        entryCutScenesEnabled.setValueFormatter(cutScenesEnabled -> cutScenesEnabled ? "YES" : "NO");
+        entryCutScenesEnabled.setValueFormatter(cutScenesEnabled -> cutScenesEnabled ? "ON" : "OFF");
         addEntry(entryCutScenesEnabled);
 
         entryMapOrder = new OptionMenuEntry<>("MAP ORDER", List.of(CUSTOM_MAPS_FIRST, ALL_RANDOM, NO_CUSTOM_MAPS), CUSTOM_MAPS_FIRST);
@@ -118,12 +118,12 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         mapSelector.loadMapPrototypes();
 
         // init entries
-        entryGameVariant.selectValue(gameVariant);
-        entryPlay3D.selectValue(GameUI.PROPERTY_3D_ENABLED.get());
-        entryCutScenesEnabled.selectValue(game.cutScenesEnabled());
-        entryMapOrder.selectValue(mapSelector.selectionMode());
+        entryGameVariant.setValue(gameVariant);
+        entryPlay3D.setValue(GameUI.PROPERTY_3D_ENABLED.get());
+        entryCutScenesEnabled.setValue(game.cutScenesEnabled());
+        entryMapOrder.setValue(mapSelector.selectionMode());
         entryMapOrder.setEnabled(!mapSelector.customMaps().isEmpty());
-        logEntryState();
+        logMenuState();
 
         soundEnabledProperty().bind(ui.soundManager().muteProperty().not());
         chaseAnimation.init(ui.currentConfig(), canvas);
@@ -131,11 +131,11 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         requestFocus();
     }
 
-    public void logEntryState() {
-        Logger.debug("{} {} {} mapOrder: {}",
+    public void logMenuState() {
+        Logger.info("Menu State: (game variant={}, scene={}, cut scenes={}, map order={})",
             entryGameVariant.value(),
             entryPlay3D.value() ? "3D" : "2D",
-            entryCutScenesEnabled.value() ? "cutscenes-on" : "cutscenes-off",
+            entryCutScenesEnabled.value() ? "ON" : "OFF",
             entryMapOrder.value());
     }
 

@@ -122,7 +122,7 @@ public class OptionMenu {
         renderer.drawOptionMenu(this);
     }
 
-    public void logEntryState() {}
+    public void logMenuState() {}
 
     public void setNextEntryKeyCode(KeyCode keyCode) {
         this.nextEntryKeyCode = keyCode;
@@ -233,7 +233,7 @@ public class OptionMenu {
             selectedEntryIndex = prevIndex;
             playSoundIfPresent(style.entrySelectedSound());
         }
-        logEntryState();
+        logMenuState();
     }
 
     private void selectNextEntry() {
@@ -242,15 +242,13 @@ public class OptionMenu {
             selectedEntryIndex = nextIndex;
             playSoundIfPresent(style.entrySelectedSound());
         }
-        logEntryState();
+        logMenuState();
     }
 
     private void selectNextValue() {
         final OptionMenuEntry<?> entry = entries.get(selectedEntryIndex);
-        entry.selectedValueIndex = entry.selectedValueIndex < entry.valueList.size() - 1
-            ? entry.selectedValueIndex + 1 : 0;
+        entry.setNextValue();
         playSoundIfPresent(style.valueSelectedSound());
-        entry.onValueSelectionChange();
-        logEntryState();
+        logMenuState();
     }
 }
