@@ -14,7 +14,7 @@ public class CutScenesTestState extends AbstractState<Game> implements TestState
 
     @Override
     public void onEnter(Game game) {
-        timer.restartIndefinitely();
+        lock();
         testedCutSceneNumber = 1;
     }
 
@@ -23,7 +23,7 @@ public class CutScenesTestState extends AbstractState<Game> implements TestState
         if (timer.hasExpired()) {
             if (testedCutSceneNumber < game.lastCutSceneNumber()) {
                 testedCutSceneNumber += 1;
-                timer.restartIndefinitely();
+                lock();
                 //TODO find another solution and get rid of this event type
                 game.publishGameEvent(new UnspecifiedChangeEvent("Cut Scene Test"));
             } else {

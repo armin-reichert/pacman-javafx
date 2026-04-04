@@ -15,10 +15,10 @@ public enum Arcade_GameState implements State<Game> {
     /**
      * Corresponds to the screen showing all these random symbols from the Arcade video memory.
      */
-    BOOT { // "Das muss das Boot abkönnen!"
+    BOOT { // "Das muss das Boot abkönnen! Jawohl Herr Kaleu!"
         @Override
         public void onEnter(Game game) {
-            timer.restartIndefinitely(); // UI triggers timer expiration
+            lock(); // UI triggers timer expiration
             game.init();
         }
 
@@ -36,7 +36,7 @@ public enum Arcade_GameState implements State<Game> {
     INTRO {
         @Override
         public void onEnter(Game game) {
-            timer.restartIndefinitely();
+            lock();
         }
 
         @Override
@@ -54,7 +54,7 @@ public enum Arcade_GameState implements State<Game> {
     SETTING_OPTIONS_FOR_START {
         @Override
         public void onEnter(Game game) {
-            timer.restartIndefinitely();
+            lock();
         }
 
         @Override
@@ -106,7 +106,7 @@ public enum Arcade_GameState implements State<Game> {
     LEVEL_COMPLETE {
         @Override
         public void onEnter(Game game) {
-            timer.restartIndefinitely(); // UI triggers timeout
+            lock(); // UI triggers timeout
         }
 
         @Override
@@ -162,7 +162,7 @@ public enum Arcade_GameState implements State<Game> {
     PACMAN_DYING {
         @Override
         public void onEnter(Game game) {
-            timer.restartIndefinitely(); // UI triggers time-out
+            lock(); // UI triggers time-out
         }
 
         @Override
@@ -211,7 +211,7 @@ public enum Arcade_GameState implements State<Game> {
     INTERMISSION {
         @Override
         public void onEnter(Game game) {
-            timer.restartIndefinitely();
+            lock();
         }
 
         @Override

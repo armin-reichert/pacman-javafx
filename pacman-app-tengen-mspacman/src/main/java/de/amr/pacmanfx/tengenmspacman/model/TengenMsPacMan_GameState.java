@@ -19,7 +19,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
     BOOT { // "Das muss das Boot abkönnen!"
         @Override
         public void onEnter(Game game) {
-            timer.restartIndefinitely();
+            lock();
             game.init();
         }
 
@@ -43,7 +43,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
     INTRO {
         @Override
         public void onEnter(Game game) {
-            timer.restartIndefinitely();
+            lock();
         }
 
         @Override
@@ -72,7 +72,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
     SHOWING_HALL_OF_FAME {
         @Override
         public void onEnter(Game game) {
-            timer.restartIndefinitely();
+            lock();
         }
 
         @Override
@@ -136,7 +136,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
     LEVEL_COMPLETE {
         @Override
         public void onEnter(Game game) {
-            timer.restartIndefinitely(); // UI triggers timeout
+            lock(); // UI triggers timeout
         }
 
         @Override
@@ -200,7 +200,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
     PACMAN_DYING {
         @Override
         public void onEnter(Game game) {
-            timer.restartIndefinitely(); // UI triggers time-out
+            lock(); // UI triggers time-out
         }
 
         @Override
@@ -249,7 +249,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
     INTERMISSION {
         @Override
         public void onEnter(Game game) {
-            timer.restartIndefinitely();
+            lock();
         }
 
         @Override

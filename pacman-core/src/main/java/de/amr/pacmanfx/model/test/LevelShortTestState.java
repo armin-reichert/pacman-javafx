@@ -22,7 +22,7 @@ public class LevelShortTestState extends AbstractState<Game> implements TestStat
     public void onEnter(Game game) {
         coinMechanism.setNumCoins(1);
         lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();
-        timer.restartIndefinitely();
+        lock();
         game.prepareNewGame();
         game.buildNormalLevel(1);
 
@@ -74,7 +74,7 @@ public class LevelShortTestState extends AbstractState<Game> implements TestStat
                 game.init();
                 game.control().restartStateWithName(GameControl.CommonGameState.BOOT.name());
             } else {
-                timer.restartIndefinitely();
+                lock();
                 game.startNextLevel();
                 GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
                 message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
