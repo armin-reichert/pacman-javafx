@@ -57,7 +57,7 @@ public class TickTimer {
 
     public TickTimer(String name) {
         this.name = name != null ? name : "unnamed";
-        resetIndefiniteTime();
+        resetToIndefiniteDuration();
     }
 
     @Override
@@ -97,7 +97,7 @@ public class TickTimer {
      * Sets the timer to run for an indefinite amount of time. The timer can be forced to expire by calling
      * {@link #expire()}.
      */
-    public void resetIndefiniteTime() {
+    public void resetToIndefiniteDuration() {
         reset(INDEFINITE);
     }
 

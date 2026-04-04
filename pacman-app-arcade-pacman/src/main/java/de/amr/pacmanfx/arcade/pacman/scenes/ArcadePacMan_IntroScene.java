@@ -167,7 +167,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 }
                 else if (timer.atSecond(2.0)) {
                     if (scene.ghostIndex < scene.ghosts.size() - 1) {
-                        timer.resetIndefiniteTime();
+                        timer.resetToIndefiniteDuration();
                     }
                     scene.ghostIndex += 1;
                 }

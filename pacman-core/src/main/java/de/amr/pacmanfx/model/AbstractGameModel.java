@@ -423,7 +423,7 @@ public abstract class AbstractGameModel implements Game {
         pac.setPosition(level.worldMap().terrainLayer().pacStartPosition());
         pac.setMoveDir(Direction.LEFT);
         pac.setWishDir(Direction.LEFT);
-        pac.powerTimer().resetIndefiniteTime();
+        pac.powerTimer().resetToIndefiniteDuration();
         pac.optAnimationManager().ifPresent(AnimationManager::reset);
 
         level.ghosts().forEach(ghost -> {

@@ -140,7 +140,7 @@ public class StateMachine<C> {
      */
     public void resetTimers() {
         for (State<C> state : states) {
-            state.timer().resetIndefiniteTime();
+            state.timer().resetToIndefiniteDuration();
         }
     }
 
@@ -178,7 +178,7 @@ public class StateMachine<C> {
         }
         prevState = currentState;
         currentState = newState;
-        currentState.timer().resetIndefiniteTime();
+        currentState.timer().resetToIndefiniteDuration();
         Logger.debug("Enter state {} timer={}", currentState, currentState.timer());
         currentState.onEnter(context);
         Logger.debug("After Enter state {} timer={}", currentState, currentState.timer());

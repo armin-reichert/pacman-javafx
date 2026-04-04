@@ -52,4 +52,18 @@ public interface State<C> {
      * @return the timer of this state
      */
     TickTimer timer();
+
+    /**
+     * Lets the timer of this state expire immediately.
+     */
+    default void expire() {
+        timer().expire();
+    }
+
+    /**
+     * Sets the state timer to indefinite duration.
+     */
+    default void lock() {
+        timer().resetToIndefiniteDuration();
+    }
 }

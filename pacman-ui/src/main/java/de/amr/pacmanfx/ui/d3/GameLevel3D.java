@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.RandomNumberSupport;
 import de.amr.pacmanfx.lib.math.Vector2f;
@@ -451,7 +450,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         } else if (gameState.nameMatches(HUNTING.name())) {
             onHuntingStart();
         } else if (gameState.nameMatches(PACMAN_DYING.name())) {
-            onPacManDying();
+            onPacManDying(gameState);
         } else if (gameState.nameMatches(EATING_GHOST.name())) {
             onEatingGhost();
         } else if (gameState.nameMatches(LEVEL_COMPLETE.name())) {
@@ -567,32 +566,40 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         animations3D.animation(AnimationID.GHOST_LIGHT).playFromStart();
     }
 
-    private void onPacManDying() {
+    private void onPacManDying(State<Game> gameState) {
         final Pac3D pac3D = entities3D.unique(Pac3D.class);
-        final TickTimer stateTimer = level.game().control().state().timer();
+        gameState.lock();
 
         uiConfig.soundEffects().ifPresent(GameSoundEffects::stopAll);
+
+        // Do not stop all animations!
         animations3D.animation(AnimationID.GHOST_LIGHT).stop();
         animations3D.animation(AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).stop();
         entities3D.all(GhostAppearance3D.class).forEach(GhostAppearance3D::stopAllAnimations);
         entities3D.first(Bonus3D.class).ifPresent(Bonus3D::expire);
 
-        stateTimer.resetIndefiniteTime(); // freeze until animation ends
-        final var dyingAnimation = new SequentialTransition(
-            // One last update before dying animation
-            doNow(() -> pac3D.update(level)),
+        createPacDyingAnimationSequence(pac3D, gameState).play();
+    }
+
+    private SequentialTransition createPacDyingAnimationSequence(Pac3D pac3D, State<Game> gameState) {
+        final var animationSequence = new SequentialTransition(
+            doNow(() -> {
+                // One last fart before dying animation starts
+                pac3D.update(level);
+                animations3D.animation(Pac3D.AnimationID.PAC_CHEWING).stop();
+                animations3D.animation(Pac3D.AnimationID.PAC_MOVING).stop();
+            }),
             pauseSec(1.5),
             doNow(() -> uiConfig.soundEffects().ifPresent(GameSoundEffects::playPacDeadSound)),
-            //TODO can we assume that this animation always exists?
             animations3D.animation(Pac3D.AnimationID.PAC_DYING).animationFX(),
             pauseSec(0.5)
         );
-        dyingAnimation.setOnFinished(_ -> {
+        animationSequence.setOnFinished(_ -> {
             pac3D.setVisible(false);
             putPacOnTheFloor();
-            stateTimer.expire();
+            gameState.expire();
         });
-        dyingAnimation.play();
+        return animationSequence;
     }
 
     private void onEatingGhost() {
@@ -680,7 +687,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             state.timer().expire();
         });
 
-        state.timer().resetIndefiniteTime(); // freeze game control until animation ends
+        state.timer().resetToIndefiniteDuration(); // freeze game control until animation ends
         seq.play();
     }
 }
