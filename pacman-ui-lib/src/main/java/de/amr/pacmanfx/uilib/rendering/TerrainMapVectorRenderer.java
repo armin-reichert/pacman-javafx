@@ -33,18 +33,18 @@ public class TerrainMapVectorRenderer extends BaseRenderer implements TerrainMap
     /** Width of inner obstacle edges. */
     public static final double DEFAULT_INNER_WALL_WIDTH = 1;
 
-    private final ObjectProperty<TerrainMapColorScheme> colorScheme = new SimpleObjectProperty<>(DEFAULT_COLOR_SCHEME);
+    private final ObjectProperty<TerrainMapColoring> mapColoring = new SimpleObjectProperty<>(DEFAULT_MAP_COLORING);
 
-    public ObjectProperty<TerrainMapColorScheme> colorSchemeProperty() {
-        return colorScheme;
+    public ObjectProperty<TerrainMapColoring> mapColoringProperty() {
+        return mapColoring;
     }
 
-    public TerrainMapColorScheme colorScheme() {
-        return colorScheme.get();
+    public TerrainMapColoring colorScheme() {
+        return mapColoring.get();
     }
 
-    public void setColorScheme(TerrainMapColorScheme scheme) {
-        colorScheme.set(requireNonNull(scheme));
+    public void setMapColoring(TerrainMapColoring scheme) {
+        mapColoring.set(requireNonNull(scheme));
     }
 
     private final DoubleProperty borderWallFullWidth = new SimpleDoubleProperty(DEFAULT_BORDER_WALL_FULL_WIDTH);

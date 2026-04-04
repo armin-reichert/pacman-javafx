@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.uilib.rendering.ArcadeHouseRenderer;
 import de.amr.pacmanfx.uilib.rendering.FoodMapRenderer;
-import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
+import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapVectorRenderer;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
@@ -49,7 +49,7 @@ public class Preview2D extends Canvas {
         terrainRenderer = new PreviewRenderer(this);
         foodRenderer = new FoodMapRenderer(this);
         houseRenderer = new ArcadeHouseRenderer(this);
-        houseRenderer.colorSchemeProperty().bind(terrainRenderer.colorSchemeProperty());
+        houseRenderer.mapColoringProperty().bind(terrainRenderer.mapColoringProperty());
 
         // Fallback renderer for tiles that belong to incomplete obstacles
         terrainTileRenderer = new TerrainMapTileRenderer(this);
@@ -98,14 +98,14 @@ public class Preview2D extends Canvas {
         }
     }
 
-    public void draw(WorldMap worldMap, TerrainMapColorScheme colorScheme) {
+    public void draw(WorldMap worldMap, TerrainMapColoring colorScheme) {
         GraphicsContext g = getGraphicsContext2D();
         g.setImageSmoothing(false);
         g.setFill(colorScheme.floorColor());
         g.fillRect(0, 0, getWidth(), getHeight());
         if (terrainVisible.get()) {
-            terrainRenderer.setColorScheme(colorScheme);
-            terrainTileRenderer.setColorScheme(colorScheme);
+            terrainRenderer.setMapColoring(colorScheme);
+            terrainTileRenderer.setMapColoring(colorScheme);
             terrainTileRenderer.draw(worldMap);
             terrainRenderer.draw(worldMap);
             drawHouse(worldMap);

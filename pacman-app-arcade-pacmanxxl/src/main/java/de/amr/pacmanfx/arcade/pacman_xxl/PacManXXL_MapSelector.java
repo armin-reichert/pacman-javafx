@@ -38,7 +38,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
 
     private final File customMapDir;
     private final ObservableList<WorldMap> customMapPrototypes = FXCollections.observableArrayList();
-    private final List<WorldMap> builtinMapPrototypes = new ArrayList<>();
+    private final List<WorldMap> builtinMaps = new ArrayList<>();
     private WorldMapSelectionMode selectionMode;
 
     public PacManXXL_MapSelector(File customMapDir) {
@@ -104,7 +104,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
     }
 
     @Override
-    public ObservableList<WorldMap> customMapPrototypes() {
+    public ObservableList<WorldMap> customMaps() {
         return customMapPrototypes;
     }
 
@@ -134,10 +134,10 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
 
     @Override
     public void loadMapPrototypes() {
-        if (builtinMapPrototypes.isEmpty()) {
+        if (builtinMaps.isEmpty()) {
             try {
                 final List<WorldMap> predefinedMaps = WorldMapSelector.loadMaps(getClass(), "maps/masonic_%d.world", 8);
-                builtinMapPrototypes.addAll(predefinedMaps);
+                builtinMaps.addAll(predefinedMaps);
                 loadCustomMaps();
             } catch (IOException x) {
                 Logger.error("Could not open world map");
@@ -156,23 +156,15 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
         final WorldMap prototype = switch (selectionMode) {
             case NO_CUSTOM_MAPS -> {
                 // first pick built-in maps in order, then randomly
-                final int index = levelNumber <= builtinMapPrototypes.size()
-                    ? levelNumber - 1 : randomInt(0, builtinMapPrototypes.size());
-                yield builtinMapPrototypes.get(index);
+                final int i = levelNumber <= builtinMaps.size() ? levelNumber - 1 : randomInt(0, builtinMaps.size());
+                yield builtinMaps.get(i);
             }
-            case CUSTOM_MAPS_FIRST -> {
-                if (levelNumber <= customMapPrototypes.size()) {
-                    // pick custom maps in order
-                    yield customMapPrototypes.get(levelNumber - 1);
-                }
-                else {
-                    // pick random built-in map
-                    yield builtinMapPrototypes.get(randomInt(0, builtinMapPrototypes.size()));
-                }
-            }
+            case CUSTOM_MAPS_FIRST -> levelNumber <= customMapPrototypes.size()
+                    ? customMapPrototypes.get(levelNumber - 1) // pick custom maps in order
+                    : builtinMaps.get(randomInt(0, builtinMaps.size())); // pick random built-in map
             case ALL_RANDOM -> {
-                final int index = randomInt(0, customMapPrototypes().size() + builtinMapPrototypes.size());
-                yield index < customMapPrototypes().size() ? customMapPrototypes.get(index) : builtinMapPrototypes.get(index - customMapPrototypes().size());
+                final int i = randomInt(0, customMaps().size() + builtinMaps.size());
+                yield i < customMaps().size() ? customMapPrototypes.get(i) : builtinMaps.get(i - customMaps().size());
             }
         };
 
@@ -180,7 +172,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
         final var worldMap = new WorldMap(prototype);
 
         // If selected map is a built-in map, use a random color scheme to get variation
-        final WorldMapColorScheme colorScheme = builtinMapPrototypes.contains(prototype)
+        final WorldMapColorScheme colorScheme = builtinMaps.contains(prototype)
             ? WORLD_MAP_COLOR_SCHEMES[randomInt(0, WORLD_MAP_COLOR_SCHEMES.length)]
             : WorldMapSelector.extractColorScheme(prototype);
         worldMap.setConfigValue(WorldMapConfigKey.COLOR_SCHEME, colorScheme);

@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.allgames.app;
 
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
@@ -58,7 +59,7 @@ public class PacManGames3dApp extends Application {
     private static final float ASPECT_RATIO    = 1.6f; // 16:10
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
-    private static final boolean INCLUDE_TESTS = true;
+    private static final boolean INTERACTIVE_TESTS_ENABLED = true;
 
     private static final List<CommonDashboardID> DASHBOARD_IDs = List.of(
         CommonDashboardID.GENERAL,
@@ -112,7 +113,7 @@ public class PacManGames3dApp extends Application {
                     .startPage(TengenMsPacMan_StartPage::new)
                     .startPage(PacManXXL_StartPage::new)
                     .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
-                    .includeInteractiveTests(INCLUDE_TESTS)
+                    .includeInteractiveTests(INTERACTIVE_TESTS_ENABLED)
                     .build();
             }
             else {
@@ -164,7 +165,7 @@ public class PacManGames3dApp extends Application {
             case ARCADE_PACMAN_XXL    -> new PacManXXL_PacMan_GameModel(gameBox, xxlMapSelector, highScoreFile);
             case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(gameBox, xxlMapSelector, highScoreFile);
         };
-        if (INCLUDE_TESTS) {
+        if (INTERACTIVE_TESTS_ENABLED) {
             final StateMachine<Game> gameStateMachine = game.control().stateMachine();
             gameStateMachine.addState(new LevelShortTestState(gameBox));
             gameStateMachine.addState(new LevelMediumTestState());

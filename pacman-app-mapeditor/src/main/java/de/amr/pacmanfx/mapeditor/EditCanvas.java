@@ -16,7 +16,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.UfxImages;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.FoodMapRenderer;
-import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
+import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.scene.Cursor;
@@ -254,7 +254,7 @@ public class EditCanvas extends Canvas {
         obstacleEditor.setEnabled(false);
     }
 
-    public void draw(TerrainMapColorScheme colorScheme) {
+    public void draw(TerrainMapColoring colorScheme) {
         double width = getWidth(), height = getHeight();
         final TerrainLayer terrain = worldMap().terrainLayer();
         final double scaledTileSize = scaling() * TS;
@@ -295,7 +295,7 @@ public class EditCanvas extends Canvas {
 
         // Terrain
         if (terrainVisible.get()) {
-            renderer.setColorScheme(colorScheme);
+            renderer.setMapColoring(colorScheme);
             renderer.setSegmentNumbersDisplayed(segmentNumbersVisible.get());
             renderer.setObstacleInnerAreaDisplayed(obstacleInnerAreaDisplayed.get());
             renderer.draw(worldMap());

@@ -22,7 +22,7 @@ public interface WorldMapSelector {
     /**
      * @return list of the built-in maps. Users should create a copy because the prototypes are modifiable!
      */
-    default List<WorldMap> customMapPrototypes() {
+    default List<WorldMap> customMaps() {
         return List.of();
     }
 

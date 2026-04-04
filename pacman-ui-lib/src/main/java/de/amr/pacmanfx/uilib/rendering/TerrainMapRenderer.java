@@ -9,9 +9,9 @@ import javafx.scene.paint.Color;
 
 public interface TerrainMapRenderer extends Renderer {
 
-    TerrainMapColorScheme DEFAULT_COLOR_SCHEME = new TerrainMapColorScheme(Color.BLACK, Color.RED,  Color.GOLD, Color.PINK);
+    TerrainMapColoring DEFAULT_MAP_COLORING = new TerrainMapColoring(Color.BLACK, Color.RED,  Color.GOLD, Color.PINK);
 
-    ObjectProperty<TerrainMapColorScheme> colorSchemeProperty();
+    ObjectProperty<TerrainMapColoring> mapColoringProperty();
 
     void draw(WorldMap worldMap);
 }

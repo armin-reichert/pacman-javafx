@@ -88,7 +88,7 @@ public class EditorPaletteTabPane extends TabPane {
 
         var terrainRenderer = new TerrainMapTileRenderer(palette);
         terrainRenderer.backgroundColorProperty().bind(prototype.backgroundColorProperty());
-        terrainRenderer.colorSchemeProperty().bind(prototype.colorSchemeProperty());
+        terrainRenderer.mapColoringProperty().bind(prototype.mapColoringProperty());
         palette.setRenderer(terrainRenderer);
 
         return palette;
@@ -112,7 +112,7 @@ public class EditorPaletteTabPane extends TabPane {
 
         var actorRenderer = new TerrainMapTileRenderer(palette);
         actorRenderer.backgroundColorProperty().bind(prototype.backgroundColorProperty());
-        actorRenderer.colorSchemeProperty().bind(prototype.colorSchemeProperty());
+        actorRenderer.mapColoringProperty().bind(prototype.mapColoringProperty());
         palette.setRenderer(actorRenderer);
 
         return palette;

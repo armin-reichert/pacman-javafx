@@ -15,18 +15,18 @@ import static de.amr.pacmanfx.Globals.TS;
 
 public class ArcadeHouseRenderer extends BaseRenderer {
 
-    private final ObjectProperty<TerrainMapColorScheme> colorScheme = new SimpleObjectProperty<>(TerrainMapRenderer.DEFAULT_COLOR_SCHEME);
+    private final ObjectProperty<TerrainMapColoring> mapColoring = new SimpleObjectProperty<>(TerrainMapRenderer.DEFAULT_MAP_COLORING);
 
-    public void setColorScheme(TerrainMapColorScheme colorScheme) {
-        this.colorScheme.set(colorScheme);
+    public void setMapColoring(TerrainMapColoring mapColoring) {
+        this.mapColoring.set(mapColoring);
     }
 
-    public TerrainMapColorScheme colorScheme() {
-        return colorScheme.get();
+    public TerrainMapColoring mapColoring() {
+        return mapColoring.get();
     }
 
-    public ObjectProperty<TerrainMapColorScheme> colorSchemeProperty() {
-        return colorScheme;
+    public ObjectProperty<TerrainMapColoring> mapColoringProperty() {
+        return mapColoring;
     }
 
     public ArcadeHouseRenderer(Canvas canvas) {
@@ -38,9 +38,9 @@ public class ArcadeHouseRenderer extends BaseRenderer {
         double doubleStrokeOuterWidth, double doubleStrokeInnerWidth) {
         ctx.save();
         ctx.scale(scaling(), scaling());
-        drawHouseWalls(origin, size, colorScheme().wallStrokeColor(), doubleStrokeOuterWidth);
-        drawHouseWalls(origin, size, colorScheme().wallFillColor(), doubleStrokeInnerWidth);
-        drawDoors(origin.plus((size.x() / 2 - 1), 0), colorScheme().floorColor(), colorScheme().doorColor());
+        drawHouseWalls(origin, size, mapColoring().wallStrokeColor(), doubleStrokeOuterWidth);
+        drawHouseWalls(origin, size, mapColoring().wallFillColor(), doubleStrokeInnerWidth);
+        drawDoors(origin.plus((size.x() / 2 - 1), 0), mapColoring().floorColor(), mapColoring().doorColor());
         ctx.restore();
     }
 

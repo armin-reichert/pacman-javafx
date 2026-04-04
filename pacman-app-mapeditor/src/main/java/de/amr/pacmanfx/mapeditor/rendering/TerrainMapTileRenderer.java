@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
+import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapRenderer;
 import de.amr.pacmanfx.uilib.rendering.TileRenderer;
 import javafx.beans.property.ObjectProperty;
@@ -79,23 +79,23 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
     private final double[] xp = new double[3];
     private final double[] yp = new double[3];
 
-    private final ObjectProperty<TerrainMapColorScheme> colorScheme = new SimpleObjectProperty<>(DEFAULT_COLOR_SCHEME);
+    private final ObjectProperty<TerrainMapColoring> mapColoring = new SimpleObjectProperty<>(DEFAULT_MAP_COLORING);
 
     public TerrainMapTileRenderer(Canvas canvas) {
         super(canvas);
     }
 
-    public void setColorScheme(TerrainMapColorScheme colorScheme) {
-        this.colorScheme.set(colorScheme);
+    public void setMapColoring(TerrainMapColoring mapColoring) {
+        this.mapColoring.set(mapColoring);
     }
 
-    public TerrainMapColorScheme colorScheme() {
-        return colorScheme.get();
+    public TerrainMapColoring colorScheme() {
+        return mapColoring.get();
     }
 
     @Override
-    public ObjectProperty<TerrainMapColorScheme> colorSchemeProperty() {
-        return colorScheme;
+    public ObjectProperty<TerrainMapColoring> mapColoringProperty() {
+        return mapColoring;
     }
 
     public void setObstacleInnerAreaDisplayed(boolean obstacleInnerAreaDisplayed) {

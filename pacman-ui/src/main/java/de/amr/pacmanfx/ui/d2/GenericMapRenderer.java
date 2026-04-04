@@ -20,14 +20,14 @@ import static java.util.function.Predicate.not;
  */
 public class GenericMapRenderer extends BaseRenderer {
 
-    public enum RenderInfoKey { TERRAIN_MAP_COLOR_SCHEME }
+    public enum RenderInfoKey {TERRAIN_MAP_COLORING}
 
     private final TerrainMapVectorRenderer terrainRenderer;
     private final FoodMapRenderer foodRenderer;
     private final ArcadeHouseRenderer houseRenderer;
 
-    private TerrainMapColorScheme blinkingOnColors;
-    private TerrainMapColorScheme blinkingOffColors;
+    private TerrainMapColoring blinkingOnMapColoring;
+    private TerrainMapColoring blinkingOffMapColoring;
 
     public GenericMapRenderer(Canvas canvas) {
         super(canvas);
@@ -48,28 +48,28 @@ public class GenericMapRenderer extends BaseRenderer {
     }
 
     private void updateColors(Color backgroundColor) {
-        blinkingOnColors = new TerrainMapColorScheme(backgroundColor, backgroundColor, Color.WHITE, backgroundColor);
-        blinkingOffColors = new TerrainMapColorScheme(backgroundColor, Color.WHITE, backgroundColor, backgroundColor);
-        final TerrainMapColorScheme oldColorScheme = terrainRenderer.colorScheme();
-        final TerrainMapColorScheme newColorScheme = new TerrainMapColorScheme(
-            backgroundColor, oldColorScheme.wallFillColor(), oldColorScheme.wallStrokeColor(), oldColorScheme.doorColor()
+        blinkingOnMapColoring = new TerrainMapColoring(backgroundColor, backgroundColor, Color.WHITE, backgroundColor);
+        blinkingOffMapColoring = new TerrainMapColoring(backgroundColor, Color.WHITE, backgroundColor, backgroundColor);
+        final TerrainMapColoring oldColoring = terrainRenderer.colorScheme();
+        final TerrainMapColoring newColoring = new TerrainMapColoring(
+            backgroundColor, oldColoring.wallFillColor(), oldColoring.wallStrokeColor(), oldColoring.doorColor()
         );
-        terrainRenderer.setColorScheme(newColorScheme);
+        terrainRenderer.setMapColoring(newColoring);
     }
 
     public void drawMap(GameLevel gameLevel, RenderInfo info) {
         final WorldMap worldMap = gameLevel.worldMap();
         if (info.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
-            terrainRenderer.setColorScheme(info.getBoolean(CommonRenderInfoKey.ENERGIZER_VISIBLE) ? blinkingOnColors : blinkingOffColors);
+            terrainRenderer.setMapColoring(info.getBoolean(CommonRenderInfoKey.ENERGIZER_VISIBLE) ? blinkingOnMapColoring : blinkingOffMapColoring);
             terrainRenderer.draw(worldMap);
         }
         else {
-            final TerrainMapColorScheme terrainColorScheme = info.get(RenderInfoKey.TERRAIN_MAP_COLOR_SCHEME, TerrainMapColorScheme.class);
-            terrainRenderer.setColorScheme(terrainColorScheme);
+            final TerrainMapColoring mapColoring = info.get(RenderInfoKey.TERRAIN_MAP_COLORING, TerrainMapColoring.class);
+            terrainRenderer.setMapColoring(mapColoring);
             terrainRenderer.draw(worldMap);
 
             worldMap.terrainLayer().optHouse().ifPresent(house -> {
-                houseRenderer.setColorScheme(terrainColorScheme);
+                houseRenderer.setMapColoring(mapColoring);
                 houseRenderer.drawHouse(house.minTile(), house.sizeInTiles(),
                     terrainRenderer.borderWallFullWidth(),terrainRenderer.borderWallInnerWidth());
             });

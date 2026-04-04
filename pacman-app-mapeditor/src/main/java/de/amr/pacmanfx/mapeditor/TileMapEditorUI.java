@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.world.WorldMapLayerID;
 import de.amr.pacmanfx.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.uilib.model3D.actor.GhostModel3D;
 import de.amr.pacmanfx.uilib.model3D.actor.PacManModel3D;
-import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
+import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -405,7 +405,7 @@ public class TileMapEditorUI {
     public void draw() {
         editorPaletteTabPane.selectedPalette().ifPresent(Palette::draw);
         final WorldMap worldMap = editor.currentWorldMap();
-        TerrainMapColorScheme colorScheme = currentColorScheme(worldMap);
+        TerrainMapColoring colorScheme = currentMapColoring(worldMap);
         if (tabEditCanvas.isSelected()) {
             editCanvas.draw(colorScheme);
         }
@@ -441,9 +441,9 @@ public class TileMapEditorUI {
     }
 
     //TODO avoid call in every animation frame
-    private TerrainMapColorScheme currentColorScheme(WorldMap worldMap) {
+    private TerrainMapColoring currentMapColoring(WorldMap worldMap) {
         WorldMapLayer terrain = worldMap.terrainLayer();
-        return new TerrainMapColorScheme(
+        return new TerrainMapColoring(
             COLOR_CANVAS_BACKGROUND,
             UfxMapEditor.getColorFromMapLayer(terrain, WorldMapPropertyName.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL),
             UfxMapEditor.getColorFromMapLayer(terrain, WorldMapPropertyName.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE),
