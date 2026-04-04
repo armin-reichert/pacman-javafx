@@ -37,7 +37,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
     };
 
     private final File customMapDir;
-    private final ObservableList<WorldMap> customMapPrototypes = FXCollections.observableArrayList();
+    private final ObservableList<WorldMap> customMaps = FXCollections.observableArrayList();
     private final List<WorldMap> builtinMaps = new ArrayList<>();
     private WorldMapSelectionMode selectionMode;
 
@@ -66,7 +66,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                 // A new map file has appeared
                 final Optional<WorldMap> worldMap = WorldMap.fromFile(file);
                 if (worldMap.isPresent()) {
-                    customMapPrototypes.add(worldMap.get());
+                    customMaps.add(worldMap.get());
                     Logger.info("Added new custom map from file '{}'", file);
                 }
             }
@@ -74,8 +74,8 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                 // A map file has been removed
                 try {
                     final URL url = file.toURI().toURL();
-                    findCustomMapPrototype(url).ifPresent(worldMap -> {
-                        customMapPrototypes.remove(worldMap);
+                    customMapPrototype(url).ifPresent(worldMap -> {
+                        customMaps.remove(worldMap);
                         Logger.info("Removed custom map file '{}'", file);
                     });
                 } catch (MalformedURLException x) {
@@ -86,10 +86,10 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                 // A map file has been changed
                 try {
                     final URL url = file.toURI().toURL();
-                    findCustomMapPrototype(url).ifPresent(customMapPrototypes::remove);
+                    customMapPrototype(url).ifPresent(customMaps::remove);
                     final Optional<WorldMap> worldMap = WorldMap.fromFile(file);
                     if (worldMap.isPresent()) {
-                        customMapPrototypes.add(worldMap.get());
+                        customMaps.add(worldMap.get());
                         Logger.info("Updated custom map from file '{}'", file);
                     }
                 } catch (IOException x) {
@@ -105,12 +105,12 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
 
     @Override
     public ObservableList<WorldMap> customMaps() {
-        return customMapPrototypes;
+        return customMaps;
     }
 
     @Override
     public void loadCustomMaps() {
-        if (!customMapPrototypes.isEmpty()) {
+        if (!customMaps.isEmpty()) {
             Logger.info("Custom maps have already been loaded");
             return;
         }
@@ -126,7 +126,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
         }
         for (File file : worldMapFiles) {
             WorldMap.fromFile(file).ifPresent(worldMap -> {
-                customMapPrototypes.add(worldMap);
+                customMaps.add(worldMap);
                 Logger.info("Custom map loaded from file '{}'", file);
             });
         }
@@ -159,12 +159,12 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                 final int i = levelNumber <= builtinMaps.size() ? levelNumber - 1 : randomInt(0, builtinMaps.size());
                 yield builtinMaps.get(i);
             }
-            case CUSTOM_MAPS_FIRST -> levelNumber <= customMapPrototypes.size()
-                    ? customMapPrototypes.get(levelNumber - 1) // pick custom maps in order
+            case CUSTOM_MAPS_FIRST -> levelNumber <= customMaps.size()
+                    ? customMaps.get(levelNumber - 1) // pick custom maps in order
                     : builtinMaps.get(randomInt(0, builtinMaps.size())); // pick random built-in map
             case ALL_RANDOM -> {
                 final int i = randomInt(0, customMaps().size() + builtinMaps.size());
-                yield i < customMaps().size() ? customMapPrototypes.get(i) : builtinMaps.get(i - customMaps().size());
+                yield i < customMaps().size() ? customMaps.get(i) : builtinMaps.get(i - customMaps().size());
             }
         };
 
@@ -196,15 +196,12 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                 final URL url = PacManXXL_MapSelector.class.getResource(path);
                 if (url != null) {
                     final File targetFile = new File(customMapDir, mapName);
-                    WorldMap.fromURL(url).ifPresentOrElse(
-                        worldMap -> {
-                            try {
-                                worldMap.saveToFile(targetFile);
-                            } catch (IOException x) {
-                                Logger.error(x, "Could not save world map file {}", targetFile);
-                            }
-                        },
-                        () -> Logger.error("Could not load world map from URL '{}'", url)
+                    WorldMap.fromURL(url).ifPresentOrElse(worldMap -> {
+                        try {
+                            worldMap.saveToFile(targetFile);
+                        } catch (IOException x) {
+                            Logger.error(x, "Could not save world map file {}", targetFile);
+                        }}, () -> Logger.error("Could not load world map from URL '{}'", url)
                     );
                 } else {
                     // Not all of these maps exits, just log them
@@ -214,7 +211,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
         }
     }
 
-    private Optional<WorldMap> findCustomMapPrototype(URL url) {
-        return customMapPrototypes.stream().filter(worldMap -> url.toString().equals(worldMap.url())).findFirst();
+    private Optional<WorldMap> customMapPrototype(URL url) {
+        return customMaps.stream().filter(map -> url.toExternalForm().equals(map.url())).findFirst();
     }
 }
