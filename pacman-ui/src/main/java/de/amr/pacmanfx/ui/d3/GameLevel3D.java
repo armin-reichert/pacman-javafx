@@ -209,22 +209,18 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Pac3D pac3D = entities3D.unique(Pac3D.class);
         final LevelCounter3D levelCounter3D = entities3D.unique(LevelCounter3D.class);
         final LivesCounter3D livesCounter3D = entities3D.unique(LivesCounter3D.class);
-        addChildren(maze3D.floor(), maze3D.particlesGroup());
-        addChild(levelCounter3D);
-        addChild(livesCounter3D);
-        addChild(pac3D);
-        pac3D.powerLight().ifPresent(this::addChild);
-        entities3D.all(GhostAppearance3D.class).sorted(BY_GHOST_PERSONALITY).forEach(this::addChild);
-        entities3D.all(Energizer3D.class).map(Energizer3D::shape).forEach(this::addChild);
-        entities3D.all(Pellet3D.class).map(Pellet3D::shape).forEach(this::addChild);
-        addChildren(maze3D, maze3D.house().root(), maze3D.house().doors());
+        addToChildren(maze3D.floor(), maze3D.particlesGroup());
+        addToChildren(levelCounter3D);
+        addToChildren(livesCounter3D);
+        addToChildren(pac3D);
+        pac3D.powerLight().ifPresent(this::addToChildren);
+        entities3D.all(GhostAppearance3D.class).sorted(BY_GHOST_PERSONALITY).forEach(this::addToChildren);
+        entities3D.all(Energizer3D.class).map(Energizer3D::shape).forEach(this::addToChildren);
+        entities3D.all(Pellet3D.class).map(Pellet3D::shape).forEach(this::addToChildren);
+        addToChildren(maze3D, maze3D.house().root(), maze3D.house().doors());
     }
 
-    private void addChild(Node child) {
-        getChildren().add(child);
-    }
-
-    private void addChildren(Node... children) {
+    private void addToChildren(Node... children) {
         getChildren().addAll(children);
     }
 
@@ -321,7 +317,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             entities3D.remove(bonus3D);
             getChildren().remove(bonus3D);
         });
-        addChild(createBonus3D(bonus));
+        addToChildren(createBonus3D(bonus));
     }
 
     private Bonus3D createBonus3D(Bonus bonus) {
@@ -648,9 +644,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         animations.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
         animations.register(AnimationID.GHOST_LIGHT, new GhostLightAnimation(ghostAppearancesByPersonality().toList()));
         animations.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, createParticlesAnimation());
-
-        //TODO: this looks ugly
-        addChild(animations.animation(AnimationID.GHOST_LIGHT, GhostLightAnimation.class).light());
+        //TODO: this is somewhat ugly
+        addToChildren(animations.animation(AnimationID.GHOST_LIGHT, GhostLightAnimation.class).light());
     }
 
     private Stream<GhostAppearance3D> ghostAppearancesByPersonality() {
