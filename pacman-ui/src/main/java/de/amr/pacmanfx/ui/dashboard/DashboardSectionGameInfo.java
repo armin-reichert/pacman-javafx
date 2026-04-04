@@ -14,6 +14,8 @@ import de.amr.pacmanfx.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.ui.GameUI;
 import javafx.scene.paint.Color;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.Globals.CYAN_GHOST_BASHFUL;
@@ -40,7 +42,9 @@ public class DashboardSectionGameInfo extends DashboardSection {
 
         addDynamicLabeledValue("World Map", ifGameLevel(gameSupplier, level -> {
             final String url = level.worldMap().url();
-            return url == null ? NO_INFO : url.substring(url.lastIndexOf("/") + 1);
+            return url == null
+                ? NO_INFO
+                : URLDecoder.decode(url.substring(url.lastIndexOf("/") + 1), StandardCharsets.UTF_8);
         }));
 
         addDynamicLabeledValue("Fill/Stroke/Pellet", ifGameLevel(gameSupplier, level -> {
