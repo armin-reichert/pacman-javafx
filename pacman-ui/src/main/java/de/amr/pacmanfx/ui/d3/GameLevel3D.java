@@ -135,7 +135,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         // Maze3D must exist when energizer animations are created!
         createAnimations(mapColorScheme);
 
-        setPacOnTheFloor();
+        putPacOnTheFloor();
         setMouseTransparent(true); // this increases performance they say...
     }
 
@@ -154,7 +154,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Sets the z-position of the 3D Pac-Man such that it sits exactly on the floor.
      */
-    public void setPacOnTheFloor() {
+    public void putPacOnTheFloor() {
         final Pac3D pac3D = entities3D.unique(Pac3D.class);
         final double radius = 0.5 * pac3D.getBoundsInLocal().getDepth();
         pac3D.setTranslateZ(-radius); // negative z means upwards
@@ -492,7 +492,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Shows the "READY!" message when the game continues.
      */
     public void onGameContinues(GameContinuedEvent ignoredEvent) {
-        setPacOnTheFloor();
+        putPacOnTheFloor();
         messageManager().showMessage(MessageManager3D.MessageType.READY);
     }
 
@@ -506,7 +506,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         if (!silent) {
             uiConfig.soundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
-        setPacOnTheFloor();
+        putPacOnTheFloor();
         messageManager().showMessage(MessageManager3D.MessageType.READY);
     }
 
@@ -592,7 +592,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         );
         dyingAnimation.setOnFinished(_ -> {
             pac3D.setVisible(false);
-            setPacOnTheFloor();
+            putPacOnTheFloor();
             stateTimer.expire();
         });
         dyingAnimation.play();
