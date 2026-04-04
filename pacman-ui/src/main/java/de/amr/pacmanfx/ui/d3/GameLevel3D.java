@@ -666,9 +666,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      *
      * @param maze3D the 3D maze to be animated
      * @param level the completed level (used to determine animation details)
-     * @param state the current game state (used to determine cut-scene follow-up)
+     * @param gameState the current game state (used to determine cut-scene follow-up)
      */
-    public void playLevelEndAnimation(Maze3D maze3D, GameLevel level, State<Game> state) {
+    public void playLevelEndAnimation(Maze3D maze3D, GameLevel level, State<Game> gameState) {
         final boolean cutScene = level.cutSceneNumber() != 0;
         final PerspectiveID perspectiveBeforeAnimation = GameUI.PROPERTY_3D_PERSPECTIVE_ID.get();
 
@@ -684,10 +684,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         seq.setOnFinished(_ -> {
             GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(perspectiveBeforeAnimation);
             maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
-            state.timer().expire();
+            gameState.expire();
         });
 
-        state.timer().resetToIndefiniteDuration(); // freeze game control until animation ends
+        gameState.lock();
         seq.play();
     }
 }

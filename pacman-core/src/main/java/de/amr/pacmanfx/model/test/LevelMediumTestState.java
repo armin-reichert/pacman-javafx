@@ -60,7 +60,7 @@ public class LevelMediumTestState extends AbstractState<Game> implements TestSta
         else if (game.isLevelCompleted(level)) {
             game.control().enterStateWithName(GameControl.CommonGameState.INTRO.name());
         } else if (game.hasPacManBeenKilled()) {
-            timer.expire();
+            expire();
         } else if (game.hasGhostBeenKilled()) {
             game.control().enterStateWithName(GameControl.CommonGameState.EATING_GHOST.name());
         }

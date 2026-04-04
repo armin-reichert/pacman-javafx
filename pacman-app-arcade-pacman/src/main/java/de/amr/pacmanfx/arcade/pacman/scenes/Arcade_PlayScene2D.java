@@ -153,7 +153,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onPacDead(PacDeadEvent e) {
         // Trigger end of game state PACMAN_DYING after dying animation has finished
-        gameContext().game().control().state().timer().expire();
+        gameContext().game().control().state().expire();
     }
 
     @Override
@@ -231,7 +231,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     private void createAndPlayLevelCompletedAnimation(GameLevel level) {
-        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> level.game().control().state().timer().expire());
+        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> level.game().control().state().expire());
         levelCompletedAnimation.play();
     }
 

@@ -154,7 +154,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.setSpeed(4.0f);
                 }
-                case 1380 -> game.control().state().timer().expire();
+                case 1380 -> game.control().state().expire();
             }
         }
     }

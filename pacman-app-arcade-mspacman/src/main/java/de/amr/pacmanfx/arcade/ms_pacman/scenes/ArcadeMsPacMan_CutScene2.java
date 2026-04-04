@@ -159,7 +159,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
             msPacMan.setSpeed(4.0f);
         }
         else if (timer.atSecond(23)) {
-            gameContext().game().control().state().timer().expire();
+            gameContext().game().control().state().expire();
         }
         else {
             pacMan.move();
