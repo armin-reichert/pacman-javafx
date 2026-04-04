@@ -164,10 +164,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Starts the lives counter symbols following Pac-Man with their eyes.
      */
     public void startTrackingPac() {
-        entities3D.first(LivesCounter3D.class).ifPresent(livesCounter3D ->
-            entities3D.first(Pac3D.class).ifPresentOrElse(
-                livesCounter3D::startTracking,
-                () -> Logger.error("Lives counter cannot track Pac-Man: 3D Pac-Man not existing")));
+        final LivesCounter3D livesCounter3D = entities3D.unique(LivesCounter3D.class);
+        final Pac3D pac3D = entities3D.unique(Pac3D.class);
+        livesCounter3D.startTracking(pac3D);
     }
 
     // Public accessors
