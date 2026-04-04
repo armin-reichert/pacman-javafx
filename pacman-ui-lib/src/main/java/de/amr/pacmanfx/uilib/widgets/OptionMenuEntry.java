@@ -7,7 +7,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -15,38 +14,37 @@ import java.util.function.Function;
 import static java.util.Objects.requireNonNull;
 
 public class OptionMenuEntry<T> {
-    protected final ObjectProperty<T> value;
+
     protected final String text;
-    protected final List<T> optionValues;
+    protected final ObjectProperty<T> value = new SimpleObjectProperty<>();
+    protected final List<T> valueList;
     protected int selectedValueIndex;
     protected boolean enabled;
 
     private Function<T, String> valueFormatter = value -> (value != null) ? String.valueOf(value) : "No value";
 
-    public OptionMenuEntry(String text, List<T> values, T initialValue) {
-        requireNonNull(text);
-        requireNonNull(initialValue);
-        requireNonNull(values);
-        if (values.isEmpty()) {
+    public OptionMenuEntry(String text, List<T> valueList, T initialValue) {
+        this.text = requireNonNull(text);
+
+        this.valueList = List.copyOf(requireNonNull(valueList));
+        if (valueList.isEmpty()) {
             throw new IllegalArgumentException("Menu entry values list is empty");
         }
-        if (values.stream().anyMatch(Objects::isNull)) {
+        if (valueList.stream().anyMatch(Objects::isNull)) {
             throw new IllegalArgumentException("Menu entry values list contains NULL value");
         }
 
-        this.value = new SimpleObjectProperty<>(initialValue);
-        this.value.addListener((_, oldValue, newValue) -> onValueChanged(oldValue, newValue));
+        value.set(requireNonNull(initialValue));
+        value.addListener((_, oldValue, newValue) -> onValueChanged(oldValue, newValue));
 
-        this.selectedValueIndex = values.indexOf(initialValue);
-        if (this.selectedValueIndex == -1) {
+        selectedValueIndex = valueList.indexOf(initialValue);
+        if (selectedValueIndex == -1) {
             Logger.error("Initial value {} is not contained in values list, using first value instead");
-            this.value.set(values.getFirst());
-            this.selectedValueIndex = 0;
+            value.set(valueList.getFirst());
+            selectedValueIndex = 0;
         }
 
-        this.text = text;
-        this.optionValues = List.copyOf(values);
-        this.enabled = true;
+        enabled = true;
     }
 
     public ObjectProperty<T> valueProperty() {
@@ -61,20 +59,12 @@ public class OptionMenuEntry<T> {
         Logger.debug("Value changed from {} to {}", oldValue, newValue);
     }
 
-    public void setValueFormatter(Function<T, String> valueFormatter) {
-        this.valueFormatter = requireNonNull(valueFormatter);
+    public void setValueFormatter(Function<T, String> formatter) {
+        valueFormatter = requireNonNull(formatter);
     }
 
-    public Function<T, String> valueFormatter() {
-        return valueFormatter;
-    }
-
-    public String formatValue(T value) {
-        return valueFormatter.apply(value);
-    }
-
-    public String formatSelectedValue() {
-        return formatValue(getSelectedValue());
+    public String selectedValueFormatted() {
+        return valueFormatter.apply(getSelectedValue());
     }
 
     protected void onValueSelectionChange() {
@@ -83,8 +73,8 @@ public class OptionMenuEntry<T> {
 
     public void selectValue(T value) {
         requireNonNull(value);
-        for (int i = 0; i < optionValues.size(); ++i) {
-            if (optionValues.get(i).equals(value)) {
+        for (int i = 0; i < valueList.size(); ++i) {
+            if (valueList.get(i).equals(value)) {
                 selectedValueIndex = i;
                 return;
             }
@@ -93,7 +83,7 @@ public class OptionMenuEntry<T> {
     }
 
     public T getSelectedValue() {
-        return optionValues.get(selectedValueIndex);
+        return valueList.get(selectedValueIndex);
     }
 
     public boolean enabled() {
@@ -106,9 +96,5 @@ public class OptionMenuEntry<T> {
 
     public String text() {
         return text;
-    }
-
-    public List<T> optionValues() {
-        return Collections.unmodifiableList(optionValues);
     }
 }

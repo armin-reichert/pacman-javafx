@@ -247,7 +247,7 @@ public class OptionMenu {
 
     private void selectNextValue() {
         final OptionMenuEntry<?> entry = entries.get(selectedEntryIndex);
-        entry.selectedValueIndex = entry.selectedValueIndex < entry.optionValues.size() - 1
+        entry.selectedValueIndex = entry.selectedValueIndex < entry.valueList.size() - 1
             ? entry.selectedValueIndex + 1 : 0;
         playSoundIfPresent(style.valueSelectedSound());
         entry.onValueSelectionChange();
