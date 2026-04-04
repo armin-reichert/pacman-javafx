@@ -15,12 +15,12 @@ import static java.util.Objects.requireNonNull;
  */
 public class RandomTextPicker {
 
-    private List<String> entries = List.of();
-    private int current;
+    private List<String> messages = List.of();
+    private int currentIndex;
 
     public RandomTextPicker(List<String> messages) {
         requireNonNull(messages);
-        createFromMessages(messages);
+        create(messages);
     }
 
     public RandomTextPicker(ResourceBundle bundle, String prefix) {
@@ -30,28 +30,28 @@ public class RandomTextPicker {
             .filter(key -> key.startsWith(prefix))
             .map(bundle::getString)
             .toList();
-        createFromMessages(messages);
+        create(messages);
     }
 
-    private void createFromMessages(List<String> messages) {
+    private void create(List<String> messages) {
         if (!messages.isEmpty()) {
-            this.entries = new ArrayList<>(messages); // shuffle() needs a mutable list
-            Collections.shuffle(this.entries);
+            this.messages = new ArrayList<>(messages); // shuffle() needs a mutable list
+            Collections.shuffle(this.messages);
         }
-        current = 0;
+        currentIndex = 0;
     }
 
-    public String nextText() {
-        if (entries.size() == 1) {
-            return entries.getFirst();
+    public String nextMessage() {
+        if (messages.size() == 1) {
+            return messages.getFirst();
         }
-        String result = entries.get(current);
-        if (++current == entries.size()) {
-            String last = entries.getLast();
+        String result = messages.get(currentIndex);
+        if (++currentIndex == messages.size()) {
+            String last = messages.getLast();
             do {
-                Collections.shuffle(entries);
-            } while (last.equals(entries.getFirst()));
-            current = 0;
+                Collections.shuffle(messages);
+            } while (last.equals(messages.getFirst()));
+            currentIndex = 0;
         }
         return result;
     }
