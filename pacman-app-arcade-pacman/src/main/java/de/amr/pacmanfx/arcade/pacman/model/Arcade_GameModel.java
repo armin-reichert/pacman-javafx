@@ -239,12 +239,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void whileEatingGhost(GameLevel level, long tick) {
-        if (tick < Arcade_GameState.TICK_EATING_GHOST_COMPLETE) {
+        if (tick < Arcade_GameState.TICK_EATING_GHOST_DURATION) {
             level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                 .forEach(ghost -> ghost.tick(this));
             level.blinking().tick();
         }
-        else if (tick == Arcade_GameState.TICK_EATING_GHOST_COMPLETE) {
+        else if (tick == Arcade_GameState.TICK_EATING_GHOST_DURATION) {
             level.pac().show();
             level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
             level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));

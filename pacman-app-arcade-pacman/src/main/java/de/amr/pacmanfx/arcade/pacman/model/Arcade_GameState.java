@@ -107,14 +107,13 @@ public enum Arcade_GameState implements State<Game> {
         @Override
         public void onEnter(Game game) {
             lock(); // UI triggers timeout
+            game.onLevelCompleted(game.optGameLevel().orElseThrow());
         }
 
         @Override
         public void onUpdate(Game game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
-            if (timer.tickCount() == 1) {
-                game.onLevelCompleted(level);
-            } else if (timer.hasExpired()) {
+            if (timer.hasExpired()) {
                 if (level.isDemoLevel()) {
                     // just in case: if demo level was completed, go back to intro scene
                     game.control().enterState(INTRO);
@@ -145,15 +144,15 @@ public enum Arcade_GameState implements State<Game> {
     EATING_GHOST {
         @Override
         public void onEnter(Game game) {
-            timer.restartTicks(TICK_EATING_GHOST_COMPLETE);
+            timer.restartTicks(TICK_EATING_GHOST_DURATION);
         }
 
         @Override
         public void onUpdate(Game game) {
-            final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.hasExpired()) {
                 game.control().resumePreviousState();
             } else {
+                final GameLevel level = game.optGameLevel().orElseThrow();
                 game.whileEatingGhost(level, timer.tickCount());
             }
         }
@@ -222,7 +221,7 @@ public enum Arcade_GameState implements State<Game> {
         }
     };
 
-    public static final short TICK_EATING_GHOST_COMPLETE = 60;
+    public static final short TICK_EATING_GHOST_DURATION = 60;
     public static final short TICK_NEW_GAME_SHOW_GUYS = 60;
     public static final short TICK_NEW_GAME_START_HUNTING = 240;
     public static final short TICK_RESUME_HUNTING = 120;
