@@ -76,7 +76,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
     private RenderInfo createRenderInfo(GameLevel level, Arcade_PlayScene2D playScene2D) {
         final var info = new RenderInfo();
         final boolean energizerVisible = level.blinking().state() == Pulse.State.ON;
-        final boolean mapIsEmpty = level.worldMap().foodLayer().uneatenFoodCount() == 0;
+        final boolean mapIsEmpty = level.worldMap().foodLayer().remainingFoodCount() == 0;
         info.put(CommonRenderInfoKey.ENERGIZER_VISIBLE, energizerVisible);
         info.put(CommonRenderInfoKey.MAP_EMPTY, mapIsEmpty);
         info.put(CommonRenderInfoKey.MAP_BRIGHT, false);

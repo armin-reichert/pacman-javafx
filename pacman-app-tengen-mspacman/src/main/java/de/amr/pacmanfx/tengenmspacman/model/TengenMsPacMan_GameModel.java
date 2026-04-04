@@ -881,7 +881,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         byte units = 0;
         TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) level.game();
         if (game.difficulty() == Difficulty.NORMAL && level.number() >= 5) {
-            int dotsLeft = level.worldMap().foodLayer().uneatenFoodCount();
+            int dotsLeft = level.worldMap().foodLayer().remainingFoodCount();
             if (dotsLeft <= 7) {
                 units = 5;
             } else if (dotsLeft <= 15) {

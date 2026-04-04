@@ -51,7 +51,7 @@ public class TestEatingFood {
             .filter(foodLayer::hasFoodAtTile)
             .filter(not(foodLayer::isEnergizerTile))
             .findFirst().ifPresent(tile -> {
-                foodLayer.registerFoodEatenAt(tile);
+                foodLayer.markFoodEatenAt(tile);
                 theGame().eatPellet(theGameLevel(), tile);
             });
     }
@@ -61,7 +61,7 @@ public class TestEatingFood {
         foodLayer.energizerTiles().stream()
             .filter(foodLayer::hasFoodAtTile)
             .findFirst().ifPresent(tile -> {
-                foodLayer.registerFoodEatenAt(tile);
+                foodLayer.markFoodEatenAt(tile);
                 theGame().eatEnergizer(level, tile);
             });
     }
@@ -72,23 +72,23 @@ public class TestEatingFood {
         final FoodLayer foodLayer = theGameLevel().worldMap().foodLayer();
 
         int eaten = foodLayer.eatenFoodCount();
-        int uneaten = foodLayer.uneatenFoodCount();
+        int uneaten = foodLayer.remainingFoodCount();
         eatNextPellet();
         assertEquals(eaten + 1, foodLayer.eatenFoodCount());
-        assertEquals(uneaten - 1, foodLayer.uneatenFoodCount());
+        assertEquals(uneaten - 1, foodLayer.remainingFoodCount());
 
         eaten = foodLayer.eatenFoodCount();
-        uneaten = foodLayer.uneatenFoodCount();
+        uneaten = foodLayer.remainingFoodCount();
         eatNextEnergizer(theGameLevel());
         assertEquals(eaten + 1, foodLayer.eatenFoodCount());
-        assertEquals(uneaten - 1, foodLayer.uneatenFoodCount());
+        assertEquals(uneaten - 1, foodLayer.remainingFoodCount());
     }
 
     @Test
     @DisplayName("Test Level Completion")
     public void testLevelCompletion() {
         final GameLevel level = theGameLevel();
-        while (level.worldMap().foodLayer().uneatenFoodCount() > 0) {
+        while (level.worldMap().foodLayer().remainingFoodCount() > 0) {
             assertFalse(theGame().isLevelCompleted(level));
             eatNextPellet();
             eatNextEnergizer(level);
@@ -102,22 +102,22 @@ public class TestEatingFood {
         final RedGhostShadow blinky = (RedGhostShadow) theGameLevel().ghost(RED_GHOST_SHADOW);
         final FoodLayer foodLayer = theGameLevel().worldMap().foodLayer();
         final LevelData data = theGame().levelData(theGameLevel().number());
-        while (foodLayer.uneatenFoodCount() > data.numDotsLeftElroy1()) {
+        while (foodLayer.remainingFoodCount() > data.numDotsLeftElroy1()) {
             assertEquals(ElroyState.Mode.ZERO, blinky.elroyState().mode());
             eatNextPellet();
         }
         assertEquals(ElroyState.Mode.ONE, blinky.elroyState().mode());
-        while (foodLayer.uneatenFoodCount() > data.numDotsLeftElroy2()) {
+        while (foodLayer.remainingFoodCount() > data.numDotsLeftElroy2()) {
             assertEquals(ElroyState.Mode.ONE, blinky.elroyState().mode());
             eatNextPellet();
         }
         assertEquals(ElroyState.Mode.TWO, blinky.elroyState().mode());
-        while (foodLayer.uneatenFoodCount() > foodLayer.energizerTiles().size()) {
+        while (foodLayer.remainingFoodCount() > foodLayer.energizerTiles().size()) {
             assertEquals(ElroyState.Mode.TWO, blinky.elroyState().mode());
             eatNextPellet();
         }
         assertEquals(ElroyState.Mode.TWO, blinky.elroyState().mode());
-        while (foodLayer.uneatenFoodCount() > 0) {
+        while (foodLayer.remainingFoodCount() > 0) {
             assertEquals(ElroyState.Mode.TWO, blinky.elroyState().mode());
             eatNextEnergizer(theGameLevel());
         }

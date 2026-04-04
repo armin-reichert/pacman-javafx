@@ -159,7 +159,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     protected void checkCruiseElroyActivation(GameLevel level) {
         final LevelData data = levelData(level.number());
-        final int uneatenFoodCount = level.worldMap().foodLayer().uneatenFoodCount();
+        final int uneatenFoodCount = level.worldMap().foodLayer().remainingFoodCount();
         if (uneatenFoodCount == data.numDotsLeftElroy1()) {
             optBlinky(level).ifPresent(blinky -> blinky.elroyState().setMode(ElroyState.Mode.ONE));
         } else if (uneatenFoodCount == data.numDotsLeftElroy2()) {
