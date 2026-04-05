@@ -15,7 +15,6 @@ import java.util.List;
 
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
-import static de.amr.pacmanfx.uilib.Ufx.toggleBoolean;
 
 public final class CheatActions {
 
@@ -100,13 +99,48 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
-            if (!game.isDemoLevelRunning()) {
+            setAutopilot(ui, !game.cheating().isUsingAutopilot());
+        }
+    };
+
+    public static final GameAction ACTION_ACTIVATE_AUTOPILOT = new GameAction("ACTIVATE_AUTOPILOT") {
+        @Override
+        public void execute(GameUI ui) {
+            setAutopilot(ui, true);
+        }
+    };
+
+    public static final GameAction ACTION_DEACTIVATE_AUTOPILOT = new GameAction("DEACTIVATE_AUTOPILOT") {
+        @Override
+        public void execute(GameUI ui) {
+            setAutopilot(ui, false);
+        }
+    };
+
+    private static void setAutopilot(GameUI ui, boolean on) {
+        final Game game = ui.gameContext().game();
+        if (on) {
+            if (game.isPlaying() && !game.isDemoLevelRunning()) {
                 game.cheating().raiseFlag();
             }
-            toggleBoolean(game.cheating().usingAutopilotProperty());
-            final boolean usingAutopilot = game.cheating().isUsingAutopilot();
-            ui.voicePlayer().playVoice(usingAutopilot ? GameUI_Resources.VOICE_AUTOPILOT_ON : GameUI_Resources.VOICE_AUTOPILOT_OFF);
-            ui.showFlashMessage(ui.translate(usingAutopilot ? "autopilot_on" : "autopilot_off"));
+        }
+        game.cheating().usingAutopilotProperty().set(on);
+        ui.voicePlayer().playVoice(on ? GameUI_Resources.VOICE_AUTOPILOT_ON : GameUI_Resources.VOICE_AUTOPILOT_OFF);
+        ui.showFlashMessage(ui.translate(on ? "autopilot_on" : "autopilot_off"));
+
+    }
+
+    public static final GameAction ACTION_ACTIVATE_IMMUNITY = new GameAction("ACTIVATE_IMMUNITY") {
+        @Override
+        public void execute(GameUI ui) {
+            setImmunity(ui, true);
+        }
+    };
+
+    public static final GameAction ACTION_DEACTIVATE_IMMUNITY = new GameAction("DEACTIVATE_IMMUNITY") {
+        @Override
+        public void execute(GameUI ui) {
+            setImmunity(ui, false);
         }
     };
 
@@ -114,13 +148,19 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
-            if (!game.isDemoLevelRunning()) {
-                game.cheating().raiseFlag();
-            }
-            toggleBoolean(game.cheating().immuneProperty());
-            final boolean immunityOn = game.cheating().immuneProperty().get();
-            ui.voicePlayer().playVoice(immunityOn ? GameUI_Resources.VOICE_IMMUNITY_ON : GameUI_Resources.VOICE_IMMUNITY_OFF);
-            ui.showFlashMessage(ui.translate(immunityOn ? "player_immunity_on" : "player_immunity_off"));
+            setImmunity(ui, !game.cheating().isImmune());
         }
     };
+
+    private static void setImmunity(GameUI ui, boolean on) {
+        final Game game = ui.gameContext().game();
+        if (on) {
+            if (game.isPlaying() && !game.isDemoLevelRunning()) {
+                game.cheating().raiseFlag();
+            }
+        }
+        game.cheating().immuneProperty().set(on);
+        ui.voicePlayer().playVoice(on ? GameUI_Resources.VOICE_IMMUNITY_ON : GameUI_Resources.VOICE_IMMUNITY_OFF);
+        ui.showFlashMessage(ui.translate(on ? "player_immunity_on" : "player_immunity_off"));
+    }
 }

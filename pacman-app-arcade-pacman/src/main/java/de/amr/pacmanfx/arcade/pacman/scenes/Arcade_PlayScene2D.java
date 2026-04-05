@@ -16,6 +16,7 @@ import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
+import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
@@ -77,11 +78,19 @@ public class Arcade_PlayScene2D extends GameScene2D {
         menu.addLocalizedTitleItem("pacman");
         menu.addLocalizedCheckBox(game.cheating().usingAutopilotProperty(), "autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
-            setAutopilot(game, checkBox.isSelected());
+            if (checkBox.isSelected()) {
+                CheatActions.ACTION_ACTIVATE_AUTOPILOT.execute(ui);
+            } else {
+                CheatActions.ACTION_DEACTIVATE_AUTOPILOT.execute(ui);
+            }
         });
         menu.addLocalizedCheckBox(game.cheating().immuneProperty(), "immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
-            setImmunity(game, checkBox.isSelected());
+            if (checkBox.isSelected()) {
+                CheatActions.ACTION_ACTIVATE_IMMUNITY.execute(ui);
+            } else {
+                CheatActions.ACTION_DEACTIVATE_IMMUNITY.execute(ui);
+            }
         });
         menu.addSeparator();
         menu.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
@@ -183,22 +192,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     // private
-
-    private void setAutopilot(Game game, boolean usingAutopilot) {
-        if (usingAutopilot && !game.isDemoLevelRunning()) {
-            game.cheating().raiseFlag();
-        }
-        ui.voicePlayer().playVoice(usingAutopilot ? GameUI_Resources.VOICE_AUTOPILOT_ON : GameUI_Resources.VOICE_AUTOPILOT_OFF);
-        ui.showFlashMessage(ui.translate(usingAutopilot ? "autopilot_on" : "autopilot_off"));
-    }
-
-    private void setImmunity(Game game, boolean immune) {
-        if (immune && !game.isDemoLevelRunning()) {
-            game.cheating().raiseFlag();
-        }
-        ui.voicePlayer().playVoice(immune ? GameUI_Resources.VOICE_IMMUNITY_ON : GameUI_Resources.VOICE_IMMUNITY_OFF);
-        ui.showFlashMessage(ui.translate(immune ? "player_immunity_on" : "player_immunity_off"));
-    }
 
     /**
      * If the 3D play scene is shown when the game level gets created, the onLevelCreated() method of this
