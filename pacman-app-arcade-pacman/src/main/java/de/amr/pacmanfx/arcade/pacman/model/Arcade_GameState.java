@@ -20,7 +20,7 @@ public enum Arcade_GameState implements State<Game> {
         public void onEnter(Game game) {
             lock(); // UI triggers timer expiration
             game.init();
-        }
+            game.hud().hide();        }
 
         @Override
         public void onUpdate(Game game) {

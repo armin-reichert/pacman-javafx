@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 
@@ -12,20 +13,15 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
  */
 public class Arcade_BootScene2D extends GameScene2D {
 
+    public static final int BOOT_TIME_SECONDS = 4;
+
     public Arcade_BootScene2D() {}
 
     @Override
-    public void doInit(Game game) {
-        game.hud().hide();
-   }
-
-    @Override
-    protected void doEnd(Game game) {}
-
-    @Override
     public void update(Game game) {
-        if (game.control().state().timer().atSecond(4)) {
-            game.control().state().expire();
+        final State<Game> gameState = game.control().state();
+        if (gameState.timer().atSecond(BOOT_TIME_SECONDS)) {
+            gameState.expire();
         }
     }
 }

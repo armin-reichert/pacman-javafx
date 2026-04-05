@@ -41,9 +41,6 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     }
 
     @Override
-    protected void doEnd(Game game) {}
-
-    @Override
     public void update(Game game) {
         final long tick = game.control().state().timer().tickCount();
         shadeOfBlue = shadeOfBlue(tick);

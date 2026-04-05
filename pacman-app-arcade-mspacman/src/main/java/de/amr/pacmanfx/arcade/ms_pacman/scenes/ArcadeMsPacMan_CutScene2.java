@@ -65,9 +65,6 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
-    protected void doEnd(Game game) {}
-
-    @Override
     public void update(Game game) {
         switch (state) {
             case SceneState.CLAPPERBOARD -> updateStateClapperboard();

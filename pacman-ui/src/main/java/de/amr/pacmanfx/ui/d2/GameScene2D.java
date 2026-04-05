@@ -94,7 +94,7 @@ public abstract class GameScene2D implements GameScene {
      *
      * @param game the active game instance
      */
-    protected abstract void doInit(Game game);
+    protected void doInit(Game game) {}
 
     /**
      * Called when the scene ends.
@@ -103,7 +103,7 @@ public abstract class GameScene2D implements GameScene {
      *
      * @param game the active game instance
      */
-    protected abstract void doEnd(Game game);
+    protected void doEnd(Game game) {}
 
     public void acceptGameLevel(GameLevel gameLevel) {
         // implemented by PlayScene2D

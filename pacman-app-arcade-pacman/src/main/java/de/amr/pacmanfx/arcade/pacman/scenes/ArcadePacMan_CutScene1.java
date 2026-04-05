@@ -52,9 +52,6 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    protected void doEnd(Game game) {}
-
-    @Override
     public void update(Game game) {
         ++tick;
         if (tick == ANIMATION_START_TICK) {

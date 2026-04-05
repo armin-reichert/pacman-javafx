@@ -39,14 +39,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public Arcade_PlayScene2D() {}
 
     @Override
-    protected void doInit(Game game) {
-        //game.hud().credit(false).score(true).levelCounter(true).livesCounter(true).show();
-    }
-
-    @Override
-    protected void doEnd(Game game) {}
-
-    @Override
     public void update(Game game) {
         game.optGameLevel().ifPresent(level -> {
             updateHUD(level);
