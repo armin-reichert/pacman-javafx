@@ -162,9 +162,9 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
         gameContext.gameVariantNameProperty().addListener((_, _, _) -> {
             final Game game = gameContext.game();
-            statusIconBox.iconAutopilot().visibleProperty().bind(game.usingAutopilotProperty());
-            statusIconBox.iconCheated()  .visibleProperty().bind(game.cheatUsedProperty());
-            statusIconBox.iconImmune()   .visibleProperty().bind(game.immuneProperty());
+            statusIconBox.iconAutopilot().visibleProperty().bind(game.cheating().usingAutopilotProperty());
+            statusIconBox.iconCheated()  .visibleProperty().bind(game.cheating().cheatUsedProperty());
+            statusIconBox.iconImmune()   .visibleProperty().bind(game.cheating().immuneProperty());
         });
     }
 

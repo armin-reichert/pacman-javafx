@@ -75,11 +75,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public Optional<GameUI_ContextMenu> supplyContextMenu(Game game) {
         final var menu = new GameUI_ContextMenu(ui);
         menu.addLocalizedTitleItem("pacman");
-        menu.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot").setOnAction(e -> {
+        menu.addLocalizedCheckBox(game.cheating().usingAutopilotProperty(), "autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             setAutopilot(game, checkBox.isSelected());
         });
-        menu.addLocalizedCheckBox(game.immuneProperty(), "immunity").setOnAction(e -> {
+        menu.addLocalizedCheckBox(game.cheating().immuneProperty(), "immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             setImmunity(game, checkBox.isSelected());
         });
@@ -186,7 +186,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private void setAutopilot(Game game, boolean usingAutopilot) {
         if (usingAutopilot && !game.isDemoLevelRunning()) {
-            game.raiseCheatFlag();
+            game.cheating().raiseFlag();
         }
         ui.voicePlayer().playVoice(usingAutopilot ? GameUI_Resources.VOICE_AUTOPILOT_ON : GameUI_Resources.VOICE_AUTOPILOT_OFF);
         ui.showFlashMessage(ui.translate(usingAutopilot ? "autopilot_on" : "autopilot_off"));
@@ -194,7 +194,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private void setImmunity(Game game, boolean immune) {
         if (immune && !game.isDemoLevelRunning()) {
-            game.raiseCheatFlag();
+            game.cheating().raiseFlag();
         }
         ui.voicePlayer().playVoice(immune ? GameUI_Resources.VOICE_IMMUNITY_ON : GameUI_Resources.VOICE_IMMUNITY_OFF);
         ui.showFlashMessage(ui.translate(immune ? "player_immunity_on" : "player_immunity_off"));

@@ -273,7 +273,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void init() {
         setInitialLifeCount(3);
-        clearCheatFlag();
+        clearFlag();
         immuneProperty().set(false);
         usingAutopilotProperty().set(false);
         prepareNewGame();

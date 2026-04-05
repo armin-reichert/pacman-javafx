@@ -165,8 +165,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         miScrolling.setToggleGroup(toggleGroup);
 
         menu.addLocalizedTitleItem("pacman");
-        menu.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot");
-        menu.addLocalizedCheckBox(game.immuneProperty(), "immunity");
+        menu.addLocalizedCheckBox(game.cheating().usingAutopilotProperty(), "autopilot");
+        menu.addLocalizedCheckBox(game.cheating().immuneProperty(), "immunity");
         menu.addSeparator();
         menu.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
         menu.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");

@@ -95,7 +95,7 @@ public final class CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
-            game.clearCheatFlag(); //TODO needed?
+            game.cheating().clearFlag(); //TODO needed?
             ui.quitCurrentGameScene();
         }
     };

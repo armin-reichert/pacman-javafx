@@ -42,21 +42,23 @@ import static java.util.Objects.requireNonNull;
  * <p>The model is deterministic and tick-driven: each call to {@link #doHuntingStep(GameLevel)} advances the
  * simulation by one frame.</p>
  */
-public abstract class AbstractGameModel implements Game {
+public abstract class AbstractGameModel implements Game, Cheating {
 
     /** Default collision strategy used by the original arcade games. */
     public static final CollisionStrategy DEFAULT_COLLISION_STRATEGY = CollisionStrategy.SAME_TILE;
 
+    // Cheating
     private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
+    private final BooleanProperty immune = new SimpleBooleanProperty(false);
+    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
+
     private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
     private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
-    private final BooleanProperty immune = new SimpleBooleanProperty(false);
     private final IntegerProperty initialLifeCount = new SimpleIntegerProperty(3);
     private final ObjectProperty<GameLevel> level = new SimpleObjectProperty<>();
     private final IntegerProperty lifeCount = new SimpleIntegerProperty(0);
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
-    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
 
     /** The game control (state machine) driving this model. */
     protected GameControl gameControl;
@@ -196,8 +198,13 @@ public abstract class AbstractGameModel implements Game {
     public abstract float ghostSpeedTunnel(int levelNumber);
 
     /* -------------------------------------------------------------------------
-     * Game interface implementation
+     * Cheating interface implementation
      * ---------------------------------------------------------------------- */
+
+    @Override
+    public Cheating cheating() {
+        return this;
+    }
 
     @Override
     public BooleanProperty cheatUsedProperty() {
@@ -213,6 +220,10 @@ public abstract class AbstractGameModel implements Game {
     public BooleanProperty usingAutopilotProperty() {
         return usingAutopilot;
     }
+
+    /* -------------------------------------------------------------------------
+     * Game interface implementation
+     * ---------------------------------------------------------------------- */
 
     @Override
     public final GameControl control() {
@@ -694,7 +705,7 @@ public abstract class AbstractGameModel implements Game {
     protected void clearCheatingProperties() {
         immuneProperty().set(false);
         usingAutopilotProperty().set(false);
-        clearCheatFlag();
+        cheating().clearFlag();
     }
 
     /**
@@ -706,8 +717,8 @@ public abstract class AbstractGameModel implements Game {
     protected void updateCheatingProperties(GameLevel level) {
         level.pac().immuneProperty().bind(immuneProperty());
         level.pac().usingAutopilotProperty().bind(usingAutopilotProperty());
-        if (isImmune() || isUsingAutopilot()) {
-            raiseCheatFlag();
+        if (cheating().isImmune() || cheating().isUsingAutopilot()) {
+            cheating().raiseFlag();
         }
     }
 

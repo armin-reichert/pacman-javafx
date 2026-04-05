@@ -257,32 +257,5 @@ public interface Game {
     /** @return the number of the last cut scene shown */
     int lastCutSceneNumber();
 
-    /** Marks that a cheat has been used in this game session. */
-    default void raiseCheatFlag() {
-        cheatUsedProperty().set(true);
-    }
-
-    /** Clears the cheat‑used flag. */
-    default void clearCheatFlag() {
-        cheatUsedProperty().set(false);
-    }
-
-    /** @return property indicating whether a cheat has been used */
-    BooleanProperty cheatUsedProperty();
-
-    /** @return property indicating whether Pac‑Man is immune to death */
-    BooleanProperty immuneProperty();
-
-    /** @return {@code true} if Pac‑Man is currently immune */
-    default boolean isImmune() {
-        return immuneProperty().get();
-    }
-
-    /** @return property indicating whether autopilot mode is active */
-    BooleanProperty usingAutopilotProperty();
-
-    /** @return {@code true} if autopilot is currently active */
-    default boolean isUsingAutopilot() {
-        return usingAutopilotProperty().get();
-    }
+    Cheating cheating();
 }

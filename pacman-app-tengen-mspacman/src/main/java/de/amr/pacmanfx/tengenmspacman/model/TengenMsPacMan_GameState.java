@@ -242,7 +242,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
         @Override
         public void onExit(Game game) {
             game.clearLevelMessage();
-            game.clearCheatFlag();
+            game.cheating().clearFlag();
         }
     },
 
