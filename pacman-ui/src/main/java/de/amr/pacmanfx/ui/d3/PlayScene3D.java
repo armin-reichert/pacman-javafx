@@ -179,7 +179,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
 
     @Override
     public void end(Game game) {
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::stopAll);
+        soundEffects().ifPresent(GameSoundEffects::stopAll);
         perspectives.activeIDProperty().unbind();
         PROPERTY_3D_DRAW_MODE.removeListener(drawModeChangeListener);
         //removeAndDisposeGameLevel3D();
@@ -204,7 +204,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
         level3D.entities().all().forEach(e -> e.update(level));
         updateHUD3D(level);
         perspectives.updatePerspective(level);
-        ui.currentConfig().soundEffects().ifPresent(soundEffects -> {
+        soundEffects().ifPresent(soundEffects -> {
             soundEffects.setEnabled(!level.isDemoLevel());
             soundEffects.playLevelPlayingSound(level);
         });

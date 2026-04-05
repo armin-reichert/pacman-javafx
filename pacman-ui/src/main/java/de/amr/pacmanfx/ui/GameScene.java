@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.SubScene;
 import javafx.scene.input.ScrollEvent;
 
@@ -32,6 +33,13 @@ public interface GameScene extends GameEventListener, Disposable {
         return Optional.empty();
     }
 
+    /**
+     * @return the (optional) game sound effects
+     */
+    default Optional<GameSoundEffects> soundEffects() {
+        return ui().currentConfig().soundEffects();
+
+    }
     /**
      * @return the global context providing access to some global data as the currently selected game variant or the
      *         coin mechanism used by Arcade games

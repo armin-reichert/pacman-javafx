@@ -74,10 +74,10 @@ public class LevelCompletedAnimation extends ManagedAnimation {
             pauseSecThen(0.5, () -> level.pac().hide()),
             pauseSec(0.5),
             levelRotation(rotationAxis),
-            pauseSecThen(0.5, () -> level3D.uiConfig().soundEffects().ifPresent(GameSoundEffects::playLevelCompleteSound)),
+            pauseSecThen(0.5, () -> level3D.soundEffects().ifPresent(GameSoundEffects::playLevelCompleteSound)),
             pauseSec(0.5),
             mazeWallsAndHouseAnimation(maze3D),
-            pauseSecThen(1.0, () -> level3D.uiConfig().soundEffects().ifPresent(GameSoundEffects::playLevelChangedSound))
+            pauseSecThen(1.0, () -> level3D.soundEffects().ifPresent(GameSoundEffects::playLevelChangedSound))
         );
     }
 

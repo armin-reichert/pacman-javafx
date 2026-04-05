@@ -139,7 +139,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
                 dynamicCamera.update(TS(level.worldMap().numRows()), level.pac());
             }
             updateHUD(level);
-            ui.currentConfig().soundEffects().ifPresent(soundEffects -> {
+            soundEffects().ifPresent(soundEffects -> {
                 soundEffects.setEnabled(!level.isDemoLevel());
                 soundEffects.playLevelPlayingSound(level);
             });
@@ -187,17 +187,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onBonusActivated(BonusActivatedEvent e) {
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
+        soundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
+        soundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent e) {
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
+        soundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
     @Override
@@ -215,7 +215,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         final Game game = e.game();
         final boolean silent = game.isDemoLevelRunning() || game.control().state() instanceof TestState;
         if (!silent) {
-            ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playGameReadySound);
+            soundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
     }
 
@@ -225,12 +225,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         switch (e.newState()) {
             case TengenMsPacMan_GameState.LEVEL_COMPLETE -> {
                 final GameLevel level = game.optGameLevel().orElseThrow();
-                ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::stopAll);
+                soundEffects().ifPresent(GameSoundEffects::stopAll);
                 playLevelCompleteAnimation(level);
             }
             case TengenMsPacMan_GameState.GAME_OVER -> {
                 final GameLevel level = game.optGameLevel().orElseThrow();
-                ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::stopAll);
+                soundEffects().ifPresent(GameSoundEffects::stopAll);
                 dynamicCamera.enterManualMode();
                 dynamicCamera.setToTopPosition();
                 level.optMessage().ifPresent(this::startGameOverMessageAnimation);
@@ -241,7 +241,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGhostEaten(GhostEatenEvent e) {
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
+        soundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
     }
 
     @Override
@@ -264,7 +264,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void onPacDying(PacDyingEvent e) {
         dynamicCamera.enterManualMode();
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
+        soundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
     }
 
     @Override
@@ -277,17 +277,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+        soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
     }
 
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
+        soundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
 
     @Override
     public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
+        soundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
 
     @Override

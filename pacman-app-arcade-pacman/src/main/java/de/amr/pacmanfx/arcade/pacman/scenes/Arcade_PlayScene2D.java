@@ -244,8 +244,4 @@ public class Arcade_PlayScene2D extends GameScene2D {
             ghostAnimations.reset();
         }));
     }
-
-    private Optional<GameSoundEffects> soundEffects() {
-        return ui.currentConfig().soundEffects();
-    }
 }
