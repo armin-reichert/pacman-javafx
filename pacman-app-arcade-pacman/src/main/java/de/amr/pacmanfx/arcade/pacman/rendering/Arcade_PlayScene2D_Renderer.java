@@ -81,10 +81,9 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
         info.put(CommonRenderInfoKey.MAP_EMPTY, mapIsEmpty);
         info.put(CommonRenderInfoKey.MAP_BRIGHT, false);
         info.put(CommonRenderInfoKey.MAP_FLASHING, false);
-        playScene2D.optLevelCompletedAnimation().flatMap(LevelCompletedAnimation::flashingState).ifPresent(flashingState -> {
+        playScene2D.optFlashingState().ifPresent(flashingState -> {
             info.put(CommonRenderInfoKey.MAP_BRIGHT,   flashingState.isHighlighted());
             info.put(CommonRenderInfoKey.MAP_FLASHING, flashingState.isFlashing());
-
         });
         return info;
     }

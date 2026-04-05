@@ -37,8 +37,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     public Arcade_PlayScene2D() {}
 
-    public Optional<LevelCompletedAnimation> optLevelCompletedAnimation() {
-        return Optional.ofNullable(levelCompletedAnimation);
+    // Expose the animation state to the scene renderer
+    public Optional<LevelCompletedAnimation.FlashingState> optFlashingState() {
+        return Optional.ofNullable(levelCompletedAnimation).flatMap(LevelCompletedAnimation::flashingState);
     }
 
     @Override
