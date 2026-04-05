@@ -299,7 +299,7 @@ public class PlayView extends StackPane implements View {
             Logger.info("Cleanup of game variant {} complete.", oldGameVariantName);
         }
         if (newGameVariantName != null) {
-            Logger.info("Initialize game variant {}...", oldGameVariantName);
+            Logger.info("Initialize game variant {}...", newGameVariantName);
             final Game game = ui.gameContext().gameByVariantName(newGameVariantName);
             game.addGameEventListener(this);
 
