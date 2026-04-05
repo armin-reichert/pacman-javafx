@@ -128,7 +128,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
-        final Game game = gameContext().game();
+        final Game game = e.game();
         if (e.newState() == Arcade_GameState.LEVEL_COMPLETE) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             soundEffects().ifPresent(GameSoundEffects::stopAll);
