@@ -3,10 +3,9 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.lib.fsm.State;
+import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
@@ -34,17 +33,11 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
     private final SpriteSheet<?> spriteSheet;
     private final Rectangle2D spriteRegion;
 
-    public Arcade_BootScene2D_Renderer(
-        GameScene2D scene,
-        Canvas canvas,
-        SpriteSheet<?> spriteSheet,
-        Rectangle2D spriteRegion)
-    {
+    public Arcade_BootScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet, Rectangle2D spriteRegion) {
         super(canvas);
         requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);
         this.spriteRegion = requireNonNull(spriteRegion);
-
         createDefaultDebugInfoRenderer(scene, canvas);
     }
 
@@ -55,30 +48,36 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
 
     @Override
     public void draw(GameScene2D scene) {
-        final State<Game> state = scene.gameContext().game().control().state();
-        final boolean onEveryFourthTick = state.timer().tickCount() % 4 == 0;
-        if (state.timer().tickCount() == 1) {
-            clearCanvas();
-        }
-        else if (state.timer().betweenSeconds(1, 2) && onEveryFourthTick) {
-            showRandomHexDigits(scene);
-        }
-        else if (state.timer().betweenSeconds(2, 3.5) && onEveryFourthTick) {
-            showRandomSpriteFragments(scene);
-        }
-        else if (state.timer().atSecond(3.5)) {
-            showGrid(scene);
+        final Arcade_BootScene2D bootScene = (Arcade_BootScene2D) scene;
+        final long tick = scene.gameContext().game().control().state().timer().tickCount();
+        switch (bootScene.state()) {
+            case SHOWING_NOTHING -> clearCanvas();
+            case SHOWING_HEX_CODES -> {
+                if (tick % 4 == 0) {
+                    final Vector2i size = scene.unscaledSize();
+                    drawRandomHexDigits(size.x(), size.y());
+                }
+            }
+            case SHOWING_SPRITE_FRAGMENTS -> {
+                if (tick % 4 == 0) {
+                    final Vector2i size = scene.unscaledSize();
+                    drawRandomSpriteFragments(size.x(), size.y());
+                }
+            }
+            case SHOWING_GRID -> {
+                final Vector2i size = scene.unscaledSize();
+                drawGrid(size.x(), size.y());
+            }
         }
         if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }
 
-    private void showRandomHexDigits(GameScene2D scene) {
-        final Vector2i sceneSize = scene.unscaledSize();
-        final int numRows = sceneSize.y() / TS;
-        final int numCols = sceneSize.x() / TS;
-        fillCanvas(backgroundColor());
+    private void drawRandomHexDigits(int width, int height) {
+        final int numRows = height / TS;
+        final int numCols = width / TS;
+        clearCanvas();
         ctx.setFill(ARCADE_WHITE);
         ctx.setFont(arcadeFont8());
         for (int row = 0; row < numRows; ++row) {
@@ -90,11 +89,10 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
         }
     }
 
-    private void showRandomSpriteFragments(GameScene2D scene) {
-        final Vector2i sceneSize = scene.unscaledSize();
-        final int numRows = sceneSize.y() / GRID_SIZE;
-        final int numCols = sceneSize.x() / GRID_SIZE;
-        fillCanvas(backgroundColor());
+    private void drawRandomSpriteFragments(int width, int height) {
+        final int numRows = height / GRID_SIZE;
+        final int numCols = width / GRID_SIZE;
+        clearCanvas();
         for (int row = 0; row < numRows; ++row) {
             if (randomInt(0, 100) < 20) continue;
             final RectShort fragment1 = randomSpriteFragment();
@@ -114,14 +112,13 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
         return new RectShort((short) xMin, (short) yMin, GRID_SIZE, GRID_SIZE);
     }
 
-    private void showGrid(GameScene2D scene) {
-        final Vector2i sceneSize = scene.unscaledSize();
-        final double gridWidth = scaled(sceneSize.x());
-        final double gridHeight = scaled(sceneSize.y());
+    private void drawGrid(int width, int height) {
+        final double gridWidth = scaled(width);
+        final double gridHeight = scaled(height);
         final int numRows = (int) (gridHeight / GRID_SIZE);
         final int numCols = (int) (gridWidth / GRID_SIZE);
         final double thin = scaled(2), thick = scaled(4);
-        fillCanvas(backgroundColor());
+        clearCanvas();
         ctx.setStroke(ARCADE_WHITE);
         for (int row = 0; row <= numRows; ++row) {
             final double y = scaled(row * GRID_SIZE);

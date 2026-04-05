@@ -13,15 +13,33 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
  */
 public class Arcade_BootScene2D extends GameScene2D {
 
-    public static final int BOOT_TIME_SECONDS = 4;
+    public enum SceneState {
+        SHOWING_NOTHING,
+        SHOWING_HEX_CODES,
+        SHOWING_SPRITE_FRAGMENTS,
+        SHOWING_GRID
+    }
 
-    public Arcade_BootScene2D() {}
+    private SceneState state;
+
+    public SceneState state() {
+        return state;
+    }
+
+    @Override
+    protected void doInit(Game game) {
+        state = SceneState.SHOWING_NOTHING;
+    }
 
     @Override
     public void update(Game game) {
         final State<Game> gameState = game.control().state();
-        if (gameState.timer().atSecond(BOOT_TIME_SECONDS)) {
-            gameState.expire();
+        final long tick = gameState.timer().tickCount();
+        switch ((int) tick) {
+            case 60 -> state = SceneState.SHOWING_HEX_CODES;
+            case 120 -> state = SceneState.SHOWING_SPRITE_FRAGMENTS;
+            case 210 -> state = SceneState.SHOWING_GRID;
+            case 240 -> gameState.expire();
         }
     }
 }
