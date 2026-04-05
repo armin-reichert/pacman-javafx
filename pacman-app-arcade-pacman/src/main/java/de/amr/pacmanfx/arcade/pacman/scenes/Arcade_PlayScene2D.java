@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
@@ -37,11 +38,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     public Arcade_PlayScene2D() {}
 
-    // Expose the animation state to the scene renderer
-    public Optional<LevelCompletedAnimation.FlashingState> optFlashingState() {
-        return Optional.ofNullable(levelCompletedAnimation).flatMap(LevelCompletedAnimation::flashingState);
-    }
-
     @Override
     protected void doInit(Game game) {
         game.hud().credit(false).score(true).levelCounter(true).livesCounter(true).show();
@@ -54,9 +50,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public void update(Game game) {
         game.optGameLevel().ifPresent(level -> {
             updateHUD(level);
-            ui.currentConfig().soundEffects().ifPresent(soundEffects -> {
-                soundEffects.setEnabled(!level.isDemoLevel());
-                soundEffects.playLevelPlayingSound(level);
+            soundEffects().ifPresent(sfx -> {
+                sfx.setEnabled(!level.isDemoLevel());
+                sfx.playLevelPlayingSound(level);
             });
         });
     }
@@ -68,8 +64,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
      */
     @Override
     public Vector2i unscaledSize() {
-        return gameContext().game().optGameLevel().map(GameLevel::worldMap).map(WorldMap::terrainLayer)
-            .map(TerrainLayer::sizeInPixel).orElse(ARCADE_MAP_SIZE_IN_PIXELS);
+        return gameContext().game().optGameLevel()
+            .map(GameLevel::worldMap)
+            .map(WorldMap::terrainLayer)
+            .map(TerrainLayer::sizeInPixel)
+            .orElse(ARCADE_MAP_SIZE_IN_PIXELS);
     }
 
     @Override
@@ -103,22 +102,22 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onBonusActivated(BonusActivatedEvent e) {
         // This is the sound in Ms. Pac-Man when the bonus wanders the maze. In Pac-Man, this is a no-op.
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
+        soundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
+        soundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent e) {
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
+        soundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
     @Override
     public void onCreditAdded(CreditAddedEvent e) {
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+        soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
     }
 
     @Override
@@ -131,7 +130,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final Game game = e.game();
         final boolean silent = game.isDemoLevelRunning() || game.control().state() instanceof TestState;
         if (!silent) {
-            ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playGameReadySound);
+            soundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
     }
 
@@ -140,18 +139,18 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final Game game = gameContext().game();
         if (e.newState() == Arcade_GameState.LEVEL_COMPLETE) {
             final GameLevel level = game.optGameLevel().orElseThrow();
-            ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::stopAll);
+            soundEffects().ifPresent(GameSoundEffects::stopAll);
             createAndPlayLevelCompletedAnimation(level);
         }
         else if (e.newState() == Arcade_GameState.GAME_OVER) {
-            ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playGameOverSound);
+            soundEffects().ifPresent(GameSoundEffects::playGameOverSound);
             game.hud().credit(true);
         }
     }
 
     @Override
     public void onGhostEaten(GhostEatenEvent e) {
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
+        soundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
     }
 
     @Override
@@ -167,31 +166,36 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacDying(PacDyingEvent e) {
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
+        soundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
     }
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
         final long tick = gameContext().clock().tickCount();
-        ui.currentConfig().soundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
+        soundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+        soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
     }
 
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
+        soundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
 
     @Override
     public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
-        ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
+        soundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
 
-    // private
+    // others
+
+    // Expose the animation state to the scene renderer
+    public Optional<LevelCompletedAnimation.FlashingState> optFlashingState() {
+        return Optional.ofNullable(levelCompletedAnimation).flatMap(LevelCompletedAnimation::flashingState);
+    }
 
     /**
      * If the 3D play scene is shown when the game level gets created, the onLevelCreated() method of this
@@ -215,6 +219,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
         Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
+    // Private
+
     private void updateHUD(GameLevel level) {
         final Game game = level.game();
         // While Pac-Man is still invisible on level start, one Pac symbol more is shown in the lives counter
@@ -237,5 +243,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
             ghostAnimations.select(Ghost.AnimationID.GHOST_NORMAL);
             ghostAnimations.reset();
         }));
+    }
+
+    private Optional<GameSoundEffects> soundEffects() {
+        return ui.currentConfig().soundEffects();
     }
 }
