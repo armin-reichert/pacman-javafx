@@ -85,6 +85,11 @@ public enum TengenMsPacMan_GameState implements State<Game> {
 
     STARTING_GAME_OR_LEVEL {
         @Override
+        public void onEnter(Game game) {
+            game.hud().credit(false).score(true).levelCounter(true).livesCounter(true).show();
+        }
+
+        @Override
         public void onUpdate(Game game) {
             final long tick = timer.tickCount();
             if (game.isPlaying()) {
@@ -250,6 +255,16 @@ public enum TengenMsPacMan_GameState implements State<Game> {
         @Override
         public void onEnter(Game game) {
             lock();
+            final var tengenHUD = (TengenMsPacMan_HeadsUpDisplay) game.hud();
+            final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game;
+            final boolean lastCutScene =
+                game.optGameLevel().orElseThrow().cutSceneNumber() == tengenGame.lastCutSceneNumber();
+            if (tengenGame.mapCategory() == MapCategory.ARCADE || lastCutScene) {
+                tengenHUD.hide();
+            } else {
+                tengenHUD.show();
+                tengenHUD.gameOptions(false).score(false).levelCounter(true).livesCounter(false).show();
+            }
         }
 
         @Override
@@ -258,6 +273,19 @@ public enum TengenMsPacMan_GameState implements State<Game> {
                 game.control().enterState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
             }
         }
+
+        @Override
+        public void onExit(Game game) {
+            final var tengenHUD = (TengenMsPacMan_HeadsUpDisplay) game.hud();
+            final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game;
+            if (tengenGame.mapCategory() == MapCategory.ARCADE) {
+                tengenHUD.hide();
+            } else {
+                tengenHUD.show();
+                tengenHUD.all(true).gameOptions(true).score(true).levelCounter(true).livesCounter(false).show();
+            }
+        }
+
     };
 
     final TickTimer timer;

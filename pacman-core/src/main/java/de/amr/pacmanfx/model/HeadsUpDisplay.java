@@ -22,33 +22,28 @@ public class HeadsUpDisplay {
         this.coinMechanism = Objects.requireNonNull(coinMechanism);
     }
 
-    @SuppressWarnings("unchecked")
-    public <HUD extends HeadsUpDisplay> HUD all(boolean visible) {
+    public HeadsUpDisplay all(boolean visible) {
         return score(visible).levelCounter(visible).livesCounter(visible);
     }
 
-    @SuppressWarnings("unchecked")
-    public <HUD extends HeadsUpDisplay> HUD levelCounter(boolean visible) {
+    public HeadsUpDisplay levelCounter(boolean visible) {
         levelCounterVisible = visible;
-        return (HUD) this;
+        return this;
     }
 
-    @SuppressWarnings("unchecked")
-    public <HUD extends HeadsUpDisplay> HUD livesCounter(boolean visible) {
+    public HeadsUpDisplay livesCounter(boolean visible) {
         livesCounterVisible = visible;
-        return (HUD) this;
+        return this;
     }
 
-    @SuppressWarnings("unchecked")
-    public <HUD extends HeadsUpDisplay> HUD score(boolean visible) {
+    public HeadsUpDisplay score(boolean visible) {
         scoreVisible = visible;
-        return (HUD) this;
+        return this;
     }
 
-    @SuppressWarnings("unchecked")
-    public <HUD extends HeadsUpDisplay> HUD credit(boolean visible) {
+    public HeadsUpDisplay credit(boolean visible) {
         creditVisible = visible;
-        return (HUD) this;
+        return this;
     }
 
     public IntegerProperty numCoinsProperty() {

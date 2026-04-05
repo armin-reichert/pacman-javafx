@@ -20,6 +20,12 @@ public class TengenMsPacMan_HeadsUpDisplay extends HeadsUpDisplay {
         return this;
     }
 
+    @Override
+    public TengenMsPacMan_HeadsUpDisplay all(boolean visible) {
+        super.all(visible);
+        return levelNumber(visible).gameOptions(visible);
+    }
+
     public boolean gameOptionsVisible() {
         return gameOptionsVisible;
     }

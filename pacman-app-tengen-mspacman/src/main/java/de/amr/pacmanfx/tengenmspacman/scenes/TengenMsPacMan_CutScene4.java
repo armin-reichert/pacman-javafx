@@ -64,8 +64,6 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     protected void doInit(Game game) {
         final UIConfig uiConfig = ui.currentConfig();
 
-        game.hud().hide();
-
         clapperboard = new Clapperboard(4, "THE END");
         clapperboard.setPosition(TS(3), TS(10));
         clapperboard.setVisible(true);
@@ -155,6 +153,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                     msPacMan.hide();
                 }
                 case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(tick);
+                case 1500 -> ui.soundManager().stopAll();
                 case TICK_EXPIRES -> game.control().enterState(TengenMsPacMan_GameState.SETTING_OPTIONS_FOR_START);
             }
         }
@@ -172,7 +171,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniors.add(junior);
         juniorCreationTime.add(tick);
 
-        String id = SoundID.INTERMISSION_1 + ".junior." + randomInt(1, 3); // 1 or 2
+        String id = SoundID.INTERMISSION_4 + ".junior." + randomInt(1, 3); // 1 or 2
         ui.soundManager().loop(id);
 
         Logger.info("Junior spawned at tick {}", tick);

@@ -9,9 +9,6 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HeadsUpDisplay;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -75,14 +72,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
-        final var tengenGame = (TengenMsPacMan_GameModel) game;
         final UIConfig uiConfig = ui.currentConfig();
-        final var hud = (TengenMsPacMan_HeadsUpDisplay) game.hud();
-        if (tengenGame.mapCategory() == MapCategory.ARCADE) {
-            hud.hide();
-        } else {
-            hud.gameOptions(false).score(false).levelCounter(true).livesCounter(false).show();
-        }
 
         actionBindings.registerByKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, JOYPAD.key(JoypadButton.START));
 

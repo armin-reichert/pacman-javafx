@@ -11,9 +11,6 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HeadsUpDisplay;
 import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
@@ -87,16 +84,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
-        final var tengenGame = (TengenMsPacMan_GameModel) game;
         final UIConfig uiConfig = ui.currentConfig();
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
-
-        final var hud = (TengenMsPacMan_HeadsUpDisplay) game.hud();
-        if (tengenGame.mapCategory() == MapCategory.ARCADE) {
-            hud.hide();
-        } else {
-            hud.gameOptions(false).score(false).levelCounter(true).livesCounter(false).show();
-        }
 
         actionBindings.registerByKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, JOYPAD.key(JoypadButton.START));
 
