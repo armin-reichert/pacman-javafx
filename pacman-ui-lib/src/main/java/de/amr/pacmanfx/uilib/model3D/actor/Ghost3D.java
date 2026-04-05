@@ -238,8 +238,9 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
     }
 
     public void stopAnimations() {
-        animations.optAnimation(AnimationID.GHOST_FLASHING.forGhost(ghost)).ifPresent(ManagedAnimation::stop);
-        animations.optAnimation(AnimationID.GHOST_DRESS.forGhost(ghost)).ifPresent(ManagedAnimation::stop);
+        for (AnimationID animationID : AnimationID.values()) {
+            animations.optAnimation(animationID.forGhost(ghost)).ifPresent(ManagedAnimation::stop);
+        }
     }
 
     public void animateDress(boolean on) {
