@@ -78,8 +78,6 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         final UIConfig uiConfig = ui.currentConfig();
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
-        game.hud().credit(false).score(true).levelCounter(true).livesCounter(false).show();
-
         pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations());
 

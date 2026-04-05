@@ -45,7 +45,6 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     @Override
     public void doInit(Game game) {
         final UIConfig uiConfig = ui.currentConfig();
-        game.hud().credit(false).score(true).levelCounter(true).livesCounter(false).show();
         pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations());
         blinky = uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW);

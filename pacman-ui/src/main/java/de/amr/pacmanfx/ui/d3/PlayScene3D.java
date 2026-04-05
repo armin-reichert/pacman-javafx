@@ -171,7 +171,6 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
 
     @Override
     public void init(Game game) {
-        game.hud().score(true).show();
         perspectives.activeIDProperty().bind(GameUI.PROPERTY_3D_PERSPECTIVE_ID);
         subScene.setFill(Color.BLACK);
         PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);

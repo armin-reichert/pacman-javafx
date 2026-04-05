@@ -65,6 +65,11 @@ public enum Arcade_GameState implements State<Game> {
 
     STARTING_GAME_OR_LEVEL {
         @Override
+        public void onEnter(Game game) {
+            game.hud().credit(false).score(true).levelCounter(true).livesCounter(true).show();
+        }
+
+        @Override
         public void onUpdate(Game game) {
             final long tick = timer.tickCount();
             if (game.isPlaying()) {
@@ -217,6 +222,7 @@ public enum Arcade_GameState implements State<Game> {
         @Override
         public void onEnter(Game game) {
             lock();
+            game.hud().credit(false).score(false).levelCounter(true).livesCounter(false).show();
         }
 
         @Override
@@ -224,6 +230,11 @@ public enum Arcade_GameState implements State<Game> {
             if (timer.hasExpired()) {
                 game.control().enterState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
             }
+        }
+
+        @Override
+        public void onExit(Game game) {
+            game.hud().credit(false).score(true).levelCounter(true).livesCounter(true).show();
         }
     };
 
