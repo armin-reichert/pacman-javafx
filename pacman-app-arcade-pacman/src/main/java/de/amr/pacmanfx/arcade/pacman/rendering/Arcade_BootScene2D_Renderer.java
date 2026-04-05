@@ -55,17 +55,20 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
             case SHOWING_HEX_CODES -> {
                 if (tick % 4 == 0) {
                     final Vector2i size = scene.unscaledSize();
+                    clearCanvas();
                     drawRandomHexDigits(size.x(), size.y());
                 }
             }
             case SHOWING_SPRITE_FRAGMENTS -> {
                 if (tick % 4 == 0) {
                     final Vector2i size = scene.unscaledSize();
+                    clearCanvas();
                     drawRandomSpriteFragments(size.x(), size.y());
                 }
             }
             case SHOWING_GRID -> {
                 final Vector2i size = scene.unscaledSize();
+                clearCanvas();
                 drawGrid(size.x(), size.y());
             }
         }
@@ -77,7 +80,6 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
     private void drawRandomHexDigits(int width, int height) {
         final int numRows = height / TS;
         final int numCols = width / TS;
-        clearCanvas();
         ctx.setFill(ARCADE_WHITE);
         ctx.setFont(arcadeFont8());
         for (int row = 0; row < numRows; ++row) {
@@ -92,7 +94,6 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
     private void drawRandomSpriteFragments(int width, int height) {
         final int numRows = height / GRID_SIZE;
         final int numCols = width / GRID_SIZE;
-        clearCanvas();
         for (int row = 0; row < numRows; ++row) {
             if (randomInt(0, 100) < 20) continue;
             final RectShort fragment1 = randomSpriteFragment();
@@ -118,7 +119,6 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
         final int numRows = (int) (gridHeight / GRID_SIZE);
         final int numCols = (int) (gridWidth / GRID_SIZE);
         final double thin = scaled(2), thick = scaled(4);
-        clearCanvas();
         ctx.setStroke(ARCADE_WHITE);
         for (int row = 0; row <= numRows; ++row) {
             final double y = scaled(row * GRID_SIZE);
