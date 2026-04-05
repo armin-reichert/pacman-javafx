@@ -15,7 +15,6 @@ import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -79,17 +78,17 @@ public class Arcade_PlayScene2D extends GameScene2D {
         menu.addLocalizedCheckBox(game.cheating().usingAutopilotProperty(), "autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                CheatActions.ACTION_ACTIVATE_AUTOPILOT.execute(ui);
+                CheatActions.ACTION_ACTIVATE_AUTOPILOT.executeIfEnabled(ui);
             } else {
-                CheatActions.ACTION_DEACTIVATE_AUTOPILOT.execute(ui);
+                CheatActions.ACTION_DEACTIVATE_AUTOPILOT.executeIfEnabled(ui);
             }
         });
         menu.addLocalizedCheckBox(game.cheating().immuneProperty(), "immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                CheatActions.ACTION_ACTIVATE_IMMUNITY.execute(ui);
+                CheatActions.ACTION_ACTIVATE_IMMUNITY.executeIfEnabled(ui);
             } else {
-                CheatActions.ACTION_DEACTIVATE_IMMUNITY.execute(ui);
+                CheatActions.ACTION_DEACTIVATE_IMMUNITY.executeIfEnabled(ui);
             }
         });
         menu.addSeparator();
