@@ -51,22 +51,22 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
         final Arcade_BootScene2D bootScene = (Arcade_BootScene2D) scene;
         final long tick = scene.gameContext().game().control().state().timer().tickCount();
         switch (bootScene.state()) {
-            case SHOWING_NOTHING -> clearCanvas();
-            case SHOWING_HEX_CODES -> {
+            case BLANK -> clearCanvas();
+            case HEX_CODES -> {
                 if (tick % 4 == 0) {
                     final Vector2i size = scene.unscaledSize();
                     clearCanvas();
                     drawRandomHexDigits(size.x(), size.y());
                 }
             }
-            case SHOWING_SPRITE_FRAGMENTS -> {
+            case RANDOM_SPRITE_FRAGMENTS -> {
                 if (tick % 4 == 0) {
                     final Vector2i size = scene.unscaledSize();
                     clearCanvas();
                     drawRandomSpriteFragments(size.x(), size.y());
                 }
             }
-            case SHOWING_GRID -> {
+            case GRID -> {
                 final Vector2i size = scene.unscaledSize();
                 clearCanvas();
                 drawGrid(size.x(), size.y());

@@ -14,10 +14,10 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 public class Arcade_BootScene2D extends GameScene2D {
 
     public enum SceneState {
-        SHOWING_NOTHING,
-        SHOWING_HEX_CODES,
-        SHOWING_SPRITE_FRAGMENTS,
-        SHOWING_GRID
+        BLANK,
+        HEX_CODES,
+        RANDOM_SPRITE_FRAGMENTS,
+        GRID
     }
 
     private SceneState state;
@@ -28,7 +28,7 @@ public class Arcade_BootScene2D extends GameScene2D {
 
     @Override
     protected void doInit(Game game) {
-        state = SceneState.SHOWING_NOTHING;
+        state = SceneState.BLANK;
     }
 
     @Override
@@ -36,9 +36,9 @@ public class Arcade_BootScene2D extends GameScene2D {
         final State<Game> gameState = game.control().state();
         final long tick = gameState.timer().tickCount();
         switch ((int) tick) {
-            case 60 -> state = SceneState.SHOWING_HEX_CODES;
-            case 120 -> state = SceneState.SHOWING_SPRITE_FRAGMENTS;
-            case 210 -> state = SceneState.SHOWING_GRID;
+            case 60  -> state = SceneState.HEX_CODES;
+            case 120 -> state = SceneState.RANDOM_SPRITE_FRAGMENTS;
+            case 210 -> state = SceneState.GRID;
             case 240 -> gameState.expire();
         }
     }
