@@ -92,7 +92,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         ui.voicePlayer().playVoice(GameUI_Resources.VOICE_EXPLAIN_GAME_START);
 
-        actionBindings.registerAllFrom(ArcadePacMan_UIConfig.GAME_START_BINDINGS); // insert coin + start game actions
+        actionBindings.registerAllFrom(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS); // insert coin + start game actions
         actionBindings.registerAllFrom(GameUI.SCENE_TESTS_BINDINGS); // actions for starting tests
 
         blinking = new Pulse(10, Pulse.State.ON);

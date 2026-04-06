@@ -198,12 +198,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public void acceptGameLevel(GameLevel level) {
         final boolean demoLevel = level.isDemoLevel();
         ui.soundManager().setEnabled(!demoLevel); //TODO is this needed?
-        if (demoLevel) {
-            actionBindings.registerAllFrom(ArcadePacMan_UIConfig.GAME_START_BINDINGS); // insert coin + start game
-        } else {
-            actionBindings.registerAllFrom(GameUI.STEERING_BINDINGS);
-            actionBindings.registerAllFrom(GameUI.CHEAT_BINDINGS);
-        }
+        actionBindings.registerAllFrom(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
+        actionBindings.registerAllFrom(GameUI.STEERING_BINDINGS);
+        actionBindings.registerAllFrom(GameUI.CHEAT_BINDINGS);
         actionBindings.addAll(GameUI.KEYBOARD);
         Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
@@ -214,7 +211,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private void updateLivesCounter(Game game, Pac pac) {
         final int more = game.control().state() == Arcade_GameState.STARTING_GAME_OR_LEVEL
             && !pac.isVisible() ? 1 : 0;
-        int count = Math.clamp(0, game.lifeCount() + more, game.hud().maxLivesDisplayed());
+        int count = Math.clamp(game.lifeCount() + more, 0, game.hud().maxLivesDisplayed());
         game.hud().setVisibleLifeCount(count);
     }
 

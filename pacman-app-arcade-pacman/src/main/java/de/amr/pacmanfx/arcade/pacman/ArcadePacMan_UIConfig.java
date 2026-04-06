@@ -148,15 +148,17 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         @Override
         public boolean isEnabled(GameUI ui) {
             final CoinMechanism slot = ui.gameContext().coinMechanism();
+            if (slot.isEmpty()) {
+                return false;
+            }
             final Game game = ui.gameContext().game();
-            final State<Game> state = ui.gameContext().game().control().state();
-            return !slot.isEmpty()
-                && (state == INTRO || state == SETTING_OPTIONS_FOR_START)
+            final State<Game> gameState = game.control().state();
+            return (gameState == INTRO || gameState == SETTING_OPTIONS_FOR_START)
                 && game.canStartNewGame();
         }
     };
 
-    public static final Set<ActionBinding> GAME_START_BINDINGS = Set.of(
+    public static final Set<ActionBinding> GAME_START_ACTION_BINDINGS = Set.of(
         new ActionBinding(ACTION_INSERT_COIN, bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
         new ActionBinding(ACTION_START_GAME,  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
     );

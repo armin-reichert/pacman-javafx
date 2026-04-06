@@ -17,7 +17,7 @@ public class Arcade_PlayScene3D extends PlayScene3D {
     public void replaceActionBindings(GameLevel level) {
         actionBindings = new ActionBindingsManagerImpl();
         if (level.isDemoLevel()) {
-            actionBindings.registerAllFrom(ArcadePacMan_UIConfig.GAME_START_BINDINGS);
+            actionBindings.registerAllFrom(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         } else {
             actionBindings.registerAllFrom(GameUI.STEERING_BINDINGS);
             actionBindings.registerAllFrom(GameUI.CHEAT_BINDINGS);
