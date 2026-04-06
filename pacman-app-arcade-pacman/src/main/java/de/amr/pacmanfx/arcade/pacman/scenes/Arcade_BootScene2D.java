@@ -35,11 +35,9 @@ public class Arcade_BootScene2D extends GameScene2D {
     public void update(Game game) {
         final State<Game> gameState = game.control().state();
         final long tick = gameState.timer().tickCount();
-        switch ((int) tick) {
-            case 60  -> state = SceneState.HEX_CODES;
-            case 120 -> state = SceneState.RANDOM_SPRITE_FRAGMENTS;
-            case 210 -> state = SceneState.GRID;
-            case 240 -> gameState.expire();
-        }
+        if (tick == 60 )      { state = SceneState.HEX_CODES; }
+        else if (tick == 120) { state = SceneState.RANDOM_SPRITE_FRAGMENTS; }
+        else if (tick == 210) { state = SceneState.GRID; }
+        else if (tick == 240) { gameState.expire(); }
     }
 }
