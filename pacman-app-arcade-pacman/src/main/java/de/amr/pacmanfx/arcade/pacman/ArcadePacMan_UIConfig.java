@@ -125,8 +125,16 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         @Override
         public boolean isEnabled(GameUI ui) {
             final CoinMechanism slot = ui.gameContext().coinMechanism();
-            final State<Game> state = ui.gameContext().game().control().state();
-            return slot.isEmpty() || (state == SETTING_OPTIONS_FOR_START && !slot.isFull());
+            if (slot.isFull()) {
+                return false;
+            }
+            final Game game = ui.gameContext().game();
+            // In demo level, coin can always be inserted
+            if (game.isDemoLevelRunning()) {
+                return true;
+            }
+            final State<Game> gameState = game.control().state();
+            return gameState == INTRO || gameState == SETTING_OPTIONS_FOR_START;
         }
     };
 

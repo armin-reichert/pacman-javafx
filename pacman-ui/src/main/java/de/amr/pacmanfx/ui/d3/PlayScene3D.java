@@ -116,7 +116,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
         ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);
 
         subSceneRoot.getChildren().addAll(level3DParent, coordinateSystem, ambientLight);
-        bindSceneActions();
+        bindPlaySceneActions();
     }
 
     public SubScene subScene() {
@@ -334,14 +334,14 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     /**
      * Binds global scene-level keyboard actions (perspective switching, drone controls, etc.).
      */
-    protected void bindSceneActions() {
+    protected void bindPlaySceneActions() {
         final Set<ActionBinding> bindings = Set.of(
-            new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,             alt(KeyCode.LEFT)),
-            new ActionBinding(ACTION_PERSPECTIVE_NEXT,                 alt(KeyCode.RIGHT)),
+            new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,       alt(KeyCode.LEFT)),
+            new ActionBinding(ACTION_PERSPECTIVE_NEXT,           alt(KeyCode.RIGHT)),
             new ActionBinding(perspectives.actionDroneClimb(),   control(KeyCode.MINUS)),
             new ActionBinding(perspectives.actionDroneDescent(), control(KeyCode.PLUS)),
             new ActionBinding(perspectives.actionDroneReset(),   control(KeyCode.DIGIT0)),
-            new ActionBinding(ACTION_TOGGLE_DRAW_MODE,                 alt(KeyCode.W))
+            new ActionBinding(ACTION_TOGGLE_DRAW_MODE,           alt(KeyCode.W))
         );
         actionBindings.registerAllFrom(bindings);
     }

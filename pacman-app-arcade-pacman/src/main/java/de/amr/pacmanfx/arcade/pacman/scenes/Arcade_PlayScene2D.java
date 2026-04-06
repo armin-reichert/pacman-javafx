@@ -197,11 +197,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
      */
     public void acceptGameLevel(GameLevel level) {
         final boolean demoLevel = level.isDemoLevel();
+        ui.soundManager().setEnabled(!demoLevel); //TODO is this needed?
         if (demoLevel) {
-            ui.soundManager().setEnabled(false);
             actionBindings.registerAllFrom(ArcadePacMan_UIConfig.GAME_START_BINDINGS); // insert coin + start game
         } else {
-            ui.soundManager().setEnabled(true);
             actionBindings.registerAllFrom(GameUI.STEERING_BINDINGS);
             actionBindings.registerAllFrom(GameUI.CHEAT_BINDINGS);
         }

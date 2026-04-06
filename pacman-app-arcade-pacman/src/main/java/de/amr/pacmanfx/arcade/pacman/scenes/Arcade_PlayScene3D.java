@@ -22,7 +22,7 @@ public class Arcade_PlayScene3D extends PlayScene3D {
             actionBindings.registerAllFrom(GameUI.STEERING_BINDINGS);
             actionBindings.registerAllFrom(GameUI.CHEAT_BINDINGS);
         }
-        bindSceneActions();
+        bindPlaySceneActions();
 
         actionBindings.addAll(GameUI.KEYBOARD);
     }
