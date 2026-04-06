@@ -41,10 +41,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void update(Game game) {
         game.optGameLevel().ifPresent(level -> {
-            updateHUD(level);
+            updateLivesCounter(game, level.pac());
             soundEffects().ifPresent(sfx -> {
                 sfx.setEnabled(!level.isDemoLevel());
-                sfx.playLevelPlayingSound(level);
+                sfx.playLevelRunningSound(level);
             });
         });
     }
@@ -153,7 +153,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onPacDead(PacDeadEvent e) {
         // Trigger end of game state PACMAN_DYING after dying animation has finished
-        gameContext().game().control().state().expire();
+        e.game().control().state().expire();
     }
 
     @Override
@@ -213,12 +213,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     // Private
 
-    private void updateHUD(GameLevel level) {
-        final Game game = level.game();
-        // While Pac-Man is still invisible on level start, one Pac symbol more is shown in the lives counter
-        final boolean oneExtra = game.control().state() == Arcade_GameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
-        final int lifeCountDisplayed = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
-        game.hud().setVisibleLifeCount(Math.clamp(lifeCountDisplayed, 0, game.hud().maxLivesDisplayed()));
+    // While Pac-Man is not yet invisible on level start, one symbol more is shown in the lives counter
+    private void updateLivesCounter(Game game, Pac pac) {
+        final int more = game.control().state() == Arcade_GameState.STARTING_GAME_OR_LEVEL
+            && !pac.isVisible() ? 1 : 0;
+        int count = Math.clamp(0, game.lifeCount() + more, game.hud().maxLivesDisplayed());
+        game.hud().setVisibleLifeCount(count);
     }
 
     private void createAndPlayLevelCompletedAnimation(GameLevel level) {

@@ -754,7 +754,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             level.optBonus().ifPresent(Bonus::setInactive);
         }
         else if (tick == TICK_PACMAN_DYING_PAC_DEAD) {
-            publishGameEvent(new PacDeadEvent(pac));
+            publishGameEvent(new PacDeadEvent(this, pac));
         }
         else {
             level.blinking().tick();

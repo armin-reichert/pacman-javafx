@@ -161,7 +161,7 @@ public class GameSoundEffects {
      *
      * @param level the current game level
      */
-    public void playLevelPlayingSound(GameLevel level) {
+    public void playLevelRunningSound(GameLevel level) {
         if (!soundManager.isEnabled()) {
             return;
         }

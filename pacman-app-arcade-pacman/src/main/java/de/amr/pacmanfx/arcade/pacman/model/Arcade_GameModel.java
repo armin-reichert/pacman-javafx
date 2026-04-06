@@ -211,7 +211,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level.optBonus().ifPresent(Bonus::setInactive); //TODO check this
         }
         else if (tick == Arcade_GameState.TICK_PACMAN_DYING_PAC_DEAD) {
-            publishGameEvent(new PacDeadEvent(pac));
+            publishGameEvent(new PacDeadEvent(this, pac));
         }
         else {
             level.blinking().tick();
