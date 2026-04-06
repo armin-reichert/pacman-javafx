@@ -75,7 +75,7 @@ public interface GameUI extends Translator {
     Keyboard KEYBOARD = new Keyboard();
 
     /** Cheat key bindings (Alt + key). */
-    Set<ActionBinding> CHEAT_BINDINGS = Set.of(
+    Set<ActionBinding> CHEAT_ACTION_BINDINGS = Set.of(
         new ActionBinding(CheatActions.ACTION_EAT_ALL_PELLETS,  alt(KeyCode.E)),
         new ActionBinding(CheatActions.ACTION_ADD_LIVES,        alt(KeyCode.L)),
         new ActionBinding(CheatActions.ACTION_ENTER_NEXT_LEVEL, alt(KeyCode.N)),
@@ -83,7 +83,7 @@ public interface GameUI extends Translator {
     );
 
     /** Steering key bindings (arrow keys, optionally with Ctrl). */
-    Set<ActionBinding> STEERING_BINDINGS = Set.of(
+    Set<ActionBinding> STEERING_ACTION_BINDINGS = Set.of(
         new ActionBinding(ACTION_STEER_UP,    bare(KeyCode.UP),    control(KeyCode.UP)),
         new ActionBinding(ACTION_STEER_DOWN,  bare(KeyCode.DOWN),  control(KeyCode.DOWN)),
         new ActionBinding(ACTION_STEER_LEFT,  bare(KeyCode.LEFT),  control(KeyCode.LEFT)),

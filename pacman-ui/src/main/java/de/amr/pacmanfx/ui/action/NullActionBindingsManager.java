@@ -42,7 +42,7 @@ public class NullActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void registerAnyFrom(GameAction action, Set<ActionBinding> actionBindings) {
+    public void registerOne(GameAction action, Set<ActionBinding> actionBindings) {
     }
 
     @Override
@@ -50,7 +50,7 @@ public class NullActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void registerAllFrom(Set<ActionBinding> actionBindings) {
+    public void registerAll(Set<ActionBinding> actionBindings) {
     }
 
     @Override

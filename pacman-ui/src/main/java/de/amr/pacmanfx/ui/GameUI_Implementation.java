@@ -182,9 +182,9 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     private void initActionBindings() {
-        actionBindingsManager.registerAnyFrom(CommonGameActions.ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(CommonGameActions.ACTION_OPEN_EDITOR,      GameUI.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyFrom(CommonGameActions.ACTION_TOGGLE_MUTED,     GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerOne(CommonGameActions.ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerOne(CommonGameActions.ACTION_OPEN_EDITOR,      GameUI.COMMON_BINDINGS);
+        actionBindingsManager.registerOne(CommonGameActions.ACTION_TOGGLE_MUTED,     GameUI.COMMON_BINDINGS);
         actionBindingsManager.addAll(GameUI.KEYBOARD);
     }
 

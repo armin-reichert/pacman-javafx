@@ -196,22 +196,21 @@ public class Arcade_PlayScene2D extends GameScene2D {
      * @param level game level
      */
     public void acceptGameLevel(GameLevel level) {
-        final boolean demoLevel = level.isDemoLevel();
-        ui.soundManager().setEnabled(!demoLevel); //TODO is this needed?
-        actionBindings.registerAllFrom(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
-        actionBindings.registerAllFrom(GameUI.STEERING_BINDINGS);
-        actionBindings.registerAllFrom(GameUI.CHEAT_BINDINGS);
+        ui.soundManager().setEnabled(!level.isDemoLevel()); //TODO is this needed?
+        actionBindings.registerAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
+        actionBindings.registerAll(GameUI.STEERING_ACTION_BINDINGS);
+        actionBindings.registerAll(GameUI.CHEAT_ACTION_BINDINGS);
         actionBindings.addAll(GameUI.KEYBOARD);
         Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
     // Private
 
-    // While Pac-Man is not yet invisible on level start, one symbol more is shown in the lives counter
+    // While Pac-Man is not yet visible on level start, one symbol more is shown in the lives counter
     private void updateLivesCounter(Game game, Pac pac) {
         final int more = game.control().state() == Arcade_GameState.STARTING_GAME_OR_LEVEL
             && !pac.isVisible() ? 1 : 0;
-        int count = Math.clamp(game.lifeCount() + more, 0, game.hud().maxLivesDisplayed());
+        final int count = Math.clamp(game.lifeCount() + more, 0, game.hud().maxLivesDisplayed());
         game.hud().setVisibleLifeCount(count);
     }
 

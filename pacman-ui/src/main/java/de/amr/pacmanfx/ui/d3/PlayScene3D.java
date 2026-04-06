@@ -343,7 +343,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
             new ActionBinding(perspectives.actionDroneReset(),   control(KeyCode.DIGIT0)),
             new ActionBinding(ACTION_TOGGLE_DRAW_MODE,           alt(KeyCode.W))
         );
-        actionBindings.registerAllFrom(bindings);
+        actionBindings.registerAll(bindings);
     }
 
     /**

@@ -105,7 +105,7 @@ public interface ActionBindingsManager extends Disposable {
      * @param action         the action to bind
      * @param actionBindings the candidate bindings
      */
-    void registerAnyFrom(GameAction action, Set<ActionBinding> actionBindings);
+    void registerOne(GameAction action, Set<ActionBinding> actionBindings);
 
     /**
      * Registers all provided bindings.
@@ -115,5 +115,5 @@ public interface ActionBindingsManager extends Disposable {
      *
      * @param actionBindings the bindings to register
      */
-    void registerAllFrom(Set<ActionBinding> actionBindings);
+    void registerAll(Set<ActionBinding> actionBindings);
 }

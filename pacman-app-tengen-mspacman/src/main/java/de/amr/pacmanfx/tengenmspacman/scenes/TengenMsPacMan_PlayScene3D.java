@@ -81,11 +81,11 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         actionBindings = new ActionBindingsManagerImpl();
         if (level.isDemoLevel()) {
             // In demo level, allow going back to options screen
-            actionBindings.registerAnyFrom(ACTION_QUIT_DEMO_LEVEL, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
+            actionBindings.registerOne(ACTION_QUIT_DEMO_LEVEL, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
         } else {
-            actionBindings.registerAllFrom(TengenMsPacMan_ActionBindings.STEERING_BINDINGS);
-            actionBindings.registerAnyFrom(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
-            actionBindings.registerAllFrom(GameUI.CHEAT_BINDINGS);
+            actionBindings.registerAll(TengenMsPacMan_ActionBindings.STEERING_BINDINGS);
+            actionBindings.registerOne(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
+            actionBindings.registerAll(GameUI.CHEAT_ACTION_BINDINGS);
         }
         bindPlaySceneActions();
 
