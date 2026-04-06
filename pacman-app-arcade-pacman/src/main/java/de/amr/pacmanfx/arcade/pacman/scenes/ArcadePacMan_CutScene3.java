@@ -38,7 +38,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         return blinky;
     }
 
-    public int tick() {
+    public long tick() {
         return tick;
     }
 
@@ -59,29 +59,29 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         if (tick < ANIMATION_START_TICK) {
             return;
         }
-        switch (tick) {
-            case ANIMATION_START_TICK -> {
-                ui.soundManager().play(SoundID.INTERMISSION_3, 2);
-                pacMan.placeAtTile(29, 20);
-                pacMan.setMoveDir(Direction.LEFT);
-                pacMan.setSpeed(1.25f);
-                pacMan.show();
-                pacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
-                blinky.placeAtTile(35, 20);
-                blinky.setMoveDir(Direction.LEFT);
-                blinky.setWishDir(Direction.LEFT);
-                blinky.setSpeed(1.25f);
-                blinky.show();
-                blinky.playAnimation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_DRESS_PATCHED);
-            }
-            case ANIMATION_START_TICK + 400 -> {
-                blinky.placeAtTile(-1, 20);
-                blinky.setMoveDir(Direction.RIGHT);
-                blinky.setWishDir(Direction.RIGHT);
-                blinky.playAnimation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_NAKED);
-            }
-            case ANIMATION_START_TICK + 700 -> game.control().state().expire();
-            default -> {}
+        if (tick == ANIMATION_START_TICK) {
+            ui.soundManager().play(SoundID.INTERMISSION_3, 2);
+            pacMan.placeAtTile(29, 20);
+            pacMan.setMoveDir(Direction.LEFT);
+            pacMan.setSpeed(1.25f);
+            pacMan.show();
+            pacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
+            blinky.placeAtTile(35, 20);
+            blinky.setMoveDir(Direction.LEFT);
+            blinky.setWishDir(Direction.LEFT);
+            blinky.setSpeed(1.25f);
+            blinky.show();
+            blinky.playAnimation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_DRESS_PATCHED);
+        }
+        else if (tick == ANIMATION_START_TICK + 400){
+            blinky.placeAtTile(-1, 20);
+            blinky.setMoveDir(Direction.RIGHT);
+            blinky.setWishDir(Direction.RIGHT);
+            blinky.playAnimation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_NAKED);
+        }
+        else if (tick == ANIMATION_START_TICK + 700) {
+            game.control().state().expire();
+            return;
         }
         pacMan.move();
         blinky.move();
