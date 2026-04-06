@@ -87,7 +87,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         final UIConfig uiConfig = ui.currentConfig();
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-        actionBindings.registerByKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, JOYPAD.key(JoypadButton.START));
+        actionBindings.bindActionToKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, JOYPAD.key(JoypadButton.START));
 
         clapperboard = new Clapperboard(1, "THEY MEET");
         clapperboard.setPosition(3 * TS, 10 * TS);

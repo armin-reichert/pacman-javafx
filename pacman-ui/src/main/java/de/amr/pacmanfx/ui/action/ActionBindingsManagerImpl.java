@@ -13,31 +13,31 @@ import static java.util.Objects.requireNonNull;
 
 public class ActionBindingsManagerImpl implements ActionBindingsManager {
 
-    private final Map<KeyCombination, GameAction> actionForKeyCombination = new HashMap<>();
+    private final Map<KeyCombination, GameAction> keyCombinationToActionMap = new HashMap<>();
 
     public ActionBindingsManagerImpl() {}
 
     @Override
     public void dispose() {
-        actionForKeyCombination.clear();
+        keyCombinationToActionMap.clear();
     }
 
     @Override
-    public Map<KeyCombination, GameAction> actionRegisteredForKeyCombination() {
-        return actionForKeyCombination;
+    public Map<KeyCombination, GameAction> keyCombinationToActionMap() {
+        return keyCombinationToActionMap;
     }
 
     @Override
-    public boolean isEmpty() {
-        return actionForKeyCombination.isEmpty();
+    public boolean empty() {
+        return keyCombinationToActionMap.isEmpty();
     }
 
     @Override
     public void addAll(Keyboard keyboard) {
-        for (KeyCombination combination : actionForKeyCombination.keySet()) {
+        for (KeyCombination combination : keyCombinationToActionMap.keySet()) {
             keyboard.setBinding(combination, this);
         }
-        actionForKeyCombination.entrySet().stream()
+        keyCombinationToActionMap.entrySet().stream()
             // sort by string representation of key combination
             .sorted(Comparator.comparing(entry -> entry.getKey().toString()))
             .forEach(entry -> Logger.debug("%-20s: %s".formatted(entry.getKey(), entry.getValue().name())));
@@ -46,17 +46,17 @@ public class ActionBindingsManagerImpl implements ActionBindingsManager {
 
     @Override
     public void removeAll(Keyboard keyboard) {
-        for (KeyCombination combination : actionForKeyCombination.keySet()) {
+        for (KeyCombination combination : keyCombinationToActionMap.keySet()) {
             keyboard.removeBinding(combination, this);
         }
         Logger.info("Key bindings removed");
     }
 
     @Override
-    public void registerByKeyCombination(GameAction action, KeyCombination combination) {
+    public void bindActionToKeyCombination(GameAction action, KeyCombination combination) {
         requireNonNull(action);
         requireNonNull(combination);
-        actionForKeyCombination.put(combination, action);
+        keyCombinationToActionMap.put(combination, action);
     }
 
     @Override
@@ -78,15 +78,15 @@ public class ActionBindingsManagerImpl implements ActionBindingsManager {
 
     @Override
     public Optional<GameAction> findMatchingAction(Keyboard keyboard) {
-        return actionForKeyCombination.keySet().stream()
+        return keyCombinationToActionMap.keySet().stream()
             .filter(keyboard::isMatching)
-            .map(actionForKeyCombination::get)
+            .map(keyCombinationToActionMap::get)
             .findFirst();
     }
 
     private void registerBinding(ActionBinding binding) {
         for (KeyCombination combination : binding.keyCombinations()) {
-            actionForKeyCombination.put(combination, binding.gameAction());
+            keyCombinationToActionMap.put(combination, binding.gameAction());
         }
     }
 }

@@ -81,10 +81,10 @@ public class StartPagesCarousel extends Carousel implements View {
 
     @Override
     public void onEnter() {
-        actionBindings.registerByKeyCombination(actionShowPrevPage, bare(KeyCode.LEFT));
-        actionBindings.registerByKeyCombination(actionShowNextPage, bare(KeyCode.RIGHT));
-        actionBindings.registerByKeyCombination(CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
-        actionBindings.registerByKeyCombination(CommonGameActions.ACTION_TOGGLE_PAUSED, bare(KeyCode.P));
+        actionBindings.bindActionToKeyCombination(actionShowPrevPage, bare(KeyCode.LEFT));
+        actionBindings.bindActionToKeyCombination(actionShowNextPage, bare(KeyCode.RIGHT));
+        actionBindings.bindActionToKeyCombination(CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
+        actionBindings.bindActionToKeyCombination(CommonGameActions.ACTION_TOGGLE_PAUSED, bare(KeyCode.P));
         actionBindings.addAll(GameUI.KEYBOARD);
         restartProgressTimer();
         currentStartPage().ifPresent(page -> page.layoutRoot().requestFocus());
@@ -119,7 +119,7 @@ public class StartPagesCarousel extends Carousel implements View {
     }
 
     @Override
-    public ActionBindingsManager actionBindingsManager() {
+    public ActionBindingsManager actionBindings() {
         return actionBindings;
     }
 

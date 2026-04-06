@@ -49,7 +49,7 @@ public interface View extends GameEventListener {
      *
      * @return the action bindings manager associated with this view
      */
-    ActionBindingsManager actionBindingsManager();
+    ActionBindingsManager actionBindings();
 
     /**
      * Processes the current keyboard state and executes the matching action, if any.
@@ -60,7 +60,7 @@ public interface View extends GameEventListener {
      * @param ui the global game UI façade
      */
     default void onKeyboardInput(GameUI ui) {
-        actionBindingsManager().findMatchingAction(GameUI.KEYBOARD)
+        actionBindings().findMatchingAction(GameUI.KEYBOARD)
             .ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
     }
 

@@ -24,12 +24,12 @@ public class NullActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public Map<KeyCombination, GameAction> actionRegisteredForKeyCombination() {
+    public Map<KeyCombination, GameAction> keyCombinationToActionMap() {
         return Map.of();
     }
 
     @Override
-    public boolean isEmpty() {
+    public boolean empty() {
         return true;
     }
 
@@ -46,7 +46,7 @@ public class NullActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void registerByKeyCombination(GameAction action, KeyCombination combination) {
+    public void bindActionToKeyCombination(GameAction action, KeyCombination combination) {
     }
 
     @Override

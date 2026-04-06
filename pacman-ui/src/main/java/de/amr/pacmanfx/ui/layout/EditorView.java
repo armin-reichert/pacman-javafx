@@ -41,7 +41,7 @@ public class EditorView implements View {
     }
 
     @Override
-    public ActionBindingsManager actionBindingsManager() { return ActionBindingsManager.NO_BINDINGS; }
+    public ActionBindingsManager actionBindings() { return ActionBindingsManager.NO_BINDINGS; }
 
     @Override
     public void onEnter() {

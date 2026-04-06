@@ -73,7 +73,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         game.hud().hide();
 
         actionBindings.registerAll(GameUI.SCENE_TESTS_BINDINGS);
-        actionBindings.registerByKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J));
+        actionBindings.bindActionToKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J));
         actionBindings.registerOne(ACTION_START_PLAYING,                  TENGEN_SPECIFIC_BINDINGS);
         actionBindings.registerOne(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TENGEN_SPECIFIC_BINDINGS);
 

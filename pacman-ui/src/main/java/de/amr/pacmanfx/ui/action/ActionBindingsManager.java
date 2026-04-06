@@ -49,7 +49,7 @@ public interface ActionBindingsManager extends Disposable {
      *
      * @return a map from {@link KeyCombination} to {@link GameAction}
      */
-    Map<KeyCombination, GameAction> actionRegisteredForKeyCombination();
+    Map<KeyCombination, GameAction> keyCombinationToActionMap();
 
     /**
      * Determines whether the current keyboard state matches any registered action.
@@ -67,7 +67,7 @@ public interface ActionBindingsManager extends Disposable {
      *
      * @return {@code true} if no key combinations are registered
      */
-    boolean isEmpty();
+    boolean empty();
 
     /**
      * Activates all known bindings on the given keyboard.
@@ -94,7 +94,7 @@ public interface ActionBindingsManager extends Disposable {
      * @param action      the action to rebind
      * @param combination the new key combination
      */
-    void registerByKeyCombination(GameAction action, KeyCombination combination);
+    void bindActionToKeyCombination(GameAction action, KeyCombination combination);
 
     /**
      * Registers exactly one binding for the given action from the provided set.

@@ -24,7 +24,7 @@ public class TestActions {
         }
     };
 
-    public static final GameAction ACTION_SHORT_LEVEL_TEST = new GameAction("TEST_LEVELS_SHORT") {
+    public static final GameAction ACTION_SHORT_LEVEL_TEST = new GameAction("SHORT_LEVEL_TEST") {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().game().control().restartStateWithName(LevelShortTestState.class.getSimpleName());
@@ -37,7 +37,7 @@ public class TestActions {
         }
     };
 
-    public static final GameAction ACTION_MEDIUM_LEVEL_TEST = new GameAction("TEST_LEVELS_MEDIUM") {
+    public static final GameAction ACTION_MEDIUM_LEVEL_TEST = new GameAction("MEDIUM_LEVEL_TEST") {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().game().control().restartStateWithName(LevelMediumTestState.class.getSimpleName());

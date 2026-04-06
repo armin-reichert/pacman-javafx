@@ -142,7 +142,7 @@ public class PlayView extends StackPane implements View {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public ActionBindingsManager actionBindingsManager() {
+    public ActionBindingsManager actionBindings() {
         return actionBindings;
     }
 
