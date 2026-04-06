@@ -192,17 +192,15 @@ public class Arcade_PlayScene2D extends GameScene2D {
     /**
      * If the 3D play scene is shown when the game level gets created, the onLevelCreated() method of this
      * scene is not called, so we have to accept the game level again when switching from the 3D scene to this one.
+     *
      * @param level game level
      */
     public void acceptGameLevel(GameLevel level) {
-        final Game game = level.game();
         final boolean demoLevel = level.isDemoLevel();
         if (demoLevel) {
-            game.hud().credit(true).livesCounter(false).levelCounter(true).show();
             ui.soundManager().setEnabled(false);
             actionBindings.registerAllFrom(ArcadePacMan_UIConfig.GAME_START_BINDINGS); // insert coin + start game
         } else {
-            game.hud().credit(false).livesCounter(true).levelCounter(true).show();
             ui.soundManager().setEnabled(true);
             actionBindings.registerAllFrom(GameUI.STEERING_BINDINGS);
             actionBindings.registerAllFrom(GameUI.CHEAT_BINDINGS);
