@@ -6,7 +6,6 @@ package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.math.RectShort;
 import javafx.animation.Animation;
-import javafx.animation.Interpolator;
 import javafx.util.Duration;
 
 import java.util.Arrays;
@@ -58,7 +57,6 @@ public class SpriteAnimationBuilder {
         final Duration cycleDuration = Duration.seconds(1.0 / SpriteAnimation.FPS * data.frameTicks);
         final SpriteAnimation anim = new SpriteAnimation(cycleDuration);
         anim.setCycleCount(cycleCount);
-        anim.setInterpolator(Interpolator.LINEAR);
         anim.setSprites(data.sprites);
         return anim;
     }

@@ -5,6 +5,7 @@ package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.math.RectShort;
 import javafx.animation.Animation;
+import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.util.Duration;
 
@@ -30,6 +31,7 @@ public class SpriteAnimation extends Transition {
     public SpriteAnimation(Duration cycleDuration) {
         requireNonNull(cycleDuration);
         setCycleDuration(cycleDuration);
+        setInterpolator(Interpolator.LINEAR);
     }
 
     @Override
