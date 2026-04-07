@@ -11,7 +11,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.buildAnimation;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
 
 public class Bag extends Actor {
 
@@ -26,8 +26,8 @@ public class Bag extends Actor {
         @Override
         protected SpriteAnimation createAnimation(Object animationID) {
             return switch (animationID) {
-                case AnimationID.JUNIOR -> buildAnimation().singleSprite(spriteSheet.sprite(JUNIOR_PAC)).once();
-                case AnimationID.BAG    -> buildAnimation().singleSprite(spriteSheet.sprite(BLUE_BAG)).once();
+                case AnimationID.JUNIOR -> builder().singleSprite(spriteSheet.sprite(JUNIOR_PAC)).once();
+                case AnimationID.BAG    -> builder().singleSprite(spriteSheet.sprite(BLUE_BAG)).once();
                 default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
             };
         }

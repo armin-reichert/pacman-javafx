@@ -9,7 +9,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.buildAnimation;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
 
 public class Bag extends Actor {
 
@@ -24,8 +24,8 @@ public class Bag extends Actor {
         @Override
         protected SpriteAnimation createAnimation(Object animationID) {
             return switch (animationID) {
-                case AnimationID.BAG    -> buildAnimation().singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).once();
-                case AnimationID.JUNIOR -> buildAnimation().singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).once();
+                case AnimationID.BAG    -> builder().singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).once();
+                case AnimationID.JUNIOR -> builder().singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).once();
                 default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
             };
         }

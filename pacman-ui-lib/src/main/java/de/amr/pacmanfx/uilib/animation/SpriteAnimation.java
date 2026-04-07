@@ -5,13 +5,8 @@ package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.math.RectShort;
 import javafx.animation.Animation;
-import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.util.Duration;
-import org.tinylog.Logger;
-
-import java.util.Arrays;
-import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
@@ -22,51 +17,8 @@ public class SpriteAnimation extends Transition {
 
     public static final int FPS = 60;
 
-    public static class Builder {
-
-        private final SpriteAnimation anim;
-
-        private Builder() {
-            anim = new SpriteAnimation();
-        }
-
-        public Builder ticksPerFrame(int ticks) {
-            anim.frameTicks = ticks;
-            return this;
-        }
-
-        public Builder sprites(RectShort[] sprites) {
-            anim.sprites = requireNonNull(sprites);
-            if (Arrays.stream(sprites).anyMatch(Objects::isNull)) {
-                throw new IllegalArgumentException("Found null sprite in sprite array");
-            }
-            return this;
-        }
-
-        public Builder singleSprite(RectShort sprite) {
-            anim.sprites = new RectShort[] { requireNonNull(sprite) };
-            return this;
-        }
-
-        public SpriteAnimation repeated() {
-            return build(Animation.INDEFINITE);
-        }
-
-        public SpriteAnimation once() {
-            return build(anim.sprites.length);
-        }
-
-        private SpriteAnimation build(int cycleCount) {
-            anim.setCycleDuration(Duration.seconds(1.0 / FPS * anim.frameTicks));
-            anim.setCycleCount(cycleCount);
-            anim.setInterpolator(Interpolator.LINEAR);
-            Logger.debug("New sprite animation '{}'", anim);
-            return anim;
-        }
-    }
-
-    public static Builder buildAnimation() {
-        return new Builder();
+    public static SpriteAnimationBuilder builder() {
+        return new SpriteAnimationBuilder();
     }
 
     private RectShort[] sprites = new RectShort[0];
@@ -74,6 +26,11 @@ public class SpriteAnimation extends Transition {
     private int frameIndex;
 
     private boolean isValidFrameIndex(int index) { return 0 <= index && index < sprites.length; }
+
+    public SpriteAnimation(Duration cycleDuration) {
+        requireNonNull(cycleDuration);
+        setCycleDuration(cycleDuration);
+    }
 
     @Override
     protected void interpolate(double t) {

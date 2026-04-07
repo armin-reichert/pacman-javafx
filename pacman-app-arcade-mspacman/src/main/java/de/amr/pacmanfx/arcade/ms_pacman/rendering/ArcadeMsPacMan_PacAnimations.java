@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.buildAnimation;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
 
 public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationManager<SpriteID> {
 
@@ -23,20 +23,20 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationManager<SpriteI
     @Override
     protected SpriteAnimation createAnimation(Object animationID) {
         return switch (animationID) {
-            case Pac.AnimationID.PAC_FULL -> buildAnimation()
+            case Pac.AnimationID.PAC_FULL -> builder()
                 .singleSprite(spriteSheet.sprite(SpriteID.MS_PACMAN_FULL))
                 .once();
 
-            case Pac.AnimationID.PAC_MUNCHING -> buildAnimation()
+            case Pac.AnimationID.PAC_MUNCHING -> builder()
                 .sprites(msPacManMunchingSprites(Direction.LEFT))
                 .repeated();
 
-            case Pac.AnimationID.PAC_DYING -> buildAnimation()
+            case Pac.AnimationID.PAC_DYING -> builder()
                 .sprites(spriteSheet().sprites(SpriteID.MS_PACMAN_DYING))
                 .ticksPerFrame(8)
                 .once();
 
-            case AnimationID.PAC_MAN_MUNCHING -> buildAnimation()
+            case AnimationID.PAC_MAN_MUNCHING -> builder()
                 .sprites(mrPacManMunchingSprites(Direction.LEFT))
                 .ticksPerFrame(2)
                 .repeated();

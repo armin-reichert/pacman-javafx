@@ -13,7 +13,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.buildAnimation;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
 
 public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationManager<SpriteID> {
 
@@ -27,26 +27,26 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationManager<Sprit
     @Override
     protected SpriteAnimation createAnimation(Object id) {
         return switch (id) {
-            case Ghost.AnimationID.GHOST_NORMAL -> buildAnimation()
+            case Ghost.AnimationID.GHOST_NORMAL -> builder()
                 .sprites(ghostNormalSprites(Direction.LEFT))
                 .ticksPerFrame(8)
                 .repeated();
 
-            case Ghost.AnimationID.GHOST_FRIGHTENED -> buildAnimation()
+            case Ghost.AnimationID.GHOST_FRIGHTENED -> builder()
                 .sprites(spriteSheet().sprites(GHOST_FRIGHTENED))
                 .ticksPerFrame(8)
                 .repeated();
 
-            case Ghost.AnimationID.GHOST_FLASHING -> buildAnimation()
+            case Ghost.AnimationID.GHOST_FLASHING -> builder()
                 .sprites(spriteSheet().sprites(GHOST_FLASHING))
                 .ticksPerFrame(7)
                 .repeated();
 
-            case Ghost.AnimationID.GHOST_EYES -> buildAnimation()
+            case Ghost.AnimationID.GHOST_EYES -> builder()
                 .sprites(ghostEyesSprites(Direction.LEFT))
                 .once();
 
-            case Ghost.AnimationID.GHOST_POINTS -> buildAnimation()
+            case Ghost.AnimationID.GHOST_POINTS -> builder()
                 .sprites(spriteSheet().sprites(GHOST_NUMBERS))
                 .once();
 

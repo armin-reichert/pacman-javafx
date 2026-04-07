@@ -71,7 +71,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
         blinky = uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW);
 
-        nailDressAnimation = SpriteAnimation.buildAnimation()
+        nailDressAnimation = SpriteAnimation.builder()
             .sprites(ArcadePacMan_SpriteSheet.instance().sprites(SpriteID.RED_GHOST_STRETCHED))
             .once();
 

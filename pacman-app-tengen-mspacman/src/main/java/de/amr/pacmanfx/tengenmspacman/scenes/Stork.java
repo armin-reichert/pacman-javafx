@@ -10,7 +10,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 import static de.amr.pacmanfx.tengenmspacman.rendering.SpriteID.STORK;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.buildAnimation;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
 
 public class Stork extends Actor {
 
@@ -25,7 +25,7 @@ public class Stork extends Actor {
         @Override
         protected SpriteAnimation createAnimation(Object animationID) {
             if (animationID.equals(AnimationID.FLYING)) {
-                return buildAnimation().sprites(spriteSheet.sprites(STORK)).ticksPerFrame(8).repeated();
+                return builder().sprites(spriteSheet.sprites(STORK)).ticksPerFrame(8).repeated();
             }
             throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         }
