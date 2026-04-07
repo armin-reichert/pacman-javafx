@@ -9,7 +9,10 @@ import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
@@ -120,7 +123,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 UIConfig uiConfig = scene.ui.currentConfig();
 
                 scene.msPacMan = createMsPacMan();
-                scene.msPacMan.setAnimationManager(scene.ui.currentConfig().createPacAnimations());
+                scene.msPacMan.setAnimations(scene.ui.currentConfig().createPacAnimations());
                 scene.msPacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
 
                 scene.msPacMan.setPosition(TS * 33, ACTOR_Y);
@@ -222,7 +225,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= MS_PAC_MAN_STOP_X) {
                     scene.msPacMan.setSpeed(0);
-                    scene.msPacMan.optAnimationManager().ifPresent(AnimationManager::resetSelectedAnimation);
+                    scene.msPacMan.resetAnimation();
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options

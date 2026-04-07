@@ -52,10 +52,10 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         final UIConfig uiConfig = ui.currentConfig();
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimationManager(uiConfig.createPacAnimations());
+        pacMan.setAnimations(uiConfig.createPacAnimations());
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimationManager(uiConfig.createPacAnimations());
+        msPacMan.setAnimations(uiConfig.createPacAnimations());
 
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.setPosition(TS(3), TS(10));

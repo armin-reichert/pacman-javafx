@@ -61,19 +61,17 @@ public class BaseDebugInfoRenderer extends GameScene2D_Renderer {
             ctx.setFont(debugTextFont);
             ctx.fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
         }
-        movingActor.optAnimationManager()
-            .filter(SpriteAnimationManager.class::isInstance)
-            .map(SpriteAnimationManager.class::cast)
-            .ifPresent(spriteAnimationMap -> {
-                Object selectedID = spriteAnimationMap.selectedAnimationID();
-                if (selectedID != null) {
-                    ctx.setFont(debugTextFont);
-                    drawAnimationInfo(movingActor, spriteAnimationMap, selectedID);
-                }
-                if (movingActor.wishDir() != null) {
-                    drawDirectionIndicator(movingActor);
-                }
-            });
+        if (movingActor.animations() instanceof SpriteAnimationManager<?> spriteAnimations) {
+            Object animationID = spriteAnimations.selectedAnimationID();
+            if (animationID != null) {
+                ctx.setFont(debugTextFont);
+                drawAnimationInfo(movingActor, spriteAnimations, animationID);
+            }
+            if (movingActor.wishDir() != null) {
+                drawDirectionIndicator(movingActor);
+            }
+
+        }
     }
 
     private void drawAnimationInfo(Actor actor, SpriteAnimationManager<?> spriteAnimationMap, Object selectedID) {

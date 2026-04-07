@@ -12,7 +12,6 @@ import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -88,7 +87,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         final UIConfig uiConfig = ui.currentConfig();
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimationManager(uiConfig.createPacAnimations());
+        msPacMan.setAnimations(uiConfig.createPacAnimations());
         msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
 
         ghosts = List.of(
@@ -186,10 +185,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     }
                     else if (ghost.y() <= endPositionY) {
                         ghost.setSpeed(0);
-                        ghost.optAnimationManager().ifPresent(am -> {
-                            am.stopSelectedAnimation();
-                            am.resetSelectedAnimation();
-                        });
+                        ghost.stopAnimation();
+                        ghost.resetAnimation();
                         return true;
                     }
                     else {
@@ -207,7 +204,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= STOP_X_MS_PACMAN) {
                     scene.msPacMan.setSpeed(0);
-                    scene.msPacMan.optAnimationManager().ifPresent(AnimationManager::resetSelectedAnimation);
+                    scene.msPacMan.resetAnimation();
                     scene.sceneController.enterState(READY_TO_PLAY);
                 }
             }

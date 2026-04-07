@@ -10,8 +10,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-import java.util.Optional;
-
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
@@ -181,36 +179,40 @@ public class Actor {
 
     // Animation support
 
-    protected AnimationManager animationManager = AnimationManager.NO_ANIMATIONS;
+    protected AnimationManager animations = AnimationManager.NO_ANIMATIONS;
 
-    public Optional<AnimationManager> optAnimationManager() {
-        return Optional.ofNullable(animationManager);
+    public AnimationManager animations() {
+        return animations;
     }
 
-    public void setAnimationManager(AnimationManager animationManager) {
-        this.animationManager = animationManager != null ? animationManager : AnimationManager.NO_ANIMATIONS;
+    public void setAnimations(AnimationManager animations) {
+        this.animations = requireNonNull(animations);
     }
 
     public void selectAnimation(Object animationID) {
         requireNonNull(animationID);
-        animationManager.selectAnimation(animationID);
+        animations.selectAnimation(animationID);
     }
 
-    public void selectAnimationAt(Object animationID, int frameIndex) {
+    public void selectAnimationAndSetFrame(Object animationID, int frameIndex) {
         requireNonNull(animationID);
-        animationManager.setAnimationFrame(animationID, frameIndex);
+        animations.setAnimationFrame(animationID, frameIndex);
     }
 
     public void playAnimation(Object animationID) {
         requireNonNull(animationID);
-        animationManager.playAnimation(animationID);
+        animations.playAnimation(animationID);
     }
 
     public void playAnimation() {
-        animationManager.playSelectedAnimation();
+        animations.playSelectedAnimation();
     }
 
     public void stopAnimation() {
-        animationManager.stopSelectedAnimation();
+        animations.stopSelectedAnimation();
+    }
+
+    public void resetAnimation() {
+        animations.resetSelectedAnimation();
     }
 }

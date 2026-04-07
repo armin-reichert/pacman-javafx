@@ -179,7 +179,7 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceManager {
     @Override
     public Ghost createGhostWithAnimations(byte personality) {
         final Ghost ghost = ArcadeMsPacMan_GameModel.createGhost(personality);
-        ghost.setAnimationManager(createGhostAnimations(personality));
+        ghost.setAnimations(createGhostAnimations(personality));
         ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
         return ghost;
     }

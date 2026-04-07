@@ -197,13 +197,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
         else if (tick == Arcade_GameState.TICK_PACMAN_DYING_HIDE_GHOSTS) {
             level.ghosts().forEach(Ghost::hide);
-            pac.optAnimationManager().ifPresent(am -> {
-                am.selectAnimation(Pac.AnimationID.PAC_DYING);
-                am.resetSelectedAnimation();
-            });
+            pac.animations().selectAnimation(Pac.AnimationID.PAC_DYING);
+            pac.animations().resetSelectedAnimation();
         }
         else if (tick == Arcade_GameState.TICK_PACMAN_DYING_START_ANIMATION) {
-            pac.optAnimationManager().ifPresent(AnimationManager::playSelectedAnimation);
+            pac.playAnimation();
             publishGameEvent(new PacDyingEvent(pac));
         }
         else if (tick == Arcade_GameState.TICK_PACMAN_DYING_HIDE_PAC) {
@@ -228,7 +226,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         ghost.setState(GhostState.EATEN);
         // Animation index is 0-based, so use animation frame 0 to show points for first killed ghost...
-        ghost.selectAnimationAt(Ghost.AnimationID.GHOST_POINTS, alreadyKilled);
+        ghost.selectAnimationAndSetFrame(Ghost.AnimationID.GHOST_POINTS, alreadyKilled);
 
         level.energizerVictims().add(ghost);
         level.incrementGhostKillCount();
@@ -247,7 +245,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         else if (tick == Arcade_GameState.TICK_EATING_GHOST_DURATION) {
             level.pac().show();
             level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
-            level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::playSelectedAnimation));
+            level.ghosts().forEach(Actor::playAnimation);
         }
     }
 

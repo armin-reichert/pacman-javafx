@@ -65,9 +65,10 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawCurrentSprite(Actor actor) {
-        actor.optAnimationManager()
-            .map(animations -> animations.currentSprite(actor))
-            .ifPresent(sprite -> drawSpriteCentered(actor.center(), sprite));
+        final RectShort sprite = actor.animations().currentSprite(actor);
+        if (sprite != null) {
+            drawSpriteCentered(actor.center(), sprite);
+        }
     }
 
     private void drawBonus(Bonus bonus) {
@@ -90,9 +91,9 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         }
     }
 
+    //TODO check if this is the way to do this
     private void drawPac(Pac pac) {
-        //TODO check if this is the way to do this
-        pac.optAnimationManager().map(SpriteAnimationManager.class::cast).ifPresent(spriteAnimations -> {
+        if (pac.animations() instanceof SpriteAnimationManager<?> spriteAnimations) {
             SpriteAnimation spriteAnimation = spriteAnimations.currentAnimation();
             if (spriteAnimation == null) {
                 Logger.error("No sprite animation found for {}", pac);
@@ -103,7 +104,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             } else {
                 drawMovingActorSprite(pac, pac.moveDir(), spriteAnimation.currentSprite());
             }
-        });
+        }
     }
 
     // Simulates dying animation by providing the right direction for each animation frame

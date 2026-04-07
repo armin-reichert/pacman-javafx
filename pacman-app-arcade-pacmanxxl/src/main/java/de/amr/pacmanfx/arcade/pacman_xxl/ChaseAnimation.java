@@ -77,7 +77,7 @@ class ChaseAnimation {
         actorRenderer.scalingProperty().bind(scalingProperty());
 
         pac = ArcadePacMan_GameModel.createPacMan();
-        pac.setAnimationManager(uiConfig.createPacAnimations());
+        pac.setAnimations(uiConfig.createPacAnimations());
         pac.playAnimation(Pac.AnimationID.PAC_MUNCHING);
         pac.setX(numTilesX * TS);
         pac.setMoveDir(Direction.LEFT);
@@ -145,7 +145,7 @@ class ChaseAnimation {
                 }
             }
             if (eatenGhostIndex != -1) {
-                ghosts.get(eatenGhostIndex).selectAnimationAt(Ghost.AnimationID.GHOST_POINTS, eatenGhostIndex);
+                ghosts.get(eatenGhostIndex).selectAnimationAndSetFrame(Ghost.AnimationID.GHOST_POINTS, eatenGhostIndex);
                 if (eatenGhostIndex > 0) {
                     ghosts.get(eatenGhostIndex - 1).setVisible(false);
                 }

@@ -46,7 +46,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     public void doInit(Game game) {
         final UIConfig uiConfig = ui.currentConfig();
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimationManager(uiConfig.createPacAnimations());
+        pacMan.setAnimations(uiConfig.createPacAnimations());
         blinky = uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW);
         tick = -1;
     }

@@ -67,7 +67,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         final UIConfig uiConfig = ui.currentConfig();
 
         pacMan = createPacMan();
-        pacMan.setAnimationManager(uiConfig.createPacAnimations());
+        pacMan.setAnimations(uiConfig.createPacAnimations());
 
         blinky = uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW);
 
@@ -136,8 +136,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     }
 
     private SpriteAnimation blinkyAnimation(Object animationID) {
-        return (SpriteAnimation) blinky.optAnimationManager()
-            .map(animations -> animations.animation(animationID))
-            .orElse(null);
+        return (SpriteAnimation) blinky.animations().animation(animationID);
     }
 }

@@ -36,12 +36,12 @@ public class Bag extends Actor {
     private boolean open;
 
     public Bag() {
-        setAnimationManager(new BagAnimations());
+        setAnimations(new BagAnimations());
     }
 
     public void setOpen(boolean open) {
         this.open = open;
-        animationManager.selectAnimation(open ? AnimationID.JUNIOR : AnimationID.BAG);
+        animations.selectAnimation(open ? AnimationID.JUNIOR : AnimationID.BAG);
     }
 
     public boolean isOpen() {

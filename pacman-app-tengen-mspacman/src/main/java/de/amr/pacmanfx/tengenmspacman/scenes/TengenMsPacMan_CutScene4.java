@@ -7,7 +7,6 @@ import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
@@ -70,10 +69,10 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = createMsPacMan();
-        msPacMan.setAnimationManager(uiConfig.createPacAnimations());
+        msPacMan.setAnimations(uiConfig.createPacAnimations());
 
         pacMan = createPacMan();
-        pacMan.setAnimationManager(uiConfig.createPacAnimations());
+        pacMan.setAnimations(uiConfig.createPacAnimations());
 
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
@@ -116,15 +115,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                 }
                 case 230 -> {
                     pacMan.setSpeed(0);
-                    pacMan.optAnimationManager().ifPresent(am -> {
-                        am.stopSelectedAnimation();
-                        am.resetSelectedAnimation();
-                    });
+                    pacMan.stopAnimation();
+                    pacMan.resetAnimation();
                     msPacMan.setSpeed(0);
-                    msPacMan.optAnimationManager().ifPresent(am -> {
-                        am.stopSelectedAnimation();
-                        am.resetSelectedAnimation();
-                    });
+                    msPacMan.stopAnimation();
+                    msPacMan.resetAnimation();
                 }
                 case 400 -> {
                     pacMan.playAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
@@ -135,8 +130,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                     msPacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_MS_PAC_MAN_WAVING_HAND);
                 }
                 case 527 -> {
-                    pacMan.optAnimationManager().ifPresent(AnimationManager::playSelectedAnimation);
-                    msPacMan.optAnimationManager().ifPresent(AnimationManager::playSelectedAnimation);
+                    pacMan.playAnimation();
+                    msPacMan.playAnimation();
                 }
                 case 648 -> {
                     pacMan.playAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_TURNING_AWAY);
@@ -165,7 +160,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         junior.setPosition((float) randomX, unscaledSize().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimationManager(ui.currentConfig().createPacAnimations());
+        junior.setAnimations(ui.currentConfig().createPacAnimations());
         junior.selectAnimation(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);

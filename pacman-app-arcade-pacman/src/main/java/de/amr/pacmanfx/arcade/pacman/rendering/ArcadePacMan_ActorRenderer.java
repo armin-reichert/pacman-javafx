@@ -33,9 +33,10 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
             drawBonus(bonus);
         }
         else {
-            actor.optAnimationManager()
-                .map(animations -> animations.currentSprite(actor))
-                .ifPresent(sprite -> drawSpriteCentered(actor.center(), sprite));
+            final RectShort sprite = actor.animations().currentSprite(actor);
+            if (sprite != null) {
+                drawSpriteCentered(actor.center(), sprite);
+            }
         }
     }
 

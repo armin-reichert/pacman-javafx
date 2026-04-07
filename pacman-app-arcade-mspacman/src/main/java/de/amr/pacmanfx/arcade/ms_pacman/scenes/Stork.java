@@ -31,6 +31,6 @@ public class Stork extends Actor {
     }
 
     public Stork() {
-        setAnimationManager(new StorkAnimations());
+        setAnimations(new StorkAnimations());
     }
 }

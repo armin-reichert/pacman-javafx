@@ -66,10 +66,10 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = createMsPacMan();
-        msPacMan.setAnimationManager(uiConfig.createPacAnimations());
+        msPacMan.setAnimations(uiConfig.createPacAnimations());
 
         pacMan = createPacMan();
-        pacMan.setAnimationManager(uiConfig.createPacAnimations());
+        pacMan.setAnimations(uiConfig.createPacAnimations());
 
         ui.soundManager().play(SoundID.INTERMISSION_2);
     }

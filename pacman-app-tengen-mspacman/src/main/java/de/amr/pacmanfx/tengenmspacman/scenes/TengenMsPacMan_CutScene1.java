@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
@@ -95,13 +94,13 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = createMsPacMan();
-        msPacMan.setAnimationManager(uiConfig.createPacAnimations());
+        msPacMan.setAnimations(uiConfig.createPacAnimations());
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
         msPacMan.setSpeed(0);
 
         pacMan = createPacMan();
-        pacMan.setAnimationManager(uiConfig.createPacAnimations());
+        pacMan.setAnimations(uiConfig.createPacAnimations());
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
         pacMan.setSpeed(0);
@@ -119,7 +118,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         pinky.setSpeed(0);
 
         heart = new Actor();
-        heart.setAnimationManager(new SingleSpriteNoAnimation(spriteSheet.sprite(SpriteID.HEART)));
+        heart.setAnimations(new SingleSpriteNoAnimation(spriteSheet.sprite(SpriteID.HEART)));
 
         collided = false;
 
@@ -216,8 +215,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                     msPacMan.setMoveDir(Direction.RIGHT);
                 }
                 case 545 -> {
-                    pacMan.optAnimationManager().ifPresent(AnimationManager::resetSelectedAnimation);
-                    msPacMan.optAnimationManager().ifPresent(AnimationManager::resetSelectedAnimation);
+                    pacMan.resetAnimation();
+                    msPacMan.resetAnimation();
                 }
                 case 560 -> {
                     heart.setPosition(0.5f * (pacMan.x() + msPacMan.x()), pacMan.y() - TS(2));

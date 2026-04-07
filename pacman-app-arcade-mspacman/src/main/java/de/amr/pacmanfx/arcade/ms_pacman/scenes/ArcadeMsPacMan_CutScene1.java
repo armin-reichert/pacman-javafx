@@ -79,17 +79,17 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimationManager(uiConfig.createPacAnimations());
+        pacMan.setAnimations(uiConfig.createPacAnimations());
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimationManager(uiConfig.createPacAnimations());
+        msPacMan.setAnimations(uiConfig.createPacAnimations());
 
         inky = uiConfig.createGhostWithAnimations(CYAN_GHOST_BASHFUL);
 
         pinky = uiConfig.createGhostWithAnimations(PINK_GHOST_SPEEDY);
 
         heart = new Actor();
-        heart.setAnimationManager(new SingleSpriteNoAnimation(spriteSheet.sprite(SpriteID.HEART)));
+        heart.setAnimations(new SingleSpriteNoAnimation(spriteSheet.sprite(SpriteID.HEART)));
 
         clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.setPosition(TS(3), TS(10));
@@ -242,17 +242,13 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private void enterStateInHeaven() {
         pacMan.setSpeed(0);
         pacMan.setMoveDir(Direction.LEFT);
-        pacMan.optAnimationManager().ifPresent(am -> {
-            am.stopSelectedAnimation();
-            am.resetSelectedAnimation();
-        });
+        pacMan.stopAnimation();
+        pacMan.resetAnimation();
 
         msPacMan.setSpeed(0);
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.optAnimationManager().ifPresent(am -> {
-            am.stopSelectedAnimation();
-            am.resetSelectedAnimation();
-        });
+        msPacMan.stopAnimation();
+        msPacMan.resetAnimation();
 
         inky.hide();
         pinky.hide();
