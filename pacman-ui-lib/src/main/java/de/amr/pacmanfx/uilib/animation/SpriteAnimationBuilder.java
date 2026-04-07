@@ -24,6 +24,9 @@ public class SpriteAnimationBuilder {
     private final BuildData data = new BuildData();
 
     public SpriteAnimationBuilder ticksPerFrame(int ticks) {
+        if (ticks <= 0) {
+            throw new IllegalArgumentException("Number of ticks per frame is negative (%d)".formatted(data.frameTicks));
+        }
         data.frameTicks = ticks;
         return this;
     }
@@ -37,8 +40,7 @@ public class SpriteAnimationBuilder {
     }
 
     public SpriteAnimationBuilder singleSprite(RectShort sprite) {
-        data.sprites = new RectShort[]{requireNonNull(sprite)};
-        return this;
+        return sprites(new RectShort[] { requireNonNull(sprite) });
     }
 
     public SpriteAnimation repeated() {
@@ -52,9 +54,6 @@ public class SpriteAnimationBuilder {
     private SpriteAnimation build(int cycleCount) {
         if (data.sprites == null) {
             throw new IllegalArgumentException("No sprites defined");
-        }
-        if (data.frameTicks <= 0) {
-            throw new IllegalArgumentException("Number of ticks per frame is negative (%d)".formatted(data.frameTicks));
         }
         final Duration cycleDuration = Duration.seconds(1.0 / SpriteAnimation.FPS * data.frameTicks);
         final SpriteAnimation anim = new SpriteAnimation(cycleDuration);
