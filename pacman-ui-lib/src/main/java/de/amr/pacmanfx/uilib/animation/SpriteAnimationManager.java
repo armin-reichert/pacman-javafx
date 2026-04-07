@@ -66,7 +66,7 @@ public abstract class SpriteAnimationManager<SID extends Enum<SID>> implements A
     }
 
     @Override
-    public Object selectedID() {
+    public Object selectedAnimationID() {
         return selectedID;
     }
 
@@ -88,21 +88,21 @@ public abstract class SpriteAnimationManager<SID extends Enum<SID>> implements A
     }
 
     @Override
-    public void play() {
+    public void playSelectedAnimation() {
         if (currentAnimation() != null) {
             currentAnimation().play();
         }
     }
 
     @Override
-    public void stop() {
+    public void stopSelectedAnimation() {
         if (currentAnimation() != null) {
             currentAnimation().stop();
         }
     }
 
     @Override
-    public void reset() {
+    public void resetSelectedAnimation() {
         if (currentAnimation() != null) {
             currentAnimation().reset();
         }

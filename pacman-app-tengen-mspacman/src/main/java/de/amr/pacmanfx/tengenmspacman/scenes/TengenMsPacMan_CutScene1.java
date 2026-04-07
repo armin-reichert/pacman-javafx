@@ -216,8 +216,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                     msPacMan.setMoveDir(Direction.RIGHT);
                 }
                 case 545 -> {
-                    pacMan.optAnimationManager().ifPresent(AnimationManager::reset);
-                    msPacMan.optAnimationManager().ifPresent(AnimationManager::reset);
+                    pacMan.optAnimationManager().ifPresent(AnimationManager::resetSelectedAnimation);
+                    msPacMan.optAnimationManager().ifPresent(AnimationManager::resetSelectedAnimation);
                 }
                 case 560 -> {
                     heart.setPosition(0.5f * (pacMan.x() + msPacMan.x()), pacMan.y() - TS(2));

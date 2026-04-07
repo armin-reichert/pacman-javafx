@@ -350,13 +350,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private void resetAnimations(GameLevel level) {
         final TengenMsPacMan_GameModel game = gameContext().game();
         level.pac().optAnimationManager().ifPresent(animationManager -> {
-            animationManager.select(game.isBoosterActive()
+            animationManager.selectAnimation(game.isBoosterActive()
                 ? TengenMsPacMan_AnimationID.ANIM_MS_PAC_MAN_BOOSTER : Pac.AnimationID.PAC_MUNCHING);
-            animationManager.reset();
+            animationManager.resetSelectedAnimation();
         });
         level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(animationManager -> {
-            animationManager.select(Ghost.AnimationID.GHOST_NORMAL);
-            animationManager.reset();
+            animationManager.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+            animationManager.resetSelectedAnimation();
         }));
     }
 }

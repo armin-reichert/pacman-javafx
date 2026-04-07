@@ -338,8 +338,8 @@ public abstract class AbstractGameModel implements Game, Cheating {
 
         level.blinking().setStartState(Pulse.State.ON);
         level.blinking().restart();
-        level.pac().optAnimationManager().ifPresent(AnimationManager::play);
-        level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
+        level.pac().optAnimationManager().ifPresent(AnimationManager::playSelectedAnimation);
+        level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::playSelectedAnimation));
 
         publishGameEvent(new HuntingPhaseStartedEvent(level.huntingTimer().phaseIndex(), level.huntingTimer().phase()));
     }
@@ -435,7 +435,7 @@ public abstract class AbstractGameModel implements Game, Cheating {
         pac.setMoveDir(Direction.LEFT);
         pac.setWishDir(Direction.LEFT);
         pac.powerTimer().resetToIndefiniteDuration();
-        pac.optAnimationManager().ifPresent(AnimationManager::reset);
+        pac.optAnimationManager().ifPresent(AnimationManager::resetSelectedAnimation);
 
         level.ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
@@ -444,7 +444,7 @@ public abstract class AbstractGameModel implements Game, Cheating {
             ghost.setMoveDir(startDir);
             ghost.setWishDir(startDir);
             ghost.setState(GhostState.LOCKED);
-            ghost.optAnimationManager().ifPresent(AnimationManager::reset);
+            ghost.optAnimationManager().ifPresent(AnimationManager::resetSelectedAnimation);
         });
 
         level.blinking().setStartState(Pulse.State.ON); // Energizers are visible when ON

@@ -221,12 +221,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private void resetActorAnimations(GameLevel level) {
         level.pac().optAnimationManager().ifPresent(pacAnimations -> {
-            pacAnimations.select(Pac.AnimationID.PAC_MUNCHING);
-            pacAnimations.reset();
+            pacAnimations.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+            pacAnimations.resetSelectedAnimation();
         });
         level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(ghostAnimations -> {
-            ghostAnimations.select(Ghost.AnimationID.GHOST_NORMAL);
-            ghostAnimations.reset();
+            ghostAnimations.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+            ghostAnimations.resetSelectedAnimation();
         }));
     }
 }

@@ -117,13 +117,13 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                 case 230 -> {
                     pacMan.setSpeed(0);
                     pacMan.optAnimationManager().ifPresent(am -> {
-                        am.stop();
-                        am.reset();
+                        am.stopSelectedAnimation();
+                        am.resetSelectedAnimation();
                     });
                     msPacMan.setSpeed(0);
                     msPacMan.optAnimationManager().ifPresent(am -> {
-                        am.stop();
-                        am.reset();
+                        am.stopSelectedAnimation();
+                        am.resetSelectedAnimation();
                     });
                 }
                 case 400 -> {
@@ -135,8 +135,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                     msPacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_MS_PAC_MAN_WAVING_HAND);
                 }
                 case 527 -> {
-                    pacMan.optAnimationManager().ifPresent(AnimationManager::play);
-                    msPacMan.optAnimationManager().ifPresent(AnimationManager::play);
+                    pacMan.optAnimationManager().ifPresent(AnimationManager::playSelectedAnimation);
+                    msPacMan.optAnimationManager().ifPresent(AnimationManager::playSelectedAnimation);
                 }
                 case 648 -> {
                     pacMan.playAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_TURNING_AWAY);

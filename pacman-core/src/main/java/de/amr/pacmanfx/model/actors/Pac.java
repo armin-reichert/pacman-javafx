@@ -170,7 +170,7 @@ public class Pac extends MovingActor {
         tryMovingOrTeleporting(level);
 
         if (moveInfo.moved) {
-            optAnimationManager().ifPresent(AnimationManager::play);
+            optAnimationManager().ifPresent(AnimationManager::playSelectedAnimation);
         } else {
             stopAnimation();
         }

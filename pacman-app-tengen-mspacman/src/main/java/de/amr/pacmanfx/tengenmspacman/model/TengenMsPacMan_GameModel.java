@@ -740,12 +740,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         else if (tick == TICK_PACMAN_DYING_HIDE_GHOSTS) {
             level.ghosts().forEach(Ghost::hide);
             pac.optAnimationManager().ifPresent(animations -> {
-                animations.select(Pac.AnimationID.PAC_DYING);
-                animations.reset();
+                animations.selectAnimation(Pac.AnimationID.PAC_DYING);
+                animations.resetSelectedAnimation();
             });
         }
         else if (tick == TICK_PACMAN_DYING_START_PAC_ANIMATION) {
-            pac.optAnimationManager().ifPresent(AnimationManager::play);
+            pac.optAnimationManager().ifPresent(AnimationManager::playSelectedAnimation);
             publishGameEvent(new PacDyingEvent(pac));
         }
         else if (tick == TICK_PACMAN_DYING_HIDE_PAC) {
@@ -786,7 +786,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         else if (tick == TICK_EATING_GHOST_COMPLETE) {
             level.pac().show();
             level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
-            level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
+            level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::playSelectedAnimation));
         }
     }
 

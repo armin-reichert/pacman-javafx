@@ -65,7 +65,7 @@ public class BaseDebugInfoRenderer extends GameScene2D_Renderer {
             .filter(SpriteAnimationManager.class::isInstance)
             .map(SpriteAnimationManager.class::cast)
             .ifPresent(spriteAnimationMap -> {
-                Object selectedID = spriteAnimationMap.selectedID();
+                Object selectedID = spriteAnimationMap.selectedAnimationID();
                 if (selectedID != null) {
                     ctx.setFont(debugTextFont);
                     drawAnimationInfo(movingActor, spriteAnimationMap, selectedID);

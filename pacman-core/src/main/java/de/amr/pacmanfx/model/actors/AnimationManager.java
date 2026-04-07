@@ -7,31 +7,31 @@ import de.amr.pacmanfx.lib.math.RectShort;
 
 public interface AnimationManager {
 
-    AnimationManager EMPTY = new AnimationManager() {
+    AnimationManager NO_ANIMATIONS = new AnimationManager() {
         @Override
-        public Object animation(Object id) {
+        public Object animation(Object animationID) {
             return null;
         }
 
         @Override
-        public String selectedID() {
+        public String selectedAnimationID() {
             return "";
         }
 
         @Override
-        public void setAnimationFrame(Object id, int frameIndex) {
+        public void setAnimationFrame(Object animationID, int frameIndex) {
         }
 
         @Override
-        public void play() {
+        public void playSelectedAnimation() {
         }
 
         @Override
-        public void stop() {
+        public void stopSelectedAnimation() {
         }
 
         @Override
-        public void reset() {
+        public void resetSelectedAnimation() {
         }
 
         @Override
@@ -45,14 +45,23 @@ public interface AnimationManager {
         }
     };
 
-    Object animation(Object id);
-    Object selectedID();
-    void setAnimationFrame(Object id, int frameIndex);
-    default void select(Object id) { setAnimationFrame(id, 0); }
-    default void play(Object id) { select(id); play(); }
-    void play();
-    void stop();
-    void reset();
+    Object animation(Object animationID);
+
+    Object selectedAnimationID();
+
+    void setAnimationFrame(Object animationID, int frameIndex);
+
+    default void selectAnimation(Object animationID) { setAnimationFrame(animationID, 0); }
+
+    default void playAnimation(Object animationID) { selectAnimation(animationID); playSelectedAnimation(); }
+
+    void playSelectedAnimation();
+
+    void stopSelectedAnimation();
+
+    void resetSelectedAnimation();
+
     RectShort currentSprite(Actor actor);
+
     int frameIndex();
 }

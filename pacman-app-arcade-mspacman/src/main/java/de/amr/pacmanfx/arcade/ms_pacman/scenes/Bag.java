@@ -41,7 +41,7 @@ public class Bag extends Actor {
 
     public void setOpen(boolean open) {
         this.open = open;
-        animationManager.select(open ? AnimationID.JUNIOR : AnimationID.BAG);
+        animationManager.selectAnimation(open ? AnimationID.JUNIOR : AnimationID.BAG);
     }
 
     public boolean isOpen() {

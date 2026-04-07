@@ -111,8 +111,8 @@ public class DashboardSectionActorInfo extends DashboardSection {
     private String ghostAnimationInfo(GameLevel level, Ghost ghost) {
         if (ghost.optAnimationManager().isPresent()
                 && ghost.optAnimationManager().get() instanceof SpriteAnimationManager<?> spriteAnimations
-                && spriteAnimations.selectedID() != null) {
-            return String.valueOf(spriteAnimations.selectedID());
+                && spriteAnimations.selectedAnimationID() != null) {
+            return String.valueOf(spriteAnimations.selectedAnimationID());
         }
         return NO_INFO;
     }

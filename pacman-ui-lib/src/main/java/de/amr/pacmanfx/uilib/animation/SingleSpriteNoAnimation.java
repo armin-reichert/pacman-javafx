@@ -26,7 +26,7 @@ public record SingleSpriteNoAnimation(RectShort sprite) implements AnimationMana
     }
 
     @Override
-    public String selectedID() {
+    public String selectedAnimationID() {
         return null;
     }
 
@@ -40,14 +40,14 @@ public record SingleSpriteNoAnimation(RectShort sprite) implements AnimationMana
     }
 
     @Override
-    public void play() {
+    public void playSelectedAnimation() {
     }
 
     @Override
-    public void stop() {
+    public void stopSelectedAnimation() {
     }
 
     @Override
-    public void reset() {
+    public void resetSelectedAnimation() {
     }
 }

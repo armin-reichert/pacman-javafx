@@ -243,15 +243,15 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pacMan.setSpeed(0);
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.optAnimationManager().ifPresent(am -> {
-            am.stop();
-            am.reset();
+            am.stopSelectedAnimation();
+            am.resetSelectedAnimation();
         });
 
         msPacMan.setSpeed(0);
         msPacMan.setMoveDir(Direction.RIGHT);
         msPacMan.optAnimationManager().ifPresent(am -> {
-            am.stop();
-            am.reset();
+            am.stopSelectedAnimation();
+            am.resetSelectedAnimation();
         });
 
         inky.hide();

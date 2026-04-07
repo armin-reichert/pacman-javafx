@@ -98,7 +98,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
                 Logger.error("No sprite animation found for {}", pac);
                 return;
             }
-            if (Pac.AnimationID.PAC_DYING.equals(spriteAnimations.selectedID())) {
+            if (Pac.AnimationID.PAC_DYING.equals(spriteAnimations.selectedAnimationID())) {
                 drawPacDyingAnimation(pac, spriteAnimation);
             } else {
                 drawMovingActorSprite(pac, pac.moveDir(), spriteAnimation.currentSprite());

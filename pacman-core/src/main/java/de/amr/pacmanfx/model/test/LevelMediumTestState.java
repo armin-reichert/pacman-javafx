@@ -18,8 +18,8 @@ public class LevelMediumTestState extends AbstractState<Game> implements TestSta
         final GameLevel level = game.optGameLevel().orElseThrow();
         level.pac().usingAutopilotProperty().unbind();
         level.pac().setUsingAutopilot(true);
-        level.pac().optAnimationManager().ifPresent(AnimationManager::play);
-        level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
+        level.pac().optAnimationManager().ifPresent(AnimationManager::playSelectedAnimation);
+        level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::playSelectedAnimation));
         level.showPacAndGhosts();
         GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
         message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());

@@ -181,19 +181,19 @@ public class Actor {
 
     // Animation support
 
-    protected AnimationManager animationManager = AnimationManager.EMPTY;
+    protected AnimationManager animationManager = AnimationManager.NO_ANIMATIONS;
 
     public Optional<AnimationManager> optAnimationManager() {
         return Optional.ofNullable(animationManager);
     }
 
     public void setAnimationManager(AnimationManager animationManager) {
-        this.animationManager = animationManager != null ? animationManager : AnimationManager.EMPTY;
+        this.animationManager = animationManager != null ? animationManager : AnimationManager.NO_ANIMATIONS;
     }
 
     public void selectAnimation(Object animationID) {
         requireNonNull(animationID);
-        animationManager.select(animationID);
+        animationManager.selectAnimation(animationID);
     }
 
     public void selectAnimationAt(Object animationID, int frameIndex) {
@@ -203,14 +203,14 @@ public class Actor {
 
     public void playAnimation(Object animationID) {
         requireNonNull(animationID);
-        animationManager.play(animationID);
+        animationManager.playAnimation(animationID);
     }
 
     public void playAnimation() {
-        animationManager.play();
+        animationManager.playSelectedAnimation();
     }
 
     public void stopAnimation() {
-        animationManager.stop();
+        animationManager.stopSelectedAnimation();
     }
 }
