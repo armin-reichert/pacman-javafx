@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.beans.property.DoubleProperty;
@@ -269,10 +268,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        //TODO check this
-        if (!ui.soundManager().isPlaying(SoundID.PAC_MAN_MUNCHING)) {
-            ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
-        }
+        final long tick = gameContext().clock().tickCount();
+        soundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 
     @Override

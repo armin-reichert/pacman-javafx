@@ -20,9 +20,5 @@ public enum SoundID {
     LEVEL_COMPLETE,
     PAC_MAN_DEATH,
     PAC_MAN_MUNCHING,
-    PAC_MAN_POWER,
-    SIREN_1,
-    SIREN_2,
-    SIREN_3,
-    SIREN_4
+    PAC_MAN_POWER
 }

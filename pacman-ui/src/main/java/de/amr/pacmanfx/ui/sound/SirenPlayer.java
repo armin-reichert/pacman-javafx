@@ -16,13 +16,13 @@ public class SirenPlayer {
 
     private final BooleanProperty mute = new SimpleBooleanProperty(false);
 
-    private final URL[] urls;
+    private final URL[] sirenURLs;
     private final AudioClip[] clips;
 
     private int currentSirenNumber;
 
     public SirenPlayer(URL... sirenURLArray) {
-        urls = Arrays.copyOf(sirenURLArray, sirenURLArray.length);
+        sirenURLs = Arrays.copyOf(sirenURLArray, sirenURLArray.length);
         clips = new AudioClip[sirenURLArray.length];
         muteProperty().addListener((_, _, muted) -> {
             if (muted) {
@@ -44,7 +44,7 @@ public class SirenPlayer {
     }
 
     public void ensureSirenPlaying(int number, double volume, double rate) {
-        if (!Validations.inClosedRange(number, 1, urls.length)) {
+        if (!Validations.inClosedRange(number, 1, sirenURLs.length)) {
             Logger.error("Invalid siren number: {}", number);
             return;
         }
@@ -59,7 +59,7 @@ public class SirenPlayer {
         }
         final int index = number - 1;
         if (clips[index] == null) {
-            final var clip = new AudioClip(urls[index].toExternalForm());
+            final var clip = new AudioClip(sirenURLs[index].toExternalForm());
             clip.setCycleCount(AudioClip.INDEFINITE);
             clip.setRate(rate);
             clip.play(volume);
