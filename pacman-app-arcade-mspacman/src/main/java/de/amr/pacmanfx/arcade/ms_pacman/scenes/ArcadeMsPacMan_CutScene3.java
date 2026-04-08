@@ -65,14 +65,14 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         final UIConfig uiConfig = ui.currentConfig();
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations());
+        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationTimer()));
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations());
+        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationTimer()));
 
-        stork = new Stork();
+        stork = new Stork(ui.spriteAnimationTimer());
 
-        bag = new Bag();
+        bag = new Bag(ui.spriteAnimationTimer());
         bag.setOpen(false);
 
         clapperboard = new Clapperboard("3", "JUNIOR");

@@ -9,35 +9,40 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
+import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
     public enum AnimationID { PAC_MAN_MUNCHING }
 
-    public ArcadeMsPacMan_PacAnimations() {
+    private final SpriteAnimationTimer timer;
+    
+    public ArcadeMsPacMan_PacAnimations(SpriteAnimationTimer spriteAnimationTimer) {
         super(ArcadeMsPacMan_SpriteSheet.instance());
+        this.timer = requireNonNull(spriteAnimationTimer);
     }
 
     @Override
     protected SpriteAnimation createAnimation(Object animationID) {
         return switch (animationID) {
-            case Pac.AnimationID.PAC_FULL -> builder()
+            case Pac.AnimationID.PAC_FULL -> builder(timer)
                 .singleSprite(spriteSheet.sprite(SpriteID.MS_PACMAN_FULL))
                 .build();
 
-            case Pac.AnimationID.PAC_MUNCHING -> builder()
+            case Pac.AnimationID.PAC_MUNCHING -> builder(timer)
                 .sprites(msPacManMunchingSprites(Direction.LEFT))
                 .repeated()
                 .build();
 
-            case Pac.AnimationID.PAC_DYING -> builder()
+            case Pac.AnimationID.PAC_DYING -> builder(timer)
                 .sprites(spriteSheet().sprites(SpriteID.MS_PACMAN_DYING))
                 .frameTicks(8)
                 .build();
 
-            case AnimationID.PAC_MAN_MUNCHING -> builder()
+            case AnimationID.PAC_MAN_MUNCHING -> builder(timer)
                 .sprites(mrPacManMunchingSprites(Direction.LEFT))
                 .frameTicks(2)
                 .repeated()

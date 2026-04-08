@@ -9,47 +9,51 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
+import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
 
+    private final SpriteAnimationTimer timer;
     private final byte personality;
 
-    public ArcadeMsPacMan_GhostAnimations(byte personality) {
+    public ArcadeMsPacMan_GhostAnimations(SpriteAnimationTimer spriteAnimationTimer, byte personality) {
         super(ArcadeMsPacMan_SpriteSheet.instance());
         this.personality = requireValidGhostPersonality(personality);
+        this.timer = requireNonNull(spriteAnimationTimer);
     }
 
     @Override
     protected SpriteAnimation createAnimation(Object id) {
         return switch (id) {
-            case Ghost.AnimationID.GHOST_NORMAL -> builder()
+            case Ghost.AnimationID.GHOST_NORMAL -> builder(timer)
                 .sprites(ghostNormalSprites(Direction.LEFT))
                 .frameTicks(8)
                 .repeated()
                 .build();
 
-            case Ghost.AnimationID.GHOST_FRIGHTENED -> builder()
+            case Ghost.AnimationID.GHOST_FRIGHTENED -> builder(timer)
                 .sprites(spriteSheet().sprites(GHOST_FRIGHTENED))
                 .frameTicks(8)
                 .repeated()
                 .build();
 
-            case Ghost.AnimationID.GHOST_FLASHING -> builder()
+            case Ghost.AnimationID.GHOST_FLASHING -> builder(timer)
                 .sprites(spriteSheet().sprites(GHOST_FLASHING))
                 .frameTicks(7)
                 .repeated()
                 .build();
 
-            case Ghost.AnimationID.GHOST_EYES -> builder()
+            case Ghost.AnimationID.GHOST_EYES -> builder(timer)
                 .sprites(ghostEyesSprites(Direction.LEFT))
                 .build();
 
-            case Ghost.AnimationID.GHOST_POINTS -> builder()
+            case Ghost.AnimationID.GHOST_POINTS -> builder(timer)
                 .sprites(spriteSheet().sprites(GHOST_NUMBERS))
                 .stopped()
                 .build();

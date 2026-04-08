@@ -67,11 +67,11 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         final UIConfig uiConfig = ui.currentConfig();
 
         pacMan = createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations());
+        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationTimer()));
 
-        blinky = uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW);
+        blinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationTimer(), RED_GHOST_SHADOW);
 
-        nailDressAnimation = SpriteAnimation.builder()
+        nailDressAnimation = SpriteAnimation.builder(ui.spriteAnimationTimer())
             .sprites(ArcadePacMan_SpriteSheet.instance().sprites(SpriteID.RED_GHOST_STRETCHED))
             .stopped()
             .build();

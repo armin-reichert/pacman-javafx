@@ -8,8 +8,10 @@ import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
+import static java.util.Objects.requireNonNull;
 
 public class Bag extends Actor {
 
@@ -17,15 +19,18 @@ public class Bag extends Actor {
 
     public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
 
-        public BagAnimations() {
+        private final SpriteAnimationTimer timer;
+
+        public BagAnimations(SpriteAnimationTimer spriteAnimationTimer) {
             super(TengenMsPacMan_SpriteSheet.instance());
+            timer = requireNonNull(spriteAnimationTimer);
         }
 
         @Override
         protected SpriteAnimation createAnimation(Object animationID) {
             return switch (animationID) {
-                case AnimationID.BAG    -> builder().singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).stopped().build();
-                case AnimationID.JUNIOR -> builder().singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).stopped().build();
+                case AnimationID.BAG    -> builder(timer).singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).stopped().build();
+                case AnimationID.JUNIOR -> builder(timer).singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).stopped().build();
                 default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
             };
         }
@@ -33,8 +38,8 @@ public class Bag extends Actor {
 
     private boolean open;
 
-    public Bag() {
-        setAnimations(new BagAnimations());
+    public Bag(SpriteAnimationTimer spriteAnimationTimer) {
+        setAnimations(new BagAnimations(spriteAnimationTimer));
         setOpen(false);
     }
 

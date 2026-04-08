@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.uilib.animation.sprite.SpriteAnimationTimer;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -14,12 +13,6 @@ import static java.util.Objects.requireNonNull;
 
 public class SpriteAnimationBuilder {
 
-    //TODO
-    private static final SpriteAnimationTimer TIMER = new SpriteAnimationTimer();
-    {
-        TIMER.start();
-    }
-
     private static class BuildData {
         int frameTicks = 1;
         RectShort[] sprites = new RectShort[0];
@@ -27,7 +20,13 @@ public class SpriteAnimationBuilder {
         boolean loop = false;
     }
 
+    private final SpriteAnimationTimer timer;
     private final BuildData data = new BuildData();
+
+    public SpriteAnimationBuilder(SpriteAnimationTimer timer) {
+        requireNonNull(timer);
+        this.timer = timer;
+    }
 
     public SpriteAnimationBuilder frameTicks(int ticks) {
         if (ticks <= 0) {
@@ -70,10 +69,7 @@ public class SpriteAnimationBuilder {
         if (data.stopped) {
             anim.stop();
         }
-
-        //TODO
-        TIMER.registerAnimation(anim);
-
+        timer.registerAnimation(anim);
         return anim;
     }
 }

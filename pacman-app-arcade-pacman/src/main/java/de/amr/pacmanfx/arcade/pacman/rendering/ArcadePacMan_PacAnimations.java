@@ -9,8 +9,10 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
+import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
@@ -18,29 +20,32 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
         ANIM_BIG_PAC_MAN,
     }
 
-    public ArcadePacMan_PacAnimations(ArcadePacMan_SpriteSheet spriteSheet) {
+    private final SpriteAnimationTimer timer;
+    
+    public ArcadePacMan_PacAnimations(SpriteAnimationTimer timer, ArcadePacMan_SpriteSheet spriteSheet) {
         super(spriteSheet);
+        this.timer = requireNonNull(timer);
     }
 
     @Override
     protected SpriteAnimation createAnimation(Object id) {
         return switch (id) {
-            case Pac.AnimationID.PAC_FULL -> builder()
+            case Pac.AnimationID.PAC_FULL -> builder(timer)
                 .singleSprite(spriteSheet.sprite(SpriteID.PACMAN_FULL))
                 .stopped()
                 .build();
 
-            case Pac.AnimationID.PAC_MUNCHING -> builder()
+            case Pac.AnimationID.PAC_MUNCHING -> builder(timer)
                 .sprites(pacMunchingSprites(Direction.LEFT))
                 .repeated()
                 .build();
 
-            case Pac.AnimationID.PAC_DYING -> builder()
+            case Pac.AnimationID.PAC_DYING -> builder(timer)
                 .sprites(spriteSheet.sprites(SpriteID.PACMAN_DYING))
                 .frameTicks(8)
                 .build();
 
-            case AnimationID.ANIM_BIG_PAC_MAN -> builder()
+            case AnimationID.ANIM_BIG_PAC_MAN -> builder(timer)
                 .sprites(spriteSheet.sprites(SpriteID.PACMAN_BIG))
                 .frameTicks(3)
                 .repeated()

@@ -2,9 +2,8 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.animation.sprite;
+package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import javafx.animation.AnimationTimer;
 
 import java.util.ArrayList;

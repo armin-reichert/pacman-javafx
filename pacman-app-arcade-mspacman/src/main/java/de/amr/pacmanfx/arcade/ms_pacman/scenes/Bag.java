@@ -8,10 +8,11 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
+import static java.util.Objects.requireNonNull;
 
 public class Bag extends Actor {
 
@@ -19,15 +20,18 @@ public class Bag extends Actor {
 
     public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
 
-        public BagAnimations() {
+        private final SpriteAnimationTimer timer;
+
+        public BagAnimations(SpriteAnimationTimer spriteAnimationTimer) {
             super(ArcadeMsPacMan_SpriteSheet.instance());
+            this.timer = requireNonNull(spriteAnimationTimer);
         }
 
         @Override
         protected SpriteAnimation createAnimation(Object animationID) {
             return switch (animationID) {
-                case AnimationID.JUNIOR -> builder().singleSprite(spriteSheet.sprite(JUNIOR_PAC)).stopped().build();
-                case AnimationID.BAG    -> builder().singleSprite(spriteSheet.sprite(BLUE_BAG)).stopped().build();
+                case AnimationID.JUNIOR -> SpriteAnimation.builder(timer).singleSprite(spriteSheet.sprite(JUNIOR_PAC)).stopped().build();
+                case AnimationID.BAG    -> SpriteAnimation.builder(timer).singleSprite(spriteSheet.sprite(BLUE_BAG)).stopped().build();
                 default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
             };
         }
@@ -35,8 +39,8 @@ public class Bag extends Actor {
 
     private boolean open;
 
-    public Bag() {
-        setAnimations(new BagAnimations());
+    public Bag(SpriteAnimationTimer spriteAnimationTimer) {
+        setAnimations(new BagAnimations(spriteAnimationTimer));
     }
 
     public void setOpen(boolean open) {

@@ -20,6 +20,7 @@ import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
@@ -72,6 +73,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private final DirectoryWatchdog customDirWatchdog;
     private final UIConfigManager uiConfigManager = new UIConfigManager();
     private final ActionBindingsManager actionBindingsManager = new ActionBindingsManagerImpl();
+    private final SpriteAnimationTimer spriteAnimationTimer = new SpriteAnimationTimer();
     private final SoundManager soundManager = new SoundManager();
     private final VoiceManager voiceManager = new VoiceManager();
     private final GameContext gameContext;
@@ -362,6 +364,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         stage.centerOnScreen();
         stage.show();
         flashMessageView.start();
+        spriteAnimationTimer.start();
         Platform.runLater(customDirWatchdog::startWatching);
     }
 
@@ -394,6 +397,11 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     @Override
     public SoundManager soundManager() {
         return soundManager;
+    }
+
+    @Override
+    public SpriteAnimationTimer spriteAnimationTimer() {
+        return spriteAnimationTimer;
     }
 
     @Override

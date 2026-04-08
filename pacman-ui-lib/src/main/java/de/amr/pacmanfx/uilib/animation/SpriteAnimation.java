@@ -15,8 +15,8 @@ public class SpriteAnimation {
     public static final int FPS = 60;
     private static final long ONE_TICK_DURATION = 1_000_000_000 / FPS;
 
-    public static SpriteAnimationBuilder builder() {
-        return new SpriteAnimationBuilder();
+    public static SpriteAnimationBuilder builder(SpriteAnimationTimer timer) {
+        return new SpriteAnimationBuilder(timer);
     }
 
     private RectShort[] sprites = new RectShort[0];

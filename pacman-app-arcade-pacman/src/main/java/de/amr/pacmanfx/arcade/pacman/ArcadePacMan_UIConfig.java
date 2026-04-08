@@ -29,6 +29,7 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.UfxImages;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -307,22 +308,22 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public Ghost createGhostWithAnimations(byte personality) {
+    public Ghost createGhostWithAnimations(SpriteAnimationTimer spriteAnimationTimer, byte personality) {
         final Ghost ghost = ArcadePacMan_GameModel.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(personality));
+        ghost.setAnimations(createGhostAnimations(spriteAnimationTimer, personality));
         ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public ArcadePacMan_GhostAnimations createGhostAnimations(byte personality) {
+    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimationTimer spriteAnimationTimer, byte personality) {
         Validations.requireValidGhostPersonality(personality);
-        return new ArcadePacMan_GhostAnimations(personality);
+        return new ArcadePacMan_GhostAnimations(spriteAnimationTimer, personality);
     }
 
     @Override
-    public ArcadePacMan_PacAnimations createPacAnimations() {
-        return new ArcadePacMan_PacAnimations(spriteSheet());
+    public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimationTimer spriteAnimationTimer) {
+        return new ArcadePacMan_PacAnimations(spriteAnimationTimer, spriteSheet());
     }
 
     @Override
