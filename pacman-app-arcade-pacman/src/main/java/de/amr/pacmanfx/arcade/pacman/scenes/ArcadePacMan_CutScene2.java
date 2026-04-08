@@ -73,7 +73,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
         nailDressAnimation = SpriteAnimation.builder()
             .sprites(ArcadePacMan_SpriteSheet.instance().sprites(SpriteID.RED_GHOST_STRETCHED))
-            .once();
+            .stopped()
+            .build();
 
         tick = -1;
     }
@@ -120,7 +121,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 blinky.setX(blinky.x() - 4);
                 blinky.selectAnimation(BLINKY_DAMAGED);
             }
-            case ANIMATION_START + 420 -> blinkyAnimation(BLINKY_DAMAGED).nextFrame(); // Eyes right-down
+            case ANIMATION_START + 420 -> blinkyAnimation(BLINKY_DAMAGED).advanceFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);
                 game.control().state().expire();
@@ -132,7 +133,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     }
 
     private void setNailDressAnimation(NailDressAnimationFrame animationFrame) {
-        nailDressAnimation.setFrameIndex(animationFrame.ordinal());
+        nailDressAnimation.setCurrentFrame(animationFrame.ordinal());
     }
 
     private SpriteAnimation blinkyAnimation(Object animationID) {

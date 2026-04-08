@@ -4,83 +4,89 @@
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.math.RectShort;
-import javafx.animation.Animation;
-import javafx.animation.Interpolator;
-import javafx.animation.Transition;
-import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
 /**
  * Plays a sequence of sprite sheet regions ("sprites") to create an animation effect.
  */
-public class SpriteAnimation extends Transition {
+public class SpriteAnimation {
 
     public static final int FPS = 60;
+    private static final long ONE_TICK_DURATION = 1_000_000_000 / FPS;
 
     public static SpriteAnimationBuilder builder() {
         return new SpriteAnimationBuilder();
     }
 
     private RectShort[] sprites = new RectShort[0];
-    private int frameTicks = 1;
-    private int frameIndex;
+    private int currentFrame;
 
-    private boolean isValidFrameIndex(int index) { return 0 <= index && index < sprites.length; }
-
-    public SpriteAnimation(Duration cycleDuration) {
-        requireNonNull(cycleDuration);
-        setCycleDuration(cycleDuration);
-        setInterpolator(Interpolator.LINEAR);
-    }
-
-    @Override
-    protected void interpolate(double t) {
-        if (t == 1) {
-            nextFrame();
-        }
-    }
+    public SpriteAnimation() {}
 
     public void reset() {
         stop();
-        jumpTo(Duration.ZERO);
-        frameIndex = 0;
+        currentFrame = 0;
     }
 
     public void setSprites(RectShort[] sprites) {
         this.sprites = requireNonNull(sprites);
     }
 
-    public void setFrameTicks(int ticks) {
-        if (ticks <= 0) {
-            throw new IllegalArgumentException("Frame ticks must be a positive number, but you gave me " + ticks);
+    public void setFrameTicks(int numTicks) {
+        if (numTicks <= 0) {
+            throw new IllegalArgumentException("Frame ticks must be a positive number, but you gave me " + numTicks);
         }
-        if (ticks != frameTicks) {
-            boolean doRestart = getStatus() == Status.RUNNING;
-            stop();
-            frameTicks = ticks;
-            if (doRestart) {
-                play();
-            }
+        frameDuration = ONE_TICK_DURATION * numTicks;
+    }
+
+    public void setCurrentFrame(int frame) {
+        if (!isValidFrame(frame)) {
+            throw new IllegalArgumentException("Frame %d is out of range, number of sprites: %d".formatted(frame, sprites.length));
+        }
+        currentFrame = frame;
+    }
+
+    public int currentFrame() { return currentFrame; }
+
+    public RectShort currentSprite() { return sprites[currentFrame]; }
+
+    public void advanceFrame() {
+        currentFrame++;
+        if (currentFrame == sprites.length) {
+            currentFrame = loop ? 0 : sprites.length - 1;
         }
     }
 
-    public void setFrameIndex(int index) {
-        if (isValidFrameIndex(index)) {
-            frameIndex = index;
-        } else {
-            throw new IllegalArgumentException("Frame index %d is out of range, number of sprites: %d".formatted(index, sprites.length));
-        }
+    private boolean isValidFrame(int index) { return 0 <= index && index < sprites.length; }
+
+    // new
+
+    private boolean loop = false;
+    private boolean started = true;
+    private long lastUpdateTime;
+
+    private long frameDuration = ONE_TICK_DURATION;
+
+    public void setLoop(boolean loop) {
+        this.loop = loop;
     }
 
-    public int frameIndex() { return frameIndex; }
+    public void start() {
+        started = true;
+    }
 
-    public RectShort currentSprite() { return sprites[frameIndex]; }
+    public void stop() {
+        started = false;
+    }
 
-    public void nextFrame() {
-        frameIndex++;
-        if (frameIndex == sprites.length) {
-            frameIndex = getCycleCount() == Animation.INDEFINITE ? 0 : sprites.length - 1;
+    public void update(long now) {
+        if (!started) {
+            return;
+        }
+        if (now - lastUpdateTime > frameDuration) {
+            advanceFrame();
+            lastUpdateTime = now;
         }
     }
 }

@@ -7,7 +7,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
 
@@ -15,7 +15,7 @@ public class Stork extends Actor {
 
     public enum AnimationID { FLYING }
 
-    public static class StorkAnimations extends SpriteAnimationManager<SpriteID> {
+    public static class StorkAnimations extends SpriteAnimationMap<SpriteID> {
 
         public StorkAnimations() {
             super(ArcadeMsPacMan_SpriteSheet.instance());
@@ -24,7 +24,10 @@ public class Stork extends Actor {
         @Override
         protected SpriteAnimation createAnimation(Object animationID) {
             if (animationID.equals(AnimationID.FLYING)) {
-                return builder().sprites(spriteSheet.sprites(SpriteID.STORK)).ticksPerFrame(8).repeated();
+                return builder().sprites(spriteSheet.sprites(SpriteID.STORK))
+                    .frameTicks(8)
+                    .repeated()
+                    .build();
             }
             throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         }

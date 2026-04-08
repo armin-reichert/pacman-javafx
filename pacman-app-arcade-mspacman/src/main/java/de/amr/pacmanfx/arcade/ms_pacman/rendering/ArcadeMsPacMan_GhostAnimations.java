@@ -8,14 +8,14 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
 
-public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationManager<SpriteID> {
+public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
 
     private final byte personality;
 
@@ -29,26 +29,30 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationManager<Sprit
         return switch (id) {
             case Ghost.AnimationID.GHOST_NORMAL -> builder()
                 .sprites(ghostNormalSprites(Direction.LEFT))
-                .ticksPerFrame(8)
-                .repeated();
+                .frameTicks(8)
+                .repeated()
+                .build();
 
             case Ghost.AnimationID.GHOST_FRIGHTENED -> builder()
                 .sprites(spriteSheet().sprites(GHOST_FRIGHTENED))
-                .ticksPerFrame(8)
-                .repeated();
+                .frameTicks(8)
+                .repeated()
+                .build();
 
             case Ghost.AnimationID.GHOST_FLASHING -> builder()
                 .sprites(spriteSheet().sprites(GHOST_FLASHING))
-                .ticksPerFrame(7)
-                .repeated();
+                .frameTicks(7)
+                .repeated()
+                .build();
 
             case Ghost.AnimationID.GHOST_EYES -> builder()
                 .sprites(ghostEyesSprites(Direction.LEFT))
-                .once();
+                .build();
 
             case Ghost.AnimationID.GHOST_POINTS -> builder()
                 .sprites(spriteSheet().sprites(GHOST_NUMBERS))
-                .once();
+                .stopped()
+                .build();
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
         };
@@ -63,7 +67,7 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationManager<Sprit
     public void setAnimationFrame(Object animationID, int frameIndex) {
         super.setAnimationFrame(animationID, frameIndex);
         if (Ghost.AnimationID.GHOST_POINTS.equals(animationID)) {
-            animation(Ghost.AnimationID.GHOST_POINTS).setFrameIndex(frameIndex);
+            animation(Ghost.AnimationID.GHOST_POINTS).setCurrentFrame(frameIndex);
         }
     }
 

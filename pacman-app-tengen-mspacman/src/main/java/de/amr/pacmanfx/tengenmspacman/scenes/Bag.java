@@ -7,7 +7,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
 
@@ -15,7 +15,7 @@ public class Bag extends Actor {
 
     public enum AnimationID { BAG, JUNIOR }
 
-    public static class BagAnimations extends SpriteAnimationManager<SpriteID> {
+    public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
 
         public BagAnimations() {
             super(TengenMsPacMan_SpriteSheet.instance());
@@ -24,12 +24,12 @@ public class Bag extends Actor {
         @Override
         protected SpriteAnimation createAnimation(Object animationID) {
             return switch (animationID) {
-                case AnimationID.BAG    -> builder().singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).once();
-                case AnimationID.JUNIOR -> builder().singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).once();
+                case AnimationID.BAG    -> builder().singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).stopped().build();
+                case AnimationID.JUNIOR -> builder().singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).stopped().build();
                 default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
             };
         }
-    };
+    }
 
     private boolean open;
 

@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengenmspacman.scenes.Stork;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -93,7 +93,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     //TODO check if this is the way to do this
     private void drawPac(Pac pac) {
-        if (pac.animations() instanceof SpriteAnimationManager<?> spriteAnimations) {
+        if (pac.animations() instanceof SpriteAnimationMap<?> spriteAnimations) {
             SpriteAnimation spriteAnimation = spriteAnimations.currentAnimation();
             if (spriteAnimation == null) {
                 Logger.error("No sprite animation found for {}", pac);
@@ -110,8 +110,8 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     // Simulates dying animation by providing the right direction for each animation frame
     private void drawPacDyingAnimation(Pac pac, SpriteAnimation animation) {
         Direction dir = Direction.DOWN;
-        if (animation.frameIndex() < 11) {
-            dir = switch (animation.frameIndex() % 4) {
+        if (animation.currentFrame() < 11) {
+            dir = switch (animation.currentFrame() % 4) {
                 case 1 -> Direction.LEFT;
                 case 2 -> Direction.UP;
                 case 3 -> Direction.RIGHT;

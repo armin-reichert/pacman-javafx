@@ -5,8 +5,7 @@
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.math.RectShort;
-import javafx.animation.Animation;
-import javafx.util.Duration;
+import de.amr.pacmanfx.uilib.animation.sprite.SpriteAnimationTimer;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -15,14 +14,22 @@ import static java.util.Objects.requireNonNull;
 
 public class SpriteAnimationBuilder {
 
+    //TODO
+    private static final SpriteAnimationTimer TIMER = new SpriteAnimationTimer();
+    {
+        TIMER.start();
+    }
+
     private static class BuildData {
         int frameTicks = 1;
         RectShort[] sprites = new RectShort[0];
+        boolean stopped = false;
+        boolean loop = false;
     }
 
     private final BuildData data = new BuildData();
 
-    public SpriteAnimationBuilder ticksPerFrame(int ticks) {
+    public SpriteAnimationBuilder frameTicks(int ticks) {
         if (ticks <= 0) {
             throw new IllegalArgumentException("Number of ticks per frame is negative (%d)".formatted(data.frameTicks));
         }
@@ -42,22 +49,31 @@ public class SpriteAnimationBuilder {
         return sprites(new RectShort[] { requireNonNull(sprite) });
     }
 
-    public SpriteAnimation repeated() {
-        return build(Animation.INDEFINITE);
+    public SpriteAnimationBuilder repeated() {
+        data.loop = true;
+        return this;
     }
 
-    public SpriteAnimation once() {
-        return build(data.sprites.length);
+    public SpriteAnimationBuilder stopped() {
+        data.stopped = true;
+        return this;
     }
 
-    private SpriteAnimation build(int cycleCount) {
+    public SpriteAnimation build() {
         if (data.sprites == null) {
             throw new IllegalArgumentException("No sprites defined");
         }
-        final Duration cycleDuration = Duration.seconds(1.0 / SpriteAnimation.FPS * data.frameTicks);
-        final SpriteAnimation anim = new SpriteAnimation(cycleDuration);
-        anim.setCycleCount(cycleCount);
+        final SpriteAnimation anim = new SpriteAnimation();
+        anim.setLoop(data.loop);
         anim.setSprites(data.sprites);
+        anim.setFrameTicks(data.frameTicks);
+        if (data.stopped) {
+            anim.stop();
+        }
+
+        //TODO
+        TIMER.registerAnimation(anim);
+
         return anim;
     }
 }

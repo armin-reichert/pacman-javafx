@@ -14,13 +14,13 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class SpriteAnimationManager<SID extends Enum<SID>> implements AnimationManager {
+public abstract class SpriteAnimationMap<SID extends Enum<SID>> implements AnimationManager {
 
     protected final SpriteSheet<SID> spriteSheet;
     protected final Map<Object, SpriteAnimation> animationsByID = new HashMap<>();
     protected Object selectedID;
 
-    public SpriteAnimationManager(SpriteSheet<SID> spriteSheet) {
+    public SpriteAnimationMap(SpriteSheet<SID> spriteSheet) {
         this.spriteSheet = requireNonNull(spriteSheet);
     }
 
@@ -75,7 +75,7 @@ public abstract class SpriteAnimationManager<SID extends Enum<SID>> implements A
         if (!animationID.equals(selectedID)) {
             selectedID = animationID;
             if (currentAnimation() != null) {
-                currentAnimation().setFrameIndex(0);
+                currentAnimation().setCurrentFrame(0);
             } else {
                 Logger.warn("No animation with ID {} exists", animationID);
             }
@@ -84,13 +84,13 @@ public abstract class SpriteAnimationManager<SID extends Enum<SID>> implements A
 
     @Override
     public int frameIndex() {
-        return currentAnimation() != null ? currentAnimation().frameIndex() : -1;
+        return currentAnimation() != null ? currentAnimation().currentFrame() : -1;
     }
 
     @Override
     public void playSelectedAnimation() {
         if (currentAnimation() != null) {
-            currentAnimation().play();
+            currentAnimation().start();
         }
     }
 

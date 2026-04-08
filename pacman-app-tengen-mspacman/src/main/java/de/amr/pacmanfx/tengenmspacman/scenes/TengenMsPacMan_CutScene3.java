@@ -113,12 +113,14 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                     pacMan.setPosition(TS * 3, GROUND_Y - 4);
                     pacMan.setSpeed(0);
                     pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
+                    pacMan.animations().stopSelectedAnimation();
                     pacMan.show();
 
                     msPacMan.setMoveDir(Direction.RIGHT);
                     msPacMan.setPosition(TS * 5, GROUND_Y - 4);
                     msPacMan.setSpeed(0);
                     msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+                    msPacMan.animations().stopSelectedAnimation();
                     msPacMan.show();
 
                     stork.setPosition(RIGHT_BORDER, TS * 7);

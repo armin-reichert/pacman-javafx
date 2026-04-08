@@ -8,11 +8,11 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
 
-public class ArcadePacMan_PacAnimations extends SpriteAnimationManager<SpriteID> {
+public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
     public enum AnimationID {
         ANIM_BIG_PAC_MAN,
@@ -27,21 +27,24 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationManager<SpriteID>
         return switch (id) {
             case Pac.AnimationID.PAC_FULL -> builder()
                 .singleSprite(spriteSheet.sprite(SpriteID.PACMAN_FULL))
-                .once();
+                .stopped()
+                .build();
 
             case Pac.AnimationID.PAC_MUNCHING -> builder()
                 .sprites(pacMunchingSprites(Direction.LEFT))
-                .repeated();
+                .repeated()
+                .build();
 
             case Pac.AnimationID.PAC_DYING -> builder()
                 .sprites(spriteSheet.sprites(SpriteID.PACMAN_DYING))
-                .ticksPerFrame(8)
-                .once();
+                .frameTicks(8)
+                .build();
 
             case AnimationID.ANIM_BIG_PAC_MAN -> builder()
                 .sprites(spriteSheet.sprites(SpriteID.PACMAN_BIG))
-                .ticksPerFrame(3)
-                .repeated();
+                .frameTicks(3)
+                .repeated()
+                .build();
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
         };
