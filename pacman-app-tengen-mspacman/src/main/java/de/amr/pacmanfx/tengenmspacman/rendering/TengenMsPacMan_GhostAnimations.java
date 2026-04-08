@@ -8,8 +8,8 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
@@ -22,13 +22,13 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator
     public static final int FLASH_TICKS = 7;  // TODO check this in emulator
 
-    private final SpriteAnimationTimer timer;
+    private final SpriteAnimationManager timer;
     private final byte personality;
 
-    public TengenMsPacMan_GhostAnimations(SpriteAnimationTimer spriteAnimationTimer, byte personality) {
+    public TengenMsPacMan_GhostAnimations(SpriteAnimationManager spriteAnimationManager, byte personality) {
         super(TengenMsPacMan_SpriteSheet.instance());
         this.personality = requireValidGhostPersonality(personality);
-        timer = requireNonNull(spriteAnimationTimer);
+        timer = requireNonNull(spriteAnimationManager);
     }
 
     @Override

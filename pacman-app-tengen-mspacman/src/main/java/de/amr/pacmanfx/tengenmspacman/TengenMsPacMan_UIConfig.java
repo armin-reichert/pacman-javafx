@@ -24,7 +24,7 @@ import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
@@ -299,21 +299,21 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     }
 
     @Override
-    public Ghost createGhostWithAnimations(SpriteAnimationTimer spriteAnimationTimer, byte personality) {
+    public Ghost createGhostWithAnimations(SpriteAnimationManager spriteAnimationManager, byte personality) {
         final Ghost ghost = TengenMsPacMan_GameModel.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(spriteAnimationTimer, personality));
+        ghost.setAnimations(createGhostAnimations(spriteAnimationManager, personality));
         ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public TengenMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationTimer spriteAnimationTimer, byte personality) {
-        return new TengenMsPacMan_GhostAnimations(spriteAnimationTimer, personality);
+    public TengenMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationManager spriteAnimationManager, byte personality) {
+        return new TengenMsPacMan_GhostAnimations(spriteAnimationManager, personality);
     }
 
     @Override
-    public TengenMsPacMan_PacAnimations createPacAnimations(SpriteAnimationTimer spriteAnimationTimer) {
-        return new TengenMsPacMan_PacAnimations(spriteAnimationTimer);
+    public TengenMsPacMan_PacAnimations createPacAnimations(SpriteAnimationManager spriteAnimationManager) {
+        return new TengenMsPacMan_PacAnimations(spriteAnimationManager);
     }
 
     // Helpers

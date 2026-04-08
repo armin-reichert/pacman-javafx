@@ -7,8 +7,8 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 
 import static de.amr.pacmanfx.tengenmspacman.rendering.SpriteID.STORK;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
@@ -20,11 +20,11 @@ public class Stork extends Actor {
 
     private static class StorkAnimations extends SpriteAnimationMap<SpriteID> {
 
-        private final SpriteAnimationTimer timer;
+        private final SpriteAnimationManager timer;
 
-        public StorkAnimations(SpriteAnimationTimer spriteAnimationTimer) {
+        public StorkAnimations(SpriteAnimationManager spriteAnimationManager) {
             super(TengenMsPacMan_SpriteSheet.instance());
-            timer = requireNonNull(spriteAnimationTimer);
+            timer = requireNonNull(spriteAnimationManager);
         }
 
         @Override
@@ -38,8 +38,8 @@ public class Stork extends Actor {
 
     private boolean bagReleasedFromBeak;
 
-    public Stork(SpriteAnimationTimer spriteAnimationTimer) {
-        setAnimations(new StorkAnimations(spriteAnimationTimer));
+    public Stork(SpriteAnimationManager spriteAnimationManager) {
+        setAnimations(new StorkAnimations(spriteAnimationManager));
     }
 
     public void setBagReleasedFromBeak(boolean released) {

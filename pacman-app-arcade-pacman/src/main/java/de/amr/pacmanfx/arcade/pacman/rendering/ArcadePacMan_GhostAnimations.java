@@ -8,8 +8,8 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
@@ -24,10 +24,10 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
         BLINKY_NAKED
     }
 
-    private final SpriteAnimationTimer timer;
+    private final SpriteAnimationManager timer;
     private final byte personality;
 
-    public ArcadePacMan_GhostAnimations(SpriteAnimationTimer timer, byte personality) {
+    public ArcadePacMan_GhostAnimations(SpriteAnimationManager timer, byte personality) {
         super(ArcadePacMan_SpriteSheet.instance());
         this.timer = requireNonNull(timer);
         this.personality = requireValidGhostPersonality(personality);

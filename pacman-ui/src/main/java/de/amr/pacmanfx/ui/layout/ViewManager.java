@@ -73,7 +73,7 @@ public class ViewManager {
         this.editorWorkDir = requireNonNull(editorWorkDir);
 
         selectedID.addListener((_, oldID, newID) ->
-            changeView(scene, flashMessageView, oldID, newID));
+            changeView(ui, scene, flashMessageView, oldID, newID));
     }
 
     public void setPlayView(View playView) {
@@ -91,7 +91,7 @@ public class ViewManager {
     /**
      * Switches from the old view to the new view, performing all required lifecycle steps.
      */
-    private void changeView(Scene scene, FlashMessageView flashMessageView, ViewID oldID, ViewID newID) {
+    private void changeView(GameUI ui, Scene scene, FlashMessageView flashMessageView, ViewID oldID, ViewID newID) {
         requireNonNull(newID);
 
         if (oldID != null) {
@@ -117,6 +117,7 @@ public class ViewManager {
         newView.actionBindings().addAll(GameUI.KEYBOARD);
         newView.onEnter();
         flashMessageView.clear();
+
         currentView.set(newView);
     }
 

@@ -7,8 +7,8 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
@@ -20,11 +20,11 @@ public class Bag extends Actor {
 
     public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
 
-        private final SpriteAnimationTimer timer;
+        private final SpriteAnimationManager timer;
 
-        public BagAnimations(SpriteAnimationTimer spriteAnimationTimer) {
+        public BagAnimations(SpriteAnimationManager spriteAnimationManager) {
             super(ArcadeMsPacMan_SpriteSheet.instance());
-            this.timer = requireNonNull(spriteAnimationTimer);
+            this.timer = requireNonNull(spriteAnimationManager);
         }
 
         @Override
@@ -39,8 +39,8 @@ public class Bag extends Actor {
 
     private boolean open;
 
-    public Bag(SpriteAnimationTimer spriteAnimationTimer) {
-        setAnimations(new BagAnimations(spriteAnimationTimer));
+    public Bag(SpriteAnimationManager spriteAnimationManager) {
+        setAnimations(new BagAnimations(spriteAnimationManager));
     }
 
     public void setOpen(boolean open) {

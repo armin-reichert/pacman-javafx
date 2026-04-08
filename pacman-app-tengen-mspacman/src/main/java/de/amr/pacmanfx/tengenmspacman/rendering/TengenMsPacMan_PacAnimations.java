@@ -7,8 +7,8 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 
 import java.util.Arrays;
 
@@ -18,11 +18,11 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
-    private final SpriteAnimationTimer timer;
+    private final SpriteAnimationManager timer;
 
-    public TengenMsPacMan_PacAnimations(SpriteAnimationTimer spriteAnimationTimer) {
+    public TengenMsPacMan_PacAnimations(SpriteAnimationManager spriteAnimationManager) {
         super(TengenMsPacMan_SpriteSheet.instance());
-        this.timer = requireNonNull(spriteAnimationTimer);
+        this.timer = requireNonNull(spriteAnimationManager);
     }
 
     @Override

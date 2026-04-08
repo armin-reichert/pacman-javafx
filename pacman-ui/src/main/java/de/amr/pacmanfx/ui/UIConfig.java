@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
@@ -301,7 +301,7 @@ public interface UIConfig extends Disposable {
      * @param personality ghost personality code (e.g. RED_GHOST_SHADOW, …)
      * @return configured ghost ready to be added to the game
      */
-    Ghost createGhostWithAnimations(SpriteAnimationTimer spriteAnimationTimer, byte personality);
+    Ghost createGhostWithAnimations(SpriteAnimationManager spriteAnimationManager, byte personality);
 
     /**
      * Creates the animation manager containing all movement & state animations
@@ -310,14 +310,14 @@ public interface UIConfig extends Disposable {
      * @param personality ghost personality code
      * @return animation manager for that ghost type
      */
-    AnimationManager createGhostAnimations(SpriteAnimationTimer spriteAnimationTimer, byte personality);
+    AnimationManager createGhostAnimations(SpriteAnimationManager spriteAnimationManager, byte personality);
 
     /**
      * Creates the animation manager for Pac-Man (or Ms. Pac-Man in Ms. Pac-Man variants).
      *
      * @return Pac-Man animation manager
      */
-    AnimationManager createPacAnimations(SpriteAnimationTimer spriteAnimationTimer);
+    AnimationManager createPacAnimations(SpriteAnimationManager spriteAnimationManager);
 
     /**
      * Returns the image showing the points awarded for eating a ghost

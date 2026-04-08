@@ -8,8 +8,8 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
@@ -19,13 +19,13 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
 
-    private final SpriteAnimationTimer timer;
+    private final SpriteAnimationManager timer;
     private final byte personality;
 
-    public ArcadeMsPacMan_GhostAnimations(SpriteAnimationTimer spriteAnimationTimer, byte personality) {
+    public ArcadeMsPacMan_GhostAnimations(SpriteAnimationManager spriteAnimationManager, byte personality) {
         super(ArcadeMsPacMan_SpriteSheet.instance());
         this.personality = requireValidGhostPersonality(personality);
-        this.timer = requireNonNull(spriteAnimationTimer);
+        this.timer = requireNonNull(spriteAnimationManager);
     }
 
     @Override

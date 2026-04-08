@@ -9,7 +9,7 @@ import javafx.animation.AnimationTimer;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SpriteAnimationTimer extends AnimationTimer {
+public class SpriteAnimationManager extends AnimationTimer {
 
     private final Set<SpriteAnimation> animations = new HashSet<>();
 
@@ -19,6 +19,10 @@ public class SpriteAnimationTimer extends AnimationTimer {
 
     public void unregisterAnimation(SpriteAnimation animation) {
         animations.remove(animation);
+    }
+
+    public void clear() {
+        animations.clear();
     }
 
     @Override

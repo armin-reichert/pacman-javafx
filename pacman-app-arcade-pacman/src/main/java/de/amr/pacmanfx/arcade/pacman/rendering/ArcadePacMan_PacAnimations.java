@@ -8,8 +8,8 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
 import static java.util.Objects.requireNonNull;
@@ -20,9 +20,9 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
         ANIM_BIG_PAC_MAN,
     }
 
-    private final SpriteAnimationTimer timer;
+    private final SpriteAnimationManager timer;
     
-    public ArcadePacMan_PacAnimations(SpriteAnimationTimer timer, ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_PacAnimations(SpriteAnimationManager timer, ArcadePacMan_SpriteSheet spriteSheet) {
         super(spriteSheet);
         this.timer = requireNonNull(timer);
     }

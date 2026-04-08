@@ -20,10 +20,10 @@ public class SpriteAnimationBuilder {
         boolean loop = false;
     }
 
-    private final SpriteAnimationTimer timer;
+    private final SpriteAnimationManager timer;
     private final BuildData data = new BuildData();
 
-    public SpriteAnimationBuilder(SpriteAnimationTimer timer) {
+    public SpriteAnimationBuilder(SpriteAnimationManager timer) {
         requireNonNull(timer);
         this.timer = timer;
     }

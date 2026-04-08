@@ -66,7 +66,7 @@ public enum Arcade_GameState implements State<Game> {
     STARTING_GAME_OR_LEVEL {
         @Override
         public void onEnter(Game game) {
-            game.hud().credit(false).score(true).levelCounter(true).livesCounter(true).show();
+            game.hud().score(true).levelCounter(true).show();
         }
 
         @Override
@@ -75,12 +75,15 @@ public enum Arcade_GameState implements State<Game> {
             if (game.isPlaying()) {
                 final GameLevel level = game.optGameLevel().orElseThrow();
                 game.continuePlaying(level, tick);
+                game.hud().credit(false).livesCounter(true);
             }
             else if (game.canStartNewGame()) {
                 game.startNewGame(tick);
+                game.hud().credit(false).livesCounter(true);
             }
             else {
                 game.startDemoLevel(tick);
+                game.hud().credit(true).livesCounter(false);
             }
         }
     },

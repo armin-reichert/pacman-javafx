@@ -15,14 +15,43 @@ public class SpriteAnimation {
     public static final int FPS = 60;
     private static final long ONE_TICK_DURATION_NANOS = 1_000_000_000 / FPS;
 
-    public static SpriteAnimationBuilder builder(SpriteAnimationTimer timer) {
+    public static SpriteAnimationBuilder builder(SpriteAnimationManager timer) {
         return new SpriteAnimationBuilder(timer);
     }
 
-    private RectShort[] sprites = new RectShort[0];
+    private RectShort[] sprites;
     private int currentFrame;
+    private boolean loop;
+    private boolean running;
+    private long lastUpdateTime;
+    private long frameDuration;
 
-    public SpriteAnimation() {}
+    public SpriteAnimation() {
+        sprites = new RectShort[0];
+        currentFrame = 0;
+        loop = false;
+        running = true; //TODO check this
+        lastUpdateTime = 0;
+        frameDuration = ONE_TICK_DURATION_NANOS;
+    }
+
+    public void update(long now) {
+        if (!running) {
+            return;
+        }
+        if (now - lastUpdateTime > frameDuration) {
+            advanceFrame();
+            lastUpdateTime = now;
+        }
+    }
+    public void start() {
+        running = true;
+        lastUpdateTime = 0;
+    }
+
+    public void stop() {
+        running = false;
+    }
 
     public void reset() {
         stop();
@@ -60,33 +89,8 @@ public class SpriteAnimation {
 
     private boolean isValidFrame(int index) { return 0 <= index && index < sprites.length; }
 
-    // new
-
-    private boolean loop = false;
-    private boolean started = true;
-    private long lastUpdateTime;
-
-    private long frameDuration = ONE_TICK_DURATION_NANOS;
-
     public void setLoop(boolean loop) {
         this.loop = loop;
     }
 
-    public void start() {
-        started = true;
-    }
-
-    public void stop() {
-        started = false;
-    }
-
-    public void update(long now) {
-        if (!started) {
-            return;
-        }
-        if (now - lastUpdateTime > frameDuration) {
-            advanceFrame();
-            lastUpdateTime = now;
-        }
-    }
 }
