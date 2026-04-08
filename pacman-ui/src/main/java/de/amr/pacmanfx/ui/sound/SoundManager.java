@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.ui.sound;
 
 import de.amr.pacmanfx.lib.Disposable;
-import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -28,9 +27,6 @@ public class SoundManager implements Disposable {
 
     private final Map<Object, Object> map = new HashMap<>();
 
-    private MediaPlayer voicePlayer;
-    private final PauseTransition voiceDelay = new PauseTransition();
-
     public SoundManager() {}
 
     @Override
@@ -40,7 +36,6 @@ public class SoundManager implements Disposable {
         final int numEntries = map.size();
         map.clear();
         Logger.info("{} sound objects removed", numEntries);
-        voicePlayer = null;
     }
 
     public MediaPlayer mediaPlayer(Object key) {
@@ -96,8 +91,8 @@ public class SoundManager implements Disposable {
         return muteProperty;
     }
 
-    public void loop(Object id) {
-        Object value = map.get(id);
+    public void loop(Object soundID) {
+        Object value = map.get(soundID);
         if (value == null) {
             return; // ignore missing sound
         }
@@ -105,38 +100,38 @@ public class SoundManager implements Disposable {
             mediaPlayer.stop();
             mediaPlayer.seek(Duration.ZERO);
         }
-        play(id, MediaPlayer.INDEFINITE);
+        play(soundID, MediaPlayer.INDEFINITE);
     }
 
-    public void play(Object id) {
-        play(id, 1);
+    public void play(Object soundID) {
+        play(soundID, 1);
     }
 
-    public void play(Object id, int repetitions) {
-        requireNonNull(id);
+    public void play(Object soundID, int repetitions) {
+        requireNonNull(soundID);
         if (muteProperty.get()) {
-            Logger.trace("Sound '{}' not played (reason: muted)", id);
+            Logger.trace("Sound '{}' not played (reason: muted)", soundID);
             return;
         }
         if (!enabledProperty.get()) {
-            Logger.trace("Sound '{}' not played (reason: disabled)", id);
+            Logger.trace("Sound '{}' not played (reason: disabled)", soundID);
             return;
         }
-        if (!map.containsKey(id)) {
-            Logger.error("Sound '{}' not played (reason: not registered)", id);
+        if (!map.containsKey(soundID)) {
+            Logger.error("Sound '{}' not played (reason: not registered)", soundID);
             return;
         }
-        Object value = map.get(id);
+        Object value = map.get(soundID);
         switch (value) {
             case MediaPlayer mediaPlayer -> {
                 Logger.trace("Play media player ({} times) with ID '{}'",
-                    repetitions == MediaPlayer.INDEFINITE ? "indefinite" : repetitions, id);
+                    repetitions == MediaPlayer.INDEFINITE ? "indefinite" : repetitions, soundID);
                 mediaPlayer.setCycleCount(repetitions);
                 mediaPlayer.play();
             }
             case URL url -> {
                 Logger.trace("Create and play audio clip ({} times) with ID '{}'",
-                    repetitions == MediaPlayer.INDEFINITE ? "indefinite" : repetitions, id);
+                    repetitions == MediaPlayer.INDEFINITE ? "indefinite" : repetitions, soundID);
                 final var audioClip = new AudioClip(url.toExternalForm());
                 audioClip.setCycleCount(repetitions);
                 audioClip.play(1.0); //TODO add volume parameter?
@@ -145,34 +140,34 @@ public class SoundManager implements Disposable {
         }
     }
 
-    public boolean isPlaying(Object id) {
-        requireNonNull(id);
-        Object value = map.get(id);
+    public boolean isPlaying(Object soundID) {
+        requireNonNull(soundID);
+        Object value = map.get(soundID);
         if (value instanceof MediaPlayer mediaPlayer) {
             return mediaPlayer.getStatus() ==  MediaPlayer.Status.PLAYING;
         }
         return false;
     }
 
-    public void pause(Object id) {
-        requireNonNull(id);
-        Object value = map.get(id);
+    public void pause(Object soundID) {
+        requireNonNull(soundID);
+        Object value = map.get(soundID);
         if (value instanceof MediaPlayer mediaPlayer) {
             mediaPlayer.pause();
         }
         else if (value instanceof URL) {
-            Logger.warn("Audio clip '{}' cannot be paused", id);
+            Logger.warn("Audio clip '{}' cannot be paused", soundID);
         }
     }
 
-    public void stop(Object id)  {
-        requireNonNull(id);
-        Object value = map.get(id);
+    public void stop(Object soundID)  {
+        requireNonNull(soundID);
+        Object value = map.get(soundID);
         if (value instanceof MediaPlayer mediaPlayer) {
             mediaPlayer.stop();
         }
         else if (value instanceof URL) {
-            Logger.warn("Audio clip '{}' cannot be stopped", id);
+            Logger.warn("Audio clip '{}' cannot be stopped", soundID);
         }
     }
 
