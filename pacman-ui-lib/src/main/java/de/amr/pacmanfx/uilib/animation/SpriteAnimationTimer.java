@@ -6,12 +6,12 @@ package de.amr.pacmanfx.uilib.animation;
 
 import javafx.animation.AnimationTimer;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SpriteAnimationTimer extends AnimationTimer {
 
-    private final List<SpriteAnimation> animations = new ArrayList<>();
+    private final Set<SpriteAnimation> animations = new HashSet<>();
 
     public void registerAnimation(SpriteAnimation animation) {
         animations.add(animation);

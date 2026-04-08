@@ -13,7 +13,7 @@ import static java.util.Objects.requireNonNull;
 public class SpriteAnimation {
 
     public static final int FPS = 60;
-    private static final long ONE_TICK_DURATION = 1_000_000_000 / FPS;
+    private static final long ONE_TICK_DURATION_NANOS = 1_000_000_000 / FPS;
 
     public static SpriteAnimationBuilder builder(SpriteAnimationTimer timer) {
         return new SpriteAnimationBuilder(timer);
@@ -37,7 +37,7 @@ public class SpriteAnimation {
         if (numTicks <= 0) {
             throw new IllegalArgumentException("Frame ticks must be a positive number, but you gave me " + numTicks);
         }
-        frameDuration = ONE_TICK_DURATION * numTicks;
+        frameDuration = ONE_TICK_DURATION_NANOS * numTicks;
     }
 
     public void setCurrentFrame(int frame) {
@@ -66,7 +66,7 @@ public class SpriteAnimation {
     private boolean started = true;
     private long lastUpdateTime;
 
-    private long frameDuration = ONE_TICK_DURATION;
+    private long frameDuration = ONE_TICK_DURATION_NANOS;
 
     public void setLoop(boolean loop) {
         this.loop = loop;
