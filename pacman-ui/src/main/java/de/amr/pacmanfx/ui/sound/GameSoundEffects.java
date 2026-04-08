@@ -3,13 +3,18 @@
  */
 package de.amr.pacmanfx.ui.sound;
 
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.media.AudioClip;
 import org.tinylog.Logger;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.model.GameControl.CommonGameState.HUNTING;
@@ -28,10 +33,6 @@ public class GameSoundEffects {
 
     private final SoundManager soundManager;
 
-    private float sirenVolume = 1.0f;
-    private SirenPlayer sirenPlayer;
-
-
     private long lastMunchingSoundPlayedTick;
     private byte munchingSoundDelay;
 
@@ -42,10 +43,6 @@ public class GameSoundEffects {
      */
     public GameSoundEffects(SoundManager soundManager) {
         this.soundManager = requireNonNull(soundManager);
-    }
-
-    public void setSirenVolume(float sirenVolume) {
-        this.sirenVolume = Math.clamp(sirenVolume, 0, 1);
     }
 
     /**
@@ -212,24 +209,6 @@ public class GameSoundEffects {
     }
 
     /**
-     * Plays the appropriate siren sound (1–4) based on the current hunting phase.
-     * <p>
-     * Siren is only played when Pac-Man is being chased (not powered).
-     * </p>
-     *
-     * @param level current game level
-     */
-    public void playSiren(GameLevel level) {
-        final boolean pacChased = !level.pac().powerTimer().isRunning();
-        if (pacChased) {
-            // siren numbers are 1..4, hunting phase index = 0..7
-            final int huntingPhase = level.huntingTimer().phaseIndex();
-            final int sirenNumber = 1 + huntingPhase / 2;
-            playSiren(sirenNumber, sirenVolume);
-        }
-    }
-
-    /**
      * Immediately stops all currently playing sounds.
      */
     public void stopAll() {
@@ -257,24 +236,90 @@ public class GameSoundEffects {
 
     // Sirens
 
-    public void registerSirens(URL... sirenURLs) {
-        sirenPlayer = new SirenPlayer(sirenURLs);
-        sirenPlayer.muteProperty().bind(soundManager.muteProperty());
+    private static final int NO_SIREN = 0;
+
+    private final BooleanProperty sirenMuted = new SimpleBooleanProperty(false);
+    private URL[] sirenURLs = new URL[0];
+    private AudioClip[] sirenClips = new AudioClip[0];
+    private int currentSirenNumber = NO_SIREN;
+    private float sirenVolume = 1.0f;
+
+    public void registerSirens(URL... urls) {
+        sirenURLs = Arrays.copyOf(urls, urls.length);
+        sirenClips = new AudioClip[urls.length];
+        sirenMuted.addListener((_, _, muted) -> {
+            if (muted) {
+                stopSirens();
+            }
+        });
+        sirenMuted.bind(soundManager.muteProperty());
     }
 
-    public void playSiren(int number, double volume) {
-        if (sirenPlayer == null) {
-            Logger.error("No sirens registered");
+    public void setSirenVolume(float sirenVolume) {
+        this.sirenVolume = Math.clamp(sirenVolume, 0, 1);
+    }
+
+    /**
+     * Plays the appropriate siren sound (1–4) based on the current hunting phase.
+     * <p>
+     * Siren is only played when Pac-Man is being chased (not powered).
+     * </p>
+     *
+     * @param level current game level
+     */
+    public void playSiren(GameLevel level) {
+        requireNonNull(level);
+        final int sirenNumber = computeSirenNumber(level);
+        if (sirenNumber != NO_SIREN) {
+            playSiren(sirenNumber);
+        }
+    }
+
+    // siren numbers are 1..4, hunting phase index = 0..7
+    private int computeSirenNumber(GameLevel level) {
+        final boolean pacPowerless = !level.pac().powerTimer().isRunning();
+        if (pacPowerless) {
+            return 1 + level.huntingTimer().phaseIndex() / 2;
+        }
+        return NO_SIREN;
+    }
+
+    public void playSiren(int number) {
+        if (!Validations.inClosedRange(number, 1, sirenClips.length)) {
+            Logger.error("Invalid siren number: {} (registered sirens: {}", number, sirenClips.length);
             return;
         }
-        sirenPlayer.ensureSirenPlaying(number, volume);
+        if (sirenMuted.get()) {
+            return;
+        }
+        if (currentSirenNumber != number) {
+            stopSiren();
+            currentSirenNumber = number;
+        }
+        final int clipIndex = currentSirenNumber - 1;
+        if (sirenClips[clipIndex] == null) {
+            final var clip = new AudioClip(sirenURLs[clipIndex].toExternalForm());
+            sirenClips[clipIndex] = clip;
+            clip.setCycleCount(AudioClip.INDEFINITE);
+            clip.play(sirenVolume);
+        }
     }
 
     public void stopSiren() {
-        if (sirenPlayer == null) {
-            Logger.error("No sirens registered");
-            return;
+        if (currentSirenNumber != NO_SIREN) {
+            final int clipIndex = currentSirenNumber - 1;
+            if (sirenClips[clipIndex] != null) {
+                sirenClips[clipIndex].stop();
+                sirenClips[clipIndex] = null;
+            }
         }
-        sirenPlayer.stopCurrentSiren();
+    }
+    public void stopSirens() {
+        for (int i = 0; i < sirenClips.length; i++) {
+            if (sirenClips[i] != null) {
+                sirenClips[i].stop();
+                sirenClips[i] = null;
+            }
+        }
     }
 }
