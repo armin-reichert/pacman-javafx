@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.layout.*;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -402,8 +403,11 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public void stopGame() {
-        optGameScene().ifPresent(gameScene -> gameScene.end(gameContext.game()));
         soundManager.stopAll();
+        optGameScene().ifPresent(gameScene -> {
+            gameScene.end(gameContext.game());
+            gameScene.soundEffects().ifPresent(GameSoundEffects::stopAll);
+        });
         gameContext.clock().stop();
         gameContext.clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
     }

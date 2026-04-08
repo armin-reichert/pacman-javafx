@@ -86,7 +86,7 @@ public interface GameScene extends GameEventListener, Disposable {
 
     @Override
     default void onStopAllSounds(StopAllSoundsEvent e) {
-        ui().soundManager().stopAll();
+        soundEffects().ifPresent(GameSoundEffects::stopAll);
     }
 
     /**

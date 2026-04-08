@@ -356,15 +356,14 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
             bounceSound.setRate(0.25);
         }
 
-        soundManager.createSirenPlayer(
+        soundEffects = new GameSoundEffects(soundManager);
+        soundEffects.setMunchingSoundDelay((byte) 0);
+        soundEffects.registerSirens(
             LOCAL_RESOURCES.url("sound/ms-siren1.wav"),
             LOCAL_RESOURCES.url("sound/ms-siren2.wav"), // TODO
             LOCAL_RESOURCES.url("sound/ms-siren2.wav"), // TODO
             LOCAL_RESOURCES.url("sound/ms-siren2.wav")  // TODO
         );
-
-        soundEffects = new GameSoundEffects(soundManager);
-        soundEffects.setMunchingSoundDelay((byte) 0);
         soundEffects.setSirenVolume(1.0f);
     }
 }

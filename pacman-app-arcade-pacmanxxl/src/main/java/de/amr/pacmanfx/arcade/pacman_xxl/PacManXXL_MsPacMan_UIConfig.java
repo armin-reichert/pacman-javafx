@@ -109,15 +109,14 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceManager {
         soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING, url("sound/munch.wav"));
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,     url("sound/ScaredGhost.mp3"));
 
-        soundManager.createSirenPlayer(
+        soundEffects = new GameSoundEffects(soundManager);
+        soundEffects.setMunchingSoundDelay((byte) 0);
+        soundEffects.registerSirens(
             url("sound/GhostNoise1.wav"),
             url("sound/GhostNoise2.wav"),
             url("sound/GhostNoise3.wav"),
             url("sound/GhostNoise4.wav")
         );
-
-        soundEffects = new GameSoundEffects(soundManager);
-        soundEffects.setMunchingSoundDelay((byte) 0);
         soundEffects.setSirenVolume(0.33f);
     }
 

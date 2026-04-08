@@ -9,6 +9,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import org.tinylog.Logger;
 
+import java.net.URL;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.model.GameControl.CommonGameState.HUNTING;
@@ -28,6 +29,9 @@ public class GameSoundEffects {
     private final SoundManager soundManager;
 
     private float sirenVolume = 1.0f;
+    private SirenPlayer sirenPlayer;
+
+
     private long lastMunchingSoundPlayedTick;
     private byte munchingSoundDelay;
 
@@ -221,15 +225,8 @@ public class GameSoundEffects {
             // siren numbers are 1..4, hunting phase index = 0..7
             final int huntingPhase = level.huntingTimer().phaseIndex();
             final int sirenNumber = 1 + huntingPhase / 2;
-            soundManager.playSiren(sirenNumber, sirenVolume);
+            playSiren(sirenNumber, sirenVolume);
         }
-    }
-
-    /**
-     * Stops any currently playing siren sound.
-     */
-    public void stopSiren() {
-        soundManager.stopSiren();
     }
 
     /**
@@ -237,6 +234,7 @@ public class GameSoundEffects {
      */
     public void stopAll() {
         soundManager.stopAll();
+        stopSiren();
     }
 
     /**
@@ -255,5 +253,28 @@ public class GameSoundEffects {
         } else {
             stopGhostReturningToHouseSound();
         }
+    }
+
+    // Sirens
+
+    public void registerSirens(URL... sirenURLs) {
+        sirenPlayer = new SirenPlayer(sirenURLs);
+        sirenPlayer.muteProperty().bind(soundManager.muteProperty());
+    }
+
+    public void playSiren(int number, double volume) {
+        if (sirenPlayer == null) {
+            Logger.error("No sirens registered");
+            return;
+        }
+        sirenPlayer.ensureSirenPlaying(number, volume);
+    }
+
+    public void stopSiren() {
+        if (sirenPlayer == null) {
+            Logger.error("No sirens registered");
+            return;
+        }
+        sirenPlayer.stopCurrentSiren();
     }
 }

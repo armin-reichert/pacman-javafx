@@ -31,16 +31,7 @@ public class SoundManager implements Disposable {
     private MediaPlayer voicePlayer;
     private final PauseTransition voiceDelay = new PauseTransition();
 
-    private SirenPlayer sirenPlayer;
-
     public SoundManager() {}
-
-    public int numSounds() {
-        int n = map.size();
-        if (voicePlayer != null) ++n;
-        if (sirenPlayer != null) ++n;
-        return n;
-    }
 
     @Override
     public void dispose() {
@@ -50,7 +41,6 @@ public class SoundManager implements Disposable {
         map.clear();
         Logger.info("{} sound objects removed", numEntries);
         voicePlayer = null;
-        sirenPlayer = null;
     }
 
     public MediaPlayer mediaPlayer(Object key) {
@@ -88,11 +78,6 @@ public class SoundManager implements Disposable {
         ));
         Logger.info("Media player: key='{}', URL='{}'", key, url);
         register(key, mediaPlayer);
-    }
-
-    public void createSirenPlayer(URL... urls) {
-        sirenPlayer = new SirenPlayer(urls);
-        sirenPlayer.muteProperty().bind(muteProperty);
     }
 
     public BooleanProperty enabledProperty() {
@@ -192,40 +177,7 @@ public class SoundManager implements Disposable {
     }
 
     public void stopAll() {
-        stopSiren();
         map.values().stream().filter(MediaPlayer.class::isInstance).map(MediaPlayer.class::cast).forEach(MediaPlayer::stop);
         Logger.debug("All sounds (media players, siren, voice) stopped");
-    }
-
-    // Sirens
-
-    public void playSiren(int number, double volume) {
-        if (sirenPlayer == null) {
-            Logger.error("No sirens registered");
-            return;
-        }
-        sirenPlayer.ensureSirenPlaying(number, volume);
-    }
-
-    public void stopSiren() {
-        if (sirenPlayer == null) {
-            Logger.error("No sirens registered");
-            return;
-        }
-        sirenPlayer.stopCurrentSiren();
-    }
-
-    @SuppressWarnings("unchecked")
-    private <C> C valueOfType(Object key, Class<C> type) {
-        requireNonNull(key);
-        requireNonNull(type);
-        final Object value = map.get(key);
-        if (value == null) {
-            throw new IllegalArgumentException("No sound value with key '%s' exists".formatted(key));
-        }
-        if (type.isInstance(value)) {
-            return (C) value;
-        }
-        throw new IllegalArgumentException("Sound '%s' is not a media object".formatted(key));
     }
 }

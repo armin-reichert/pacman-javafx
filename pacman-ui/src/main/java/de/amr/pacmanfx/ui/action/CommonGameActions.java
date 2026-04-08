@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.GameClock;
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl.CommonGameState;
@@ -16,6 +17,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.ViewManager.ViewID;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -280,9 +282,11 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_PAUSED = new GameAction("TOGGLE_PAUSED") {
         @Override
         public void execute(GameUI ui) {
-            toggleBoolean(ui.gameContext().clock().updatesDisabledProperty());
-            if (ui.gameContext().clock().getUpdatesDisabled()) {
+            final GameContext gameContext = ui.gameContext();
+            toggleBoolean(gameContext.clock().updatesDisabledProperty());
+            if (gameContext.clock().getUpdatesDisabled()) {
                 ui.soundManager().stopAll();
+                ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::stopAll);
             }
             Logger.info("Game ({}) {}", ui.gameContext().gameVariantName(), ui.gameContext().clock().getUpdatesDisabled() ? "paused" : "resumed");
         }

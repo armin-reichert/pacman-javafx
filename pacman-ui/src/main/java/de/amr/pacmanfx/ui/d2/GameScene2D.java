@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -130,7 +131,7 @@ public abstract class GameScene2D implements GameScene {
     @Override
     public final void end(Game game) {
         doEnd(game);
-        ui.soundManager().stopAll();
+        soundEffects().ifPresent(GameSoundEffects::stopAll);
         Logger.info("2D scene {} ends", getClass().getSimpleName());
     }
 
