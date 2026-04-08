@@ -79,14 +79,14 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationTimer()));
+        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationTimer()));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
 
-        inky = uiConfig.createGhostWithAnimations(ui.spriteAnimationTimer(), CYAN_GHOST_BASHFUL);
+        inky = uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), CYAN_GHOST_BASHFUL);
 
-        pinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationTimer(), PINK_GHOST_SPEEDY);
+        pinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), PINK_GHOST_SPEEDY);
 
         heart = new Actor();
         heart.setAnimations(new SingleSpriteNoAnimation(spriteSheet.sprite(SpriteID.HEART)));

@@ -204,7 +204,7 @@ public interface GameUI extends Translator {
      */
     Stage stage();
 
-    SpriteAnimationManager spriteAnimationTimer();
+    SpriteAnimationManager spriteAnimationManager();
 
     /**
      * Returns the sound manager responsible for playing sound effects.

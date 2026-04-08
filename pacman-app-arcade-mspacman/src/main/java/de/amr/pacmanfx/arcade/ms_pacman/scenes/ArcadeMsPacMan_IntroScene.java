@@ -87,14 +87,14 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         final UIConfig uiConfig = ui.currentConfig();
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationTimer()));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
         msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
 
         ghosts = List.of(
-            uiConfig.createGhostWithAnimations(ui.spriteAnimationTimer(), RED_GHOST_SHADOW),
-            uiConfig.createGhostWithAnimations(ui.spriteAnimationTimer(), PINK_GHOST_SPEEDY),
-            uiConfig.createGhostWithAnimations(ui.spriteAnimationTimer(), CYAN_GHOST_BASHFUL),
-            uiConfig.createGhostWithAnimations(ui.spriteAnimationTimer(), ORANGE_GHOST_POKEY)
+            uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), RED_GHOST_SHADOW),
+            uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), PINK_GHOST_SPEEDY),
+            uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), CYAN_GHOST_BASHFUL),
+            uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), ORANGE_GHOST_POKEY)
         );
 
         presentedGhostCharacter = RED_GHOST_SHADOW;

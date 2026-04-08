@@ -400,7 +400,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
-    public SpriteAnimationManager spriteAnimationTimer() {
+    public SpriteAnimationManager spriteAnimationManager() {
         return spriteAnimationManager;
     }
 
