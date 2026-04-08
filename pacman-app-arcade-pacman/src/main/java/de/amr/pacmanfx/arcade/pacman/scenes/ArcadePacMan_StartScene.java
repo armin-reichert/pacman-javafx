@@ -7,7 +7,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
-import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 /**
  * Scene shown after credit has been added and where game can be started.
@@ -32,6 +32,6 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(CreditAddedEvent e) {
-        ui.soundManager().play(SoundID.COIN_INSERTED);
+        soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
     }
 }

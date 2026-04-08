@@ -21,6 +21,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 
 import java.util.ArrayList;
@@ -44,10 +45,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private Pulse blinking;
     private Pac pacMan;
     private List<Ghost> ghosts;
+    private List<Ghost> victims;
     private boolean[] ghostImageVisible;
     private boolean[] ghostNicknameVisible;
     private boolean[] ghostCharacterVisible;
-    private List<Ghost> victims;
     private boolean titleVisible;
     private int ghostIndex;
     private long ghostKilledTime;
@@ -88,7 +89,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void doInit(Game game) {
         final UIConfig uiConfig = ui.currentConfig();
 
-        game.hud().credit(true).score(true).livesCounter(false).levelCounter(true).show();
+        game.hud().credit(true).livesCounter(false).levelCounter(true).score(true).show();
 
         ui.voicePlayer().playVoice(GameUI_Resources.VOICE_EXPLAIN_GAME_START);
 
@@ -133,7 +134,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(CreditAddedEvent e) {
-        ui.soundManager().play(SoundID.COIN_INSERTED);
+        soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
     }
 
     public SceneState state() {
