@@ -42,7 +42,7 @@ public class GameClockFX implements GameClock {
      * {@link Timeline}. If the clock was running, it is stopped and restarted
      * with the new timing.
      */
-    private final IntegerProperty targetFrameRate = new SimpleIntegerProperty(DEFAULT_FRAME_RATE) {
+    private final IntegerProperty targetFrameRate = new SimpleIntegerProperty(60) {
         @Override
         protected void invalidated() {
             final boolean wasRunning = isRunning();

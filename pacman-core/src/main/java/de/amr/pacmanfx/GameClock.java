@@ -27,11 +27,6 @@ import java.util.function.Consumer;
 public interface GameClock {
 
     /**
-     * Default target frame rate in frames per second.
-     */
-    int DEFAULT_FRAME_RATE = 60;
-
-    /**
      * Installs an error handler that is invoked when either the permanent or
      * pausable action throws an exception during a tick.
      * <p>
