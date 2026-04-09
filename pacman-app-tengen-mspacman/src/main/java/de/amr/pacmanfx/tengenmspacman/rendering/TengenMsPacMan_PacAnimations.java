@@ -29,7 +29,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
     protected SpriteAnimation createAnimation(Object animationID) {
         return switch (animationID) {
             case Pac.AnimationID.PAC_FULL -> builder(manager)
-                .singleSprite(spriteSheet.sprite(SpriteID.MS_PAC_FULL))
+                .sprite(spriteSheet.sprite(SpriteID.MS_PAC_FULL))
                 .build();
 
             case Pac.AnimationID.PAC_DYING -> builder(manager)
@@ -82,7 +82,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
                 .build();
 
             case ANIM_JUNIOR -> builder(manager)
-                .singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC))
+                .sprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC))
                 .initiallyStopped()
                 .build();
 

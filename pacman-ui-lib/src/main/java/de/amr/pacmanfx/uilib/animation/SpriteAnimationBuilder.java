@@ -24,8 +24,7 @@ public class SpriteAnimationBuilder {
     private final BuildData data = new BuildData();
 
     public SpriteAnimationBuilder(SpriteAnimationManager manager) {
-        requireNonNull(manager);
-        this.manager = manager;
+        this.manager = requireNonNull(manager);
     }
 
     public SpriteAnimationBuilder sprites(RectShort[] sprites) {
@@ -36,8 +35,8 @@ public class SpriteAnimationBuilder {
         return this;
     }
 
-    public SpriteAnimationBuilder singleSprite(RectShort sprite) {
-        return sprites(new RectShort[] { requireNonNull(sprite) });
+    public SpriteAnimationBuilder sprite(RectShort sprite) {
+        return sprites(new RectShort[] { sprite });
     }
 
     public SpriteAnimationBuilder frameTicks(int ticks) {

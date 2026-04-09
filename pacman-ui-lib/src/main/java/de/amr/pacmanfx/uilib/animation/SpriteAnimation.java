@@ -84,9 +84,14 @@ public class SpriteAnimation {
     public RectShort currentSprite() { return sprites[currentFrame]; }
 
     public void advanceFrame() {
-        currentFrame++;
-        if (currentFrame == sprites.length) {
-            currentFrame = loop ? 0 : sprites.length - 1;
+        if (currentFrame == sprites.length - 1) {
+            if (loop) {
+                currentFrame = 0;
+            } else {
+                stop();
+            }
+        } else {
+            ++currentFrame;
         }
     }
 

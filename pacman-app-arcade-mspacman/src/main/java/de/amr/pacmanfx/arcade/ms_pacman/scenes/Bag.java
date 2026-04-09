@@ -30,8 +30,8 @@ public class Bag extends Actor {
         @Override
         protected SpriteAnimation createAnimation(Object animationID) {
             return switch (animationID) {
-                case AnimationID.JUNIOR -> SpriteAnimation.builder(manager).singleSprite(spriteSheet.sprite(JUNIOR_PAC)).initiallyStopped().build();
-                case AnimationID.BAG    -> SpriteAnimation.builder(manager).singleSprite(spriteSheet.sprite(BLUE_BAG)).initiallyStopped().build();
+                case AnimationID.JUNIOR -> SpriteAnimation.builder(manager).sprite(spriteSheet.sprite(JUNIOR_PAC)).initiallyStopped().build();
+                case AnimationID.BAG    -> SpriteAnimation.builder(manager).sprite(spriteSheet.sprite(BLUE_BAG)).initiallyStopped().build();
                 default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
             };
         }
