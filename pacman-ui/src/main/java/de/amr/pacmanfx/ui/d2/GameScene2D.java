@@ -133,7 +133,7 @@ public abstract class GameScene2D implements GameScene {
         doEnd(game);
         soundEffects().ifPresent(GameSoundEffects::stopAll);
         //TODO this is a temporary solution
-        ui.spriteAnimationManager().clearCache();
+        ui.spriteAnimationManager().clearAnimations();
         Logger.info("2D scene {} ends", getClass().getSimpleName());
     }
 

@@ -14,22 +14,22 @@ import static java.util.Objects.requireNonNull;
 
 public class SpriteAnimationManager extends AnimationTimer {
 
-    private final Set<SpriteAnimation> cache = new HashSet<>();
+    private final Set<SpriteAnimation> spriteAnimations = new HashSet<>();
 
     public void registerAnimation(SpriteAnimation animation) {
         requireNonNull(animation);
-        cache.add(animation);
-        Logger.info("Sprite animation registered (cache size={})", cache.size());
+        spriteAnimations.add(animation);
+        Logger.info("Sprite animation registered (cache size={})", spriteAnimations.size());
     }
 
-    public void clearCache() {
-        cache.clear();
+    public void clearAnimations() {
+        spriteAnimations.clear();
         Logger.info("Sprite animation cache cleared");
     }
 
     @Override
     public void handle(long now) {
-        for (SpriteAnimation animation : cache) {
+        for (SpriteAnimation animation : spriteAnimations) {
             animation.update(now);
         }
     }
