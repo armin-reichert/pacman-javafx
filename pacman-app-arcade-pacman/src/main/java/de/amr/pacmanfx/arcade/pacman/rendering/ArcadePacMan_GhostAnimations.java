@@ -60,19 +60,19 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
 
             case Ghost.AnimationID.GHOST_POINTS -> builder(timer)
                 .sprites(spriteSheet().sprites(SpriteID.GHOST_NUMBERS))
-                .stopped()
+                .initiallyStopped()
                 .build();
 
             case AnimationID.BLINKY_DAMAGED -> builder(timer)
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_DAMAGED))
-                .stopped()
+                .initiallyStopped()
                 .build();
 
             case AnimationID.BLINKY_DRESS_PATCHED -> builder(timer)
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_PATCHED))
                 .frameTicks(4)
                 .repeated()
-                .stopped()
+                .initiallyStopped()
                 .build();
 
             case AnimationID.BLINKY_NAKED -> builder(timer)

@@ -32,7 +32,7 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
         return switch (id) {
             case Pac.AnimationID.PAC_FULL -> builder(timer)
                 .singleSprite(spriteSheet.sprite(SpriteID.PACMAN_FULL))
-                .stopped()
+                .initiallyStopped()
                 .build();
 
             case Pac.AnimationID.PAC_MUNCHING -> builder(timer)

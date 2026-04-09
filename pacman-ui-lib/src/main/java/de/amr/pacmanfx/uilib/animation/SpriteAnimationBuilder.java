@@ -14,32 +14,24 @@ import static java.util.Objects.requireNonNull;
 public class SpriteAnimationBuilder {
 
     private static class BuildData {
-        int frameTicks = 1;
         RectShort[] sprites = new RectShort[0];
-        boolean stopped = false;
+        boolean initiallyStopped = false;
         boolean loop = false;
+        int frameTicks = 1;
     }
 
-    private final SpriteAnimationManager timer;
+    private final SpriteAnimationManager manager;
     private final BuildData data = new BuildData();
 
-    public SpriteAnimationBuilder(SpriteAnimationManager timer) {
-        requireNonNull(timer);
-        this.timer = timer;
-    }
-
-    public SpriteAnimationBuilder frameTicks(int ticks) {
-        if (ticks <= 0) {
-            throw new IllegalArgumentException("Number of ticks per frame is negative (%d)".formatted(data.frameTicks));
-        }
-        data.frameTicks = ticks;
-        return this;
+    public SpriteAnimationBuilder(SpriteAnimationManager manager) {
+        requireNonNull(manager);
+        this.manager = manager;
     }
 
     public SpriteAnimationBuilder sprites(RectShort[] sprites) {
         data.sprites = requireNonNull(sprites);
         if (Arrays.stream(sprites).anyMatch(Objects::isNull)) {
-            throw new IllegalArgumentException("Found null sprite in sprite array");
+            throw new IllegalArgumentException("Found null entry in sprite array");
         }
         return this;
     }
@@ -48,13 +40,21 @@ public class SpriteAnimationBuilder {
         return sprites(new RectShort[] { requireNonNull(sprite) });
     }
 
+    public SpriteAnimationBuilder frameTicks(int ticks) {
+        if (ticks <= 0) {
+            throw new IllegalArgumentException("Number of ticks per frame is negative (%d)".formatted(ticks));
+        }
+        data.frameTicks = ticks;
+        return this;
+    }
+
     public SpriteAnimationBuilder repeated() {
         data.loop = true;
         return this;
     }
 
-    public SpriteAnimationBuilder stopped() {
-        data.stopped = true;
+    public SpriteAnimationBuilder initiallyStopped() {
+        data.initiallyStopped = true;
         return this;
     }
 
@@ -66,10 +66,10 @@ public class SpriteAnimationBuilder {
         anim.setLoop(data.loop);
         anim.setSprites(data.sprites);
         anim.setFrameTicks(data.frameTicks);
-        if (data.stopped) {
+        if (data.initiallyStopped) {
             anim.stop();
         }
-        timer.registerAnimation(anim);
+        manager.registerAnimation(anim);
         return anim;
     }
 }

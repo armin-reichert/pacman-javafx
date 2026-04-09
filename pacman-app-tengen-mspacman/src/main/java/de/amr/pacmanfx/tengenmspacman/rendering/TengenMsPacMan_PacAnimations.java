@@ -83,7 +83,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
             case ANIM_JUNIOR -> builder(timer)
                 .singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC))
-                .stopped()
+                .initiallyStopped()
                 .build();
 
             default -> throw new IllegalArgumentException("Illegal animation ID " + animationID);

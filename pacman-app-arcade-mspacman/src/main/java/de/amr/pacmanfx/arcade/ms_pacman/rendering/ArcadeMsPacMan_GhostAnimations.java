@@ -55,7 +55,7 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
 
             case Ghost.AnimationID.GHOST_POINTS -> builder(timer)
                 .sprites(spriteSheet().sprites(GHOST_NUMBERS))
-                .stopped()
+                .initiallyStopped()
                 .build();
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + id);

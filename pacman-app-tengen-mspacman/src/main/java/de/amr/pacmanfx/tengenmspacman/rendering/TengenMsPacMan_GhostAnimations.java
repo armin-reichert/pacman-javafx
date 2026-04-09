@@ -20,45 +20,45 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
 
     public static final int NORMAL_TICKS = 8;  // TODO check this in emulator
     public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator
-    public static final int FLASH_TICKS = 7;  // TODO check this in emulator
+    public static final int FLASHING_TICKS = 7;  // TODO check this in emulator
 
-    private final SpriteAnimationManager timer;
+    private final SpriteAnimationManager manager;
     private final byte personality;
 
     public TengenMsPacMan_GhostAnimations(SpriteAnimationManager spriteAnimationManager, byte personality) {
         super(TengenMsPacMan_SpriteSheet.instance());
         this.personality = requireValidGhostPersonality(personality);
-        timer = requireNonNull(spriteAnimationManager);
+        manager = requireNonNull(spriteAnimationManager);
     }
 
     @Override
     protected SpriteAnimation createAnimation(Object animationID) {
         return switch (animationID) {
-            case Ghost.AnimationID.GHOST_NORMAL -> builder(timer)
+            case Ghost.AnimationID.GHOST_NORMAL -> builder(manager)
                 .sprites(ghostNormalSprites(Direction.LEFT))
                 .frameTicks(NORMAL_TICKS)
                 .repeated()
                 .build();
 
-            case Ghost.AnimationID.GHOST_FRIGHTENED -> builder(timer)
+            case Ghost.AnimationID.GHOST_FRIGHTENED -> builder(manager)
                 .sprites(spriteSheet.sprites(SpriteID.GHOST_FRIGHTENED))
                 .frameTicks(FRIGHTENED_TICKS)
                 .repeated()
                 .build();
 
-            case Ghost.AnimationID.GHOST_FLASHING -> builder(timer)
+            case Ghost.AnimationID.GHOST_FLASHING -> builder(manager)
                 .sprites(spriteSheet.sprites(SpriteID.GHOST_FLASHING))
-                .frameTicks(FLASH_TICKS)
+                .frameTicks(FLASHING_TICKS)
                 .repeated()
                 .build();
 
-            case Ghost.AnimationID.GHOST_EYES -> builder(timer)
+            case Ghost.AnimationID.GHOST_EYES -> builder(manager)
                 .sprites(ghostEyesSprites(Direction.LEFT))
                 .build();
 
-            case Ghost.AnimationID.GHOST_POINTS -> builder(timer)
+            case Ghost.AnimationID.GHOST_POINTS -> builder(manager)
                 .sprites(spriteSheet.sprites(SpriteID.GHOST_NUMBERS))
-                .stopped()
+                .initiallyStopped()
                 .build();
 
             default -> throw new IllegalArgumentException("Illegal animation ID " + animationID);

@@ -73,7 +73,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
         nailDressAnimation = SpriteAnimation.builder(ui.spriteAnimationManager())
             .sprites(ArcadePacMan_SpriteSheet.instance().sprites(SpriteID.RED_GHOST_STRETCHED))
-            .stopped()
+            .initiallyStopped()
             .build();
 
         tick = -1;
