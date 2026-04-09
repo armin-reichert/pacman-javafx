@@ -115,7 +115,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         scorePoints(level, pelletPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
         level.pac().setRestingTicks(restingTicksAfterPelletEaten);
-        checkCruiseElroyActivation(level);
+        checkRedGhostCruiseElroyActivation(level);
     }
 
     @Override
@@ -128,7 +128,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         scorePoints(level, energizerPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
         pac.setRestingTicks(restingTicksAfterEnergizerEaten);
-        checkCruiseElroyActivation(level);
+        checkRedGhostCruiseElroyActivation(level);
 
         if (!isLevelCompleted(level)) {
             level.ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(MovingActor::requestTurnBack);
@@ -157,17 +157,19 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         };
     }
 
-    protected void checkCruiseElroyActivation(GameLevel level) {
-        final LevelData data = levelData(level.number());
-        final int uneatenFoodCount = level.worldMap().foodLayer().remainingFoodCount();
-        if (uneatenFoodCount == data.numDotsLeftElroy1()) {
-            optBlinky(level).ifPresent(blinky -> blinky.elroyState().setMode(ElroyState.Mode.ONE));
-        } else if (uneatenFoodCount == data.numDotsLeftElroy2()) {
-            optBlinky(level).ifPresent(blinky -> blinky.elroyState().setMode(ElroyState.Mode.TWO));
-        }
+    protected void checkRedGhostCruiseElroyActivation(GameLevel level) {
+        optRedGhost(level).ifPresent(redGhost -> {
+            final LevelData data = levelData(level.number());
+            final int uneatenFoodCount = level.worldMap().foodLayer().remainingFoodCount();
+            if (uneatenFoodCount == data.numDotsLeftElroy1()) {
+                redGhost.elroyState().setMode(ElroyState.Mode.ONE);
+            } else if (uneatenFoodCount == data.numDotsLeftElroy2()) {
+                redGhost.elroyState().setMode(ElroyState.Mode.TWO);
+            }
+        });
     }
 
-    private Optional<RedGhostShadow> optBlinky(GameLevel level) {
+    private Optional<RedGhostShadow> optRedGhost(GameLevel level) {
         return level.ghosts().filter(RedGhostShadow.class::isInstance).map(RedGhostShadow.class::cast).findAny();
     }
 
