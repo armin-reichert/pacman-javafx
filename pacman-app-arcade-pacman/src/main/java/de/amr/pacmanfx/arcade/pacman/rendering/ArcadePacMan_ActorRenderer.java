@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -31,6 +32,17 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
 
         if (actor instanceof Bonus bonus) {
             drawBonus(bonus);
+        }
+        else if (actor instanceof Pac pac && pac.animations().selectedAnimationID() == Pac.AnimationID.PAC_MUNCHING) {
+            // Select munching sprite depending on Pac-Man's current move direction
+            final RectShort[] sprites = switch (pac.moveDir()) {
+                case RIGHT -> spriteSheet().sprites(SpriteID.PACMAN_MUNCHING_RIGHT);
+                case LEFT  -> spriteSheet().sprites(SpriteID.PACMAN_MUNCHING_LEFT);
+                case UP    -> spriteSheet().sprites(SpriteID.PACMAN_MUNCHING_UP);
+                case DOWN  -> spriteSheet().sprites(SpriteID.PACMAN_MUNCHING_DOWN);
+            };
+            final RectShort sprite = sprites[pac.animations().frameIndex()];
+            drawSpriteCentered(actor.center(), sprite);
         }
         else {
             final RectShort sprite = actor.animations().currentSprite(actor);
