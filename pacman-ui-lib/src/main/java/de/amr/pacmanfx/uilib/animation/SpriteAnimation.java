@@ -3,12 +3,9 @@
  */
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.math.RectShort;
-import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.Objects.requireNonNullElse;
 
 /**
  * Plays a sequence of sprite sheet regions ("sprites") to create an animation effect.
