@@ -63,7 +63,6 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
     @Override
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Pac pac && isSelected(Pac.AnimationID.PAC_MUNCHING)) {
-
             currentAnimation().setSprites(pacMunchingSprites(pac.moveDir()));
         }
     }

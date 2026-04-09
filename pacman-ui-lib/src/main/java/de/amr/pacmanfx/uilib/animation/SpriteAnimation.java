@@ -5,8 +5,10 @@ package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.math.RectShort;
+import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.Objects.requireNonNullElse;
 
 /**
  * Plays a sequence of sprite sheet regions ("sprites") to create an animation effect.
@@ -33,8 +35,8 @@ public class SpriteAnimation {
         sprites = new RectShort[0];
         currentFrame = 0;
         loop = false;
-        running = true; //TODO check this
-        lastUpdateTime = 0;
+        running = false;
+        lastUpdateTime = now();
         setFrameTicks(1);
     }
 
@@ -48,8 +50,10 @@ public class SpriteAnimation {
         }
     }
     public void start() {
-        running = true;
-        lastUpdateTime = 0;
+        if (!running) {
+            running = true;
+            lastUpdateTime = now();
+        }
     }
 
     public void stop() {
@@ -59,9 +63,14 @@ public class SpriteAnimation {
     public void reset() {
         stop();
         currentFrame = 0;
+        lastUpdateTime = now();
     }
 
     public void setSprites(RectShort[] sprites) {
+        if (this.sprites == sprites) {
+            //Logger.info("Sprites unchanged");
+            return;
+        }
         this.sprites = requireNonNull(sprites);
         if (sprites.length == 0) {
             throw new IllegalArgumentException("Sprites array is empty");
@@ -73,6 +82,10 @@ public class SpriteAnimation {
             throw new IllegalArgumentException("Frame ticks must be a positive number, but you gave me " + numTicks);
         }
         frameDuration = 1_000_000_000L / fps * numTicks;
+    }
+
+    public void setLoop(boolean loop) {
+        this.loop = loop;
     }
 
     public void setCurrentFrame(int frame) {
@@ -100,8 +113,7 @@ public class SpriteAnimation {
 
     private boolean isValidFrame(int index) { return 0 <= index && index < sprites.length; }
 
-    public void setLoop(boolean loop) {
-        this.loop = loop;
+    private long now() {
+        return System.nanoTime();
     }
-
 }
