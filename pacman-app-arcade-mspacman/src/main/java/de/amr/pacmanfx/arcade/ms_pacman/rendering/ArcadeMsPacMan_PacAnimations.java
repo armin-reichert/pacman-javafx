@@ -18,31 +18,31 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
     public enum AnimationID { PAC_MAN_MUNCHING }
 
-    private final SpriteAnimationManager timer;
+    private final SpriteAnimationManager manager;
     
     public ArcadeMsPacMan_PacAnimations(SpriteAnimationManager spriteAnimationManager) {
         super(ArcadeMsPacMan_SpriteSheet.instance());
-        this.timer = requireNonNull(spriteAnimationManager);
+        this.manager = requireNonNull(spriteAnimationManager);
     }
 
     @Override
     protected SpriteAnimation createAnimation(Object animationID) {
         return switch (animationID) {
-            case Pac.AnimationID.PAC_FULL -> builder(timer)
+            case Pac.AnimationID.PAC_FULL -> builder(manager)
                 .singleSprite(spriteSheet.sprite(SpriteID.MS_PACMAN_FULL))
                 .build();
 
-            case Pac.AnimationID.PAC_MUNCHING -> builder(timer)
+            case Pac.AnimationID.PAC_MUNCHING -> builder(manager)
                 .sprites(msPacManMunchingSprites(Direction.LEFT))
                 .repeated()
                 .build();
 
-            case Pac.AnimationID.PAC_DYING -> builder(timer)
+            case Pac.AnimationID.PAC_DYING -> builder(manager)
                 .sprites(spriteSheet().sprites(SpriteID.MS_PACMAN_DYING))
                 .frameTicks(8)
                 .build();
 
-            case AnimationID.PAC_MAN_MUNCHING -> builder(timer)
+            case AnimationID.PAC_MAN_MUNCHING -> builder(manager)
                 .sprites(mrPacManMunchingSprites(Direction.LEFT))
                 .frameTicks(2)
                 .repeated()

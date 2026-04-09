@@ -18,70 +18,70 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
-    private final SpriteAnimationManager timer;
+    private final SpriteAnimationManager manager;
 
     public TengenMsPacMan_PacAnimations(SpriteAnimationManager spriteAnimationManager) {
         super(TengenMsPacMan_SpriteSheet.instance());
-        this.timer = requireNonNull(spriteAnimationManager);
+        this.manager = requireNonNull(spriteAnimationManager);
     }
 
     @Override
     protected SpriteAnimation createAnimation(Object animationID) {
         return switch (animationID) {
-            case Pac.AnimationID.PAC_FULL -> builder(timer)
+            case Pac.AnimationID.PAC_FULL -> builder(manager)
                 .singleSprite(spriteSheet.sprite(SpriteID.MS_PAC_FULL))
                 .build();
 
-            case Pac.AnimationID.PAC_DYING -> builder(timer)
+            case Pac.AnimationID.PAC_DYING -> builder(manager)
                 .sprites(pacDyingSprites())
                 .frameTicks(8)
                 .build();
 
-            case Pac.AnimationID.PAC_MUNCHING -> builder(timer)
+            case Pac.AnimationID.PAC_MUNCHING -> builder(manager)
                 .sprites(spriteSheet.sprites(SpriteID.MS_PAC_MUNCHING))
                 .repeated()
                 .build();
 
-            case ANIM_MS_PAC_MAN_BOOSTER -> builder(timer)
+            case ANIM_MS_PAC_MAN_BOOSTER -> builder(manager)
                 .sprites(spriteSheet.sprites(SpriteID.MS_PAC_MUNCHING_BOOSTER))
                 .repeated()
                 .build();
 
-            case ANIM_MS_PAC_MAN_WAVING_HAND -> builder(timer)
+            case ANIM_MS_PAC_MAN_WAVING_HAND -> builder(manager)
                 .sprites(spriteSheet.sprites(SpriteID.MS_PAC_WAVING_HAND))
                 .frameTicks(8)
                 .repeated()
                 .build();
 
-            case ANIM_MS_PAC_MAN_TURNING_AWAY -> builder(timer)
+            case ANIM_MS_PAC_MAN_TURNING_AWAY -> builder(manager)
                 .sprites(spriteSheet.sprites(SpriteID.MS_PAC_TURNING_AWAY))
                 .frameTicks(15)
                 .build();
 
-            case ANIM_PAC_MAN_MUNCHING -> builder(timer)
+            case ANIM_PAC_MAN_MUNCHING -> builder(manager)
                 .sprites(spriteSheet.sprites(SpriteID.MR_PAC_MUNCHING))
                 .frameTicks(2)
                 .repeated()
                 .build();
 
-            case ANIM_PAC_MAN_BOOSTER -> builder(timer)
+            case ANIM_PAC_MAN_BOOSTER -> builder(manager)
                 .sprites(spriteSheet.sprites(SpriteID.MR_PAC_MUNCHING_BOOSTER))
                 .frameTicks(2)
                 .repeated()
                 .build();
 
-            case ANIM_PAC_MAN_WAVING_HAND -> builder(timer)
+            case ANIM_PAC_MAN_WAVING_HAND -> builder(manager)
                 .sprites(spriteSheet.sprites(SpriteID.MR_PAC_WAVING_HAND))
                 .frameTicks(8)
                 .repeated()
                 .build();
 
-            case ANIM_PAC_MAN_TURNING_AWAY -> builder(timer)
+            case ANIM_PAC_MAN_TURNING_AWAY -> builder(manager)
                 .sprites(spriteSheet.sprites(SpriteID.MR_PAC_TURNING_AWAY))
                 .frameTicks(15)
                 .build();
 
-            case ANIM_JUNIOR -> builder(timer)
+            case ANIM_JUNIOR -> builder(manager)
                 .singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC))
                 .initiallyStopped()
                 .build();

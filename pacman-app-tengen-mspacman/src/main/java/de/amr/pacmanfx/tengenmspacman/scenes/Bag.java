@@ -19,18 +19,18 @@ public class Bag extends Actor {
 
     public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
 
-        private final SpriteAnimationManager timer;
+        private final SpriteAnimationManager manager;
 
         public BagAnimations(SpriteAnimationManager spriteAnimationManager) {
             super(TengenMsPacMan_SpriteSheet.instance());
-            timer = requireNonNull(spriteAnimationManager);
+            manager = requireNonNull(spriteAnimationManager);
         }
 
         @Override
         protected SpriteAnimation createAnimation(Object animationID) {
             return switch (animationID) {
-                case AnimationID.BAG    -> builder(timer).singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).initiallyStopped().build();
-                case AnimationID.JUNIOR -> builder(timer).singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).initiallyStopped().build();
+                case AnimationID.BAG    -> builder(manager).singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).initiallyStopped().build();
+                case AnimationID.JUNIOR -> builder(manager).singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).initiallyStopped().build();
                 default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
             };
         }

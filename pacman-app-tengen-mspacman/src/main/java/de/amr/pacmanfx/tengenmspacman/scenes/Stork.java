@@ -20,17 +20,17 @@ public class Stork extends Actor {
 
     private static class StorkAnimations extends SpriteAnimationMap<SpriteID> {
 
-        private final SpriteAnimationManager timer;
+        private final SpriteAnimationManager manager;
 
         public StorkAnimations(SpriteAnimationManager spriteAnimationManager) {
             super(TengenMsPacMan_SpriteSheet.instance());
-            timer = requireNonNull(spriteAnimationManager);
+            manager = requireNonNull(spriteAnimationManager);
         }
 
         @Override
         protected SpriteAnimation createAnimation(Object animationID) {
             if (animationID.equals(AnimationID.FLYING)) {
-                return builder(timer).sprites(spriteSheet.sprites(STORK)).frameTicks(8).repeated().build();
+                return builder(manager).sprites(spriteSheet.sprites(STORK)).frameTicks(8).repeated().build();
             }
             throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         }

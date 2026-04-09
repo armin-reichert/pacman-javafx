@@ -19,41 +19,41 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
 
-    private final SpriteAnimationManager timer;
+    private final SpriteAnimationManager manager;
     private final byte personality;
 
     public ArcadeMsPacMan_GhostAnimations(SpriteAnimationManager spriteAnimationManager, byte personality) {
         super(ArcadeMsPacMan_SpriteSheet.instance());
         this.personality = requireValidGhostPersonality(personality);
-        this.timer = requireNonNull(spriteAnimationManager);
+        this.manager = requireNonNull(spriteAnimationManager);
     }
 
     @Override
     protected SpriteAnimation createAnimation(Object id) {
         return switch (id) {
-            case Ghost.AnimationID.GHOST_NORMAL -> builder(timer)
+            case Ghost.AnimationID.GHOST_NORMAL -> builder(manager)
                 .sprites(ghostNormalSprites(Direction.LEFT))
                 .frameTicks(8)
                 .repeated()
                 .build();
 
-            case Ghost.AnimationID.GHOST_FRIGHTENED -> builder(timer)
+            case Ghost.AnimationID.GHOST_FRIGHTENED -> builder(manager)
                 .sprites(spriteSheet().sprites(GHOST_FRIGHTENED))
                 .frameTicks(8)
                 .repeated()
                 .build();
 
-            case Ghost.AnimationID.GHOST_FLASHING -> builder(timer)
+            case Ghost.AnimationID.GHOST_FLASHING -> builder(manager)
                 .sprites(spriteSheet().sprites(GHOST_FLASHING))
                 .frameTicks(7)
                 .repeated()
                 .build();
 
-            case Ghost.AnimationID.GHOST_EYES -> builder(timer)
+            case Ghost.AnimationID.GHOST_EYES -> builder(manager)
                 .sprites(ghostEyesSprites(Direction.LEFT))
                 .build();
 
-            case Ghost.AnimationID.GHOST_POINTS -> builder(timer)
+            case Ghost.AnimationID.GHOST_POINTS -> builder(manager)
                 .sprites(spriteSheet().sprites(GHOST_NUMBERS))
                 .initiallyStopped()
                 .build();
