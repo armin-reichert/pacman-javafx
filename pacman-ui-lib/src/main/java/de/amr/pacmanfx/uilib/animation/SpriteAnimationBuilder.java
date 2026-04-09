@@ -62,7 +62,7 @@ public class SpriteAnimationBuilder {
         if (data.sprites == null) {
             throw new IllegalArgumentException("No sprites defined");
         }
-        final SpriteAnimation anim = new SpriteAnimation();
+        final SpriteAnimation anim = new SpriteAnimation(60);
         anim.setLoop(data.loop);
         anim.setSprites(data.sprites);
         anim.setFrameTicks(data.frameTicks);

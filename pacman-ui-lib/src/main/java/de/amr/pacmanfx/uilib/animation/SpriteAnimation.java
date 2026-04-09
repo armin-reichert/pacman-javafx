@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.animation;
 
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.math.RectShort;
 
 import static java.util.Objects.requireNonNull;
@@ -12,13 +13,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class SpriteAnimation {
 
-    public static final int FPS = 60;
-    private static final long ONE_TICK_DURATION_NANOS = 1_000_000_000 / FPS;
-
     public static SpriteAnimationBuilder builder(SpriteAnimationManager timer) {
         return new SpriteAnimationBuilder(timer);
     }
 
+    private final int fps;
     private RectShort[] sprites;
     private int currentFrame;
     private boolean loop;
@@ -26,13 +25,17 @@ public class SpriteAnimation {
     private long lastUpdateTime;
     private long frameDuration;
 
-    public SpriteAnimation() {
+    public SpriteAnimation(int fps) {
+        if (fps <= 0) {
+            throw new IllegalArgumentException("Illegal FPS value: %d".formatted(fps));
+        }
+        this.fps = fps;
         sprites = new RectShort[0];
         currentFrame = 0;
         loop = false;
         running = true; //TODO check this
         lastUpdateTime = 0;
-        frameDuration = ONE_TICK_DURATION_NANOS;
+        setFrameTicks(1);
     }
 
     public void update(long now) {
@@ -66,7 +69,7 @@ public class SpriteAnimation {
         if (numTicks <= 0) {
             throw new IllegalArgumentException("Frame ticks must be a positive number, but you gave me " + numTicks);
         }
-        frameDuration = ONE_TICK_DURATION_NANOS * numTicks;
+        frameDuration = 1_000_000_000L / fps * numTicks;
     }
 
     public void setCurrentFrame(int frame) {
