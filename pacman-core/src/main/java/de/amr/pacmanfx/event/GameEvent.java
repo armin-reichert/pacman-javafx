@@ -3,6 +3,8 @@
  */
 package de.amr.pacmanfx.event;
 
+import de.amr.pacmanfx.model.Game;
+
 public sealed interface GameEvent permits
     BonusActivatedEvent,
     BonusEatenEvent,
@@ -23,8 +25,10 @@ public sealed interface GameEvent permits
     PacEatsFoodEvent,
     PacGetsPowerEvent,
     PacLostPowerEvent,
-    PacStartsLosingPowerEvent,
-    SpecialScoreReachedEvent,
+    PacPowerFadesEvent,
+    SpecialScoreEvent,
     StopAllSoundsEvent,
-    UnspecifiedChangeEvent
-{}
+    GenericChangeEvent
+{
+    Game game();
+}

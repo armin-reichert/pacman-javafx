@@ -120,7 +120,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             ui.soundManager().setEnabled(true);
             slot.insertCoin();
             game.control().enterState(SETTING_OPTIONS_FOR_START);
-            game.publishGameEvent(new CreditAddedEvent(1));
+            game.publishGameEvent(new CreditAddedEvent(game, 1));
         }
 
         @Override

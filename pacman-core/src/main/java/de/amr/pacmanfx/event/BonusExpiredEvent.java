@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.event;
 
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Bonus;
 
-public record BonusExpiredEvent(Bonus bonus) implements GameEvent {}
+public record BonusExpiredEvent(Game game, Bonus bonus) implements GameEvent {}

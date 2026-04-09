@@ -267,12 +267,12 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     }
 
     @Override
-    public void onGameContinues(GameContinuedEvent event) {
+    public void onGameContinued(GameContinuedEvent event) {
         level3D.onGameContinues(event);
     }
 
     @Override
-    public void onGameStarts(GameStartedEvent event) {
+    public void onGameStarted(GameStartedEvent event) {
         level3D.onGameStarts(event);
     }
 
@@ -287,7 +287,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     }
 
     @Override
-    public void onLevelStarts(LevelStartedEvent event) {
+    public void onLevelStarted(LevelStartedEvent event) {
         final GameLevel level = event.level();
         final State<Game> state = level.game().control().state();
         if (state instanceof TestState) {
@@ -319,12 +319,12 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     }
 
     @Override
-    public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
+    public void onSpecialScore(SpecialScoreEvent e) {
         level3D.onSpecialScoreReached(e);
     }
 
     @Override
-    public void onUnspecifiedChange(UnspecifiedChangeEvent event) {
+    public void ongenericChange(GenericChangeEvent event) {
         // TODO: remove (currently only used by GameState.TESTING_CUT_SCENES)
         ui.forceGameSceneUpdate();
     }

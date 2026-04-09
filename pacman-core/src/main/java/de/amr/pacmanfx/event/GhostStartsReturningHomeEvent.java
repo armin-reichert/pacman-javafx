@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.event;
 
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Ghost;
 
-public record GhostStartsReturningHomeEvent(Ghost ghost) implements GameEvent {}
+public record GhostStartsReturningHomeEvent(Game game, Ghost ghost) implements GameEvent {}

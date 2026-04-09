@@ -4,4 +4,6 @@
 
 package de.amr.pacmanfx.event;
 
-public record IntermissionStartedEvent(int intermissionNumber) implements GameEvent {}
+import de.amr.pacmanfx.model.Game;
+
+public record IntermissionStartedEvent(Game game, int intermissionNumber) implements GameEvent {}

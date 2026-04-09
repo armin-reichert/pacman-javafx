@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.model.test;
 
-import de.amr.pacmanfx.event.UnspecifiedChangeEvent;
+import de.amr.pacmanfx.event.GenericChangeEvent;
 import de.amr.pacmanfx.lib.fsm.AbstractState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
@@ -25,7 +25,7 @@ public class CutScenesTestState extends AbstractState<Game> implements TestState
                 testedCutSceneNumber += 1;
                 lock();
                 //TODO find another solution and get rid of this event type
-                game.publishGameEvent(new UnspecifiedChangeEvent("Cut Scene Test"));
+                game.publishGameEvent(new GenericChangeEvent(game, "Cut Scene Test"));
             } else {
                 game.control().enterStateWithName(GameControl.CommonGameState.INTRO.name());
             }

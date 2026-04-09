@@ -552,7 +552,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         soundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
 
-    public void onSpecialScoreReached(SpecialScoreReachedEvent ignoredEvent) {
+    public void onSpecialScoreReached(SpecialScoreEvent ignoredEvent) {
         soundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
 

@@ -25,7 +25,7 @@ public class LevelMediumTestState extends AbstractState<Game> implements TestSta
         message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
         level.setMessage(message);
         game.hud().show();
-        game.publishGameEvent(new StopAllSoundsEvent());
+        game.publishGameEvent(new StopAllSoundsEvent(game));
     }
 
     @Override
@@ -49,7 +49,7 @@ public class LevelMediumTestState extends AbstractState<Game> implements TestSta
         game.whileHunting(level);
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
-                game.publishGameEvent(new StopAllSoundsEvent());
+                game.publishGameEvent(new StopAllSoundsEvent(game));
                 game.control().enterStateWithName(GameControl.CommonGameState.INTRO.name());
             } else {
                 timer().restartSeconds(TEST_DURATION_SEC);

@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.d2;
 
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.event.UnspecifiedChangeEvent;
+import de.amr.pacmanfx.event.GenericChangeEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
@@ -142,7 +142,7 @@ public abstract class GameScene2D implements GameScene {
      * Currently used only for testing cut scenes.
      */
     @Override
-    public void onUnspecifiedChange(UnspecifiedChangeEvent event) {
+    public void ongenericChange(GenericChangeEvent event) {
         ui.forceGameSceneUpdate();
     }
 

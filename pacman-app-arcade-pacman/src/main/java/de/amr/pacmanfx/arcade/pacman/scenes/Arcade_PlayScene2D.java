@@ -113,12 +113,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onGameContinues(GameContinuedEvent e) {
+    public void onGameContinued(GameContinuedEvent e) {
         e.game().optGameLevel().ifPresent(this::resetActorAnimations);
     }
 
     @Override
-    public void onGameStarts(GameStartedEvent e) {
+    public void onGameStarted(GameStartedEvent e) {
         final Game game = e.game();
         final boolean silent = game.isDemoLevelRunning() || game.control().state() instanceof TestState;
         if (!silent) {
@@ -178,7 +178,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onSpecialScoreReached(SpecialScoreReachedEvent e) {
+    public void onSpecialScore(SpecialScoreEvent e) {
         soundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
 

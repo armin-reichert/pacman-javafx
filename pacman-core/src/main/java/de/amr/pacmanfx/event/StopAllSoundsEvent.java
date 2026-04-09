@@ -4,4 +4,6 @@
 
 package de.amr.pacmanfx.event;
 
-public record StopAllSoundsEvent() implements GameEvent {}
+import de.amr.pacmanfx.model.Game;
+
+public record StopAllSoundsEvent(Game game) implements GameEvent {}

@@ -107,13 +107,13 @@ public class Bonus extends MovingActor {
                 }
                 if (timer.hasExpired() || reachedExit) {
                     setInactive();
-                    game.publishGameEvent(new BonusExpiredEvent(this));
+                    game.publishGameEvent(new BonusExpiredEvent(game, this));
                 }
             }
             case EATEN -> {
                 if (timer.hasExpired()) {
                     setInactive();
-                    game.publishGameEvent(new BonusExpiredEvent(this));
+                    game.publishGameEvent(new BonusExpiredEvent(game, this));
                 }
             }
             case INACTIVE -> {}
@@ -158,11 +158,6 @@ public class Bonus extends MovingActor {
     public String toString() {
         return "Bonus{symbol=%s, points=%d, ticksRemaining=%d, state=%s, animation=%s}"
             .formatted(symbol, points, timer.remainingTicks(), state, jumpingAnimation);
-    }
-
-    @Override
-    public boolean canTurnBack() {
-        return false;
     }
 
     @Override

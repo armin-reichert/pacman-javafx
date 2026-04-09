@@ -448,7 +448,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
-        publishGameEvent(new LevelStartedEvent(level));
+        publishGameEvent(new LevelStartedEvent(this, level));
     }
 
     @Override
@@ -574,7 +574,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gateKeeper.setLevelNumber(levelNumber);
 
         levelProperty().set(level);
-        publishGameEvent(new LevelCreatedEvent(level));
+        publishGameEvent(new LevelCreatedEvent(this, level));
     }
 
     @Override
@@ -590,7 +590,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gateKeeper.setLevelNumber(1);
 
         levelProperty().set(level);
-        publishGameEvent(new LevelCreatedEvent(level));
+        publishGameEvent(new LevelCreatedEvent(this, level));
     }
 
     @Override
@@ -673,7 +673,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
-        publishGameEvent(new BonusActivatedEvent(bonus));
+        publishGameEvent(new BonusActivatedEvent(this, bonus));
     }
 
     @Override
@@ -707,7 +707,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                 Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
                 level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
                 simStep.pacGotPower = true;
-                publishGameEvent(new PacGetsPowerEvent(pac));
+                publishGameEvent(new PacGetsPowerEvent(this, pac));
             }
         }
     }
@@ -717,7 +717,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         scorePoints(level, bonus.points());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
         bonus.setEatenSeconds(BONUS_EATEN_SECONDS);
-        publishGameEvent(new BonusEatenEvent(bonus));
+        publishGameEvent(new BonusEatenEvent(this, bonus));
     }
 
     @Override
@@ -735,7 +735,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             pac.stopAnimation();
 
             level.ghosts().forEach(ghost -> ghost.onPacKilled(level));
-            publishGameEvent(new StopAllSoundsEvent());
+            publishGameEvent(new StopAllSoundsEvent(this));
         }
         else if (tick == TICK_PACMAN_DYING_HIDE_GHOSTS) {
             level.ghosts().forEach(Ghost::hide);
@@ -744,7 +744,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
         else if (tick == TICK_PACMAN_DYING_START_PAC_ANIMATION) {
             pac.playAnimation();
-            publishGameEvent(new PacDyingEvent(pac));
+            publishGameEvent(new PacDyingEvent(this, pac));
         }
         else if (tick == TICK_PACMAN_DYING_HIDE_PAC) {
             pac.hide();
@@ -772,7 +772,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         level.pac().hide();
         level.ghosts().forEach(Ghost::stopAnimation);
-        publishGameEvent(new GhostEatenEvent(ghost));
+        publishGameEvent(new GhostEatenEvent(this, ghost));
     }
 
     @Override

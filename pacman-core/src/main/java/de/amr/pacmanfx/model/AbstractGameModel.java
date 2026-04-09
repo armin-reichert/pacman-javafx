@@ -341,7 +341,7 @@ public abstract class AbstractGameModel implements Game, Cheating {
         level.pac().playAnimation();
         level.ghosts().forEach(Actor::playAnimation);
 
-        publishGameEvent(new HuntingPhaseStartedEvent(level.huntingTimer().phaseIndex(), level.huntingTimer().phase()));
+        publishGameEvent(new HuntingPhaseStartedEvent(this, level.huntingTimer().phaseIndex(), level.huntingTimer().phase()));
     }
 
     /**
@@ -491,7 +491,7 @@ public abstract class AbstractGameModel implements Game, Cheating {
         }
         if (simStep.extraLifeWon) {
             addLives(1);
-            publishGameEvent(new SpecialScoreReachedEvent(newScore));
+            publishGameEvent(new SpecialScoreEvent(this, newScore));
         }
     }
 
@@ -606,7 +606,7 @@ public abstract class AbstractGameModel implements Game, Cheating {
                 activateNextBonus(level);
                 simStep.bonusIndex = level.currentBonusIndex();
             }
-            publishGameEvent(new PacEatsFoodEvent(pac, false));
+            publishGameEvent(new PacEatsFoodEvent(this, pac, false));
         }
     }
 
@@ -686,7 +686,7 @@ public abstract class AbstractGameModel implements Game, Cheating {
             pac.powerTimer().doTick();
             if (pac.isPowerFadingStarting(level)) {
                 simStep.pacStartsLosingPower = true;
-                publishGameEvent(new PacStartsLosingPowerEvent(pac));
+                publishGameEvent(new PacPowerFadesEvent(this, pac));
             } else if (pac.powerTimer().hasExpired()) {
                 simStep.pacLostPower = true;
                 pac.powerTimer().stop();
@@ -694,7 +694,7 @@ public abstract class AbstractGameModel implements Game, Cheating {
                 level.energizerVictims().clear();
                 level.huntingTimer().start();
                 level.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-                publishGameEvent(new PacLostPowerEvent(pac));
+                publishGameEvent(new PacLostPowerEvent(this, pac));
             }
         }
     }
