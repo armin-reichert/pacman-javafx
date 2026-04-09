@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -34,6 +35,31 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         if (!actor.isVisible()) return;
 
         switch (actor) {
+            case Pac pac -> {
+                final Object animationID = pac.animations().selectedAnimationID();
+                final int frame = pac.animations().frameIndex();
+                if (animationID == Pac.AnimationID.PAC_MUNCHING) {
+                    final RectShort[] sprites = switch (pac.moveDir()) {
+                        case RIGHT -> spriteSheet().sprites(SpriteID.MS_PACMAN_MUNCHING_RIGHT);
+                        case LEFT  -> spriteSheet().sprites(SpriteID.MS_PACMAN_MUNCHING_LEFT);
+                        case UP    -> spriteSheet().sprites(SpriteID.MS_PACMAN_MUNCHING_UP);
+                        case DOWN  -> spriteSheet().sprites(SpriteID.MS_PACMAN_MUNCHING_DOWN);
+                    };
+                    drawSpriteCentered(pac.center(), sprites[frame]);
+                }
+                else if (animationID == ArcadeMsPacMan_PacAnimations.AnimationID.PAC_MAN_MUNCHING) {
+                    final RectShort[] sprites = spriteSheet().sprites(switch (pac.moveDir()) {
+                        case RIGHT -> SpriteID.MR_PACMAN_MUNCHING_RIGHT;
+                        case LEFT  -> SpriteID.MR_PACMAN_MUNCHING_LEFT;
+                        case UP    -> SpriteID.MR_PACMAN_MUNCHING_UP;
+                        case DOWN  -> SpriteID.MR_PACMAN_MUNCHING_DOWN;
+                    });
+                    drawSpriteCentered(pac.center(), sprites[frame]);
+                }
+                else {
+                    drawSpriteCentered(pac.center(), pac.animations().currentSprite(pac));
+                }
+            }
             case Bonus bonus -> drawBonus(bonus);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             default -> drawSpriteCentered(actor.center(), actor.animations().currentSprite(actor));
