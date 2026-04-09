@@ -72,7 +72,7 @@ public class PlayScene2DCamera extends ParallelCamera {
     /**
      * Intro: Show top of maze, wait some time, move to bottom of maze, finally start tracking Pac-Man.
      */
-    public void enterIntroMode() {
+    public void playIntroSequence() {
         if (state == State.INTRO) {
             Logger.warn("Camera intro sequence is already running");
             return;

@@ -205,7 +205,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         game.optGameLevel().ifPresent(level -> {
             resetAnimations(level);
             game.showLevelMessage(GameLevelMessageType.READY);
-            dynamicCamera.enterIntroMode();
+            dynamicCamera.playIntroSequence();
         });
     }
 
@@ -251,7 +251,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void onLevelStarted(LevelStartedEvent e) {
         TengenMsPacMan_GameModel game = gameContext().game();
-        dynamicCamera.enterIntroMode();
+        dynamicCamera.playIntroSequence();
         game.optGameLevel().ifPresent(this::resetAnimations);
     }
 
