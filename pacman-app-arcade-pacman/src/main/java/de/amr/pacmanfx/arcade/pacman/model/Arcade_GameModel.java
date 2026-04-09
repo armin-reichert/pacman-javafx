@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman.model;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
@@ -16,7 +17,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 
 import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static java.util.Objects.requireNonNull;
@@ -158,7 +158,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     protected void checkRedGhostCruiseElroyActivation(GameLevel level) {
-        optRedGhost(level).ifPresent(redGhost -> {
+        final RedGhostShadow redGhost = (RedGhostShadow) level.ghost(Globals.RED_GHOST_SHADOW);
+        if (redGhost != null) {
             final LevelData data = levelData(level.number());
             final int uneatenFoodCount = level.worldMap().foodLayer().remainingFoodCount();
             if (uneatenFoodCount == data.numDotsLeftElroy1()) {
@@ -166,11 +167,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             } else if (uneatenFoodCount == data.numDotsLeftElroy2()) {
                 redGhost.elroyState().setMode(ElroyState.Mode.TWO);
             }
-        });
-    }
-
-    private Optional<RedGhostShadow> optRedGhost(GameLevel level) {
-        return level.ghosts().filter(RedGhostShadow.class::isInstance).map(RedGhostShadow.class::cast).findAny();
+        } else {
+            throw new IllegalStateException("Red ghost not existing in this level");
+        }
     }
 
     // GameEvents interface
