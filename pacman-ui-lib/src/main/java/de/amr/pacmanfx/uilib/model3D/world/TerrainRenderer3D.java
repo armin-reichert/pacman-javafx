@@ -52,12 +52,12 @@ public class TerrainRenderer3D {
     }
 
     public Wall3D createBoxWall(Vector2f center, double sizeX, double sizeY) {
-        Wall3D wall3D = Wall3D.createBoxWall(center, sizeX, sizeY);
+        final Wall3D wall3D = Wall3D.createBoxWall(center, sizeX, sizeY);
         return onWallCreated.call(wall3D);
     }
 
     public Wall3D createCylinderWall(Vector2f center, double radius) {
-        Wall3D wall3D = Wall3D.createCylinderWall(center, radius);
+        final Wall3D wall3D = Wall3D.createCylinderWall(center, radius);
         return onWallCreated.call(wall3D);
     }
 
@@ -72,7 +72,7 @@ public class TerrainRenderer3D {
     }
 
     public Wall3D createWallBetweenTileCoordinates(Vector2i t1, Vector2i t2, double wallThickness) {
-        Vector2f center = t1.midpoint(t2).scaled(TS).plus(HTS, HTS);
+        final Vector2f center = t1.midpoint(t2).scaled(TS).plus(HTS, HTS);
         if (t1.x() == t2.x()) { // vertical wall
             return createBoxWall(center, wallThickness, TS * t1.manhattanDist(t2));
         } else if (t1.y() == t2.y()) { // horizontal wall
@@ -120,10 +120,11 @@ public class TerrainRenderer3D {
     }
 
     private void renderSegmentPath(Obstacle obstacle, double wallThickness) {
-        float r = HTS;
+        final float r = HTS;
         for (ObstacleSegment segment : obstacle.segments()) {
-            boolean counterClockwise = segment.ccw();
-            Vector2f start = segment.startPoint().toVector2f(), end = segment.endPoint().toVector2f();
+            final boolean counterClockwise = segment.ccw();
+            final Vector2f start = segment.startPoint().toVector2f();
+            final Vector2f end   = segment.endPoint().toVector2f();
             if (segment.isStraightLine()) {
                 createWallBetween(start, end, wallThickness);
             }
