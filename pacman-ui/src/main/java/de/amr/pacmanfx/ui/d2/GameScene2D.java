@@ -142,7 +142,7 @@ public abstract class GameScene2D implements GameScene {
      * Currently used only for testing cut scenes.
      */
     @Override
-    public void ongenericChange(GenericChangeEvent event) {
+    public void onGenericChange(GenericChangeEvent event) {
         ui.forceGameSceneUpdate();
     }
 

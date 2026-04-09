@@ -324,7 +324,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     }
 
     @Override
-    public void ongenericChange(GenericChangeEvent event) {
+    public void onGenericChange(GenericChangeEvent event) {
         // TODO: remove (currently only used by GameState.TESTING_CUT_SCENES)
         ui.forceGameSceneUpdate();
     }

@@ -20,7 +20,7 @@ public interface GameEventListener {
             case GameContinuedEvent e            -> onGameContinued(e);
             case GameStartedEvent e              -> onGameStarted(e);
             case GameStateChangeEvent e          -> onGameStateChange(e);
-            case GenericChangeEvent e            -> ongenericChange(e);
+            case GenericChangeEvent e            -> onGenericChange(e);
             case GhostEatenEvent e               -> onGhostEaten(e);
             case GhostEntersHouseEvent e         -> onGhostEntersHouse(e);
             case GhostStartsReturningHomeEvent e -> onGhostStartsReturningHome(e);
@@ -65,5 +65,5 @@ public interface GameEventListener {
     default void onPacLostPower(PacLostPowerEvent e) {}
     default void onPacPowerFades(PacPowerFadesEvent e) {}
     default void onStopAllSounds(StopAllSoundsEvent e) {}
-    default void ongenericChange(GenericChangeEvent e) {}
+    default void onGenericChange(GenericChangeEvent e) {}
 }
