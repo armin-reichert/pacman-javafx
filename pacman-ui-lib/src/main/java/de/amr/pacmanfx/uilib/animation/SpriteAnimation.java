@@ -13,8 +13,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class SpriteAnimation {
 
-    public static SpriteAnimationBuilder builder(SpriteAnimationManager timer) {
-        return new SpriteAnimationBuilder(timer);
+    public static SpriteAnimationBuilder builder(SpriteAnimationManager manager) {
+        return new SpriteAnimationBuilder(manager);
     }
 
     private final int fps;
@@ -63,6 +63,9 @@ public class SpriteAnimation {
 
     public void setSprites(RectShort[] sprites) {
         this.sprites = requireNonNull(sprites);
+        if (sprites.length == 0) {
+            throw new IllegalArgumentException("Sprites array is empty");
+        }
     }
 
     public void setFrameTicks(int numTicks) {
