@@ -59,13 +59,13 @@ public class Obstacle {
         return innerAreaRectangles == null ? List.of() : Collections.unmodifiableList(innerAreaRectangles);
     }
 
-    public Vector2i[] points() {
-        List<Vector2i> points = new ArrayList<>();
+    public List<Vector2i> points() {
+        final List<Vector2i> points = new ArrayList<>();
         points.add(startPoint);
         for (ObstacleSegment segment : segments) {
             points.add(segment.startPoint().plus(segment.vector()));
         }
-        return points.toArray(Vector2i[]::new);
+        return points;
     }
 
     @Override
@@ -110,18 +110,17 @@ public class Obstacle {
         return segments.get(i);
     }
 
-    public Vector2f[] cornerCenterPoints() {
-        var centerPoints = new LinkedHashSet<Vector2f>(); //TODO ArrayList?
-        float hts = HTS;
+    public List<Vector2f> cornerCenterPoints() {
+        final var centers = new ArrayList<Vector2f>();
         for (ObstacleSegment segment : segments) {
-            boolean up = segment.vector().y() < 0, down = segment.vector().y() > 0;
-            byte code = segment.encoding();
-            if (code == ARC_NW.$ && down) centerPoints.add(segment.startPoint().plus(0, hts));
-            if (code == ARC_SW.$ && down) centerPoints.add(segment.startPoint().plus(hts, 0));
-            if (code == ARC_SE.$ && up)   centerPoints.add(segment.startPoint().plus(0, -hts));
-            if (code == ARC_NE.$ && up)   centerPoints.add(segment.startPoint().plus(-hts, 0));
+            final boolean up = segment.vector().y() < 0, down = segment.vector().y() > 0;
+            final byte code = segment.encoding();
+            if (code == ARC_NW.$ && down) centers.add(segment.startPoint().toVector2f().plus(0, HTS));
+            if (code == ARC_SW.$ && down) centers.add(segment.startPoint().toVector2f().plus(HTS, 0));
+            if (code == ARC_SE.$ && up)   centers.add(segment.startPoint().toVector2f().plus(0, -HTS));
+            if (code == ARC_NE.$ && up)   centers.add(segment.startPoint().toVector2f().plus(-HTS, 0));
         }
-        return centerPoints.toArray(Vector2f[]::new);
+        return centers;
     }
 
     public List<Vector2i> computeInnerPolygon() {

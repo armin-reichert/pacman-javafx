@@ -10,6 +10,8 @@ import de.amr.pacmanfx.model.world.ObstacleSegment;
 import javafx.util.Callback;
 import org.tinylog.Logger;
 
+import java.util.List;
+
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 
@@ -95,14 +97,14 @@ public class TerrainRenderer3D {
         if (obstacle.isClosed() && !border) {
             //TODO provide general solution for obstacles with holes
             if ("dcgbfceb".equals(obstacle.encoding())) { // O-shape with hole
-                Vector2f[] corners = obstacle.cornerCenterPoints();
+                final List<Vector2f> corners = obstacle.cornerCenterPoints();
                 for (Vector2f corner : corners) {
                     createCylinderWall(corner, HTS);
                 }
-                createWallBetween(corners[0], corners[1], TS);
-                createWallBetween(corners[1], corners[2], TS);
-                createWallBetween(corners[2], corners[3], TS);
-                createWallBetween(corners[3], corners[0], TS);
+                createWallBetween(corners.get(0), corners.get(1), TS);
+                createWallBetween(corners.get(1), corners.get(2), TS);
+                createWallBetween(corners.get(2), corners.get(3), TS);
+                createWallBetween(corners.get(3), corners.get(0), TS);
             } else {
                 // My way (c) for creating closed obstacles:
                 // Create a cylindric wall at each corner, use the rectangular partition of the inner area to
