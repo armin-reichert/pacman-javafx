@@ -6,20 +6,15 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.MovingActor;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengenmspacman.scenes.Stork;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
@@ -43,31 +38,29 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         switch (actor) {
             case Bonus bonus -> drawBonus(bonus);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
+            case Ghost ghost -> drawGhost(ghost);
             case Pac pac -> drawPac(pac);
             case Stork stork -> drawStork(stork);
-            default -> drawCurrentSprite(actor);
+            default -> drawSpriteCentered(actor.center(), actor.animations().currentSprite(actor));
         }
     }
 
-    // There are only left-pointing Ms. Pac-Man sprites in the sprite sheet, so we rotate and mirror in the renderer
-    private void drawMovingActorSprite(MovingActor actor, Direction dir, RectShort sprite) {
-        Vector2f center = actor.center().scaled(scaling());
-        ctx.save();
-        ctx.translate(center.x(), center.y());
-        switch (dir) {
-            case LEFT  -> {}
-            case UP    -> ctx.rotate(90);
-            case RIGHT -> ctx.scale(-1, 1);
-            case DOWN  -> { ctx.scale(-1, 1); ctx.rotate(-90); }
-        }
-        drawSpriteCentered(0, 0, sprite);
-        ctx.restore();
+    private void drawGhost(Ghost ghost) {
+        drawSpriteCentered(ghost.center(), computeGhostSprite(ghost));
     }
 
-    private void drawCurrentSprite(Actor actor) {
-        final RectShort sprite = actor.animations().currentSprite(actor);
-        if (sprite != null) {
-            drawSpriteCentered(actor.center(), sprite);
+    private RectShort computeGhostSprite(Ghost ghost) {
+        final AnimationManager animations = ghost.animations();
+        if (animations.isSelected(Ghost.AnimationID.GHOST_NORMAL)) {
+            final RectShort[] sprites = TengenMsPacMan_GhostAnimations.ghostNormalSprites(spriteSheet(), ghost.personality(), ghost.wishDir());
+            return sprites[animations.frameIndex()];
+        }
+        else if (animations.isSelected(Ghost.AnimationID.GHOST_EYES)) {
+            final RectShort[] sprites = TengenMsPacMan_GhostAnimations.ghostEyesSprites(spriteSheet(), ghost.wishDir());
+            return sprites[animations.frameIndex()];
+        }
+        else {
+            return animations.currentSprite(ghost);
         }
     }
 
@@ -87,38 +80,49 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         if (0 <= index && index < sprites.length) {
             drawSpriteCentered(center, sprites[index]);
         } else {
-            Logger.error("Cannot render bonus with symbol code {}", index);
+            throw new IllegalArgumentException("Illegal bonus symbol index: %d".formatted(index));
         }
     }
 
-    //TODO check if this is the way to do this
     private void drawPac(Pac pac) {
-        if (pac.animations() instanceof SpriteAnimationMap<?> spriteAnimations) {
-            SpriteAnimation spriteAnimation = spriteAnimations.currentAnimation();
-            if (spriteAnimation == null) {
-                Logger.error("No sprite animation found for {}", pac);
-                return;
+        final AnimationManager animations = pac.animations();
+        if (animations.isSelected(Pac.AnimationID.PAC_DYING)) {
+            if (animations instanceof SpriteAnimationMap<?> sam) {
+                drawPacDyingSpriteAnimation(pac, sam);
             }
-            if (Pac.AnimationID.PAC_DYING.equals(spriteAnimations.selectedAnimationID())) {
-                drawPacDyingAnimation(pac, spriteAnimation);
-            } else {
-                drawMovingActorSprite(pac, pac.moveDir(), spriteAnimation.currentSprite());
-            }
+        }
+        else {
+            drawSpriteCenteredRotatedByDir(pac.center().scaled(scaling()), pac.moveDir(), animations.currentSprite(pac));
         }
     }
 
     // Simulates dying animation by providing the right direction for each animation frame
-    private void drawPacDyingAnimation(Pac pac, SpriteAnimation animation) {
-        Direction dir = Direction.DOWN;
-        if (animation.currentFrame() < 11) {
-            dir = switch (animation.currentFrame() % 4) {
-                case 1 -> Direction.LEFT;
-                case 2 -> Direction.UP;
-                case 3 -> Direction.RIGHT;
-                default -> Direction.DOWN; // start with DOWN
-            };
+    private void drawPacDyingSpriteAnimation(Pac pac, SpriteAnimationMap<?> sam) {
+        final Direction dir = switch (sam.frameIndex()) {
+            case 0, 4, 8  -> Direction.DOWN;
+            case 1, 5, 9  -> Direction.LEFT;
+            case 2, 6, 10 -> Direction.UP;
+            case 3, 7     -> Direction.RIGHT;
+            default       -> Direction.UP; // end position frame 11...
+        };
+        drawSpriteCenteredRotatedByDir(pac.center().scaled(scaling()), dir, sam.currentSprite(pac));
+    }
+
+    // There are only left-pointing Ms. Pac-Man sprites in the sprite sheet, so we rotate and mirror in the renderer
+    private void drawSpriteCenteredRotatedByDir(Vector2f center, Direction dir, RectShort sprite) {
+        ctx.save();
+        ctx.translate(center.x(), center.y());
+        switch (dir) {
+            case LEFT  -> {}
+            case UP    -> ctx.rotate(90);
+            case RIGHT -> ctx.scale(-1, 1);
+            case DOWN  -> {
+                ctx.scale(-1, 1);
+                ctx.rotate(-90);
+            }
         }
-        drawMovingActorSprite(pac, dir, animation.currentSprite());
+        drawSpriteCentered(0, 0, sprite);
+        ctx.restore();
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
@@ -145,7 +149,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawStork(Stork stork) {
-        drawCurrentSprite(stork);
+        drawSpriteCentered(stork.center(), stork.animations().currentSprite(stork));
         if (stork.isBagReleasedFromBeak()) {
             // Sprite sheet has no stork without bag under its beak so we over-paint the bag
             ctx.setFill(backgroundColor());
