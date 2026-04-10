@@ -8,12 +8,12 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder.builder;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
@@ -36,46 +36,46 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
     @Override
     public SpriteAnimation createAnimation(Object animationID) {
         return switch (animationID) {
-            case Ghost.AnimationID.GHOST_NORMAL -> builder(manager)
+            case Ghost.AnimationID.GHOST_NORMAL -> SpriteAnimationBuilder.builder(manager)
                 .sprites(ghostNormalSprites(Direction.LEFT))
                 .frameTicks(8)
                 .repeated()
                 .build();
 
-            case Ghost.AnimationID.GHOST_FRIGHTENED -> builder(manager)
+            case Ghost.AnimationID.GHOST_FRIGHTENED -> SpriteAnimationBuilder.builder(manager)
                 .sprites(spriteSheet().sprites(SpriteID.GHOST_FRIGHTENED))
                 .frameTicks(8)
                 .repeated()
                 .build();
 
-            case Ghost.AnimationID.GHOST_FLASHING -> builder(manager)
+            case Ghost.AnimationID.GHOST_FLASHING -> SpriteAnimationBuilder.builder(manager)
                 .sprites(spriteSheet().sprites(SpriteID.GHOST_FLASHING))
                 .frameTicks(7)
                 .repeated()
                 .build();
 
-            case Ghost.AnimationID.GHOST_EYES -> builder(manager)
+            case Ghost.AnimationID.GHOST_EYES -> SpriteAnimationBuilder.builder(manager)
                 .sprites(ghostEyesSprites(Direction.LEFT))
                 .build();
 
-            case Ghost.AnimationID.GHOST_POINTS -> builder(manager)
+            case Ghost.AnimationID.GHOST_POINTS -> SpriteAnimationBuilder.builder(manager)
                 .sprites(spriteSheet().sprites(SpriteID.GHOST_NUMBERS))
                 .initiallyStopped()
                 .build();
 
-            case AnimationID.BLINKY_DAMAGED -> builder(manager)
+            case AnimationID.BLINKY_DAMAGED -> SpriteAnimationBuilder.builder(manager)
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_DAMAGED))
                 .initiallyStopped()
                 .build();
 
-            case AnimationID.BLINKY_DRESS_PATCHED -> builder(manager)
+            case AnimationID.BLINKY_DRESS_PATCHED -> SpriteAnimationBuilder.builder(manager)
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_PATCHED))
                 .frameTicks(4)
                 .repeated()
                 .initiallyStopped()
                 .build();
 
-            case AnimationID.BLINKY_NAKED -> builder(manager)
+            case AnimationID.BLINKY_NAKED -> SpriteAnimationBuilder.builder(manager)
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_NAKED))
                 .frameTicks(4)
                 .repeated()

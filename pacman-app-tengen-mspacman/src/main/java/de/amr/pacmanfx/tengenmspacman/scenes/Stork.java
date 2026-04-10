@@ -7,11 +7,11 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.tengenmspacman.rendering.SpriteID.STORK;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder.builder;
 import static java.util.Objects.requireNonNull;
 
 public class Stork extends Actor {
@@ -30,7 +30,11 @@ public class Stork extends Actor {
         @Override
         protected SpriteAnimation createAnimation(Object animationID) {
             if (animationID.equals(AnimationID.FLYING)) {
-                return builder(manager).sprites(spriteSheet.sprites(STORK)).frameTicks(8).repeated().build();
+                return SpriteAnimationBuilder.builder(manager)
+                    .sprites(spriteSheet.sprites(STORK))
+                    .frameTicks(8)
+                    .repeated()
+                    .build();
             }
             throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         }
