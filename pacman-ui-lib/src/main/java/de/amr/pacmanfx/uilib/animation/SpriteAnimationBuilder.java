@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.math.RectShort;
 
 import java.util.Arrays;
