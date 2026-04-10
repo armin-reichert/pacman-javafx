@@ -66,22 +66,22 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawBonus(Bonus bonus) {
+        if (!bonus.isVisible()) return;
         switch (bonus.state()) {
-            case INACTIVE -> {}
-            case EDIBLE -> drawBonusSprite(bonus.center().plus(0, bonus.verticalElongation()),
-                spriteSheet().sprites(SpriteID.BONUS_SYMBOLS), bonus.symbol());
-            case EATEN  -> drawBonusSprite(bonus.center(),
-                spriteSheet().sprites(SpriteID.BONUS_VALUES),
+            case EDIBLE -> {
+                final int index = bonus.symbol(); //TODO decouple
+                final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
+                // The Up-Down animation of the moving bonus changes the center of drawing
+                final Vector2f center = bonus.center().plus(0, bonus.verticalElongation());
+                drawSpriteCentered(center, sprites[index]);
+            }
+            case EATEN  -> {
                 // Note: sprite sheet has bonus values in wrong order!
-                TengenMsPacMan_UIConfig.bonusValueSpriteIndex(bonus.symbol()));
-        }
-    }
-
-    private void drawBonusSprite(Vector2f center, RectShort[] sprites, int index) {
-        if (0 <= index && index < sprites.length) {
-            drawSpriteCentered(center, sprites[index]);
-        } else {
-            throw new IllegalArgumentException("Illegal bonus symbol index: %d".formatted(index));
+                final int index = TengenMsPacMan_UIConfig.bonusValueSpriteIndex(bonus.symbol());
+                final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_VALUES);
+                drawSpriteCentered(bonus.center(), sprites[index]);
+            }
+            case INACTIVE -> {}
         }
     }
 
