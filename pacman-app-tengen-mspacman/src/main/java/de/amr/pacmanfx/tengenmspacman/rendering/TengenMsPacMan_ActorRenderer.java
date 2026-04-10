@@ -17,6 +17,8 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
+import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID.*;
+import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID.ANIM_PAC_MAN_WAVING_HAND;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
@@ -90,10 +92,36 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             if (animations instanceof SpriteAnimationMap<?> sam) {
                 drawPacDyingSpriteAnimation(pac, sam);
             }
+            return;
+        }
+        final int frame = animations.frameIndex();
+        RectShort sprite;
+        if (animations.isSelected(Pac.AnimationID.PAC_MUNCHING)) {
+            sprite = spriteSheet().sprites(SpriteID.MS_PAC_MUNCHING)[frame];
+        }
+        else if (animations.isSelected(ANIM_MS_PAC_MAN_BOOSTER)) {
+            sprite = spriteSheet().sprites(SpriteID.MS_PAC_MUNCHING_BOOSTER)[frame];
+        }
+        else if (animations.isSelected(ANIM_MS_PAC_MAN_TURNING_AWAY)) {
+            sprite = spriteSheet().sprites(SpriteID.MS_PAC_TURNING_AWAY)[frame];
+        }
+        else if (animations.isSelected(ANIM_MS_PAC_MAN_WAVING_HAND)) {
+            sprite = spriteSheet().sprites(SpriteID.MS_PAC_WAVING_HAND)[frame];
+        }
+        else if (animations.isSelected(ANIM_PAC_MAN_MUNCHING)) {
+            sprite = spriteSheet().sprites(SpriteID.MR_PAC_MUNCHING)[frame];
+        }
+        else if (animations.isSelected(ANIM_PAC_MAN_TURNING_AWAY)) {
+            sprite = spriteSheet().sprites(SpriteID.MR_PAC_TURNING_AWAY)[frame];
+        }
+        else if (animations.isSelected(ANIM_PAC_MAN_WAVING_HAND)) {
+            sprite = spriteSheet().sprites(SpriteID.MR_PAC_WAVING_HAND)[frame];
         }
         else {
-            drawSpriteCenteredRotatedByDir(pac.center().scaled(scaling()), pac.moveDir(), animations.currentSprite(pac));
+            sprite = animations.currentSprite(pac);
         }
+        final Vector2f center = pac.center().scaled(scaling());
+        drawSpriteCenteredRotatedByDir(center, pac.moveDir(), sprite);
     }
 
     // Simulates dying animation by providing the right direction for each animation frame

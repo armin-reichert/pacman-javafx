@@ -28,9 +28,6 @@ public abstract class SpriteAnimationMap<SID extends Enum<SID>> implements Anima
 
     public SpriteSheet<SID> spriteSheet() { return spriteSheet; }
 
-    // TODO: this is somewhat crude but currently the way to keep the sprites up-to-date with actor direction etc.
-    protected void updateActorSprites(Actor actor) {}
-
     public boolean isSelected(Object id) {
         requireNonNull(id);
         return id.equals(selectedID);
@@ -38,12 +35,8 @@ public abstract class SpriteAnimationMap<SID extends Enum<SID>> implements Anima
 
     @Override
     public RectShort currentSprite(Actor actor) {
-        var currentAnimation = currentAnimation();
-        if (currentAnimation == null) {
-            return null;
-        }
-        updateActorSprites(actor);
-        return currentAnimation.currentSprite();
+        final SpriteAnimation currentAnimation = currentAnimation();
+        return currentAnimation == null ? null : currentAnimation.currentSprite();
     }
 
     @Override

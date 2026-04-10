@@ -4,12 +4,12 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import java.util.Arrays;
 
@@ -33,7 +33,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
                 .build();
 
             case Pac.AnimationID.PAC_DYING -> SpriteAnimationBuilder.builder(manager)
-                .sprites(pacDyingSprites())
+                .sprites(pacDyingSprites(spriteSheet))
                 .frameTicks(8)
                 .build();
 
@@ -95,37 +95,10 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
         return (TengenMsPacMan_SpriteSheet) super.spriteSheet();
     }
 
-    @Override
-    protected void updateActorSprites(Actor actor) {
-        if (actor instanceof Pac) {
-            if (isSelected(Pac.AnimationID.PAC_MUNCHING)) {
-                currentAnimation().setSprites(spriteSheet.sprites(SpriteID.MS_PAC_MUNCHING));
-            }
-            if (isSelected(ANIM_MS_PAC_MAN_BOOSTER)) {
-                currentAnimation().setSprites(spriteSheet.sprites(SpriteID.MS_PAC_MUNCHING_BOOSTER));
-            }
-            if (isSelected(ANIM_MS_PAC_MAN_TURNING_AWAY)) {
-                currentAnimation().setSprites(spriteSheet.sprites(SpriteID.MS_PAC_TURNING_AWAY));
-            }
-            if (isSelected(ANIM_MS_PAC_MAN_WAVING_HAND)) {
-                currentAnimation().setSprites(spriteSheet.sprites(SpriteID.MS_PAC_WAVING_HAND));
-            }
-            if (isSelected(ANIM_PAC_MAN_MUNCHING)) {
-                currentAnimation().setSprites(spriteSheet.sprites(SpriteID.MR_PAC_MUNCHING));
-            }
-            if (isSelected(ANIM_PAC_MAN_TURNING_AWAY)) {
-                currentAnimation().setSprites(spriteSheet.sprites(SpriteID.MR_PAC_TURNING_AWAY));
-            }
-            if (isSelected(ANIM_PAC_MAN_WAVING_HAND)) {
-                currentAnimation().setSprites(spriteSheet.sprites(SpriteID.MR_PAC_WAVING_HAND));
-            }
-        }
-    }
-
-    private RectShort[] pacDyingSprites() {
-        // TODO: reconsider renderer rotating single sprite to create animation effect
+    //TODO rethink this
+    public static RectShort[] pacDyingSprites(SpriteSheet<SpriteID> spriteSheet) {
         final var sprites = new RectShort[11];
-        final RectShort munchingOpen = spriteSheet().sprites(SpriteID.MS_PAC_MUNCHING)[0];
+        final RectShort munchingOpen = spriteSheet.sprites(SpriteID.MS_PAC_MUNCHING)[0];
         Arrays.fill(sprites, munchingOpen);
         return sprites;
     }
