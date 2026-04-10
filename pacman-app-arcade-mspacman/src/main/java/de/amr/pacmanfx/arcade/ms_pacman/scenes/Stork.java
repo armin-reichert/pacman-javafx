@@ -10,7 +10,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder.builder;
 import static java.util.Objects.requireNonNull;
 
 public class Stork extends Actor {

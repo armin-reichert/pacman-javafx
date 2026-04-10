@@ -13,7 +13,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder.builder;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {

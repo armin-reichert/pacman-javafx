@@ -7,6 +7,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
@@ -30,8 +31,16 @@ public class Bag extends Actor {
         @Override
         protected SpriteAnimation createAnimation(Object animationID) {
             return switch (animationID) {
-                case AnimationID.JUNIOR -> SpriteAnimation.builder(manager).sprite(spriteSheet.sprite(JUNIOR_PAC)).initiallyStopped().build();
-                case AnimationID.BAG    -> SpriteAnimation.builder(manager).sprite(spriteSheet.sprite(BLUE_BAG)).initiallyStopped().build();
+                case AnimationID.JUNIOR ->
+                    SpriteAnimationBuilder.builder(manager)
+                        .sprite(spriteSheet.sprite(JUNIOR_PAC))
+                        .initiallyStopped()
+                        .build();
+                case AnimationID.BAG ->
+                    SpriteAnimationBuilder.builder(manager)
+                        .sprite(spriteSheet.sprite(BLUE_BAG))
+                        .initiallyStopped()
+                        .build();
                 default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
             };
         }

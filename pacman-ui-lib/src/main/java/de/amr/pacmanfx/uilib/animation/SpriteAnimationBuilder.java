@@ -13,6 +13,10 @@ import static java.util.Objects.requireNonNull;
 
 public class SpriteAnimationBuilder {
 
+    public static SpriteAnimationBuilder builder(SpriteAnimationManager manager) {
+        return new SpriteAnimationBuilder(requireNonNull(manager));
+    }
+
     private static class BuildData {
         RectShort[] sprites = new RectShort[0];
         boolean initiallyStopped = false;

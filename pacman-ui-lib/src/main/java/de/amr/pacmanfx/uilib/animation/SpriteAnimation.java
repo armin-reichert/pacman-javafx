@@ -8,13 +8,9 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Plays a sequence of sprite sheet regions ("sprites") to create an animation effect.
+ * Plays a sequence of image regions ("sprites") to create an animation effect.
  */
 public class SpriteAnimation {
-
-    public static SpriteAnimationBuilder builder(SpriteAnimationManager manager) {
-        return new SpriteAnimationBuilder(manager);
-    }
 
     private final int fps;
     private RectShort[] sprites;

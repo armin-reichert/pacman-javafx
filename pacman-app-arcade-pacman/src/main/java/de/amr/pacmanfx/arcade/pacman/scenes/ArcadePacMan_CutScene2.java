@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.Globals.TS;
@@ -71,7 +72,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
         blinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), RED_GHOST_SHADOW);
 
-        nailDressAnimation = SpriteAnimation.builder(ui.spriteAnimationManager())
+        nailDressAnimation = SpriteAnimationBuilder.builder(ui.spriteAnimationManager())
             .sprites(ArcadePacMan_SpriteSheet.instance().sprites(SpriteID.RED_GHOST_STRETCHED))
             .initiallyStopped()
             .build();

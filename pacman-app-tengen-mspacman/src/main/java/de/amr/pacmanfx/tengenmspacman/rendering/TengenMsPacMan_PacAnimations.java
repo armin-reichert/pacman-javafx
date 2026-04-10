@@ -13,7 +13,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import java.util.Arrays;
 
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID.*;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.builder;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder.builder;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
