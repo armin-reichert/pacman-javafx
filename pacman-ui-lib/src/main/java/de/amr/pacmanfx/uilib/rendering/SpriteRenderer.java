@@ -55,9 +55,8 @@ public interface SpriteRenderer extends Renderer {
     }
 
     /**
-     * Draws the sprite centered and rotated towards the given direction over the given position.
-     * The target position is scaled using the current scaling value. It is assumed that the sprite is pointing to the left
-     * in its default orientation (rotation = 0). The rotation is applied before scaling.
+     * Draws the sprite centered and rotated towards the given direction over the given (already scaled) position.
+     * It is assumed that the sprite is pointing to the left in its default orientation (rotation = 0).
      *
      * @param center position over which sprite gets drawn
      * @param dir the direction the sprite is facing
