@@ -39,15 +39,11 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         switch (actor) {
             case Bonus bonus -> drawBonus(bonus);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            case Ghost ghost -> drawGhost(ghost);
+            case Ghost ghost -> drawSpriteCentered(ghost.center(), computeGhostSprite(ghost));
             case Pac pac -> drawPac(pac);
             case Stork stork -> drawStork(stork);
             default -> drawSpriteCentered(actor.center(), actor.animations().currentSprite());
         }
-    }
-
-    private void drawGhost(Ghost ghost) {
-        drawSpriteCentered(ghost.center(), computeGhostSprite(ghost));
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
@@ -62,26 +58,6 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         }
         else {
             return animations.currentSprite();
-        }
-    }
-
-    private void drawBonus(Bonus bonus) {
-        if (!bonus.isVisible()) return;
-        switch (bonus.state()) {
-            case EDIBLE -> {
-                final int index = bonus.symbol(); //TODO decouple
-                final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
-                // The Up-Down animation of the moving bonus changes the center of drawing
-                final Vector2f center = bonus.center().plus(0, bonus.verticalElongation());
-                drawSpriteCentered(center, sprites[index]);
-            }
-            case EATEN  -> {
-                // Note: sprite sheet has bonus values in wrong order!
-                final int index = TengenMsPacMan_UIConfig.bonusValueSpriteIndex(bonus.symbol());
-                final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_VALUES);
-                drawSpriteCentered(bonus.center(), sprites[index]);
-            }
-            case INACTIVE -> {}
         }
     }
 
@@ -119,8 +95,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         else {
             sprite = animations.currentSprite();
         }
-        final Vector2f center = pac.center().scaled(scaling());
-        drawSpriteCenteredRotatedByDir(center, pac.moveDir(), sprite);
+        drawSpriteCenteredRotatedByDir(pac.center().scaled(scaling()), pac.moveDir(), sprite);
     }
 
     // Simulates dying animation by providing the right direction for each animation frame
@@ -135,26 +110,26 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         drawSpriteCenteredRotatedByDir(pac.center().scaled(scaling()), dir, sam.currentSprite());
     }
 
-    // There are only left-pointing Ms. Pac-Man sprites in the sprite sheet, so we rotate and mirror in the renderer
-    private void drawSpriteCenteredRotatedByDir(Vector2f center, Direction dir, RectShort sprite) {
-        ctx.save();
-        ctx.translate(center.x(), center.y());
-        switch (dir) {
-            case LEFT  -> {}
-            case UP    -> ctx.rotate(90);
-            case RIGHT -> ctx.scale(-1, 1);
-            case DOWN  -> {
-                ctx.scale(-1, 1);
-                ctx.rotate(-90);
+    private void drawBonus(Bonus bonus) {
+        switch (bonus.state()) {
+            case EDIBLE -> {
+                final int index = bonus.symbol(); //TODO decouple
+                final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
+                // The Up-Down animation of the moving bonus changes the center of drawing
+                final Vector2f center = bonus.center().plus(0, bonus.verticalElongation());
+                drawSpriteCentered(center, sprites[index]);
             }
+            case EATEN  -> {
+                // Note: sprite sheet has bonus values in wrong order!
+                final int index = TengenMsPacMan_UIConfig.bonusValueSpriteIndex(bonus.symbol());
+                final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_VALUES);
+                drawSpriteCentered(bonus.center(), sprites[index]);
+            }
+            case INACTIVE -> {}
         }
-        drawSpriteCentered(0, 0, sprite);
-        ctx.restore();
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
-        requireNonNull(clapperboard);
-        if (!clapperboard.isVisible()) return;
         clapperboard.sprite().ifPresent(sprite -> {
             double numberX = clapperboard.x() + 8, numberY = clapperboard.y() + 18; // baseline
             drawSpriteCentered(clapperboard.center(), sprite);

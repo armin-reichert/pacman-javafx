@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.rendering;
 
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -51,5 +52,30 @@ public interface SpriteRenderer extends Renderer {
      */
     default void drawSpriteCentered(double centerX, double centerY, RectShort sprite) {
         drawSprite(sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height(), true);
+    }
+
+    /**
+     * Draws the sprite centered and rotated towards the given direction over the given position.
+     * The target position is scaled using the current scaling value. It is assumed that the sprite is pointing to the left
+     * in its default orientation (rotation = 0). The rotation is applied before scaling.
+     *
+     * @param center position over which sprite gets drawn
+     * @param dir the direction the sprite is facing
+     * @param sprite the actor sprite
+     */
+    default void drawSpriteCenteredRotatedByDir(Vector2f center, Direction dir, RectShort sprite) {
+        ctx().save();
+        ctx().translate(center.x(), center.y());
+        switch (dir) {
+            case LEFT  -> {}
+            case UP    -> ctx().rotate(90);
+            case RIGHT -> ctx().scale(-1, 1);
+            case DOWN  -> {
+                ctx().scale(-1, 1);
+                ctx().rotate(-90);
+            }
+        }
+        drawSpriteCentered(0, 0, sprite);
+        ctx().restore();
     }
 }
