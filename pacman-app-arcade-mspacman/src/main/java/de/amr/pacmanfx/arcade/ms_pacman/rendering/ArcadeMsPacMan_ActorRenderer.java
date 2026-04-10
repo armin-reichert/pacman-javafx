@@ -89,17 +89,18 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
-            case EDIBLE -> drawSpriteCentered(bonus.center().plus(0, bonus.verticalElongation()),
-                spriteSheet().sprites(SpriteID.BONUS_SYMBOLS), bonus.symbol());
-            case EATEN -> drawSpriteCentered(bonus.center(),
-                spriteSheet().sprites(SpriteID.BONUS_VALUES), bonus.symbol());
+            case EDIBLE -> {
+                final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
+                final Vector2f center = bonus.center().plus(0, bonus.verticalElongation());
+                final int index = bonus.symbol(); // TODO decouple
+                drawSpriteCentered(center, sprites[index]);
+            }
+            case EATEN -> {
+                final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_VALUES);
+                final int index = bonus.symbol(); // TODO decouple
+                drawSpriteCentered(bonus.center(), sprites[index]);
+            }
             case INACTIVE -> {}
-        }
-    }
-
-    private void drawSpriteCentered(Vector2f center, RectShort[] sprites, int spriteIndex) {
-        if (0 <= spriteIndex && spriteIndex < sprites.length) {
-            drawSpriteCentered(center, sprites[spriteIndex]);
         }
     }
 }
