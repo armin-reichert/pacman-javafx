@@ -55,8 +55,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     public static final double CANVAS_WIDTH_UNSCALED = NES_SCREEN_PIXELS.x();
 
-    private static final Font GAME_OVER_MESSAGE_FONT = Font.font(BaseRenderer.DEFAULT_ARCADE_FONT.getFamily(), TS);
-
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SCREEN_PIXELS.y());
 
     private final StackPane rootPane;
@@ -339,7 +337,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private void startGameOverMessageAnimation(GameLevelMessage message) {
         if (message instanceof MovingGameLevelMessage movingMessage) {
-            double messageWidth = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, GAME_OVER_MESSAGE_FONT);
+            double messageWidth = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, Font.font(BaseRenderer.arcadeFont().getFamily(), TS));
             movingMessage.startMovement(unscaledSize().x(), messageWidth);
         }
     }

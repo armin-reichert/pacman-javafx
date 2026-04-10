@@ -5,7 +5,6 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -22,22 +21,28 @@ import static java.util.Objects.requireNonNull;
 
 public class BaseRenderer implements Renderer {
 
-    public static final ResourceManager UI_LIB_RESOURCES = () -> BaseRenderer.class;
+    private static final ObjectProperty<Font> arcadeFont = new SimpleObjectProperty<>(Font.font("Monospaced", 8));
 
-    public static final Font DEFAULT_ARCADE_FONT = UI_LIB_RESOURCES.loadFont("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf", 8);
+    public static void setArcadeFont(Font font) {
+        arcadeFont.set(requireNonNull(font));
+    }
+    public static Font arcadeFont() {
+        return arcadeFont.get();
+    }
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scaling                = new SimpleDoubleProperty(1.0);
-    private final ObjectProperty<Font> arcadeFont6      = new SimpleObjectProperty<>(DEFAULT_ARCADE_FONT);
-    private final ObjectProperty<Font> arcadeFont8      = new SimpleObjectProperty<>(DEFAULT_ARCADE_FONT);
+
+    private final ObjectProperty<Font> arcadeFont6 = new SimpleObjectProperty<>();
+    private final ObjectProperty<Font> arcadeFont8 = new SimpleObjectProperty<>();
 
     protected final GraphicsContext ctx;
     protected boolean imageSmoothing;
 
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        arcadeFont8.bind(scaling.map(_ -> Ufx.deriveFont(DEFAULT_ARCADE_FONT, scaled(8))));
-        arcadeFont6.bind(scaling.map(_ -> Ufx.deriveFont(DEFAULT_ARCADE_FONT, scaled(6))));
+        arcadeFont8.bind(scaling.map(_ -> Ufx.deriveFont(arcadeFont.get(), scaled(8))));
+        arcadeFont6.bind(scaling.map(_ -> Ufx.deriveFont(arcadeFont.get(), scaled(6))));
     }
 
     public void clearCanvas() {
