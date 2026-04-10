@@ -11,7 +11,6 @@ import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
@@ -32,37 +31,28 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         requireNonNull(actor);
         if (!actor.isVisible()) return;
         switch (actor) {
-            case Pac pac -> drawPac(pac);
-            case Ghost ghost -> drawGhost(ghost);
-            case Bonus bonus -> drawBonus(bonus);
+            case Pac pac                   -> drawSpriteCentered(pac.center(), computePacSprite(pac));
+            case Ghost ghost               -> drawSpriteCentered(ghost.center(), computeGhostSprite(ghost));
+            case Bonus bonus               -> drawBonus(bonus);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            default -> drawSpriteCentered(actor.center(), actor.animations().currentSprite());
+            default                        -> drawSpriteCentered(actor.center(), actor.animations().currentSprite());
         }
-    }
-
-    private void drawGhost(Ghost ghost) {
-        drawSpriteCentered(ghost.center(), computeGhostSprite(ghost));
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
         final AnimationManager animations = ghost.animations();
-        final Object animationID = animations.selectedAnimationID();
-        if (animationID == Ghost.AnimationID.GHOST_NORMAL) {
+        if (animations.isSelected(Ghost.AnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = ArcadeMsPacMan_GhostAnimations.ghostNormalSprites(
                 spriteSheet(), ghost.personality(), ghost.wishDir());
             return sprites[animations.frameIndex()];
         }
-        else if (animationID == Ghost.AnimationID.GHOST_EYES) {
+        else if (animations.isSelected(Ghost.AnimationID.GHOST_EYES)) {
             final RectShort[] sprites = ArcadeMsPacMan_GhostAnimations.ghostEyesSprites(spriteSheet(), ghost.wishDir());
             return sprites[animations.frameIndex()];
         }
         else {
             return animations.currentSprite();
         }
-    }
-
-    private void drawPac(Pac pac) {
-        drawSpriteCentered(pac.center(), computePacSprite(pac));
     }
 
     private RectShort computePacSprite(Pac pac) {
@@ -82,7 +72,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private void drawClapperBoard(Clapperboard clapperboard) {
         final RectShort[] sprites = spriteSheet().sprites(SpriteID.CLAPPERBOARD);
-        final int spriteIndex = clapperboard.state();
+        final int spriteIndex = clapperboard.state(); //TODO decouple
         if (0 <= spriteIndex && spriteIndex < sprites.length) {
             final RectShort sprite = sprites[spriteIndex];
             drawSpriteCentered(clapperboard.center(), sprite);
@@ -99,19 +89,17 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
-            case EDIBLE -> drawBonusSprite(bonus.center().plus(0, bonus.verticalElongation()),
+            case EDIBLE -> drawSpriteCentered(bonus.center().plus(0, bonus.verticalElongation()),
                 spriteSheet().sprites(SpriteID.BONUS_SYMBOLS), bonus.symbol());
-            case EATEN -> drawBonusSprite(bonus.center(),
+            case EATEN -> drawSpriteCentered(bonus.center(),
                 spriteSheet().sprites(SpriteID.BONUS_VALUES), bonus.symbol());
             case INACTIVE -> {}
         }
     }
 
-    private void drawBonusSprite(Vector2f center, RectShort[] sprites, int spriteIndex) {
+    private void drawSpriteCentered(Vector2f center, RectShort[] sprites, int spriteIndex) {
         if (0 <= spriteIndex && spriteIndex < sprites.length) {
             drawSpriteCentered(center, sprites[spriteIndex]);
-        } else {
-            Logger.error("Cannot render bonus with symbol code {}", spriteIndex);
         }
     }
 }
