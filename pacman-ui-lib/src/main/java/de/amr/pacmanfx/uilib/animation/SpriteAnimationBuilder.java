@@ -13,8 +13,23 @@ import static java.util.Objects.requireNonNull;
 
 public class SpriteAnimationBuilder {
 
+    /**
+     * Creates a new sprite animation builder for animations running at 60 frames/second.
+     * @param manager the animation manager
+     * @return new  builder
+     */
     public static SpriteAnimationBuilder builder(SpriteAnimationManager manager) {
-        return new SpriteAnimationBuilder(requireNonNull(manager));
+        return new SpriteAnimationBuilder(manager, 60);
+    }
+
+    /**
+     * Creates a new sprite animation builder for animations running at the specified frame rate (frames/second).
+     * @param manager the animation manager
+     * @param fps the frame rate at which the build animation is played
+     * @return new  builder
+     */
+    public static SpriteAnimationBuilder builder(SpriteAnimationManager manager, int fps) {
+        return new SpriteAnimationBuilder(manager, fps);
     }
 
     private static class BuildData {
@@ -34,11 +49,7 @@ public class SpriteAnimationBuilder {
         }
     }
 
-    public SpriteAnimationBuilder(SpriteAnimationManager manager) {
-        this(manager, 60);
-    }
-
-    public SpriteAnimationBuilder(SpriteAnimationManager manager, int fps) {
+    private SpriteAnimationBuilder(SpriteAnimationManager manager, int fps) {
         this.manager = requireNonNull(manager);
         if (fps <= 0) {
             throw new IllegalArgumentException("Sprite animation frame rate must be positive, but is %d".formatted(fps));
