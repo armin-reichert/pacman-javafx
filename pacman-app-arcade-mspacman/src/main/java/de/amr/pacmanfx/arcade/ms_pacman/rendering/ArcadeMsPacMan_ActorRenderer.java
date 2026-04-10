@@ -31,10 +31,9 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     public void drawActor(Actor actor) {
         requireNonNull(actor);
         if (!actor.isVisible()) return;
-
         switch (actor) {
-            case Ghost ghost -> drawGhost(ghost);
             case Pac pac -> drawPac(pac);
+            case Ghost ghost -> drawGhost(ghost);
             case Bonus bonus -> drawBonus(bonus);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             default -> drawSpriteCentered(actor.center(), actor.animations().currentSprite(actor));
@@ -63,28 +62,21 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawPac(Pac pac) {
-        final Object animationID = pac.animations().selectedAnimationID();
-        final int frame = pac.animations().frameIndex();
-        if (animationID == Pac.AnimationID.PAC_MUNCHING) {
-            final RectShort[] sprites = switch (pac.moveDir()) {
-                case RIGHT -> spriteSheet().sprites(SpriteID.MS_PACMAN_MUNCHING_RIGHT);
-                case LEFT  -> spriteSheet().sprites(SpriteID.MS_PACMAN_MUNCHING_LEFT);
-                case UP    -> spriteSheet().sprites(SpriteID.MS_PACMAN_MUNCHING_UP);
-                case DOWN  -> spriteSheet().sprites(SpriteID.MS_PACMAN_MUNCHING_DOWN);
-            };
-            drawSpriteCentered(pac.center(), sprites[frame]);
+        drawSpriteCentered(pac.center(), computePacSprite(pac));
+    }
+
+    private RectShort computePacSprite(Pac pac) {
+        final AnimationManager animations = pac.animations();
+        if (animations.isSelected(Pac.AnimationID.PAC_MUNCHING)) {
+            final RectShort[] sprites = ArcadeMsPacMan_PacAnimations.msPacManMunchingSprites(spriteSheet(), pac.moveDir());
+            return sprites[animations.frameIndex()];
         }
-        else if (animationID == ArcadeMsPacMan_PacAnimations.AnimationID.PAC_MAN_MUNCHING) {
-            final RectShort[] sprites = spriteSheet().sprites(switch (pac.moveDir()) {
-                case RIGHT -> SpriteID.MR_PACMAN_MUNCHING_RIGHT;
-                case LEFT  -> SpriteID.MR_PACMAN_MUNCHING_LEFT;
-                case UP    -> SpriteID.MR_PACMAN_MUNCHING_UP;
-                case DOWN  -> SpriteID.MR_PACMAN_MUNCHING_DOWN;
-            });
-            drawSpriteCentered(pac.center(), sprites[frame]);
+        else if (animations.isSelected(ArcadeMsPacMan_PacAnimations.AnimationID.PAC_MAN_MUNCHING)) {
+            final RectShort[] sprites = ArcadeMsPacMan_PacAnimations.mrPacManMunchingSprites(spriteSheet(), pac.moveDir());
+            return sprites[animations.frameIndex()];
         }
         else {
-            drawSpriteCentered(pac.center(), pac.animations().currentSprite(pac));
+            return animations.currentSprite(pac);
         }
     }
 
