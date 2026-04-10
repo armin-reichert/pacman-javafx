@@ -45,8 +45,16 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawGhost(Ghost ghost) {
-        drawSpriteCentered(ghost.center(), ghost.animations().currentSprite(ghost));
-
+        final Object animationID = ghost.animations().selectedAnimationID();
+        final int frame = ghost.animations().frameIndex();
+        if (animationID == Ghost.AnimationID.GHOST_NORMAL) {
+            final RectShort[] sprites = ArcadeMsPacMan_GhostAnimations.ghostNormalSprites(
+                spriteSheet(), ghost.personality(), ghost.moveDir());
+            drawSpriteCentered(ghost.center(), sprites[frame]);
+        }
+        else {
+            drawSpriteCentered(ghost.center(), ghost.animations().currentSprite(ghost));
+        }
     }
 
     private void drawPac(Pac pac) {

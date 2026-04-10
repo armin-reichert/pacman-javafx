@@ -11,6 +11,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
@@ -32,7 +33,7 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     protected SpriteAnimation createAnimation(Object id) {
         return switch (id) {
             case Ghost.AnimationID.GHOST_NORMAL -> SpriteAnimationBuilder.builder(manager)
-                .sprites(ghostNormalSprites(Direction.LEFT))
+                .sprites(ghostNormalSprites(spriteSheet, personality, Direction.LEFT))
                 .frameTicks(8)
                 .repeated()
                 .build();
@@ -50,7 +51,7 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
                 .build();
 
             case Ghost.AnimationID.GHOST_EYES -> SpriteAnimationBuilder.builder(manager)
-                .sprites(ghostEyesSprites(Direction.LEFT))
+                .sprites(ghostEyesSprites(spriteSheet, Direction.LEFT))
                 .build();
 
             case Ghost.AnimationID.GHOST_POINTS -> SpriteAnimationBuilder.builder(manager)
@@ -79,15 +80,15 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Ghost ghost) {
             switch (selectedID) {
-                case Ghost.AnimationID.GHOST_NORMAL -> currentAnimation().setSprites(ghostNormalSprites(ghost.wishDir()));
-                case Ghost.AnimationID.GHOST_EYES -> currentAnimation().setSprites(ghostEyesSprites(ghost.wishDir()));
+                case Ghost.AnimationID.GHOST_EYES
+                    -> currentAnimation().setSprites(ghostEyesSprites(spriteSheet, ghost.wishDir()));
                 default -> {}
             }
         }
     }
 
-    private RectShort[] ghostNormalSprites(Direction dir) {
-        return spriteSheet().sprites(switch (personality) {
+    public static RectShort[] ghostNormalSprites(SpriteSheet<SpriteID> spriteSheet, byte personality, Direction dir) {
+        return spriteSheet.sprites(switch (personality) {
             case RED_GHOST_SHADOW -> switch (dir) {
                 case RIGHT -> RED_GHOST_RIGHT;
                 case LEFT -> RED_GHOST_LEFT;
@@ -116,7 +117,7 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
         });
     }
 
-    private RectShort[] ghostEyesSprites(Direction dir) {
+    public static RectShort[] ghostEyesSprites(SpriteSheet<SpriteID> spriteSheet, Direction dir) {
         return new RectShort[] {
             switch (dir) {
                 case RIGHT -> spriteSheet.sprite(GHOST_EYES_RIGHT);
