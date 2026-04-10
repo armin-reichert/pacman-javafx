@@ -20,11 +20,9 @@ import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
-import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
@@ -108,9 +106,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         viewManager.setPlayView(new PlayView(this, scene, DEFAULT_DASHBOARD_CONFIG));
         viewManager.setEditorViewFactory(this::createEditorView);
 
-        // Load default Arcade font from uilib module resources
-        final ResourceManager uilibResources = () -> Ufx.class;
-        BaseRenderer.setArcadeFont(uilibResources.loadFont("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf", 8));
+        BaseRenderer.setArcadeFont(GameUI_Resources.FONT_ARCADE_8);
 
         initLayout(mainSceneWidth,mainSceneHeight);
         initActionBindings();

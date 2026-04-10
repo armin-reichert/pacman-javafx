@@ -21,13 +21,13 @@ import static java.util.Objects.requireNonNull;
 
 public class BaseRenderer implements Renderer {
 
-    private static final ObjectProperty<Font> arcadeFont = new SimpleObjectProperty<>(Font.font("Monospaced", 8));
+    private static final ObjectProperty<Font> ARCADE_FONT = new SimpleObjectProperty<>(Font.font("Monospaced", 8));
 
     public static void setArcadeFont(Font font) {
-        arcadeFont.set(requireNonNull(font));
+        ARCADE_FONT.set(requireNonNull(font));
     }
     public static Font arcadeFont() {
-        return arcadeFont.get();
+        return ARCADE_FONT.get();
     }
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
@@ -41,8 +41,8 @@ public class BaseRenderer implements Renderer {
 
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        arcadeFont8.bind(scaling.map(_ -> Ufx.deriveFont(arcadeFont.get(), scaled(8))));
-        arcadeFont6.bind(scaling.map(_ -> Ufx.deriveFont(arcadeFont.get(), scaled(6))));
+        arcadeFont8.bind(scaling.map(_ -> Ufx.deriveFont(ARCADE_FONT.get(), scaled(8))));
+        arcadeFont6.bind(scaling.map(_ -> Ufx.deriveFont(ARCADE_FONT.get(), scaled(6))));
     }
 
     public void clearCanvas() {
