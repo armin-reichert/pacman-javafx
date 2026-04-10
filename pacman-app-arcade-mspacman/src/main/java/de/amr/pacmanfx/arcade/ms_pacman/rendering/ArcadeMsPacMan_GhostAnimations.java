@@ -5,7 +5,6 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
@@ -73,17 +72,6 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
         super.setAnimationFrame(animationID, frameIndex);
         if (Ghost.AnimationID.GHOST_POINTS.equals(animationID)) {
             animation(Ghost.AnimationID.GHOST_POINTS).setCurrentFrame(frameIndex);
-        }
-    }
-
-    @Override
-    protected void updateActorSprites(Actor actor) {
-        if (actor instanceof Ghost ghost) {
-            switch (selectedID) {
-                case Ghost.AnimationID.GHOST_EYES
-                    -> currentAnimation().setSprites(ghostEyesSprites(spriteSheet, ghost.wishDir()));
-                default -> {}
-            }
         }
     }
 

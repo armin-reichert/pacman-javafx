@@ -6,10 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -45,15 +42,23 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawGhost(Ghost ghost) {
-        final Object animationID = ghost.animations().selectedAnimationID();
-        final int frame = ghost.animations().frameIndex();
+        drawSpriteCentered(ghost.center(), computeGhostSprite(ghost));
+    }
+
+    private RectShort computeGhostSprite(Ghost ghost) {
+        final AnimationManager animations = ghost.animations();
+        final Object animationID = animations.selectedAnimationID();
         if (animationID == Ghost.AnimationID.GHOST_NORMAL) {
             final RectShort[] sprites = ArcadeMsPacMan_GhostAnimations.ghostNormalSprites(
                 spriteSheet(), ghost.personality(), ghost.moveDir());
-            drawSpriteCentered(ghost.center(), sprites[frame]);
+            return sprites[animations.frameIndex()];
+        }
+        else if (animationID == Ghost.AnimationID.GHOST_EYES) {
+            final RectShort[] sprites = ArcadeMsPacMan_GhostAnimations.ghostEyesSprites(spriteSheet(), ghost.moveDir());
+            return sprites[animations.frameIndex()];
         }
         else {
-            drawSpriteCentered(ghost.center(), ghost.animations().currentSprite(ghost));
+            return animations.currentSprite(ghost);
         }
     }
 
