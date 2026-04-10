@@ -33,12 +33,12 @@ public class Bag extends Actor {
             return switch (animationID) {
                 case AnimationID.JUNIOR ->
                     SpriteAnimationBuilder.builder(manager)
-                        .sprite(spriteSheet.sprite(JUNIOR_PAC))
+                        .singleSprite(spriteSheet.sprite(JUNIOR_PAC))
                         .initiallyStopped()
                         .build();
                 case AnimationID.BAG ->
                     SpriteAnimationBuilder.builder(manager)
-                        .sprite(spriteSheet.sprite(BLUE_BAG))
+                        .singleSprite(spriteSheet.sprite(BLUE_BAG))
                         .initiallyStopped()
                         .build();
                 default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);

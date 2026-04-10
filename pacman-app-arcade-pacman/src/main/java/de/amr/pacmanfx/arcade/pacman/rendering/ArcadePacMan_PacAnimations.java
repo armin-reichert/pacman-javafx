@@ -28,7 +28,7 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
     protected SpriteAnimation createAnimation(Object id) {
         return switch (id) {
             case Pac.AnimationID.PAC_FULL -> builder(manager)
-                .sprite(spriteSheet.sprite(SpriteID.PACMAN_FULL))
+                .singleSprite(spriteSheet.sprite(SpriteID.PACMAN_FULL))
                 .initiallyStopped()
                 .build();
 

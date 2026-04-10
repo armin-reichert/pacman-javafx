@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.uilib.animation;
 
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.math.RectShort;
 
 import java.util.Arrays;
@@ -18,20 +19,40 @@ public class SpriteAnimationBuilder {
     }
 
     private static class BuildData {
-        RectShort[] sprites = new RectShort[0];
+        RectShort[] sprites;
         boolean initiallyStopped = false;
         boolean loop = false;
+        int fps;
         int frameTicks = 1;
     }
 
     private final SpriteAnimationManager manager;
-    private final BuildData data = new BuildData();
+    private BuildData data;
+
+    private void checkBuildPossible() {
+        if (data == null) {
+            throw new IllegalStateException("Build method can only be called once");
+        }
+    }
 
     public SpriteAnimationBuilder(SpriteAnimationManager manager) {
+        this(manager, 60);
+    }
+
+    public SpriteAnimationBuilder(SpriteAnimationManager manager, int fps) {
         this.manager = requireNonNull(manager);
+        if (fps <= 0) {
+            throw new IllegalArgumentException("Sprite animation frame rate must be positive, but is %d".formatted(fps));
+        }
+        data = new BuildData();
+        data.fps = fps;
     }
 
     public SpriteAnimationBuilder sprites(RectShort[] sprites) {
+        checkBuildPossible();
+        if (data.sprites != null) {
+            throw new IllegalArgumentException("Cannot set sprites: Sprite(s) already defined");
+        }
         data.sprites = requireNonNull(sprites);
         if (Arrays.stream(sprites).anyMatch(Objects::isNull)) {
             throw new IllegalArgumentException("Found null entry in sprite array");
@@ -39,39 +60,51 @@ public class SpriteAnimationBuilder {
         return this;
     }
 
-    public SpriteAnimationBuilder sprite(RectShort sprite) {
-        return sprites(new RectShort[] { sprite });
+    public SpriteAnimationBuilder singleSprite(RectShort sprite) {
+        checkBuildPossible();
+        if (data.sprites != null) {
+            throw new IllegalArgumentException("Cannot set single sprite: Sprite(s) already defined");
+        }
+        if (sprite == null) {
+            throw new IllegalArgumentException("Cannot set single sprite: Sprite is null");
+        }
+        return sprites(new RectShort[] { sprite } );
     }
 
     public SpriteAnimationBuilder frameTicks(int ticks) {
+        checkBuildPossible();
         if (ticks <= 0) {
-            throw new IllegalArgumentException("Number of ticks per frame is negative (%d)".formatted(ticks));
+            throw new IllegalArgumentException("Number of ticks per frame (%d) must be positive".formatted(ticks));
         }
         data.frameTicks = ticks;
         return this;
     }
 
     public SpriteAnimationBuilder repeated() {
+        checkBuildPossible();
         data.loop = true;
         return this;
     }
 
     public SpriteAnimationBuilder initiallyStopped() {
+        checkBuildPossible();
         data.initiallyStopped = true;
         return this;
     }
 
     public SpriteAnimation build() {
+        checkBuildPossible();
         if (data.sprites == null) {
             throw new IllegalArgumentException("No sprites defined");
         }
-        final SpriteAnimation anim = new SpriteAnimation(60);
+        final SpriteAnimation anim = new SpriteAnimation(data.fps);
         anim.setLoop(data.loop);
         anim.setSprites(data.sprites);
         anim.setFrameTicks(data.frameTicks);
         if (data.initiallyStopped) {
             anim.stop();
         }
+        data = null; // signals build has been called and data are consumed
         manager.registerAnimation(anim);
         return anim;
     }
