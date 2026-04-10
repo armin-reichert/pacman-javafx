@@ -6,7 +6,7 @@ package de.amr.pacmanfx.model.actors;
 
 import de.amr.pacmanfx.lib.math.RectShort;
 
-import java.util.stream.Stream;
+import static java.util.Objects.requireNonNull;
 
 public interface AnimationManager {
 
@@ -51,6 +51,11 @@ public interface AnimationManager {
     Object animation(Object animationID);
 
     Object selectedAnimationID();
+
+    default boolean isSelected(Object animationID) {
+        requireNonNull(animationID);
+        return animationID.equals(selectedAnimationID());
+    }
 
     void setAnimationFrame(Object animationID, int frameIndex);
 

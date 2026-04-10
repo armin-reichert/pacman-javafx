@@ -4,10 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -40,21 +37,17 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     }
 
     private void drawPac(Pac pac) {
-        final SpriteAnimationMap<?> animations = (SpriteAnimationMap<?>) pac.animations();
-       if (animations.isSelected(Pac.AnimationID.PAC_MUNCHING)) {
-            // Select munching sprite depending on Pac-Man's current move direction
-            final RectShort[] sprites = switch (pac.moveDir()) {
-                case RIGHT -> spriteSheet().sprites(SpriteID.PACMAN_MUNCHING_RIGHT);
-                case LEFT  -> spriteSheet().sprites(SpriteID.PACMAN_MUNCHING_LEFT);
-                case UP    -> spriteSheet().sprites(SpriteID.PACMAN_MUNCHING_UP);
-                case DOWN  -> spriteSheet().sprites(SpriteID.PACMAN_MUNCHING_DOWN);
-            };
-            final RectShort sprite = sprites[pac.animations().frameIndex()];
-            drawSpriteCentered(pac.center(), sprite);
+        drawSpriteCentered(pac.center(), computePacSprite(pac));
+    }
+
+    private RectShort computePacSprite(Pac pac) {
+        final AnimationManager animations = pac.animations();
+        if (animations.isSelected(Pac.AnimationID.PAC_MUNCHING)) {
+            final RectShort[] sprites = ArcadePacMan_PacAnimations.munchingSprites(spriteSheet(), pac.moveDir());
+            return sprites[animations.frameIndex()];
         }
         else {
-            final RectShort sprite = pac.animations().currentSprite(pac);
-            drawSpriteCentered(pac.center(), sprite);
+            return animations.currentSprite(pac);
         }
     }
 
