@@ -14,7 +14,7 @@ public class SpriteAnimation {
 
     private final int fps;
     private RectShort[] sprites;
-    private int currentFrame;
+    private int currentFrameIndex;
     private boolean loop;
     private boolean running;
     private long lastUpdateTime;
@@ -26,7 +26,7 @@ public class SpriteAnimation {
         }
         this.fps = fps;
         sprites = new RectShort[0];
-        currentFrame = 0;
+        currentFrameIndex = 0;
         loop = false;
         running = false;
         lastUpdateTime = now();
@@ -55,7 +55,7 @@ public class SpriteAnimation {
 
     public void reset() {
         stop();
-        currentFrame = 0;
+        currentFrameIndex = 0;
         lastUpdateTime = now();
     }
 
@@ -81,26 +81,26 @@ public class SpriteAnimation {
         this.loop = loop;
     }
 
-    public void setCurrentFrame(int frame) {
+    public void setCurrentFrameIndex(int frame) {
         if (!isValidFrame(frame)) {
             throw new IllegalArgumentException("Frame %d is out of range, number of sprites: %d".formatted(frame, sprites.length));
         }
-        currentFrame = frame;
+        currentFrameIndex = frame;
     }
 
-    public int currentFrame() { return currentFrame; }
+    public int currentFrameIndex() { return currentFrameIndex; }
 
-    public RectShort currentSprite() { return sprites[currentFrame]; }
+    public RectShort currentSprite() { return sprites[currentFrameIndex]; }
 
     public void advanceFrame() {
-        if (currentFrame == sprites.length - 1) {
+        if (currentFrameIndex == sprites.length - 1) {
             if (loop) {
-                currentFrame = 0;
+                currentFrameIndex = 0;
             } else {
                 stop();
             }
         } else {
-            ++currentFrame;
+            ++currentFrameIndex;
         }
     }
 

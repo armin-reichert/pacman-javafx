@@ -71,7 +71,7 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     public void setAnimationFrame(Object animationID, int frameIndex) {
         super.setAnimationFrame(animationID, frameIndex);
         if (Ghost.AnimationID.GHOST_POINTS.equals(animationID)) {
-            animation(Ghost.AnimationID.GHOST_POINTS).setCurrentFrame(frameIndex);
+            animation(Ghost.AnimationID.GHOST_POINTS).setCurrentFrameIndex(frameIndex);
         }
     }
 

@@ -5,7 +5,6 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
@@ -95,7 +94,7 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
     public void setAnimationFrame(Object animationID, int frameIndex) {
         super.setAnimationFrame(animationID, frameIndex);
         if (Ghost.AnimationID.GHOST_POINTS.equals(animationID)) {
-            animation(Ghost.AnimationID.GHOST_POINTS).setCurrentFrame(frameIndex);
+            animation(Ghost.AnimationID.GHOST_POINTS).setCurrentFrameIndex(frameIndex);
         }
     }
 

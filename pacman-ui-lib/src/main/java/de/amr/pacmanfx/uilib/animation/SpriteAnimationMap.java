@@ -75,7 +75,7 @@ public abstract class SpriteAnimationMap<SID extends Enum<SID>> implements Anima
         if (!animationID.equals(selectedID)) {
             selectedID = animationID;
             if (currentAnimation() != null) {
-                currentAnimation().setCurrentFrame(0);
+                currentAnimation().setCurrentFrameIndex(0);
             } else {
                 Logger.warn("No animation with ID {} exists", animationID);
             }
@@ -84,7 +84,7 @@ public abstract class SpriteAnimationMap<SID extends Enum<SID>> implements Anima
 
     @Override
     public int frameIndex() {
-        return currentAnimation() != null ? currentAnimation().currentFrame() : -1;
+        return currentAnimation() != null ? currentAnimation().currentFrameIndex() : -1;
     }
 
     @Override

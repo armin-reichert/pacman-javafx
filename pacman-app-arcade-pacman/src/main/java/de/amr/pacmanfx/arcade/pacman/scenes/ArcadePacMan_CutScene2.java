@@ -134,7 +134,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     }
 
     private void setNailDressAnimation(NailDressAnimationFrame animationFrame) {
-        nailDressAnimation.setCurrentFrame(animationFrame.ordinal());
+        nailDressAnimation.setCurrentFrameIndex(animationFrame.ordinal());
     }
 
     private SpriteAnimation blinkyAnimation(Object animationID) {
