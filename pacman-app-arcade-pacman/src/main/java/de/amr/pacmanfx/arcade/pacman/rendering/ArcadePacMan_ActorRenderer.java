@@ -6,7 +6,9 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -29,11 +31,17 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     public void drawActor(Actor actor) {
         requireNonNull(actor);
         if (!actor.isVisible()) return;
-
-        if (actor instanceof Bonus bonus) {
-            drawBonus(bonus);
+        switch (actor) {
+            case Bonus bonus -> drawBonus(bonus);
+            case Pac pac -> drawPac(pac);
+            case Ghost ghost -> drawGhost(ghost);
+            default -> drawSpriteCentered(actor.center(), actor.animations().currentSprite(actor));
         }
-        else if (actor instanceof Pac pac && pac.animations().selectedAnimationID() == Pac.AnimationID.PAC_MUNCHING) {
+    }
+
+    private void drawPac(Pac pac) {
+        final SpriteAnimationMap<?> animations = (SpriteAnimationMap<?>) pac.animations();
+       if (animations.isSelected(Pac.AnimationID.PAC_MUNCHING)) {
             // Select munching sprite depending on Pac-Man's current move direction
             final RectShort[] sprites = switch (pac.moveDir()) {
                 case RIGHT -> spriteSheet().sprites(SpriteID.PACMAN_MUNCHING_RIGHT);
@@ -42,13 +50,31 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
                 case DOWN  -> spriteSheet().sprites(SpriteID.PACMAN_MUNCHING_DOWN);
             };
             final RectShort sprite = sprites[pac.animations().frameIndex()];
-            drawSpriteCentered(actor.center(), sprite);
+            drawSpriteCentered(pac.center(), sprite);
         }
         else {
-            final RectShort sprite = actor.animations().currentSprite(actor);
-            if (sprite != null) {
-                drawSpriteCentered(actor.center(), sprite);
-            }
+            final RectShort sprite = pac.animations().currentSprite(pac);
+            drawSpriteCentered(pac.center(), sprite);
+        }
+    }
+
+    private void drawGhost(Ghost ghost) {
+        drawSpriteCentered(ghost.center(), computeGhostSprite(ghost));
+    }
+
+    private RectShort computeGhostSprite(Ghost ghost) {
+        final SpriteAnimationMap<?> animations = (SpriteAnimationMap<?>) ghost.animations();
+        if (animations.isSelected(Ghost.AnimationID.GHOST_NORMAL)) {
+            final RectShort[] sprites = ArcadePacMan_GhostAnimations.ghostNormalSprites(
+                spriteSheet(), ghost.personality(), ghost.wishDir());
+            return sprites[ghost.animations().frameIndex()];
+        }
+        else if (animations.isSelected(Ghost.AnimationID.GHOST_EYES)) {
+            final RectShort[] sprites = ArcadePacMan_GhostAnimations.ghostEyesSprites(spriteSheet(), ghost.wishDir());
+            return sprites[ghost.animations().frameIndex()];
+        }
+        else {
+            return ghost.animations().currentSprite(ghost);
         }
     }
 

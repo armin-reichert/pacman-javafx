@@ -50,11 +50,11 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         final Object animationID = animations.selectedAnimationID();
         if (animationID == Ghost.AnimationID.GHOST_NORMAL) {
             final RectShort[] sprites = ArcadeMsPacMan_GhostAnimations.ghostNormalSprites(
-                spriteSheet(), ghost.personality(), ghost.moveDir());
+                spriteSheet(), ghost.personality(), ghost.wishDir());
             return sprites[animations.frameIndex()];
         }
         else if (animationID == Ghost.AnimationID.GHOST_EYES) {
-            final RectShort[] sprites = ArcadeMsPacMan_GhostAnimations.ghostEyesSprites(spriteSheet(), ghost.moveDir());
+            final RectShort[] sprites = ArcadeMsPacMan_GhostAnimations.ghostEyesSprites(spriteSheet(), ghost.wishDir());
             return sprites[animations.frameIndex()];
         }
         else {
