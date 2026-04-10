@@ -36,7 +36,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case Ghost ghost -> drawGhost(ghost);
             case Bonus bonus -> drawBonus(bonus);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            default -> drawSpriteCentered(actor.center(), actor.animations().currentSprite(actor));
+            default -> drawSpriteCentered(actor.center(), actor.animations().currentSprite());
         }
     }
 
@@ -57,7 +57,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             return sprites[animations.frameIndex()];
         }
         else {
-            return animations.currentSprite(ghost);
+            return animations.currentSprite();
         }
     }
 
@@ -76,7 +76,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             return sprites[animations.frameIndex()];
         }
         else {
-            return animations.currentSprite(pac);
+            return animations.currentSprite();
         }
     }
 

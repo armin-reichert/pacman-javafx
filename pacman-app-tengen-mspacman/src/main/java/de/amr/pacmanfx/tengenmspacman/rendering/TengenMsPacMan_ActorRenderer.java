@@ -18,7 +18,6 @@ import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID.*;
-import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID.ANIM_PAC_MAN_WAVING_HAND;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
@@ -43,7 +42,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case Ghost ghost -> drawGhost(ghost);
             case Pac pac -> drawPac(pac);
             case Stork stork -> drawStork(stork);
-            default -> drawSpriteCentered(actor.center(), actor.animations().currentSprite(actor));
+            default -> drawSpriteCentered(actor.center(), actor.animations().currentSprite());
         }
     }
 
@@ -62,7 +61,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             return sprites[animations.frameIndex()];
         }
         else {
-            return animations.currentSprite(ghost);
+            return animations.currentSprite();
         }
     }
 
@@ -118,7 +117,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             sprite = spriteSheet().sprites(SpriteID.MR_PAC_WAVING_HAND)[frame];
         }
         else {
-            sprite = animations.currentSprite(pac);
+            sprite = animations.currentSprite();
         }
         final Vector2f center = pac.center().scaled(scaling());
         drawSpriteCenteredRotatedByDir(center, pac.moveDir(), sprite);
@@ -133,7 +132,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case 3, 7     -> Direction.RIGHT;
             default       -> Direction.UP; // end position frame 11...
         };
-        drawSpriteCenteredRotatedByDir(pac.center().scaled(scaling()), dir, sam.currentSprite(pac));
+        drawSpriteCenteredRotatedByDir(pac.center().scaled(scaling()), dir, sam.currentSprite());
     }
 
     // There are only left-pointing Ms. Pac-Man sprites in the sprite sheet, so we rotate and mirror in the renderer
@@ -177,7 +176,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawStork(Stork stork) {
-        drawSpriteCentered(stork.center(), stork.animations().currentSprite(stork));
+        drawSpriteCentered(stork.center(), stork.animations().currentSprite());
         if (stork.isBagReleasedFromBeak()) {
             // Sprite sheet has no stork without bag under its beak so we over-paint the bag
             ctx.setFill(backgroundColor());

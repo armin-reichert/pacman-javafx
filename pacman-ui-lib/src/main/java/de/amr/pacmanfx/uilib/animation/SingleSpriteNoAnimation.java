@@ -16,7 +16,7 @@ public record SingleSpriteNoAnimation(RectShort sprite) implements AnimationMana
     }
 
     @Override
-    public RectShort currentSprite(Actor actor) {
+    public RectShort currentSprite() {
         return sprite;
     }
 

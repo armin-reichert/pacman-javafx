@@ -32,7 +32,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
             case Bonus bonus -> drawBonus(bonus);
             case Pac pac -> drawPac(pac);
             case Ghost ghost -> drawGhost(ghost);
-            default -> drawSpriteCentered(actor.center(), actor.animations().currentSprite(actor));
+            default -> drawSpriteCentered(actor.center(), actor.animations().currentSprite());
         }
     }
 
@@ -47,7 +47,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
             return sprites[animations.frameIndex()];
         }
         else {
-            return animations.currentSprite(pac);
+            return animations.currentSprite();
         }
     }
 
@@ -67,7 +67,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
             return sprites[ghost.animations().frameIndex()];
         }
         else {
-            return ghost.animations().currentSprite(ghost);
+            return ghost.animations().currentSprite();
         }
     }
 

@@ -38,7 +38,7 @@ public interface AnimationManager {
         }
 
         @Override
-        public RectShort currentSprite(Actor actor) {
+        public RectShort currentSprite() {
             return null;
         }
 
@@ -69,7 +69,7 @@ public interface AnimationManager {
 
     void resetSelectedAnimation();
 
-    RectShort currentSprite(Actor actor);
+    RectShort currentSprite();
 
     int frameIndex();
 }

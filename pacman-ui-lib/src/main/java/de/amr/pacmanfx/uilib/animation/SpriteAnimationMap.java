@@ -34,7 +34,7 @@ public abstract class SpriteAnimationMap<SID extends Enum<SID>> implements Anima
     }
 
     @Override
-    public RectShort currentSprite(Actor actor) {
+    public RectShort currentSprite() {
         final SpriteAnimation currentAnimation = currentAnimation();
         return currentAnimation == null ? null : currentAnimation.currentSprite();
     }

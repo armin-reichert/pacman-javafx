@@ -98,8 +98,8 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
     //TODO rethink this
     public static RectShort[] pacDyingSprites(SpriteSheet<SpriteID> spriteSheet) {
         final var sprites = new RectShort[11];
-        final RectShort munchingOpen = spriteSheet.sprites(SpriteID.MS_PAC_MUNCHING)[0];
-        Arrays.fill(sprites, munchingOpen);
+        final RectShort mouthOpen = spriteSheet.sprites(SpriteID.MS_PAC_MUNCHING)[0];
+        Arrays.fill(sprites, mouthOpen);
         return sprites;
     }
 }
