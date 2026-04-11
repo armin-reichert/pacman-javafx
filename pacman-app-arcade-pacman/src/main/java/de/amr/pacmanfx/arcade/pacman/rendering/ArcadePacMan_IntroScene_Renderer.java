@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
+import static de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene.SceneState.*;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
 public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRendererMixin {
@@ -43,7 +44,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
             public void draw(GameScene2D scene) {
                 ArcadePacMan_IntroScene introScene = (ArcadePacMan_IntroScene) scene;
                 super.draw(scene);
-                ctx.fillText("Scene timer %d".formatted(introScene.state().timer().tickCount()), 0, scaled(5 * TS));
+                ctx.fillText("Scene timer %d".formatted(introScene.sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
             }
         });
         energizerSprite = spriteSheet().sprite(SpriteID.ENERGIZER);
@@ -57,22 +58,23 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
 
     @Override
     public void draw(GameScene2D scene) {
-        final var intro = (ArcadePacMan_IntroScene) scene;
+        final var introScene = (ArcadePacMan_IntroScene) scene;
         clearCanvas();
-        drawGhostGallery(intro);
-        switch (intro.state()) {
-            case SHOWING_POINTS -> drawPoints(intro);
+        drawGhostGallery(introScene);
+        switch (introScene.sceneController.state()) {
+            case SHOWING_POINTS -> drawPoints(introScene);
             case CHASING_PAC -> {
-                drawBlinkingEnergizer(intro, ENERGIZER_X, ENERGIZER_Y);
-                drawRumblingGuys(intro);
-                drawPoints(intro);
+                drawBlinkingEnergizer(introScene, ENERGIZER_X, ENERGIZER_Y);
+                drawRumblingGuys(introScene);
+                drawPoints(introScene);
                 drawCopyright();
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
-                drawRumblingGuys(intro);
-                drawPoints(intro);
+                drawRumblingGuys(introScene);
+                drawPoints(introScene);
                 drawCopyright();
             }
+            default -> {}
         }
         if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);

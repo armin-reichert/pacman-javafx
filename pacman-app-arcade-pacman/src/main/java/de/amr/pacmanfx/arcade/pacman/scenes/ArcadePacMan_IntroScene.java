@@ -38,7 +38,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private static final float CHASING_SPEED = 1.1f;
     private static final float GHOST_FRIGHTENED_SPEED = 0.6f;
 
-    private final StateMachine<ArcadePacMan_IntroScene> sceneController;
+    public final StateMachine<ArcadePacMan_IntroScene> sceneController;
 
     // public for access by renderer
     public Pulse blinking;
@@ -105,10 +105,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     public void onCreditAdded(CreditAddedEvent e) {
         soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
-    }
-
-    public SceneState state() {
-        return (SceneState) sceneController.state();
     }
 
     public enum SceneState implements State<ArcadePacMan_IntroScene> {
