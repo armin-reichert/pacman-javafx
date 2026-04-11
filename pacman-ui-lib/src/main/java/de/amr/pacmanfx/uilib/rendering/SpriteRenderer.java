@@ -8,8 +8,6 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
-import static java.util.Objects.requireNonNull;
-
 public interface SpriteRenderer extends Renderer {
 
     SpriteSheet<?> spriteSheet();
@@ -36,22 +34,22 @@ public interface SpriteRenderer extends Renderer {
     /**
      * Draws the sprite centered over the given position. The target position is scaled using the current scaling value.
      *
+     * @param sprite the actor sprite
      * @param centerX x-position over which sprite gets drawn
      * @param centerY y-position over which sprite gets drawn
-     * @param sprite the actor sprite
      */
-    default void drawSpriteCentered(double centerX, double centerY, RectShort sprite) {
+    default void drawSpriteCentered(RectShort sprite, double centerX, double centerY) {
         drawSprite(sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height(), true);
     }
 
     /**
      * Draws the sprite centered over the given position. The target position is scaled using the current scaling value.
      *
-     * @param center position over which sprite gets drawn
      * @param sprite the actor sprite
+     * @param center position over which sprite gets drawn
      */
-    default void drawSpriteCentered(Vector2f center, RectShort sprite) {
-        drawSpriteCentered(center.x(), center.y(), sprite);
+    default void drawSpriteCentered(RectShort sprite, Vector2f center) {
+        drawSpriteCentered(sprite, center.x(), center.y());
     }
 
     /**
@@ -74,7 +72,7 @@ public interface SpriteRenderer extends Renderer {
                 ctx().rotate(-90);
             }
         }
-        drawSpriteCentered(0, 0, sprite);
+        drawSpriteCentered(sprite, 0, 0);
         ctx().restore();
     }
 }

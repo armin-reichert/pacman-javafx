@@ -29,10 +29,10 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
         requireNonNull(actor);
         if (!actor.isVisible()) return;
         switch (actor) {
-            case Pac pac     -> drawSpriteCentered(pac.center(), computePacSprite(pac));
-            case Ghost ghost -> drawSpriteCentered(ghost.center(), computeGhostSprite(ghost));
+            case Pac pac     -> drawSpriteCentered(computePacSprite(pac), pac.center());
+            case Ghost ghost -> drawSpriteCentered(computeGhostSprite(ghost), ghost.center());
             case Bonus bonus -> drawBonus(bonus);
-            default          -> drawSpriteCentered(actor.center(), actor.animations().currentSprite());
+            default          -> drawSpriteCentered(actor.animations().currentSprite(), actor.center());
         }
     }
 
@@ -67,12 +67,12 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
             case EDIBLE -> {
                 //TODO: decouple symbol code from index in sprite array
                 final int index = bonus.symbol();
-                drawSpriteCentered(bonus.center(), spriteSheet().sprites(SpriteID.BONUS_SYMBOLS)[index]);
+                drawSpriteCentered(spriteSheet().sprites(SpriteID.BONUS_SYMBOLS)[index], bonus.center());
             }
             case EATEN -> {
                 //TODO: decouple symbol code from index in sprite array
                 final int index = bonus.symbol();
-                drawSpriteCentered(bonus.center(), spriteSheet().sprites(SpriteID.BONUS_VALUES)[index]);
+                drawSpriteCentered(spriteSheet().sprites(SpriteID.BONUS_VALUES)[index], bonus.center());
             }
             case INACTIVE -> {}
         }

@@ -34,11 +34,11 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         requireNonNull(actor);
         if (!actor.isVisible()) return;
         switch (actor) {
-            case Pac pac                   -> drawSpriteCentered(pac.center(), computePacSprite(pac));
-            case Ghost ghost               -> drawSpriteCentered(ghost.center(), computeGhostSprite(ghost));
+            case Pac pac                   -> drawSpriteCentered(computePacSprite(pac), pac.center());
+            case Ghost ghost               -> drawSpriteCentered(computeGhostSprite(ghost), ghost.center());
             case Bonus bonus               -> drawBonus(bonus);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            default                        -> drawSpriteCentered(actor.center(), actor.animations().currentSprite());
+            default                        -> drawSpriteCentered(actor.animations().currentSprite(), actor.center());
         }
     }
 
@@ -78,7 +78,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         final int spriteIndex = clapperboard.state(); //TODO decouple
         if (0 <= spriteIndex && spriteIndex < sprites.length) {
             final RectShort sprite = sprites[spriteIndex];
-            drawSpriteCentered(clapperboard.center(), sprite);
+            drawSpriteCentered(sprite, clapperboard.center());
             // Draw number and title
             final double numberX = scaled(clapperboard.x() + sprite.width() - 25);
             final double textX = scaled(clapperboard.x() + sprite.width());
@@ -96,12 +96,12 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
                 final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
                 final Vector2f center = bonus.center().plus(0, bonus.verticalElongation());
                 final int index = bonus.symbol(); // TODO decouple
-                drawSpriteCentered(center, sprites[index]);
+                drawSpriteCentered(sprites[index], center);
             }
             case EATEN -> {
                 final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_VALUES);
                 final int index = bonus.symbol(); // TODO decouple
-                drawSpriteCentered(bonus.center(), sprites[index]);
+                drawSpriteCentered(sprites[index], bonus.center());
             }
             case INACTIVE -> {}
         }

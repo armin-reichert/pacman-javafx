@@ -87,7 +87,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
             int offsetY = 3 * p * TS;
             if (introScene.isGhostImageVisible(p)) {
                 RectShort sprite = spriteSheet().sprites(GALLERY_GHOSTS)[p];
-                drawSpriteCentered(TS * 5, y + offsetY - HTS, sprite);
+                drawSpriteCentered(sprite, TS * 5, y + offsetY - HTS);
             }
             if (introScene.isGhostCharacterVisible(p)) {
                 fillText("-" + GHOST_CHARACTERS[p], GHOST_COLORS[p], TS * 7, y + offsetY);
@@ -121,7 +121,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
 
     private void drawBlinkingEnergizer(ArcadePacMan_IntroScene introScene, double x, double y) {
         if (introScene.blinking().state() == Pulse.State.ON) {
-            drawSpriteCentered(x + 4, y + 4, energizerSprite);
+            drawSpriteCentered(energizerSprite, x + 4, y + 4);
         }
     }
 }
