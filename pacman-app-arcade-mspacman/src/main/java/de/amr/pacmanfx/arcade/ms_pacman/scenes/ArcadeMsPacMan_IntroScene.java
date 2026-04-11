@@ -59,8 +59,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public void doInit(Game game) {
         ui.voicePlayer().playVoice(GameUI_Resources.VOICE_EXPLAIN_GAME_START);
 
-        game.hud().credit(true).score(true).levelCounter(true).livesCounter(false).show();
-
         actionBindings.registerAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         actionBindings.registerAll(GameUI.SCENE_TESTS_BINDINGS);
 

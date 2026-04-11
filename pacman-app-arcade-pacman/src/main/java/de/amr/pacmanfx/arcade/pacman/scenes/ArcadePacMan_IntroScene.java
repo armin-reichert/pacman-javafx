@@ -61,8 +61,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void doInit(Game game) {
         final UIConfig uiConfig = ui.currentConfig();
 
-        game.hud().credit(true).livesCounter(false).levelCounter(true).score(true).show();
-
         ui.voicePlayer().playVoice(GameUI_Resources.VOICE_EXPLAIN_GAME_START);
 
         actionBindings.registerAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS); // insert coin + start game actions
