@@ -24,7 +24,6 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -41,47 +40,21 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private final StateMachine<ArcadePacMan_IntroScene> sceneController;
 
-    private Pulse blinking;
-    private Pac pacMan;
-    private List<Ghost> ghosts;
+    // public for access by renderer
+    public Pulse blinking;
+    public Pac pacMan;
+    public List<Ghost> ghosts;
+    public boolean[] ghostImageVisible;
+    public boolean[] ghostNicknameVisible;
+    public boolean[] ghostCharacterVisible;
+    public boolean titleVisible;
+
     private List<Ghost> victims;
-    private boolean[] ghostImageVisible;
-    private boolean[] ghostNicknameVisible;
-    private boolean[] ghostCharacterVisible;
-    private boolean titleVisible;
     private int ghostIndex;
     private long ghostKilledTime;
 
     public ArcadePacMan_IntroScene() {
         sceneController = new StateMachine<>(this, List.of(SceneState.values()));
-    }
-
-    public boolean isTitleVisible() {
-        return titleVisible;
-    }
-
-    public boolean isGhostImageVisible(byte personality) {
-        return ghostImageVisible[personality];
-    }
-
-    public boolean isGhostCharacterVisible(byte personality) {
-        return ghostCharacterVisible[personality];
-    }
-
-    public boolean isGhostNicknameVisible(byte personality) {
-        return ghostNicknameVisible[personality];
-    }
-
-    public List<Ghost> ghosts() {
-        return Collections.unmodifiableList(ghosts);
-    }
-
-    public Pac pacMan() {
-        return pacMan;
-    }
-
-    public Pulse blinking() {
-        return blinking;
     }
 
     @Override

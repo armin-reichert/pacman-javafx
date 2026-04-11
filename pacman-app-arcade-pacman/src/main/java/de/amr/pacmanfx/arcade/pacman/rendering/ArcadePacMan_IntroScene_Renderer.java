@@ -81,28 +81,28 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
 
     private void drawGhostGallery(ArcadePacMan_IntroScene introScene) {
         ctx.setFont(arcadeFont8());
-        if (introScene.isTitleVisible()) {
+        if (introScene.titleVisible) {
             fillText("CHARACTER / NICKNAME", ARCADE_WHITE, TS(LEFT_TILE_X + 3), TS(6));
         }
         final int y = TS * 8;
         for (byte p = RED_GHOST_SHADOW; p <= ORANGE_GHOST_POKEY; ++p) {
             int offsetY = 3 * p * TS;
-            if (introScene.isGhostImageVisible(p)) {
+            if (introScene.ghostImageVisible[p]) {
                 RectShort sprite = spriteSheet().sprites(GALLERY_GHOSTS)[p];
                 drawSpriteCentered(sprite, TS * 5, y + offsetY - HTS);
             }
-            if (introScene.isGhostCharacterVisible(p)) {
+            if (introScene.ghostCharacterVisible[p]) {
                 fillText("-" + GHOST_CHARACTERS[p], GHOST_COLORS[p], TS * 7, y + offsetY);
             }
-            if (introScene.isGhostNicknameVisible(p)) {
+            if (introScene.ghostNicknameVisible[p]) {
                 fillText(GHOST_NICKNAMES[p], GHOST_COLORS[p], TS * 18, y + offsetY);
             }
         }
     }
 
     private void drawRumblingGuys(ArcadePacMan_IntroScene introScene) {
-        introScene.ghosts().forEach(actorRenderer::drawActor);
-        actorRenderer.drawActor(introScene.pacMan());
+        introScene.ghosts.forEach(actorRenderer::drawActor);
+        actorRenderer.drawActor(introScene.pacMan);
     }
 
     private void drawCopyright() {
@@ -122,7 +122,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
     }
 
     private void drawBlinkingEnergizer(ArcadePacMan_IntroScene introScene, double x, double y) {
-        if (introScene.blinking().state() == Pulse.State.ON) {
+        if (introScene.blinking.state() == Pulse.State.ON) {
             drawSpriteCentered(energizerSprite, x + 4, y + 4);
         }
     }
