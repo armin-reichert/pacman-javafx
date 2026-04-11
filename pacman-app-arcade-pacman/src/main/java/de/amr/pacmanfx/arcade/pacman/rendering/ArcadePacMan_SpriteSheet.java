@@ -14,7 +14,6 @@ import javafx.scene.image.Image;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.math.RectShort.rect;
 
 public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
@@ -41,19 +40,19 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         image = moduleResources.loadImage(SPRITESHEET_PNG);
 
         // -- Map images
-        spriteMap.add(SpriteID.MAP_FULL, rect(0, 0, 224, 248));
-        spriteMap.add(SpriteID.MAP_EMPTY, rect(228, 0, 224, 248));
+        spriteMap.add(SpriteID.MAP_FULL, RectShort.of(0, 0, 224, 248));
+        spriteMap.add(SpriteID.MAP_EMPTY, RectShort.of(228, 0, 224, 248));
 
         // -- Eaten ghost values
         spriteMap.add(SpriteID.GHOST_NUMBERS,
-            rect(456, 133, 15, 7),  // 200
-            rect(472, 133, 15, 7),  // 400
-            rect(488, 133, 15, 7),  // 800
-            rect(504, 133, 16, 7)   // 1600
+            RectShort.of(456, 133, 15, 7),  // 200
+            RectShort.of(472, 133, 15, 7),  // 400
+            RectShort.of(488, 133, 15, 7),  // 800
+            RectShort.of(504, 133, 16, 7)   // 1600
         );
 
         // Energizer
-        spriteMap.add(SpriteID.ENERGIZER, rect(8, 24, 8, 8));
+        spriteMap.add(SpriteID.ENERGIZER, RectShort.of(8, 24, 8, 8));
 
         // -- 8 bonus symbols ("fruits")
         spriteMap.add(SpriteID.BONUS_SYMBOLS,
@@ -63,14 +62,14 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
         // -- Bonus value numbers
         spriteMap.add(SpriteID.BONUS_VALUES,
-            rect(457, 148, 14, 7), //  100
-            rect(472, 148, 15, 7), //  300
-            rect(488, 148, 15, 7), //  500
-            rect(504, 148, 15, 7), //  700
-            rect(520, 148, 18, 7), // 1000
-            rect(518, 164, 20, 7), // 2000
-            rect(518, 180, 20, 7), // 3000
-            rect(518, 196, 20, 7)  // 5000
+            RectShort.of(457, 148, 14, 7), //  100
+            RectShort.of(472, 148, 15, 7), //  300
+            RectShort.of(488, 148, 15, 7), //  500
+            RectShort.of(504, 148, 15, 7), //  700
+            RectShort.of(520, 148, 18, 7), // 1000
+            RectShort.of(518, 164, 20, 7), // 2000
+            RectShort.of(518, 180, 20, 7), // 3000
+            RectShort.of(518, 196, 20, 7)  // 5000
         );
 
         spriteMap.add(SpriteID.LIVES_COUNTER_SYMBOL, clipSpriteRect(129, 15, 16, 16));
@@ -86,9 +85,9 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         spriteMap.add(SpriteID.PACMAN_DYING, makePacManDyingSpriteSeq());
 
         spriteMap.add(SpriteID.PACMAN_BIG,
-            rect(488, 16, 32, 32),
-            rect(520, 16, 32, 32),
-            rect(552, 16, 33, 32)
+            RectShort.of(488, 16, 32, 32),
+            RectShort.of(520, 16, 32, 32),
+            RectShort.of(552, 16, 33, 32)
         );
 
         // -- Ghost sprites
@@ -127,8 +126,8 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         // -- Cut scenes sprites
         spriteMap.add(SpriteID.RED_GHOST_STRETCHED, clipSpriteTiles(8, 6, 5));
 
-        spriteMap.add(SpriteID.RED_GHOST_DAMAGED, rect(585, 113, 14, 14), rect(601, 113, 14, 14));
-        spriteMap.add(SpriteID.RED_GHOST_PATCHED, rect(617, 113, 14, 14), rect(633, 113, 14, 14));
+        spriteMap.add(SpriteID.RED_GHOST_DAMAGED, RectShort.of(585, 113, 14, 14), RectShort.of(601, 113, 14, 14));
+        spriteMap.add(SpriteID.RED_GHOST_PATCHED, RectShort.of(617, 113, 14, 14), RectShort.of(633, 113, 14, 14));
 
         spriteMap.add(SpriteID.RED_GHOST_NAKED,
             clipSpriteRect(RASTER_SIZE * 8, RASTER_SIZE * 8, RASTER_SIZE * 2, RASTER_SIZE),
@@ -208,7 +207,7 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     // private methods
 
     private RectShort clipSpriteRect(int x, int y, int w, int h) {
-        return rect(HORIZONTAL_SPLIT_X + x, y, w, h);
+        return RectShort.of(HORIZONTAL_SPLIT_X + x, y, w, h);
     }
 
     private RectShort clipSpriteTile(int tileX, int tileY) {
@@ -238,6 +237,6 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     }
 
     private RectShort[] makePacManDyingSpriteSeq() {
-        return IntStream.range(0, 11).mapToObj(i -> rect(504 + i * 16, 1, 15, i == 10 ? 15 : 14)).toArray(RectShort[]::new);
+        return IntStream.range(0, 11).mapToObj(i -> RectShort.of(504 + i * 16, 1, 15, i == 10 ? 15 : 14)).toArray(RectShort[]::new);
     }
 }

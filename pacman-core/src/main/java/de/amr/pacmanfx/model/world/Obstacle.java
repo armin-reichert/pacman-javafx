@@ -49,7 +49,7 @@ public class Obstacle {
             if (isClosed()) {
                 try {
                     Collection<Vector2i> innerPolygon = computeInnerPolygon();
-                    PolygonToRectangleConverter<RectShort> converter = RectShort::new;
+                    PolygonToRectangleConverter<RectShort> converter = RectShort::of;
                     innerAreaRectangles = converter.convertPolygonToRectangles(innerPolygon);
                 } catch (Exception x) {
                     Logger.warn(x, "Inner area rectangle partition could not be computed");

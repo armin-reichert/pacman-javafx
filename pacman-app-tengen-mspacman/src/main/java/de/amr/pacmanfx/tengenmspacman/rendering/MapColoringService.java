@@ -125,7 +125,7 @@ public class MapColoringService {
         );
         final var coloredMapImage = new ColorSchemedImage(
             recoloredMapImage,
-            new RectShort(0, 0, mapSprite.width(), mapSprite.height()),
+            RectShort.of(0, 0, mapSprite.width(), mapSprite.height()),
             tgtColorScheme);
         Logger.info("{} map ({}) recolored to {}", mapCategory, mapID, tgtColorScheme);
         return coloredMapImage;

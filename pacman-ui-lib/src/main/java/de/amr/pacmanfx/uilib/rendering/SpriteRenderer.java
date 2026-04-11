@@ -8,6 +8,8 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
+import static java.util.Objects.requireNonNull;
+
 public interface SpriteRenderer extends Renderer {
 
     SpriteSheet<?> spriteSheet();
@@ -21,14 +23,14 @@ public interface SpriteRenderer extends Renderer {
      * @param scaled      tells is the destination rectangle's position and size is scaled using the current scaling value
      */
     default void drawSprite(RectShort sprite, double x, double y, boolean scaled) {
-        if (sprite == null) return;
-        final double scalingValue = scaled ? scaling() : 1;
+        requireNonNull(sprite);
+        final double s = scaled ? scaling() : 1;
         ctx().setImageSmoothing(imageSmoothing());
         ctx().drawImage(spriteSheet().sourceImage(),
             sprite.x(), sprite.y(),
             sprite.width(), sprite.height(),
-            scalingValue * x, scalingValue * y,
-            scalingValue * sprite.width(), scalingValue * sprite.height());
+            s * x, s * y,
+            s * sprite.width(), s * sprite.height());
     }
 
     /**
@@ -61,6 +63,7 @@ public interface SpriteRenderer extends Renderer {
      * @param dir the direction the sprite is facing
      */
     default void drawSpriteCenteredRotatedByDir(RectShort sprite, Vector2f center, Direction dir) {
+        requireNonNull(sprite);
         ctx().save();
         ctx().translate(center.x(), center.y());
         switch (dir) {

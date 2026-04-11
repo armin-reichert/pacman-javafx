@@ -6,7 +6,7 @@ package de.amr.pacmanfx.lib.math;
 import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
 
 /**
- * A rectangular area with short integer precision.
+ * A rectangle with short precision. Used to represent sprites and inner obstacle rectangles.
  *
  * @param x left-upper corner x
  * @param y left-upper corner y
@@ -16,19 +16,35 @@ import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
 public record RectShort(short x, short y, short width, short height) {
 
     /** Sprite Zero, no sugar! */
-    public static RectShort ZERO = new RectShort(0, 0, 0, 0);
+    public static RectShort ZERO = RectShort.of(0, 0, 0, 0);
 
-    public static RectShort rect(int x, int y, int width, int height) {
-        return new RectShort(x, y, width, height);
+    private static short checkNonNegativeShort(int value, String messageFormat) {
+        if (value < 0 || value > Short.MAX_VALUE) {
+            throw new IllegalArgumentException(messageFormat.formatted(value));
+        }
+        return (short) value;
     }
 
-    public RectShort(int x, int y, int width, int height) {
-        this((short) x, (short) y, (short) width, (short) height);
+    public static RectShort of(int x, int y, int width, int height) {
+        return new RectShort(
+            checkNonNegativeShort(x,      "Illegal sprite x-position: %d"),
+            checkNonNegativeShort(y,      "Illegal sprite y-position: %d"),
+            checkNonNegativeShort(width,  "Illegal sprite width: %d"),
+            checkNonNegativeShort(height, "Illegal sprite height: %d"));
     }
 
-    public int xMax() { return x + width; }
+    public RectShort(short x, short y, short width, short height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        checkNonNegativeShort(x + width,  "Sprite max x-position out of range: %d");
+        checkNonNegativeShort(y + height, "Sprite max y-position out of range: %d");
+    }
 
-    public int yMax() { return y + height; }
+    public short xMax() { return (short) (x + width); }
+
+    public short yMax() { return (short) (y + height); }
 
     public boolean contains(int x, int y) {
         return this.x <= x && x < xMax() &&  this.y <= y && y < yMax();

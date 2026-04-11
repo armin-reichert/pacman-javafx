@@ -31,7 +31,7 @@ public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSprite
     private static final int MAP_SPRITE_HEIGHT = 31 * TS;
 
     private static RectShort spriteAtCell(int row, int col) {
-        return new RectShort(col * MAP_SPRITE_WIDTH, row * MAP_SPRITE_HEIGHT, MAP_SPRITE_WIDTH, MAP_SPRITE_HEIGHT);
+        return RectShort.of(col * MAP_SPRITE_WIDTH, row * MAP_SPRITE_HEIGHT, MAP_SPRITE_WIDTH, MAP_SPRITE_HEIGHT);
     }
 
     private Image image;

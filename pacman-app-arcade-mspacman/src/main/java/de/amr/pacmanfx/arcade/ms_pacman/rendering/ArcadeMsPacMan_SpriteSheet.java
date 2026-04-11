@@ -15,7 +15,6 @@ import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
-import static de.amr.pacmanfx.lib.math.RectShort.rect;
 
 public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
@@ -40,20 +39,20 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         image = moduleResources.loadImage(SPRITESHEET_PNG);
 
         spriteMap.add(FULL_MAPS,
-            rect(0, 0, 224, 248),
-            rect(0, 248, 224, 248),
-            rect(0, 2 * 248, 224, 248),
-            rect(0, 3 * 248, 224, 248),
-            rect(0, 4 * 248, 224, 248),
-            rect(0, 5 * 248, 224, 248)
+            RectShort.of(0, 0, 224, 248),
+            RectShort.of(0, 248, 224, 248),
+            RectShort.of(0, 2 * 248, 224, 248),
+            RectShort.of(0, 3 * 248, 224, 248),
+            RectShort.of(0, 4 * 248, 224, 248),
+            RectShort.of(0, 5 * 248, 224, 248)
         );
         spriteMap.add(EMPTY_MAPS,
-            rect(228, 0, 224, 248),
-            rect(228, 248, 224, 248),
-            rect(228, 2 * 248, 224, 248),
-            rect(228, 3 * 248, 224, 248),
-            rect(228, 4 * 248, 224, 248),
-            rect(228, 5 * 248, 224, 248)
+            RectShort.of(228, 0, 224, 248),
+            RectShort.of(228, 248, 224, 248),
+            RectShort.of(228, 2 * 248, 224, 248),
+            RectShort.of(228, 3 * 248, 224, 248),
+            RectShort.of(228, 4 * 248, 224, 248),
+            RectShort.of(228, 5 * 248, 224, 248)
         );
         spriteMap.add(MS_PACMAN_FULL, fullMsPacMan());
         spriteMap.add(MS_PACMAN_MUNCHING_RIGHT, makeMsPacManMunchingSpriteSeq(0));
@@ -91,15 +90,15 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         spriteMap.add(BONUS_SYMBOLS, tilesRightOf(3, 0, 7));
         spriteMap.add(BONUS_VALUES, tilesRightOf(3, 1, 7));
         spriteMap.add(LIVES_COUNTER_SYMBOL, tile(1, 0));
-        spriteMap.add(STORK, rect(489, 176, 32, 16), rect(521, 176, 32, 16));
+        spriteMap.add(STORK, RectShort.of(489, 176, 32, 16), RectShort.of(521, 176, 32, 16));
         spriteMap.add(CLAPPERBOARD,
-            rect(456, 208, 32, 32),  // open
-            rect(488, 208, 32, 32),  // middle
-            rect(520, 208, 32, 32)   // closed
+            RectShort.of(456, 208, 32, 32),  // open
+            RectShort.of(488, 208, 32, 32),  // middle
+            RectShort.of(520, 208, 32, 32)   // closed
         );
         spriteMap.add(HEART, tile(2, 10));
-        spriteMap.add(BLUE_BAG, rect(488, 199, 8, 8));
-        spriteMap.add(JUNIOR_PAC, rect(509, 200, 8, 8));
+        spriteMap.add(BLUE_BAG, RectShort.of(488, 199, 8, 8));
+        spriteMap.add(JUNIOR_PAC, RectShort.of(509, 200, 8, 8));
 
         spriteMap.checkCompleteness();
     }
@@ -166,7 +165,7 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     // private methods
 
     private RectShort tile(int tileX, int tileY) {
-        return rect(HORIZONTAL_SPLIT_X + 16 * tileX, 16 * tileY, 16, 16);
+        return RectShort.of(HORIZONTAL_SPLIT_X + 16 * tileX, 16 * tileY, 16, 16);
     }
 
     private RectShort[] tilesRightOf(int tileX, int tileY, int numTiles) {
@@ -174,7 +173,7 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
             throw new IllegalArgumentException("Number of tiles must be positive but is " + numTiles);
         }
         return IntStream.range(tileX, tileX + numTiles)
-            .mapToObj(x -> rect(HORIZONTAL_SPLIT_X + 16 * x, 16 * tileY, 16, 16))
+            .mapToObj(x -> RectShort.of(HORIZONTAL_SPLIT_X + 16 * x, 16 * tileY, 16, 16))
             .toArray(RectShort[]::new);
     }
 

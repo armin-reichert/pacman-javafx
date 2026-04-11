@@ -11,7 +11,6 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.math.RectShort.rect;
 
 /**
  * SpriteSheet for non‐arcade maps in Tengen Ms. Pac-Man.
@@ -64,7 +63,7 @@ public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMaps
             for (int col = 0; col < 8; ++col) {
                 if (number != 32) {
                     final MapID id = ids[number - 1];
-                    spriteMap.add(id, rect(col * mapWidth, yPos[row], mapWidth, mapHeights[row][col]));
+                    spriteMap.add(id, RectShort.of(col * mapWidth, yPos[row], mapWidth, mapHeights[row][col]));
                 }
                 ++number;
             }
@@ -72,18 +71,18 @@ public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMaps
 
         // Maze #32 (last in STRANGE level) has 3 animation frames
         spriteMap.add(MapID.MAP32_ANIMATED,
-            rect(1568,  840, mapWidth, 31 * TS),
-            rect(1568, 1088, mapWidth, 31 * TS),
-            rect(1568, 1336, mapWidth, 31 * TS));
+            RectShort.of(1568,  840, mapWidth, 31 * TS),
+            RectShort.of(1568, 1088, mapWidth, 31 * TS),
+            RectShort.of(1568, 1336, mapWidth, 31 * TS));
 
         // row=3, col=8:  Maze #33 is BIG
-        spriteMap.add(MapID.MAP33_BIG, rect(8 * mapWidth, yPos[3], mapWidth, mapHeights[3][8]));
+        spriteMap.add(MapID.MAP33_BIG, RectShort.of(8 * mapWidth, yPos[3], mapWidth, mapHeights[3][8]));
 
         // row=4: 4 MINI mazes
-        spriteMap.add(MapID.MAP34_MINI, rect(           0, yPos[4], mapWidth, mapHeights[4][0]));
-        spriteMap.add(MapID.MAP35_MINI, rect(    mapWidth, yPos[4], mapWidth, mapHeights[4][1]));
-        spriteMap.add(MapID.MAP36_MINI, rect(2 * mapWidth, yPos[4], mapWidth, mapHeights[4][2]));
-        spriteMap.add(MapID.MAP37_MINI, rect(3 * mapWidth, yPos[4], mapWidth, mapHeights[4][3]));
+        spriteMap.add(MapID.MAP34_MINI, RectShort.of(           0, yPos[4], mapWidth, mapHeights[4][0]));
+        spriteMap.add(MapID.MAP35_MINI, RectShort.of(    mapWidth, yPos[4], mapWidth, mapHeights[4][1]));
+        spriteMap.add(MapID.MAP36_MINI, RectShort.of(2 * mapWidth, yPos[4], mapWidth, mapHeights[4][2]));
+        spriteMap.add(MapID.MAP37_MINI, RectShort.of(3 * mapWidth, yPos[4], mapWidth, mapHeights[4][3]));
 
         spriteMap.checkCompleteness();
     }

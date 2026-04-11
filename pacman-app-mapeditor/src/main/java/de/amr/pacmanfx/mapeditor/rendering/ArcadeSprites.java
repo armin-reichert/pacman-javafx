@@ -14,12 +14,12 @@ public class ArcadeSprites {
 
     public static final Image SPRITE_SHEET = RESOURCE_MANAGER.loadImage("/de/amr/pacmanfx/mapeditor/graphics/pacman_spritesheet.png");
 
-    public static final RectShort PAC_MAN      = new RectShort(473,  16, 14, 14);
-    public static final RectShort RED_GHOST    = new RectShort(505,  65, 14, 14);
-    public static final RectShort PINK_GHOST   = new RectShort(553,  81, 14, 14);
-    public static final RectShort CYAN_GHOST   = new RectShort(521,  97, 14, 14);
-    public static final RectShort ORANGE_GHOST = new RectShort(521, 113, 14, 14);
-    public static final RectShort STRAWBERRY   = new RectShort(505,  49, 14, 14);
+    public static final RectShort PAC_MAN      = RectShort.of(473,  16, 14, 14);
+    public static final RectShort RED_GHOST    = RectShort.of(505,  65, 14, 14);
+    public static final RectShort PINK_GHOST   = RectShort.of(553,  81, 14, 14);
+    public static final RectShort CYAN_GHOST   = RectShort.of(521,  97, 14, 14);
+    public static final RectShort ORANGE_GHOST = RectShort.of(521, 113, 14, 14);
+    public static final RectShort STRAWBERRY   = RectShort.of(505,  49, 14, 14);
 
     // These are the colors from the first Ms. Pac-Man level
     public static final Color MS_PACMAN_COLOR_FOOD        = Color.valueOf("#dedeff");

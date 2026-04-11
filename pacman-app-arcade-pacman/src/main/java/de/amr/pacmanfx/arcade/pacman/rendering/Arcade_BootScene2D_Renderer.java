@@ -110,7 +110,7 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
         xMin = clamp(xMin, spriteRegion.getMinX(), spriteRegion.getMaxX() - GRID_SIZE);
         double yMin = lerp(spriteRegion.getMinY(), spriteRegion.getMaxY(), randomFloat(0, 1));
         yMin = clamp(yMin, spriteRegion.getMinY(), spriteRegion.getMaxY() - GRID_SIZE);
-        return new RectShort((short) xMin, (short) yMin, GRID_SIZE, GRID_SIZE);
+        return RectShort.of((short) xMin, (short) yMin, GRID_SIZE, GRID_SIZE);
     }
 
     private void drawGrid(int width, int height) {
