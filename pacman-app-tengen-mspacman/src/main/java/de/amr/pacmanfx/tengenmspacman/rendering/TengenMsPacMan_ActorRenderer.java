@@ -95,7 +95,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         else {
             sprite = animations.currentSprite();
         }
-        drawSpriteCenteredRotatedByDir(pac.center().scaled(scaling()), pac.moveDir(), sprite);
+        drawSpriteCenteredRotatedByDir(sprite, pac.center().scaled(scaling()), pac.moveDir());
     }
 
     // Simulates dying animation by providing the right direction for each animation frame
@@ -107,7 +107,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case 3, 7     -> Direction.RIGHT;
             default       -> Direction.UP; // end position frame 11...
         };
-        drawSpriteCenteredRotatedByDir(pac.center().scaled(scaling()), dir, sam.currentSprite());
+        drawSpriteCenteredRotatedByDir(sam.currentSprite(), pac.center().scaled(scaling()), dir);
     }
 
     private void drawBonus(Bonus bonus) {

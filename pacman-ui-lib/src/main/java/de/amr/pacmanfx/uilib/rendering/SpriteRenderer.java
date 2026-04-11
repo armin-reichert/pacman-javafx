@@ -23,7 +23,7 @@ public interface SpriteRenderer extends Renderer {
      * @param scaled      tells is the destination rectangle's position and size is scaled using the current scaling value
      */
     default void drawSprite(RectShort sprite, double x, double y, boolean scaled) {
-        requireNonNull(sprite);
+        if (sprite == null) return;
         final double scalingValue = scaled ? scaling() : 1;
         ctx().setImageSmoothing(imageSmoothing());
         ctx().drawImage(spriteSheet().sourceImage(),
@@ -31,16 +31,6 @@ public interface SpriteRenderer extends Renderer {
             sprite.width(), sprite.height(),
             scalingValue * x, scalingValue * y,
             scalingValue * sprite.width(), scalingValue * sprite.height());
-    }
-
-    /**
-     * Draws the sprite centered over the given position. The target position is scaled using the current scaling value.
-     *
-     * @param center position over which sprite gets drawn
-     * @param sprite the actor sprite
-     */
-    default void drawSpriteCentered(Vector2f center, RectShort sprite) {
-        drawSpriteCentered(center.x(), center.y(), sprite);
     }
 
     /**
@@ -55,14 +45,24 @@ public interface SpriteRenderer extends Renderer {
     }
 
     /**
+     * Draws the sprite centered over the given position. The target position is scaled using the current scaling value.
+     *
+     * @param center position over which sprite gets drawn
+     * @param sprite the actor sprite
+     */
+    default void drawSpriteCentered(Vector2f center, RectShort sprite) {
+        drawSpriteCentered(center.x(), center.y(), sprite);
+    }
+
+    /**
      * Draws the sprite centered and rotated towards the given direction over the given (already scaled) position.
      * It is assumed that the sprite is pointing to the left in its default orientation (rotation = 0).
      *
+     * @param sprite the actor sprite
      * @param center position over which sprite gets drawn
      * @param dir the direction the sprite is facing
-     * @param sprite the actor sprite
      */
-    default void drawSpriteCenteredRotatedByDir(Vector2f center, Direction dir, RectShort sprite) {
+    default void drawSpriteCenteredRotatedByDir(RectShort sprite, Vector2f center, Direction dir) {
         ctx().save();
         ctx().translate(center.x(), center.y());
         switch (dir) {
