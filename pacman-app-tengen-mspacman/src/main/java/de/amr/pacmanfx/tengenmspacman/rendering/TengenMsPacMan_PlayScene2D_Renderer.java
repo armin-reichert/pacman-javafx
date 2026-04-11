@@ -16,9 +16,10 @@ import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -29,9 +30,9 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_PlayScene2D.CANVAS_WIDTH_UNSCALED;
 
-public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
-    implements SpriteRenderer, TengenMsPacMan_SceneRenderingCommons {
-
+public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer
+    implements GameScene2D_Renderer, SpriteRendererMixin, TengenMsPacMan_SceneRendererMixin
+{
     private static final List<Byte> GHOSTS_Z_ORDER = List.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW);
 
     private static final float CONTENT_INDENT = TS(2);
@@ -67,6 +68,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
     private final RenderInfo renderInfo = new RenderInfo();
     private final TengenMsPacMan_GameLevelRenderer levelRenderer;
     private final TengenMsPacMan_ActorRenderer actorRenderer;
+    private final BaseDebugInfoRenderer debugRenderer;
     private final List<Actor> actorsInZOrder = new ArrayList<>();
     private final Rectangle clipRect;
 

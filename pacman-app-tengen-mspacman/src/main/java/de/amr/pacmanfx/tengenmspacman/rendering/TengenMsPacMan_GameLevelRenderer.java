@@ -30,7 +30,7 @@ import static de.amr.pacmanfx.tengenmspacman.rendering.NonArcadeMapsSpriteSheet.
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements SpriteRenderer, GameLevelRenderer {
+public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements SpriteRendererMixin, GameLevelRenderer {
 
     /**
      * Strange map #15 (maze #32) has a "psychedelic" animation:

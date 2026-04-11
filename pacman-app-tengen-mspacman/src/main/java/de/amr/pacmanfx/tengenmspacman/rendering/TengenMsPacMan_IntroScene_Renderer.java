@@ -8,10 +8,12 @@ import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene.SceneState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
+import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -22,17 +24,18 @@ import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene.MA
 import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene.MARQUEE_Y;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
-    implements SpriteRenderer, TengenMsPacMan_SceneRenderingCommons {
+public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
+    implements GameScene2D_Renderer, SpriteRendererMixin, TengenMsPacMan_SceneRendererMixin {
 
     private final ActorRenderer actorRenderer;
+    private final BaseDebugInfoRenderer debugRenderer;
 
     public TengenMsPacMan_IntroScene_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
         requireNonNull(uiConfig);
         requireNonNull(scene);
         actorRenderer = scene.adaptRenderer(uiConfig.createActorRenderer(canvas));
-        createDefaultDebugInfoRenderer(scene, canvas);
+        debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 
     @Override

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -22,7 +22,7 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implements SpriteRenderer, HeadsUpDisplay_Renderer {
+public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implements SpriteRendererMixin, HeadsUpDisplay_Renderer {
 
     public static final String SCORE_TEXT = "SCORE";
     public static final String HIGH_SCORE_TEXT = "HIGH SCORE";

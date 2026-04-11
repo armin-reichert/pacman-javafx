@@ -7,10 +7,12 @@ import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 
@@ -26,19 +28,20 @@ import static java.util.Objects.requireNonNull;
  * and a grid before the intro scene starts. This scene is used by the Arcade and the XXL variants so we pass the
  * corresponding spritesheet as a parameter.
  */
-public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
+public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRendererMixin {
 
     public static final int GRID_SIZE = 16;
 
     private final SpriteSheet<?> spriteSheet;
     private final Rectangle2D spriteRegion;
+    private final BaseDebugInfoRenderer debugRenderer;
 
     public Arcade_BootScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet, Rectangle2D spriteRegion) {
         super(canvas);
         requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);
         this.spriteRegion = requireNonNull(spriteRegion);
-        createDefaultDebugInfoRenderer(scene, canvas);
+        this.debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 
     @Override

@@ -8,12 +8,12 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
+public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRendererMixin, ActorRenderer {
 
     public ArcadePacMan_ActorRenderer(Canvas canvas) {
         super(canvas);

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Implements the rendering for all actor types occurring in the Arcade Ms. Pac-Man game.
  */
-public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
+public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRendererMixin, ActorRenderer {
 
     public ArcadeMsPacMan_ActorRenderer(Canvas canvas) {
         super(canvas);

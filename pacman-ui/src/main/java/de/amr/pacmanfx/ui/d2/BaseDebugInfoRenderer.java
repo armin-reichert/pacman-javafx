@@ -12,13 +12,14 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
 
-public class BaseDebugInfoRenderer extends GameScene2D_Renderer {
+public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_Renderer {
 
     public static final Color DEFAULT_FILL_COLOR = Color.WHITE;
     public static final Color DEFAULT_STROKE_COLOR = Color.GRAY;

@@ -3,20 +3,14 @@
  */
 package de.amr.pacmanfx.ui.d2;
 
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 
-public abstract class GameScene2D_Renderer extends BaseRenderer {
+public interface GameScene2D_Renderer extends Renderer {
 
-    protected BaseDebugInfoRenderer debugRenderer;
+    void draw(GameScene2D scene);
 
-    public GameScene2D_Renderer(Canvas canvas) {
-        super(canvas);
-    }
-
-    public abstract void draw(GameScene2D scene);
-
-    protected void createDefaultDebugInfoRenderer(GameScene2D scene, Canvas canvas) {
-        debugRenderer = scene.adaptRenderer(new BaseDebugInfoRenderer(canvas));
+    static BaseDebugInfoRenderer createDefaultSceneDebugRenderer(GameScene2D scene, Canvas canvas) {
+        return scene.adaptRenderer(new BaseDebugInfoRenderer(canvas));
     }
 }

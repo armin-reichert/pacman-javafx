@@ -5,21 +5,24 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CreditsScene;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CreditsScene.DISPLAY_SECONDS;
 
-public class TengenMsPacMan_CreditsScene_Renderer extends GameScene2D_Renderer implements TengenMsPacMan_SceneRenderingCommons {
+public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, TengenMsPacMan_SceneRendererMixin {
 
+    private final BaseDebugInfoRenderer debugRenderer;
     private int y;
 
     public TengenMsPacMan_CreditsScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
-        createDefaultDebugInfoRenderer(scene, canvas);
+        debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 
     @Override

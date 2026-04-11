@@ -6,18 +6,21 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CutScene2;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
+import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
-public class TengenMsPacMan_CutScene2_Renderer extends GameScene2D_Renderer {
+public class TengenMsPacMan_CutScene2_Renderer extends BaseRenderer implements GameScene2D_Renderer {
 
     private final TengenMsPacMan_ActorRenderer actorRenderer;
+    private final BaseDebugInfoRenderer debugRenderer;
 
     public TengenMsPacMan_CutScene2_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
         actorRenderer = scene.adaptRenderer((TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
-        createDefaultDebugInfoRenderer(scene, canvas);
+        debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 
     @Override

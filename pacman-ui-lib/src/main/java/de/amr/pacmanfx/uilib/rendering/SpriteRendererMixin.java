@@ -10,7 +10,10 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import static java.util.Objects.requireNonNull;
 
-public interface SpriteRenderer extends Renderer {
+/**
+ * Mix-in interface providing sprite rendering functionality.
+ */
+public interface SpriteRendererMixin extends Renderer {
 
     SpriteSheet<?> spriteSheet();
 

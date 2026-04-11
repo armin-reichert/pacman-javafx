@@ -10,9 +10,9 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
+import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
@@ -27,13 +27,14 @@ import static java.util.Objects.requireNonNull;
  * Renders the 2D play scene for the Arcade Pac-Man games. The XXL games use a generic map renderer that does not need
  * any graphics.
  */
-public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
+public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRendererMixin {
 
     private static final List<Byte> GHOST_Z_ORDER = List.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW);
 
     private final SpriteSheet<?> spriteSheet;
     private final GameLevelRenderer levelRenderer;
     private final ActorRenderer actorRenderer;
+    private final BaseDebugInfoRenderer debugRenderer;
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
     public Arcade_PlayScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {

@@ -19,7 +19,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 import static java.util.function.Predicate.not;
 
-public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements SpriteRenderer, GameLevelRenderer {
+public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements SpriteRendererMixin, GameLevelRenderer {
 
     protected final AssetMap assets;
 

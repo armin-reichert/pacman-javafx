@@ -19,7 +19,7 @@ import static java.util.function.Predicate.not;
  * Renderer for classic Arcade Pac-Man. ThePac-Man XXL Pac-Man game subclasses this class to use a generic map
  * renderer instead of a sprite based one.
  */
-public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements SpriteRenderer, GameLevelRenderer {
+public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements SpriteRendererMixin, GameLevelRenderer {
 
     private final Image brightMapImage;
 

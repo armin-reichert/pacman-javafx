@@ -11,7 +11,8 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -19,7 +20,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
-public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
+public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRendererMixin {
 
     private static final String MIDWAY_MFG_CO = "© 1980 MIDWAY MFG.CO.";
     private static final String[] GHOST_NICKNAMES  = { "\"BLINKY\"", "\"PINKY\"", "\"INKY\"", "\"CLYDE\"" };
@@ -31,6 +32,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
     private static final short ENERGIZER_Y = TS * 20;
 
     private final ArcadePacMan_ActorRenderer actorRenderer;
+    private final BaseDebugInfoRenderer debugRenderer;
     private final RectShort energizerSprite;
 
     public ArcadePacMan_IntroScene_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas) {

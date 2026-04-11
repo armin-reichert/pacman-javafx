@@ -7,9 +7,11 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -21,9 +23,9 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_OptionsScene.*;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_OptionsScene_Renderer extends GameScene2D_Renderer
-    implements SpriteRenderer, TengenMsPacMan_SceneRenderingCommons {
-
+public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
+    implements GameScene2D_Renderer, SpriteRendererMixin, TengenMsPacMan_SceneRendererMixin
+{
     private static final int COL_ARROW = 2 * TS;
     private static final int COL_LABEL = 4 * TS;
     private static final int COL_COLON = 19 * TS;
@@ -32,10 +34,12 @@ public class TengenMsPacMan_OptionsScene_Renderer extends GameScene2D_Renderer
     private static final Color NES_YELLOW = nesColor(0x28);
     private static final Color NES_WHITE = nesColor(0x20);
 
+    private final BaseDebugInfoRenderer debugRenderer;
+
     public TengenMsPacMan_OptionsScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
         requireNonNull(scene);
-        createDefaultDebugInfoRenderer(scene, canvas);
+        debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 
     @Override

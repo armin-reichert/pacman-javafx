@@ -6,10 +6,12 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
@@ -17,11 +19,13 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ORANGE;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
-public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
+public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRendererMixin {
+
+    private final BaseDebugInfoRenderer debugRenderer;
 
     public ArcadeMsPacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
-        createDefaultDebugInfoRenderer(scene, canvas);
+        debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 
     @Override
