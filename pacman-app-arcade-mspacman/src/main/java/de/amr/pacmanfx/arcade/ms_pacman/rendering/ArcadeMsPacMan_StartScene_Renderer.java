@@ -9,22 +9,22 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
-import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ORANGE;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
 public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRendererMixin {
 
+    private final CopyrightRenderer copyrightRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
 
     public ArcadeMsPacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
+        copyrightRenderer = scene.adaptRenderer(new CopyrightRenderer(canvas,
+            scene.ui().currentConfig().assets().image("logo.midway")));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 
@@ -48,20 +48,11 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
         ctx.setFont(arcadeFont6());
         ctx.fillText("PTS", STS*25, STS*25);
         drawSprite(livesCounterSprite, TS(13), TS(23) + 1, true);
-        drawMidwayCopyright(scene.ui().currentConfig().assets(), TS * 6, TS * 28);
+
+        copyrightRenderer.drawCopyright(TS(6), TS(28));
 
         if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
-    }
-
-    public void drawMidwayCopyright(AssetMap assets, double x, double y) {
-        final Image logo = assets.image("logo.midway");
-        ctx.setFont(arcadeFont8());
-        ctx.setFill(ARCADE_RED);
-        ctx.drawImage(logo, scaled(x), scaled(y + 2), scaled(TS(4) - 2), scaled(TS(4)));
-        ctx.fillText("©",             scaled(x + TS(5)), scaled(y + TS(2)) + 2);
-        ctx.fillText("MIDWAY MFG CO", scaled(x + TS(7)), scaled(y + TS(2)));
-        ctx.fillText("1980/1981",     scaled(x + TS(8)), scaled(y + TS(4)));
     }
 }
