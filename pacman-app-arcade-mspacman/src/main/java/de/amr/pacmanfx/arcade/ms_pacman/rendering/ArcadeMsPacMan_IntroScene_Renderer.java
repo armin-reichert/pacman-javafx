@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene;
-import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
@@ -28,11 +27,13 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
     private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
     private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
+    private final MarqueeRenderer marqueeRenderer;
     private final ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
 
     public ArcadeMsPacMan_IntroScene_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
+        marqueeRenderer = scene.adaptRenderer(new MarqueeRenderer(canvas));
         actorRenderer = scene.adaptRenderer(uiConfig.createActorRenderer(canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
@@ -44,16 +45,17 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
 
         ctx.setFont(arcadeFont8());
         fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
-        drawMarquee(introScene.marquee());
 
-        introScene.ghosts().forEach(actorRenderer::drawActor);
-        actorRenderer.drawActor(introScene.msPacMan());
+        marqueeRenderer.drawMarquee(introScene.marquee);
+
+        introScene.ghosts.forEach(actorRenderer::drawActor);
+        actorRenderer.drawActor(introScene.msPacMan);
 
         switch (introScene.sceneController.state()) {
             case SceneState.GHOSTS_MARCHING_IN -> {
-                String ghostName = GHOST_NAMES[introScene.presentedGhostCharacter()];
-                Color ghostColor = GHOST_COLORS[introScene.presentedGhostCharacter()];
-                if (introScene.presentedGhostCharacter() == RED_GHOST_SHADOW) {
+                String ghostName = GHOST_NAMES[introScene.presentedGhostPersonality];
+                Color ghostColor = GHOST_COLORS[introScene.presentedGhostPersonality];
+                if (introScene.presentedGhostPersonality == RED_GHOST_SHADOW) {
                     fillText("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
                 }
                 double x = TITLE_X + (ghostName.length() < 4 ? TS(4) : TS(3));
@@ -66,67 +68,21 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
             }
             default -> {}
         }
-        drawMidwayCopyright(introScene.ui().currentConfig().assets().image("logo.midway"), TS(6), TS(28));
 
-        if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
-            debugRenderer.draw(scene);
-        }
-    }
-
-    /**
-     * 6 of the 96 light bulbs are bright in each frame, shifting counter-clockwise every tick.
-     * <p>
-     * The bulbs on the left border however are switched off every second frame. This is
-     * probably a bug in the original Arcade game.
-     * </p>
-     */
-    private void drawMarquee(Marquee marquee) {
-        long tick = marquee.timer().tickCount();
-        ctx.setFill(marquee.bulbOffColor());
-        for (int bulbIndex = 0; bulbIndex < marquee.totalBulbCount(); ++bulbIndex) {
-            drawMarqueeBulb(marquee, bulbIndex);
-        }
-        int firstBrightIndex = (int) (tick % marquee.totalBulbCount());
-        ctx.setFill(marquee.bulbOnColor());
-        for (int i = 0; i < marquee.brightBulbsCount(); ++i) {
-            drawMarqueeBulb(marquee, (firstBrightIndex + i * marquee.brightBulbsDistance()) % marquee.totalBulbCount());
-        }
-        // simulate bug from original Arcade game
-        ctx.setFill(marquee.bulbOffColor());
-        for (int bulbIndex = 81; bulbIndex < marquee.totalBulbCount(); bulbIndex += 2) {
-            drawMarqueeBulb(marquee, bulbIndex);
-        }
-    }
-
-    private void drawMarqueeBulb(Marquee marquee, int bulbIndex) {
-        final double minX = marquee.x(), minY = marquee.y();
-        final double maxX = marquee.x() + marquee.width(), maxY = marquee.y() + marquee.height();
-        double x, y;
-        if (bulbIndex <= 33) { // lower edge left-to-right
-            x = minX + 4 * bulbIndex;
-            y = maxY;
-        }
-        else if (bulbIndex <= 48) { // right edge bottom-to-top
-            x = maxX;
-            y = 4 * (70 - bulbIndex);
-        }
-        else if (bulbIndex <= 81) { // upper edge right-to-left
-            x = 4 * (marquee.totalBulbCount() - bulbIndex);
-            y = minY;
-        }
-        else { // left edge top-to-bottom
-            x = minX;
-            y = 4 * (bulbIndex - 59);
-        }
-        ctx.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
-    }
-
-    private void drawMidwayCopyright(Image logo, double x, double y) {
+        // Midway Copyright
+        final Image logo = scene.ui().currentConfig().assets().image("logo.midway");
+        final double x = TS(6);
+        final double y = TS(28);
         ctx.drawImage(logo, scaled(x), scaled(y + 2), scaled(TS(4) - 2), scaled(TS(4)));
         ctx.setFont(arcadeFont8());
         ctx.setFill(ARCADE_RED);
         ctx.fillText("©", scaled(x + TS(5)), scaled(y + TS(2)) + 2);
         ctx.fillText("MIDWAY MFG CO", scaled(x + TS(7)), scaled(y + TS(2)));
         ctx.fillText("1980/1981", scaled(x + TS(8)), scaled(y + TS(4)));
+
+        if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+            debugRenderer.draw(scene);
+        }
     }
+
 }

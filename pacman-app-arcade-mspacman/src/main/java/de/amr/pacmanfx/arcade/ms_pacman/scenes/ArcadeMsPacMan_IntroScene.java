@@ -21,7 +21,6 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
-import java.util.Collections;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -45,30 +44,15 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     public final StateMachine<ArcadeMsPacMan_IntroScene> sceneController;
 
-    private Marquee marquee;
-    private Pac msPacMan;
-    private List<Ghost> ghosts;
-    private byte presentedGhostCharacter;
+    public Marquee marquee;
+    public Pac msPacMan;
+    public List<Ghost> ghosts;
+    public byte presentedGhostPersonality;
+
     private int numTicksBeforeRising;
 
     public ArcadeMsPacMan_IntroScene() {
         sceneController = new StateMachine<>(this, List.of(SceneState.values()));
-    }
-
-    public Marquee marquee() {
-        return marquee;
-    }
-
-    public Pac msPacMan() {
-        return msPacMan;
-    }
-
-    public List<Ghost> ghosts() {
-        return Collections.unmodifiableList(ghosts);
-    }
-
-    public byte presentedGhostCharacter() {
-        return presentedGhostCharacter;
     }
 
     @Override
@@ -97,7 +81,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), ORANGE_GHOST_POKEY)
         );
 
-        presentedGhostCharacter = RED_GHOST_SHADOW;
+        presentedGhostPersonality = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
         sceneController.restart(SceneState.STARTING);
@@ -140,7 +124,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     ghost.setVisible(true);
                     ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
                 }
-                scene.presentedGhostCharacter = RED_GHOST_SHADOW;
+                scene.presentedGhostPersonality = RED_GHOST_SHADOW;
             }
 
             @Override
@@ -158,16 +142,16 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.marquee.timer().doTick();
                 boolean atEndPosition = letGhostWalkIn(scene);
                 if (atEndPosition) {
-                    if (scene.presentedGhostCharacter == ORANGE_GHOST_POKEY) {
+                    if (scene.presentedGhostPersonality == ORANGE_GHOST_POKEY) {
                         scene.sceneController.enterState(MS_PACMAN_MARCHING_IN);
                     } else {
-                        ++scene.presentedGhostCharacter;
+                        ++scene.presentedGhostPersonality;
                     }
                 }
             }
 
             boolean letGhostWalkIn(ArcadeMsPacMan_IntroScene scene) {
-                Ghost ghost = scene.ghosts.get(scene.presentedGhostCharacter);
+                Ghost ghost = scene.ghosts.get(scene.presentedGhostPersonality);
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.x() <= STOP_X_GHOST) {
                         ghost.setX(STOP_X_GHOST);
@@ -179,7 +163,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     }
                 }
                 else if (ghost.moveDir() == Direction.UP) {
-                    int endPositionY = TOP_Y + scene.presentedGhostCharacter * 16 + 1;
+                    int endPositionY = TOP_Y + scene.presentedGhostPersonality * 16 + 1;
                     if (scene.numTicksBeforeRising > 0) {
                         scene.numTicksBeforeRising--;
                     }
