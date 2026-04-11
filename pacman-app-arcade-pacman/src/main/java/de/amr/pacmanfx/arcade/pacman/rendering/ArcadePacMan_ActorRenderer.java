@@ -40,7 +40,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     private RectShort computePacSprite(Pac pac) {
         final AnimationManager animations = pac.animations();
         if (animations.isSelected(Pac.AnimationID.PAC_MUNCHING)) {
-            final RectShort[] sprites = ArcadePacMan_PacAnimations.munchingSprites(spriteSheet(), pac.moveDir());
+            final RectShort[] sprites = spriteSheet().munchingSprites(pac.moveDir());
             return sprites[animations.frameIndex()];
         }
         else {

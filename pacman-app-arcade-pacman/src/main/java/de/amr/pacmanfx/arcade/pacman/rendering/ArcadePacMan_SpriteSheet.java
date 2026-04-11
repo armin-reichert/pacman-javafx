@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
@@ -149,6 +150,17 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     @Override
     public RectShort[] sprites(SpriteID id) {
         return spriteMap.spriteSequence(id);
+    }
+
+    // public
+
+    public RectShort[] munchingSprites(Direction dir) {
+        return switch (dir) {
+            case RIGHT -> sprites(SpriteID.PACMAN_MUNCHING_RIGHT);
+            case LEFT  -> sprites(SpriteID.PACMAN_MUNCHING_LEFT);
+            case UP    -> sprites(SpriteID.PACMAN_MUNCHING_UP);
+            case DOWN  -> sprites(SpriteID.PACMAN_MUNCHING_DOWN);
+        };
     }
 
     // private methods

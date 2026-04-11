@@ -49,11 +49,11 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     private RectShort computeGhostSprite(Ghost ghost) {
         final AnimationManager animations = ghost.animations();
         if (animations.isSelected(Ghost.AnimationID.GHOST_NORMAL)) {
-            final RectShort[] sprites = TengenMsPacMan_GhostAnimations.ghostNormalSprites(spriteSheet(), ghost.personality(), ghost.wishDir());
+            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.wishDir());
             return sprites[animations.frameIndex()];
         }
         else if (animations.isSelected(Ghost.AnimationID.GHOST_EYES)) {
-            final RectShort[] sprites = TengenMsPacMan_GhostAnimations.ghostEyesSprites(spriteSheet(), ghost.wishDir());
+            final RectShort[] sprites = spriteSheet().ghostEyesSprites(ghost.wishDir());
             return sprites[animations.frameIndex()];
         }
         else {

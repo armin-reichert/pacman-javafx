@@ -4,15 +4,12 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
-import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static java.util.Objects.requireNonNull;
 
@@ -32,10 +29,15 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     }
 
     @Override
+    public TengenMsPacMan_SpriteSheet spriteSheet() {
+        return (TengenMsPacMan_SpriteSheet) spriteSheet;
+    }
+
+    @Override
     protected SpriteAnimation createAnimation(Object animationID) {
         return switch (animationID) {
             case Ghost.AnimationID.GHOST_NORMAL -> SpriteAnimationBuilder.builder(manager)
-                .sprites(ghostNormalSprites(spriteSheet, personality, Direction.LEFT))
+                .sprites(spriteSheet().ghostNormalSprites(personality, Direction.LEFT))
                 .frameTicks(NORMAL_TICKS)
                 .repeated()
                 .build();
@@ -53,7 +55,7 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
                 .build();
 
             case Ghost.AnimationID.GHOST_EYES -> SpriteAnimationBuilder.builder(manager)
-                .sprites(ghostEyesSprites(spriteSheet, Direction.LEFT))
+                .sprites(spriteSheet().ghostEyesSprites(Direction.LEFT))
                 .build();
 
             case Ghost.AnimationID.GHOST_POINTS -> SpriteAnimationBuilder.builder(manager)
@@ -71,46 +73,5 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
         if (Ghost.AnimationID.GHOST_POINTS.equals(animationID)) {
             animation(Ghost.AnimationID.GHOST_POINTS).setCurrentFrameIndex(frameIndex);
         }
-    }
-
-    public static RectShort[] ghostNormalSprites(SpriteSheet<SpriteID> spriteSheet, byte personality, Direction dir) {
-        return switch (personality) {
-            case RED_GHOST_SHADOW -> switch (dir) {
-                case Direction.RIGHT -> spriteSheet.sprites(SpriteID.RED_GHOST_RIGHT);
-                case Direction.LEFT  -> spriteSheet.sprites(SpriteID.RED_GHOST_LEFT);
-                case Direction.UP    -> spriteSheet.sprites(SpriteID.RED_GHOST_UP);
-                case Direction.DOWN  -> spriteSheet.sprites(SpriteID.RED_GHOST_DOWN);
-            };
-            case PINK_GHOST_SPEEDY   -> switch (dir) {
-                case Direction.RIGHT -> spriteSheet.sprites(SpriteID.PINK_GHOST_RIGHT);
-                case Direction.LEFT  -> spriteSheet.sprites(SpriteID.PINK_GHOST_LEFT);
-                case Direction.UP    -> spriteSheet.sprites(SpriteID.PINK_GHOST_UP);
-                case Direction.DOWN  -> spriteSheet.sprites(SpriteID.PINK_GHOST_DOWN);
-            };
-            case CYAN_GHOST_BASHFUL  -> switch (dir) {
-                case Direction.RIGHT -> spriteSheet.sprites(SpriteID.CYAN_GHOST_RIGHT);
-                case Direction.LEFT  -> spriteSheet.sprites(SpriteID.CYAN_GHOST_LEFT);
-                case Direction.UP    -> spriteSheet.sprites(SpriteID.CYAN_GHOST_UP);
-                case Direction.DOWN  -> spriteSheet.sprites(SpriteID.CYAN_GHOST_DOWN);
-            };
-            case ORANGE_GHOST_POKEY  -> switch (dir) {
-                case Direction.RIGHT -> spriteSheet.sprites(SpriteID.ORANGE_GHOST_RIGHT);
-                case Direction.LEFT  -> spriteSheet.sprites(SpriteID.ORANGE_GHOST_LEFT);
-                case Direction.UP    -> spriteSheet.sprites(SpriteID.ORANGE_GHOST_UP);
-                case Direction.DOWN  -> spriteSheet.sprites(SpriteID.ORANGE_GHOST_DOWN);
-            };
-            default -> throw new IllegalArgumentException();
-        };
-    }
-
-    public static RectShort[] ghostEyesSprites(SpriteSheet<SpriteID> spriteSheet, Direction dir) {
-        return new RectShort[] {
-            switch (dir) {
-                case RIGHT -> spriteSheet.sprite(SpriteID.GHOST_EYES_RIGHT);
-                case LEFT  -> spriteSheet.sprite(SpriteID.GHOST_EYES_LEFT);
-                case UP    -> spriteSheet.sprite(SpriteID.GHOST_EYES_UP);
-                case DOWN  -> spriteSheet.sprite(SpriteID.GHOST_EYES_DOWN);
-            }
-        };
     }
 }

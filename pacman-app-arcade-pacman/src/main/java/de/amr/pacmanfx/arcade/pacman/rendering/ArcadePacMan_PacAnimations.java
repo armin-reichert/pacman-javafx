@@ -4,13 +4,11 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import static java.util.Objects.requireNonNull;
 
@@ -37,7 +35,7 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
             // Renderer draws sprites depending on Pac-Man move direction!
             case Pac.AnimationID.PAC_MUNCHING -> SpriteAnimationBuilder.builder(manager)
-                .sprites(munchingSprites(spriteSheet, Direction.LEFT))
+                .sprites(spriteSheet().munchingSprites(Direction.LEFT))
                 .repeated()
                 .build();
 
@@ -59,15 +57,5 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
         return (ArcadePacMan_SpriteSheet) super.spriteSheet();
-    }
-
-    public static RectShort[] munchingSprites(SpriteSheet<SpriteID> spriteSheet, Direction dir) {
-        return switch (dir) {
-            case RIGHT -> spriteSheet.sprites(SpriteID.PACMAN_MUNCHING_RIGHT);
-            case LEFT  -> spriteSheet.sprites(SpriteID.PACMAN_MUNCHING_LEFT);
-            case UP    -> spriteSheet.sprites(SpriteID.PACMAN_MUNCHING_UP);
-            case DOWN  -> spriteSheet.sprites(SpriteID.PACMAN_MUNCHING_DOWN);
-        };
-
     }
 }
