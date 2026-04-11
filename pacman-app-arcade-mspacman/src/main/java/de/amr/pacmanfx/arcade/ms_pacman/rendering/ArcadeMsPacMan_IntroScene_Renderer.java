@@ -13,7 +13,6 @@ import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
@@ -28,12 +27,15 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
     private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
     private final MarqueeRenderer marqueeRenderer;
+    private final CopyrightRenderer copyrightRenderer;
     private final ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
 
     public ArcadeMsPacMan_IntroScene_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
         marqueeRenderer = scene.adaptRenderer(new MarqueeRenderer(canvas));
+        copyrightRenderer = scene.adaptRenderer(new CopyrightRenderer(canvas,
+            scene.ui().currentConfig().assets().image("logo.midway")));
         actorRenderer = scene.adaptRenderer(uiConfig.createActorRenderer(canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
@@ -68,17 +70,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
             }
             default -> {}
         }
-
-        // Midway Copyright
-        final Image logo = scene.ui().currentConfig().assets().image("logo.midway");
-        final double x = TS(6);
-        final double y = TS(28);
-        ctx.drawImage(logo, scaled(x), scaled(y + 2), scaled(TS(4) - 2), scaled(TS(4)));
-        ctx.setFont(arcadeFont8());
-        ctx.setFill(ARCADE_RED);
-        ctx.fillText("©", scaled(x + TS(5)), scaled(y + TS(2)) + 2);
-        ctx.fillText("MIDWAY MFG CO", scaled(x + TS(7)), scaled(y + TS(2)));
-        ctx.fillText("1980/1981", scaled(x + TS(8)), scaled(y + TS(4)));
+        copyrightRenderer.drawCopyright(TS(6), TS(28));
 
         if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
