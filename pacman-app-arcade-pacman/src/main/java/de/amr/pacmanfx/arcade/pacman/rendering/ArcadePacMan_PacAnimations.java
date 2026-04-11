@@ -35,7 +35,7 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
             // Renderer draws sprites depending on Pac-Man move direction!
             case Pac.AnimationID.PAC_MUNCHING -> SpriteAnimationBuilder.builder(manager)
-                .sprites(spriteSheet().munchingSprites(Direction.LEFT))
+                .sprites(spriteSheet().pacMunchingSprites(Direction.LEFT))
                 .repeated()
                 .build();
 

@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 
 import java.util.stream.IntStream;
 
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.math.RectShort.rect;
 
 public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
@@ -154,12 +155,53 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     // public
 
-    public RectShort[] munchingSprites(Direction dir) {
+    public RectShort[] pacMunchingSprites(Direction dir) {
         return switch (dir) {
             case RIGHT -> sprites(SpriteID.PACMAN_MUNCHING_RIGHT);
             case LEFT  -> sprites(SpriteID.PACMAN_MUNCHING_LEFT);
             case UP    -> sprites(SpriteID.PACMAN_MUNCHING_UP);
             case DOWN  -> sprites(SpriteID.PACMAN_MUNCHING_DOWN);
+        };
+    }
+
+    public RectShort[] ghostNormalSprites(byte personality, Direction dir) {
+        return sprites(switch (personality) {
+            case RED_GHOST_SHADOW -> switch (dir) {
+                case RIGHT -> SpriteID.RED_GHOST_RIGHT;
+                case LEFT ->  SpriteID.RED_GHOST_LEFT;
+                case UP ->    SpriteID.RED_GHOST_UP;
+                case DOWN ->  SpriteID.RED_GHOST_DOWN;
+            };
+            case PINK_GHOST_SPEEDY -> switch (dir) {
+                case RIGHT -> SpriteID.PINK_GHOST_RIGHT;
+                case LEFT ->  SpriteID.PINK_GHOST_LEFT;
+                case UP ->    SpriteID.PINK_GHOST_UP;
+                case DOWN ->  SpriteID.PINK_GHOST_DOWN;
+            };
+            case CYAN_GHOST_BASHFUL -> switch (dir) {
+                case RIGHT -> SpriteID.CYAN_GHOST_RIGHT;
+                case LEFT ->  SpriteID.CYAN_GHOST_LEFT;
+                case UP ->    SpriteID.CYAN_GHOST_UP;
+                case DOWN ->  SpriteID.CYAN_GHOST_DOWN;
+            };
+            case ORANGE_GHOST_POKEY -> switch (dir) {
+                case RIGHT -> SpriteID.ORANGE_GHOST_RIGHT;
+                case LEFT ->  SpriteID.ORANGE_GHOST_LEFT;
+                case UP ->    SpriteID.ORANGE_GHOST_UP;
+                case DOWN ->  SpriteID.ORANGE_GHOST_DOWN;
+            };
+            default -> throw new IllegalArgumentException();
+        });
+    }
+
+    public RectShort[] ghostEyesSprites(Direction dir) {
+        return new RectShort[] {
+            switch (dir) {
+                case RIGHT -> sprite(SpriteID.GHOST_EYES_RIGHT);
+                case LEFT  -> sprite(SpriteID.GHOST_EYES_LEFT);
+                case UP    -> sprite(SpriteID.GHOST_EYES_UP);
+                case DOWN  -> sprite(SpriteID.GHOST_EYES_DOWN);
+            }
         };
     }
 
