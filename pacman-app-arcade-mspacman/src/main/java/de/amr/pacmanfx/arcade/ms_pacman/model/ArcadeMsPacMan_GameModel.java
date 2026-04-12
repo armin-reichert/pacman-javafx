@@ -445,7 +445,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         final Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         final List<Vector2i> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).toList();
 
-        bonus.initRoute(route, leftToRight);
+        bonus.setMazeRoute(route, leftToRight);
         Logger.info("Moving bonus route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
     }
 }

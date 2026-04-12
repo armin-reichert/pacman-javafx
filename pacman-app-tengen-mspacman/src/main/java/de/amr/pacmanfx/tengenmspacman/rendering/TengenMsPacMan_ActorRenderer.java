@@ -116,7 +116,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
                 final int index = bonus.symbol(); //TODO decouple
                 final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
                 // The Up-Down animation of the moving bonus changes the center of drawing
-                final Vector2f center = bonus.center().plus(0, bonus.verticalElongation());
+                final Vector2f center = bonus.center();
                 drawSpriteCentered(sprites[index], center);
             }
             case EATEN  -> {

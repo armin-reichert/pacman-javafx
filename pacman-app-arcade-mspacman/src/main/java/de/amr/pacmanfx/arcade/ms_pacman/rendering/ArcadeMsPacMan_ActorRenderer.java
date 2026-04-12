@@ -94,7 +94,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         switch (bonus.state()) {
             case EDIBLE -> {
                 final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
-                final Vector2f center = bonus.center().plus(0, bonus.verticalElongation());
+                final Vector2f center = bonus.center();
                 final int index = bonus.symbol(); // TODO decouple
                 drawSpriteCentered(sprites[index], center);
             }

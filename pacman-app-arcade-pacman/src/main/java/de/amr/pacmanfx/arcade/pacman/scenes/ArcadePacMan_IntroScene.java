@@ -206,7 +206,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 else if (timer.tickCount() == 240) {
                     scene.sceneController.enterState(CHASING_GHOSTS);
                 }
-                scene.blinking.tick();
+                scene.blinking.doTick();
                 scene.pacMan.move();
                 scene.ghosts.forEach(Ghost::move);
 
@@ -278,7 +278,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
                 scene.pacMan.move();
                 scene.ghosts.forEach(Ghost::move);
-                scene.blinking.tick();
+                scene.blinking.doTick();
             }
         },
 

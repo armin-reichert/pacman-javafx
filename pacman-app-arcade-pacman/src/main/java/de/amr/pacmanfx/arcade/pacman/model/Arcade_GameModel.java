@@ -213,7 +213,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             publishGameEvent(new PacDeadEvent(this, pac));
         }
         else {
-            level.blinking().tick();
+            level.blinking().doTick();
             pac.tick(this);
         }
     }
@@ -241,7 +241,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         if (tick < Arcade_GameState.TICK_EATING_GHOST_DURATION) {
             level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                 .forEach(ghost -> ghost.tick(this));
-            level.blinking().tick();
+            level.blinking().doTick();
         }
         else if (tick == Arcade_GameState.TICK_EATING_GHOST_DURATION) {
             level.pac().show();

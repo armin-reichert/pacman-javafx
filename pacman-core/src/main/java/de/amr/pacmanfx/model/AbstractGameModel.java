@@ -535,7 +535,7 @@ public abstract class AbstractGameModel implements Game, Cheating {
         }
 
         level.optBonus().ifPresent(bonus -> bonus.tick(this));
-        level.blinking().tick();
+        level.blinking().doTick();
 
         if (!simStep.ghostsCollidingWithPac.isEmpty()) {
             // Is Pac getting killed after the collision with a ghost?

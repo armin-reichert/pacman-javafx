@@ -30,6 +30,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class Bonus extends MovingActor {
 
+    private static final int PULSE_CHANGE_TICKS = 10;
+
     private final TickTimer timer = new TickTimer("Bonus-Timer");
     private final byte symbol;
     private final int points;
@@ -37,14 +39,14 @@ public class Bonus extends MovingActor {
     private BonusState state;
 
     // moving bonus only
-    private final Pulse jumping;
+    private final Pulse jumpingAnimation;
     private RouteBasedSteering routeNavigation;
 
     public Bonus(byte symbol, int points) {
         super("Bonus-symbol:%d-points:%d".formatted(symbol, points));
         this.symbol = (byte) Validations.requireNonNegativeInt(symbol);
         this.points = Validations.requireNonNegativeInt(points);
-        jumping = new Pulse(10, Pulse.State.OFF);
+        jumpingAnimation = new Pulse(PULSE_CHANGE_TICKS, Pulse.State.OFF);
 
         reset();
         canTeleport = false; // override default value (true)
@@ -70,7 +72,7 @@ public class Bonus extends MovingActor {
         timer.restartIndefinitely();
 
         setSpeed(0);
-        jumping.reset();
+        jumpingAnimation.reset();
 
         hide();
     }
@@ -88,9 +90,23 @@ public class Bonus extends MovingActor {
 
         setSpeed(speed);
         setTargetTile(null);
-        jumping.restart();
+        jumpingAnimation.restart();
 
         show();
+    }
+
+    public void setMazeRoute(List<Vector2i> waypoints, boolean leftToRight) {
+        requireNonNull(waypoints);
+        if (waypoints.isEmpty()) {
+            Logger.error("Bonus route must not be empty");
+            return;
+        }
+        final var route = new ArrayList<>(waypoints);
+        final Vector2i first = route.removeFirst();
+        placeAtTile(first);
+        setMoveDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
+        setWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
+        routeNavigation = new RouteBasedSteering(route);
     }
 
     public void showEatenForSeconds(float seconds) {
@@ -98,7 +114,7 @@ public class Bonus extends MovingActor {
         timer.restartSeconds(seconds);
 
         setSpeed(0);
-        jumping.stop();
+        jumpingAnimation.stop();
 
         show();
     }
@@ -133,44 +149,31 @@ public class Bonus extends MovingActor {
     }
 
     private boolean wanderMaze(GameLevel level) {
-        jumping.tick();
         routeNavigation.steer(this, level);
         boolean mazeExitReached = routeNavigation.isComplete()
             || level.worldMap().terrainLayer().isTileInPortalSpace(tile());
         if (!mazeExitReached) {
             navigateTowardsTarget(level);
             tryMovingOrTeleporting(level);
+            jump();
         }
         return mazeExitReached;
     }
 
-    public void initRoute(List<Vector2i> waypoints, boolean leftToRight) {
-        requireNonNull(waypoints);
-        if (waypoints.isEmpty()) {
-            Logger.error("Bonus route must not be empty");
-            return;
+    //TODO check in emulator what's exactly going on
+    private void jump() {
+        jumpingAnimation.doTick();
+        if (jumpingAnimation.pulseTriggered()) {
+            float pixels = moveDir().isVertical() ? 3.0f : 2.0f;
+            float dy = jumpingAnimation.state() == Pulse.State.ON ? -pixels : pixels;
+            setY(y() + dy);
         }
-        var route = new ArrayList<>(waypoints);
-        Vector2i first = route.removeFirst();
-        placeAtTile(first);
-        setMoveDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
-        setWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
-        routeNavigation = new RouteBasedSteering(route);
-    }
-
-    public float verticalElongation() {
-        if (jumping == null || !jumping.isRunning()) {
-            return 0;
-        }
-        //TODO check in emulator what's exactly going on
-        int pixels = moveDir().isVertical() ? 2 : 1;
-        return jumping.state() == Pulse.State.ON ? -pixels : pixels;
     }
 
     @Override
     public String toString() {
         return "Bonus{symbol=%s, points=%d, ticksRemaining=%d, state=%s, animation=%s}"
-            .formatted(symbol, points, timer.remainingTicks(), state, jumping);
+            .formatted(symbol, points, timer.remainingTicks(), state, jumpingAnimation);
     }
 
     @Override

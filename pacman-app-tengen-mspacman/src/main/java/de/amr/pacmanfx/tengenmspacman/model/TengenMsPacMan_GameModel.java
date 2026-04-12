@@ -668,7 +668,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         final byte symbol = level.bonusSymbol(level.currentBonusIndex());
         final Bonus bonus = new Bonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
-        bonus.initRoute(route, leftToRight);
+        bonus.setMazeRoute(route, leftToRight);
         bonus.showEdibleAndStartWandering(level.game().bonusSpeed(level));
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
@@ -755,7 +755,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             publishGameEvent(new PacDeadEvent(this, pac));
         }
         else {
-            level.blinking().tick();
+            level.blinking().doTick();
             pac.tick(this);
         }
     }
@@ -779,7 +779,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void whileEatingGhost(GameLevel level, long tick) {
         if (tick < TICK_EATING_GHOST_COMPLETE) {
             level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).forEach(ghost -> ghost.tick(this));
-            level.blinking().tick();
+            level.blinking().doTick();
         }
         else if (tick == TICK_EATING_GHOST_COMPLETE) {
             level.pac().show();
