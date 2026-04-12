@@ -75,8 +75,8 @@ public abstract class SpriteAnimationMap<SID extends Enum<SID>> implements Anima
     }
 
     @Override
-    public int frameIndex() {
-        return currentAnimation() != null ? currentAnimation().currentFrameIndex() : -1;
+    public int currentFrame() {
+        return currentAnimation() != null ? currentAnimation().currentFrame() : -1;
     }
 
     @Override

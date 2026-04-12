@@ -88,7 +88,7 @@ public class SpriteAnimation {
         currentFrameIndex = frame;
     }
 
-    public int currentFrameIndex() { return currentFrameIndex; }
+    public int currentFrame() { return currentFrameIndex; }
 
     public RectShort currentSprite() { return sprites[currentFrameIndex]; }
 

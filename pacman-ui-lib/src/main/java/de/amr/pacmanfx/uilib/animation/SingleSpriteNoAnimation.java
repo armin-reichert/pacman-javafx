@@ -34,7 +34,7 @@ public record SingleSpriteNoAnimation(RectShort sprite) implements AnimationSet 
     }
 
     @Override
-    public int frameIndex() {
+    public int currentFrame() {
         return 0;
     }
 

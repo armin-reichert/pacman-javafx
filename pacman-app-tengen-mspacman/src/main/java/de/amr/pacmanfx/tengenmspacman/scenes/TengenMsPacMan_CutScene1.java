@@ -154,7 +154,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             switch (eventTick) {
                 case 130 -> {
                     pacMan.setSpeed(SPEED_CHASING);
-                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
+                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_MR_PAC_MAN_MUNCHING);
                     pacMan.playAnimation();
                     pacMan.show();
 

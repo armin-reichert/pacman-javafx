@@ -65,7 +65,7 @@ public interface SpriteRendererMixin extends Renderer {
      * @param center position over which sprite gets drawn
      * @param dir the direction the sprite is facing
      */
-    default void drawSpriteCenteredRotatedByDir(RectShort sprite, Vector2f center, Direction dir) {
+    default void drawSpriteCenteredFacingAt(RectShort sprite, Vector2f center, Direction dir) {
         requireNonNull(sprite);
         ctx().save();
         ctx().translate(center.x(), center.y());

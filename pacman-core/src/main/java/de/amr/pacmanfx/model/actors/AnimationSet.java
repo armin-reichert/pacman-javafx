@@ -40,7 +40,7 @@ public interface AnimationSet {
         }
 
         @Override
-        public int frameIndex() {
+        public int currentFrame() {
             return -1;
         }
     };
@@ -66,5 +66,5 @@ public interface AnimationSet {
 
     RectShort currentSprite();
 
-    int frameIndex();
+    int currentFrame();
 }

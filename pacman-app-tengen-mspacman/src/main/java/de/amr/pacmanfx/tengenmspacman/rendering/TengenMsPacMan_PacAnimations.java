@@ -58,7 +58,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
                 .frameTicks(15)
                 .build();
 
-            case ANIM_PAC_MAN_MUNCHING -> SpriteAnimationBuilder.builder(manager)
+            case ANIM_MR_PAC_MAN_MUNCHING -> SpriteAnimationBuilder.builder(manager)
                 .sprites(spriteSheet.sprites(SpriteID.MR_PAC_MUNCHING))
                 .frameTicks(2)
                 .repeated()
@@ -70,13 +70,13 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
                 .repeated()
                 .build();
 
-            case ANIM_PAC_MAN_WAVING_HAND -> SpriteAnimationBuilder.builder(manager)
+            case ANIM_MR_PAC_MAN_WAVING_HAND -> SpriteAnimationBuilder.builder(manager)
                 .sprites(spriteSheet.sprites(SpriteID.MR_PAC_WAVING_HAND))
                 .frameTicks(8)
                 .repeated()
                 .build();
 
-            case ANIM_PAC_MAN_TURNING_AWAY -> SpriteAnimationBuilder.builder(manager)
+            case ANIM_MR_PAC_MAN_TURNING_AWAY -> SpriteAnimationBuilder.builder(manager)
                 .sprites(spriteSheet.sprites(SpriteID.MR_PAC_TURNING_AWAY))
                 .frameTicks(15)
                 .build();

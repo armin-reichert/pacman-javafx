@@ -105,7 +105,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.setPosition(LEFT_BORDER, LOWER_LANE);
                     pacMan.setSpeed(1f);
-                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
+                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_MR_PAC_MAN_MUNCHING);
                     pacMan.playAnimation();
                     pacMan.show();
 
@@ -125,13 +125,13 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                     msPacMan.resetAnimation();
                 }
                 case 400 -> {
-                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
+                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_MR_PAC_MAN_MUNCHING);
                     pacMan.playAnimation();
                     msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
                     msPacMan.playAnimation();
                 }
                 case 520 -> {
-                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_WAVING_HAND);
+                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_MR_PAC_MAN_WAVING_HAND);
                     msPacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_MS_PAC_MAN_WAVING_HAND);
                 }
                 case 527 -> {
@@ -139,7 +139,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                     msPacMan.playAnimation();
                 }
                 case 648 -> {
-                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_TURNING_AWAY);
+                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_MR_PAC_MAN_TURNING_AWAY);
                     pacMan.playAnimation();
                     msPacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_MS_PAC_MAN_TURNING_AWAY);
                     msPacMan.playAnimation();
