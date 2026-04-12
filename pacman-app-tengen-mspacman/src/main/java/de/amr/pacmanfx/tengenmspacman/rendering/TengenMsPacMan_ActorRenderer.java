@@ -47,7 +47,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
-        final AnimationManager animations = ghost.animations();
+        final AnimationSet animations = ghost.animations();
         if (animations.isSelected(Ghost.AnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.wishDir());
             return sprites[animations.frameIndex()];
@@ -62,7 +62,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawPac(Pac pac) {
-        final AnimationManager animations = pac.animations();
+        final AnimationSet animations = pac.animations();
         if (animations.isSelected(Pac.AnimationID.PAC_DYING)) {
             if (animations instanceof SpriteAnimationMap<?> sam) {
                 drawPacDyingSpriteAnimation(pac, sam);

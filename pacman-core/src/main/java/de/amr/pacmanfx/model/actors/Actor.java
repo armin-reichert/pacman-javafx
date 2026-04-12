@@ -179,13 +179,13 @@ public class Actor {
 
     // Animation support
 
-    protected AnimationManager animations = AnimationManager.NO_ANIMATIONS;
+    protected AnimationSet animations = AnimationSet.EMPTY_ANIMATION_SET;
 
-    public AnimationManager animations() {
+    public AnimationSet animations() {
         return animations;
     }
 
-    public void setAnimations(AnimationManager animations) {
+    public void setAnimations(AnimationSet animations) {
         this.animations = requireNonNull(animations);
     }
 

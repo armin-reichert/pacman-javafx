@@ -8,9 +8,9 @@ import de.amr.pacmanfx.lib.math.RectShort;
 
 import static java.util.Objects.requireNonNull;
 
-public interface AnimationManager {
+public interface AnimationSet {
 
-    AnimationManager NO_ANIMATIONS = new AnimationManager() {
+    AnimationSet EMPTY_ANIMATION_SET = new AnimationSet() {
         @Override
         public Object animation(Object animationID) {
             return null;

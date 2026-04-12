@@ -43,7 +43,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
-        final AnimationManager animations = ghost.animations();
+        final AnimationSet animations = ghost.animations();
         if (animations.isSelected(Ghost.AnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(
                 ghost.personality(), ghost.wishDir());
@@ -59,7 +59,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private RectShort computePacSprite(Pac pac) {
-        final AnimationManager animations = pac.animations();
+        final AnimationSet animations = pac.animations();
         if (animations.isSelected(Pac.AnimationID.PAC_MUNCHING)) {
             final RectShort[] sprites = ArcadeMsPacMan_PacAnimations.msPacManMunchingSprites(spriteSheet(), pac.moveDir());
             return sprites[animations.frameIndex()];

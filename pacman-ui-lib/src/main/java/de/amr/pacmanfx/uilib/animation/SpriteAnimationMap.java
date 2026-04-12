@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.model.actors.AnimationManager;
+import de.amr.pacmanfx.model.actors.AnimationSet;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import org.tinylog.Logger;
 
@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class SpriteAnimationMap<SID extends Enum<SID>> implements AnimationManager {
+public abstract class SpriteAnimationMap<SID extends Enum<SID>> implements AnimationSet {
 
     protected final SpriteSheet<SID> spriteSheet;
     protected final Map<Object, SpriteAnimation> animationsByID = new HashMap<>();

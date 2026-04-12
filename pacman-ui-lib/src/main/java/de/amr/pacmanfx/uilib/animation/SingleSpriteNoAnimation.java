@@ -4,11 +4,11 @@
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.model.actors.AnimationManager;
+import de.amr.pacmanfx.model.actors.AnimationSet;
 
 import static java.util.Objects.requireNonNull;
 
-public record SingleSpriteNoAnimation(RectShort sprite) implements AnimationManager {
+public record SingleSpriteNoAnimation(RectShort sprite) implements AnimationSet {
 
     public SingleSpriteNoAnimation(RectShort sprite) {
         this.sprite = requireNonNull(sprite);
