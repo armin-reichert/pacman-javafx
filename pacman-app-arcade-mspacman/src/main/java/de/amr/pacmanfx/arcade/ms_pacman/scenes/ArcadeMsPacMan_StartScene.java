@@ -15,7 +15,6 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
-        //game.hud().credit(true).score(true).levelCounter(true).livesCounter(false).show();
         actionBindings.registerAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS); // Insert coin + start game action
     }
 
@@ -29,5 +28,6 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(CreditAddedEvent e) {
-        soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);    }
+        soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+    }
 }
