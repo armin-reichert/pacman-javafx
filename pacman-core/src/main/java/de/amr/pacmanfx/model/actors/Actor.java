@@ -199,11 +199,6 @@ public class Actor {
         animations.setAnimationFrame(animationID, frameIndex);
     }
 
-    public void playAnimation(Object animationID) {
-        requireNonNull(animationID);
-        animations.playAnimation(animationID);
-    }
-
     public void playAnimation() {
         animations.playSelectedAnimation();
     }

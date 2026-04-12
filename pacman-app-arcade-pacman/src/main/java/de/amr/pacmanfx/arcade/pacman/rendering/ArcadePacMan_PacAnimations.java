@@ -7,7 +7,7 @@ import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static java.util.Objects.requireNonNull;
@@ -18,9 +18,9 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
         ANIM_BIG_PAC_MAN,
     }
 
-    private final SpriteAnimationManager manager;
+    private final SpriteAnimationRegistry manager;
     
-    public ArcadePacMan_PacAnimations(SpriteAnimationManager manager, ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_PacAnimations(SpriteAnimationRegistry manager, ArcadePacMan_SpriteSheet spriteSheet) {
         super(spriteSheet);
         this.manager = requireNonNull(manager);
     }

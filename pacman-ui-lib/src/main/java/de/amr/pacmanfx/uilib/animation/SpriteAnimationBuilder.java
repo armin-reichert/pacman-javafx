@@ -18,7 +18,7 @@ public class SpriteAnimationBuilder {
      * @param manager the animation manager
      * @return new  builder
      */
-    public static SpriteAnimationBuilder builder(SpriteAnimationManager manager) {
+    public static SpriteAnimationBuilder builder(SpriteAnimationRegistry manager) {
         return new SpriteAnimationBuilder(manager, 60);
     }
 
@@ -28,7 +28,7 @@ public class SpriteAnimationBuilder {
      * @param fps the frame rate at which the build animation is played
      * @return new  builder
      */
-    public static SpriteAnimationBuilder builder(SpriteAnimationManager manager, int fps) {
+    public static SpriteAnimationBuilder builder(SpriteAnimationRegistry manager, int fps) {
         return new SpriteAnimationBuilder(manager, fps);
     }
 
@@ -40,7 +40,7 @@ public class SpriteAnimationBuilder {
         int frameTicks = 1;
     }
 
-    private final SpriteAnimationManager manager;
+    private final SpriteAnimationRegistry manager;
     private BuildData data;
 
     private void checkBuildPossible() {
@@ -49,7 +49,7 @@ public class SpriteAnimationBuilder {
         }
     }
 
-    private SpriteAnimationBuilder(SpriteAnimationManager manager, int fps) {
+    private SpriteAnimationBuilder(SpriteAnimationRegistry manager, int fps) {
         this.manager = requireNonNull(manager);
         if (fps <= 0) {
             throw new IllegalArgumentException("Sprite animation frame rate must be positive, but is %d".formatted(fps));

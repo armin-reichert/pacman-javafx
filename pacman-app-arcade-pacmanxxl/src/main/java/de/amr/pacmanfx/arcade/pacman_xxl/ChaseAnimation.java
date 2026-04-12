@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -71,17 +71,18 @@ class ChaseAnimation {
         timeline.stop();
     }
 
-    public void init(UIConfig uiConfig, SpriteAnimationManager spriteAnimationManager, Canvas canvas) {
+    public void init(UIConfig uiConfig, SpriteAnimationRegistry spriteAnimationRegistry, Canvas canvas) {
         requireNonNull(uiConfig);
-        requireNonNull(spriteAnimationManager);
+        requireNonNull(spriteAnimationRegistry);
         requireNonNull(canvas);
 
         actorRenderer = uiConfig.createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scalingProperty());
 
         pac = ArcadePacMan_GameModel.createPacMan();
-        pac.setAnimations(uiConfig.createPacAnimations(spriteAnimationManager));
-        pac.playAnimation(Pac.AnimationID.PAC_MUNCHING);
+        pac.setAnimations(uiConfig.createPacAnimations(spriteAnimationRegistry));
+        pac.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+        pac.playAnimation();
         pac.setX(numTilesX * TS);
         pac.setMoveDir(Direction.LEFT);
         pac.setWishDir(Direction.LEFT);
@@ -89,10 +90,10 @@ class ChaseAnimation {
         pac.setVisible(true);
 
         ghosts = List.of(
-            uiConfig.createGhostWithAnimations(spriteAnimationManager, RED_GHOST_SHADOW),
-            uiConfig.createGhostWithAnimations(spriteAnimationManager, PINK_GHOST_SPEEDY),
-            uiConfig.createGhostWithAnimations(spriteAnimationManager, CYAN_GHOST_BASHFUL),
-            uiConfig.createGhostWithAnimations(spriteAnimationManager, ORANGE_GHOST_POKEY)
+            uiConfig.createGhostWithAnimations(spriteAnimationRegistry, RED_GHOST_SHADOW),
+            uiConfig.createGhostWithAnimations(spriteAnimationRegistry, PINK_GHOST_SPEEDY),
+            uiConfig.createGhostWithAnimations(spriteAnimationRegistry, CYAN_GHOST_BASHFUL),
+            uiConfig.createGhostWithAnimations(spriteAnimationRegistry, ORANGE_GHOST_POKEY)
         );
         for (Ghost ghost : ghosts) {
             ghost.setX((numTilesX + 4) * TS + ghost.personality() * GHOST_DISTANCE);
@@ -100,7 +101,8 @@ class ChaseAnimation {
             ghost.setWishDir(Direction.LEFT);
             ghost.setSpeed(GHOST_CHASE_SPEED);
             ghost.setVisible(true);
-            ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
+            ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+            ghost.playAnimation();
         }
 
         state = ChasingState.GHOSTS_CHASING_PAC;
@@ -133,7 +135,8 @@ class ChaseAnimation {
                 ghost.setWishDir(Direction.LEFT);
                 ghost.setX((numTilesX + 4) * TS + ghost.personality() * 2 * TS);
                 ghost.setSpeed(1.05f);
-                ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
+                ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+                ghost.playAnimation();
             }
             state = ChasingState.GHOSTS_CHASING_PAC;
         }
@@ -169,7 +172,8 @@ class ChaseAnimation {
                 ghost.setMoveDir(Direction.RIGHT);
                 ghost.setWishDir(Direction.RIGHT);
                 ghost.setSpeed(0.58f);
-                ghost.playAnimation(Ghost.AnimationID.GHOST_FRIGHTENED);
+                ghost.selectAnimation(Ghost.AnimationID.GHOST_FRIGHTENED);
+                ghost.playAnimation();
             }
             // Let Pac-Man chase the ghosts from left to right side of the screen
             state = ChasingState.PAC_CHASING_GHOSTS;

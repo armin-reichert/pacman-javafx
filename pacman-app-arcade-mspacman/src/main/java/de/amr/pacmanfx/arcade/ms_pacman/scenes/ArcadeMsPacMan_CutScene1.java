@@ -79,14 +79,14 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
+        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
 
-        inky = uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), CYAN_GHOST_BASHFUL);
+        inky = uiConfig.createGhostWithAnimations(ui.spriteAnimationRegistry(), CYAN_GHOST_BASHFUL);
 
-        pinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), PINK_GHOST_SPEEDY);
+        pinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationRegistry(), PINK_GHOST_SPEEDY);
 
         heart = new Actor();
         heart.setAnimations(new SingleSpriteNoAnimation(spriteSheet.sprite(SpriteID.HEART)));
@@ -136,27 +136,31 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
         pacMan.setSpeed(SPEED_PAC_CHASING);
-        pacMan.playAnimation(ArcadeMsPacMan_PacAnimations.AnimationID.PAC_MAN_MUNCHING);
+        pacMan.selectAnimation(ArcadeMsPacMan_PacAnimations.AnimationID.PAC_MAN_MUNCHING);
+        pacMan.playAnimation();
         pacMan.show();
 
         inky.setMoveDir(Direction.RIGHT);
         inky.setWishDir(Direction.RIGHT);
         inky.setPosition(pacMan.x() - 6 * TS, pacMan.y());
         inky.setSpeed(SPEED_GHOST_CHASING);
-        inky.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
+        inky.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+        inky.playAnimation();
         inky.show();
 
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(TS * 30, LOWER_LANE_Y);
         msPacMan.setSpeed(SPEED_PAC_CHASING);
-        msPacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
+        msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+        msPacMan.playAnimation();
         msPacMan.show();
 
         pinky.setMoveDir(Direction.LEFT);
         pinky.setWishDir(Direction.LEFT);
         pinky.setPosition(msPacMan.x() + 6 * TS, msPacMan.y());
         pinky.setSpeed(SPEED_GHOST_CHASING);
-        pinky.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
+        pinky.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+        pinky.playAnimation();
         pinky.show();
 
         setState(SceneState.CHASED_BY_GHOSTS, TickTimer.INDEFINITE);

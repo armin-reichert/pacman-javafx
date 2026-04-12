@@ -70,10 +70,10 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
 
         pacMan = createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
+        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
 
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
@@ -105,13 +105,15 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.setPosition(LEFT_BORDER, LOWER_LANE);
                     pacMan.setSpeed(1f);
-                    pacMan.playAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
+                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
+                    pacMan.playAnimation();
                     pacMan.show();
 
                     msPacMan.setMoveDir(Direction.LEFT);
                     msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
                     msPacMan.setSpeed(1f);
-                    msPacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
+                    msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+                    msPacMan.playAnimation();
                     msPacMan.show();
                 }
                 case 230 -> {
@@ -123,8 +125,10 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                     msPacMan.resetAnimation();
                 }
                 case 400 -> {
-                    pacMan.playAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
-                    msPacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
+                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
+                    pacMan.playAnimation();
+                    msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+                    msPacMan.playAnimation();
                 }
                 case 520 -> {
                     pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_WAVING_HAND);
@@ -135,8 +139,10 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                     msPacMan.playAnimation();
                 }
                 case 648 -> {
-                    pacMan.playAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_TURNING_AWAY);
-                    msPacMan.playAnimation(TengenMsPacMan_AnimationID.ANIM_MS_PAC_MAN_TURNING_AWAY);
+                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_TURNING_AWAY);
+                    pacMan.playAnimation();
+                    msPacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_MS_PAC_MAN_TURNING_AWAY);
+                    msPacMan.playAnimation();
                 }
                 case 650 -> {
                     pacMan.setSpeed(1.5f); // TODO not sure
@@ -161,7 +167,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         junior.setPosition((float) randomX, unscaledSize().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimations(ui.currentConfig().createPacAnimations(ui.spriteAnimationManager()));
+        junior.setAnimations(ui.currentConfig().createPacAnimations(ui.spriteAnimationRegistry()));
         junior.selectAnimation(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);

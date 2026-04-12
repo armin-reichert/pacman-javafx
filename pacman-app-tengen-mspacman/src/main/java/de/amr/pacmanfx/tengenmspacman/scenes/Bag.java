@@ -8,7 +8,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static java.util.Objects.requireNonNull;
@@ -19,11 +19,11 @@ public class Bag extends Actor {
 
     public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
 
-        private final SpriteAnimationManager manager;
+        private final SpriteAnimationRegistry manager;
 
-        public BagAnimations(SpriteAnimationManager spriteAnimationManager) {
+        public BagAnimations(SpriteAnimationRegistry spriteAnimationRegistry) {
             super(TengenMsPacMan_SpriteSheet.instance());
-            manager = requireNonNull(spriteAnimationManager);
+            manager = requireNonNull(spriteAnimationRegistry);
         }
 
         @Override
@@ -44,8 +44,8 @@ public class Bag extends Actor {
 
     private boolean open;
 
-    public Bag(SpriteAnimationManager spriteAnimationManager) {
-        setAnimations(new BagAnimations(spriteAnimationManager));
+    public Bag(SpriteAnimationRegistry spriteAnimationRegistry) {
+        setAnimations(new BagAnimations(spriteAnimationRegistry));
         setOpen(false);
     }
 

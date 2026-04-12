@@ -94,24 +94,24 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
         msPacMan.setSpeed(0);
 
         pacMan = createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
+        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
         pacMan.setSpeed(0);
 
-        inky = uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), CYAN_GHOST_BASHFUL);
+        inky = uiConfig.createGhostWithAnimations(ui.spriteAnimationRegistry(), CYAN_GHOST_BASHFUL);
         inky.setMoveDir(Direction.RIGHT);
         inky.setWishDir(Direction.RIGHT);
         inky.setPosition(LEFT_BORDER, UPPER_LANE);
         inky.setSpeed(0);
 
-        pinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), PINK_GHOST_SPEEDY);
+        pinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationRegistry(), PINK_GHOST_SPEEDY);
         pinky.setMoveDir(Direction.LEFT);
         pinky.setWishDir(Direction.LEFT);
         pinky.setPosition(RIGHT_BORDER, LOWER_LANE);
@@ -154,20 +154,24 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             switch (eventTick) {
                 case 130 -> {
                     pacMan.setSpeed(SPEED_CHASING);
-                    pacMan.playAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
+                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
+                    pacMan.playAnimation();
                     pacMan.show();
 
                     msPacMan.setSpeed(SPEED_CHASING);
-                    msPacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
+                    msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+                    msPacMan.playAnimation();
                     msPacMan.show();
                 }
                 case 160 -> {
                     inky.setSpeed(SPEED_CHASING);
-                    inky.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
+                    inky.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+                    inky.playAnimation();
                     inky.show();
 
                     pinky.setSpeed(SPEED_CHASING);
-                    pinky.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
+                    pinky.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+                    pinky.playAnimation();
                     pinky.show();
                 }
                 case 400 -> {

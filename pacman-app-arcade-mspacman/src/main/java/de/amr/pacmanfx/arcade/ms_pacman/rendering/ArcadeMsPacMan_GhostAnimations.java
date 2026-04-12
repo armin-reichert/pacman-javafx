@@ -7,7 +7,7 @@ import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
@@ -16,13 +16,13 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
 
-    private final SpriteAnimationManager manager;
+    private final SpriteAnimationRegistry manager;
     private final byte personality;
 
-    public ArcadeMsPacMan_GhostAnimations(SpriteAnimationManager spriteAnimationManager, byte personality) {
+    public ArcadeMsPacMan_GhostAnimations(SpriteAnimationRegistry spriteAnimationRegistry, byte personality) {
         super(ArcadeMsPacMan_SpriteSheet.instance());
         this.personality = requireValidGhostPersonality(personality);
-        this.manager = requireNonNull(spriteAnimationManager);
+        this.manager = requireNonNull(spriteAnimationRegistry);
     }
 
     @Override

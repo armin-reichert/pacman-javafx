@@ -260,7 +260,10 @@ public class Ghost extends MovingActor {
         switch (newState) {
             case LOCKED, HUNTING_PAC -> selectAnimation(AnimationID.GHOST_NORMAL);
             case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(AnimationID.GHOST_EYES);
-            case FRIGHTENED -> playAnimation(AnimationID.GHOST_FRIGHTENED);
+            case FRIGHTENED -> {
+                selectAnimation(AnimationID.GHOST_FRIGHTENED);
+                playAnimation();
+            }
             case EATEN -> {}
         }
     }

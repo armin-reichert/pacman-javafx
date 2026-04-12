@@ -9,16 +9,15 @@ import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.actor.GhostConfig;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -121,23 +120,24 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             public void onEnter(TengenMsPacMan_IntroScene scene) {
                 final GameUI ui = scene.ui;
                 final UIConfig uiConfig = ui.currentConfig();
+                final SpriteAnimationRegistry animationRegistry = ui.spriteAnimationRegistry();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 
                 scene.msPacMan = createMsPacMan();
-                scene.msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
-                scene.msPacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
-
+                scene.msPacMan.setAnimations(uiConfig.createPacAnimations(animationRegistry));
+                scene.msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+                scene.msPacMan.playAnimation();
                 scene.msPacMan.setPosition(TS * 33, ACTOR_Y);
                 scene.msPacMan.setMoveDir(Direction.LEFT);
                 scene.msPacMan.setSpeed(SPEED);
                 scene.msPacMan.setVisible(true);
 
                 scene.ghosts = List.of(
-                    uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), RED_GHOST_SHADOW),
-                    uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), CYAN_GHOST_BASHFUL),
-                    uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), PINK_GHOST_SPEEDY),
-                    uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), ORANGE_GHOST_POKEY)
+                    uiConfig.createGhostWithAnimations(animationRegistry, RED_GHOST_SHADOW),
+                    uiConfig.createGhostWithAnimations(animationRegistry, CYAN_GHOST_BASHFUL),
+                    uiConfig.createGhostWithAnimations(animationRegistry, PINK_GHOST_SPEEDY),
+                    uiConfig.createGhostWithAnimations(animationRegistry, ORANGE_GHOST_POKEY)
                 );
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33, ACTOR_Y);

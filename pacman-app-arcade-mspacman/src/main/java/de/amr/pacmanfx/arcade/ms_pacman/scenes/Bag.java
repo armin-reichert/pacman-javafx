@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
@@ -21,11 +21,11 @@ public class Bag extends Actor {
 
     public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
 
-        private final SpriteAnimationManager manager;
+        private final SpriteAnimationRegistry manager;
 
-        public BagAnimations(SpriteAnimationManager spriteAnimationManager) {
+        public BagAnimations(SpriteAnimationRegistry spriteAnimationRegistry) {
             super(ArcadeMsPacMan_SpriteSheet.instance());
-            this.manager = requireNonNull(spriteAnimationManager);
+            this.manager = requireNonNull(spriteAnimationRegistry);
         }
 
         @Override
@@ -48,8 +48,8 @@ public class Bag extends Actor {
 
     private boolean open;
 
-    public Bag(SpriteAnimationManager spriteAnimationManager) {
-        setAnimations(new BagAnimations(spriteAnimationManager));
+    public Bag(SpriteAnimationRegistry spriteAnimationRegistry) {
+        setAnimations(new BagAnimations(spriteAnimationRegistry));
     }
 
     public void setOpen(boolean open) {

@@ -68,11 +68,11 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         final UIConfig uiConfig = ui.currentConfig();
 
         pacMan = createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
+        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
 
-        blinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), RED_GHOST_SHADOW);
+        blinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationRegistry(), RED_GHOST_SHADOW);
 
-        nailDressAnimation = SpriteAnimationBuilder.builder(ui.spriteAnimationManager())
+        nailDressAnimation = SpriteAnimationBuilder.builder(ui.spriteAnimationRegistry())
             .sprites(ArcadePacMan_SpriteSheet.instance().sprites(SpriteID.RED_GHOST_STRETCHED))
             .initiallyStopped()
             .build();
@@ -95,7 +95,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 pacMan.placeAtTile(28, 20);
                 pacMan.setMoveDir(Direction.LEFT);
                 pacMan.setSpeed(1.15f);
-                pacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
+                pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+                pacMan.playAnimation();
                 pacMan.show();
             }
             case ANIMATION_START + 111 -> {
@@ -103,7 +104,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 blinky.setMoveDir(Direction.LEFT);
                 blinky.setWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
-                blinky.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
+                blinky.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+                blinky.playAnimation();
                 blinky.show();
             }
             case ANIMATION_START + 194 -> {

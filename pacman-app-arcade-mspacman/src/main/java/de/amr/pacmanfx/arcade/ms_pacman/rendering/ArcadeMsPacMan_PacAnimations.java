@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
@@ -18,11 +18,11 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
     public enum AnimationID { PAC_MAN_MUNCHING }
 
-    private final SpriteAnimationManager manager;
+    private final SpriteAnimationRegistry manager;
     
-    public ArcadeMsPacMan_PacAnimations(SpriteAnimationManager spriteAnimationManager) {
+    public ArcadeMsPacMan_PacAnimations(SpriteAnimationRegistry spriteAnimationRegistry) {
         super(ArcadeMsPacMan_SpriteSheet.instance());
-        this.manager = requireNonNull(spriteAnimationManager);
+        this.manager = requireNonNull(spriteAnimationRegistry);
     }
 
     @Override

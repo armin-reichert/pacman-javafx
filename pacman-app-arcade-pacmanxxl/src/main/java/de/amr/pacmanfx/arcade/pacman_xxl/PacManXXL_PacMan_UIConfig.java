@@ -22,7 +22,7 @@ import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -183,21 +183,21 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public Ghost createGhostWithAnimations(SpriteAnimationManager spriteAnimationManager, byte personality) {
+    public Ghost createGhostWithAnimations(SpriteAnimationRegistry spriteAnimationRegistry, byte personality) {
         final Ghost ghost = ArcadePacMan_GameModel.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(spriteAnimationManager, personality));
+        ghost.setAnimations(createGhostAnimations(spriteAnimationRegistry, personality));
         ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimationManager spriteAnimationManager, byte personality) {
-        return new ArcadePacMan_GhostAnimations(spriteAnimationManager, personality);
+    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimationRegistry spriteAnimationRegistry, byte personality) {
+        return new ArcadePacMan_GhostAnimations(spriteAnimationRegistry, personality);
     }
 
     @Override
-    public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimationManager spriteAnimationManager) {
-        return new ArcadePacMan_PacAnimations(spriteAnimationManager, spriteSheet());
+    public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimationRegistry spriteAnimationRegistry) {
+        return new ArcadePacMan_PacAnimations(spriteAnimationRegistry, spriteSheet());
     }
 
     @Override

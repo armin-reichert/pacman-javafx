@@ -82,13 +82,13 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
 
         pacMan = createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
+        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
 
-        stork = new Stork(ui.spriteAnimationManager());
-        flyingBag = new Bag(ui.spriteAnimationManager());
+        stork = new Stork(ui.spriteAnimationRegistry());
+        flyingBag = new Bag(ui.spriteAnimationRegistry());
 
         darkness = false;
 
@@ -126,7 +126,8 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                     stork.setPosition(RIGHT_BORDER, TS * 7);
                     stork.setVelocity(-0.8f, 0);
                     stork.setBagReleasedFromBeak(false);
-                    stork.playAnimation(Stork.AnimationID.FLYING);
+                    stork.selectAnimation(Stork.AnimationID.FLYING);
+                    stork.playAnimation();
                     stork.show();
                 }
                 case 240 -> {

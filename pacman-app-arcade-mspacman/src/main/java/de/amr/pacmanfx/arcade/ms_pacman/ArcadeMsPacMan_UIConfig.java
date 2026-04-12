@@ -27,7 +27,7 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.UfxImages;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -161,22 +161,22 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
         return actorRenderer;
     }
 
-    public Ghost createGhostWithAnimations(SpriteAnimationManager spriteAnimationManager, byte personality) {
+    public Ghost createGhostWithAnimations(SpriteAnimationRegistry spriteAnimationRegistry, byte personality) {
         final Ghost ghost = ArcadeMsPacMan_GameModel.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(spriteAnimationManager, personality));
+        ghost.setAnimations(createGhostAnimations(spriteAnimationRegistry, personality));
         ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public ArcadeMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationManager spriteAnimationManager, byte personality) {
+    public ArcadeMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationRegistry spriteAnimationRegistry, byte personality) {
         requireValidGhostPersonality(personality);
-        return new ArcadeMsPacMan_GhostAnimations(spriteAnimationManager, personality);
+        return new ArcadeMsPacMan_GhostAnimations(spriteAnimationRegistry, personality);
     }
 
     @Override
-    public ArcadeMsPacMan_PacAnimations createPacAnimations(SpriteAnimationManager spriteAnimationManager) {
-        return new ArcadeMsPacMan_PacAnimations(spriteAnimationManager);
+    public ArcadeMsPacMan_PacAnimations createPacAnimations(SpriteAnimationRegistry spriteAnimationRegistry) {
+        return new ArcadeMsPacMan_PacAnimations(spriteAnimationRegistry);
     }
 
     @Override

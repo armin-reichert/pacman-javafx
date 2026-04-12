@@ -20,7 +20,7 @@ import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -74,7 +74,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private final DirectoryWatchdog customDirWatchdog;
     private final UIConfigManager uiConfigManager = new UIConfigManager();
     private final ActionBindingsManager actionBindingsManager = new ActionBindingsManagerImpl();
-    private final SpriteAnimationManager spriteAnimationManager = new SpriteAnimationManager();
+    private final SpriteAnimationRegistry spriteAnimationRegistry = new SpriteAnimationRegistry();
     private final SoundManager soundManager = new SoundManager();
     private final VoiceManager voiceManager = new VoiceManager();
     private final GameContext gameContext;
@@ -367,7 +367,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         stage.centerOnScreen();
         stage.show();
         flashMessageView.start();
-        spriteAnimationManager.start();
+        spriteAnimationRegistry.startAnimationTimer();
         Platform.runLater(customDirWatchdog::startWatching);
     }
 
@@ -403,8 +403,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
-    public SpriteAnimationManager spriteAnimationManager() {
-        return spriteAnimationManager;
+    public SpriteAnimationRegistry spriteAnimationRegistry() {
+        return spriteAnimationRegistry;
     }
 
     @Override
@@ -427,6 +427,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     public void terminate() {
         Logger.info("Application is terminated now. There is no way back!");
         stopGame();
+        spriteAnimationRegistry.stopAnimationTimer();
+        spriteAnimationRegistry.clearAnimations();
         flashMessageView.stop();
         customDirWatchdog.dispose();
     }

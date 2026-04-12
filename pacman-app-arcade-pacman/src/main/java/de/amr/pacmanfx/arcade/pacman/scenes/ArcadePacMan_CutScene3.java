@@ -47,8 +47,8 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         final UIConfig uiConfig = ui.currentConfig();
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
-        blinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), RED_GHOST_SHADOW);
+        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
+        blinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationRegistry(), RED_GHOST_SHADOW);
 
         tick = -1;
     }
@@ -65,19 +65,22 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
             pacMan.setMoveDir(Direction.LEFT);
             pacMan.setSpeed(1.25f);
             pacMan.show();
-            pacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
+            pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+            pacMan.playAnimation();
             blinky.placeAtTile(35, 20);
             blinky.setMoveDir(Direction.LEFT);
             blinky.setWishDir(Direction.LEFT);
             blinky.setSpeed(1.25f);
             blinky.show();
-            blinky.playAnimation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_DRESS_PATCHED);
+            blinky.selectAnimation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_DRESS_PATCHED);
+            blinky.playAnimation();
         }
         else if (tick == ANIMATION_START_TICK + 400){
             blinky.placeAtTile(-1, 20);
             blinky.setMoveDir(Direction.RIGHT);
             blinky.setWishDir(Direction.RIGHT);
-            blinky.playAnimation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_NAKED);
+            blinky.selectAnimation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_NAKED);
+            blinky.playAnimation();
         }
         else if (tick == ANIMATION_START_TICK + 700) {
             game.control().state().expire();

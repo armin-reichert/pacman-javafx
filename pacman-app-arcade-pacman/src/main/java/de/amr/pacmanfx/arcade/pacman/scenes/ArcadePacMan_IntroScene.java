@@ -69,14 +69,14 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         blinking = new Pulse(10, Pulse.State.ON);
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
-        pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
+        //pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
 
         ghosts = List.of(
-            uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), RED_GHOST_SHADOW),
-            uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), PINK_GHOST_SPEEDY),
-            uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), CYAN_GHOST_BASHFUL),
-            uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), ORANGE_GHOST_POKEY)
+            uiConfig.createGhostWithAnimations(ui.spriteAnimationRegistry(), RED_GHOST_SHADOW),
+            uiConfig.createGhostWithAnimations(ui.spriteAnimationRegistry(), PINK_GHOST_SPEEDY),
+            uiConfig.createGhostWithAnimations(ui.spriteAnimationRegistry(), CYAN_GHOST_BASHFUL),
+            uiConfig.createGhostWithAnimations(ui.spriteAnimationRegistry(), ORANGE_GHOST_POKEY)
         );
 
         ghostImageVisible     = new boolean[4];
@@ -166,7 +166,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 scene.pacMan.setMoveDir(Direction.LEFT);
                 scene.pacMan.setSpeed(CHASING_SPEED);
                 scene.pacMan.show();
-                scene.pacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
+                scene.pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+                scene.pacMan.playAnimation();
                 scene.ghosts.forEach(ghost -> {
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setMoveDir(Direction.LEFT);
@@ -174,7 +175,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     ghost.setSpeed(CHASING_SPEED);
                     ghost.setPosition(scene.pacMan.x() + 16 * (ghost.personality() + 1), scene.pacMan.y());
                     ghost.show();
-                    ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
+                    ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+                    ghost.playAnimation();
                 });
             }
 
@@ -197,7 +199,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 }
                 else if (timer.tickCount() == 236) {
                     // Pac-Man moves again a bit
-                    scene.pacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
+                    scene.pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+                    scene.pacMan.playAnimation();
                     scene.pacMan.setSpeed(CHASING_SPEED);
                 }
                 else if (timer.tickCount() == 240) {
@@ -267,7 +270,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                         } else {
                             ghost.show();
                             ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
-                            ghost.playAnimation(Ghost.AnimationID.GHOST_FRIGHTENED);
+                            ghost.selectAnimation(Ghost.AnimationID.GHOST_FRIGHTENED);
+                            ghost.playAnimation();
                         }
                     });
                 }

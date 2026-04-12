@@ -7,7 +7,7 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
@@ -18,11 +18,11 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
-    private final SpriteAnimationManager manager;
+    private final SpriteAnimationRegistry manager;
 
-    public TengenMsPacMan_PacAnimations(SpriteAnimationManager spriteAnimationManager) {
+    public TengenMsPacMan_PacAnimations(SpriteAnimationRegistry spriteAnimationRegistry) {
         super(TengenMsPacMan_SpriteSheet.instance());
-        this.manager = requireNonNull(spriteAnimationManager);
+        this.manager = requireNonNull(spriteAnimationRegistry);
     }
 
     @Override

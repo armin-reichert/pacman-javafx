@@ -7,7 +7,7 @@ import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
@@ -21,10 +21,10 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
         BLINKY_NAKED
     }
 
-    private final SpriteAnimationManager manager;
+    private final SpriteAnimationRegistry manager;
     private final byte personality;
 
-    public ArcadePacMan_GhostAnimations(SpriteAnimationManager manager, byte personality) {
+    public ArcadePacMan_GhostAnimations(SpriteAnimationRegistry manager, byte personality) {
         super(ArcadePacMan_SpriteSheet.instance());
         this.manager = requireNonNull(manager);
         this.personality = requireValidGhostPersonality(personality);

@@ -69,14 +69,14 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         final UIConfig uiConfig = ui.currentConfig();
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
         msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
 
         ghosts = List.of(
-            uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), RED_GHOST_SHADOW),
-            uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), PINK_GHOST_SPEEDY),
-            uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), CYAN_GHOST_BASHFUL),
-            uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), ORANGE_GHOST_POKEY)
+            uiConfig.createGhostWithAnimations(ui.spriteAnimationRegistry(), RED_GHOST_SHADOW),
+            uiConfig.createGhostWithAnimations(ui.spriteAnimationRegistry(), PINK_GHOST_SPEEDY),
+            uiConfig.createGhostWithAnimations(ui.spriteAnimationRegistry(), CYAN_GHOST_BASHFUL),
+            uiConfig.createGhostWithAnimations(ui.spriteAnimationRegistry(), ORANGE_GHOST_POKEY)
         );
 
         presentedGhostPersonality = RED_GHOST_SHADOW;
@@ -112,7 +112,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.setMoveDir(Direction.LEFT);
                 scene.msPacMan.setSpeed(ACTOR_SPEED);
                 scene.msPacMan.setVisible(true);
-                scene.msPacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
+                scene.msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+                scene.msPacMan.playAnimation();
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33.5f, TS * 20);
                     ghost.setMoveDir(Direction.LEFT);
@@ -120,7 +121,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     ghost.setSpeed(ACTOR_SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setVisible(true);
-                    ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
+                    ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+                    ghost.playAnimation();
                 }
                 scene.presentedGhostPersonality = RED_GHOST_SHADOW;
             }

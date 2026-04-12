@@ -46,8 +46,8 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     public void doInit(Game game) {
         final UIConfig uiConfig = ui.currentConfig();
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
-        blinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationManager(), RED_GHOST_SHADOW);
+        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
+        blinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationRegistry(), RED_GHOST_SHADOW);
         tick = -1;
     }
 
@@ -60,14 +60,16 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             pacMan.placeAtTile(29, 20);
             pacMan.setMoveDir(Direction.LEFT);
             pacMan.setSpeed(1.25f);
-            pacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
+            pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+            pacMan.playAnimation();
             pacMan.show();
 
             blinky.placeAtTile(32, 20);
             blinky.setMoveDir(Direction.LEFT);
             blinky.setWishDir(Direction.LEFT);
             blinky.setSpeed(1.3f);
-            blinky.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
+            blinky.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+            blinky.playAnimation();
             blinky.show();
         }
         else if (tick == ANIMATION_START_TICK + 260) {
@@ -75,12 +77,14 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             blinky.setMoveDir(Direction.RIGHT);
             blinky.setWishDir(Direction.RIGHT);
             blinky.setSpeed(0.75f);
-            blinky.playAnimation(Ghost.AnimationID.GHOST_FRIGHTENED);
+            blinky.selectAnimation(Ghost.AnimationID.GHOST_FRIGHTENED);
+            blinky.playAnimation();
         }
         else if (tick == ANIMATION_START_TICK + 400) {
             pacMan.placeAtTile(-3, 18, 0, 6.5f);
             pacMan.setMoveDir(Direction.RIGHT);
-            pacMan.playAnimation(ArcadePacMan_PacAnimations.AnimationID.ANIM_BIG_PAC_MAN);
+            pacMan.selectAnimation(ArcadePacMan_PacAnimations.AnimationID.ANIM_BIG_PAC_MAN);
+            pacMan.playAnimation();
         }
         else if (tick == ANIMATION_START_TICK + 632) {
             game.control().state().expire();

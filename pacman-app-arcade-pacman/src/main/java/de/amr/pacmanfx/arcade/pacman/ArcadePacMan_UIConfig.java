@@ -29,12 +29,10 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.UfxImages;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -310,22 +308,22 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public Ghost createGhostWithAnimations(SpriteAnimationManager spriteAnimationManager, byte personality) {
+    public Ghost createGhostWithAnimations(SpriteAnimationRegistry spriteAnimationRegistry, byte personality) {
         final Ghost ghost = ArcadePacMan_GameModel.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(spriteAnimationManager, personality));
+        ghost.setAnimations(createGhostAnimations(spriteAnimationRegistry, personality));
         ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimationManager spriteAnimationManager, byte personality) {
+    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimationRegistry spriteAnimationRegistry, byte personality) {
         Validations.requireValidGhostPersonality(personality);
-        return new ArcadePacMan_GhostAnimations(spriteAnimationManager, personality);
+        return new ArcadePacMan_GhostAnimations(spriteAnimationRegistry, personality);
     }
 
     @Override
-    public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimationManager spriteAnimationManager) {
-        return new ArcadePacMan_PacAnimations(spriteAnimationManager, spriteSheet());
+    public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimationRegistry spriteAnimationRegistry) {
+        return new ArcadePacMan_PacAnimations(spriteAnimationRegistry, spriteSheet());
     }
 
     @Override

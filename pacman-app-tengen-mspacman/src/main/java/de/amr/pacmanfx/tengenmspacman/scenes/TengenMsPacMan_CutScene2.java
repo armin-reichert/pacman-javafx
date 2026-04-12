@@ -66,10 +66,10 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
 
         pacMan = createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
+        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
 
         ui.soundManager().play(SoundID.INTERMISSION_2);
     }
@@ -92,13 +92,15 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
                 case 270 -> {
                     msPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
                     msPacMan.setMoveDir(Direction.RIGHT);
-                    msPacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
+                    msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+                    msPacMan.playAnimation();
                     msPacMan.setSpeed(2.0f);
                     msPacMan.show();
                 }
                 case 320 -> {
                     pacMan.setMoveDir(Direction.RIGHT);
-                    pacMan.playAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
+                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
+                    pacMan.playAnimation();
                     pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.setSpeed(2.0f);

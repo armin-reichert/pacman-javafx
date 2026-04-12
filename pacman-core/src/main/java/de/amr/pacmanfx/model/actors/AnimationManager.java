@@ -18,7 +18,7 @@ public interface AnimationManager {
 
         @Override
         public String selectedAnimationID() {
-            return "";
+            return null;
         }
 
         @Override
@@ -26,20 +26,17 @@ public interface AnimationManager {
         }
 
         @Override
-        public void playSelectedAnimation() {
-        }
+        public void playSelectedAnimation() {}
 
         @Override
-        public void stopSelectedAnimation() {
-        }
+        public void stopSelectedAnimation() {}
 
         @Override
-        public void resetSelectedAnimation() {
-        }
+        public void resetSelectedAnimation() {}
 
         @Override
         public RectShort currentSprite() {
-            return null;
+            return RectShort.ZERO;
         }
 
         @Override
@@ -60,8 +57,6 @@ public interface AnimationManager {
     void setAnimationFrame(Object animationID, int frameIndex);
 
     default void selectAnimation(Object animationID) { setAnimationFrame(animationID, 0); }
-
-    default void playAnimation(Object animationID) { selectAnimation(animationID); playSelectedAnimation(); }
 
     void playSelectedAnimation();
 

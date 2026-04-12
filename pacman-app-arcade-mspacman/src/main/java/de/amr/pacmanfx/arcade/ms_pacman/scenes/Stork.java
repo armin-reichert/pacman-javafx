@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static java.util.Objects.requireNonNull;
@@ -19,11 +19,11 @@ public class Stork extends Actor {
 
     public static class StorkAnimations extends SpriteAnimationMap<SpriteID> {
 
-        private final SpriteAnimationManager manager;
+        private final SpriteAnimationRegistry manager;
 
-        public StorkAnimations(SpriteAnimationManager spriteAnimationManager) {
+        public StorkAnimations(SpriteAnimationRegistry spriteAnimationRegistry) {
             super(ArcadeMsPacMan_SpriteSheet.instance());
-            manager = requireNonNull(spriteAnimationManager);
+            manager = requireNonNull(spriteAnimationRegistry);
         }
 
         @Override
@@ -39,7 +39,7 @@ public class Stork extends Actor {
         }
     }
 
-    public Stork(SpriteAnimationManager spriteAnimationManager) {
-        setAnimations(new StorkAnimations(spriteAnimationManager));
+    public Stork(SpriteAnimationRegistry spriteAnimationRegistry) {
+        setAnimations(new StorkAnimations(spriteAnimationRegistry));
     }
 }

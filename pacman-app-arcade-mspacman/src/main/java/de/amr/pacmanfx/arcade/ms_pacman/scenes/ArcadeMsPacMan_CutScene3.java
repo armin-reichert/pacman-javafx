@@ -65,14 +65,14 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         final UIConfig uiConfig = ui.currentConfig();
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
+        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationManager()));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
 
-        stork = new Stork(ui.spriteAnimationManager());
+        stork = new Stork(ui.spriteAnimationRegistry());
 
-        bag = new Bag(ui.spriteAnimationManager());
+        bag = new Bag(ui.spriteAnimationRegistry());
         bag.setOpen(false);
 
         clapperboard = new Clapperboard("3", "JUNIOR");
@@ -131,7 +131,8 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         stork.setPosition(TS * 30, TS * 12);
         stork.setVelocity(-0.8f, 0);
         stork.show();
-        stork.playAnimation(Stork.AnimationID.FLYING);
+        stork.selectAnimation(Stork.AnimationID.FLYING);
+        stork.playAnimation();
 
         bag.setPosition(stork.x() - 14, stork.y() + 3);
         bag.setVelocity(stork.velocity());

@@ -12,9 +12,29 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
-public class SpriteAnimationManager extends AnimationTimer {
+public class SpriteAnimationRegistry {
 
+    private final AnimationTimer animationTimer;
     private final Set<SpriteAnimation> spriteAnimations = new HashSet<>();
+
+    public SpriteAnimationRegistry() {
+        animationTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                for (SpriteAnimation animation : spriteAnimations) {
+                    animation.update(now);
+                }
+            }
+        };
+    }
+
+    public void startAnimationTimer() {
+        animationTimer.start();
+    }
+
+    public void stopAnimationTimer() {
+        animationTimer.stop();
+    }
 
     public void registerAnimation(SpriteAnimation animation) {
         requireNonNull(animation);
@@ -25,12 +45,5 @@ public class SpriteAnimationManager extends AnimationTimer {
     public void clearAnimations() {
         spriteAnimations.clear();
         Logger.info("Sprite animation cache cleared");
-    }
-
-    @Override
-    public void handle(long now) {
-        for (SpriteAnimation animation : spriteAnimations) {
-            animation.update(now);
-        }
     }
 }
