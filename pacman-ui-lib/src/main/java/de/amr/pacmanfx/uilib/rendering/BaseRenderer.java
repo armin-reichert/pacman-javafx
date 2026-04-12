@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.rendering;
 
+import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.beans.property.DoubleProperty;
@@ -28,6 +29,13 @@ public class BaseRenderer implements Renderer {
     }
     public static Font arcadeFont() {
         return ARCADE_FONT.get();
+    }
+
+    public static RectShort spriteOrDefault(RectShort[] sprites, int index) {
+        if (0 <= index && index < sprites.length) {
+            return sprites[index];
+        }
+        return RectShort.NULL_RECTANGLE;
     }
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
