@@ -5,22 +5,24 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengenmspacman.scenes.Stork;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.bonusValueSpriteIndex;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID.*;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRendererMixin, ActorRenderer {
+
+    private record DirectedSprite(RectShort sprite, Direction dir) {}
 
     public TengenMsPacMan_ActorRenderer(Canvas canvas) {
         super(canvas);
@@ -37,10 +39,10 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         if (!actor.isVisible()) return;
 
         switch (actor) {
-            case Bonus bonus -> drawBonus(bonus);
-            case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
+            case Bonus bonus -> drawSpriteCentered(computeBonusSprite(bonus), bonus.center());
             case Ghost ghost -> drawSpriteCentered(computeGhostSprite(ghost), ghost.center());
             case Pac pac -> drawPac(pac);
+            case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Stork stork -> drawStork(stork);
             default -> drawSpriteCentered(actor.animations().currentSprite(), actor.center());
         }
@@ -63,70 +65,60 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private void drawPac(Pac pac) {
         final AnimationSet animations = pac.animations();
-        if (animations.isSelected(Pac.AnimationID.PAC_DYING)) {
-            if (animations instanceof SpriteAnimationMap<?> sam) {
-                drawPacDyingSpriteAnimation(pac, sam);
-            }
-            return;
-        }
         final int frame = animations.frameIndex();
-        RectShort sprite;
-        if (animations.isSelected(Pac.AnimationID.PAC_MUNCHING)) {
-            sprite = spriteSheet().sprites(SpriteID.MS_PAC_MUNCHING)[frame];
+        DirectedSprite sprite;
+        if (animations.isSelected(Pac.AnimationID.PAC_DYING) && animations instanceof SpriteAnimationMap<?> sam) {
+            sprite = new DirectedSprite(sam.currentSprite(), computePacDyingSpriteDir(pac));
+        }
+        else if (animations.isSelected(Pac.AnimationID.PAC_MUNCHING)) {
+            sprite = new DirectedSprite(spriteSheet().sprites(SpriteID.MS_PAC_MUNCHING)[frame], pac.moveDir());
         }
         else if (animations.isSelected(ANIM_MS_PAC_MAN_BOOSTER)) {
-            sprite = spriteSheet().sprites(SpriteID.MS_PAC_MUNCHING_BOOSTER)[frame];
+            sprite = new DirectedSprite(spriteSheet().sprites(SpriteID.MS_PAC_MUNCHING_BOOSTER)[frame], pac.moveDir());
         }
         else if (animations.isSelected(ANIM_MS_PAC_MAN_TURNING_AWAY)) {
-            sprite = spriteSheet().sprites(SpriteID.MS_PAC_TURNING_AWAY)[frame];
+            sprite = new DirectedSprite(spriteSheet().sprites(SpriteID.MS_PAC_TURNING_AWAY)[frame], pac.moveDir());
         }
         else if (animations.isSelected(ANIM_MS_PAC_MAN_WAVING_HAND)) {
-            sprite = spriteSheet().sprites(SpriteID.MS_PAC_WAVING_HAND)[frame];
+            sprite = new DirectedSprite(spriteSheet().sprites(SpriteID.MS_PAC_WAVING_HAND)[frame], pac.moveDir());
         }
         else if (animations.isSelected(ANIM_PAC_MAN_MUNCHING)) {
-            sprite = spriteSheet().sprites(SpriteID.MR_PAC_MUNCHING)[frame];
+            sprite = new DirectedSprite(spriteSheet().sprites(SpriteID.MR_PAC_MUNCHING)[frame], pac.moveDir());
         }
         else if (animations.isSelected(ANIM_PAC_MAN_TURNING_AWAY)) {
-            sprite = spriteSheet().sprites(SpriteID.MR_PAC_TURNING_AWAY)[frame];
+            sprite = new DirectedSprite(spriteSheet().sprites(SpriteID.MR_PAC_TURNING_AWAY)[frame], pac.moveDir());
         }
         else if (animations.isSelected(ANIM_PAC_MAN_WAVING_HAND)) {
-            sprite = spriteSheet().sprites(SpriteID.MR_PAC_WAVING_HAND)[frame];
+            sprite = new DirectedSprite(spriteSheet().sprites(SpriteID.MR_PAC_WAVING_HAND)[frame], pac.moveDir());
         }
         else {
-            sprite = animations.currentSprite();
+            sprite = new DirectedSprite(animations.currentSprite(), pac.moveDir());
         }
-        drawSpriteCenteredRotatedByDir(sprite, pac.center().scaled(scaling()), pac.moveDir());
+        drawSpriteCenteredRotatedByDir(sprite.sprite(), pac.center().scaled(scaling()), sprite.dir());
     }
 
-    // Simulates dying animation by providing the right direction for each animation frame
-    private void drawPacDyingSpriteAnimation(Pac pac, SpriteAnimationMap<?> sam) {
-        final Direction dir = switch (sam.frameIndex()) {
-            case 0, 4, 8  -> Direction.DOWN;
-            case 1, 5, 9  -> Direction.LEFT;
-            case 2, 6, 10 -> Direction.UP;
-            case 3, 7     -> Direction.RIGHT;
-            default       -> Direction.UP; // end position frame 11...
+    // Dying animation is realized by providing a sprite direction for each animation frame
+    private Direction computePacDyingSpriteDir(Pac pac) {
+        final var dyingAnimation = pac.animations().animation(Pac.AnimationID.PAC_DYING);
+        if (dyingAnimation instanceof SpriteAnimation spriteAnimation) {
+            return switch (spriteAnimation.currentFrameIndex()) {
+                case 0, 4, 8  -> Direction.DOWN;
+                case 1, 5, 9  -> Direction.LEFT;
+                case 2, 6, 10 -> Direction.UP;
+                case 3, 7     -> Direction.RIGHT;
+                default       -> Direction.UP; // end position frame 11...
+            };
+        }
+        throw new IllegalArgumentException("No sprite animation set for Pac-Man dying");
+    }
+
+    private RectShort computeBonusSprite(Bonus bonus) {
+        return switch (bonus.state()) {
+            case EDIBLE -> spriteSheet().sprites(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
+            // Note: sprite sheet has bonus values in wrong order!
+            case EATEN -> spriteSheet().sprites(SpriteID.BONUS_VALUES)[bonusValueSpriteIndex(bonus.symbol())];
+            case INACTIVE -> RectShort.ZERO;
         };
-        drawSpriteCenteredRotatedByDir(sam.currentSprite(), pac.center().scaled(scaling()), dir);
-    }
-
-    private void drawBonus(Bonus bonus) {
-        switch (bonus.state()) {
-            case EDIBLE -> {
-                final int index = bonus.symbol(); //TODO decouple
-                final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
-                // The Up-Down animation of the moving bonus changes the center of drawing
-                final Vector2f center = bonus.center();
-                drawSpriteCentered(sprites[index], center);
-            }
-            case EATEN  -> {
-                // Note: sprite sheet has bonus values in wrong order!
-                final int index = TengenMsPacMan_UIConfig.bonusValueSpriteIndex(bonus.symbol());
-                final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_VALUES);
-                drawSpriteCentered(sprites[index], bonus.center());
-            }
-            case INACTIVE -> {}
-        }
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
