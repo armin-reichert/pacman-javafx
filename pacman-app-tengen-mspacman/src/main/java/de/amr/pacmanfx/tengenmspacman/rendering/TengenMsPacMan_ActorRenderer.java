@@ -54,11 +54,11 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         final AnimationSet animations = ghost.animations();
         if (animations.isSelected(Ghost.AnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.wishDir());
-            return sprites[animations.currentFrame()];
+            return spriteOrDefault(sprites, animations.currentFrame());
         }
         if (animations.isSelected(Ghost.AnimationID.GHOST_EYES)) {
             final RectShort[] sprites = spriteSheet().ghostEyesSprites(ghost.wishDir());
-            return sprites[animations.currentFrame()];
+            return spriteOrDefault(sprites, animations.currentFrame());
         }
         else {
             return animations.currentSprite();
@@ -71,13 +71,13 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         
         return switch (animations.selectedAnimationID()) {
             case Pac.AnimationID.PAC_DYING    -> computePacDyingSprite(pac);
-            case Pac.AnimationID.PAC_MUNCHING -> new FacingSprite(spriteSheet().sprites(SpriteID.MS_PAC_MUNCHING)[currentFrame], pac.moveDir());
-            case ANIM_MS_PAC_MAN_BOOSTER      -> new FacingSprite(spriteSheet().sprites(SpriteID.MS_PAC_MUNCHING_BOOSTER)[currentFrame], pac.moveDir());
-            case ANIM_MS_PAC_MAN_TURNING_AWAY -> new FacingSprite(spriteSheet().sprites(SpriteID.MS_PAC_TURNING_AWAY)[currentFrame], pac.moveDir());
-            case ANIM_MS_PAC_MAN_WAVING_HAND  -> new FacingSprite(spriteSheet().sprites(SpriteID.MS_PAC_WAVING_HAND)[currentFrame], pac.moveDir());
-            case ANIM_MR_PAC_MAN_MUNCHING     -> new FacingSprite(spriteSheet().sprites(SpriteID.MR_PAC_MUNCHING)[currentFrame], pac.moveDir());
-            case ANIM_MR_PAC_MAN_TURNING_AWAY -> new FacingSprite(spriteSheet().sprites(SpriteID.MR_PAC_TURNING_AWAY)[currentFrame], pac.moveDir());
-            case ANIM_MR_PAC_MAN_WAVING_HAND  -> new FacingSprite(spriteSheet().sprites(SpriteID.MR_PAC_WAVING_HAND)[currentFrame], pac.moveDir());
+            case Pac.AnimationID.PAC_MUNCHING -> new FacingSprite(spriteOrDefault(spriteSheet().sprites(SpriteID.MS_PAC_MUNCHING)        , currentFrame), pac.moveDir());
+            case ANIM_MS_PAC_MAN_BOOSTER      -> new FacingSprite(spriteOrDefault(spriteSheet().sprites(SpriteID.MS_PAC_MUNCHING_BOOSTER), currentFrame), pac.moveDir());
+            case ANIM_MS_PAC_MAN_TURNING_AWAY -> new FacingSprite(spriteOrDefault(spriteSheet().sprites(SpriteID.MS_PAC_TURNING_AWAY)    , currentFrame), pac.moveDir());
+            case ANIM_MS_PAC_MAN_WAVING_HAND  -> new FacingSprite(spriteOrDefault(spriteSheet().sprites(SpriteID.MS_PAC_WAVING_HAND)     , currentFrame), pac.moveDir());
+            case ANIM_MR_PAC_MAN_MUNCHING     -> new FacingSprite(spriteOrDefault(spriteSheet().sprites(SpriteID.MR_PAC_MUNCHING)        , currentFrame), pac.moveDir());
+            case ANIM_MR_PAC_MAN_TURNING_AWAY -> new FacingSprite(spriteOrDefault(spriteSheet().sprites(SpriteID.MR_PAC_TURNING_AWAY)    , currentFrame), pac.moveDir());
+            case ANIM_MR_PAC_MAN_WAVING_HAND  -> new FacingSprite(spriteOrDefault(spriteSheet().sprites(SpriteID.MR_PAC_WAVING_HAND)     , currentFrame), pac.moveDir());
             default -> new FacingSprite(animations.currentSprite(), pac.moveDir());
         };
     }
@@ -101,9 +101,9 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private RectShort computeBonusSprite(Bonus bonus) {
         return switch (bonus.state()) {
-            case EDIBLE -> spriteSheet().sprites(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
+            case EDIBLE -> spriteOrDefault(spriteSheet().sprites(SpriteID.BONUS_SYMBOLS), bonus.symbol());
             // Note: sprite sheet has bonus values in wrong order!
-            case EATEN -> spriteSheet().sprites(SpriteID.BONUS_VALUES)[bonusValueSpriteIndex(bonus.symbol())];
+            case EATEN -> spriteOrDefault(spriteSheet().sprites(SpriteID.BONUS_VALUES), bonusValueSpriteIndex(bonus.symbol()));
             case INACTIVE -> RectShort.NULL_RECTANGLE;
         };
     }
