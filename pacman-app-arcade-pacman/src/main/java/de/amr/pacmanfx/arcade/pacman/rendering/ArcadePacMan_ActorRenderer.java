@@ -71,7 +71,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
         return switch (bonus.state()) {
             case EDIBLE   -> spriteSheet().sprites(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
             case EATEN    -> spriteSheet().sprites(SpriteID.BONUS_VALUES)[bonus.symbol()];
-            case INACTIVE -> RectShort.ZERO;
+            case INACTIVE -> RectShort.NULL_RECTANGLE;
         };
     }
 }

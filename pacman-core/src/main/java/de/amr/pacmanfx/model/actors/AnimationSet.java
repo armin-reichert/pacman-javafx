@@ -36,7 +36,7 @@ public interface AnimationSet {
 
         @Override
         public RectShort currentSprite() {
-            return RectShort.ZERO;
+            return RectShort.NULL_RECTANGLE;
         }
 
         @Override

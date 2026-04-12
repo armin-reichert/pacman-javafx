@@ -157,13 +157,13 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
             case BIG     -> spriteSheet().sprite(SpriteID.INFO_CATEGORY_BIG);
             case MINI    -> spriteSheet().sprite(SpriteID.INFO_CATEGORY_MINI);
             case STRANGE -> spriteSheet().sprite(SpriteID.INFO_CATEGORY_STRANGE);
-            case ARCADE  -> RectShort.ZERO;
+            case ARCADE  -> RectShort.NULL_RECTANGLE;
         };
         final RectShort difficultySprite = switch (difficulty) {
             case EASY   -> spriteSheet().sprite(SpriteID.INFO_DIFFICULTY_EASY);
             case HARD   -> spriteSheet().sprite(SpriteID.INFO_DIFFICULTY_HARD);
             case CRAZY  -> spriteSheet().sprite(SpriteID.INFO_DIFFICULTY_CRAZY);
-            case NORMAL -> RectShort.ZERO;
+            case NORMAL -> RectShort.NULL_RECTANGLE;
         };
         drawSpriteCentered(spriteSheet().sprite(SpriteID.INFO_FRAME), centerX, y);
         if (booster != PacBooster.OFF) {

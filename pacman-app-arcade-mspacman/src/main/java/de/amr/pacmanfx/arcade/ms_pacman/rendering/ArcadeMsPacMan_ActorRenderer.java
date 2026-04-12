@@ -5,7 +5,6 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -36,7 +35,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         switch (actor) {
             case Pac pac                   -> drawSpriteCentered(computePacSprite(pac), pac.center());
             case Ghost ghost               -> drawSpriteCentered(computeGhostSprite(ghost), ghost.center());
-            case Bonus bonus               -> drawBonus(bonus);
+            case Bonus bonus               -> drawSpriteCentered(computeBonusSprite(bonus), bonus.center());
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             default                        -> drawSpriteCentered(actor.animations().currentSprite(), actor.center());
         }
@@ -89,20 +88,12 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         }
     }
 
-    private void drawBonus(Bonus bonus) {
-        switch (bonus.state()) {
-            case EDIBLE -> {
-                final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
-                final Vector2f center = bonus.center();
-                final int index = bonus.symbol(); // TODO decouple
-                drawSpriteCentered(sprites[index], center);
-            }
-            case EATEN -> {
-                final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_VALUES);
-                final int index = bonus.symbol(); // TODO decouple
-                drawSpriteCentered(sprites[index], bonus.center());
-            }
-            case INACTIVE -> {}
-        }
+    // TODO decouple symbol code from sprite index
+    private RectShort computeBonusSprite(Bonus bonus) {
+        return switch (bonus.state()) {
+            case EDIBLE -> spriteSheet().sprites(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
+            case EATEN ->  spriteSheet().sprites(SpriteID.BONUS_VALUES)[bonus.symbol()];
+            case INACTIVE -> RectShort.NULL_RECTANGLE;
+        };
     }
 }

@@ -16,7 +16,7 @@ import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
 public record RectShort(short x, short y, short width, short height) {
 
     /** Sprite Zero, no sugar! */
-    public static RectShort ZERO = RectShort.of(0, 0, 0, 0);
+    public static RectShort NULL_RECTANGLE = RectShort.of(0, 0, 0, 0);
 
     private static short checkNonNegativeShort(int value, String messageFormat) {
         if (value < 0 || value > Short.MAX_VALUE) {
