@@ -118,7 +118,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private void enterStateDeliverJunior() {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(TS * 3, LANE_Y - 4);
-        pacMan.selectAnimation(ArcadeMsPacMan_PacAnimations.AnimationID.PAC_MAN_MUNCHING);
+        pacMan.selectAnimation(ArcadeMsPacMan_PacAnimations.AnimationID.MR_PAC_MAN_MUNCHING);
         pacMan.stopAnimation();
         pacMan.show();
 

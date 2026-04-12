@@ -45,8 +45,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     private RectShort computeGhostSprite(Ghost ghost) {
         final AnimationSet animations = ghost.animations();
         if (animations.isSelected(Ghost.AnimationID.GHOST_NORMAL)) {
-            final RectShort[] sprites = spriteSheet().ghostNormalSprites(
-                ghost.personality(), ghost.wishDir());
+            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.wishDir());
             return sprites[animations.currentFrame()];
         }
         else if (animations.isSelected(Ghost.AnimationID.GHOST_EYES)) {
@@ -64,7 +63,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.moveDir());
             return sprites[animations.currentFrame()];
         }
-        else if (animations.isSelected(ArcadeMsPacMan_PacAnimations.AnimationID.PAC_MAN_MUNCHING)) {
+        else if (animations.isSelected(ArcadeMsPacMan_PacAnimations.AnimationID.MR_PAC_MAN_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().mrPacManMunchingSprites(pac.moveDir());
             return sprites[animations.currentFrame()];
         }

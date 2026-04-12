@@ -14,7 +14,7 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
-    public enum AnimationID { PAC_MAN_MUNCHING }
+    public enum AnimationID {MR_PAC_MAN_MUNCHING}
 
     private final SpriteAnimationRegistry manager;
     
@@ -40,7 +40,7 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
                 .frameTicks(8)
                 .build();
 
-            case AnimationID.PAC_MAN_MUNCHING -> SpriteAnimationBuilder.builder(manager)
+            case AnimationID.MR_PAC_MAN_MUNCHING -> SpriteAnimationBuilder.builder(manager)
                 .sprites(spriteSheet.sprites(SpriteID.MR_PACMAN_MUNCHING_LEFT))
                 .frameTicks(2)
                 .repeated()
