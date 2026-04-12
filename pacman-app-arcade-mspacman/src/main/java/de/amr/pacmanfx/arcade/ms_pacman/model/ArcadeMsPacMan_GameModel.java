@@ -313,10 +313,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         if (terrain.horizontalPortals().isEmpty()) {
             final Vector2i bonusTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.setPosition(halfTileRightOf(bonusTile));
-            bonus.setEdibleSeconds(randomFloat(9, 10));
+            bonus.showEdibleForSeconds(randomFloat(9, 10));
         } else {
             computeBonusRoute(bonus, terrain, house);
-            bonus.setEdibleAndStartJumpingAtSpeed(level.game().bonusSpeed(level));
+            bonus.showEdibleAndStartWandering(level.game().bonusSpeed(level));
         }
 
         level.setBonus(bonus);

@@ -338,7 +338,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected void eatBonus(GameLevel level, Bonus bonus) {
         scorePoints(level, bonus.points());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-        bonus.setEatenSeconds(BONUS_EATEN_SECONDS);
+        bonus.showEatenForSeconds(BONUS_EATEN_SECONDS);
         publishGameEvent(new BonusEatenEvent(this, bonus));
     }
 

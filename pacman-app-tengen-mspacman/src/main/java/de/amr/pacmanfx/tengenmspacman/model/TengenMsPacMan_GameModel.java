@@ -669,7 +669,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final byte symbol = level.bonusSymbol(level.currentBonusIndex());
         final Bonus bonus = new Bonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         bonus.initRoute(route, leftToRight);
-        bonus.setEdibleAndStartJumpingAtSpeed(level.game().bonusSpeed(level));
+        bonus.showEdibleAndStartWandering(level.game().bonusSpeed(level));
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
@@ -716,7 +716,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     protected void eatBonus(GameLevel level, Bonus bonus) {
         scorePoints(level, bonus.points());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-        bonus.setEatenSeconds(BONUS_EATEN_SECONDS);
+        bonus.showEatenForSeconds(BONUS_EATEN_SECONDS);
         publishGameEvent(new BonusEatenEvent(this, bonus));
     }
 
