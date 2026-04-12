@@ -121,6 +121,24 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     // public
 
+    public RectShort[] msPacManMunchingSprites(Direction dir) {
+        return switch (dir) {
+            case RIGHT -> sprites(SpriteID.MS_PACMAN_MUNCHING_RIGHT);
+            case LEFT  -> sprites(SpriteID.MS_PACMAN_MUNCHING_LEFT);
+            case UP    -> sprites(SpriteID.MS_PACMAN_MUNCHING_UP);
+            case DOWN  -> sprites(SpriteID.MS_PACMAN_MUNCHING_DOWN);
+        };
+    }
+
+    public RectShort[] mrPacManMunchingSprites(Direction dir) {
+        return sprites(switch (dir) {
+            case RIGHT -> SpriteID.MR_PACMAN_MUNCHING_RIGHT;
+            case LEFT  -> SpriteID.MR_PACMAN_MUNCHING_LEFT;
+            case UP    -> SpriteID.MR_PACMAN_MUNCHING_UP;
+            case DOWN  -> SpriteID.MR_PACMAN_MUNCHING_DOWN;
+        });
+    }
+
     public RectShort[] ghostNormalSprites(byte personality, Direction dir) {
         return sprites(switch (personality) {
             case RED_GHOST_SHADOW -> switch (dir) {
