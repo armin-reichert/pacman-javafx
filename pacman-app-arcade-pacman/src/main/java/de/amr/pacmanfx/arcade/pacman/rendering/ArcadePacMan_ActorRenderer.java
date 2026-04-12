@@ -28,12 +28,16 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     public void drawActor(Actor actor) {
         requireNonNull(actor);
         if (!actor.isVisible()) return;
-        switch (actor) {
-            case Pac pac     -> drawSpriteCentered(computePacSprite(pac), pac.center());
-            case Ghost ghost -> drawSpriteCentered(computeGhostSprite(ghost), ghost.center());
-            case Bonus bonus -> drawBonus(bonus);
-            default          -> drawSpriteCentered(actor.animations().currentSprite(), actor.center());
-        }
+        drawSpriteCentered(computeSprite(actor), actor.center());
+    }
+
+    private RectShort computeSprite(Actor actor) {
+        return switch (actor) {
+            case Pac pac -> computePacSprite(pac);
+            case Ghost ghost -> computeGhostSprite(ghost);
+            case Bonus bonus -> computeBonusSprite(bonus);
+            default -> actor.animations().currentSprite();
+        };
     }
 
     private RectShort computePacSprite(Pac pac) {
@@ -62,19 +66,12 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
         }
     }
 
-    private void drawBonus(Bonus bonus) {
-        switch (bonus.state()) {
-            case EDIBLE -> {
-                //TODO: decouple symbol code from index in sprite array
-                final int index = bonus.symbol();
-                drawSpriteCentered(spriteSheet().sprites(SpriteID.BONUS_SYMBOLS)[index], bonus.center());
-            }
-            case EATEN -> {
-                //TODO: decouple symbol code from index in sprite array
-                final int index = bonus.symbol();
-                drawSpriteCentered(spriteSheet().sprites(SpriteID.BONUS_VALUES)[index], bonus.center());
-            }
-            case INACTIVE -> {}
-        }
+    private RectShort computeBonusSprite(Bonus bonus) {
+        //TODO: decouple symbol code from index in sprite array
+        return switch (bonus.state()) {
+            case EDIBLE   -> spriteSheet().sprites(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
+            case EATEN    -> spriteSheet().sprites(SpriteID.BONUS_VALUES)[bonus.symbol()];
+            case INACTIVE -> RectShort.ZERO;
+        };
     }
 }
