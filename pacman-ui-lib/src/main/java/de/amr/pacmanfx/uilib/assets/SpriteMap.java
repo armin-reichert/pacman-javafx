@@ -19,14 +19,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class SpriteMap<SID extends Enum<SID>> {
 
-    sealed interface SpriteData permits SingleSprite, SpriteSequence {}
-
-    record SingleSprite(RectShort rect) implements SpriteData {}
-
-    record SpriteSequence(RectShort[] sequence) implements SpriteData {}
-
     private final Class<SID> idEnumClass;
-    private final EnumMap<SID, SpriteData> spriteDataByID;
+    private final EnumMap<SID, Object> spriteDataByID;
 
     public SpriteMap(Class<SID> idEnumClass) {
         this.idEnumClass = requireNonNull(idEnumClass);
@@ -37,9 +31,9 @@ public class SpriteMap<SID extends Enum<SID>> {
         return spriteDataByID.isEmpty();
     }
 
-    private SpriteData get(SID id) {
+    private Object get(SID id) {
         requireNonNull(id);
-        SpriteData value = spriteDataByID.get(id);
+        Object value = spriteDataByID.get(id);
         if (value == null) {
             throw new IllegalArgumentException("Sprite value is null for id '%s'".formatted(id));
         }
@@ -47,27 +41,27 @@ public class SpriteMap<SID extends Enum<SID>> {
     }
 
     public final RectShort sprite(SID id) {
-        SpriteData value = get(id);
-        return switch (value) {
-            case SingleSprite(RectShort sprite) -> sprite;
-            case SpriteSequence ignored -> throw new IllegalArgumentException("Sprite ID '%s' does not reference a sprite".formatted(id));
-        };
+        Object value = get(id);
+        if (!(value instanceof RectShort))    {
+            throw new IllegalArgumentException("Sprite ID '%s' does not reference a sprite".formatted(id));
+        }
+        return (RectShort) value;
     }
 
     public final RectShort[] spriteSequence(SID id) {
-        SpriteData value = get(id);
-        return switch (value) {
-            case SingleSprite ignored -> throw new IllegalArgumentException("Sprite ID '%s' does not reference a sprite sequence".formatted(id));
-            case SpriteSequence spriteSequence -> spriteSequence.sequence;
-        };
+        Object value = get(id);
+        if (!(value instanceof RectShort[])) {
+            throw new IllegalArgumentException("Sprite ID '%s' does not reference a sprite sequence".formatted(id));
+        }
+        return (RectShort[]) value;
     }
 
     public final void add(SID id, RectShort... sprites) {
         requireNonNull(sprites, "Sprite list is null! WTF?");
         if (sprites.length == 1) {
-            spriteDataByID.put(id, new SingleSprite(sprites[0]));
+            spriteDataByID.put(id, sprites[0]);
         } else {
-            spriteDataByID.put(id, new SpriteSequence(sprites));
+            spriteDataByID.put(id, sprites.clone());
         }
     }
 
