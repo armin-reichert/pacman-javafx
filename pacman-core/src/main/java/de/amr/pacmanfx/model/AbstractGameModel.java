@@ -42,7 +42,7 @@ import static java.util.Objects.requireNonNull;
  * <p>The model is deterministic and tick-driven: each call to {@link #doHuntingStep(GameLevel)} advances the
  * simulation by one frame.</p>
  */
-public abstract class AbstractGameModel implements Game, Cheating {
+public abstract class AbstractGameModel implements Game, GameCheats {
 
     /** Default collision strategy used by the original arcade games. */
     public static final CollisionStrategy DEFAULT_COLLISION_STRATEGY = CollisionStrategy.SAME_TILE;
@@ -199,7 +199,7 @@ public abstract class AbstractGameModel implements Game, Cheating {
      * ---------------------------------------------------------------------- */
 
     @Override
-    public Cheating cheating() {
+    public GameCheats cheating() {
         return this;
     }
 

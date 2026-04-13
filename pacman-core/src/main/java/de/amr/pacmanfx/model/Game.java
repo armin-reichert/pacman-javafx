@@ -256,5 +256,5 @@ public interface Game {
     /** @return the number of the last cut scene shown */
     int lastCutSceneNumber();
 
-    Cheating cheating();
+    GameCheats cheating();
 }

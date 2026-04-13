@@ -6,7 +6,7 @@ package de.amr.pacmanfx.model;
 
 import javafx.beans.property.BooleanProperty;
 
-public interface Cheating {
+public interface GameCheats {
 
     /** @return property indicating whether a cheat has been used */
     BooleanProperty cheatUsedProperty();
