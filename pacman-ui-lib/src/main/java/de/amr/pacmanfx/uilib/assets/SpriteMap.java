@@ -64,7 +64,8 @@ public class SpriteMap<SID extends Enum<SID>> {
             throw new IllegalArgumentException("Sprite list is null! WTF?");
         }
         for (int i = 0; i < sprites.length; ++i) {
-            requireNonNull(sprites, "Sprite list contains null value at index %d! WTF?".formatted(i));
+            requireNonNull(sprites[i], "Sprite list for ID '%s' contains null value at index %d! WTF?"
+                .formatted(id, i));
         }
         if (sprites.length == 1) {
             map.put(id, sprites[0]);
