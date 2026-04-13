@@ -15,6 +15,8 @@ import static java.util.Objects.requireNonNull;
  */
 public interface SpriteRendererMixin extends Renderer {
 
+    record FacingSprite(RectShort sprite, Direction facingDirection) {}
+
     SpriteSheet<?> spriteSheet();
 
     /**
@@ -23,7 +25,7 @@ public interface SpriteRendererMixin extends Renderer {
      * @param sprite      the sprite to draw
      * @param x           x-coordinate of left-upper corner
      * @param y           y-coordinate of left-upper corner
-     * @param scaled      tells is the destination rectangle's position and size is scaled using the current scaling value
+     * @param scaled      tells is the destination rectangle's position and size will be scaled using the current scaling value
      */
     default void drawSprite(RectShort sprite, double x, double y, boolean scaled) {
         requireNonNull(sprite);
@@ -37,48 +39,23 @@ public interface SpriteRendererMixin extends Renderer {
     }
 
     /**
-     * Draws the sprite centered over the given position. The target position is scaled using the current scaling value.
+     * Draws the sprite centered over the given position. The target position will be scaled using the current scaling value.
      *
      * @param sprite the actor sprite
-     * @param centerX x-position over which sprite gets drawn
-     * @param centerY y-position over which sprite gets drawn
+     * @param unscaledX unscaled x-position over which sprite gets drawn
+     * @param unscaledY unscaled y-position over which sprite gets drawn
      */
-    default void drawSpriteCentered(RectShort sprite, double centerX, double centerY) {
-        drawSprite(sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height(), true);
+    default void drawSpriteCentered(RectShort sprite, double unscaledX, double unscaledY) {
+        drawSprite(sprite, unscaledX - 0.5 * sprite.width(), unscaledY - 0.5 * sprite.height(), true);
     }
 
     /**
-     * Draws the sprite centered over the given position. The target position is scaled using the current scaling value.
+     * Draws the sprite centered over the given position. The target position will be scaled using the current scaling value.
      *
      * @param sprite the actor sprite
-     * @param center position over which sprite gets drawn
+     * @param centerUnscaled position over which sprite gets drawn
      */
-    default void drawSpriteCentered(RectShort sprite, Vector2f center) {
-        drawSpriteCentered(sprite, center.x(), center.y());
-    }
-
-    /**
-     * Draws the sprite centered and rotated towards the given direction over the given (already scaled) position.
-     * It is assumed that the sprite is pointing to the left in its default orientation (rotation = 0).
-     *
-     * @param sprite the actor sprite
-     * @param center position over which sprite gets drawn
-     * @param dir the direction the sprite is facing
-     */
-    default void drawSpriteCenteredFacingAt(RectShort sprite, Vector2f center, Direction dir) {
-        requireNonNull(sprite);
-        ctx().save();
-        ctx().translate(center.x(), center.y());
-        switch (dir) {
-            case LEFT  -> {}
-            case UP    -> ctx().rotate(90);
-            case RIGHT -> ctx().scale(-1, 1);
-            case DOWN  -> {
-                ctx().scale(-1, 1);
-                ctx().rotate(-90);
-            }
-        }
-        drawSpriteCentered(sprite, 0, 0);
-        ctx().restore();
+    default void drawSpriteCentered(RectShort sprite, Vector2f centerUnscaled) {
+        drawSpriteCentered(sprite, centerUnscaled.x(), centerUnscaled.y());
     }
 }
