@@ -118,7 +118,6 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         return spriteMap.spriteSequence(id);
     }
 
-
     // public
 
     public RectShort[] msPacManMunchingSprites(Direction dir) {

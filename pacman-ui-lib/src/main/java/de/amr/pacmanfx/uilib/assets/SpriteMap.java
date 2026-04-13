@@ -57,7 +57,9 @@ public class SpriteMap<SID extends Enum<SID>> {
     }
 
     public final void add(SID id, RectShort... sprites) {
-        requireNonNull(sprites, "Sprite list is null! WTF?");
+        if (sprites.length == 0) {
+            throw new IllegalArgumentException("Sprite list is null! WTF?");
+        }
         if (sprites.length == 1) {
             spriteDataByID.put(id, sprites[0]);
         } else {
