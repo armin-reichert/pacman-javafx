@@ -60,9 +60,6 @@ public abstract class AbstractGameModel implements Game, Cheating {
     private final IntegerProperty lifeCount = new SimpleIntegerProperty(0);
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
 
-    /** The game control (state machine) driving this model. */
-    protected GameControl gameControl;
-
     /** Per-tick simulation state (collisions, kills, events). */
     protected final SimulationStep simStep = new SimulationStep();
 
@@ -224,11 +221,6 @@ public abstract class AbstractGameModel implements Game, Cheating {
     /* -------------------------------------------------------------------------
      * Game interface implementation
      * ---------------------------------------------------------------------- */
-
-    @Override
-    public final GameControl control() {
-        return gameControl;
-    }
 
     @Override
     public SimulationStep simulationStep() {

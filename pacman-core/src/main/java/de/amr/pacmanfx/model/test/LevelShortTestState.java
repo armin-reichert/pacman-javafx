@@ -72,7 +72,7 @@ public class LevelShortTestState extends AbstractState<Game> implements TestStat
             if (level.number() == lastTestedLevelNumber) {
                 coinMechanism.setNumCoins(0);
                 game.init();
-                game.control().restartStateWithName(GameControl.CommonGameState.BOOT.name());
+                game.gameControl().restartStateWithName(GameControl.CommonGameState.BOOT.name());
             } else {
                 lock();
                 game.startNextLevel();

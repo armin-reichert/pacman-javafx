@@ -148,7 +148,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             }
         }
 
-        final long tick = game.control().state().timer().tickCount();
+        final long tick = game.gameControl().state().timer().tickCount();
         if (tick <= TICK_EXPIRES) {
             final short eventTick = (short) tick;
             switch (eventTick) {
@@ -231,7 +231,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                     msPacMan.hide();
                     heart.hide();
                 }
-                case 775 -> game.control().state().expire();
+                case 775 -> game.gameControl().state().expire();
             }
         }
     }

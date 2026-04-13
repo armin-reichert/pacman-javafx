@@ -166,7 +166,7 @@ public class GameSoundEffects {
         if (!soundManager.isEnabled()) {
             return;
         }
-        if (level.game().control().state().nameMatches(HUNTING.name())) {
+        if (level.game().gameControl().state().nameMatches(HUNTING.name())) {
             playSiren(level);
             playGhostSounds(level.pac(), level.ghosts());
         }

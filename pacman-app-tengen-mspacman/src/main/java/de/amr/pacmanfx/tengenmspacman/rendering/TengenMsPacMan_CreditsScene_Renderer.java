@@ -37,7 +37,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
         drawHorizontalBar(nesColor(0x20), nesColor(0x13), scene.unscaledSize().x(), TS, 212);
         ctx.setFont(arcadeFont8());
         y = 7 * TS; // important: reset on every draw!
-        if (scene.gameContext().game().control().state().timer().betweenSeconds(0, 0.5 * DISPLAY_SECONDS)) {
+        if (scene.gameContext().game().gameControl().state().timer().betweenSeconds(0, 0.5 * DISPLAY_SECONDS)) {
             drawOriginalCreditsText();
         } else {
             final var creditsScene = (TengenMsPacMan_CreditsScene) scene;

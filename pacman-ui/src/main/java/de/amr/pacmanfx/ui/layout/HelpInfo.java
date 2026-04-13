@@ -26,7 +26,7 @@ public class HelpInfo {
 
     public static HelpInfo build(GameUI ui) {
         final Game game = ui.gameContext().game();
-        final State<Game> state = game.control().state();
+        final State<Game> state = game.gameControl().state();
         final boolean demoLevel = game.isDemoLevelRunning();
 
         final HelpInfo helpInfo = new HelpInfo(ui);

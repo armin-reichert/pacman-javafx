@@ -47,7 +47,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer
         public void draw(GameScene2D scene) {
             final Game game = scene.gameContext().game();
             final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
-            final State<Game> gameState = game.control().state();
+            final State<Game> gameState = game.gameControl().state();
 
             drawTileGrid(CANVAS_WIDTH_UNSCALED, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);
 

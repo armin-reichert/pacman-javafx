@@ -155,7 +155,7 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
      */
     @Override
     public void update(GameLevel level) {
-        final GameControl gameControl = level.game().control();
+        final GameControl gameControl = level.game().gameControl();
         final boolean oneMore = gameControl.state().nameMatches(GameControl.CommonGameState.STARTING_GAME_OR_LEVEL.name())
             && !level.pac().isVisible();
         final boolean visible = level.game().canStartNewGame();

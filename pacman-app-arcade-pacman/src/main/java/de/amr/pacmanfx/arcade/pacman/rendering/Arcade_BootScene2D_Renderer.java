@@ -52,7 +52,7 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
     @Override
     public void draw(GameScene2D scene) {
         final Arcade_BootScene2D bootScene = (Arcade_BootScene2D) scene;
-        final long tick = scene.gameContext().game().control().state().timer().tickCount();
+        final long tick = scene.gameContext().game().gameControl().state().timer().tickCount();
         switch (bootScene.state()) {
             case BLANK -> clearCanvas();
             case HEX_CODES -> {

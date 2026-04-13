@@ -226,6 +226,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         0x00, 0x18, 0x20                                // levels 17, 18, then 19+
     };
 
+    private final GameControl gameControl;
     private final TengenMsPacMan_HeadsUpDisplay hud;
     private final TengenMsPacMan_MapSelector mapSelector;
     private final TengenMsPacMan_LevelCounter levelCounter;
@@ -263,6 +264,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             && mapCategory == DEFAULT_MAP_CATEGORY
             && startLevelNumber == DEFAULT_START_LEVEL
             && numContinues == DEFAULT_NUM_CONTINUES;
+    }
+
+    @Override
+    public GameControl gameControl() {
+        return gameControl;
     }
 
     @Override
@@ -413,7 +419,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
         else if (tick == TICK_NEW_GAME_START_HUNTING) {
             setPlaying(true);
-            control().enterState(HUNTING);
+            gameControl().enterState(HUNTING);
         }
     }
 
@@ -424,7 +430,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             level.showPacAndGhosts();
             publishGameEvent(new GameContinuedEvent(this));
         } else if (tick == TICK_RESUME_HUNTING) {
-            control().enterState(HUNTING);
+            gameControl().enterState(HUNTING);
         }
     }
 
@@ -466,7 +472,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             level.showPacAndGhosts();
         }
         else if (tick == TICK_DEMO_LEVEL_START_HUNTING) {
-            control().enterState(TengenMsPacMan_GameState.HUNTING);
+            gameControl().enterState(TengenMsPacMan_GameState.HUNTING);
         }
     }
 

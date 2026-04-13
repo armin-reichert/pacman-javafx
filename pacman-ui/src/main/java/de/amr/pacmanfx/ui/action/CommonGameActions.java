@@ -57,7 +57,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("LET_GAME_STATE_EXPIRE") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().game().control().state().expire();
+            ui.gameContext().game().gameControl().state().expire();
         }
     };
 
@@ -107,11 +107,11 @@ public final class CommonGameActions {
         public void execute(GameUI ui) {
             ui.stopGame();
             final Game game = ui.gameContext().game();
-            boolean isLevelShortTest = game.control().state() instanceof LevelShortTestState;
+            boolean isLevelShortTest = game.gameControl().state() instanceof LevelShortTestState;
             if (isLevelShortTest) {
-                game.control().state().onExit(game); //TODO exit other states too?
+                game.gameControl().state().onExit(game); //TODO exit other states too?
             }
-            game.control().restartStateWithName(CommonGameState.INTRO.name());
+            game.gameControl().restartStateWithName(CommonGameState.INTRO.name());
             ui.gameContext().clock().start();
         }
     };
@@ -328,13 +328,13 @@ public final class CommonGameActions {
         }
 
         private boolean isTestModeRunning(Game game) {
-            return game.control().state().nameMatches(
+            return game.gameControl().state().nameMatches(
                 LevelShortTestState.class.getSimpleName(),
                 LevelMediumTestState.class.getSimpleName());
         }
 
         private boolean canSwitchSceneNow(Game game) {
-            return game.control().state().nameMatches(CommonGameState.HUNTING.name());
+            return game.gameControl().state().nameMatches(CommonGameState.HUNTING.name());
         }
     };
 }

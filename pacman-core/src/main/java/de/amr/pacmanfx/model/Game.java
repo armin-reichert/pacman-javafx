@@ -9,7 +9,6 @@ import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 
 import java.util.Optional;
@@ -47,7 +46,7 @@ public interface Game {
      *
      * @return the {@link GameControl} instance for this game
      */
-    GameControl control();
+    GameControl gameControl();
 
     /**
      * Returns the simulation step information for the current frame.

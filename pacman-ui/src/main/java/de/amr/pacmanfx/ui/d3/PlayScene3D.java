@@ -289,7 +289,7 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     @Override
     public void onLevelStarted(LevelStartedEvent event) {
         final GameLevel level = event.level();
-        final State<Game> state = level.game().control().state();
+        final State<Game> state = level.game().gameControl().state();
         if (state instanceof TestState) {
             replaceGameLevel3D(level);
             level3D.entities().all(Energizer3D.class).forEach(Energizer3D::startPumping);

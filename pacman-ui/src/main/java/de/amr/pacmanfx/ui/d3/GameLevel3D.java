@@ -501,7 +501,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     public void onGameStarts(GameStartedEvent event) {
         final Game game = event.game();
-        final State<Game> state = game.control().state();
+        final State<Game> state = game.gameControl().state();
         final boolean silent = game.isDemoLevelRunning() || state instanceof TestState;
         if (!silent) {
             soundEffects().ifPresent(GameSoundEffects::playGameReadySound);
@@ -618,7 +618,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void onLevelComplete() {
-        final State<Game> gameState = level.game().control().state();
+        final State<Game> gameState = level.game().gameControl().state();
         final Maze3D maze3D = entities3D.unique(Maze3D.class);
 
         soundEffects().ifPresent(GameSoundEffects::stopAll);

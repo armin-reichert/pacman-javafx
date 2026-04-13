@@ -220,7 +220,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private void simulate(Game game) {
         final SimulationStep simulationStep = game.simulationStep();
         simulationStep.init(gameContext.clock().tickCount());
-        game.control().stateMachine().update();
+        game.gameControl().stateMachine().update();
         simulationStep.printLog();
     }
 
@@ -335,7 +335,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         final Game game = gameContext.game();
         //TODO this is game-specific and should not be here
         optGameScene().ifPresent(gameScene -> {
-            boolean shouldConsumeCoin = game.control().state().name().equals("STARTING_GAME_OR_LEVEL")
+            boolean shouldConsumeCoin = game.gameControl().state().name().equals("STARTING_GAME_OR_LEVEL")
                 || game.isPlaying();
             if (shouldConsumeCoin && !gameContext.coinMechanism().isEmpty()) {
                 gameContext.coinMechanism().consumeCoin();
@@ -344,14 +344,14 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         });
 
         stopGame();
-        game.control().restartStateWithName(GameControl.CommonGameState.BOOT.name());
+        game.gameControl().restartStateWithName(GameControl.CommonGameState.BOOT.name());
         showStartView();
     }
 
     @Override
     public void restart() {
         stopGame();
-        gameContext.game().control().restartStateWithName(GameControl.CommonGameState.BOOT.name());
+        gameContext.game().gameControl().restartStateWithName(GameControl.CommonGameState.BOOT.name());
         Platform.runLater(gameContext.clock()::start);
     }
 

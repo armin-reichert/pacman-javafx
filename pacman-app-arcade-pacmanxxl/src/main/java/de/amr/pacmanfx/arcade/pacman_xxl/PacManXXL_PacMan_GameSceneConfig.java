@@ -36,7 +36,7 @@ class PacManXXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
     @Override
     protected SceneID determineSceneID(Game game) {
-        return switch (game.control().state()) {
+        return switch (game.gameControl().state()) {
             case Arcade_GameState.BOOT -> CommonSceneID.BOOT_SCENE;
             case Arcade_GameState.SETTING_OPTIONS_FOR_START -> CommonSceneID.START_SCENE;
             case Arcade_GameState.INTRO -> CommonSceneID.INTRO_SCENE;

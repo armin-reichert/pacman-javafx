@@ -210,7 +210,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void onGameStarted(GameStartedEvent e) {
         final Game game = e.game();
-        final boolean silent = game.isDemoLevelRunning() || game.control().state() instanceof TestState;
+        final boolean silent = game.isDemoLevelRunning() || game.gameControl().state() instanceof TestState;
         if (!silent) {
             soundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
@@ -255,7 +255,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacDead(PacDeadEvent e) {
-        gameContext().game().control().state().expire();
+        gameContext().game().gameControl().state().expire();
     }
 
     @Override
@@ -323,7 +323,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         final TengenMsPacMan_GameModel game = gameContext().game();
         final TengenMsPacMan_HeadsUpDisplay hud = game.hud();
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
-        final boolean oneExtra = game.control().state() == TengenMsPacMan_GameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
+        final boolean oneExtra = game.gameControl().state() == TengenMsPacMan_GameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
         final int displayedLifeCount = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
         hud.setVisibleLifeCount(Math.clamp(displayedLifeCount, 0, hud.maxLivesDisplayed()));
         hud.levelNumber(game.mapCategory() != MapCategory.ARCADE);
@@ -331,7 +331,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private void playLevelCompleteAnimation(GameLevel level) {
         levelCompletedAnimation = new LevelCompletedAnimation(level,
-            () -> level.game().control().state().expire());
+            () -> level.game().gameControl().state().expire());
         levelCompletedAnimation.play();
     }
 

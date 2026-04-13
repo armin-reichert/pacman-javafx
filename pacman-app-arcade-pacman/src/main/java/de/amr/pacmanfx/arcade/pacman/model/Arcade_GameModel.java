@@ -69,6 +69,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     private static final float BONUS_EATEN_SECONDS = 2;
 
+    protected final GameControl gameControl;
     protected final CoinMechanism coinMechanism;
 
     protected HeadsUpDisplay hud;
@@ -106,6 +107,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     public abstract LevelData levelData(int levelNumber);
+
+    @Override
+    public GameControl gameControl() {
+        return gameControl;
+    }
 
     @Override
     public void eatPellet(GameLevel level, Vector2i tile) {
@@ -309,7 +315,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
         else if (tick == Arcade_GameState.TICK_NEW_GAME_START_HUNTING) {
             setPlaying(true);
-            control().enterState(Arcade_GameState.HUNTING);
+            gameControl().enterState(Arcade_GameState.HUNTING);
         }
     }
 
@@ -324,7 +330,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             publishGameEvent(new GameContinuedEvent(this));
         }
         else if (tick == Arcade_GameState.TICK_RESUME_HUNTING) {
-            control().enterState(Arcade_GameState.HUNTING);
+            gameControl().enterState(Arcade_GameState.HUNTING);
         }
     }
 
@@ -391,7 +397,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level.showPacAndGhosts();
         }
         else if (tick == Arcade_GameState.TICK_RESUME_HUNTING) {
-            control().enterState(Arcade_GameState.HUNTING);
+            gameControl().enterState(Arcade_GameState.HUNTING);
         }
     }
 
