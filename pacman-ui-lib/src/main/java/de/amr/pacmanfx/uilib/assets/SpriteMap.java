@@ -41,6 +41,7 @@ public class SpriteMap<SID extends Enum<SID>> {
     }
 
     public final RectShort sprite(SID id) {
+        requireNonNull(id);
         Object value = get(id);
         if (!(value instanceof RectShort))    {
             throw new IllegalArgumentException("Sprite ID '%s' does not reference a sprite".formatted(id));
@@ -49,6 +50,7 @@ public class SpriteMap<SID extends Enum<SID>> {
     }
 
     public final RectShort[] spriteSequence(SID id) {
+        requireNonNull(id);
         Object value = get(id);
         if (!(value instanceof RectShort[])) {
             throw new IllegalArgumentException("Sprite ID '%s' does not reference a sprite sequence".formatted(id));
@@ -57,6 +59,7 @@ public class SpriteMap<SID extends Enum<SID>> {
     }
 
     public final void add(SID id, RectShort... sprites) {
+        requireNonNull(id);
         if (sprites.length == 0) {
             throw new IllegalArgumentException("Sprite list is null! WTF?");
         }
