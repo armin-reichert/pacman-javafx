@@ -20,20 +20,20 @@ import static java.util.Objects.requireNonNull;
 public class SpriteMap<SID extends Enum<SID>> {
 
     private final Class<SID> idEnumClass;
-    private final EnumMap<SID, Object> spriteDataByID;
+    private final EnumMap<SID, Object> map;
 
     public SpriteMap(Class<SID> idEnumClass) {
         this.idEnumClass = requireNonNull(idEnumClass);
-        spriteDataByID = new EnumMap<>(idEnumClass);
+        map = new EnumMap<>(idEnumClass);
     }
 
     public boolean isEmpty() {
-        return spriteDataByID.isEmpty();
+        return map.isEmpty();
     }
 
     private Object get(SID id) {
         requireNonNull(id);
-        Object value = spriteDataByID.get(id);
+        Object value = map.get(id);
         if (value == null) {
             throw new IllegalArgumentException("Sprite value is null for id '%s'".formatted(id));
         }
@@ -61,15 +61,15 @@ public class SpriteMap<SID extends Enum<SID>> {
             throw new IllegalArgumentException("Sprite list is null! WTF?");
         }
         if (sprites.length == 1) {
-            spriteDataByID.put(id, sprites[0]);
+            map.put(id, sprites[0]);
         } else {
-            spriteDataByID.put(id, sprites.clone());
+            map.put(id, sprites.clone());
         }
     }
 
     public final void checkCompleteness() {
         for (SID id : idEnumClass.getEnumConstants()) {
-            if (!spriteDataByID.containsKey(id)) {
+            if (!map.containsKey(id)) {
                 Logger.warn("Found sprite ID without value: {}", id);
             }
         }
