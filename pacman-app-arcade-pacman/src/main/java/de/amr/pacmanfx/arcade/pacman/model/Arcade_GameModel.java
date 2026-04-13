@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.model;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.TickTimer;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
@@ -28,16 +27,6 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class Arcade_GameModel extends AbstractGameModel {
 
-    protected static GameControl createGameControl(Game game) {
-        final var stateMachine = new StateMachine<Game>();
-        stateMachine.setName("Arcade Pac-Man (common) Game Control");
-        stateMachine.setContext(game);
-        stateMachine.addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
-        stateMachine.addStates(Arcade_GameState.values());
-        return () -> stateMachine;
-    }
-
-    // Level data as given in the "Pac-Man Dossier"
     protected static final LevelData[] LEVEL_DATA_TABLE = {
         /* 1*/ LevelData.of( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5),
         /* 2*/ LevelData.of( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5),
@@ -88,7 +77,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         this.coinMechanism = requireNonNull(coinMechanism);
         hud = new HeadsUpDisplay(coinMechanism);
-        gameControl = createGameControl(this);
+        gameControl = new Arcade_GameControl(this);
         pelletPoints = 10;
         energizerPoints = 50;
         restingTicksAfterPelletEaten = 1;
