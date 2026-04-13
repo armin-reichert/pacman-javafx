@@ -35,7 +35,7 @@ public class SpriteMap<SID extends Enum<SID>> {
         requireNonNull(id);
         Object value = map.get(id);
         if (value == null) {
-            throw new IllegalArgumentException("Sprite value is null for id '%s'".formatted(id));
+            throw new IllegalArgumentException("Sprite map value is null for id '%s'".formatted(id));
         }
         return value;
     }
@@ -62,6 +62,9 @@ public class SpriteMap<SID extends Enum<SID>> {
         requireNonNull(id);
         if (sprites.length == 0) {
             throw new IllegalArgumentException("Sprite list is null! WTF?");
+        }
+        for (int i = 0; i < sprites.length; ++i) {
+            requireNonNull(sprites, "Sprite list contains null value at index %d! WTF?".formatted(i));
         }
         if (sprites.length == 1) {
             map.put(id, sprites[0]);
