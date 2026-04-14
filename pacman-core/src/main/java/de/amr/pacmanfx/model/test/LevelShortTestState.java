@@ -8,7 +8,7 @@ import de.amr.pacmanfx.model.*;
 
 import static java.util.Objects.requireNonNull;
 
-public class LevelShortTestState extends TestState {
+public class LevelShortTestState<GAME extends Game> extends TestState<GAME> {
 
     private final CoinMechanism coinMechanism;
     private int lastTestedLevelNumber;
@@ -18,7 +18,7 @@ public class LevelShortTestState extends TestState {
     }
 
     @Override
-    public void onEnter(Game game) {
+    public void onEnter(GAME game) {
         coinMechanism.setNumCoins(1);
         lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();
         lock();
@@ -31,7 +31,7 @@ public class LevelShortTestState extends TestState {
     }
 
     @Override
-    public void onUpdate(Game game) {
+    public void onUpdate(GAME game) {
         final GameLevel level = game.optGameLevel().orElseThrow();
         final float START = 1.0f;
         if (timer.atSecond(START)) {
@@ -85,7 +85,7 @@ public class LevelShortTestState extends TestState {
     }
 
     @Override
-    public void onExit(Game game) {
+    public void onExit(GAME game) {
         coinMechanism.setNumCoins(0);
         game.init();
         game.levelCounter().clear();
