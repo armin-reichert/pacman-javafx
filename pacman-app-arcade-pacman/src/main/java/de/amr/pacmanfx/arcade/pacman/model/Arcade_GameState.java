@@ -58,6 +58,7 @@ public enum Arcade_GameState implements State<Game> {
         public void onEnter(Game game) {
             lock();
             game.hud().credit(true).score(true).levelCounter(true).livesCounter(false).show();
+            game.prepareNewGame();
         }
 
         @Override
@@ -208,20 +209,15 @@ public enum Arcade_GameState implements State<Game> {
         @Override
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
-                game.prepareNewGame();
+                final GameLevel level = game.optGameLevel().orElseThrow();
+                level.clearMessage();
+                game.cheats().clearFlag();
                 if (game.canStartNewGame()) {
                     game.flow().enterState(PREPARING_GAME_START);
                 } else {
                     game.flow().enterState(INTRO);
                 }
             }
-        }
-
-        @Override
-        public void onExit(Game game) {
-            final GameLevel level = game.optGameLevel().orElseThrow();
-            level.clearMessage();
-            game.cheats().clearFlag();
         }
     },
 

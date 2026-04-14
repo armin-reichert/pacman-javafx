@@ -60,6 +60,11 @@ public enum TengenMsPacMan_GameState implements State<Game> {
      */
     PREPARING_GAME_START {
         @Override
+        public void onEnter(Game game) {
+            game.prepareNewGame();
+        }
+
+        @Override
         public void onUpdate(Game game) {
             // wait for user interaction to leave state
         }
@@ -239,16 +244,11 @@ public enum TengenMsPacMan_GameState implements State<Game> {
                 if (level.isDemoLevel()) {
                     game.flow().enterState(SHOWING_HALL_OF_FAME);
                 } else {
+                    level.clearMessage();
+                    game.cheats().clearFlag();
                     game.flow().enterState(game.canContinueOnGameOver() ? PREPARING_GAME_START : INTRO);
                 }
             }
-        }
-
-        @Override
-        public void onExit(Game game) {
-            final GameLevel level = game.optGameLevel().orElseThrow();
-            level.clearMessage();
-            game.cheats().clearFlag();
         }
     },
 
