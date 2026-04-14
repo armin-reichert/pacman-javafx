@@ -367,6 +367,18 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         return numContinues;
     }
 
+    public void showLevelMessage(GameLevelMessageType type) {
+        optGameLevel().ifPresent(level -> {
+            requireNonNull(type);
+            final Vector2f center = level.worldMap().terrainLayer().messageCenterPosition();
+            // Non-Arcade maps have a moving "Game Over" message
+            final GameLevelMessage message = type == GameLevelMessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
+                ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC)
+                : new GameLevelMessage(type, center);
+            level.setMessage(message);
+        });
+    }
+
     @Override
     public boolean canContinueOnGameOver() {
         if (startLevelNumber >= 10 && numContinues > 0) {
@@ -478,24 +490,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
     }
 
-    @Override
-    public void showLevelMessage(GameLevelMessageType type) {
-        optGameLevel().ifPresent(level -> {
-            requireNonNull(type);
-            final Vector2f center = level.worldMap().terrainLayer().messageCenterPosition();
-            // Non-Arcade maps have a moving "Game Over" message
-            final GameLevelMessage message = type == GameLevelMessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
-                    ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC)
-                    : new GameLevelMessage(type, center);
-            level.setMessage(message);
-        });
-    }
-
-    @Override
-    public void clearLevelMessage() {
-        optGameLevel().ifPresent(GameLevel::clearMessage);
-    }
-
     public void activatePacBooster(Pac pac, boolean active) {
         boosterActive = active;
         pac.selectAnimation(boosterActive
@@ -602,7 +596,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void whileHunting(GameLevel level) {
+    public void playLevel(GameLevel level) {
         doHuntingStep(level);
         gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
     }

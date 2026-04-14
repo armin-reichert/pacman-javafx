@@ -98,14 +98,14 @@ public enum Arcade_GameState implements State<Game> {
             // "GAME_OVER" (demo level) and  "TEST LEVEL XX" messages are not cleared
             level.optMessage()
                 .filter(message -> message.type() == GameLevelMessageType.READY)
-                .ifPresent(_ -> game.clearLevelMessage());
-            game.startHunting(level);
+                .ifPresent(_ -> level.clearMessage());
+            game.startPlayingLevel(level);
         }
 
         @Override
         public void onUpdate(Game game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
-            game.whileHunting(level);
+            game.playLevel(level);
             if (game.isLevelCompleted(level)) {
                 game.flow().enterState(LEVEL_COMPLETE);
             }
@@ -219,7 +219,8 @@ public enum Arcade_GameState implements State<Game> {
 
         @Override
         public void onExit(Game game) {
-            game.clearLevelMessage();
+            final GameLevel level = game.optGameLevel().orElseThrow();
+            level.clearMessage();
             game.cheating().clearFlag();
         }
     },

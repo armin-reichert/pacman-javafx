@@ -167,10 +167,19 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
     }
 
+    protected void showLevelMessage(GameLevelMessageType type) {
+        requireNonNull(type);
+        optGameLevel().ifPresent(level -> {
+            final var message = new GameLevelMessage(type);
+            message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
+            level.setMessage(message);
+        });
+    }
+
     // GameEvents interface
 
     @Override
-    public void whileHunting(GameLevel level) {
+    public void playLevel(GameLevel level) {
         doHuntingStep(level);
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
@@ -416,21 +425,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         buildNormalLevel(level.number() + 1);
         final GameLevel newLevel = optGameLevel().orElseThrow();
         startLevel(newLevel);
-    }
-
-    @Override
-    public void showLevelMessage(GameLevelMessageType type) {
-        requireNonNull(type);
-        optGameLevel().ifPresent(level -> {
-            final var message = new GameLevelMessage(type);
-            message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
-            level.setMessage(message);
-        });
-    }
-
-    @Override
-    public void clearLevelMessage() {
-        optGameLevel().ifPresent(GameLevel::clearMessage);
     }
 
     @Override

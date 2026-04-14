@@ -328,7 +328,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
      * @param level the current level
      */
     @Override
-    public void startHunting(GameLevel level) {
+    public void startPlayingLevel(GameLevel level) {
         level.huntingTimer().startFirstPhase(level.number());
 
         level.blinking().setStartState(Pulse.State.ON);

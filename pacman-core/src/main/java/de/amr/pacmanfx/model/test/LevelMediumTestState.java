@@ -46,7 +46,7 @@ public class LevelMediumTestState extends AbstractState<Game> implements TestSta
         level.pac().tick(game);
         level.ghosts().forEach(ghost -> ghost.tick(game));
         level.optBonus().ifPresent(bonus -> bonus.tick(game));
-        game.whileHunting(level);
+        game.playLevel(level);
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
                 game.flow().publishGameEvent(new StopAllSoundsEvent(game));

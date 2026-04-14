@@ -43,7 +43,7 @@ public class LevelShortTestState extends AbstractState<Game> implements TestStat
             level.blinking().restart();
         }
         else if (timer.atSecond(START + 1)) {
-            game.clearLevelMessage();
+            level.clearMessage();
         }
         else if (timer.atSecond(START + 3)) {
             game.activateNextBonus(level);

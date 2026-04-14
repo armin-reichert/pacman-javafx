@@ -3,8 +3,6 @@
  */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -167,12 +165,6 @@ public interface Game {
     /** Starts a demo level at the given tick. */
     void startDemoLevel(long tick);
 
-    /** Shows a level message such as “Ready!” or “Game Over”. */
-    void showLevelMessage(GameLevelMessageType type);
-
-    /** Clears any active level message. */
-    void clearLevelMessage();
-
     /** @return {@code true} if the given level has been completed */
     boolean isLevelCompleted(GameLevel level);
 
@@ -182,9 +174,9 @@ public interface Game {
     /** Starts the next level in sequence. */
     void startNextLevel();
 
-    void startHunting(GameLevel level);
+    void startPlayingLevel(GameLevel level);
 
-    void whileHunting(GameLevel level);
+    void playLevel(GameLevel level);
 
     void activateNextBonus(GameLevel level);
 
