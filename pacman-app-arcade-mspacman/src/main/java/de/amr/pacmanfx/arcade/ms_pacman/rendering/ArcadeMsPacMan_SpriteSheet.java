@@ -169,12 +169,12 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     }
 
     public RectShort ghostEyesSprite(Direction dir) {
-        return switch (dir) {
-            case RIGHT -> sprite(GHOST_EYES_RIGHT);
-            case LEFT  -> sprite(GHOST_EYES_LEFT);
-            case UP    -> sprite(GHOST_EYES_UP);
-            case DOWN  -> sprite(GHOST_EYES_DOWN);
-        };
+        return sprite(switch (dir) {
+            case RIGHT -> GHOST_EYES_RIGHT;
+            case LEFT  -> GHOST_EYES_LEFT;
+            case UP    -> GHOST_EYES_UP;
+            case DOWN  -> GHOST_EYES_DOWN;
+        });
     }
 
     // private methods
