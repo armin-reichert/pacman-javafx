@@ -19,6 +19,7 @@ import org.tinylog.Logger;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -30,7 +31,7 @@ public class Arcade_GameFlow implements GameFlow {
         stateMachine.setName("Arcade Pac-Man Game Flow");
         stateMachine.setContext(game);
         stateMachine.addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
-        stateMachine.addStates(Arcade_GameState.values());
+        Stream.of(Arcade_GameState.values()).forEach(stateMachine::addState);
     }
 
     @Override
@@ -149,5 +150,4 @@ public class Arcade_GameFlow implements GameFlow {
     public void setCutScenesEnabled(boolean enabled) {
         cutScenesEnabled.set(enabled);
     }
-
 }

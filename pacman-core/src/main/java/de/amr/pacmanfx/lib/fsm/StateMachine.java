@@ -45,10 +45,9 @@ public class StateMachine<C> {
 
     public void addState(State<C> state) {
         requireNonNull(state);
-        if (states.contains(state)) {
-            Logger.warn("State '{}' is already contained in set of states of FSM '{}'", state.name(), name);
-        } else {
-            states.add(state);
+        final boolean added = states.add(state);
+        if (!added) {
+            Logger.warn("State '{}' is already contained in states of machine '{}'", state.name(), name);
         }
     }
 
