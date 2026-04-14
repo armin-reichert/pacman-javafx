@@ -4,11 +4,10 @@
 package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
-import de.amr.pacmanfx.lib.fsm.TimeControlledState;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Actor;
 
-public class LevelMediumTestState extends TimeControlledState<Game> implements TestState {
+public class LevelMediumTestState extends TestState {
 
     static final int TEST_DURATION_SEC = 10;
 

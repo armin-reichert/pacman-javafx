@@ -3,8 +3,16 @@
  */
 package de.amr.pacmanfx.model.test;
 
-/**
- * Marker interface for test game states.
- */
-public interface TestState {
+import de.amr.pacmanfx.lib.TickTimer;
+import de.amr.pacmanfx.lib.fsm.State;
+import de.amr.pacmanfx.model.Game;
+
+public abstract class TestState implements State<Game> {
+
+    protected final TickTimer timer = new TickTimer(getClass().getSimpleName());
+
+    @Override
+    public TickTimer timer() {
+        return timer;
+    }
 }

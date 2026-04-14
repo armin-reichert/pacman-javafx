@@ -4,12 +4,11 @@
 package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.event.BonusEatenEvent;
-import de.amr.pacmanfx.lib.fsm.TimeControlledState;
 import de.amr.pacmanfx.model.*;
 
 import static java.util.Objects.requireNonNull;
 
-public class LevelShortTestState extends TimeControlledState<Game> implements TestState {
+public class LevelShortTestState extends TestState {
 
     private final CoinMechanism coinMechanism;
     private int lastTestedLevelNumber;

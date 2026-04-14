@@ -25,15 +25,19 @@ public class StateMachine<C> {
 
     protected final List<StateChangeListener<State<C>>> stateChangeListeners = new ArrayList<>(5);
     protected C context;
-    protected Set<State<C>> states = new HashSet<>();
-    protected State<C> currentState;
-    protected State<C> prevState;
-
     protected String name = getClass().getSimpleName();
+    protected Set<State<C>> states = new HashSet<>();
+    protected State<C> state;
+    protected State<C> previousState;
 
     public StateMachine() {}
 
     public StateMachine(C context, Collection<State<C>> states) {
+        requireNonNull(context);
+        requireNonNull(states);
+        if (states.isEmpty()) {
+            Logger.warn("Empty state set?");
+        }
         setContext(context);
         addStates(states);
     }
@@ -75,14 +79,14 @@ public class StateMachine<C> {
 
     @Override
     public String toString() {
-        return String.format("StateMachine[name=%s, state=%s, prevState=%s]", name, currentState, prevState);
+        return String.format("StateMachine[name=%s, state=%s, prevState=%s]", name, state, previousState);
     }
 
     /**
      * @return the current state
      */
     public State<C> state() {
-        return currentState;
+        return state;
     }
 
     /**
@@ -107,7 +111,7 @@ public class StateMachine<C> {
      * @return the previous state (can be null)
      */
     public State<C> prevState() {
-        return prevState;
+        return previousState;
     }
 
     /**
@@ -153,7 +157,7 @@ public class StateMachine<C> {
     public void restart(State<C> state) {
         requireNonNull(state);
         resetTimers();
-        currentState = null;
+        this.state = null;
         enterState(state);
     }
 
@@ -168,33 +172,33 @@ public class StateMachine<C> {
      */
     public void enterState(State<C> newState) {
         requireNonNull(newState);
-        if (newState == currentState) {
-            Logger.info("State machine is already in state {}", currentState);
+        if (newState == state) {
+            Logger.info("State machine is already in state {}", state);
             return;
         }
-        if (currentState != null) {
-            currentState.onExit(context);
-            Logger.debug("Exit  state {} timer={}", currentState, currentState.timer());
+        if (state != null) {
+            state.onExit(context);
+            Logger.debug("Exit  state {} timer={}", state, state.timer());
         }
-        prevState = currentState;
-        currentState = newState;
-        currentState.timer().resetToIndefiniteDuration();
-        Logger.debug("Enter state {} timer={}", currentState, currentState.timer());
-        currentState.onEnter(context);
-        Logger.debug("After Enter state {} timer={}", currentState, currentState.timer());
-        stateChangeListeners.forEach(listener -> listener.onStateChange(prevState, currentState));
+        previousState = state;
+        state = newState;
+        state.timer().resetToIndefiniteDuration();
+        Logger.debug("Enter state {} timer={}", state, state.timer());
+        state.onEnter(context);
+        Logger.debug("After Enter state {} timer={}", state, state.timer());
+        stateChangeListeners.forEach(listener -> listener.onStateChange(previousState, state));
     }
 
     /**
      * Returns to the previous state.
      */
     public void resumePreviousState() {
-        if (prevState == null) {
+        if (previousState == null) {
             throw new IllegalStateException("State machine cannot resume previous state because there is none");
         }
-        Logger.debug("Resume state {}, timer= {}", prevState, prevState.timer());
-        currentState.onExit(context);
-        currentState = prevState;
+        Logger.debug("Resume state {}, timer= {}", previousState, previousState.timer());
+        state.onExit(context);
+        state = previousState;
     }
 
     /**
@@ -203,11 +207,11 @@ public class StateMachine<C> {
      * Runs the {@link State#onUpdate} hook method (if defined) of the current state and advances the state timer.
      */
     public void update() {
-        currentState.onUpdate(context);
-        if (currentState.timer().state() == TickTimer.State.READY) {
-            currentState.timer().start();
+        state.onUpdate(context);
+        if (state.timer().state() == TickTimer.State.READY) {
+            state.timer().start();
         } else {
-            currentState.timer().doTick();
+            state.timer().doTick();
         }
     }
 }
