@@ -6,7 +6,7 @@ package de.amr.pacmanfx.model.test;
 import de.amr.pacmanfx.event.GenericChangeEvent;
 import de.amr.pacmanfx.lib.fsm.AbstractState;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameControl;
+import de.amr.pacmanfx.model.GameFlow;
 
 public class CutScenesTestState extends AbstractState<Game> implements TestState {
 
@@ -27,7 +27,7 @@ public class CutScenesTestState extends AbstractState<Game> implements TestState
                 //TODO find another solution and get rid of this event type
                 game.publishGameEvent(new GenericChangeEvent(game, "Cut Scene Test"));
             } else {
-                game.gameControl().enterStateWithName(GameControl.CommonGameState.INTRO.name());
+                game.flow().enterStateWithName(GameFlow.CanonicalGameState.INTRO.name());
             }
         }
     }

@@ -46,7 +46,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.INTRO;
-import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.SETTING_OPTIONS_FOR_START;
+import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.PREPARING_GAME_START;
 import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
@@ -119,7 +119,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             ui.voicePlayer().stopVoice();
             ui.soundManager().setEnabled(true);
             slot.insertCoin();
-            game.gameControl().enterState(SETTING_OPTIONS_FOR_START);
+            game.flow().enterState(PREPARING_GAME_START);
             game.publishGameEvent(new CreditAddedEvent(game, 1));
         }
 
@@ -134,8 +134,8 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             if (game.isDemoLevelRunning()) {
                 return true;
             }
-            final State<Game> gameState = game.gameControl().state();
-            return gameState == INTRO || gameState == SETTING_OPTIONS_FOR_START;
+            final State<Game> gameState = game.flow().state();
+            return gameState == INTRO || gameState == PREPARING_GAME_START;
         }
     };
 
@@ -143,7 +143,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         @Override
         public void execute(GameUI ui) {
             ui.voicePlayer().stopVoice();
-            ui.gameContext().game().gameControl().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
+            ui.gameContext().game().flow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override
@@ -153,8 +153,8 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
                 return false;
             }
             final Game game = ui.gameContext().game();
-            final State<Game> gameState = game.gameControl().state();
-            return (gameState == INTRO || gameState == SETTING_OPTIONS_FOR_START)
+            final State<Game> gameState = game.flow().state();
+            return (gameState == INTRO || gameState == PREPARING_GAME_START)
                 && game.canStartNewGame();
         }
     };

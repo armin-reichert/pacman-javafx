@@ -36,9 +36,9 @@ class PacManXXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
     @Override
     protected SceneID determineSceneID(Game game) {
-        return switch (game.gameControl().state()) {
+        return switch (game.flow().state()) {
             case Arcade_GameState.BOOT -> CommonSceneID.BOOT_SCENE;
-            case Arcade_GameState.SETTING_OPTIONS_FOR_START -> CommonSceneID.START_SCENE;
+            case Arcade_GameState.PREPARING_GAME_START -> CommonSceneID.START_SCENE;
             case Arcade_GameState.INTRO -> CommonSceneID.INTRO_SCENE;
             case Arcade_GameState.INTERMISSION -> resolveCutSceneID(game);
             case CutScenesTestState testState -> GameSceneConfig.cutSceneID(testState.testedCutSceneNumber);

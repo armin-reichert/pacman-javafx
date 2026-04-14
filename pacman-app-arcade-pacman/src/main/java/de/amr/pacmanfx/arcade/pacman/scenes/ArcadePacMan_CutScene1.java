@@ -87,7 +87,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             pacMan.playAnimation();
         }
         else if (tick == ANIMATION_START_TICK + 632) {
-            game.gameControl().state().expire();
+            game.flow().state().expire();
         }
 
         if (tick >= ANIMATION_START_TICK) {

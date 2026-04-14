@@ -85,7 +85,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         msPacMan.move();
         clapperboard.tick();
 
-        final long tick = game.gameControl().state().timer().tickCount();
+        final long tick = game.flow().state().timer().tickCount();
         if (tick <= TICK_EXPIRES) {
             final short eventTick = (short) tick;
             switch (eventTick) {
@@ -146,7 +146,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.setSpeed(4.0f);
                 }
-                case 1380 -> game.gameControl().state().expire();
+                case 1380 -> game.flow().state().expire();
             }
         }
     }

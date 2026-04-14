@@ -70,10 +70,10 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
                 }
             });
 
-            final State<Game> state = game.gameControl().state();
+            final State<Game> state = game.flow().state();
             final String gameStateText = state.name() + " (Tick %d)".formatted(state.timer().tickCount());
             String huntingPhaseText = "";
-            if (state == Arcade_GameState.HUNTING) {
+            if (state == Arcade_GameState.LEVEL_PLAYING) {
                 final AbstractHuntingTimer huntingTimer = level.huntingTimer();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
             }

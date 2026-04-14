@@ -11,34 +11,21 @@ import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-/**
- * Defines the control contract for a game model driven by a {@link StateMachine}.
- *
- * <p>Each concrete game model owns a finite state machine that governs the
- * progression of gameplay states (boot, intro, level transitions, dying, etc.).
- * The controller layer should not implement game logic or state transitions
- * directly; instead, it delegates all state management to the model via this
- * interface.</p>
- *
- * <p>The state machine determines both the internal game flow and the scene
- * selection in the user interface. Implementations are expected to register
- * all required states and transitions during construction.</p>
- */
-public interface GameControl {
+public interface GameFlow {
 
     /**
-     * Enumeration of well‑known game state identifiers.
+     * Enumeration of game state identifiers.
      *
      * <p>These constants exist to avoid scattering string literals throughout
      * game‑variant‑independent code. Implementations may define additional
      * states, but these represent the canonical set used across Pac‑Man FX.</p>
      */
-    enum CommonGameState {
+    enum CanonicalGameState {
         BOOT,
         INTRO,
-        SETTING_OPTIONS_FOR_START,
+        PREPARING_GAME_START,
         STARTING_GAME_OR_LEVEL,
-        HUNTING,
+        LEVEL_PLAYING,
         LEVEL_COMPLETE,
         LEVEL_TRANSITION,
         EATING_GHOST,

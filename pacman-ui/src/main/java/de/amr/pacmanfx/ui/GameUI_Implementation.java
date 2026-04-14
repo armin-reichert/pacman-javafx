@@ -8,7 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameControl;
+import de.amr.pacmanfx.model.GameFlow;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
@@ -220,7 +220,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private void simulate(Game game) {
         final SimulationStep simulationStep = game.simulationStep();
         simulationStep.init(gameContext.clock().tickCount());
-        game.gameControl().stateMachine().update();
+        game.flow().stateMachine().update();
         simulationStep.printLog();
     }
 
@@ -335,7 +335,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         final Game game = gameContext.game();
         //TODO this is game-specific and should not be here
         optGameScene().ifPresent(gameScene -> {
-            boolean shouldConsumeCoin = game.gameControl().state().name().equals("STARTING_GAME_OR_LEVEL")
+            boolean shouldConsumeCoin = game.flow().state().name().equals("STARTING_GAME_OR_LEVEL")
                 || game.isPlaying();
             if (shouldConsumeCoin && !gameContext.coinMechanism().isEmpty()) {
                 gameContext.coinMechanism().consumeCoin();
@@ -344,14 +344,14 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         });
 
         stopGame();
-        game.gameControl().restartStateWithName(GameControl.CommonGameState.BOOT.name());
+        game.flow().restartStateWithName(GameFlow.CanonicalGameState.BOOT.name());
         showStartView();
     }
 
     @Override
     public void restart() {
         stopGame();
-        gameContext.game().gameControl().restartStateWithName(GameControl.CommonGameState.BOOT.name());
+        gameContext.game().flow().restartStateWithName(GameFlow.CanonicalGameState.BOOT.name());
         Platform.runLater(gameContext.clock()::start);
     }
 

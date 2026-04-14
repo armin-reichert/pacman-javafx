@@ -7,7 +7,7 @@ import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameControl.CommonGameState;
+import de.amr.pacmanfx.model.GameFlow.CanonicalGameState;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
@@ -57,7 +57,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("LET_GAME_STATE_EXPIRE") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().game().gameControl().state().expire();
+            ui.gameContext().game().flow().state().expire();
         }
     };
 
@@ -107,11 +107,11 @@ public final class CommonGameActions {
         public void execute(GameUI ui) {
             ui.stopGame();
             final Game game = ui.gameContext().game();
-            boolean isLevelShortTest = game.gameControl().state() instanceof LevelShortTestState;
+            boolean isLevelShortTest = game.flow().state() instanceof LevelShortTestState;
             if (isLevelShortTest) {
-                game.gameControl().state().onExit(game); //TODO exit other states too?
+                game.flow().state().onExit(game); //TODO exit other states too?
             }
-            game.gameControl().restartStateWithName(CommonGameState.INTRO.name());
+            game.flow().restartStateWithName(CanonicalGameState.INTRO.name());
             ui.gameContext().clock().start();
         }
     };
@@ -328,13 +328,13 @@ public final class CommonGameActions {
         }
 
         private boolean isTestModeRunning(Game game) {
-            return game.gameControl().state().nameMatches(
+            return game.flow().state().nameMatches(
                 LevelShortTestState.class.getSimpleName(),
                 LevelMediumTestState.class.getSimpleName());
         }
 
         private boolean canSwitchSceneNow(Game game) {
-            return game.gameControl().state().nameMatches(CommonGameState.HUNTING.name());
+            return game.flow().state().nameMatches(CanonicalGameState.LEVEL_PLAYING.name());
         }
     };
 }

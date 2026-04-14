@@ -58,7 +58,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
-import static de.amr.pacmanfx.model.GameControl.CommonGameState.*;
+import static de.amr.pacmanfx.model.GameFlow.CanonicalGameState.*;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_WALL_HEIGHT;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.*;
@@ -451,7 +451,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final State<Game> gameState = event.newState();
         if (gameState.nameMatches(STARTING_GAME_OR_LEVEL.name())) {
             onStartingGame();
-        } else if (gameState.nameMatches(HUNTING.name())) {
+        } else if (gameState.nameMatches(LEVEL_PLAYING.name())) {
             onHuntingStart();
         } else if (gameState.nameMatches(PACMAN_DYING.name())) {
             onPacManDying(gameState);
@@ -501,7 +501,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     public void onGameStarts(GameStartedEvent event) {
         final Game game = event.game();
-        final State<Game> state = game.gameControl().state();
+        final State<Game> state = game.flow().state();
         final boolean silent = game.isDemoLevelRunning() || state instanceof TestState;
         if (!silent) {
             soundEffects().ifPresent(GameSoundEffects::playGameReadySound);
@@ -618,7 +618,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void onLevelComplete() {
-        final State<Game> gameState = level.game().gameControl().state();
+        final State<Game> gameState = level.game().flow().state();
         final Maze3D maze3D = entities3D.unique(Maze3D.class);
 
         soundEffects().ifPresent(GameSoundEffects::stopAll);

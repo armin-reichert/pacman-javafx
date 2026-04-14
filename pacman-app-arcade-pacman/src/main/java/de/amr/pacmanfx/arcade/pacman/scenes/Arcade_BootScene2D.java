@@ -33,7 +33,7 @@ public class Arcade_BootScene2D extends GameScene2D {
 
     @Override
     public void update(Game game) {
-        final State<Game> gameState = game.gameControl().state();
+        final State<Game> gameState = game.flow().state();
         final long tick = gameState.timer().tickCount();
         if (tick == 60 )      { state = SceneState.HEX_CODES; }
         else if (tick == 120) { state = SceneState.RANDOM_SPRITE_FRAGMENTS; }

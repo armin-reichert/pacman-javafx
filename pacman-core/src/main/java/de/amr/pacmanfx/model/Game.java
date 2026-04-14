@@ -44,9 +44,9 @@ public interface Game {
     /**
      * Returns the controller of the game flow.
      *
-     * @return the {@link GameControl} instance for this game
+     * @return the {@link GameFlow} instance for this game
      */
-    GameControl gameControl();
+    GameFlow flow();
 
     /**
      * Returns the simulation step information for the current frame.

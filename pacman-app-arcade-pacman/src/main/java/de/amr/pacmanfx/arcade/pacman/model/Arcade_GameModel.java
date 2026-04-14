@@ -58,7 +58,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     private static final float BONUS_EATEN_SECONDS = 2;
 
-    protected final GameControl gameControl;
+    protected final GameFlow gameFlow;
     protected final CoinMechanism coinMechanism;
 
     protected HeadsUpDisplay hud;
@@ -77,7 +77,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         this.coinMechanism = requireNonNull(coinMechanism);
         hud = new HeadsUpDisplay(coinMechanism);
-        gameControl = new Arcade_GameControl(this);
+        gameFlow = new Arcade_GameFlow(this);
         pelletPoints = 10;
         energizerPoints = 50;
         restingTicksAfterPelletEaten = 1;
@@ -98,8 +98,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public abstract LevelData levelData(int levelNumber);
 
     @Override
-    public GameControl gameControl() {
-        return gameControl;
+    public GameFlow flow() {
+        return gameFlow;
     }
 
     @Override
@@ -304,7 +304,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
         else if (tick == Arcade_GameState.TICK_NEW_GAME_START_HUNTING) {
             setPlaying(true);
-            gameControl().enterState(Arcade_GameState.HUNTING);
+            flow().enterState(Arcade_GameState.LEVEL_PLAYING);
         }
     }
 
@@ -319,7 +319,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             publishGameEvent(new GameContinuedEvent(this));
         }
         else if (tick == Arcade_GameState.TICK_RESUME_HUNTING) {
-            gameControl().enterState(Arcade_GameState.HUNTING);
+            flow().enterState(Arcade_GameState.LEVEL_PLAYING);
         }
     }
 
@@ -386,7 +386,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level.showPacAndGhosts();
         }
         else if (tick == Arcade_GameState.TICK_RESUME_HUNTING) {
-            gameControl().enterState(Arcade_GameState.HUNTING);
+            flow().enterState(Arcade_GameState.LEVEL_PLAYING);
         }
     }
 

@@ -26,7 +26,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
         @Override
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
-                game.gameControl().enterState(INTRO);
+                game.flow().enterState(INTRO);
             }
         }
     },
@@ -49,7 +49,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
         @Override
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
-                game.gameControl().enterState(STARTING_GAME_OR_LEVEL);
+                game.flow().enterState(STARTING_GAME_OR_LEVEL);
             }
         }
     },
@@ -58,7 +58,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
      * Corresponds to the "MS PAC-MAN OPTIONS" screen where difficulty, booster, map category
      * and start level can be set.
      */
-    SETTING_OPTIONS_FOR_START {
+    PREPARING_GAME_START {
         @Override
         public void onUpdate(Game game) {
             // wait for user interaction to leave state
@@ -78,7 +78,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
         @Override
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
-                game.gameControl().enterState(INTRO);
+                game.flow().enterState(INTRO);
             }
         }
     },
@@ -103,7 +103,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
         }
     },
 
-    HUNTING {
+    LEVEL_PLAYING {
         @Override
         public void onEnter(Game game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
@@ -116,11 +116,11 @@ public enum TengenMsPacMan_GameState implements State<Game> {
             final GameLevel level = game.optGameLevel().orElseThrow();
             game.whileHunting(level);
             if (game.isLevelCompleted(level)) {
-                game.gameControl().enterState(LEVEL_COMPLETE);
+                game.flow().enterState(LEVEL_COMPLETE);
             } else if (game.hasPacManBeenKilled()) {
-                game.gameControl().enterState(PACMAN_DYING);
+                game.flow().enterState(PACMAN_DYING);
             } else if (game.hasGhostBeenKilled()) {
-                game.gameControl().enterState(EATING_GHOST);
+                game.flow().enterState(EATING_GHOST);
             }
         }
 
@@ -152,18 +152,18 @@ public enum TengenMsPacMan_GameState implements State<Game> {
             }
 
             if (level.isDemoLevel()) {
-                game.gameControl().enterState(SHOWING_HALL_OF_FAME);
+                game.flow().enterState(SHOWING_HALL_OF_FAME);
                 return;
             }
 
             if (timer.hasExpired()) {
                 if (level.isDemoLevel()) {
                     // Just in case: if demo level is completed, go back to intro scene
-                    game.gameControl().enterState(INTRO);
+                    game.flow().enterState(INTRO);
                 } else if (game.cutScenesEnabled() && level.cutSceneNumber() != 0) {
-                    game.gameControl().enterState(INTERMISSION);
+                    game.flow().enterState(INTERMISSION);
                 } else {
-                    game.gameControl().enterState(LEVEL_TRANSITION);
+                    game.flow().enterState(LEVEL_TRANSITION);
                 }
             }
         }
@@ -179,7 +179,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
         @Override
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
-                game.gameControl().enterState(STARTING_GAME_OR_LEVEL);
+                game.flow().enterState(STARTING_GAME_OR_LEVEL);
             }
         }
     },
@@ -194,7 +194,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
         public void onUpdate(Game game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.hasExpired()) {
-                game.gameControl().resumePreviousState();
+                game.flow().resumePreviousState();
             } else {
                 game.whileEatingGhost(level, timer.tickCount());
             }
@@ -213,10 +213,10 @@ public enum TengenMsPacMan_GameState implements State<Game> {
             final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.hasExpired()) {
                 if (level.isDemoLevel()) {
-                    game.gameControl().enterState(GAME_OVER);
+                    game.flow().enterState(GAME_OVER);
                 } else {
                     game.addLives(-1);
-                    game.gameControl().enterState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
+                    game.flow().enterState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
                 }
             } else {
                 game.whilePacManDying(level, level.pac(), timer.tickCount());
@@ -237,9 +237,9 @@ public enum TengenMsPacMan_GameState implements State<Game> {
             final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.hasExpired()) {
                 if (level.isDemoLevel()) {
-                    game.gameControl().enterState(SHOWING_HALL_OF_FAME);
+                    game.flow().enterState(SHOWING_HALL_OF_FAME);
                 } else {
-                    game.gameControl().enterState(game.canContinueOnGameOver() ? SETTING_OPTIONS_FOR_START : INTRO);
+                    game.flow().enterState(game.canContinueOnGameOver() ? PREPARING_GAME_START : INTRO);
                 }
             }
         }
@@ -270,7 +270,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
         @Override
         public void onUpdate(Game game) {
             if (timer.hasExpired()) {
-                game.gameControl().enterState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
+                game.flow().enterState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
             }
         }
 

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.event.PacEatsFoodEvent;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameControl.CommonGameState;
+import de.amr.pacmanfx.model.GameFlow.CanonicalGameState;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.GameUI;
@@ -49,7 +49,7 @@ public final class CheatActions {
         @Override
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.gameContext().game();
-            return !game.isDemoLevelRunning() && game.gameControl().state().nameMatches(CommonGameState.HUNTING.name());
+            return !game.isDemoLevelRunning() && game.flow().state().nameMatches(CanonicalGameState.LEVEL_PLAYING.name());
         }
     };
 
@@ -62,7 +62,7 @@ public final class CheatActions {
                 if (!killableGhosts.isEmpty()) {
                     level.energizerVictims().clear(); // resets value of next killed ghost to 200
                     killableGhosts.forEach(ghost -> game.onEatGhost(level, ghost));
-                    game.gameControl().enterStateWithName(CommonGameState.EATING_GHOST.name());
+                    game.flow().enterStateWithName(CanonicalGameState.EATING_GHOST.name());
                 }
                 game.cheating().raiseFlag();
             });
@@ -72,7 +72,7 @@ public final class CheatActions {
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.gameContext().game();
             return !game.isDemoLevelRunning()
-                && game.gameControl().state().nameMatches(CommonGameState.HUNTING.name());
+                && game.flow().state().nameMatches(CanonicalGameState.LEVEL_PLAYING.name());
         }
     };
 
@@ -82,7 +82,7 @@ public final class CheatActions {
             final Game game = ui.gameContext().game();
             realLevel(game).ifPresent(_ -> {
                 game.cheating().raiseFlag();
-                game.gameControl().enterStateWithName(CommonGameState.LEVEL_COMPLETE.name());
+                game.flow().enterStateWithName(CanonicalGameState.LEVEL_COMPLETE.name());
             });
         }
 
@@ -94,7 +94,7 @@ public final class CheatActions {
                 return false;
             }
             return game.isPlaying()
-                && game.gameControl().state().nameMatches(CommonGameState.HUNTING.name())
+                && game.flow().state().nameMatches(CanonicalGameState.LEVEL_PLAYING.name())
                 && level.number() < game.lastLevelNumber();
         }
     };

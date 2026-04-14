@@ -28,7 +28,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
 import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
-import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState.HUNTING;
+import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState.LEVEL_PLAYING;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -38,7 +38,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
-    private static GameControl createGameControl(Game game) {
+    private static GameFlow createGameControl(Game game) {
         final var stateMachine = new StateMachine<Game>();
         stateMachine.setName("Tengen Ms. Pac-Man Game State Machine");
         stateMachine.addStates(TengenMsPacMan_GameState.values());
@@ -226,7 +226,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         0x00, 0x18, 0x20                                // levels 17, 18, then 19+
     };
 
-    private final GameControl gameControl;
+    private final GameFlow gameFlow;
     private final TengenMsPacMan_HeadsUpDisplay hud;
     private final TengenMsPacMan_MapSelector mapSelector;
     private final TengenMsPacMan_LevelCounter levelCounter;
@@ -248,7 +248,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
         hud = new TengenMsPacMan_HeadsUpDisplay();
-        gameControl = createGameControl(this);
+        gameFlow = createGameControl(this);
         //TODO implement original logic from Tengen game
         gateKeeper = new GateKeeper();
         automaticSteering = new RuleBasedPacSteering();
@@ -267,8 +267,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public GameControl gameControl() {
-        return gameControl;
+    public GameFlow flow() {
+        return gameFlow;
     }
 
     @Override
@@ -419,7 +419,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
         else if (tick == TICK_NEW_GAME_START_HUNTING) {
             setPlaying(true);
-            gameControl().enterState(HUNTING);
+            flow().enterState(LEVEL_PLAYING);
         }
     }
 
@@ -430,7 +430,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             level.showPacAndGhosts();
             publishGameEvent(new GameContinuedEvent(this));
         } else if (tick == TICK_RESUME_HUNTING) {
-            gameControl().enterState(HUNTING);
+            flow().enterState(LEVEL_PLAYING);
         }
     }
 
@@ -472,7 +472,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             level.showPacAndGhosts();
         }
         else if (tick == TICK_DEMO_LEVEL_START_HUNTING) {
-            gameControl().enterState(TengenMsPacMan_GameState.HUNTING);
+            flow().enterState(TengenMsPacMan_GameState.LEVEL_PLAYING);
         }
     }
 

@@ -83,7 +83,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
             blinky.playAnimation();
         }
         else if (tick == ANIMATION_START_TICK + 700) {
-            game.gameControl().state().expire();
+            game.flow().state().expire();
             return;
         }
         pacMan.move();

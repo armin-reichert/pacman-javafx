@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameControl.CommonGameState;
+import de.amr.pacmanfx.model.GameFlow.CanonicalGameState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import javafx.geometry.Insets;
@@ -26,21 +26,21 @@ public class HelpInfo {
 
     public static HelpInfo build(GameUI ui) {
         final Game game = ui.gameContext().game();
-        final State<Game> state = game.gameControl().state();
+        final State<Game> state = game.flow().state();
         final boolean demoLevel = game.isDemoLevelRunning();
 
         final HelpInfo helpInfo = new HelpInfo(ui);
-        if (state.nameMatches(CommonGameState.INTRO.name())) {
+        if (state.nameMatches(CanonicalGameState.INTRO.name())) {
             helpInfo.addInfoForIntroScene(game);
         }
-        else if (state.nameMatches(CommonGameState.SETTING_OPTIONS_FOR_START.name())) {
+        else if (state.nameMatches(CanonicalGameState.PREPARING_GAME_START.name())) {
             helpInfo.addInfoForCreditScene(game);
         }
         else if (state.nameMatches(
-            CommonGameState.STARTING_GAME_OR_LEVEL.name(),
-            CommonGameState.HUNTING.name(),
-            CommonGameState.PACMAN_DYING.name(),
-            CommonGameState.EATING_GHOST.name())) {
+            CanonicalGameState.STARTING_GAME_OR_LEVEL.name(),
+            CanonicalGameState.LEVEL_PLAYING.name(),
+            CanonicalGameState.PACMAN_DYING.name(),
+            CanonicalGameState.EATING_GHOST.name())) {
             if (demoLevel) {
                 helpInfo.addInfoForDemoLevelPlayScene();
             } else {

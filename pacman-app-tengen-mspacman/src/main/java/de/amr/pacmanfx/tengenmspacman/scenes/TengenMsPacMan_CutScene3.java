@@ -104,7 +104,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     public void update(Game game) {
         clapperboard.tick();
 
-        final long tick = game.gameControl().state().timer().tickCount();
+        final long tick = game.flow().state().timer().tickCount();
         if (tick <= TICK_EXPIRES) {
             final short eventTick = (short) tick;
             switch (eventTick) {
@@ -147,7 +147,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                     flyingBag.setAcceleration(Vector2f.ZERO);
                 }
                 case 640 -> darkness = true;
-                case TICK_EXPIRES -> game.gameControl().state().expire();
+                case TICK_EXPIRES -> game.flow().state().expire();
             }
         }
 

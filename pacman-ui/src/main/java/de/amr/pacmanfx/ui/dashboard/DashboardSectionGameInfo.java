@@ -33,7 +33,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
     public void init(GameUI ui) {
         final Supplier<Game> gameSupplier = ui.gameContext()::game;
 
-        addDynamicLabeledValue("Game State",  () -> "%s".formatted(ui.gameContext().game().gameControl().state().name()));
+        addDynamicLabeledValue("Game State",  () -> "%s".formatted(ui.gameContext().game().flow().state().name()));
         addDynamicLabeledValue("State Timer", () -> stateTimerInfo(gameSupplier.get()));
         addDynamicLabeledValue("Game Scene", ifGameScenePresent(ui, gameScene -> gameScene.getClass().getSimpleName()));
 
@@ -89,7 +89,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
     }
 
     private String stateTimerInfo(Game game) {
-        final TickTimer timer = game.gameControl().state().timer();
+        final TickTimer timer = game.flow().state().timer();
         final boolean indefinite = timer.durationTicks() == TickTimer.INDEFINITE;
         if (timer.isStopped()) {
             return "Stopped at tick %s of %s".formatted(timer.tickCount(), indefinite ? "∞" : timer.durationTicks());

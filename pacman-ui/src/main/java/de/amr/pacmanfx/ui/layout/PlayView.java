@@ -9,7 +9,7 @@ import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameControl;
+import de.amr.pacmanfx.model.GameFlow;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
@@ -194,7 +194,7 @@ public class PlayView extends StackPane implements View {
     @Override
     public void onGameEvent(GameEvent gameEvent) {
         final Game game = ui.gameContext().game();
-        final State<Game> gameState = game.gameControl().state();
+        final State<Game> gameState = game.flow().state();
         switch (gameEvent) {
             case LevelCreatedEvent levelCreatedEvent -> {
                 final GameLevel level = levelCreatedEvent.level();
@@ -211,7 +211,7 @@ public class PlayView extends StackPane implements View {
                 optCurrentGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
             }
             case GameStateChangeEvent _ -> {
-                if (gameState.nameMatches(GameControl.CommonGameState.LEVEL_COMPLETE.name())) {
+                if (gameState.nameMatches(GameFlow.CanonicalGameState.LEVEL_COMPLETE.name())) {
                     miniView.slideOut();
                 }
             }
