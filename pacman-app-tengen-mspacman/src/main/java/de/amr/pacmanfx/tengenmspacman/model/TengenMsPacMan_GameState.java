@@ -160,7 +160,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
                 if (level.isDemoLevel()) {
                     // Just in case: if demo level is completed, go back to intro scene
                     game.flow().enterState(INTRO);
-                } else if (game.cutScenesEnabled() && level.cutSceneNumber() != 0) {
+                } else if (game.flow().cutScenesEnabled() && level.cutSceneNumber() != 0) {
                     game.flow().enterState(INTERMISSION);
                 } else {
                     game.flow().enterState(LEVEL_TRANSITION);

@@ -57,7 +57,6 @@ public abstract class AbstractGameModel implements Game, GameCheats {
 
     private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
     private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
-    private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
     private final IntegerProperty initialLifeCount = new SimpleIntegerProperty(3);
     private final ObjectProperty<GameLevel> level = new SimpleObjectProperty<>();
     private final IntegerProperty lifeCount = new SimpleIntegerProperty(0);
@@ -289,16 +288,6 @@ public abstract class AbstractGameModel implements Game, GameCheats {
     @Override
     public boolean hasGhostBeenKilled() {
         return !simStep.ghostsKilled.isEmpty();
-    }
-
-    @Override
-    public boolean cutScenesEnabled() {
-        return cutScenesEnabled.get();
-    }
-
-    @Override
-    public void setCutScenesEnabled(boolean enabled) {
-        cutScenesEnabled.set(enabled);
     }
 
     @Override

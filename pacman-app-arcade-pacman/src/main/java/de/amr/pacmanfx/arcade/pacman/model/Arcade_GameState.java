@@ -133,7 +133,7 @@ public enum Arcade_GameState implements State<Game> {
                     // just in case: if demo level was completed, go back to intro scene
                     game.flow().enterState(INTRO);
                 }
-                else if (game.cutScenesEnabled() && level.cutSceneNumber() != 0) {
+                else if (game.flow().cutScenesEnabled() && level.cutSceneNumber() != 0) {
                     game.flow().enterState(INTERMISSION);
                 }
                 else {

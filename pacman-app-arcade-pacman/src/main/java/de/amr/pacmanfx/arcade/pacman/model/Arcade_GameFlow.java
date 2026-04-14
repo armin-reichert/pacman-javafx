@@ -12,6 +12,8 @@ import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameFlow;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.util.HashSet;
@@ -133,4 +135,19 @@ public class Arcade_GameFlow implements GameFlow {
         }
         eventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
     }
+
+    // Cut scenes
+
+    private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
+
+    @Override
+    public boolean cutScenesEnabled() {
+        return cutScenesEnabled.get();
+    }
+
+    @Override
+    public void setCutScenesEnabled(boolean enabled) {
+        cutScenesEnabled.set(enabled);
+    }
+
 }

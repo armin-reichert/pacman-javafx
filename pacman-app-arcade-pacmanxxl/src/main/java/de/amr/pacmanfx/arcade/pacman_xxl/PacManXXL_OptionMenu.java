@@ -120,7 +120,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         // init entries
         entryGameVariant.setValue(gameVariant);
         entryPlay3D.setValue(GameUI.PROPERTY_3D_ENABLED.get());
-        entryCutScenesEnabled.setValue(game.cutScenesEnabled());
+        entryCutScenesEnabled.setValue(game.flow().cutScenesEnabled());
         entryMapOrder.setValue(mapSelector.selectionMode());
         entryMapOrder.setEnabled(!mapSelector.customMaps().isEmpty());
         logMenuState();

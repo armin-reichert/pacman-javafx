@@ -57,4 +57,14 @@ public interface GameFlow {
     void removeGameEventListener(GameEventListener listener);
 
     void publishGameEvent(GameEvent event);
+
+    // Cut scenes
+
+    /** @return {@code true} if cut scenes are enabled */
+    boolean cutScenesEnabled();
+
+    /** Enables or disables cut scenes. */
+    void setCutScenesEnabled(boolean enabled);
+
+
 }

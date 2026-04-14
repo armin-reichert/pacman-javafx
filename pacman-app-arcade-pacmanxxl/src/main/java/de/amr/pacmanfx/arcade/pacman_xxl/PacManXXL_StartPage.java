@@ -143,7 +143,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         play3DListener = (_, _, play3D) -> GameUI.PROPERTY_3D_ENABLED.set(play3D);
         menu.entryPlay3D().valueProperty().addListener(play3DListener);
 
-        cutScenesEnabledListener = (_,_,enabled) -> ui.gameContext().game().setCutScenesEnabled(enabled);
+        cutScenesEnabledListener = (_,_,enabled) -> ui.gameContext().game().flow().setCutScenesEnabled(enabled);
         menu.entryCutScenesEnabled().valueProperty().addListener(cutScenesEnabledListener);
 
         menu.scalingProperty().bind(menuScaling(stage));

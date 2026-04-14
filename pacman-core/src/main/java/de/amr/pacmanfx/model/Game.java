@@ -232,12 +232,5 @@ public interface Game {
 
     float pacSpeedWhenHasPower(GameLevel level);
 
-    /** @return {@code true} if cut scenes are enabled */
-    boolean cutScenesEnabled();
-
-    /** Enables or disables cut scenes. */
-    void setCutScenesEnabled(boolean enabled);
-
-    /** @return the number of the last cut scene shown */
     int lastCutSceneNumber();
 }
