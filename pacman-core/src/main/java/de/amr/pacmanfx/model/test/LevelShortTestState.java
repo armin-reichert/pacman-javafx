@@ -51,7 +51,7 @@ public class LevelShortTestState extends AbstractState<Game> implements TestStat
         else if (timer.atSecond(START + 5)) {
             level.optBonus().ifPresent(bonus -> {
                 bonus.showEatenForSeconds(2);
-                game.publishGameEvent(new BonusEatenEvent(game, bonus));
+                game.flow().publishGameEvent(new BonusEatenEvent(game, bonus));
             });
         }
         else if (timer.atSecond(START + 6)) {
@@ -60,7 +60,7 @@ public class LevelShortTestState extends AbstractState<Game> implements TestStat
         else if (timer.atSecond(START + 8)) {
             level.optBonus().ifPresent(bonus -> {
                 bonus.showEatenForSeconds(2);
-                game.publishGameEvent(new BonusEatenEvent(game, bonus));
+                game.flow().publishGameEvent(new BonusEatenEvent(game, bonus));
             });
         }
         else if (timer.atSecond(START + 9)) {

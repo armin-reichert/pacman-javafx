@@ -194,15 +194,6 @@ public interface Game {
 
     boolean hasGhostBeenKilled();
 
-    /** Registers a listener for game events. */
-    void addGameEventListener(GameEventListener listener);
-
-    /** Removes a previously registered game event listener. */
-    void removeGameEventListener(GameEventListener listener);
-
-    /** Publishes a game event to all registered listeners. */
-    void publishGameEvent(GameEvent event);
-
     void onLevelCompleted(GameLevel level);
 
     void whilePacManDying(GameLevel level, Pac pac, long tick);

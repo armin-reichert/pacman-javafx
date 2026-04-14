@@ -3,6 +3,8 @@
  */
 package de.amr.pacmanfx.model;
 
+import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.lib.fsm.State;
 
 import java.util.Optional;
@@ -47,4 +49,12 @@ public interface GameFlow {
     void restartState(State<Game> gameState);
 
     void restartStateWithName(String stateName);
+
+    // events
+
+    void addGameEventListener(GameEventListener listener);
+
+    void removeGameEventListener(GameEventListener listener);
+
+    void publishGameEvent(GameEvent event);
 }

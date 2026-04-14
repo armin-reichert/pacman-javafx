@@ -293,7 +293,7 @@ public class PlayView extends StackPane implements View {
         if (oldGameVariantName != null) {
             Logger.info("Cleanup game variant {}...", oldGameVariantName);
             final Game game = ui.gameContext().gameByVariantName(oldGameVariantName);
-            game.removeGameEventListener(this);
+            game.flow().removeGameEventListener(this);
             ui.uiConfigManager().dispose(oldGameVariantName);
             ui.soundManager().dispose();
             ui.stage().getIcons().removeAll();
@@ -302,7 +302,7 @@ public class PlayView extends StackPane implements View {
         if (newGameVariantName != null) {
             Logger.info("Initialize game variant {}...", newGameVariantName);
             final Game game = ui.gameContext().gameByVariantName(newGameVariantName);
-            game.addGameEventListener(this);
+            game.flow().addGameEventListener(this);
 
             final UIConfig uiConfig = ui.config(newGameVariantName);
             uiConfig.init(ui);

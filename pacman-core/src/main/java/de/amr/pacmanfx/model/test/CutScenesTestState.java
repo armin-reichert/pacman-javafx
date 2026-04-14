@@ -25,7 +25,7 @@ public class CutScenesTestState extends AbstractState<Game> implements TestState
                 testedCutSceneNumber += 1;
                 lock();
                 //TODO find another solution and get rid of this event type
-                game.publishGameEvent(new GenericChangeEvent(game, "Cut Scene Test"));
+                game.flow().publishGameEvent(new GenericChangeEvent(game, "Cut Scene Test"));
             } else {
                 game.flow().enterStateWithName(GameFlow.CanonicalGameState.INTRO.name());
             }

@@ -320,7 +320,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         }
 
         level.setBonus(bonus);
-        publishGameEvent(new BonusActivatedEvent(this, bonus));
+        flow().publishGameEvent(new BonusActivatedEvent(this, bonus));
     }
 
     // Helpers

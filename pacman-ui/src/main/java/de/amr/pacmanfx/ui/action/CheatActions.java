@@ -42,7 +42,7 @@ public final class CheatActions {
             realLevel(game).ifPresent(level -> {
                 level.worldMap().foodLayer().eatPellets();
                 game.cheating().raiseFlag();
-                game.publishGameEvent(new PacEatsFoodEvent(game, level.pac(), true));
+                game.flow().publishGameEvent(new PacEatsFoodEvent(game, level.pac(), true));
             });
         }
 

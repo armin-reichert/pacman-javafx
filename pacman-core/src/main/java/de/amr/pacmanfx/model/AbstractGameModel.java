@@ -15,7 +15,10 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -333,7 +336,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
         level.pac().playAnimation();
         level.ghosts().forEach(Actor::playAnimation);
 
-        publishGameEvent(new HuntingPhaseStartedEvent(this, level.huntingTimer().phaseIndex(), level.huntingTimer().phase()));
+        flow().publishGameEvent(new HuntingPhaseStartedEvent(this, level.huntingTimer().phaseIndex(), level.huntingTimer().phase()));
     }
 
     /**
@@ -362,54 +365,6 @@ public abstract class AbstractGameModel implements Game, GameCheats {
 
         level.ghosts().forEach(Ghost::stopAnimation);
         level.optBonus().ifPresent(Bonus::setInactive);
-    }
-
-    /* -------------------------------------------------------------------------
-     * GameEventManager implementation
-     * ---------------------------------------------------------------------- */
-
-    private final Set<GameEventListener> eventListeners = new HashSet<>();
-
-    /**
-     * Registers a {@link GameEventListener}.
-     *
-     * @param listener the listener to add
-     */
-    @Override
-    public void addGameEventListener(GameEventListener listener) {
-        requireNonNull(listener);
-        if (!eventListeners.contains(listener)) {
-            eventListeners.add(listener);
-            Logger.info("{}: Game event listener registered: {}", getClass().getSimpleName(), listener);
-        }
-    }
-
-    /**
-     * Removes a previously registered {@link GameEventListener}.
-     *
-     * @param listener the listener to remove
-     */
-    @Override
-    public void removeGameEventListener(GameEventListener listener) {
-        requireNonNull(listener);
-        boolean removed = eventListeners.remove(listener);
-        if (removed) {
-            Logger.info("{}: Game event listener removed: {}", getClass().getSimpleName(), listener);
-        } else {
-            Logger.warn("{}: Game event listener not removed, as not registered: {}", getClass().getSimpleName(), listener);
-        }
-    }
-
-    /**
-     * Publishes a {@link GameEvent} to all registered listeners.
-     *
-     * @param event the event to publish
-     */
-    @Override
-    public void publishGameEvent(GameEvent event) {
-        requireNonNull(event);
-        Logger.trace("Publish game event: {}", event);
-        eventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
     }
 
     /* -------------------------------------------------------------------------
@@ -483,7 +438,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
         }
         if (simStep.extraLifeWon) {
             addLives(1);
-            publishGameEvent(new SpecialScoreEvent(this, newScore));
+            flow().publishGameEvent(new SpecialScoreEvent(this, newScore));
         }
     }
 
@@ -598,7 +553,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
                 activateNextBonus(level);
                 simStep.bonusIndex = level.currentBonusIndex();
             }
-            publishGameEvent(new PacEatsFoodEvent(this, pac, false));
+            flow().publishGameEvent(new PacEatsFoodEvent(this, pac, false));
         }
     }
 
@@ -678,7 +633,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
             pac.powerTimer().doTick();
             if (pac.isPowerFadingStarting(level)) {
                 simStep.pacStartsLosingPower = true;
-                publishGameEvent(new PacPowerFadesEvent(this, pac));
+                flow().publishGameEvent(new PacPowerFadesEvent(this, pac));
             } else if (pac.powerTimer().hasExpired()) {
                 simStep.pacLostPower = true;
                 pac.powerTimer().stop();
@@ -686,7 +641,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
                 level.energizerVictims().clear();
                 level.huntingTimer().start();
                 level.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-                publishGameEvent(new PacLostPowerEvent(this, pac));
+                flow().publishGameEvent(new PacLostPowerEvent(this, pac));
             }
         }
     }

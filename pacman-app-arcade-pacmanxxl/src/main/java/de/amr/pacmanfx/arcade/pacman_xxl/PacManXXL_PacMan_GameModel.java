@@ -50,6 +50,6 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         gateKeeper.setLevelNumber(levelNumber);
 
         levelProperty().set(level);
-        publishGameEvent(new LevelCreatedEvent(this, level));
+        flow().publishGameEvent(new LevelCreatedEvent(this, level));
     }
 }
