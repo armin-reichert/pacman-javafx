@@ -26,7 +26,7 @@ public final class CheatActions {
             final Game game = ui.gameContext().game();
             realLevel(game).ifPresent(_ -> {
                 game.addLives(3);
-                game.cheating().raiseFlag();
+                game.cheats().raiseFlag();
                 ui.showFlashMessage(ui.translate("cheat_add_lives", game.lifeCount()));
             });
         }
@@ -41,7 +41,7 @@ public final class CheatActions {
             final Game game = ui.gameContext().game();
             realLevel(game).ifPresent(level -> {
                 level.worldMap().foodLayer().eatPellets();
-                game.cheating().raiseFlag();
+                game.cheats().raiseFlag();
                 game.flow().publishGameEvent(new PacEatsFoodEvent(game, level.pac(), true));
             });
         }
@@ -64,7 +64,7 @@ public final class CheatActions {
                     killableGhosts.forEach(ghost -> game.onEatGhost(level, ghost));
                     game.flow().enterStateWithName(CanonicalGameState.EATING_GHOST.name());
                 }
-                game.cheating().raiseFlag();
+                game.cheats().raiseFlag();
             });
         }
 
@@ -81,7 +81,7 @@ public final class CheatActions {
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
             realLevel(game).ifPresent(_ -> {
-                game.cheating().raiseFlag();
+                game.cheats().raiseFlag();
                 game.flow().enterStateWithName(CanonicalGameState.LEVEL_COMPLETE.name());
             });
         }
@@ -93,7 +93,7 @@ public final class CheatActions {
             if (level == null) {
                 return false;
             }
-            return game.isPlaying()
+            return game.isPlayingLevel()
                 && game.flow().state().nameMatches(CanonicalGameState.LEVEL_PLAYING.name())
                 && level.number() < game.lastLevelNumber();
         }
@@ -103,7 +103,7 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
-            setAutopilot(ui, !game.cheating().isUsingAutopilot());
+            setAutopilot(ui, !game.cheats().isUsingAutopilot());
         }
     };
 
@@ -124,11 +124,11 @@ public final class CheatActions {
     private static void setAutopilot(GameUI ui, boolean on) {
         final Game game = ui.gameContext().game();
         if (on) {
-            if (game.isPlaying() && !game.isDemoLevelRunning()) {
-                game.cheating().raiseFlag();
+            if (game.isPlayingLevel() && !game.isDemoLevelRunning()) {
+                game.cheats().raiseFlag();
             }
         }
-        game.cheating().usingAutopilotProperty().set(on);
+        game.cheats().usingAutopilotProperty().set(on);
         ui.voicePlayer().playVoice(on ? GameUI_Resources.VOICE_AUTOPILOT_ON : GameUI_Resources.VOICE_AUTOPILOT_OFF);
         ui.showFlashMessage(ui.translate(on ? "autopilot_on" : "autopilot_off"));
 
@@ -152,18 +152,18 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
-            setImmunity(ui, !game.cheating().isImmune());
+            setImmunity(ui, !game.cheats().isImmune());
         }
     };
 
     private static void setImmunity(GameUI ui, boolean on) {
         final Game game = ui.gameContext().game();
         if (on) {
-            if (game.isPlaying() && !game.isDemoLevelRunning()) {
-                game.cheating().raiseFlag();
+            if (game.isPlayingLevel() && !game.isDemoLevelRunning()) {
+                game.cheats().raiseFlag();
             }
         }
-        game.cheating().immuneProperty().set(on);
+        game.cheats().immuneProperty().set(on);
         ui.voicePlayer().playVoice(on ? GameUI_Resources.VOICE_IMMUNITY_ON : GameUI_Resources.VOICE_IMMUNITY_OFF);
         ui.showFlashMessage(ui.translate(on ? "player_immunity_on" : "player_immunity_off"));
     }

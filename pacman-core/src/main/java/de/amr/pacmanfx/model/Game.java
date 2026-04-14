@@ -46,6 +46,8 @@ public interface Game {
      */
     GameFlow flow();
 
+    GameCheats cheats();
+
     /**
      * Returns the simulation step information for the current frame.
      * This includes actor movements, collisions, and events that occurred
@@ -127,20 +129,6 @@ public interface Game {
      */
     void startNewGame(long tick);
 
-    /** @return {@code true} if the game is currently in a playing state */
-    boolean isPlaying();
-
-    /** Sets whether the game is currently being played. */
-    void setPlaying(boolean playing);
-
-    /**
-     * Continues gameplay after a game‑over or interruption.
-     *
-     * @param level the level to resume
-     * @param tick  the current simulation tick
-     */
-    void continuePlaying(GameLevel level, long tick);
-
     /** @return {@code true} if the game can continue after game‑over */
     boolean canContinueOnGameOver();
 
@@ -174,9 +162,23 @@ public interface Game {
     /** Starts the next level in sequence. */
     void startNextLevel();
 
-    void startPlayingLevel(GameLevel level);
+    void onPlayingLevelStart(GameLevel level);
 
     void playLevel(GameLevel level);
+
+    /** @return {@code true} if the game is currently in a playing state */
+    boolean isPlayingLevel();
+
+    /** Sets whether the game is currently being played. */
+    void setPlayingLevel(boolean playing);
+
+    /**
+     * Continues gameplay after a game‑over or interruption.
+     *
+     * @param level the level to resume
+     * @param tick  the current simulation tick
+     */
+    void continuePlayingLevel(GameLevel level, long tick);
 
     void activateNextBonus(GameLevel level);
 
@@ -238,6 +240,4 @@ public interface Game {
 
     /** @return the number of the last cut scene shown */
     int lastCutSceneNumber();
-
-    GameCheats cheating();
 }

@@ -202,7 +202,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
      * ---------------------------------------------------------------------- */
 
     @Override
-    public GameCheats cheating() {
+    public GameCheats cheats() {
         return this;
     }
 
@@ -272,12 +272,12 @@ public abstract class AbstractGameModel implements Game, GameCheats {
     }
 
     @Override
-    public boolean isPlaying() {
+    public boolean isPlayingLevel() {
         return playing.get();
     }
 
     @Override
-    public void setPlaying(boolean playing) {
+    public void setPlayingLevel(boolean playing) {
         this.playing.set(playing);
     }
 
@@ -323,19 +323,17 @@ public abstract class AbstractGameModel implements Game, GameCheats {
     }
 
     /**
-     * Starts the hunting phase: resets timers, starts animations, and publishes a game event.
+     * Called when level starts playing: resets timers, starts animations, and publishes a game event.
      *
      * @param level the current level
      */
     @Override
-    public void startPlayingLevel(GameLevel level) {
+    public void onPlayingLevelStart(GameLevel level) {
         level.huntingTimer().startFirstPhase(level.number());
-
         level.blinking().setStartState(Pulse.State.ON);
         level.blinking().restart();
         level.pac().playAnimation();
         level.ghosts().forEach(Actor::playAnimation);
-
         flow().publishGameEvent(new HuntingPhaseStartedEvent(this, level.huntingTimer().phaseIndex(), level.huntingTimer().phase()));
     }
 
@@ -652,7 +650,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
     protected void clearCheatingProperties() {
         immuneProperty().set(false);
         usingAutopilotProperty().set(false);
-        cheating().clearFlag();
+        cheats().clearFlag();
     }
 
     /**
@@ -664,8 +662,8 @@ public abstract class AbstractGameModel implements Game, GameCheats {
     protected void updateCheatingProperties(GameLevel level) {
         level.pac().immuneProperty().bind(immuneProperty());
         level.pac().usingAutopilotProperty().bind(usingAutopilotProperty());
-        if (cheating().isImmune() || cheating().isUsingAutopilot()) {
-            cheating().raiseFlag();
+        if (cheats().isImmune() || cheats().isUsingAutopilot()) {
+            cheats().raiseFlag();
         }
     }
 

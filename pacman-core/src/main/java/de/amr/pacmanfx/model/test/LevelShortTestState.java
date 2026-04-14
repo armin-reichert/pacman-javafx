@@ -36,7 +36,7 @@ public class LevelShortTestState extends AbstractState<Game> implements TestStat
         final GameLevel level = game.optGameLevel().orElseThrow();
         final float START = 1.0f;
         if (timer.atSecond(START)) {
-            game.continuePlaying(level, 1);
+            game.continuePlayingLevel(level, 1);
             GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
             message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
             level.setMessage(message);

@@ -99,6 +99,6 @@ public class DashboardSectionGameControl extends DashboardSection {
     }
 
     private boolean canEnterNextLevel(Game game, State<?> state) {
-        return game.isPlaying() && state.nameMatches(CanonicalGameState.LEVEL_PLAYING.name());
+        return game.isPlayingLevel() && state.nameMatches(CanonicalGameState.LEVEL_PLAYING.name());
     }
 }

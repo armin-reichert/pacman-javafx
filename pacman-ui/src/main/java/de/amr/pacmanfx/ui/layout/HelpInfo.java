@@ -78,13 +78,13 @@ public class HelpInfo {
         pane.setBackground(UfxBackgrounds.roundedBackground(backgroundColor, 10));
 
         // add default entries:
-        if (ui.gameContext().game().cheating().isUsingAutopilot()) {
+        if (ui.gameContext().game().cheats().isUsingAutopilot()) {
             var autoPilotEntry = text(ui.translate("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
-        if (ui.gameContext().game().cheating().isImmune()) {
+        if (ui.gameContext().game().cheats().isImmune()) {
             var immunityEntry = text(ui.translate("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);

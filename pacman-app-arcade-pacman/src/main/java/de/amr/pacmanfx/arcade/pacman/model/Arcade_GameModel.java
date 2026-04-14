@@ -167,13 +167,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
     }
 
-    protected void showLevelMessage(GameLevelMessageType type) {
-        requireNonNull(type);
-        optGameLevel().ifPresent(level -> {
-            final var message = new GameLevelMessage(type);
-            message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
-            level.setMessage(message);
-        });
+    protected void showLevelMessage(GameLevel level, GameLevelMessageType type) {
+        final var message = new GameLevelMessage(type);
+        message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
+        level.setMessage(message);
     }
 
     // GameEvents interface
@@ -256,12 +253,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void onGameOver() {
-        final GameLevel level = optGameLevel().orElseThrow();
-        setPlaying(false);
         if (!coinMechanism.isEmpty()) {
-            coinMechanism.consumeCoin();
+            coinMechanism.consumeCoin(); //TODO not sure if coin should be consumed after game is over
         }
-        showLevelMessage(GameLevelMessageType.GAME_OVER);
+        setPlayingLevel(false);
+        final GameLevel level = optGameLevel().orElseThrow();
+        showLevelMessage(level, GameLevelMessageType.GAME_OVER);
         try {
             updateHighScore();
         } catch (IOException x) {
@@ -293,7 +290,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         levelProperty().set(null);
         lifeCountProperty().set(initialLifeCount());
         levelCounter().clear();
-        setPlaying(false);
+        setPlayingLevel(false);
     }
 
     @Override
@@ -312,17 +309,17 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level.showPacAndGhosts();
         }
         else if (tick == Arcade_GameState.TICK_NEW_GAME_START_HUNTING) {
-            setPlaying(true);
+            setPlayingLevel(true);
             flow().enterState(Arcade_GameState.LEVEL_PLAYING);
         }
     }
 
     @Override
-    public void continuePlaying(GameLevel level, long tick) {
+    public void continuePlayingLevel(GameLevel level, long tick) {
         if (tick == 1) {
             makeReadyForPlaying(level);
             level.showPacAndGhosts();
-            showLevelMessage(GameLevelMessageType.READY);
+            showLevelMessage(level, GameLevelMessageType.READY);
         }
         else if (tick == 60) {
             flow().publishGameEvent(new GameContinuedEvent(this));
@@ -404,12 +401,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         level.recordStartTime(System.currentTimeMillis());
         makeReadyForPlaying(level);
         if (level.isDemoLevel()) {
-            showLevelMessage(GameLevelMessageType.GAME_OVER);
+            showLevelMessage(level, GameLevelMessageType.GAME_OVER);
             score().setEnabled(false);
             highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
         } else {
-            showLevelMessage(GameLevelMessageType.READY);
+            showLevelMessage(level, GameLevelMessageType.READY);
             levelCounter().update(level.number(), level.bonusSymbol(0));
             score().setEnabled(true);
             updateCheatingProperties(level);

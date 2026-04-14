@@ -162,8 +162,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         miScrolling.setToggleGroup(toggleGroup);
 
         menu.addLocalizedTitleItem("pacman");
-        menu.addLocalizedCheckBox(game.cheating().usingAutopilotProperty(), "autopilot");
-        menu.addLocalizedCheckBox(game.cheating().immuneProperty(), "immunity");
+        menu.addLocalizedCheckBox(game.cheats().usingAutopilotProperty(), "autopilot");
+        menu.addLocalizedCheckBox(game.cheats().immuneProperty(), "immunity");
         menu.addSeparator();
         menu.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
         menu.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
@@ -202,7 +202,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         final TengenMsPacMan_GameModel game = gameContext().game();
         game.optGameLevel().ifPresent(level -> {
             resetAnimations(level);
-            game.showLevelMessage(GameLevelMessageType.READY);
+            game.showMessage(level, GameLevelMessageType.READY);
             dynamicCamera.playIntroSequence();
         });
     }

@@ -88,8 +88,8 @@ public class PlaySceneContextMenu extends GameUI_ContextMenu implements Disposab
         }
 
         addLocalizedTitleItem("pacman");
-        addLocalizedCheckBox(game.cheating().usingAutopilotProperty(), "autopilot");
-        addLocalizedCheckBox(game.cheating().immuneProperty(), "immunity");
+        addLocalizedCheckBox(game.cheats().usingAutopilotProperty(), "autopilot");
+        addLocalizedCheckBox(game.cheats().immuneProperty(), "immunity");
 
         addSeparator();
         addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");

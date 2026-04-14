@@ -168,9 +168,9 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
         gameContext.gameVariantNameProperty().addListener((_, _, _) -> {
             final Game game = gameContext.game();
-            statusIconBox.iconAutopilot().visibleProperty().bind(game.cheating().usingAutopilotProperty());
-            statusIconBox.iconCheated()  .visibleProperty().bind(game.cheating().cheatUsedProperty());
-            statusIconBox.iconImmune()   .visibleProperty().bind(game.cheating().immuneProperty());
+            statusIconBox.iconAutopilot().visibleProperty().bind(game.cheats().usingAutopilotProperty());
+            statusIconBox.iconCheated()  .visibleProperty().bind(game.cheats().cheatUsedProperty());
+            statusIconBox.iconImmune()   .visibleProperty().bind(game.cheats().immuneProperty());
         });
     }
 
@@ -336,7 +336,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         //TODO this is game-specific and should not be here
         optGameScene().ifPresent(gameScene -> {
             boolean shouldConsumeCoin = game.flow().state().name().equals("STARTING_GAME_OR_LEVEL")
-                || game.isPlaying();
+                || game.isPlayingLevel();
             if (shouldConsumeCoin && !gameContext.coinMechanism().isEmpty()) {
                 gameContext.coinMechanism().consumeCoin();
             }
@@ -373,7 +373,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public void showEditorView() {
-        if (!gameContext.game().isPlaying() || gameContext.clock().getUpdatesDisabled()) {
+        if (!gameContext.game().isPlayingLevel() || gameContext.clock().getUpdatesDisabled()) {
             stopGame();
             viewManager.selectView(EDITOR_VIEW);
             return;

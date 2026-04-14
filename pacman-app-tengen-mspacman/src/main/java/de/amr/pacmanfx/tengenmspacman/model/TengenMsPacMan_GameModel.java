@@ -286,7 +286,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         lifeCountProperty().set(initialLifeCount());
         levelProperty().set(null);
         levelCounter.clear();
-        setPlaying(false);
+        setPlayingLevel(false);
         boosterActive = false;
         gateKeeper.reset();
         score.reset();
@@ -300,8 +300,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void onGameOver() {
-        setPlaying(false);
-        showLevelMessage(GameLevelMessageType.GAME_OVER);
+        final GameLevel level = optGameLevel().orElseThrow();
+        setPlayingLevel(false);
+        showMessage(level, GameLevelMessageType.GAME_OVER);
         try {
             updateHighScore();
         } catch (IOException x) {
@@ -367,16 +368,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         return numContinues;
     }
 
-    public void showLevelMessage(GameLevelMessageType type) {
-        optGameLevel().ifPresent(level -> {
-            requireNonNull(type);
-            final Vector2f center = level.worldMap().terrainLayer().messageCenterPosition();
-            // Non-Arcade maps have a moving "Game Over" message
-            final GameLevelMessage message = type == GameLevelMessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
-                ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC)
-                : new GameLevelMessage(type, center);
-            level.setMessage(message);
-        });
+    public void showMessage(GameLevel level, GameLevelMessageType type) {
+        final Vector2f center = level.worldMap().terrainLayer().messageCenterPosition();
+        // Non-Arcade maps show a moving "Game Over" message
+        final GameLevelMessage message = type == GameLevelMessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
+            ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC)
+            : new GameLevelMessage(type, center);
+        level.setMessage(message);
     }
 
     @Override
@@ -419,13 +417,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             level.showPacAndGhosts();
         }
         else if (tick == TICK_NEW_GAME_START_HUNTING) {
-            setPlaying(true);
+            setPlayingLevel(true);
             flow().enterState(LEVEL_PLAYING);
         }
     }
 
     @Override
-    public void continuePlaying(GameLevel level, long tick) {
+    public void continuePlayingLevel(GameLevel level, long tick) {
         if (tick == 1) {
             makeReadyForPlaying(level);
             level.showPacAndGhosts();
@@ -443,12 +441,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             activatePacBooster(level.pac(), true);
         }
         if (level.isDemoLevel()) {
-            showLevelMessage(GameLevelMessageType.GAME_OVER);
+            showMessage(level, GameLevelMessageType.GAME_OVER);
             score().setEnabled(true);
             highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
         } else {
-            showLevelMessage(GameLevelMessageType.READY);
+            showMessage(level, GameLevelMessageType.READY);
             levelCounter.update(level.number(), level.bonusSymbol(0));
             score().setEnabled(true);
             updateCheatingProperties(level);
