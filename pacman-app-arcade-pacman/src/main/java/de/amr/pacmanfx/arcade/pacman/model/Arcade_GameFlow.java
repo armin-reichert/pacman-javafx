@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameFlow;
+import javafx.application.Platform;
 import org.tinylog.Logger;
 
 import java.util.HashSet;
@@ -24,7 +25,7 @@ public class Arcade_GameFlow implements GameFlow {
     private final StateMachine<Game> stateMachine = new StateMachine<>();
 
     public Arcade_GameFlow(Arcade_GameModel game) {
-        stateMachine.setName("Arcade Pac-Man (common) Game Control");
+        stateMachine.setName("Arcade Pac-Man Game Flow");
         stateMachine.setContext(game);
         stateMachine.addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
         stateMachine.addStates(Arcade_GameState.values());
@@ -80,6 +81,13 @@ public class Arcade_GameFlow implements GameFlow {
 
     private final Set<GameEventListener> eventListeners = new HashSet<>();
 
+    private void ensureFxThread() {
+        if (!Platform.isFxApplicationThread()) {
+            throw new IllegalStateException(
+                "Game event listeners must be added/removed on the JavaFX Application Thread");
+        }
+    }
+
     /**
      * Registers a {@link GameEventListener}.
      *
@@ -88,8 +96,9 @@ public class Arcade_GameFlow implements GameFlow {
     @Override
     public void addGameEventListener(GameEventListener listener) {
         requireNonNull(listener);
-        if (!eventListeners.contains(listener)) {
-            eventListeners.add(listener);
+        ensureFxThread();
+        final boolean added = eventListeners.add(listener);
+        if (added) {
             Logger.info("{}: Game event listener registered: {}", getClass().getSimpleName(), listener);
         }
     }
@@ -102,6 +111,7 @@ public class Arcade_GameFlow implements GameFlow {
     @Override
     public void removeGameEventListener(GameEventListener listener) {
         requireNonNull(listener);
+        ensureFxThread();
         boolean removed = eventListeners.remove(listener);
         if (removed) {
             Logger.info("{}: Game event listener removed: {}", getClass().getSimpleName(), listener);
@@ -118,7 +128,9 @@ public class Arcade_GameFlow implements GameFlow {
     @Override
     public void publishGameEvent(GameEvent event) {
         requireNonNull(event);
-        Logger.trace("Publish game event: {}", event);
+        if (Logger.isTraceEnabled()) {
+            Logger.trace("Publish game event: {}", event);
+        }
         eventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
     }
 }
