@@ -7,6 +7,7 @@ import de.amr.pacmanfx.lib.TickTimer;
 import org.tinylog.Logger;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -90,10 +91,10 @@ public class StateMachine<C> {
     }
 
     /**
-     * @return (Unmodifiable) list of the state objects
+     * @return stream of the state objects
      */
-    public Set<State<C>> states() {
-        return Collections.unmodifiableSet(states);
+    public Stream<State<C>> states() {
+        return states.stream();
     }
 
     /**
@@ -102,15 +103,13 @@ public class StateMachine<C> {
      */
     public Optional<State<C>> optState(String name) {
         requireNonNull(name);
-        return states().stream()
-            .filter(s -> s.name().equals(name))
-            .findFirst();
+        return states().filter(s -> s.name().equals(name)).findFirst();
     }
 
     /**
      * @return the previous state (can be null)
      */
-    public State<C> prevState() {
+    public State<C> previousState() {
         return previousState;
     }
 
@@ -121,11 +120,9 @@ public class StateMachine<C> {
      */
     public void addStateChangeListener(StateChangeListener<State<C>> listener) {
         requireNonNull(listener);
-        if (!stateChangeListeners.contains(listener)) {
-            stateChangeListeners.add(listener);
-        }
-        else {
-            Logger.warn("Attempt to add state change listener twice: {}", listener);
+        final boolean added = stateChangeListeners.add(listener);
+        if (!added) {
+            Logger.warn("State change listener already added: {}", listener);
         }
     }
 
@@ -194,7 +191,10 @@ public class StateMachine<C> {
      */
     public void resumePreviousState() {
         if (previousState == null) {
-            throw new IllegalStateException("State machine cannot resume previous state because there is none");
+            throw new IllegalStateException("State machine cannot resume previous state: no previous state exists");
+        }
+        if (state == null) {
+            throw new IllegalStateException("State machine cannot resume previous state: current state is not defined");
         }
         Logger.debug("Resume state {}, timer= {}", previousState, previousState.timer());
         state.onExit(context);
@@ -207,9 +207,13 @@ public class StateMachine<C> {
      * Runs the {@link State#onUpdate} hook method (if defined) of the current state and advances the state timer.
      */
     public void update() {
+        if (state == null) {
+            throw new IllegalStateException("State machine cannot be updated: current state is not defined");
+        }
         state.onUpdate(context);
         if (state.timer().state() == TickTimer.State.READY) {
             state.timer().start();
+            Logger.info("Timer started for state '{}'", state.name());
         } else {
             state.timer().doTick();
         }
