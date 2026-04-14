@@ -29,7 +29,7 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     private static final String SPRITESHEET_PNG = "graphics/mspacman_spritesheet.png";
 
     // Map images are located left and sprites right of this x position
-    private static final int HORIZONTAL_SPLIT_X = 456;
+    private static final int SPRITE_START_X = 456;
 
     private final SpriteMap<SpriteID> spriteMap = new SpriteMap<>(SpriteID.class);
     private final Image image;
@@ -180,7 +180,7 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     // private methods
 
     private RectShort tile(int tileX, int tileY) {
-        return RectShort.of(HORIZONTAL_SPLIT_X + 16 * tileX, 16 * tileY, 16, 16);
+        return RectShort.of(SPRITE_START_X + 16 * tileX, 16 * tileY, 16, 16);
     }
 
     private RectShort[] tilesRightOf(int tileX, int tileY, int numTiles) {
@@ -188,7 +188,7 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
             throw new IllegalArgumentException("Number of tiles must be positive but is " + numTiles);
         }
         return IntStream.range(tileX, tileX + numTiles)
-            .mapToObj(x -> RectShort.of(HORIZONTAL_SPLIT_X + 16 * x, 16 * tileY, 16, 16))
+            .mapToObj(tx -> tile(tx, tileY))
             .toArray(RectShort[]::new);
     }
 
@@ -197,12 +197,12 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     }
 
     private RectShort[] makeMsPacManMunchingSpriteSeq(int dir) {
-        RectShort wide = tile(0, dir), open = tile(1, dir), closed = tile(2, dir);
+        final RectShort wide = tile(0, dir), open = tile(1, dir), closed = tile(2, dir);
         return new RectShort[] {open, open, wide, wide, open, open, open, closed, closed};
     }
 
     private RectShort[] makeMsPacManDyingSpriteSeq() {
-        RectShort right = tile(1, 0), left = tile(1, 1), up = tile(1, 2), down = tile(1, 3);
+        final RectShort right = tile(1, 0), left = tile(1, 1), up = tile(1, 2), down = tile(1, 3);
         // TODO: this is not yet 100% correct
         return new RectShort[] {down, left, up, right, down, left, up, right, down, left, up};
     }
