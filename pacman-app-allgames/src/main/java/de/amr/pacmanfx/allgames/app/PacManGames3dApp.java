@@ -165,9 +165,9 @@ public class PacManGames3dApp extends Application {
             case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(gameBox, xxlMapSelector, highScoreFile);
         };
         if (INTERACTIVE_TESTS_ENABLED) {
-            game.flow().addState(new LevelShortTestState(gameBox));
-            game.flow().addState(new LevelMediumTestState());
-            game.flow().addState(new CutScenesTestState());
+            game.flow().addState(new LevelShortTestState<>(gameBox));
+            game.flow().addState(new LevelMediumTestState<>());
+            game.flow().addState(new CutScenesTestState<>());
         }
         gameBox.registerGame(gameVariant.name(), game);
     }

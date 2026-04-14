@@ -7,8 +7,8 @@ import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static java.util.Objects.requireNonNull;
@@ -52,7 +52,7 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
                 .build();
 
             case Ghost.AnimationID.GHOST_EYES -> SpriteAnimationBuilder.builder(manager)
-                .sprites(spriteSheet().ghostEyesSprites(Direction.LEFT))
+                .singleSprite(spriteSheet().ghostEyesSprite(Direction.LEFT))
                 .build();
 
             case Ghost.AnimationID.GHOST_POINTS -> SpriteAnimationBuilder.builder(manager)
