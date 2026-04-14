@@ -23,10 +23,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class StateMachine<C> {
 
-    protected final List<StateChangeListener<State<C>>> stateChangeListeners = new ArrayList<>(5);
+    protected final Set<State<C>> states = new HashSet<>();
+    protected final Set<StateChangeListener<State<C>>> stateChangeListeners = new HashSet<>(5);
     protected C context;
     protected String name = getClass().getSimpleName();
-    protected Set<State<C>> states = new HashSet<>();
     protected State<C> state;
     protected State<C> previousState;
 
