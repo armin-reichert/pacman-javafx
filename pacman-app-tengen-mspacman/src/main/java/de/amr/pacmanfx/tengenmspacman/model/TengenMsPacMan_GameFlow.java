@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.pacman.model;
+package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.State;
@@ -13,15 +13,16 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-public class Arcade_GameFlow implements GameFlow {
+public class TengenMsPacMan_GameFlow implements GameFlow {
 
     private final StateMachine<Game> stateMachine = new StateMachine<>();
 
-    public Arcade_GameFlow(Arcade_GameModel game) {
-        stateMachine.setName("Arcade Pac-Man (common) Game Control");
+    public TengenMsPacMan_GameFlow(TengenMsPacMan_GameModel game) {
+        stateMachine.setName("Tengen Ms. Pac-Man Game State Machine");
+        stateMachine.addStates(TengenMsPacMan_GameState.values());
         stateMachine.setContext(game);
-        stateMachine.addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
-        stateMachine.addStates(Arcade_GameState.values());
+        stateMachine.addStateChangeListener((oldState, newState) -> game.publishGameEvent(
+            new GameStateChangeEvent(game, oldState, newState)));
     }
 
     @Override

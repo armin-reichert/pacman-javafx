@@ -58,7 +58,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     private static final float BONUS_EATEN_SECONDS = 2;
 
-    protected final GameFlow gameFlow;
+    protected final Arcade_GameFlow gameFlow;
     protected final CoinMechanism coinMechanism;
 
     protected HeadsUpDisplay hud;

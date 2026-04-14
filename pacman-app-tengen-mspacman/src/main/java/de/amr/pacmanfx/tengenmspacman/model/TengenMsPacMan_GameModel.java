@@ -5,7 +5,6 @@ package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.TickTimer;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -37,16 +36,6 @@ import static java.util.Objects.requireNonNull;
  * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly">Ms.Pac-Man-NES-Tengen-Disassembly</a>
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
-
-    private static GameFlow createGameControl(Game game) {
-        final var stateMachine = new StateMachine<Game>();
-        stateMachine.setName("Tengen Ms. Pac-Man Game State Machine");
-        stateMachine.addStates(TengenMsPacMan_GameState.values());
-        stateMachine.setContext(game);
-        stateMachine.addStateChangeListener((oldState, newState) -> game.publishGameEvent(
-            new GameStateChangeEvent(game, oldState, newState)));
-        return () -> stateMachine;
-    }
 
     public static Pac createPacMan() {
         final var pacMan = new Pac("Pac-Man");
@@ -226,7 +215,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         0x00, 0x18, 0x20                                // levels 17, 18, then 19+
     };
 
-    private final GameFlow gameFlow;
+    private final TengenMsPacMan_GameFlow gameFlow;
     private final TengenMsPacMan_HeadsUpDisplay hud;
     private final TengenMsPacMan_MapSelector mapSelector;
     private final TengenMsPacMan_LevelCounter levelCounter;
@@ -248,7 +237,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
         hud = new TengenMsPacMan_HeadsUpDisplay();
-        gameFlow = createGameControl(this);
+        gameFlow = new TengenMsPacMan_GameFlow(this);
         //TODO implement original logic from Tengen game
         gateKeeper = new GateKeeper();
         automaticSteering = new RuleBasedPacSteering();

@@ -3,9 +3,7 @@
  */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
@@ -148,14 +146,13 @@ public class GameUI_Builder {
         final var ui = new GameUI_Implementation(gameBox, windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight());
 
         gameConfigMap.forEach((gameVariant, config) -> {
-            final AbstractGameModel gameModel = config.gameModelFactory.get();
-            gameBox.registerGame(gameVariant, gameModel);
+            final AbstractGameModel game = config.gameModelFactory.get();
+            gameBox.registerGame(gameVariant, game);
             ui.uiConfigManager().addFactory(gameVariant, config.uiConfigFactory);
             if (includeInteractiveTests) {
-                final StateMachine<Game> gameStateMachine = gameModel.flow().stateMachine();
-                gameStateMachine.addState(new LevelShortTestState(gameBox));
-                gameStateMachine.addState(new LevelMediumTestState());
-                gameStateMachine.addState(new CutScenesTestState());
+                game.flow().addState(new LevelShortTestState(gameBox));
+                game.flow().addState(new LevelMediumTestState());
+                game.flow().addState(new CutScenesTestState());
             }
         });
 

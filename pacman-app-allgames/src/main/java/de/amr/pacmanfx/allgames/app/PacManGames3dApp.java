@@ -11,7 +11,6 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
@@ -166,10 +165,9 @@ public class PacManGames3dApp extends Application {
             case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(gameBox, xxlMapSelector, highScoreFile);
         };
         if (INTERACTIVE_TESTS_ENABLED) {
-            final StateMachine<Game> gameStateMachine = game.flow().stateMachine();
-            gameStateMachine.addState(new LevelShortTestState(gameBox));
-            gameStateMachine.addState(new LevelMediumTestState());
-            gameStateMachine.addState(new CutScenesTestState());
+            game.flow().addState(new LevelShortTestState(gameBox));
+            game.flow().addState(new LevelMediumTestState());
+            game.flow().addState(new CutScenesTestState());
         }
         gameBox.registerGame(gameVariant.name(), game);
     }
