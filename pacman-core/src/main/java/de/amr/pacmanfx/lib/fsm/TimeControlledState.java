@@ -5,7 +5,7 @@ package de.amr.pacmanfx.lib.fsm;
 
 import de.amr.pacmanfx.lib.TickTimer;
 
-public abstract class AbstractState<C> implements State<C> {
+public abstract class TimeControlledState<C> implements State<C> {
 
     protected final TickTimer timer = new TickTimer("Timer-" + name());
 

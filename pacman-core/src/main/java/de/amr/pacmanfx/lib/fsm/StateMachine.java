@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class StateMachine<C> {
 
-    protected final List<FsmStateChangeListener<State<C>>> stateChangeListeners = new ArrayList<>(5);
+    protected final List<StateChangeListener<State<C>>> stateChangeListeners = new ArrayList<>(5);
     protected C context;
     protected Set<State<C>> states = new HashSet<>();
     protected State<C> currentState;
@@ -115,7 +115,7 @@ public class StateMachine<C> {
      *
      * @param listener a state change listener
      */
-    public void addStateChangeListener(FsmStateChangeListener<State<C>> listener) {
+    public void addStateChangeListener(StateChangeListener<State<C>> listener) {
         requireNonNull(listener);
         if (!stateChangeListeners.contains(listener)) {
             stateChangeListeners.add(listener);
@@ -130,7 +130,7 @@ public class StateMachine<C> {
      *
      * @param listener a state change listener
      */
-    public void removeStateChangeListener(FsmStateChangeListener<State<C>> listener) {
+    public void removeStateChangeListener(StateChangeListener<State<C>> listener) {
         requireNonNull(listener);
         stateChangeListeners.remove(listener);
     }

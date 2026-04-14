@@ -4,11 +4,11 @@
 package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.event.GenericChangeEvent;
-import de.amr.pacmanfx.lib.fsm.AbstractState;
+import de.amr.pacmanfx.lib.fsm.TimeControlledState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameFlow;
 
-public class CutScenesTestState extends AbstractState<Game> implements TestState {
+public class CutScenesTestState extends TimeControlledState<Game> implements TestState {
 
     public int testedCutSceneNumber;
 
