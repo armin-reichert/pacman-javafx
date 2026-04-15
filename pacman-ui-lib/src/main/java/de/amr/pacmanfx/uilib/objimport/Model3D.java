@@ -37,7 +37,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Model3D implements Disposable {
 
-    public static Model3D fromWavefrontFile(URL modelURL) throws Model3DException {
+    public static Model3D fromOBJFile(URL modelURL) throws Model3DException {
         try {
             final Model3D content = ObjFileImporter.importObjFile(modelURL, StandardCharsets.UTF_8);
             if (content == null) {

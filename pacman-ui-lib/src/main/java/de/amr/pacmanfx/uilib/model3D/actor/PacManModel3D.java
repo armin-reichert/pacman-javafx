@@ -32,6 +32,14 @@ import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
  */
 public class PacManModel3D implements Disposable {
 
+    private static class LazyThreadSafeSingletonHolder {
+        static final PacManModel3D SINGLETON = new PacManModel3D();
+    }
+
+    public static PacManModel3D instance() {
+        return LazyThreadSafeSingletonHolder.SINGLETON;
+    }
+
 	private static final String MESH_ID_PAC_MAN_EYES   = "PacMan.Eyes";
 	private static final String MESH_ID_PAC_MAN_HEAD   = "PacMan.Head";
 	private static final String MESH_ID_PAC_MAN_PALATE = "PacMan.Palate";
@@ -51,11 +59,9 @@ public class PacManModel3D implements Disposable {
 	 *
 	 * @throws RuntimeException if the model cannot be loaded
 	 */
-	public PacManModel3D() {
+	private PacManModel3D() {
 		try {
-			model3D = Model3D.fromWavefrontFile(
-					getClass().getResource("/de/amr/pacmanfx/uilib/model3D/pacman.obj")
-			);
+			model3D = Model3D.fromOBJFile(getClass().getResource("/de/amr/pacmanfx/uilib/model3D/pacman.obj"));
 		} catch (Model3DException x) {
 			throw new RuntimeException("Failed to load Pac-Man 3D model", x);
 		}

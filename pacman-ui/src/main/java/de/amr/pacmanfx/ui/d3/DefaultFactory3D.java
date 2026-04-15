@@ -35,12 +35,6 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultFactory3D implements Factory3D {
 
-    /** Shared 3D model instance for Pac-Man. */
-    public static final PacManModel3D PAC_MAN_MODEL = new PacManModel3D();
-
-    /** Shared 3D model instance for ghosts. */
-    public static final GhostModel3D GHOST_MODEL = new GhostModel3D();
-
     /** Shared 3D model instance for pellets. */
     public static final PelletModel3D PELLET_MODEL = new PelletModel3D();
 
@@ -114,7 +108,7 @@ public class DefaultFactory3D implements Factory3D {
         requireNonNull(pacConfig);
         requireNonNull(animations);
 
-        return new PacMan3D(animations, PAC_MAN_MODEL, pac, pacConfig);
+        return new PacMan3D(animations, PacManModel3D.instance(), pac, pacConfig);
     }
 
     @Override
@@ -130,9 +124,9 @@ public class DefaultFactory3D implements Factory3D {
         final GhostColorSet colorSet = ghostConfig.createGhostColorSet();
         final GhostMaterials materials = ghostMaterialsCache.computeIfAbsent(colorSet, this::createGhostMaterial);
         final GhostMeshes meshes = new GhostMeshes(
-            GHOST_MODEL.dressMesh(),
-            GHOST_MODEL.pupilsMesh(),
-            GHOST_MODEL.eyeballsMesh()
+            GhostModel3D.instance().dressMesh(),
+            GhostModel3D.instance().pupilsMesh(),
+            GhostModel3D.instance().eyeballsMesh()
         );
 
         return new GhostAppearance3D(
@@ -149,7 +143,7 @@ public class DefaultFactory3D implements Factory3D {
     public Group createLivesCounterShape3D(EntityConfig entityConfig) {
         requireNonNull(entityConfig);
         final PacConfig pacConfig = entityConfig.pacConfig().withModifiedSize3D(entityConfig.livesCounter().shapeSize());
-        return PAC_MAN_MODEL.createPacBody(pacConfig);
+        return PacManModel3D.instance().createPacBody(pacConfig);
     }
 
     @Override

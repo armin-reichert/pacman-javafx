@@ -11,7 +11,15 @@ import javafx.scene.shape.Mesh;
 
 public class GhostModel3D implements Disposable {
 
-	private static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
+    private static class LazyThreadSafeSingletonHolder {
+        static final GhostModel3D SINGLETON = new GhostModel3D();
+    }
+
+    public static GhostModel3D instance() {
+        return LazyThreadSafeSingletonHolder.SINGLETON;
+    }
+
+    private static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
 	private static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
 	private static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
 
@@ -20,9 +28,9 @@ public class GhostModel3D implements Disposable {
     private final Mesh eyeballsMesh;
     private final Mesh pupilsMesh;
 
-	public GhostModel3D() {
+	private GhostModel3D() {
 		try {
-			model3D = Model3D.fromWavefrontFile(getClass().getResource("/de/amr/pacmanfx/uilib/model3D/ghost.obj"));
+			model3D = Model3D.fromOBJFile(getClass().getResource("/de/amr/pacmanfx/uilib/model3D/ghost.obj"));
             dressMesh = model3D.mesh(MESH_ID_GHOST_DRESS).orElseThrow();
             eyeballsMesh = model3D.mesh(MESH_ID_GHOST_EYEBALLS).orElseThrow();
             pupilsMesh = model3D.mesh(MESH_ID_GHOST_PUPILS).orElseThrow();
