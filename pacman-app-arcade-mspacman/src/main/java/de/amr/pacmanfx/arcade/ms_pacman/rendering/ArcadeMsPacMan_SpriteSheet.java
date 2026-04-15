@@ -18,12 +18,12 @@ import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
 
 public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
-    private static class Holder {
-        static final ArcadeMsPacMan_SpriteSheet INSTANCE = new ArcadeMsPacMan_SpriteSheet();
+    private static class LazyThreadSafeSingletonHolder {
+        static final ArcadeMsPacMan_SpriteSheet SINGLETON = new ArcadeMsPacMan_SpriteSheet();
     }
 
     public static ArcadeMsPacMan_SpriteSheet instance() {
-        return Holder.INSTANCE;
+        return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
     private static final String SPRITESHEET_PNG = "graphics/mspacman_spritesheet.png";

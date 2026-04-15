@@ -19,11 +19,11 @@ import java.util.List;
  */
 public class TengenMsPacMan_MapRepository {
 
-    private static class Holder {
-        static final TengenMsPacMan_MapRepository INSTANCE = new TengenMsPacMan_MapRepository();
+    private static class LazyThreadSafeSingletonHolder {
+        static final TengenMsPacMan_MapRepository SINGLETON = new TengenMsPacMan_MapRepository();
     }
 
-    public static TengenMsPacMan_MapRepository instance() { return Holder.INSTANCE; }
+    public static TengenMsPacMan_MapRepository instance() { return LazyThreadSafeSingletonHolder.SINGLETON; }
 
     private TengenMsPacMan_MapRepository() {}
 

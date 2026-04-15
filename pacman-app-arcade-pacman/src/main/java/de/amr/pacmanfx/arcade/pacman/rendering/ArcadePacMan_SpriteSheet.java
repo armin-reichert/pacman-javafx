@@ -17,12 +17,12 @@ import static de.amr.pacmanfx.Globals.*;
 
 public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
-    private static class Holder {
-        static final ArcadePacMan_SpriteSheet INSTANCE = new ArcadePacMan_SpriteSheet();
+    private static class LazyThreadSafeSingletonHolder {
+        static final ArcadePacMan_SpriteSheet SINGLETON = new ArcadePacMan_SpriteSheet();
     }
 
     public static ArcadePacMan_SpriteSheet instance() {
-        return Holder.INSTANCE;
+        return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
     private static final String SPRITESHEET_PNG = "graphics/pacman_spritesheet.png";

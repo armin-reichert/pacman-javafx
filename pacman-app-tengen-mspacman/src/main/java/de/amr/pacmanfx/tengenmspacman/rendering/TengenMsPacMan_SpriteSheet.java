@@ -18,12 +18,12 @@ import static de.amr.pacmanfx.tengenmspacman.rendering.SpriteID.*;
 
 public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
-    private static class Holder {
-        static final TengenMsPacMan_SpriteSheet INSTANCE = new TengenMsPacMan_SpriteSheet();
+    private static class LazyThreadSafeSingletonHolder {
+        static final TengenMsPacMan_SpriteSheet SINGLETON = new TengenMsPacMan_SpriteSheet();
     }
 
     public static TengenMsPacMan_SpriteSheet instance() {
-        return Holder.INSTANCE;
+        return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
     // Bonus symbols/values: x-position, width, y-delta

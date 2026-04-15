@@ -20,12 +20,12 @@ import static de.amr.pacmanfx.Globals.TS;
  */
 public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMapsSpriteSheet.MapID> {
 
-    private static class Holder {
-        static final NonArcadeMapsSpriteSheet INSTANCE = new NonArcadeMapsSpriteSheet();
+    private static class LazyThreadSafeSingletonHolder {
+        static final NonArcadeMapsSpriteSheet SINGLETON = new NonArcadeMapsSpriteSheet();
     }
 
     public static NonArcadeMapsSpriteSheet instance() {
-        return Holder.INSTANCE;
+        return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
     // Map IDs as they appear in the sprite sheet (row by row)

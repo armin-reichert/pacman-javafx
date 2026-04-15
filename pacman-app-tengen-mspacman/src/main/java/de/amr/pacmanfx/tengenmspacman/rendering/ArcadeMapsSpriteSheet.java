@@ -14,12 +14,12 @@ import static de.amr.pacmanfx.Globals.TS;
 
 public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSpriteSheet.MapID> {
 
-    private static class Holder {
-        static final ArcadeMapsSpriteSheet INSTANCE = new ArcadeMapsSpriteSheet();
+    private static class LazyThreadSafeSingletonHolder {
+        static final ArcadeMapsSpriteSheet SINGLETON = new ArcadeMapsSpriteSheet();
     }
 
     public static ArcadeMapsSpriteSheet instance() {
-        return Holder.INSTANCE;
+        return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
     public enum MapID {

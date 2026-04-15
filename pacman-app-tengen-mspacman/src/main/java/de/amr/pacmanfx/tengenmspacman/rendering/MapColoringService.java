@@ -23,11 +23,11 @@ import java.util.List;
  */
 public class MapColoringService {
 
-    private static class Holder {
-        static MapColoringService INSTANCE = new MapColoringService();
+    private static class LazyThreadSafeSingletonHolder {
+        static MapColoringService SINGLETON = new MapColoringService();
     }
 
-    public static MapColoringService instance() { return Holder.INSTANCE; }
+    public static MapColoringService instance() { return LazyThreadSafeSingletonHolder.SINGLETON; }
 
     private MapColoringService() {}
 
