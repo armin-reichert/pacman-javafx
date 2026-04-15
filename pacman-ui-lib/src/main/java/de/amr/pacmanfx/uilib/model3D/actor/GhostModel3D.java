@@ -30,7 +30,7 @@ public class GhostModel3D implements Disposable {
 
 	private GhostModel3D() {
 		try {
-			model3D = Model3D.fromOBJFile(getClass().getResource("/de/amr/pacmanfx/uilib/model3D/ghost.obj"));
+			model3D = Model3D.importObjFile(getClass().getResource("/de/amr/pacmanfx/uilib/model3D/ghost.obj"));
             dressMesh = model3D.mesh(MESH_ID_GHOST_DRESS).orElseThrow();
             eyeballsMesh = model3D.mesh(MESH_ID_GHOST_EYEBALLS).orElseThrow();
             pupilsMesh = model3D.mesh(MESH_ID_GHOST_PUPILS).orElseThrow();

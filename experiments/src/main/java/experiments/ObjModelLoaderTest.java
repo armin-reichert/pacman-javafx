@@ -19,7 +19,7 @@ public class ObjModelLoaderTest {
             ResourceManager rm = () -> ObjModelLoaderTest.class;
             var url = rm.url(args[0]);
             try {
-                var model3D = Model3D.fromOBJFile(url);
+                var model3D = Model3D.importObjFile(url);
                 Logger.info(contentAsText(model3D, url));
             } catch (Exception x) {
                 Logger.error(x);

@@ -37,9 +37,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class Model3D implements Disposable {
 
-    public static Model3D fromOBJFile(URL modelURL) throws Model3DException {
+    public static Model3D importObjFile(URL url) throws Model3DException {
         try {
-            final Model3D content = ObjFileImporter.importObjFile(modelURL, StandardCharsets.UTF_8);
+            final Model3D content = ObjFileImporter.importObjFile(url, StandardCharsets.UTF_8);
             if (content == null) {
                 throw new Model3DException("Could not load OBJ file");
             }
@@ -47,7 +47,7 @@ public class Model3D implements Disposable {
                 try {
                     MeshHelper.validateTriangleMesh(mesh);
                 } catch (AssertionError error) {
-                    Logger.error("Invalid OBJ file data: {}, URL: '{}'", error.getMessage(), modelURL);
+                    Logger.error("Invalid OBJ file data: {}, URL: '{}'", error.getMessage(), url);
                 }
             }
             return content;

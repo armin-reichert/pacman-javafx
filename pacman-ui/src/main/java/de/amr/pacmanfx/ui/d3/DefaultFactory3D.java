@@ -35,9 +35,6 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultFactory3D implements Factory3D {
 
-    /** Shared 3D model instance for pellets. */
-    public static final PelletModel3D PELLET_MODEL = new PelletModel3D();
-
     public static final int DEFAULT_NUMBER_BOX_SIZE_X = 14;
     public static final int DEFAULT_NUMBER_BOX_SIZE_Y = 8;
     public static final int DEFAULT_NUMBER_BOX_SIZE_Z = 8;
@@ -148,7 +145,7 @@ public class DefaultFactory3D implements Factory3D {
 
     @Override
     public Pellet3D createPellet3D(PelletConfig3D pelletConfig, PhongMaterial material) {
-        final Mesh scaledPelletMesh = scaledPelletMesh(PELLET_MODEL.mesh(), pelletConfig);
+        final Mesh scaledPelletMesh = scaledPelletMesh(PelletModel3D.instance().mesh(), pelletConfig);
         final var pellet3D = new Pellet3D(new MeshView(scaledPelletMesh));
         pellet3D.shape().setMaterial(material);
         return pellet3D;

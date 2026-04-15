@@ -11,13 +11,21 @@ import javafx.scene.shape.Mesh;
 
 public class PelletModel3D implements Disposable {
 
+    private static class LazyThreadSafeSingletonHolder {
+        static final PelletModel3D SINGLETON = new PelletModel3D();
+    }
+
+    public static PelletModel3D instance() {
+        return LazyThreadSafeSingletonHolder.SINGLETON;
+    }
+
 	private static final String MESH_ID_PELLET = "pellet";
 
 	private final Model3D model3D;
 
-	public PelletModel3D() {
+	private PelletModel3D() {
 		try {
-			model3D = Model3D.fromOBJFile(getClass().getResource("/de/amr/pacmanfx/uilib/model3D/pellet.obj"));
+			model3D = Model3D.importObjFile(getClass().getResource("/de/amr/pacmanfx/uilib/model3D/pellet.obj"));
 		} catch (Model3DException x) {
 			throw new RuntimeException(x);
 		}
