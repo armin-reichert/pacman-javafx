@@ -193,6 +193,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
+        detectCheats();
     }
 
     @Override

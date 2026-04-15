@@ -785,6 +785,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         level.ghosts().forEach(Ghost::show);
         doHuntingStep(level);
         gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
+        detectCheats();
     }
 
     @Override

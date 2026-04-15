@@ -32,7 +32,7 @@ public final class CheatActions {
         }
 
         @Override
-        public boolean isEnabled(GameUI ui) { return ui.gameContext().game().optGameLevel().isPresent(); }
+        public boolean isEnabled(GameUI ui) { return realLevel(ui.gameContext().game()).isPresent(); }
     };
 
     public static final GameAction ACTION_EAT_ALL_PELLETS = new GameAction("CHEAT_EAT_ALL_PELLETS") {
@@ -49,7 +49,8 @@ public final class CheatActions {
         @Override
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.gameContext().game();
-            return !game.isDemoLevelRunning() && game.flow().state().nameMatches(CanonicalGameState.LEVEL_PLAYING.name());
+            return realLevel(game).isPresent()
+                && game.flow().state().nameMatches(CanonicalGameState.LEVEL_PLAYING.name());
         }
     };
 
@@ -71,7 +72,7 @@ public final class CheatActions {
         @Override
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.gameContext().game();
-            return !game.isDemoLevelRunning()
+            return realLevel(game).isPresent()
                 && game.flow().state().nameMatches(CanonicalGameState.LEVEL_PLAYING.name());
         }
     };
@@ -89,13 +90,10 @@ public final class CheatActions {
         @Override
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.gameContext().game();
-            final GameLevel level = game.optGameLevel().orElse(null);
-            if (level == null) {
-                return false;
-            }
-            return game.isPlayingLevel()
+            final Optional<GameLevel> realLevel = realLevel(game);
+            return realLevel.isPresent()
                 && game.flow().state().nameMatches(CanonicalGameState.LEVEL_PLAYING.name())
-                && level.number() < game.lastLevelNumber();
+                && realLevel.get().number() < game.lastLevelNumber();
         }
     };
 
@@ -156,13 +154,8 @@ public final class CheatActions {
         }
     };
 
-    private static void setImmunity(GameUI ui, boolean on) {
+    public static void setImmunity(GameUI ui, boolean on) {
         final Game game = ui.gameContext().game();
-        if (on) {
-            if (game.isPlayingLevel() && !game.isDemoLevelRunning()) {
-                game.cheats().raiseFlag();
-            }
-        }
         game.cheats().immuneProperty().set(on);
         ui.voicePlayer().playVoice(on ? GameUI_Resources.VOICE_IMMUNITY_ON : GameUI_Resources.VOICE_IMMUNITY_OFF);
         ui.showFlashMessage(ui.translate(on ? "player_immunity_on" : "player_immunity_off"));

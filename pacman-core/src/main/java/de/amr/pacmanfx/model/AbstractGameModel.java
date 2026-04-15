@@ -671,4 +671,15 @@ public abstract class AbstractGameModel implements Game, GameCheats {
             highScore.save();
         }
     }
+
+    protected void detectCheats() {
+        optGameLevel().filter(gameLevel -> !gameLevel.isDemoLevel()).ifPresent(_ -> {
+            if (cheats().isUsingAutopilot()) {
+                cheats().raiseFlag();
+            }
+            if (cheats().isImmune()) {
+                cheats().raiseFlag();
+            }
+        });
+    }
 }
