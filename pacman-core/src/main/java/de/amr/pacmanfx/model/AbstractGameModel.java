@@ -314,10 +314,10 @@ public abstract class AbstractGameModel implements Game, GameCheats {
     /**
      * Called when level starts playing: resets timers, starts animations, and publishes a game event.
      *
-     * @param level the current level
      */
     @Override
-    public void onLevelPlayingStart(GameLevel level) {
+    public void onStartLevelPlaying() {
+        final GameLevel level = optGameLevel().orElseThrow();
         // Clear "READY!" message. "GAME_OVER" (demo level) and  "TEST LEVEL XX" messages are not cleared!
         level.optMessage()
             .filter(message -> message.type() == GameLevelMessageType.READY)

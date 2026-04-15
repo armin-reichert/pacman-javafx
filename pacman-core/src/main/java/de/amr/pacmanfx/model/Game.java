@@ -168,9 +168,9 @@ public interface Game {
     /** Sets whether the game is currently being played. */
     void setPlayingLevel(boolean playing);
 
-    void onLevelPlayingStart(GameLevel level);
+    void onStartLevelPlaying();
 
-    void doPlayLevel(GameLevel level);
+    void doLevelPlaying();
 
     void continuePlayingLevel(long tick);
 

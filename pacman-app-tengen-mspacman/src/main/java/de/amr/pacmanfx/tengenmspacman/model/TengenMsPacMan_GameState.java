@@ -109,14 +109,12 @@ public enum TengenMsPacMan_GameState implements State<Game> {
     LEVEL_PLAYING {
         @Override
         public void onEnter(Game game) {
-            final GameLevel level = game.optGameLevel().orElseThrow();
-            game.onLevelPlayingStart(level);
+            game.onStartLevelPlaying();
         }
 
         @Override
         public void onUpdate(Game game) {
-            final GameLevel level = game.optGameLevel().orElseThrow();
-            game.doPlayLevel(level);
+            game.doLevelPlaying();
             if (game.isLevelCompleted()) {
                 game.flow().enterState(LEVEL_COMPLETE);
             } else if (game.hasPacManBeenKilled()) {
@@ -181,7 +179,6 @@ public enum TengenMsPacMan_GameState implements State<Game> {
 
         @Override
         public void onUpdate(Game game) {
-            final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.hasExpired()) {
                 game.flow().resumePreviousState();
             } else {

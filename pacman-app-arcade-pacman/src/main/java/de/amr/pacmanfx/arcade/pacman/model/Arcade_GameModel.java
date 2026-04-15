@@ -173,10 +173,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         level.setMessage(message);
     }
 
-    // GameEvents interface
-
     @Override
-    public void doPlayLevel(GameLevel level) {
+    public void doLevelPlaying() {
+        final GameLevel level = optGameLevel().orElseThrow();
+        level.pac().show();
+        level.ghosts().forEach(Ghost::show);
         doHuntingStep(level);
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());

@@ -597,7 +597,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void doPlayLevel(GameLevel level) {
+    public void doLevelPlaying() {
+        final GameLevel level = optGameLevel().orElseThrow();
+        level.pac().show();
+        level.ghosts().forEach(Ghost::show);
         doHuntingStep(level);
         gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
     }

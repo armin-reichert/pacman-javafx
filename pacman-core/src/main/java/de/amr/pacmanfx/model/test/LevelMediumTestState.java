@@ -45,7 +45,7 @@ public class LevelMediumTestState<GAME extends Game> extends TestState<GAME> {
         level.pac().tick(game);
         level.ghosts().forEach(ghost -> ghost.tick(game));
         level.optBonus().ifPresent(bonus -> bonus.tick(game));
-        game.doPlayLevel(level);
+        game.doLevelPlaying();
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
                 game.flow().publishGameEvent(new StopAllSoundsEvent(game));
