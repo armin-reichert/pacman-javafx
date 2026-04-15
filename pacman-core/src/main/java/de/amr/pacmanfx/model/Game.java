@@ -190,7 +190,7 @@ public interface Game {
 
     void onLevelCompleted();
 
-    void doPacManDying(GameLevel level, Pac pac, long tick);
+    void doPacManDying(Pac pac, long tick);
 
     void onEatGhost(GameLevel level, Ghost ghost);
 

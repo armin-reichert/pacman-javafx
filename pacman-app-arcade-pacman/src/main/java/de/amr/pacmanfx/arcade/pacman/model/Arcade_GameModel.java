@@ -184,7 +184,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void doPacManDying(GameLevel level, Pac pac, long tick) {
+    public void doPacManDying(Pac pac, long tick) {
+        final GameLevel level = optGameLevel().orElseThrow();
         if (tick == 1) {
             gateKeeper.resetCounterAndSetEnabled(true);
             level.huntingTimer().stop();

@@ -188,7 +188,7 @@ public enum Arcade_GameState implements State<Game> {
                     game.flow().enterState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
                 }
             } else {
-                game.doPacManDying(level, level.pac(), timer.tickCount());
+                game.doPacManDying(level.pac(), timer.tickCount());
             }
         }
     },
