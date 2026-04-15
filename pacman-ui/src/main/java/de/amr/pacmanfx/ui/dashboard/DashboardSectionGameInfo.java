@@ -154,7 +154,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level) {
-        final float speed = level.game().actorSpeedControl().ghostSpeedWhenFrightened(level);
+        final float speed = level.game().actorSpeedControl().ghostSpeedFrightened(level);
         return "%.4f px/s".formatted(speed * NUM_TICKS_PER_SEC);
     }
 

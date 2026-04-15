@@ -40,7 +40,7 @@ public interface ActorSpeedControl {
      * @param level the current level
      * @return the speed of frightened ghosts (pixels per frame)
      */
-    float ghostSpeedWhenFrightened(GameLevel level);
+    float ghostSpeedFrightened(GameLevel level);
 
     /**
      * Returns the ghost's speed inside a tunnel for the given level.

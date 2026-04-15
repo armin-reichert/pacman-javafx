@@ -134,25 +134,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     protected final WorldMapSelector mapSelector;
     protected final LevelCounter levelCounter;
 
-    public class SpeedControl extends Arcade_GameModel.SpeedControl {
-        @Override
-        public float ghostSpeed(GameLevel level, Ghost ghost) {
-            final int levelNumber = level.number();
-            final TerrainLayer terrain = level.worldMap().terrainLayer();
-            final boolean insideHouse = terrain.house().isVisitedBy(ghost);
-            // In levels 3..., ghosts do not slow down in tunnel anymore!
-            final boolean insideTunnel = terrain.isTunnel(ghost.tile()) && levelNumber <= 2;
-            return switch (ghost.state()) {
-                case LOCKED -> insideHouse ? 0.5f : 0;
-                case LEAVING_HOUSE -> 0.5f;
-                case HUNTING_PAC -> insideTunnel ? ghostSpeedTunnel(levelNumber) : ghostSpeedAttacking(level, ghost);
-                case FRIGHTENED -> insideTunnel ? ghostSpeedTunnel(levelNumber) : ghostSpeedWhenFrightened(level);
-                case EATEN -> 0;
-                case RETURNING_HOME, ENTERING_HOUSE -> 2;
-            };
-        }
-    }
-
     /**
      * Called via reflection by builder.
      *
@@ -169,16 +150,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         this.levelCounter = new ArcadeMsPacMan_LevelCounter();
         this.demoLevelSteering = new RuleBasedPacSteering();
         this.automaticSteering = new RuleBasedPacSteering();
-        this.actorSpeedControl = new SpeedControl();
+        this.actorSpeedControl = new ArcadeMsPacMan_ActorSpeedControl();
         createGateKeeper();
         mapSelector.loadMapPrototypes();
-    }
-
-    @Override
-    public LevelData levelData(int levelNumber) {
-        requireValidLevelNumber(levelNumber);
-        int row = Math.min(levelNumber - 1, LEVEL_DATA_TABLE.length - 1);
-        return LEVEL_DATA_TABLE[row];
     }
 
     @Override

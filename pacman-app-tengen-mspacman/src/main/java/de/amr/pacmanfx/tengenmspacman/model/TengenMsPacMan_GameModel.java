@@ -354,7 +354,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                 case LOCKED -> insideHouse ? 0.5f : 0;
                 case LEAVING_HOUSE -> 0.5f;
                 case HUNTING_PAC -> tunnelSlowdown ? ghostSpeedTunnel(levelNumber) : ghostSpeedAttacking(level, ghost);
-                case FRIGHTENED -> tunnelSlowdown ? ghostSpeedTunnel(levelNumber) : ghostSpeedWhenFrightened(level);
+                case FRIGHTENED -> tunnelSlowdown ? ghostSpeedTunnel(levelNumber) : ghostSpeedFrightened(level);
                 case EATEN -> 0;
                 case RETURNING_HOME, ENTERING_HOUSE -> 2;
             };
@@ -375,7 +375,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
 
         @Override
-        public float ghostSpeedWhenFrightened(GameLevel level) {
+        public float ghostSpeedFrightened(GameLevel level) {
             final int levelNumber = level.number();
             float speed = ghostBaseSpeedInLevel(levelNumber);
             speed += ghostDifficultySpeedDelta(difficulty());
