@@ -162,15 +162,15 @@ public interface Game {
     /** Starts the next level in sequence. */
     void startNextLevel();
 
-    void onPlayingLevelStart(GameLevel level);
-
-    void playLevel(GameLevel level);
-
     /** @return {@code true} if the game is currently in a playing state */
     boolean isPlayingLevel();
 
     /** Sets whether the game is currently being played. */
     void setPlayingLevel(boolean playing);
+
+    void onLevelPlayingStart(GameLevel level);
+
+    void doPlayLevel(GameLevel level);
 
     /**
      * Continues gameplay after a game‑over or interruption.
@@ -190,13 +190,15 @@ public interface Game {
 
     void onLevelCompleted(GameLevel level);
 
-    void whilePacManDying(GameLevel level, Pac pac, long tick);
+    void doPacManDying(GameLevel level, Pac pac, long tick);
 
     void onEatGhost(GameLevel level, Ghost ghost);
 
-    void whileEatingGhost(GameLevel level, long tick);
+    void doEatingGhost(GameLevel level, long tick);
 
     void onGameOver();
+
+    int lastIntermissionNumber();
 
     /**
      * Returns the collision strategy used to detect interactions between
@@ -231,6 +233,4 @@ public interface Game {
     float pacSpeed(GameLevel level);
 
     float pacSpeedWhenHasPower(GameLevel level);
-
-    int lastCutSceneNumber();
 }

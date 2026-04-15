@@ -20,7 +20,7 @@ public class CutScenesTestState<GAME extends Game> extends TestState<GAME> {
     @Override
     public void onUpdate(GAME game) {
         if (timer.hasExpired()) {
-            if (testedCutSceneNumber < game.lastCutSceneNumber()) {
+            if (testedCutSceneNumber < game.lastIntermissionNumber()) {
                 testedCutSceneNumber += 1;
                 lock();
                 //TODO find another solution and get rid of this event type

@@ -317,7 +317,11 @@ public abstract class AbstractGameModel implements Game, GameCheats {
      * @param level the current level
      */
     @Override
-    public void onPlayingLevelStart(GameLevel level) {
+    public void onLevelPlayingStart(GameLevel level) {
+        // Clear "READY!" message. "GAME_OVER" (demo level) and  "TEST LEVEL XX" messages are not cleared!
+        level.optMessage()
+            .filter(message -> message.type() == GameLevelMessageType.READY)
+            .ifPresent(_ -> level.clearMessage());
         level.huntingTimer().startFirstPhase(level.number());
         level.blinking().setStartState(Pulse.State.ON);
         level.blinking().restart();

@@ -220,7 +220,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private void simulate(Game game) {
         final SimulationStep simulationStep = game.simulationStep();
         simulationStep.init(gameContext.clock().tickCount());
-        game.flow().updateState();
+        game.flow().update();
         simulationStep.printLog();
     }
 

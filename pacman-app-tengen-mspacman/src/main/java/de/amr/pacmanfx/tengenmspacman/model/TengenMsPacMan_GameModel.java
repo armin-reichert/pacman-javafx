@@ -507,7 +507,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public int lastCutSceneNumber() {
+    public int lastIntermissionNumber() {
         return 4;
     }
 
@@ -594,7 +594,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void playLevel(GameLevel level) {
+    public void doPlayLevel(GameLevel level) {
         doHuntingStep(level);
         gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
     }
@@ -708,7 +708,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void whilePacManDying(GameLevel level, Pac pac, long tick) {
+    public void doPacManDying(GameLevel level, Pac pac, long tick) {
         if (tick == 1) {
             level.huntingTimer().stop();
             gateKeeper.resetCounterAndSetEnabled(true);
@@ -763,7 +763,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void whileEatingGhost(GameLevel level, long tick) {
+    public void doEatingGhost(GameLevel level, long tick) {
         if (tick < TICK_EATING_GHOST_COMPLETE) {
             level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).forEach(ghost -> ghost.tick(this));
             level.blinking().doTick();

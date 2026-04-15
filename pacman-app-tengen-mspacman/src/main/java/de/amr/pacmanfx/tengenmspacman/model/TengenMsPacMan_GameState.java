@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelMessageType;
 import org.tinylog.Logger;
 
 public enum TengenMsPacMan_GameState implements State<Game> {
@@ -112,14 +111,13 @@ public enum TengenMsPacMan_GameState implements State<Game> {
         @Override
         public void onEnter(Game game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
-            clearReadyMessage(level);
-            game.onPlayingLevelStart(level);
+            game.onLevelPlayingStart(level);
         }
 
         @Override
         public void onUpdate(Game game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
-            game.playLevel(level);
+            game.doPlayLevel(level);
             if (game.isLevelCompleted(level)) {
                 game.flow().enterState(LEVEL_COMPLETE);
             } else if (game.hasPacManBeenKilled()) {
@@ -127,19 +125,6 @@ public enum TengenMsPacMan_GameState implements State<Game> {
             } else if (game.hasGhostBeenKilled()) {
                 game.flow().enterState(EATING_GHOST);
             }
-        }
-
-        @Override
-        public void onExit(Game game) {
-            final GameLevel level = game.optGameLevel().orElseThrow();
-            //TODO is this needed?
-            clearReadyMessage(level);
-        }
-
-        private void clearReadyMessage(GameLevel level) {
-            level.optMessage().filter(message -> message.type() == GameLevelMessageType.READY).ifPresent(_ -> {
-                level.clearMessage(); // leave TEST message alone
-            });
         }
     },
 
@@ -201,7 +186,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
             if (timer.hasExpired()) {
                 game.flow().resumePreviousState();
             } else {
-                game.whileEatingGhost(level, timer.tickCount());
+                game.doEatingGhost(level, timer.tickCount());
             }
         }
     },
@@ -224,7 +209,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
                     game.flow().enterState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
                 }
             } else {
-                game.whilePacManDying(level, level.pac(), timer.tickCount());
+                game.doPacManDying(level, level.pac(), timer.tickCount());
             }
         }
     },
@@ -257,10 +242,10 @@ public enum TengenMsPacMan_GameState implements State<Game> {
         public void onEnter(Game game) {
             lock();
             final var tengenHUD = (TengenMsPacMan_HeadsUpDisplay) game.hud();
-            final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game;
-            final boolean lastCutScene =
-                game.optGameLevel().orElseThrow().cutSceneNumber() == tengenGame.lastCutSceneNumber();
-            if (tengenGame.mapCategory() == MapCategory.ARCADE || lastCutScene) {
+            final TengenMsPacMan_GameModel tengenGame = tengenGame(game);
+            final GameLevel level = game.optGameLevel().orElseThrow();
+            final boolean lastCutSceneReached =  level.cutSceneNumber() == tengenGame.lastIntermissionNumber();
+            if (tengenGame.mapCategory() == MapCategory.ARCADE || lastCutSceneReached) {
                 tengenHUD.hide();
             } else {
                 tengenHUD.show();
@@ -278,7 +263,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
         @Override
         public void onExit(Game game) {
             final var tengenHUD = (TengenMsPacMan_HeadsUpDisplay) game.hud();
-            final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game;
+            final TengenMsPacMan_GameModel tengenGame = tengenGame(game);
             if (tengenGame.mapCategory() == MapCategory.ARCADE) {
                 tengenHUD.hide();
             } else {
@@ -294,6 +279,10 @@ public enum TengenMsPacMan_GameState implements State<Game> {
     TengenMsPacMan_GameState() {
         timer = new TickTimer("Timer-" + name());
         Logger.info("Game state {} created", name());
+    }
+
+    TengenMsPacMan_GameModel tengenGame(Game game) {
+        return (TengenMsPacMan_GameModel) game;
     }
 
     @Override

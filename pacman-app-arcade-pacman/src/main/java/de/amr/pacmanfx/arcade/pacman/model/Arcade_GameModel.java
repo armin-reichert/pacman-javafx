@@ -176,7 +176,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     // GameEvents interface
 
     @Override
-    public void playLevel(GameLevel level) {
+    public void doPlayLevel(GameLevel level) {
         doHuntingStep(level);
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
@@ -184,7 +184,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void whilePacManDying(GameLevel level, Pac pac, long tick) {
+    public void doPacManDying(GameLevel level, Pac pac, long tick) {
         if (tick == 1) {
             gateKeeper.resetCounterAndSetEnabled(true);
             level.huntingTimer().stop();
@@ -238,7 +238,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void whileEatingGhost(GameLevel level, long tick) {
+    public void doEatingGhost(GameLevel level, long tick) {
         if (tick < Arcade_GameState.TICK_EATING_GHOST_DURATION) {
             level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                 .forEach(ghost -> ghost.tick(this));
@@ -344,7 +344,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public int lastCutSceneNumber() {
+    public int lastIntermissionNumber() {
         return 3;
     }
 
