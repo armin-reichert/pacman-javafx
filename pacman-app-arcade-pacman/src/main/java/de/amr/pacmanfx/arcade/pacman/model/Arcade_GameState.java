@@ -118,7 +118,7 @@ public enum Arcade_GameState implements State<Game> {
         @Override
         public void onEnter(Game game) {
             lock(); // UI triggers timeout
-            game.onLevelCompleted(game.optGameLevel().orElseThrow());
+            game.onLevelCompleted();
         }
 
         @Override

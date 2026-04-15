@@ -188,7 +188,7 @@ public interface Game {
 
     boolean hasGhostBeenKilled();
 
-    void onLevelCompleted(GameLevel level);
+    void onLevelCompleted();
 
     void doPacManDying(GameLevel level, Pac pac, long tick);
 

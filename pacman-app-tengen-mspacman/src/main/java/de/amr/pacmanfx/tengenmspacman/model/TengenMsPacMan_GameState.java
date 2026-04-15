@@ -138,7 +138,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
         public void onUpdate(Game game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.tickCount() == 1) {
-                game.onLevelCompleted(level);
+                game.onLevelCompleted();
             }
 
             if (level.isDemoLevel()) {
