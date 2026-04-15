@@ -165,8 +165,7 @@ public enum Arcade_GameState implements State<Game> {
             if (timer.hasExpired()) {
                 game.flow().resumePreviousState();
             } else {
-                final GameLevel level = game.optGameLevel().orElseThrow();
-                game.doEatingGhost(level, timer.tickCount());
+                game.doEatingGhost(timer.tickCount());
             }
         }
     },

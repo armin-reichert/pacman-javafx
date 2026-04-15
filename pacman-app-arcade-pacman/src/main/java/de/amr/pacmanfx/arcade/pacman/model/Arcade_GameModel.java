@@ -240,7 +240,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void doEatingGhost(GameLevel level, long tick) {
+    public void doEatingGhost(long tick) {
+        final GameLevel level = optGameLevel().orElseThrow();
         if (tick < Arcade_GameState.TICK_EATING_GHOST_DURATION) {
             level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                 .forEach(ghost -> ghost.tick(this));

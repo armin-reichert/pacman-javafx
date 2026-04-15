@@ -186,7 +186,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
             if (timer.hasExpired()) {
                 game.flow().resumePreviousState();
             } else {
-                game.doEatingGhost(level, timer.tickCount());
+                game.doEatingGhost(timer.tickCount());
             }
         }
     },

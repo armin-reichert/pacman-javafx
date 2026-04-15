@@ -765,7 +765,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void doEatingGhost(GameLevel level, long tick) {
+    public void doEatingGhost(long tick) {
+        final GameLevel level = optGameLevel().orElseThrow();
         if (tick < TICK_EATING_GHOST_COMPLETE) {
             level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).forEach(ghost -> ghost.tick(this));
             level.blinking().doTick();

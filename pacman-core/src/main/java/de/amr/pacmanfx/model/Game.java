@@ -194,7 +194,7 @@ public interface Game {
 
     void onEatGhost(Ghost ghost);
 
-    void doEatingGhost(GameLevel level, long tick);
+    void doEatingGhost(long tick);
 
     void onGameOver();
 
