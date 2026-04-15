@@ -303,11 +303,11 @@ public abstract class AbstractGameModel implements Game, GameCheats {
     /**
      * Returns whether the current level is completed.
      *
-     * @param level the current game level
      * @return {@code true} if all food has been eaten
      */
     @Override
-    public boolean isLevelCompleted(GameLevel level) {
+    public boolean isLevelCompleted() {
+        final GameLevel level = optGameLevel().orElseThrow();
         return level.worldMap().foodLayer().remainingFoodCount() == 0;
     }
 
@@ -516,7 +516,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
         checkFoodFound(level, pac);
         checkBonusFound(level);
 
-        if (!isLevelCompleted(level)) {
+        if (!isLevelCompleted()) {
             updatePacPower(level, pac);
             level.huntingTimer().update(level.number());
         }

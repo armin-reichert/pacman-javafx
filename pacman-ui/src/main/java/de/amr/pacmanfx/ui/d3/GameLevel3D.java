@@ -536,7 +536,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Pac3D pac3D = entities3D.unique(Pac3D.class);
         final Game game = level.game();
         soundEffects().ifPresent(GameSoundEffects::stopSiren);
-        if (!game.isLevelCompleted(level)) {
+        if (!game.isLevelCompleted()) {
             pac3D.setMovementAnimationPowerMode(true);
             animations3D.animation(AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).playFromStart();
             soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);

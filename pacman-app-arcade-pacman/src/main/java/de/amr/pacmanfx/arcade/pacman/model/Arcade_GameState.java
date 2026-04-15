@@ -101,7 +101,7 @@ public enum Arcade_GameState implements State<Game> {
         public void onUpdate(Game game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             game.doPlayLevel(level);
-            if (game.isLevelCompleted(level)) {
+            if (game.isLevelCompleted()) {
                 game.flow().enterState(LEVEL_COMPLETE);
             }
             else if (game.hasPacManBeenKilled()) {

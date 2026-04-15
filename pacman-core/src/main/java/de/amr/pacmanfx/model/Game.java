@@ -154,7 +154,7 @@ public interface Game {
     void startDemoLevel(long tick);
 
     /** @return {@code true} if the given level has been completed */
-    boolean isLevelCompleted(GameLevel level);
+    boolean isLevelCompleted();
 
     /** @return the number of the last completed level */
     int lastLevelNumber();
@@ -172,12 +172,6 @@ public interface Game {
 
     void doPlayLevel(GameLevel level);
 
-    /**
-     * Continues gameplay after a game‑over or interruption.
-     *
-     * @param level the level to resume
-     * @param tick  the current simulation tick
-     */
     void continuePlayingLevel(long tick);
 
     void activateNextBonus();

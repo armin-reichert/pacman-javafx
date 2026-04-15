@@ -89,11 +89,11 @@ public class TestEatingFood {
     public void testLevelCompletion() {
         final GameLevel level = theGameLevel();
         while (level.worldMap().foodLayer().remainingFoodCount() > 0) {
-            assertFalse(theGame().isLevelCompleted(level));
+            assertFalse(theGame().isLevelCompleted());
             eatNextPellet();
             eatNextEnergizer(level);
         }
-        assertTrue(theGame().isLevelCompleted(level));
+        assertTrue(theGame().isLevelCompleted());
     }
 
     @Test

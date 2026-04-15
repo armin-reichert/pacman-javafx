@@ -125,7 +125,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         pac.setRestingTicks(restingTicksAfterEnergizerEaten);
         checkRedGhostCruiseElroyActivation(level);
 
-        if (!isLevelCompleted(level)) {
+        if (!isLevelCompleted()) {
             level.ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(MovingActor::requestTurnBack);
             level.energizerVictims().clear();
             final float powerSeconds = level.pacPowerSeconds();
