@@ -274,7 +274,7 @@ public class Ghost extends MovingActor {
     @Override
     public void tick(Game game) {
         game.optGameLevel().ifPresent(level -> {
-            final float speed = game.ghostSpeed(level, this);
+            final float speed = game.actorSpeedControl().ghostSpeed(level, this);
             switch (state()) {
                 case LOCKED         -> updateStateLocked(level, speed);
                 case LEAVING_HOUSE  -> updateStateLeavingHouse(level, speed);

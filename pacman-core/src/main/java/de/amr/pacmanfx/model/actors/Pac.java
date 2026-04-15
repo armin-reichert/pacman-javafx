@@ -166,7 +166,9 @@ public class Pac extends MovingActor {
             automaticSteering.steer(this, level);
         }
 
-        setSpeed(powerTimer.isRunning() ? game.pacSpeedWhenHasPower(level) : game.pacSpeed(level));
+        setSpeed(powerTimer.isRunning()
+            ? game.actorSpeedControl().pacSpeedWhenHasPower(level)
+            : game.actorSpeedControl().pacSpeed(level));
         tryMovingOrTeleporting(level);
 
         if (moveInfo.moved) {

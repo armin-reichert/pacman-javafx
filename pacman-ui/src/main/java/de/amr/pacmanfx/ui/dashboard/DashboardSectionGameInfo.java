@@ -5,7 +5,10 @@ package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.AbstractHuntingTimer;
+import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
@@ -145,33 +148,29 @@ public class DashboardSectionGameInfo extends DashboardSection {
     }
 
     private String fmtGhostAttackSpeed(GameLevel level) {
-        if (level.game() instanceof AbstractGameModel gameModel) {
-            // do not use Blinky because he has varying attack speed (Cruise Elroy mode)
-            return "%.4f px/s".formatted(gameModel.ghostSpeedAttacking(level, level.ghost(CYAN_GHOST_BASHFUL)) * NUM_TICKS_PER_SEC);
-        }
-        return NO_INFO;
+        // do not use Blinky because he has varying attack speed (Cruise Elroy mode)
+        final float speed = level.game().actorSpeedControl().ghostSpeedAttacking(level, level.ghost(CYAN_GHOST_BASHFUL));
+        return "%.4f px/s".formatted(speed * NUM_TICKS_PER_SEC);
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level) {
-        if (level.game() instanceof AbstractGameModel gameModel) {
-            return "%.4f px/s".formatted(gameModel.ghostSpeedWhenFrightened(level) * NUM_TICKS_PER_SEC);
-        }
-        return NO_INFO;
+        final float speed = level.game().actorSpeedControl().ghostSpeedWhenFrightened(level);
+        return "%.4f px/s".formatted(speed * NUM_TICKS_PER_SEC);
     }
 
     private String fmtGhostSpeedTunnel(GameLevel level) {
-        if (level.game() instanceof AbstractGameModel gameModel) {
-            return "%.4f px/s".formatted(gameModel.ghostSpeedTunnel(level.number()) * NUM_TICKS_PER_SEC);
-        }
-        return NO_INFO;
+        final float speed = level.game().actorSpeedControl().ghostSpeedTunnel(level.number());
+        return "%.4f px/s".formatted(speed * NUM_TICKS_PER_SEC);
     }
 
     private String fmtPacNormalSpeed(GameLevel level) {
-        return "%.4f px/s".formatted(level.game().pacSpeed(level) * NUM_TICKS_PER_SEC);
+        final float speed = level.game().actorSpeedControl().pacSpeed(level);
+        return "%.4f px/s".formatted(speed * NUM_TICKS_PER_SEC);
     }
 
     private String fmtPacSpeedPowered(GameLevel level) {
-        return "%.4f px/s".formatted(level.game().pacSpeedWhenHasPower(level) * NUM_TICKS_PER_SEC);
+        final float speed = level.game().actorSpeedControl().pacSpeedWhenHasPower(level);
+        return "%.4f px/s".formatted(speed * NUM_TICKS_PER_SEC);
     }
 
     private String fmtPacPowerTime(GameLevel level) {

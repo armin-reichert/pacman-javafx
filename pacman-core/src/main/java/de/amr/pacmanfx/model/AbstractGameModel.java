@@ -171,31 +171,6 @@ public abstract class AbstractGameModel implements Game, GameCheats {
      */
     protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
-    /**
-     * Returns the ghost's speed while attacking.
-     *
-     * @param level the current level
-     * @param ghost a ghost
-     * @return the ghost's speed (pixels per frame) while attacking
-     */
-    public abstract float ghostSpeedAttacking(GameLevel level, Ghost ghost);
-
-    /**
-     * Returns the speed of frightened ghosts.
-     *
-     * @param level the current level
-     * @return the speed of frightened ghosts (pixels per frame)
-     */
-    public abstract float ghostSpeedWhenFrightened(GameLevel level);
-
-    /**
-     * Returns the ghost's speed inside a tunnel for the given level.
-     *
-     * @param levelNumber the level number
-     * @return the ghost's tunnel speed (pixels per frame)
-     */
-    public abstract float ghostSpeedTunnel(int levelNumber);
-
     /* -------------------------------------------------------------------------
      * Cheating interface implementation
      * ---------------------------------------------------------------------- */

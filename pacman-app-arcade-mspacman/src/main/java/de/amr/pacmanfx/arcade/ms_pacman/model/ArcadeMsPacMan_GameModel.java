@@ -134,6 +134,25 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     protected final WorldMapSelector mapSelector;
     protected final LevelCounter levelCounter;
 
+    public class SpeedControl extends Arcade_GameModel.SpeedControl {
+        @Override
+        public float ghostSpeed(GameLevel level, Ghost ghost) {
+            final int levelNumber = level.number();
+            final TerrainLayer terrain = level.worldMap().terrainLayer();
+            final boolean insideHouse = terrain.house().isVisitedBy(ghost);
+            // In levels 3..., ghosts do not slow down in tunnel anymore!
+            final boolean insideTunnel = terrain.isTunnel(ghost.tile()) && levelNumber <= 2;
+            return switch (ghost.state()) {
+                case LOCKED -> insideHouse ? 0.5f : 0;
+                case LEAVING_HOUSE -> 0.5f;
+                case HUNTING_PAC -> insideTunnel ? ghostSpeedTunnel(levelNumber) : ghostSpeedAttacking(level, ghost);
+                case FRIGHTENED -> insideTunnel ? ghostSpeedTunnel(levelNumber) : ghostSpeedWhenFrightened(level);
+                case EATEN -> 0;
+                case RETURNING_HOME, ENTERING_HOUSE -> 2;
+            };
+        }
+    }
+
     /**
      * Called via reflection by builder.
      *
@@ -150,6 +169,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         this.levelCounter = new ArcadeMsPacMan_LevelCounter();
         this.demoLevelSteering = new RuleBasedPacSteering();
         this.automaticSteering = new RuleBasedPacSteering();
+        this.actorSpeedControl = new SpeedControl();
         createGateKeeper();
         mapSelector.loadMapPrototypes();
     }
@@ -184,7 +204,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
-        terrain.propertyMap().put(POS_HOUSE_MIN_TILE,  houseMinTile.toString());
+        terrain.propertyMap().put(POS_HOUSE_MIN_TILE, houseMinTile.toString());
 
         final var house = new ArcadeHouse(houseMinTile);
         terrain.setHouse(house);
@@ -208,23 +228,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         levelCounter.setEnabled(levelNumber < 8);
 
         return level;
-    }
-
-    @Override
-    public float ghostSpeed(GameLevel level, Ghost ghost) {
-        final int levelNumber = level.number();
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final boolean insideHouse = terrain.house().isVisitedBy(ghost);
-        // In levels 3..., ghosts do not slow down in tunnel anymore!
-        final boolean insideTunnel = terrain.isTunnel(ghost.tile()) && levelNumber <= 2;
-        return switch (ghost.state()) {
-            case LOCKED -> insideHouse ? 0.5f : 0;
-            case LEAVING_HOUSE -> 0.5f;
-            case HUNTING_PAC -> insideTunnel ? ghostSpeedTunnel(levelNumber) : ghostSpeedAttacking(level, ghost);
-            case FRIGHTENED -> insideTunnel ? ghostSpeedTunnel(levelNumber) : ghostSpeedWhenFrightened(level);
-            case EATEN -> 0;
-            case RETURNING_HOME, ENTERING_HOUSE -> 2;
-        };
     }
 
     @Override
@@ -318,7 +321,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             bonus.showEdibleForSeconds(randomFloat(9, 10));
         } else {
             computeBonusRoute(bonus, terrain, house);
-            bonus.showEdibleAndStartWandering(bonusSpeed(level));
+            bonus.showEdibleAndStartWandering(actorSpeedControl().bonusSpeed(level));
         }
 
         level.setBonus(bonus);

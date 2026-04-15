@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.model;
 
+import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -214,36 +215,5 @@ public interface Game {
     /** Adds the given number of lives. */
     void addLives(int numLives);
 
-    /**
-     * Returns Pac‑Man's bonus speed for the given level.
-     *
-     * @param level the current level
-     * @return the bonus speed multiplier
-     */
-    float bonusSpeed(GameLevel level);
-
-    /**
-     * Returns the speed of the given ghost for the given level.
-     *
-     * @param level the current level
-     * @param ghost the ghost whose speed is requested
-     * @return the ghost's speed multiplier
-     */
-    float ghostSpeed(GameLevel level, Ghost ghost);
-
-    /**
-     * Returns Pac‑Man's normal speed for the given level.
-     *
-     * @param level the current level
-     * @return Pac‑Man's speed multiplier
-     */
-    float pacSpeed(GameLevel level);
-
-    /**
-     * Returns Pac‑Man's speed while he has power (after eating a power pellet).
-     *
-     * @param level the current level
-     * @return Pac‑Man's powered‑up speed multiplier
-     */
-    float pacSpeedWhenHasPower(GameLevel level);
+    ActorSpeedControl actorSpeedControl();
 }
