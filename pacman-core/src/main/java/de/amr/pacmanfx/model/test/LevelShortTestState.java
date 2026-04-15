@@ -5,6 +5,7 @@ package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.event.BonusEatenEvent;
 import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.actors.Ghost;
 
 import static java.util.Objects.requireNonNull;
 
@@ -24,10 +25,10 @@ public class LevelShortTestState<GAME extends Game> extends TestState<GAME> {
         lock();
         game.prepareNewGame();
         game.buildNormalLevel(1);
-
         game.startLevel();
         final GameLevel level = game.optGameLevel().orElseThrow();
-        level.showPacAndGhosts();
+        level.pac().show();
+        level.ghosts().forEach(Ghost::show);
     }
 
     @Override

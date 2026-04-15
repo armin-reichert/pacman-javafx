@@ -145,14 +145,6 @@ public class GameLevel {
     }
 
     /**
-     * Makes Pac-Man and the ghosts visible.
-     */
-    public void showPacAndGhosts() {
-        pac.show();
-        ghosts().forEach(Ghost::show);
-    }
-
-    /**
      * Makes Pac-Man and the ghosts invisible.
      */
     public void hidePacAndGhosts() {

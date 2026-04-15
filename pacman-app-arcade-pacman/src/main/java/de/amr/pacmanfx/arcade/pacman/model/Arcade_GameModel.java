@@ -308,7 +308,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
         else if (tick == Arcade_GameState.TICK_NEW_GAME_SHOW_GUYS) {
             final GameLevel level = optGameLevel().orElseThrow();
-            level.showPacAndGhosts();
+            level.pac().show();
+            level.ghosts().forEach(Ghost::show);
         }
         else if (tick == Arcade_GameState.TICK_NEW_GAME_START_HUNTING) {
             setPlayingLevel(true);
@@ -321,7 +322,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         final GameLevel level = optGameLevel().orElseThrow();
         if (tick == 1) {
             makeReadyForPlaying(level);
-            level.showPacAndGhosts();
+            level.pac().show();
+            level.ghosts().forEach(Ghost::show);
             showLevelMessage(level, GameLevelMessageType.READY);
         }
         else if (tick == 60) {
@@ -389,9 +391,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             startLevel();
         }
         else if (tick == 3) {
+            // Now, actor animations are available, show them
             final GameLevel level = optGameLevel().orElseThrow();
-            // Now, actor animations are available
-            level.showPacAndGhosts();
+            level.pac().show();
+            level.ghosts().forEach(Ghost::show);
         }
         else if (tick == Arcade_GameState.TICK_RESUME_HUNTING) {
             flow().enterState(Arcade_GameState.LEVEL_PLAYING);

@@ -413,7 +413,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
         else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
             final GameLevel level = optGameLevel().orElseThrow();
-            level.showPacAndGhosts();
+            level.pac().show();
+            level.ghosts().forEach(Ghost::show);
         }
         else if (tick == TICK_NEW_GAME_START_HUNTING) {
             setPlayingLevel(true);
@@ -426,7 +427,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final GameLevel level = optGameLevel().orElseThrow();
         if (tick == 1) {
             makeReadyForPlaying(level);
-            level.showPacAndGhosts();
+            level.pac().show();
+            level.ghosts().forEach(Ghost::show);
             flow().publishGameEvent(new GameContinuedEvent(this));
         } else if (tick == TICK_RESUME_HUNTING) {
             flow().enterState(LEVEL_PLAYING);
@@ -466,9 +468,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             startLevel();
         }
         else if (tick == 3) {
-            final GameLevel level = optGameLevel().orElseThrow();
             // Now, actor animations are available
-            level.showPacAndGhosts();
+            final GameLevel level = optGameLevel().orElseThrow();
+            level.pac().show();
+            level.ghosts().forEach(Ghost::show);
         }
         else if (tick == TICK_DEMO_LEVEL_START_HUNTING) {
             flow().enterState(TengenMsPacMan_GameState.LEVEL_PLAYING);
@@ -481,8 +484,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         if (level.number() < LAST_LEVEL_NUMBER) {
             buildNormalLevel(level.number() + 1);
             startLevel();
-            final GameLevel newLevel = optGameLevel().orElseThrow();
-            newLevel.showPacAndGhosts();
+            level.pac().show();
+            level.ghosts().forEach(Ghost::show);
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", LAST_LEVEL_NUMBER);
         }
