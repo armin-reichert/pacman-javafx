@@ -180,9 +180,9 @@ public interface Game {
      */
     void continuePlayingLevel(GameLevel level, long tick);
 
-    void activateNextBonus(GameLevel level);
+    void activateNextBonus();
 
-    boolean isBonusReached(GameLevel level);
+    boolean isBonusReached();
 
     boolean hasPacManBeenKilled();
 

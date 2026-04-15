@@ -238,7 +238,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public boolean isBonusReached(GameLevel level) {
+    public boolean isBonusReached() {
+        final GameLevel level = optGameLevel().orElseThrow();
         final int eatenFoodCount = level.worldMap().foodLayer().eatenFoodCount();
         return eatenFoodCount == bonus1PelletsEaten || eatenFoodCount == bonus2PelletsEaten;
     }
@@ -293,7 +294,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      *
      **/
     @Override
-    public void activateNextBonus(GameLevel level) {
+    public void activateNextBonus() {
+        final GameLevel level = optGameLevel().orElseThrow();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         if (level.optBonus().isPresent() && level.optBonus().get().state() == BonusState.EDIBLE) {

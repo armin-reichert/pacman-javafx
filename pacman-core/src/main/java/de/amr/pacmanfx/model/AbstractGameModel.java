@@ -540,8 +540,8 @@ public abstract class AbstractGameModel implements Game, GameCheats {
             } else {
                 eatPellet(level, simStep.foodTile);
             }
-            if (isBonusReached(level)) {
-                activateNextBonus(level);
+            if (isBonusReached()) {
+                activateNextBonus();
                 simStep.bonusIndex = level.currentBonusIndex();
             }
             flow().publishGameEvent(new PacEatsFoodEvent(this, pac, false));

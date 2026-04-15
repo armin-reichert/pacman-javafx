@@ -165,13 +165,15 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public boolean isBonusReached(GameLevel level) {
+    public boolean isBonusReached() {
+        final GameLevel level = optGameLevel().orElseThrow();
         final int pelletsEaten = level.worldMap().foodLayer().eatenFoodCount();
         return pelletsEaten == bonus1PelletsEaten || pelletsEaten == bonus2PelletsEaten;
     }
 
     @Override
-    public void activateNextBonus(GameLevel level) {
+    public void activateNextBonus() {
+        final GameLevel level = optGameLevel().orElseThrow();
         level.selectNextBonus();
         final byte symbol = level.bonusSymbol(level.currentBonusIndex());
         final var bonus = new Bonus(symbol, bonusValue(symbol));
