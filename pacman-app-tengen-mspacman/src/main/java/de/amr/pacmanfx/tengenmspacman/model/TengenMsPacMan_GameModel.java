@@ -664,7 +664,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final byte symbol = level.bonusSymbol(level.currentBonusIndex());
         final Bonus bonus = new Bonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         bonus.setMazeRoute(route, leftToRight);
-        bonus.showEdibleAndStartWandering(level.game().bonusSpeed(level));
+        bonus.showEdibleAndStartWandering(bonusSpeed(level));
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);

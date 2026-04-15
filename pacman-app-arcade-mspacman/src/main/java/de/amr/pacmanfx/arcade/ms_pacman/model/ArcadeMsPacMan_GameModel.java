@@ -318,7 +318,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             bonus.showEdibleForSeconds(randomFloat(9, 10));
         } else {
             computeBonusRoute(bonus, terrain, house);
-            bonus.showEdibleAndStartWandering(level.game().bonusSpeed(level));
+            bonus.showEdibleAndStartWandering(bonusSpeed(level));
         }
 
         level.setBonus(bonus);
