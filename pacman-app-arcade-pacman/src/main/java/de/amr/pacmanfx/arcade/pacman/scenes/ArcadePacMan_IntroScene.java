@@ -88,7 +88,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         ghostIndex = 0;
         ghostKilledTime = 0;
 
-        sceneController.restart(SceneState.STARTING);
+        sceneController.restartState(SceneState.STARTING);
     }
 
     @Override

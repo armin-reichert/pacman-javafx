@@ -80,7 +80,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         presentsText = new Actor();
         presentsText.setPosition(9 * TS, MARQUEE_Y - TS);
 
-        controller.restart(SceneState.WAITING_FOR_START);
+        controller.restartState(SceneState.WAITING_FOR_START);
     }
 
     @Override

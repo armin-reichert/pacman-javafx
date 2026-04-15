@@ -32,8 +32,6 @@ public interface GameFlow {
         INTERMISSION
     }
 
-    void updateState();
-
     Optional<State<Game>> optState(String stateName);
 
     State<Game> state();
@@ -50,7 +48,9 @@ public interface GameFlow {
 
     void restartStateWithName(String stateName);
 
-    // events
+    void update();
+
+    // Game events
 
     void addGameEventListener(GameEventListener listener);
 
@@ -65,6 +65,4 @@ public interface GameFlow {
 
     /** Enables or disables cut scenes. */
     void setCutScenesEnabled(boolean enabled);
-
-
 }

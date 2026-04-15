@@ -82,7 +82,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         presentedGhostPersonality = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
-        sceneController.restart(SceneState.STARTING);
+        sceneController.restartState(SceneState.STARTING);
     }
 
     @Override

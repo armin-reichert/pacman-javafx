@@ -150,11 +150,16 @@ public class StateMachine<C> {
      *
      * @param state the state to enter
      */
-    public void restart(State<C> state) {
+    public void restartState(State<C> state) {
         requireNonNull(state);
         resetTimers();
         this.state = null;
         enterState(state);
+    }
+
+    public void restartStateWithName(String stateName) {
+        optState(stateName).ifPresentOrElse(this::restartState,
+            () -> Logger.error("No state named {} found", stateName));
     }
 
     /**
@@ -183,6 +188,11 @@ public class StateMachine<C> {
         state.onEnter(context);
         Logger.debug("After Enter state {} timer={}", state, state.timer());
         stateChangeListeners.forEach(listener -> listener.onStateChange(previousState, state));
+    }
+
+    public void enterStateWithName(String stateName) {
+        optState(stateName).ifPresentOrElse(this::enterState,
+            () -> Logger.error("No state named {} found", stateName));
     }
 
     /**

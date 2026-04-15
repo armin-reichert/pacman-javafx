@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.pacman.model;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
-import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameFlow;
@@ -17,78 +16,27 @@ import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-public class Arcade_GameFlow implements GameFlow {
+public class Arcade_GameFlow extends StateMachine<Game> implements GameFlow {
 
-    private final StateMachine<Game> stateMachine = new StateMachine<>();
-
-    public Arcade_GameFlow(Arcade_GameModel game) {
-        stateMachine.setName("Arcade Pac-Man Game Flow");
-        stateMachine.setContext(game);
-        stateMachine.addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
-        Stream.of(Arcade_GameState.values()).forEach(stateMachine::addState);
+    private static void ensureFxThread(String actionDesc) {
+        if (!Platform.isFxApplicationThread()) {
+            throw new IllegalStateException(actionDesc + " must be executed on the JavaFX Application Thread");
+        }
     }
 
-    @Override
-    public void updateState() {
-        stateMachine.update();
-    }
-
-    @Override
-    public void addState(State<Game> gameState) {
-        stateMachine.addState(gameState);
-    }
-
-    @Override
-    public Optional<State<Game>> optState(String stateName) {
-        return stateMachine.optState(stateName);
-    }
-
-    @Override
-    public State<Game> state() {
-        return stateMachine.state();
-    }
-
-    @Override
-    public void enterState(State<Game> gameState) {
-        stateMachine.enterState(gameState);
-    }
-
-    @Override
-    public void enterStateWithName(String stateName) {
-        optState(stateName).ifPresentOrElse(stateMachine::enterState,
-            () -> Logger.error("No game state named {} found", stateName));
-    }
-
-    @Override
-    public void resumePreviousState() {
-        stateMachine.resumePreviousState();
-    }
-
-    @Override
-    public void restartState(State<Game> gameState) {
-        stateMachine.restart(gameState);
-    }
-
-    @Override
-    public void restartStateWithName(String stateName) {
-        optState(stateName).ifPresentOrElse(stateMachine::restart,
-            () -> Logger.error("No game state named {} found", stateName));
-
-    }
-
+    private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
     private final Set<GameEventListener> eventListeners = new HashSet<>();
 
-    private void ensureFxThread() {
-        if (!Platform.isFxApplicationThread()) {
-            throw new IllegalStateException(
-                "Game event listeners must be added/removed on the JavaFX Application Thread");
-        }
+    public Arcade_GameFlow(Arcade_GameModel game) {
+        setName("Arcade Pac-Man Game Flow");
+        setContext(game);
+        addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
+        Stream.of(Arcade_GameState.values()).forEach(this::addState);
     }
 
     /**
@@ -99,7 +47,7 @@ public class Arcade_GameFlow implements GameFlow {
     @Override
     public void addGameEventListener(GameEventListener listener) {
         requireNonNull(listener);
-        ensureFxThread();
+        ensureFxThread("Adding game event listeners");
         final boolean added = eventListeners.add(listener);
         if (added) {
             Logger.info("{}: Game event listener registered: {}", getClass().getSimpleName(), listener);
@@ -114,7 +62,7 @@ public class Arcade_GameFlow implements GameFlow {
     @Override
     public void removeGameEventListener(GameEventListener listener) {
         requireNonNull(listener);
-        ensureFxThread();
+        ensureFxThread("Removing game event listeners");
         boolean removed = eventListeners.remove(listener);
         if (removed) {
             Logger.info("{}: Game event listener removed: {}", getClass().getSimpleName(), listener);
@@ -138,8 +86,6 @@ public class Arcade_GameFlow implements GameFlow {
     }
 
     // Cut scenes
-
-    private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
     @Override
     public boolean cutScenesEnabled() {
