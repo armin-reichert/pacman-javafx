@@ -488,7 +488,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
                     .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
                     .forEach(simStep.ghostsKilled::add);
                 // More than one ghost might have been killed in this step
-                simStep.ghostsKilled.forEach(ghost -> onEatGhost(level, ghost));
+                simStep.ghostsKilled.forEach(this::onEatGhost);
                 if (hasGhostBeenKilled()) {
                     quitHunting = true;
                 }

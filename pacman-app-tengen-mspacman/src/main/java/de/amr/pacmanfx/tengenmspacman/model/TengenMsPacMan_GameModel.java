@@ -749,7 +749,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onEatGhost(GameLevel level, Ghost ghost) {
+    public void onEatGhost(Ghost ghost) {
+        final GameLevel level = optGameLevel().orElseThrow();
         final List<Ghost> victims = level.energizerVictims();
         final int killedSoFar = victims.size();
         final int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
