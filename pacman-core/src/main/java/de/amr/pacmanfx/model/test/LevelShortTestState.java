@@ -25,8 +25,8 @@ public class LevelShortTestState<GAME extends Game> extends TestState<GAME> {
         game.prepareNewGame();
         game.buildNormalLevel(1);
 
+        game.startLevel();
         final GameLevel level = game.optGameLevel().orElseThrow();
-        game.startLevel(level);
         level.showPacAndGhosts();
     }
 

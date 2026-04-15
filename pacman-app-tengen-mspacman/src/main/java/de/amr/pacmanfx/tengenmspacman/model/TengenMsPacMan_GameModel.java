@@ -409,8 +409,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             flow().publishGameEvent(new GameStartedEvent(this));
         }
         else if (tick == TICK_SHOW_READY) {
-            final GameLevel level = optGameLevel().orElseThrow();
-            startLevel(level);
+            startLevel();
         }
         else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
             final GameLevel level = optGameLevel().orElseThrow();
@@ -435,7 +434,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void startLevel(GameLevel level) {
+    public void startLevel() {
+        final GameLevel level = optGameLevel().orElseThrow();
         level.recordStartTime(System.currentTimeMillis());
         makeReadyForPlaying(level);
         if (pacBooster == PacBooster.ALWAYS_ON) {
@@ -463,8 +463,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             buildDemoLevel();
         }
         else if (tick == 2) {
-            final GameLevel level = optGameLevel().orElseThrow();
-            startLevel(level);
+            startLevel();
         }
         else if (tick == 3) {
             final GameLevel level = optGameLevel().orElseThrow();
@@ -481,8 +480,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final GameLevel level = optGameLevel().orElseThrow();
         if (level.number() < LAST_LEVEL_NUMBER) {
             buildNormalLevel(level.number() + 1);
+            startLevel();
             final GameLevel newLevel = optGameLevel().orElseThrow();
-            startLevel(newLevel);
             newLevel.showPacAndGhosts();
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", LAST_LEVEL_NUMBER);

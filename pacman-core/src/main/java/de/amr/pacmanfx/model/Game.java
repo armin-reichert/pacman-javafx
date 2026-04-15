@@ -147,8 +147,8 @@ public interface Game {
      */
     GameLevel createLevel(int levelNumber, boolean demoLevel);
 
-    /** Starts the given level. */
-    void startLevel(GameLevel level);
+    /** Starts the current level. */
+    void startLevel();
 
     /** Starts a demo level at the given tick. */
     void startDemoLevel(long tick);

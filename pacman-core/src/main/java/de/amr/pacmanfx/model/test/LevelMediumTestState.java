@@ -33,9 +33,7 @@ public class LevelMediumTestState<GAME extends Game> extends TestState<GAME> {
         timer.restartSeconds(TEST_DURATION_SEC);
         game.prepareNewGame();
         game.buildNormalLevel(1);
-
-        final GameLevel level = game.optGameLevel().orElseThrow();
-        game.startLevel(level);
+        game.startLevel();
         configureLevelForTest(game);
     }
 

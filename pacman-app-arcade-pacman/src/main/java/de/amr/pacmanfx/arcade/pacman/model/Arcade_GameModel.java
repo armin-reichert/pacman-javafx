@@ -304,8 +304,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             flow().publishGameEvent(new GameStartedEvent(this));
         }
         else if (tick == 2) {
-            final GameLevel level = optGameLevel().orElseThrow();
-            startLevel(level);
+            startLevel();
         }
         else if (tick == Arcade_GameState.TICK_NEW_GAME_SHOW_GUYS) {
             final GameLevel level = optGameLevel().orElseThrow();
@@ -387,8 +386,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             buildDemoLevel();
         }
         else if (tick == 2) {
-            final GameLevel level = optGameLevel().orElseThrow();
-            startLevel(level);
+            startLevel();
         }
         else if (tick == 3) {
             final GameLevel level = optGameLevel().orElseThrow();
@@ -401,7 +399,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void startLevel(GameLevel level) {
+    public void startLevel() {
+        final GameLevel level = optGameLevel().orElseThrow();
         level.recordStartTime(System.currentTimeMillis());
         makeReadyForPlaying(level);
         if (level.isDemoLevel()) {
@@ -424,8 +423,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void startNextLevel() {
         final GameLevel level = optGameLevel().orElseThrow();
         buildNormalLevel(level.number() + 1);
-        final GameLevel newLevel = optGameLevel().orElseThrow();
-        startLevel(newLevel);
+        startLevel();
     }
 
     @Override
