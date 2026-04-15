@@ -423,7 +423,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void continuePlayingLevel(GameLevel level, long tick) {
+    public void continuePlayingLevel(long tick) {
+        final GameLevel level = optGameLevel().orElseThrow();
         if (tick == 1) {
             makeReadyForPlaying(level);
             level.showPacAndGhosts();

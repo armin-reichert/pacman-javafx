@@ -178,7 +178,7 @@ public interface Game {
      * @param level the level to resume
      * @param tick  the current simulation tick
      */
-    void continuePlayingLevel(GameLevel level, long tick);
+    void continuePlayingLevel(long tick);
 
     void activateNextBonus();
 
