@@ -35,11 +35,19 @@ import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
  */
 public class ArcadePacMan_IntroScene extends GameScene2D {
 
+    // State STARTING
+    public static final int TICK_TITLE_VISIBLE           = 3;
+    public static final int TICK_START_PRESENTING_GHOSTS = 60;
+
+    // State PRESENTING_GHOSTS
     public static final int TICK_GHOST_SPRITE_VISIBLE    =   0;
     public static final int TICK_GHOST_CHARACTER_VISIBLE =  60;
     public static final int TICK_GHOST_NICKNAME_VISIBLE  =  90;
     public static final int TICK_GHOST_PRESENT_NEXT      = 120;
     public static final int TICK_GHOST_PRESENTATION_END  = 180;
+
+    // State SHOWING_POINTS
+    public static final int TICK_SHOW_POINTS_DURATION = 60;
 
     private static final float CHASING_SPEED = 1.1f;
     private static final float GHOST_FRIGHTENED_SPEED = 0.6f;
@@ -119,9 +127,9 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         STARTING {
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                if (timer.tickCount() == 3) {
+                if (timer.tickCount() == TICK_TITLE_VISIBLE) {
                     scene.titleVisible = true;
-                } else if (timer.atSecond(1)) {
+                } else if (timer.tickCount() == TICK_START_PRESENTING_GHOSTS) {
                     scene.flow.enterState(PRESENTING_GHOSTS);
                 }
             }
@@ -159,7 +167,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                if (timer.atSecond(1)) {
+                if (timer.tickCount() == TICK_SHOW_POINTS_DURATION) {
                     scene.flow.enterState(CHASING_PAC);
                 }
             }
