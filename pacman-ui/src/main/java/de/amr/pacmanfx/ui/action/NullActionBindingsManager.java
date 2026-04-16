@@ -34,12 +34,10 @@ public class NullActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void addAll(Keyboard keyboard) {
-    }
+    public void addToKeyboard() {}
 
     @Override
-    public void removeAll(Keyboard keyboard) {
-    }
+    public void removeFromKeyboard() {}
 
     @Override
     public void registerOne(GameAction action, Set<ActionBinding> actionBindings) {

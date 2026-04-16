@@ -304,7 +304,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             actionBindings.registerOne(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
         }
         Input.instance().joypad.setBindings(actionBindings);
-        actionBindings.addAll(Input.instance().keyboard);
+        actionBindings.addToKeyboard();
     }
 
     // private

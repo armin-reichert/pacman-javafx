@@ -12,7 +12,6 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.DoubleProperty;
@@ -122,7 +121,7 @@ public abstract class GameScene2D implements GameScene {
     @Override
     public final void init(Game game) {
         doInit(game);
-        actionBindings.addAll(Input.instance().keyboard);
+        actionBindings.addToKeyboard();
         Logger.info("2D scene {} initialized", getClass().getSimpleName());
     }
 

@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.action;
 
+import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.input.KeyCombination;
 import org.tinylog.Logger;
@@ -33,21 +34,18 @@ public class ActionBindingsManagerImpl implements ActionBindingsManager {
     }
 
     @Override
-    public void addAll(Keyboard keyboard) {
+    public void addToKeyboard() {
         for (KeyCombination combination : keyCombinationToActionMap.keySet()) {
-            keyboard.setBinding(combination, this);
+            Input.instance().keyboard.setBinding(combination, this);
         }
-        keyCombinationToActionMap.entrySet().stream()
-            // sort by string representation of key combination
-            .sorted(Comparator.comparing(entry -> entry.getKey().toString()))
-            .forEach(entry -> Logger.debug("%-20s: %s".formatted(entry.getKey(), entry.getValue().name())));
+        logBindings();
         Logger.info("Key bindings updated");
     }
 
     @Override
-    public void removeAll(Keyboard keyboard) {
+    public void removeFromKeyboard() {
         for (KeyCombination combination : keyCombinationToActionMap.keySet()) {
-            keyboard.removeBinding(combination, this);
+            Input.instance().keyboard.removeBinding(combination, this);
         }
         Logger.info("Key bindings removed");
     }
@@ -88,5 +86,12 @@ public class ActionBindingsManagerImpl implements ActionBindingsManager {
         for (KeyCombination combination : binding.keyCombinations()) {
             keyCombinationToActionMap.put(combination, binding.gameAction());
         }
+    }
+
+    private void logBindings() {
+        // Sort output by key combination display text
+        keyCombinationToActionMap.entrySet().stream()
+            .sorted(Comparator.comparing(e -> e.getKey().toString()))
+            .forEach(e -> Logger.debug("%-20s: %s".formatted(e.getKey(), e.getValue().name())));
     }
 }

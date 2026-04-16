@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -99,7 +98,7 @@ public class ViewManager {
             final View oldView = viewMap.get(oldID);
             if (oldView != null) {
                 oldView.onExit();
-                oldView.actionBindings().removeAll(Input.instance().keyboard);
+                oldView.actionBindings().removeFromKeyboard();
             }
         }
 
@@ -115,7 +114,7 @@ public class ViewManager {
         }
 
         layoutPane.getChildren().set(RESERVED_VIEW_INDEX_IN_LAYOUT, newView.root());
-        newView.actionBindings().addAll(Input.instance().keyboard);
+        newView.actionBindings().addToKeyboard();
         newView.onEnter();
         flashMessageView.clear();
 
