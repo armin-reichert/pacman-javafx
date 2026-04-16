@@ -49,8 +49,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     // State SHOWING_POINTS
     public static final int TICK_SHOW_POINTS_DURATION = 60;
 
-    private static final float CHASING_SPEED = 1.1f;
-    private static final float GHOST_FRIGHTENED_SPEED = 0.6f;
+    // State CHASING_PAC_MAN
+    public static final float CHASING_SPEED = 1.1f;
+    public static final float GHOST_FRIGHTENED_SPEED = 0.6f;
+    public static final int TICK_PAC_MAN_REACHES_ENERGIZER = 232;
+    public static final int TICK_PAC_MAN_MOVES_AGAIN = 236;
+    public static final int TICK_CHASING_GHOSTS_START = 240;
+
 
     public final StateMachine<ArcadePacMan_IntroScene> flow;
 
@@ -168,12 +173,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (timer.tickCount() == TICK_SHOW_POINTS_DURATION) {
-                    scene.flow.enterState(CHASING_PAC);
+                    scene.flow.enterState(CHASING_PAC_MAN);
                 }
             }
         },
 
-        CHASING_PAC {
+        CHASING_PAC_MAN {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
                 timer.restartIndefinitely();
@@ -193,14 +198,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
                     ghost.playAnimation();
                 });
+                scene.blinking.start();
             }
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                if (timer.atSecond(1)) {
-                    scene.blinking.start();
-                }
-                else if (timer.tickCount() == 232) {
+                if (timer.tickCount() == TICK_PAC_MAN_REACHES_ENERGIZER) {
                     // Pac-Man reaches the energizer at the left and stops
                     scene.pacMan.setSpeed(0);
                     scene.pacMan.stopAnimation();
@@ -212,15 +215,21 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                         ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
                     });
                 }
-                else if (timer.tickCount() == 236) {
+                else if (timer.tickCount() == TICK_PAC_MAN_MOVES_AGAIN) {
                     // Pac-Man moves again a bit
                     scene.pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
                     scene.pacMan.playAnimation();
                     scene.pacMan.setSpeed(CHASING_SPEED);
                 }
-                else if (timer.tickCount() == 240) {
+                else if (timer.tickCount() == TICK_CHASING_GHOSTS_START) {
                     scene.flow.enterState(CHASING_GHOSTS);
+                    return;
                 }
+
+                chasePacMan(scene);
+            }
+
+            private void chasePacMan(ArcadePacMan_IntroScene scene) {
                 scene.blinking.doTick();
                 scene.pacMan.move();
                 scene.ghosts.forEach(Ghost::move);

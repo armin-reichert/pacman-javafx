@@ -63,7 +63,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
         drawGhostGallery(introScene);
         switch (introScene.flow.state()) {
             case SHOWING_POINTS -> drawPoints(introScene);
-            case CHASING_PAC -> {
+            case CHASING_PAC_MAN -> {
                 drawBlinkingEnergizer(introScene, ENERGIZER_X, ENERGIZER_Y);
                 drawRumblingGuys(introScene);
                 drawPoints(introScene);
