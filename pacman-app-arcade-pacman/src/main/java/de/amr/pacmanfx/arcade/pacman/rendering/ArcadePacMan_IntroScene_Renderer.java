@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
 import de.amr.pacmanfx.lib.Pulse;
 import de.amr.pacmanfx.lib.math.RectShort;
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
@@ -103,7 +104,9 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
     }
 
     private void drawRumblingGuys(ArcadePacMan_IntroScene introScene) {
-        introScene.ghosts.forEach(actorRenderer::drawActor);
+        for (Ghost ghost : introScene.ghosts) {
+            actorRenderer.drawActor(ghost);
+        }
         actorRenderer.drawActor(introScene.pacMan);
     }
 
