@@ -44,7 +44,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
             public void draw(GameScene2D scene) {
                 ArcadePacMan_IntroScene introScene = (ArcadePacMan_IntroScene) scene;
                 super.draw(scene);
-                ctx.fillText("Scene timer %d".formatted(introScene.sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
+                ctx.fillText("Scene timer %d".formatted(introScene.flow.state().timer().tickCount()), 0, scaled(5 * TS));
             }
         });
         energizerSprite = spriteSheet().sprite(SpriteID.ENERGIZER);
@@ -61,7 +61,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
         final var introScene = (ArcadePacMan_IntroScene) scene;
         clearCanvas();
         drawGhostGallery(introScene);
-        switch (introScene.sceneController.state()) {
+        switch (introScene.flow.state()) {
             case SHOWING_POINTS -> drawPoints(introScene);
             case CHASING_PAC -> {
                 drawBlinkingEnergizer(introScene, ENERGIZER_X, ENERGIZER_Y);

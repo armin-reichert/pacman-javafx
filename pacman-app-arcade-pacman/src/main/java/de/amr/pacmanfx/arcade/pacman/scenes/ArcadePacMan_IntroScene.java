@@ -38,7 +38,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private static final float CHASING_SPEED = 1.1f;
     private static final float GHOST_FRIGHTENED_SPEED = 0.6f;
 
-    public final StateMachine<ArcadePacMan_IntroScene> sceneController;
+    public final StateMachine<ArcadePacMan_IntroScene> flow;
 
     // public for access by renderer
     public Pulse blinking;
@@ -54,7 +54,9 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private long ghostKilledTime;
 
     public ArcadePacMan_IntroScene() {
-        sceneController = new StateMachine<>(this, List.of(SceneState.values()));
+        flow = new StateMachine<>();
+        flow.setContext(this);
+        flow.addStates(SceneState.values());
     }
 
     @Override
@@ -70,7 +72,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
-        //pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
 
         ghosts = List.of(
             uiConfig.createGhostWithAnimations(ui.spriteAnimationRegistry(), RED_GHOST_SHADOW),
@@ -88,7 +89,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         ghostIndex = 0;
         ghostKilledTime = 0;
 
-        sceneController.restartState(SceneState.STARTING);
+        flow.restartState(SceneState.STARTING);
     }
 
     @Override
@@ -99,7 +100,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void update(Game game) {
-        sceneController.update();
+        flow.update();
     }
 
     @Override
@@ -115,7 +116,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 if (timer.tickCount() == 3) {
                     scene.titleVisible = true;
                 } else if (timer.atSecond(1)) {
-                    scene.sceneController.enterState(PRESENTING_GHOSTS);
+                    scene.flow.enterState(PRESENTING_GHOSTS);
                 }
             }
         },
@@ -139,7 +140,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     scene.ghostIndex += 1;
                 }
                 else if (timer.atSecond(2.5)) {
-                    scene.sceneController.enterState(SHOWING_POINTS);
+                    scene.flow.enterState(SHOWING_POINTS);
                 }
             }
         },
@@ -153,7 +154,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (timer.atSecond(1)) {
-                    scene.sceneController.enterState(CHASING_PAC);
+                    scene.flow.enterState(CHASING_PAC);
                 }
             }
         },
@@ -204,7 +205,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     scene.pacMan.setSpeed(CHASING_SPEED);
                 }
                 else if (timer.tickCount() == 240) {
-                    scene.sceneController.enterState(CHASING_GHOSTS);
+                    scene.flow.enterState(CHASING_GHOSTS);
                 }
                 scene.blinking.doTick();
                 scene.pacMan.move();
@@ -239,7 +240,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (scene.ghosts.stream().allMatch(ghost -> ghost.inAnyOfStates(EATEN))) {
                     scene.pacMan.hide();
-                    scene.sceneController.enterState(READY_TO_PLAY);
+                    scene.flow.enterState(READY_TO_PLAY);
                     return;
                 }
 
