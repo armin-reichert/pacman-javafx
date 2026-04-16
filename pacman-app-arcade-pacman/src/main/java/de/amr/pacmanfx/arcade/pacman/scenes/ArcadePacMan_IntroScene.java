@@ -56,6 +56,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public static final int TICK_PAC_MAN_MOVES_AGAIN = 236;
     public static final int TICK_CHASING_GHOSTS_START = 240;
 
+    // State CHASING_GHOSTS
+    public static final int GHOST_EATING_TICKS = 50;
 
     public final StateMachine<ArcadePacMan_IntroScene> flow;
 
@@ -157,11 +159,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
             private void presentNextGhost(ArcadePacMan_IntroScene scene) {
                 if (scene.ghostIndex < scene.ghosts.size() - 1) {
+                    scene.ghostIndex += 1;
                     timer.resetToIndefiniteDuration();
                 }
-                scene.ghostIndex += 1;
             }
-
         },
 
         SHOWING_POINTS {
@@ -285,7 +286,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     });
 
                 // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on
-                if (timer.tickCount() == scene.ghostKilledTime + 50) {
+                if (timer.tickCount() == scene.ghostKilledTime + GHOST_EATING_TICKS) {
                     scene.pacMan.show();
                     scene.pacMan.setSpeed(CHASING_SPEED);
                     scene.ghosts.forEach(ghost -> {
