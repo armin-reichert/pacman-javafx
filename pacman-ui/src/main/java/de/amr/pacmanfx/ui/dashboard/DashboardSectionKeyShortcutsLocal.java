@@ -28,7 +28,7 @@ public class DashboardSectionKeyShortcutsLocal extends DashboardSection {
 
     private void addEntries(GameUI ui, GameScene gameScene) {
         final ActionBindingsManager actionBindings = gameScene.actionBindings();
-        if (actionBindings.empty()) {
+        if (actionBindings.noBindings()) {
             addRow(createLabel(NO_INFO, false));
         }
         else {

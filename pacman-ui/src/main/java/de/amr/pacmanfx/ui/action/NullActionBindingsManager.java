@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.input.KeyCombination;
 
 import java.util.Map;
@@ -29,30 +28,30 @@ public class NullActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public boolean empty() {
+    public boolean noBindings() {
         return true;
     }
 
     @Override
-    public void addToKeyboard() {}
+    public void pluginKeyboard() {}
 
     @Override
-    public void removeFromKeyboard() {}
+    public void unplugKeyboard() {}
 
     @Override
-    public void registerOne(GameAction action, Set<ActionBinding> actionBindings) {
+    public void bindOne(GameAction action, Set<ActionBinding> bindings) {
     }
 
     @Override
-    public void bindActionToKeyCombination(GameAction action, KeyCombination combination) {
+    public void bind(GameAction action, KeyCombination combination) {
     }
 
     @Override
-    public void registerAll(Set<ActionBinding> actionBindings) {
+    public void bindAll(Set<ActionBinding> bindings) {
     }
 
     @Override
-    public Optional<GameAction> findMatchingAction(Keyboard keyboard) {
+    public Optional<GameAction> matchingAction() {
         return Optional.empty();
     }
 }

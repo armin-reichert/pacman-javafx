@@ -11,10 +11,11 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
+import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
+import de.amr.pacmanfx.ui.input.Input;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -78,18 +79,18 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     public void replaceActionBindings(GameLevel level) {
-        actionBindings = new ActionBindingsManagerImpl();
+        actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
         if (level.isDemoLevel()) {
             // In demo level, allow going back to options screen
-            actionBindings.registerOne(ACTION_QUIT_DEMO_LEVEL, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
+            actionBindings.bindOne(ACTION_QUIT_DEMO_LEVEL, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
         } else {
-            actionBindings.registerAll(TengenMsPacMan_ActionBindings.STEERING_BINDINGS);
-            actionBindings.registerOne(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
-            actionBindings.registerAll(GameUI.CHEAT_ACTION_BINDINGS);
+            actionBindings.bindAll(TengenMsPacMan_ActionBindings.STEERING_BINDINGS);
+            actionBindings.bindOne(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
+            actionBindings.bindAll(GameUI.CHEAT_ACTION_BINDINGS);
         }
         bindPlaySceneActions();
 
-        actionBindings.addToKeyboard();
+        actionBindings.pluginKeyboard();
     }
 
     @Override

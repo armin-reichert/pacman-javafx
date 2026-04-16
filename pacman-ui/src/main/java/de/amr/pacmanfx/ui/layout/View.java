@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
-import de.amr.pacmanfx.ui.input.Input;
 import javafx.scene.Node;
 
 import java.util.Optional;
@@ -61,8 +60,7 @@ public interface View extends GameEventListener {
      * @param ui the global game UI façade
      */
     default void onKeyboardInput(GameUI ui) {
-        actionBindings().findMatchingAction(Input.instance().keyboard)
-            .ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
+        actionBindings().matchingAction().ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
     }
 
     /**

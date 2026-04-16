@@ -9,7 +9,6 @@ import de.amr.pacmanfx.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.SubScene;
@@ -76,8 +75,7 @@ public interface GameScene extends GameEventListener, Disposable {
      * defined in the action bindings is executed.
      */
     default void onUserInput() {
-        actionBindings().findMatchingAction(Input.instance().keyboard)
-            .ifPresent(action -> action.executeIfEnabled(ui()));
+        actionBindings().matchingAction().ifPresent(action -> action.executeIfEnabled(ui()));
     }
 
     /**

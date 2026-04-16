@@ -28,8 +28,8 @@ import java.util.Set;
  *
  * <h2>Lifecycle</h2>
  * <ul>
- *   <li>{@link #addToKeyboard()} registers all known bindings with the keyboard.</li>
- *   <li>{@link #removeFromKeyboard()} unregisters them again.</li>
+ *   <li>{@link #pluginKeyboard()} registers all known bindings with the keyboard.</li>
+ *   <li>{@link #unplugKeyboard()} unregisters them again.</li>
  *   <li>{@link #dispose()} frees any internal resources (if needed).</li>
  * </ul>
  *
@@ -57,32 +57,31 @@ public interface ActionBindingsManager extends Disposable {
      * Implementations typically inspect the pressed keys on the given {@link Keyboard}
      * and compare them against known {@link KeyCombination}s.
      *
-     * @param keyboard the keyboard to inspect
      * @return the matching action, or an empty {@code Optional} if none match
      */
-    Optional<GameAction> findMatchingAction(Keyboard keyboard);
+    Optional<GameAction> matchingAction();
 
     /**
-     * Indicates whether this manager currently holds no bindings.
+     * Indicates whether this bindings manager currently holds no bindings.
      *
      * @return {@code true} if no key combinations are registered
      */
-    boolean empty();
+    boolean noBindings();
 
     /**
      * Activates all known bindings on the given keyboard.
      * <p>
      * This typically means registering listeners or updating internal keyboard state
-     * so that {@link #findMatchingAction(Keyboard)} can resolve actions.
+     * so that {@link #matchingAction()} can resolve actions.
      */
-    void addToKeyboard();
+    void pluginKeyboard();
 
     /**
      * Removes all bindings previously activated on the given keyboard.
      * <p>
      * After calling this method, no key combinations should trigger actions.
      */
-    void removeFromKeyboard();
+    void unplugKeyboard();
 
     /**
      * Assigns a new key combination to the given action, replacing any previous binding.
@@ -90,7 +89,7 @@ public interface ActionBindingsManager extends Disposable {
      * @param action      the action to rebind
      * @param combination the new key combination
      */
-    void bindActionToKeyCombination(GameAction action, KeyCombination combination);
+    void bind(GameAction action, KeyCombination combination);
 
     /**
      * Registers exactly one binding for the given action from the provided set.
@@ -99,9 +98,9 @@ public interface ActionBindingsManager extends Disposable {
      * or apply custom selection logic.
      *
      * @param action         the action to bind
-     * @param actionBindings the candidate bindings
+     * @param bindings the candidate bindings
      */
-    void registerOne(GameAction action, Set<ActionBinding> actionBindings);
+    void bindOne(GameAction action, Set<ActionBinding> bindings);
 
     /**
      * Registers all provided bindings.
@@ -109,7 +108,7 @@ public interface ActionBindingsManager extends Disposable {
      * This is typically used when loading predefined binding sets (e.g., cheat keys,
      * steering keys, or debug keys).
      *
-     * @param actionBindings the bindings to register
+     * @param bindings the bindings to register
      */
-    void registerAll(Set<ActionBinding> actionBindings);
+    void bindAll(Set<ActionBinding> bindings);
 }

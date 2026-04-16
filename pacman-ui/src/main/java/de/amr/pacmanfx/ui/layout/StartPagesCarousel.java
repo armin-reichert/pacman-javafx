@@ -8,9 +8,10 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.StartPage;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
-import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
+import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.GameAction;
+import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -57,7 +58,7 @@ public class StartPagesCarousel extends Carousel implements View {
     };
 
     private final List<StartPage> pages = new ArrayList<>();
-    private final ActionBindingsManager actionBindings = new ActionBindingsManagerImpl();
+    private final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
 
     private final GameUI ui;
 
@@ -81,11 +82,11 @@ public class StartPagesCarousel extends Carousel implements View {
 
     @Override
     public void onEnter() {
-        actionBindings.bindActionToKeyCombination(actionShowPrevPage, bare(KeyCode.LEFT));
-        actionBindings.bindActionToKeyCombination(actionShowNextPage, bare(KeyCode.RIGHT));
-        actionBindings.bindActionToKeyCombination(CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
-        actionBindings.bindActionToKeyCombination(CommonGameActions.ACTION_TOGGLE_PAUSED, bare(KeyCode.P));
-        actionBindings.addToKeyboard();
+        actionBindings.bind(actionShowPrevPage, bare(KeyCode.LEFT));
+        actionBindings.bind(actionShowNextPage, bare(KeyCode.RIGHT));
+        actionBindings.bind(CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
+        actionBindings.bind(CommonGameActions.ACTION_TOGGLE_PAUSED, bare(KeyCode.P));
+        actionBindings.pluginKeyboard();
         restartProgressTimer();
         currentStartPage().ifPresent(page -> page.layoutRoot().requestFocus());
     }
@@ -93,7 +94,7 @@ public class StartPagesCarousel extends Carousel implements View {
     @Override
     public void onExit() {
         pauseProgressTimer();
-        actionBindings.removeFromKeyboard();
+        actionBindings.unplugKeyboard();
         currentStartPage().ifPresent(startPage -> startPage.onExitStartPage(ui));
     }
 

@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
-import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
+import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
@@ -79,7 +79,7 @@ public class PlayView extends StackPane implements View {
     private final HelpLayer helpLayer;
     private final GameUI_ContextMenu contextMenu;
 
-    private final ActionBindingsManager actionBindings = new ActionBindingsManagerImpl();
+    private final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
 
     private ChangeListener<GameScene> gameSceneChangeListener;
     private ChangeListener<? super Number> parentSceneWidthListener;
@@ -149,7 +149,7 @@ public class PlayView extends StackPane implements View {
 
     @Override
     public void onKeyboardInput(GameUI ui) {
-        actionBindings.findMatchingAction(Input.instance().keyboard).ifPresentOrElse(
+        actionBindings.matchingAction().ifPresentOrElse(
             action -> action.execute(ui),
             () -> optCurrentGameScene().ifPresent(GameScene::onUserInput)
         );
@@ -376,26 +376,26 @@ public class PlayView extends StackPane implements View {
     }
 
     private void configureActionBindings() {
-        actionBindings.registerOne(ACTION_BOOT_SHOW_PLAY_VIEW, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_QUIT_GAME_SCENE, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_SHOW_HELP, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_SIMULATION_SLOWER, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_SIMULATION_SLOWEST, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_SIMULATION_FASTER, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_SIMULATION_FASTEST, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_SIMULATION_RESET, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_SIMULATION_ONE_STEP, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_SIMULATION_TEN_STEPS, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_TOGGLE_AUTOPILOT, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_TOGGLE_DEBUG_INFO, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_TOGGLE_MUTED, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_TOGGLE_PAUSED, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_TOGGLE_COLLISION_STRATEGY, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_TOGGLE_DASHBOARD, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_TOGGLE_IMMUNITY, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, GameUI.COMMON_BINDINGS);
-        actionBindings.registerOne(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_BOOT_SHOW_PLAY_VIEW, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_QUIT_GAME_SCENE, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_SHOW_HELP, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_SIMULATION_SLOWER, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_SIMULATION_SLOWEST, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_SIMULATION_FASTER, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_SIMULATION_FASTEST, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_SIMULATION_RESET, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_SIMULATION_ONE_STEP, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_SIMULATION_TEN_STEPS, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_TOGGLE_AUTOPILOT, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_TOGGLE_DEBUG_INFO, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_TOGGLE_MUTED, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_TOGGLE_PAUSED, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_TOGGLE_COLLISION_STRATEGY, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_TOGGLE_DASHBOARD, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_TOGGLE_IMMUNITY, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, GameUI.COMMON_BINDINGS);
+        actionBindings.bindOne(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GameUI.COMMON_BINDINGS);
     }
 
     private void handleContextMenuRequest(ContextMenuEvent event) {

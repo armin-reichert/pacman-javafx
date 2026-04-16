@@ -72,10 +72,10 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     public void doInit(Game game) {
         game.hud().hide();
 
-        actionBindings.registerAll(GameUI.SCENE_TESTS_BINDINGS);
-        actionBindings.bindActionToKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J));
-        actionBindings.registerOne(ACTION_START_PLAYING,                  TENGEN_SPECIFIC_BINDINGS);
-        actionBindings.registerOne(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TENGEN_SPECIFIC_BINDINGS);
+        actionBindings.bindAll(GameUI.SCENE_TESTS_BINDINGS);
+        actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J));
+        actionBindings.bindOne(ACTION_START_PLAYING,                  TENGEN_SPECIFIC_BINDINGS);
+        actionBindings.bindOne(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TENGEN_SPECIFIC_BINDINGS);
 
         Input.instance().joypad.setBindings(actionBindings);
 
@@ -147,7 +147,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
                 case OPTION_STARTING_LEVEL -> setPrevStartLevelValue();
             }
         }
-        else actionBindings().findMatchingAction(Input.instance().keyboard).ifPresent(action -> action.executeIfEnabled(ui()));
+        else actionBindings().matchingAction().ifPresent(action -> action.executeIfEnabled(ui()));
     }
 
     private void setPrevStartLevelValue() {

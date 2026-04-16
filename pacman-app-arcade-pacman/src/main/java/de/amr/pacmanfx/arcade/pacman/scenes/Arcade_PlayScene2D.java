@@ -197,10 +197,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
      */
     public void acceptGameLevel(GameLevel level) {
         ui.soundManager().setEnabled(!level.isDemoLevel()); //TODO is this needed?
-        actionBindings.registerAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
-        actionBindings.registerAll(GameUI.STEERING_ACTION_BINDINGS);
-        actionBindings.registerAll(GameUI.CHEAT_ACTION_BINDINGS);
-        actionBindings.addToKeyboard();
+        actionBindings.bindAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
+        actionBindings.bindAll(GameUI.STEERING_ACTION_BINDINGS);
+        actionBindings.bindAll(GameUI.CHEAT_ACTION_BINDINGS);
+        actionBindings.pluginKeyboard();
         Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
