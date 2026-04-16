@@ -24,23 +24,11 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
 
     public static final short ANIMATION_START_TICK = 120;
 
-    private int tick;
-    private Pac pacMan;
-    private Ghost blinky;
+    public int tick;
+    public Pac pacMan;
+    public Ghost blinky;
 
     public ArcadePacMan_CutScene3() {}
-
-    public Pac pac() {
-        return pacMan;
-    }
-
-    public Ghost blinky() {
-        return blinky;
-    }
-
-    public long tick() {
-        return tick;
-    }
 
     @Override
     public void doInit(Game game) {

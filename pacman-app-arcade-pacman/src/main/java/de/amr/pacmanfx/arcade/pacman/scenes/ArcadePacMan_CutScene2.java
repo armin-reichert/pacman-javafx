@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -36,32 +35,14 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     /** Tick when animation starts */
     public static final short ANIMATION_START = 120;
 
-    public static final int NAIL_X = TS * 14;
-    public static final int NAIL_Y = TS * 19 + 3;
-
-    private int tick;
-    private Pac pacMan;
-    private Ghost blinky;
-
-    private SpriteAnimation nailDressAnimation;
+    public final int nailX = TS * 14;
+    public final int nailY = TS * 19 + 3;
+    public int tick;
+    public Pac pacMan;
+    public Ghost blinky;
+    public SpriteAnimation nailDressAnimation;
 
     public ArcadePacMan_CutScene2() {}
-
-    public Pac pac() {
-        return pacMan;
-    }
-
-    public Ghost blinky() {
-        return blinky;
-    }
-
-    public RectShort currentNailOrStretchedDressSprite() {
-        return nailDressAnimation.currentSprite();
-    }
-
-    public int tick() {
-        return tick;
-    }
 
     @Override
     public void doInit(Game game) {
