@@ -65,7 +65,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
         switch (introScene.flow.state()) {
             case SHOWING_POINTS -> drawPoints(introScene);
             case CHASING_PAC_MAN -> {
-                drawBlinkingEnergizer(introScene, ENERGIZER_X, ENERGIZER_Y);
+                drawBlinkingEnergizer(introScene.blinking, ENERGIZER_X, ENERGIZER_Y);
                 drawRumblingGuys(introScene);
                 drawPoints(introScene);
                 drawCopyright();
@@ -121,13 +121,13 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
         fillText("10",  ARCADE_WHITE, arcadeFont8(), TS(LEFT_TILE_X + 8), TS(25));
         fillText("PTS", ARCADE_WHITE, arcadeFont6(), TS(LEFT_TILE_X + 11), TS(25));
         // energizer
-        drawBlinkingEnergizer(introScene, TS(LEFT_TILE_X + 6), TS(26));
+        drawBlinkingEnergizer(introScene.blinking, TS(LEFT_TILE_X + 6), TS(26));
         fillText("50",  ARCADE_WHITE, arcadeFont8(), TS(LEFT_TILE_X + 8), TS(27));
         fillText("PTS", ARCADE_WHITE, arcadeFont6(), TS(LEFT_TILE_X + 11), TS(27));
     }
 
-    private void drawBlinkingEnergizer(ArcadePacMan_IntroScene introScene, double x, double y) {
-        if (introScene.blinking.state() == Pulse.State.ON) {
+    private void drawBlinkingEnergizer(Pulse blinking, double x, double y) {
+        if (blinking.state() == Pulse.State.ON) {
             drawSpriteCentered(energizerSprite, x + 4, y + 4);
         }
     }

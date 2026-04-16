@@ -222,7 +222,6 @@ public class StateMachine<C> {
         state.onUpdate(context);
         if (state.timer().state() == TickTimer.State.READY) {
             state.timer().start();
-            Logger.info("Timer started for state '{}'", state.name());
         } else {
             state.timer().doTick();
         }

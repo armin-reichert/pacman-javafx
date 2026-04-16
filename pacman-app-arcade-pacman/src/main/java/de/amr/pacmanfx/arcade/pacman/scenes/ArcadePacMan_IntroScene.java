@@ -58,7 +58,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public static final int TICK_PAC_MAN_APPEARS = 60;
     public static final int TICK_PAC_MAN_REACHES_ENERGIZER = 230;
     public static final int TICK_PAC_MAN_MOVES_AGAIN = TICK_PAC_MAN_REACHES_ENERGIZER + 4;
-    public static final int TICK_CHASING_GHOSTS_START = TICK_PAC_MAN_REACHES_ENERGIZER + 8;
+    public static final int TICK_CHASING_PAC_MAN_END = TICK_PAC_MAN_REACHES_ENERGIZER + 8;
 
     // State CHASING_GHOSTS
     public static final int GHOST_EATING_TICKS = 50;
@@ -184,7 +184,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         CHASING_PAC_MAN {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
-                timer.restartIndefinitely();
+                timer.restartTicks(TICK_CHASING_PAC_MAN_END);
                 scene.pacMan.hide();
             }
 
@@ -227,7 +227,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     scene.pacMan.playAnimation();
                     scene.pacMan.setSpeed(CHASING_SPEED);
                 }
-                else if (timer.tickCount() == TICK_CHASING_GHOSTS_START) {
+                else if (timer.tickCount() == TICK_CHASING_PAC_MAN_END) {
                     scene.flow.enterState(CHASING_GHOSTS);
                     return;
                 }

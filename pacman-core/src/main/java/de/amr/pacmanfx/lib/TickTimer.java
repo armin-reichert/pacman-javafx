@@ -107,7 +107,7 @@ public class TickTimer {
     public void start() {
         if (state == STOPPED || state == READY) {
             state = RUNNING;
-            Logger.trace("{} started", this);
+            Logger.info("Start timer (duration {}): {}", ticksToString(duration), this);
             publishEvent(new TickTimerEvent(Type.STARTED));
         }
     }
