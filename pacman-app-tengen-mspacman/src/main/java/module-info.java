@@ -18,6 +18,7 @@ open module de.amr.pacmanfx.tengenmspacman {
     exports de.amr.pacmanfx.tengenmspacman;
     exports de.amr.pacmanfx.tengenmspacman.app;
     exports de.amr.pacmanfx.tengenmspacman.model;
+    exports de.amr.pacmanfx.tengenmspacman.model.actor;
     exports de.amr.pacmanfx.tengenmspacman.rendering;
     exports de.amr.pacmanfx.tengenmspacman.scenes;
 }

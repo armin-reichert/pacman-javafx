@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -16,8 +17,6 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.JOYPAD;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_PIXELS;
-import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.createMsPacMan;
-import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_LET_GAME_STATE_EXPIRE;
 
 /**
@@ -65,10 +64,10 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         clapperboard.show();
         clapperboard.startAnimation();
 
-        msPacMan = createMsPacMan();
+        msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
 
-        pacMan = createPacMan();
+        pacMan = TengenMsPacMan_ActorFactory.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
 
         ui.soundManager().play(SoundID.INTERMISSION_2);

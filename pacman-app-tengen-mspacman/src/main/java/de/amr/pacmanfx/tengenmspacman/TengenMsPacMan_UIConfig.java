@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
 import de.amr.pacmanfx.ui.GameSceneConfig;
@@ -300,7 +301,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
 
     @Override
     public Ghost createGhostWithAnimations(SpriteAnimationRegistry spriteAnimationRegistry, byte personality) {
-        final Ghost ghost = TengenMsPacMan_GameModel.createGhost(personality);
+        final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(personality);
         ghost.setAnimations(createGhostAnimations(spriteAnimationRegistry, personality));
         ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
         return ghost;

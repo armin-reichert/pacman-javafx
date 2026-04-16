@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.tengenmspacman.model;
+package de.amr.pacmanfx.tengenmspacman.model.actor;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameException;
@@ -11,6 +11,9 @@ import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
+import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;

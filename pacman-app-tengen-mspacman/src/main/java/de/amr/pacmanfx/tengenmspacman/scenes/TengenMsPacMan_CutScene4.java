@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
+import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -24,8 +25,6 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_PIXELS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_TILES;
-import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.createMsPacMan;
-import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.createPacMan;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
@@ -69,10 +68,10 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         clapperboard.setVisible(true);
         clapperboard.startAnimation();
 
-        msPacMan = createMsPacMan();
+        msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
 
-        pacMan = createPacMan();
+        pacMan = TengenMsPacMan_ActorFactory.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
 
         juniors = new ArrayList<>();
@@ -162,7 +161,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     private void spawnJunior(int tick) {
-        var junior = createPacMan();
+        var junior = TengenMsPacMan_ActorFactory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         junior.setPosition((float) randomX, unscaledSize().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);

@@ -9,9 +9,13 @@ import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
+import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
@@ -29,7 +33,6 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGE
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_ENTER_START_SCREEN;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_PIXELS;
-import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.createMsPacMan;
 
 public class TengenMsPacMan_IntroScene extends GameScene2D {
 
@@ -123,7 +126,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 
-                scene.msPacMan = createMsPacMan();
+                scene.msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
                 scene.msPacMan.setAnimations(uiConfig.createPacAnimations(animationRegistry));
                 scene.msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
                 scene.msPacMan.playAnimation();

@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
@@ -21,8 +22,6 @@ import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.JOYPAD;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_PIXELS;
-import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.createMsPacMan;
-import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_LET_GAME_STATE_EXPIRE;
 
 /**
@@ -93,13 +92,13 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         clapperboard.show();
         clapperboard.startAnimation();
 
-        msPacMan = createMsPacMan();
+        msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
         msPacMan.setSpeed(0);
 
-        pacMan = createPacMan();
+        pacMan = TengenMsPacMan_ActorFactory.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationRegistry()));
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
