@@ -23,6 +23,7 @@ import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
+import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
@@ -148,9 +149,9 @@ public class PlayView extends StackPane implements View {
 
     @Override
     public void onKeyboardInput(GameUI ui) {
-        actionBindings.findMatchingAction(GameUI.KEYBOARD).ifPresentOrElse(
+        actionBindings.findMatchingAction(Input.instance().keyboard).ifPresentOrElse(
             action -> action.execute(ui),
-            () -> optCurrentGameScene().ifPresent(GameScene::onKeyboardInput)
+            () -> optCurrentGameScene().ifPresent(GameScene::onUserInput)
         );
     }
 

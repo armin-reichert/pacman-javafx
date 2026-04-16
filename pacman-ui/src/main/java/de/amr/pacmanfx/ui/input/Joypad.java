@@ -46,7 +46,7 @@ public class Joypad {
     private final Keyboard keyboard;
     private int selectedIndex;
 
-    public Joypad(Keyboard keyboard) {
+    Joypad(Keyboard keyboard) {
         this.keyboard = requireNonNull(keyboard);
     }
 
@@ -59,10 +59,10 @@ public class Joypad {
     }
 
     public boolean isButtonPressed(JoypadButton buttonID) {
-        return keyboard.isMatching(key(buttonID));
+        return keyboard.isMatching(keyForButton(buttonID));
     }
 
-    public KeyCodeCombination key(JoypadButton buttonID) {
+    public KeyCodeCombination keyForButton(JoypadButton buttonID) {
         return currentKeyBinding().key(buttonID);
     }
 

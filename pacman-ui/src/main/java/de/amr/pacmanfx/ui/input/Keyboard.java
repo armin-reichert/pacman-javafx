@@ -36,6 +36,8 @@ public final class Keyboard {
     private final Map<KeyCombination, ActionBindingsManager> actionBindings = new HashMap<>();
     private final List<KeyCombination> matches = new ArrayList<>(3);
 
+    Keyboard() {}
+
     public void setBinding(KeyCombination combination, ActionBindingsManager bindingsManager) {
         if (actionBindings.get(combination) == bindingsManager) {
             Logger.debug("Key combination '{}' already bound to action {}", combination, bindingsManager);

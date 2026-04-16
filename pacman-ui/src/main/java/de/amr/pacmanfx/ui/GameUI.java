@@ -10,7 +10,6 @@ import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
-import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.MiniGameView;
 import de.amr.pacmanfx.ui.layout.ViewManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -67,13 +66,6 @@ public interface GameUI extends Translator {
     // ---------------------------------------------------------------------------------------------
     // Key Bindings
     // ---------------------------------------------------------------------------------------------
-
-    /**
-     * Global keyboard handler used for all key bindings.
-     * <p>
-     * Implementations typically register this handler with the JavaFX scene.
-     */
-    Keyboard KEYBOARD = new Keyboard();
 
     /** Cheat key bindings (Alt + key). */
     Set<ActionBinding> CHEAT_ACTION_BINDINGS = Set.of(

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.GameAction;
+import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -85,7 +86,7 @@ public class StartPagesCarousel extends Carousel implements View {
         actionBindings.bindActionToKeyCombination(actionShowNextPage, bare(KeyCode.RIGHT));
         actionBindings.bindActionToKeyCombination(CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
         actionBindings.bindActionToKeyCombination(CommonGameActions.ACTION_TOGGLE_PAUSED, bare(KeyCode.P));
-        actionBindings.addAll(GameUI.KEYBOARD);
+        actionBindings.addAll(Input.instance().keyboard);
         restartProgressTimer();
         currentStartPage().ifPresent(page -> page.layoutRoot().requestFocus());
     }
@@ -93,7 +94,7 @@ public class StartPagesCarousel extends Carousel implements View {
     @Override
     public void onExit() {
         pauseProgressTimer();
-        actionBindings.removeAll(GameUI.KEYBOARD);
+        actionBindings.removeAll(Input.instance().keyboard);
         currentStartPage().ifPresent(startPage -> startPage.onExitStartPage(ui));
     }
 

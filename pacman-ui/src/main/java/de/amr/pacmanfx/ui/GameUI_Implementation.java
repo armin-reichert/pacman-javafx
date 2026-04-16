@@ -16,6 +16,7 @@ import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
+import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -191,22 +192,21 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         actionBindingsManager.registerOne(CommonGameActions.ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
         actionBindingsManager.registerOne(CommonGameActions.ACTION_OPEN_EDITOR,      GameUI.COMMON_BINDINGS);
         actionBindingsManager.registerOne(CommonGameActions.ACTION_TOGGLE_MUTED,     GameUI.COMMON_BINDINGS);
-        actionBindingsManager.addAll(GameUI.KEYBOARD);
+        actionBindingsManager.addAll(Input.instance().keyboard);
     }
 
     private void initScene() {
         scene.getStylesheets().add(GameUI_Resources.STYLE_SHEET_PATH);
 
-        scene.addEventFilter(KeyEvent.KEY_PRESSED,  KEYBOARD::onKeyPressed);
-        scene.addEventFilter(KeyEvent.KEY_RELEASED, KEYBOARD::onKeyReleased);
+        scene.addEventFilter(KeyEvent.KEY_PRESSED,  Input.instance().keyboard::onKeyPressed);
+        scene.addEventFilter(KeyEvent.KEY_RELEASED, Input.instance().keyboard::onKeyReleased);
 
         // If a global action is bound to the key press, execute it; otherwise let the current view handle it.
-        scene.setOnKeyPressed(e -> actionBindingsManager.findMatchingAction(KEYBOARD).ifPresentOrElse(action ->
-            {
+        scene.setOnKeyPressed(e -> actionBindingsManager.findMatchingAction(Input.instance().keyboard)
+            .ifPresentOrElse(action -> {
                 boolean executed = action.executeIfEnabled(this);
                 if (executed) e.consume();
-            },
-            () -> viewManager.currentView().onKeyboardInput(this)
+            }, () -> viewManager.currentView().onKeyboardInput(this)
         ));
         scene.setOnScroll(e -> optGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
     }

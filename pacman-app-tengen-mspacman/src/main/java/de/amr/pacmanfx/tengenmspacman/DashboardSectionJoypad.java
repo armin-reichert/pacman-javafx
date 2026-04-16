@@ -8,6 +8,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardSection;
+import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.image.ImageView;
 
@@ -20,25 +21,24 @@ public class DashboardSectionJoypad extends DashboardSection {
     }
 
     public void init(GameUI ui) {
-        final var joypad = TengenMsPacMan_UIConfig.JOYPAD.currentKeyBinding();
         final var imageNesController = new ImageView(LOCAL_RESOURCES.loadImage("graphics/nes-controller.jpg"));
 
         addRow(imageNesController);
         addDynamicLabeledValue("[SELECT]", () -> "%s".formatted(
-            joypad.key(JoypadButton.SELECT).getDisplayText())
+            Input.instance().joypad.keyForButton(JoypadButton.SELECT).getDisplayText())
         );
         addDynamicLabeledValue("[START]", () -> "%s".formatted(
-                joypad.key(JoypadButton.START).getDisplayText())
+            Input.instance().joypad.keyForButton(JoypadButton.START).getDisplayText())
         );
         addDynamicLabeledValue("[B]  [A]", () -> "%s   %s".formatted(
-            joypad.key(JoypadButton.B).getDisplayText(),
-            joypad.key(JoypadButton.A).getDisplayText())
+            Input.instance().joypad.keyForButton(JoypadButton.B).getDisplayText(),
+            Input.instance().joypad.keyForButton(JoypadButton.A).getDisplayText())
         );
         addDynamicLabeledValue("UP/DOWN/LEFT/RIGHT", () -> "%s  %s  %s  %s".formatted(
-            joypad.key(JoypadButton.UP).getDisplayText(),
-            joypad.key(JoypadButton.DOWN).getDisplayText(),
-            joypad.key(JoypadButton.LEFT).getDisplayText(),
-            joypad.key(JoypadButton.RIGHT).getDisplayText())
+            Input.instance().joypad.keyForButton(JoypadButton.UP).getDisplayText(),
+            Input.instance().joypad.keyForButton(JoypadButton.DOWN).getDisplayText(),
+            Input.instance().joypad.keyForButton(JoypadButton.LEFT).getDisplayText(),
+            Input.instance().joypad.keyForButton(JoypadButton.RIGHT).getDisplayText())
         );
     }
 }

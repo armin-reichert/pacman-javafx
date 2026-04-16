@@ -8,6 +8,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
+import de.amr.pacmanfx.ui.input.Input;
 
 public class Arcade_PlayScene3D extends PlayScene3D {
 
@@ -24,6 +25,6 @@ public class Arcade_PlayScene3D extends PlayScene3D {
         }
         bindPlaySceneActions();
 
-        actionBindings.addAll(GameUI.KEYBOARD);
+        actionBindings.addAll(Input.instance().keyboard);
     }
 }

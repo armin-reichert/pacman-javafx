@@ -20,6 +20,7 @@ import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.control.CheckMenuItem;
@@ -200,7 +201,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         actionBindings.registerAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         actionBindings.registerAll(GameUI.STEERING_ACTION_BINDINGS);
         actionBindings.registerAll(GameUI.CHEAT_ACTION_BINDINGS);
-        actionBindings.addAll(GameUI.KEYBOARD);
+        actionBindings.addAll(Input.instance().keyboard);
         Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 

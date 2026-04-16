@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -73,7 +74,7 @@ public class ViewManager {
         this.editorWorkDir = requireNonNull(editorWorkDir);
 
         selectedID.addListener((_, oldID, newID) ->
-            changeView(ui, scene, flashMessageView, oldID, newID));
+            changeView(scene, flashMessageView, oldID, newID));
     }
 
     public void setPlayView(View playView) {
@@ -91,14 +92,14 @@ public class ViewManager {
     /**
      * Switches from the old view to the new view, performing all required lifecycle steps.
      */
-    private void changeView(GameUI ui, Scene scene, FlashMessageView flashMessageView, ViewID oldID, ViewID newID) {
+    private void changeView(Scene scene, FlashMessageView flashMessageView, ViewID oldID, ViewID newID) {
         requireNonNull(newID);
 
         if (oldID != null) {
             final View oldView = viewMap.get(oldID);
             if (oldView != null) {
                 oldView.onExit();
-                oldView.actionBindings().removeAll(GameUI.KEYBOARD);
+                oldView.actionBindings().removeAll(Input.instance().keyboard);
             }
         }
 
@@ -114,7 +115,7 @@ public class ViewManager {
         }
 
         layoutPane.getChildren().set(RESERVED_VIEW_INDEX_IN_LAYOUT, newView.root());
-        newView.actionBindings().addAll(GameUI.KEYBOARD);
+        newView.actionBindings().addAll(Input.instance().keyboard);
         newView.onEnter();
         flashMessageView.clear();
 

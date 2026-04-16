@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui.action.ActionBindingsManagerImpl;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
+import de.amr.pacmanfx.ui.input.Input;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -89,7 +90,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         }
         bindPlaySceneActions();
 
-        actionBindings.addAll(GameUI.KEYBOARD);
+        actionBindings.addAll(Input.instance().keyboard);
     }
 
     @Override

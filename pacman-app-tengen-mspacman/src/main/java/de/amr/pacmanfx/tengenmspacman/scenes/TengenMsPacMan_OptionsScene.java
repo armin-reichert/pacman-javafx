@@ -10,6 +10,7 @@ import de.amr.pacmanfx.tengenmspacman.model.*;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
+import de.amr.pacmanfx.ui.input.Input;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.input.KeyCode;
@@ -20,7 +21,6 @@ import java.io.IOException;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_START_PLAYING;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.JOYPAD;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_PIXELS;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 
@@ -59,7 +59,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private final GameAction actionSelectNextJoypadBinding = new GameAction("SELECT_NEXT_JOYPAD_BINDING") {
         @Override
         public void execute(GameUI ui) {
-            JOYPAD.selectNextBinding(actionBindings);
+            Input.instance().joypad.selectNextBinding(actionBindings);
         }
     };
 
@@ -77,7 +77,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         actionBindings.registerOne(ACTION_START_PLAYING,                  TENGEN_SPECIFIC_BINDINGS);
         actionBindings.registerOne(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TENGEN_SPECIFIC_BINDINGS);
 
-        JOYPAD.setBindings(actionBindings);
+        Input.instance().joypad.setBindings(actionBindings);
 
         selectedOption.set(OPTION_PAC_BOOSTER);
         tengenGame().setCanStartNewGame(true);
@@ -88,7 +88,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     protected void doEnd(Game game) {
-        JOYPAD.removeBindings(actionBindings);
+        Input.instance().joypad.removeBindings(actionBindings);
     }
 
     @Override
@@ -119,15 +119,17 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public void onKeyboardInput() {
-        if (JOYPAD.isButtonPressed(JoypadButton.DOWN)) {
+    public void onUserInput() {
+        if (Input.instance().joypad.isButtonPressed(JoypadButton.DOWN)) {
             selectedOption.set(selectedOption() + 1 < NUM_OPTIONS ? selectedOption() + 1 : 0);
         }
-        else if (JOYPAD.isButtonPressed(JoypadButton.UP)) {
+        else if (Input.instance().joypad.isButtonPressed(JoypadButton.UP)) {
             selectedOption.set(selectedOption() == 0 ? NUM_OPTIONS - 1 : selectedOption() - 1);
         }
         // Button "A" on the joypad is located right of "B": select next value
-        else if (JOYPAD.isButtonPressed(JoypadButton.A) || GameUI.KEYBOARD.isPressed(KeyCode.RIGHT)) {
+        else if (Input.instance().joypad.isButtonPressed(JoypadButton.A)
+              || Input.instance().keyboard.isPressed(KeyCode.RIGHT))
+        {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setNextDifficultyValue();
@@ -136,7 +138,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             }
         }
         // Button "B" is left of "A": select previous value
-        else if (JOYPAD.isButtonPressed(JoypadButton.B) || GameUI.KEYBOARD.isPressed(KeyCode.LEFT)) {
+        else if (Input.instance().joypad.isButtonPressed(JoypadButton.B)
+              || Input.instance().keyboard.isPressed(KeyCode.LEFT)) {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue();
@@ -144,7 +147,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
                 case OPTION_STARTING_LEVEL -> setPrevStartLevelValue();
             }
         }
-        else actionBindings().findMatchingAction(GameUI.KEYBOARD).ifPresent(action -> action.executeIfEnabled(ui()));
+        else actionBindings().findMatchingAction(Input.instance().keyboard).ifPresent(action -> action.executeIfEnabled(ui()));
     }
 
     private void setPrevStartLevelValue() {
