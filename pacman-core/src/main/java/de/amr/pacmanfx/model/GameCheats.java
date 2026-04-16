@@ -23,7 +23,7 @@ public interface GameCheats {
     }
 
     /** Clears the cheat‑used flag. */
-    default void clearFlag() {
+    default void clearCheatUsedFlag() {
         cheatUsedProperty().set(false);
     }
 

@@ -86,7 +86,7 @@ public interface TengenMsPacMan_Actions {
         @Override
         public boolean isEnabled(GameUI ui) {
             final var tengenGame = ui.gameContext().<TengenMsPacMan_GameModel>game();
-            return tengenGame.pacBooster() == PacBooster.USE_A_OR_B && tengenGame.optGameLevel().isPresent();
+            return tengenGame.pacBoosterMode() == PacBooster.USE_A_OR_B && tengenGame.optGameLevel().isPresent();
         }
     };
 }

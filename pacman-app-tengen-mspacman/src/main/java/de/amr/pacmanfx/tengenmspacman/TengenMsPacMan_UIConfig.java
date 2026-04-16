@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.pacmanfx.lib.math.RectShort;
@@ -10,7 +11,7 @@ import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
@@ -35,19 +36,17 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
 
 public class TengenMsPacMan_UIConfig implements UIConfig {
 
-    // Local resources are inside resource folder subdirectories corresponding to package name of this class
+    // Local resources are stored inside main resource folder subdirectories named after package name of this class
     private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
 
-    // Map RGB color values to JavaFX color objects
+    // Map of RGB color values to JavaFX color objects
     public static final Color[] NES_COLORS = Stream.of(NES_Palette.RGB_COLORS).map(Color::valueOf).toArray(Color[]::new);
 
     /**
@@ -117,26 +116,33 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     // TODO: should probably live somewhere else
     public static final Joypad JOYPAD = new Joypad(GameUI.KEYBOARD);
 
-    // Note: Order of bonus symbols ins spritesheet is not 1:1 with order of bonus values!
+    // Note: Order of bonus symbols in spritesheet is not 1:1 with order of bonus values!
     // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
-    public static byte bonusValueSpriteIndex(byte bonusSymbol) {
-        return switch (bonusSymbol) {
-            case TengenMsPacMan_GameModel.BONUS_CHERRY -> 0;     // 100
-            case TengenMsPacMan_GameModel.BONUS_STRAWBERRY -> 1; // 200
-            case TengenMsPacMan_GameModel.BONUS_ORANGE -> 2;     // 500
-            case TengenMsPacMan_GameModel.BONUS_PRETZEL -> 3;    // 700
-            case TengenMsPacMan_GameModel.BONUS_APPLE -> 4;      // 1000
-            case TengenMsPacMan_GameModel.BONUS_PEAR -> 5;       // 2000
-            case TengenMsPacMan_GameModel.BONUS_BANANA -> 8;     // 6 -> 8 (5000)
-            case TengenMsPacMan_GameModel.BONUS_MILK -> 6;       // 7 -> 6 (3000)
-            case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7;  // 8 -> 7 (4000)
-            case TengenMsPacMan_GameModel.BONUS_HIGH_HEELS -> 9; // 6000
-            case TengenMsPacMan_GameModel.BONUS_STAR -> 10;      // 7000
-            case TengenMsPacMan_GameModel.BONUS_HAND -> 11;      // 8000
-            case TengenMsPacMan_GameModel.BONUS_RING -> 12;      // 9000
-            case TengenMsPacMan_GameModel.BONUS_FLOWER -> 13;    // TEN!000
-            default -> bonusSymbol;
-        };
+    private static final Map<BonusSymbol, Integer> BONUS_VALUE_SPRITE_INDEX = new EnumMap<>(BonusSymbol.class);
+    static {
+        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.CHERRY,      0); // "100"
+        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.STRAWBERRY,  1); // "200"
+        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.ORANGE,      2); // "500"
+        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.PRETZEL,     3); // "700"
+        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.APPLE,       4); // "1000"
+        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.PEAR,        5); // "2000"
+        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.BANANA,      8); // 6 -> 8 ("5000")
+        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.MILK,        6); // 7 -> 6 ("3000")
+        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.ICE_CREAM,   7); // 8 -> 7 ("4000")
+        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.HIGH_HEELS,  9); // "6000"
+        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.STAR,       10); // "7000"
+        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.HAND,       11); // "8000"
+        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.RING,       12); // "9000"
+        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.FLOWER,     13); // "TEN!000"
+
+    }
+
+    public static int bonusValueSpriteIndex(int bonusSymbolCode) {
+        if (bonusSymbolCode < 0 || bonusSymbolCode >= BonusSymbol.values().length) {
+            throw new IllegalArgumentException("Illegal bonus symbol code: " + bonusSymbolCode);
+        }
+        final BonusSymbol symbol = BonusSymbol.values()[bonusSymbolCode];
+        return BONUS_VALUE_SPRITE_INDEX.getOrDefault(symbol, bonusSymbolCode);
     }
 
     /** Path inside resources folder where map files (.world) are stored. */
@@ -184,7 +190,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
         return SHADES_OF_BLUE[(int) (tick % 64) / 16];
     }
 
-    // end of static stuff
+    // Non-static members
 
     private final AssetMap assets = new AssetMap();
     private final TengenMsPacMan_Factory3D factory3D = new TengenMsPacMan_Factory3D();
@@ -287,7 +293,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        final byte spriteIndex = bonusValueSpriteIndex(symbol);
+        final int spriteIndex = bonusValueSpriteIndex(symbol);
         final RectShort sprite = spriteSheet().sprites(SpriteID.BONUS_VALUES)[spriteIndex];
         return spriteSheet().image(sprite);
     }

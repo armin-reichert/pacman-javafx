@@ -19,13 +19,15 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
-import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
+import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomBoolean;
+import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState.LEVEL_PLAYING;
@@ -38,17 +40,17 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
-    static final short TICK_SHOW_READY = 10;
-    static final short TICK_NEW_GAME_SHOW_GUYS = 70;
-    static final short TICK_NEW_GAME_START_HUNTING = 250;
-    static final short TICK_RESUME_HUNTING = 240;
-    static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
-    static final short TICK_EATING_GHOST_COMPLETE = 60;
+    public static final short TICK_SHOW_READY = 10;
+    public static final short TICK_NEW_GAME_SHOW_GUYS = 70;
+    public static final short TICK_NEW_GAME_START_HUNTING = 250;
+    public static final short TICK_RESUME_HUNTING = 240;
+    public static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
+    public static final short TICK_EATING_GHOST_COMPLETE = 60;
 
-    static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
-    static final short TICK_PACMAN_DYING_START_PAC_ANIMATION = 90;
-    static final short TICK_PACMAN_DYING_HIDE_PAC = 190;
-    static final short TICK_PACMAN_DYING_PAC_DEAD = 240;
+    public static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
+    public static final short TICK_PACMAN_DYING_START_PAC_ANIMATION = 90;
+    public static final short TICK_PACMAN_DYING_HIDE_PAC = 190;
+    public static final short TICK_PACMAN_DYING_PAC_DEAD = 240;
 
     public static final String GAME_OVER_MESSAGE_TEXT = "GAME OVER";
     public static final String READY_MESSAGE_TEXT = "READY!";
@@ -62,26 +64,30 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
     public static final byte GAME_OVER_MESSAGE_DELAY_SEC = 2;
 
-    // Bonus symbols in Arcade, Mini and Big mazes
-    public static final byte BONUS_CHERRY      = 0;
-    public static final byte BONUS_STRAWBERRY  = 1;
-    public static final byte BONUS_ORANGE      = 2;
-    public static final byte BONUS_PRETZEL     = 3;
-    public static final byte BONUS_APPLE       = 4;
-    public static final byte BONUS_PEAR        = 5;
-    public static final byte BONUS_BANANA      = 6;
+    public enum BonusSymbol {
+        // Arcade, Mini, Big mazes
+        CHERRY, STRAWBERRY, ORANGE, PRETZEL, APPLE, PEAR, BANANA,
+        // Strange mazes (additional symbols)
+        MILK, ICE_CREAM, HIGH_HEELS, STAR, HAND, RING, FLOWER
+    }
 
-    // Additional bonus symbols in Strange mazes
-    public static final byte BONUS_MILK        = 7;
-    public static final byte BONUS_ICE_CREAM   = 8;
-    public static final byte BONUS_HIGH_HEELS  = 9;
-    public static final byte BONUS_STAR        = 10;
-    public static final byte BONUS_HAND        = 11;
-    public static final byte BONUS_RING        = 12;
-    public static final byte BONUS_FLOWER      = 13;
-
-    // Bonus value = factor * 100
-    private static final byte[] BONUS_VALUE_FACTORS = new byte[14];
+    private static final EnumMap<BonusSymbol, Integer> BONUS_VALUES = new EnumMap<>(BonusSymbol.class);
+    static {
+        BONUS_VALUES.put(BonusSymbol.CHERRY,       100);
+        BONUS_VALUES.put(BonusSymbol.STRAWBERRY,   200);
+        BONUS_VALUES.put(BonusSymbol.ORANGE,       500);
+        BONUS_VALUES.put(BonusSymbol.PRETZEL,      700);
+        BONUS_VALUES.put(BonusSymbol.APPLE,       1000);
+        BONUS_VALUES.put(BonusSymbol.PEAR,        2000);
+        BONUS_VALUES.put(BonusSymbol.BANANA,      5000); // Note!
+        BONUS_VALUES.put(BonusSymbol.MILK,        3000); // Note!
+        BONUS_VALUES.put(BonusSymbol.ICE_CREAM,   4000); // Note!
+        BONUS_VALUES.put(BonusSymbol.HIGH_HEELS,  6000);
+        BONUS_VALUES.put(BonusSymbol.STAR,        7000);
+        BONUS_VALUES.put(BonusSymbol.HAND,        8000);
+        BONUS_VALUES.put(BonusSymbol.RING,        9000);
+        BONUS_VALUES.put(BonusSymbol.FLOWER,     10000);
+    }
 
     private static final int FIRST_BONUS_PELLETS_EATEN = 64;
     private static final int SECOND_BONUS_PELLETS_EATEN = 176;
@@ -93,23 +99,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private static final MapCategory DEFAULT_MAP_CATEGORY = MapCategory.ARCADE;
     private static final int DEFAULT_START_LEVEL = 1;
     private static final int DEFAULT_NUM_CONTINUES = 4;
-
-    static {
-        BONUS_VALUE_FACTORS[BONUS_CHERRY]        = 1;
-        BONUS_VALUE_FACTORS[BONUS_STRAWBERRY]    = 2;
-        BONUS_VALUE_FACTORS[BONUS_ORANGE]        = 5;
-        BONUS_VALUE_FACTORS[BONUS_PRETZEL]       = 7;
-        BONUS_VALUE_FACTORS[BONUS_APPLE]         = 10;
-        BONUS_VALUE_FACTORS[BONUS_PEAR]          = 20;
-        BONUS_VALUE_FACTORS[BONUS_BANANA]        = 50; // !!
-        BONUS_VALUE_FACTORS[BONUS_MILK]          = 30; // !!
-        BONUS_VALUE_FACTORS[BONUS_ICE_CREAM]     = 40; // !!
-        BONUS_VALUE_FACTORS[BONUS_HIGH_HEELS]    = 60;
-        BONUS_VALUE_FACTORS[BONUS_STAR]          = 70;
-        BONUS_VALUE_FACTORS[BONUS_HAND]          = 80;
-        BONUS_VALUE_FACTORS[BONUS_RING]          = 90;
-        BONUS_VALUE_FACTORS[BONUS_FLOWER]        = 100;
-    }
 
     private static final float BONUS_EATEN_SECONDS = 2;
 
@@ -135,7 +124,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     private MapCategory mapCategory;
     private Difficulty difficulty;
-    private PacBooster pacBooster;
+    private PacBooster pacBoosterMode;
     private boolean boosterActive;
     private int startLevelNumber; // 1-7
     private boolean canStartNewGame;
@@ -149,13 +138,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         hud = new TengenMsPacMan_HeadsUpDisplay();
         gameFlow = new TengenMsPacMan_GameFlow(this);
         actorSpeedControl = new TengenMsPacMan_ActorSpeedControl();
-        //TODO implement original logic from Tengen game
-        gateKeeper = new GateKeeper();
+        gateKeeper = new GateKeeper(); //TODO implement original logic from Tengen game
         automaticSteering = new RuleBasedPacSteering();
         demoLevelSteering = new RuleBasedPacSteering();
+
         pelletPoints = 10;
         energizerPoints = 50;
-        setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
         cutSceneNumberAfterLevelNumber = Map.of(
             2, 1,
             5, 2,
@@ -164,25 +152,104 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             17, 3,
             LAST_LEVEL_NUMBER, 4
         );
+
+        setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
         setDifficulty(Difficulty.NORMAL);
     }
 
     public boolean allOptionsDefault() {
-        return pacBooster == DEFAULT_PAC_BOOSTER
+        return pacBoosterMode == DEFAULT_PAC_BOOSTER
             && difficulty == DEFAULT_DIFFICULTY
             && mapCategory == DEFAULT_MAP_CATEGORY
             && startLevelNumber == DEFAULT_START_LEVEL
             && numContinues == DEFAULT_NUM_CONTINUES;
     }
 
-    @Override
-    public GameFlow flow() {
-        return gameFlow;
+    public void setPacBoosterMode(PacBooster mode) {
+        pacBoosterMode = requireNonNull(mode);
     }
+
+    public PacBooster pacBoosterMode() {
+        return pacBoosterMode;
+    }
+
+    public void activatePacBooster(Pac pac, boolean active) {
+        requireNonNull(pac);
+        pac.selectAnimation(active ? TengenMsPacMan_AnimationID.ANIM_MS_PAC_MAN_BOOSTER : Pac.AnimationID.PAC_MUNCHING);
+        boosterActive = active;
+    }
+
+    /*
+     * See https://tcrf.net/Ms._Pac-Man_(NES,_Tengen):
+     * Humorously, instead of adding a check to disable multiple extra lives,
+     * the "Arcade" maze set sets the remaining 3 extra life scores to over 970,000 points,
+     * a score normally unachievable without cheat codes, since all maze sets end after 32 stages.
+     * This was most likely done to simulate the Arcade game only giving one extra life per game.
+     */
+    public void setMapCategory(MapCategory mapCategory) {
+        this.mapCategory = requireNonNull(mapCategory);
+        if (mapCategory == MapCategory.ARCADE) {
+            setExtraLifeScores(10_000, 970_000, 980_000, 990_000);
+        } else {
+            setExtraLifeScores(10_000, 50_000, 100_000, 300_000);
+        }
+    }
+
+    public MapCategory mapCategory() {
+        return mapCategory;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = requireNonNull(difficulty);
+        actorSpeedControl.setDifficulty(difficulty);
+    }
+
+    public Difficulty difficulty() {
+        return difficulty;
+    }
+
+    public void setStartLevelNumber(int number) {
+        if (number < FIRST_LEVEL_NUMBER || number > LAST_LEVEL_NUMBER) {
+            throw GameException.invalidLevelNumber(number);
+        }
+        startLevelNumber = number;
+    }
+
+    public int startLevelNumber() {
+        return startLevelNumber;
+    }
+
+    public int numContinues() {
+        return numContinues;
+    }
+
+    public boolean isBoosterActive() {
+        return boosterActive;
+    }
+
+    public void setCanStartNewGame(boolean canStartNewGame) {
+        this.canStartNewGame = canStartNewGame;
+    }
+
+    public void showMessage(GameLevel level, GameLevelMessageType type) {
+        final Vector2f center = level.worldMap().terrainLayer().messageCenterPosition();
+        // Non-Arcade maps show a moving "Game Over" message
+        final GameLevelMessage message = type == GameLevelMessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
+            ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC)
+            : new GameLevelMessage(type, center);
+        level.setMessage(message);
+    }
+
+    // Game interface
 
     @Override
     public ActorSpeedControl actorSpeedControl() {
         return actorSpeedControl;
+    }
+
+    @Override
+    public GameFlow flow() {
+        return gameFlow;
     }
 
     @Override
@@ -192,18 +259,22 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void init() {
+        mapSelector.loadMapPrototypes();
         setInitialLifeCount(3);
-        clearFlag();
+
+        clearCheatUsedFlag();
         immuneProperty().set(false);
         usingAutopilotProperty().set(false);
-        prepareNewGame();
+
         hud.all(false);
-        setPacBooster(DEFAULT_PAC_BOOSTER);
+
+        setPacBoosterMode(DEFAULT_PAC_BOOSTER);
         setDifficulty(DEFAULT_DIFFICULTY);
         setMapCategory(DEFAULT_MAP_CATEGORY);
         setStartLevelNumber(DEFAULT_START_LEVEL);
         numContinues = DEFAULT_NUM_CONTINUES;
-        mapSelector.loadMapPrototypes();
+
+        prepareNewGame();
     }
 
     @Override
@@ -243,66 +314,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         return levelCounter;
     }
 
-    public void setPacBooster(PacBooster mode) {
-        pacBooster = mode;
-    }
-
-    public PacBooster pacBooster() {
-        return pacBooster;
-    }
-
-    public void setMapCategory(MapCategory mapCategory) {
-        this.mapCategory = requireNonNull(mapCategory);
-        if (mapCategory == MapCategory.ARCADE) {
-            /* see https://tcrf.net/Ms._Pac-Man_(NES,_Tengen):
-            Humorously, instead of adding a check to disable multiple extra lives,
-            the "Arcade" maze set sets the remaining 3 extra life scores to over 970,000 points,
-            a score normally unachievable without cheat codes, since all maze sets end after 32 stages.
-            This was most likely done to simulate the Arcade game only giving one extra life per game.
-            */
-            setExtraLifeScores(10_000, 970_000, 980_000, 990_000);
-        } else {
-            setExtraLifeScores(10_000, 50_000, 100_000, 300_000);
-        }
-    }
-
-    public MapCategory mapCategory() {
-        return mapCategory;
-    }
-
-    public void setDifficulty(Difficulty difficulty) {
-        this.difficulty = requireNonNull(difficulty);
-        actorSpeedControl.setDifficulty(difficulty);
-    }
-
-    public Difficulty difficulty() {
-        return difficulty;
-    }
-
-    public void setStartLevelNumber(int number) {
-        if (number < FIRST_LEVEL_NUMBER || number > LAST_LEVEL_NUMBER) {
-            throw GameException.invalidLevelNumber(number);
-        }
-        startLevelNumber = number;
-    }
-
-    public int startLevelNumber() {
-        return startLevelNumber;
-    }
-
-    public int numContinues() {
-        return numContinues;
-    }
-
-    public void showMessage(GameLevel level, GameLevelMessageType type) {
-        final Vector2f center = level.worldMap().terrainLayer().messageCenterPosition();
-        // Non-Arcade maps show a moving "Game Over" message
-        final GameLevelMessage message = type == GameLevelMessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
-            ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC)
-            : new GameLevelMessage(type, center);
-        level.setMessage(message);
-    }
-
     @Override
     public boolean canContinueOnGameOver() {
         if (startLevelNumber >= 10 && numContinues > 0) {
@@ -314,17 +325,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
     }
 
-    public boolean isBoosterActive() {
-        return boosterActive;
-    }
-
     @Override
     public boolean canStartNewGame() {
         return canStartNewGame;
-    }
-
-    public void setCanStartNewGame(boolean canStartNewGame) {
-        this.canStartNewGame = canStartNewGame;
     }
 
     @Override
@@ -366,7 +369,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final GameLevel level = optGameLevel().orElseThrow();
         level.recordStartTime(System.currentTimeMillis());
         makeReadyForPlaying(level);
-        if (pacBooster == PacBooster.ALWAYS_ON) {
+        if (pacBoosterMode == PacBooster.ALWAYS_ON) {
             activatePacBooster(level.pac(), true);
         }
         if (level.isDemoLevel()) {
@@ -417,12 +420,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
     }
 
-    public void activatePacBooster(Pac pac, boolean active) {
-        boosterActive = active;
-        pac.selectAnimation(boosterActive
-            ? TengenMsPacMan_AnimationID.ANIM_MS_PAC_MAN_BOOSTER : Pac.AnimationID.PAC_MUNCHING);
-    }
-
     @Override
     public int lastIntermissionNumber() {
         return 4;
@@ -462,8 +459,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         setGhosts(level, house);
 
         //TODO not sure about this:
-        level.setBonusSymbol(0, computeBonusSymbol(level.number()));
-        level.setBonusSymbol(1, computeBonusSymbol(level.number()));
+        level.setBonusSymbol(0, (byte) computeBonusSymbol(level.number()).ordinal());
+        level.setBonusSymbol(1, (byte) computeBonusSymbol(level.number()).ordinal());
 
         levelCounter.setEnabled(levelNumber < 8);
 
@@ -527,15 +524,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         return eatenFoodCount == FIRST_BONUS_PELLETS_EATEN || eatenFoodCount == SECOND_BONUS_PELLETS_EATEN;
     }
 
-    private byte computeBonusSymbol(int levelNumber) {
-        //TODO: I have no idea yet how Tengen does this
-        byte maxBonus = mapCategory == MapCategory.STRANGE ? BONUS_FLOWER : BONUS_BANANA;
-        if (levelNumber - 1 <= maxBonus) {
-            return (byte) (levelNumber - 1);
-        }
-        return randomByte(0, maxBonus + 1);
-    }
-
     @Override
     public void activateNextBonus() {
         final GameLevel level = optGameLevel().orElseThrow();
@@ -576,8 +564,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         level.selectNextBonus();
 
-        final byte symbol = level.bonusSymbol(level.currentBonusIndex());
-        final Bonus bonus = new Bonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+        final byte symbolCode = level.bonusSymbol(level.currentBonusIndex());
+        final BonusSymbol symbol = BonusSymbol.values()[symbolCode];
+        final Bonus bonus = new Bonus(symbolCode, BONUS_VALUES.get(symbol));
         bonus.setMazeRoute(route, leftToRight);
         bonus.showEdibleAndStartWandering(actorSpeedControl.bonusSpeed(level));
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
@@ -706,7 +695,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private void setMsPacMan(GameLevel level) {
         final Pac msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAutomaticSteering(automaticSteering);
-        activatePacBooster(msPacMan, pacBooster == PacBooster.ALWAYS_ON);
+        activatePacBooster(msPacMan, pacBoosterMode == PacBooster.ALWAYS_ON);
         level.setPac(msPacMan);
     }
 
@@ -739,5 +728,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             huntingTimer.logPhase();
         });
         return huntingTimer;
+    }
+
+    //TODO: I have no idea yet how Tengen really implemented this
+    private BonusSymbol computeBonusSymbol(int levelNumber) {
+        final BonusSymbol lastSymbol = mapCategory == MapCategory.STRANGE ? BonusSymbol.FLOWER : BonusSymbol.BANANA;
+        return (levelNumber - 1 <= lastSymbol.ordinal())
+            ? BonusSymbol.values()[levelNumber - 1]
+            : BonusSymbol.values()[randomInt(0, lastSymbol.ordinal() + 1)];
     }
 }

@@ -83,7 +83,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         drawMarkerIfSelected(optionsScene, OPTION_PAC_BOOSTER, y, arcadeFont8());
         fillText("PAC BOOSTER", NES_YELLOW, COL_LABEL, y);
         fillText(":", NES_YELLOW, COL_COLON, y);
-        String pacBoosterText = switch (game.pacBooster()) {
+        String pacBoosterText = switch (game.pacBoosterMode()) {
             case OFF -> "OFF";
             case ALWAYS_ON -> "ALWAYS ON";
             case USE_A_OR_B -> "USE A OR B";

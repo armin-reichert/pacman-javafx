@@ -87,7 +87,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         });
 
         if (tengenHUD.gameOptionsVisible()) {
-            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(), TS(16), TS(2.5f));
+            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBoosterMode(), TS(16), TS(2.5f));
         }
 
         ctx.restore();

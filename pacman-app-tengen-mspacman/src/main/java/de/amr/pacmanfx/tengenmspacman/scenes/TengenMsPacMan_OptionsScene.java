@@ -198,18 +198,18 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     private void setPrevPacBoosterValue() {
-        PacBooster pacBooster = tengenGame().pacBooster();
+        PacBooster pacBooster = tengenGame().pacBoosterMode();
         var values = PacBooster.values();
         int current = pacBooster.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
-        tengenGame().setPacBooster(values[prev]);
+        tengenGame().setPacBoosterMode(values[prev]);
         optionValueChanged();
     }
 
     private void setNextPacBoosterValue() {
-        PacBooster pacBooster = tengenGame().pacBooster();
+        PacBooster pacBooster = tengenGame().pacBoosterMode();
         var values = PacBooster.values();
         int current = pacBooster.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        tengenGame().setPacBooster(values[next]);
+        tengenGame().setPacBoosterMode(values[next]);
         optionValueChanged();
     }
 

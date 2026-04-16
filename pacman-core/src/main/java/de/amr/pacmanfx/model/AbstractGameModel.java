@@ -618,7 +618,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
     protected void clearCheatingProperties() {
         immuneProperty().set(false);
         usingAutopilotProperty().set(false);
-        cheats().clearFlag();
+        cheats().clearCheatUsedFlag();
     }
 
     /**
