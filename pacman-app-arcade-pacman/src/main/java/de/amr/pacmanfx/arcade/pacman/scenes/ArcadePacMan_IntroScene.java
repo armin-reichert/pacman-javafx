@@ -43,17 +43,19 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public static final int TICK_GHOST_CHARACTER_VISIBLE =  60;
     public static final int TICK_GHOST_NICKNAME_VISIBLE  =  90;
     public static final int TICK_GHOST_PRESENT_NEXT      = 120;
-    public static final int TICK_GHOST_PRESENTATION_END  = 180;
+    public static final int TICK_GHOST_PRESENTATION_END  = 150;
 
     // State SHOWING_POINTS
     public static final int TICK_SHOW_POINTS_DURATION = 60;
 
     // State CHASING_PAC_MAN
     public static final float CHASING_SPEED = 1.1f;
-    public static final float GHOST_FRIGHTENED_SPEED = 0.6f;
-    public static final int TICK_PAC_MAN_REACHES_ENERGIZER = 232;
-    public static final int TICK_PAC_MAN_MOVES_AGAIN = 236;
-    public static final int TICK_CHASING_GHOSTS_START = 240;
+    public static final float GHOST_FRIGHTENED_SPEED = 0.5f;
+
+    public static final int TICK_PAC_MAN_APPEARS = 60;
+    public static final int TICK_PAC_MAN_REACHES_ENERGIZER = 230;
+    public static final int TICK_PAC_MAN_MOVES_AGAIN = TICK_PAC_MAN_REACHES_ENERGIZER + 4;
+    public static final int TICK_CHASING_GHOSTS_START = TICK_PAC_MAN_REACHES_ENERGIZER + 8;
 
     // State CHASING_GHOSTS
     public static final int GHOST_EATING_TICKS = 50;
@@ -182,28 +184,31 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
                 timer.restartIndefinitely();
-                scene.pacMan.setPosition(TS * 36, TS * 20);
-                scene.pacMan.setMoveDir(Direction.LEFT);
-                scene.pacMan.setSpeed(CHASING_SPEED);
-                scene.pacMan.show();
-                scene.pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
-                scene.pacMan.playAnimation();
-                scene.ghosts.forEach(ghost -> {
-                    ghost.setState(GhostState.HUNTING_PAC);
-                    ghost.setMoveDir(Direction.LEFT);
-                    ghost.setWishDir(Direction.LEFT);
-                    ghost.setSpeed(CHASING_SPEED);
-                    ghost.setPosition(scene.pacMan.x() + 16 * (ghost.personality() + 1), scene.pacMan.y());
-                    ghost.show();
-                    ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
-                    ghost.playAnimation();
-                });
-                scene.blinking.start();
+                scene.pacMan.hide();
             }
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                if (timer.tickCount() == TICK_PAC_MAN_REACHES_ENERGIZER) {
+                if (timer.tickCount() == TICK_PAC_MAN_APPEARS) {
+                    scene.blinking.start();
+                    scene.pacMan.setPosition(TS * 28, TS * 20);
+                    scene.pacMan.setMoveDir(Direction.LEFT);
+                    scene.pacMan.setSpeed(CHASING_SPEED);
+                    scene.pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+                    scene.pacMan.playAnimation();
+                    scene.pacMan.show();
+                    scene.ghosts.forEach(ghost -> {
+                        ghost.setState(GhostState.HUNTING_PAC);
+                        ghost.setMoveDir(Direction.LEFT);
+                        ghost.setWishDir(Direction.LEFT);
+                        ghost.setSpeed(CHASING_SPEED);
+                        ghost.setPosition(scene.pacMan.x() + 16 * (ghost.personality() + 1), scene.pacMan.y());
+                        ghost.show();
+                        ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+                        ghost.playAnimation();
+                    });
+                }
+                else if (timer.tickCount() == TICK_PAC_MAN_REACHES_ENERGIZER) {
                     // Pac-Man reaches the energizer at the left and stops
                     scene.pacMan.setSpeed(0);
                     scene.pacMan.stopAnimation();
@@ -310,7 +315,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 final Game game = scene.gameContext().game();
-                if (timer.atSecond(0.75)) {
+                if (timer.atSecond(1)) {
                     scene.ghosts.get(ORANGE_GHOST_POKEY).hide();
                     if (!game.canStartNewGame()) {
                         game.flow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
