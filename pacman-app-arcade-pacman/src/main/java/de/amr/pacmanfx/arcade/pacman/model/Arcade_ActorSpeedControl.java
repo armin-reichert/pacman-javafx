@@ -71,8 +71,7 @@ public class Arcade_ActorSpeedControl implements ActorSpeedControl {
 
     @Override
     public float ghostSpeedFrightened(GameLevel level) {
-        final int levelNumber = level.number();
-        final float pct = levelData(levelNumber).pctGhostSpeedFrightened();
+        final float pct = levelData(level.number()).pctGhostSpeedFrightened();
         return pct > 0 ? pct * BASE_SPEED_ONE_PERCENT : BASE_SPEED;
     }
 

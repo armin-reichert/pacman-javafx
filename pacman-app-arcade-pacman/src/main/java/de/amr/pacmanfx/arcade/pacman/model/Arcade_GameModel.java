@@ -15,6 +15,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
@@ -28,27 +29,27 @@ import static java.util.Objects.requireNonNull;
 public abstract class Arcade_GameModel extends AbstractGameModel {
 
     protected static final LevelData[] LEVEL_DATA_TABLE = {
-        /* 1*/ LevelData.of( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5),
-        /* 2*/ LevelData.of( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5),
-        /* 3*/ LevelData.of( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5),
-        /* 4*/ LevelData.of( 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5),
-        /* 5*/ LevelData.of(100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5),
-        /* 6*/ LevelData.of(100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5),
-        /* 7*/ LevelData.of(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
-        /* 8*/ LevelData.of(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
-        /* 9*/ LevelData.of(100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3),
-        /*10*/ LevelData.of(100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5),
-        /*11*/ LevelData.of(100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5),
-        /*12*/ LevelData.of(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
-        /*13*/ LevelData.of(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
-        /*14*/ LevelData.of(100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5),
-        /*15*/ LevelData.of(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
-        /*16*/ LevelData.of(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
-        /*17*/ LevelData.of(100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0),
-        /*18*/ LevelData.of(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
-        /*19*/ LevelData.of(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
-        /*20*/ LevelData.of(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
-        /*21*/ LevelData.of( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
+    /* 1*/ LevelData.of( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5),
+    /* 2*/ LevelData.of( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5),
+    /* 3*/ LevelData.of( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5),
+    /* 4*/ LevelData.of( 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5),
+    /* 5*/ LevelData.of(100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5),
+    /* 6*/ LevelData.of(100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5),
+    /* 7*/ LevelData.of(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
+    /* 8*/ LevelData.of(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
+    /* 9*/ LevelData.of(100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3),
+    /*10*/ LevelData.of(100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5),
+    /*11*/ LevelData.of(100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5),
+    /*12*/ LevelData.of(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
+    /*13*/ LevelData.of(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
+    /*14*/ LevelData.of(100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5),
+    /*15*/ LevelData.of(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
+    /*16*/ LevelData.of(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
+    /*17*/ LevelData.of(100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0),
+    /*18*/ LevelData.of(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
+    /*19*/ LevelData.of(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
+    /*20*/ LevelData.of(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
+    /*21*/ LevelData.of( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
     };
 
     public static LevelData levelData(int levelNumber) {
@@ -71,13 +72,15 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected GateKeeper gateKeeper;
     protected Steering automaticSteering;
     protected Steering demoLevelSteering;
-    protected ActorSpeedControl actorSpeedControl;
+    protected Arcade_ActorSpeedControl actorSpeedControl;
 
-    protected int restingTicksAfterPelletEaten;
-    protected int restingTicksAfterEnergizerEaten;
+    protected int restingTicksPellet;
+    protected int restingTicksEnergizer;
 
     protected int bonus1PelletsEaten;
     protected int bonus2PelletsEaten;
+
+    protected Map<Integer, Integer> cutSceneNumberAfterLevelNumber = Map.of();
 
     protected Arcade_GameModel(CoinMechanism coinMechanism, File highscoreFile) {
         super(highscoreFile);
@@ -86,21 +89,20 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         hud = new HeadsUpDisplay(coinMechanism);
         gameFlow = new Arcade_GameFlow(this);
         actorSpeedControl = new Arcade_ActorSpeedControl();
+
         pelletPoints = 10;
         energizerPoints = 50;
-        restingTicksAfterPelletEaten = 1;
-        restingTicksAfterEnergizerEaten = 3;
+        restingTicksPellet = 1;
+        restingTicksEnergizer = 3;
         setExtraLifeScores(10_000);
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
-    }
-
-    protected int cutSceneNumberAfterLevel(int levelNumber) {
-        return switch (levelNumber) {
-            case 2 -> 1; // after level #2, play cut scene #1
-            case 5 -> 2;
-            case 9, 13, 17 -> 3;
-            default -> 0;
-        };
+        cutSceneNumberAfterLevelNumber = Map.of(
+             2, 1, // after level #2, play cut scene #1
+             5, 2,
+             9, 3,
+            13, 3,
+            17, 3
+        );
     }
 
     @Override
@@ -120,7 +122,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         scorePoints(level, pelletPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
-        level.pac().setRestingTicks(restingTicksAfterPelletEaten);
+        level.pac().setRestingTicks(restingTicksPellet);
         checkRedGhostCruiseElroyActivation(level);
     }
 
@@ -133,7 +135,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         scorePoints(level, energizerPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
-        pac.setRestingTicks(restingTicksAfterEnergizerEaten);
+        pac.setRestingTicks(restingTicksEnergizer);
         checkRedGhostCruiseElroyActivation(level);
 
         if (!isLevelCompleted()) {
@@ -183,6 +185,76 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
         level.setMessage(message);
     }
+
+    // Game interface
+
+    @Override
+    public void init() {
+        setInitialLifeCount(3);
+        clearCheatingProperties();
+        prepareNewGame();
+        levelCounter().clear();
+    }
+
+    @Override
+    public void prepareNewGame() {
+        score.reset();
+        try {
+            highScore.load();
+            highScore.setEnabled(true);
+        } catch (IOException x) {
+            Logger.error(x, "Error loading highscore file {}", highScore.file().getAbsolutePath());
+        }
+        gateKeeper.reset();
+        levelProperty().set(null);
+        lifeCountProperty().set(initialLifeCount());
+        levelCounter().clear();
+        setPlayingLevel(false);
+    }
+
+    @Override
+    public void startNewGame(long tick) {
+        if (tick == 1) {
+            prepareNewGame();
+            buildNormalLevel(1);
+            flow().publishGameEvent(new GameStartedEvent(this));
+        }
+        else if (tick == 2) {
+            startLevel();
+        }
+        else if (tick == Arcade_GameState.TICK_NEW_GAME_SHOW_GUYS) {
+            final GameLevel level = optGameLevel().orElseThrow();
+            level.pac().show();
+            level.ghosts().forEach(Ghost::show);
+        }
+        else if (tick == Arcade_GameState.TICK_NEW_GAME_START_HUNTING) {
+            setPlayingLevel(true);
+            flow().enterState(Arcade_GameState.LEVEL_PLAYING);
+        }
+    }
+
+    @Override
+    public void continuePlayingLevel(long tick) {
+        final GameLevel level = optGameLevel().orElseThrow();
+        if (tick == 1) {
+            makeReadyForPlaying(level);
+            level.pac().show();
+            level.ghosts().forEach(Ghost::show);
+            showLevelMessage(level, GameLevelMessageType.READY);
+        }
+        else if (tick == 60) {
+            flow().publishGameEvent(new GameContinuedEvent(this));
+        }
+        else if (tick == Arcade_GameState.TICK_RESUME_HUNTING) {
+            flow().enterState(Arcade_GameState.LEVEL_PLAYING);
+        }
+    }
+
+    @Override
+    public boolean canStartNewGame() { return !coinMechanism.isEmpty(); }
+
+    @Override
+    public boolean canContinueOnGameOver() { return false; }
 
     @Override
     public void doLevelPlaying() {
@@ -283,76 +355,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         Logger.info("Game ended with level number {}", level.number());
     }
 
-    // GameLifecycle interface
-
-    @Override
-    public void init() {
-        setInitialLifeCount(3);
-        clearCheatingProperties();
-        prepareNewGame();
-        levelCounter().clear();
-    }
-
-    @Override
-    public void prepareNewGame() {
-        score.reset();
-        try {
-            highScore.load();
-            highScore.setEnabled(true);
-        } catch (IOException x) {
-            Logger.error(x, "Error loading highscore file {}", highScore.file().getAbsolutePath());
-        }
-        gateKeeper.reset();
-        levelProperty().set(null);
-        lifeCountProperty().set(initialLifeCount());
-        levelCounter().clear();
-        setPlayingLevel(false);
-    }
-
-    @Override
-    public void startNewGame(long tick) {
-        if (tick == 1) {
-            prepareNewGame();
-            buildNormalLevel(1);
-            flow().publishGameEvent(new GameStartedEvent(this));
-        }
-        else if (tick == 2) {
-            startLevel();
-        }
-        else if (tick == Arcade_GameState.TICK_NEW_GAME_SHOW_GUYS) {
-            final GameLevel level = optGameLevel().orElseThrow();
-            level.pac().show();
-            level.ghosts().forEach(Ghost::show);
-        }
-        else if (tick == Arcade_GameState.TICK_NEW_GAME_START_HUNTING) {
-            setPlayingLevel(true);
-            flow().enterState(Arcade_GameState.LEVEL_PLAYING);
-        }
-    }
-
-    @Override
-    public void continuePlayingLevel(long tick) {
-        final GameLevel level = optGameLevel().orElseThrow();
-        if (tick == 1) {
-            makeReadyForPlaying(level);
-            level.pac().show();
-            level.ghosts().forEach(Ghost::show);
-            showLevelMessage(level, GameLevelMessageType.READY);
-        }
-        else if (tick == 60) {
-            flow().publishGameEvent(new GameContinuedEvent(this));
-        }
-        else if (tick == Arcade_GameState.TICK_RESUME_HUNTING) {
-            flow().enterState(Arcade_GameState.LEVEL_PLAYING);
-        }
-    }
-
-    @Override
-    public boolean canStartNewGame() { return !coinMechanism.isEmpty(); }
-
-    @Override
-    public boolean canContinueOnGameOver() { return false; }
-
     @Override
     protected void eatBonus(GameLevel level, Bonus bonus) {
         scorePoints(level, bonus.points());
@@ -369,7 +371,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void buildNormalLevel(int levelNumber) {
         final GameLevel level = createLevel(levelNumber, false);
-        level.setCutSceneNumber(cutSceneNumberAfterLevel(levelNumber));
+        level.setCutSceneNumber(cutSceneNumberAfterLevelNumber.getOrDefault(levelNumber, 0));
         levelCounter().setEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
