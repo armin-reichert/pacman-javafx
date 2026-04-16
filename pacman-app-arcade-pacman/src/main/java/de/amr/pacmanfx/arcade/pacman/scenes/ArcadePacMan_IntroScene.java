@@ -35,6 +35,12 @@ import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
  */
 public class ArcadePacMan_IntroScene extends GameScene2D {
 
+    public static final int TICK_GHOST_SPRITE_VISIBLE    =   0;
+    public static final int TICK_GHOST_CHARACTER_VISIBLE =  60;
+    public static final int TICK_GHOST_NICKNAME_VISIBLE  =  90;
+    public static final int TICK_GHOST_PRESENT_NEXT      = 120;
+    public static final int TICK_GHOST_PRESENTATION_END  = 180;
+
     private static final float CHASING_SPEED = 1.1f;
     private static final float GHOST_FRIGHTENED_SPEED = 0.6f;
 
@@ -124,25 +130,25 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         PRESENTING_GHOSTS {
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                if (timer.tickCount() == 1) {
-                    scene.ghostImageVisible[scene.ghostIndex] = true;
+                if (timer.tickCount() > TICK_GHOST_PRESENTATION_END) {
+                    return;
                 }
-                else if (timer.atSecond(1.0)) {
-                    scene.ghostCharacterVisible[scene.ghostIndex] = true;
-                }
-                else if (timer.atSecond(1.5)) {
-                    scene.ghostNicknameVisible[scene.ghostIndex] = true;
-                }
-                else if (timer.atSecond(2.0)) {
-                    if (scene.ghostIndex < scene.ghosts.size() - 1) {
-                        timer.resetToIndefiniteDuration();
-                    }
-                    scene.ghostIndex += 1;
-                }
-                else if (timer.atSecond(2.5)) {
-                    scene.flow.enterState(SHOWING_POINTS);
+                switch ((int) timer.tickCount()) {
+                    case TICK_GHOST_SPRITE_VISIBLE    -> scene.ghostImageVisible[scene.ghostIndex] = true;
+                    case TICK_GHOST_CHARACTER_VISIBLE -> scene.ghostCharacterVisible[scene.ghostIndex] = true;
+                    case TICK_GHOST_NICKNAME_VISIBLE  -> scene.ghostNicknameVisible[scene.ghostIndex] = true;
+                    case TICK_GHOST_PRESENT_NEXT      -> presentNextGhost(scene);
+                    case TICK_GHOST_PRESENTATION_END  -> scene.flow.enterState(SHOWING_POINTS);
                 }
             }
+
+            private void presentNextGhost(ArcadePacMan_IntroScene scene) {
+                if (scene.ghostIndex < scene.ghosts.size() - 1) {
+                    timer.resetToIndefiniteDuration();
+                }
+                scene.ghostIndex += 1;
+            }
+
         },
 
         SHOWING_POINTS {
