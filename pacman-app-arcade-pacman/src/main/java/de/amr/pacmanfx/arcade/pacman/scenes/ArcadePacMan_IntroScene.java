@@ -23,7 +23,6 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -70,9 +69,9 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public boolean[] ghostCharacterVisible;
     public boolean titleVisible;
 
-    private List<Ghost> victims;
+    private int ghostsEaten;
     private int ghostIndex;
-    private long ghostKilledTime;
+    private long lastGhostEatenTick;
 
     public ArcadePacMan_IntroScene() {
         flow = new StateMachine<>();
@@ -105,10 +104,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         ghostNicknameVisible  = new boolean[4];
         ghostCharacterVisible = new boolean[4];
 
-        victims = new ArrayList<>(4);
         titleVisible = false;
         ghostIndex = 0;
-        ghostKilledTime = 0;
+        lastGhostEatenTick = 0;
+        ghostsEaten = 0;
 
         flow.restartState(SceneState.STARTING);
     }
@@ -254,10 +253,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
                 timer.restartIndefinitely();
-                scene.ghostKilledTime = timer.tickCount();
+                scene.lastGhostEatenTick = timer.tickCount();
                 scene.pacMan.setMoveDir(Direction.RIGHT);
                 scene.pacMan.setSpeed(CHASING_SPEED);
-                scene.victims.clear();
+                scene.ghostsEaten = 0;
             }
 
             @Override
@@ -273,20 +272,20 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     .filter(ghost -> CollisionStrategy.SAME_TILE.collide(ghost, scene.pacMan))
                     .findFirst()
                     .ifPresent(victim -> {
-                        scene.victims.add(victim);
-                        scene.ghostKilledTime = timer.tickCount();
+                        victim.setState(EATEN);
+                        victim.selectAnimationAndSetFrame(Ghost.AnimationID.GHOST_POINTS, scene.ghostsEaten);
+                        scene.ghostsEaten++;
+                        scene.lastGhostEatenTick = timer.tickCount();
                         scene.pacMan.hide();
                         scene.pacMan.setSpeed(0);
                         scene.ghosts.forEach(ghost -> {
                             ghost.setSpeed(0);
                             ghost.stopAnimation();
                         });
-                        victim.setState(EATEN);
-                        victim.selectAnimationAndSetFrame(Ghost.AnimationID.GHOST_POINTS, scene.victims.size() - 1);
                     });
 
                 // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on
-                if (timer.tickCount() == scene.ghostKilledTime + GHOST_EATING_TICKS) {
+                if (timer.tickCount() == scene.lastGhostEatenTick + GHOST_EATING_TICKS) {
                     scene.pacMan.show();
                     scene.pacMan.setSpeed(CHASING_SPEED);
                     scene.ghosts.forEach(ghost -> {
