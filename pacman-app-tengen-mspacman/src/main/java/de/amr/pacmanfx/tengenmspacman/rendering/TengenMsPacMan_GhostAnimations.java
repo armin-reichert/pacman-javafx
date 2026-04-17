@@ -8,7 +8,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationDriver;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static java.util.Objects.requireNonNull;
@@ -19,13 +19,13 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator
     public static final int FLASHING_TICKS = 7;  // TODO check this in emulator
 
-    private final SpriteAnimationRegistry manager;
+    private final SpriteAnimationDriver manager;
     private final byte personality;
 
-    public TengenMsPacMan_GhostAnimations(SpriteAnimationRegistry spriteAnimationRegistry, byte personality) {
+    public TengenMsPacMan_GhostAnimations(SpriteAnimationDriver spriteAnimationDriver, byte personality) {
         super(TengenMsPacMan_SpriteSheet.instance());
         this.personality = requireValidGhostPersonality(personality);
-        manager = requireNonNull(spriteAnimationRegistry);
+        manager = requireNonNull(spriteAnimationDriver);
     }
 
     @Override

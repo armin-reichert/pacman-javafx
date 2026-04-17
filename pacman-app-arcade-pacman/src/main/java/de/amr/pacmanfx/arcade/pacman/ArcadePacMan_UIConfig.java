@@ -29,7 +29,7 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.UfxImages;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationDriver;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -308,22 +308,22 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public Ghost createGhostWithAnimations(SpriteAnimationRegistry spriteAnimationRegistry, byte personality) {
+    public Ghost createGhostWithAnimations(SpriteAnimationDriver spriteAnimationDriver, byte personality) {
         final Ghost ghost = ArcadePacMan_GameModel.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(spriteAnimationRegistry, personality));
+        ghost.setAnimations(createGhostAnimations(spriteAnimationDriver, personality));
         ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimationRegistry spriteAnimationRegistry, byte personality) {
+    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimationDriver spriteAnimationDriver, byte personality) {
         Validations.requireValidGhostPersonality(personality);
-        return new ArcadePacMan_GhostAnimations(spriteAnimationRegistry, personality);
+        return new ArcadePacMan_GhostAnimations(spriteAnimationDriver, personality);
     }
 
     @Override
-    public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimationRegistry spriteAnimationRegistry) {
-        return new ArcadePacMan_PacAnimations(spriteAnimationRegistry, spriteSheet());
+    public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimationDriver spriteAnimationDriver) {
+        return new ArcadePacMan_PacAnimations(spriteAnimationDriver, spriteSheet());
     }
 
     @Override

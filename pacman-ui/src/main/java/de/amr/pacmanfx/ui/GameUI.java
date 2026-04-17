@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui.layout.MiniGameView;
 import de.amr.pacmanfx.ui.layout.ViewManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationDriver;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.Translator;
 import javafx.beans.property.*;
@@ -196,7 +196,12 @@ public interface GameUI extends Translator {
      */
     Stage stage();
 
-    SpriteAnimationRegistry spriteAnimationRegistry();
+    /**
+     * Returns the container and timer for all sprite animations.
+     *
+     * @return the central sprite animation driver
+     */
+    SpriteAnimationDriver spriteAnimationDriver();
 
     /**
      * Returns the sound manager responsible for playing sound effects.

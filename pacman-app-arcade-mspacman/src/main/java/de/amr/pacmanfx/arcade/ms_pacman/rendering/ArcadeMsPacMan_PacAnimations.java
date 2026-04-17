@@ -8,7 +8,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationDriver;
 
 import static java.util.Objects.requireNonNull;
 
@@ -16,11 +16,11 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
     public enum AnimationID {MR_PAC_MAN_MUNCHING}
 
-    private final SpriteAnimationRegistry manager;
+    private final SpriteAnimationDriver manager;
     
-    public ArcadeMsPacMan_PacAnimations(SpriteAnimationRegistry spriteAnimationRegistry) {
+    public ArcadeMsPacMan_PacAnimations(SpriteAnimationDriver spriteAnimationDriver) {
         super(ArcadeMsPacMan_SpriteSheet.instance());
-        this.manager = requireNonNull(spriteAnimationRegistry);
+        this.manager = requireNonNull(spriteAnimationDriver);
     }
 
     @Override

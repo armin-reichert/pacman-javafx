@@ -12,16 +12,16 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
-public class SpriteAnimationRegistry {
+public class SpriteAnimationDriver {
 
-    private final AnimationTimer animationTimer;
-    private final Set<SpriteAnimation> spriteAnimations = new HashSet<>();
+    private final AnimationTimer timer;
+    private final Set<SpriteAnimation> animations = new HashSet<>();
 
-    public SpriteAnimationRegistry() {
-        animationTimer = new AnimationTimer() {
+    public SpriteAnimationDriver() {
+        timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                for (SpriteAnimation animation : spriteAnimations) {
+                for (SpriteAnimation animation : animations) {
                     animation.update(now);
                 }
             }
@@ -29,21 +29,21 @@ public class SpriteAnimationRegistry {
     }
 
     public void startAnimationTimer() {
-        animationTimer.start();
+        timer.start();
     }
 
     public void stopAnimationTimer() {
-        animationTimer.stop();
+        timer.stop();
     }
 
     public void registerAnimation(SpriteAnimation animation) {
         requireNonNull(animation);
-        spriteAnimations.add(animation);
-        Logger.debug("Sprite animation registered (cache size={})", spriteAnimations.size());
+        animations.add(animation);
+        Logger.debug("Sprite animation registered (cache size={})", animations.size());
     }
 
     public void clearAnimations() {
-        spriteAnimations.clear();
+        animations.clear();
         Logger.info("Sprite animation cache cleared");
     }
 }

@@ -20,7 +20,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationDriver;
 import de.amr.pacmanfx.uilib.model3D.actor.GhostConfig;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -122,7 +122,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             public void onEnter(TengenMsPacMan_IntroScene scene) {
                 final GameUI ui = scene.ui;
                 final UIConfig uiConfig = ui.currentConfig();
-                final SpriteAnimationRegistry animationRegistry = ui.spriteAnimationRegistry();
+                final SpriteAnimationDriver animationRegistry = ui.spriteAnimationDriver();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 
