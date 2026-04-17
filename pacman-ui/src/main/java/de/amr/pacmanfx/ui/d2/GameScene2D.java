@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
  * Subclasses implement {@link #onStart()} and {@link #onEnd()} to define
  * scene-specific behavior.
  */
-public abstract class GameScene2D implements GameScene {
+public class GameScene2D implements GameScene {
 
     public static final float MAX_SCALING = 5.0f;
 
@@ -51,7 +51,7 @@ public abstract class GameScene2D implements GameScene {
      * Creates a new 2D game scene. Subclasses typically configure their
      * rendering and input bindings during {@link #onStart()}.
      */
-    protected GameScene2D() {}
+    public GameScene2D() {}
 
     /**
      * Associates this scene with the UI layer.
@@ -102,6 +102,13 @@ public abstract class GameScene2D implements GameScene {
      */
     protected void onEnd() {}
 
+    /**
+     * Called on every tick of the game clock.
+     *
+     * @param tick the current game clock tick count
+     */
+    protected void onTick(long tick) {}
+
     // TODO: rethink
     public void onEnteredFrom3DScene() {}
 
@@ -128,6 +135,15 @@ public abstract class GameScene2D implements GameScene {
         onEnd();
         soundEffects().ifPresent(GameSoundEffects::stopAll);
         Logger.info("2D scene {} ends", getClass().getSimpleName());
+    }
+
+    @Override
+    public final void update(Game game) {
+        final long tick = gameContext().clock().tickCount();
+        if (Logger.isTraceEnabled()) {
+            Logger.trace("{}: Tick {}", getClass().getSimpleName(), tick);
+        }
+        onTick(tick);
     }
 
     /**

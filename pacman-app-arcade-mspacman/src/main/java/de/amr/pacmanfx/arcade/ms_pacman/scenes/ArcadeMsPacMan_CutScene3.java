@@ -10,7 +10,6 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -83,7 +82,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    public void update(Game game) {
+    protected void onTick(long tick) {
         switch (sceneState) {
             case SceneState.CLAPPERBOARD -> updateStateClapperboard();
             case SceneState.DELIVER_JUNIOR -> updateStateDeliverJunior();

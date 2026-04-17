@@ -3,11 +3,13 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
@@ -39,7 +41,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     private Pac pacMan;
     private Pac msPacMan;
     private List<Pac> juniors;
-    private List<Integer> juniorCreationTime;
+    private List<Long> juniorCreationTimes;
     private Clapperboard clapperboard;
 
     public TengenMsPacMan_CutScene4() {}
@@ -76,7 +78,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationDriver()));
 
         juniors = new ArrayList<>();
-        juniorCreationTime = new ArrayList<>();
+        juniorCreationTimes = new ArrayList<>();
 
         ui.soundManager().play(SoundID.INTERMISSION_4);
     }
@@ -87,19 +89,21 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     @Override
-    public void update(Game game) {
-        final int tick = (int) game.flow().state().timer().tickCount();
+    protected void onTick(long tick) {
+        final TengenMsPacMan_GameModel game = gameContext().game();
+        final State<Game> gameState = game.flow().state();
+        final long gameStateTick = gameState.timer().tickCount();
 
         clapperboard.tick();
 
         pacMan.move();
         msPacMan.move();
         for (int i = 0; i < juniors.size(); ++i) {
-            updateJunior(tick, i);
+            updateJunior(gameStateTick, i);
         }
 
-        if (tick <= TICK_EXPIRES) {
-            final short eventTick = (short) tick;
+        if (gameStateTick <= TICK_EXPIRES) {
+            final short eventTick = (short) gameStateTick;
             switch (eventTick) {
                 case 130 -> {
                     pacMan.setMoveDir(Direction.RIGHT);
@@ -154,14 +158,14 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                     pacMan.hide();
                     msPacMan.hide();
                 }
-                case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(tick);
+                case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(gameStateTick);
                 case 1500 -> soundEffects().ifPresent(GameSoundEffects::stopAll);
                 case TICK_EXPIRES -> game.flow().enterState(TengenMsPacMan_GameState.PREPARING_GAME_START);
             }
         }
     }
 
-    private void spawnJunior(int tick) {
+    private void spawnJunior(long tick) {
         var junior = TengenMsPacMan_ActorFactory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         junior.setPosition((float) randomX, unscaledSize().y() - 4 * TS);
@@ -171,7 +175,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         junior.selectAnimation(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);
-        juniorCreationTime.add(tick);
+        juniorCreationTimes.add(tick);
 
         String id = SoundID.INTERMISSION_4 + ".junior." + randomInt(1, 3); // 1 or 2
         ui.soundManager().loop(id);
@@ -179,10 +183,10 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         Logger.info("Junior spawned at tick {}", tick);
     }
 
-    private void updateJunior(int tick, int index) {
+    private void updateJunior(long tick, int index) {
         Pac junior = juniors.get(index);
-        int creationTime = juniorCreationTime.get(index);
-        int lifeTime = tick - creationTime;
+        long creationTime = juniorCreationTimes.get(index);
+        long lifeTime = tick - creationTime;
         if (lifeTime> 0 && lifeTime % 10 == 0) {
             computeNewMoveDir(junior);
         }

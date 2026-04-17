@@ -54,11 +54,11 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         clearCanvas();
 
         final TengenMsPacMan_IntroScene introScene = (TengenMsPacMan_IntroScene) scene;
-        final long tick = introScene.controller.state().timer().tickCount();
+        final long tick = introScene.sceneFlow.state().timer().tickCount();
 
         ctx.setFont(arcadeFont8());
         ctx.setImageSmoothing(false);
-        switch (introScene.controller.state()) {
+        switch (introScene.sceneFlow.state()) {
             case SceneState.WAITING_FOR_START -> {
                 if (!introScene.dark) {
                     boolean showPressStart = tick % 60 < 30;

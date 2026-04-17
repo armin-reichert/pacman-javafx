@@ -91,7 +91,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void update(Game game) {
+    protected void onTick(long tick) {
         sceneController.update();
     }
 

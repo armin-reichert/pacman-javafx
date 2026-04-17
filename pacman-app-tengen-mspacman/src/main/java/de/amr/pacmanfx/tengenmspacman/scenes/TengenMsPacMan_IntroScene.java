@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -46,7 +45,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     public static final int MS_PAC_MAN_STOP_X = MARQUEE_X + 62;
     public static final float SPEED = 2.2f; //TODO check exact speed
 
-    public final StateMachine<TengenMsPacMan_IntroScene> controller;
+    public final StateMachine<TengenMsPacMan_IntroScene> sceneFlow;
 
     public TengenMsPacMan_SpriteSheet spriteSheet;
 
@@ -61,7 +60,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     public boolean dark;
 
     public TengenMsPacMan_IntroScene() {
-        controller = new StateMachine<>(this, List.of(SceneState.values()));
+        sceneFlow = new StateMachine<>(this, List.of(SceneState.values()));
     }
 
     @Override
@@ -86,14 +85,12 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         presentsText = new Actor();
         presentsText.setPosition(9 * TS, MARQUEE_Y - TS);
 
-        controller.restartState(SceneState.WAITING_FOR_START);
+        sceneFlow.restartState(SceneState.WAITING_FOR_START);
     }
 
     @Override
-    public void update(Game game) {
-        if (!gameContext().clock().getUpdatesDisabled()) {
-            controller.update();
-        }
+    protected void onTick(long tick) {
+        sceneFlow.update();
     }
 
     @Override
@@ -115,7 +112,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     scene.dark = true;
                 } else if (timer.atSecond(9)) {
                     scene.dark = false;
-                    scene.controller.enterState(SHOWING_MARQUEE);
+                    scene.sceneFlow.enterState(SHOWING_MARQUEE);
                 }
             }
         },
@@ -160,7 +157,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
                 scene.marquee.update(timer.tickCount());
                 if (timer.atSecond(1)) {
-                    scene.controller.enterState(GHOSTS_MARCHING_IN);
+                    scene.sceneFlow.enterState(GHOSTS_MARCHING_IN);
                 }
             }
         },
@@ -178,7 +175,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 boolean reachedEndPosition = letGhostMarchIn(scene);
                 if (reachedEndPosition) {
                     if (scene.ghostIndex == 3) {
-                        scene.controller.enterState(MS_PACMAN_MARCHING_IN);
+                        scene.sceneFlow.enterState(MS_PACMAN_MARCHING_IN);
                     } else {
                         ++scene.ghostIndex;
                     }

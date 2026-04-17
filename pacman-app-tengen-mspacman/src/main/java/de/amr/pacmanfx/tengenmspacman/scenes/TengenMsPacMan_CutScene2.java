@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
@@ -85,15 +86,11 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
-    public void update(Game game) {
-        pacMan.move();
-        msPacMan.move();
-        clapperboard.tick();
-
-        final long tick = game.flow().state().timer().tickCount();
-        if (tick <= TICK_EXPIRES) {
-            final short eventTick = (short) tick;
-            switch (eventTick) {
+    protected void onTick(long tick) {
+        final State<Game> gameState = gameContext().game().flow().state();
+        final long gameStateTick = gameState.timer().tickCount();
+        if (gameStateTick <= TICK_EXPIRES) {
+            switch ((int) gameStateTick) {
                 case 270 -> {
                     msPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
                     msPacMan.setMoveDir(Direction.RIGHT);
@@ -151,8 +148,12 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.setSpeed(4.0f);
                 }
-                case 1380 -> game.flow().state().expire();
+                case 1380 -> gameState.expire();
             }
+
+            pacMan.move();
+            msPacMan.move();
+            clapperboard.tick();
         }
     }
 

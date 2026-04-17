@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -135,7 +134,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void update(Game game) {
+    protected void onTick(long tick) {
         clapperboard.tick();
 
         pacMan.move();
@@ -152,10 +151,9 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             }
         }
 
-        final long tick = game.flow().state().timer().tickCount();
-        if (tick <= TICK_EXPIRES) {
-            final short eventTick = (short) tick;
-            switch (eventTick) {
+        final long gameStateTick = gameContext().game().flow().state().timer().tickCount();
+        if (gameStateTick <= TICK_EXPIRES) {
+            switch ((int) gameStateTick) {
                 case 130 -> {
                     pacMan.setSpeed(SPEED_CHASING);
                     pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_MR_PAC_MAN_MUNCHING);
@@ -235,7 +233,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                     msPacMan.hide();
                     heart.hide();
                 }
-                case 775 -> game.flow().state().expire();
+                case 775 -> gameContext().game().flow().state().expire();
             }
         }
     }

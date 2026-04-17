@@ -3,8 +3,10 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS;
@@ -32,12 +34,14 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     }
 
     @Override
-    public void update(Game game) {
-        if (game.flow().state().timer().atSecond(DISPLAY_SECONDS)) {
-            game.flow().state().expire();
+    protected void onTick(long tick) {
+        final TengenMsPacMan_GameModel game = gameContext().game();
+        final State<Game> gameState = game.flow().state();
+        if (gameState.timer().atSecond(DISPLAY_SECONDS)) {
+            gameState.expire();
             return;
         }
-        if (game.flow().state().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
+        if (gameState.timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
             fadeProgress = Math.min(fadeProgress + 0.005f, 1f); // Clamp to 1.0
         }
     }

@@ -124,7 +124,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void update(Game game) {
+    protected void onTick(long tick) {
         flow.update();
     }
 

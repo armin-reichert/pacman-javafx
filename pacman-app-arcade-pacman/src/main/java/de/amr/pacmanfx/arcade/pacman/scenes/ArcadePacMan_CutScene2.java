@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.UIConfig;
@@ -37,7 +36,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     public final int nailX = TS * 14;
     public final int nailY = TS * 19 + 3;
-    public int tick;
+    public int sceneTick;
     public Pac pacMan;
     public Ghost blinky;
     public SpriteAnimation nailDressAnimation;
@@ -58,16 +57,16 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             .initiallyStopped()
             .build();
 
-        tick = -1;
+        sceneTick = -1;
     }
 
     @Override
-    public void update(Game game) {
-        ++tick;
-        if (tick < ANIMATION_START) {
+    protected void onTick(long tick) {
+        ++sceneTick;
+        if (sceneTick < ANIMATION_START) {
             return;
         }
-        switch (tick) {
+        switch (sceneTick) {
             case ANIMATION_START -> {
                 ui.soundManager().play(SoundID.INTERMISSION_2);
                 setNailDressAnimation(NailDressAnimationFrame.NAIL);
@@ -108,7 +107,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             case ANIMATION_START + 420 -> blinkyAnimation(BLINKY_DAMAGED).advanceFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);
-                game.flow().state().expire();
+                gameContext().game().flow().state().expire();
             }
             default -> {}
         }

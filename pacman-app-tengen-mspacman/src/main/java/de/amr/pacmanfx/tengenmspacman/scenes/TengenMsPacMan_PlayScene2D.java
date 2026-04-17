@@ -125,7 +125,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void update(Game game) {
+    protected void onTick(long tick) {
+        final TengenMsPacMan_GameModel game = gameContext().game();
         game.optGameLevel().ifPresent(level -> {
             final int numRows = level.worldMap().terrainLayer().numRows();
             canvasHeightUnscaled.set(TS(numRows + 2)); // 2 additional rows for level counter below maze

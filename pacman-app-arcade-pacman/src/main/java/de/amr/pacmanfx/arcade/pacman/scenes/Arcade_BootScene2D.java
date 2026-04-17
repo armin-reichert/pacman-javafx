@@ -20,24 +20,26 @@ public class Arcade_BootScene2D extends GameScene2D {
         GRID
     }
 
-    private SceneState state;
+    private SceneState sceneState;
 
     public SceneState state() {
-        return state;
+        return sceneState;
     }
 
     @Override
     protected void onStart() {
-        state = SceneState.BLANK;
+        sceneState = SceneState.BLANK;
     }
 
     @Override
-    public void update(Game game) {
-        final State<Game> gameState = game.flow().state();
-        final long tick = gameState.timer().tickCount();
-        if (tick == 60 )      { state = SceneState.HEX_CODES; }
-        else if (tick == 120) { state = SceneState.RANDOM_SPRITE_FRAGMENTS; }
-        else if (tick == 210) { state = SceneState.GRID; }
-        else if (tick == 240) { gameState.expire(); }
+    protected void onTick(long tick) {
+        final State<Game> gameState = gameContext().game().flow().state();
+        final long stateTick = gameState.timer().tickCount();
+        switch ((int) stateTick) {
+            case  60 -> sceneState = SceneState.HEX_CODES;
+            case 120 -> sceneState = SceneState.RANDOM_SPRITE_FRAGMENTS;
+            case 210 -> sceneState = SceneState.GRID;
+            case 240 -> gameState.expire();
+        }
     }
 }

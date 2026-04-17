@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacAnimations;
 import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.UIConfig;
@@ -24,7 +23,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
 
     public static final short ANIMATION_START_TICK = 120;
 
-    public int tick;
+    public int sceneTick;
     public Pac pacMan;
     public Ghost blinky;
 
@@ -36,13 +35,13 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationDriver()));
         blinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationDriver(), RED_GHOST_SHADOW);
-        tick = -1;
+        sceneTick = -1;
     }
 
     @Override
-    public void update(Game game) {
-        ++tick;
-        if (tick == ANIMATION_START_TICK) {
+    protected void onTick(long tick) {
+        ++sceneTick;
+        if (sceneTick == ANIMATION_START_TICK) {
             ui.soundManager().play(SoundID.INTERMISSION_1, 2);
 
             pacMan.placeAtTile(29, 20);
@@ -60,7 +59,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             blinky.playAnimation();
             blinky.show();
         }
-        else if (tick == ANIMATION_START_TICK + 260) {
+        else if (sceneTick == ANIMATION_START_TICK + 260) {
             blinky.placeAtTile(-2, 20, 4, 0);
             blinky.setMoveDir(Direction.RIGHT);
             blinky.setWishDir(Direction.RIGHT);
@@ -68,17 +67,17 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             blinky.selectAnimation(Ghost.AnimationID.GHOST_FRIGHTENED);
             blinky.playAnimation();
         }
-        else if (tick == ANIMATION_START_TICK + 400) {
+        else if (sceneTick == ANIMATION_START_TICK + 400) {
             pacMan.placeAtTile(-3, 18, 0, 6.5f);
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.selectAnimation(ArcadePacMan_PacAnimations.AnimationID.ANIM_BIG_PAC_MAN);
             pacMan.playAnimation();
         }
-        else if (tick == ANIMATION_START_TICK + 632) {
-            game.flow().state().expire();
+        else if (sceneTick == ANIMATION_START_TICK + 632) {
+            gameContext().game().flow().state().expire();
         }
 
-        if (tick >= ANIMATION_START_TICK) {
+        if (sceneTick >= ANIMATION_START_TICK) {
             pacMan.move();
             blinky.move();
         }

@@ -5,7 +5,6 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.tengenmspacman.model.*;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.GameAction;
@@ -96,7 +95,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public void update(Game game) {
+    protected void onTick(long tick) {
         if (initialDelay > 0) {
             --initialDelay;
             return;
@@ -104,7 +103,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            game.flow().enterState(TengenMsPacMan_GameState.INTRO);
+            gameContext().game().flow().enterState(TengenMsPacMan_GameState.INTRO);
         }
     }
 

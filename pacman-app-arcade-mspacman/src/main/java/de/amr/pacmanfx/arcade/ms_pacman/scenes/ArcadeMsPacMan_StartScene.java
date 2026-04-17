@@ -5,7 +5,6 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.event.CreditAddedEvent;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
@@ -22,9 +21,6 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     protected void onEnd() {
         ui.voicePlayer().stopVoice();
     }
-
-    @Override
-    public void update(Game game) {}
 
     @Override
     public void onCreditAdded(CreditAddedEvent e) {

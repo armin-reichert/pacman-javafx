@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
+import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -106,13 +107,11 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    public void update(Game game) {
-        clapperboard.tick();
-
-        final long tick = game.flow().state().timer().tickCount();
-        if (tick <= TICK_EXPIRES) {
-            final short eventTick = (short) tick;
-            switch (eventTick) {
+    protected void onTick(long tick) {
+        final State<Game> gameState = gameContext().game().flow().state();
+        final long gameStateTick = gameState.timer().tickCount();
+        if (gameStateTick <= TICK_EXPIRES) {
+            switch ((int) gameStateTick) {
                 case 130 -> {
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.setPosition(TS * 3, GROUND_Y - 4);
@@ -152,12 +151,12 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                     flyingBag.setAcceleration(Vector2f.ZERO);
                 }
                 case 640 -> darkness = true;
-                case TICK_EXPIRES -> game.flow().state().expire();
+                case TICK_EXPIRES -> gameState.expire();
             }
         }
 
+        clapperboard.tick();
         stork.move();
-
         if (!flyingBag.isOpen()) {
             flyingBag.move();
             Vector2f velocity = flyingBag.velocity();
@@ -166,7 +165,6 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                 flyingBag.setVelocity(0.9f * velocity.x(), -0.3f * velocity.y());
             }
         }
-
     }
 
     @Override
