@@ -68,7 +68,7 @@ public abstract class GameScene implements GameEventListener, Disposable {
     /**
      * Called when the scene becomes the current one.
      */
-    public final void init(Game game) {
+    public final void init() {
         actionBindings.pluginKeyboard();
         onSceneStart();
         Logger.info("2D scene {} initialized", getClass().getSimpleName());
@@ -85,7 +85,7 @@ public abstract class GameScene implements GameEventListener, Disposable {
         onTick(tick);
     }
 
-    public final void end(Game game) {
+    public final void end() {
         onSceneEnd();
         soundEffects().ifPresent(GameSoundEffects::stopAll);
         Logger.info("2D scene {} ends", getClass().getSimpleName());

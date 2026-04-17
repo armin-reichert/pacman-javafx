@@ -235,13 +235,13 @@ public class PlayView extends StackPane implements View {
         }
 
         if (prevGameScene != null) {
-            prevGameScene.end(game);
+            prevGameScene.end();
             Logger.info("Game scene ended: {}", prevGameScene.getClass().getSimpleName());
         }
 
         nextGameScene.onEmbeddedIntoUI(ui); // Must be called *before* embedding
         embedGameScene(parentScene, nextGameScene);
-        nextGameScene.init(game);
+        nextGameScene.init();
         Logger.info("Game scene initialized: {}", nextGameScene.getClass().getSimpleName());
 
         // Handle switching between 2D and 3D play scene view
