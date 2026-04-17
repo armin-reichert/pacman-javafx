@@ -74,7 +74,7 @@ import static java.util.Objects.requireNonNull;
  * <p>Instances are created and managed by {@link GameUI}. The scene is activated when switching
  * from 2D to 3D view and remains active until the user switches back or the game ends.</p>
  */
-public class PlayScene3D implements GameScene, DisposableGraphicsObject {
+public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     /** Duration of the fade-in animation when the 3D scene becomes active. */
     public static final Duration FADE_IN_DURATION = Duration.seconds(3);

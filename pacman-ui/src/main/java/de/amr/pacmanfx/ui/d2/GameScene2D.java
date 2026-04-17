@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
  * Subclasses implement {@link #onStart()} and {@link #onEnd()} to define
  * scene-specific behavior.
  */
-public class GameScene2D implements GameScene {
+public class GameScene2D extends GameScene {
 
     public static final float MAX_SCALING = 5.0f;
 

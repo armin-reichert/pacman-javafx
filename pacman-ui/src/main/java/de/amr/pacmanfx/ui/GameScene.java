@@ -18,26 +18,26 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 /**
- * Common interface of all game scenes (2D and 3D).
+ * Common base class of all game scenes (2D and 3D).
  */
-public interface GameScene extends GameEventListener, Disposable {
+public abstract class GameScene implements GameEventListener, Disposable {
 
     /**
      * @return the game UI
      */
-    GameUI ui();
+    public abstract GameUI ui();
 
     /**
      * @return (optional) JavaFX subscene associated with this game scene. 2D scenes without camera do not need one.
      */
-    default Optional<SubScene> optSubScene() {
+    public Optional<SubScene> optSubScene() {
         return Optional.empty();
     }
 
     /**
      * @return the (optional) game sound effects
      */
-    default Optional<GameSoundEffects> soundEffects() {
+    public Optional<GameSoundEffects> soundEffects() {
         return ui().currentConfig().soundEffects();
 
     }
@@ -45,38 +45,38 @@ public interface GameScene extends GameEventListener, Disposable {
      * @return the global context providing access to some global data as the currently selected game variant or the
      *         coin mechanism used by Arcade games
      */
-    default GameContext gameContext() {
+    public GameContext gameContext() {
         return ui().gameContext();
     }
 
     /**
      * @return the action bindings defined for this game scene
      */
-    ActionBindingsManager actionBindings();
+    public abstract ActionBindingsManager actionBindings();
 
     /**
      * Called when the scene becomes the current one.
      */
-    void init(Game game);
+    public abstract void init(Game game);
 
     /**
      * Called when the scene is initialized.
      * Subclasses implement their setup logic here (loading assets, configuring
      * input, preparing animations, etc.).
      */
-    default void onStart() {}
+    public void onStart() {}
 
     /**
      * Called when the scene ends.
      * Subclasses implement cleanup logic here (stopping animations, releasing
      * temporary resources, etc.).
      */
-    default void onEnd() {}
+    public void onEnd() {}
 
     /**
      * Called when the scene needs to be updated.
      */
-    default void update() {
+    public void update() {
         final long tick = gameContext().clock().tickCount();
         if (Logger.isTraceEnabled()) {
             Logger.trace("{}: Tick {}", getClass().getSimpleName(), tick);
@@ -89,20 +89,20 @@ public interface GameScene extends GameEventListener, Disposable {
      *
      * @param tick the current game clock tick count
      */
-    default void onTick(long tick) {}
+    public void onTick(long tick) {}
 
     /**
      * Called when the scene ends and gets replaced by another scene.
      */
-    void end(Game game);
+    public abstract void end(Game game);
 
-    void onEmbed(GameUI ui);
+    public abstract void onEmbed(GameUI ui);
 
     /**
-     * Called when a key combination has been pressed inside this game scene. By default, the first matching action
+     * Called when a key combination has been pressed inside this game scene. By public, the first matching action
      * defined in the action bindings is executed.
      */
-    default void onUserInput() {
+    public void onUserInput() {
         actionBindings().matchingAction().ifPresent(action -> action.executeIfEnabled(ui()));
     }
 
@@ -110,10 +110,10 @@ public interface GameScene extends GameEventListener, Disposable {
      * Called when a scroll event (mouse wheel event) has been triggered inside this game scene
      * @param scrollEvent the scroll event
      */
-    default void onScroll(ScrollEvent scrollEvent) {}
+    public void onScroll(ScrollEvent scrollEvent) {}
 
     @Override
-    default void onStopAllSounds(StopAllSoundsEvent e) {
+    public void onStopAllSounds(StopAllSoundsEvent e) {
         soundEffects().ifPresent(GameSoundEffects::stopAll);
     }
 
@@ -121,7 +121,7 @@ public interface GameScene extends GameEventListener, Disposable {
      * @param game the current game
      * @return context menu provided by this game scene which is merged into the view's context menu
      */
-    default Optional<GameUI_ContextMenu> supplyContextMenu(Game game) {
+    public Optional<GameUI_ContextMenu> supplyContextMenu(Game game) {
         return Optional.empty();
     }
 }
