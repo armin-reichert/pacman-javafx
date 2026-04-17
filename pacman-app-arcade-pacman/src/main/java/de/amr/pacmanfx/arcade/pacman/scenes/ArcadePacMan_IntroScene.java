@@ -77,7 +77,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public final boolean[] ghostNicknameVisible = new boolean[NUM_GHOSTS];
     public final boolean[] ghostCharacterVisible = new boolean[NUM_GHOSTS];
 
-    private int ghostsEaten;
+    private int numGhostsEaten;
     private int ghostIndex;
     private long lastGhostEatenTick;
 
@@ -113,7 +113,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         titleVisible = false;
         ghostIndex = 0;
         lastGhostEatenTick = 0;
-        ghostsEaten = 0;
+        numGhostsEaten = 0;
 
         flow.restartState(SceneState.STARTING);
     }
@@ -134,6 +134,16 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
     }
 
+    private void chaseGhosts(long tick) {
+        blinking.doTick();
+        pacMan.move();
+        for (Ghost ghost : ghosts) { ghost.move(); }
+        edibleGhost().ifPresent(victim -> eatGhostAndStopChasing(victim, tick));
+        if (tick == lastGhostEatenTick + GHOST_EATING_TICKS) {
+            continueChasing();
+        }
+    }
+
     private Optional<Ghost> edibleGhost() {
         return Stream.of(ghosts)
             .filter(ghost -> ghost.state() == FRIGHTENED)
@@ -143,18 +153,17 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private void eatGhostAndStopChasing(Ghost victim, long tick) {
         victim.setState(EATEN);
-        victim.selectAnimationAtFrame(Ghost.AnimationID.GHOST_POINTS, ghostsEaten);
-        ghostsEaten++;
-        lastGhostEatenTick = tick;
+        victim.selectAnimationAtFrame(Ghost.AnimationID.GHOST_POINTS, numGhostsEaten);
+        numGhostsEaten++;
         pacMan.hide();
         pacMan.setSpeed(0);
         for (Ghost ghost : ghosts) {
             ghost.setSpeed(0);
             ghost.stopAnimation();
         }
+        lastGhostEatenTick = tick;
     }
 
-    // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on
     private void continueChasing() {
         pacMan.show();
         pacMan.setSpeed(CHASING_SPEED);
@@ -303,24 +312,17 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 scene.lastGhostEatenTick = timer.tickCount();
                 scene.pacMan.setMoveDir(Direction.RIGHT);
                 scene.pacMan.setSpeed(CHASING_SPEED);
-                scene.ghostsEaten = 0;
+                scene.numGhostsEaten = 0;
             }
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                if (timer.tickCount() == TICK_CHASING_GHOSTS_END) {
+                final long tick = timer.tickCount();
+                if (tick == TICK_CHASING_GHOSTS_END) {
                     scene.pacMan.hide();
                     scene.flow.enterState(READY_TO_PLAY);
                 } else {
-                    scene.edibleGhost().ifPresent(victim -> scene.eatGhostAndStopChasing(victim, timer.tickCount()));
-                    if (timer.tickCount() == scene.lastGhostEatenTick + GHOST_EATING_TICKS) {
-                        scene.continueChasing();
-                    }
-                    scene.blinking.doTick();
-                    scene.pacMan.move();
-                    for (Ghost ghost : scene.ghosts) {
-                        ghost.move();
-                    }
+                    scene.chaseGhosts(tick);
                 }
             }
         },
