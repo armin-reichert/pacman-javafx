@@ -64,9 +64,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     // State CHASING_GHOSTS
     public static final int GHOST_EATING_TICKS = 50;
 
-    public final StateMachine<ArcadePacMan_IntroScene> flow;
+    public static final int TICK_CHASING_GHOSTS_END = 270;
 
-    // public for access by renderer
+    // public access for renderer
+    public final StateMachine<ArcadePacMan_IntroScene> flow;
     public boolean titleVisible;
     public Pulse blinking;
     public Pac pacMan;
@@ -243,15 +244,15 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     ghost.move();
                 }
 
-                // shaking effect
-                final long frame = timer.tickCount() % 6;
+                // "shaking" effect
+                final long tick_0_to_5 = timer.tickCount() % 6;
                 final Ghost pinkGhost = scene.ghosts[PINK_GHOST_SPEEDY];
                 final Ghost cyanGhost = scene.ghosts[CYAN_GHOST_BASHFUL];
-                if (frame == 2) {
+                if (tick_0_to_5 == 2) {
                     pinkGhost.setX(pinkGhost.x() + 0.5);
                     cyanGhost.setX(cyanGhost.x() - 0.5);
                 }
-                else if (frame == 5) {
+                else if (tick_0_to_5 == 5) {
                     pinkGhost.setX(pinkGhost.x() - 0.5);
                     cyanGhost.setX(cyanGhost.x() + 0.5);
                 }
@@ -261,7 +262,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         CHASING_GHOSTS {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
-                timer.restartIndefinitely();
+                timer.restartTicks(TICK_CHASING_GHOSTS_END);
                 scene.lastGhostEatenTick = timer.tickCount();
                 scene.pacMan.setMoveDir(Direction.RIGHT);
                 scene.pacMan.setSpeed(CHASING_SPEED);
@@ -270,7 +271,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                if (Stream.of(scene.ghosts).allMatch(ghost -> ghost.inAnyOfStates(EATEN))) {
+                if (timer.tickCount() == TICK_CHASING_GHOSTS_END) {
                     scene.pacMan.hide();
                     scene.flow.enterState(READY_TO_PLAY);
                     return;

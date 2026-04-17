@@ -39,7 +39,7 @@ public class SpriteAnimationRegistry {
     public void registerAnimation(SpriteAnimation animation) {
         requireNonNull(animation);
         spriteAnimations.add(animation);
-        Logger.info("Sprite animation registered (cache size={})", spriteAnimations.size());
+        Logger.debug("Sprite animation registered (cache size={})", spriteAnimations.size());
     }
 
     public void clearAnimations() {
