@@ -297,6 +297,7 @@ public class PlayView extends StackPane implements View {
             game.flow().removeGameEventListener(this);
             ui.uiConfigManager().dispose(oldGameVariantName);
             ui.soundManager().dispose();
+            ui.spriteAnimationDriver().clear();
             ui.stage().getIcons().removeAll();
             Logger.info("Cleanup of game variant {} complete.", oldGameVariantName);
         }
