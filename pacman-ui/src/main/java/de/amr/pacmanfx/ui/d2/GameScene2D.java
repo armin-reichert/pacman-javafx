@@ -102,13 +102,6 @@ public class GameScene2D implements GameScene {
      */
     protected void onEnd() {}
 
-    /**
-     * Called on every tick of the game clock.
-     *
-     * @param tick the current game clock tick count
-     */
-    protected void onTick(long tick) {}
-
     // TODO: rethink
     public void onEnteredFrom3DScene() {}
 
@@ -135,15 +128,6 @@ public class GameScene2D implements GameScene {
         onEnd();
         soundEffects().ifPresent(GameSoundEffects::stopAll);
         Logger.info("2D scene {} ends", getClass().getSimpleName());
-    }
-
-    @Override
-    public final void update(Game game) {
-        final long tick = gameContext().clock().tickCount();
-        if (Logger.isTraceEnabled()) {
-            Logger.trace("{}: Tick {}", getClass().getSimpleName(), tick);
-        }
-        onTick(tick);
     }
 
     /**

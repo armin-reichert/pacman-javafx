@@ -32,7 +32,7 @@ public class Arcade_BootScene2D extends GameScene2D {
     }
 
     @Override
-    protected void onTick(long tick) {
+    public void onTick(long tick) {
         final State<Game> gameState = gameContext().game().flow().state();
         final long stateTick = gameState.timer().tickCount();
         switch ((int) stateTick) {

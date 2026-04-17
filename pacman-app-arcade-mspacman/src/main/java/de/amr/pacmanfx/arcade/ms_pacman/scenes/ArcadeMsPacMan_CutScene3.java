@@ -82,7 +82,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    protected void onTick(long tick) {
+    public void onTick(long tick) {
         switch (sceneState) {
             case SceneState.CLAPPERBOARD -> updateStateClapperboard();
             case SceneState.DELIVER_JUNIOR -> updateStateDeliverJunior();

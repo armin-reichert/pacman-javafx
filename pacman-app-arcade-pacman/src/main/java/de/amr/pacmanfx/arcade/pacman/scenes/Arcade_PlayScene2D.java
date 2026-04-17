@@ -40,7 +40,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public Arcade_PlayScene2D() {}
 
     @Override
-    protected void onTick(long tick) {
+    public void onTick(long tick) {
         final Arcade_GameModel game = gameContext().game();
         game.optGameLevel().ifPresent(level -> {
             updateLivesCounter(game, level.pac());

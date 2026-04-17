@@ -186,9 +186,8 @@ public class PlayScene3D implements GameScene, DisposableGraphicsObject {
     }
 
     @Override
-    public void update(Game game) {
+    public void onTick(long tick) {
         final GameLevel level = optGameLevel().orElse(null);
-        final long tick = ui.gameContext().clock().tickCount();
 
         if (level == null) {
             Logger.info("Tick {}: Game level not yet created, update ignored", tick);

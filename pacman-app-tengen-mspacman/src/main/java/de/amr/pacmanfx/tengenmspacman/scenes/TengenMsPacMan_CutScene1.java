@@ -134,7 +134,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    protected void onTick(long tick) {
+    public void onTick(long tick) {
         clapperboard.tick();
 
         pacMan.move();

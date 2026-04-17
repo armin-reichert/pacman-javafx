@@ -98,7 +98,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    protected void onTick(long tick) {
+    public void onTick(long tick) {
         switch (sceneState) {
             case CLAPPERBOARD -> updateStateClapperboard();
             case CHASED_BY_GHOSTS -> updateStateChasedByGhosts();

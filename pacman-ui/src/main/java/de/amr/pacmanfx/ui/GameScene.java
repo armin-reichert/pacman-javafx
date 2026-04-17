@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.SubScene;
 import javafx.scene.input.ScrollEvent;
+import org.tinylog.Logger;
 
 import java.util.Optional;
 
@@ -61,7 +62,20 @@ public interface GameScene extends GameEventListener, Disposable {
     /**
      * Called when the scene needs to be updated.
      */
-    void update(Game game);
+    default void update() {
+        final long tick = gameContext().clock().tickCount();
+        if (Logger.isTraceEnabled()) {
+            Logger.trace("{}: Tick {}", getClass().getSimpleName(), tick);
+        }
+        onTick(tick);
+    }
+
+    /**
+     * Called on every tick of the game clock.
+     *
+     * @param tick the current game clock tick count
+     */
+    default void onTick(long tick) {}
 
     /**
      * Called when the scene ends and gets replaced by another scene.

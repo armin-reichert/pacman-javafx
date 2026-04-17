@@ -86,7 +86,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
-    protected void onTick(long tick) {
+    public void onTick(long tick) {
         final State<Game> gameState = gameContext().game().flow().state();
         final long gameStateTick = gameState.timer().tickCount();
         if (gameStateTick <= TICK_EXPIRES) {

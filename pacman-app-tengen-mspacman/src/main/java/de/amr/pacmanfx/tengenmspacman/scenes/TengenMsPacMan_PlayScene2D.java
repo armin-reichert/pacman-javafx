@@ -125,7 +125,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    protected void onTick(long tick) {
+    public void onTick(long tick) {
         final TengenMsPacMan_GameModel game = gameContext().game();
         game.optGameLevel().ifPresent(level -> {
             final int numRows = level.worldMap().terrainLayer().numRows();

@@ -95,7 +95,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    protected void onTick(long tick) {
+    public void onTick(long tick) {
         if (initialDelay > 0) {
             --initialDelay;
             return;

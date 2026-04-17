@@ -120,9 +120,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private void initGameClock() {
         final GameClock clock = requireNonNull(gameContext.clock(), "Game clock has not been set in game context?");
         clock.setUpdateAction(() -> {
-            final Game game = gameContext.game();
-            simulate(game);
-            optGameScene().ifPresent(gameScene -> gameScene.update(game));
+            simulate(gameContext.game());
+            optGameScene().ifPresent(GameScene::update);
         });
         clock.setPermanentAction(() -> viewManager.currentView().render());
         clock.setErrorHandler(this::ka_tas_tro_phe);

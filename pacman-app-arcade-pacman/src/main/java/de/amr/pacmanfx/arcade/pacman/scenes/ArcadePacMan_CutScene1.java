@@ -39,7 +39,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    protected void onTick(long tick) {
+    public void onTick(long tick) {
         ++sceneTick;
         if (sceneTick == ANIMATION_START_TICK) {
             ui.soundManager().play(SoundID.INTERMISSION_1, 2);

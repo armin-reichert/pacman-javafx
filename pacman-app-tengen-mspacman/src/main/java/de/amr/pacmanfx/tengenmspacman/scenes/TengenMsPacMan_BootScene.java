@@ -42,7 +42,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     }
 
     @Override
-    protected void onTick(long tick) {
+    public void onTick(long tick) {
         final State<Game> gameState = gameContext().game().flow().state();
         final int t = (int) gameState.timer().tickCount();
         switch (t) {
