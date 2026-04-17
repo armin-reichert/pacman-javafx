@@ -67,6 +67,9 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     public static final int TICK_CHASING_GHOSTS_END = 270;
 
+    // READY_TO_PLAY
+    public static final int TICK_START_DEMO_LEVEL = 60;
+
     // public access for renderer
     public final StateMachine<ArcadePacMan_IntroScene> flow;
     public boolean titleVisible;
@@ -211,8 +214,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private void eatGhostAndStopChasing(Ghost victim, long tick) {
         victim.setState(EATEN);
-        victim.selectAnimationAtFrame(Ghost.AnimationID.GHOST_POINTS, numGhostsEaten);
-        numGhostsEaten++;
+        victim.selectAnimationAtFrame(Ghost.AnimationID.GHOST_POINTS, numGhostsEaten++);
         pacMan.hide();
         pacMan.setSpeed(0);
         for (Ghost ghost : ghosts) {
@@ -329,24 +331,25 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 final long tick = timer.tickCount();
                 if (tick == TICK_CHASING_GHOSTS_END) {
                     scene.pacMan.hide();
-                    scene.flow.enterState(READY_TO_PLAY);
+                    scene.flow.enterState(WAIT_FOR_DEMO_LEVEL);
                 } else {
                     scene.chaseGhosts(tick);
                 }
             }
         },
 
-        READY_TO_PLAY {
+        WAIT_FOR_DEMO_LEVEL {
+            @Override
+            public void onEnter(ArcadePacMan_IntroScene context) {
+                timer.restartTicks(TICK_START_DEMO_LEVEL);
+            }
+
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 final Game game = scene.gameContext().game();
-                if (timer.atSecond(1)) {
+                if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
                     scene.ghosts[ORANGE_GHOST_POKEY].hide();
-                    if (!game.canStartNewGame()) {
-                        game.flow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
-                    }
-                } else if (timer.atSecond(5)) {
-                    game.flow().enterState(Arcade_GameState.PREPARING_GAME_START);
+                    game.flow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
                 }
             }
         };

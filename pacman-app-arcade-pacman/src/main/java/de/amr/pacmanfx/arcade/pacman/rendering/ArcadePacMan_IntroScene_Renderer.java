@@ -70,7 +70,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
                 drawPoints(introScene);
                 drawCopyright();
             }
-            case CHASING_GHOSTS, READY_TO_PLAY -> {
+            case CHASING_GHOSTS, WAIT_FOR_DEMO_LEVEL -> {
                 drawRumblingGuys(introScene);
                 drawPoints(introScene);
                 drawCopyright();
