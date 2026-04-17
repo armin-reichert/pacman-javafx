@@ -86,7 +86,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    protected void onEnd() {
+    public void onEnd() {
         ui.voicePlayer().stopVoice();
     }
 

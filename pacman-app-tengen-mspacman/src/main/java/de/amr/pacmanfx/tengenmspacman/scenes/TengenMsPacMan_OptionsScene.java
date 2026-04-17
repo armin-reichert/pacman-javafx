@@ -90,7 +90,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    protected void onEnd() {
+    public void onEnd() {
         Input.instance().joypad.removeBindings(actionBindings);
     }
 

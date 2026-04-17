@@ -88,22 +88,10 @@ public class GameScene2D implements GameScene {
         return renderer;
     }
 
-    /**
-     * Called when the scene is initialized.
-     * Subclasses implement their setup logic here (loading assets, configuring
-     * input, preparing animations, etc.).
-     */
-    protected void onStart() {}
-
-    /**
-     * Called when the scene ends.
-     * Subclasses implement cleanup logic here (stopping animations, releasing
-     * temporary resources, etc.).
-     */
-    protected void onEnd() {}
-
     // TODO: rethink
     public void onEnteredFrom3DScene() {}
+
+    // GameScene interface
 
     @Override
     public ActionBindingsManager actionBindings() {

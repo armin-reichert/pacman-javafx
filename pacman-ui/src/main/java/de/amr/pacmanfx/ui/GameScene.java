@@ -60,6 +60,20 @@ public interface GameScene extends GameEventListener, Disposable {
     void init(Game game);
 
     /**
+     * Called when the scene is initialized.
+     * Subclasses implement their setup logic here (loading assets, configuring
+     * input, preparing animations, etc.).
+     */
+    default void onStart() {}
+
+    /**
+     * Called when the scene ends.
+     * Subclasses implement cleanup logic here (stopping animations, releasing
+     * temporary resources, etc.).
+     */
+    default void onEnd() {}
+
+    /**
      * Called when the scene needs to be updated.
      */
     default void update() {

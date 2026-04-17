@@ -81,7 +81,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
-    protected void onEnd() {
+    public void onEnd() {
         ui.soundManager().stop(SoundID.INTERMISSION_2);
     }
 
