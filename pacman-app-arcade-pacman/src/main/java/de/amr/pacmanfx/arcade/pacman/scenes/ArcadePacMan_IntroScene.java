@@ -134,6 +134,42 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
     }
 
+    private Optional<Ghost> edibleGhost() {
+        return Stream.of(ghosts)
+            .filter(ghost -> ghost.state() == FRIGHTENED)
+            .filter(ghost -> CollisionStrategy.SAME_TILE.collide(ghost, pacMan))
+            .findFirst();
+    }
+
+    private void eatGhostAndStopChasing(Ghost victim, long tick) {
+        victim.setState(EATEN);
+        victim.selectAnimationAtFrame(Ghost.AnimationID.GHOST_POINTS, ghostsEaten);
+        ghostsEaten++;
+        lastGhostEatenTick = tick;
+        pacMan.hide();
+        pacMan.setSpeed(0);
+        for (Ghost ghost : ghosts) {
+            ghost.setSpeed(0);
+            ghost.stopAnimation();
+        }
+    }
+
+    // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on
+    private void continueChasing() {
+        pacMan.show();
+        pacMan.setSpeed(CHASING_SPEED);
+        for (Ghost ghost : ghosts) {
+            if (ghost.state() == EATEN) {
+                ghost.hide();
+            } else {
+                ghost.show();
+                ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
+                ghost.selectAnimation(Ghost.AnimationID.GHOST_FRIGHTENED);
+                ghost.playAnimation();
+            }
+        }
+    }
+
     public enum SceneState implements State<ArcadePacMan_IntroScene> {
 
         STARTING {
@@ -276,52 +312,14 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     scene.pacMan.hide();
                     scene.flow.enterState(READY_TO_PLAY);
                 } else {
-                    nextEdibleGhost(scene).ifPresent(victim -> eatGhostAndStop(scene, victim));
+                    scene.edibleGhost().ifPresent(victim -> scene.eatGhostAndStopChasing(victim, timer.tickCount()));
                     if (timer.tickCount() == scene.lastGhostEatenTick + GHOST_EATING_TICKS) {
-                        continueChasing(scene);
+                        scene.continueChasing();
                     }
                     scene.blinking.doTick();
                     scene.pacMan.move();
                     for (Ghost ghost : scene.ghosts) {
                         ghost.move();
-                    }
-                }
-            }
-
-            private Optional<Ghost> nextEdibleGhost(ArcadePacMan_IntroScene scene) {
-                return Stream.of(scene.ghosts)
-                    .filter(ghost -> ghost.state() == FRIGHTENED)
-                    .filter(ghost -> CollisionStrategy.SAME_TILE.collide(ghost, scene.pacMan))
-                    .findFirst();
-            }
-
-            private void eatGhostAndStop(ArcadePacMan_IntroScene scene, Ghost victim) {
-                victim.setState(EATEN);
-                victim.selectAnimationAtFrame(Ghost.AnimationID.GHOST_POINTS, scene.ghostsEaten);
-                scene.ghostsEaten++;
-                scene.lastGhostEatenTick = timer.tickCount();
-                scene.pacMan.hide();
-                scene.pacMan.setSpeed(0);
-                for (Ghost ghost : scene.ghosts) {
-                    ghost.setSpeed(0);
-                    ghost.stopAnimation();
-                }
-            }
-
-            // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on
-            private void continueChasing(ArcadePacMan_IntroScene scene) {
-                if (timer.tickCount() == scene.lastGhostEatenTick + GHOST_EATING_TICKS) {
-                    scene.pacMan.show();
-                    scene.pacMan.setSpeed(CHASING_SPEED);
-                    for (Ghost ghost : scene.ghosts) {
-                        if (ghost.inAnyOfStates(EATEN)) {
-                            ghost.hide();
-                        } else {
-                            ghost.show();
-                            ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
-                            ghost.selectAnimation(Ghost.AnimationID.GHOST_FRIGHTENED);
-                            ghost.playAnimation();
-                        }
                     }
                 }
             }
