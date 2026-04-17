@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
@@ -203,7 +204,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                         ghost.setMoveDir(Direction.LEFT);
                         ghost.setWishDir(Direction.LEFT);
                         ghost.setSpeed(CHASING_SPEED);
-                        ghost.setPosition(scene.pacMan.x() + 16 * (ghost.personality() + 1), scene.pacMan.y());
+                        ghost.setPosition(scene.pacMan.x() + 16 * ghost.personality() + 18, scene.pacMan.y());
                         ghost.show();
                         ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
                         ghost.playAnimation();
