@@ -134,6 +134,64 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
     }
 
+    private void startChasingPacMan() {
+        blinking.start();
+        pacMan.setPosition(TS * 28, TS * 20);
+        pacMan.setMoveDir(Direction.LEFT);
+        pacMan.setSpeed(CHASING_SPEED);
+        pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+        pacMan.playAnimation();
+        pacMan.show();
+        for (Ghost ghost : ghosts) {
+            ghost.setState(GhostState.HUNTING_PAC);
+            ghost.setMoveDir(Direction.LEFT);
+            ghost.setWishDir(Direction.LEFT);
+            ghost.setSpeed(CHASING_SPEED);
+            ghost.setPosition(pacMan.x() + 16 * ghost.personality() + 18, pacMan.y());
+            ghost.show();
+            ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+            ghost.playAnimation();
+        }
+    }
+
+    private void chasePacMan(long tick) {
+        blinking.doTick();
+        pacMan.move();
+        for (Ghost ghost : ghosts) {
+            ghost.move();
+        }
+
+        // "shaking" effect
+        final long tick_0_to_5 = tick % 6;
+        final Ghost pinkGhost = ghosts[PINK_GHOST_SPEEDY];
+        final Ghost cyanGhost = ghosts[CYAN_GHOST_BASHFUL];
+        if (tick_0_to_5 == 2) {
+            pinkGhost.setX(pinkGhost.x() + 0.5);
+            cyanGhost.setX(cyanGhost.x() - 0.5);
+        }
+        else if (tick_0_to_5 == 5) {
+            pinkGhost.setX(pinkGhost.x() - 0.5);
+            cyanGhost.setX(cyanGhost.x() + 0.5);
+        }
+    }
+
+    private void turnCardsStopPacMan() {
+        pacMan.setSpeed(0);
+        pacMan.stopAnimation();
+        for (Ghost ghost : ghosts) {
+            ghost.setState(FRIGHTENED);
+            ghost.setMoveDir(Direction.RIGHT);
+            ghost.setWishDir(Direction.RIGHT);
+            ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
+        }
+    }
+
+    private void turnCardsRestartPacMan() {
+        pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+        pacMan.playAnimation();
+        pacMan.setSpeed(CHASING_SPEED);
+    }
+
     private void chaseGhosts(long tick) {
         blinking.doTick();
         pacMan.move();
@@ -238,70 +296,21 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                if (timer.tickCount() == TICK_PAC_MAN_APPEARS) {
-                    scene.blinking.start();
-                    scene.pacMan.setPosition(TS * 28, TS * 20);
-                    scene.pacMan.setMoveDir(Direction.LEFT);
-                    scene.pacMan.setSpeed(CHASING_SPEED);
-                    scene.pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
-                    scene.pacMan.playAnimation();
-                    scene.pacMan.show();
-                    for (Ghost ghost : scene.ghosts) {
-                        ghost.setState(GhostState.HUNTING_PAC);
-                        ghost.setMoveDir(Direction.LEFT);
-                        ghost.setWishDir(Direction.LEFT);
-                        ghost.setSpeed(CHASING_SPEED);
-                        ghost.setPosition(scene.pacMan.x() + 16 * ghost.personality() + 18, scene.pacMan.y());
-                        ghost.show();
-                        ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
-                        ghost.playAnimation();
-                    }
+                final long tick = timer.tickCount();
+                if (tick == TICK_PAC_MAN_APPEARS) {
+                    scene.startChasingPacMan();
                 }
-                else if (timer.tickCount() == TICK_PAC_MAN_REACHES_ENERGIZER) {
-                    // Pac-Man reaches the energizer at the left and stops
-                    scene.pacMan.setSpeed(0);
-                    scene.pacMan.stopAnimation();
-                    // Ghosts get frightened and reverse direction
-                    for (Ghost ghost : scene.ghosts) {
-                        ghost.setState(FRIGHTENED);
-                        ghost.setMoveDir(Direction.RIGHT);
-                        ghost.setWishDir(Direction.RIGHT);
-                        ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
-                    }
+                else if (tick == TICK_PAC_MAN_REACHES_ENERGIZER) {
+                    scene.turnCardsStopPacMan();
                 }
-                else if (timer.tickCount() == TICK_PAC_MAN_MOVES_AGAIN) {
-                    // Pac-Man moves again a bit
-                    scene.pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
-                    scene.pacMan.playAnimation();
-                    scene.pacMan.setSpeed(CHASING_SPEED);
+                else if (tick == TICK_PAC_MAN_MOVES_AGAIN) {
+                    scene.turnCardsRestartPacMan();
                 }
-                else if (timer.tickCount() == TICK_CHASING_PAC_MAN_END) {
+                else if (tick == TICK_CHASING_PAC_MAN_END) {
                     scene.flow.enterState(CHASING_GHOSTS);
                     return;
                 }
-
-                chasePacMan(scene);
-            }
-
-            private void chasePacMan(ArcadePacMan_IntroScene scene) {
-                scene.blinking.doTick();
-                scene.pacMan.move();
-                for (Ghost ghost : scene.ghosts) {
-                    ghost.move();
-                }
-
-                // "shaking" effect
-                final long tick_0_to_5 = timer.tickCount() % 6;
-                final Ghost pinkGhost = scene.ghosts[PINK_GHOST_SPEEDY];
-                final Ghost cyanGhost = scene.ghosts[CYAN_GHOST_BASHFUL];
-                if (tick_0_to_5 == 2) {
-                    pinkGhost.setX(pinkGhost.x() + 0.5);
-                    cyanGhost.setX(cyanGhost.x() - 0.5);
-                }
-                else if (tick_0_to_5 == 5) {
-                    pinkGhost.setX(pinkGhost.x() - 0.5);
-                    cyanGhost.setX(cyanGhost.x() + 0.5);
-                }
+                scene.chasePacMan(tick);
             }
         },
 
