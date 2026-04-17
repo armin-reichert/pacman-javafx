@@ -315,7 +315,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         ghost.setState(GhostState.EATEN);
         // Animation index is 0-based, so use animation frame 0 to show points for first killed ghost...
-        ghost.selectAnimationAndSetFrame(Ghost.AnimationID.GHOST_POINTS, alreadyKilled);
+        ghost.selectAnimationAtFrame(Ghost.AnimationID.GHOST_POINTS, alreadyKilled);
 
         level.energizerVictims().add(ghost);
         level.incrementGhostKillCount();

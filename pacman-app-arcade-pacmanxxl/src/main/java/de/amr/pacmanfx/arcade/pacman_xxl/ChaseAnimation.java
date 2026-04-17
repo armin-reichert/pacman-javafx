@@ -151,7 +151,7 @@ class ChaseAnimation {
                 }
             }
             if (eatenGhostIndex != -1) {
-                ghosts.get(eatenGhostIndex).selectAnimationAndSetFrame(Ghost.AnimationID.GHOST_POINTS, eatenGhostIndex);
+                ghosts.get(eatenGhostIndex).selectAnimationAtFrame(Ghost.AnimationID.GHOST_POINTS, eatenGhostIndex);
                 if (eatenGhostIndex > 0) {
                     ghosts.get(eatenGhostIndex - 1).setVisible(false);
                 }

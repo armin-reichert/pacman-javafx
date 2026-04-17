@@ -668,7 +668,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         victims.add(ghost);
         ghost.setState(GhostState.EATEN);
-        ghost.selectAnimationAndSetFrame(Ghost.AnimationID.GHOST_POINTS, killedSoFar);
+        ghost.selectAnimationAtFrame(Ghost.AnimationID.GHOST_POINTS, killedSoFar);
         scorePoints(level, points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         level.pac().hide();

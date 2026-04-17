@@ -25,6 +25,7 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -274,27 +275,41 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 if (timer.tickCount() == TICK_CHASING_GHOSTS_END) {
                     scene.pacMan.hide();
                     scene.flow.enterState(READY_TO_PLAY);
-                    return;
+                } else {
+                    nextEdibleGhost(scene).ifPresent(victim -> eatGhostAndStop(scene, victim));
+                    if (timer.tickCount() == scene.lastGhostEatenTick + GHOST_EATING_TICKS) {
+                        continueChasing(scene);
+                    }
+                    scene.blinking.doTick();
+                    scene.pacMan.move();
+                    for (Ghost ghost : scene.ghosts) {
+                        ghost.move();
+                    }
                 }
+            }
 
-                Stream.of(scene.ghosts)
+            private Optional<Ghost> nextEdibleGhost(ArcadePacMan_IntroScene scene) {
+                return Stream.of(scene.ghosts)
                     .filter(ghost -> ghost.state() == FRIGHTENED)
                     .filter(ghost -> CollisionStrategy.SAME_TILE.collide(ghost, scene.pacMan))
-                    .findFirst()
-                    .ifPresent(victim -> {
-                        victim.setState(EATEN);
-                        victim.selectAnimationAndSetFrame(Ghost.AnimationID.GHOST_POINTS, scene.ghostsEaten);
-                        scene.ghostsEaten++;
-                        scene.lastGhostEatenTick = timer.tickCount();
-                        scene.pacMan.hide();
-                        scene.pacMan.setSpeed(0);
-                        for (Ghost ghost : scene.ghosts) {
-                            ghost.setSpeed(0);
-                            ghost.stopAnimation();
-                        }
-                    });
+                    .findFirst();
+            }
 
-                // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on
+            private void eatGhostAndStop(ArcadePacMan_IntroScene scene, Ghost victim) {
+                victim.setState(EATEN);
+                victim.selectAnimationAtFrame(Ghost.AnimationID.GHOST_POINTS, scene.ghostsEaten);
+                scene.ghostsEaten++;
+                scene.lastGhostEatenTick = timer.tickCount();
+                scene.pacMan.hide();
+                scene.pacMan.setSpeed(0);
+                for (Ghost ghost : scene.ghosts) {
+                    ghost.setSpeed(0);
+                    ghost.stopAnimation();
+                }
+            }
+
+            // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on
+            private void continueChasing(ArcadePacMan_IntroScene scene) {
                 if (timer.tickCount() == scene.lastGhostEatenTick + GHOST_EATING_TICKS) {
                     scene.pacMan.show();
                     scene.pacMan.setSpeed(CHASING_SPEED);
@@ -309,10 +324,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                         }
                     }
                 }
-
-                scene.pacMan.move();
-                for (Ghost ghost : scene.ghosts) { ghost.move(); }
-                scene.blinking.doTick();
             }
         },
 
