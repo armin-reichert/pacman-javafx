@@ -45,7 +45,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     public ArcadePacMan_CutScene2() {}
 
     @Override
-    public void doInit(Game game) {
+    public void doInit() {
         final UIConfig uiConfig = ui.currentConfig();
 
         pacMan = createPacMan();

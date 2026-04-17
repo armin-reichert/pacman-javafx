@@ -106,17 +106,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void doInit(Game game) {
-        TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game;
+    public void doInit() {
+        final TengenMsPacMan_GameModel game = gameContext().game();
         game.hud().score(true).levelCounter(true).livesCounter(true).show();
-        tengenGame.hud().gameOptions(!tengenGame.allOptionsDefault());
+        game.hud().gameOptions(!game.allOptionsDefault());
         updateScaling();
         dynamicCamera.enterManualMode();
         dynamicCamera.setToTopPosition();
     }
 
     @Override
-    protected void doEnd(Game game) {
+    protected void doEnd() {
         dynamicCamera.enterManualMode();
     }
 

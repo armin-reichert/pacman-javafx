@@ -14,12 +14,12 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     public ArcadeMsPacMan_StartScene() {}
 
     @Override
-    public void doInit(Game game) {
+    public void doInit() {
         actionBindings.bindAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS); // Insert coin + start game action
     }
 
     @Override
-    protected void doEnd(Game game) {
+    protected void doEnd() {
         ui.voicePlayer().stopVoice();
     }
 

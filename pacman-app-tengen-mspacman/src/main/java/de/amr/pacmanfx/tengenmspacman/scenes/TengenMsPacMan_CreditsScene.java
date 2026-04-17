@@ -23,8 +23,8 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     public TengenMsPacMan_CreditsScene() {}
 
     @Override
-    protected void doInit(Game game) {
-        game.hud().hide();
+    protected void doInit() {
+        gameContext().game().hud().hide();
         actionBindings.bindOne(ACTION_ENTER_START_SCREEN, TENGEN_SPECIFIC_BINDINGS);
         fadeProgress = 0;
     }

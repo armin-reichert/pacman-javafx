@@ -27,7 +27,7 @@ public class Arcade_BootScene2D extends GameScene2D {
     }
 
     @Override
-    protected void doInit(Game game) {
+    protected void doInit() {
         state = SceneState.BLANK;
     }
 

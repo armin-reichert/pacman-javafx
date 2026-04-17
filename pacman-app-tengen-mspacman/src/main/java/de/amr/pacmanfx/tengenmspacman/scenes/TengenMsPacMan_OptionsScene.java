@@ -69,25 +69,26 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     public TengenMsPacMan_OptionsScene() {}
 
     @Override
-    public void doInit(Game game) {
+    public void doInit() {
+        final TengenMsPacMan_GameModel game = gameContext().game();
         game.hud().hide();
 
-        actionBindings.bindAll(GameUI.SCENE_TESTS_BINDINGS);
-        actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J));
-        actionBindings.bindOne(ACTION_START_PLAYING,                  TENGEN_SPECIFIC_BINDINGS);
+        actionBindings.bindOne(ACTION_START_PLAYING, TENGEN_SPECIFIC_BINDINGS);
         actionBindings.bindOne(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TENGEN_SPECIFIC_BINDINGS);
+        actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J));
+        actionBindings.bindAll(GameUI.SCENE_TESTS_BINDINGS);
 
         Input.instance().joypad.setBindings(actionBindings);
 
         selectedOption.set(OPTION_PAC_BOOSTER);
-        tengenGame().setCanStartNewGame(true);
+        game.setCanStartNewGame(true);
 
         idleTicks = 0;
         initialDelay = INITIAL_DELAY;
     }
 
     @Override
-    protected void doEnd(Game game) {
+    protected void doEnd() {
         Input.instance().joypad.removeBindings(actionBindings);
     }
 

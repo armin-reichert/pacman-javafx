@@ -34,7 +34,7 @@ import static java.util.Objects.requireNonNull;
  * {@link Canvas}, and coordinates lifecycle events (initialization, shutdown)
  * with the {@link Game} and {@link GameUI}.
  * <p>
- * Subclasses implement {@link #doInit(Game)} and {@link #doEnd(Game)} to define
+ * Subclasses implement {@link #doInit()} and {@link #doEnd()} to define
  * scene-specific behavior.
  */
 public abstract class GameScene2D implements GameScene {
@@ -50,7 +50,7 @@ public abstract class GameScene2D implements GameScene {
 
     /**
      * Creates a new 2D game scene. Subclasses typically configure their
-     * rendering and input bindings during {@link #doInit(Game)}.
+     * rendering and input bindings during {@link #doInit()}.
      */
     protected GameScene2D() {}
 
@@ -93,19 +93,15 @@ public abstract class GameScene2D implements GameScene {
      * Called when the scene is initialized.
      * Subclasses implement their setup logic here (loading assets, configuring
      * input, preparing animations, etc.).
-     *
-     * @param game the active game instance
      */
-    protected void doInit(Game game) {}
+    protected void doInit() {}
 
     /**
      * Called when the scene ends.
      * Subclasses implement cleanup logic here (stopping animations, releasing
      * temporary resources, etc.).
-     *
-     * @param game the active game instance
      */
-    protected void doEnd(Game game) {}
+    protected void doEnd() {}
 
     public void acceptGameLevel(GameLevel gameLevel) {
         // implemented by PlayScene2D
@@ -121,7 +117,7 @@ public abstract class GameScene2D implements GameScene {
      */
     @Override
     public final void init(Game game) {
-        doInit(game);
+        doInit();
         actionBindings.pluginKeyboard();
         Logger.info("2D scene {} initialized", getClass().getSimpleName());
     }
@@ -131,7 +127,7 @@ public abstract class GameScene2D implements GameScene {
      */
     @Override
     public final void end(Game game) {
-        doEnd(game);
+        doEnd();
         soundEffects().ifPresent(GameSoundEffects::stopAll);
         //TODO this is a temporary solution
         ui.spriteAnimationDriver().clear();

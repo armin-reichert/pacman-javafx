@@ -56,7 +56,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void doInit(Game game) {
+    public void doInit() {
         ui.voicePlayer().playVoice(GameUI_Resources.VOICE_EXPLAIN_GAME_START);
 
         actionBindings.bindAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
@@ -86,7 +86,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    protected void doEnd(Game game) {
+    protected void doEnd() {
         ui.voicePlayer().stopVoice();
     }
 

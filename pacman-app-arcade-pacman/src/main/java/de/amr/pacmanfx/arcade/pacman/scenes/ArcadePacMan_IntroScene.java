@@ -87,7 +87,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void doInit(Game game) {
+    public void doInit() {
         final UIConfig uiConfig = ui.currentConfig();
 
         ui.voicePlayer().playVoice(GameUI_Resources.VOICE_EXPLAIN_GAME_START);
@@ -118,7 +118,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    protected void doEnd(Game game) {
+    protected void doEnd() {
         blinking.stop();
         ui.voicePlayer().stopVoice();
     }
