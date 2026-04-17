@@ -14,13 +14,14 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_PIXELS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.shadeOfBlue;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.*;
 
 /**
  * Shows moving and color changing "TENGEN PRESENTS" text and ghost running through scene.
  */
 public class TengenMsPacMan_BootScene extends GameScene2D {
+
+    public static final Vector2i SIZE = new Vector2i(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
 
     private static final float GHOST_Y = TS(21.5f);
 
@@ -83,7 +84,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     public Vector2i unscaledSize() {
-        return NES_SCREEN_PIXELS;
+        return SIZE;
     }
 
     private void gray(boolean b)  { gray = b; }

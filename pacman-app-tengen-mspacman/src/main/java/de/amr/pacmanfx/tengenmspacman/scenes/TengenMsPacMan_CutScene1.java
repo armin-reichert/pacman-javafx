@@ -21,7 +21,8 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_PIXELS;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_LET_GAME_STATE_EXPIRE;
 
 /**
@@ -32,6 +33,8 @@ import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_LET_GAME_STATE_
  * the screen and a big pink heart appears above them.
  */
 public class TengenMsPacMan_CutScene1 extends GameScene2D {
+
+    public static final Vector2i SIZE = new Vector2i(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
 
     public static final int TICK_EXPIRES = 775;
 
@@ -238,5 +241,5 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public Vector2i unscaledSize() { return NES_SCREEN_PIXELS; }
+    public Vector2i unscaledSize() { return SIZE; }
 }

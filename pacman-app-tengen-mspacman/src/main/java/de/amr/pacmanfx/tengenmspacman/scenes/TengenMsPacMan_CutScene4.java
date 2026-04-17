@@ -23,10 +23,11 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_PIXELS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_TILES;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.*;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
+
+    public static final Vector2i SIZE = new Vector2i(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
 
     public static final int TICK_EXPIRES = 1512;
 
@@ -214,5 +215,5 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     @Override
-    public Vector2i unscaledSize() { return NES_SCREEN_PIXELS; }
+    public Vector2i unscaledSize() { return SIZE; }
 }

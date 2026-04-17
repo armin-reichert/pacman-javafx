@@ -168,8 +168,8 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     /** Size of NES screen in tiles (32x30). */
     public static final Vector2i NES_SCREEN_TILES = new Vector2i(32, 30);
 
-    /** Size of NES screen in pixels (256x240). */
-    public static final Vector2i NES_SCREEN_PIXELS = new Vector2i(256, 240);
+    public static final int NES_SCREEN_WIDTH  = 256;
+    public static final int NES_SCREEN_HEIGHT = 240;
 
     /** Aspect ratio of NES screen (32/30 = 1.066...) */
     public static final float NES_SCREEN_ASPECT_RATIO = 1.0666666666f;

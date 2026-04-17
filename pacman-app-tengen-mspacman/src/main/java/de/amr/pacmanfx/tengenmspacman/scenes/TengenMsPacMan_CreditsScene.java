@@ -9,13 +9,15 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_ENTER_START_SCREEN;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_PIXELS;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 
 /**
  * Gives credit to the people that helped in making the game, original and remake authors.
  */
 public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
+    public static final Vector2i SIZE = new Vector2i(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
     public static final float DISPLAY_SECONDS = 16;
 
     public float fadeProgress = 0;
@@ -41,5 +43,5 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     }
 
     @Override
-    public Vector2i unscaledSize() { return NES_SCREEN_PIXELS; }
+    public Vector2i unscaledSize() { return SIZE; }
 }

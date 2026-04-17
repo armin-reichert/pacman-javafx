@@ -28,14 +28,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_PlayScene2D.CANVAS_WIDTH_UNSCALED;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 
-public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer
+public class TengenMsPacMan_PlayScene2D_Renderer
+    extends BaseRenderer
     implements GameScene2D_Renderer, SpriteRendererMixin, TengenMsPacMan_SceneRendererMixin
 {
+    private static final int CONTENT_INDENT = 2*TS;
     private static final List<Byte> GHOSTS_Z_ORDER = List.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW);
-
-    private static final float CONTENT_INDENT = TS(2);
 
     private static class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
 
@@ -49,7 +49,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer
             final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
             final State<Game> gameState = game.flow().state();
 
-            drawTileGrid(CANVAS_WIDTH_UNSCALED, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);
+            drawTileGrid(NES_SCREEN_WIDTH, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);
 
             ctx.save();
             ctx.translate(scaled(CONTENT_INDENT), 0);
@@ -84,7 +84,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer
         clipRect = new Rectangle();
         clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(CONTENT_INDENT)));
         clipRect.yProperty().bind(canvas.translateYProperty());
-        clipRect.widthProperty().bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED - 2 * CONTENT_INDENT));
+        clipRect.widthProperty().bind(scalingProperty().multiply(NES_SCREEN_WIDTH - 2 * CONTENT_INDENT));
         clipRect.heightProperty().bind(canvas.heightProperty());
     }
 

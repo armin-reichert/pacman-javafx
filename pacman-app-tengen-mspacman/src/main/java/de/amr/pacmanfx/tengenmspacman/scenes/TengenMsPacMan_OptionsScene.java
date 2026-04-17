@@ -21,7 +21,8 @@ import java.io.IOException;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_START_PLAYING;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_PIXELS;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 
 /**
@@ -33,6 +34,8 @@ import static de.amr.pacmanfx.ui.input.Keyboard.alt;
  * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/MsPacManTENGENDis.asm:9545">Disassembly</a>.
  */
 public class TengenMsPacMan_OptionsScene extends GameScene2D {
+
+    public static final Vector2i SIZE = new Vector2i(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
 
     public static final byte OPTION_PLAYERS = 0;
     public static final byte OPTION_PAC_BOOSTER = 1;
@@ -106,7 +109,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public Vector2i unscaledSize() { return NES_SCREEN_PIXELS; }
+    public Vector2i unscaledSize() { return SIZE; }
 
     private TengenMsPacMan_GameModel tengenGame() { return gameContext().game(); }
     
