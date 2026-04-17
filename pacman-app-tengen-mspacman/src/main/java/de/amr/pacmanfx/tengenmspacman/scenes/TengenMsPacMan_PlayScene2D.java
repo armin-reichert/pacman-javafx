@@ -110,7 +110,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onStart() {
+    public void onSceneStart() {
         final TengenMsPacMan_GameModel game = gameContext().game();
         game.hud().score(true).levelCounter(true).livesCounter(true).show();
         game.hud().gameOptions(!game.allOptionsDefault());
@@ -120,7 +120,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onEnd() {
+    public void onSceneEnd() {
         dynamicCamera.enterManualMode();
     }
 

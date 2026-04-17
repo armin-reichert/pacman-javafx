@@ -30,7 +30,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     public ArcadePacMan_CutScene1() {}
     
     @Override
-    public void onStart() {
+    public void onSceneStart() {
         final UIConfig uiConfig = ui.currentConfig();
         pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationDriver()));

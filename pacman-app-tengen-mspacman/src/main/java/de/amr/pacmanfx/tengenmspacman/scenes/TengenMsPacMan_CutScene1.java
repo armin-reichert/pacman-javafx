@@ -83,7 +83,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void onStart() {
+    public void onSceneStart() {
         final UIConfig uiConfig = ui.currentConfig();
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
@@ -129,7 +129,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void onEnd() {
+    public void onSceneEnd() {
         ui.soundManager().stop(SoundID.INTERMISSION_1);
     }
 

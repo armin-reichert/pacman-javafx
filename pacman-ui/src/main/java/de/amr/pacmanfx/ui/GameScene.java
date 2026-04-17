@@ -9,6 +9,8 @@ import de.amr.pacmanfx.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
+import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
+import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.SubScene;
@@ -17,15 +19,22 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Common base class of all game scenes (2D and 3D).
  */
 public abstract class GameScene implements GameEventListener, Disposable {
 
+    protected final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
+    protected GameUI ui;
+
     /**
      * @return the game UI
      */
-    public abstract GameUI ui();
+    public final GameUI ui() {
+        return ui;
+    }
 
     /**
      * @return (optional) JavaFX subscene associated with this game scene. 2D scenes without camera do not need one.
@@ -52,26 +61,18 @@ public abstract class GameScene implements GameEventListener, Disposable {
     /**
      * @return the action bindings defined for this game scene
      */
-    public abstract ActionBindingsManager actionBindings();
+    public ActionBindingsManager actionBindings() {
+        return actionBindings;
+    }
 
     /**
      * Called when the scene becomes the current one.
      */
-    public abstract void init(Game game);
-
-    /**
-     * Called when the scene is initialized.
-     * Subclasses implement their setup logic here (loading assets, configuring
-     * input, preparing animations, etc.).
-     */
-    public void onStart() {}
-
-    /**
-     * Called when the scene ends.
-     * Subclasses implement cleanup logic here (stopping animations, releasing
-     * temporary resources, etc.).
-     */
-    public void onEnd() {}
+    public final void init(Game game) {
+        actionBindings.pluginKeyboard();
+        onSceneStart();
+        Logger.info("2D scene {} initialized", getClass().getSimpleName());
+    }
 
     /**
      * Called when the scene needs to be updated.
@@ -84,6 +85,19 @@ public abstract class GameScene implements GameEventListener, Disposable {
         onTick(tick);
     }
 
+    public final void end(Game game) {
+        onSceneEnd();
+        soundEffects().ifPresent(GameSoundEffects::stopAll);
+        Logger.info("2D scene {} ends", getClass().getSimpleName());
+    }
+
+    /**
+     * Called when the scene is initialized.
+     * Subclasses implement their setup logic here (loading assets, configuring
+     * input, preparing animations, etc.).
+     */
+    public void onSceneStart() {}
+
     /**
      * Called on every tick of the game clock.
      *
@@ -92,11 +106,15 @@ public abstract class GameScene implements GameEventListener, Disposable {
     public void onTick(long tick) {}
 
     /**
-     * Called when the scene ends and gets replaced by another scene.
+     * Called when the scene ends.
+     * Subclasses implement cleanup logic here (stopping animations, releasing
+     * temporary resources, etc.).
      */
-    public abstract void end(Game game);
+    public void onSceneEnd() {}
 
-    public abstract void onEmbed(GameUI ui);
+    public void onEmbeddedIntoUI(GameUI ui) {
+        this.ui = requireNonNull(ui);
+    }
 
     /**
      * Called when a key combination has been pressed inside this game scene. By public, the first matching action

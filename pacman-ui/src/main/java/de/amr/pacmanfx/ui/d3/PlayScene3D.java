@@ -15,12 +15,10 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.action.ActionBinding;
-import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
@@ -48,32 +46,6 @@ import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
 import static java.util.Objects.requireNonNull;
 
-/**
- * 3D implementation of the Pac-Man play scene.
- * <p>
- * This scene is responsible for rendering and updating the full 3D representation
- * of the current game level, including the maze, actors, food, bonus items, HUD
- * elements, and all camera perspectives. It acts as the central coordinator between
- * the game model, the 3D world, the active camera controller, and the UI framework.
- * </p>
- *
- * <p>It manages:</p>
- * <ul>
- *   <li>Lifecycle of the 3D level — creation, replacement, disposal, and per-frame updates</li>
- *   <li>Camera perspectives — switching between multiple strategies (drone, total, tracking, stalking)</li>
- *   <li>3D rendering infrastructure — SubScene, camera setup, fade-in animation, coordinate axes, HUD placement</li>
- *   <li>Game event handling — reacting to model events and updating the 3D world</li>
- *   <li>Sound orchestration — contextual effects (munching, siren, ghost returning) synchronized with state</li>
- *   <li>Input bindings — keyboard and scroll-wheel controls for perspective and drone movement</li>
- *   <li>HUD and messaging — READY/test messages, score overlays, animated text</li>
- * </ul>
- *
- * <p>The class delegates actual rendering to {@link GameLevel3D} and camera control to {@link PerspectiveManager}.
- * It is intentionally large because it is the integration point for model ↔ 3D ↔ UI ↔ input ↔ audio.</p>
- *
- * <p>Instances are created and managed by {@link GameUI}. The scene is activated when switching
- * from 2D to 3D view and remains active until the user switches back or the game ends.</p>
- */
 public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     /** Duration of the fade-in animation when the 3D scene becomes active. */
@@ -86,9 +58,6 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     protected final PerspectiveManager perspectives;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
 
-    protected ActionBindingsManager actionBindings = ActionBindingsManager.NO_BINDINGS;
-
-    protected GameUI ui;
     protected GameLevel3D level3D;
     protected Scores3D scores3D;
     protected PlaySceneContextMenu contextMenu;
@@ -154,7 +123,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     @Override
-    public void onEmbed(GameUI ui) {
+    public void onEmbeddedIntoUI(GameUI ui) {
         this.ui = requireNonNull(ui);
         // TODO: reconsider whether scores need recreation here (variant/font change?)
         replaceScores3D();
@@ -165,20 +134,14 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     // ────────────────────────────────────────────────────────────────────────────
 
     @Override
-    public ActionBindingsManager actionBindings() {
-        return actionBindings;
-    }
-
-    @Override
-    public void init(Game game) {
+    public void onSceneStart() {
         perspectives.activeIDProperty().bind(GameUI.PROPERTY_3D_PERSPECTIVE_ID);
-        subScene.setFill(Color.BLACK);
         PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
+        subScene.setFill(Color.BLACK);
     }
 
     @Override
-    public void end(Game game) {
-        soundEffects().ifPresent(GameSoundEffects::stopAll);
+    public void onSceneEnd() {
         perspectives.activeIDProperty().unbind();
         PROPERTY_3D_DRAW_MODE.removeListener(drawModeChangeListener);
         //removeAndDisposeGameLevel3D();
@@ -188,7 +151,6 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     @Override
     public void onTick(long tick) {
         final GameLevel level = optGameLevel().orElse(null);
-
         if (level == null) {
             Logger.info("Tick {}: Game level not yet created, update ignored", tick);
             return;
@@ -227,15 +189,6 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         contextMenu = new PlaySceneContextMenu(ui);
         return Optional.of(contextMenu);
     }
-
-    @Override
-    public GameUI ui() {
-        return ui;
-    }
-
-    // ────────────────────────────────────────────────────────────────────────────
-    // GameEventListener implementations (delegated to handler)
-    // ────────────────────────────────────────────────────────────────────────────
 
     @Override
     public void onGameStateChange(GameStateChangeEvent event) {

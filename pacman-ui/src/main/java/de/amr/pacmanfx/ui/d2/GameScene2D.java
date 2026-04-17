@@ -10,9 +10,6 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
-import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
-import de.amr.pacmanfx.ui.input.Input;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -33,7 +30,7 @@ import static java.util.Objects.requireNonNull;
  * {@link Canvas}, and coordinates lifecycle events (initialization, shutdown)
  * with the {@link Game} and {@link GameUI}.
  * <p>
- * Subclasses implement {@link #onStart()} and {@link #onEnd()} to define
+ * Subclasses implement {@link #onSceneStart()} and {@link #onSceneEnd()} to define
  * scene-specific behavior.
  */
 public class GameScene2D extends GameScene {
@@ -43,25 +40,13 @@ public class GameScene2D extends GameScene {
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
 
-    protected final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
-    protected GameUI ui;
     protected Canvas canvas;
 
     /**
      * Creates a new 2D game scene. Subclasses typically configure their
-     * rendering and input bindings during {@link #onStart()}.
+     * rendering and input bindings during {@link #onSceneStart()}.
      */
     public GameScene2D() {}
-
-    /**
-     * Associates this scene with the UI layer.
-     *
-     * @param ui the UI instance, must not be {@code null}
-     */
-    @Override
-    public void onEmbed(GameUI ui) {
-        this.ui = requireNonNull(ui);
-    }
 
     /**
      * Releases bindings and resources held by this scene.
@@ -93,31 +78,6 @@ public class GameScene2D extends GameScene {
 
     // GameScene interface
 
-    @Override
-    public ActionBindingsManager actionBindings() {
-        return actionBindings;
-    }
-
-    /**
-     * Initializes the scene and registers default keyboard bindings.
-     */
-    @Override
-    public final void init(Game game) {
-        onStart();
-        actionBindings.pluginKeyboard();
-        Logger.info("2D scene {} initialized", getClass().getSimpleName());
-    }
-
-    /**
-     * Ends the scene and stops all currently playing sounds.
-     */
-    @Override
-    public final void end(Game game) {
-        onEnd();
-        soundEffects().ifPresent(GameSoundEffects::stopAll);
-        Logger.info("2D scene {} ends", getClass().getSimpleName());
-    }
-
     /**
      * Handles unspecified change events.
      * Currently used only for testing cut scenes.
@@ -125,11 +85,6 @@ public class GameScene2D extends GameScene {
     @Override
     public void onGenericChange(GenericChangeEvent event) {
         ui.forceGameSceneUpdate();
-    }
-
-    @Override
-    public GameUI ui() {
-        return ui;
     }
 
     /**

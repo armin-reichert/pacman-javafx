@@ -73,7 +73,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void onStart() {
+    public void onSceneStart() {
         final UIConfig uiConfig = ui.currentConfig();
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 

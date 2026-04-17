@@ -16,13 +16,13 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     public ArcadePacMan_StartScene() {}
 
     @Override
-    public void onStart() {
+    public void onSceneStart() {
         gameContext().game().hud().credit(true).score(true).levelCounter(true).livesCounter(false).show();
         actionBindings.bindAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
     }
 
     @Override
-    public void onEnd() {
+    public void onSceneEnd() {
         ui.voicePlayer().stopVoice();
     }
 

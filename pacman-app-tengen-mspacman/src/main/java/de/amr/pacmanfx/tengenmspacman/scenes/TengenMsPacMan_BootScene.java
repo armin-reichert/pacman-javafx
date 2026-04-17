@@ -34,7 +34,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     public TengenMsPacMan_BootScene() {}
 
     @Override
-    public void onStart() {
+    public void onSceneStart() {
         movingText = new Actor();
         movingText.setPosition(TS(9), unscaledSize().y()); // lower border of screen
         final UIConfig uiConfig = ui.currentConfig();

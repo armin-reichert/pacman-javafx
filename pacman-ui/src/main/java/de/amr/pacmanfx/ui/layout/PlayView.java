@@ -239,7 +239,7 @@ public class PlayView extends StackPane implements View {
             Logger.info("Game scene ended: {}", prevGameScene.getClass().getSimpleName());
         }
 
-        nextGameScene.onEmbed(ui); // Must be called *before* embedding
+        nextGameScene.onEmbeddedIntoUI(ui); // Must be called *before* embedding
         embedGameScene(parentScene, nextGameScene);
         nextGameScene.init(game);
         Logger.info("Game scene initialized: {}", nextGameScene.getClass().getSimpleName());
