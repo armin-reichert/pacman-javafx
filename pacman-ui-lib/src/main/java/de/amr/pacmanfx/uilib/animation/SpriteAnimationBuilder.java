@@ -15,21 +15,23 @@ public class SpriteAnimationBuilder {
 
     /**
      * Creates a new sprite animation builder for animations running at 60 frames/second.
-     * @param manager the animation manager
+     *
+     * @param driver the animation driver
      * @return new  builder
      */
-    public static SpriteAnimationBuilder builder(SpriteAnimationDriver manager) {
-        return new SpriteAnimationBuilder(manager, 60);
+    public static SpriteAnimationBuilder builder(SpriteAnimationDriver driver) {
+        return new SpriteAnimationBuilder(driver, 60);
     }
 
     /**
      * Creates a new sprite animation builder for animations running at the specified frame rate (frames/second).
-     * @param manager the animation manager
+     *
+     * @param driver the animation driver
      * @param fps the frame rate at which the build animation is played
      * @return new  builder
      */
-    public static SpriteAnimationBuilder builder(SpriteAnimationDriver manager, int fps) {
-        return new SpriteAnimationBuilder(manager, fps);
+    public static SpriteAnimationBuilder builder(SpriteAnimationDriver driver, int fps) {
+        return new SpriteAnimationBuilder(driver, fps);
     }
 
     private static class BuildData {
@@ -40,7 +42,7 @@ public class SpriteAnimationBuilder {
         int frameTicks = 1;
     }
 
-    private final SpriteAnimationDriver manager;
+    private final SpriteAnimationDriver driver;
     private BuildData data;
 
     private void checkBuildPossible() {
@@ -49,8 +51,8 @@ public class SpriteAnimationBuilder {
         }
     }
 
-    private SpriteAnimationBuilder(SpriteAnimationDriver manager, int fps) {
-        this.manager = requireNonNull(manager);
+    private SpriteAnimationBuilder(SpriteAnimationDriver driver, int fps) {
+        this.driver = requireNonNull(driver);
         if (fps <= 0) {
             throw new IllegalArgumentException("Sprite animation frame rate must be positive, but is %d".formatted(fps));
         }
@@ -58,7 +60,7 @@ public class SpriteAnimationBuilder {
         data.fps = fps;
     }
 
-    public SpriteAnimationBuilder sprites(RectShort[] sprites) {
+    public SpriteAnimationBuilder sprites(RectShort... sprites) {
         checkBuildPossible();
         if (data.sprites != null) {
             throw new IllegalArgumentException("Cannot set sprites: Sprite(s) already defined");
@@ -78,7 +80,7 @@ public class SpriteAnimationBuilder {
         if (sprite == null) {
             throw new IllegalArgumentException("Cannot set single sprite: Sprite is null");
         }
-        return sprites(new RectShort[] { sprite } );
+        return sprites(sprite);
     }
 
     public SpriteAnimationBuilder frameTicks(int ticks) {
@@ -107,15 +109,15 @@ public class SpriteAnimationBuilder {
         if (data.sprites == null) {
             throw new IllegalArgumentException("No sprites defined");
         }
-        final SpriteAnimation anim = new SpriteAnimation(data.fps);
-        anim.setLoop(data.loop);
-        anim.setSprites(data.sprites);
-        anim.setFrameTicks(data.frameTicks);
+        final SpriteAnimation animation = new SpriteAnimation(data.fps);
+        animation.setLoop(data.loop);
+        animation.setSprites(data.sprites);
+        animation.setFrameTicks(data.frameTicks);
         if (data.initiallyStopped) {
-            anim.stop();
+            animation.stop();
         }
+        driver.register(animation);
         data = null; // signals build has been called and data are consumed
-        manager.registerAnimation(anim);
-        return anim;
+        return animation;
     }
 }

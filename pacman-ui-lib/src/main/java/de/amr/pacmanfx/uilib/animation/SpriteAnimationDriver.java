@@ -28,21 +28,21 @@ public class SpriteAnimationDriver {
         };
     }
 
-    public void startAnimationTimer() {
+    public void startAnimation() {
         timer.start();
     }
 
-    public void stopAnimationTimer() {
+    public void stopAnimation() {
         timer.stop();
     }
 
-    public void registerAnimation(SpriteAnimation animation) {
+    public void register(SpriteAnimation animation) {
         requireNonNull(animation);
         animations.add(animation);
         Logger.debug("Sprite animation registered (cache size={})", animations.size());
     }
 
-    public void clearAnimations() {
+    public void clear() {
         animations.clear();
         Logger.info("Sprite animation cache cleared");
     }
