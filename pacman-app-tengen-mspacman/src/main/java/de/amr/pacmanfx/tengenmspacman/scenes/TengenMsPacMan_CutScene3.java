@@ -70,7 +70,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
+    public void onStart() {
         final UIConfig uiConfig = ui.currentConfig();
 
         actionBindings.bind(
@@ -98,7 +98,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    protected void doEnd() {
+    protected void onEnd() {
         ui.soundManager().stop(SoundID.INTERMISSION_3);
     }
 

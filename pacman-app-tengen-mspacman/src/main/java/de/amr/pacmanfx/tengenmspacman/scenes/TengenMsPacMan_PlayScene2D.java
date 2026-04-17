@@ -12,7 +12,10 @@ import de.amr.pacmanfx.model.GameLevelMessageType;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
-import de.amr.pacmanfx.tengenmspacman.model.*;
+import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
+import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -106,7 +109,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
+    public void onStart() {
         final TengenMsPacMan_GameModel game = gameContext().game();
         game.hud().score(true).levelCounter(true).livesCounter(true).show();
         game.hud().gameOptions(!game.allOptionsDefault());
@@ -116,7 +119,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    protected void doEnd() {
+    protected void onEnd() {
         dynamicCamera.enterManualMode();
     }
 
@@ -248,14 +251,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelStarted(LevelStartedEvent e) {
-        TengenMsPacMan_GameModel game = gameContext().game();
+        e.game().optGameLevel().ifPresent(this::resetAnimations);
         dynamicCamera.playIntroSequence();
-        game.optGameLevel().ifPresent(this::resetAnimations);
     }
 
     @Override
     public void onPacDead(PacDeadEvent e) {
-        gameContext().game().flow().state().expire();
+        e.game().flow().state().expire();
     }
 
     @Override
@@ -286,9 +288,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void acceptGameLevel(GameLevel level) {
-        level.game().hud().levelCounter(true).livesCounter(true).show();
+    public void onEnteredFrom3DScene() {
+        final Game game = gameContext().game();
+        game.hud().levelCounter(true).livesCounter(true).show();
+        game.optGameLevel().ifPresent(this::acceptGameLevel);
+    }
 
+    // private
+
+    private void acceptGameLevel(GameLevel level) {
         dynamicCamera.enterTrackingMode();
         dynamicCamera.updateRange(level.worldMap());
 
@@ -307,10 +315,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         actionBindings.pluginKeyboard();
     }
 
-    // private
-
     private void updateScaling() {
-        SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
+        final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
         scalingProperty().set(switch (displayMode) {
             case SCALED_TO_FIT -> subScene.getHeight() / canvasHeightUnscaled.get();
             case SCROLLING -> subScene.getHeight() / NES_SCREEN_PIXELS.y();
@@ -321,17 +327,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private void updateHUD(GameLevel level) {
         final TengenMsPacMan_GameModel game = gameContext().game();
-        final TengenMsPacMan_HeadsUpDisplay hud = game.hud();
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
         final boolean oneExtra = game.flow().state() == TengenMsPacMan_GameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
         final int displayedLifeCount = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
-        hud.setVisibleLifeCount(Math.clamp(displayedLifeCount, 0, hud.maxLivesDisplayed()));
-        hud.levelNumber(game.mapCategory() != MapCategory.ARCADE);
+        game.hud().setVisibleLifeCount(Math.clamp(displayedLifeCount, 0, game.hud().maxLivesDisplayed()));
+        game.hud().levelNumber(game.mapCategory() != MapCategory.ARCADE);
     }
 
     private void playLevelCompleteAnimation(GameLevel level) {
-        levelCompletedAnimation = new LevelCompletedAnimation(level,
-            () -> level.game().flow().state().expire());
+        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> level.game().flow().state().expire());
         levelCompletedAnimation.play();
     }
 

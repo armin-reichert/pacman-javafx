@@ -34,7 +34,7 @@ import static java.util.Objects.requireNonNull;
  * {@link Canvas}, and coordinates lifecycle events (initialization, shutdown)
  * with the {@link Game} and {@link GameUI}.
  * <p>
- * Subclasses implement {@link #doInit()} and {@link #doEnd()} to define
+ * Subclasses implement {@link #onStart()} and {@link #onEnd()} to define
  * scene-specific behavior.
  */
 public abstract class GameScene2D implements GameScene {
@@ -50,7 +50,7 @@ public abstract class GameScene2D implements GameScene {
 
     /**
      * Creates a new 2D game scene. Subclasses typically configure their
-     * rendering and input bindings during {@link #doInit()}.
+     * rendering and input bindings during {@link #onStart()}.
      */
     protected GameScene2D() {}
 
@@ -94,18 +94,17 @@ public abstract class GameScene2D implements GameScene {
      * Subclasses implement their setup logic here (loading assets, configuring
      * input, preparing animations, etc.).
      */
-    protected void doInit() {}
+    protected void onStart() {}
 
     /**
      * Called when the scene ends.
      * Subclasses implement cleanup logic here (stopping animations, releasing
      * temporary resources, etc.).
      */
-    protected void doEnd() {}
+    protected void onEnd() {}
 
-    public void acceptGameLevel(GameLevel gameLevel) {
-        // implemented by PlayScene2D
-    }
+    // TODO: rethink
+    public void onEnteredFrom3DScene() {}
 
     @Override
     public ActionBindingsManager actionBindings() {
@@ -117,7 +116,7 @@ public abstract class GameScene2D implements GameScene {
      */
     @Override
     public final void init(Game game) {
-        doInit();
+        onStart();
         actionBindings.pluginKeyboard();
         Logger.info("2D scene {} initialized", getClass().getSimpleName());
     }
@@ -127,7 +126,7 @@ public abstract class GameScene2D implements GameScene {
      */
     @Override
     public final void end(Game game) {
-        doEnd();
+        onEnd();
         soundEffects().ifPresent(GameSoundEffects::stopAll);
         Logger.info("2D scene {} ends", getClass().getSimpleName());
     }

@@ -499,12 +499,9 @@ public class PlayView extends StackPane implements View {
             throw new IllegalArgumentException("Expected GameScene2D, but scene has class %s"
                 .formatted(nextScene.getClass().getSimpleName()));
         }
-        // Pause simulation while switching
+        // Pause simulation during scene switching
         ui.gameContext().clock().setUpdatesDisabled(true);
-
-        final Game game = ui.gameContext().game();
-        game.optGameLevel().ifPresent(playScene2D::acceptGameLevel);
-
+        playScene2D.onEnteredFrom3DScene();
         ui.gameContext().clock().setUpdatesDisabled(false);
         Logger.info("2D scene {} entered from 3D scene {}", playScene2D.getClass().getSimpleName(), currentScene.getClass().getSimpleName());
     }

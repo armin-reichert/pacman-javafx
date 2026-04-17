@@ -147,7 +147,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent e) {
-        acceptGameLevel(e.level());
+        onEnteredFrom3DScene(e.level());
     }
 
     @Override
@@ -195,7 +195,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
      *
      * @param level game level
      */
-    public void acceptGameLevel(GameLevel level) {
+    public void onEnteredFrom3DScene(GameLevel level) {
         ui.soundManager().setEnabled(!level.isDemoLevel()); //TODO is this needed?
         actionBindings.bindAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         actionBindings.bindAll(GameUI.STEERING_ACTION_BINDINGS);
