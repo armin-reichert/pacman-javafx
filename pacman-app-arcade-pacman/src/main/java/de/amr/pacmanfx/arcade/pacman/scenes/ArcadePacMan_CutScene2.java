@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimations;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.lib.math.Direction;
@@ -27,13 +28,31 @@ import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimatio
  */
 public class ArcadePacMan_CutScene2 extends GameScene2D {
 
-    // ordinal value corresponds to animation frame
-    private enum NailDressAnimationFrame {
-        NAIL, STRETCHED_S, STRETCHED_M, STRETCHED_L, RAPTURED
+    public enum NailDressState {
+        NAIL(0), STRETCHED_SMALL(1), STRETCHED_MEDIUM(2), STRETCHED_LARGE(3), RAPTURED(4);
+
+        NailDressState(int frame) {
+            this.frame = (byte) frame;
+        }
+
+        public byte frame() {
+            return frame;
+        }
+
+        private final byte frame;
     }
 
-    /** Tick when animation starts */
-    public static final short ANIMATION_START = 120;
+    public static final int TICK_ANIMATION_START = 120;
+    public static final int TICK_PAC_MAN_STARTS_RUNNING = TICK_ANIMATION_START + 25;
+    public static final int TICK_BLINKY_STARTS_RUNNING  = TICK_ANIMATION_START + 111;
+    public static final int TICK_BLINKY_GETS_CAUGHT     = TICK_ANIMATION_START + 194;
+    public static final int TICK_DRESS_STRETCHED_SMALL  = TICK_ANIMATION_START + 198;
+    public static final int TICK_DRESS_STRETCHED_MEDIUM = TICK_ANIMATION_START + 230;
+    public static final int TICK_DRESS_STRETCHED_LARGE  = TICK_ANIMATION_START + 262;
+    public static final int TICK_BLINKY_STOPS_MOVING    = TICK_ANIMATION_START + 296;
+    public static final int TICK_DRESS_RAPTURES         = TICK_ANIMATION_START + 360;
+    public static final int TICK_BLINK_INSPECTS_DAMAGE  = TICK_ANIMATION_START + 420;
+    public static final int TICK_ANIMATION_ENDS         = TICK_ANIMATION_START + 508;
 
     public final int nailX = TS * 14;
     public final int nailY = TS * 19 + 3;
@@ -49,76 +68,87 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     @Override
     public void onSceneStart() {
         final UIConfig uiConfig = ui.currentConfig();
-
         pacMan = createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationDriver()));
-
         blinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationDriver(), RED_GHOST_SHADOW);
-
         nailDressAnimation = SpriteAnimationBuilder.builder(ui.spriteAnimationDriver())
             .sprites(ArcadePacMan_SpriteSheet.instance().sprites(SpriteID.RED_GHOST_STRETCHED))
             .initiallyStopped()
             .build();
-
         sceneTick = -1;
     }
 
     @Override
     public void onTick(long tick) {
-        if (++sceneTick < ANIMATION_START) {
+        if (++sceneTick < TICK_ANIMATION_START) {
             return;
         }
         switch (sceneTick) {
-            case ANIMATION_START -> {
+            case TICK_ANIMATION_START -> {
                 ui.soundManager().play(SoundID.INTERMISSION_2);
-                setNailDressAnimation(NailDressAnimationFrame.NAIL);
+                setNailDressAnimationState(NailDressState.NAIL);
             }
-            case ANIMATION_START + 25 -> {
-                pacMan.placeAtTile(28, 20);
-                pacMan.setMoveDir(Direction.LEFT);
-                pacMan.setSpeed(1.15f);
-                pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
-                pacMan.playAnimation();
-                pacMan.show();
-            }
-            case ANIMATION_START + 111 -> {
-                blinky.placeAtTile(28, 20, -3, 0);
-                blinky.setMoveDir(Direction.LEFT);
-                blinky.setWishDir(Direction.LEFT);
-                blinky.setSpeed(1.25f);
-                blinky.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
-                blinky.playAnimation();
-                blinky.show();
-            }
-            case ANIMATION_START + 194 -> {
-                blinky.setSpeed(0.09f);
-                blinkyAnimation(Ghost.AnimationID.GHOST_NORMAL).setFrameTicks(32);
-            }
-            case ANIMATION_START + 198 -> setNailDressAnimation(NailDressAnimationFrame.STRETCHED_S);
-            case ANIMATION_START + 230 -> setNailDressAnimation(NailDressAnimationFrame.STRETCHED_M);
-            case ANIMATION_START + 262 -> setNailDressAnimation(NailDressAnimationFrame.STRETCHED_L);
-            case ANIMATION_START + 296 -> {
-                blinky.setSpeed(0);
-                blinky.stopAnimation();
-            }
-            case ANIMATION_START + 360 -> {
-                setNailDressAnimation(NailDressAnimationFrame.RAPTURED);
-                blinky.setX(blinky.x() - 4);
-                blinky.selectAnimation(BLINKY_DAMAGED);
-            }
-            case ANIMATION_START + 420 -> blinkyAnimation(BLINKY_DAMAGED).advanceFrame(); // Eyes right-down
-            case ANIMATION_START + 508 -> {
-                blinky.setVisible(false);
-                gameContext().game().flow().state().expire();
-            }
-            default -> {}
+            case TICK_PAC_MAN_STARTS_RUNNING -> pacManStartsRunning();
+            case TICK_BLINKY_STARTS_RUNNING -> blinkyStartsRunning();
+            case TICK_BLINKY_GETS_CAUGHT -> blinkyGetsCaughtOnNail();
+            case TICK_DRESS_STRETCHED_SMALL -> setNailDressAnimationState(NailDressState.STRETCHED_SMALL);
+            case TICK_DRESS_STRETCHED_MEDIUM -> setNailDressAnimationState(NailDressState.STRETCHED_MEDIUM);
+            case TICK_DRESS_STRETCHED_LARGE -> setNailDressAnimationState(NailDressState.STRETCHED_LARGE);
+            case TICK_BLINKY_STOPS_MOVING -> blinkyStopsMoving();
+            case TICK_DRESS_RAPTURES -> dressRaptures();
+            case TICK_BLINK_INSPECTS_DAMAGE -> blinkyLooksDownToInspectDamage();
+            case TICK_ANIMATION_ENDS -> animationEnds();
         }
         pacMan.move();
         blinky.move();
     }
 
-    private void setNailDressAnimation(NailDressAnimationFrame animationFrame) {
-        nailDressAnimation.setCurrentFrameIndex(animationFrame.ordinal());
+    private void blinkyLooksDownToInspectDamage() {
+        blinkyAnimation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_DAMAGED).advanceFrame();
+    }
+
+    private void animationEnds() {
+        blinky.setVisible(false);
+        gameContext().game().flow().state().expire();
+    }
+
+    private void dressRaptures() {
+        setNailDressAnimationState(NailDressState.RAPTURED);
+        blinky.setX(blinky.x() - 4);
+        blinky.selectAnimation(BLINKY_DAMAGED);
+    }
+
+    private void blinkyStopsMoving() {
+        blinky.setSpeed(0);
+        blinky.stopAnimation();
+    }
+
+    private void blinkyGetsCaughtOnNail() {
+        blinky.setSpeed(0.09f);
+        blinkyAnimation(Ghost.AnimationID.GHOST_NORMAL).setFrameTicks(32);
+    }
+
+    private void blinkyStartsRunning() {
+        blinky.placeAtTile(28, 20, -3, 0);
+        blinky.setMoveDir(Direction.LEFT);
+        blinky.setWishDir(Direction.LEFT);
+        blinky.setSpeed(1.25f);
+        blinky.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+        blinky.playAnimation();
+        blinky.show();
+    }
+
+    private void pacManStartsRunning() {
+        pacMan.placeAtTile(28, 20);
+        pacMan.setMoveDir(Direction.LEFT);
+        pacMan.setSpeed(1.15f);
+        pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+        pacMan.playAnimation();
+        pacMan.show();
+    }
+
+    private void setNailDressAnimationState(NailDressState state) {
+        nailDressAnimation.setCurrentFrameIndex(state.frame());
     }
 
     private SpriteAnimation blinkyAnimation(Object animationID) {

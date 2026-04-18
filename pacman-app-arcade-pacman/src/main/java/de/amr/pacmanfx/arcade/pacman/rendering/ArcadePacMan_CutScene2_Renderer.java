@@ -19,8 +19,8 @@ public class ArcadePacMan_CutScene2_Renderer extends ArcadePacMan_CutScene_Rende
             public void draw(GameScene2D scene) {
                 super.draw(scene);
                 if (scene instanceof ArcadePacMan_CutScene2 cutScene2) {
-                    final String text = cutScene2.sceneTick < ArcadePacMan_CutScene2.ANIMATION_START
-                        ? String.format("Wait %d", ArcadePacMan_CutScene2.ANIMATION_START - cutScene2.sceneTick)
+                    final String text = cutScene2.sceneTick < ArcadePacMan_CutScene2.TICK_ANIMATION_START
+                        ? String.format("Wait %d", ArcadePacMan_CutScene2.TICK_ANIMATION_START - cutScene2.sceneTick)
                         : String.format("Frame %d", cutScene2.sceneTick);
                     fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
                 }
