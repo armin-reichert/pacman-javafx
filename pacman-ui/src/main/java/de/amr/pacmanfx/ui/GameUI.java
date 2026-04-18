@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.ui;
 
+import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.TestActions;

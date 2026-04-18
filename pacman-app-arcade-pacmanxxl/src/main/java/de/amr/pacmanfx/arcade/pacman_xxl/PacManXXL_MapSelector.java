@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.lib.PathWatchEventListener;
+import de.amr.basics.filesystem.PathWatchEventListener;
 import de.amr.pacmanfx.model.world.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

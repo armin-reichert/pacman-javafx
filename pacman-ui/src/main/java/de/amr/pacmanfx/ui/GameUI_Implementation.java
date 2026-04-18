@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.ui;
 
+import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameFlow;
 import de.amr.pacmanfx.model.SimulationStep;
