@@ -43,46 +43,55 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void onTick(long tick) {
-        ++sceneTick;
-        if (sceneTick == ANIMATION_START_TICK) {
+        if (++sceneTick == ANIMATION_START_TICK) {
             ui.soundManager().play(SoundID.INTERMISSION_1, 2);
-
-            pacMan.placeAtTile(29, 20);
-            pacMan.setMoveDir(Direction.LEFT);
-            pacMan.setSpeed(1.25f);
-            pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
-            pacMan.playAnimation();
-            pacMan.show();
-
-            blinky.placeAtTile(32, 20);
-            blinky.setMoveDir(Direction.LEFT);
-            blinky.setWishDir(Direction.LEFT);
-            blinky.setSpeed(1.3f);
-            blinky.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
-            blinky.playAnimation();
-            blinky.show();
+            startBlinkyChasingPacMan();
         }
         else if (sceneTick == ANIMATION_START_TICK + 260) {
-            blinky.placeAtTile(-2, 20, 4, 0);
-            blinky.setMoveDir(Direction.RIGHT);
-            blinky.setWishDir(Direction.RIGHT);
-            blinky.setSpeed(0.75f);
-            blinky.selectAnimation(Ghost.AnimationID.GHOST_FRIGHTENED);
-            blinky.playAnimation();
+            startBlinkyEscapingPacMan();
         }
         else if (sceneTick == ANIMATION_START_TICK + 400) {
-            pacMan.placeAtTile(-3, 18, 0, 6.5f);
-            pacMan.setMoveDir(Direction.RIGHT);
-            pacMan.selectAnimation(ArcadePacMan_PacAnimations.AnimationID.ANIM_BIG_PAC_MAN);
-            pacMan.playAnimation();
+            startBigPacManChasingBlinky();
         }
         else if (sceneTick == ANIMATION_START_TICK + 632) {
             gameContext().game().flow().state().expire();
         }
-
         if (sceneTick >= ANIMATION_START_TICK) {
             pacMan.move();
             blinky.move();
         }
+    }
+
+    private void startBigPacManChasingBlinky() {
+        pacMan.placeAtTile(-3, 18, 0, 6.5f);
+        pacMan.setMoveDir(Direction.RIGHT);
+        pacMan.selectAnimation(ArcadePacMan_PacAnimations.AnimationID.ANIM_BIG_PAC_MAN);
+        pacMan.playAnimation();
+    }
+
+    private void startBlinkyEscapingPacMan() {
+        blinky.placeAtTile(-2, 20, 4, 0);
+        blinky.setMoveDir(Direction.RIGHT);
+        blinky.setWishDir(Direction.RIGHT);
+        blinky.setSpeed(0.75f);
+        blinky.selectAnimation(Ghost.AnimationID.GHOST_FRIGHTENED);
+        blinky.playAnimation();
+    }
+
+    private void startBlinkyChasingPacMan() {
+        pacMan.placeAtTile(29, 20);
+        pacMan.setMoveDir(Direction.LEFT);
+        pacMan.setSpeed(1.25f);
+        pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+        pacMan.playAnimation();
+        pacMan.show();
+
+        blinky.placeAtTile(32, 20);
+        blinky.setMoveDir(Direction.LEFT);
+        blinky.setWishDir(Direction.LEFT);
+        blinky.setSpeed(1.3f);
+        blinky.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+        blinky.playAnimation();
+        blinky.show();
     }
 }

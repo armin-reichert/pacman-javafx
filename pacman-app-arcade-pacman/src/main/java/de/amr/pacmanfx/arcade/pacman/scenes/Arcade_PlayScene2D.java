@@ -198,10 +198,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
     /**
      * If the 3D play scene is shown when the game level gets created, the onLevelCreated() method of this
      * scene is not called, so we have to accept the game level again when switching from the 3D scene to this one.
-     *
-     * @param level game level
      */
-    public void adaptToGameLevel(GameLevel level) {
+    private void adaptToGameLevel(GameLevel level) {
         ui.soundManager().setEnabled(!level.isDemoLevel()); //TODO is this needed?
         actionBindings.addAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         actionBindings.addAll(GameUI.STEERING_ACTION_BINDINGS);
