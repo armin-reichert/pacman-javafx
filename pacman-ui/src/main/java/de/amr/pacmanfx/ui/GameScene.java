@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.ui;
 
+import de.amr.basics.Disposable;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
-import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
 import de.amr.pacmanfx.ui.input.Input;

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.lib.Disposable;
+import de.amr.basics.Disposable;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.input.KeyCombination;
 

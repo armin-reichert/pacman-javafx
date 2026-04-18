@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.lib.Disposable;
+import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.actors.AnimationSet;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.lib.Disposable;
+import de.amr.basics.Disposable;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import javafx.beans.value.ObservableValue;

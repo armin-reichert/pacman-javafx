@@ -5,6 +5,7 @@ module de.amr.basics {
 
     requires org.tinylog.api;
 
+    exports de.amr.basics;
     exports de.amr.basics.fsm;
     exports de.amr.basics.graph;
     exports de.amr.basics.math;

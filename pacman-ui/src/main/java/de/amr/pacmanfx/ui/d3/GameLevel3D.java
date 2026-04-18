@@ -3,13 +3,13 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
+import de.amr.basics.Disposable;
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntitySet;

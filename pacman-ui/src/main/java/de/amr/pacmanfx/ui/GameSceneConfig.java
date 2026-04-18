@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.lib.Disposable;
+import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.d2.GameScene2D;

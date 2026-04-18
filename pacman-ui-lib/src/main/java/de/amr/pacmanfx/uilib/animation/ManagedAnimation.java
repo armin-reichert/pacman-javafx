@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.lib.Disposable;
+import de.amr.basics.Disposable;
 import javafx.animation.Animation;
 import org.tinylog.Logger;
 import org.tinylog.Supplier;

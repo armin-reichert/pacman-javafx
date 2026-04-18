@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.model3D.actor;
 
-import de.amr.pacmanfx.lib.Disposable;
+import de.amr.basics.Disposable;
 import de.amr.pacmanfx.uilib.model3D.Model3DException;
 import de.amr.pacmanfx.uilib.objimport.Model3D;
 import javafx.scene.Group;

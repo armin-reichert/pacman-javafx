@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
-import de.amr.pacmanfx.lib.Disposable;
+import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;

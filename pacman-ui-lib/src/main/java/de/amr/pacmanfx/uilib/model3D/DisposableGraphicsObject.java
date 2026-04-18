@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.lib.Disposable;
+import de.amr.basics.Disposable;
 import javafx.scene.Group;
 import javafx.scene.LightBase;
 import javafx.scene.Node;

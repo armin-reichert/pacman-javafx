@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.objimport;
 
-import de.amr.pacmanfx.lib.Disposable;
+import de.amr.basics.Disposable;
 import de.amr.pacmanfx.uilib.model3D.Model3DException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableFloatArray;

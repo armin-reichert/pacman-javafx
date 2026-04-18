@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.assets;
 
-import de.amr.pacmanfx.lib.Disposable;
+import de.amr.basics.Disposable;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;

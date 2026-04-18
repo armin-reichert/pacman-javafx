@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.pacmanfx.lib.Disposable;
+import de.amr.basics.Disposable;
 
 import java.util.List;
 
