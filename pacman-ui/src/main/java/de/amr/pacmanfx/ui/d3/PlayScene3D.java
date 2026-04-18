@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.d3;
 
+import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;

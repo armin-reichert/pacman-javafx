@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.lib.fsm.State;
+import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;

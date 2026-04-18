@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.lib.fsm.State;
+import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameFlow.CanonicalGameState;
 import de.amr.pacmanfx.ui.GameUI;

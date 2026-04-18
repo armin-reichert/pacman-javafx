@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.arcade.pacman.model;
 
+import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import org.tinylog.Logger;

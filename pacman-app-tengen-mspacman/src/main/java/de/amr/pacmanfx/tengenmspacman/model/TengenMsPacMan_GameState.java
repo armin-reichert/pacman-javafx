@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.tengenmspacman.model;
 
+import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import org.tinylog.Logger;

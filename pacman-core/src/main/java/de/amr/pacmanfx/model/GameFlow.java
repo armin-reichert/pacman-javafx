@@ -3,9 +3,9 @@
  */
 package de.amr.pacmanfx.model;
 
+import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.lib.fsm.State;
 
 import java.util.Optional;
 

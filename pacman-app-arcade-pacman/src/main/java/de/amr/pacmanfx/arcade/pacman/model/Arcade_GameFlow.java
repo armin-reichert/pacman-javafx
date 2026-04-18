@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.arcade.pacman.model;
 
+import de.amr.basics.fsm.StateMachine;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameFlow;
 import javafx.application.Platform;
