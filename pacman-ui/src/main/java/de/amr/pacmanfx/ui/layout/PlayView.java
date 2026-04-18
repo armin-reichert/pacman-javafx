@@ -408,8 +408,10 @@ public class PlayView extends StackPane implements View {
             }
             gameScene.supplyContextMenu().ifPresent(sceneMenu -> contextMenu.addAll(sceneMenu.itemsCopy()));
         });
-        contextMenu.requestFocus();
-        contextMenu.show(this, event.getScreenX(), event.getScreenY());
+        if (!contextMenu.getItems().isEmpty()) {
+            contextMenu.requestFocus();
+            contextMenu.show(this, event.getScreenX(), event.getScreenY());
+        }
     }
 
     private void useDecoratedCanvas(GameScene2D gameScene2D) {
