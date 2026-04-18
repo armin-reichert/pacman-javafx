@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.lib.graph;
 
-import de.amr.pacmanfx.lib.math.Direction;
+import de.amr.basics.math.Direction;
 
 import java.util.ArrayList;
 import java.util.BitSet;

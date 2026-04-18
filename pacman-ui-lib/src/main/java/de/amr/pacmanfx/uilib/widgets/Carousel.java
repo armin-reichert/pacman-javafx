@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.widgets;
 
-import de.amr.pacmanfx.lib.math.Direction;
+import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.animation.*;
 import javafx.beans.property.BooleanProperty;

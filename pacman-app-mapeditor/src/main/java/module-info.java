@@ -10,6 +10,7 @@ open module de.amr.pacmanfx.mapeditor {
     requires org.tinylog.api;
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
+    requires de.amr.basics;
 
     exports de.amr.pacmanfx.mapeditor;
     exports de.amr.pacmanfx.mapeditor.actions;

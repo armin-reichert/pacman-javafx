@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.lib.math;
+package de.amr.basics.math;
 
 /**
  * As there is no *mutable* 3d vector class in standard JDK or JavaFX...

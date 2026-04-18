@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.lib.nes;
 
-import de.amr.pacmanfx.lib.math.RandomNumberSupport;
+import de.amr.basics.math.RandomNumberSupport;
 
 /**
  * The color schemes used in the Tengen Ms. Pac-Man maps. That was quite some work to fiddle them out.

@@ -3,9 +3,9 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
+import de.amr.basics.math.Direction;
+import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
-import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;

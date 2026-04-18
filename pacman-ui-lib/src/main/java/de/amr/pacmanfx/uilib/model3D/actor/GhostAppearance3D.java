@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.uilib.model3D.actor;
 
-import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.lib.math.Vector2f;
+import de.amr.basics.math.Direction;
+import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Ghost;

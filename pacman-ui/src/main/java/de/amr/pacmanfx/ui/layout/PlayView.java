@@ -3,11 +3,11 @@
  */
 package de.amr.pacmanfx.ui.layout;
 
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.lib.fsm.State;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameFlow;
 import de.amr.pacmanfx.model.GameLevel;

@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.model;
 
+import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.lib.TickTimer;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;

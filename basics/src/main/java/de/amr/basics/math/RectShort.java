@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.lib.math;
+package de.amr.basics.math;
 
-import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
+import static de.amr.basics.math.Vector2f.vec2_float;
 
 /**
  * A rectangle with short precision. Used to represent sprites and inner obstacle rectangles.

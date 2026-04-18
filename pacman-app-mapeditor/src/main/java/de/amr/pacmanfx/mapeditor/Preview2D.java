@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.mapeditor;
 
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;

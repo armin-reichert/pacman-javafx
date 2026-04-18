@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.lib;
 
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Vector2i;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.ui.d3.entities;
 
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.world.ArcadeHouse;

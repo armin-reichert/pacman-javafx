@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.mapeditor.palette;
 
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 
 import java.util.function.Consumer;

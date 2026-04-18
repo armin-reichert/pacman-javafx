@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
-import de.amr.pacmanfx.lib.math.Vector2f;
+import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;

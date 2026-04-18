@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.model.world;
 
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Vector2i;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
+import static de.amr.basics.math.Vector2i.vec2_int;
 import static java.util.Objects.requireNonNull;
 
 public sealed class WorldMapLayer permits FoodLayer, TerrainLayer {

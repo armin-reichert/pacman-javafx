@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.lib.graph;
 
-import de.amr.pacmanfx.lib.math.Direction;
+import de.amr.basics.math.Direction;
 
 /**
  * Grid graph interface as used by maze generation algorithms.

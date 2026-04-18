@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.lib.math.RectShort;
+import de.amr.basics.math.RectShort;
 
 import java.util.Arrays;
 import java.util.Objects;

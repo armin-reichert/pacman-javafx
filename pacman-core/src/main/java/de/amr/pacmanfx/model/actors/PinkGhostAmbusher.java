@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 
 import static de.amr.pacmanfx.Globals.PINK_GHOST_SPEEDY;

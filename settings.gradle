@@ -19,6 +19,7 @@ dependencyResolutionManagement {
 rootProject.name = "pacman-javafx"
 
 include(
+    "basics",
     "pacman-core",
     "pacman-ui-lib",
     "pacman-ui",
@@ -30,3 +31,5 @@ include(
     "pacman-app-mapeditor",
     "experiments"
 )
+
+include 'basics'

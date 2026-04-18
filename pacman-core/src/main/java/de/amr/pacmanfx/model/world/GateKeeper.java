@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.model.world;
 
-import de.amr.pacmanfx.lib.math.Direction;
+import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -15,8 +15,8 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
+import static de.amr.basics.math.Direction.LEFT;
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.math.Direction.LEFT;
 import static java.util.Objects.requireNonNull;
 
 /**

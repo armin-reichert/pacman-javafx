@@ -5,6 +5,7 @@ open module de.amr.pacmanfx.uilib {
     requires javafx.controls;
     requires javafx.media;
     requires org.tinylog.api;
+    requires de.amr.basics;
     requires de.amr.pacmanfx.core;
     requires javafx.base;
 

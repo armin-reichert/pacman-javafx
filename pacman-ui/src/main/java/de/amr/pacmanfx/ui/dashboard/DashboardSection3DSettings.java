@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameScene;

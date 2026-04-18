@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
+import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.UIConfig;

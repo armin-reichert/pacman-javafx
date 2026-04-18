@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.model3D.animation;
 
-import de.amr.pacmanfx.lib.math.Direction;
+import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
 import javafx.animation.Animation;

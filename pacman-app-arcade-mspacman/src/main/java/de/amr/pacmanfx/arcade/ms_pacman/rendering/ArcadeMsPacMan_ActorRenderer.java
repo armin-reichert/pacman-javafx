@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
+import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
-import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;

@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.uilib.model3D.world;
 
-import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -28,9 +28,9 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static de.amr.pacmanfx.uilib.UfxColors.colorWithOpacity;
 import static java.util.Objects.requireNonNull;

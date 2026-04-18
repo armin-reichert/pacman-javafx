@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.model.world;
 
-import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import org.tinylog.Logger;
 

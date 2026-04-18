@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
+import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventListener {

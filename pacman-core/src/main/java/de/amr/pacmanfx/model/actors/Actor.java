@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;

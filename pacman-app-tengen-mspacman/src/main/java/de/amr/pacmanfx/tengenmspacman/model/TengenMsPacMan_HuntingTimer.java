@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.tengenmspacman.model;
 
+import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.Validations;
-import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.model.AbstractHuntingTimer;
 
 /**

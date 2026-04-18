@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.mapeditor.actions;
 
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.TileMatcher;
@@ -16,8 +16,8 @@ import org.tinylog.Logger;
 import java.nio.IntBuffer;
 import java.time.LocalTime;
 
+import static de.amr.basics.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.mapeditor.UfxMapEditor.getColorFromMapLayer;
 
 public class Action_FillMapFromTemplate extends EditorUIAction<Void> {

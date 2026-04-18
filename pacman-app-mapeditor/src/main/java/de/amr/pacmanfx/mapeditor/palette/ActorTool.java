@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.mapeditor.palette;
 
-import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.RectShort;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainProperty;
 import de.amr.pacmanfx.model.world.WorldMapPropertyName;

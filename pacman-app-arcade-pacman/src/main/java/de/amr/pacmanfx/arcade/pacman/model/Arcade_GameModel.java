@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.arcade.pacman.model;
 
+import de.amr.basics.math.Vector2i;
+import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.lib.TickTimer;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.GateKeeper;
@@ -17,8 +17,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+import static de.amr.basics.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
-import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static java.util.Objects.requireNonNull;
 
 /**

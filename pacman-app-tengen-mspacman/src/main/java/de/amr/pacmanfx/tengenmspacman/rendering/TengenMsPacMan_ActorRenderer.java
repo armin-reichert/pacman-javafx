@@ -3,9 +3,9 @@
  */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.lib.math.Vector2f;
+import de.amr.basics.math.Direction;
+import de.amr.basics.math.RectShort;
+import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengenmspacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengenmspacman.scenes.Stork;

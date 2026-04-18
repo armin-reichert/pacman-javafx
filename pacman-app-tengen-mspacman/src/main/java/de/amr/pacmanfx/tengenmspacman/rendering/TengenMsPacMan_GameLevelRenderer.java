@@ -3,9 +3,9 @@
  */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
+import de.amr.basics.math.RectShort;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.lib.Pulse;
-import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
@@ -21,9 +21,9 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
+import static de.amr.basics.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengenmspacman.rendering.NonArcadeMapsSpriteSheet.MapID.MAP32_ANIMATED;

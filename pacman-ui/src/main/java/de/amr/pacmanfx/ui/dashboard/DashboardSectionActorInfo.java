@@ -3,9 +3,9 @@
  */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.lib.TickTimer;
-import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
+import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -18,8 +18,8 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
+import static de.amr.basics.timer.TickTimer.ticksToString;
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.TickTimer.ticksToString;
 
 public class DashboardSectionActorInfo extends DashboardSection {
 

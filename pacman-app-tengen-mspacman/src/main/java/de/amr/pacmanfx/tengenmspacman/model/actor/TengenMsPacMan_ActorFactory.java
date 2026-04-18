@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.tengenmspacman.model.actor;
 
-import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Direction;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.actors.*;

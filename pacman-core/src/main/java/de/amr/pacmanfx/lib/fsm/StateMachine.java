@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.lib.fsm;
 
-import de.amr.pacmanfx.lib.TickTimer;
+import de.amr.basics.timer.TickTimer;
 import org.tinylog.Logger;
 
 import java.util.*;

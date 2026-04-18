@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;

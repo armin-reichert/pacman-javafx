@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
+import de.amr.basics.math.Direction;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.lib.fsm.State;
-import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.*;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {

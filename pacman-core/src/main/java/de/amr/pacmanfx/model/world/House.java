@@ -3,14 +3,14 @@
  */
 package de.amr.pacmanfx.model.world;
 
-import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Direction;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.actors.Actor;
 
+import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
 import static java.util.Objects.requireNonNull;
 
 public interface House {

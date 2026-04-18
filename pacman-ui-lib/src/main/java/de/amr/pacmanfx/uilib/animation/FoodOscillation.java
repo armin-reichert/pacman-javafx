@@ -4,14 +4,14 @@
 
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.lib.math.Vector2f;
+import de.amr.basics.math.Vector2f;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.scene.Group;
 import javafx.util.Duration;
 
+import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
 
 /**
  * Oszillation animation for pellets (unused).

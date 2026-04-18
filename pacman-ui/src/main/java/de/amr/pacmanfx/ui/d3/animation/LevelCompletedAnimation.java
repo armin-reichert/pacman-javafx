@@ -15,7 +15,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.pacmanfx.lib.math.RandomNumberSupport.chance;
+import static de.amr.basics.math.RandomNumberSupport.chance;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSecThen;
 import static java.util.Objects.requireNonNull;

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.mapeditor;
 
-import de.amr.pacmanfx.lib.math.RectShort;
+import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;

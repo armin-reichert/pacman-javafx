@@ -3,13 +3,13 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
+import de.amr.basics.math.RandomNumberSupport;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.fsm.State;
-import de.amr.pacmanfx.lib.math.RandomNumberSupport;
-import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntitySet;
@@ -56,8 +56,8 @@ import org.tinylog.Logger;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.model.GameFlow.CanonicalGameState.*;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_WALL_HEIGHT;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;

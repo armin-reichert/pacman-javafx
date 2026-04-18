@@ -13,7 +13,7 @@ import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 
 import java.io.File;
 
-import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
+import static de.amr.basics.math.RandomNumberSupport.randomInt;
 
 /**
  * Extension of Arcade Pac-Man with 8 new builtin mazes (thanks to the one and only

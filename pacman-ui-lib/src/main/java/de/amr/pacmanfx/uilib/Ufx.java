@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.uilib;
 
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.Validations;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ObservableValue;

@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman;
 
+import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
@@ -10,7 +11,6 @@ import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.lib.fsm.State;
-import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Ghost;

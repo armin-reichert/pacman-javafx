@@ -3,11 +3,11 @@
  */
 package de.amr.pacmanfx.model.actors;
 
+import de.amr.basics.math.Direction;
+import de.amr.basics.math.RandomNumberSupport;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.Validations;
-import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.lib.math.RandomNumberSupport;
-import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
@@ -22,12 +22,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
+import static de.amr.basics.math.Direction.*;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.differsAtMost;
 import static de.amr.pacmanfx.Validations.stateIsOneOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
-import static de.amr.pacmanfx.lib.math.Direction.*;
 import static java.util.Objects.requireNonNull;
 
 /**

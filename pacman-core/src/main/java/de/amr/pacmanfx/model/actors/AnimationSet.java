@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.pacmanfx.lib.math.RectShort;
+import de.amr.basics.math.RectShort;
 
 import static java.util.Objects.requireNonNull;
 

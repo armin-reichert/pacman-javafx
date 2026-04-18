@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.uilib.animation;
 
+import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.lib.math.Vector3f;
 import javafx.geometry.Point3D;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Shape3D;

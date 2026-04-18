@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.RectShort;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;

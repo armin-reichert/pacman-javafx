@@ -3,13 +3,14 @@
  */
 package de.amr.pacmanfx.mapeditor.actions;
 
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapPropertyName;
 
-import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
+import static de.amr.basics.math.Vector2i.vec2_int;
+
 
 public class Action_CreatePreconfiguredMap extends EditorAction<WorldMap> {
 

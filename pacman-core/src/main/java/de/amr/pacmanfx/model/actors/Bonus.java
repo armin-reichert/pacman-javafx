@@ -3,13 +3,13 @@
  */
 package de.amr.pacmanfx.model.actors;
 
+import de.amr.basics.math.Direction;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
+import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.event.BonusExpiredEvent;
 import de.amr.pacmanfx.lib.Pulse;
-import de.amr.pacmanfx.lib.TickTimer;
-import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.TerrainLayer;

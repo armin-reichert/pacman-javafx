@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.GameBox;
 import de.amr.pacmanfx.ui.GameUI;

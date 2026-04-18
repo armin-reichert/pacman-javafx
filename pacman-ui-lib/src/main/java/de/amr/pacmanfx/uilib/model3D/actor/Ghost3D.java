@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.uilib.model3D.actor;
 
+import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.Validations;
-import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;

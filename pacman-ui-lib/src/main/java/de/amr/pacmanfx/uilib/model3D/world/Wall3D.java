@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.model3D.world;
 
-import de.amr.pacmanfx.lib.math.Vector2f;
+import de.amr.basics.math.Vector2f;
 import javafx.beans.property.DoubleProperty;
 import javafx.css.PseudoClass;
 import javafx.scene.Node;

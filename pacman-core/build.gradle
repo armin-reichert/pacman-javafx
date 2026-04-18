@@ -11,5 +11,7 @@ javafx {
 }
 
 dependencies {
-    implementation(libs.bundles.tinylog)
+    implementation(
+        project(":basics"),
+        libs.bundles.tinylog)
 }

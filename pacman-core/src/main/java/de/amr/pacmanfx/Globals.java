@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx;
 
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Vector2i;
 
 public final class Globals {
 

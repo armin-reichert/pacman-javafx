@@ -11,6 +11,7 @@ open module de.amr.pacmanfx.arcade.ms_pacman {
 
     requires org.tinylog.api;
 
+    requires de.amr.basics;
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.mapeditor.actions;
 
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.EditMode;
 import de.amr.pacmanfx.mapeditor.SizeInputDialog;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;

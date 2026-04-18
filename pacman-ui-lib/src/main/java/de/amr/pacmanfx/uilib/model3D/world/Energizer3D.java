@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.model3D.world;
 
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;

@@ -3,12 +3,12 @@
  */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
+import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Factory3D;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
-import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;

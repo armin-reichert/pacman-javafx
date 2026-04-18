@@ -1,17 +1,14 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.lib;
+package de.amr.basics.timer;
 
-import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.lib.TickTimerEvent.Type;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static de.amr.pacmanfx.lib.TickTimer.State.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -32,7 +29,7 @@ public class TickTimer {
      * @return number of ticks corresponding to given seconds at the normal frame rate (60Hz)
      */
     public static long secToTicks(double seconds) {
-        return Math.round(seconds * Globals.NUM_TICKS_PER_SEC);
+        return Math.round(seconds * 60);
     }
 
     /**
@@ -79,9 +76,9 @@ public class TickTimer {
         assertValidTickNumber(ticks);
         duration = ticks;
         tickCount = 0;
-        state = READY;
+        state = State.READY;
         Logger.trace("{} reset", this);
-        publishEvent(new TickTimerEvent(Type.RESET, ticks));
+        publishEvent(new TickTimerEvent(TickTimerEvent.Type.RESET, ticks));
     }
 
     /**
@@ -105,10 +102,10 @@ public class TickTimer {
      * Starts the timer. If the timer is already running, does nothing.
      */
     public void start() {
-        if (state == STOPPED || state == READY) {
-            state = RUNNING;
+        if (state == State.STOPPED || state == State.READY) {
+            state = State.RUNNING;
             Logger.info("Start timer (duration {}): {}", ticksToString(duration), this);
-            publishEvent(new TickTimerEvent(Type.STARTED));
+            publishEvent(new TickTimerEvent(TickTimerEvent.Type.STARTED));
         }
     }
 
@@ -116,10 +113,10 @@ public class TickTimer {
      * Stops the timer. If the timer is not running, does nothing.
      */
     public void stop() {
-        if (state == RUNNING) {
-            state = STOPPED;
+        if (state == State.RUNNING) {
+            state = State.STOPPED;
             Logger.trace("{} stopped", this);
-            publishEvent(new TickTimerEvent(Type.STOPPED));
+            publishEvent(new TickTimerEvent(TickTimerEvent.Type.STOPPED));
         }
     }
 
@@ -127,7 +124,7 @@ public class TickTimer {
      * Advances the timer by one step, if it is running. Does nothing, else.
      */
     public void doTick() {
-        if (state == RUNNING) {
+        if (state == State.RUNNING) {
             if (tickCount == duration) {
                 expire();
             } else {
@@ -140,10 +137,10 @@ public class TickTimer {
      * Forces the timer to expire.
      */
     public void expire() {
-        if (state != EXPIRED) {
-            state = EXPIRED;
+        if (state != State.EXPIRED) {
+            state = State.EXPIRED;
             Logger.trace("{} expired", this);
-            publishEvent(new TickTimerEvent(Type.EXPIRED, tickCount));
+            publishEvent(new TickTimerEvent(TickTimerEvent.Type.EXPIRED, tickCount));
         } else {
             Logger.warn("Timer {} not expired, state is {}", this, state);
         }
@@ -185,19 +182,19 @@ public class TickTimer {
     }
 
     public boolean hasExpired() {
-        return state == EXPIRED;
+        return state == State.EXPIRED;
     }
 
     public boolean isReady() {
-        return state == READY;
+        return state == State.READY;
     }
 
     public boolean isRunning() {
-        return state == RUNNING;
+        return state == State.RUNNING;
     }
 
     public boolean isStopped() {
-        return state == STOPPED;
+        return state == State.STOPPED;
     }
 
     /**

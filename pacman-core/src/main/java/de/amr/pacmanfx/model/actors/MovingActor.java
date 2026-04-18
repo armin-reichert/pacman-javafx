@@ -3,9 +3,9 @@
  */
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Direction;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.TerrainLayer;
@@ -16,11 +16,11 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.Optional;
 
+import static de.amr.basics.math.Direction.RIGHT;
+import static de.amr.basics.math.Direction.UP;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
-import static de.amr.pacmanfx.lib.math.Direction.RIGHT;
-import static de.amr.pacmanfx.lib.math.Direction.UP;
 import static java.util.Objects.requireNonNull;
 
 /**

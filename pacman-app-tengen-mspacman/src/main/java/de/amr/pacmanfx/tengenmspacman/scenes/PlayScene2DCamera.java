@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
-import de.amr.pacmanfx.lib.math.Direction;
+import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.beans.property.DoubleProperty;

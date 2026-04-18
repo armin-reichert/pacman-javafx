@@ -8,7 +8,7 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 
-import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
+import static de.amr.basics.math.RandomNumberSupport.randomInt;
 
 /**
  * @see <a href="https://www.eggradients.com/">Eggradients</a>

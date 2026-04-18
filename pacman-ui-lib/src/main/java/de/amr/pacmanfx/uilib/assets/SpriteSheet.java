@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.assets;
 
-import de.amr.pacmanfx.lib.math.RectShort;
+import de.amr.basics.math.RectShort;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 

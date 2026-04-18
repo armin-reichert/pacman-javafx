@@ -3,13 +3,13 @@
  */
 package de.amr.pacmanfx.model.world;
 
+import de.amr.basics.math.Direction;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.Validations;
-import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector2i;
 
+import static de.amr.basics.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.model.world.TerrainTile.*;
 import static java.util.Objects.requireNonNull;
 

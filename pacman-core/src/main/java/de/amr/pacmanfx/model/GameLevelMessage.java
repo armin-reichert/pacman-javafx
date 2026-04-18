@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.lib.math.Vector2f;
+import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;
 
 import static java.util.Objects.requireNonNull;

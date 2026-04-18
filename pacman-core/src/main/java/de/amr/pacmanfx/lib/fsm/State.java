@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.lib.fsm;
 
-import de.amr.pacmanfx.lib.TickTimer;
+import de.amr.basics.timer.TickTimer;
 
 import java.util.stream.Stream;
 

@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.mapeditor.rendering;
 
-import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Direction;
+import de.amr.basics.math.RectShort;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
@@ -29,9 +29,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiPredicate;
 
+import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.model.world.TerrainTile.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;

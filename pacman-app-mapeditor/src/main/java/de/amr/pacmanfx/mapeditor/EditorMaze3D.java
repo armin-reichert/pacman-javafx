@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.mapeditor;
 
-import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
@@ -29,9 +29,9 @@ import javafx.scene.transform.Translate;
 
 import java.util.stream.Stream;
 
+import static de.amr.basics.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static de.amr.pacmanfx.uilib.UfxColors.colorWithOpacity;

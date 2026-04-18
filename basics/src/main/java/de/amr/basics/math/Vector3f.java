@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.lib.math;
+package de.amr.basics.math;
 
 /**
  * Immutable 3D vector with float precision. No full-fledged implementation, just the needed methods.

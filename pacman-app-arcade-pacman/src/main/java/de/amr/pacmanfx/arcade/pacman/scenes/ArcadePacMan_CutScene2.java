@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimations;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
-import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;

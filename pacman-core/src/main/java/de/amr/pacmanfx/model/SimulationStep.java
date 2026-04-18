@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import org.tinylog.Logger;

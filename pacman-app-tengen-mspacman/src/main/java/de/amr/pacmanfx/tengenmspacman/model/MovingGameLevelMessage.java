@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.model;
 
-import de.amr.pacmanfx.lib.math.Vector2f;
+import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.GameLevelMessageType;
 

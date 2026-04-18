@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.lib.TickTimer;
+import de.amr.basics.timer.TickTimer;
 import javafx.scene.paint.Color;
 
 public class Marquee {

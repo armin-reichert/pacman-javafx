@@ -3,9 +3,9 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
 import de.amr.pacmanfx.lib.Pulse;
-import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;

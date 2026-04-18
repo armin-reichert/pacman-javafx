@@ -11,6 +11,7 @@ plugins {
 
 dependencies {
     implementation(
+        project(":basics"),
         project(":pacman-core"),
         project(":pacman-ui-lib"),
         libs.bundles.tinylog

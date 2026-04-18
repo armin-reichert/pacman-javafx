@@ -7,7 +7,7 @@ import de.amr.pacmanfx.mapeditor.actions.*;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.*;
 
-import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
+import static de.amr.basics.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.NO_GRAPHIC;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.translated;
 

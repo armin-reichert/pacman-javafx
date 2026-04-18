@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.pacmanfx.lib.math.RectShort;
+import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import javafx.scene.image.Image;
 

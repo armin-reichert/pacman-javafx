@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector3f;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.uilib.animation.EnergizerParticle.FragmentState;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+import static de.amr.basics.math.RandomNumberSupport.*;
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
 import static java.util.Objects.requireNonNull;
 
 /**

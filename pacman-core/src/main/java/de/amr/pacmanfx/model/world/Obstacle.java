@@ -3,16 +3,16 @@
  */
 package de.amr.pacmanfx.model.world;
 
+import de.amr.basics.math.RectShort;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.lib.PolygonToRectangleConverter;
-import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import org.tinylog.Logger;
 
 import java.util.*;
 
+import static de.amr.basics.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.lib.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.model.world.TerrainTile.*;
 import static java.lang.Math.signum;
 
