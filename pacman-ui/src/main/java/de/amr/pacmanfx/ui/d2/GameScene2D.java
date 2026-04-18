@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -17,7 +16,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
-import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -43,12 +41,6 @@ public class GameScene2D extends GameScene {
     protected Canvas canvas;
 
     /**
-     * Creates a new 2D game scene. Subclasses typically configure their
-     * rendering and input bindings during {@link #onSceneStart()}.
-     */
-    public GameScene2D() {}
-
-    /**
      * Releases bindings and resources held by this scene.
      * Called when the scene is permanently discarded.
      */
@@ -56,7 +48,6 @@ public class GameScene2D extends GameScene {
     public void dispose() {
         backgroundColor.unbind();
         scaling.unbind();
-        actionBindings.dispose();
     }
 
     /**
@@ -75,8 +66,6 @@ public class GameScene2D extends GameScene {
 
     // TODO: rethink
     public void onEnteredFrom3DScene() {}
-
-    // GameScene interface
 
     /**
      * Handles unspecified change events.

@@ -17,7 +17,6 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void onSceneStart() {
-        gameContext().game().hud().credit(true).score(true).levelCounter(true).livesCounter(false).show();
         actionBindings.bindAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
     }
 
