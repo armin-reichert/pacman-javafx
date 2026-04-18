@@ -1,0 +1,15 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+plugins {
+    alias(libs.plugins.javafx)
+}
+
+javafx {
+    modules = ["javafx.base"]  // for JavaFX properties and data binding
+}
+
+dependencies {
+    implementation(libs.bundles.tinylog)
+}
