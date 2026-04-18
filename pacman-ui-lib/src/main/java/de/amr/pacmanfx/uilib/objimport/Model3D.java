@@ -4,15 +4,18 @@
 package de.amr.pacmanfx.uilib.objimport;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.uilib.model3D.Model3DException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableFloatArray;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.TriangleMesh;
 import org.tinylog.Logger;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -37,25 +40,41 @@ import static java.util.Objects.requireNonNull;
  */
 public class Model3D implements Disposable {
 
+    public static Model3D importObjFile(URL url, Charset charset) throws IOException {
+        requireNonNull(url);
+        requireNonNull(charset);
+        final ObjFileParser parser = new ObjFileParser(url);
+        try (InputStream is = url.openStream()) {
+            final var reader = new BufferedReader(new InputStreamReader(is, charset));
+            parser.parse(reader);
+            Logger.info("OBJ file parsed: {} vertices, {} uvs, {} faces, {} smoothing groups. URL={}",
+                parser.data.vertexArray.size() / 3,
+                parser.data.uvArray.size() / 2,
+                parser.data.facesList.size() / 6,
+                parser.data.smoothingGroupList.size(),
+                url);
+            return parser.data;
+        }
+    }
+
     public static Model3D importObjFile(URL url) throws Model3DException {
         try {
-            final Model3D content = ObjFileImporter.importObjFile(url, StandardCharsets.UTF_8);
-            if (content == null) {
+            final Model3D model3D = importObjFile(url, StandardCharsets.UTF_8);
+            if (model3D == null) {
                 throw new Model3DException("Could not load OBJ file");
             }
-            for (TriangleMesh mesh : content.meshMap().values()) {
+            for (TriangleMesh mesh : model3D.meshMap().values()) {
                 try {
                     MeshHelper.validateTriangleMesh(mesh);
                 } catch (AssertionError error) {
                     Logger.error("Invalid OBJ file data: {}, URL: '{}'", error.getMessage(), url);
                 }
             }
-            return content;
+            return model3D;
         } catch (IOException x) {
             throw new Model3DException("Could not load OBJ file", x);
         }
     }
-
 
     /**
      * Creates a new model representation for the OBJ file located at the given URL.

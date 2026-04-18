@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.uilib.model3D.Model3DException;
 import de.amr.pacmanfx.uilib.objimport.Model3D;
+import de.amr.pacmanfx.uilib.objimport.Model3DException;
 import javafx.scene.shape.Mesh;
 
 public class GhostModel3D implements Disposable {

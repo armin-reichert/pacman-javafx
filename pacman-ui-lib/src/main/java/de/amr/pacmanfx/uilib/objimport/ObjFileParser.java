@@ -10,16 +10,12 @@ import org.tinylog.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import static de.amr.pacmanfx.uilib.objimport.SmoothingGroups.computeSmoothingGroups;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Code is based on Oracle's OBJ importer from the 3DViewer sample project.
@@ -28,26 +24,7 @@ import static java.util.Objects.requireNonNull;
  * "https://github.com/teamfx/openjfx-10-dev-rt/tree/master/apps/samples/3DViewer/src/main/java/com/javafx/experiments/importers">3DViewer
  * Sample</a>
  */
-public class ObjFileImporter {
-
-    public static Model3D importObjFile(URL url, Charset charset) throws IOException {
-        requireNonNull(url);
-        requireNonNull(charset);
-        final ObjFileImporter importer = new ObjFileImporter(url);
-        try (InputStream is = url.openStream()) {
-            final var reader = new BufferedReader(new InputStreamReader(is, charset));
-            importer.parse(reader);
-            Logger.info("OBJ file parsed: {} vertices, {} uvs, {} faces, {} smoothing groups. URL={}",
-                importer.data.vertexArray.size() / 3,
-                importer.data.uvArray.size() / 2,
-                importer.data.facesList.size() / 6,
-                importer.data.smoothingGroupList.size(),
-                url);
-            return importer.data;
-        }
-    }
-
-    // Private stuff
+public class ObjFileParser {
 
     private static String[] splitBySpace(String line) {
         return line.trim().split("\\s+");
@@ -82,13 +59,13 @@ public class ObjFileImporter {
     private String meshName = "default";
     private int currentSmoothingGroup = 0;
 
-    private final Model3D data;
+    final Model3D data;
 
-    private ObjFileImporter(URL url) {
+    public ObjFileParser(URL url) {
         data = new Model3D(url);
     }
 
-    private void parse(BufferedReader reader) throws IOException {
+    void parse(BufferedReader reader) throws IOException {
         String line;
         while ((line = reader.readLine()) != null) {
             if (line.isBlank() || line.startsWith("#")) {
