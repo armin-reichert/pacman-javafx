@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.input;
 
-import de.amr.pacmanfx.lib.nes.JoypadButton;
 import javafx.scene.input.KeyCodeCombination;
 
 public record JoypadKeyBinding(

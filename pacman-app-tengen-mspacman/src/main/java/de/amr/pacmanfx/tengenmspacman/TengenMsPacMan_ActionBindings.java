@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.ui.input.JoypadButton;
 import javafx.scene.input.KeyCode;
 
 import java.util.Set;

@@ -3,12 +3,12 @@
  */
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardSection;
 import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.image.ImageView;
 

@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
+import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
