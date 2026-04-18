@@ -137,7 +137,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
         if (e.newState() == Arcade_GameState.LEVEL_COMPLETE) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             soundEffects().ifPresent(GameSoundEffects::stopAll);
-            createAndPlayLevelCompletedAnimation(level);
+            levelCompletedAnimation = new LevelCompletedAnimation(level, () -> level.game().flow().state().expire());
+            levelCompletedAnimation.play();
         }
         else if (e.newState() == Arcade_GameState.GAME_OVER) {
             soundEffects().ifPresent(GameSoundEffects::playGameOverSound);
@@ -218,11 +219,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
             && !level.pac().isVisible() ? 1 : 0;
         final int count = Math.clamp(game.lifeCount() - 1 + additionalLives, 0, game.hud().maxLivesDisplayed());
         game.hud().setVisibleLifeCount(count);
-    }
-
-    private void createAndPlayLevelCompletedAnimation(GameLevel level) {
-        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> level.game().flow().state().expire());
-        levelCompletedAnimation.play();
     }
 
     private void resetActorAnimations(GameLevel level) {
