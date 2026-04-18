@@ -14,7 +14,6 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.model.world;
     exports de.amr.pacmanfx.model.test;
     exports de.amr.pacmanfx.lib;
-    exports de.amr.pacmanfx.lib.graph;
     exports de.amr.pacmanfx.lib.nes;
     exports de.amr.pacmanfx.steering;
     exports de.amr.pacmanfx;

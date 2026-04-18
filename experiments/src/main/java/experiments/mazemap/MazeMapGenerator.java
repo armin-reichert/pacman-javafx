@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package experiments.mazemap;
 
-import de.amr.pacmanfx.lib.graph.GridGraph;
-import de.amr.pacmanfx.lib.graph.GridGraphImpl;
-import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.basics.graph.GridGraph;
+import de.amr.basics.graph.GridGraphImpl;
+import de.amr.basics.math.Direction;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.world.*;
 import org.tinylog.Logger;
 

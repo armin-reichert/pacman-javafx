@@ -8,6 +8,7 @@ module experiments {
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.mapeditor;
     requires de.amr.pacmanfx.ui;
+    requires de.amr.basics;
 
     exports experiments;
 }
