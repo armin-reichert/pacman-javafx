@@ -4,9 +4,9 @@
 package de.amr.pacmanfx.ui.d3.entities;
 
 import de.amr.basics.Disposable;
+import de.amr.basics.StopWatch;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.lib.StopWatch;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.Obstacle;
