@@ -45,7 +45,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public void onTick(long tick) {
         final Arcade_GameModel game = gameContext().game();
         game.optGameLevel().ifPresent(level -> {
-            updateLivesCounter(game, level.pac());
+            updateLivesCounter(level);
             soundEffects().ifPresent(sfx -> {
                 sfx.setEnabled(!level.isDemoLevel());
                 sfx.playLevelRunningSound(level);
@@ -59,7 +59,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
      * @return Unscaled scene size in pixels as (width, height)
      */
     @Override
-    public Vector2i unscaledSize() {
+    public Vector2i unscaledSceneSize() {
         return gameContext().game().optGameLevel()
             .map(GameLevel::worldMap)
             .map(WorldMap::terrainLayer)
@@ -152,7 +152,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent e) {
-        onEnteredFrom3DScene(e.level());
+        adaptToGameLevel(e.level());
     }
 
     @Override
@@ -187,9 +187,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
         soundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
 
-    // others
+    // Others
 
-    // Expose the animation state to the scene renderer
+    // Expose flashing animation state to renderer
     public Optional<LevelCompletedAnimation.FlashingState> optFlashingState() {
         return Optional.ofNullable(levelCompletedAnimation).flatMap(LevelCompletedAnimation::flashingState);
     }
@@ -200,22 +200,23 @@ public class Arcade_PlayScene2D extends GameScene2D {
      *
      * @param level game level
      */
-    public void onEnteredFrom3DScene(GameLevel level) {
+    public void adaptToGameLevel(GameLevel level) {
         ui.soundManager().setEnabled(!level.isDemoLevel()); //TODO is this needed?
         actionBindings.bindAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         actionBindings.bindAll(GameUI.STEERING_ACTION_BINDINGS);
         actionBindings.bindAll(GameUI.CHEAT_ACTION_BINDINGS);
-        actionBindings.pluginKeyboard();
+        actionBindings.assignBindingsToKeyboard();
         Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
     // Private
 
     // While Pac-Man is not yet visible on level start, one symbol more is shown in the lives counter
-    private void updateLivesCounter(Game game, Pac pac) {
-        final int more = game.flow().state() == Arcade_GameState.STARTING_GAME_OR_LEVEL
-            && !pac.isVisible() ? 1 : 0;
-        final int count = Math.clamp(game.lifeCount() - 1 + more, 0, game.hud().maxLivesDisplayed());
+    private void updateLivesCounter(GameLevel level) {
+        final Game game = level.game();
+        final int additionalLives = level.game().flow().state() == Arcade_GameState.STARTING_GAME_OR_LEVEL
+            && !level.pac().isVisible() ? 1 : 0;
+        final int count = Math.clamp(game.lifeCount() - 1 + additionalLives, 0, game.hud().maxLivesDisplayed());
         game.hud().setVisibleLifeCount(count);
     }
 

@@ -44,7 +44,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
         requireNonNull(game);
         requireNonNull(scene);
 
-        final Vector2i sceneSize = scene.unscaledSize();
+        final Vector2i sceneSize = scene.unscaledSceneSize();
 
         if (!hud.isVisible()) return;
 

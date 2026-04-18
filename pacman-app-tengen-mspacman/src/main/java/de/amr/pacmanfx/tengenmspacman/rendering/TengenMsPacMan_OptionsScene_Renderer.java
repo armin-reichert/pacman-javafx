@@ -65,7 +65,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
             drawJoypadKeyBinding(Input.instance().joypad.currentKeyBinding());
         }
 
-        drawHorizontalBar(nesColor(0x20), nesColor(0x21), optionsScene.unscaledSize().x(), TS, 20);
+        drawHorizontalBar(nesColor(0x20), nesColor(0x21), optionsScene.unscaledSceneSize().x(), TS, 20);
 
         float y = 48;
         fillText("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
@@ -132,7 +132,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         y += TS(1);
         fillText("PRESS START TO START GAME",   NES_YELLOW, TS(3), y);
 
-        drawHorizontalBar(nesColor(0x20), nesColor(0x21), optionsScene.unscaledSize().x(), TS, 212);
+        drawHorizontalBar(nesColor(0x20), nesColor(0x21), optionsScene.unscaledSceneSize().x(), TS, 212);
 
         if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);

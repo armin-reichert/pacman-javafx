@@ -197,7 +197,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         actionBindings.bindOne(CommonGameActions.ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
         actionBindings.bindOne(CommonGameActions.ACTION_OPEN_EDITOR,      GameUI.COMMON_BINDINGS);
         actionBindings.bindOne(CommonGameActions.ACTION_TOGGLE_MUTED,     GameUI.COMMON_BINDINGS);
-        actionBindings.pluginKeyboard();
+        actionBindings.assignBindingsToKeyboard();
     }
 
     private void initScene() {

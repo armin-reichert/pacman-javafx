@@ -147,7 +147,7 @@ public class GameScene2D extends GameScene {
      *
      * @return the unscaled scene size in pixels
      */
-    public Vector2i unscaledSize() {
+    public Vector2i unscaledSceneSize() {
         return Globals.ARCADE_MAP_SIZE_IN_PIXELS;
     }
 }

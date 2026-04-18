@@ -73,13 +73,13 @@ public abstract class GameScene implements GameEventListener, Disposable {
      */
     public final void init() {
         onSceneStart();
-        actionBindings.pluginKeyboard();
+        actionBindings.assignBindingsToKeyboard();
         Logger.info("Game scene {} initialized", getClass().getSimpleName());
     }
 
     public final void end() {
         onSceneEnd();
-        actionBindings.unplugKeyboard();
+        actionBindings.removeBindingsFromKeyboard();
         actionBindings.dispose();
         soundEffects().ifPresent(GameSoundEffects::stopAll);
         Logger.info("Game scene {} ends", getClass().getSimpleName());

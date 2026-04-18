@@ -110,7 +110,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public Vector2i unscaledSize() { return SIZE; }
+    public Vector2i unscaledSceneSize() { return SIZE; }
 
     private TengenMsPacMan_GameModel tengenGame() { return gameContext().game(); }
     

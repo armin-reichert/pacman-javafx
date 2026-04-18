@@ -24,6 +24,6 @@ public class Arcade_PlayScene3D extends PlayScene3D {
             actionBindings.bindAll(GameUI.CHEAT_ACTION_BINDINGS);
         }
         bindPlaySceneActions();
-        actionBindings.pluginKeyboard();
+        actionBindings.assignBindingsToKeyboard();
     }
 }

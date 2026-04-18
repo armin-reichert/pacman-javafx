@@ -39,7 +39,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     @Override
     public void onSceneStart() {
         movingText = new Actor();
-        movingText.setPosition(TS(9), unscaledSize().y()); // lower border of screen
+        movingText.setPosition(TS(9), unscaledSceneSize().y()); // lower border of screen
         final UIConfig uiConfig = ui.currentConfig();
         ghost = uiConfig.createGhostWithAnimations(ui.spriteAnimationDriver(), RED_GHOST_SHADOW);
     }
@@ -61,7 +61,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
                 movingText.setVelocity(Vector2f.ZERO);
             }
             case 113 -> {
-                ghost.setPosition(unscaledSize().x() - TS, GHOST_Y);
+                ghost.setPosition(unscaledSceneSize().x() - TS, GHOST_Y);
                 ghost.setMoveDir(Direction.LEFT);
                 ghost.setWishDir(Direction.LEFT);
                 ghost.setSpeed(TS);
@@ -85,7 +85,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     }
 
     @Override
-    public Vector2i unscaledSize() {
+    public Vector2i unscaledSceneSize() {
         return SIZE;
     }
 

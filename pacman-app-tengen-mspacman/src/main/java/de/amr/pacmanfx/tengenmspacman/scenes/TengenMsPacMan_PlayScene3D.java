@@ -90,7 +90,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         }
         bindPlaySceneActions();
 
-        actionBindings.pluginKeyboard();
+        actionBindings.assignBindingsToKeyboard();
     }
 
     @Override

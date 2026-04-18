@@ -36,16 +36,16 @@ public class GameActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void pluginKeyboard() {
+    public void assignBindingsToKeyboard() {
         for (KeyCombination combination : actionByKeyCombination.keySet()) {
             keyboard.setBinding(combination, this);
         }
         logBindings();
-        Logger.info("Key bindings updated");
+        Logger.info("Key bindings assigned");
     }
 
     @Override
-    public void unplugKeyboard() {
+    public void removeBindingsFromKeyboard() {
         for (KeyCombination combination : actionByKeyCombination.keySet()) {
             keyboard.removeBinding(combination, this);
         }

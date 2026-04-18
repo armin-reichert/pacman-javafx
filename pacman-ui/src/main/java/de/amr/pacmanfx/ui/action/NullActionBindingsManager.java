@@ -33,10 +33,10 @@ public class NullActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void pluginKeyboard() {}
+    public void assignBindingsToKeyboard() {}
 
     @Override
-    public void unplugKeyboard() {}
+    public void removeBindingsFromKeyboard() {}
 
     @Override
     public void bindOne(GameAction action, Set<ActionBinding> bindings) {

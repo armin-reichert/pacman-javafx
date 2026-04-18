@@ -184,7 +184,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public Vector2i unscaledSize() {
+    public Vector2i unscaledSceneSize() {
         return gameContext().game().optGameLevel()
             .map(level -> level.worldMap().terrainLayer().sizeInPixel())
             .orElse(DEFAULT_SIZE);
@@ -319,7 +319,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             actionBindings.bindOne(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
         }
         Input.instance().joypad.setBindings(actionBindings);
-        actionBindings.pluginKeyboard();
+        actionBindings.assignBindingsToKeyboard();
     }
 
     private void updateScaling() {
@@ -349,7 +349,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private void startGameOverMessageAnimation(GameLevelMessage message) {
         if (message instanceof MovingGameLevelMessage movingMessage) {
             double messageWidth = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, Font.font(BaseRenderer.arcadeFont().getFamily(), TS));
-            movingMessage.startMovement(unscaledSize().x(), messageWidth);
+            movingMessage.startMovement(unscaledSceneSize().x(), messageWidth);
         }
     }
 

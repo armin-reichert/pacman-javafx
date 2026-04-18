@@ -141,7 +141,7 @@ public class DashboardSection3DSettings extends DashboardSection {
         if (gameScene == null) return NO_INFO;
 
         if (gameScene instanceof GameScene2D gameScene2D) {
-            final Vector2i size = gameScene2D.unscaledSize();
+            final Vector2i size = gameScene2D.unscaledSceneSize();
             final Vector2f scaledSize = size.scaled(gameScene2D.scaling());
             return "%dx%d (scaled: %.0fx%.0f)".formatted(size.x(), size.y(), scaledSize.x(), scaledSize.y());
         }

@@ -28,8 +28,8 @@ import java.util.Set;
  *
  * <h2>Lifecycle</h2>
  * <ul>
- *   <li>{@link #pluginKeyboard()} registers all known bindings with the keyboard.</li>
- *   <li>{@link #unplugKeyboard()} unregisters them again.</li>
+ *   <li>{@link #assignBindingsToKeyboard()} registers all known bindings with the keyboard.</li>
+ *   <li>{@link #removeBindingsFromKeyboard()} unregisters them again.</li>
  *   <li>{@link #dispose()} frees any internal resources (if needed).</li>
  * </ul>
  *
@@ -74,14 +74,14 @@ public interface ActionBindingsManager extends Disposable {
      * This typically means registering listeners or updating internal keyboard state
      * so that {@link #matchingAction()} can resolve actions.
      */
-    void pluginKeyboard();
+    void assignBindingsToKeyboard();
 
     /**
      * Removes all bindings previously activated on the given keyboard.
      * <p>
      * After calling this method, no key combinations should trigger actions.
      */
-    void unplugKeyboard();
+    void removeBindingsFromKeyboard();
 
     /**
      * Assigns a new key combination to the given action, replacing any previous binding.

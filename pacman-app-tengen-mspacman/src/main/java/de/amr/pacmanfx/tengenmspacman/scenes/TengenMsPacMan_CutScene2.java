@@ -161,5 +161,5 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
-    public Vector2i unscaledSize() { return SIZE; }
+    public Vector2i unscaledSceneSize() { return SIZE; }
 }

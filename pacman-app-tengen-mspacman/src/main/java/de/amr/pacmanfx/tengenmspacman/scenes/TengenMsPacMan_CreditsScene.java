@@ -50,5 +50,5 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     }
 
     @Override
-    public Vector2i unscaledSize() { return SIZE; }
+    public Vector2i unscaledSceneSize() { return SIZE; }
 }

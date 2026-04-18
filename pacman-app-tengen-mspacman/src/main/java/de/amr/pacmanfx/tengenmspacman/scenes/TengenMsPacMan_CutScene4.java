@@ -171,7 +171,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     private void spawnJunior(long tick) {
         var junior = TengenMsPacMan_ActorFactory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
-        junior.setPosition((float) randomX, unscaledSize().y() - 4 * TS);
+        junior.setPosition((float) randomX, unscaledSceneSize().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
         junior.setAnimations(ui.currentConfig().createPacAnimations(ui.spriteAnimationDriver()));
@@ -194,11 +194,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             computeNewMoveDir(junior);
         }
         junior.move();
-        if (junior.x() > unscaledSize().x()) {
+        if (junior.x() > unscaledSceneSize().x()) {
             junior.setX(0);
         }
         if (junior.x() < 0) {
-            junior.setX(unscaledSize().x());
+            junior.setX(unscaledSceneSize().x());
         }
     }
 
@@ -217,10 +217,10 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     private int compareBySmallestDistToSceneCenter(Pac junior, Direction dir1, Direction dir2) {
         Vector2f pos1 = junior.tile().plus(dir1.vector()).scaled(TS).toVector2f();
         Vector2f pos2 = junior.tile().plus(dir2.vector()).scaled(TS).toVector2f();
-        Vector2f center = unscaledSize().scaled(0.5);
+        Vector2f center = unscaledSceneSize().scaled(0.5);
         return Double.compare(pos1.euclideanDist(center), pos2.euclideanDist(center));
     }
 
     @Override
-    public Vector2i unscaledSize() { return SIZE; }
+    public Vector2i unscaledSceneSize() { return SIZE; }
 }

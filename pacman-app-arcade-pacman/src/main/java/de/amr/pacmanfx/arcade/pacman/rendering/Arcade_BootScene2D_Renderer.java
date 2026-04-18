@@ -57,20 +57,20 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
             case BLANK -> clearCanvas();
             case HEX_CODES -> {
                 if (tick % 4 == 0) {
-                    final Vector2i size = scene.unscaledSize();
+                    final Vector2i size = scene.unscaledSceneSize();
                     clearCanvas();
                     drawRandomHexDigits(size.x(), size.y());
                 }
             }
             case RANDOM_SPRITE_FRAGMENTS -> {
                 if (tick % 4 == 0) {
-                    final Vector2i size = scene.unscaledSize();
+                    final Vector2i size = scene.unscaledSceneSize();
                     clearCanvas();
                     drawRandomSpriteFragments(size.x(), size.y());
                 }
             }
             case GRID -> {
-                final Vector2i size = scene.unscaledSize();
+                final Vector2i size = scene.unscaledSceneSize();
                 clearCanvas();
                 drawGrid(size.x(), size.y());
             }
