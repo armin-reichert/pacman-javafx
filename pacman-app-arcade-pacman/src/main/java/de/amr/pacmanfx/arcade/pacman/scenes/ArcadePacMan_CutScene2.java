@@ -65,8 +65,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void onTick(long tick) {
-        ++sceneTick;
-        if (sceneTick < ANIMATION_START) {
+        if (++sceneTick < ANIMATION_START) {
             return;
         }
         switch (sceneTick) {
