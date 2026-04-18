@@ -14,6 +14,7 @@ import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -46,7 +47,9 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private Actor heart;
     private Clapperboard clapperboard;
 
-    public ArcadeMsPacMan_CutScene1() {}
+    public ArcadeMsPacMan_CutScene1(GameUI ui) {
+        super(ui);
+    }
 
     public Pac pacMan() {
         return pacMan;

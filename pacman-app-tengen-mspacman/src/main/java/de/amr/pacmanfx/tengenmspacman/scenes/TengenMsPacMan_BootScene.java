@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import javafx.scene.paint.Color;
@@ -31,7 +32,9 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     public Ghost ghost;
     public Color shadeOfBlue;
 
-    public TengenMsPacMan_BootScene() {}
+    public TengenMsPacMan_BootScene(GameUI ui) {
+        super(ui);
+    }
 
     @Override
     public void onSceneStart() {

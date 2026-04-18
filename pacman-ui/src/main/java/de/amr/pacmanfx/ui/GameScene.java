@@ -26,12 +26,16 @@ import static java.util.Objects.requireNonNull;
 public abstract class GameScene implements GameEventListener, Disposable {
 
     protected final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
-    protected GameUI ui;
+    protected final GameUI ui;
+
+    public GameScene(GameUI ui) {
+        this.ui = requireNonNull(ui);
+    }
 
     /**
      * @return the game UI
      */
-    public final GameUI ui() {
+    public GameUI ui() {
         return ui;
     }
 
@@ -110,9 +114,7 @@ public abstract class GameScene implements GameEventListener, Disposable {
      */
     public void onSceneEnd() {}
 
-    public void onEmbeddedIntoUI(GameUI ui) {
-        this.ui = requireNonNull(ui);
-    }
+    public void onEmbeddedIntoUI() {}
 
     /**
      * Called when a key combination has been pressed inside this game scene. By default, the first matching action

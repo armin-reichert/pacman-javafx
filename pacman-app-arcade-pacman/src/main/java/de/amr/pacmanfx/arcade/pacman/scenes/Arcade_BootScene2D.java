@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 
 /**
@@ -21,6 +22,10 @@ public class Arcade_BootScene2D extends GameScene2D {
     }
 
     private SceneState sceneState;
+
+    public Arcade_BootScene2D(GameUI ui) {
+        super(ui);
+    }
 
     public SceneState state() {
         return sceneState;

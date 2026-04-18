@@ -68,7 +68,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private int idleTicks;
     public int initialDelay;
 
-    public TengenMsPacMan_OptionsScene() {}
+    public TengenMsPacMan_OptionsScene(GameUI ui) {
+        super(ui);
+    }
 
     @Override
     public void onSceneStart() {

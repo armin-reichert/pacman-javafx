@@ -9,6 +9,7 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameSceneConfig;
+import de.amr.pacmanfx.ui.GameUI;
 
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.*;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
@@ -19,17 +20,17 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
     public ArcadePacMan_GameSceneConfig() {}
 
     @Override
-    protected GameScene createGameScene(SceneID sceneID) {
+    protected GameScene createGameScene(GameUI ui, SceneID sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
-            case CommonSceneID.BOOT_SCENE -> new Arcade_BootScene2D();
-            case CommonSceneID.INTRO_SCENE -> new ArcadePacMan_IntroScene();
-            case CommonSceneID.START_SCENE -> new ArcadePacMan_StartScene();
-            case CommonSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D();
-            case CommonSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D();
-            case CommonSceneID.CUTSCENE_1 -> new ArcadePacMan_CutScene1();
-            case CommonSceneID.CUTSCENE_2 -> new ArcadePacMan_CutScene2();
-            case CommonSceneID.CUTSCENE_3 -> new ArcadePacMan_CutScene3();
+            case CommonSceneID.BOOT_SCENE -> new Arcade_BootScene2D(ui);
+            case CommonSceneID.INTRO_SCENE -> new ArcadePacMan_IntroScene(ui);
+            case CommonSceneID.START_SCENE -> new ArcadePacMan_StartScene(ui);
+            case CommonSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D(ui);
+            case CommonSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D(ui);
+            case CommonSceneID.CUTSCENE_1 -> new ArcadePacMan_CutScene1(ui);
+            case CommonSceneID.CUTSCENE_2 -> new ArcadePacMan_CutScene2(ui);
+            case CommonSceneID.CUTSCENE_3 -> new ArcadePacMan_CutScene3(ui);
             default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
         };
     }
@@ -41,7 +42,7 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
             case PREPARING_GAME_START -> CommonSceneID.START_SCENE;
             case INTRO -> CommonSceneID.INTRO_SCENE;
             case INTERMISSION -> resolveCutSceneID(game);
-            case CutScenesTestState testState -> GameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
+            case CutScenesTestState<?> testState -> GameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
         };
     }

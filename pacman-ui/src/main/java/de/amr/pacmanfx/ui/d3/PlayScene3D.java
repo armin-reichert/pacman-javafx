@@ -44,7 +44,6 @@ import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_LIGHT_COLOR;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
-import static java.util.Objects.requireNonNull;
 
 public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
@@ -72,7 +71,9 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
-    public PlayScene3D() {
+    public PlayScene3D(GameUI ui) {
+        super(ui);
+
         perspectives = new PerspectiveManager(camera);
         // Initial size is irrelevant (will be bound to parent scene size later)
         subScene = new SubScene(subSceneRoot, 88, 88, true, SceneAntialiasing.BALANCED);
@@ -123,8 +124,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     @Override
-    public void onEmbeddedIntoUI(GameUI ui) {
-        this.ui = requireNonNull(ui);
+    public void onEmbeddedIntoUI() {
         // TODO: reconsider whether scores need recreation here (variant/font change?)
         replaceScores3D();
     }

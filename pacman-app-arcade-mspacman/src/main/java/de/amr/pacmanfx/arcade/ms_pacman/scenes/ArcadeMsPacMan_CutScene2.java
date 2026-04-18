@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -32,7 +33,9 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     private Clapperboard clapperboard;
 
-    public ArcadeMsPacMan_CutScene2() {}
+    public ArcadeMsPacMan_CutScene2(GameUI ui) {
+        super(ui);
+    }
 
     public Pac pacMan() {
         return pacMan;

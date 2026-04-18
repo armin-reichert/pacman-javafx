@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacAnimations;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -27,7 +28,9 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     public Pac pacMan;
     public Ghost blinky;
 
-    public ArcadePacMan_CutScene1() {}
+    public ArcadePacMan_CutScene1(GameUI ui) {
+        super(ui);
+    }
     
     @Override
     public void onSceneStart() {

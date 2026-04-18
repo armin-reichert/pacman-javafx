@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameSceneConfig;
+import de.amr.pacmanfx.ui.GameUI;
 
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
@@ -22,17 +23,18 @@ public class PacManXXL_MsPacMan_GameSceneConfig extends AbstractGameSceneConfig 
     public PacManXXL_MsPacMan_GameSceneConfig() {}
 
     @Override
-    protected GameScene createGameScene(SceneID sceneID) {
+    protected GameScene createGameScene(GameUI ui, SceneID sceneID) {
+        requireNonNull(ui);
         requireNonNull(sceneID);
         return switch (sceneID) {
-            case CommonSceneID.BOOT_SCENE -> new Arcade_BootScene2D();
-            case CommonSceneID.INTRO_SCENE -> new ArcadeMsPacMan_IntroScene();
-            case CommonSceneID.START_SCENE -> new ArcadeMsPacMan_StartScene();
-            case CommonSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D();
-            case CommonSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D();
-            case CommonSceneID.CUTSCENE_1 -> new ArcadeMsPacMan_CutScene1();
-            case CommonSceneID.CUTSCENE_2 -> new ArcadeMsPacMan_CutScene2();
-            case CommonSceneID.CUTSCENE_3 -> new ArcadeMsPacMan_CutScene3();
+            case CommonSceneID.BOOT_SCENE -> new Arcade_BootScene2D(ui);
+            case CommonSceneID.INTRO_SCENE -> new ArcadeMsPacMan_IntroScene(ui);
+            case CommonSceneID.START_SCENE -> new ArcadeMsPacMan_StartScene(ui);
+            case CommonSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D(ui);
+            case CommonSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D(ui);
+            case CommonSceneID.CUTSCENE_1 -> new ArcadeMsPacMan_CutScene1(ui);
+            case CommonSceneID.CUTSCENE_2 -> new ArcadeMsPacMan_CutScene2(ui);
+            case CommonSceneID.CUTSCENE_3 -> new ArcadeMsPacMan_CutScene3(ui);
             default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
         };
     }

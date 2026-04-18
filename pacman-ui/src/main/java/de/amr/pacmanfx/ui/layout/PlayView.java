@@ -228,7 +228,7 @@ public class PlayView extends StackPane implements View {
     private void updateGameScene(boolean forcedReload) {
         final Game game = ui.gameContext().game();
         final GameScene prevGameScene = optCurrentGameScene().orElse(null);
-        final GameScene nextGameScene = ui.currentGameSceneConfig().selectGameScene(game).orElseThrow();
+        final GameScene nextGameScene = ui.currentGameSceneConfig().selectGameScene(ui, game).orElseThrow();
 
         if (nextGameScene == prevGameScene && !forcedReload) {
             return;
@@ -239,7 +239,7 @@ public class PlayView extends StackPane implements View {
             Logger.info("Game scene ended: {}", prevGameScene.getClass().getSimpleName());
         }
 
-        nextGameScene.onEmbeddedIntoUI(ui); // Must be called *before* embedding
+        nextGameScene.onEmbeddedIntoUI(); // Must be called *before* embedding
         embedGameScene(parentScene, nextGameScene);
         nextGameScene.init();
         Logger.info("Game scene initialized: {}", nextGameScene.getClass().getSimpleName());

@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.event.CreditAddedEvent;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
@@ -13,7 +14,9 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
  */
 public class ArcadePacMan_StartScene extends GameScene2D {
 
-    public ArcadePacMan_StartScene() {}
+    public ArcadePacMan_StartScene(GameUI ui) {
+        super(ui);
+    }
 
     @Override
     public void onSceneStart() {

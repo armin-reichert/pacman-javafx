@@ -10,7 +10,9 @@ import de.amr.pacmanfx.ui.d3.PlayScene3D;
 
 public class Arcade_PlayScene3D extends PlayScene3D {
 
-    public Arcade_PlayScene3D() {}
+    public Arcade_PlayScene3D(GameUI ui) {
+        super(ui);
+    }
 
     @Override
     public void replaceActionBindings(GameLevel level) {

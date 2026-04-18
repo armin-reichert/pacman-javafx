@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.input.Input;
@@ -43,7 +44,9 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     private Pac pacMan;
     private Pac msPacMan;
 
-    public TengenMsPacMan_CutScene2() {}
+    public TengenMsPacMan_CutScene2(GameUI ui) {
+        super(ui);
+    }
 
     public Clapperboard clapperboard() {
         return clapperboard;

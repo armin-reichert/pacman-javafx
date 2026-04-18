@@ -31,10 +31,10 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public final Optional<GameScene> selectGameScene(Game game) {
+    public final Optional<GameScene> selectGameScene(GameUI ui, Game game) {
         requireNonNull(game);
         final SceneID sceneID = determineSceneID(game);
-        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
+        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, id -> createGameScene(ui, id));
         return Optional.of(gameScene);
     }
 
@@ -45,7 +45,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
         return scenesByID.get(sceneID) == gameScene;
     }
 
-    protected abstract GameScene createGameScene(SceneID sceneID);
+    protected abstract GameScene createGameScene(GameUI ui, SceneID sceneID);
 
     protected abstract SceneID determineSceneID(Game game);
 }

@@ -29,7 +29,7 @@ import java.util.Optional;
  * their own identifiers or use the built‑in {@link CommonSceneID} enumeration.
  *
  * <h2>Scene Selection</h2>
- * The method {@link #selectGameScene(Game)} determines which scene should be displayed for the
+ * The method {@link #selectGameScene(GameUI, Game)} determines which scene should be displayed for the
  * current game state. This allows each game variant to define its own scene flow.
  */
 public interface GameSceneConfig extends Disposable {
@@ -125,10 +125,11 @@ public interface GameSceneConfig extends Disposable {
      *   <li>selecting the appropriate cutscene after a level is completed.</li>
      * </ul>
      *
+     * @param ui the game UI
      * @param game the current game model
      * @return the scene to display, or an empty {@code Optional} if no scene applies
      */
-    Optional<GameScene> selectGameScene(Game game);
+    Optional<GameScene> selectGameScene(GameUI ui, Game game);
 
     default SceneID resolveCutSceneID(Game game) {
         final Optional<GameLevel> optGameLevel = game.optGameLevel();

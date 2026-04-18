@@ -7,6 +7,7 @@ import de.amr.pacmanfx.lib.fsm.State;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS;
@@ -24,7 +25,9 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     public float fadeProgress = 0;
 
-    public TengenMsPacMan_CreditsScene() {}
+    public TengenMsPacMan_CreditsScene(GameUI ui) {
+        super(ui);
+    }
 
     @Override
     public void onSceneStart() {

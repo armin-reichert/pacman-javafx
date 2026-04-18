@@ -37,8 +37,11 @@ public class GameScene2D extends GameScene {
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
-
     protected Canvas canvas;
+
+    public GameScene2D(GameUI ui) {
+        super(ui);
+    }
 
     /**
      * Releases bindings and resources held by this scene.

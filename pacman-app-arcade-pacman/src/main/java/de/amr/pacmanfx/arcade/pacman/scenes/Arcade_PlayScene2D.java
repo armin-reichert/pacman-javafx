@@ -37,7 +37,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public Arcade_PlayScene2D() {}
+    public Arcade_PlayScene2D(GameUI ui) {
+        super(ui);
+    }
 
     @Override
     public void onTick(long tick) {

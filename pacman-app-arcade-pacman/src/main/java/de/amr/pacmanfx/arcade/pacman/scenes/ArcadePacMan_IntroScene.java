@@ -84,7 +84,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private int ghostIndex;
     private long lastGhostEatenTick;
 
-    public ArcadePacMan_IntroScene() {
+    public ArcadePacMan_IntroScene(GameUI ui) {
+        super(ui);
         flow = new StateMachine<>();
         flow.setContext(this);
         flow.addStates(SceneState.values());

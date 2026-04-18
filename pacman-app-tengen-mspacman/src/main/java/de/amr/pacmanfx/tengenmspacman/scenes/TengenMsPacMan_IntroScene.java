@@ -59,7 +59,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     private int waitBeforeRising;
     public boolean dark;
 
-    public TengenMsPacMan_IntroScene() {
+    public TengenMsPacMan_IntroScene(GameUI ui) {
+        super(ui);
         sceneFlow = new StateMachine<>(this, List.of(SceneState.values()));
     }
 
