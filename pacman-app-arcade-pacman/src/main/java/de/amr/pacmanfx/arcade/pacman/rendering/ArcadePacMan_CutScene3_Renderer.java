@@ -20,8 +20,8 @@ public class ArcadePacMan_CutScene3_Renderer extends ArcadePacMan_CutScene_Rende
                 super.draw(scene);
                 if (scene instanceof ArcadePacMan_CutScene3 cutScene) {
                     final long tick = cutScene.sceneTick;
-                    String text = tick < ArcadePacMan_CutScene3.ANIMATION_START_TICK
-                        ? String.format("Wait %d", ArcadePacMan_CutScene3.ANIMATION_START_TICK - tick)
+                    String text = tick < ArcadePacMan_CutScene3.TICK_ANIMATION_START
+                        ? String.format("Wait %d", ArcadePacMan_CutScene3.TICK_ANIMATION_START - tick)
                         : String.format("Frame %d", tick);
                     fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
                 }
