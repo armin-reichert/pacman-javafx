@@ -5,8 +5,8 @@ package de.amr.pacmanfx.model;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.lib.Pulse;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import javafx.beans.property.*;

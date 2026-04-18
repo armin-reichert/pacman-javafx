@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.lib.Pulse;
+import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;

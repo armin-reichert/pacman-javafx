@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
-import de.amr.pacmanfx.lib.Pulse;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;

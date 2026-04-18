@@ -5,7 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.lib.Pulse;
+import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;

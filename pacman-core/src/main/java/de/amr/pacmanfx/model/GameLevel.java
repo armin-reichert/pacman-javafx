@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.lib.Pulse;
+import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
