@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.model.world;
 
+import de.amr.basics.math.PolygonToRectangleConverter;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.lib.PolygonToRectangleConverter;
 import org.tinylog.Logger;
 
 import java.util.*;

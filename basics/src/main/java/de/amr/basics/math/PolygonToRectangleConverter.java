@@ -1,9 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.lib;
-
-import de.amr.basics.math.Vector2i;
+package de.amr.basics.math;
 
 import java.util.ArrayList;
 import java.util.Collection;
