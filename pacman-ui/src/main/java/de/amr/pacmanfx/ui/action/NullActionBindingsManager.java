@@ -33,21 +33,21 @@ public class NullActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void assignBindingsToKeyboard() {}
+    public void assignToKeyboard() {}
 
     @Override
-    public void removeBindingsFromKeyboard() {}
+    public void removeFromKeyboard() {}
 
     @Override
-    public void bindOne(GameAction action, Set<ActionBinding> bindings) {
+    public void addAny(GameAction action, Set<ActionBinding> bindings) {
     }
 
     @Override
-    public void bind(GameAction action, KeyCombination combination) {
+    public void add(GameAction action, KeyCombination combination) {
     }
 
     @Override
-    public void bindAll(Set<ActionBinding> bindings) {
+    public void addAll(Set<ActionBinding> bindings) {
     }
 
     @Override

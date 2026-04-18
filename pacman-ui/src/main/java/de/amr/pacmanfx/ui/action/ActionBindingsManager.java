@@ -28,8 +28,8 @@ import java.util.Set;
  *
  * <h2>Lifecycle</h2>
  * <ul>
- *   <li>{@link #assignBindingsToKeyboard()} registers all known bindings with the keyboard.</li>
- *   <li>{@link #removeBindingsFromKeyboard()} unregisters them again.</li>
+ *   <li>{@link #assignToKeyboard()} registers all known bindings with the keyboard.</li>
+ *   <li>{@link #removeFromKeyboard()} unregisters them again.</li>
  *   <li>{@link #dispose()} frees any internal resources (if needed).</li>
  * </ul>
  *
@@ -74,14 +74,14 @@ public interface ActionBindingsManager extends Disposable {
      * This typically means registering listeners or updating internal keyboard state
      * so that {@link #matchingAction()} can resolve actions.
      */
-    void assignBindingsToKeyboard();
+    void assignToKeyboard();
 
     /**
      * Removes all bindings previously activated on the given keyboard.
      * <p>
      * After calling this method, no key combinations should trigger actions.
      */
-    void removeBindingsFromKeyboard();
+    void removeFromKeyboard();
 
     /**
      * Assigns a new key combination to the given action, replacing any previous binding.
@@ -89,7 +89,7 @@ public interface ActionBindingsManager extends Disposable {
      * @param action      the action to rebind
      * @param combination the new key combination
      */
-    void bind(GameAction action, KeyCombination combination);
+    void add(GameAction action, KeyCombination combination);
 
     /**
      * Registers exactly one binding for the given action from the provided set.
@@ -100,7 +100,7 @@ public interface ActionBindingsManager extends Disposable {
      * @param action         the action to bind
      * @param bindings the candidate bindings
      */
-    void bindOne(GameAction action, Set<ActionBinding> bindings);
+    void addAny(GameAction action, Set<ActionBinding> bindings);
 
     /**
      * Registers all provided bindings.
@@ -110,5 +110,5 @@ public interface ActionBindingsManager extends Disposable {
      *
      * @param bindings the bindings to register
      */
-    void bindAll(Set<ActionBinding> bindings);
+    void addAll(Set<ActionBinding> bindings);
 }

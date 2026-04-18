@@ -309,17 +309,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
         // Action keyboard bindings
         if (level.isDemoLevel()) {
-            actionBindings.bindOne(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
-            actionBindings.bindOne(ACTION_QUIT_DEMO_LEVEL, TENGEN_SPECIFIC_BINDINGS);
+            actionBindings.addAny(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
+            actionBindings.addAny(ACTION_QUIT_DEMO_LEVEL, TENGEN_SPECIFIC_BINDINGS);
         } else {
             // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
-            actionBindings.bindAll(STEERING_BINDINGS);
-            actionBindings.bindAll(GameUI.CHEAT_ACTION_BINDINGS);
-            actionBindings.bindOne(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
-            actionBindings.bindOne(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
+            actionBindings.addAll(STEERING_BINDINGS);
+            actionBindings.addAll(GameUI.CHEAT_ACTION_BINDINGS);
+            actionBindings.addAny(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
+            actionBindings.addAny(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
         }
         Input.instance().joypad.setBindings(actionBindings);
-        actionBindings.assignBindingsToKeyboard();
+        actionBindings.assignToKeyboard();
     }
 
     private void updateScaling() {

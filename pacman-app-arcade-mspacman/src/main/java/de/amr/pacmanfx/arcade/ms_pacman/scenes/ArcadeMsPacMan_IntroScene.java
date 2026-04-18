@@ -60,8 +60,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public void onSceneStart() {
         ui.voicePlayer().playVoice(GameUI_Resources.VOICE_EXPLAIN_GAME_START);
 
-        actionBindings.bindAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
-        actionBindings.bindAll(GameUI.SCENE_TESTS_BINDINGS);
+        actionBindings.addAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
+        actionBindings.addAll(GameUI.SCENE_TESTS_BINDINGS);
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);

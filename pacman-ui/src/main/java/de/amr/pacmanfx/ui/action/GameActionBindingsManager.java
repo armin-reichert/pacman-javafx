@@ -36,7 +36,7 @@ public class GameActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void assignBindingsToKeyboard() {
+    public void assignToKeyboard() {
         for (KeyCombination combination : actionByKeyCombination.keySet()) {
             keyboard.setBinding(combination, this);
         }
@@ -45,7 +45,7 @@ public class GameActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void removeBindingsFromKeyboard() {
+    public void removeFromKeyboard() {
         for (KeyCombination combination : actionByKeyCombination.keySet()) {
             keyboard.removeBinding(combination, this);
         }
@@ -53,14 +53,14 @@ public class GameActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void bind(GameAction action, KeyCombination combination) {
+    public void add(GameAction action, KeyCombination combination) {
         requireNonNull(action);
         requireNonNull(combination);
         actionByKeyCombination.put(combination, action);
     }
 
     @Override
-    public void bindOne(GameAction gameAction, Set<ActionBinding> bindings) {
+    public void addAny(GameAction gameAction, Set<ActionBinding> bindings) {
         requireNonNull(gameAction);
         requireNonNull(bindings);
         bindings.stream()
@@ -70,7 +70,7 @@ public class GameActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void bindAll(Set<ActionBinding> bindings) {
+    public void addAll(Set<ActionBinding> bindings) {
         for (ActionBinding binding : bindings) {
             registerBinding(binding);
         }

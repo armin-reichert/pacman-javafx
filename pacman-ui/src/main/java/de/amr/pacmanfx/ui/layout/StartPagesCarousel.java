@@ -82,11 +82,11 @@ public class StartPagesCarousel extends Carousel implements View {
 
     @Override
     public void onEnter() {
-        actionBindings.bind(actionShowPrevPage, bare(KeyCode.LEFT));
-        actionBindings.bind(actionShowNextPage, bare(KeyCode.RIGHT));
-        actionBindings.bind(CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
-        actionBindings.bind(CommonGameActions.ACTION_TOGGLE_PAUSED, bare(KeyCode.P));
-        actionBindings.assignBindingsToKeyboard();
+        actionBindings.add(actionShowPrevPage, bare(KeyCode.LEFT));
+        actionBindings.add(actionShowNextPage, bare(KeyCode.RIGHT));
+        actionBindings.add(CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
+        actionBindings.add(CommonGameActions.ACTION_TOGGLE_PAUSED, bare(KeyCode.P));
+        actionBindings.assignToKeyboard();
         restartProgressTimer();
         currentStartPage().ifPresent(page -> page.layoutRoot().requestFocus());
     }
@@ -94,7 +94,7 @@ public class StartPagesCarousel extends Carousel implements View {
     @Override
     public void onExit() {
         pauseProgressTimer();
-        actionBindings.removeBindingsFromKeyboard();
+        actionBindings.removeFromKeyboard();
         currentStartPage().ifPresent(startPage -> startPage.onExitStartPage(ui));
     }
 

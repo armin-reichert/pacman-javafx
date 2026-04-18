@@ -90,7 +90,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         final UIConfig uiConfig = ui.currentConfig();
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-        actionBindings.bind(
+        actionBindings.add(
             ACTION_LET_GAME_STATE_EXPIRE,
             Input.instance().joypad.keyForButton(JoypadButton.START));
 

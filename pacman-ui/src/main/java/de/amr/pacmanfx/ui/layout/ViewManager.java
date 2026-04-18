@@ -98,7 +98,7 @@ public class ViewManager {
             final View oldView = viewMap.get(oldID);
             if (oldView != null) {
                 oldView.onExit();
-                oldView.actionBindings().removeBindingsFromKeyboard();
+                oldView.actionBindings().removeFromKeyboard();
             }
         }
 
@@ -114,7 +114,7 @@ public class ViewManager {
         }
 
         layoutPane.getChildren().set(RESERVED_VIEW_INDEX_IN_LAYOUT, newView.root());
-        newView.actionBindings().assignBindingsToKeyboard();
+        newView.actionBindings().assignToKeyboard();
         newView.onEnter();
         flashMessageView.clear();
 

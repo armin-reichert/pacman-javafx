@@ -64,7 +64,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     public void onSceneStart() {
         final UIConfig uiConfig = ui.currentConfig();
 
-        actionBindings.bind(
+        actionBindings.add(
             ACTION_LET_GAME_STATE_EXPIRE,
             Input.instance().joypad.keyForButton(JoypadButton.START)
         );
