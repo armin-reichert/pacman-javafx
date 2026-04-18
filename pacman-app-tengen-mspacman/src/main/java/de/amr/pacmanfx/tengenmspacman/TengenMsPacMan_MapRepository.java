@@ -4,9 +4,9 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
+import de.amr.pacmanfx.nes.NES_ColorScheme;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
 

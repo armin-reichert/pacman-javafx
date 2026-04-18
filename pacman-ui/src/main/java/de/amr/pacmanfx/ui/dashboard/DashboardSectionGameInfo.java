@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.AbstractHuntingTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
@@ -14,6 +13,7 @@ import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
+import de.amr.pacmanfx.nes.NES_ColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
 import javafx.scene.paint.Color;
 

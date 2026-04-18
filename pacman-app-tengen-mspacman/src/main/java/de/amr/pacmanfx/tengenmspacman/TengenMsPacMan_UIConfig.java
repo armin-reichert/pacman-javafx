@@ -6,11 +6,11 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
-import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.nes.NES_ColorScheme;
+import de.amr.pacmanfx.nes.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;

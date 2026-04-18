@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
+import static de.amr.pacmanfx.UsefulFunctions.tileAt;
 
 public class MazeObstacles3D extends Group implements Disposable {
 

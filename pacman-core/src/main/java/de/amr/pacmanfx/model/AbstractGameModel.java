@@ -22,7 +22,7 @@ import java.util.TreeSet;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
+import static de.amr.pacmanfx.UsefulFunctions.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
 
 /**

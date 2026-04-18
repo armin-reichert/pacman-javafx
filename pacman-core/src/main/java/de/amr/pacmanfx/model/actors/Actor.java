@@ -12,7 +12,7 @@ import javafx.beans.property.SimpleObjectProperty;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
+import static de.amr.pacmanfx.UsefulFunctions.tileAt;
 import static java.util.Objects.requireNonNull;
 
 /**

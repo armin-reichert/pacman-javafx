@@ -25,9 +25,9 @@ import java.util.function.BiConsumer;
 import static de.amr.basics.math.Direction.*;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.Validations.differsAtMost;
 import static de.amr.pacmanfx.Validations.stateIsOneOf;
-import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
 
 /**

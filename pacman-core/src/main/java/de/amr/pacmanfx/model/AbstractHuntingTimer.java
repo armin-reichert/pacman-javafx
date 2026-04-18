@@ -11,10 +11,10 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
+import static de.amr.pacmanfx.UsefulFunctions.isEven;
+import static de.amr.pacmanfx.UsefulFunctions.isOdd;
 import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
-import static de.amr.pacmanfx.lib.UsefulFunctions.isEven;
-import static de.amr.pacmanfx.lib.UsefulFunctions.isOdd;
 
 /**
  * Controls the timing of the hunting phases (alternating scattering and chasing).

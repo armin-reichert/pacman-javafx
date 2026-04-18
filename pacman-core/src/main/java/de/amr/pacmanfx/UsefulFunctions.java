@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.lib;
+package de.amr.pacmanfx;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;

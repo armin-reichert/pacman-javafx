@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 import static de.amr.basics.math.RandomNumberSupport.randomFloat;
 import static de.amr.basics.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
-import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 

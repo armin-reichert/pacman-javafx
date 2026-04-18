@@ -7,7 +7,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
-import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
+import static de.amr.pacmanfx.UsefulFunctions.lerp;
 import static java.util.Objects.requireNonNull;
 
 public class DronePerspective implements Perspective<GameLevel> {

@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
-import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
+import de.amr.pacmanfx.nes.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
