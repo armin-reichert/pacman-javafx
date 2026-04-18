@@ -20,8 +20,6 @@ import java.util.stream.Stream;
 
 import static de.amr.basics.math.RandomNumberSupport.*;
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.UsefulFunctions.halfTileRightOf;
-import static de.amr.pacmanfx.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;

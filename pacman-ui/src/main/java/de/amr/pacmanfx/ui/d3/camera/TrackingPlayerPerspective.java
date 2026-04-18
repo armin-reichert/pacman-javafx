@@ -8,7 +8,7 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.UsefulFunctions.lerp;
+import static de.amr.pacmanfx.Globals.lerp;
 import static java.util.Objects.requireNonNull;
 
 public class TrackingPlayerPerspective implements Perspective<GameLevel> {

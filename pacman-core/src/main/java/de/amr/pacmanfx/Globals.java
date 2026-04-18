@@ -3,7 +3,12 @@
  */
 package de.amr.pacmanfx;
 
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+
+import static de.amr.basics.math.Vector2f.vec2_float;
+import static de.amr.basics.math.Vector2i.vec2_int;
+import static java.util.Objects.requireNonNull;
 
 public final class Globals {
 
@@ -72,4 +77,59 @@ public final class Globals {
      * The tile size is 8px which gives a map size of 224x288px.
      */
     public static final Vector2i ARCADE_MAP_SIZE_IN_PIXELS = new Vector2i(224, 288); // 28x36 tiles
+
+    /**
+     * @param position a position
+     * @return tile containing given position
+     */
+    public static Vector2i tileAt(Vector2f position) {
+        requireNonNull(position);
+        return tileAt(position.x(), position.y());
+    }
+
+    /**
+     * @param x x position
+     * @param y y position
+     * @return tile containing given position
+     */
+    public static Vector2i tileAt(float x, float y) {
+        float tx = x >= 0 ? x / TS : (x - TS) / TS;
+        float ty = y >= 0 ? y / TS : (y - TS) / TS;
+        return vec2_int((int) tx, (int) ty);
+    }
+
+    /**
+     * @param tileX tile x coordinate
+     * @param tileY tile y coordinate
+     * @return position (scaled by tile size) half tile right of tile origin
+     */
+    public static Vector2f halfTileRightOf(int tileX, int tileY) {
+        return vec2_float(TS * tileX + HTS, TS * tileY);
+    }
+
+    /**
+     * @param tile some tile
+     * @return position (scaled by tile size) half tile right of tile origin
+     */
+    public static Vector2f halfTileRightOf(Vector2i tile) {
+        return halfTileRightOf(tile.x(), tile.y());
+    }
+
+    public static boolean isEven(int n) {
+        return n % 2 == 0;
+    }
+
+    public static boolean isOdd(int n) {
+        return n % 2 != 0;
+    }
+
+    /**
+     * @param from value1
+     * @param to value2
+     * @param t      "time" between 0 and 1
+     * @return linear interpolation between {@code from} and {@code to} values
+     */
+    public static double lerp(double from, double to, double t) {
+        return (1 - t) * from + t * to;
+    }
 }

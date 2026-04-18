@@ -14,7 +14,7 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
 import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.UsefulFunctions.tileAt;
+import static de.amr.pacmanfx.Globals.tileAt;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 

@@ -10,9 +10,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.UsefulFunctions.tileAt;
+import static de.amr.pacmanfx.Globals.*;
 import static java.util.Objects.requireNonNull;
 
 /**

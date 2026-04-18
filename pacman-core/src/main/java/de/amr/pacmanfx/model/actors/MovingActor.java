@@ -18,9 +18,7 @@ import java.util.Optional;
 
 import static de.amr.basics.math.Direction.RIGHT;
 import static de.amr.basics.math.Direction.UP;
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.UsefulFunctions.tileAt;
+import static de.amr.pacmanfx.Globals.*;
 import static java.util.Objects.requireNonNull;
 
 /**

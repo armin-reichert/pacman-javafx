@@ -17,7 +17,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static de.amr.pacmanfx.UsefulFunctions.tileAt;
+import static de.amr.pacmanfx.Globals.tileAt;
 
 /**
  * Pac-Man steering based on a set of rules.
