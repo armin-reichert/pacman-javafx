@@ -24,6 +24,9 @@ import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationDriver;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
+import de.amr.pacmanfx.uilib.model3D.actor.GhostModel3D;
+import de.amr.pacmanfx.uilib.model3D.actor.PacManModel3D;
+import de.amr.pacmanfx.uilib.model3D.world.PelletModel3D;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
@@ -115,6 +118,9 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         initScene();
         initStage();
         initGameClock();
+
+        // preload to make 3D scene creation faster
+        load3DModels();
     }
 
     private void initGameClock() {
@@ -232,6 +238,13 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         Logger.error("SOMETHING VERY BAD HAPPENED!");
         showFlashMessage(Duration.seconds(60), "%s\n%s".formatted(SOMEONE_CALL_AN_AMBULANCE, reason.getMessage()));
         stopGame();
+    }
+
+    private void load3DModels() {
+        Logger.info("Preloading 3D models...");
+        PacManModel3D.instance();
+        GhostModel3D.instance();
+        PelletModel3D.instance();
     }
 
     // PreferencesManager interface
