@@ -185,7 +185,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     @Override
-    public Optional<GameUI_ContextMenu> supplyContextMenu(Game game) {
+    public Optional<GameUI_ContextMenu> supplyContextMenu() {
         contextMenu = new PlaySceneContextMenu(ui);
         return Optional.of(contextMenu);
     }

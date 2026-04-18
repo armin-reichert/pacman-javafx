@@ -149,9 +149,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public Optional<GameUI_ContextMenu> supplyContextMenu(Game game) {
+    public Optional<GameUI_ContextMenu> supplyContextMenu() {
+        final Game game = gameContext().game();
         final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
-
         final var menu = new GameUI_ContextMenu(ui);
 
         final RadioMenuItem miScaledToFit = menu.addLocalizedRadioButton("scaled_to_fit");
@@ -172,6 +172,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         menu.addSeparator();
         menu.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
         menu.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
+
         return Optional.of(menu);
     }
 

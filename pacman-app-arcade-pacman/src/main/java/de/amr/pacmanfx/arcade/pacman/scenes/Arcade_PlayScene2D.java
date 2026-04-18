@@ -66,7 +66,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public Optional<GameUI_ContextMenu> supplyContextMenu(Game game) {
+    public Optional<GameUI_ContextMenu> supplyContextMenu() {
+        final Game game = gameContext().game();
         final var menu = new GameUI_ContextMenu(ui);
         menu.addLocalizedTitleItem("pacman");
         menu.addLocalizedCheckBox(game.cheats().usingAutopilotProperty(), "autopilot").setOnAction(e -> {

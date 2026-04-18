@@ -7,7 +7,6 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
 import de.amr.pacmanfx.ui.input.Input;
@@ -116,7 +115,7 @@ public abstract class GameScene implements GameEventListener, Disposable {
     }
 
     /**
-     * Called when a key combination has been pressed inside this game scene. By public, the first matching action
+     * Called when a key combination has been pressed inside this game scene. By default, the first matching action
      * defined in the action bindings is executed.
      */
     public void onUserInput() {
@@ -135,10 +134,9 @@ public abstract class GameScene implements GameEventListener, Disposable {
     }
 
     /**
-     * @param game the current game
      * @return context menu provided by this game scene which is merged into the view's context menu
      */
-    public Optional<GameUI_ContextMenu> supplyContextMenu(Game game) {
+    public Optional<GameUI_ContextMenu> supplyContextMenu() {
         return Optional.empty();
     }
 }
