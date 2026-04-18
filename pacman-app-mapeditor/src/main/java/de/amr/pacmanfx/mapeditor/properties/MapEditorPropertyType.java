@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.mapeditor.properties;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.lib.ColorRGBA;
+import de.amr.pacmanfx.mapeditor.palette.ColorRGBA;
 
 import java.util.Locale;
 
