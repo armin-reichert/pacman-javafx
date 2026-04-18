@@ -56,18 +56,22 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
 
             // Mark intersection tiles
             final TerrainLayer terrain = level.worldMap().terrainLayer();
-            terrain.tiles().filter(terrain::isIntersection).forEach(tile -> {
-                final double cx = tile.x() * TS + HTS;
-                final double cy = tile.y() * TS + HTS;
-                for (Direction dir : CLOCK_ORDER) {
-                    if (!terrain.isTileBlocked(tile.plus(dir.vector()))) {
-                        final double x = cx + dir.vector().x() * HTS;
-                        final double y = cy + dir.vector().y() * HTS;
-                        ctx.setFill(Color.gray(0.6));
-                        ctx.setLineWidth(1);
-                        ctx.strokeLine(scaled(cx), scaled(cy), scaled(x), scaled(y));
+            terrain.tiles()
+                .filter(tile -> tile.y() >= terrain.emptyRowsOverMaze())
+                .filter(tile -> tile.y() < terrain.numRows() - terrain.emptyRowsBelowMaze())
+                .filter(terrain::isIntersection)
+                .forEach(tile -> {
+                    final double cx = tile.x() * TS + HTS;
+                    final double cy = tile.y() * TS + HTS;
+                    for (Direction dir : CLOCK_ORDER) {
+                        if (!terrain.isTileBlocked(tile.plus(dir.vector()))) {
+                            final double x = cx + dir.vector().x() * HTS;
+                            final double y = cy + dir.vector().y() * HTS;
+                            ctx.setStroke(Color.WHITE);
+                            ctx.setLineWidth(2);
+                            ctx.strokeLine(scaled(cx), scaled(cy), scaled(x), scaled(y));
+                        }
                     }
-                }
             });
 
             final State<Game> state = game.flow().state();
