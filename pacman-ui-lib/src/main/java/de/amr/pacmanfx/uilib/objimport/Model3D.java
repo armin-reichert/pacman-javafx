@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.uilib.objimport;
 
-import de.amr.basics.Disposable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableFloatArray;
 import javafx.scene.paint.Material;
@@ -38,7 +37,7 @@ import static java.util.Objects.requireNonNull;
  * The class does not perform the parsing itself; it only holds the parsed data.
  * A separate OBJ importer is expected to populate the fields.
  */
-public class Model3D implements Disposable {
+public class Model3D {
 
     public static Model3D importObjFile(URL url, Charset charset) throws IOException {
         requireNonNull(url);
@@ -159,7 +158,6 @@ public class Model3D implements Disposable {
      * After calling this method, the model becomes empty and cannot be used
      * unless repopulated by an importer.
      */
-    @Override
     public void dispose() {
         triangleMeshMap.clear();
         materialMapsList.clear();
