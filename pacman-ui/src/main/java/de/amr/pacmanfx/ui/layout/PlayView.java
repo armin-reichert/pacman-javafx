@@ -202,9 +202,9 @@ public class PlayView extends StackPane implements View {
                 final UIConfig uiConfig = ui.currentConfig();
 
                 //TODO this should be done elsewhere
-                level.pac().setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationDriver()));
+                level.pac().setAnimations(uiConfig.createPacAnimations());
                 level.ghosts().forEach(ghost ->
-                    ghost.setAnimations(uiConfig.createGhostAnimations(ui.spriteAnimationDriver(), ghost.personality())));
+                    ghost.setAnimations(uiConfig.createGhostAnimations(ghost.personality())));
 
                 miniView.onLevelCreated(level);
                 miniView.slideIn();
@@ -297,7 +297,6 @@ public class PlayView extends StackPane implements View {
             game.flow().removeGameEventListener(this);
             ui.uiConfigManager().dispose(oldGameVariantName);
             ui.soundManager().dispose();
-            ui.spriteAnimationDriver().clear();
             ui.stage().getIcons().removeAll();
             Logger.info("Cleanup of game variant {} complete.", oldGameVariantName);
         }

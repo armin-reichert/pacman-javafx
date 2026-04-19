@@ -12,6 +12,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class SpriteAnimation {
 
+    //TODO how to manage access to central animation container?
+    private static final SpriteAnimationContainer CENTRAL_ANIMATION_CONTAINER = SpriteAnimationContainer.instance();
+
     private final int fps;
     private RectShort[] sprites;
     private int currentFrameIndex;
@@ -44,12 +47,14 @@ public class SpriteAnimation {
     }
     public void start() {
         if (!running) {
+            CENTRAL_ANIMATION_CONTAINER.register(this);
             running = true;
             lastUpdateTime = now();
         }
     }
 
     public void stop() {
+        CENTRAL_ANIMATION_CONTAINER.unregister(this);
         running = false;
     }
 

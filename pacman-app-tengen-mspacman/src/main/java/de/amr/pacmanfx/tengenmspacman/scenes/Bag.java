@@ -8,7 +8,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationDriver;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationContainer;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static java.util.Objects.requireNonNull;
@@ -19,21 +19,18 @@ public class Bag extends Actor {
 
     public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
 
-        private final SpriteAnimationDriver manager;
-
-        public BagAnimations(SpriteAnimationDriver spriteAnimationDriver) {
+        public BagAnimations() {
             super(TengenMsPacMan_SpriteSheet.instance());
-            manager = requireNonNull(spriteAnimationDriver);
         }
 
         @Override
         protected SpriteAnimation createAnimation(Object animationID) {
             return switch (animationID) {
-                case AnimationID.BAG -> SpriteAnimationBuilder.builder(manager)
+                case AnimationID.BAG -> SpriteAnimationBuilder.builder()
                     .singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG))
                     .initiallyStopped()
                     .build();
-                case AnimationID.JUNIOR -> SpriteAnimationBuilder.builder(manager)
+                case AnimationID.JUNIOR -> SpriteAnimationBuilder.builder()
                     .singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC))
                     .initiallyStopped()
                     .build();
@@ -44,8 +41,8 @@ public class Bag extends Actor {
 
     private boolean open;
 
-    public Bag(SpriteAnimationDriver spriteAnimationDriver) {
-        setAnimations(new BagAnimations(spriteAnimationDriver));
+    public Bag() {
+        setAnimations(new BagAnimations());
         setOpen(false);
     }
 

@@ -103,12 +103,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         blinking = new Pulse(10, Pulse.State.ON);
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimationDriver()));
+        pacMan.setAnimations(uiConfig.createPacAnimations());
 
-        ghosts[0] = uiConfig.createGhostWithAnimations(ui.spriteAnimationDriver(), RED_GHOST_SHADOW);
-        ghosts[1] = uiConfig.createGhostWithAnimations(ui.spriteAnimationDriver(), PINK_GHOST_SPEEDY);
-        ghosts[2] = uiConfig.createGhostWithAnimations(ui.spriteAnimationDriver(), CYAN_GHOST_BASHFUL);
-        ghosts[3] = uiConfig.createGhostWithAnimations(ui.spriteAnimationDriver(), ORANGE_GHOST_POKEY);
+        ghosts[0] = uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW);
+        ghosts[1] = uiConfig.createGhostWithAnimations(PINK_GHOST_SPEEDY);
+        ghosts[2] = uiConfig.createGhostWithAnimations(CYAN_GHOST_BASHFUL);
+        ghosts[3] = uiConfig.createGhostWithAnimations(ORANGE_GHOST_POKEY);
 
         Arrays.fill(ghostImageVisible, false);
         Arrays.fill(ghostNicknameVisible, false);

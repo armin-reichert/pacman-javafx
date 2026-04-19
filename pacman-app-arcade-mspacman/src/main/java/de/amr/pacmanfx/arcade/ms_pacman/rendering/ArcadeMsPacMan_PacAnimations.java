@@ -7,7 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationDriver;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationContainer;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static java.util.Objects.requireNonNull;
@@ -16,31 +16,28 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
     public enum AnimationID {MR_PAC_MAN_MUNCHING}
 
-    private final SpriteAnimationDriver manager;
-    
-    public ArcadeMsPacMan_PacAnimations(SpriteAnimationDriver spriteAnimationDriver) {
+    public ArcadeMsPacMan_PacAnimations() {
         super(ArcadeMsPacMan_SpriteSheet.instance());
-        this.manager = requireNonNull(spriteAnimationDriver);
     }
 
     @Override
     protected SpriteAnimation createAnimation(Object animationID) {
         return switch (animationID) {
-            case Pac.AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder(manager)
+            case Pac.AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet.sprite(SpriteID.MS_PACMAN_FULL))
                 .build();
 
-            case Pac.AnimationID.PAC_MUNCHING -> SpriteAnimationBuilder.builder(manager)
+            case Pac.AnimationID.PAC_MUNCHING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().msPacManMunchingSprites(Direction.LEFT))
                 .repeated()
                 .build();
 
-            case Pac.AnimationID.PAC_DYING -> SpriteAnimationBuilder.builder(manager)
+            case Pac.AnimationID.PAC_DYING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(SpriteID.MS_PACMAN_DYING))
                 .frameTicks(8)
                 .build();
 
-            case AnimationID.MR_PAC_MAN_MUNCHING -> SpriteAnimationBuilder.builder(manager)
+            case AnimationID.MR_PAC_MAN_MUNCHING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.MR_PACMAN_MUNCHING_LEFT))
                 .frameTicks(2)
                 .repeated()

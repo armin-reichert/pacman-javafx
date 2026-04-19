@@ -8,12 +8,10 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationDriver;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
-import static java.util.Objects.requireNonNull;
 
 public class Bag extends Actor {
 
@@ -21,23 +19,20 @@ public class Bag extends Actor {
 
     public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
 
-        private final SpriteAnimationDriver manager;
-
-        public BagAnimations(SpriteAnimationDriver spriteAnimationDriver) {
+        public BagAnimations() {
             super(ArcadeMsPacMan_SpriteSheet.instance());
-            this.manager = requireNonNull(spriteAnimationDriver);
         }
 
         @Override
         protected SpriteAnimation createAnimation(Object animationID) {
             return switch (animationID) {
                 case AnimationID.JUNIOR ->
-                    SpriteAnimationBuilder.builder(manager)
+                    SpriteAnimationBuilder.builder()
                         .singleSprite(spriteSheet.sprite(JUNIOR_PAC))
                         .initiallyStopped()
                         .build();
                 case AnimationID.BAG ->
-                    SpriteAnimationBuilder.builder(manager)
+                    SpriteAnimationBuilder.builder()
                         .singleSprite(spriteSheet.sprite(BLUE_BAG))
                         .initiallyStopped()
                         .build();
@@ -48,8 +43,8 @@ public class Bag extends Actor {
 
     private boolean open;
 
-    public Bag(SpriteAnimationDriver spriteAnimationDriver) {
-        setAnimations(new BagAnimations(spriteAnimationDriver));
+    public Bag() {
+        setAnimations(new BagAnimations());
     }
 
     public void setOpen(boolean open) {

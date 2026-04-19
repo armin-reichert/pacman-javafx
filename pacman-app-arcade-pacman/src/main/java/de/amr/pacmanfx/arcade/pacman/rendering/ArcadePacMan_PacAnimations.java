@@ -7,10 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationDriver;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-
-import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
@@ -18,33 +15,30 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
         ANIM_BIG_PAC_MAN,
     }
 
-    private final SpriteAnimationDriver manager;
-    
-    public ArcadePacMan_PacAnimations(SpriteAnimationDriver manager, ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_PacAnimations(ArcadePacMan_SpriteSheet spriteSheet) {
         super(spriteSheet);
-        this.manager = requireNonNull(manager);
     }
 
     @Override
     protected SpriteAnimation createAnimation(Object id) {
         return switch (id) {
-            case Pac.AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder(manager)
+            case Pac.AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet.sprite(SpriteID.PACMAN_FULL))
                 .initiallyStopped()
                 .build();
 
             // Renderer draws sprites depending on Pac-Man move direction!
-            case Pac.AnimationID.PAC_MUNCHING -> SpriteAnimationBuilder.builder(manager)
+            case Pac.AnimationID.PAC_MUNCHING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().pacMunchingSprites(Direction.LEFT))
                 .repeated()
                 .build();
 
-            case Pac.AnimationID.PAC_DYING -> SpriteAnimationBuilder.builder(manager)
+            case Pac.AnimationID.PAC_DYING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.PACMAN_DYING))
                 .frameTicks(8)
                 .build();
 
-            case AnimationID.ANIM_BIG_PAC_MAN -> SpriteAnimationBuilder.builder(manager)
+            case AnimationID.ANIM_BIG_PAC_MAN -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.PACMAN_BIG))
                 .frameTicks(3)
                 .repeated()

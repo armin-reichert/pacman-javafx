@@ -8,7 +8,6 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationDriver;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -71,16 +70,15 @@ class ChaseAnimation {
         timeline.stop();
     }
 
-    public void init(UIConfig uiConfig, SpriteAnimationDriver spriteAnimationDriver, Canvas canvas) {
+    public void init(UIConfig uiConfig, Canvas canvas) {
         requireNonNull(uiConfig);
-        requireNonNull(spriteAnimationDriver);
         requireNonNull(canvas);
 
         actorRenderer = uiConfig.createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scalingProperty());
 
         pac = ArcadePacMan_GameModel.createPacMan();
-        pac.setAnimations(uiConfig.createPacAnimations(spriteAnimationDriver));
+        pac.setAnimations(uiConfig.createPacAnimations());
         pac.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
         pac.playAnimation();
         pac.setX(numTilesX * TS);
@@ -90,10 +88,10 @@ class ChaseAnimation {
         pac.setVisible(true);
 
         ghosts = List.of(
-            uiConfig.createGhostWithAnimations(spriteAnimationDriver, RED_GHOST_SHADOW),
-            uiConfig.createGhostWithAnimations(spriteAnimationDriver, PINK_GHOST_SPEEDY),
-            uiConfig.createGhostWithAnimations(spriteAnimationDriver, CYAN_GHOST_BASHFUL),
-            uiConfig.createGhostWithAnimations(spriteAnimationDriver, ORANGE_GHOST_POKEY)
+            uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW),
+            uiConfig.createGhostWithAnimations(PINK_GHOST_SPEEDY),
+            uiConfig.createGhostWithAnimations(CYAN_GHOST_BASHFUL),
+            uiConfig.createGhostWithAnimations(ORANGE_GHOST_POKEY)
         );
         for (Ghost ghost : ghosts) {
             ghost.setX((numTilesX + 4) * TS + ghost.personality() * GHOST_DISTANCE);

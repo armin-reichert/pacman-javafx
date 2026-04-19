@@ -8,10 +8,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationDriver;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-
-import static java.util.Objects.requireNonNull;
 
 public class Stork extends Actor {
 
@@ -19,17 +16,14 @@ public class Stork extends Actor {
 
     public static class StorkAnimations extends SpriteAnimationMap<SpriteID> {
 
-        private final SpriteAnimationDriver manager;
-
-        public StorkAnimations(SpriteAnimationDriver spriteAnimationDriver) {
+        public StorkAnimations() {
             super(ArcadeMsPacMan_SpriteSheet.instance());
-            manager = requireNonNull(spriteAnimationDriver);
         }
 
         @Override
         protected SpriteAnimation createAnimation(Object animationID) {
             if (animationID.equals(AnimationID.FLYING)) {
-                return SpriteAnimationBuilder.builder(manager)
+                return SpriteAnimationBuilder.builder()
                     .sprites(spriteSheet.sprites(SpriteID.STORK))
                     .frameTicks(8)
                     .repeated()
@@ -39,7 +33,7 @@ public class Stork extends Actor {
         }
     }
 
-    public Stork(SpriteAnimationDriver spriteAnimationDriver) {
-        setAnimations(new StorkAnimations(spriteAnimationDriver));
+    public Stork() {
+        setAnimations(new StorkAnimations());
     }
 }

@@ -16,22 +16,20 @@ public class SpriteAnimationBuilder {
     /**
      * Creates a new sprite animation builder for animations running at 60 frames/second.
      *
-     * @param driver the animation driver
      * @return new  builder
      */
-    public static SpriteAnimationBuilder builder(SpriteAnimationDriver driver) {
-        return new SpriteAnimationBuilder(driver, 60);
+    public static SpriteAnimationBuilder builder() {
+        return new SpriteAnimationBuilder(60);
     }
 
     /**
      * Creates a new sprite animation builder for animations running at the specified frame rate (frames/second).
      *
-     * @param driver the animation driver
      * @param fps the frame rate at which the build animation is played
      * @return new  builder
      */
-    public static SpriteAnimationBuilder builder(SpriteAnimationDriver driver, int fps) {
-        return new SpriteAnimationBuilder(driver, fps);
+    public static SpriteAnimationBuilder builder(int fps) {
+        return new SpriteAnimationBuilder(fps);
     }
 
     private static class BuildData {
@@ -42,7 +40,6 @@ public class SpriteAnimationBuilder {
         int frameTicks = 1;
     }
 
-    private final SpriteAnimationDriver driver;
     private BuildData data;
 
     private void checkBuildPossible() {
@@ -51,8 +48,7 @@ public class SpriteAnimationBuilder {
         }
     }
 
-    private SpriteAnimationBuilder(SpriteAnimationDriver driver, int fps) {
-        this.driver = requireNonNull(driver);
+    private SpriteAnimationBuilder(int fps) {
         if (fps <= 0) {
             throw new IllegalArgumentException("Sprite animation frame rate must be positive, but is %d".formatted(fps));
         }
@@ -116,7 +112,6 @@ public class SpriteAnimationBuilder {
         if (data.initiallyStopped) {
             animation.stop();
         }
-        driver.register(animation);
         data = null; // signals build has been called and data are consumed
         return animation;
     }
