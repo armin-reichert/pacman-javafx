@@ -13,8 +13,8 @@ import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 
 import static de.amr.pacmanfx.ui.d3.animation.LevelCompletedAnimation.createMazeWallsSwingingAnimation;
-import static de.amr.pacmanfx.uilib.animation.AnimationHelpers.pauseSec;
-import static de.amr.pacmanfx.uilib.animation.AnimationHelpers.pauseSecThen;
+import static de.amr.pacmanfx.uilib.animation.FXAnimationHelpers.pauseSec;
+import static de.amr.pacmanfx.uilib.animation.FXAnimationHelpers.pauseSecThen;
 
 /**
  * Shortened version of the level‑completion animation.

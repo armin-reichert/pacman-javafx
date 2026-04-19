@@ -10,7 +10,7 @@ import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
-public interface AnimationHelpers {
+public interface FXAnimationHelpers {
 
     /**
      * Executes the given action immediately when played in a SequentialTransition.
