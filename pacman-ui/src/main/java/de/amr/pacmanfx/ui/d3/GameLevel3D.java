@@ -61,7 +61,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.GameFlow.CanonicalGameState.*;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_WALL_HEIGHT;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
-import static de.amr.pacmanfx.uilib.animation.FXAnimationHelpers.*;
+import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
 /**

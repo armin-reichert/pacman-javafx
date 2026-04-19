@@ -9,8 +9,8 @@ import javafx.animation.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.pacmanfx.uilib.animation.FXAnimationHelpers.doNow;
-import static de.amr.pacmanfx.uilib.animation.FXAnimationHelpers.pauseSecThen;
+import static de.amr.pacmanfx.uilib.Ufx.doNow;
+import static de.amr.pacmanfx.uilib.Ufx.pauseSecThen;
 import static java.util.Objects.requireNonNull;
 
 public class PacMan3DDyingAnimation extends ManagedAnimation {

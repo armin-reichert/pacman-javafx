@@ -5,6 +5,9 @@ package de.amr.pacmanfx.uilib;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.Validations;
+import javafx.animation.Animation;
+import javafx.animation.PauseTransition;
+import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ObservableValue;
@@ -187,5 +190,47 @@ public final class Ufx {
         material.diffuseColorProperty().bind(colorProperty);
         material.specularColorProperty().bind(colorProperty.map(Color::brighter));
         return material;
+    }
+
+    /**
+     * Executes the given action immediately when played in a SequentialTransition.
+     * @param action code to run
+     * @return empty transition
+     */
+    public static Transition doNow(Runnable action) {
+        requireNonNull(action);
+        var transition = new Transition() {
+            @Override
+            protected void interpolate(double t) {}
+        };
+        transition.setOnFinished(_ -> action.run());
+        return transition;
+    }
+
+    /**
+     * Pauses for the given number of seconds.
+     *
+     * @param seconds number of seconds
+     * @return pause transition
+     */
+    public static PauseTransition pauseSec(double seconds) {
+        return new PauseTransition(javafx.util.Duration.seconds(seconds));
+    }
+
+    /**
+     * Prepends a pause of the given duration (in seconds) before the given action is executed. Note that you have to call
+     * {@link Animation#play()} to execute the action!
+     * <p>
+     * NOTE: Do NOT start an animation in the action!
+     *
+     * @param seconds number of seconds to wait before the action is executed
+     * @param action       code to run
+     * @return pause transition
+     */
+    public static PauseTransition pauseSecThen(double seconds, Runnable action) {
+        requireNonNull(action);
+        var pause = new PauseTransition(javafx.util.Duration.seconds(seconds));
+        pause.setOnFinished(_ -> action.run());
+        return pause;
     }
 }
