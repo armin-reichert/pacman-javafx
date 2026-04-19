@@ -19,4 +19,5 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.model3D.animation;
     exports de.amr.pacmanfx.uilib.model3D.actor;
     exports de.amr.pacmanfx.uilib.model3D.world;
+    exports de.amr.pacmanfx.uilib.spriteanim;
 }

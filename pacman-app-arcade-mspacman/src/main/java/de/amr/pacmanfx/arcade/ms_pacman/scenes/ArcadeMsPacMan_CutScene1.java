@@ -18,7 +18,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
+import de.amr.pacmanfx.uilib.spriteanim.SingleSpriteNoAnimation;
 
 import static de.amr.pacmanfx.Globals.*;
 

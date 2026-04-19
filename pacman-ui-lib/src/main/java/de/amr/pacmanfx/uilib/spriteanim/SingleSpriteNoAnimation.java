@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.animation;
+package de.amr.pacmanfx.uilib.spriteanim;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.AnimationSet;
