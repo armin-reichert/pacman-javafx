@@ -3,20 +3,19 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
+import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.uilib.spriteanim.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
 
 public class Bag extends Actor {
-
-    public enum AnimationID { BAG, JUNIOR }
 
     public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
 
@@ -27,12 +26,12 @@ public class Bag extends Actor {
         @Override
         protected SpriteAnimation createAnimation(Object animationID) {
             return switch (animationID) {
-                case AnimationID.JUNIOR ->
+                case ArcadeMsPacMan_AnimationID.JUNIOR ->
                     SpriteAnimationBuilder.builder()
                         .singleSprite(spriteSheet.sprite(JUNIOR_PAC))
                         .initiallyStopped()
                         .build(SpriteAnimationContainer.instance());
-                case AnimationID.BAG ->
+                case ArcadeMsPacMan_AnimationID.BAG ->
                     SpriteAnimationBuilder.builder()
                         .singleSprite(spriteSheet.sprite(BLUE_BAG))
                         .initiallyStopped()
@@ -50,7 +49,7 @@ public class Bag extends Actor {
 
     public void setOpen(boolean open) {
         this.open = open;
-        animations.selectAnimation(open ? AnimationID.JUNIOR : AnimationID.BAG);
+        animations.selectAnimation(open ? ArcadeMsPacMan_AnimationID.JUNIOR : ArcadeMsPacMan_AnimationID.BAG);
     }
 
     public boolean isOpen() {

@@ -8,6 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
@@ -134,7 +135,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                     stork.setPosition(RIGHT_BORDER, TS * 7);
                     stork.setVelocity(-0.8f, 0);
                     stork.setBagReleasedFromBeak(false);
-                    stork.selectAnimation(Stork.AnimationID.FLYING);
+                    stork.selectAnimation(ArcadeMsPacMan_AnimationID.STORK_FLYING);
                     stork.playAnimation();
                     stork.show();
                 }

@@ -8,8 +8,8 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimations;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;
@@ -121,7 +121,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private void enterStateDeliverJunior() {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(TS * 3, LANE_Y - 4);
-        pacMan.selectAnimation(ArcadeMsPacMan_PacAnimations.AnimationID.MR_PAC_MAN_MUNCHING);
+        pacMan.selectAnimation(ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
         pacMan.stopAnimation();
         pacMan.show();
 
@@ -134,7 +134,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         stork.setPosition(TS * 30, TS * 12);
         stork.setVelocity(-0.8f, 0);
         stork.show();
-        stork.selectAnimation(Stork.AnimationID.FLYING);
+        stork.selectAnimation(ArcadeMsPacMan_AnimationID.STORK_FLYING);
         stork.playAnimation();
 
         bag.setPosition(stork.x() - 14, stork.y() + 3);

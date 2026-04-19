@@ -7,14 +7,13 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.uilib.spriteanim.SpriteAnimationMap;
 
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
-
-    public enum AnimationID {MR_PAC_MAN_MUNCHING}
 
     private final SpriteAnimationContainer container;
 
@@ -40,7 +39,7 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
                 .frameTicks(8)
                 .build(container);
 
-            case AnimationID.MR_PAC_MAN_MUNCHING -> SpriteAnimationBuilder.builder()
+            case ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.MR_PACMAN_MUNCHING_LEFT))
                 .frameTicks(2)
                 .repeated()

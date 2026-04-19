@@ -7,14 +7,10 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimations;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -139,7 +135,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
         pacMan.setSpeed(SPEED_PAC_CHASING);
-        pacMan.selectAnimation(ArcadeMsPacMan_PacAnimations.AnimationID.MR_PAC_MAN_MUNCHING);
+        pacMan.selectAnimation(ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
         pacMan.playAnimation();
         pacMan.show();
 

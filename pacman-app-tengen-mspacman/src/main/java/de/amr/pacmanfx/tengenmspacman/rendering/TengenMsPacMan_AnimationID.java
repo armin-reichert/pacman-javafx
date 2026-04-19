@@ -11,5 +11,5 @@ public enum TengenMsPacMan_AnimationID {
     ANIM_PAC_MAN_BOOSTER,
     MR_PAC_MAN_WAVING_HAND,
     MR_PAC_MAN_TURNING_AWAY,
-    ANIM_JUNIOR
+    ANIM_JUNIOR,
 }
