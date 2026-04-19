@@ -10,5 +10,6 @@ module de.amr.basics {
     exports de.amr.basics.fsm;
     exports de.amr.basics.graph;
     exports de.amr.basics.math;
+    exports de.amr.basics.spriteanim;
     exports de.amr.basics.timer;
 }

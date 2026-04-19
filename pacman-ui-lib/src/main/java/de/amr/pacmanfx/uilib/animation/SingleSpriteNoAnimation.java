@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.model.actors.AnimationSet;
+import de.amr.basics.spriteanim.AnimationSet;
 
 import static java.util.Objects.requireNonNull;
 

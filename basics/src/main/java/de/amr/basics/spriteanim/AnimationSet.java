@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.model.actors;
+package de.amr.basics.spriteanim;
 
 import de.amr.basics.math.RectShort;
 
@@ -22,8 +22,7 @@ public interface AnimationSet {
         }
 
         @Override
-        public void setAnimationFrame(Object animationID, int frameIndex) {
-        }
+        public void setAnimationFrame(Object animationID, int frameIndex) {}
 
         @Override
         public void playSelectedAnimation() {}

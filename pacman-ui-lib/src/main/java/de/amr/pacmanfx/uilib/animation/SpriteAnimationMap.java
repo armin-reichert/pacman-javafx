@@ -4,7 +4,8 @@
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.model.actors.AnimationSet;
+import de.amr.basics.spriteanim.AnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import org.tinylog.Logger;
 
@@ -17,7 +18,7 @@ public abstract class SpriteAnimationMap<SID extends Enum<SID>> implements Anima
 
     protected final SpriteSheet<SID> spriteSheet;
     protected final Map<Object, SpriteAnimation> animationsByID = new HashMap<>();
-    protected Object selectedID;
+    protected SID selectedID;
 
     public SpriteAnimationMap(SpriteSheet<SID> spriteSheet) {
         this.spriteSheet = requireNonNull(spriteSheet);
@@ -62,10 +63,11 @@ public abstract class SpriteAnimationMap<SID extends Enum<SID>> implements Anima
         return selectedID;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void setAnimationFrame(Object animationID, int frameIndex) {
         if (!animationID.equals(selectedID)) {
-            selectedID = animationID;
+            selectedID = (SID) animationID;
             if (currentAnimation() != null) {
                 currentAnimation().setCurrentFrameIndex(0);
             } else {

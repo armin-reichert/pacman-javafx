@@ -12,7 +12,7 @@ import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import javafx.scene.SubScene;
 import javafx.scene.input.ScrollEvent;
 import org.tinylog.Logger;

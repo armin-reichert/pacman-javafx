@@ -9,7 +9,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengenmspacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengenmspacman.scenes.Stork;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
@@ -47,7 +47,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
-        final AnimationSet animations = ghost.animations();
+        final de.amr.basics.spriteanim.AnimationSet animations = ghost.animations();
         if (animations.isSelected(Ghost.AnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.wishDir());
             return spriteOrDefault(sprites, animations.currentFrame());
@@ -61,7 +61,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private FacingSprite computePacSprite(Pac pac) {
-        final AnimationSet animations = pac.animations();
+        final de.amr.basics.spriteanim.AnimationSet animations = pac.animations();
         final int frame = animations.currentFrame();
         final Direction dir = pac.moveDir();
         return switch (animations.selectedAnimationID()) {

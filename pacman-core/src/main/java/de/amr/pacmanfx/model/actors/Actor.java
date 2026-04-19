@@ -177,13 +177,13 @@ public class Actor {
 
     // Animation support
 
-    protected AnimationSet animations = AnimationSet.EMPTY_ANIMATION_SET;
+    protected de.amr.basics.spriteanim.AnimationSet animations = de.amr.basics.spriteanim.AnimationSet.EMPTY_ANIMATION_SET;
 
-    public AnimationSet animations() {
+    public de.amr.basics.spriteanim.AnimationSet animations() {
         return animations;
     }
 
-    public void setAnimations(AnimationSet animations) {
+    public void setAnimations(de.amr.basics.spriteanim.AnimationSet animations) {
         this.animations = requireNonNull(animations);
     }
 
