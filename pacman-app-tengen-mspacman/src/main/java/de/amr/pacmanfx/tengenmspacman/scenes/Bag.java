@@ -29,11 +29,11 @@ public class Bag extends Actor {
                 case AnimationID.BAG -> SpriteAnimationBuilder.builder()
                     .singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG))
                     .initiallyStopped()
-                    .build();
+                    .build(SpriteAnimationContainer.instance());
                 case AnimationID.JUNIOR -> SpriteAnimationBuilder.builder()
                     .singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC))
                     .initiallyStopped()
-                    .build();
+                    .build(SpriteAnimationContainer.instance());
                 default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
             };
         }

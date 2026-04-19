@@ -25,6 +25,7 @@ import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationContainer;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
@@ -310,12 +311,12 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
 
     @Override
     public TengenMsPacMan_GhostAnimations createGhostAnimations(byte personality) {
-        return new TengenMsPacMan_GhostAnimations(personality);
+        return new TengenMsPacMan_GhostAnimations(SpriteAnimationContainer.instance(), personality);
     }
 
     @Override
     public TengenMsPacMan_PacAnimations createPacAnimations() {
-        return new TengenMsPacMan_PacAnimations();
+        return new TengenMsPacMan_PacAnimations(SpriteAnimationContainer.instance());
     }
 
     // Helpers

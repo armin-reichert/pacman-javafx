@@ -100,12 +100,12 @@ public class SpriteAnimationBuilder {
         return this;
     }
 
-    public SpriteAnimation build() {
+    public SpriteAnimation build(SpriteAnimationContainer container) {
         checkBuildPossible();
         if (data.sprites == null) {
             throw new IllegalArgumentException("No sprites defined");
         }
-        final SpriteAnimation animation = new SpriteAnimation(data.fps);
+        final SpriteAnimation animation = new SpriteAnimation(container, data.fps);
         animation.setLoop(data.loop);
         animation.setSprites(data.sprites);
         animation.setFrameTicks(data.frameTicks);

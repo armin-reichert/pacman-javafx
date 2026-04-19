@@ -21,10 +21,12 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
         BLINKY_NAKED
     }
 
+    private final SpriteAnimationContainer container;
     private final byte personality;
 
-    public ArcadePacMan_GhostAnimations(byte personality) {
+    public ArcadePacMan_GhostAnimations(SpriteAnimationContainer container, byte personality) {
         super(ArcadePacMan_SpriteSheet.instance());
+        this.container = requireNonNull(container);
         this.personality = requireValidGhostPersonality(personality);
     }
 
@@ -35,46 +37,46 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
                 .sprites(spriteSheet().ghostNormalSprites(personality, Direction.LEFT))
                 .frameTicks(8)
                 .repeated()
-                .build();
+                .build(container);
 
             case Ghost.AnimationID.GHOST_FRIGHTENED -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(SpriteID.GHOST_FRIGHTENED))
                 .frameTicks(8)
                 .repeated()
-                .build();
+                .build(container);
 
             case Ghost.AnimationID.GHOST_FLASHING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(SpriteID.GHOST_FLASHING))
                 .frameTicks(7)
                 .repeated()
-                .build();
+                .build(container);
 
             case Ghost.AnimationID.GHOST_EYES -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet().ghostEyesSprite(Direction.LEFT))
-                .build();
+                .build(container);
 
             case Ghost.AnimationID.GHOST_POINTS -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(SpriteID.GHOST_NUMBERS))
                 .initiallyStopped()
-                .build();
+                .build(container);
 
             case AnimationID.BLINKY_DAMAGED -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_DAMAGED))
                 .initiallyStopped()
-                .build();
+                .build(container);
 
             case AnimationID.BLINKY_DRESS_PATCHED -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_PATCHED))
                 .frameTicks(4)
                 .repeated()
                 .initiallyStopped()
-                .build();
+                .build(container);
 
             case AnimationID.BLINKY_NAKED -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_NAKED))
                 .frameTicks(4)
                 .repeated()
-                .build();
+                .build(container);
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };

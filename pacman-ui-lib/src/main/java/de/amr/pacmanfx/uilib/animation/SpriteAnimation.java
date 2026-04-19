@@ -12,9 +12,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class SpriteAnimation {
 
-    //TODO how to manage access to central animation container?
-    private static final SpriteAnimationContainer CENTRAL_ANIMATION_CONTAINER = SpriteAnimationContainer.instance();
-
+    private final SpriteAnimationContainer container;
     private final int fps;
     private RectShort[] sprites;
     private int currentFrameIndex;
@@ -23,7 +21,8 @@ public class SpriteAnimation {
     private long lastUpdateTime;
     private long frameDuration;
 
-    public SpriteAnimation(int fps) {
+    public SpriteAnimation(SpriteAnimationContainer container, int fps) {
+        this.container = requireNonNull(container);
         if (fps <= 0) {
             throw new IllegalArgumentException("Illegal FPS value: %d".formatted(fps));
         }
@@ -47,14 +46,14 @@ public class SpriteAnimation {
     }
     public void start() {
         if (!running) {
-            CENTRAL_ANIMATION_CONTAINER.register(this);
+            container.register(this);
             running = true;
             lastUpdateTime = now();
         }
     }
 
     public void stop() {
-        CENTRAL_ANIMATION_CONTAINER.unregister(this);
+        container.unregister(this);
         running = false;
     }
 

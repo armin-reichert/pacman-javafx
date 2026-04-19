@@ -171,12 +171,12 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
     @Override
     public ArcadeMsPacMan_GhostAnimations createGhostAnimations(byte personality) {
         requireValidGhostPersonality(personality);
-        return new ArcadeMsPacMan_GhostAnimations(personality);
+        return new ArcadeMsPacMan_GhostAnimations(SpriteAnimationContainer.instance(), personality);
     }
 
     @Override
     public ArcadeMsPacMan_PacAnimations createPacAnimations() {
-        return new ArcadeMsPacMan_PacAnimations();
+        return new ArcadeMsPacMan_PacAnimations(SpriteAnimationContainer.instance());
     }
 
     @Override

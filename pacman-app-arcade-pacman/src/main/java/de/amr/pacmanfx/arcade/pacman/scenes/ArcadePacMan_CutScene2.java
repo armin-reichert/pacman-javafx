@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationContainer;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.Globals.TS;
@@ -74,7 +75,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         nailDressAnimation = SpriteAnimationBuilder.builder()
             .sprites(ArcadePacMan_SpriteSheet.instance().sprites(SpriteID.RED_GHOST_STRETCHED))
             .initiallyStopped()
-            .build();
+            .build(SpriteAnimationContainer.instance());
         sceneTick = -1;
     }
 

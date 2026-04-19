@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationContainer;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 public class Stork extends Actor {
@@ -27,7 +28,7 @@ public class Stork extends Actor {
                     .sprites(spriteSheet.sprites(SpriteID.STORK))
                     .frameTicks(8)
                     .repeated()
-                    .build();
+                    .build(SpriteAnimationContainer.instance());
             }
             throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         }

@@ -26,6 +26,7 @@ import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationContainer;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -185,12 +186,12 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceManager {
 
     @Override
     public SpriteAnimationMap<SpriteID> createGhostAnimations(byte personality) {
-        return new ArcadeMsPacMan_GhostAnimations(personality);
+        return new ArcadeMsPacMan_GhostAnimations(SpriteAnimationContainer.instance(), personality);
     }
 
     @Override
     public SpriteAnimationMap<SpriteID> createPacAnimations() {
-        return new ArcadeMsPacMan_PacAnimations();
+        return new ArcadeMsPacMan_PacAnimations(SpriteAnimationContainer.instance());
     }
 
     @Override

@@ -16,8 +16,11 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
     public enum AnimationID {MR_PAC_MAN_MUNCHING}
 
-    public ArcadeMsPacMan_PacAnimations() {
+    private final SpriteAnimationContainer container;
+
+    public ArcadeMsPacMan_PacAnimations(SpriteAnimationContainer container) {
         super(ArcadeMsPacMan_SpriteSheet.instance());
+        this.container = requireNonNull(container);
     }
 
     @Override
@@ -25,23 +28,23 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
         return switch (animationID) {
             case Pac.AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet.sprite(SpriteID.MS_PACMAN_FULL))
-                .build();
+                .build(container);
 
             case Pac.AnimationID.PAC_MUNCHING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().msPacManMunchingSprites(Direction.LEFT))
                 .repeated()
-                .build();
+                .build(container);
 
             case Pac.AnimationID.PAC_DYING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(SpriteID.MS_PACMAN_DYING))
                 .frameTicks(8)
-                .build();
+                .build(container);
 
             case AnimationID.MR_PAC_MAN_MUNCHING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.MR_PACMAN_MUNCHING_LEFT))
                 .frameTicks(2)
                 .repeated()
-                .build();
+                .build(container);
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };

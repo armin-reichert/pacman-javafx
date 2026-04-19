@@ -8,6 +8,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationBuilder;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationContainer;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.tengenmspacman.rendering.SpriteID.STORK;
@@ -29,7 +30,7 @@ public class Stork extends Actor {
                     .sprites(spriteSheet.sprites(STORK))
                     .frameTicks(8)
                     .repeated()
-                    .build();
+                    .build(SpriteAnimationContainer.instance());
             }
             throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         }
