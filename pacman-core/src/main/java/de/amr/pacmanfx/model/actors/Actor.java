@@ -178,7 +178,7 @@ public class Actor {
 
     // Animation support
 
-    protected AnimationSet animations = AnimationSet.EMPTY;
+    protected AnimationSet animations = AnimationSet.emptyAnimSet();
 
     public AnimationSet animations() {
         return animations;

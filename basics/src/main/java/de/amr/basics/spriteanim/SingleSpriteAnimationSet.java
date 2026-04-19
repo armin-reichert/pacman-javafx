@@ -7,7 +7,7 @@ import de.amr.basics.math.RectShort;
 
 import static java.util.Objects.requireNonNull;
 
-public record SingleSpriteAnimationSet(RectShort sprite) implements AnimationSet {
+record SingleSpriteAnimationSet(RectShort sprite) implements AnimationSet {
 
     public SingleSpriteAnimationSet(RectShort sprite) {
         this.sprite = requireNonNull(sprite);

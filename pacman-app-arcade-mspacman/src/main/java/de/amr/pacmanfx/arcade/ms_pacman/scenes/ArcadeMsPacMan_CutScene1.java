@@ -18,8 +18,8 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.basics.spriteanim.SingleSpriteAnimationSet;
 
+import static de.amr.basics.spriteanim.AnimationSet.singleSpriteAnimSet;
 import static de.amr.pacmanfx.Globals.*;
 
 /**
@@ -91,7 +91,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pinky = uiConfig.createGhostWithAnimations(PINK_GHOST_SPEEDY);
 
         heart = new Actor();
-        heart.setAnimations(new SingleSpriteAnimationSet(spriteSheet.sprite(SpriteID.HEART)));
+        heart.setAnimations(singleSpriteAnimSet(spriteSheet.sprite(SpriteID.HEART)));
 
         clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.setPosition(TS(3), TS(10));

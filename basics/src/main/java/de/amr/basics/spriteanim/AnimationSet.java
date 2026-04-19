@@ -10,6 +10,14 @@ import static java.util.Objects.requireNonNull;
 
 public interface AnimationSet {
 
+    static AnimationSet emptyAnimSet() {
+        return EMPTY;
+    }
+
+    static AnimationSet singleSpriteAnimSet(RectShort sprite) {
+        return new SingleSpriteAnimationSet(sprite);
+    }
+
     AnimationSet EMPTY = new EmptyAnimationSet();
 
     Object animation(Object animationID);
