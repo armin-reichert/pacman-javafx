@@ -4,14 +4,14 @@
 package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.animation.HeadBangingAnimation;
 import de.amr.pacmanfx.uilib.model3D.animation.Pac3DChewingAnimation;
 import de.amr.pacmanfx.uilib.model3D.animation.PacMan3DDyingAnimation;
 
 public class PacMan3D extends Pac3D {
 
-    public PacMan3D(AnimationRegistry animations, PacManModel3D model3D, Pac pac, PacConfig pacConfig) {
+    public PacMan3D(ManagedAnimationsRegistry animations, PacManModel3D model3D, Pac pac, PacConfig pacConfig) {
         super(animations, pac);
 
         setBody(model3D.createPacBody(pacConfig));

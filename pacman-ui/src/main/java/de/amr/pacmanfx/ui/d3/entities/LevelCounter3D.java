@@ -7,7 +7,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.LevelCounterConfig3D;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.animation.Animation;
@@ -32,10 +32,10 @@ public class LevelCounter3D extends Group implements GameLevelEntity, Disposable
 
     public enum AnimationID { LEVEL_COUNTER_SPINNING }
 
-    private final AnimationRegistry animations;
+    private final ManagedAnimationsRegistry animations;
     private final UIConfig uiConfig;
 
-    public LevelCounter3D(AnimationRegistry animations, UIConfig uiConfig) {
+    public LevelCounter3D(ManagedAnimationsRegistry animations, UIConfig uiConfig) {
         this.animations = requireNonNull(animations);
         this.uiConfig = requireNonNull(uiConfig);
     }

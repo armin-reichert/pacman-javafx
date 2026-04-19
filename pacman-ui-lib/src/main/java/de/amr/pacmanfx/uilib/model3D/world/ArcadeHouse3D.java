@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.uilib.UfxColors;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.animation.KeyFrame;
@@ -65,7 +65,7 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
     /** Height of the lower wall segment. */
     private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty();
 
-    private final AnimationRegistry animations;
+    private final ManagedAnimationsRegistry animations;
 
     private final float barThickness;
     private final double wallBaseOpacity;
@@ -94,7 +94,7 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
      * @param opacity           opacity of the wall base material
      */
     public ArcadeHouse3D(
-        AnimationRegistry animations,
+        ManagedAnimationsRegistry animations,
         ArcadeHouse house,
         double baseHeight,
         double wallThickness,

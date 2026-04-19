@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.config.HouseConfig3D;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.d3.MazeMaterials3D;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.world.Wall3D;
 import javafx.beans.property.DoubleProperty;
@@ -85,7 +85,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         Factory3D factory3D,
         EntityConfig entityConfig,
         WorldMapColorScheme colorScheme,
-        AnimationRegistry animations)
+        ManagedAnimationsRegistry animations)
     {
         requireNonNull(factory3D);
         requireNonNull(entityConfig);
@@ -183,7 +183,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         floor3D = new MazeFloor3D(materials3D.floor(), width, height, floorConfig.thickness(), floorConfig.padding());
     }
 
-    private void createArcadeHouse3D(AnimationRegistry animations, HouseConfig3D houseConfig, GameLevel level, WorldMapColorScheme colorScheme) {
+    private void createArcadeHouse3D(ManagedAnimationsRegistry animations, HouseConfig3D houseConfig, GameLevel level, WorldMapColorScheme colorScheme) {
         level.worldMap().terrainLayer().optHouse()
             .filter(ArcadeHouse.class::isInstance)
             .map(ArcadeHouse.class::cast)

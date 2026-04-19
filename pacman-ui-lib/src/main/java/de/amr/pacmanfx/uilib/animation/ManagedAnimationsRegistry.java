@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * A registry for managed animations.
  */
-public class AnimationRegistry {
+public class ManagedAnimationsRegistry {
 
     private final Map<Object, ManagedAnimation> animationMap = new HashMap<>();
 

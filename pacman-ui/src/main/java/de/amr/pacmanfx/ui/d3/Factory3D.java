@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.uilib.UfxColors;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
 import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
@@ -36,7 +36,7 @@ public interface Factory3D extends Disposable {
         GameLevel level,
         EntityConfig entityConfig,
         WorldMapColorScheme colorScheme,
-        AnimationRegistry animations);
+        ManagedAnimationsRegistry animations);
 
     /**
      * Creates the 3D representation of Pac for this game variant, including model,
@@ -47,7 +47,7 @@ public interface Factory3D extends Disposable {
      * @param animations the registry where animations are stored
      * @return the 3D representation of Pac
      */
-    Pac3D createPac3D(Pac pac, PacConfig pacConfig, AnimationRegistry animations);
+    Pac3D createPac3D(Pac pac, PacConfig pacConfig, ManagedAnimationsRegistry animations);
 
     /**
      * Creates the 3D representation of a ghost for this game variant, including
@@ -58,7 +58,7 @@ public interface Factory3D extends Disposable {
      * @param animations the registry where animations are stored
      * @return the 3D representation of a ghost
      */
-    GhostAppearance3D createGhostAppearance3D(Ghost ghost, de.amr.pacmanfx.uilib.model3D.actor.GhostConfig ghostConfig, AnimationRegistry animations);
+    GhostAppearance3D createGhostAppearance3D(Ghost ghost, de.amr.pacmanfx.uilib.model3D.actor.GhostConfig ghostConfig, ManagedAnimationsRegistry animations);
 
     /**
      * Creates the 3D representation of the lives counter for this variant.
@@ -70,7 +70,7 @@ public interface Factory3D extends Disposable {
 
     Pellet3D createPellet3D(PelletConfig3D pelletConfig, PhongMaterial material);
 
-    Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animations, PhongMaterial material);
+    Energizer3D createEnergizer3D(EnergizerConfig3D config, ManagedAnimationsRegistry animations, PhongMaterial material);
 
     Shape3D createNumberShape3D(UIConfig uiConfig, int numberIndex);
 

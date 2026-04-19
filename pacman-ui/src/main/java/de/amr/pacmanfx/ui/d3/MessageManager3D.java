@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.ui.GameUI_Resources;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
 import javafx.scene.Group;
@@ -42,7 +42,7 @@ public class MessageManager3D implements DisposableGraphicsObject {
     /** Default display duration for READY! message */
     public static final float READY_MESSAGE_DISPLAY_SECONDS = 2.5f;
 
-    private final AnimationRegistry animations;
+    private final ManagedAnimationsRegistry animations;
     private final Group messageParent;
     private MessageView messageView;
 
@@ -54,7 +54,7 @@ public class MessageManager3D implements DisposableGraphicsObject {
      * @param animations registry for message animations
      * @param messageParent  the group to which messages are added/removed
      */
-    public MessageManager3D(AnimationRegistry animations, Group messageParent) {
+    public MessageManager3D(ManagedAnimationsRegistry animations, Group messageParent) {
         this.animations = requireNonNull(animations);
         this.messageParent = requireNonNull(messageParent);
     }

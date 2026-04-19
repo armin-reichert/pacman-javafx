@@ -5,7 +5,7 @@ package de.amr.pacmanfx.uilib.widgets;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
@@ -65,7 +65,7 @@ public class MessageView extends ImageView implements Disposable {
             return this;
         }
 
-        public MessageView build(AnimationRegistry animations) {
+        public MessageView build(ManagedAnimationsRegistry animations) {
             return new MessageView(animations, this);
         }
     }
@@ -118,10 +118,10 @@ public class MessageView extends ImageView implements Disposable {
         }
     }
 
-    private final AnimationRegistry animations;
+    private final ManagedAnimationsRegistry animations;
     private final float displaySeconds;
 
-    private MessageView(AnimationRegistry animations, Builder builder) {
+    private MessageView(ManagedAnimationsRegistry animations, Builder builder) {
         this.animations = requireNonNull(animations);
         this.displaySeconds = builder.displaySeconds;
 

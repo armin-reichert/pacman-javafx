@@ -12,7 +12,7 @@ import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
@@ -90,7 +90,7 @@ public class DefaultFactory3D implements Factory3D {
         GameLevel level,
         EntityConfig entityConfig,
         WorldMapColorScheme colorScheme,
-        AnimationRegistry animations)
+        ManagedAnimationsRegistry animations)
     {
         final Maze3D maze3D = new Maze3D(level, this, entityConfig, colorScheme, animations);
         maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
@@ -100,7 +100,7 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Pac3D createPac3D(Pac pac, PacConfig pacConfig, AnimationRegistry animations) {
+    public Pac3D createPac3D(Pac pac, PacConfig pacConfig, ManagedAnimationsRegistry animations) {
         requireNonNull(pac);
         requireNonNull(pacConfig);
         requireNonNull(animations);
@@ -112,7 +112,7 @@ public class DefaultFactory3D implements Factory3D {
     public GhostAppearance3D createGhostAppearance3D(
         Ghost ghost,
         GhostConfig ghostConfig,
-        AnimationRegistry animations)
+        ManagedAnimationsRegistry animations)
     {
         requireNonNull(ghost);
         requireNonNull(ghostConfig);
@@ -152,7 +152,7 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animations, PhongMaterial material) {
+    public Energizer3D createEnergizer3D(EnergizerConfig3D config, ManagedAnimationsRegistry animations, PhongMaterial material) {
         final var energizer3D = new Energizer3D(animations);
         energizer3D.setShapeFactory(() -> {
             final var shape = new Sphere(config.radius(), 48);

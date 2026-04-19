@@ -7,7 +7,7 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -54,7 +54,7 @@ public class DashboardSectionAnimations3D extends DashboardSection {
     private final Timeline refreshTimer;
     private final TableView<TableRow> tableView = new TableView<>();
 
-    private final ObjectProperty<AnimationRegistry> currentAnimations = new SimpleObjectProperty<>();
+    private final ObjectProperty<ManagedAnimationsRegistry> currentAnimations = new SimpleObjectProperty<>();
 
     public DashboardSectionAnimations3D(Dashboard dashboard) {
         super(dashboard);
@@ -109,7 +109,7 @@ public class DashboardSectionAnimations3D extends DashboardSection {
         }
     }
 
-    private AnimationRegistry observedAnimations(GameScene gameScene) {
+    private ManagedAnimationsRegistry observedAnimations(GameScene gameScene) {
         if (gameScene instanceof PlayScene3D playScene3D) {
             return playScene3D.optGameLevel3D().map(GameLevel3D::animations).orElse(null);
         }

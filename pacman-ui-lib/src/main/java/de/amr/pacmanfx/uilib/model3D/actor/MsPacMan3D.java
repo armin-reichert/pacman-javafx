@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.animation.HipSwayingAnimation;
 import de.amr.pacmanfx.uilib.model3D.animation.Pac3DChewingAnimation;
@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 
 public class MsPacMan3D extends Pac3D {
 
-    public MsPacMan3D(AnimationRegistry animations, PacManModel3D model3D, Pac msPacMan, PacConfig pacConfig) {
+    public MsPacMan3D(ManagedAnimationsRegistry animations, PacManModel3D model3D, Pac msPacMan, PacConfig pacConfig) {
         super(animations, msPacMan);
 
         requireNonNull(pacConfig);

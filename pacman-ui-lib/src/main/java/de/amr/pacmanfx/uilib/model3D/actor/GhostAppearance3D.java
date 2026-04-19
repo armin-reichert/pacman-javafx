@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
@@ -48,7 +48,7 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
 
     private static final double HEIGHT_OVER_FLOOR = 2.0;
 
-    private final AnimationRegistry animations;
+    private final ManagedAnimationsRegistry animations;
     private final Ghost3D ghost3D;
     private Shape3D numberShape3D;
 
@@ -58,7 +58,7 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
     private ChangeListener<Direction> wishDirChangeListener = (_, _, _) -> updateTransform(ghost());
 
     public GhostAppearance3D(
-        AnimationRegistry animations,
+        ManagedAnimationsRegistry animations,
         Ghost ghost,
         GhostColorSet colorSet,
         GhostMeshes meshes,

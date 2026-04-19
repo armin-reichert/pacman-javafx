@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.scene.Group;
@@ -31,7 +31,7 @@ public abstract class Pac3D extends Group implements GameLevelEntity, Disposable
     public enum AnimationID { PAC_CHEWING, PAC_DYING, PAC_MOVING }
 
     protected final Pac pac;
-    protected final AnimationRegistry animations;
+    protected final ManagedAnimationsRegistry animations;
 
     protected PointLight powerLight;
 
@@ -44,7 +44,7 @@ public abstract class Pac3D extends Group implements GameLevelEntity, Disposable
         return jaw;
     }
 
-    protected Pac3D(AnimationRegistry animations, Pac pac) {
+    protected Pac3D(ManagedAnimationsRegistry animations, Pac pac) {
         this.animations = requireNonNull(animations);
         this.pac = requireNonNull(pac);
         getTransforms().add(moveRotation);

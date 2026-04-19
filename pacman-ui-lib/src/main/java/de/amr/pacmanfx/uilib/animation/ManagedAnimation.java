@@ -13,7 +13,7 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A lazily created JavaFX animation that can be registered in an {@link AnimationRegistry}.
+ * A lazily created JavaFX animation that can be registered in an {@link ManagedAnimationsRegistry}.
  * <p>
  * A {@code ManagedAnimation} encapsulates:
  * <ul>

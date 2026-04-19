@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.actor;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
@@ -98,7 +98,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
 
     private final Ghost ghost;
     private final GhostColorSet colorSet;
-    private final AnimationRegistry animations;
+    private final ManagedAnimationsRegistry animations;
 
     private GhostMaterials materials;
     private MeshView dressShape;
@@ -107,7 +107,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
     private Group dressGroup;
 
     public Ghost3D(
-        AnimationRegistry animations,
+        ManagedAnimationsRegistry animations,
         Ghost ghost,
         GhostColorSet colorSet,
         GhostMeshes meshes,

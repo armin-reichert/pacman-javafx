@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.d3.DefaultFactory3D;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.actor.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 public class TengenMsPacMan_Factory3D extends DefaultFactory3D {
 
     @Override
-    public Pac3D createPac3D(Pac pac, PacConfig pacConfig, AnimationRegistry animations) {
+    public Pac3D createPac3D(Pac pac, PacConfig pacConfig, ManagedAnimationsRegistry animations) {
         requireNonNull(pac);
         requireNonNull(pacConfig);
         requireNonNull(animations);
