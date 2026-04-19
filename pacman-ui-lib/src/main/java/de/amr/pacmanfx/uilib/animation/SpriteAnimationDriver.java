@@ -28,11 +28,11 @@ public class SpriteAnimationDriver {
         };
     }
 
-    public void startAnimation() {
+    public void startTimer() {
         timer.start();
     }
 
-    public void stopAnimation() {
+    public void stopTimer() {
         timer.stop();
     }
 

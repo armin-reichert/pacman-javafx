@@ -378,7 +378,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         stage.centerOnScreen();
         stage.show();
         flashMessageView.start();
-        spriteAnimationDriver.startAnimation();
+        spriteAnimationDriver.startTimer();
         Platform.runLater(customDirWatchdog::startWatching);
     }
 
@@ -438,7 +438,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     public void terminate() {
         Logger.info("Application is terminated now. There is no way back!");
         stopGame();
-        spriteAnimationDriver.stopAnimation();
+        spriteAnimationDriver.stopTimer();
         spriteAnimationDriver.clear();
         flashMessageView.stop();
         customDirWatchdog.dispose();
