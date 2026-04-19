@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.Disposable;
-import de.amr.basics.spriteanim.AnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
@@ -309,14 +309,14 @@ public interface UIConfig extends Disposable {
      * @param personality ghost personality code
      * @return animation manager for that ghost type
      */
-    AnimationSet createGhostAnimations(byte personality);
+    SpriteAnimationSet createGhostAnimations(byte personality);
 
     /**
      * Creates the animation manager for Pac-Man (or Ms. Pac-Man in Ms. Pac-Man variants).
      *
      * @return Pac-Man animation manager
      */
-    AnimationSet createPacAnimations();
+    SpriteAnimationSet createPacAnimations();
 
     /**
      * Returns the image showing the points awarded for eating a ghost

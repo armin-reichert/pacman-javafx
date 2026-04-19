@@ -7,14 +7,15 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
-import de.amr.pacmanfx.uilib.spriteanim.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.spriteanim.SpriteSpriteAnimationMap;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
+public class ArcadeMsPacMan_GhostAnimations extends SpriteSpriteAnimationMap<SpriteID> {
 
     private final SpriteAnimationContainer container;
     private final byte personality;
@@ -26,8 +27,8 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     }
 
     @Override
-    protected SpriteAnimation createAnimation(Object id) {
-        return switch (id) {
+    protected SpriteAnimation createAnimation(SpriteAnimationID animationID) {
+        return switch (animationID) {
             case ArcadePacMan_AnimationID.GHOST_NORMAL -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().ghostNormalSprites(personality, Direction.LEFT))
                 .frameTicks(8)
@@ -55,7 +56,7 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
                 .initiallyStopped()
                 .build(container);
 
-            default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
+            default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };
     }
 
@@ -65,7 +66,7 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     }
 
     @Override
-    public void setAnimationFrame(Object animationID, int frameIndex) {
+    public void setAnimationFrame(SpriteAnimationID animationID, int frameIndex) {
         super.setAnimationFrame(animationID, frameIndex);
         if (ArcadePacMan_AnimationID.GHOST_POINTS.equals(animationID)) {
             animation(ArcadePacMan_AnimationID.GHOST_POINTS).setCurrentFrameIndex(frameIndex);

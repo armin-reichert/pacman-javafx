@@ -7,13 +7,14 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
-import de.amr.pacmanfx.uilib.spriteanim.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.spriteanim.SpriteSpriteAnimationMap;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
+public class TengenMsPacMan_GhostAnimations extends SpriteSpriteAnimationMap<SpriteID> {
 
     public static final int NORMAL_TICKS = 8;  // TODO check this in emulator
     public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator
@@ -34,7 +35,7 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     }
 
     @Override
-    protected SpriteAnimation createAnimation(Object animationID) {
+    protected SpriteAnimation createAnimation(SpriteAnimationID animationID) {
         return switch (animationID) {
             case ArcadePacMan_AnimationID.GHOST_NORMAL -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().ghostNormalSprites(personality, Direction.LEFT))
@@ -68,7 +69,7 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     }
 
     @Override
-    public void setAnimationFrame(Object animationID, int frameIndex) {
+    public void setAnimationFrame(SpriteAnimationID animationID, int frameIndex) {
         super.setAnimationFrame(animationID, frameIndex);
         if (ArcadePacMan_AnimationID.GHOST_POINTS.equals(animationID)) {
             animation(ArcadePacMan_AnimationID.GHOST_POINTS).setCurrentFrameIndex(frameIndex);

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 plugins {
     alias(libs.plugins.javafx)
     //alias(libs.plugins.jlink)
@@ -13,8 +17,7 @@ dependencies {
         libs.bundles.tinylog
     )
     testImplementation(libs.junit.jupiter.api)
-    testRuntimeOnly(libs.junit.jupiter.engine)
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testRuntimeOnly(libs.junit.jupiter.engine, "org.junit.platform:junit-platform-launcher")
 }
 
 test {
@@ -25,9 +28,6 @@ javafx {
     modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"]
 }
 
-/*
- * Copyright (c) 2021-2026 Armin Reichert (MIT License)
- */
 
 /*
 application {

@@ -5,7 +5,8 @@ package de.amr.pacmanfx.model.actors;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.spriteanim.AnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationID;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -178,22 +179,22 @@ public class Actor {
 
     // Animation support
 
-    protected AnimationSet animations = AnimationSet.emptyAnimSet();
+    protected SpriteAnimationSet animations = SpriteAnimationSet.emptyAnimSet();
 
-    public AnimationSet animations() {
+    public SpriteAnimationSet animations() {
         return animations;
     }
 
-    public void setAnimations(AnimationSet animations) {
+    public void setAnimations(SpriteAnimationSet animations) {
         this.animations = requireNonNull(animations);
     }
 
-    public void selectAnimation(Object animationID) {
+    public void selectAnimation(SpriteAnimationID animationID) {
         requireNonNull(animationID);
         animations.selectAnimation(animationID);
     }
 
-    public void selectAnimationAtFrame(Object animationID, int frameIndex) {
+    public void selectAnimationAtFrame(SpriteAnimationID animationID, int frameIndex) {
         requireNonNull(animationID);
         animations.setAnimationFrame(animationID, frameIndex);
     }

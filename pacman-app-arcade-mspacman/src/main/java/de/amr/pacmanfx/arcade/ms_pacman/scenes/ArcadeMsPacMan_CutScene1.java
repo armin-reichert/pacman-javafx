@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
 
-import static de.amr.basics.spriteanim.AnimationSet.singleSpriteAnimSet;
+import static de.amr.basics.spriteanim.SpriteAnimationSet.singleSpriteAnimSet;
 import static de.amr.pacmanfx.Globals.*;
 
 /**

@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.Disposable;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
@@ -12,7 +13,6 @@ import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import javafx.scene.SubScene;
 import javafx.scene.input.ScrollEvent;
 import org.tinylog.Logger;

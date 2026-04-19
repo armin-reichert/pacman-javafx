@@ -7,14 +7,15 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
-import de.amr.pacmanfx.uilib.spriteanim.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.spriteanim.SpriteSpriteAnimationMap;
 
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
+public class ArcadePacMan_PacAnimations extends SpriteSpriteAnimationMap<SpriteID> {
 
-    public enum AnimationID {
+    public enum AnimationID implements SpriteAnimationID {
         ANIM_BIG_PAC_MAN,
     }
 
@@ -26,8 +27,8 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
     }
 
     @Override
-    protected SpriteAnimation createAnimation(Object id) {
-        return switch (id) {
+    protected SpriteAnimation createAnimation(SpriteAnimationID animationID) {
+        return switch (animationID) {
             case ArcadePacMan_AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet.sprite(SpriteID.PACMAN_FULL))
                 .initiallyStopped()
@@ -50,7 +51,7 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
                 .repeated()
                 .build(container);
 
-            default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
+            default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };
     }
 

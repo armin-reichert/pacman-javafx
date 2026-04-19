@@ -7,6 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimationID;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
@@ -151,7 +152,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         nailDressAnimation.setCurrentFrameIndex(state.frame());
     }
 
-    private SpriteAnimation blinkyAnimation(Object animationID) {
+    private SpriteAnimation blinkyAnimation(SpriteAnimationID animationID) {
         return (SpriteAnimation) blinky.animations().animation(animationID);
     }
 }

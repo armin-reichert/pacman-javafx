@@ -4,7 +4,9 @@
 
 package de.amr.pacmanfx.model.actors;
 
-public enum ArcadePacMan_AnimationID {
+import de.amr.basics.spriteanim.SpriteAnimationID;
+
+public enum ArcadePacMan_AnimationID implements SpriteAnimationID {
     PAC_DYING,
     PAC_FULL,
     PAC_MUNCHING,

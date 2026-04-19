@@ -33,8 +33,8 @@ import de.amr.pacmanfx.ui.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerParticlesAnimation;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
@@ -60,7 +60,6 @@ import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.GameFlow.CanonicalGameState.*;
 import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_WALL_HEIGHT;
-import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 

@@ -7,16 +7,17 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.spriteanim.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.spriteanim.SpriteSpriteAnimationMap;
 
 import java.util.Arrays;
 
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID.*;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
+public class TengenMsPacMan_PacAnimations extends SpriteSpriteAnimationMap<SpriteID> {
 
     private final SpriteAnimationContainer container;
 
@@ -26,7 +27,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
     }
 
     @Override
-    protected SpriteAnimation createAnimation(Object animationID) {
+    protected SpriteAnimation createAnimation(SpriteAnimationID animationID) {
         return switch (animationID) {
             case ArcadePacMan_AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet.sprite(SpriteID.MS_PAC_FULL))

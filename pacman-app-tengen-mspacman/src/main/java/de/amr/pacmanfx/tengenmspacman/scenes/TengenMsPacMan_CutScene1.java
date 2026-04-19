@@ -20,7 +20,7 @@ import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.SoundID;
 
-import static de.amr.basics.spriteanim.AnimationSet.singleSpriteAnimSet;
+import static de.amr.basics.spriteanim.SpriteAnimationSet.singleSpriteAnimSet;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;

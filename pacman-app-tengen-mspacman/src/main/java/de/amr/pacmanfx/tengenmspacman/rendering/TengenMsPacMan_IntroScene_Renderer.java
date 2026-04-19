@@ -20,7 +20,8 @@ import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.*;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.shadeOfBlue;
 import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene.MARQUEE_X;
 import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene.MARQUEE_Y;
 import static java.util.Objects.requireNonNull;

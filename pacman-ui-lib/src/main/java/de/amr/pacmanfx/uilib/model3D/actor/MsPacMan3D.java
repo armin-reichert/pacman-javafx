@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.animation.HipSwayingAnimation;
 import de.amr.pacmanfx.uilib.model3D.animation.Pac3DChewingAnimation;
 import javafx.animation.Interpolator;

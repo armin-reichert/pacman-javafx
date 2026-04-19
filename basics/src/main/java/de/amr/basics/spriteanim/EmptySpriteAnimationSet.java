@@ -6,19 +6,19 @@ package de.amr.basics.spriteanim;
 
 import de.amr.basics.math.RectShort;
 
-public class EmptyAnimationSet implements AnimationSet {
+public class EmptySpriteAnimationSet implements SpriteAnimationSet {
     @Override
-    public Object animation(Object animationID) {
+    public Object animation(SpriteAnimationID animationID) {
         return null;
     }
 
     @Override
-    public String selectedAnimationID() {
+    public SpriteAnimationID selectedAnimationID() {
         return null;
     }
 
     @Override
-    public void setAnimationFrame(Object animationID, int frameIndex) {}
+    public void setAnimationFrame(SpriteAnimationID animationID, int frameIndex) {}
 
     @Override
     public void playSelectedAnimation() {}

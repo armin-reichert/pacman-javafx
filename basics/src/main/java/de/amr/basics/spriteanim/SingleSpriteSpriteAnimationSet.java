@@ -7,9 +7,9 @@ import de.amr.basics.math.RectShort;
 
 import static java.util.Objects.requireNonNull;
 
-record SingleSpriteAnimationSet(RectShort sprite) implements AnimationSet {
+record SingleSpriteSpriteAnimationSet(RectShort sprite) implements SpriteAnimationSet {
 
-    public SingleSpriteAnimationSet(RectShort sprite) {
+    public SingleSpriteSpriteAnimationSet(RectShort sprite) {
         this.sprite = requireNonNull(sprite);
     }
 
@@ -19,17 +19,17 @@ record SingleSpriteAnimationSet(RectShort sprite) implements AnimationSet {
     }
 
     @Override
-    public Object animation(Object animationID) {
+    public Object animation(SpriteAnimationID animationID) {
         return null;
     }
 
     @Override
-    public String selectedAnimationID() {
+    public SpriteAnimationID selectedAnimationID() {
         return null;
     }
 
     @Override
-    public void setAnimationFrame(Object animationID, int frameIndex) {}
+    public void setAnimationFrame(SpriteAnimationID animationID, int frameIndex) {}
 
     @Override
     public int currentFrame() {

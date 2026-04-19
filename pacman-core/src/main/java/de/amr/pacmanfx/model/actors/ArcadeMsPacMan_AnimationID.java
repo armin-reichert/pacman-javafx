@@ -4,7 +4,9 @@
 
 package de.amr.pacmanfx.model.actors;
 
-public enum ArcadeMsPacMan_AnimationID {
+import de.amr.basics.spriteanim.SpriteAnimationID;
+
+public enum ArcadeMsPacMan_AnimationID implements SpriteAnimationID {
     MR_PAC_MAN_MUNCHING,
     BAG, JUNIOR,
     STORK_FLYING

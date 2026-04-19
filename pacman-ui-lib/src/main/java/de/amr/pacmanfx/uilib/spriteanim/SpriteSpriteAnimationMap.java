@@ -4,8 +4,9 @@
 package de.amr.pacmanfx.uilib.spriteanim;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.AnimationSet;
 import de.amr.basics.spriteanim.SpriteAnimation;
+import de.amr.basics.spriteanim.SpriteAnimationID;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import org.tinylog.Logger;
 
@@ -14,21 +15,21 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class SpriteAnimationMap<SID extends Enum<SID>> implements AnimationSet {
+public abstract class SpriteSpriteAnimationMap<SID> implements SpriteAnimationSet {
 
     protected final SpriteSheet<SID> spriteSheet;
-    protected final Map<Object, SpriteAnimation> animationsByID = new HashMap<>();
-    protected SID selectedID;
+    protected final Map<SpriteAnimationID, SpriteAnimation> animationsByID = new HashMap<>();
+    protected SpriteAnimationID selectedID;
 
-    public SpriteAnimationMap(SpriteSheet<SID> spriteSheet) {
+    public SpriteSpriteAnimationMap(SpriteSheet<SID> spriteSheet) {
         this.spriteSheet = requireNonNull(spriteSheet);
     }
 
-    protected abstract SpriteAnimation createAnimation(Object animationID);
+    protected abstract SpriteAnimation createAnimation(SpriteAnimationID animationID);
 
     public SpriteSheet<SID> spriteSheet() { return spriteSheet; }
 
-    public boolean isSelected(Object id) {
+    public boolean isSelected(SpriteAnimationID id) {
         requireNonNull(id);
         return id.equals(selectedID);
     }
@@ -40,7 +41,7 @@ public abstract class SpriteAnimationMap<SID extends Enum<SID>> implements Anima
     }
 
     @Override
-    public SpriteAnimation animation(Object animationID) {
+    public SpriteAnimation animation(SpriteAnimationID animationID) {
         if (!animationsByID.containsKey(animationID)) {
             SpriteAnimation spriteAnimation = createAnimation(animationID);
             animationsByID.put(animationID, spriteAnimation);
@@ -48,7 +49,7 @@ public abstract class SpriteAnimationMap<SID extends Enum<SID>> implements Anima
         return animationsByID.get(animationID);
     }
 
-    public void setAnimation(Object animationID, SpriteAnimation animation) {
+    public void setAnimation(SpriteAnimationID animationID, SpriteAnimation animation) {
         requireNonNull(animationID);
         requireNonNull(animation);
         animationsByID.put(animationID, animation);
@@ -59,15 +60,14 @@ public abstract class SpriteAnimationMap<SID extends Enum<SID>> implements Anima
     }
 
     @Override
-    public Object selectedAnimationID() {
+    public SpriteAnimationID selectedAnimationID() {
         return selectedID;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void setAnimationFrame(Object animationID, int frameIndex) {
+    public void setAnimationFrame(SpriteAnimationID animationID, int frameIndex) {
         if (!animationID.equals(selectedID)) {
-            selectedID = (SID) animationID;
+            selectedID = animationID;
             if (currentAnimation() != null) {
                 currentAnimation().setCurrentFrameIndex(0);
             } else {

@@ -5,8 +5,8 @@ package de.amr.pacmanfx.uilib.widgets;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
