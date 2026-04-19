@@ -10,6 +10,7 @@ import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimations;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
@@ -126,7 +127,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
         msPacMan.setMoveDir(Direction.RIGHT);
         msPacMan.setPosition(TS * 5, LANE_Y - 4);
-        msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+        msPacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
         msPacMan.stopAnimation();
         msPacMan.show();
 

@@ -12,6 +12,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -71,7 +72,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
         msPacMan.setAnimations(uiConfig.createPacAnimations());
-        msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+        msPacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
 
         ghosts = List.of(
             uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW),
@@ -113,7 +114,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.setMoveDir(Direction.LEFT);
                 scene.msPacMan.setSpeed(ACTOR_SPEED);
                 scene.msPacMan.setVisible(true);
-                scene.msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+                scene.msPacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
                 scene.msPacMan.playAnimation();
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33.5f, TS * 20);
@@ -122,7 +123,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     ghost.setSpeed(ACTOR_SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setVisible(true);
-                    ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+                    ghost.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
                     ghost.playAnimation();
                 }
                 scene.presentedGhostPersonality = RED_GHOST_SHADOW;

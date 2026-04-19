@@ -6,6 +6,8 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
@@ -25,7 +27,6 @@ import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
@@ -305,7 +306,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     public Ghost createGhostWithAnimations(byte personality) {
         final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(personality);
         ghost.setAnimations(createGhostAnimations(personality));
-        ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+        ghost.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;
     }
 

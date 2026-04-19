@@ -4,22 +4,16 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.uilib.spriteanim.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
-
-    public enum AnimationID {
-        BLINKY_DAMAGED,
-        BLINKY_DRESS_PATCHED,
-        BLINKY_NAKED
-    }
 
     private final SpriteAnimationContainer container;
     private final byte personality;
@@ -33,46 +27,46 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
     @Override
     public SpriteAnimation createAnimation(Object animationID) {
         return switch (animationID) {
-            case Ghost.AnimationID.GHOST_NORMAL -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_NORMAL -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().ghostNormalSprites(personality, Direction.LEFT))
                 .frameTicks(8)
                 .repeated()
                 .build(container);
 
-            case Ghost.AnimationID.GHOST_FRIGHTENED -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_FRIGHTENED -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(SpriteID.GHOST_FRIGHTENED))
                 .frameTicks(8)
                 .repeated()
                 .build(container);
 
-            case Ghost.AnimationID.GHOST_FLASHING -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_FLASHING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(SpriteID.GHOST_FLASHING))
                 .frameTicks(7)
                 .repeated()
                 .build(container);
 
-            case Ghost.AnimationID.GHOST_EYES -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_EYES -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet().ghostEyesSprite(Direction.LEFT))
                 .build(container);
 
-            case Ghost.AnimationID.GHOST_POINTS -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_POINTS -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(SpriteID.GHOST_NUMBERS))
                 .initiallyStopped()
                 .build(container);
 
-            case AnimationID.BLINKY_DAMAGED -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.BLINKY_DAMAGED -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_DAMAGED))
                 .initiallyStopped()
                 .build(container);
 
-            case AnimationID.BLINKY_DRESS_PATCHED -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.BLINKY_DRESS_PATCHED -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_PATCHED))
                 .frameTicks(4)
                 .repeated()
                 .initiallyStopped()
                 .build(container);
 
-            case AnimationID.BLINKY_NAKED -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.BLINKY_NAKED -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_NAKED))
                 .frameTicks(4)
                 .repeated()
@@ -90,8 +84,8 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
     @Override
     public void setAnimationFrame(Object animationID, int frameIndex) {
         super.setAnimationFrame(animationID, frameIndex);
-        if (Ghost.AnimationID.GHOST_POINTS.equals(animationID)) {
-            animation(Ghost.AnimationID.GHOST_POINTS).setCurrentFrameIndex(frameIndex);
+        if (ArcadePacMan_AnimationID.GHOST_POINTS.equals(animationID)) {
+            animation(ArcadePacMan_AnimationID.GHOST_POINTS).setCurrentFrameIndex(frameIndex);
         }
     }
 }

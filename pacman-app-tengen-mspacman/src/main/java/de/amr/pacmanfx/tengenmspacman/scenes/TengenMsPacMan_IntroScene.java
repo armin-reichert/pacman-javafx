@@ -8,10 +8,7 @@ import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
@@ -127,7 +124,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
                 scene.msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
                 scene.msPacMan.setAnimations(uiConfig.createPacAnimations());
-                scene.msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+                scene.msPacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
                 scene.msPacMan.playAnimation();
                 scene.msPacMan.setPosition(TS * 33, ACTOR_Y);
                 scene.msPacMan.setMoveDir(Direction.LEFT);

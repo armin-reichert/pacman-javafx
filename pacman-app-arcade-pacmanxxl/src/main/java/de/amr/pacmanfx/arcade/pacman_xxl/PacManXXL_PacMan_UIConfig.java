@@ -4,11 +4,13 @@
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.basics.math.RectShort;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Factory3D;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
+import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
@@ -22,7 +24,6 @@ import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -186,7 +187,7 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManager {
     public Ghost createGhostWithAnimations(byte personality) {
         final Ghost ghost = ArcadePacMan_GameModel.createGhost(personality);
         ghost.setAnimations(createGhostAnimations(personality));
-        ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+        ghost.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;
     }
 

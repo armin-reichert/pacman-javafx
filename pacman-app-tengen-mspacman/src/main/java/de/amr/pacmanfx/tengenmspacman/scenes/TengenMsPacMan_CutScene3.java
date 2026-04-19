@@ -8,6 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
@@ -119,14 +120,14 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.setPosition(TS * 3, GROUND_Y - 4);
                     pacMan.setSpeed(0);
-                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_MR_PAC_MAN_MUNCHING);
+                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     pacMan.animations().stopSelectedAnimation();
                     pacMan.show();
 
                     msPacMan.setMoveDir(Direction.RIGHT);
                     msPacMan.setPosition(TS * 5, GROUND_Y - 4);
                     msPacMan.setSpeed(0);
-                    msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+                    msPacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
                     msPacMan.animations().stopSelectedAnimation();
                     msPacMan.show();
 

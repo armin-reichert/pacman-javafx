@@ -325,7 +325,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
         Logger.info("Power timer stopped and reset to zero.");
         pac.setSpeed(0);
         pac.stopAnimation();
-        pac.selectAnimation(Pac.AnimationID.PAC_FULL);
+        pac.selectAnimation(ArcadePacMan_AnimationID.PAC_FULL);
 
         level.ghosts().forEach(Ghost::stopAnimation);
         level.optBonus().ifPresent(Bonus::setInactive);

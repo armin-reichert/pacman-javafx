@@ -20,8 +20,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class Pac extends MovingActor {
 
-    public enum AnimationID {PAC_DYING, PAC_FULL, PAC_MUNCHING}
-
     public static final byte REST_FOREVER = -1;
 
     private final TickTimer powerTimer = new TickTimer("Pac-PowerTimer");
@@ -90,7 +88,7 @@ public class Pac extends MovingActor {
         restingTicks = 0;
         starvingTicks = 0;
         corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
-        selectAnimation(AnimationID.PAC_MUNCHING);
+        selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
     }
 
     public BooleanProperty deadProperty() {

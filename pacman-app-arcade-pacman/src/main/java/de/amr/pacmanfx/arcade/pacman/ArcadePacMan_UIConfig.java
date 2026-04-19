@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.RectShort;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
@@ -13,6 +14,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
@@ -29,7 +31,6 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.UfxImages;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -311,7 +312,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     public Ghost createGhostWithAnimations(byte personality) {
         final Ghost ghost = ArcadePacMan_GameModel.createGhost(personality);
         ghost.setAnimations(createGhostAnimations(personality));
-        ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+        ghost.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;
     }
 

@@ -11,8 +11,7 @@ import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
@@ -220,10 +219,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     private void resetActorAnimations(GameLevel level) {
-        level.pac().animations().selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+        level.pac().animations().selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
-            ghost.animations().selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+            ghost.animations().selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
             ghost.resetAnimation();
         });
     }

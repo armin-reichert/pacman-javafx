@@ -9,8 +9,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.GameLevelMessageType;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
@@ -356,11 +355,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private void resetAnimations(GameLevel level) {
         final TengenMsPacMan_GameModel game = gameContext().game();
         level.pac().selectAnimation(game.isBoosterActive()
-            ? TengenMsPacMan_AnimationID.ANIM_MS_PAC_MAN_BOOSTER
-            : Pac.AnimationID.PAC_MUNCHING);
+            ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER
+            : ArcadePacMan_AnimationID.PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
-            ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+            ghost.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
             ghost.resetAnimation();
         });
     }

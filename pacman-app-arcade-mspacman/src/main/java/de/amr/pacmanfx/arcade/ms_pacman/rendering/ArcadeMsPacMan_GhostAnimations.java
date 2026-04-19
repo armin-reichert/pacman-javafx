@@ -4,10 +4,10 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.uilib.spriteanim.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
@@ -28,29 +28,29 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     @Override
     protected SpriteAnimation createAnimation(Object id) {
         return switch (id) {
-            case Ghost.AnimationID.GHOST_NORMAL -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_NORMAL -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().ghostNormalSprites(personality, Direction.LEFT))
                 .frameTicks(8)
                 .repeated()
                 .build(container);
 
-            case Ghost.AnimationID.GHOST_FRIGHTENED -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_FRIGHTENED -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(GHOST_FRIGHTENED))
                 .frameTicks(8)
                 .repeated()
                 .build(container);
 
-            case Ghost.AnimationID.GHOST_FLASHING -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_FLASHING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(GHOST_FLASHING))
                 .frameTicks(7)
                 .repeated()
                 .build(container);
 
-            case Ghost.AnimationID.GHOST_EYES -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_EYES -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet().ghostEyesSprite(Direction.LEFT))
                 .build(container);
 
-            case Ghost.AnimationID.GHOST_POINTS -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_POINTS -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(GHOST_NUMBERS))
                 .initiallyStopped()
                 .build(container);
@@ -67,8 +67,8 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     @Override
     public void setAnimationFrame(Object animationID, int frameIndex) {
         super.setAnimationFrame(animationID, frameIndex);
-        if (Ghost.AnimationID.GHOST_POINTS.equals(animationID)) {
-            animation(Ghost.AnimationID.GHOST_POINTS).setCurrentFrameIndex(frameIndex);
+        if (ArcadePacMan_AnimationID.GHOST_POINTS.equals(animationID)) {
+            animation(ArcadePacMan_AnimationID.GHOST_POINTS).setCurrentFrameIndex(frameIndex);
         }
     }
 }

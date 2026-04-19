@@ -4,10 +4,10 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.uilib.spriteanim.SpriteAnimationMap;
 
 import static java.util.Objects.requireNonNull;
@@ -28,18 +28,18 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
     @Override
     protected SpriteAnimation createAnimation(Object id) {
         return switch (id) {
-            case Pac.AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet.sprite(SpriteID.PACMAN_FULL))
                 .initiallyStopped()
                 .build(container);
 
             // Renderer draws sprites depending on Pac-Man move direction!
-            case Pac.AnimationID.PAC_MUNCHING -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.PAC_MUNCHING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().pacMunchingSprites(Direction.LEFT))
                 .repeated()
                 .build(container);
 
-            case Pac.AnimationID.PAC_DYING -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.PAC_DYING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.PACMAN_DYING))
                 .frameTicks(8)
                 .build(container);

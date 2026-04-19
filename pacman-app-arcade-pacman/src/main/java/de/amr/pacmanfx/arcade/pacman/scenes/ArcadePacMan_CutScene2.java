@@ -4,23 +4,22 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimations;
+import de.amr.basics.spriteanim.SpriteAnimation;
+import de.amr.basics.spriteanim.SpriteAnimationBuilder;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
+import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.basics.spriteanim.SpriteAnimation;
-import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel.createPacMan;
-import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimations.AnimationID.BLINKY_DAMAGED;
 
 /**
  * Second cut scene in Arcade Pac-Man game:<br>
@@ -105,7 +104,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     }
 
     private void blinkyLooksDownToInspectDamage() {
-        blinkyAnimation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_DAMAGED).advanceFrame();
+        blinkyAnimation(ArcadePacMan_AnimationID.BLINKY_DAMAGED).advanceFrame();
     }
 
     private void animationEnds() {
@@ -116,7 +115,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private void dressRaptures() {
         setNailDressAnimationState(NailDressState.RAPTURED);
         blinky.setX(blinky.x() - 4);
-        blinky.selectAnimation(BLINKY_DAMAGED);
+        blinky.selectAnimation(ArcadePacMan_AnimationID.BLINKY_DAMAGED);
     }
 
     private void blinkyStopsMoving() {
@@ -126,7 +125,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     private void blinkyGetsCaughtOnNail() {
         blinky.setSpeed(0.09f);
-        blinkyAnimation(Ghost.AnimationID.GHOST_NORMAL).setFrameTicks(32);
+        blinkyAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL).setFrameTicks(32);
     }
 
     private void blinkyStartsRunning() {
@@ -134,7 +133,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
         blinky.setSpeed(1.25f);
-        blinky.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
+        blinky.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
         blinky.playAnimation();
         blinky.show();
     }
@@ -143,7 +142,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         pacMan.placeAtTile(28, 20);
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(1.15f);
-        pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+        pacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
         pacMan.playAnimation();
         pacMan.show();
     }

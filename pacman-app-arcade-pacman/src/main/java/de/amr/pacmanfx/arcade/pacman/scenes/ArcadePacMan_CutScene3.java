@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimations;
+import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;
@@ -68,7 +68,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         blinky.placeAtTile(-1, 20);
         blinky.setMoveDir(Direction.RIGHT);
         blinky.setWishDir(Direction.RIGHT);
-        blinky.selectAnimation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_NAKED);
+        blinky.selectAnimation(ArcadePacMan_AnimationID.BLINKY_NAKED);
         blinky.playAnimation();
     }
 
@@ -77,14 +77,14 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(1.25f);
         pacMan.show();
-        pacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
+        pacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
         pacMan.playAnimation();
         blinky.placeAtTile(35, 20);
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
         blinky.setSpeed(1.25f);
         blinky.show();
-        blinky.selectAnimation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_DRESS_PATCHED);
+        blinky.selectAnimation(ArcadePacMan_AnimationID.BLINKY_DRESS_PATCHED);
         blinky.playAnimation();
     }
 }
