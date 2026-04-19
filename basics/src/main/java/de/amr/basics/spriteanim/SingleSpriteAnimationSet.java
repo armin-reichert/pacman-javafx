@@ -1,16 +1,15 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.spriteanim;
+package de.amr.basics.spriteanim;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.AnimationSet;
 
 import static java.util.Objects.requireNonNull;
 
-public record SingleSpriteNoAnimation(RectShort sprite) implements AnimationSet {
+public record SingleSpriteAnimationSet(RectShort sprite) implements AnimationSet {
 
-    public SingleSpriteNoAnimation(RectShort sprite) {
+    public SingleSpriteAnimationSet(RectShort sprite) {
         this.sprite = requireNonNull(sprite);
     }
 
@@ -30,8 +29,7 @@ public record SingleSpriteNoAnimation(RectShort sprite) implements AnimationSet 
     }
 
     @Override
-    public void setAnimationFrame(Object animationID, int frameIndex) {
-    }
+    public void setAnimationFrame(Object animationID, int frameIndex) {}
 
     @Override
     public int currentFrame() {
@@ -39,14 +37,11 @@ public record SingleSpriteNoAnimation(RectShort sprite) implements AnimationSet 
     }
 
     @Override
-    public void playSelectedAnimation() {
-    }
+    public void playSelectedAnimation() {}
 
     @Override
-    public void stopSelectedAnimation() {
-    }
+    public void stopSelectedAnimation() {}
 
     @Override
-    public void resetSelectedAnimation() {
-    }
+    public void resetSelectedAnimation() {}
 }

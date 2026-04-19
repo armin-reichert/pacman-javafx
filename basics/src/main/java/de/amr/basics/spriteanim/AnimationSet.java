@@ -10,39 +10,7 @@ import static java.util.Objects.requireNonNull;
 
 public interface AnimationSet {
 
-    AnimationSet EMPTY_ANIMATION_SET = new AnimationSet() {
-        @Override
-        public Object animation(Object animationID) {
-            return null;
-        }
-
-        @Override
-        public String selectedAnimationID() {
-            return null;
-        }
-
-        @Override
-        public void setAnimationFrame(Object animationID, int frameIndex) {}
-
-        @Override
-        public void playSelectedAnimation() {}
-
-        @Override
-        public void stopSelectedAnimation() {}
-
-        @Override
-        public void resetSelectedAnimation() {}
-
-        @Override
-        public RectShort currentSprite() {
-            return RectShort.NULL_RECTANGLE;
-        }
-
-        @Override
-        public int currentFrame() {
-            return -1;
-        }
-    };
+    AnimationSet EMPTY = new EmptyAnimationSet();
 
     Object animation(Object animationID);
 

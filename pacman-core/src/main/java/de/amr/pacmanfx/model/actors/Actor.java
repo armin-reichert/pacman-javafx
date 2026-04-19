@@ -5,6 +5,7 @@ package de.amr.pacmanfx.model.actors;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.spriteanim.AnimationSet;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -177,13 +178,13 @@ public class Actor {
 
     // Animation support
 
-    protected de.amr.basics.spriteanim.AnimationSet animations = de.amr.basics.spriteanim.AnimationSet.EMPTY_ANIMATION_SET;
+    protected AnimationSet animations = AnimationSet.EMPTY;
 
-    public de.amr.basics.spriteanim.AnimationSet animations() {
+    public AnimationSet animations() {
         return animations;
     }
 
-    public void setAnimations(de.amr.basics.spriteanim.AnimationSet animations) {
+    public void setAnimations(AnimationSet animations) {
         this.animations = requireNonNull(animations);
     }
 
