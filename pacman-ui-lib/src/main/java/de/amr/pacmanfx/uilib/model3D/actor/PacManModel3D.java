@@ -122,21 +122,12 @@ public class PacManModel3D implements Disposable {
 
         final var headBounds = head.getBoundsInLocal();
         final var centeredOverOrigin = new Translate(-headBounds.getCenterX(), -headBounds.getCenterY(), -headBounds.getCenterZ());
-        Stream.of(head, eyes, palate).forEach(mv -> mv.getTransforms().add(centeredOverOrigin));
+        Stream.of(head, eyes, palate).forEach(part -> part.getTransforms().add(centeredOverOrigin));
 
-        final var bounds = body.getBoundsInLocal();
-        final float size = pacConfig.size3D();
-        final var scaleToSize = new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
-        body.getTransforms().add(scaleToSize);
-
+		normalizeBodySize(body, pacConfig.size3D());
 		fixBodyRotation(body); //TODO fix in obj file
-        return body;
-	}
 
-	private void fixBodyRotation(Node body) {
-		body.getTransforms().add(new Rotate(90,  Rotate.X_AXIS));
-		body.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
-		body.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+        return body;
 	}
 
 	/**
@@ -163,14 +154,26 @@ public class PacManModel3D implements Disposable {
 
         body.getChildren().addAll(headMeshView, palateMeshView);
 
-        final var bodyBounds = body.getBoundsInLocal();
-        final float size = pacConfig.size3D();
-        body.getTransforms().add(
-            new Scale(size / bodyBounds.getWidth(), size / bodyBounds.getHeight(), size / bodyBounds.getDepth()));
-
+		normalizeBodySize(body, pacConfig.size3D());
 		fixBodyRotation(body); //TODO fix in obj file
+
         return body;
     }
+
+	private void fixBodyRotation(Node body) {
+		body.getTransforms().add(new Rotate(90,  Rotate.X_AXIS));
+		body.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
+		body.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+	}
+
+	private void normalizeBodySize(Node body, float size) {
+		final var bounds = body.getBoundsInLocal();
+		body.getTransforms().add(new Scale(
+			size / bounds.getWidth(),
+			size / bounds.getHeight(),
+			size / bounds.getDepth())
+		);
+	}
 
 	/**
 	 * Creates the additional female parts used for Ms. Pac-Man (hair bow, pearls, etc.).
