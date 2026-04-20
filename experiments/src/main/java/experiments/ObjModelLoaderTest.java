@@ -4,22 +4,21 @@ See file LICENSE in repository root directory for details.
 */
 package experiments;
 
-import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.objimport.Model3D;
-import javafx.scene.paint.Material;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.net.URL;
-import java.util.Map;
+import java.nio.file.Paths;
 
 public class ObjModelLoaderTest {
 
     static void main(String[] args) {
         if (args.length > 0) {
-            ResourceManager rm = () -> ObjModelLoaderTest.class;
-            var url = rm.url(args[0]);
             try {
-                var model3D = Model3D.importObjFile(url);
+                final File file = Paths.get(args[0]).toFile();
+                final URL url = file.toURI().toURL();
+                final Model3D model3D = Model3D.importObjFile(url);
                 Logger.info(contentAsText(model3D, url));
             } catch (Exception x) {
                 Logger.error(x);
@@ -35,12 +34,6 @@ public class ObjModelLoaderTest {
         sb.append("\tMeshes:\n");
         for (var entry : model3D.meshMap().entrySet()) {
             sb.append("\t\t'%s': %s%n".formatted(entry.getKey(), entry.getValue()));
-        }
-        sb.append("\tMaterials:\n");
-        for (Map<String, Material> lib : model3D.materialLibs()) {
-            for (var entry : lib.entrySet()) {
-                sb.append("\t\t'%s': %s%n".formatted(entry.getKey(), entry.getValue()));
-            }
         }
         return sb.toString();
     }
