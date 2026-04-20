@@ -7,6 +7,7 @@ package de.amr.pacmanfx.uilib.model3D.actor;
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.uilib.objimport.Model3D;
 import de.amr.pacmanfx.uilib.objimport.Model3DException;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -120,10 +121,7 @@ public class PacManModel3D implements Disposable {
 
         body.getChildren().addAll(head, eyes, palate);
 
-        final var headBounds = head.getBoundsInLocal();
-        final var centeredOverOrigin = new Translate(-headBounds.getCenterX(), -headBounds.getCenterY(), -headBounds.getCenterZ());
-        Stream.of(head, eyes, palate).forEach(part -> part.getTransforms().add(centeredOverOrigin));
-
+		centerOverOrigin(head, eyes, palate);
 		normalizeBodySize(body, pacConfig.size3D());
 		fixBodyRotation(body); //TODO fix in obj file
 
@@ -137,36 +135,40 @@ public class PacManModel3D implements Disposable {
 	 * @return a new Pac body without eyeballs
 	 */
 	public Group createBlindPacBody(PacConfig pacConfig) {
-		//return new PacBodyNoEyes(pacConfig, headMesh(), palateMesh());
         final Group body = new Group();
 
-        final PhongMaterial headMaterial = coloredPhongMaterial(pacConfig.colors().head());
-        final var headMeshView = new MeshView(headMesh());
-        headMeshView.setMaterial(headMaterial);
+        final var head = new MeshView(headMesh());
+        head.setMaterial(coloredPhongMaterial(pacConfig.colors().head()));
 
-        final PhongMaterial palateMaterial = coloredPhongMaterial(pacConfig.colors().palate());
-        final var palateMeshView = new MeshView(palateMesh());
-        palateMeshView.setMaterial(palateMaterial);
+        final var palate = new MeshView(palateMesh());
+        palate.setMaterial(coloredPhongMaterial(pacConfig.colors().palate()));
 
-        final var headBounds = headMeshView.getBoundsInLocal();
-        final var centeredOverOrigin = new Translate(-headBounds.getCenterX(), -headBounds.getCenterY(), -headBounds.getCenterZ());
-        Stream.of(headMeshView, palateMeshView).forEach(node -> node.getTransforms().add(centeredOverOrigin));
+        body.getChildren().addAll(head, palate);
 
-        body.getChildren().addAll(headMeshView, palateMeshView);
-
+		centerOverOrigin(head, palate);
 		normalizeBodySize(body, pacConfig.size3D());
 		fixBodyRotation(body); //TODO fix in obj file
 
         return body;
     }
 
-	private void fixBodyRotation(Node body) {
+	private static void centerOverOrigin(Node master, Node... slaves) {
+		final Bounds masterBounds = master.getBoundsInLocal();
+		final var centeredOverOrigin = new Translate(
+			-masterBounds.getCenterX(),
+			-masterBounds.getCenterY(),
+			-masterBounds.getCenterZ());
+		master.getTransforms().add(centeredOverOrigin);
+		Stream.of(slaves).map(Node::getTransforms).forEach(tf -> tf.add(centeredOverOrigin));
+	}
+
+	private static void fixBodyRotation(Node body) {
 		body.getTransforms().add(new Rotate(90,  Rotate.X_AXIS));
 		body.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
 		body.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
 	}
 
-	private void normalizeBodySize(Node body, float size) {
+	private static void normalizeBodySize(Node body, float size) {
 		final var bounds = body.getBoundsInLocal();
 		body.getTransforms().add(new Scale(
 			size / bounds.getWidth(),
