@@ -52,6 +52,10 @@ public class PacManModel3D implements Disposable {
 	private PacManModel3D() {
 		try {
 			model3D = Model3D.importObjFile(getClass().getResource(OBJ_FILE));
+			// fail fast
+			mesh(ID_HEAD);
+			mesh(ID_PALATE);
+			mesh(ID_EYES);
 		} catch (Model3DException x) {
 			throw new RuntimeException("Failed to load Pac-Man 3D model", x);
 		}
