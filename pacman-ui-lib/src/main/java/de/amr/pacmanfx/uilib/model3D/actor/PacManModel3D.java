@@ -40,9 +40,9 @@ public class PacManModel3D implements Disposable {
         return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
-	private static final String MESH_ID_PAC_MAN_EYES   = "PacMan.Eyes";
-	private static final String MESH_ID_PAC_MAN_HEAD   = "PacMan.Head";
-	private static final String MESH_ID_PAC_MAN_PALATE = "PacMan.Palate";
+	private static final String MESH_ID_PAC_MAN_EYES   = "Group.PacMan.Eyes";
+	private static final String MESH_ID_PAC_MAN_HEAD   = "Group.PacMan.Head";
+	private static final String MESH_ID_PAC_MAN_PALATE = "Group.PacMan.Palate";
 
 	/** The loaded 3D model containing all Pac-Man mesh parts. */
 	private final Model3D model3D;
