@@ -47,6 +47,19 @@ public class ObjFileParser {
         Command(String token) {
             this.token = token;
         }
+
+        private boolean matches(String line) {
+            return line.equals(token);
+        }
+
+        private boolean starts(String line) {
+            return line.startsWith(token + " ");
+        }
+
+        private String restOf(String line) {
+            return line.substring(token.length() + 1).trim();
+        }
+
     }
 
     private static String[] splitBySpace(String line) {
@@ -77,7 +90,6 @@ public class ObjFileParser {
 
     private final Map<String, TriangleMesh> meshMap = new HashMap<>();
 
-    private String line;
     private int facesStart = 0;
     private int facesNormalStart = 0;
     private int smoothingGroupsStart = 0;
@@ -165,63 +177,52 @@ public class ObjFileParser {
         return "default" + anonMeshNameCount++;
     }
 
-    private boolean lineIs(Command command) {
-        return line.equals(command.token);
-    }
-
-    private boolean lineStartsWith(Command command) {
-        return line.startsWith(command.token + " ");
-    }
-
-    private String lineAfter(Command command) {
-        return line.substring(command.token.length() + 1);
-    }
-
     private void parse(BufferedReader reader) throws IOException {
+        String line;
         while ((line = reader.readLine()) != null) {
             if (line.isBlank() || line.startsWith("#")) {
                 Logger.trace("Blank or comment line, ignored");
             }
-            else if (lineStartsWith(Command.FACE)) {
-                parseFace(lineAfter(Command.FACE));
+            else if (Command.FACE.starts(line)) {
+                parseFace(Command.FACE.restOf(line));
             }
-            else if (lineStartsWith(Command.GROUP)) {
+            else if (Command.GROUP.starts(line)) {
                 commitPendingMesh();
-                meshName = lineAfter(Command.GROUP);
+                meshName = Command.GROUP.restOf(line);
             }
-            else if (lineIs(Command.GROUP)) {
+            else if (Command.GROUP.matches(line)) {
                 commitPendingMesh();
                 meshName = nextAnonMeshName();
             }
-            else if (lineStartsWith(Command.MATERIAL_LIB)) {
+            else if (Command.MATERIAL_LIB.starts(line)) {
                 // we don't use material library definitions defined in the OBJ file
-                final String libraryName = lineAfter(Command.MATERIAL_LIB);
+                final String libraryName = Command.MATERIAL_LIB.restOf(line);
                 Logger.info("Material library definition '{}' ignored", libraryName);
             }
-            else if (lineIs(Command.OBJECT)) {
+            else if (Command.OBJECT.matches(line)) {
                 commitPendingMesh();
                 meshName = nextAnonMeshName();
             }
-            else if (lineStartsWith(Command.OBJECT)) {
+            else if (Command.OBJECT.starts(line)) {
                 commitPendingMesh();
-                meshName = lineAfter(Command.OBJECT);
+                meshName = Command.OBJECT.restOf(line);
             }
-            else if (lineStartsWith(Command.SMOOTHING_GROUP)) {
-                parseSmoothingGroup(lineAfter(Command.SMOOTHING_GROUP));
+            else if (Command.SMOOTHING_GROUP.starts(line)) {
+                parseSmoothingGroup(Command.SMOOTHING_GROUP.restOf(line));
             }
-            else if (lineStartsWith(Command.USE_MATERIAL)) {
+            else if (Command.USE_MATERIAL.starts(line)) {
                 commitPendingMesh();
-                final String materialName = lineAfter(Command.USE_MATERIAL);
+                final String materialName = Command.USE_MATERIAL.restOf(line);
                 Logger.trace("Material usage '{}' ignored", materialName);
             }
-            else if (lineStartsWith(Command.VERTEX)) {
-                parseVertex(lineAfter(Command.VERTEX));
+            else if (Command.VERTEX.starts(line)) {
+                parseVertex(Command.VERTEX.restOf(line));
             }
-            else if (lineStartsWith(Command.VERTEX_NORMAL)) {
-                parseVertexNormal(lineAfter(Command.VERTEX_NORMAL));
+            else if (Command.VERTEX_NORMAL.starts(line)) {
+                parseVertexNormal(Command.VERTEX_NORMAL.restOf(line));
             }
-            else if (lineStartsWith(Command.TEXTURE_COORDINATE)) {
-                parseTextureCoordinate(lineAfter(Command.TEXTURE_COORDINATE));
+            else if (Command.TEXTURE_COORDINATE.starts(line)) {
+                parseTextureCoordinate(Command.TEXTURE_COORDINATE.restOf(line));
             }
             else {
                 Logger.warn("Line skipped: {} (no idea what it wants from me)", line);
