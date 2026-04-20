@@ -94,7 +94,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
         final var worldMap = new WorldMap(mapPrototypes.get(category).get(number - 1));
         worldMap.setConfigValue(WorldMapConfigKey.MAP_NUMBER, number);
         worldMap.setConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MAP_CATEGORY, category);
-        worldMap.setConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.NES_COLOR_SCHEME, nesColorScheme);
+        worldMap.setConfigValue(WorldMapConfigKey.COLOR_SCHEME, nesColorScheme);
         worldMap.setConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MULTIPLE_FLASH_COLORS, false);
         return worldMap;
     }

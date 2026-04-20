@@ -9,7 +9,10 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
-import de.amr.pacmanfx.model.world.*;
+import de.amr.pacmanfx.model.world.FoodLayer;
+import de.amr.pacmanfx.model.world.MapColorScheme;
+import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.ui.GameUI;
 import javafx.scene.paint.Color;
 
@@ -48,28 +51,20 @@ public class DashboardSectionGameInfo extends DashboardSection {
 
         addDynamicLabeledValue("Fill/Stroke/Pellet", ifGameLevel(gameSupplier, level -> {
             final WorldMap worldMap = level.worldMap();
-            //TODO create "plugin" mechanism for variant-specific info
-            if (worldMap.hasConfigValue("nesColorScheme")) {
-                // Tengen Ms. Pac-Man
-                final var colorScheme = (MapColorScheme) worldMap.getConfigValue("nesColorScheme");
-                final Color fillColor = Color.valueOf(colorScheme.wallFill());
-                final Color strokeColor = Color.valueOf(colorScheme.wallStroke());
-                final Color pelletColor = Color.valueOf(colorScheme.pellet());
-                return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
-            } else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_SCHEME)) {
-                // Pac-Man XXL game
-                final WorldMapColorScheme colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
-                final Color fillColor = Color.valueOf(colorScheme.wallFill());
-                final Color strokeColor = Color.valueOf(colorScheme.wallStroke());
-                final Color pelletColor = Color.valueOf(colorScheme.pellet());
-                return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
-            } else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX)) {
-                // Arcade games
-                final WorldMapColorScheme coloring = ui.currentConfig().colorScheme(worldMap);
-                return "%s / %s / %s".formatted(coloring.wallFill(), coloring.wallStroke(), coloring.pellet());
-            } else {
-                return NO_INFO;
+            MapColorScheme colorScheme = null;
+            if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_SCHEME)) {
+                colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
             }
+            else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX)) {
+                colorScheme = ui.currentConfig().colorScheme(worldMap);
+            }
+            if (colorScheme != null) {
+                final Color fillColor = Color.valueOf(colorScheme.wallFill());
+                final Color strokeColor = Color.valueOf(colorScheme.wallStroke());
+                final Color pelletColor = Color.valueOf(colorScheme.pellet());
+                return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
+            }
+            return NO_INFO;
         }));
 
         addDynamicLabeledValue("Hunting Phase",   ifGameLevel(gameSupplier, this::fmtHuntingPhase));

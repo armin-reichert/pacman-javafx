@@ -9,10 +9,10 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.world.MapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.tengenmspacman.rendering.NES_MapColorScheme;
-import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
+import de.amr.pacmanfx.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
@@ -162,8 +162,6 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
         MAP_IMAGE_SET,
         /** Boolean value defining if multiple (random) flash colors are used. */
         MULTIPLE_FLASH_COLORS,
-        /** Name of used NES color scheme e.g. _23_20_2B_VIOLET_WHITE_GREEN. */
-        NES_COLOR_SCHEME
     }
 
     /** Size of NES screen in tiles (32x30). */
@@ -297,9 +295,9 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        final NES_MapColorScheme scheme = worldMap.getConfigValue(MapConfigKey.NES_COLOR_SCHEME);
-        final WorldMapColorScheme colorScheme = new WorldMapColorScheme(scheme.wallFill(), scheme.wallStroke(),
-            scheme.door(), scheme.pellet());
+        final MapColorScheme scheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
+        final WorldMapColorScheme colorScheme = new WorldMapColorScheme(
+            scheme.wallFill(), scheme.wallStroke(), scheme.door(), scheme.pellet());
         return enhanceContrast(colorScheme);
     }
 
