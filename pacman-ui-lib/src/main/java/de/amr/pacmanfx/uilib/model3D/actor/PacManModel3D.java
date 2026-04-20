@@ -78,30 +78,6 @@ public class PacManModel3D implements Disposable {
 	}
 
 	/**
-	 * @return the mesh representing Pac-Man's eyes
-	 * @throws java.util.NoSuchElementException if the mesh is missing
-	 */
-	public Mesh eyesMesh() {
-		return model3D.mesh(ID_EYES).orElseThrow();
-	}
-
-	/**
-	 * @return the mesh representing Pac-Man's head
-	 * @throws java.util.NoSuchElementException if the mesh is missing
-	 */
-	public Mesh headMesh() {
-		return model3D.mesh(ID_HEAD).orElseThrow();
-	}
-
-	/**
-	 * @return the mesh representing Pac-Man's palate (mouth interior)
-	 * @throws java.util.NoSuchElementException if the mesh is missing
-	 */
-	public Mesh palateMesh() {
-		return model3D.mesh(ID_PALATE).orElseThrow();
-	}
-
-	/**
 	 * Creates a fully assembled Pac-Man body with head, eyes, and palate.
 	 *
 	 * @param pacConfig the Pac configuration
@@ -110,13 +86,13 @@ public class PacManModel3D implements Disposable {
 	public Group createPacBody(PacConfig pacConfig) {
         final Group body = new Group();
 
-        final var head = new MeshView(headMesh());
+        final var head = new MeshView(mesh(ID_HEAD));
         head.setMaterial(coloredPhongMaterial(pacConfig.colors().head()));
 
-        final var eyes = new MeshView(eyesMesh());
+        final var eyes = new MeshView(mesh(ID_EYES));
         eyes.setMaterial(coloredPhongMaterial(pacConfig.colors().eyes()));
 
-        final var palate = new MeshView(palateMesh());
+        final var palate = new MeshView(mesh(ID_PALATE));
         palate.setMaterial((coloredPhongMaterial(pacConfig.colors().palate())));
 
         body.getChildren().addAll(head, eyes, palate);
@@ -137,10 +113,10 @@ public class PacManModel3D implements Disposable {
 	public Group createBlindPacBody(PacConfig pacConfig) {
         final Group body = new Group();
 
-        final var head = new MeshView(headMesh());
+        final var head = new MeshView(mesh(ID_HEAD));
         head.setMaterial(coloredPhongMaterial(pacConfig.colors().head()));
 
-        final var palate = new MeshView(palateMesh());
+        final var palate = new MeshView(mesh(ID_PALATE));
         palate.setMaterial(coloredPhongMaterial(pacConfig.colors().palate()));
 
         body.getChildren().addAll(head, palate);
@@ -160,6 +136,10 @@ public class PacManModel3D implements Disposable {
 			-masterBounds.getCenterZ());
 		master.getTransforms().add(centeredOverOrigin);
 		Stream.of(slaves).map(Node::getTransforms).forEach(tf -> tf.add(centeredOverOrigin));
+	}
+
+	private Mesh mesh(String id) {
+		return model3D.mesh(id).orElseThrow();
 	}
 
 	private static void fixBodyRotation(Node body) {
