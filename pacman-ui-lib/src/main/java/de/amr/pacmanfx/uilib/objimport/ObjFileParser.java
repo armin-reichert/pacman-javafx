@@ -415,9 +415,9 @@ public class ObjFileParser {
                     normalsMap.put(normalsIndex, normals.size() / 3);
                     if (normalsIndex >= 0 && normals.size() >= (normalsIndex + 1) * 3) {
                         normals.addAll(
-                            normals.get(normalsIndex * 3),
-                            normals.get(normalsIndex * 3 + 1),
-                            normals.get(normalsIndex * 3 + 2)
+                            normalsArray.get(normalsIndex * 3),
+                            normalsArray.get(normalsIndex * 3 + 1),
+                            normalsArray.get(normalsIndex * 3 + 2)
                         );
                     } else {
                         useNormals = false;
