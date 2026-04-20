@@ -19,9 +19,9 @@ public class GhostModel3D implements Disposable {
         return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
-    private static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
-	private static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
-	private static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
+    private static final String MESH_ID_GHOST_DRESS = "Group.Dress";
+	private static final String MESH_ID_GHOST_EYEBALLS = "Group.Eyeballs";
+	private static final String MESH_ID_GHOST_PUPILS = "Group.Pupils";
 
     private final Model3D model3D;
 	private final Mesh dressMesh;
