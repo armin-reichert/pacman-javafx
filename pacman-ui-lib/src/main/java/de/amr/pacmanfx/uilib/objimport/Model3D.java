@@ -56,6 +56,16 @@ public class Model3D {
         }
     }
 
+    /** The URL of the OBJ file this model was loaded from. */
+    private final URL url;
+
+    /**
+     * Maps mesh names (OBJ object/group names) to their corresponding {@link TriangleMesh}.
+     * <p>
+     * OBJ files may contain multiple named objects; each becomes a separate mesh.
+     */
+    private final Map<String, TriangleMesh> triangleMeshMap = new HashMap<>();
+
     /**
      * Creates a new model representation for the OBJ file located at the given URL.
      *
@@ -68,16 +78,6 @@ public class Model3D {
     public URL url() {
         return url;
     }
-
-    /** The URL of the OBJ file this model was loaded from. */
-    final URL url;
-
-    /**
-     * Maps mesh names (OBJ object/group names) to their corresponding {@link TriangleMesh}.
-     * <p>
-     * OBJ files may contain multiple named objects; each becomes a separate mesh.
-     */
-    final Map<String, TriangleMesh> triangleMeshMap = new HashMap<>();
 
     /**
      * Clears all stored model data.
