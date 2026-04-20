@@ -8,6 +8,7 @@ import de.amr.basics.Disposable;
 import de.amr.pacmanfx.uilib.objimport.Model3D;
 import de.amr.pacmanfx.uilib.objimport.Model3DException;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
@@ -40,9 +41,9 @@ public class PacManModel3D implements Disposable {
         return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
-	private static final String MESH_ID_PAC_MAN_EYES   = "Group.PacMan.Eyes";
-	private static final String MESH_ID_PAC_MAN_HEAD   = "Group.PacMan.Head";
-	private static final String MESH_ID_PAC_MAN_PALATE = "Group.PacMan.Palate";
+	private static final String ID_EYES = "Group.PacMan.Eyes";
+	private static final String ID_HEAD = "Group.PacMan.Head";
+	private static final String ID_PALATE = "Group.PacMan.Palate";
 
 	/** The loaded 3D model containing all Pac-Man mesh parts. */
 	private final Model3D model3D;
@@ -80,7 +81,7 @@ public class PacManModel3D implements Disposable {
 	 * @throws java.util.NoSuchElementException if the mesh is missing
 	 */
 	public Mesh eyesMesh() {
-		return model3D.mesh(MESH_ID_PAC_MAN_EYES).orElseThrow();
+		return model3D.mesh(ID_EYES).orElseThrow();
 	}
 
 	/**
@@ -88,7 +89,7 @@ public class PacManModel3D implements Disposable {
 	 * @throws java.util.NoSuchElementException if the mesh is missing
 	 */
 	public Mesh headMesh() {
-		return model3D.mesh(MESH_ID_PAC_MAN_HEAD).orElseThrow();
+		return model3D.mesh(ID_HEAD).orElseThrow();
 	}
 
 	/**
@@ -96,7 +97,7 @@ public class PacManModel3D implements Disposable {
 	 * @throws java.util.NoSuchElementException if the mesh is missing
 	 */
 	public Mesh palateMesh() {
-		return model3D.mesh(MESH_ID_PAC_MAN_PALATE).orElseThrow();
+		return model3D.mesh(ID_PALATE).orElseThrow();
 	}
 
 	/**
@@ -123,16 +124,19 @@ public class PacManModel3D implements Disposable {
         final var centeredOverOrigin = new Translate(-headBounds.getCenterX(), -headBounds.getCenterY(), -headBounds.getCenterZ());
         Stream.of(head, eyes, palate).forEach(mv -> mv.getTransforms().add(centeredOverOrigin));
 
-        body.getTransforms().add(new Rotate(90,  Rotate.X_AXIS));
-        body.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
-        body.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
-
         final var bounds = body.getBoundsInLocal();
         final float size = pacConfig.size3D();
         final var scaleToSize = new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
         body.getTransforms().add(scaleToSize);
 
+		fixBodyRotation(body); //TODO fix in obj file
         return body;
+	}
+
+	private void fixBodyRotation(Node body) {
+		body.getTransforms().add(new Rotate(90,  Rotate.X_AXIS));
+		body.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
+		body.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
 	}
 
 	/**
@@ -159,16 +163,12 @@ public class PacManModel3D implements Disposable {
 
         body.getChildren().addAll(headMeshView, palateMeshView);
 
-        // TODO check/fix Pac-Man mesh position and rotation in OBJ file
-        body.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-        body.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
-        body.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
-
         final var bodyBounds = body.getBoundsInLocal();
         final float size = pacConfig.size3D();
         body.getTransforms().add(
             new Scale(size / bodyBounds.getWidth(), size / bodyBounds.getHeight(), size / bodyBounds.getDepth()));
 
+		fixBodyRotation(body); //TODO fix in obj file
         return body;
     }
 
