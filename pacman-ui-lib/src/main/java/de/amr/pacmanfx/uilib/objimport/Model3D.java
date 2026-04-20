@@ -9,10 +9,7 @@ import javafx.scene.paint.Material;
 import javafx.scene.shape.TriangleMesh;
 import org.tinylog.Logger;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -40,20 +37,7 @@ import static java.util.Objects.requireNonNull;
 public class Model3D {
 
     public static Model3D importObjFile(URL url, Charset charset) throws IOException {
-        requireNonNull(url);
-        requireNonNull(charset);
-        final ObjFileParser parser = new ObjFileParser(url);
-        try (InputStream is = url.openStream()) {
-            final var reader = new BufferedReader(new InputStreamReader(is, charset));
-            parser.parse(reader);
-            Logger.info("OBJ file parsed: {} vertices, {} uvs, {} faces, {} smoothing groups. URL={}",
-                parser.data.vertexArray.size() / 3,
-                parser.data.uvArray.size() / 2,
-                parser.data.facesList.size() / 6,
-                parser.data.smoothingGroupList.size(),
-                url);
-            return parser.data;
-        }
+        return new ObjFileParser(url, charset).model3D();
     }
 
     public static Model3D importObjFile(URL url) throws Model3DException {

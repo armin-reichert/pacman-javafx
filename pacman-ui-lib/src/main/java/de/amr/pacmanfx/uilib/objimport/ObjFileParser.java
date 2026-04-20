@@ -10,12 +10,16 @@ import org.tinylog.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import static de.amr.pacmanfx.uilib.objimport.SmoothingGroups.computeSmoothingGroups;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Code is based on Oracle's OBJ importer from the 3DViewer sample project.
@@ -59,13 +63,29 @@ public class ObjFileParser {
     private String meshName = "default";
     private int currentSmoothingGroup = 0;
 
-    final Model3D data;
+    private final Model3D model3D;
 
-    public ObjFileParser(URL url) {
-        data = new Model3D(url);
+    public ObjFileParser(URL url, Charset charset) throws IOException {
+        requireNonNull(url);
+        requireNonNull(charset);
+        model3D = new Model3D(url);
+        try (InputStream is = url.openStream()) {
+            final var reader = new BufferedReader(new InputStreamReader(is, charset));
+            parse(reader);
+            Logger.info("OBJ file parsed: {} vertices, {} uvs, {} faces, {} smoothing groups. URL={}",
+                model3D.vertexArray.size() / 3,
+                model3D.uvArray.size() / 2,
+                model3D.facesList.size() / 6,
+                model3D.smoothingGroupList.size(),
+                url);
+        }
     }
 
-    void parse(BufferedReader reader) throws IOException {
+    public Model3D model3D() {
+        return model3D;
+    }
+
+    private void parse(BufferedReader reader) throws IOException {
         String line;
         while ((line = reader.readLine()) != null) {
             if (line.isBlank() || line.startsWith("#")) {
@@ -144,46 +164,46 @@ public class ObjFileParser {
                 }
             }
         }
-        int v1 = data.vertexIndex(triplets[0][0]);
+        int v1 = model3D.vertexIndex(triplets[0][0]);
         int uv1 = -1;
         int n1 = -1;
         if (uvProvided) {
-            uv1 = data.uvIndex(triplets[0][1]);
+            uv1 = model3D.uvIndex(triplets[0][1]);
             if (uv1 < 0) {
                 uvProvided = false;
             }
         }
         if (normalProvided) {
-            n1 = data.normalIndex(triplets[0][2]);
+            n1 = model3D.normalIndex(triplets[0][2]);
             if (n1 < 0) {
                 normalProvided = false;
             }
         }
         for (int i = 1; i < triplets.length - 1; i++) {
-            int v2 = data.vertexIndex(triplets[i][0]);
-            int v3 = data.vertexIndex(triplets[i + 1][0]);
+            int v2 = model3D.vertexIndex(triplets[i][0]);
+            int v3 = model3D.vertexIndex(triplets[i + 1][0]);
             int uv2 = -1;
             int uv3 = -1;
             int n2 = -1;
             int n3 = -1;
             if (uvProvided) {
-                uv2 = data.uvIndex(triplets[i][1]);
-                uv3 = data.uvIndex(triplets[i + 1][1]);
+                uv2 = model3D.uvIndex(triplets[i][1]);
+                uv3 = model3D.uvIndex(triplets[i + 1][1]);
             }
             if (normalProvided) {
-                n2 = data.normalIndex(triplets[i][2]);
-                n3 = data.normalIndex(triplets[i + 1][2]);
+                n2 = model3D.normalIndex(triplets[i][2]);
+                n3 = model3D.normalIndex(triplets[i + 1][2]);
             }
-            data.facesList.add(v1);
-            data.facesList.add(uv1);
-            data.facesList.add(v2);
-            data.facesList.add(uv2);
-            data.facesList.add(v3);
-            data.facesList.add(uv3);
-            data.faceNormalsList.add(n1);
-            data.faceNormalsList.add(n2);
-            data.faceNormalsList.add(n3);
-            data.smoothingGroupList.add(currentSmoothingGroup);
+            model3D.facesList.add(v1);
+            model3D.facesList.add(uv1);
+            model3D.facesList.add(v2);
+            model3D.facesList.add(uv2);
+            model3D.facesList.add(v3);
+            model3D.facesList.add(uv3);
+            model3D.faceNormalsList.add(n1);
+            model3D.faceNormalsList.add(n2);
+            model3D.faceNormalsList.add(n3);
+            model3D.smoothingGroupList.add(currentSmoothingGroup);
         }
     }
 
@@ -197,7 +217,7 @@ public class ObjFileParser {
         float x = Float.parseFloat(vertices[0]);
         float y = Float.parseFloat(vertices[1]);
         float z = Float.parseFloat(vertices[2]);
-        data.vertexArray.addAll(x, y, z);
+        model3D.vertexArray.addAll(x, y, z);
     }
 
     /**
@@ -211,7 +231,7 @@ public class ObjFileParser {
         String[] coordinates = splitBySpace(argsText);
         float u = Float.parseFloat(coordinates[0]);
         float v = Float.parseFloat(coordinates[1]);
-        data.uvArray.addAll(u, 1 - v);
+        model3D.uvArray.addAll(u, 1 - v);
     }
 
     /**
@@ -235,8 +255,8 @@ public class ObjFileParser {
     private void parseMaterialLibs(String argsText) {
         String[] materialFileNames = splitBySpace(argsText);
         for (String filename : materialFileNames) {
-            MaterialFileReader materialFileReader = new MaterialFileReader(filename, data.url.toExternalForm());
-            data.materialMapsList.add(materialFileReader.getMaterialMap());
+            MaterialFileReader materialFileReader = new MaterialFileReader(filename, model3D.url.toExternalForm());
+            model3D.materialMapsList.add(materialFileReader.getMaterialMap());
         }
     }
 
@@ -250,18 +270,18 @@ public class ObjFileParser {
         float x = Float.parseFloat(values[0]);
         float y = Float.parseFloat(values[1]);
         float z = Float.parseFloat(values[2]);
-        data.normalsArray.addAll(x, y, z);
+        model3D.normalsArray.addAll(x, y, z);
     }
 
     private void commitCurrentMesh() {
-        if (facesStart >= data.facesList.size()) {
+        if (facesStart >= model3D.facesList.size()) {
             // we're only interested in faces
-            smoothingGroupsStart = data.smoothingGroupList.size();
+            smoothingGroupsStart = model3D.smoothingGroupList.size();
             return;
         }
-        var vertexMap      = new HashMap<Integer, Integer>(data.vertexArray.size() / 2);
-        var uvMap          = new HashMap<Integer, Integer>(data.uvArray.size() / 2);
-        var normalsMap     = new HashMap<Integer, Integer>(data.normalsArray.size() / 2);
+        var vertexMap      = new HashMap<Integer, Integer>(model3D.vertexArray.size() / 2);
+        var uvMap          = new HashMap<Integer, Integer>(model3D.uvArray.size() / 2);
+        var normalsMap     = new HashMap<Integer, Integer>(model3D.normalsArray.size() / 2);
 
         var verticesArray  = FXCollections.observableFloatArray();
         var texCoordsArray = FXCollections.observableFloatArray();
@@ -269,51 +289,51 @@ public class ObjFileParser {
 
         boolean useNormals = true;
 
-        for (int facesIndex = facesStart; facesIndex < data.facesList.size(); facesIndex += 2) {
+        for (int facesIndex = facesStart; facesIndex < model3D.facesList.size(); facesIndex += 2) {
 
             // First comes vertex index
-            final int vertexIndex = data.facesList.get(facesIndex);
+            final int vertexIndex = model3D.facesList.get(facesIndex);
             if (!vertexMap.containsKey(vertexIndex)) {
                 vertexMap.put(vertexIndex, verticesArray.size() / 3);
                 verticesArray.addAll(
-                    data.vertexArray.get(vertexIndex * 3),
-                    data.vertexArray.get(vertexIndex * 3 + 1),
-                    data.vertexArray.get(vertexIndex * 3 + 2)
+                    model3D.vertexArray.get(vertexIndex * 3),
+                    model3D.vertexArray.get(vertexIndex * 3 + 1),
+                    model3D.vertexArray.get(vertexIndex * 3 + 2)
                 );
             }
-            data.facesList.set(facesIndex, vertexMap.get(vertexIndex));
+            model3D.facesList.set(facesIndex, vertexMap.get(vertexIndex));
 
             // Second comes texture coordinate index
-            final int texCoordIndex = data.facesList.get(facesIndex + 1);
+            final int texCoordIndex = model3D.facesList.get(facesIndex + 1);
             if (!uvMap.containsKey(texCoordIndex)) {
                 uvMap.put(texCoordIndex, texCoordsArray.size() / 2);
                 if (texCoordIndex >= 0) {
                     texCoordsArray.addAll(
-                        data.uvArray.get(texCoordIndex * 2),
-                        data.uvArray.get(texCoordIndex * 2 + 1)
+                        model3D.uvArray.get(texCoordIndex * 2),
+                        model3D.uvArray.get(texCoordIndex * 2 + 1)
                     );
                 } else {
                     texCoordsArray.addAll(0f, 0f);
                 }
             }
-            data.facesList.set(facesIndex + 1, uvMap.get(texCoordIndex));
+            model3D.facesList.set(facesIndex + 1, uvMap.get(texCoordIndex));
 
             if (useNormals) {
-                int normalsIndex = data.faceNormalsList.get(facesIndex / 2);
+                int normalsIndex = model3D.faceNormalsList.get(facesIndex / 2);
                 if (!normalsMap.containsKey(normalsIndex)) {
                     normalsMap.put(normalsIndex, normalsArray.size() / 3);
-                    if (normalsIndex >= 0 && data.normalsArray.size() >= (normalsIndex + 1) * 3) {
+                    if (normalsIndex >= 0 && model3D.normalsArray.size() >= (normalsIndex + 1) * 3) {
                         normalsArray.addAll(
-                            data.normalsArray.get(normalsIndex * 3),
-                            data.normalsArray.get(normalsIndex * 3 + 1),
-                            data.normalsArray.get(normalsIndex * 3 + 2)
+                            model3D.normalsArray.get(normalsIndex * 3),
+                            model3D.normalsArray.get(normalsIndex * 3 + 1),
+                            model3D.normalsArray.get(normalsIndex * 3 + 2)
                         );
                     } else {
                         useNormals = false;
                         normalsArray.addAll(0f, 0f, 0f);
                     }
                 }
-                data.faceNormalsList.set(facesIndex / 2, normalsMap.get(normalsIndex));
+                model3D.faceNormalsList.set(facesIndex / 2, normalsMap.get(normalsIndex));
             }
         }
 
@@ -323,23 +343,23 @@ public class ObjFileParser {
         mesh.getPoints().setAll(verticesArray);
         mesh.getTexCoords().setAll(texCoordsArray);
 
-        final int[] faces = toIntArray(restOf(data.facesList, facesStart));
+        final int[] faces = toIntArray(restOf(model3D.facesList, facesStart));
         mesh.getFaces().setAll(faces);
 
         final int[] smoothingGroups = useNormals
-            ? computeSmoothingGroups(mesh, faces, toIntArray(restOf(data.faceNormalsList, facesNormalStart)), toFloatArray(normalsArray))
-            : toIntArray(restOf(data.smoothingGroupList, smoothingGroupsStart));
+            ? computeSmoothingGroups(mesh, faces, toIntArray(restOf(model3D.faceNormalsList, facesNormalStart)), toFloatArray(normalsArray))
+            : toIntArray(restOf(model3D.smoothingGroupList, smoothingGroupsStart));
         mesh.getFaceSmoothingGroups().setAll(smoothingGroups);
 
         // try specified name, if already used, make unique name using serial number e.g. "my_mesh (3)"
         int serialNumber = 2;
         String unusedMeshName = meshName;
-        while (data.triangleMeshMap.containsKey(unusedMeshName)) {
+        while (model3D.triangleMeshMap.containsKey(unusedMeshName)) {
             Logger.info("Mesh name '{}' already exists", unusedMeshName);
             unusedMeshName = "%s (%d)".formatted(meshName, serialNumber);
             ++serialNumber;
         }
-        data.triangleMeshMap.put(unusedMeshName, mesh);
+        model3D.triangleMeshMap.put(unusedMeshName, mesh);
 
         Logger.trace("Added mesh '{}', vertices: {}, texture coordinates: {}, faces: {}, smoothing groups: {}",
             meshName,
@@ -348,8 +368,8 @@ public class ObjFileParser {
             mesh.getFaces().size() / mesh.getFaceElementSize(),
             mesh.getFaceSmoothingGroups().size());
 
-        facesStart = data.facesList.size();
-        facesNormalStart = data.faceNormalsList.size();
-        smoothingGroupsStart = data.smoothingGroupList.size();
+        facesStart = model3D.facesList.size();
+        facesNormalStart = model3D.faceNormalsList.size();
+        smoothingGroupsStart = model3D.smoothingGroupList.size();
     }
 }
