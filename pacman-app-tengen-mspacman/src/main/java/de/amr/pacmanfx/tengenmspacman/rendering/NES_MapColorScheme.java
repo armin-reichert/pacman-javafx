@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.nes;
+package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.basics.math.RandomNumberSupport;
+import de.amr.basics.math.RandomNumberSupport;import de.amr.pacmanfx.model.world.MapColorScheme;
 
 /**
- * The color schemes used in the Tengen Ms. Pac-Man maps. That was quite some work to fiddle them out.
+ * The color schemes used in the Tengen Ms. Pac-Man maps. That was quite some work to figure these out.
  */
-public enum NES_ColorScheme {
+public enum NES_MapColorScheme implements MapColorScheme {
     /** This scheme is used for highlighted maze in flashing animation. */
     _0F_20_0F_BLACK_WHITE_BLACK   (0x0f, 0x20, 0x0f),
 
@@ -43,22 +43,38 @@ public enum NES_ColorScheme {
     _28_16_20_YELLOW_RED_WHITE    (0x28, 0x16, 0x20),
     _28_20_2A_YELLOW_WHITE_GREEN  (0x28, 0x20, 0x2a);
 
-    NES_ColorScheme(int fillIndex, int strokeIndex, int pelletIndex) {
-        fillColor   = NES_Palette.rgbColor((byte) fillIndex);
-        strokeColor = NES_Palette.rgbColor((byte) strokeIndex);
-        pelletColor = NES_Palette.rgbColor((byte) pelletIndex);
+    NES_MapColorScheme(int fillIndex, int strokeIndex, int pelletIndex) {
+        fill = NES_Palette.rgbColor((byte) fillIndex);
+        stroke = NES_Palette.rgbColor((byte) strokeIndex);
+        pellet = NES_Palette.rgbColor((byte) pelletIndex);
     }
 
-    public static NES_ColorScheme randomScheme() {
+    public static NES_MapColorScheme randomScheme() {
         // ignore first entry (black white)
         return values()[RandomNumberSupport.randomInt(1, values().length)];
     }
 
-    public String fillColorRGB() { return fillColor; }
-    public String strokeColorRGB() { return strokeColor; }
-    public String pelletColorRGB() { return pelletColor; }
+   @Override
+    public String wallFill() {
+        return fill;
+    }
 
-    private final String fillColor;
-    private final String strokeColor;
-    private final String pelletColor;
+    @Override
+    public String wallStroke() {
+        return stroke;
+    }
+
+    @Override
+    public String door() {
+        return stroke; // Tengen mazes use wall "stroke" color for house doors
+    }
+
+    @Override
+    public String pellet() {
+        return pellet;
+    }
+
+    private final String fill;
+    private final String stroke;
+    private final String pellet;
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.nes;
+package de.amr.pacmanfx.tengenmspacman.rendering;
 
 /**
  * Got this info from the <a href="https://www.mesen.ca/">Mesen NES emulator</a>.

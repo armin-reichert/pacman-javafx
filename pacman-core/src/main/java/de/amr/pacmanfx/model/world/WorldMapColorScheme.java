@@ -3,4 +3,6 @@
  */
 package de.amr.pacmanfx.model.world;
 
-public record WorldMapColorScheme(String wallFill, String wallStroke, String door, String pellet) {}
+public record WorldMapColorScheme(String wallFill, String wallStroke, String door, String pellet)
+    implements MapColorScheme
+{}

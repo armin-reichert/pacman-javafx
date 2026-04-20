@@ -9,11 +9,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
-import de.amr.pacmanfx.model.world.FoodLayer;
-import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.nes.NES_ColorScheme;
+import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.ui.GameUI;
 import javafx.scene.paint.Color;
 
@@ -55,10 +51,10 @@ public class DashboardSectionGameInfo extends DashboardSection {
             //TODO create "plugin" mechanism for variant-specific info
             if (worldMap.hasConfigValue("nesColorScheme")) {
                 // Tengen Ms. Pac-Man
-                final var nesColors = (NES_ColorScheme) worldMap.getConfigValue("nesColorScheme");
-                final Color fillColor = Color.valueOf(nesColors.fillColorRGB());
-                final Color strokeColor = Color.valueOf(nesColors.strokeColorRGB());
-                final Color pelletColor = Color.valueOf(nesColors.pelletColorRGB());
+                final var colorScheme = (MapColorScheme) worldMap.getConfigValue("nesColorScheme");
+                final Color fillColor = Color.valueOf(colorScheme.wallFill());
+                final Color strokeColor = Color.valueOf(colorScheme.wallStroke());
+                final Color pelletColor = Color.valueOf(colorScheme.pellet());
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
             } else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_SCHEME)) {
                 // Pac-Man XXL game

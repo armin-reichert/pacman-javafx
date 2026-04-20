@@ -7,7 +7,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
-import de.amr.pacmanfx.nes.NES_ColorScheme;
+import de.amr.pacmanfx.tengenmspacman.rendering.NES_MapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.rendering.NonArcadeMapsSpriteSheet;
 import org.tinylog.Logger;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
-import static de.amr.pacmanfx.nes.NES_ColorScheme.*;
+import static de.amr.pacmanfx.tengenmspacman.rendering.NES_MapColorScheme.*;
 import static de.amr.pacmanfx.tengenmspacman.model.MapCategory.*;
 
 /**
@@ -90,7 +90,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
         }
     }
 
-    private WorldMap configuredMap(MapCategory category, int number, NES_ColorScheme nesColorScheme) {
+    private WorldMap configuredMap(MapCategory category, int number, NES_MapColorScheme nesColorScheme) {
         final var worldMap = new WorldMap(mapPrototypes.get(category).get(number - 1));
         worldMap.setConfigValue(WorldMapConfigKey.MAP_NUMBER, number);
         worldMap.setConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MAP_CATEGORY, category);
@@ -100,7 +100,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     }
 
     private WorldMap randomlyConfiguredMap(MapCategory category, int number) {
-        final WorldMap worldMap = configuredMap(category, number, NES_ColorScheme.randomScheme());
+        final WorldMap worldMap = configuredMap(category, number, NES_MapColorScheme.randomScheme());
         worldMap.setConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MULTIPLE_FLASH_COLORS, true);
         return worldMap;
     }

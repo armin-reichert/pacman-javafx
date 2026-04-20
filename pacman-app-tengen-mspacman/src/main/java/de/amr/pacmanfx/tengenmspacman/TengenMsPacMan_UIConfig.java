@@ -11,8 +11,8 @@ import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.nes.NES_ColorScheme;
-import de.amr.pacmanfx.nes.NES_Palette;
+import de.amr.pacmanfx.tengenmspacman.rendering.NES_MapColorScheme;
+import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
@@ -297,8 +297,9 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        final NES_ColorScheme scheme = worldMap.getConfigValue(MapConfigKey.NES_COLOR_SCHEME);
-        final WorldMapColorScheme colorScheme = new WorldMapColorScheme(scheme.fillColorRGB(), scheme.strokeColorRGB(), scheme.strokeColorRGB(), scheme.pelletColorRGB());
+        final NES_MapColorScheme scheme = worldMap.getConfigValue(MapConfigKey.NES_COLOR_SCHEME);
+        final WorldMapColorScheme colorScheme = new WorldMapColorScheme(scheme.wallFill(), scheme.wallStroke(),
+            scheme.door(), scheme.pellet());
         return enhanceContrast(colorScheme);
     }
 

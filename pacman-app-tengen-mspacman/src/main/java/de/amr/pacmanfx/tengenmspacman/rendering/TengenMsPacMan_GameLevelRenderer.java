@@ -9,7 +9,6 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.world.*;
-import de.amr.pacmanfx.nes.NES_ColorScheme;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MapConfigKey;
@@ -100,8 +99,8 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         requireNonNull(level);
         final WorldMap worldMap = level.worldMap();
         final MapImageSet recoloredMazeSprites = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
-        final NES_ColorScheme colorScheme = recoloredMazeSprites.mapImage().colorScheme();
-        final Color pelletColor = Color.valueOf(colorScheme.pelletColorRGB());
+        final NES_MapColorScheme colorScheme = recoloredMazeSprites.mapImage().colorScheme();
+        final Color pelletColor = Color.valueOf(colorScheme.pellet());
         final boolean blinkingOn = level.blinking().state() == Pulse.State.ON;
 
         ctx.save();
@@ -148,9 +147,9 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     private void drawGameOverMessage(GameLevel level, GameLevelMessage message) {
-        final NES_ColorScheme colorScheme = level.worldMap().getConfigValue(MapConfigKey.NES_COLOR_SCHEME);
+        final NES_MapColorScheme colorScheme = level.worldMap().getConfigValue(MapConfigKey.NES_COLOR_SCHEME);
         final Color color = level.isDemoLevel()
-            ? Color.valueOf(colorScheme.strokeColorRGB())
+            ? Color.valueOf(colorScheme.wallStroke())
             : uiConfig.assets().color("color.game_over_message");
         fillTextCentered(GAME_OVER_MESSAGE_TEXT, color, arcadeFont8(), message.x(), message.y());
     }
@@ -170,7 +169,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
             return;
         }
         final MapImageSet recoloredImageSet = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
-        final Color strokeColor = Color.valueOf(recoloredImageSet.mapImage().colorScheme().strokeColorRGB());
+        final Color strokeColor = Color.valueOf(recoloredImageSet.mapImage().colorScheme().wallStroke());
         final double scaledTileSize = scaled(TS);
         final double xMin = house.leftDoorTile().x() * scaledTileSize;
         final double yMin = house.leftDoorTile().y() * scaledTileSize + scaled(5); // 5 pixels down

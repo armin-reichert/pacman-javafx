@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.nes.NES_ColorScheme;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.uilib.UfxImages;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -36,8 +35,8 @@ public class MapColoringService {
         Object mapID,
         SpriteSheet<?> spriteSheet,
         RectShort mapSprite,
-        NES_ColorScheme srcColorScheme,
-        NES_ColorScheme tgtColorScheme)
+        NES_MapColorScheme srcColorScheme,
+        NES_MapColorScheme tgtColorScheme)
     {
         return tgtColorScheme.equals(srcColorScheme)
             ? new ColorSchemedImage(spriteSheet.sourceImage(), mapSprite, srcColorScheme)
@@ -51,15 +50,15 @@ public class MapColoringService {
         MapCategory mapCategory, Object mapID,
         SpriteSheet<?> spriteSheet,
         RectShort mapSprite,
-        NES_ColorScheme srcColorScheme,
-        NES_ColorScheme tgtColorScheme,
+        NES_MapColorScheme srcColorScheme,
+        NES_MapColorScheme tgtColorScheme,
         boolean multipleFlashColors,
         int flashCount)
     {
         final var flashingMapImages = new ArrayList<ColorSchemedImage>();
         if (multipleFlashColors) {
-            final List<NES_ColorScheme> randomColorSchemes = randomColorSchemesOtherThan(flashCount, tgtColorScheme);
-            for (NES_ColorScheme randomColorScheme : randomColorSchemes) {
+            final List<NES_MapColorScheme> randomColorSchemes = randomColorSchemesOtherThan(flashCount, tgtColorScheme);
+            for (NES_MapColorScheme randomColorScheme : randomColorSchemes) {
                 final ColorSchemedImage maze = computeRecoloredMapImage(
                     mapCategory, mapID,
                     spriteSheet, mapSprite,
@@ -71,7 +70,7 @@ public class MapColoringService {
             final ColorSchemedImage blackWhiteMapImage = computeRecoloredMapImage(
                 mapCategory, mapID,
                 spriteSheet, mapSprite,
-                srcColorScheme, NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK
+                srcColorScheme, NES_MapColorScheme._0F_20_0F_BLACK_WHITE_BLACK
             );
             for (int i = 0; i < flashCount; ++i) {
                 flashingMapImages.add(blackWhiteMapImage);
@@ -85,8 +84,8 @@ public class MapColoringService {
         Object mapID,
         SpriteSheet<?> spriteSheet,
         RectShort mapSprite,
-        NES_ColorScheme srcColorScheme,
-        NES_ColorScheme tgtColorScheme,
+        NES_MapColorScheme srcColorScheme,
+        NES_MapColorScheme tgtColorScheme,
         boolean multipleFlashColors,
         int flashCount)
     {
@@ -109,19 +108,19 @@ public class MapColoringService {
         Object mapID,
         SpriteSheet<?> spriteSheet,
         RectShort mapSprite,
-        NES_ColorScheme srcColorScheme,
-        NES_ColorScheme tgtColorScheme)
+        NES_MapColorScheme srcColorScheme,
+        NES_MapColorScheme tgtColorScheme)
     {
         // Make copy of spritesheet image region
         final Image existingMapImage = spriteSheet.image(mapSprite);
         final Image recoloredMapImage = UfxImages.replaceImageColors(
             existingMapImage,
-            Color.valueOf(srcColorScheme.fillColorRGB()),
-            Color.valueOf(srcColorScheme.strokeColorRGB()),
-            Color.valueOf(srcColorScheme.pelletColorRGB()),
-            Color.valueOf(tgtColorScheme.fillColorRGB()),
-            Color.valueOf(tgtColorScheme.strokeColorRGB()),
-            Color.valueOf(tgtColorScheme.pelletColorRGB())
+            Color.valueOf(srcColorScheme.wallFill()),
+            Color.valueOf(srcColorScheme.wallStroke()),
+            Color.valueOf(srcColorScheme.pellet()),
+            Color.valueOf(tgtColorScheme.wallFill()),
+            Color.valueOf(tgtColorScheme.wallStroke()),
+            Color.valueOf(tgtColorScheme.pellet())
         );
         final var coloredMapImage = new ColorSchemedImage(
             recoloredMapImage,
@@ -131,10 +130,10 @@ public class MapColoringService {
         return coloredMapImage;
     }
 
-    private List<NES_ColorScheme> randomColorSchemesOtherThan(int count, NES_ColorScheme colorScheme) {
-        final var randomColorSchemes = new HashSet<NES_ColorScheme>();
+    private List<NES_MapColorScheme> randomColorSchemesOtherThan(int count, NES_MapColorScheme colorScheme) {
+        final var randomColorSchemes = new HashSet<NES_MapColorScheme>();
         while (randomColorSchemes.size() < count) {
-            final NES_ColorScheme randomColorScheme = NES_ColorScheme.randomScheme();
+            final NES_MapColorScheme randomColorScheme = NES_MapColorScheme.randomScheme();
             if (!randomColorScheme.equals(colorScheme)) {
                 randomColorSchemes.add(randomColorScheme);
             }
