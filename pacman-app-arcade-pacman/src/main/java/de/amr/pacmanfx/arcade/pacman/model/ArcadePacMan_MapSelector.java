@@ -20,9 +20,7 @@ public class ArcadePacMan_MapSelector implements WorldMapSelector {
     public void loadMapPrototypes() {
         final URL url = getClass().getResource(PROTOTYPE_PATH);
         if (url == null) {
-            final String errorMsg = "Could not access Arcade Pac-Man map '%s'".formatted(PROTOTYPE_PATH);
-            Logger.error(errorMsg);
-            throw new IllegalStateException(errorMsg);
+            throw new IllegalStateException("Could not access Arcade Pac-Man map '%s'".formatted(PROTOTYPE_PATH));
         }
         WorldMap.fromURL(url).ifPresentOrElse(worldMap -> prototype = worldMap,
             () -> Logger.error("Could not load map prototype from URL {}", url)
