@@ -170,7 +170,12 @@ public class ObjFileParser {
                 meshName = nextAnonMeshName();
             }
             meshMap.put(meshName, mesh);
-            Logger.info("Mesh identified: " + meshName);
+            Logger.info("Mesh '{}', vertices: {}, texture coordinates: {}, faces: {}, smoothing groups: {}",
+                meshName,
+                mesh.getPoints().size() / mesh.getPointElementSize(),
+                mesh.getTexCoords().size() / mesh.getTexCoordElementSize(),
+                mesh.getFaces().size() / mesh.getFaceElementSize(),
+                mesh.getFaceSmoothingGroups().size());
         }
     }
 
@@ -187,13 +192,13 @@ public class ObjFileParser {
             else if (Command.FACE.starts(line)) {
                 parseFace(Command.FACE.restOf(line));
             }
-            else if (Command.GROUP.starts(line)) {
-                commitPendingMesh();
-                meshName = Command.GROUP.restOf(line);
-            }
             else if (Command.GROUP.matches(line)) {
                 commitPendingMesh();
                 meshName = nextAnonMeshName();
+            }
+            else if (Command.GROUP.starts(line)) {
+                commitPendingMesh();
+                meshName = Command.GROUP.restOf(line);
             }
             else if (Command.MATERIAL_LIB.starts(line)) {
                 // we don't use material library definitions defined in the OBJ file
@@ -366,23 +371,22 @@ public class ObjFileParser {
             smoothingGroupsStart = smoothingGroupList.size();
             return null;
         }
-        var vertexMap      = new HashMap<Integer, Integer>(vertexArray.size() / 2);
-        var uvMap          = new HashMap<Integer, Integer>(uvArray.size() / 2);
-        var normalsMap     = new HashMap<Integer, Integer>(normalsArray.size() / 2);
+        var vertexMap  = new HashMap<Integer, Integer>(vertexArray.size() / 2);
+        var uvMap      = new HashMap<Integer, Integer>(uvArray.size() / 2);
+        var normalsMap = new HashMap<Integer, Integer>(normalsArray.size() / 2);
 
-        var verticesArray  = FXCollections.observableFloatArray();
-        var texCoordsArray = FXCollections.observableFloatArray();
-        var normalsArray   = FXCollections.observableFloatArray();
+        var vertices  = FXCollections.observableFloatArray();
+        var texCoords = FXCollections.observableFloatArray();
+        var normals   = FXCollections.observableFloatArray();
 
         boolean useNormals = true;
 
         for (int facesIndex = facesStart; facesIndex < facesList.size(); facesIndex += 2) {
-
             // First comes vertex index
             final int vertexIndex = facesList.get(facesIndex);
             if (!vertexMap.containsKey(vertexIndex)) {
-                vertexMap.put(vertexIndex, verticesArray.size() / 3);
-                verticesArray.addAll(
+                vertexMap.put(vertexIndex, vertices.size() / 3);
+                vertices.addAll(
                     vertexArray.get(vertexIndex * 3),
                     vertexArray.get(vertexIndex * 3 + 1),
                     vertexArray.get(vertexIndex * 3 + 2)
@@ -393,14 +397,14 @@ public class ObjFileParser {
             // Second comes texture coordinate index
             final int texCoordIndex = facesList.get(facesIndex + 1);
             if (!uvMap.containsKey(texCoordIndex)) {
-                uvMap.put(texCoordIndex, texCoordsArray.size() / 2);
+                uvMap.put(texCoordIndex, texCoords.size() / 2);
                 if (texCoordIndex >= 0) {
-                    texCoordsArray.addAll(
+                    texCoords.addAll(
                         uvArray.get(texCoordIndex * 2),
                         uvArray.get(texCoordIndex * 2 + 1)
                     );
                 } else {
-                    texCoordsArray.addAll(0f, 0f);
+                    texCoords.addAll(0f, 0f);
                 }
             }
             facesList.set(facesIndex + 1, uvMap.get(texCoordIndex));
@@ -408,42 +412,34 @@ public class ObjFileParser {
             if (useNormals) {
                 int normalsIndex = faceNormalsList.get(facesIndex / 2);
                 if (!normalsMap.containsKey(normalsIndex)) {
-                    normalsMap.put(normalsIndex, normalsArray.size() / 3);
-                    if (normalsIndex >= 0 && normalsArray.size() >= (normalsIndex + 1) * 3) {
-                        normalsArray.addAll(
-                            normalsArray.get(normalsIndex * 3),
-                            normalsArray.get(normalsIndex * 3 + 1),
-                            normalsArray.get(normalsIndex * 3 + 2)
+                    normalsMap.put(normalsIndex, normals.size() / 3);
+                    if (normalsIndex >= 0 && normals.size() >= (normalsIndex + 1) * 3) {
+                        normals.addAll(
+                            normals.get(normalsIndex * 3),
+                            normals.get(normalsIndex * 3 + 1),
+                            normals.get(normalsIndex * 3 + 2)
                         );
                     } else {
                         useNormals = false;
-                        normalsArray.addAll(0f, 0f, 0f);
+                        normals.addAll(0f, 0f, 0f);
                     }
                 }
                 faceNormalsList.set(facesIndex / 2, normalsMap.get(normalsIndex));
             }
         }
 
-        // Now build the triangle mesh from the parsed data:
-
+        // Now create the triangle mesh from the parsed data:
         final var mesh = new TriangleMesh();
-        mesh.getPoints().setAll(verticesArray);
-        mesh.getTexCoords().setAll(texCoordsArray);
+        mesh.getPoints().setAll(vertices);
+        mesh.getTexCoords().setAll(texCoords);
 
         final int[] faces = toIntArray(restOf(facesList, facesStart));
         mesh.getFaces().setAll(faces);
 
         final int[] smoothingGroups = useNormals
-            ? computeSmoothingGroups(mesh, faces, toIntArray(restOf(faceNormalsList, facesNormalStart)), toFloatArray(normalsArray))
+            ? computeSmoothingGroups(mesh, faces, toIntArray(restOf(faceNormalsList, facesNormalStart)), toFloatArray(normals))
             : toIntArray(restOf(smoothingGroupList, smoothingGroupsStart));
         mesh.getFaceSmoothingGroups().setAll(smoothingGroups);
-
-        Logger.trace("Parsed mesh '{}', vertices: {}, texture coordinates: {}, faces: {}, smoothing groups: {}",
-            meshName,
-            mesh.getPoints().size() / mesh.getPointElementSize(),
-            mesh.getTexCoords().size() / mesh.getTexCoordElementSize(),
-            mesh.getFaces().size() / mesh.getFaceElementSize(),
-            mesh.getFaceSmoothingGroups().size());
 
         facesStart = facesList.size();
         facesNormalStart = faceNormalsList.size();
