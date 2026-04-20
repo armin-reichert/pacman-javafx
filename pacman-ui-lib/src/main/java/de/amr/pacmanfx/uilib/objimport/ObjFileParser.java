@@ -31,6 +31,24 @@ import static java.util.Objects.requireNonNull;
  */
 public class ObjFileParser {
 
+    private enum Command {
+        FACE("f"),
+        GROUP("g"),
+        MATERIAL_LIB("mtllib"),
+        OBJECT("o"),
+        SMOOTHING_GROUP("s"),
+        USE_MATERIAL("usemtl"),
+        VERTEX("v"),
+        VERTEX_NORMAL("vn"),
+        TEXTURE_COORDINATE("vt");
+
+        private final String token;
+
+        Command(String token) {
+            this.token = token;
+        }
+    }
+
     private static String[] splitBySpace(String line) {
         return line.trim().split("\\s+");
     }
@@ -59,6 +77,7 @@ public class ObjFileParser {
 
     private final Map<String, TriangleMesh> meshMap = new HashMap<>();
 
+    private String line;
     private int facesStart = 0;
     private int facesNormalStart = 0;
     private int smoothingGroupsStart = 0;
@@ -132,7 +151,7 @@ public class ObjFileParser {
         return meshMap;
     }
 
-    private void commitCurrentMesh() {
+    private void commitPendingMesh() {
         TriangleMesh mesh = createTriangleMesh();
         if (mesh != null) {
             if (meshName == null) {
@@ -146,53 +165,69 @@ public class ObjFileParser {
         return "default" + anonMeshNameCount++;
     }
 
+    private boolean lineIs(Command command) {
+        return line.equals(command.token);
+    }
+
+    private boolean lineStartsWith(Command command) {
+        return line.startsWith(command.token + " ");
+    }
+
+    private String lineAfter(Command command) {
+        return line.substring(command.token.length() + 1);
+    }
+
     private void parse(BufferedReader reader) throws IOException {
-        String line;
         while ((line = reader.readLine()) != null) {
             if (line.isBlank() || line.startsWith("#")) {
                 Logger.trace("Blank or comment line, ignored");
             }
-            else if (line.startsWith("f ")) {
-                parseFace(line.substring(2));
+            else if (lineStartsWith(Command.FACE)) {
+                parseFace(lineAfter(Command.FACE));
             }
-            else if (line.startsWith("g ")) {
-                commitCurrentMesh();
-                meshName = line.substring(2);
+            else if (lineStartsWith(Command.GROUP)) {
+                commitPendingMesh();
+                meshName = lineAfter(Command.GROUP);
             }
-            else if (line.equals("g")) {
-                commitCurrentMesh();
+            else if (lineIs(Command.GROUP)) {
+                commitPendingMesh();
                 meshName = nextAnonMeshName();
             }
-            else if (line.startsWith("mtllib ")) {
-                // we don't use material defined in the OBJ file
-                final String libraryName = line.substring(7);
+            else if (lineStartsWith(Command.MATERIAL_LIB)) {
+                // we don't use material library definitions defined in the OBJ file
+                final String libraryName = lineAfter(Command.MATERIAL_LIB);
                 Logger.info("Material library definition '{}' ignored", libraryName);
             }
-            else if (line.startsWith("o ")) {
-                commitCurrentMesh();
-                meshName = line.substring(2);
+            else if (lineIs(Command.OBJECT)) {
+                commitPendingMesh();
+                meshName = nextAnonMeshName();
             }
-            else if (line.startsWith("s ")) {
-                parseSmoothingGroup(line.substring(2));
+            else if (lineStartsWith(Command.OBJECT)) {
+                commitPendingMesh();
+                meshName = lineAfter(Command.OBJECT);
             }
-            else if (line.startsWith("usemtl ")) {
-                commitCurrentMesh();
-                Logger.trace("usemtl '{}' command not supported", line.substring(7));
+            else if (lineStartsWith(Command.SMOOTHING_GROUP)) {
+                parseSmoothingGroup(lineAfter(Command.SMOOTHING_GROUP));
             }
-            else if (line.startsWith("v ")) {
-                parseVertex(line.substring(2));
+            else if (lineStartsWith(Command.USE_MATERIAL)) {
+                commitPendingMesh();
+                final String materialName = lineAfter(Command.USE_MATERIAL);
+                Logger.trace("Material usage '{}' ignored", materialName);
             }
-            else if (line.startsWith("vn ")) {
-                parseVertexNormal(line.substring(3));
+            else if (lineStartsWith(Command.VERTEX)) {
+                parseVertex(lineAfter(Command.VERTEX));
             }
-            else if (line.startsWith("vt ")) {
-                parseTextureCoordinate(line.substring(3));
+            else if (lineStartsWith(Command.VERTEX_NORMAL)) {
+                parseVertexNormal(lineAfter(Command.VERTEX_NORMAL));
+            }
+            else if (lineStartsWith(Command.TEXTURE_COORDINATE)) {
+                parseTextureCoordinate(lineAfter(Command.TEXTURE_COORDINATE));
             }
             else {
-                Logger.warn("Line skipped: {} (no idea what it means)", line);
+                Logger.warn("Line skipped: {} (no idea what it wants from me)", line);
             }
         }
-        commitCurrentMesh();
+        commitPendingMesh();
     }
 
     /**
