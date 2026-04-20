@@ -12,7 +12,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
@@ -53,9 +52,9 @@ public class PacManModel3D implements Disposable {
 		try {
 			model3D = Model3D.importObjFile(getClass().getResource(OBJ_FILE));
 			// fail fast
-			mesh(ID_HEAD);
-			mesh(ID_PALATE);
-			mesh(ID_EYES);
+			model3D.meshOrFail(ID_HEAD);
+			model3D.meshOrFail(ID_PALATE);
+			model3D.meshOrFail(ID_EYES);
 		} catch (Model3DException x) {
 			throw new RuntimeException("Failed to load Pac-Man 3D model", x);
 		}
@@ -76,13 +75,13 @@ public class PacManModel3D implements Disposable {
 	 * @return a new Pac body group
 	 */
 	public Group createPacBody(PacConfig config) {
-        final var head = new MeshView(mesh(ID_HEAD));
+        final var head = new MeshView(model3D.meshOrFail(ID_HEAD));
         head.setMaterial(coloredPhongMaterial(config.colors().head()));
 
-        final var eyes = new MeshView(mesh(ID_EYES));
+        final var eyes = new MeshView(model3D.meshOrFail(ID_EYES));
         eyes.setMaterial(coloredPhongMaterial(config.colors().eyes()));
 
-        final var palate = new MeshView(mesh(ID_PALATE));
+        final var palate = new MeshView(model3D.meshOrFail(ID_PALATE));
         palate.setMaterial((coloredPhongMaterial(config.colors().palate())));
 
 		final Group body = new Group(head, eyes, palate);
@@ -100,10 +99,10 @@ public class PacManModel3D implements Disposable {
 	 * @return a new Pac body without eyeballs
 	 */
 	public Group createBlindPacBody(PacConfig config) {
-        final var head = new MeshView(mesh(ID_HEAD));
+        final var head = new MeshView(model3D.meshOrFail(ID_HEAD));
         head.setMaterial(coloredPhongMaterial(config.colors().head()));
 
-        final var palate = new MeshView(mesh(ID_PALATE));
+        final var palate = new MeshView(model3D.meshOrFail(ID_PALATE));
         palate.setMaterial(coloredPhongMaterial(config.colors().palate()));
 
 		final Group body = new Group(head, palate);
@@ -113,10 +112,6 @@ public class PacManModel3D implements Disposable {
 
         return body;
     }
-
-	private Mesh mesh(String id) {
-		return model3D.mesh(id).orElseThrow();
-	}
 
 	private static void centerOverOrigin(Node master, Node... slaves) {
 		final Bounds masterBounds = master.getBoundsInLocal();

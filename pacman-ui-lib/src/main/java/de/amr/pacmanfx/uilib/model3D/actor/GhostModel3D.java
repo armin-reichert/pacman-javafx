@@ -38,24 +38,20 @@ public class GhostModel3D implements Disposable {
 		}
 	}
 
-	private Mesh mesh(String id) {
-		return model3D.mesh(id).orElseThrow();
-	}
-
 	@Override
 	public void dispose() {
 		model3D.dispose();
 	}
 
 	public Mesh dressMesh() {
-		return mesh(ID_DRESS);
+		return model3D.meshOrFail(ID_DRESS);
 	}
 
 	public Mesh eyeballsMesh() {
-		return mesh(ID_EYEBALLS);
+		return model3D.meshOrFail(ID_EYEBALLS);
 	}
 
 	public Mesh pupilsMesh() {
-		return mesh(ID_PUPILS);
+		return model3D.meshOrFail(ID_PUPILS);
 	}
 }

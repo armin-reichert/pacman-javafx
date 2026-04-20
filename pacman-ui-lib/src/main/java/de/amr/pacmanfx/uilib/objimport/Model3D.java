@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.objimport;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableFloatArray;
 import javafx.scene.paint.Material;
+import javafx.scene.shape.Mesh;
 import javafx.scene.shape.TriangleMesh;
 import org.tinylog.Logger;
 
@@ -66,6 +67,10 @@ public class Model3D {
      */
     public Model3D(URL url) {
         this.url = Objects.requireNonNull(url);
+    }
+
+    public URL url() {
+        return url;
     }
 
     /** The URL of the OBJ file this model was loaded from. */
@@ -157,13 +162,17 @@ public class Model3D {
         return Collections.unmodifiableMap(triangleMeshMap);
     }
 
-    public Optional<TriangleMesh> mesh(String meshName) {
+    public Optional<TriangleMesh> optMesh(String meshName) {
         requireNonNull(meshName);
         return Optional.ofNullable(triangleMeshMap.get(meshName));
+    }
+
+    public Mesh meshOrFail(String id) {
+        return optMesh(id).orElseThrow(
+            () -> new IllegalArgumentException("No mesh with ID '%s' exists in 3D model %s".formatted(id, url)));
     }
 
     public List<Map<String, Material>> materialLibs() {
         return Collections.unmodifiableList(materialMapsList);
     }
-
 }

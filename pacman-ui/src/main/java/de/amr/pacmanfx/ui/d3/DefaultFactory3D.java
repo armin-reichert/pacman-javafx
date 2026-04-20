@@ -145,7 +145,7 @@ public class DefaultFactory3D implements Factory3D {
 
     @Override
     public Pellet3D createPellet3D(PelletConfig3D pelletConfig, PhongMaterial material) {
-        final Mesh scaledPelletMesh = scaledPelletMesh(PelletModel3D.instance().mesh(), pelletConfig);
+        final Mesh scaledPelletMesh = scaledPelletMesh(PelletModel3D.instance().pelletMesh(), pelletConfig);
         final var pellet3D = new Pellet3D(new MeshView(scaledPelletMesh));
         pellet3D.shape().setMaterial(material);
         return pellet3D;

@@ -19,13 +19,14 @@ public class PelletModel3D implements Disposable {
         return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
-	private static final String MESH_ID_PELLET = "pellet";
+	private static final String OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pellet.obj";
+	private static final String ID_PELLET = "Object.Pellet";
 
 	private final Model3D model3D;
 
 	private PelletModel3D() {
 		try {
-			model3D = Model3D.importObjFile(getClass().getResource("/de/amr/pacmanfx/uilib/model3D/pellet.obj"));
+			model3D = Model3D.importObjFile(getClass().getResource(OBJ_FILE));
 		} catch (Model3DException x) {
 			throw new RuntimeException(x);
 		}
@@ -36,7 +37,7 @@ public class PelletModel3D implements Disposable {
 		model3D.dispose();
 	}
 
-	public Mesh mesh() {
-		return model3D.mesh(MESH_ID_PELLET).orElseThrow();
+	public Mesh pelletMesh() {
+		return model3D.meshOrFail(ID_PELLET);
 	}
 }

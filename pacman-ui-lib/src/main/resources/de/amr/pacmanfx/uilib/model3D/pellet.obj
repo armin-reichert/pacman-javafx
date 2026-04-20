@@ -1,7 +1,7 @@
 # Blender 4.0.2
 # www.blender.org
 mtllib pellet.mtl
-o pellet
+o Object.Pellet
 v 12.897000 11.091700 0.007799
 v 12.788400 11.801900 0.015499
 v 12.762200 11.927200 0.243599
