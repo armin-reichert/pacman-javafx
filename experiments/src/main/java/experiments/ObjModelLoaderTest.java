@@ -17,9 +17,8 @@ public class ObjModelLoaderTest {
         if (args.length > 0) {
             try {
                 final File file = Paths.get(args[0]).toFile();
-                final URL url = file.toURI().toURL();
-                final Model3D model3D = Model3D.importObjFile(url);
-                Logger.info(contentAsText(model3D, url));
+                final Model3D model3D = Model3D.importObj(file);
+                Logger.info(contentAsText(model3D, file.toURI().toURL()));
             } catch (Exception x) {
                 Logger.error(x);
             }

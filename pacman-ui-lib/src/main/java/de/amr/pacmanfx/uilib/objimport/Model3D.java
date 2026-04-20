@@ -7,7 +7,9 @@ import javafx.scene.shape.Mesh;
 import javafx.scene.shape.TriangleMesh;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -33,16 +35,16 @@ import static java.util.Objects.requireNonNull;
  */
 public class Model3D {
 
-    public static Model3D importObjFile(URL url, Charset charset) throws IOException {
+    public static Model3D importObj(URL url, Charset charset) throws IOException {
         final Model3D model3D = new Model3D(url);
         final var parser = new ObjFileParser(url, charset);
         model3D.triangleMeshMap.putAll(parser.meshMap());
         return model3D;
     }
 
-    public static Model3D importObjFile(URL url) throws Model3DException {
+    public static Model3D importObj(URL url) throws Model3DException {
         try {
-            final Model3D model3D = importObjFile(url, StandardCharsets.UTF_8);
+            final Model3D model3D = importObj(url, StandardCharsets.UTF_8);
             for (TriangleMesh mesh : model3D.meshMap().values()) {
                 try {
                     MeshHelper.validateTriangleMesh(mesh);
@@ -52,6 +54,14 @@ public class Model3D {
             }
             return model3D;
         } catch (IOException x) {
+            throw new Model3DException("Could not load OBJ file", x);
+        }
+    }
+
+    public static Model3D importObj(File file) throws Model3DException {
+        try {
+            return importObj(file.toURI().toURL());
+        } catch (MalformedURLException x) {
             throw new Model3DException("Could not load OBJ file", x);
         }
     }

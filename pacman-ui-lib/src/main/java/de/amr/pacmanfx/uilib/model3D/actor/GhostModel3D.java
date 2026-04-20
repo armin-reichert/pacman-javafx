@@ -28,7 +28,7 @@ public class GhostModel3D implements Disposable {
 
 	private GhostModel3D() {
 		try {
-			model3D = Model3D.importObjFile(getClass().getResource(OBJ_FILE));
+			model3D = Model3D.importObj(getClass().getResource(OBJ_FILE));
 			// fail fast
 			dressMesh();
 			eyeballsMesh();

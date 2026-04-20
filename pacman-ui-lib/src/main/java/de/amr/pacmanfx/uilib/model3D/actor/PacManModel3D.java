@@ -50,7 +50,7 @@ public class PacManModel3D implements Disposable {
 
 	private PacManModel3D() {
 		try {
-			model3D = Model3D.importObjFile(getClass().getResource(OBJ_FILE));
+			model3D = Model3D.importObj(getClass().getResource(OBJ_FILE));
 			// fail fast
 			model3D.meshOrFail(ID_HEAD);
 			model3D.meshOrFail(ID_PALATE);
