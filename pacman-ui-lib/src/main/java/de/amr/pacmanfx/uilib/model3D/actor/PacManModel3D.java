@@ -42,28 +42,16 @@ public class PacManModel3D implements Disposable {
         return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
+	private static final String OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pacman.obj";
 	private static final String ID_EYES = "Group.PacMan.Eyes";
 	private static final String ID_HEAD = "Group.PacMan.Head";
 	private static final String ID_PALATE = "Group.PacMan.Palate";
 
-	/** The loaded 3D model containing all Pac-Man mesh parts. */
 	private final Model3D model3D;
 
-	/**
-	 * Loads the Pac-Man OBJ model from the classpath.
-	 * <p>
-	 * The model file must contain mesh groups with the IDs:
-	 * <ul>
-	 *   <li>{@code PacMan.Head}</li>
-	 *   <li>{@code PacMan.Eyes}</li>
-	 *   <li>{@code PacMan.Palate}</li>
-	 * </ul>
-	 *
-	 * @throws RuntimeException if the model cannot be loaded
-	 */
 	private PacManModel3D() {
 		try {
-			model3D = Model3D.importObjFile(getClass().getResource("/de/amr/pacmanfx/uilib/model3D/pacman.obj"));
+			model3D = Model3D.importObjFile(getClass().getResource(OBJ_FILE));
 		} catch (Model3DException x) {
 			throw new RuntimeException("Failed to load Pac-Man 3D model", x);
 		}
@@ -80,25 +68,22 @@ public class PacManModel3D implements Disposable {
 	/**
 	 * Creates a fully assembled Pac-Man body with head, eyes, and palate.
 	 *
-	 * @param pacConfig the Pac configuration
+	 * @param config the Pac configuration
 	 * @return a new Pac body group
 	 */
-	public Group createPacBody(PacConfig pacConfig) {
-        final Group body = new Group();
-
+	public Group createPacBody(PacConfig config) {
         final var head = new MeshView(mesh(ID_HEAD));
-        head.setMaterial(coloredPhongMaterial(pacConfig.colors().head()));
+        head.setMaterial(coloredPhongMaterial(config.colors().head()));
 
         final var eyes = new MeshView(mesh(ID_EYES));
-        eyes.setMaterial(coloredPhongMaterial(pacConfig.colors().eyes()));
+        eyes.setMaterial(coloredPhongMaterial(config.colors().eyes()));
 
         final var palate = new MeshView(mesh(ID_PALATE));
-        palate.setMaterial((coloredPhongMaterial(pacConfig.colors().palate())));
+        palate.setMaterial((coloredPhongMaterial(config.colors().palate())));
 
-        body.getChildren().addAll(head, eyes, palate);
-
+		final Group body = new Group(head, eyes, palate);
 		centerOverOrigin(head, eyes, palate);
-		normalizeBodySize(body, pacConfig.size3D());
+		normalizeBodySize(body, config.size3D());
 		fixBodyRotation(body); //TODO fix in obj file
 
         return body;
@@ -107,26 +92,27 @@ public class PacManModel3D implements Disposable {
 	/**
 	 * Creates a Pac-Man body without eyes (used for blinking or special effects).
 	 *
-	 * @param pacConfig the Pac configuration
+	 * @param config the Pac configuration
 	 * @return a new Pac body without eyeballs
 	 */
-	public Group createBlindPacBody(PacConfig pacConfig) {
-        final Group body = new Group();
-
+	public Group createBlindPacBody(PacConfig config) {
         final var head = new MeshView(mesh(ID_HEAD));
-        head.setMaterial(coloredPhongMaterial(pacConfig.colors().head()));
+        head.setMaterial(coloredPhongMaterial(config.colors().head()));
 
         final var palate = new MeshView(mesh(ID_PALATE));
-        palate.setMaterial(coloredPhongMaterial(pacConfig.colors().palate()));
+        palate.setMaterial(coloredPhongMaterial(config.colors().palate()));
 
-        body.getChildren().addAll(head, palate);
-
+		final Group body = new Group(head, palate);
 		centerOverOrigin(head, palate);
-		normalizeBodySize(body, pacConfig.size3D());
+		normalizeBodySize(body, config.size3D());
 		fixBodyRotation(body); //TODO fix in obj file
 
         return body;
     }
+
+	private Mesh mesh(String id) {
+		return model3D.mesh(id).orElseThrow();
+	}
 
 	private static void centerOverOrigin(Node master, Node... slaves) {
 		final Bounds masterBounds = master.getBoundsInLocal();
@@ -136,10 +122,6 @@ public class PacManModel3D implements Disposable {
 			-masterBounds.getCenterZ());
 		master.getTransforms().add(centeredOverOrigin);
 		Stream.of(slaves).map(Node::getTransforms).forEach(tf -> tf.add(centeredOverOrigin));
-	}
-
-	private Mesh mesh(String id) {
-		return model3D.mesh(id).orElseThrow();
 	}
 
 	private static void fixBodyRotation(Node body) {
@@ -160,44 +142,42 @@ public class PacManModel3D implements Disposable {
 	/**
 	 * Creates the additional female parts used for Ms. Pac-Man (hair bow, pearls, etc.).
 	 *
-	 * @param pacConfig Pac configuration
+	 * @param config Pac configuration
 	 * @return a new female parts group
 	 */
-	public Group createFemaleBodyParts(PacConfig pacConfig) {
-        final Group parts = new Group();
-
+	public Group createFemaleBodyParts(PacConfig config) {
         final int sphereDivisions = 16; // 64 is default
 
-        final PhongMaterial bowMaterial = coloredPhongMaterial(pacConfig.msColors().hairBow());
+        final PhongMaterial bowMaterial = coloredPhongMaterial(config.msColors().hairBow());
 
         final Sphere bowLeft = new Sphere(1.2, sphereDivisions);
         bowLeft.setMaterial(bowMaterial);
-        bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -pacConfig.size3D() * 0.55));
+        bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -config.size3D() * 0.55));
 
         final Sphere bowRight = new Sphere(1.2, sphereDivisions);
         bowRight.setMaterial(bowMaterial);
-        bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -pacConfig.size3D() * 0.55));
+        bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -config.size3D() * 0.55));
 
-        final PhongMaterial pearlMaterial = coloredPhongMaterial(pacConfig.msColors().hairBowPearls());
+        final PhongMaterial pearlMaterial = coloredPhongMaterial(config.msColors().hairBowPearls());
 
         final Sphere pearlLeft = new Sphere(0.4, sphereDivisions);
         pearlLeft.setMaterial(pearlMaterial);
-        pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacConfig.size3D() * 0.58));
+        pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -config.size3D() * 0.58));
 
         final Sphere pearlRight = new Sphere(0.4, sphereDivisions);
         pearlRight.setMaterial(pearlMaterial);
-        pearlRight.getTransforms().addAll(new Translate(2, -0.5, -pacConfig.size3D() * 0.58));
+        pearlRight.getTransforms().addAll(new Translate(2, -0.5, -config.size3D() * 0.58));
 
         final PhongMaterial beautySpotMaterial = coloredPhongMaterial(Color.rgb(120, 120, 120));
         final Sphere beautySpot = new Sphere(0.5, sphereDivisions);
-        beautySpot.getTransforms().addAll(new Translate(-0.33 * pacConfig.size3D(), -0.4 * pacConfig.size3D(), -0.14 * pacConfig.size3D()));
+        beautySpot.getTransforms().addAll(new Translate(-0.33 * config.size3D(), -0.4 * config.size3D(), -0.14 * config.size3D()));
         beautySpot.setMaterial(beautySpotMaterial);
 
-        final PhongMaterial silicone = coloredPhongMaterial(pacConfig.msColors().boobs());
+        final PhongMaterial silicone = coloredPhongMaterial(config.msColors().boobs());
 
-        final double bx = -0.2 * pacConfig.size3D(); // forward
+        final double bx = -0.2 * config.size3D(); // forward
         final double by = 1.6; // or - 1.6 // sidewards
-        final double bz = 0.4 * pacConfig.size3D(); // up/down
+        final double bz = 0.4 * config.size3D(); // up/down
 
         final Sphere boobLeft = new Sphere(1.8, sphereDivisions);
         boobLeft.setMaterial(silicone);
@@ -207,18 +187,17 @@ public class PacManModel3D implements Disposable {
         boobRight.setMaterial(silicone);
         boobRight.getTransforms().addAll(new Translate(bx, by, bz));
 
-        parts.getChildren().addAll(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
-        return parts;
+        return new Group(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
     }
 
 	/**
 	 * Creates a complete Ms. Pac-Man body consisting of a Pac-Man base body
 	 * plus the additional female parts.
 	 *
-	 * @param pacConfig Pac configuration
+	 * @param config Pac configuration
 	 * @return a new Ms Pac-Man body instance
 	 */
-	public Group createMsPacManBody(PacConfig pacConfig) {
-		return new Group(createPacBody(pacConfig), createFemaleBodyParts(pacConfig));
+	public Group createMsPacManBody(PacConfig config) {
+		return new Group(createPacBody(config), createFemaleBodyParts(config));
 	}
 }
