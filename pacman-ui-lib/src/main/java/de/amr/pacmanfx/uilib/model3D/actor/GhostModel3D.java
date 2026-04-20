@@ -19,24 +19,27 @@ public class GhostModel3D implements Disposable {
         return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
-    private static final String MESH_ID_GHOST_DRESS = "Group.Dress";
-	private static final String MESH_ID_GHOST_EYEBALLS = "Group.Eyeballs";
-	private static final String MESH_ID_GHOST_PUPILS = "Group.Pupils";
+	private static final String OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/ghost.obj";
+    private static final String ID_DRESS = "Group.Dress";
+	private static final String ID_EYEBALLS = "Group.Eyeballs";
+	private static final String ID_PUPILS = "Group.Pupils";
 
     private final Model3D model3D;
-	private final Mesh dressMesh;
-    private final Mesh eyeballsMesh;
-    private final Mesh pupilsMesh;
 
 	private GhostModel3D() {
 		try {
-			model3D = Model3D.importObjFile(getClass().getResource("/de/amr/pacmanfx/uilib/model3D/ghost.obj"));
-            dressMesh = model3D.mesh(MESH_ID_GHOST_DRESS).orElseThrow();
-            eyeballsMesh = model3D.mesh(MESH_ID_GHOST_EYEBALLS).orElseThrow();
-            pupilsMesh = model3D.mesh(MESH_ID_GHOST_PUPILS).orElseThrow();
+			model3D = Model3D.importObjFile(getClass().getResource(OBJ_FILE));
+			// fail fast
+			dressMesh();
+			eyeballsMesh();
+			pupilsMesh();
 		} catch (Model3DException x) {
 			throw new RuntimeException(x);
 		}
+	}
+
+	private Mesh mesh(String id) {
+		return model3D.mesh(id).orElseThrow();
 	}
 
 	@Override
@@ -45,14 +48,14 @@ public class GhostModel3D implements Disposable {
 	}
 
 	public Mesh dressMesh() {
-		return dressMesh;
+		return mesh(ID_DRESS);
 	}
 
 	public Mesh eyeballsMesh() {
-		return eyeballsMesh;
+		return mesh(ID_EYEBALLS);
 	}
 
 	public Mesh pupilsMesh() {
-		return pupilsMesh;
+		return mesh(ID_PUPILS);
 	}
 }
