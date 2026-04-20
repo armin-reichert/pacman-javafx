@@ -34,15 +34,15 @@ import static java.util.Objects.requireNonNull;
 public class Model3D {
 
     public static Model3D importObjFile(URL url, Charset charset) throws IOException {
-        return new ObjFileParser(url, charset).model3D();
+        final Model3D model3D = new Model3D(url);
+        final var parser = new ObjFileParser(url, charset);
+        model3D.triangleMeshMap.putAll(parser.meshMap());
+        return model3D;
     }
 
     public static Model3D importObjFile(URL url) throws Model3DException {
         try {
             final Model3D model3D = importObjFile(url, StandardCharsets.UTF_8);
-            if (model3D == null) {
-                throw new Model3DException("Could not load OBJ file");
-            }
             for (TriangleMesh mesh : model3D.meshMap().values()) {
                 try {
                     MeshHelper.validateTriangleMesh(mesh);

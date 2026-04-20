@@ -17,6 +17,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static de.amr.pacmanfx.uilib.objimport.SmoothingGroups.computeSmoothingGroups;
 import static java.util.Objects.requireNonNull;
@@ -56,6 +57,8 @@ public class ObjFileParser {
         return list.subList(start, list.size());
     }
 
+    private final Map<String, TriangleMesh> meshMap = new HashMap<>();
+
     private int facesStart = 0;
     private int facesNormalStart = 0;
     private int smoothingGroupsStart = 0;
@@ -64,8 +67,6 @@ public class ObjFileParser {
     private String meshName;
 
     private int currentSmoothingGroup = 0;
-
-    private final Model3D model3D;
 
     /** Flat array of vertex coordinates (x, y, z). */
     private final ObservableFloatArray vertexArray = FXCollections.observableFloatArray();
@@ -121,15 +122,14 @@ public class ObjFileParser {
     public ObjFileParser(URL url, Charset charset) throws IOException {
         requireNonNull(url);
         requireNonNull(charset);
-        model3D = new Model3D(url);
         try (InputStream is = url.openStream()) {
             final var reader = new BufferedReader(new InputStreamReader(is, charset));
             parse(reader);
         }
     }
 
-    public Model3D model3D() {
-        return model3D;
+    public Map<String, TriangleMesh> meshMap() {
+        return meshMap;
     }
 
     private void commitCurrentMesh() {
@@ -138,7 +138,7 @@ public class ObjFileParser {
             if (meshName == null) {
                 meshName = nextAnonMeshName();
             }
-            model3D.triangleMeshMap.put(meshName, mesh);
+            meshMap.put(meshName, mesh);
         }
     }
 
