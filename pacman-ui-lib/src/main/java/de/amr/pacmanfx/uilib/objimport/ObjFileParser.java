@@ -170,6 +170,7 @@ public class ObjFileParser {
                 meshName = nextAnonMeshName();
             }
             meshMap.put(meshName, mesh);
+            Logger.info("Mesh identified: " + meshName);
         }
     }
 
