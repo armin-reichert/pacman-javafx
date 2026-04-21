@@ -76,6 +76,7 @@ public class ObjFileParser {
     private int facesNormalStart = 0;
     private int smoothingGroupsStart = 0;
 
+    private int lineNo;
     private int anonMeshNameCount = 0;
 
     private MeshDefinition currentMeshDef;
@@ -235,7 +236,10 @@ public class ObjFileParser {
 
     private void parseObjectsAndGroups(BufferedReader reader) throws IOException {
         String line;
+        lineNo = 0;
         while ((line = reader.readLine()) != null) {
+            ++lineNo;
+
             if (line.isBlank() || line.startsWith("#")) {
                 Logger.trace("Blank or comment line, ignored");
             }
