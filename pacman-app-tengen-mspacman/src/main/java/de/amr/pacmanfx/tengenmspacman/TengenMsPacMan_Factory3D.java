@@ -22,7 +22,7 @@ public class TengenMsPacMan_Factory3D extends DefaultFactory3D {
         requireNonNull(pac);
         requireNonNull(pacConfig);
         requireNonNull(animations);
-        return new MsPacMan3D(animations, PacManModel3D.instance(), pac, pacConfig);
+        return new MsPacMan3D(animations, pac, pacConfig);
     }
 
     @Override

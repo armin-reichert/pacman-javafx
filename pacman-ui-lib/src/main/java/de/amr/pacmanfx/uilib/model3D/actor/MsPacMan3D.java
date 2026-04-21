@@ -18,15 +18,15 @@ import static java.util.Objects.requireNonNull;
 
 public class MsPacMan3D extends Pac3D {
 
-    public MsPacMan3D(ManagedAnimationsRegistry animations, PacManModel3D model3D, Pac msPacMan, PacConfig pacConfig) {
+    public MsPacMan3D(ManagedAnimationsRegistry animations, Pac msPacMan, PacConfig pacConfig) {
         super(animations, msPacMan);
 
         requireNonNull(pacConfig);
 
-        setBody(model3D.createPacBody(pacConfig));
-        setJaw(model3D.createBlindPacBody(pacConfig));
+        setBody(PacManModel3D.instance().createPacBody(pacConfig));
+        setJaw(PacManModel3D.instance().createBlindPacBody(pacConfig));
 
-        final Group femaleParts = model3D.createFemaleBodyParts(pacConfig);
+        final Group femaleParts = PacManModel3D.instance().createFemaleBodyParts(pacConfig);
         getChildren().add(femaleParts);
 
         this.animations.register(AnimationID.PAC_CHEWING, new Pac3DChewingAnimation(this));

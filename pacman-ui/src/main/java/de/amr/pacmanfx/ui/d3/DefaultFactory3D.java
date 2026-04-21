@@ -105,7 +105,7 @@ public class DefaultFactory3D implements Factory3D {
         requireNonNull(pacConfig);
         requireNonNull(animations);
 
-        return new PacMan3D(animations, PacManModel3D.instance(), pac, pacConfig);
+        return new PacMan3D(animations, pac, pacConfig);
     }
 
     @Override

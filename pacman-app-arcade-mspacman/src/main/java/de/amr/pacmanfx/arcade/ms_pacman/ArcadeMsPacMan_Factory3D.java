@@ -19,7 +19,7 @@ public class ArcadeMsPacMan_Factory3D extends DefaultFactory3D {
 
     @Override
     public Pac3D createPac3D(Pac pac, PacConfig pacConfig, ManagedAnimationsRegistry animations) {
-        return new MsPacMan3D(animations, PacManModel3D.instance(), pac, pacConfig);
+        return new MsPacMan3D(animations, pac, pacConfig);
     }
 
     @Override

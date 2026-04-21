@@ -11,11 +11,11 @@ import de.amr.pacmanfx.uilib.model3D.animation.PacMan3DDyingAnimation;
 
 public class PacMan3D extends Pac3D {
 
-    public PacMan3D(ManagedAnimationsRegistry animations, PacManModel3D model3D, Pac pac, PacConfig pacConfig) {
+    public PacMan3D(ManagedAnimationsRegistry animations, Pac pac, PacConfig pacConfig) {
         super(animations, pac);
 
-        setBody(model3D.createPacBody(pacConfig));
-        setJaw(model3D.createBlindPacBody(pacConfig));
+        setBody(PacManModel3D.instance().createPacBody(pacConfig));
+        setJaw(PacManModel3D.instance().createBlindPacBody(pacConfig));
 
         animations.register(AnimationID.PAC_CHEWING, new Pac3DChewingAnimation(this));
         animations.register(AnimationID.PAC_DYING,   new PacMan3DDyingAnimation(this));
