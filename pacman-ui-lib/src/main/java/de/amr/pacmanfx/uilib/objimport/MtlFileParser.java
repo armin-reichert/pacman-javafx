@@ -10,11 +10,9 @@ import org.tinylog.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class MtlFileParser {
 
@@ -78,12 +76,13 @@ public class MtlFileParser {
         }
     }
 
-    private final Map<String, PhongMaterial> materialMap = new HashMap<>();
-
-    private final List<ObjMaterial> materialList = new ArrayList<>();
+    private final Map<String, PhongMaterial> materialMap = new LinkedHashMap<>();
     private ObjMaterial currentMaterial;
-
     private int lineNo = 1;
+
+    public Map<String, PhongMaterial> materialMap() {
+        return Collections.unmodifiableMap(materialMap);
+    }
 
     public void parse(BufferedReader reader) throws IOException {
         String statement;
@@ -148,15 +147,13 @@ public class MtlFileParser {
             ++lineNo;
         }
         commitMaterial();
-        for (ObjMaterial material : materialList) {
-            Logger.info(material);
-            PhongMaterial oldValue = materialMap.put(material.name, createPhongMaterial(material));
-            if (oldValue != null) {
-                Logger.warn("Duplicate material found: {}. Overwrites previous material.", material.name);
-            }
-        }
         Logger.info("Found {} materials", materialMap.size());
+        for (PhongMaterial material : materialMap.values()) {
+            Logger.info(material);
+        }
     }
+
+    // Private
 
     private static Color fxColor(RGB rgb) {
         return Color.color(rgb.red, rgb.green, rgb.blue);
@@ -180,7 +177,10 @@ public class MtlFileParser {
 
     private void commitMaterial() {
         if (currentMaterial != null) {
-            materialList.add(currentMaterial);
+            final PhongMaterial oldValue = materialMap.put(currentMaterial.name, createPhongMaterial(currentMaterial));
+            if (oldValue != null) {
+                Logger.warn("Duplicate material found: {}. Overwrites previous material.", currentMaterial.name);
+            }
             currentMaterial = null;
         }
     }

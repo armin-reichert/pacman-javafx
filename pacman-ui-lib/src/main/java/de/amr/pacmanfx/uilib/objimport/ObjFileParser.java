@@ -5,6 +5,7 @@ package de.amr.pacmanfx.uilib.objimport;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableFloatArray;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.TriangleMesh;
 import org.tinylog.Logger;
 
@@ -12,8 +13,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static de.amr.pacmanfx.uilib.objimport.SmoothingGroups.computeSmoothingGroups;
@@ -30,7 +34,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class ObjFileParser {
 
-    private enum Keyword {
+    public enum Keyword {
         FACE            ("f"),
         GROUP           ("g"),
         MATERIAL_LIB    ("mtllib"),
@@ -47,6 +51,69 @@ public class ObjFileParser {
             this.text = text;
         }
     }
+
+    private static class MeshDefinition {
+        final String name;
+        String materialName;
+
+        public MeshDefinition(String name) {
+            this.name = name;
+        }
+    }
+
+    // fields
+
+    private final URL objFileURL;
+
+    private final Map<String, TriangleMesh> meshMap = new HashMap<>();
+    private final Map<String, Map<String, PhongMaterial>> materialLibsMap = new HashMap<>();
+
+    private int facesStart = 0;
+    private int facesNormalStart = 0;
+    private int smoothingGroupsStart = 0;
+
+    private int anonMeshNameCount = 0;
+
+    private MeshDefinition currentMeshDef;
+
+    private int currentSmoothingGroup = 0;
+
+    /** Flat array of vertex coordinates (x, y, z). */
+    private final ObservableFloatArray vertexArray = FXCollections.observableFloatArray();
+
+    /** Flat array of texture coordinates (u, v). */
+    private final ObservableFloatArray uvArray = FXCollections.observableFloatArray();
+
+    /** Face index list (vertex/uv/normal indices). */
+    private final ArrayList<Integer> facesList = new ArrayList<>();
+
+    /** Smoothing group indices for each face. */
+    private final ArrayList<Integer> smoothingGroupList = new ArrayList<>();
+
+    /** Flat array of vertex normals (nx, ny, nz). */
+    private final ObservableFloatArray normalsArray = FXCollections.observableFloatArray();
+
+    /** Normal indices for each face. */
+    private final ArrayList<Integer> faceNormalsList = new ArrayList<>();
+
+    public ObjFileParser(URL objFileURL, Charset charset) throws IOException {
+        this.objFileURL = requireNonNull(objFileURL);
+        requireNonNull(charset);
+        try (InputStream is = objFileURL.openStream()) {
+            final var reader = new BufferedReader(new InputStreamReader(is, charset));
+            parseMaterialLibraryDefinitions(reader);
+        }
+        try (InputStream is = objFileURL.openStream()) {
+            final var reader = new BufferedReader(new InputStreamReader(is, charset));
+            parsingMeshDefinitions(reader);
+        }
+    }
+
+    public Map<String, TriangleMesh> meshMap() {
+        return Collections.unmodifiableMap(meshMap);
+    }
+
+    // Private
 
     private static String[] splitBySpace(String line) {
         return line.trim().split("\\s+");
@@ -74,72 +141,27 @@ public class ObjFileParser {
         return list.subList(start, list.size());
     }
 
-    private boolean fullMatch(String line, Keyword cmd) {
+    private static boolean matchesWithoutParams(String line, Keyword cmd) {
         return line.equals(cmd.text);
     }
 
-    private boolean prefixMatch(String line, Keyword cmd) {
+    private static boolean matches(String line, Keyword cmd) {
         return line.startsWith(cmd.text + " ");
     }
 
-    private static String restOf(String line, Keyword cmd) {
+    private static String parameters(String line, Keyword cmd) {
         return line.substring(cmd.text.length() + 1).trim();
     }
 
-    // fields
-
-    private final Map<String, TriangleMesh> meshMap = new HashMap<>();
-
-    private int facesStart = 0;
-    private int facesNormalStart = 0;
-    private int smoothingGroupsStart = 0;
-
-    private int anonMeshNameCount = 0;
-    private String meshName;
-
-    private int currentSmoothingGroup = 0;
-
-    /** Flat array of vertex coordinates (x, y, z). */
-    private final ObservableFloatArray vertexArray = FXCollections.observableFloatArray();
-
-    /** Flat array of texture coordinates (u, v). */
-    private final ObservableFloatArray uvArray = FXCollections.observableFloatArray();
-
-    /** Face index list (vertex/uv/normal indices). */
-    private final ArrayList<Integer> facesList = new ArrayList<>();
-
-    /** Smoothing group indices for each face. */
-    private final ArrayList<Integer> smoothingGroupList = new ArrayList<>();
-
-    /** Flat array of vertex normals (nx, ny, nz). */
-    private final ObservableFloatArray normalsArray = FXCollections.observableFloatArray();
-
-    /** Normal indices for each face. */
-    private final ArrayList<Integer> faceNormalsList = new ArrayList<>();
-
-
-    public ObjFileParser(URL url, Charset charset) throws IOException {
-        requireNonNull(url);
-        requireNonNull(charset);
-        try (InputStream is = url.openStream()) {
-            final var reader = new BufferedReader(new InputStreamReader(is, charset));
-            parse(reader);
-        }
-    }
-
-    public Map<String, TriangleMesh> meshMap() {
-        return Collections.unmodifiableMap(meshMap);
-    }
-
-    private void commitPendingMesh() {
+    private void commitMesh() {
         TriangleMesh mesh = createTriangleMesh();
         if (mesh != null) {
-            if (meshName == null) {
-                meshName = nextAnonMeshName();
+            if (currentMeshDef == null) {
+                currentMeshDef = new MeshDefinition(nextAnonMeshName());
             }
-            meshMap.put(meshName, mesh);
+            meshMap.put(currentMeshDef.name, mesh);
             Logger.info("Mesh '{}', vertices: {}, texture coordinates: {}, faces: {}, smoothing groups: {}",
-                meshName,
+                currentMeshDef.name,
                 mesh.getPoints().size() / mesh.getPointElementSize(),
                 mesh.getTexCoords().size() / mesh.getTexCoordElementSize(),
                 mesh.getFaces().size() / mesh.getFaceElementSize(),
@@ -151,58 +173,110 @@ public class ObjFileParser {
         return "default" + anonMeshNameCount++;
     }
 
-    private void parse(BufferedReader reader) throws IOException {
+    // Search for material library definitions
+    private void parseMaterialLibraryDefinitions(BufferedReader reader) throws IOException {
         String statement;
         while ((statement = reader.readLine()) != null) {
             if (statement.isBlank() || statement.startsWith("#")) {
                 Logger.trace("Blank or comment line, ignored");
             }
-            else if (prefixMatch(statement, Keyword.FACE)) {
-                parseFace(restOf(statement, Keyword.FACE));
-            }
-            else if (fullMatch(statement, Keyword.GROUP)) {
-                commitPendingMesh();
-                meshName = nextAnonMeshName();
-            }
-            else if (prefixMatch(statement, Keyword.GROUP)) {
-                commitPendingMesh();
-                meshName = restOf(statement, Keyword.GROUP);
-            }
-            else if (prefixMatch(statement, Keyword.MATERIAL_LIB)) {
+            else if (matches(statement, Keyword.MATERIAL_LIB)) {
                 // we don't use material library definitions defined in the OBJ file
-                final String libraryName = restOf(statement, Keyword.MATERIAL_LIB);
-                Logger.info("Material library definition '{}' ignored", libraryName);
+                final String libraryName = parameters(statement, Keyword.MATERIAL_LIB);
+                Logger.info("Material library definition: '{}'", libraryName);
+                if (materialLibsMap.containsKey(libraryName)) {
+                    Logger.warn("Duplicate material library definition: {}", libraryName);
+                }
+                else {
+                    final Map<String, PhongMaterial> library = parseMaterialLibrary(libraryName);
+                    if (library != null) {
+                        materialLibsMap.put(libraryName, library);
+                        Logger.info("Material library parsed: {}", libraryName);
+                    }
+                }
             }
-            else if (fullMatch(statement, Keyword.OBJECT)) {
-                commitPendingMesh();
-                meshName = nextAnonMeshName();
+        }
+    }
+
+    private Map<String, PhongMaterial> parseMaterialLibrary(String libraryName) {
+        int lastSlash = objFileURL.toExternalForm().lastIndexOf('/');
+        if (lastSlash == -1) {
+            Logger.error("OBJ file URL looks strange: {}", objFileURL);
+        }
+        String materialLibURL = objFileURL.toExternalForm().substring(0, lastSlash)
+            + "/" + libraryName;
+        Logger.info("Material library URL: {}", materialLibURL);
+
+        URI uri;
+        try {
+            uri = new URI(materialLibURL);
+            final MtlFileParser parser = new MtlFileParser();
+            try (InputStream is = uri.toURL().openStream()) {
+                final var reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+                parser.parse(reader);
+                return parser.materialMap();
+            } catch (IOException x) {
+                Logger.error(x, "Parsing error");
+                return null;
             }
-            else if (prefixMatch(statement, Keyword.OBJECT)) {
-                commitPendingMesh();
-                meshName = restOf(statement, Keyword.OBJECT);
+        } catch (URISyntaxException e) {
+            Logger.error("Invalid material library URL: {}", materialLibURL);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void parsingMeshDefinitions(BufferedReader reader) throws IOException {
+        String statement;
+        while ((statement = reader.readLine()) != null) {
+            if (statement.isBlank() || statement.startsWith("#")) {
+                Logger.trace("Blank or comment line, ignored");
             }
-            else if (prefixMatch(statement, Keyword.SMOOTHING_GROUP)) {
-                parseSmoothingGroup(restOf(statement, Keyword.SMOOTHING_GROUP));
+            else if (matches(statement, Keyword.FACE)) {
+                parseFace(parameters(statement, Keyword.FACE));
             }
-            else if (prefixMatch(statement, Keyword.USE_MATERIAL)) {
-                commitPendingMesh();
-                final String materialName = restOf(statement, Keyword.USE_MATERIAL);
+            else if (matchesWithoutParams(statement, Keyword.GROUP)) {
+                commitMesh();
+                currentMeshDef = new MeshDefinition(nextAnonMeshName());
+            }
+            else if (matches(statement, Keyword.GROUP)) {
+                commitMesh();
+                final String groupName = parameters(statement, Keyword.GROUP);
+                currentMeshDef = new MeshDefinition(groupName);
+            }
+            else if (matches(statement, Keyword.MATERIAL_LIB)) {
+                // processed in pass 1
+            }
+            else if (matches(statement, Keyword.USE_MATERIAL)) {
+                commitMesh();
+                final String materialName = parameters(statement, Keyword.USE_MATERIAL);
                 Logger.trace("Material usage '{}' ignored", materialName);
             }
-            else if (prefixMatch(statement, Keyword.VERTEX)) {
-                parseVertex(restOf(statement, Keyword.VERTEX));
+            else if (matchesWithoutParams(statement, Keyword.OBJECT)) {
+                commitMesh();
+                currentMeshDef = new MeshDefinition(nextAnonMeshName());
             }
-            else if (prefixMatch(statement, Keyword.VERTEX_NORMAL)) {
-                parseVertexNormal(restOf(statement, Keyword.VERTEX_NORMAL));
+            else if (matches(statement, Keyword.OBJECT)) {
+                commitMesh();
+                final String objectName = parameters(statement, Keyword.OBJECT);;
+                currentMeshDef = new MeshDefinition(objectName);
             }
-            else if (prefixMatch(statement, Keyword.TEX_COORD)) {
-                parseTextureCoordinate(restOf(statement, Keyword.TEX_COORD));
+            else if (matches(statement, Keyword.SMOOTHING_GROUP)) {
+                parseSmoothingGroup(parameters(statement, Keyword.SMOOTHING_GROUP));
+            }
+            else if (matches(statement, Keyword.VERTEX)) {
+                parseVertex(parameters(statement, Keyword.VERTEX));
+            }
+            else if (matches(statement, Keyword.VERTEX_NORMAL)) {
+                parseVertexNormal(parameters(statement, Keyword.VERTEX_NORMAL));
+            }
+            else if (matches(statement, Keyword.TEX_COORD)) {
+                parseTextureCoordinate(parameters(statement, Keyword.TEX_COORD));
             }
             else {
                 Logger.warn("Line skipped: {} (no idea what it wants from me)", statement);
             }
         }
-        commitPendingMesh();
+        commitMesh();
     }
 
     /**
