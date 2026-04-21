@@ -14,10 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static de.amr.pacmanfx.uilib.objimport.SmoothingGroups.computeSmoothingGroups;
 import static java.util.Objects.requireNonNull;
@@ -34,34 +31,21 @@ import static java.util.Objects.requireNonNull;
 public class ObjFileParser {
 
     private enum Command {
-        FACE("f"),
-        GROUP("g"),
-        MATERIAL_LIB("mtllib"),
-        OBJECT("o"),
-        SMOOTHING_GROUP("s"),
-        USE_MATERIAL("usemtl"),
-        VERTEX("v"),
-        VERTEX_NORMAL("vn"),
-        TEXTURE_COORDINATE("vt");
+        FACE            ("f"),
+        GROUP           ("g"),
+        MATERIAL_LIB    ("mtllib"),
+        OBJECT          ("o"),
+        SMOOTHING_GROUP ("s"),
+        USE_MATERIAL    ("usemtl"),
+        VERTEX          ("v"),
+        VERTEX_NORMAL   ("vn"),
+        TEX_COORD       ("vt");
 
-        private final String token;
+        private final String text;
 
-        Command(String token) {
-            this.token = token;
+        Command(String text) {
+            this.text = text;
         }
-
-        private boolean matches(String line) {
-            return line.equals(token);
-        }
-
-        private boolean starts(String line) {
-            return line.startsWith(token + " ");
-        }
-
-        private String restOf(String line) {
-            return line.substring(token.length() + 1).trim();
-        }
-
     }
 
     private static String[] splitBySpace(String line) {
@@ -86,9 +70,23 @@ public class ObjFileParser {
         // return ofa.toArray(new float[ofa.size()]);
     }
 
-    private static List<Integer> restOf(ArrayList<Integer> list, int start) {
+    private static List<Integer> restOfList(ArrayList<Integer> list, int start) {
         return list.subList(start, list.size());
     }
+
+    private boolean fullMatch(String line, Command cmd) {
+        return line.equals(cmd.text);
+    }
+
+    private boolean prefixMatch(String line, Command cmd) {
+        return line.startsWith(cmd.text + " ");
+    }
+
+    private static String restOf(String line, Command cmd) {
+        return line.substring(cmd.text.length() + 1).trim();
+    }
+
+    // fields
 
     private final Map<String, TriangleMesh> meshMap = new HashMap<>();
 
@@ -119,38 +117,6 @@ public class ObjFileParser {
     /** Normal indices for each face. */
     private final ArrayList<Integer> faceNormalsList = new ArrayList<>();
 
-    /**
-     * Converts an OBJ vertex index (1-based, negative allowed) into a 0-based index
-     * into {@link #vertexArray}.
-     *
-     * @param v the OBJ vertex index
-     * @return the resolved 0-based index
-     */
-    private int vertexIndex(int v) {
-        return (v < 0) ? v + vertexArray.size() / 3 : v - 1;
-    }
-
-    /**
-     * Converts an OBJ texture coordinate index (1-based, negative allowed)
-     * into a 0-based index into {@link #uvArray}.
-     *
-     * @param uv the OBJ texture coordinate index
-     * @return the resolved 0-based index
-     */
-    private int uvIndex(int uv) {
-        return (uv < 0) ? uv + uvArray.size() / 2 : uv - 1;
-    }
-
-    /**
-     * Converts an OBJ normal index (1-based, negative allowed)
-     * into a 0-based index into {@link #normalsArray}.
-     *
-     * @param n the OBJ normal index
-     * @return the resolved 0-based index
-     */
-    private int normalIndex(int n) {
-        return (n < 0) ? n + normalsArray.size() / 3 : n - 1;
-    }
 
     public ObjFileParser(URL url, Charset charset) throws IOException {
         requireNonNull(url);
@@ -162,7 +128,7 @@ public class ObjFileParser {
     }
 
     public Map<String, TriangleMesh> meshMap() {
-        return meshMap;
+        return Collections.unmodifiableMap(meshMap);
     }
 
     private void commitPendingMesh() {
@@ -191,46 +157,46 @@ public class ObjFileParser {
             if (line.isBlank() || line.startsWith("#")) {
                 Logger.trace("Blank or comment line, ignored");
             }
-            else if (Command.FACE.starts(line)) {
-                parseFace(Command.FACE.restOf(line));
+            else if (prefixMatch(line, Command.FACE)) {
+                parseFace(restOf(line, Command.FACE));
             }
-            else if (Command.GROUP.matches(line)) {
+            else if (fullMatch(line, Command.GROUP)) {
                 commitPendingMesh();
                 meshName = nextAnonMeshName();
             }
-            else if (Command.GROUP.starts(line)) {
+            else if (prefixMatch(line, Command.GROUP)) {
                 commitPendingMesh();
-                meshName = Command.GROUP.restOf(line);
+                meshName = restOf(line, Command.GROUP);
             }
-            else if (Command.MATERIAL_LIB.starts(line)) {
+            else if (prefixMatch(line, Command.MATERIAL_LIB)) {
                 // we don't use material library definitions defined in the OBJ file
-                final String libraryName = Command.MATERIAL_LIB.restOf(line);
+                final String libraryName = restOf(line, Command.MATERIAL_LIB);
                 Logger.info("Material library definition '{}' ignored", libraryName);
             }
-            else if (Command.OBJECT.matches(line)) {
+            else if (fullMatch(line, Command.OBJECT)) {
                 commitPendingMesh();
                 meshName = nextAnonMeshName();
             }
-            else if (Command.OBJECT.starts(line)) {
+            else if (prefixMatch(line, Command.OBJECT)) {
                 commitPendingMesh();
-                meshName = Command.OBJECT.restOf(line);
+                meshName = restOf(line, Command.OBJECT);
             }
-            else if (Command.SMOOTHING_GROUP.starts(line)) {
-                parseSmoothingGroup(Command.SMOOTHING_GROUP.restOf(line));
+            else if (prefixMatch(line, Command.SMOOTHING_GROUP)) {
+                parseSmoothingGroup(restOf(line, Command.SMOOTHING_GROUP));
             }
-            else if (Command.USE_MATERIAL.starts(line)) {
+            else if (prefixMatch(line, Command.USE_MATERIAL)) {
                 commitPendingMesh();
-                final String materialName = Command.USE_MATERIAL.restOf(line);
+                final String materialName = restOf(line, Command.USE_MATERIAL);
                 Logger.trace("Material usage '{}' ignored", materialName);
             }
-            else if (Command.VERTEX.starts(line)) {
-                parseVertex(Command.VERTEX.restOf(line));
+            else if (prefixMatch(line, Command.VERTEX)) {
+                parseVertex(restOf(line, Command.VERTEX));
             }
-            else if (Command.VERTEX_NORMAL.starts(line)) {
-                parseVertexNormal(Command.VERTEX_NORMAL.restOf(line));
+            else if (prefixMatch(line, Command.VERTEX_NORMAL)) {
+                parseVertexNormal(restOf(line, Command.VERTEX_NORMAL));
             }
-            else if (Command.TEXTURE_COORDINATE.starts(line)) {
-                parseTextureCoordinate(Command.TEXTURE_COORDINATE.restOf(line));
+            else if (prefixMatch(line, Command.TEX_COORD)) {
+                parseTextureCoordinate(restOf(line, Command.TEX_COORD));
             }
             else {
                 Logger.warn("Line skipped: {} (no idea what it wants from me)", line);
@@ -435,12 +401,12 @@ public class ObjFileParser {
         mesh.getPoints().setAll(vertices);
         mesh.getTexCoords().setAll(texCoords);
 
-        final int[] faces = toIntArray(restOf(facesList, facesStart));
+        final int[] faces = toIntArray(restOfList(facesList, facesStart));
         mesh.getFaces().setAll(faces);
 
         final int[] smoothingGroups = useNormals
-            ? computeSmoothingGroups(mesh, faces, toIntArray(restOf(faceNormalsList, facesNormalStart)), toFloatArray(normals))
-            : toIntArray(restOf(smoothingGroupList, smoothingGroupsStart));
+            ? computeSmoothingGroups(mesh, faces, toIntArray(restOfList(faceNormalsList, facesNormalStart)), toFloatArray(normals))
+            : toIntArray(restOfList(smoothingGroupList, smoothingGroupsStart));
         mesh.getFaceSmoothingGroups().setAll(smoothingGroups);
 
         facesStart = facesList.size();
@@ -449,4 +415,38 @@ public class ObjFileParser {
 
         return mesh;
     }
+
+    /**
+     * Converts an OBJ vertex index (1-based, negative allowed) into a 0-based index
+     * into {@link #vertexArray}.
+     *
+     * @param v the OBJ vertex index
+     * @return the resolved 0-based index
+     */
+    private int vertexIndex(int v) {
+        return (v < 0) ? v + vertexArray.size() / 3 : v - 1;
+    }
+
+    /**
+     * Converts an OBJ texture coordinate index (1-based, negative allowed)
+     * into a 0-based index into {@link #uvArray}.
+     *
+     * @param uv the OBJ texture coordinate index
+     * @return the resolved 0-based index
+     */
+    private int uvIndex(int uv) {
+        return (uv < 0) ? uv + uvArray.size() / 2 : uv - 1;
+    }
+
+    /**
+     * Converts an OBJ normal index (1-based, negative allowed)
+     * into a 0-based index into {@link #normalsArray}.
+     *
+     * @param n the OBJ normal index
+     * @return the resolved 0-based index
+     */
+    private int normalIndex(int n) {
+        return (n < 0) ? n + normalsArray.size() / 3 : n - 1;
+    }
+
 }
