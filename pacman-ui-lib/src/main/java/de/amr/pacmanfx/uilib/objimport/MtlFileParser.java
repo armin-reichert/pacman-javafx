@@ -18,32 +18,6 @@ import java.util.*;
 
 public class MtlFileParser {
 
-    static final String[] FILE_PATHS = {
-        "/de/amr/pacmanfx/uilib/model3D/ghost.mtl",
-        "/de/amr/pacmanfx/uilib/model3D/pacman.mtl",
-        "/de/amr/pacmanfx/uilib/model3D/pellet.mtl"
-    };
-
-    static void main() {
-        for (String path : FILE_PATHS) {
-            final URL url = MtlFileParser.class.getResource(path);
-            if (url == null) {
-                Logger.error("Invalid OBJ file URL {}", url);
-                return;
-            }
-            Logger.info("Parsing material file '{}'", path);
-            final MtlFileParser parser = new MtlFileParser();
-            try {
-                try (InputStream is = url.openStream()) {
-                    final var reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-                    parser.parse(reader);
-                }
-            } catch (IOException x) {
-                Logger.error(x, "Parsing error");
-            }
-        }
-    }
-
     public enum Keyword {
         NEW_MATERIAL    ("newmtl"),
         SHININESS       ("Ns"),
