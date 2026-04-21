@@ -492,7 +492,6 @@ public class ObjFileParser {
         mesh.getFaceSmoothingGroups().setAll(smoothingGroups);
 
         if (currentMeshDef.materialName != null) {
-            Logger.info("TODO: Set material {} for mesh {}", currentMeshDef.materialName, currentMeshDef.name);
             for (var materialLibName : materialLibsMap.keySet()) {
                 final var materialLib = materialLibsMap.get(materialLibName);
                 if (materialLib.containsKey(currentMeshDef.materialName)) {
