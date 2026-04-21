@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class ObjFileParser {
 
-    private enum Command {
+    private enum Keyword {
         FACE            ("f"),
         GROUP           ("g"),
         MATERIAL_LIB    ("mtllib"),
@@ -43,7 +43,7 @@ public class ObjFileParser {
 
         private final String text;
 
-        Command(String text) {
+        Keyword(String text) {
             this.text = text;
         }
     }
@@ -74,15 +74,15 @@ public class ObjFileParser {
         return list.subList(start, list.size());
     }
 
-    private boolean fullMatch(String line, Command cmd) {
+    private boolean fullMatch(String line, Keyword cmd) {
         return line.equals(cmd.text);
     }
 
-    private boolean prefixMatch(String line, Command cmd) {
+    private boolean prefixMatch(String line, Keyword cmd) {
         return line.startsWith(cmd.text + " ");
     }
 
-    private static String restOf(String line, Command cmd) {
+    private static String restOf(String line, Keyword cmd) {
         return line.substring(cmd.text.length() + 1).trim();
     }
 
@@ -152,54 +152,54 @@ public class ObjFileParser {
     }
 
     private void parse(BufferedReader reader) throws IOException {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            if (line.isBlank() || line.startsWith("#")) {
+        String statement;
+        while ((statement = reader.readLine()) != null) {
+            if (statement.isBlank() || statement.startsWith("#")) {
                 Logger.trace("Blank or comment line, ignored");
             }
-            else if (prefixMatch(line, Command.FACE)) {
-                parseFace(restOf(line, Command.FACE));
+            else if (prefixMatch(statement, Keyword.FACE)) {
+                parseFace(restOf(statement, Keyword.FACE));
             }
-            else if (fullMatch(line, Command.GROUP)) {
+            else if (fullMatch(statement, Keyword.GROUP)) {
                 commitPendingMesh();
                 meshName = nextAnonMeshName();
             }
-            else if (prefixMatch(line, Command.GROUP)) {
+            else if (prefixMatch(statement, Keyword.GROUP)) {
                 commitPendingMesh();
-                meshName = restOf(line, Command.GROUP);
+                meshName = restOf(statement, Keyword.GROUP);
             }
-            else if (prefixMatch(line, Command.MATERIAL_LIB)) {
+            else if (prefixMatch(statement, Keyword.MATERIAL_LIB)) {
                 // we don't use material library definitions defined in the OBJ file
-                final String libraryName = restOf(line, Command.MATERIAL_LIB);
+                final String libraryName = restOf(statement, Keyword.MATERIAL_LIB);
                 Logger.info("Material library definition '{}' ignored", libraryName);
             }
-            else if (fullMatch(line, Command.OBJECT)) {
+            else if (fullMatch(statement, Keyword.OBJECT)) {
                 commitPendingMesh();
                 meshName = nextAnonMeshName();
             }
-            else if (prefixMatch(line, Command.OBJECT)) {
+            else if (prefixMatch(statement, Keyword.OBJECT)) {
                 commitPendingMesh();
-                meshName = restOf(line, Command.OBJECT);
+                meshName = restOf(statement, Keyword.OBJECT);
             }
-            else if (prefixMatch(line, Command.SMOOTHING_GROUP)) {
-                parseSmoothingGroup(restOf(line, Command.SMOOTHING_GROUP));
+            else if (prefixMatch(statement, Keyword.SMOOTHING_GROUP)) {
+                parseSmoothingGroup(restOf(statement, Keyword.SMOOTHING_GROUP));
             }
-            else if (prefixMatch(line, Command.USE_MATERIAL)) {
+            else if (prefixMatch(statement, Keyword.USE_MATERIAL)) {
                 commitPendingMesh();
-                final String materialName = restOf(line, Command.USE_MATERIAL);
+                final String materialName = restOf(statement, Keyword.USE_MATERIAL);
                 Logger.trace("Material usage '{}' ignored", materialName);
             }
-            else if (prefixMatch(line, Command.VERTEX)) {
-                parseVertex(restOf(line, Command.VERTEX));
+            else if (prefixMatch(statement, Keyword.VERTEX)) {
+                parseVertex(restOf(statement, Keyword.VERTEX));
             }
-            else if (prefixMatch(line, Command.VERTEX_NORMAL)) {
-                parseVertexNormal(restOf(line, Command.VERTEX_NORMAL));
+            else if (prefixMatch(statement, Keyword.VERTEX_NORMAL)) {
+                parseVertexNormal(restOf(statement, Keyword.VERTEX_NORMAL));
             }
-            else if (prefixMatch(line, Command.TEX_COORD)) {
-                parseTextureCoordinate(restOf(line, Command.TEX_COORD));
+            else if (prefixMatch(statement, Keyword.TEX_COORD)) {
+                parseTextureCoordinate(restOf(statement, Keyword.TEX_COORD));
             }
             else {
-                Logger.warn("Line skipped: {} (no idea what it wants from me)", line);
+                Logger.warn("Line skipped: {} (no idea what it wants from me)", statement);
             }
         }
         commitPendingMesh();
