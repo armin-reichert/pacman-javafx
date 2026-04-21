@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.objimport;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableFloatArray;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Mesh;
 import javafx.scene.shape.TriangleMesh;
 import org.tinylog.Logger;
 
@@ -68,6 +69,9 @@ public class ObjFileParser {
     private final Map<String, TriangleMesh> meshMap = new HashMap<>();
     private final Map<String, Map<String, PhongMaterial>> materialLibsMap = new HashMap<>();
 
+    // If a material is assigned to an object/group with "usemtl" in the OBJ, it can be looked up here
+    private final Map<Mesh, PhongMaterial> modelMaterialAssignments = new HashMap<>();
+
     private int facesStart = 0;
     private int facesNormalStart = 0;
     private int smoothingGroupsStart = 0;
@@ -111,6 +115,10 @@ public class ObjFileParser {
 
     public Map<String, TriangleMesh> meshMap() {
         return Collections.unmodifiableMap(meshMap);
+    }
+
+    public Map<Mesh, PhongMaterial> modelMaterialAssignments() {
+        return Collections.unmodifiableMap(modelMaterialAssignments);
     }
 
     // Private
@@ -188,7 +196,7 @@ public class ObjFileParser {
                     Logger.warn("Duplicate material library definition: {}", libraryName);
                 }
                 else {
-                    final Map<String, PhongMaterial> library = parseMaterialLibrary(libraryName);
+                    final Map<String, PhongMaterial> library = parseMaterialLibraryFile(libraryName);
                     if (library != null) {
                         materialLibsMap.put(libraryName, library);
                         Logger.info("Material library parsed: {}", libraryName);
@@ -198,7 +206,7 @@ public class ObjFileParser {
         }
     }
 
-    private Map<String, PhongMaterial> parseMaterialLibrary(String libraryName) {
+    private Map<String, PhongMaterial> parseMaterialLibraryFile(String libraryName) {
         int lastSlash = objFileURL.toExternalForm().lastIndexOf('/');
         if (lastSlash == -1) {
             Logger.error("OBJ file URL looks strange: {}", objFileURL);
@@ -247,9 +255,9 @@ public class ObjFileParser {
                 // processed in pass 1
             }
             else if (matches(statement, Keyword.USE_MATERIAL)) {
-                commitMesh();
                 final String materialName = parameters(statement, Keyword.USE_MATERIAL);
-                Logger.trace("Material usage '{}' ignored", materialName);
+                Logger.trace("Material usage '{}'", materialName);
+                currentMeshDef.materialName = materialName;
             }
             else if (matchesWithoutParams(statement, Keyword.OBJECT)) {
                 commitMesh();
@@ -482,6 +490,18 @@ public class ObjFileParser {
             ? computeSmoothingGroups(mesh, faces, toIntArray(restOfList(faceNormalsList, facesNormalStart)), toFloatArray(normals))
             : toIntArray(restOfList(smoothingGroupList, smoothingGroupsStart));
         mesh.getFaceSmoothingGroups().setAll(smoothingGroups);
+
+        if (currentMeshDef.materialName != null) {
+            Logger.info("TODO: Set material {} for mesh {}", currentMeshDef.materialName, currentMeshDef.name);
+            for (var materialLibName : materialLibsMap.keySet()) {
+                final var materialLib = materialLibsMap.get(materialLibName);
+                if (materialLib.containsKey(currentMeshDef.materialName)) {
+                    final PhongMaterial material = materialLib.get(currentMeshDef.materialName);
+                    // In JavaFX, material is assigned to MeshView, not to Mesh!
+                    modelMaterialAssignments.put(mesh, material);
+                }
+            }
+        }
 
         facesStart = facesList.size();
         facesNormalStart = faceNormalsList.size();

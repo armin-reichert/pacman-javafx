@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.objimport;
 
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.TriangleMesh;
 import org.tinylog.Logger;
@@ -39,6 +40,7 @@ public class Model3D {
         final Model3D model3D = new Model3D(url);
         final var parser = new ObjFileParser(url, charset);
         model3D.triangleMeshMap.putAll(parser.meshMap());
+        model3D.modelMaterialAssignments.putAll(parser.modelMaterialAssignments());
         return model3D;
     }
 
@@ -76,6 +78,8 @@ public class Model3D {
      */
     private final Map<String, TriangleMesh> triangleMeshMap = new HashMap<>();
 
+    private final Map<Mesh, PhongMaterial> modelMaterialAssignments = new HashMap<>();
+
     /**
      * Creates a new model representation for the OBJ file located at the given URL.
      *
@@ -111,5 +115,9 @@ public class Model3D {
     public Mesh meshOrFail(String id) {
         return optMesh(id).orElseThrow(
             () -> new IllegalArgumentException("No mesh with ID '%s' exists in 3D model %s".formatted(id, url)));
+    }
+
+    public Optional<PhongMaterial> modelMaterialAssignment(Mesh mesh) {
+        return Optional.ofNullable(modelMaterialAssignments.get(mesh));
     }
 }
