@@ -12,6 +12,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
@@ -75,8 +76,7 @@ public class PacManModel3D implements Disposable {
 	 * @return a new Pac body group
 	 */
 	public Group createPacBody(PacConfig config) {
-        final var head = new MeshView(model3D.meshOrFail(ID_HEAD));
-        head.setMaterial(coloredPhongMaterial(config.colors().head()));
+        final MeshView head = createHead(config);
 
         final var eyes = new MeshView(model3D.meshOrFail(ID_EYES));
         eyes.setMaterial(coloredPhongMaterial(config.colors().eyes()));
@@ -99,8 +99,7 @@ public class PacManModel3D implements Disposable {
 	 * @return a new Pac body without eyeballs
 	 */
 	public Group createBlindPacBody(PacConfig config) {
-        final var head = new MeshView(model3D.meshOrFail(ID_HEAD));
-        head.setMaterial(coloredPhongMaterial(config.colors().head()));
+		final MeshView head = createHead(config);
 
         final var palate = new MeshView(model3D.meshOrFail(ID_PALATE));
         palate.setMaterial(coloredPhongMaterial(config.colors().palate()));
@@ -112,6 +111,18 @@ public class PacManModel3D implements Disposable {
 
         return body;
     }
+
+	private MeshView createHead(PacConfig config) {
+		final Mesh headMesh = model3D.meshOrFail(ID_HEAD);
+		final var head = new MeshView(headMesh);
+
+		// If we would like to use the material defined in the OBJ file:
+		//final PhongMaterial headMaterial = model3D.modelMaterialAssignment(headMesh).orElse(coloredPhongMaterial(config.colors().head()));
+		final PhongMaterial headMaterial = coloredPhongMaterial(config.colors().head());
+		head.setMaterial(headMaterial);
+
+		return head;
+	}
 
 	private static void centerOverOrigin(Node master, Node... slaves) {
 		final Bounds masterBounds = master.getBoundsInLocal();
