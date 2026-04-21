@@ -35,17 +35,27 @@ public class MtlFileParser {
     }
 
     private static class ObjMaterial {
+
+        static final double DEFAULT_SHININESS = 10.0;
+        static final double DEFAULT_OPACITY = 1;
+        static final int DEFAULT_ILLUMINATION = 2;
+        static final ColorRGB DEFAULT_AMBIENT_COLOR = ColorRGB.BLACK;
+        static final ColorRGB DEFAULT_DIFFUSE_COLOR = ColorRGB.BLACK;
+        static final ColorRGB DEFAULT_EMISSIVE_COLOR = ColorRGB.BLACK;
+        static final ColorRGB DEFAULT_SPECULAR_COLOR = ColorRGB.BLACK;
+        static final double DEFAULT_OPTICAL_DENSITY = 1.0;
+
         final String name;
 
-        double ns = 0;
-        double d = 1;
-        int illum = 2;
-        double ni = 1;
+        double ns = DEFAULT_SHININESS;
+        double d = DEFAULT_OPACITY;
+        int illum = DEFAULT_ILLUMINATION;
+        double ni = DEFAULT_OPTICAL_DENSITY;
 
-        ColorRGB ka = ColorRGB.BLACK;
-        ColorRGB kd = ColorRGB.BLACK;
-        ColorRGB ks = ColorRGB.BLACK;
-        ColorRGB ke = ColorRGB.BLACK;
+        ColorRGB ka = DEFAULT_AMBIENT_COLOR;
+        ColorRGB kd = DEFAULT_DIFFUSE_COLOR;
+        ColorRGB ks = DEFAULT_SPECULAR_COLOR;
+        ColorRGB ke = DEFAULT_EMISSIVE_COLOR;
 
         ObjMaterial(String name) {
             this.name = name;
@@ -90,17 +100,17 @@ public class MtlFileParser {
             }
             else if (startsWith(line, Keyword.SHININESS)) {
                 if (assertCurrentMaterial()) {
-                    currentMaterial.ns = parseShininess(params(line, Keyword.SHININESS), 10.0);
+                    currentMaterial.ns = parseShininess(params(line, Keyword.SHININESS), ObjMaterial.DEFAULT_SHININESS);
                 }
             }
             else if (startsWith(line, Keyword.OPACITY)) {
                 if (assertCurrentMaterial()) {
-                    currentMaterial.d = parseOpacity(params(line, Keyword.OPACITY), 1.0);
+                    currentMaterial.d = parseOpacity(params(line, Keyword.OPACITY), ObjMaterial.DEFAULT_OPACITY);
                 }
             }
             else if (startsWith(line, Keyword.ILLUMINATION)) {
                 if (assertCurrentMaterial()) {
-                    currentMaterial.illum = parseIllumination(params(line, Keyword.ILLUMINATION), 2);
+                    currentMaterial.illum = parseIllumination(params(line, Keyword.ILLUMINATION), ObjMaterial.DEFAULT_ILLUMINATION);
                 }
             }
             else if (startsWith(line, Keyword.OPTICAL_DENSITY)) {
@@ -110,22 +120,22 @@ public class MtlFileParser {
             }
             else if (startsWith(line, Keyword.AMBIENT_COLOR)) {
                 if (assertCurrentMaterial()) {
-                    currentMaterial.ka = parseColorRGB(params(line, Keyword.AMBIENT_COLOR), ColorRGB.BLACK);
+                    currentMaterial.ka = parseColorRGB(params(line, Keyword.AMBIENT_COLOR), ObjMaterial.DEFAULT_AMBIENT_COLOR);
                 }
             }
             else if (startsWith(line, Keyword.DIFFUSE_COLOR)) {
                 if (assertCurrentMaterial()) {
-                    currentMaterial.kd = parseColorRGB(params(line, Keyword.DIFFUSE_COLOR), ColorRGB.BLACK);
+                    currentMaterial.kd = parseColorRGB(params(line, Keyword.DIFFUSE_COLOR), ObjMaterial.DEFAULT_DIFFUSE_COLOR);
                 }
             }
             else if (startsWith(line, Keyword.EMISSIVE_COLOR)) {
                 if (assertCurrentMaterial()) {
-                    currentMaterial.ke = parseColorRGB(params(line, Keyword.EMISSIVE_COLOR), ColorRGB.BLACK);
+                    currentMaterial.ke = parseColorRGB(params(line, Keyword.EMISSIVE_COLOR), ObjMaterial.DEFAULT_EMISSIVE_COLOR);
                 }
             }
             else if (startsWith(line, Keyword.SPECULAR_COLOR)) {
                 if (assertCurrentMaterial()) {
-                    currentMaterial.ks = parseColorRGB(params(line, Keyword.SPECULAR_COLOR), ColorRGB.BLACK);
+                    currentMaterial.ks = parseColorRGB(params(line, Keyword.SPECULAR_COLOR), ObjMaterial.DEFAULT_SPECULAR_COLOR);
                 }
             }
             ++lineNo;
