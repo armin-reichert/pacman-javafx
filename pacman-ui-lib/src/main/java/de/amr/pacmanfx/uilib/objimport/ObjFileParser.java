@@ -149,16 +149,16 @@ public class ObjFileParser {
         return list.subList(start, list.size());
     }
 
-    private static boolean matchesWithoutParams(String line, Keyword cmd) {
-        return line.equals(cmd.text);
+    private static boolean equals(String line, Keyword keyword) {
+        return line.equals(keyword.text);
     }
 
-    private static boolean matches(String line, Keyword cmd) {
-        return line.startsWith(cmd.text + " ");
+    private static boolean startsWith(String line, Keyword keyword) {
+        return line.startsWith(keyword.text + " ");
     }
 
-    private static String parameters(String line, Keyword cmd) {
-        return line.substring(cmd.text.length() + 1).trim();
+    private static String params(String line, Keyword keyword) {
+        return line.substring(keyword.text.length() + 1).trim();
     }
 
     private void commitMesh() {
@@ -183,14 +183,14 @@ public class ObjFileParser {
 
     // Search for material library definitions
     private void parseMaterialLibraryDefinitions(BufferedReader reader) throws IOException {
-        String statement;
-        while ((statement = reader.readLine()) != null) {
-            if (statement.isBlank() || statement.startsWith("#")) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            if (line.isBlank() || line.startsWith("#")) {
                 Logger.trace("Blank or comment line, ignored");
             }
-            else if (matches(statement, Keyword.MATERIAL_LIB)) {
+            else if (startsWith(line, Keyword.MATERIAL_LIB)) {
                 // we don't use material library definitions defined in the OBJ file
-                final String libraryName = parameters(statement, Keyword.MATERIAL_LIB);
+                final String libraryName = params(line, Keyword.MATERIAL_LIB);
                 Logger.info("Material library definition: '{}'", libraryName);
                 if (materialLibsMap.containsKey(libraryName)) {
                     Logger.warn("Duplicate material library definition: {}", libraryName);
@@ -239,45 +239,45 @@ public class ObjFileParser {
             if (statement.isBlank() || statement.startsWith("#")) {
                 Logger.trace("Blank or comment line, ignored");
             }
-            else if (matches(statement, Keyword.FACE)) {
-                parseFace(parameters(statement, Keyword.FACE));
+            else if (startsWith(statement, Keyword.FACE)) {
+                parseFace(params(statement, Keyword.FACE));
             }
-            else if (matchesWithoutParams(statement, Keyword.GROUP)) {
+            else if (equals(statement, Keyword.GROUP)) {
                 commitMesh();
                 currentMeshDef = new MeshDefinition(nextAnonMeshName());
             }
-            else if (matches(statement, Keyword.GROUP)) {
+            else if (startsWith(statement, Keyword.GROUP)) {
                 commitMesh();
-                currentMeshDef = new MeshDefinition(parameters(statement, Keyword.GROUP));
+                currentMeshDef = new MeshDefinition(params(statement, Keyword.GROUP));
             }
-            else if (matches(statement, Keyword.MATERIAL_LIB)) {
+            else if (startsWith(statement, Keyword.MATERIAL_LIB)) {
                 // already processed in pass 1
                 Logger.debug("Material library definition");
             }
-            else if (matches(statement, Keyword.MATERIAL_USAGE)) {
-                final String materialName = parameters(statement, Keyword.MATERIAL_USAGE);
+            else if (startsWith(statement, Keyword.MATERIAL_USAGE)) {
+                final String materialName = params(statement, Keyword.MATERIAL_USAGE);
                 Logger.trace("Material usage '{}'", materialName);
                 currentMeshDef.materialName = materialName;
             }
-            else if (matchesWithoutParams(statement, Keyword.OBJECT)) {
+            else if (equals(statement, Keyword.OBJECT)) {
                 commitMesh();
                 currentMeshDef = new MeshDefinition(nextAnonMeshName());
             }
-            else if (matches(statement, Keyword.OBJECT)) {
+            else if (startsWith(statement, Keyword.OBJECT)) {
                 commitMesh();
-                currentMeshDef = new MeshDefinition(parameters(statement, Keyword.OBJECT));
+                currentMeshDef = new MeshDefinition(params(statement, Keyword.OBJECT));
             }
-            else if (matches(statement, Keyword.SMOOTHING_GROUP)) {
-                parseSmoothingGroup(parameters(statement, Keyword.SMOOTHING_GROUP));
+            else if (startsWith(statement, Keyword.SMOOTHING_GROUP)) {
+                parseSmoothingGroup(params(statement, Keyword.SMOOTHING_GROUP));
             }
-            else if (matches(statement, Keyword.VERTEX)) {
-                parseVertex(parameters(statement, Keyword.VERTEX));
+            else if (startsWith(statement, Keyword.VERTEX)) {
+                parseVertex(params(statement, Keyword.VERTEX));
             }
-            else if (matches(statement, Keyword.VERTEX_NORMAL)) {
-                parseVertexNormal(parameters(statement, Keyword.VERTEX_NORMAL));
+            else if (startsWith(statement, Keyword.VERTEX_NORMAL)) {
+                parseVertexNormal(params(statement, Keyword.VERTEX_NORMAL));
             }
-            else if (matches(statement, Keyword.TEX_COORD)) {
-                parseTextureCoordinate(parameters(statement, Keyword.TEX_COORD));
+            else if (startsWith(statement, Keyword.TEX_COORD)) {
+                parseTextureCoordinate(params(statement, Keyword.TEX_COORD));
             }
             else {
                 Logger.warn("Line skipped: {} (no idea what it wants from me)", statement);
