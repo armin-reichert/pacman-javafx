@@ -109,7 +109,7 @@ public class ObjFileParser {
         }
         try (InputStream is = objFileURL.openStream()) {
             final var reader = new BufferedReader(new InputStreamReader(is, charset));
-            parsingMeshDefinitions(reader);
+            parseObjectsAndGroups(reader);
         }
     }
 
@@ -149,7 +149,7 @@ public class ObjFileParser {
         return list.subList(start, list.size());
     }
 
-    private static boolean equals(String line, Keyword keyword) {
+    private static boolean fullMatch(String line, Keyword keyword) {
         return line.equals(keyword.text);
     }
 
@@ -233,54 +233,54 @@ public class ObjFileParser {
         }
     }
 
-    private void parsingMeshDefinitions(BufferedReader reader) throws IOException {
-        String statement;
-        while ((statement = reader.readLine()) != null) {
-            if (statement.isBlank() || statement.startsWith("#")) {
+    private void parseObjectsAndGroups(BufferedReader reader) throws IOException {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            if (line.isBlank() || line.startsWith("#")) {
                 Logger.trace("Blank or comment line, ignored");
             }
-            else if (startsWith(statement, Keyword.FACE)) {
-                parseFace(params(statement, Keyword.FACE));
-            }
-            else if (equals(statement, Keyword.GROUP)) {
+            else if (fullMatch(line, Keyword.OBJECT)) {
                 commitMesh();
                 currentMeshDef = new MeshDefinition(nextAnonMeshName());
             }
-            else if (startsWith(statement, Keyword.GROUP)) {
+            else if (startsWith(line, Keyword.OBJECT)) {
                 commitMesh();
-                currentMeshDef = new MeshDefinition(params(statement, Keyword.GROUP));
+                currentMeshDef = new MeshDefinition(params(line, Keyword.OBJECT));
             }
-            else if (startsWith(statement, Keyword.MATERIAL_LIB)) {
-                // already processed in pass 1
-                Logger.debug("Material library definition");
+            else if (fullMatch(line, Keyword.GROUP)) {
+                commitMesh();
+                currentMeshDef = new MeshDefinition(nextAnonMeshName());
             }
-            else if (startsWith(statement, Keyword.MATERIAL_USAGE)) {
-                final String materialName = params(statement, Keyword.MATERIAL_USAGE);
+            else if (startsWith(line, Keyword.GROUP)) {
+                commitMesh();
+                currentMeshDef = new MeshDefinition(params(line, Keyword.GROUP));
+            }
+            else if (startsWith(line, Keyword.SMOOTHING_GROUP)) {
+                parseSmoothingGroup(params(line, Keyword.SMOOTHING_GROUP));
+            }
+            else if (startsWith(line, Keyword.VERTEX)) {
+                parseVertex(params(line, Keyword.VERTEX));
+            }
+            else if (startsWith(line, Keyword.VERTEX_NORMAL)) {
+                parseVertexNormal(params(line, Keyword.VERTEX_NORMAL));
+            }
+            else if (startsWith(line, Keyword.TEX_COORD)) {
+                parseTextureCoordinate(params(line, Keyword.TEX_COORD));
+            }
+            else if (startsWith(line, Keyword.FACE)) {
+                parseFace(params(line, Keyword.FACE));
+            }
+            else if (startsWith(line, Keyword.MATERIAL_USAGE)) {
+                final String materialName = params(line, Keyword.MATERIAL_USAGE);
                 Logger.trace("Material usage '{}'", materialName);
                 currentMeshDef.materialName = materialName;
             }
-            else if (equals(statement, Keyword.OBJECT)) {
-                commitMesh();
-                currentMeshDef = new MeshDefinition(nextAnonMeshName());
-            }
-            else if (startsWith(statement, Keyword.OBJECT)) {
-                commitMesh();
-                currentMeshDef = new MeshDefinition(params(statement, Keyword.OBJECT));
-            }
-            else if (startsWith(statement, Keyword.SMOOTHING_GROUP)) {
-                parseSmoothingGroup(params(statement, Keyword.SMOOTHING_GROUP));
-            }
-            else if (startsWith(statement, Keyword.VERTEX)) {
-                parseVertex(params(statement, Keyword.VERTEX));
-            }
-            else if (startsWith(statement, Keyword.VERTEX_NORMAL)) {
-                parseVertexNormal(params(statement, Keyword.VERTEX_NORMAL));
-            }
-            else if (startsWith(statement, Keyword.TEX_COORD)) {
-                parseTextureCoordinate(params(statement, Keyword.TEX_COORD));
+            else if (startsWith(line, Keyword.MATERIAL_LIB)) {
+                // already processed in pass 1
+                Logger.debug("Material library definition");
             }
             else {
-                Logger.warn("Line skipped: {} (no idea what it wants from me)", statement);
+                Logger.warn("Line skipped: {} (no idea what it wants from me)", line);
             }
         }
         commitMesh();
