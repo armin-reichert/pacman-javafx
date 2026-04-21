@@ -34,10 +34,6 @@ public class MtlFileParser {
         }
     }
 
-    private record RGB(double red, double green, double blue) {
-        static RGB BLACK = new RGB(0.0, 0.0, 0.0);
-    }
-
     private static class ObjMaterial {
         final String name;
 
@@ -46,10 +42,10 @@ public class MtlFileParser {
         int illum = 2;
         double ni = 1;
 
-        RGB ka = RGB.BLACK;
-        RGB kd = RGB.BLACK;
-        RGB ks = RGB.BLACK;
-        RGB ke = RGB.BLACK;
+        ColorRGB ka = ColorRGB.BLACK;
+        ColorRGB kd = ColorRGB.BLACK;
+        ColorRGB ks = ColorRGB.BLACK;
+        ColorRGB ke = ColorRGB.BLACK;
 
         ObjMaterial(String name) {
             this.name = name;
@@ -114,22 +110,22 @@ public class MtlFileParser {
             }
             else if (startsWith(line, Keyword.AMBIENT_COLOR)) {
                 if (assertCurrentMaterial()) {
-                    currentMaterial.ka = parseRGB(params(line, Keyword.AMBIENT_COLOR), RGB.BLACK);
+                    currentMaterial.ka = parseColorRGB(params(line, Keyword.AMBIENT_COLOR), ColorRGB.BLACK);
                 }
             }
             else if (startsWith(line, Keyword.DIFFUSE_COLOR)) {
                 if (assertCurrentMaterial()) {
-                    currentMaterial.kd = parseRGB(params(line, Keyword.DIFFUSE_COLOR), RGB.BLACK);
+                    currentMaterial.kd = parseColorRGB(params(line, Keyword.DIFFUSE_COLOR), ColorRGB.BLACK);
                 }
             }
             else if (startsWith(line, Keyword.EMISSIVE_COLOR)) {
                 if (assertCurrentMaterial()) {
-                    currentMaterial.ke = parseRGB(params(line, Keyword.EMISSIVE_COLOR), RGB.BLACK);
+                    currentMaterial.ke = parseColorRGB(params(line, Keyword.EMISSIVE_COLOR), ColorRGB.BLACK);
                 }
             }
             else if (startsWith(line, Keyword.SPECULAR_COLOR)) {
                 if (assertCurrentMaterial()) {
-                    currentMaterial.ks = parseRGB(params(line, Keyword.SPECULAR_COLOR), RGB.BLACK);
+                    currentMaterial.ks = parseColorRGB(params(line, Keyword.SPECULAR_COLOR), ColorRGB.BLACK);
                 }
             }
             ++lineNo;
@@ -141,8 +137,8 @@ public class MtlFileParser {
 
     // Private
 
-    private static Color fxColor(RGB rgb) {
-        return Color.color(rgb.red, rgb.green, rgb.blue);
+    private static Color fxColor(ColorRGB colorRGB) {
+        return Color.color(colorRGB.red(), colorRGB.green(), colorRGB.blue());
     }
 
     private static PhongMaterial createPhongMaterial(ObjMaterial material) {
@@ -208,16 +204,16 @@ public class MtlFileParser {
         return defaultValue;
     }
 
-    private static RGB parseRGB(String s, RGB defaultValue) {
+    private static ColorRGB parseColorRGB(String s, ColorRGB defaultValue) {
         String[] comp = s.trim().split("\\s+");
         if (comp.length == 3) {
             double r = Math.clamp(Double.parseDouble(comp[0]), 0.0, 1.0);
             double g = Math.clamp(Double.parseDouble(comp[1]), 0.0, 1.0);
             double b = Math.clamp(Double.parseDouble(comp[2]), 0.0, 1.0);
-            return new RGB(r, g, b);
+            return new ColorRGB(r, g, b);
         }
         else {
-            Logger.error("Invalid RGB color format: {}", s);
+            Logger.error("Invalid ColorValue color format: {}", s);
             return defaultValue;
         }
     }
