@@ -50,12 +50,6 @@ public class MtlFileParser {
         RGB ks = RGB.BLACK;
         RGB ke = RGB.BLACK;
 
-        String mapKd;
-        String mapKs;
-        String mapD;
-        String mapBump;
-
-
         @Override
         public String toString() {
             return "ObjMaterial{" +
@@ -68,10 +62,6 @@ public class MtlFileParser {
                 ", kd=" + kd +
                 ", ks=" + ks +
                 ", ke=" + ke +
-                ", mapKd='" + mapKd + '\'' +
-                ", mapKs='" + mapKs + '\'' +
-                ", mapD='" + mapD + '\'' +
-                ", mapBump='" + mapBump + '\'' +
                 '}';
         }
     }
@@ -148,9 +138,7 @@ public class MtlFileParser {
         }
         commitMaterial();
         Logger.info("Found {} materials", materialMap.size());
-        for (PhongMaterial material : materialMap.values()) {
-            Logger.info(material);
-        }
+        materialMap.forEach((name, material) -> Logger.info("{}: {}", name, material));
     }
 
     // Private
@@ -225,9 +213,9 @@ public class MtlFileParser {
     private RGB parseRGB(String s, RGB defaultRGB) {
         String[] comp = s.trim().split("\\s+");
         if (comp.length == 3) {
-            double r = Double.parseDouble(comp[0]);
-            double g = Double.parseDouble(comp[1]);
-            double b = Double.parseDouble(comp[2]);
+            double r = Math.clamp(Double.parseDouble(comp[0]), 0.0, 1.0);
+            double g = Math.clamp(Double.parseDouble(comp[1]), 0.0, 1.0);
+            double b = Math.clamp(Double.parseDouble(comp[2]), 0.0, 1.0);
             return new RGB(r, g, b);
         }
         else {
