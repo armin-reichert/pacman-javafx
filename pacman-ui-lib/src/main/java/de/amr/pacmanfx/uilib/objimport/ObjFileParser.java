@@ -36,15 +36,15 @@ import static java.util.Objects.requireNonNull;
 public class ObjFileParser {
 
     public enum Keyword {
-        FACE            ("f"),
-        GROUP           ("g"),
-        MATERIAL_LIB    ("mtllib"),
-        OBJECT          ("o"),
-        SMOOTHING_GROUP ("s"),
-        USE_MATERIAL    ("usemtl"),
-        VERTEX          ("v"),
-        VERTEX_NORMAL   ("vn"),
-        TEX_COORD       ("vt");
+        OBJECT            ("o"),
+        GROUP             ("g"),
+        MATERIAL_LIB      ("mtllib"),
+        MATERIAL_USAGE    ("usemtl"),
+        SMOOTHING_GROUP   ("s"),
+        VERTEX            ("v"),
+        VERTEX_NORMAL     ("vn"),
+        TEX_COORD         ("vt"),
+        FACE              ("f");
 
         private final String text;
 
@@ -248,14 +248,14 @@ public class ObjFileParser {
             }
             else if (matches(statement, Keyword.GROUP)) {
                 commitMesh();
-                final String groupName = parameters(statement, Keyword.GROUP);
-                currentMeshDef = new MeshDefinition(groupName);
+                currentMeshDef = new MeshDefinition(parameters(statement, Keyword.GROUP));
             }
             else if (matches(statement, Keyword.MATERIAL_LIB)) {
-                // processed in pass 1
+                // already processed in pass 1
+                Logger.debug("Material library definition");
             }
-            else if (matches(statement, Keyword.USE_MATERIAL)) {
-                final String materialName = parameters(statement, Keyword.USE_MATERIAL);
+            else if (matches(statement, Keyword.MATERIAL_USAGE)) {
+                final String materialName = parameters(statement, Keyword.MATERIAL_USAGE);
                 Logger.trace("Material usage '{}'", materialName);
                 currentMeshDef.materialName = materialName;
             }
@@ -265,8 +265,7 @@ public class ObjFileParser {
             }
             else if (matches(statement, Keyword.OBJECT)) {
                 commitMesh();
-                final String objectName = parameters(statement, Keyword.OBJECT);;
-                currentMeshDef = new MeshDefinition(objectName);
+                currentMeshDef = new MeshDefinition(parameters(statement, Keyword.OBJECT));
             }
             else if (matches(statement, Keyword.SMOOTHING_GROUP)) {
                 parseSmoothingGroup(parameters(statement, Keyword.SMOOTHING_GROUP));
