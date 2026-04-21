@@ -39,7 +39,8 @@ public class MtlFileParser {
     }
 
     private static class ObjMaterial {
-        String name;
+        final String name;
+
         double ns = 0;
         double d = 1;
         int illum = 2;
@@ -49,6 +50,10 @@ public class MtlFileParser {
         RGB kd = RGB.BLACK;
         RGB ks = RGB.BLACK;
         RGB ke = RGB.BLACK;
+
+        ObjMaterial(String name) {
+            this.name = name;
+        }
 
         @Override
         public String toString() {
@@ -75,68 +80,61 @@ public class MtlFileParser {
     }
 
     public void parse(BufferedReader reader) throws IOException {
-        String statement;
-        while ((statement = reader.readLine()) != null) {
-            if (statement.isBlank() || statement.startsWith("#")) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            if (line.isBlank()) {
+                Logger.trace("Blank line, ignored");
+            }
+            else if (line.startsWith("#")) {
                 Logger.trace("Blank or comment line, ignored");
             }
-            else if (matches(statement, Keyword.NEW_MATERIAL)) {
-                commitMaterial();
-                String parameters = parameters(statement, Keyword.NEW_MATERIAL);
-                currentMaterial = new ObjMaterial();
-                currentMaterial.name = parameters.strip();
+            else if (startsWith(line, Keyword.NEW_MATERIAL)) {
+                commitCurrentMaterial();
+                currentMaterial = new ObjMaterial(params(line, Keyword.NEW_MATERIAL));
             }
-            else if (matches(statement, Keyword.SHININESS)) {
+            else if (startsWith(line, Keyword.SHININESS)) {
                 if (assertCurrentMaterial()) {
-                    String parameters = parameters(statement, Keyword.SHININESS);
-                    currentMaterial.ns = parseShininess(parameters);
+                    currentMaterial.ns = parseShininess(params(line, Keyword.SHININESS), 10.0);
                 }
             }
-            else if (matches(statement, Keyword.OPACITY)) {
+            else if (startsWith(line, Keyword.OPACITY)) {
                 if (assertCurrentMaterial()) {
-                    String parameters = parameters(statement, Keyword.OPACITY);
-                    currentMaterial.d = parseOpacity(parameters, 1.0);
+                    currentMaterial.d = parseOpacity(params(line, Keyword.OPACITY), 1.0);
                 }
             }
-            else if (matches(statement, Keyword.ILLUMINATION)) {
+            else if (startsWith(line, Keyword.ILLUMINATION)) {
                 if (assertCurrentMaterial()) {
-                    String params = parameters(statement, Keyword.ILLUMINATION);
-                    currentMaterial.illum = parseIllumination(params, 2);
+                    currentMaterial.illum = parseIllumination(params(line, Keyword.ILLUMINATION), 2);
                 }
             }
-            else if (matches(statement, Keyword.OPTICAL_DENSITY)) {
+            else if (startsWith(line, Keyword.OPTICAL_DENSITY)) {
                 if (assertCurrentMaterial()) {
-                    String params = parameters(statement, Keyword.OPTICAL_DENSITY);
-                    currentMaterial.ni = Double.parseDouble(params);
+                    currentMaterial.ni = Double.parseDouble(params(line, Keyword.OPTICAL_DENSITY));
                 }
             }
-            else if (matches(statement, Keyword.AMBIENT_COLOR)) {
+            else if (startsWith(line, Keyword.AMBIENT_COLOR)) {
                 if (assertCurrentMaterial()) {
-                    String parameters = parameters(statement, Keyword.AMBIENT_COLOR);
-                    currentMaterial.ka = parseRGB(parameters, RGB.BLACK);
+                    currentMaterial.ka = parseRGB(params(line, Keyword.AMBIENT_COLOR), RGB.BLACK);
                 }
             }
-            else if (matches(statement, Keyword.DIFFUSE_COLOR)) {
+            else if (startsWith(line, Keyword.DIFFUSE_COLOR)) {
                 if (assertCurrentMaterial()) {
-                    String parameters = parameters(statement, Keyword.DIFFUSE_COLOR);
-                    currentMaterial.kd = parseRGB(parameters, RGB.BLACK);
+                    currentMaterial.kd = parseRGB(params(line, Keyword.DIFFUSE_COLOR), RGB.BLACK);
                 }
             }
-            else if (matches(statement, Keyword.EMISSIVE_COLOR)) {
+            else if (startsWith(line, Keyword.EMISSIVE_COLOR)) {
                 if (assertCurrentMaterial()) {
-                    String parameters = parameters(statement, Keyword.EMISSIVE_COLOR);
-                    currentMaterial.ke = parseRGB(parameters, RGB.BLACK);
+                    currentMaterial.ke = parseRGB(params(line, Keyword.EMISSIVE_COLOR), RGB.BLACK);
                 }
             }
-            else if (matches(statement, Keyword.SPECULAR_COLOR)) {
+            else if (startsWith(line, Keyword.SPECULAR_COLOR)) {
                 if (assertCurrentMaterial()) {
-                    String parameters = parameters(statement, Keyword.SPECULAR_COLOR);
-                    currentMaterial.ks = parseRGB(parameters, RGB.BLACK);
+                    currentMaterial.ks = parseRGB(params(line, Keyword.SPECULAR_COLOR), RGB.BLACK);
                 }
             }
             ++lineNo;
         }
-        commitMaterial();
+        commitCurrentMaterial();
         Logger.info("Found {} materials", materialMap.size());
         materialMap.forEach((name, material) -> Logger.info("{}: {}", name, material));
     }
@@ -148,7 +146,7 @@ public class MtlFileParser {
     }
 
     private static PhongMaterial createPhongMaterial(ObjMaterial material) {
-        PhongMaterial phongMaterial = new PhongMaterial();
+        final var phongMaterial = new PhongMaterial();
         phongMaterial.setDiffuseColor(fxColor(material.kd));
         phongMaterial.setSpecularColor(fxColor(material.ks));
         phongMaterial.setSpecularPower(material.ns);
@@ -163,7 +161,7 @@ public class MtlFileParser {
         return true;
     }
 
-    private void commitMaterial() {
+    private void commitCurrentMaterial() {
         if (currentMaterial != null) {
             final PhongMaterial oldValue = materialMap.put(currentMaterial.name, createPhongMaterial(currentMaterial));
             if (oldValue != null) {
@@ -173,44 +171,44 @@ public class MtlFileParser {
         }
     }
 
-    private static boolean matches(String statement, MtlFileParser.Keyword keyword) {
-        return statement.startsWith(keyword.text + " ");
+    private static boolean startsWith(String line, MtlFileParser.Keyword keyword) {
+        return line.startsWith(keyword.text + " ");
     }
 
-    private static String parameters(String statement, MtlFileParser.Keyword keyword) {
-        return statement.substring(keyword.text.length() + 1).strip();
+    private static String params(String line, MtlFileParser.Keyword keyword) {
+        return line.substring(keyword.text.length() + 1).strip();
     }
 
     // double, 0-1000
-    private double parseShininess(String s) {
+    private static double parseShininess(String s, double defaultValue) {
         double value = Double.parseDouble(s);
         if (0 <= value && value <= 1000) {
             return value;
         }
         Logger.error("Shininess value out-of-range 0..1000: {}", value);
-        return 500;
+        return defaultValue;
     }
 
     // integer, 0..10
-    private int parseIllumination(String s, int defaultIllumination) {
+    private static int parseIllumination(String s, int defaultValue) {
         int value = Integer.parseInt(s);
         if (0 <= value && value <= 10) {
             return value;
         }
         Logger.error("Illumination value out-of-range 0..10: {}", value);
-        return defaultIllumination;
+        return defaultValue;
     }
 
-    private double parseOpacity(String s, double defaultOpacity) {
+    private static double parseOpacity(String s, double defaultValue) {
         double value = Double.parseDouble(s);
         if (0 <= value && value <= 1) {
             return value;
         }
         Logger.error("Opacity value out-of-range 0..1: {}", value);
-        return defaultOpacity;
+        return defaultValue;
     }
 
-    private RGB parseRGB(String s, RGB defaultRGB) {
+    private static RGB parseRGB(String s, RGB defaultValue) {
         String[] comp = s.trim().split("\\s+");
         if (comp.length == 3) {
             double r = Math.clamp(Double.parseDouble(comp[0]), 0.0, 1.0);
@@ -220,7 +218,7 @@ public class MtlFileParser {
         }
         else {
             Logger.error("Invalid RGB color format: {}", s);
-            return defaultRGB;
+            return defaultValue;
         }
     }
 }
