@@ -67,10 +67,10 @@ public class ObjFileParser {
     private final URL objFileURL;
 
     private final Map<String, TriangleMesh> meshMap = new HashMap<>();
-    private final Map<String, Map<String, PhongMaterial>> materialLibsMap = new HashMap<>();
+    private final Map<String, Map<String, PhongMaterial>> materialLibsMap = new WeakHashMap<>();
 
     // If a material is assigned to an object/group with "usemtl" in the OBJ, it can be looked up here
-    private final Map<Mesh, PhongMaterial> modelMaterialAssignments = new HashMap<>();
+    private final Map<Mesh, PhongMaterial> modelMaterialAssignments = new WeakHashMap<>();
 
     private int facesStart = 0;
     private int facesNormalStart = 0;
