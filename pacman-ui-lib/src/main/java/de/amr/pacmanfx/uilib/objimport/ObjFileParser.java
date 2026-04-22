@@ -36,7 +36,25 @@ import static java.util.Objects.requireNonNull;
  */
 public class ObjFileParser {
 
-    public enum Keyword {
+    public record ObjFileParseResult(
+        Map<String, TriangleMesh> meshMap,
+        Map<Mesh, PhongMaterial> modelMaterialAssignments) {}
+
+    public static Optional<ObjFileParseResult> parse(URL objFileURL, Charset charset) {
+        try {
+            final var parser = new ObjFileParser(objFileURL, charset);
+            return Optional.of(new ObjFileParseResult(
+                Collections.unmodifiableMap(parser.meshMap),
+                Collections.unmodifiableMap(parser.modelMaterialAssignments)
+            ));
+        }
+        catch (IOException x) {
+            Logger.error(x, "OBJ file parsing failed");
+            return Optional.empty();
+        }
+    }
+
+    private enum Keyword {
         OBJECT            ("o"),
         GROUP             ("g"),
         MATERIAL_LIB      ("mtllib"),
@@ -86,22 +104,22 @@ public class ObjFileParser {
     /** Flat array of vertex coordinates (x, y, z). */
     private final ObservableFloatArray vertexArray = FXCollections.observableFloatArray();
 
+    /** Flat array of vertex normals (nx, ny, nz). */
+    private final ObservableFloatArray normalsArray = FXCollections.observableFloatArray();
+
     /** Flat array of texture coordinates (u, v). */
     private final ObservableFloatArray uvArray = FXCollections.observableFloatArray();
 
     /** Face index list (vertex/uv/normal indices). */
-    private final ArrayList<Integer> facesList = new ArrayList<>();
-
-    /** Smoothing group indices for each face. */
-    private final ArrayList<Integer> smoothingGroupList = new ArrayList<>();
-
-    /** Flat array of vertex normals (nx, ny, nz). */
-    private final ObservableFloatArray normalsArray = FXCollections.observableFloatArray();
+    private final List<Integer> facesList = new ArrayList<>();
 
     /** Normal indices for each face. */
-    private final ArrayList<Integer> faceNormalsList = new ArrayList<>();
+    private final List<Integer> faceNormalsList = new ArrayList<>();
 
-    public ObjFileParser(URL objFileURL, Charset charset) throws IOException {
+    /** Smoothing group indices for each face. */
+    private final List<Integer> smoothingGroupList = new ArrayList<>();
+
+    private ObjFileParser(URL objFileURL, Charset charset) throws IOException {
         this.objFileURL = requireNonNull(objFileURL);
         requireNonNull(charset);
         Logger.info("Parsing OBJ file {}", objFileURL);
@@ -113,14 +131,6 @@ public class ObjFileParser {
             final var reader = new BufferedReader(new InputStreamReader(is, charset));
             parseObjectsAndGroups(reader);
         }
-    }
-
-    public Map<String, TriangleMesh> meshMap() {
-        return Collections.unmodifiableMap(meshMap);
-    }
-
-    public Map<Mesh, PhongMaterial> modelMaterialAssignments() {
-        return Collections.unmodifiableMap(modelMaterialAssignments);
     }
 
     // Private

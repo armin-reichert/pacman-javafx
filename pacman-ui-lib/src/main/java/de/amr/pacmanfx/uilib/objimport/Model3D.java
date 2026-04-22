@@ -38,9 +38,11 @@ public class Model3D {
 
     public static Model3D importObj(URL url, Charset charset) throws IOException {
         final Model3D model3D = new Model3D(url);
-        final var parser = new ObjFileParser(url, charset);
-        model3D.triangleMeshMap.putAll(parser.meshMap());
-        model3D.modelMaterialAssignments.putAll(parser.modelMaterialAssignments());
+        ObjFileParser.parse(url, charset).ifPresent(result -> {
+            model3D.triangleMeshMap.putAll(result.meshMap());
+            model3D.modelMaterialAssignments.putAll(result.modelMaterialAssignments());
+
+        });
         return model3D;
     }
 
