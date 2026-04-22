@@ -25,9 +25,9 @@ import static de.amr.pacmanfx.uilib.objimport.SmoothingGroups.computeSmoothingGr
 import static java.util.Objects.requireNonNull;
 
 /**
- * Parses Wavefront OBJ files. Not a full fledged implementation but just good enough for my purposes.
+ * Parses Wavefront OBJ files. Just good enough for my purposes. Some parts of the code still unclear to me.
  *
- * <p>Code derived from the OBJ importer from the 3DViewer sample project (Oracle).
+ * <p>Code has been derived from the OBJ importer in the 3DViewer sample project (Oracle).
  *
  * @see <a href=
  * "https://github.com/teamfx/openjfx-10-dev-rt/tree/master/apps/samples/3DViewer/src/main/java/com/javafx/experiments/importers">3DViewer
@@ -75,13 +75,12 @@ public class ObjFileParser {
     private int facesStart = 0;
     private int facesNormalStart = 0;
     private int smoothingGroupsStart = 0;
+    private int currentSmoothingGroup = 0;
 
     private int lineNo;
     private int anonMeshNameCount = 0;
 
     private MeshDefinition currentMeshDef;
-
-    private int currentSmoothingGroup = 0;
 
     /** Flat array of vertex coordinates (x, y, z). */
     private final ObservableFloatArray vertexArray = FXCollections.observableFloatArray();
@@ -104,6 +103,7 @@ public class ObjFileParser {
     public ObjFileParser(URL objFileURL, Charset charset) throws IOException {
         this.objFileURL = requireNonNull(objFileURL);
         requireNonNull(charset);
+        Logger.info("Parsing OBJ file {}", objFileURL);
         try (InputStream is = objFileURL.openStream()) {
             final var reader = new BufferedReader(new InputStreamReader(is, charset));
             parseMaterialLibraryDefinitions(reader);
@@ -124,44 +124,6 @@ public class ObjFileParser {
 
     // Private
 
-    private static String[] splitBySpace(String line) {
-        return line.trim().split("\\s+");
-    }
-
-    private static int[] toIntArray(List<Integer> list) {
-        final int[] arr = new int[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            arr[i] = list.get(i);
-        }
-        return arr;
-        // Perhaps more elegant, but not as performant:
-        // return list.stream().mapToInt(Integer::intValue).toArray();
-    }
-
-    private static float[] toFloatArray(ObservableFloatArray ofa) {
-        final float[] arr = new float[ofa.size()];
-        ofa.copyTo(0, arr, 0, ofa.size());
-        return arr;
-        // Perhaps more elegant, but not as performant:
-        // return ofa.toArray(new float[ofa.size()]);
-    }
-
-    private static List<Integer> restOfList(ArrayList<Integer> list, int start) {
-        return list.subList(start, list.size());
-    }
-
-    private static boolean fullMatch(String line, Keyword keyword) {
-        return line.equals(keyword.text);
-    }
-
-    private static boolean startsWith(String line, Keyword keyword) {
-        return line.startsWith(keyword.text + " ");
-    }
-
-    private static String params(String line, Keyword keyword) {
-        return line.substring(keyword.text.length() + 1).trim();
-    }
-
     private void commitMesh() {
         TriangleMesh mesh = createTriangleMesh();
         if (mesh != null) {
@@ -178,10 +140,6 @@ public class ObjFileParser {
         }
     }
 
-    private String nextAnonMeshName() {
-        return "default" + anonMeshNameCount++;
-    }
-
     // Search for material library definitions
     private void parseMaterialLibraryDefinitions(BufferedReader reader) throws IOException {
         String line;
@@ -190,46 +148,42 @@ public class ObjFileParser {
                 Logger.trace("Blank or comment line, ignored");
             }
             else if (startsWith(line, Keyword.MATERIAL_LIB)) {
-                // we don't use material library definitions defined in the OBJ file
-                final String libraryName = params(line, Keyword.MATERIAL_LIB);
-                Logger.info("Material library definition: '{}'", libraryName);
-                if (materialLibsMap.containsKey(libraryName)) {
-                    Logger.warn("Duplicate material library definition: {}", libraryName);
+                final String libName = params(line, Keyword.MATERIAL_LIB);
+                Logger.info("Material library definition found: '{}'", libName);
+                if (materialLibsMap.containsKey(libName)) {
+                    Logger.warn("Material library definition will be ignored (already defined): {}", libName);
                 }
                 else {
-                    final Map<String, PhongMaterial> library = parseMaterialLibraryFile(libraryName);
-                    if (library != null) {
-                        materialLibsMap.put(libraryName, library);
-                        Logger.info("Material library parsed: {}", libraryName);
+                    final Map<String, PhongMaterial> lib = parseMaterialLibraryFile(libName);
+                    if (lib != null) {
+                        Logger.info("Material library parsed: {}", libName);
+                        materialLibsMap.put(libName, lib);
                     }
+                    else Logger.error("Material library {} could not be parsed");
                 }
             }
         }
     }
 
-    private Map<String, PhongMaterial> parseMaterialLibraryFile(String libraryName) {
-        int lastSlash = objFileURL.toExternalForm().lastIndexOf('/');
+    private Map<String, PhongMaterial> parseMaterialLibraryFile(String libName) throws IOException {
+        final int lastSlash = objFileURL.toExternalForm().lastIndexOf('/');
         if (lastSlash == -1) {
             Logger.error("OBJ file URL looks strange: {}", objFileURL);
+            throw new RuntimeException();
         }
-        String materialLibURL = objFileURL.toExternalForm().substring(0, lastSlash)
-            + "/" + libraryName;
-        Logger.info("Material library URL: {}", materialLibURL);
+        final String libURL = objFileURL.toExternalForm().substring(0, lastSlash) + "/" + libName;
+        Logger.info("Material library URL (derived from OBJ file URL): {}", libURL);
 
-        URI uri;
         try {
-            uri = new URI(materialLibURL);
-            final MtlFileParser parser = new MtlFileParser();
+            final URI uri = new URI(libURL);
             try (InputStream is = uri.toURL().openStream()) {
                 final var reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+                final MtlFileParser parser = new MtlFileParser();
                 parser.parse(reader);
                 return parser.materialMap();
-            } catch (IOException x) {
-                Logger.error(x, "Parsing error");
-                return null;
             }
         } catch (URISyntaxException e) {
-            Logger.error("Invalid material library URL: {}", materialLibURL);
+            Logger.error("Invalid material library URL: {}", libURL);
             throw new RuntimeException(e);
         }
     }
@@ -499,7 +453,6 @@ public class ObjFileParser {
                 final var materialLib = materialLibsMap.get(materialLibName);
                 if (materialLib.containsKey(currentMeshDef.materialName)) {
                     final PhongMaterial material = materialLib.get(currentMeshDef.materialName);
-                    // In JavaFX, material is assigned to MeshView, not to Mesh!
                     modelMaterialAssignments.put(mesh, material);
                 }
             }
@@ -510,6 +463,44 @@ public class ObjFileParser {
         smoothingGroupsStart = smoothingGroupList.size();
 
         return mesh;
+    }
+
+    private static String[] splitBySpace(String line) {
+        return line.trim().split("\\s+");
+    }
+
+    private static int[] toIntArray(List<Integer> list) {
+        final int[] arr = new int[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            arr[i] = list.get(i);
+        }
+        return arr;
+        // Perhaps more elegant, but not as performant:
+        // return list.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    private static float[] toFloatArray(ObservableFloatArray ofa) {
+        final float[] arr = new float[ofa.size()];
+        ofa.copyTo(0, arr, 0, ofa.size());
+        return arr;
+        // Perhaps more elegant, but not as performant:
+        // return ofa.toArray(new float[ofa.size()]);
+    }
+
+    private static List<Integer> restOfList(List<Integer> list, int start) {
+        return list.subList(start, list.size());
+    }
+
+    private static boolean fullMatch(String line, Keyword keyword) {
+        return line.equals(keyword.text);
+    }
+
+    private static boolean startsWith(String line, Keyword keyword) {
+        return line.startsWith(keyword.text + " ");
+    }
+
+    private static String params(String line, Keyword keyword) {
+        return line.substring(keyword.text.length() + 1).trim();
     }
 
     /**
@@ -545,4 +536,7 @@ public class ObjFileParser {
         return (n < 0) ? n + normalsArray.size() / 3 : n - 1;
     }
 
+    private String nextAnonMeshName() {
+        return "default" + anonMeshNameCount++;
+    }
 }
