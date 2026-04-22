@@ -412,11 +412,14 @@ public class ObjFileParser {
     }
 
     private TriangleMesh createTriangleMesh() {
+
+        //TODO What does this mean?
         if (facesStart >= facesList.size()) {
             // we're only interested in faces
             smoothingGroupsStart = smoothingGroupList.size();
             return null;
         }
+
         var vertexMap  = new HashMap<Integer, Integer>(vertexArray.size() / 2);
         var uvMap      = new HashMap<Integer, Integer>(uvArray.size() / 2);
         var normalsMap = new HashMap<Integer, Integer>(normalsArray.size() / 2);
