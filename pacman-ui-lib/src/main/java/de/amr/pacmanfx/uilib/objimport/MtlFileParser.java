@@ -25,14 +25,74 @@ public class MtlFileParser {
         DIFFUSE_COLOR   ("Kd"),
         EMISSIVE_COLOR  ("Ke"),
         SPECULAR_COLOR  ("Ks"),
-        OPTICAL_DENSITY ("Ni");
+        OPTICAL_DENSITY ("Ni"),
+        UNKNOWN         ("");
 
         private final String text;
 
         Keyword(String text) {
             this.text = text;
         }
+
+        static Keyword fromText(String text) {
+            for (Keyword keyword : values()) {
+                if (keyword.text.equals(text)) {
+                    return keyword;
+                }
+            }
+            return UNKNOWN;
+        }
     }
+
+    public static class MtlTokenizer {
+
+        public static class Token {
+            public final Keyword keyword;
+            public final String args;
+            public final int lineNo;
+
+            public Token(String keywordText, String args, int lineNo) {
+                this.keyword = Keyword.fromText(keywordText);
+                this.args = args;
+                this.lineNo = lineNo;
+            }
+        }
+
+        private final BufferedReader reader;
+        private int lineNo = 0;
+
+        public MtlTokenizer(BufferedReader reader) {
+            this.reader = reader;
+        }
+
+        public Token next() throws IOException {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                lineNo++;
+
+                // Remove inline comments
+                int hash = line.indexOf('#');
+                if (hash >= 0) {
+                    line = line.substring(0, hash);
+                }
+
+                line = line.strip();
+                if (line.isEmpty()) {
+                    continue;
+                }
+
+                String[] parts = line.split("\\s+", 2);
+                String keyword = parts[0];
+                String args = parts.length > 1 ? parts[1].strip() : "";
+
+                return new Token(keyword, args, lineNo);
+            }
+
+            return null; // EOF
+        }
+    }
+
 
     private static class ObjMaterial {
 
@@ -79,70 +139,66 @@ public class MtlFileParser {
 
     private final Map<String, PhongMaterial> materialMap = new LinkedHashMap<>();
     private ObjMaterial currentMaterial;
-    private int lineNo = 1;
 
     public Map<String, PhongMaterial> materialMap() {
         return Collections.unmodifiableMap(materialMap);
     }
 
     public void parse(BufferedReader reader) throws IOException {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            if (line.isBlank()) {
-                Logger.trace("Blank line, ignored");
-            }
-            else if (line.startsWith("#")) {
-                Logger.trace("Blank or comment line, ignored");
-            }
-            else if (startsWith(line, Keyword.NEW_MATERIAL)) {
-                commitCurrentMaterial();
-                currentMaterial = new ObjMaterial(params(line, Keyword.NEW_MATERIAL));
-            }
-            else if (startsWith(line, Keyword.SHININESS)) {
-                if (assertCurrentMaterial()) {
-                    currentMaterial.ns = parseShininess(params(line, Keyword.SHININESS), ObjMaterial.DEFAULT_SHININESS);
+        MtlTokenizer tokenizer = new MtlTokenizer(reader);
+        MtlTokenizer.Token token;
+
+        while ((token = tokenizer.next()) != null) {
+            switch (token.keyword) {
+                case NEW_MATERIAL -> {
+                    commitCurrentMaterial();
+                    currentMaterial = new ObjMaterial(token.args);
                 }
-            }
-            else if (startsWith(line, Keyword.OPACITY)) {
-                if (assertCurrentMaterial()) {
-                    currentMaterial.d = parseOpacity(params(line, Keyword.OPACITY), ObjMaterial.DEFAULT_OPACITY);
+                case SHININESS -> {
+                    if (assertCurrentMaterial(token.lineNo)) {
+                        currentMaterial.ns = parseShininess(token.args, ObjMaterial.DEFAULT_SHININESS);
+                    }
                 }
-            }
-            else if (startsWith(line, Keyword.ILLUMINATION)) {
-                if (assertCurrentMaterial()) {
-                    currentMaterial.illum = parseIllumination(params(line, Keyword.ILLUMINATION), ObjMaterial.DEFAULT_ILLUMINATION);
+                case OPACITY -> {
+                    if (assertCurrentMaterial(token.lineNo)) {
+                        currentMaterial.d = parseOpacity(token.args, ObjMaterial.DEFAULT_OPACITY);
+                    }
                 }
-            }
-            else if (startsWith(line, Keyword.OPTICAL_DENSITY)) {
-                if (assertCurrentMaterial()) {
-                    currentMaterial.ni = Float.parseFloat(params(line, Keyword.OPTICAL_DENSITY));
+                case ILLUMINATION -> {
+                    if (assertCurrentMaterial(token.lineNo)) {
+                        currentMaterial.illum = parseIllumination(token.args, ObjMaterial.DEFAULT_ILLUMINATION);
+                    }
                 }
-            }
-            else if (startsWith(line, Keyword.AMBIENT_COLOR)) {
-                if (assertCurrentMaterial()) {
-                    currentMaterial.ka = parseColorRGB(params(line, Keyword.AMBIENT_COLOR), ObjMaterial.DEFAULT_AMBIENT_COLOR);
+                case OPTICAL_DENSITY ->  {
+                    if (assertCurrentMaterial(token.lineNo)) {
+                        currentMaterial.ni = Float.parseFloat(token.args);
+                    }
                 }
-            }
-            else if (startsWith(line, Keyword.DIFFUSE_COLOR)) {
-                if (assertCurrentMaterial()) {
-                    currentMaterial.kd = parseColorRGB(params(line, Keyword.DIFFUSE_COLOR), ObjMaterial.DEFAULT_DIFFUSE_COLOR);
+                case AMBIENT_COLOR ->  {
+                    if (assertCurrentMaterial(token.lineNo)) {
+                        currentMaterial.ka = parseColorRGB(token.args, ObjMaterial.DEFAULT_AMBIENT_COLOR);
+                    }
                 }
-            }
-            else if (startsWith(line, Keyword.EMISSIVE_COLOR)) {
-                if (assertCurrentMaterial()) {
-                    currentMaterial.ke = parseColorRGB(params(line, Keyword.EMISSIVE_COLOR), ObjMaterial.DEFAULT_EMISSIVE_COLOR);
+                case DIFFUSE_COLOR ->  {
+                    if (assertCurrentMaterial(token.lineNo)) {
+                        currentMaterial.kd = parseColorRGB(token.args, ObjMaterial.DEFAULT_DIFFUSE_COLOR);
+                    }
                 }
-            }
-            else if (startsWith(line, Keyword.SPECULAR_COLOR)) {
-                if (assertCurrentMaterial()) {
-                    currentMaterial.ks = parseColorRGB(params(line, Keyword.SPECULAR_COLOR), ObjMaterial.DEFAULT_SPECULAR_COLOR);
+                case EMISSIVE_COLOR -> {
+                    if (assertCurrentMaterial(token.lineNo)) {
+                        currentMaterial.ke = parseColorRGB(token.args, ObjMaterial.DEFAULT_EMISSIVE_COLOR);
+                    }
                 }
+                case SPECULAR_COLOR -> {
+                    if (assertCurrentMaterial(token.lineNo)) {
+                        currentMaterial.ks = parseColorRGB(token.args, ObjMaterial.DEFAULT_SPECULAR_COLOR);
+                    }
+                }
+                default -> Logger.warn("Unknown keyword '{}' at line {}", token.keyword, token.lineNo);
             }
-            ++lineNo;
         }
+
         commitCurrentMaterial();
-        Logger.info("Found {} materials", materialMap.size());
-        materialMap.forEach((name, material) -> Logger.info("{}: {}", name, material));
     }
 
     // Private
@@ -159,7 +215,7 @@ public class MtlFileParser {
         return phongMaterial;
     }
 
-    private boolean assertCurrentMaterial() {
+    private boolean assertCurrentMaterial(int lineNo) {
         if (currentMaterial == null) {
             Logger.error("{}: No material definition has been started", lineNo);
             return false;
@@ -175,14 +231,6 @@ public class MtlFileParser {
             }
             currentMaterial = null;
         }
-    }
-
-    private static boolean startsWith(String line, MtlFileParser.Keyword keyword) {
-        return line.startsWith(keyword.text + " ");
-    }
-
-    private static String params(String line, MtlFileParser.Keyword keyword) {
-        return line.substring(keyword.text.length() + 1).strip();
     }
 
     // float, 0-1000
