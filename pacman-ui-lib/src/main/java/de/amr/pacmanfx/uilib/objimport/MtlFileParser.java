@@ -233,7 +233,7 @@ public class MtlFileParser {
         }
     }
 
-    // float, 0-1000
+    // float, 0..1000
     private static float parseShininess(String s, float defaultValue) {
         float value = Float.parseFloat(s);
         if (0 <= value && value <= 1000) {
@@ -253,6 +253,7 @@ public class MtlFileParser {
         return defaultValue;
     }
 
+    // float, 0..1
     private static float parseOpacity(String s, float defaultValue) {
         float value = Float.parseFloat(s);
         if (0 <= value && value <= 1) {
@@ -262,6 +263,7 @@ public class MtlFileParser {
         return defaultValue;
     }
 
+    // float 3-tuple, each 0..1
     private static ColorRGB parseColorRGB(String s, ColorRGB defaultValue) {
         String[] comp = s.trim().split("\\s+");
         if (comp.length == 3) {
