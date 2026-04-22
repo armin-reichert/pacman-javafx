@@ -150,7 +150,7 @@ public class GameUI_Builder {
             gameBox.registerGame(gameVariant, game);
             ui.uiConfigManager().addFactory(gameVariant, config.uiConfigFactory);
             if (includeInteractiveTests) {
-                game.flow().addState(new LevelShortTestState<>(gameBox));
+                game.flow().addState(new LevelShortTestState<>(gameBox.coinMechanism()));
                 game.flow().addState(new LevelMediumTestState<>());
                 game.flow().addState(new CutScenesTestState<>());
             }

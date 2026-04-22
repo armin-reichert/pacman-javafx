@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Container for the playable games. Each game variant is represented by an instance of its game model (see {@link Game}).
  */
-public class GameBox implements GameContext, CoinMechanism {
+public class GameBox implements GameContext {
 
     /**
      * Game variant names must match this pattern (e.g. "MS_PACMAN_2024").
@@ -52,6 +52,8 @@ public class GameBox implements GameContext, CoinMechanism {
 
     private final File homeDir = DEFAULT_HOME_DIR;
     private final File customMapDir = DEFAULT_CUSTOM_MAP_DIR;
+
+    private final CoinMechanism coinMechanism = new SimpleCoinMechanism();
 
     public GameBox() {
         final boolean ok = validateUserDirs();
@@ -94,41 +96,44 @@ public class GameBox implements GameContext, CoinMechanism {
 
     // CoinMechanism implementation
 
-    private final IntegerProperty numCoins = new SimpleIntegerProperty(0);
+    private static class SimpleCoinMechanism implements CoinMechanism {
 
-    @Override
-    public IntegerProperty numCoinsProperty() { return numCoins; }
+        private final IntegerProperty numCoins = new SimpleIntegerProperty(0);
 
-    public int numCoins() {
-        return numCoinsProperty().get();
-    }
+        @Override
+        public IntegerProperty numCoinsProperty() { return numCoins; }
 
-    @Override
-    public int maxCoins() {
-        return 99;
-    }
-
-    public boolean isEmpty() {
-        return numCoins() == 0;
-    }
-
-    public void setNumCoins(int n) {
-        if (n >= 0 && n <= maxCoins()) {
-            numCoinsProperty().set(n);
-        } else {
-            Logger.error("Cannot set number of coins to {}", n);
+        public int numCoins() {
+            return numCoinsProperty().get();
         }
-    }
 
-    public void insertCoin() {
-        if (numCoins() +1 <= maxCoins()) {
-            setNumCoins(numCoins() + 1);
+        @Override
+        public int maxCoins() {
+            return 99;
         }
-    }
 
-    public void consumeCoin() {
-        if (numCoins() > 0) {
-            setNumCoins(numCoins() - 1);
+        public boolean isEmpty() {
+            return numCoins() == 0;
+        }
+
+        public void setNumCoins(int n) {
+            if (n >= 0 && n <= maxCoins()) {
+                numCoinsProperty().set(n);
+            } else {
+                Logger.error("Cannot set number of coins to {}", n);
+            }
+        }
+
+        public void insertCoin() {
+            if (numCoins() +1 <= maxCoins()) {
+                setNumCoins(numCoins() + 1);
+            }
+        }
+
+        public void consumeCoin() {
+            if (numCoins() > 0) {
+                setNumCoins(numCoins() - 1);
+            }
         }
     }
 
@@ -170,7 +175,7 @@ public class GameBox implements GameContext, CoinMechanism {
 
     @Override
     public CoinMechanism coinMechanism() {
-        return this;
+        return coinMechanism;
     }
 
     // other stuff
