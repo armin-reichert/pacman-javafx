@@ -20,6 +20,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static de.amr.pacmanfx.uilib.objimport.SmoothingGroups.computeSmoothingGroups;
 import static java.util.Objects.requireNonNull;
@@ -158,10 +159,8 @@ public class ObjFileParser {
         }
     }
 
-    // Search for material library definitions
     private void parseMaterialLibraryDefinitions(BufferedReader reader) throws IOException {
-        String line;
-        while ((line = reader.readLine()) != null) {
+        for( String line; (line = reader.readLine()) != null; ) {
             if (startsWith(line, Keyword.MATERIAL_LIB)) {
                 final String libName = params(line, Keyword.MATERIAL_LIB);
                 Logger.info("Material library definition found: '{}'", libName);
@@ -181,14 +180,14 @@ public class ObjFileParser {
     }
 
     private Map<String, PhongMaterial> parseMaterialLibraryFile(String libName) throws IOException {
-        final int lastSlash = objFileURL.toExternalForm().lastIndexOf('/');
-        if (lastSlash == -1) {
-            Logger.error("OBJ file URL looks strange: {}", objFileURL);
+        final String objFileURLString = objFileURL.toExternalForm();
+        final int endOfPath = objFileURLString.lastIndexOf('/');
+        if (endOfPath == -1) {
+            Logger.error("OBJ file URL looks strange, no path end found: {}", objFileURLString);
             throw new RuntimeException();
         }
-        final String libURL = objFileURL.toExternalForm().substring(0, lastSlash) + "/" + libName;
+        final String libURL = objFileURLString.substring(0, endOfPath) + "/" + libName;
         Logger.info("Material library URL (derived from OBJ file URL): {}", libURL);
-
         try {
             final URI uri = new URI(libURL);
             try (InputStream is = uri.toURL().openStream()) {
