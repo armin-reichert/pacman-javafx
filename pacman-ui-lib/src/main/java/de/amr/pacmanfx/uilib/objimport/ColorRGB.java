@@ -4,6 +4,6 @@
 
 package de.amr.pacmanfx.uilib.objimport;
 
-public record ColorRGB(double red, double green, double blue) {
-    static ColorRGB BLACK = new ColorRGB(0.0, 0.0, 0.0);
+public record ColorRGB(float red, float green, float blue) {
+    static ColorRGB BLACK = new ColorRGB(0, 0, 0);
 }
