@@ -18,48 +18,29 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Represents a 3D model loaded from a Wavefront OBJ file.
- * <p>
- * This class stores all intermediate data extracted from the OBJ file:
- * <ul>
- *   <li>vertex positions</li>
- *   <li>texture coordinates</li>
- *   <li>normals</li>
- *   <li>faces and smoothing groups</li>
- * </ul>
- * After parsing, the model provides one or more {@link TriangleMesh} instances,
- * each optionally associated with a material map.
- * <p>
- * The class does not perform the parsing itself; it only holds the parsed data.
- * A separate OBJ importer is expected to populate the fields.
  */
 public class Model3D {
 
-    public static Model3D importObj(URL url, Charset charset) {
-        final Model3D model3D = new Model3D(url);
-        ObjFileParser.parse(url, charset).ifPresent(result -> {
-            model3D.triangleMeshMap.putAll(result.meshMap());
+    public static Model3D importObj(URL objFileURL, Charset charset) {
+        final Model3D model3D = new Model3D(objFileURL);
+        ObjFileParser.parse(objFileURL, charset).ifPresent(result -> {
+            model3D.meshMap.putAll(result.meshMap());
             model3D.modelMaterialAssignments.putAll(result.modelMaterialAssignments());
         });
         return model3D;
     }
 
-    public static Model3D importObj(URL url) {
-        return importObj(url, StandardCharsets.UTF_8);
+    public static Model3D importObj(URL objFileURL) {
+        return importObj(objFileURL, StandardCharsets.UTF_8);
     }
 
-    public static Model3D importObj(File file) throws MalformedURLException {
-        return importObj(file.toURI().toURL());
+    public static Model3D importObj(File objFile) throws MalformedURLException {
+        return importObj(objFile.toURI().toURL());
     }
 
-    /** The URL of the OBJ file this model was loaded from. */
     private final URL url;
 
-    /**
-     * Maps mesh names (OBJ object/group names) to their corresponding {@link TriangleMesh}.
-     * <p>
-     * OBJ files may contain multiple named objects; each becomes a separate mesh.
-     */
-    private final Map<String, TriangleMesh> triangleMeshMap = new HashMap<>();
+    private final Map<String, TriangleMesh> meshMap = new HashMap<>();
 
     private final Map<Mesh, PhongMaterial> modelMaterialAssignments = new HashMap<>();
 
@@ -72,35 +53,31 @@ public class Model3D {
         this.url = Objects.requireNonNull(url);
     }
 
+    public void dispose() {
+        meshMap.clear();
+        modelMaterialAssignments.clear();
+    }
+
     public URL url() {
         return url;
     }
 
-    /**
-     * Clears all stored model data.
-     * <p>
-     * After calling this method, the model becomes empty and cannot be used
-     * unless repopulated by an importer.
-     */
-    public void dispose() {
-        triangleMeshMap.clear();
-    }
-
     public Map<String, TriangleMesh> meshMap() {
-        return Collections.unmodifiableMap(triangleMeshMap);
+        return Collections.unmodifiableMap(meshMap);
     }
 
     public Optional<TriangleMesh> optMesh(String meshName) {
         requireNonNull(meshName);
-        return Optional.ofNullable(triangleMeshMap.get(meshName));
+        return Optional.ofNullable(meshMap.get(meshName));
     }
 
-    public Mesh meshOrFail(String id) {
-        return optMesh(id).orElseThrow(
-            () -> new IllegalArgumentException("No mesh with ID '%s' exists in 3D model %s".formatted(id, url)));
+    public Mesh meshOrFail(String meshName) {
+        return optMesh(meshName).orElseThrow(
+            () -> new IllegalArgumentException("No mesh with name '%s' exists in 3D model %s".formatted(meshName, url)));
     }
 
     public Optional<PhongMaterial> modelMaterialAssignment(Mesh mesh) {
+        requireNonNull(mesh);
         return Optional.ofNullable(modelMaterialAssignments.get(mesh));
     }
 }
