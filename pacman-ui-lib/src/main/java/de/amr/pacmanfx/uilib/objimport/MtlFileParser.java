@@ -44,20 +44,19 @@ public class MtlFileParser {
         }
     }
 
-    public static class MtlTokenizer {
+    public static class Token {
+        public final Keyword keyword;
+        public final String args;
+        public final int lineNo;
 
-        public static class Token {
-            public final Keyword keyword;
-            public final String args;
-            public final int lineNo;
-
-            public Token(String keywordText, String args, int lineNo) {
-                this.keyword = Keyword.fromText(keywordText);
-                this.args = args;
-                this.lineNo = lineNo;
-            }
+        public Token(String keywordText, String args, int lineNo) {
+            this.keyword = Keyword.fromText(keywordText);
+            this.args = args;
+            this.lineNo = lineNo;
         }
+    }
 
+    public static class MtlTokenizer {
         private final BufferedReader reader;
         private int lineNo = 0;
 
@@ -92,7 +91,6 @@ public class MtlFileParser {
             return null; // EOF
         }
     }
-
 
     private static class ObjMaterial {
 
@@ -140,13 +138,15 @@ public class MtlFileParser {
     private final Map<String, PhongMaterial> materialMap = new LinkedHashMap<>();
     private ObjMaterial currentMaterial;
 
+    private MtlTokenizer tokenizer;
+
     public Map<String, PhongMaterial> materialMap() {
         return Collections.unmodifiableMap(materialMap);
     }
 
     public void parse(BufferedReader reader) throws IOException {
-        MtlTokenizer tokenizer = new MtlTokenizer(reader);
-        MtlTokenizer.Token token;
+        tokenizer = new MtlTokenizer(reader);
+        Token token;
 
         while ((token = tokenizer.next()) != null) {
             switch (token.keyword) {
@@ -155,42 +155,42 @@ public class MtlFileParser {
                     currentMaterial = new ObjMaterial(token.args);
                 }
                 case SHININESS -> {
-                    if (assertCurrentMaterial(token.lineNo)) {
+                    if (materialStarted()) {
                         currentMaterial.ns = parseShininess(token.args, ObjMaterial.DEFAULT_SHININESS);
                     }
                 }
                 case OPACITY -> {
-                    if (assertCurrentMaterial(token.lineNo)) {
+                    if (materialStarted()) {
                         currentMaterial.d = parseOpacity(token.args, ObjMaterial.DEFAULT_OPACITY);
                     }
                 }
                 case ILLUMINATION -> {
-                    if (assertCurrentMaterial(token.lineNo)) {
+                    if (materialStarted()) {
                         currentMaterial.illum = parseIllumination(token.args, ObjMaterial.DEFAULT_ILLUMINATION);
                     }
                 }
                 case OPTICAL_DENSITY ->  {
-                    if (assertCurrentMaterial(token.lineNo)) {
+                    if (materialStarted()) {
                         currentMaterial.ni = parseOpticalDensity(token.args, ObjMaterial.DEFAULT_OPTICAL_DENSITY);
                     }
                 }
                 case AMBIENT_COLOR ->  {
-                    if (assertCurrentMaterial(token.lineNo)) {
+                    if (materialStarted()) {
                         currentMaterial.ka = parseColorRGB(token.args, ObjMaterial.DEFAULT_AMBIENT_COLOR);
                     }
                 }
                 case DIFFUSE_COLOR ->  {
-                    if (assertCurrentMaterial(token.lineNo)) {
+                    if (materialStarted()) {
                         currentMaterial.kd = parseColorRGB(token.args, ObjMaterial.DEFAULT_DIFFUSE_COLOR);
                     }
                 }
                 case EMISSIVE_COLOR -> {
-                    if (assertCurrentMaterial(token.lineNo)) {
+                    if (materialStarted()) {
                         currentMaterial.ke = parseColorRGB(token.args, ObjMaterial.DEFAULT_EMISSIVE_COLOR);
                     }
                 }
                 case SPECULAR_COLOR -> {
-                    if (assertCurrentMaterial(token.lineNo)) {
+                    if (materialStarted()) {
                         currentMaterial.ks = parseColorRGB(token.args, ObjMaterial.DEFAULT_SPECULAR_COLOR);
                     }
                 }
@@ -215,9 +215,9 @@ public class MtlFileParser {
         return phongMaterial;
     }
 
-    private boolean assertCurrentMaterial(int lineNo) {
+    private boolean materialStarted() {
         if (currentMaterial == null) {
-            Logger.error("{}: No material definition has been started", lineNo);
+            Logger.error("{}: No material definition has been started", tokenizer.lineNo);
             return false;
         }
         return true;
