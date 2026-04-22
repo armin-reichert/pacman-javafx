@@ -44,15 +44,9 @@ public class MtlFileParser {
         }
     }
 
-    public static class Token {
-        public final Keyword keyword;
-        public final String args;
-        public final int lineNo;
-
-        public Token(String keywordText, String args, int lineNo) {
-            this.keyword = Keyword.fromText(keywordText);
-            this.args = args;
-            this.lineNo = lineNo;
+    public record Token(Keyword keyword, String args, int lineNo) {
+        public Token(String keyword, String args, int lineNo) {
+            this(Keyword.fromText(keyword), args, lineNo);
         }
     }
 
