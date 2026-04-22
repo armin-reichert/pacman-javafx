@@ -6,10 +6,8 @@ package de.amr.pacmanfx.uilib.objimport;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.TriangleMesh;
-import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -36,38 +34,21 @@ import static java.util.Objects.requireNonNull;
  */
 public class Model3D {
 
-    public static Model3D importObj(URL url, Charset charset) throws IOException {
+    public static Model3D importObj(URL url, Charset charset) {
         final Model3D model3D = new Model3D(url);
         ObjFileParser.parse(url, charset).ifPresent(result -> {
             model3D.triangleMeshMap.putAll(result.meshMap());
             model3D.modelMaterialAssignments.putAll(result.modelMaterialAssignments());
-
         });
         return model3D;
     }
 
-    public static Model3D importObj(URL url) throws Model3DException {
-        try {
-            final Model3D model3D = importObj(url, StandardCharsets.UTF_8);
-            for (TriangleMesh mesh : model3D.meshMap().values()) {
-                try {
-                    MeshHelper.validateTriangleMesh(mesh);
-                } catch (AssertionError error) {
-                    Logger.error("Invalid OBJ file data: {}, URL: '{}'", error.getMessage(), url);
-                }
-            }
-            return model3D;
-        } catch (IOException x) {
-            throw new Model3DException("Could not load OBJ file", x);
-        }
+    public static Model3D importObj(URL url) {
+        return importObj(url, StandardCharsets.UTF_8);
     }
 
-    public static Model3D importObj(File file) throws Model3DException {
-        try {
-            return importObj(file.toURI().toURL());
-        } catch (MalformedURLException x) {
-            throw new Model3DException("Could not load OBJ file", x);
-        }
+    public static Model3D importObj(File file) throws MalformedURLException {
+        return importObj(file.toURI().toURL());
     }
 
     /** The URL of the OBJ file this model was loaded from. */

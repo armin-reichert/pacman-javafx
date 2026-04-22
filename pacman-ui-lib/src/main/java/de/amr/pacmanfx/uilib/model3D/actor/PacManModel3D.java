@@ -6,7 +6,6 @@ package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.uilib.objimport.Model3D;
-import de.amr.pacmanfx.uilib.objimport.Model3DException;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -56,7 +55,7 @@ public class PacManModel3D implements Disposable {
 			model3D.meshOrFail(ID_HEAD);
 			model3D.meshOrFail(ID_PALATE);
 			model3D.meshOrFail(ID_EYES);
-		} catch (Model3DException x) {
+		} catch (Exception x) {
 			throw new RuntimeException("Failed to load Pac-Man 3D model", x);
 		}
 	}

@@ -6,7 +6,6 @@ package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.uilib.objimport.Model3D;
-import de.amr.pacmanfx.uilib.objimport.Model3DException;
 import javafx.scene.shape.Mesh;
 
 public class GhostModel3D implements Disposable {
@@ -33,7 +32,7 @@ public class GhostModel3D implements Disposable {
 			dressMesh();
 			eyeballsMesh();
 			pupilsMesh();
-		} catch (Model3DException x) {
+		} catch (Exception x) {
 			throw new RuntimeException(x);
 		}
 	}

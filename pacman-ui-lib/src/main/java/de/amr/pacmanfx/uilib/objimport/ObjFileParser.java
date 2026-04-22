@@ -43,6 +43,13 @@ public class ObjFileParser {
     public static Optional<ObjFileParseResult> parse(URL objFileURL, Charset charset) {
         try {
             final var parser = new ObjFileParser(objFileURL, charset);
+            parser.meshMap.forEach((name, mesh) -> {
+                try {
+                    MeshHelper.validateTriangleMesh(mesh);
+                } catch (AssertionError e) {
+                    Logger.error(e, "Invalid mesh: {}, URL: '{}'", name, objFileURL);
+                }
+            });
             return Optional.of(new ObjFileParseResult(
                 Collections.unmodifiableMap(parser.meshMap),
                 Collections.unmodifiableMap(parser.modelMaterialAssignments)

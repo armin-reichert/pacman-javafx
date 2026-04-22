@@ -6,7 +6,6 @@ package de.amr.pacmanfx.uilib.model3D.world;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.uilib.objimport.Model3D;
-import de.amr.pacmanfx.uilib.objimport.Model3DException;
 import javafx.scene.shape.Mesh;
 
 public class PelletModel3D implements Disposable {
@@ -27,7 +26,7 @@ public class PelletModel3D implements Disposable {
 	private PelletModel3D() {
 		try {
 			model3D = Model3D.importObj(getClass().getResource(OBJ_FILE));
-		} catch (Model3DException x) {
+		} catch (Exception x) {
 			throw new RuntimeException(x);
 		}
 	}
