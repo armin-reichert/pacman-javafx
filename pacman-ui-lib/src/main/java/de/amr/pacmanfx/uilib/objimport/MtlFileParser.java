@@ -223,7 +223,7 @@ public class MtlFileParser {
             return new ColorRGB(r, g, b);
         }
         else {
-            Logger.error("Invalid ColorValue color format: {}", s);
+            Logger.error("Invalid color format: {}", s);
             return defaultValue;
         }
     }

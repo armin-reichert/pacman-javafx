@@ -27,7 +27,8 @@ import static java.util.Objects.requireNonNull;
 /**
  * Parses Wavefront OBJ files. Just good enough for my purposes. Some parts of the code still unclear to me.
  *
- * <p>Code has been derived from the OBJ importer in the 3DViewer sample project (Oracle).
+ * <p>Code has been derived from the OBJ importer in the 3DViewer sample project (Oracle). Parts rewritten using
+ * Copilot.
  *
  * @see <a href=
  * "https://github.com/teamfx/openjfx-10-dev-rt/tree/master/apps/samples/3DViewer/src/main/java/com/javafx/experiments/importers">3DViewer
@@ -245,78 +246,99 @@ public class ObjFileParser {
     }
 
     /**
-     * Face definition. Example:
-     * <pre>f 723/564/3004 731/555/3034 732/554/3037 724/563/3007</pre>
+     * Parses an OBJ face statement and triangulates it.
+     * Supports all legal formats:
+     *   f v
+     *   f v/vt
+     *   f v//vn
+     *   f v/vt/vn
+     *   and polygons with 3+ vertices.
      */
     private void parseFace(String argText) {
+
+        // 1. Split the face into vertex blocks
         String[] blocks = splitBySpace(argText);
-        int[][] triplets = new int[blocks.length][];
-        boolean uvProvided = true;
-        boolean normalProvided = true;
+
+        // 2. Parse each block into (v, vt, vn) indices
+        FaceVertex[] verts = new FaceVertex[blocks.length];
+        boolean hasUV = true;
+        boolean hasNormal = true;
+
         for (int i = 0; i < blocks.length; i++) {
-            String[] points = blocks[i].split("/");
-            if (points.length < 2) {
-                uvProvided = false;
+            verts[i] = parseFaceVertex(blocks[i]);
+
+            if (verts[i].vt == null) {
+                hasUV = false;
             }
-            if (points.length < 3) {
-                normalProvided = false;
-            }
-            triplets[i] = new int[points.length];
-            for (int j = 0; j < points.length; j++) {
-                if (points[j].isEmpty()) {
-                    triplets[i][j] = 0;
-                    if (j == 1) {
-                        uvProvided = false;
-                    }
-                    if (j == 2) {
-                        normalProvided = false;
-                    }
-                } else {
-                    triplets[i][j] = Integer.parseInt(points[j]);
-                }
+            if (verts[i].vn == null) {
+                hasNormal = false;
             }
         }
-        int v1 = vertexIndex(triplets[0][0]);
-        int uv1 = -1;
-        int n1 = -1;
-        if (uvProvided) {
-            uv1 = uvIndex(triplets[0][1]);
-            if (uv1 < 0) {
-                uvProvided = false;
+
+        // 3. Convert OBJ indices to internal 0-based indices
+        for (FaceVertex fv : verts) {
+            fv.v = vertexIndex(fv.v);
+
+            if (hasUV) {
+                fv.vt = uvIndex(fv.vt);
+                if (fv.vt < 0) hasUV = false;
+            }
+
+            if (hasNormal) {
+                fv.vn = normalIndex(fv.vn);
+                if (fv.vn < 0) hasNormal = false;
             }
         }
-        if (normalProvided) {
-            n1 = normalIndex(triplets[0][2]);
-            if (n1 < 0) {
-                normalProvided = false;
-            }
-        }
-        for (int i = 1; i < triplets.length - 1; i++) {
-            int v2 = vertexIndex(triplets[i][0]);
-            int v3 = vertexIndex(triplets[i + 1][0]);
-            int uv2 = -1;
-            int uv3 = -1;
-            int n2 = -1;
-            int n3 = -1;
-            if (uvProvided) {
-                uv2 = uvIndex(triplets[i][1]);
-                uv3 = uvIndex(triplets[i + 1][1]);
-            }
-            if (normalProvided) {
-                n2 = normalIndex(triplets[i][2]);
-                n3 = normalIndex(triplets[i + 1][2]);
-            }
-            facesList.add(v1);
-            facesList.add(uv1);
-            facesList.add(v2);
-            facesList.add(uv2);
-            facesList.add(v3);
-            facesList.add(uv3);
-            faceNormalsList.add(n1);
-            faceNormalsList.add(n2);
-            faceNormalsList.add(n3);
+
+        // 4. Triangulate using a fan: (v0, v[i], v[i+1])
+        for (int i = 1; i < verts.length - 1; i++) {
+            FaceVertex v1 = verts[0];
+            FaceVertex v2 = verts[i];
+            FaceVertex v3 = verts[i + 1];
+
+            // Vertex + UV indices
+            facesList.add(v1.v);
+            facesList.add(hasUV ? v1.vt : -1);
+
+            facesList.add(v2.v);
+            facesList.add(hasUV ? v2.vt : -1);
+
+            facesList.add(v3.v);
+            facesList.add(hasUV ? v3.vt : -1);
+
+            // Normal indices
+            faceNormalsList.add(hasNormal ? v1.vn : -1);
+            faceNormalsList.add(hasNormal ? v2.vn : -1);
+            faceNormalsList.add(hasNormal ? v3.vn : -1);
+
+            // Smoothing group
             smoothingGroupList.add(currentSmoothingGroup);
         }
+    }
+
+    /** Helper record for a face vertex */
+    private static class FaceVertex {
+        Integer v;   // vertex index
+        Integer vt;  // texture index (nullable)
+        Integer vn;  // normal index (nullable)
+    }
+
+    /** Parses a single face vertex block like "3/4/5", "3//5", "3/4", or "3". */
+    private FaceVertex parseFaceVertex(String block) {
+        String[] parts = block.split("/", -1); // keep empty fields
+        FaceVertex fv = new FaceVertex();
+
+        fv.v = Integer.parseInt(parts[0]);
+
+        if (parts.length > 1 && !parts[1].isEmpty()) {
+            fv.vt = Integer.parseInt(parts[1]);
+        }
+
+        if (parts.length > 2 && !parts[2].isEmpty()) {
+            fv.vn = Integer.parseInt(parts[2]);
+        }
+
+        return fv;
     }
 
     /**
