@@ -171,7 +171,7 @@ public class MtlFileParser {
                 }
                 case OPTICAL_DENSITY ->  {
                     if (assertCurrentMaterial(token.lineNo)) {
-                        currentMaterial.ni = Float.parseFloat(token.args);
+                        currentMaterial.ni = parseOpticalDensity(token.args, ObjMaterial.DEFAULT_OPTICAL_DENSITY);
                     }
                 }
                 case AMBIENT_COLOR ->  {
@@ -239,7 +239,7 @@ public class MtlFileParser {
         if (0 <= value && value <= 1000) {
             return value;
         }
-        Logger.error("Shininess value out-of-range 0..1000: {}", value);
+        Logger.error("Shininess Ns={} out-of-range 0..1000", value);
         return defaultValue;
     }
 
@@ -249,7 +249,7 @@ public class MtlFileParser {
         if (0 <= value && value <= 10) {
             return value;
         }
-        Logger.error("Illumination value out-of-range 0..10: {}", value);
+        Logger.error("Illumination illum={} out-of-range 0..10", value);
         return defaultValue;
     }
 
@@ -259,7 +259,17 @@ public class MtlFileParser {
         if (0 <= value && value <= 1) {
             return value;
         }
-        Logger.error("Opacity value out-of-range 0..1: {}", value);
+        Logger.error("Opacity d={} out-of-range 0..1", value);
+        return defaultValue;
+    }
+
+    // float, 0.001..10
+    private static float parseOpticalDensity(String s, float defaultValue) {
+        float value = Float.parseFloat(s);
+        if (0.001f <= value && value <= 10f) {
+            return value;
+        }
+        Logger.error("Optical density Ni={} out of range 0.001..10", value);
         return defaultValue;
     }
 
