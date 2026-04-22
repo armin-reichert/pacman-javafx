@@ -271,10 +271,10 @@ public class ObjFileParser {
      *   f v/vt/vn
      *   and polygons with 3+ vertices.
      */
-    private void parseFace(String argText) {
+    private void parseFace(String text) {
 
         // 1. Split the face into vertex blocks
-        String[] blocks = splitBySpace(argText);
+        String[] blocks = splitBySpace(text);
 
         // 2. Parse each block into (v, vt, vn) indices
         FaceVertex[] verts = new FaceVertex[blocks.length];
@@ -363,8 +363,8 @@ public class ObjFileParser {
      * <p>Example:
      * <pre>v 3.14441400 1.97608500 -4.85138200</pre>
      */
-    private void parseVertex(String argsText) {
-        String[] vertices = splitBySpace(argsText);
+    private void parseVertex(String text) {
+        String[] vertices = splitBySpace(text);
         float x = Float.parseFloat(vertices[0]);
         float y = Float.parseFloat(vertices[1]);
         float z = Float.parseFloat(vertices[2]);
@@ -378,8 +378,8 @@ public class ObjFileParser {
      * Example:
      * <pre>vt 0.90625000 6.2500000e-2</pre>
      */
-    private void parseTextureCoordinate(String argsText) {
-        String[] coordinates = splitBySpace(argsText);
+    private void parseTextureCoordinate(String text) {
+        String[] coordinates = splitBySpace(text);
         float u = Float.parseFloat(coordinates[0]);
         float v = Float.parseFloat(coordinates[1]);
         uvArray.addAll(u, 1 - v);
@@ -390,11 +390,11 @@ public class ObjFileParser {
      * <p>Example:
      * <pre>s 5</pre>
      */
-    private void parseSmoothingGroup(String argsText) {
-        if (argsText.equals("off")) {
+    private void parseSmoothingGroup(String text) {
+        if (text.equals("off")) {
             currentSmoothingGroup = 0;
         } else {
-            currentSmoothingGroup = Integer.parseInt(argsText);
+            currentSmoothingGroup = Integer.parseInt(text);
         }
     }
 
@@ -403,8 +403,8 @@ public class ObjFileParser {
      * <p>Example:</p>
      * <pre>vn -0.59190005 0.53777519 0.60037669</pre>
      */
-    private void parseVertexNormal(String argsText) {
-        String[] values = splitBySpace(argsText);
+    private void parseVertexNormal(String text) {
+        String[] values = splitBySpace(text);
         float x = Float.parseFloat(values[0]);
         float y = Float.parseFloat(values[1]);
         float z = Float.parseFloat(values[2]);
@@ -504,8 +504,8 @@ public class ObjFileParser {
         return mesh;
     }
 
-    private static String[] splitBySpace(String line) {
-        return line.trim().split("\\s+");
+    private static String[] splitBySpace(String text) {
+        return text.trim().split("\\s+");
     }
 
     private static int[] toIntArray(List<Integer> list) {
@@ -530,16 +530,16 @@ public class ObjFileParser {
         return list.subList(start, list.size());
     }
 
-    private static boolean fullMatch(String line, Keyword keyword) {
-        return line.equals(keyword.text);
+    private static boolean fullMatch(String text, Keyword keyword) {
+        return text.equals(keyword.text);
     }
 
-    private static boolean startsWith(String line, Keyword keyword) {
-        return line.startsWith(keyword.text + " ");
+    private static boolean startsWith(String text, Keyword keyword) {
+        return text.startsWith(keyword.text + " ");
     }
 
-    private static String params(String line, Keyword keyword) {
-        return line.substring(keyword.text.length() + 1).trim();
+    private static String params(String text, Keyword keyword) {
+        return text.substring(keyword.text.length() + 1).trim();
     }
 
     /**
