@@ -162,10 +162,7 @@ public class ObjFileParser {
     private void parseMaterialLibraryDefinitions(BufferedReader reader) throws IOException {
         String line;
         while ((line = reader.readLine()) != null) {
-            if (line.isBlank() || line.startsWith("#")) {
-                Logger.trace("Blank or comment line, ignored");
-            }
-            else if (startsWith(line, Keyword.MATERIAL_LIB)) {
+            if (startsWith(line, Keyword.MATERIAL_LIB)) {
                 final String libName = params(line, Keyword.MATERIAL_LIB);
                 Logger.info("Material library definition found: '{}'", libName);
                 if (materialLibsMap.containsKey(libName)) {
