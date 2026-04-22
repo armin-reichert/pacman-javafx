@@ -36,21 +36,21 @@ public class MtlFileParser {
 
     private static class ObjMaterial {
 
-        static final double DEFAULT_SHININESS = 10.0;
-        static final double DEFAULT_OPACITY = 1;
+        static final float DEFAULT_SHININESS = 10.0f;
+        static final float DEFAULT_OPACITY = 1;
         static final int DEFAULT_ILLUMINATION = 2;
         static final ColorRGB DEFAULT_AMBIENT_COLOR = ColorRGB.BLACK;
         static final ColorRGB DEFAULT_DIFFUSE_COLOR = ColorRGB.BLACK;
         static final ColorRGB DEFAULT_EMISSIVE_COLOR = ColorRGB.BLACK;
         static final ColorRGB DEFAULT_SPECULAR_COLOR = ColorRGB.BLACK;
-        static final double DEFAULT_OPTICAL_DENSITY = 1.0;
+        static final float DEFAULT_OPTICAL_DENSITY = 1.0f;
 
         final String name;
 
-        double ns = DEFAULT_SHININESS;
-        double d = DEFAULT_OPACITY;
+        float ns = DEFAULT_SHININESS;
+        float d = DEFAULT_OPACITY;
         int illum = DEFAULT_ILLUMINATION;
-        double ni = DEFAULT_OPTICAL_DENSITY;
+        float ni = DEFAULT_OPTICAL_DENSITY;
 
         ColorRGB ka = DEFAULT_AMBIENT_COLOR;
         ColorRGB kd = DEFAULT_DIFFUSE_COLOR;
@@ -115,7 +115,7 @@ public class MtlFileParser {
             }
             else if (startsWith(line, Keyword.OPTICAL_DENSITY)) {
                 if (assertCurrentMaterial()) {
-                    currentMaterial.ni = Double.parseDouble(params(line, Keyword.OPTICAL_DENSITY));
+                    currentMaterial.ni = Float.parseFloat(params(line, Keyword.OPTICAL_DENSITY));
                 }
             }
             else if (startsWith(line, Keyword.AMBIENT_COLOR)) {
@@ -185,9 +185,9 @@ public class MtlFileParser {
         return line.substring(keyword.text.length() + 1).strip();
     }
 
-    // double, 0-1000
-    private static double parseShininess(String s, double defaultValue) {
-        double value = Double.parseDouble(s);
+    // float, 0-1000
+    private static float parseShininess(String s, float defaultValue) {
+        float value = Float.parseFloat(s);
         if (0 <= value && value <= 1000) {
             return value;
         }
@@ -205,8 +205,8 @@ public class MtlFileParser {
         return defaultValue;
     }
 
-    private static double parseOpacity(String s, double defaultValue) {
-        double value = Double.parseDouble(s);
+    private static float parseOpacity(String s, float defaultValue) {
+        float value = Float.parseFloat(s);
         if (0 <= value && value <= 1) {
             return value;
         }
@@ -217,9 +217,9 @@ public class MtlFileParser {
     private static ColorRGB parseColorRGB(String s, ColorRGB defaultValue) {
         String[] comp = s.trim().split("\\s+");
         if (comp.length == 3) {
-            double r = Math.clamp(Double.parseDouble(comp[0]), 0.0, 1.0);
-            double g = Math.clamp(Double.parseDouble(comp[1]), 0.0, 1.0);
-            double b = Math.clamp(Double.parseDouble(comp[2]), 0.0, 1.0);
+            float r = (float) Math.clamp(Float.parseFloat(comp[0]), 0.0, 1.0);
+            float g = (float) Math.clamp(Float.parseFloat(comp[1]), 0.0, 1.0);
+            float b = (float) Math.clamp(Float.parseFloat(comp[2]), 0.0, 1.0);
             return new ColorRGB(r, g, b);
         }
         else {
