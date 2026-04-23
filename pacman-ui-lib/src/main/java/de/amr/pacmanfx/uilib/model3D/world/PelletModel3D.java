@@ -26,6 +26,7 @@ public class PelletModel3D implements Disposable {
 	private PelletModel3D() {
 		try {
 			model3D = Model3D.importObj(getClass().getResource(OBJ_FILE));
+            pelletMesh(); // fail fast
 		} catch (Exception x) {
 			throw new RuntimeException(x);
 		}
