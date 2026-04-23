@@ -144,10 +144,11 @@ public class MtlFileParser {
     public enum Keyword {
         NEW_MATERIAL       ("newmtl"),
         OPACITY            ("d"), // "d" = "dissolve"
-        ILLUMINATION       ("illum"),
-        AMBIENT_COLOR      ("Ka"),
+        TRANSPARENCY       ("Tr"), // Tr = 1 - d
+        ILLUMINATION       ("illum"), // not used by JavaFX
+        AMBIENT_COLOR      ("Ka"), // not used by JavaFX
         DIFFUSE_COLOR      ("Kd"),
-        EMISSIVE_COLOR     ("Ke"),
+        EMISSIVE_COLOR     ("Ke"), // not used by JavaFX
         SPECULAR_COLOR     ("Ks"),
         REFRACTION_INDEX   ("Ni"), // not used by JavaFX
         SPECULAR_POWER     ("Ns"),
@@ -211,7 +212,7 @@ public class MtlFileParser {
         }
     }
 
-    private static class ObjMaterial {
+    private static class MaterialDef {
         static final float    DEFAULT_OPACITY = 1;
         static final byte     DEFAULT_ILLUMINATION = 2;
         static final ColorRGB DEFAULT_AMBIENT_COLOR = ColorRGB.BLACK;
@@ -232,13 +233,13 @@ public class MtlFileParser {
         float ni    = DEFAULT_REFRACTION_INDEX;
         float ns    = DEFAULT_SPECULAR_POWER;
 
-        ObjMaterial(String name) {
+        MaterialDef(String name) {
             this.name = name;
         }
 
         @Override
         public String toString() {
-            return "ObjMaterial{" +
+            return "MaterialDef{" +
                 "name='" + name + '\'' +
                 ", ns=" + ns +
                 ", d=" + d +
@@ -253,7 +254,7 @@ public class MtlFileParser {
     }
 
     private final Map<String, PhongMaterial> materialMap = new LinkedHashMap<>();
-    private ObjMaterial currentMaterial;
+    private MaterialDef currentMaterialDef;
 
     private MtlTokenizer tokenizer;
 
@@ -269,46 +270,51 @@ public class MtlFileParser {
             switch (token.keyword) {
                 case NEW_MATERIAL -> {
                     commitCurrentMaterial();
-                    currentMaterial = new ObjMaterial(token.args);
+                    currentMaterialDef = new MaterialDef(token.args);
                 }
                 case SPECULAR_POWER -> {
-                    if (materialStarted()) {
-                        currentMaterial.ns = parseSpecularPower(token.args);
+                    if (materialDefStarted()) {
+                        currentMaterialDef.ns = parseSpecularPower(token.args);
                     }
                 }
                 case OPACITY -> {
-                    if (materialStarted()) {
-                        currentMaterial.d = parseOpacity(token.args);
+                    if (materialDefStarted()) {
+                        currentMaterialDef.d = parseOpacity(token.args);
+                    }
+                }
+                case TRANSPARENCY -> {
+                    if (materialDefStarted()) {
+                        currentMaterialDef.d = 1.0f - parseOpacity(token.args);
                     }
                 }
                 case ILLUMINATION -> {
-                    if (materialStarted()) {
-                        currentMaterial.illum = parseIllumination(token.args);
+                    if (materialDefStarted()) {
+                        currentMaterialDef.illum = parseIllumination(token.args);
                     }
                 }
                 case REFRACTION_INDEX ->  {
-                    if (materialStarted()) {
-                        currentMaterial.ni = parseRefractionIndex(token.args);
+                    if (materialDefStarted()) {
+                        currentMaterialDef.ni = parseRefractionIndex(token.args);
                     }
                 }
                 case AMBIENT_COLOR ->  {
-                    if (materialStarted()) {
-                        currentMaterial.ka = parseColorRGB(token.args, ObjMaterial.DEFAULT_AMBIENT_COLOR);
+                    if (materialDefStarted()) {
+                        currentMaterialDef.ka = parseColorRGB(token.args, MaterialDef.DEFAULT_AMBIENT_COLOR);
                     }
                 }
                 case DIFFUSE_COLOR ->  {
-                    if (materialStarted()) {
-                        currentMaterial.kd = parseColorRGB(token.args, ObjMaterial.DEFAULT_DIFFUSE_COLOR);
+                    if (materialDefStarted()) {
+                        currentMaterialDef.kd = parseColorRGB(token.args, MaterialDef.DEFAULT_DIFFUSE_COLOR);
                     }
                 }
                 case EMISSIVE_COLOR -> {
-                    if (materialStarted()) {
-                        currentMaterial.ke = parseColorRGB(token.args, ObjMaterial.DEFAULT_EMISSIVE_COLOR);
+                    if (materialDefStarted()) {
+                        currentMaterialDef.ke = parseColorRGB(token.args, MaterialDef.DEFAULT_EMISSIVE_COLOR);
                     }
                 }
                 case SPECULAR_COLOR -> {
-                    if (materialStarted()) {
-                        currentMaterial.ks = parseColorRGB(token.args, ObjMaterial.DEFAULT_SPECULAR_COLOR);
+                    if (materialDefStarted()) {
+                        currentMaterialDef.ks = parseColorRGB(token.args, MaterialDef.DEFAULT_SPECULAR_COLOR);
                     }
                 }
                 default -> Logger.warn("Unknown keyword '{}' at line {}", token.keyword, token.lineNo);
@@ -320,20 +326,37 @@ public class MtlFileParser {
 
     // Private
 
-    private static Color fxColor(ColorRGB colorRGB) {
-        return Color.color(colorRGB.red(), colorRGB.green(), colorRGB.blue());
+    private static Color fxColor(ColorRGB colorRGB, double opacity) {
+        return Color.color(colorRGB.red(), colorRGB.green(), colorRGB.blue(), opacity);
     }
 
-    private static PhongMaterial createPhongMaterial(ObjMaterial material) {
+    // Note: Copilot says that for transparent colors to work, the mesh view must have:
+    // meshView.setCullFace(CullFace.NONE);
+    // meshView.setDrawMode(DrawMode.FILL);
+    // meshView.setDepthTest(DepthTest.ENABLE);
+    // meshView.setBlendMode(BlendMode.SRC_OVER);
+    private static PhongMaterial createPhongMaterial(MaterialDef materialDef) {
+        if (materialDef.illum != MaterialDef.DEFAULT_ILLUMINATION) {
+            Logger.warn("{}: Illumination value {} will be ignored", materialDef.name, materialDef.illum);
+        }
+        if (!materialDef.ka.equals(MaterialDef.DEFAULT_AMBIENT_COLOR)) {
+            Logger.warn("{}: Ambient Color value {} will be ignored", materialDef.name, materialDef.ka);
+        }
+        if (!materialDef.ke.equals(MaterialDef.DEFAULT_EMISSIVE_COLOR)) {
+            Logger.warn("{}: Emissive Color value {} will be ignored", materialDef.name, materialDef.ke);
+        }
+        if (materialDef.ni != MaterialDef.DEFAULT_REFRACTION_INDEX) {
+            Logger.warn("{}: Refraction Index value {} will be ignored", materialDef.name, materialDef.ni);
+        }
         final var phongMaterial = new PhongMaterial();
-        phongMaterial.setDiffuseColor(fxColor(material.kd));
-        phongMaterial.setSpecularColor(fxColor(material.ks));
-        phongMaterial.setSpecularPower(material.ns);
+        phongMaterial.setDiffuseColor(fxColor(materialDef.kd, materialDef.d));
+        phongMaterial.setSpecularColor(fxColor(materialDef.ks, materialDef.d));
+        phongMaterial.setSpecularPower(materialDef.ns);
         return phongMaterial;
     }
 
-    private boolean materialStarted() {
-        if (currentMaterial == null) {
+    private boolean materialDefStarted() {
+        if (currentMaterialDef == null) {
             Logger.error("{}: No material definition has been started", tokenizer.lineNo);
             return false;
         }
@@ -341,15 +364,15 @@ public class MtlFileParser {
     }
 
     private void commitCurrentMaterial() {
-        if (currentMaterial != null) {
-            final PhongMaterial newPhongMaterial = createPhongMaterial(currentMaterial);
-            final PhongMaterial oldPhongMaterial = materialMap.put(currentMaterial.name, newPhongMaterial);
+        if (currentMaterialDef != null) {
+            final PhongMaterial newPhongMaterial = createPhongMaterial(currentMaterialDef);
+            final PhongMaterial oldPhongMaterial = materialMap.put(currentMaterialDef.name, newPhongMaterial);
             if (oldPhongMaterial != null) {
-                Logger.warn("Material replaced: '{}'={}", currentMaterial.name, oldPhongMaterial);
+                Logger.warn("Material replaced: '{}'={}", currentMaterialDef.name, oldPhongMaterial);
             } else {
-                Logger.info("Material added: '{}'={}", currentMaterial.name, newPhongMaterial);
+                Logger.info("Material added: '{}'={}", currentMaterialDef.name, newPhongMaterial);
             }
-            currentMaterial = null;
+            currentMaterialDef = null;
         }
     }
 
@@ -360,7 +383,7 @@ public class MtlFileParser {
             return value;
         }
         Logger.error("Specular Power Ns={} out-of-range 0..1000", value);
-        return ObjMaterial.DEFAULT_SPECULAR_POWER;
+        return MaterialDef.DEFAULT_SPECULAR_POWER;
     }
 
     // integer, 0..10
@@ -370,7 +393,7 @@ public class MtlFileParser {
             return (byte) value;
         }
         Logger.error("Illumination illum={} out-of-range 0..10", value);
-        return ObjMaterial.DEFAULT_ILLUMINATION;
+        return MaterialDef.DEFAULT_ILLUMINATION;
     }
 
     // float, 0..1
@@ -380,7 +403,7 @@ public class MtlFileParser {
             return value;
         }
         Logger.error("Opacity d={} out-of-range 0..1", value);
-        return ObjMaterial.DEFAULT_OPACITY;
+        return MaterialDef.DEFAULT_OPACITY;
     }
 
     // float, 0.001..10
@@ -390,7 +413,7 @@ public class MtlFileParser {
             return value;
         }
         Logger.error("Refraction Index Ni={} out of range 0.001..10", value);
-        return ObjMaterial.DEFAULT_REFRACTION_INDEX;
+        return MaterialDef.DEFAULT_REFRACTION_INDEX;
     }
 
     // float 3-tuple, each 0..1
