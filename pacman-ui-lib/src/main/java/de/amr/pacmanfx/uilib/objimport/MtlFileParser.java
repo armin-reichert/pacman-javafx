@@ -219,9 +219,12 @@ public class MtlFileParser {
 
     private void commitCurrentMaterial() {
         if (currentMaterial != null) {
-            final PhongMaterial oldValue = materialMap.put(currentMaterial.name, createPhongMaterial(currentMaterial));
-            if (oldValue != null) {
-                Logger.warn("Duplicate material found: {}. Overwrites previous material.", currentMaterial.name);
+            final PhongMaterial newPhongMaterial = createPhongMaterial(currentMaterial);
+            final PhongMaterial oldPhongMaterial = materialMap.put(currentMaterial.name, newPhongMaterial);
+            if (oldPhongMaterial != null) {
+                Logger.warn("Material replaced: '{}'={}", currentMaterial.name, oldPhongMaterial);
+            } else {
+                Logger.info("Material added: '{}'={}", currentMaterial.name, newPhongMaterial);
             }
             currentMaterial = null;
         }
