@@ -176,11 +176,11 @@ public class MtlFileParser {
         }
     }
 
-    public static class MtlTokenizer {
+    public static class Tokenizer {
         private final BufferedReader reader;
         private int lineNo = 0;
 
-        public MtlTokenizer(BufferedReader reader) {
+        public Tokenizer(BufferedReader reader) {
             this.reader = reader;
         }
 
@@ -256,14 +256,14 @@ public class MtlFileParser {
     private final Map<String, PhongMaterial> materialMap = new LinkedHashMap<>();
     private MaterialDef currentMaterialDef;
 
-    private MtlTokenizer tokenizer;
+    private Tokenizer tokenizer;
 
     public Map<String, PhongMaterial> materialMap() {
         return Collections.unmodifiableMap(materialMap);
     }
 
     public void parse(BufferedReader reader) throws IOException {
-        tokenizer = new MtlTokenizer(reader);
+        tokenizer = new Tokenizer(reader);
         Token token;
 
         while ((token = tokenizer.next()) != null) {

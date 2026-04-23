@@ -20,7 +20,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.regex.Pattern;
 
 import static de.amr.pacmanfx.uilib.objimport.SmoothingGroups.computeSmoothingGroups;
 import static java.util.Objects.requireNonNull;
@@ -37,9 +36,82 @@ import static java.util.Objects.requireNonNull;
  */
 public class ObjFileParser {
 
+    public enum Keyword {
+        OBJECT            ("o"),
+        GROUP             ("g"),
+        MATERIAL_LIB      ("mtllib"),
+        MATERIAL_USAGE    ("usemtl"),
+        SMOOTHING_GROUP   ("s"),
+        VERTEX            ("v"),
+        VERTEX_NORMAL     ("vn"),
+        TEX_COORD         ("vt"),
+        FACE              ("f"),
+        UNKNOWN           ("");
+
+        private final String text;
+
+        Keyword(String text) {
+            this.text = text;
+        }
+
+        static Keyword fromText(String text) {
+            for (Keyword keyword : values()) {
+                if (keyword.text.equals(text)) {
+                    return keyword;
+                }
+            }
+            return UNKNOWN;
+
+        }
+    }
+
+    public record Token(ObjFileParser.Keyword keyword, String args, int lineNo) {
+        public Token(String keyword, String args, int lineNo) {
+            this(Keyword.fromText(keyword), args, lineNo);
+        }
+    }
+
+    public static class Tokenizer {
+        private final BufferedReader reader;
+        private int lineNo = 0;
+
+        public Tokenizer(BufferedReader reader) {
+            this.reader = reader;
+        }
+
+        public Token next() throws IOException {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                lineNo++;
+
+                // Remove inline comments
+                int hash = line.indexOf('#');
+                if (hash >= 0) {
+                    line = line.substring(0, hash);
+                }
+
+                line = line.strip();
+                if (line.isEmpty()) {
+                    continue;
+                }
+
+                String[] parts = line.split("\\s+", 2);
+                String keyword = parts[0];
+                String args = parts.length > 1 ? parts[1].strip() : "";
+
+                return new Token(keyword, args, lineNo);
+            }
+
+            return null; // EOF
+        }
+    }
+
+
     public record ObjFileParseResult(
         Map<String, TriangleMesh> meshMap,
-        Map<Mesh, PhongMaterial> modelMaterialAssignments) {}
+        Map<Mesh, PhongMaterial> modelMaterialAssignments
+    ) {}
 
     public static Optional<ObjFileParseResult> parse(URL objFileURL, Charset charset) {
         try {
@@ -62,24 +134,6 @@ public class ObjFileParser {
         }
     }
 
-    private enum Keyword {
-        OBJECT            ("o"),
-        GROUP             ("g"),
-        MATERIAL_LIB      ("mtllib"),
-        MATERIAL_USAGE    ("usemtl"),
-        SMOOTHING_GROUP   ("s"),
-        VERTEX            ("v"),
-        VERTEX_NORMAL     ("vn"),
-        TEX_COORD         ("vt"),
-        FACE              ("f");
-
-        private final String text;
-
-        Keyword(String text) {
-            this.text = text;
-        }
-    }
-
     private static class MeshDefinition {
         final String name;
         String materialName;
@@ -91,6 +145,7 @@ public class ObjFileParser {
 
     // fields
 
+    private Tokenizer tokenizer;
     private final URL objFileURL;
 
     private final Map<String, TriangleMesh> meshMap = new HashMap<>();
@@ -104,7 +159,6 @@ public class ObjFileParser {
     private int smoothingGroupsStart = 0;
     private int currentSmoothingGroup = 0;
 
-    private int lineNo;
     private int anonMeshNameCount = 0;
 
     private MeshDefinition currentMeshDef;
@@ -160,9 +214,10 @@ public class ObjFileParser {
     }
 
     private void parseMaterialLibraryDefinitions(BufferedReader reader) throws IOException {
-        for( String line; (line = reader.readLine()) != null; ) {
-            if (startsWith(line, Keyword.MATERIAL_LIB)) {
-                final String libName = params(line, Keyword.MATERIAL_LIB);
+        tokenizer = new  Tokenizer(reader);
+        for ( Token token; (token = tokenizer.next()) != null; ) {
+            if (token.keyword().equals(Keyword.MATERIAL_LIB)) {
+                final String libName = token.args();
                 Logger.info("Material library definition found: '{}'", libName);
                 if (materialLibsMap.containsKey(libName)) {
                     Logger.warn("Material library definition will be ignored (already defined): {}", libName);
@@ -203,56 +258,50 @@ public class ObjFileParser {
     }
 
     private void parseObjectsAndGroups(BufferedReader reader) throws IOException {
-        String line;
-        lineNo = 0;
-        while ((line = reader.readLine()) != null) {
-            ++lineNo;
+        tokenizer = new Tokenizer(reader);
+        Token token;
 
-            if (line.isBlank() || line.startsWith("#")) {
-                Logger.trace("Blank or comment line, ignored");
-            }
-            else if (fullMatch(line, Keyword.OBJECT)) {
-                commitMesh();
-                currentMeshDef = new MeshDefinition(nextAnonMeshName());
-            }
-            else if (startsWith(line, Keyword.OBJECT)) {
-                commitMesh();
-                currentMeshDef = new MeshDefinition(params(line, Keyword.OBJECT));
-            }
-            else if (fullMatch(line, Keyword.GROUP)) {
-                commitMesh();
-                currentMeshDef = new MeshDefinition(nextAnonMeshName());
-            }
-            else if (startsWith(line, Keyword.GROUP)) {
-                commitMesh();
-                currentMeshDef = new MeshDefinition(params(line, Keyword.GROUP));
-            }
-            else if (startsWith(line, Keyword.SMOOTHING_GROUP)) {
-                parseSmoothingGroup(params(line, Keyword.SMOOTHING_GROUP));
-            }
-            else if (startsWith(line, Keyword.VERTEX)) {
-                parseVertex(params(line, Keyword.VERTEX));
-            }
-            else if (startsWith(line, Keyword.VERTEX_NORMAL)) {
-                parseVertexNormal(params(line, Keyword.VERTEX_NORMAL));
-            }
-            else if (startsWith(line, Keyword.TEX_COORD)) {
-                parseTextureCoordinate(params(line, Keyword.TEX_COORD));
-            }
-            else if (startsWith(line, Keyword.FACE)) {
-                parseFace(params(line, Keyword.FACE));
-            }
-            else if (startsWith(line, Keyword.MATERIAL_USAGE)) {
-                final String materialName = params(line, Keyword.MATERIAL_USAGE);
-                Logger.trace("Material usage '{}'", materialName);
-                currentMeshDef.materialName = materialName;
-            }
-            else if (startsWith(line, Keyword.MATERIAL_LIB)) {
-                // already processed in pass 1
-                Logger.debug("Material library definition");
-            }
-            else {
-                Logger.warn("Line skipped: {} (no idea what it wants from me)", line);
+        while ((token = tokenizer.next()) != null) {
+            switch (token.keyword()) {
+                case OBJECT, GROUP -> {
+                    commitMesh();
+                    final String name = token.args().isEmpty() ? nextAnonMeshName() : token.args();
+                    currentMeshDef = new MeshDefinition(name);
+                }
+                case SMOOTHING_GROUP -> {
+                    if (meshDefStarted()) {
+                        parseSmoothingGroup(token.args());
+                    }
+                }
+                case VERTEX -> {
+                    if (meshDefStarted()) {
+                        parseVertex(token.args());
+                    }
+                }
+                case VERTEX_NORMAL -> {
+                    if (meshDefStarted()) {
+                        parseVertexNormal(token.args());
+                    }
+                }
+                case TEX_COORD -> {
+                    if (meshDefStarted()) {
+                        parseTextureCoordinate(token.args());
+                    }
+                }
+                case FACE -> {
+                    if (meshDefStarted()) {
+                        parseFace(token.args());
+                    }
+                }
+                case MATERIAL_USAGE -> {
+                    if (meshDefStarted()) {
+                        final String materialName = token.args();
+                        Logger.trace("Material usage '{}'", materialName);
+                        currentMeshDef.materialName = materialName;
+                    }
+                }
+                case MATERIAL_LIB -> Logger.debug("Material library definition");
+                default -> Logger.warn("Line skipped (unknown keyword '{}'): {} (line {})", token.keyword().text, token.args(), token.lineNo());
             }
         }
         commitMesh();
@@ -529,16 +578,8 @@ public class ObjFileParser {
         return list.subList(start, list.size());
     }
 
-    private static boolean fullMatch(String text, Keyword keyword) {
-        return text.equals(keyword.text);
-    }
-
-    private static boolean startsWith(String text, Keyword keyword) {
-        return text.startsWith(keyword.text + " ");
-    }
-
-    private static String params(String text, Keyword keyword) {
-        return text.substring(keyword.text.length() + 1).trim();
+    private boolean meshDefStarted() {
+        return currentMeshDef != null;
     }
 
     /**
