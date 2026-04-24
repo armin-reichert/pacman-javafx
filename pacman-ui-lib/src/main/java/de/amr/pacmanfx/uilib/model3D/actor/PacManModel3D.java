@@ -12,7 +12,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
@@ -60,9 +59,9 @@ public class PacManModel3D implements Disposable {
             final var builder = new TriangleMeshBuilder(parser.objModel(), parser.materialLibsMap());
             meshesByMaterialName = builder.buildMeshViewsByMaterial();
 			// fail fast
-			meshOrFail(ID_HEAD);
-			meshOrFail(ID_PALATE);
-			meshOrFail(ID_EYES);
+            head();
+            palate();
+            eyes();
 		} catch (Exception x) {
 			throw new RuntimeException("Failed to load Pac-Man 3D model", x);
 		}
@@ -73,10 +72,22 @@ public class PacManModel3D implements Disposable {
         meshesByMaterialName.clear();
     }
 
-    private Mesh meshOrFail(String materialName) {
+    public MeshView head() {
+        return meshViewOrFail(ID_HEAD);
+    }
+
+    public MeshView palate() {
+        return meshViewOrFail(ID_PALATE);
+    }
+
+    public MeshView eyes() {
+        return meshViewOrFail(ID_EYES);
+    }
+
+    private MeshView meshViewOrFail(String materialName) {
         final MeshView meshView = meshesByMaterialName.get(materialName);
         if (meshView != null) {
-            return meshView.getMesh();
+            return meshView;
         }
         throw new IllegalArgumentException("Mesh view for material %s does not exist".formatted(materialName));
     }
@@ -91,10 +102,10 @@ public class PacManModel3D implements Disposable {
 	public Group createPacBody(PacConfig config) {
         final MeshView head = createHead(config);
 
-        final var eyes = new MeshView(meshOrFail(ID_EYES));
+        final var eyes = new MeshView(eyes().getMesh());
         eyes.setMaterial(coloredPhongMaterial(config.colors().eyes()));
 
-        final var palate = new MeshView(meshOrFail(ID_PALATE));
+        final var palate = new MeshView(palate().getMesh());
         palate.setMaterial((coloredPhongMaterial(config.colors().palate())));
 
 		final Group body = new Group(head, eyes, palate);
@@ -114,7 +125,7 @@ public class PacManModel3D implements Disposable {
 	public Group createBlindPacBody(PacConfig config) {
 		final MeshView head = createHead(config);
 
-        final var palate = new MeshView(meshOrFail(ID_PALATE));
+        final var palate = new MeshView(palate().getMesh());
         palate.setMaterial(coloredPhongMaterial(config.colors().palate()));
 
 		final Group body = new Group(head, palate);
@@ -126,9 +137,7 @@ public class PacManModel3D implements Disposable {
     }
 
 	private MeshView createHead(PacConfig config) {
-		final Mesh headMesh = meshOrFail(ID_HEAD);
-		final var head = new MeshView(headMesh);
-
+		final var head = new MeshView(head().getMesh());
 		// If we would like to use the material defined in the OBJ file:
 		//final PhongMaterial headMaterial = model3D.modelMaterialAssignment(headMesh).orElse(coloredPhongMaterial(config.colors().head()));
 		final PhongMaterial headMaterial = coloredPhongMaterial(config.colors().head());
