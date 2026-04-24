@@ -25,7 +25,8 @@ import static de.amr.pacmanfx.uilib.objimport.SmoothingGroups.computeSmoothingGr
 import static java.util.Objects.requireNonNull;
 
 /**
- * Parses Wavefront OBJ files. Just good enough for my purposes. Some parts of the code still unclear to me.
+ * Parses Wavefront OBJ files. Just good enough for my use-case at the moment. Some parts of the code still unclear to me and
+ * to my latest knowledge even complete nonsense.
  *
  * <p>Code has been derived from the OBJ importer in the 3DViewer sample project (Oracle). Parts rewritten using
  * Copilot.
