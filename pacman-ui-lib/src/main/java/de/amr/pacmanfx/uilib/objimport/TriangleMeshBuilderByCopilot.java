@@ -10,13 +10,14 @@ import javafx.scene.paint.PhongMaterial;
 
 import java.util.*;
 
-public class TriangleMeshBuilder {
+public class TriangleMeshBuilderByCopilot {
 
     private final ObjFileParserByCopilot.ObjModel model;
     private final Map<String, PhongMaterial> materials;
 
-    public TriangleMeshBuilder(ObjFileParserByCopilot.ObjModel model,
-                               Map<String, Map<String, PhongMaterial>> materialLibs) {
+    public TriangleMeshBuilderByCopilot(
+        ObjFileParserByCopilot.ObjModel model,
+        Map<String, Map<String, PhongMaterial>> materialLibs) {
 
         this.model = model;
 
