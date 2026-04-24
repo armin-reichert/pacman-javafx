@@ -4,20 +4,18 @@
 
 package de.amr.pacmanfx.uilib.objimport;
 
-import javafx.scene.paint.PhongMaterial;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ObjModel {
-    final List<Vertex> vertices = new ArrayList<>();
-    List<TexCoord> texCoords = new ArrayList<>();
-    final List<Normal> normals = new ArrayList<>();
+    final List<ObjVertex> vertices = new ArrayList<>();
+    List<ObjTexCoord> texCoords = new ArrayList<>();
+    final List<ObjNormal> normals = new ArrayList<>();
 
     final List<ObjObject> objects = new ArrayList<>();
-    final Map<String, Map<String, PhongMaterial>> materialLibsMap = new HashMap<>();
+    final Map<String, Map<String, ObjMaterial>> materialLibsMap = new HashMap<>();
 
     ObjObject currentObject;
     ObjGroup currentGroup;

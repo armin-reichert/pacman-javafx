@@ -4,5 +4,5 @@
 
 package de.amr.pacmanfx.uilib.objimport;
 
-record Normal(float x, float y, float z) {
+record ObjNormal(float x, float y, float z) {
 }

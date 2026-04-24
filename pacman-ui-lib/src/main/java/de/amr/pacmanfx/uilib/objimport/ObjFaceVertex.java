@@ -4,12 +4,12 @@
 
 package de.amr.pacmanfx.uilib.objimport;
 
-class FaceVertex {
+class ObjFaceVertex {
     public final int vIndex;
     public final int vtIndex;
     public final int vnIndex;
 
-    public FaceVertex(int vIndex, int vtIndex, int vnIndex) {
+    public ObjFaceVertex(int vIndex, int vtIndex, int vnIndex) {
         this.vIndex = vIndex;
         this.vtIndex = vtIndex;
         this.vnIndex = vnIndex;

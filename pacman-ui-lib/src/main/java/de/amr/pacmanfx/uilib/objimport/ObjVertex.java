@@ -4,5 +4,5 @@
 
 package de.amr.pacmanfx.uilib.objimport;
 
-record TexCoord(float u, float v) {
+public record ObjVertex(float x, float y, float z) {
 }

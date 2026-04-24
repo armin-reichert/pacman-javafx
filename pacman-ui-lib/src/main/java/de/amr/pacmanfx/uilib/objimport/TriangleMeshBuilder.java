@@ -1,8 +1,10 @@
 package de.amr.pacmanfx.uilib.objimport;
 
+import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
+import org.tinylog.Logger;
 
 import java.util.*;
 
@@ -19,11 +21,11 @@ public class TriangleMeshBuilder {
         this.model = model;
 
         // Flatten material libraries
-        Map<String, PhongMaterial> flat = new HashMap<>();
-        for (var lib : model.materialLibsMap.values()) {
-            flat.putAll(lib);
+        Map<String, PhongMaterial> materialMap = new HashMap<>();
+        for (Map<String, ObjMaterial> lib : model.materialLibsMap.values()) {
+            lib.forEach((name, material) -> materialMap.put(name, createPhongMaterial(material)));
         }
-        this.materials = flat;
+        this.materials = materialMap;
     }
 
     /* -------------------------------------------------------------
@@ -80,20 +82,20 @@ public class TriangleMeshBuilder {
         Map<VertexKey, Integer> vertexMap = new HashMap<>();
 
         for (ObjFace face : faces) {
-            for (FaceVertex fv : face.vertices) {
+            for (ObjFaceVertex fv : face.vertices) {
 
                 VertexKey key = new VertexKey(fv.vIndex, fv.vtIndex, fv.vnIndex);
 
                 int newIndex = vertexMap.computeIfAbsent(key, k -> {
                     // Position
-                    Vertex v = model.vertices.get(k.v);
+                    ObjVertex v = model.vertices.get(k.v);
                     points.add(v.x());
                     points.add(v.y());
                     points.add(v.z());
 
                     // UV
                     if (k.vt >= 0) {
-                        TexCoord tc = model.texCoords.get(k.vt);
+                        ObjTexCoord tc = model.texCoords.get(k.vt);
                         texCoords.add(tc.u());
                         texCoords.add(1 - tc.v()); // JavaFX V-flip
                     } else {
@@ -139,4 +141,34 @@ public class TriangleMeshBuilder {
     }
 
     private record VertexKey(int v, int vt, int vn) {}
+
+    // Note: Copilot says that for transparent colors to work, the mesh view must have:
+    // meshView.setCullFace(CullFace.NONE);
+    // meshView.setDrawMode(DrawMode.FILL);
+    // meshView.setDepthTest(DepthTest.ENABLE);
+    // meshView.setBlendMode(BlendMode.SRC_OVER);
+    private static PhongMaterial createPhongMaterial(ObjMaterial objMaterial) {
+        if (objMaterial.illum != ObjMaterial.DEFAULT_ILLUMINATION) {
+            Logger.warn("{}: Illumination value {} will be ignored", objMaterial.name, objMaterial.illum);
+        }
+        if (!objMaterial.ka.equals(ObjMaterial.DEFAULT_AMBIENT_COLOR)) {
+            Logger.warn("{}: Ambient Color value {} will be ignored", objMaterial.name, objMaterial.ka);
+        }
+        if (!objMaterial.ke.equals(ObjMaterial.DEFAULT_EMISSIVE_COLOR)) {
+            Logger.warn("{}: Emissive Color value {} will be ignored", objMaterial.name, objMaterial.ke);
+        }
+        if (objMaterial.ni != ObjMaterial.DEFAULT_REFRACTION_INDEX) {
+            Logger.warn("{}: Refraction Index value {} will be ignored", objMaterial.name, objMaterial.ni);
+        }
+        final var phongMaterial = new PhongMaterial();
+        phongMaterial.setDiffuseColor(fxColor(objMaterial.kd, objMaterial.d));
+        phongMaterial.setSpecularColor(fxColor(objMaterial.ks, objMaterial.d));
+        phongMaterial.setSpecularPower(objMaterial.ns);
+        return phongMaterial;
+    }
+
+    private static Color fxColor(ColorRGB colorRGB, double opacity) {
+        return Color.color(colorRGB.red(), colorRGB.green(), colorRGB.blue(), opacity);
+    }
+
 }

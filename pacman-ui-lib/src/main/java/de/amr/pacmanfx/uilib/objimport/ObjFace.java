@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ObjFace {
-    public final List<FaceVertex> vertices = new ArrayList<>();
+    public final List<ObjFaceVertex> vertices = new ArrayList<>();
     public final String materialName;
     public final Integer smoothingGroup;
 

@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.uilib.objimport;
 
-import javafx.scene.paint.PhongMaterial;
 import org.tinylog.Logger;
 
 import java.io.BufferedReader;
@@ -130,7 +129,7 @@ public class ObjFileParser {
                 Logger.info("Material library found: '{}'", libName);
 
                 if (!objModel.materialLibsMap.containsKey(libName)) {
-                    Map<String, PhongMaterial> lib = parseMaterialLibraryFile(libName);
+                    Map<String, ObjMaterial> lib = parseMaterialLibraryFile(libName);
                     if (lib != null) {
                         objModel.materialLibsMap.put(libName, lib);
                         Logger.info("Material library parsed: {}", libName);
@@ -140,7 +139,7 @@ public class ObjFileParser {
         }
     }
 
-    private Map<String, PhongMaterial> parseMaterialLibraryFile(String libName) throws IOException {
+    private Map<String, ObjMaterial> parseMaterialLibraryFile(String libName) throws IOException {
         final String objFileURLString = objFileURL.toExternalForm();
         final int endOfPath = objFileURLString.lastIndexOf('/');
         if (endOfPath == -1) {
@@ -246,26 +245,26 @@ public class ObjFileParser {
         Logger.info("Material usage: {}", name);
     }
 
-    private Vertex parseVertex(String s) {
+    private ObjVertex parseVertex(String s) {
         String[] parts = splitBySpace(s, 3);
-        return new Vertex(
+        return new ObjVertex(
             Float.parseFloat(parts[0]),
             Float.parseFloat(parts[1]),
             Float.parseFloat(parts[2])
         );
     }
 
-    private TexCoord parseTexCoord(String s) {
+    private ObjTexCoord parseTexCoord(String s) {
         String[] parts = splitBySpace(s, 3);
-        return new TexCoord(
+        return new ObjTexCoord(
             Float.parseFloat(parts[0]),
             Float.parseFloat(parts[1])
         );
     }
 
-    private Normal parseNormal(String s) {
+    private ObjNormal parseNormal(String s) {
         String[] parts = splitBySpace(s, 3);
-        return new Normal(
+        return new ObjNormal(
             Float.parseFloat(parts[0]),
             Float.parseFloat(parts[1]),
             Float.parseFloat(parts[2])
@@ -281,7 +280,7 @@ public class ObjFileParser {
         }
 
         String[] refs = args.split("\\s+");
-        List<FaceVertex> verts = new ArrayList<>();
+        List<ObjFaceVertex> verts = new ArrayList<>();
 
         for (String ref : refs) {
             verts.add(parseFaceVertex(objModel, ref));
@@ -290,7 +289,7 @@ public class ObjFileParser {
         triangulateAndStoreFace(objModel, verts);
     }
 
-    private FaceVertex parseFaceVertex(ObjModel objModel, String ref) {
+    private ObjFaceVertex parseFaceVertex(ObjModel objModel, String ref) {
         String[] parts = ref.split("/", -1);
 
         int v  = parseIndex(parts[0], objModel.vertices.size());
@@ -301,7 +300,7 @@ public class ObjFileParser {
             ? parseIndex(parts[2], objModel.normals.size())
             : -1;
 
-        return new FaceVertex(v, vt, vn);
+        return new ObjFaceVertex(v, vt, vn);
     }
 
     private int parseIndex(String s, int size) {
@@ -312,17 +311,17 @@ public class ObjFileParser {
         return idx - 1;
     }
 
-    private void triangulateAndStoreFace(ObjModel objModel, List<FaceVertex> vertices) {
+    private void triangulateAndStoreFace(ObjModel objModel, List<ObjFaceVertex> vertices) {
         if (vertices.size() < 3) {
             Logger.error("Invalid face with <3 vertices");
             return;
         }
 
-        FaceVertex v0 = vertices.get(0);
+        ObjFaceVertex v0 = vertices.get(0);
 
         for (int i = 1; i < vertices.size() - 1; i++) {
-            FaceVertex v1 = vertices.get(i);
-            FaceVertex v2 = vertices.get(i + 1);
+            ObjFaceVertex v1 = vertices.get(i);
+            ObjFaceVertex v2 = vertices.get(i + 1);
 
             ObjFace face = new ObjFace(
                 objModel.currentMaterialName,
