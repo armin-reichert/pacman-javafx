@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.uilib.objimport.ObjFileParserByCopilot;
-import de.amr.pacmanfx.uilib.objimport.TriangleMeshBuilderByCopilot;
+import de.amr.pacmanfx.uilib.objimport.ObjFileParser;
+import de.amr.pacmanfx.uilib.objimport.TriangleMeshBuilder;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -56,8 +56,8 @@ public class PacManModel3D implements Disposable {
 	private PacManModel3D() {
 		try {
             URL url = getClass().getResource(OBJ_FILE);
-            ObjFileParserByCopilot parser = new ObjFileParserByCopilot(url, StandardCharsets.UTF_8);
-            TriangleMeshBuilderByCopilot builder = new TriangleMeshBuilderByCopilot(parser.objModel(), parser.materialLibsMap());
+            ObjFileParser parser = new ObjFileParser(url, StandardCharsets.UTF_8);
+            TriangleMeshBuilder builder = new TriangleMeshBuilder(parser.objModel(), parser.materialLibsMap());
             meshesByMaterialName = builder.buildMeshViewsByMaterial();
 			// fail fast
 			meshOrFail(ID_HEAD);

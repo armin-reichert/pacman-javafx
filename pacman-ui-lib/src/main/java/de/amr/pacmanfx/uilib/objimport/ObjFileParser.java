@@ -3,11 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.objimport;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableFloatArray;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Mesh;
-import javafx.scene.shape.TriangleMesh;
 import org.tinylog.Logger;
 
 import java.io.BufferedReader;
@@ -19,25 +15,23 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static de.amr.pacmanfx.uilib.objimport.SmoothingGroups.computeSmoothingGroups;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Parses Wavefront OBJ files. Just good enough for my use-case at the moment. Some parts of the code still unclear to me and
- * to my latest knowledge even complete nonsense.
- *
- * <p>Code has been derived from the OBJ importer in the 3DViewer sample project (Oracle). Parts rewritten using
- * Copilot.
- *
- * @see <a href=
- * "https://github.com/teamfx/openjfx-10-dev-rt/tree/master/apps/samples/3DViewer/src/main/java/com/javafx/experiments/importers">3DViewer
- * Sample</a>
+ * OBJ file parser created by Copilot AI.
  */
 public class ObjFileParser {
 
-    public enum Keyword {
+    /* -------------------------------------------------------------
+     *  TOKENIZER
+     * ------------------------------------------------------------- */
+
+    public enum ObjKeyword {
         OBJECT            ("o"),
         GROUP             ("g"),
         MATERIAL_LIB      ("mtllib"),
@@ -51,24 +45,23 @@ public class ObjFileParser {
 
         private final String text;
 
-        Keyword(String text) {
+        ObjKeyword(String text) {
             this.text = text;
         }
 
-        static Keyword fromText(String text) {
-            for (Keyword keyword : values()) {
+        static ObjKeyword fromText(String text) {
+            for (ObjKeyword keyword : values()) {
                 if (keyword.text.equals(text)) {
                     return keyword;
                 }
             }
             return UNKNOWN;
-
         }
     }
 
-    public record Token(ObjFileParser.Keyword keyword, String args, int lineNo) {
+    public record Token(ObjKeyword keyword, String args, int lineNo) {
         public Token(String keyword, String args, int lineNo) {
-            this(Keyword.fromText(keyword), args, lineNo);
+            this(ObjKeyword.fromText(keyword), args, lineNo);
         }
     }
 
@@ -86,7 +79,6 @@ public class ObjFileParser {
             while ((line = reader.readLine()) != null) {
                 lineNo++;
 
-                // Remove inline comments
                 int hash = line.indexOf('#');
                 if (hash >= 0) {
                     line = line.substring(0, hash);
@@ -104,132 +96,126 @@ public class ObjFileParser {
                 return new Token(keyword, args, lineNo);
             }
 
-            return null; // EOF
+            return null;
         }
     }
 
+    /* -------------------------------------------------------------
+     *  OBJ MODEL STRUCTURE
+     * ------------------------------------------------------------- */
 
-    public record ObjFileParseResult(
-        Map<String, TriangleMesh> meshMap,
-        Map<Mesh, PhongMaterial> modelMaterialAssignments
-    ) {}
+    public static class ObjModel {
+        public final List<Vertex>      vertices      = new ArrayList<>();
+        public final List<TexCoord>    texCoords     = new ArrayList<>();
+        public final List<Normal>      normals       = new ArrayList<>();
 
-    public static Optional<ObjFileParseResult> parse(URL objFileURL, Charset charset) {
-        try {
-            final var parser = new ObjFileParser(objFileURL, charset);
-            parser.meshMap.forEach((name, mesh) -> {
-                try {
-                    MeshHelper.validateTriangleMesh(mesh);
-                } catch (AssertionError e) {
-                    Logger.error(e, "Invalid mesh: {}, URL: '{}'", name, objFileURL);
-                }
-            });
-            return Optional.of(new ObjFileParseResult(
-                Collections.unmodifiableMap(parser.meshMap),
-                Collections.unmodifiableMap(parser.modelMaterialAssignments)
-            ));
-        }
-        catch (IOException x) {
-            Logger.error(x, "OBJ file parsing failed");
-            return Optional.empty();
+        public final List<ObjObject>   objects       = new ArrayList<>();
+        public final List<ObjMaterialLib> materialLibs = new ArrayList<>();
+
+        public ObjObject currentObject;
+        public ObjGroup  currentGroup;
+        public String    currentMaterialName;
+        public Integer   currentSmoothingGroup;
+    }
+
+    public static class ObjMaterialLib {
+        public final String fileName;
+        public ObjMaterialLib(String fileName) { this.fileName = fileName; }
+    }
+
+    public static class ObjObject {
+        public final String name;
+        public final List<ObjGroup> groups = new ArrayList<>();
+        public ObjObject(String name) { this.name = name; }
+    }
+
+    public static class ObjGroup {
+        public final String name;
+        public final List<ObjFace> faces = new ArrayList<>();
+        public ObjGroup(String name) { this.name = name; }
+    }
+
+    public static class ObjFace {
+        public final List<FaceVertex> vertices = new ArrayList<>();
+        public final String  materialName;
+        public final Integer smoothingGroup;
+
+        public ObjFace(String materialName, Integer smoothingGroup) {
+            this.materialName = materialName;
+            this.smoothingGroup = smoothingGroup;
         }
     }
 
-    private static class MeshDefinition {
-        final String name;
-        String materialName;
+    public static class FaceVertex {
+        public final int vIndex;
+        public final int vtIndex;
+        public final int vnIndex;
 
-        public MeshDefinition(String name) {
-            this.name = name;
+        public FaceVertex(int vIndex, int vtIndex, int vnIndex) {
+            this.vIndex = vIndex;
+            this.vtIndex = vtIndex;
+            this.vnIndex = vnIndex;
         }
     }
 
-    // fields
+    public record Vertex(float x, float y, float z) {}
+    public record TexCoord(float u, float v) {}
+    public record Normal(float x, float y, float z) {}
+
+    /* -------------------------------------------------------------
+     *  FIELDS
+     * ------------------------------------------------------------- */
 
     private Tokenizer tokenizer;
     private final URL objFileURL;
-
-    private final Map<String, TriangleMesh> meshMap = new HashMap<>();
-    private final Map<String, Map<String, PhongMaterial>> materialLibsMap = new WeakHashMap<>();
-
-    // If a material is assigned to an object/group with "usemtl" in the OBJ, it can be looked up here
-    private final Map<Mesh, PhongMaterial> modelMaterialAssignments = new WeakHashMap<>();
-
-    private int facesStart = 0;
-    private int facesNormalStart = 0;
-    private int smoothingGroupsStart = 0;
-    private int currentSmoothingGroup = 0;
-
     private int anonMeshNameCount = 0;
+    private final ObjModel objModel;
 
-    private MeshDefinition currentMeshDef;
+    private final Map<String, Map<String, PhongMaterial>> materialLibsMap = new HashMap<>();
 
-    /** Flat array of vertex coordinates (x, y, z). */
-    private final ObservableFloatArray vertexArray = FXCollections.observableFloatArray();
+    /* -------------------------------------------------------------
+     *  CONSTRUCTOR
+     * ------------------------------------------------------------- */
 
-    /** Flat array of vertex normals (nx, ny, nz). */
-    private final ObservableFloatArray normalsArray = FXCollections.observableFloatArray();
-
-    /** Flat array of texture coordinates (u, v). */
-    private final ObservableFloatArray uvArray = FXCollections.observableFloatArray();
-
-    /** Face index list (vertex/uv/normal indices). */
-    private final List<Integer> facesList = new ArrayList<>();
-
-    /** Normal indices for each face. */
-    private final List<Integer> faceNormalsList = new ArrayList<>();
-
-    /** Smoothing group indices for each face. */
-    private final List<Integer> smoothingGroupList = new ArrayList<>();
-
-    private ObjFileParser(URL objFileURL, Charset charset) throws IOException {
+    public ObjFileParser(URL objFileURL, Charset charset) throws IOException {
         this.objFileURL = requireNonNull(objFileURL);
         requireNonNull(charset);
-        Logger.info("Parsing OBJ file {}", objFileURL);
+
+        objModel = new ObjModel();
         try (InputStream is = objFileURL.openStream()) {
-            final var reader = new BufferedReader(new InputStreamReader(is, charset));
-            parseMaterialLibraryDefinitions(reader);
+            parseMaterialLibraries(new BufferedReader(new InputStreamReader(is, charset)));
         }
         try (InputStream is = objFileURL.openStream()) {
-            final var reader = new BufferedReader(new InputStreamReader(is, charset));
-            parseObjectsAndGroups(reader);
+            parseGeometry(new BufferedReader(new InputStreamReader(is, charset)));
         }
     }
 
-    // Private
-
-    private void commitMesh() {
-        TriangleMesh mesh = createTriangleMesh();
-        if (mesh != null) {
-            if (currentMeshDef == null) {
-                currentMeshDef = new MeshDefinition(nextAnonMeshName());
-            }
-            meshMap.put(currentMeshDef.name, mesh);
-            Logger.info("Mesh '{}', vertices: {}, texture coordinates: {}, faces: {}, smoothing groups: {}",
-                currentMeshDef.name,
-                mesh.getPoints().size() / mesh.getPointElementSize(),
-                mesh.getTexCoords().size() / mesh.getTexCoordElementSize(),
-                mesh.getFaces().size() / mesh.getFaceElementSize(),
-                mesh.getFaceSmoothingGroups().size());
-        }
+    public ObjModel objModel() {
+        return objModel;
     }
 
-    private void parseMaterialLibraryDefinitions(BufferedReader reader) throws IOException {
-        tokenizer = new  Tokenizer(reader);
-        for ( Token token; (token = tokenizer.next()) != null; ) {
-            if (token.keyword().equals(Keyword.MATERIAL_LIB)) {
+    public Map<String, Map<String, PhongMaterial>> materialLibsMap() {
+        return materialLibsMap;
+    }
+
+    /* -------------------------------------------------------------
+     *  MATERIAL LIBRARIES
+     * ------------------------------------------------------------- */
+
+    private void parseMaterialLibraries(BufferedReader reader) throws IOException {
+        tokenizer = new Tokenizer(reader);
+
+        for (Token token; (token = tokenizer.next()) != null; ) {
+            if (token.keyword() == ObjKeyword.MATERIAL_LIB) {
                 final String libName = token.args();
-                Logger.info("Material library definition found: '{}'", libName);
-                if (materialLibsMap.containsKey(libName)) {
-                    Logger.warn("Material library definition will be ignored (already defined): {}", libName);
-                }
-                else {
-                    final Map<String, PhongMaterial> lib = parseMaterialLibraryFile(libName);
+                Logger.info("Material library found: '{}'", libName);
+
+                if (!materialLibsMap.containsKey(libName)) {
+                    Map<String, PhongMaterial> lib = parseMaterialLibraryFile(libName);
                     if (lib != null) {
-                        Logger.info("Material library parsed: {}", libName);
                         materialLibsMap.put(libName, lib);
+                        Logger.info("Material library parsed: {}", libName);
                     }
-                    else Logger.error("Material library {} could not be parsed");
                 }
             }
         }
@@ -239,11 +225,13 @@ public class ObjFileParser {
         final String objFileURLString = objFileURL.toExternalForm();
         final int endOfPath = objFileURLString.lastIndexOf('/');
         if (endOfPath == -1) {
-            Logger.error("OBJ file URL looks strange, no path end found: {}", objFileURLString);
+            Logger.error("OBJ file URL has no path: {}", objFileURLString);
             throw new RuntimeException();
         }
+
         final String libURL = objFileURLString.substring(0, endOfPath) + "/" + libName;
-        Logger.info("Material library URL (derived from OBJ file URL): {}", libURL);
+        Logger.info("Material library URL: {}", libURL);
+
         try {
             final URI uri = new URI(libURL);
             try (InputStream is = uri.toURL().openStream()) {
@@ -258,365 +246,183 @@ public class ObjFileParser {
         }
     }
 
-    private void parseObjectsAndGroups(BufferedReader reader) throws IOException {
+    /* -------------------------------------------------------------
+     *  OBJ PARSING
+     * ------------------------------------------------------------- */
+
+    private void parseGeometry(BufferedReader reader) throws IOException {
         tokenizer = new Tokenizer(reader);
         Token token;
 
         while ((token = tokenizer.next()) != null) {
             switch (token.keyword()) {
-                case OBJECT, GROUP -> {
-                    commitMesh();
-                    final String name = token.args().isEmpty() ? nextAnonMeshName() : token.args();
-                    currentMeshDef = new MeshDefinition(name);
-                }
-                case SMOOTHING_GROUP -> {
-                    if (meshDefStarted()) {
-                        parseSmoothingGroup(token.args());
-                    }
-                }
-                case VERTEX -> {
-                    if (meshDefStarted()) {
-                        parseVertex(token.args());
-                    }
-                }
-                case VERTEX_NORMAL -> {
-                    if (meshDefStarted()) {
-                        parseVertexNormal(token.args());
-                    }
-                }
-                case TEX_COORD -> {
-                    if (meshDefStarted()) {
-                        parseTextureCoordinate(token.args());
-                    }
-                }
-                case FACE -> {
-                    if (meshDefStarted()) {
-                        parseFace(token.args());
-                    }
-                }
-                case MATERIAL_USAGE -> {
-                    if (meshDefStarted()) {
-                        final String materialName = token.args();
-                        Logger.trace("Material usage '{}'", materialName);
-                        currentMeshDef.materialName = materialName;
-                    }
-                }
-                case MATERIAL_LIB -> Logger.debug("Material library definition");
-                default -> Logger.warn("Line skipped (unknown keyword '{}'): {} (line {})", token.keyword().text, token.args(), token.lineNo());
+
+                case OBJECT -> parseObject(token.args());
+                case GROUP  -> parseGroup(token.args());
+                case SMOOTHING_GROUP -> parseSmoothingGroup(token.args());
+                case MATERIAL_USAGE  -> parseMaterialUsage(token.args());
+
+                case VERTEX        -> objModel.vertices.add(parseVertex(token.args()));
+                case TEX_COORD     -> objModel.texCoords.add(parseTexCoord(token.args()));
+                case VERTEX_NORMAL -> objModel.normals.add(parseNormal(token.args()));
+
+                case FACE -> parseFace(token.args());
+
+                case MATERIAL_LIB -> Logger.debug("Material library definition ignored in 2nd pass");
+
+                default -> Logger.warn("Unknown keyword '{}' at line {}",
+                    token.keyword().text, token.lineNo());
             }
         }
-        commitMesh();
     }
 
-    /**
-     * Parses an OBJ face statement and triangulates it.
-     * Supports all legal formats:
-     *   f v
-     *   f v/vt
-     *   f v//vn
-     *   f v/vt/vn
-     *   and polygons with 3+ vertices.
-     */
-    private void parseFace(String text) {
+    /* -------------------------------------------------------------
+     *  PARSING HELPERS
+     * ------------------------------------------------------------- */
 
-        // 1. Split the face into vertex blocks
-        String[] blocks = splitBySpace(text);
-
-        // 2. Parse each block into (v, vt, vn) indices
-        FaceVertex[] verts = new FaceVertex[blocks.length];
-        boolean hasUV = true;
-        boolean hasNormal = true;
-
-        for (int i = 0; i < blocks.length; i++) {
-            verts[i] = parseFaceVertex(blocks[i]);
-
-            if (verts[i].vt == null) {
-                hasUV = false;
-            }
-            if (verts[i].vn == null) {
-                hasNormal = false;
-            }
+    private void parseObject(String name) {
+        if (name.isEmpty()) {
+            name = "Object." + nextAnonName();
         }
 
-        // 3. Convert OBJ indices to internal 0-based indices
-        for (FaceVertex fv : verts) {
-            fv.v = vertexIndex(fv.v);
+        ObjObject obj = new ObjObject(name);
+        objModel.objects.add(obj);
+        objModel.currentObject = obj;
+        objModel.currentGroup = null;
 
-            if (hasUV) {
-                fv.vt = uvIndex(fv.vt);
-                if (fv.vt < 0) hasUV = false;
-            }
+        Logger.info("Object created: {}", name);
+    }
 
-            if (hasNormal) {
-                fv.vn = normalIndex(fv.vn);
-                if (fv.vn < 0) hasNormal = false;
-            }
+    private void parseGroup(String name) {
+        if (objModel.currentObject == null) {
+            parseObject("Object." + nextAnonName());
         }
 
-        // 4. Triangulate using a fan: (v0, v[i], v[i+1])
-        for (int i = 1; i < verts.length - 1; i++) {
-            FaceVertex v1 = verts[0];
-            FaceVertex v2 = verts[i];
-            FaceVertex v3 = verts[i + 1];
-
-            // Vertex + UV indices
-            facesList.add(v1.v);
-            facesList.add(hasUV ? v1.vt : -1);
-
-            facesList.add(v2.v);
-            facesList.add(hasUV ? v2.vt : -1);
-
-            facesList.add(v3.v);
-            facesList.add(hasUV ? v3.vt : -1);
-
-            // Normal indices
-            faceNormalsList.add(hasNormal ? v1.vn : -1);
-            faceNormalsList.add(hasNormal ? v2.vn : -1);
-            faceNormalsList.add(hasNormal ? v3.vn : -1);
-
-            // Smoothing group
-            smoothingGroupList.add(currentSmoothingGroup);
-        }
-    }
-
-    /** Helper record for a face vertex */
-    private static class FaceVertex {
-        Integer v;   // vertex index
-        Integer vt;  // texture index (nullable)
-        Integer vn;  // normal index (nullable)
-    }
-
-    /** Parses a single face vertex block like "3/4/5", "3//5", "3/4", or "3". */
-    private FaceVertex parseFaceVertex(String block) {
-        String[] parts = block.split("/", -1); // keep empty fields
-        FaceVertex fv = new FaceVertex();
-
-        fv.v = Integer.parseInt(parts[0]);
-
-        if (parts.length > 1 && !parts[1].isEmpty()) {
-            fv.vt = Integer.parseInt(parts[1]);
+        if (name.isEmpty()) {
+            name = "Group." + nextAnonName();
         }
 
-        if (parts.length > 2 && !parts[2].isEmpty()) {
-            fv.vn = Integer.parseInt(parts[2]);
-        }
+        ObjGroup group = new ObjGroup(name);
+        objModel.currentObject.groups.add(group);
+        objModel.currentGroup = group;
 
-        return fv;
+        Logger.info("Group created: {}", name);
     }
 
-    /**
-     * Vertex definition. List of geometric vertices, with (x, y, z, [w]) coordinates, w is optional and defaults to 1.0.
-     * <p>Example:
-     * <pre>v 3.14441400 1.97608500 -4.85138200</pre>
-     */
-    private void parseVertex(String text) {
-        String[] vertices = splitBySpace(text);
-        float x = Float.parseFloat(vertices[0]);
-        float y = Float.parseFloat(vertices[1]);
-        float z = Float.parseFloat(vertices[2]);
-        vertexArray.addAll(x, y, z);
-    }
-
-    /**
-     * "vt ". Texture coordinates, u, [v], [w], floating point values between 0 and 1.
-     * v, w are optional and default to 0.
-     * <p>
-     * Example:
-     * <pre>vt 0.90625000 6.2500000e-2</pre>
-     */
-    private void parseTextureCoordinate(String text) {
-        String[] coordinates = splitBySpace(text);
-        float u = Float.parseFloat(coordinates[0]);
-        float v = Float.parseFloat(coordinates[1]);
-        uvArray.addAll(u, 1 - v);
-    }
-
-    /**
-     * Smoothing group: "s <integer> ..." or "s off".
-     * <p>Example:
-     * <pre>s 5</pre>
-     */
-    private void parseSmoothingGroup(String text) {
-        if (text.equals("off")) {
-            currentSmoothingGroup = 0;
+    private void parseSmoothingGroup(String args) {
+        if (args.equalsIgnoreCase("off") || args.equals("0")) {
+            objModel.currentSmoothingGroup = null;
         } else {
-            currentSmoothingGroup = Integer.parseInt(text);
-        }
-    }
-
-    /**
-     * Vertex normal: "vn float_value1 float_value2 float_value3"
-     * <p>Example:</p>
-     * <pre>vn -0.59190005 0.53777519 0.60037669</pre>
-     */
-    private void parseVertexNormal(String text) {
-        String[] values = splitBySpace(text);
-        float x = Float.parseFloat(values[0]);
-        float y = Float.parseFloat(values[1]);
-        float z = Float.parseFloat(values[2]);
-        normalsArray.addAll(x, y, z);
-    }
-
-    private TriangleMesh createTriangleMesh() {
-
-        //TODO What does this mean?
-        if (facesStart >= facesList.size()) {
-            // we're only interested in faces
-            smoothingGroupsStart = smoothingGroupList.size();
-            return null;
-        }
-
-        var vertexMap  = new HashMap<Integer, Integer>(vertexArray.size() / 2);
-        var uvMap      = new HashMap<Integer, Integer>(uvArray.size() / 2);
-        var normalsMap = new HashMap<Integer, Integer>(normalsArray.size() / 2);
-
-        var vertices  = FXCollections.observableFloatArray();
-        var texCoords = FXCollections.observableFloatArray();
-        var normals   = FXCollections.observableFloatArray();
-
-        boolean useNormals = true;
-
-        for (int facesIndex = facesStart; facesIndex < facesList.size(); facesIndex += 2) {
-            // First comes vertex index
-            final int vertexIndex = facesList.get(facesIndex);
-            if (!vertexMap.containsKey(vertexIndex)) {
-                vertexMap.put(vertexIndex, vertices.size() / 3);
-                vertices.addAll(
-                    vertexArray.get(vertexIndex * 3),
-                    vertexArray.get(vertexIndex * 3 + 1),
-                    vertexArray.get(vertexIndex * 3 + 2)
-                );
-            }
-            facesList.set(facesIndex, vertexMap.get(vertexIndex));
-
-            // Second comes texture coordinate index
-            final int texCoordIndex = facesList.get(facesIndex + 1);
-            if (!uvMap.containsKey(texCoordIndex)) {
-                uvMap.put(texCoordIndex, texCoords.size() / 2);
-                if (texCoordIndex >= 0) {
-                    texCoords.addAll(
-                        uvArray.get(texCoordIndex * 2),
-                        uvArray.get(texCoordIndex * 2 + 1)
-                    );
-                } else {
-                    texCoords.addAll(0f, 0f);
-                }
-            }
-            facesList.set(facesIndex + 1, uvMap.get(texCoordIndex));
-
-            if (useNormals) {
-                int normalsIndex = faceNormalsList.get(facesIndex / 2);
-                if (!normalsMap.containsKey(normalsIndex)) {
-                    normalsMap.put(normalsIndex, normals.size() / 3);
-                    if (normalsIndex >= 0 && normals.size() >= (normalsIndex + 1) * 3) {
-                        normals.addAll(
-                            normalsArray.get(normalsIndex * 3),
-                            normalsArray.get(normalsIndex * 3 + 1),
-                            normalsArray.get(normalsIndex * 3 + 2)
-                        );
-                    } else {
-                        useNormals = false;
-                        normals.addAll(0f, 0f, 0f);
-                    }
-                }
-                faceNormalsList.set(facesIndex / 2, normalsMap.get(normalsIndex));
+            try {
+                objModel.currentSmoothingGroup = Integer.parseInt(args);
+            } catch (NumberFormatException e) {
+                Logger.error("Invalid smoothing group '{}'", args);
+                objModel.currentSmoothingGroup = null;
             }
         }
+    }
 
-        // Now create the triangle mesh from the parsed data:
-        final var mesh = new TriangleMesh();
-        mesh.getPoints().setAll(vertices);
-        mesh.getTexCoords().setAll(texCoords);
+    private void parseMaterialUsage(String name) {
+        objModel.currentMaterialName = name;
+        Logger.info("Material usage: {}", name);
+    }
 
-        final int[] faces = toIntArray(restOfList(facesList, facesStart));
-        mesh.getFaces().setAll(faces);
+    private Vertex parseVertex(String s) {
+        String[] parts = splitBySpace(s, 3);
+        return new Vertex(
+            Float.parseFloat(parts[0]),
+            Float.parseFloat(parts[1]),
+            Float.parseFloat(parts[2])
+        );
+    }
 
-        final int[] smoothingGroups = useNormals
-            ? computeSmoothingGroups(mesh, faces, toIntArray(restOfList(faceNormalsList, facesNormalStart)), toFloatArray(normals))
-            : toIntArray(restOfList(smoothingGroupList, smoothingGroupsStart));
-        mesh.getFaceSmoothingGroups().setAll(smoothingGroups);
+    private TexCoord parseTexCoord(String s) {
+        String[] parts = splitBySpace(s, 3);
+        return new TexCoord(
+            Float.parseFloat(parts[0]),
+            Float.parseFloat(parts[1])
+        );
+    }
 
-        if (currentMeshDef.materialName != null) {
-            for (var materialLibName : materialLibsMap.keySet()) {
-                final var materialLib = materialLibsMap.get(materialLibName);
-                if (materialLib.containsKey(currentMeshDef.materialName)) {
-                    final PhongMaterial material = materialLib.get(currentMeshDef.materialName);
-                    modelMaterialAssignments.put(mesh, material);
-                }
-            }
+    private Normal parseNormal(String s) {
+        String[] parts = splitBySpace(s, 3);
+        return new Normal(
+            Float.parseFloat(parts[0]),
+            Float.parseFloat(parts[1]),
+            Float.parseFloat(parts[2])
+        );
+    }
+
+    private void parseFace(String args) {
+        if (objModel.currentObject == null) {
+            parseObject("Object." + nextAnonName());
+        }
+        if (objModel.currentGroup == null) {
+            parseGroup("Group." + nextAnonName());
         }
 
-        facesStart = facesList.size();
-        facesNormalStart = faceNormalsList.size();
-        smoothingGroupsStart = smoothingGroupList.size();
+        String[] refs = args.split("\\s+");
+        List<FaceVertex> verts = new ArrayList<>();
 
-        return mesh;
-    }
-
-    private static String[] splitBySpace(String text) {
-        return text.trim().split("\\s+");
-    }
-
-    private static int[] toIntArray(List<Integer> list) {
-        final int[] arr = new int[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            arr[i] = list.get(i);
+        for (String ref : refs) {
+            verts.add(parseFaceVertex(ref));
         }
-        return arr;
-        // Perhaps more elegant, but not as performant:
-        // return list.stream().mapToInt(Integer::intValue).toArray();
+
+        triangulateAndStoreFace(verts);
     }
 
-    private static float[] toFloatArray(ObservableFloatArray ofa) {
-        final float[] arr = new float[ofa.size()];
-        ofa.copyTo(0, arr, 0, ofa.size());
-        return arr;
-        // Perhaps more elegant, but not as performant:
-        // return ofa.toArray(new float[ofa.size()]);
+    private FaceVertex parseFaceVertex(String ref) {
+        String[] parts = ref.split("/");
+
+        int v  = parseIndex(parts[0], objModel.vertices.size());
+        int vt = parts.length > 1 && !parts[1].isEmpty()
+            ? parseIndex(parts[1], objModel.texCoords.size())
+            : -1;
+        int vn = parts.length > 2 && !parts[2].isEmpty()
+            ? parseIndex(parts[2], objModel.normals.size())
+            : -1;
+
+        return new FaceVertex(v, vt, vn);
     }
 
-    private static List<Integer> restOfList(List<Integer> list, int start) {
-        return list.subList(start, list.size());
+    private int parseIndex(String s, int size) {
+        int idx = Integer.parseInt(s);
+        if (idx < 0) {
+            return size + idx;
+        }
+        return idx - 1;
     }
 
-    private boolean meshDefStarted() {
-        return currentMeshDef != null;
+    private void triangulateAndStoreFace(List<FaceVertex> verts) {
+        if (verts.size() < 3) {
+            Logger.error("Invalid face with <3 vertices");
+            return;
+        }
+
+        FaceVertex v0 = verts.get(0);
+
+        for (int i = 1; i < verts.size() - 1; i++) {
+            FaceVertex v1 = verts.get(i);
+            FaceVertex v2 = verts.get(i + 1);
+
+            ObjFace face = new ObjFace(
+                objModel.currentMaterialName,
+                objModel.currentSmoothingGroup
+            );
+
+            face.vertices.add(v0);
+            face.vertices.add(v1);
+            face.vertices.add(v2);
+
+            objModel.currentGroup.faces.add(face);
+        }
     }
 
-    /**
-     * Converts an OBJ vertex index (1-based, negative allowed) into a 0-based index
-     * into {@link #vertexArray}.
-     *
-     * @param v the OBJ vertex index
-     * @return the resolved 0-based index
-     */
-    private int vertexIndex(int v) {
-        return (v < 0) ? v + vertexArray.size() / 3 : v - 1;
+    private String nextAnonName() {
+        return "anon." + anonMeshNameCount++;
     }
 
-    /**
-     * Converts an OBJ texture coordinate index (1-based, negative allowed)
-     * into a 0-based index into {@link #uvArray}.
-     *
-     * @param uv the OBJ texture coordinate index
-     * @return the resolved 0-based index
-     */
-    private int uvIndex(int uv) {
-        return (uv < 0) ? uv + uvArray.size() / 2 : uv - 1;
-    }
-
-    /**
-     * Converts an OBJ normal index (1-based, negative allowed)
-     * into a 0-based index into {@link #normalsArray}.
-     *
-     * @param n the OBJ normal index
-     * @return the resolved 0-based index
-     */
-    private int normalIndex(int n) {
-        return (n < 0) ? n + normalsArray.size() / 3 : n - 1;
-    }
-
-    private String nextAnonMeshName() {
-        return "default" + anonMeshNameCount++;
+    private static String[] splitBySpace(String text, int n) {
+        return text.trim().split("\\s+", n);
     }
 }

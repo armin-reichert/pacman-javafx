@@ -4,19 +4,22 @@
 
 package de.amr.pacmanfx.uilib.objimport;
 
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
-import javafx.scene.paint.PhongMaterial;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class TriangleMeshBuilderByCopilot {
+public class TriangleMeshBuilder {
 
-    private final ObjFileParserByCopilot.ObjModel model;
+    private final ObjFileParser.ObjModel model;
     private final Map<String, PhongMaterial> materials;
 
-    public TriangleMeshBuilderByCopilot(
-        ObjFileParserByCopilot.ObjModel model,
+    public TriangleMeshBuilder(
+        ObjFileParser.ObjModel model,
         Map<String, Map<String, PhongMaterial>> materialLibs) {
 
         this.model = model;
@@ -33,12 +36,12 @@ public class TriangleMeshBuilderByCopilot {
      * Builds one MeshView per material.
      */
     public Map<String, MeshView> buildMeshViewsByMaterial() {
-        Map<String, List<ObjFileParserByCopilot.ObjFace>> facesByMaterial = groupFacesByMaterial();
+        Map<String, List<ObjFileParser.ObjFace>> facesByMaterial = groupFacesByMaterial();
         Map<String, MeshView> meshViews = new HashMap<>();
 
         for (var entry : facesByMaterial.entrySet()) {
             String materialName = entry.getKey();
-            List<ObjFileParserByCopilot.ObjFace> faces = entry.getValue();
+            List<ObjFileParser.ObjFace> faces = entry.getValue();
 
             TriangleMesh mesh = buildMeshForFaces(faces);
             MeshView view = new MeshView(mesh);
@@ -58,12 +61,12 @@ public class TriangleMeshBuilderByCopilot {
      *  GROUP FACES BY MATERIAL
      * ------------------------------------------------------------- */
 
-    private Map<String, List<ObjFileParserByCopilot.ObjFace>> groupFacesByMaterial() {
-        Map<String, List<ObjFileParserByCopilot.ObjFace>> map = new HashMap<>();
+    private Map<String, List<ObjFileParser.ObjFace>> groupFacesByMaterial() {
+        Map<String, List<ObjFileParser.ObjFace>> map = new HashMap<>();
 
-        for (ObjFileParserByCopilot.ObjObject obj : model.objects) {
-            for (ObjFileParserByCopilot.ObjGroup group : obj.groups) {
-                for (ObjFileParserByCopilot.ObjFace face : group.faces) {
+        for (ObjFileParser.ObjObject obj : model.objects) {
+            for (ObjFileParser.ObjGroup group : obj.groups) {
+                for (ObjFileParser.ObjFace face : group.faces) {
                     String mat = face.materialName;
                     map.computeIfAbsent(mat, _ -> new ArrayList<>()).add(face);
                 }
@@ -77,7 +80,7 @@ public class TriangleMeshBuilderByCopilot {
      *  BUILD A TRIANGLEMESH FOR A SET OF FACES
      * ------------------------------------------------------------- */
 
-    private TriangleMesh buildMeshForFaces(List<ObjFileParserByCopilot.ObjFace> faces) {
+    private TriangleMesh buildMeshForFaces(List<ObjFileParser.ObjFace> faces) {
         TriangleMesh mesh = new TriangleMesh();
 
         List<Float> points = new ArrayList<>();
@@ -88,21 +91,21 @@ public class TriangleMeshBuilderByCopilot {
         // does not allow arbitrary indexing like OBJ does.
         Map<VertexKey, Integer> vertexMap = new HashMap<>();
 
-        for (ObjFileParserByCopilot.ObjFace face : faces) {
-            for (ObjFileParserByCopilot.FaceVertex fv : face.vertices) {
+        for (ObjFileParser.ObjFace face : faces) {
+            for (ObjFileParser.FaceVertex fv : face.vertices) {
 
                 VertexKey key = new VertexKey(fv.vIndex, fv.vtIndex, fv.vnIndex);
 
                 int newIndex = vertexMap.computeIfAbsent(key, k -> {
                     // Add vertex position
-                    ObjFileParserByCopilot.Vertex v = model.vertices.get(k.v);
+                    ObjFileParser.Vertex v = model.vertices.get(k.v);
                     points.add(v.x());
                     points.add(v.y());
                     points.add(v.z());
 
                     // Add UV (or dummy)
                     if (k.vt >= 0) {
-                        ObjFileParserByCopilot.TexCoord tc = model.texCoords.get(k.vt);
+                        ObjFileParser.TexCoord tc = model.texCoords.get(k.vt);
                         texCoords.add(tc.u());
                         texCoords.add(1 - tc.v()); // Flip V for JavaFX
                     } else {

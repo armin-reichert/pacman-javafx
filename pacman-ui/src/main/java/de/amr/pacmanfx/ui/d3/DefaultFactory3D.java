@@ -18,7 +18,6 @@ import de.amr.pacmanfx.uilib.model3D.actor.*;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
 import de.amr.pacmanfx.uilib.model3D.world.PelletModel3D;
-import de.amr.pacmanfx.uilib.objimport.MeshHelper;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.image.Image;

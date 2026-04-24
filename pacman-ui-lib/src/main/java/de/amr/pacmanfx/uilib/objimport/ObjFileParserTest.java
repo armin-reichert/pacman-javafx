@@ -12,7 +12,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-public class ObjFileParserByCopilotTest {
+public class ObjFileParserTest {
     static final String[] FILE_PATHS = {
         "/de/amr/pacmanfx/uilib/model3D/ghost.obj",
 //        "/de/amr/pacmanfx/uilib/model3D/pacman.obj",
@@ -21,14 +21,14 @@ public class ObjFileParserByCopilotTest {
 
     static void main() {
         for (String path : FILE_PATHS) {
-            final URL url = ObjFileParserByCopilot.class.getResource(path);
+            final URL url = ObjFileParser.class.getResource(path);
             if (url == null) {
                 Logger.error("Invalid OBJ file URL {}", url);
                 return;
             }
             try {
-                final ObjFileParserByCopilot parser = new ObjFileParserByCopilot(url, StandardCharsets.UTF_8);
-                TriangleMeshBuilderByCopilot builder = new TriangleMeshBuilderByCopilot(parser.objModel(), parser.materialLibsMap());
+                final ObjFileParser parser = new ObjFileParser(url, StandardCharsets.UTF_8);
+                TriangleMeshBuilder builder = new TriangleMeshBuilder(parser.objModel(), parser.materialLibsMap());
                 Map<String, MeshView> meshes = builder.buildMeshViewsByMaterial();
                 Logger.info("Constructed {} mesh views from OBJ model: {}", meshes.size(), meshes);
             } catch (IOException x) {

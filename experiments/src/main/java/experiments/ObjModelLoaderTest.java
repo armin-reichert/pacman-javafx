@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package experiments;
 
-import de.amr.pacmanfx.uilib.objimport.Model3D;
 import org.tinylog.Logger;
 
 import java.io.File;
