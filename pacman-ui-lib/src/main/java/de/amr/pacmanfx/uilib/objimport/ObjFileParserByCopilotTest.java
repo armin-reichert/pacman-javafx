@@ -10,7 +10,7 @@ import org.tinylog.Logger;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
+import java.util.Map;
 
 public class ObjFileParserByCopilotTest {
     static final String[] FILE_PATHS = {
@@ -29,8 +29,8 @@ public class ObjFileParserByCopilotTest {
             try {
                 final ObjFileParserByCopilot parser = new ObjFileParserByCopilot(url, StandardCharsets.UTF_8);
                 TriangleMeshBuilderByCopilot builder = new TriangleMeshBuilderByCopilot(parser.objModel(), parser.materialLibsMap());
-                List<MeshView> meshes = builder.buildMeshes();
-                Logger.info("Constructed {} mesh views from OBJ model", meshes.size());
+                Map<String, MeshView> meshes = builder.buildMeshViewsByMaterial();
+                Logger.info("Constructed {} mesh views from OBJ model: {}", meshes.size(), meshes);
             } catch (IOException x) {
                 Logger.error(x, "Parsing error");
             }

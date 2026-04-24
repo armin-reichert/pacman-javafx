@@ -5,8 +5,14 @@
 package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.uilib.objimport.Model3D;
+import de.amr.pacmanfx.uilib.objimport.ObjFileParserByCopilot;
+import de.amr.pacmanfx.uilib.objimport.TriangleMeshBuilderByCopilot;
 import javafx.scene.shape.Mesh;
+import javafx.scene.shape.MeshView;
+
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 public class GhostModel3D implements Disposable {
 
@@ -19,16 +25,18 @@ public class GhostModel3D implements Disposable {
     }
 
 	private static final String OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/ghost.obj";
-    private static final String ID_DRESS = "Group.Dress";
-	private static final String ID_EYEBALLS = "Group.Eyeballs";
-	private static final String ID_PUPILS = "Group.Pupils";
+    private static final String ID_DRESS = "Material.Dress";
+	private static final String ID_EYEBALLS = "Material.Eyeballs";
+	private static final String ID_PUPILS = "Material.Pupils";
 
-    private final Model3D model3D;
+	private final Map<String, MeshView> meshesByMaterialName;
 
 	private GhostModel3D() {
 		try {
-			model3D = Model3D.importObj(getClass().getResource(OBJ_FILE));
-			// fail fast
+			URL url = getClass().getResource(OBJ_FILE);
+			ObjFileParserByCopilot parser = new ObjFileParserByCopilot(url, StandardCharsets.UTF_8);
+			TriangleMeshBuilderByCopilot builder = new TriangleMeshBuilderByCopilot(parser.objModel(), parser.materialLibsMap());
+			meshesByMaterialName = builder.buildMeshViewsByMaterial();
 			dressMesh();
 			eyeballsMesh();
 			pupilsMesh();
@@ -39,18 +47,26 @@ public class GhostModel3D implements Disposable {
 
 	@Override
 	public void dispose() {
-		model3D.dispose();
+		meshesByMaterialName.clear();
+	}
+
+	private Mesh meshOrFail(String materialName) {
+		final MeshView meshView = meshesByMaterialName.get(materialName);
+		if (meshView != null) {
+			return meshView.getMesh();
+		}
+		throw new IllegalArgumentException("Mesh view for material %s does not exist".formatted(materialName));
 	}
 
 	public Mesh dressMesh() {
-		return model3D.meshOrFail(ID_DRESS);
+		return meshOrFail(ID_DRESS);
 	}
 
 	public Mesh eyeballsMesh() {
-		return model3D.meshOrFail(ID_EYEBALLS);
+		return meshOrFail(ID_EYEBALLS);
 	}
 
 	public Mesh pupilsMesh() {
-		return model3D.meshOrFail(ID_PUPILS);
+		return meshOrFail(ID_PUPILS);
 	}
 }

@@ -32,10 +32,9 @@ public class TriangleMeshBuilderByCopilot {
     /**
      * Builds one MeshView per material.
      */
-    public List<MeshView> buildMeshes() {
+    public Map<String, MeshView> buildMeshViewsByMaterial() {
         Map<String, List<ObjFileParserByCopilot.ObjFace>> facesByMaterial = groupFacesByMaterial();
-
-        List<MeshView> result = new ArrayList<>();
+        Map<String, MeshView> meshViews = new HashMap<>();
 
         for (var entry : facesByMaterial.entrySet()) {
             String materialName = entry.getKey();
@@ -49,10 +48,10 @@ public class TriangleMeshBuilderByCopilot {
                 view.setMaterial(mat);
             }
 
-            result.add(view);
+            meshViews.put(materialName, view);
         }
 
-        return result;
+        return meshViews;
     }
 
     /* -------------------------------------------------------------
@@ -66,7 +65,7 @@ public class TriangleMeshBuilderByCopilot {
             for (ObjFileParserByCopilot.ObjGroup group : obj.groups) {
                 for (ObjFileParserByCopilot.ObjFace face : group.faces) {
                     String mat = face.materialName;
-                    map.computeIfAbsent(mat, k -> new ArrayList<>()).add(face);
+                    map.computeIfAbsent(mat, _ -> new ArrayList<>()).add(face);
                 }
             }
         }
