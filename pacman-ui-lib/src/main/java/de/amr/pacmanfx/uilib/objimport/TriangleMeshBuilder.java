@@ -15,15 +15,12 @@ public class TriangleMeshBuilder {
     private final ObjFileParser.ObjModel model;
     private final Map<String, PhongMaterial> materials;
 
-    public TriangleMeshBuilder(
-        ObjFileParser.ObjModel model,
-        Map<String, Map<String, PhongMaterial>> materialLibs) {
-
+    public TriangleMeshBuilder(ObjFileParser.ObjModel model) {
         this.model = model;
 
         // Flatten material libraries
         Map<String, PhongMaterial> flat = new HashMap<>();
-        for (var lib : materialLibs.values()) {
+        for (var lib : model.materialLibsMap.values()) {
             flat.putAll(lib);
         }
         this.materials = flat;
@@ -64,7 +61,7 @@ public class TriangleMeshBuilder {
         MeshView mv = new MeshView(mesh);
 
         // Assign material if all faces share one
-        String mat = faces.get(0).materialName;
+        String mat = faces.getFirst().materialName;
         if (mat != null && materials.containsKey(mat)) {
             mv.setMaterial(materials.get(mat));
         }

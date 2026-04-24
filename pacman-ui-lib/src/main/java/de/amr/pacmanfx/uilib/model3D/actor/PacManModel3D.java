@@ -56,7 +56,8 @@ public class PacManModel3D implements Disposable {
 		try {
             final URL url = getClass().getResource(OBJ_FILE);
             final var parser = new ObjFileParser(url, StandardCharsets.UTF_8);
-            final var builder = new TriangleMeshBuilder(parser.objModel(), parser.materialLibsMap());
+            final ObjFileParser.ObjModel objModel = parser.parse();
+            final var builder = new TriangleMeshBuilder(objModel);
             meshViews = builder.buildMeshViewsByGroup();
 			// fail fast
             head();

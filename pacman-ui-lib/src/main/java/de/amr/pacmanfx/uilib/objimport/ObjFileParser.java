@@ -110,7 +110,7 @@ public class ObjFileParser {
         public final List<Normal>      normals       = new ArrayList<>();
 
         public final List<ObjObject>   objects       = new ArrayList<>();
-        public final List<ObjMaterialLib> materialLibs = new ArrayList<>();
+        public final Map<String, Map<String, PhongMaterial>> materialLibsMap = new HashMap<>();
 
         public ObjObject currentObject;
         public ObjGroup  currentGroup;
@@ -166,12 +166,11 @@ public class ObjFileParser {
      *  FIELDS
      * ------------------------------------------------------------- */
 
-    private Tokenizer tokenizer;
     private final URL objFileURL;
-    private int anonMeshNameCount = 0;
-    private final ObjModel objModel;
+    private final Charset charset;
 
-    private final Map<String, Map<String, PhongMaterial>> materialLibsMap = new HashMap<>();
+    private Tokenizer tokenizer;
+    private int anonMeshNameCount = 0;
 
     /* -------------------------------------------------------------
      *  CONSTRUCTOR
@@ -179,41 +178,36 @@ public class ObjFileParser {
 
     public ObjFileParser(URL objFileURL, Charset charset) throws IOException {
         this.objFileURL = requireNonNull(objFileURL);
-        requireNonNull(charset);
-
-        objModel = new ObjModel();
-        try (InputStream is = objFileURL.openStream()) {
-            parseMaterialLibraries(new BufferedReader(new InputStreamReader(is, charset)));
-        }
-        try (InputStream is = objFileURL.openStream()) {
-            parseGeometry(new BufferedReader(new InputStreamReader(is, charset)));
-        }
+        this.charset = requireNonNull(charset);
     }
 
-    public ObjModel objModel() {
+    public ObjModel parse() throws IOException {
+        final var objModel = new ObjModel();
+        try (InputStream is = objFileURL.openStream()) {
+            parseMaterialLibraries(objModel, new BufferedReader(new InputStreamReader(is, charset)));
+        }
+        try (InputStream is = objFileURL.openStream()) {
+            parseGeometry(objModel, new BufferedReader(new InputStreamReader(is, charset)));
+
+        }
         return objModel;
-    }
-
-    public Map<String, Map<String, PhongMaterial>> materialLibsMap() {
-        return materialLibsMap;
     }
 
     /* -------------------------------------------------------------
      *  MATERIAL LIBRARIES
      * ------------------------------------------------------------- */
 
-    private void parseMaterialLibraries(BufferedReader reader) throws IOException {
+    private void parseMaterialLibraries(ObjModel objModel, BufferedReader reader) throws IOException {
         tokenizer = new Tokenizer(reader);
-
         for (Token token; (token = tokenizer.next()) != null; ) {
             if (token.keyword() == ObjKeyword.MATERIAL_LIB) {
                 final String libName = token.args();
                 Logger.info("Material library found: '{}'", libName);
 
-                if (!materialLibsMap.containsKey(libName)) {
+                if (!objModel.materialLibsMap.containsKey(libName)) {
                     Map<String, PhongMaterial> lib = parseMaterialLibraryFile(libName);
                     if (lib != null) {
-                        materialLibsMap.put(libName, lib);
+                        objModel.materialLibsMap.put(libName, lib);
                         Logger.info("Material library parsed: {}", libName);
                     }
                 }
@@ -250,23 +244,23 @@ public class ObjFileParser {
      *  OBJ PARSING
      * ------------------------------------------------------------- */
 
-    private void parseGeometry(BufferedReader reader) throws IOException {
+    private void parseGeometry(ObjModel objModel, BufferedReader reader) throws IOException {
         tokenizer = new Tokenizer(reader);
         Token token;
 
         while ((token = tokenizer.next()) != null) {
             switch (token.keyword()) {
 
-                case OBJECT -> parseObject(token.args());
-                case GROUP  -> parseGroup(token.args());
-                case SMOOTHING_GROUP -> parseSmoothingGroup(token.args());
-                case MATERIAL_USAGE  -> parseMaterialUsage(token.args());
+                case OBJECT -> parseObject(objModel, token.args());
+                case GROUP  -> parseGroup(objModel, token.args());
+                case SMOOTHING_GROUP -> parseSmoothingGroup(objModel, token.args());
+                case MATERIAL_USAGE  -> parseMaterialUsage(objModel, token.args());
 
                 case VERTEX        -> objModel.vertices.add(parseVertex(token.args()));
                 case TEX_COORD     -> objModel.texCoords.add(parseTexCoord(token.args()));
                 case VERTEX_NORMAL -> objModel.normals.add(parseNormal(token.args()));
 
-                case FACE -> parseFace(token.args());
+                case FACE -> parseFace(objModel, token.args());
 
                 case MATERIAL_LIB -> Logger.debug("Material library definition ignored in 2nd pass");
 
@@ -280,7 +274,7 @@ public class ObjFileParser {
      *  PARSING HELPERS
      * ------------------------------------------------------------- */
 
-    private void parseObject(String name) {
+    private void parseObject(ObjModel objModel, String name) {
         if (name.isEmpty()) {
             name = "Object." + nextAnonName();
         }
@@ -293,9 +287,9 @@ public class ObjFileParser {
         Logger.info("Object created: {}", name);
     }
 
-    private void parseGroup(String name) {
+    private void parseGroup(ObjModel objModel, String name) {
         if (objModel.currentObject == null) {
-            parseObject("Object." + nextAnonName());
+            parseObject(objModel, "Object." + nextAnonName());
         }
 
         if (name.isEmpty()) {
@@ -309,7 +303,7 @@ public class ObjFileParser {
         Logger.info("Group created: {}", name);
     }
 
-    private void parseSmoothingGroup(String args) {
+    private void parseSmoothingGroup(ObjModel objModel, String args) {
         if (args.equalsIgnoreCase("off") || args.equals("0")) {
             objModel.currentSmoothingGroup = null;
         } else {
@@ -322,7 +316,7 @@ public class ObjFileParser {
         }
     }
 
-    private void parseMaterialUsage(String name) {
+    private void parseMaterialUsage(ObjModel objModel, String name) {
         objModel.currentMaterialName = name;
         Logger.info("Material usage: {}", name);
     }
@@ -353,25 +347,25 @@ public class ObjFileParser {
         );
     }
 
-    private void parseFace(String args) {
+    private void parseFace(ObjModel objModel, String args) {
         if (objModel.currentObject == null) {
-            parseObject("Object." + nextAnonName());
+            parseObject(objModel, "Object." + nextAnonName());
         }
         if (objModel.currentGroup == null) {
-            parseGroup("Group." + nextAnonName());
+            parseGroup(objModel, "Group." + nextAnonName());
         }
 
         String[] refs = args.split("\\s+");
         List<FaceVertex> verts = new ArrayList<>();
 
         for (String ref : refs) {
-            verts.add(parseFaceVertex(ref));
+            verts.add(parseFaceVertex(objModel, ref));
         }
 
-        triangulateAndStoreFace(verts);
+        triangulateAndStoreFace(objModel, verts);
     }
 
-    private FaceVertex parseFaceVertex(String ref) {
+    private FaceVertex parseFaceVertex(ObjModel objModel, String ref) {
         String[] parts = ref.split("/", -1);
 
         int v  = parseIndex(parts[0], objModel.vertices.size());
@@ -393,17 +387,17 @@ public class ObjFileParser {
         return idx - 1;
     }
 
-    private void triangulateAndStoreFace(List<FaceVertex> verts) {
-        if (verts.size() < 3) {
+    private void triangulateAndStoreFace(ObjModel objModel, List<FaceVertex> vertices) {
+        if (vertices.size() < 3) {
             Logger.error("Invalid face with <3 vertices");
             return;
         }
 
-        FaceVertex v0 = verts.get(0);
+        FaceVertex v0 = vertices.get(0);
 
-        for (int i = 1; i < verts.size() - 1; i++) {
-            FaceVertex v1 = verts.get(i);
-            FaceVertex v2 = verts.get(i + 1);
+        for (int i = 1; i < vertices.size() - 1; i++) {
+            FaceVertex v1 = vertices.get(i);
+            FaceVertex v2 = vertices.get(i + 1);
 
             ObjFace face = new ObjFace(
                 objModel.currentMaterialName,
