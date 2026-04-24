@@ -5,8 +5,14 @@
 package de.amr.pacmanfx.uilib.model3D.world;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.uilib.objimport.Model3D;
+import de.amr.pacmanfx.uilib.objimport.ObjFileParserByCopilot;
+import de.amr.pacmanfx.uilib.objimport.TriangleMeshBuilderByCopilot;
 import javafx.scene.shape.Mesh;
+import javafx.scene.shape.MeshView;
+
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 public class PelletModel3D implements Disposable {
 
@@ -19,25 +25,36 @@ public class PelletModel3D implements Disposable {
     }
 
 	private static final String OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pellet.obj";
-	private static final String ID_PELLET = "Object.Pellet";
+	private static final String ID_PELLET = "Material.Pellet";
 
-	private final Model3D model3D;
+    private final Map<String, MeshView> meshesByMaterialName;
 
 	private PelletModel3D() {
-		try {
-			model3D = Model3D.importObj(getClass().getResource(OBJ_FILE));
+        try {
+            URL url = getClass().getResource(OBJ_FILE);
+            ObjFileParserByCopilot parser = new ObjFileParserByCopilot(url, StandardCharsets.UTF_8);
+            TriangleMeshBuilderByCopilot builder = new TriangleMeshBuilderByCopilot(parser.objModel(), parser.materialLibsMap());
+            meshesByMaterialName = builder.buildMeshViewsByMaterial();
             pelletMesh(); // fail fast
 		} catch (Exception x) {
 			throw new RuntimeException(x);
 		}
 	}
 
-	@Override
-	public void dispose() {
-		model3D.dispose();
-	}
+    @Override
+    public void dispose() {
+        meshesByMaterialName.clear();
+    }
+
+    private Mesh meshOrFail(String materialName) {
+        final MeshView meshView = meshesByMaterialName.get(materialName);
+        if (meshView != null) {
+            return meshView.getMesh();
+        }
+        throw new IllegalArgumentException("Mesh view for material %s does not exist".formatted(materialName));
+    }
 
 	public Mesh pelletMesh() {
-		return model3D.meshOrFail(ID_PELLET);
+		return meshOrFail(ID_PELLET);
 	}
 }
