@@ -24,7 +24,7 @@ public class MtlFileParserTest {
         for (String path : FILE_PATHS) {
             final URL url = MtlFileParser.class.getResource(path);
             if (url == null) {
-                Logger.error("Invalid OBJ file URL {}", url);
+                Logger.error("Invalid OBJ file path {}", path);
                 return;
             }
             Logger.info("Parsing material file '{}'", path);

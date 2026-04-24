@@ -23,7 +23,7 @@ public class ObjFileParserTest {
         for (String path : FILE_PATHS) {
             final URL url = ObjFileParser.class.getResource(path);
             if (url == null) {
-                Logger.error("Invalid OBJ file URL {}", url);
+                Logger.error("Invalid OBJ file path {}", path);
                 return;
             }
             try {
