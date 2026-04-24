@@ -28,7 +28,7 @@ public class ObjFileParserTest {
             }
             try {
                 final ObjFileParser parser = new ObjFileParser(url, StandardCharsets.UTF_8);
-                final ObjFileParser.ObjModel objModel = parser.parse();
+                final ObjModel objModel = parser.parse();
                 TriangleMeshBuilder builder = new TriangleMeshBuilder(objModel);
                 Map<String, MeshView> meshes = builder.buildMeshViewsByGroup();
                 Logger.info("Constructed {} mesh views from OBJ model: {}", meshes.size(), meshes);

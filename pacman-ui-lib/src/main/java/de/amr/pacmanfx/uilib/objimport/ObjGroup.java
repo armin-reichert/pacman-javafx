@@ -1,0 +1,17 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.uilib.objimport;
+
+import java.util.ArrayList;
+import java.util.List;
+
+class ObjGroup {
+    public final String name;
+    public final List<ObjFace> faces = new ArrayList<>();
+
+    public ObjGroup(String name) {
+        this.name = name;
+    }
+}

@@ -16,7 +16,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,10 +25,6 @@ import static java.util.Objects.requireNonNull;
  * OBJ file parser created by Copilot AI.
  */
 public class ObjFileParser {
-
-    /* -------------------------------------------------------------
-     *  TOKENIZER
-     * ------------------------------------------------------------- */
 
     public enum ObjKeyword {
         OBJECT            ("o"),
@@ -100,81 +95,11 @@ public class ObjFileParser {
         }
     }
 
-    /* -------------------------------------------------------------
-     *  OBJ MODEL STRUCTURE
-     * ------------------------------------------------------------- */
-
-    public static class ObjModel {
-        public final List<Vertex>      vertices      = new ArrayList<>();
-        public final List<TexCoord>    texCoords     = new ArrayList<>();
-        public final List<Normal>      normals       = new ArrayList<>();
-
-        public final List<ObjObject>   objects       = new ArrayList<>();
-        public final Map<String, Map<String, PhongMaterial>> materialLibsMap = new HashMap<>();
-
-        public ObjObject currentObject;
-        public ObjGroup  currentGroup;
-        public String    currentMaterialName;
-        public Integer   currentSmoothingGroup;
-    }
-
-    public static class ObjMaterialLib {
-        public final String fileName;
-        public ObjMaterialLib(String fileName) { this.fileName = fileName; }
-    }
-
-    public static class ObjObject {
-        public final String name;
-        public final List<ObjGroup> groups = new ArrayList<>();
-        public ObjObject(String name) { this.name = name; }
-    }
-
-    public static class ObjGroup {
-        public final String name;
-        public final List<ObjFace> faces = new ArrayList<>();
-        public ObjGroup(String name) { this.name = name; }
-    }
-
-    public static class ObjFace {
-        public final List<FaceVertex> vertices = new ArrayList<>();
-        public final String  materialName;
-        public final Integer smoothingGroup;
-
-        public ObjFace(String materialName, Integer smoothingGroup) {
-            this.materialName = materialName;
-            this.smoothingGroup = smoothingGroup;
-        }
-    }
-
-    public static class FaceVertex {
-        public final int vIndex;
-        public final int vtIndex;
-        public final int vnIndex;
-
-        public FaceVertex(int vIndex, int vtIndex, int vnIndex) {
-            this.vIndex = vIndex;
-            this.vtIndex = vtIndex;
-            this.vnIndex = vnIndex;
-        }
-    }
-
-    public record Vertex(float x, float y, float z) {}
-    public record TexCoord(float u, float v) {}
-    public record Normal(float x, float y, float z) {}
-
-    /* -------------------------------------------------------------
-     *  FIELDS
-     * ------------------------------------------------------------- */
-
     private final URL objFileURL;
     private final Charset charset;
 
     private Tokenizer tokenizer;
     private int anonMeshNameCount = 0;
-
-    /* -------------------------------------------------------------
-     *  CONSTRUCTOR
-     * ------------------------------------------------------------- */
 
     public ObjFileParser(URL objFileURL, Charset charset) throws IOException {
         this.objFileURL = requireNonNull(objFileURL);

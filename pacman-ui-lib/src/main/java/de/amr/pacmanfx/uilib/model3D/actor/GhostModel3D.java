@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.uilib.objimport.ObjFileParser;
+import de.amr.pacmanfx.uilib.objimport.ObjModel;
 import de.amr.pacmanfx.uilib.objimport.TriangleMeshBuilder;
 import javafx.scene.shape.MeshView;
 
@@ -35,7 +36,7 @@ public class GhostModel3D implements Disposable {
 		try {
 			final URL url = getClass().getResource(OBJ_FILE);
 			final var parser = new ObjFileParser(url, StandardCharsets.UTF_8);
-			final ObjFileParser.ObjModel objModel = parser.parse();
+			final ObjModel objModel = parser.parse();
             final var builder = new TriangleMeshBuilder(objModel);
 			meshViews = builder.buildMeshViewsByGroup();
 			// access meshes, fail fast

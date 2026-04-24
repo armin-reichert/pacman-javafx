@@ -12,10 +12,10 @@ import java.util.*;
  */
 public class TriangleMeshBuilder {
 
-    private final ObjFileParser.ObjModel model;
+    private final ObjModel model;
     private final Map<String, PhongMaterial> materials;
 
-    public TriangleMeshBuilder(ObjFileParser.ObjModel model) {
+    public TriangleMeshBuilder(ObjModel model) {
         this.model = model;
 
         // Flatten material libraries
@@ -37,8 +37,8 @@ public class TriangleMeshBuilder {
     public Map<String, MeshView> buildMeshViewsByGroup() {
         Map<String, MeshView> result = new LinkedHashMap<>();
 
-        for (ObjFileParser.ObjObject obj : model.objects) {
-            for (ObjFileParser.ObjGroup group : obj.groups) {
+        for (ObjObject obj : model.objects) {
+            for (ObjGroup group : obj.groups) {
 
                 String key = obj.name + "." + group.name;
 
@@ -56,7 +56,7 @@ public class TriangleMeshBuilder {
      *  MESH BUILDING
      * ------------------------------------------------------------- */
 
-    private MeshView buildMeshViewForFaces(List<ObjFileParser.ObjFace> faces) {
+    private MeshView buildMeshViewForFaces(List<ObjFace> faces) {
         TriangleMesh mesh = buildMeshForFaces(faces);
         MeshView mv = new MeshView(mesh);
 
@@ -69,7 +69,7 @@ public class TriangleMeshBuilder {
         return mv;
     }
 
-    private TriangleMesh buildMeshForFaces(List<ObjFileParser.ObjFace> faces) {
+    private TriangleMesh buildMeshForFaces(List<ObjFace> faces) {
         TriangleMesh mesh = new TriangleMesh();
 
         List<Float> points = new ArrayList<>();
@@ -79,21 +79,21 @@ public class TriangleMeshBuilder {
 
         Map<VertexKey, Integer> vertexMap = new HashMap<>();
 
-        for (ObjFileParser.ObjFace face : faces) {
-            for (ObjFileParser.FaceVertex fv : face.vertices) {
+        for (ObjFace face : faces) {
+            for (FaceVertex fv : face.vertices) {
 
                 VertexKey key = new VertexKey(fv.vIndex, fv.vtIndex, fv.vnIndex);
 
                 int newIndex = vertexMap.computeIfAbsent(key, k -> {
                     // Position
-                    ObjFileParser.Vertex v = model.vertices.get(k.v);
+                    Vertex v = model.vertices.get(k.v);
                     points.add(v.x());
                     points.add(v.y());
                     points.add(v.z());
 
                     // UV
                     if (k.vt >= 0) {
-                        ObjFileParser.TexCoord tc = model.texCoords.get(k.vt);
+                        TexCoord tc = model.texCoords.get(k.vt);
                         texCoords.add(tc.u());
                         texCoords.add(1 - tc.v()); // JavaFX V-flip
                     } else {
