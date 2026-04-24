@@ -2,7 +2,8 @@ package experiments;
 
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
-import de.amr.pacmanfx.uilib.model3D.actor.PacManModel3D;
+import de.amr.pacmanfx.uilib.objimport.ObjFileParser;
+import de.amr.pacmanfx.uilib.objimport.TriangleMeshBuilder;
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.control.Menu;
@@ -18,6 +19,8 @@ import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class ModelViewer extends Application {
 
@@ -91,7 +94,7 @@ public class ModelViewer extends Application {
         if (selectedFile != null) {
             Logger.info("File {} selected", selectedFile);
             try {
-                Node shape = PacManModel3D.instance().createPacBody(PAC_CONFIG);
+                MeshView shape = importObjFile(selectedFile);
                 //allMeshViewsUnder(shape).forEach(meshView -> meshView.setDrawMode(DrawMode.LINE));
                 setCurrentNode(new Group(shape));
             } catch (Exception x) {
@@ -99,6 +102,14 @@ public class ModelViewer extends Application {
                 Logger.error("Could not open 3D model from file {}", selectedFile);
             }
         }
+    }
+
+    private MeshView importObjFile(File selectedFile) throws Exception {
+        final URL url = selectedFile.toURI().toURL();
+        final var parser = new ObjFileParser(url, StandardCharsets.UTF_8);
+        final var builder = new TriangleMeshBuilder(parser.parse());
+        var meshViews = builder.buildMeshViewsByGroup();
+        return meshViews.values().stream().findAny().orElse(null);
     }
 
     private void setCurrentNode(Node node) {
