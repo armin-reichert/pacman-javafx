@@ -1,18 +1,15 @@
-/*
- * Copyright (c) 2021-2026 Armin Reichert (MIT License)
- */
-
 package de.amr.pacmanfx.uilib.objimport;
 
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+/**
+ * Builds one MeshView per OBJ group.
+ * No JavaFX Group nodes are created.
+ */
 public class TriangleMeshBuilder {
 
     private final ObjFileParser.ObjModel model;
@@ -24,7 +21,7 @@ public class TriangleMeshBuilder {
 
         this.model = model;
 
-        // Flatten all material libraries into one map
+        // Flatten material libraries
         Map<String, PhongMaterial> flat = new HashMap<>();
         for (var lib : materialLibs.values()) {
             flat.putAll(lib);
@@ -32,53 +29,48 @@ public class TriangleMeshBuilder {
         this.materials = flat;
     }
 
-    /**
-     * Builds one MeshView per material.
-     */
-    public Map<String, MeshView> buildMeshViewsByMaterial() {
-        Map<String, List<ObjFileParser.ObjFace>> facesByMaterial = groupFacesByMaterial();
-        Map<String, MeshView> meshViews = new HashMap<>();
-
-        for (var entry : facesByMaterial.entrySet()) {
-            String materialName = entry.getKey();
-            List<ObjFileParser.ObjFace> faces = entry.getValue();
-
-            TriangleMesh mesh = buildMeshForFaces(faces);
-            MeshView view = new MeshView(mesh);
-
-            PhongMaterial mat = materials.get(materialName);
-            if (mat != null) {
-                view.setMaterial(mat);
-            }
-
-            meshViews.put(materialName, view);
-        }
-
-        return meshViews;
-    }
-
     /* -------------------------------------------------------------
-     *  GROUP FACES BY MATERIAL
+     *  PUBLIC API
      * ------------------------------------------------------------- */
 
-    private Map<String, List<ObjFileParser.ObjFace>> groupFacesByMaterial() {
-        Map<String, List<ObjFileParser.ObjFace>> map = new HashMap<>();
+    /**
+     * Builds one MeshView per OBJ group.
+     * Key format: "objectName.groupName"
+     */
+    public Map<String, MeshView> buildMeshViewsByGroup() {
+        Map<String, MeshView> result = new LinkedHashMap<>();
 
         for (ObjFileParser.ObjObject obj : model.objects) {
             for (ObjFileParser.ObjGroup group : obj.groups) {
-                for (ObjFileParser.ObjFace face : group.faces) {
-                    String mat = face.materialName;
-                    map.computeIfAbsent(mat, _ -> new ArrayList<>()).add(face);
-                }
+
+                String key = obj.name + "." + group.name;
+
+                MeshView mv = buildMeshViewForFaces(group.faces);
+                mv.setId(key);
+
+                result.put(key, mv);
             }
         }
 
-        return map;
+        return result;
     }
 
     /* -------------------------------------------------------------
-     *  BUILD A TRIANGLEMESH FOR A SET OF FACES
+     *  MESH BUILDING
      * ------------------------------------------------------------- */
+
+    private MeshView buildMeshViewForFaces(List<ObjFileParser.ObjFace> faces) {
+        TriangleMesh mesh = buildMeshForFaces(faces);
+        MeshView mv = new MeshView(mesh);
+
+        // Assign material if all faces share one
+        String mat = faces.get(0).materialName;
+        if (mat != null && materials.containsKey(mat)) {
+            mv.setMaterial(materials.get(mat));
+        }
+
+        return mv;
+    }
 
     private TriangleMesh buildMeshForFaces(List<ObjFileParser.ObjFace> faces) {
         TriangleMesh mesh = new TriangleMesh();
@@ -86,9 +78,8 @@ public class TriangleMeshBuilder {
         List<Float> points = new ArrayList<>();
         List<Float> texCoords = new ArrayList<>();
         List<Integer> facesIdx = new ArrayList<>();
+        List<Integer> smoothing = new ArrayList<>();
 
-        // We need to deduplicate vertices because JavaFX TriangleMesh
-        // does not allow arbitrary indexing like OBJ does.
         Map<VertexKey, Integer> vertexMap = new HashMap<>();
 
         for (ObjFileParser.ObjFace face : faces) {
@@ -97,17 +88,17 @@ public class TriangleMeshBuilder {
                 VertexKey key = new VertexKey(fv.vIndex, fv.vtIndex, fv.vnIndex);
 
                 int newIndex = vertexMap.computeIfAbsent(key, k -> {
-                    // Add vertex position
+                    // Position
                     ObjFileParser.Vertex v = model.vertices.get(k.v);
                     points.add(v.x());
                     points.add(v.y());
                     points.add(v.z());
 
-                    // Add UV (or dummy)
+                    // UV
                     if (k.vt >= 0) {
                         ObjFileParser.TexCoord tc = model.texCoords.get(k.vt);
                         texCoords.add(tc.u());
-                        texCoords.add(1 - tc.v()); // Flip V for JavaFX
+                        texCoords.add(1 - tc.v()); // JavaFX V-flip
                     } else {
                         texCoords.add(0f);
                         texCoords.add(0f);
@@ -116,15 +107,20 @@ public class TriangleMeshBuilder {
                     return (points.size() / 3) - 1;
                 });
 
-                // JavaFX face index format: vertexIndex, texCoordIndex
+                // JavaFX face format: vertexIndex, texCoordIndex
                 facesIdx.add(newIndex);
                 facesIdx.add(newIndex);
             }
+
+            // Smoothing group → JavaFX bitmask
+            int sg = face.smoothingGroup != null ? (1 << face.smoothingGroup) : 0;
+            smoothing.add(sg);
         }
 
         mesh.getPoints().setAll(toFloatArray(points));
         mesh.getTexCoords().setAll(toFloatArray(texCoords));
         mesh.getFaces().setAll(toIntArray(facesIdx));
+        mesh.getFaceSmoothingGroups().setAll(toIntArray(smoothing));
 
         return mesh;
     }
@@ -145,8 +141,5 @@ public class TriangleMeshBuilder {
         return arr;
     }
 
-    /**
-     * A unique key for a vertex/uv/normal combination.
-     */
     private record VertexKey(int v, int vt, int vn) {}
 }

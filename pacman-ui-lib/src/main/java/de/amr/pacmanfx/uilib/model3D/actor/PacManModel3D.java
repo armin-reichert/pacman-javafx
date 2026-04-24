@@ -46,18 +46,18 @@ public class PacManModel3D implements Disposable {
 
 	private static final String OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pacman.obj";
 
-    private static final String ID_EYES = "Material.Eyes";
-	private static final String ID_HEAD = "Material.Head";
-	private static final String ID_PALATE = "Material.Palate";
+    private static final String ID_EYES   = "Object.Sphere.1.Group.PacMan.Eyes";
+	private static final String ID_HEAD   = "Object.Sphere.2.Group.PacMan.Head";
+	private static final String ID_PALATE = "Object.Sphere.2.Group.PacMan.Palate";
 
-    private final Map<String, MeshView> meshesByMaterialName;
+    private final Map<String, MeshView> meshViews;
 
 	private PacManModel3D() {
 		try {
             final URL url = getClass().getResource(OBJ_FILE);
             final var parser = new ObjFileParser(url, StandardCharsets.UTF_8);
             final var builder = new TriangleMeshBuilder(parser.objModel(), parser.materialLibsMap());
-            meshesByMaterialName = builder.buildMeshViewsByMaterial();
+            meshViews = builder.buildMeshViewsByGroup();
 			// fail fast
             head();
             palate();
@@ -69,7 +69,7 @@ public class PacManModel3D implements Disposable {
 
     @Override
     public void dispose() {
-        meshesByMaterialName.clear();
+        meshViews.clear();
     }
 
     public MeshView head() {
@@ -84,12 +84,12 @@ public class PacManModel3D implements Disposable {
         return meshViewOrFail(ID_EYES);
     }
 
-    private MeshView meshViewOrFail(String materialName) {
-        final MeshView meshView = meshesByMaterialName.get(materialName);
+    private MeshView meshViewOrFail(String name) {
+        final MeshView meshView = meshViews.get(name);
         if (meshView != null) {
             return meshView;
         }
-        throw new IllegalArgumentException("Mesh view for material %s does not exist".formatted(materialName));
+        throw new IllegalArgumentException("Mesh view for name %s does not exist".formatted(name));
     }
 
 

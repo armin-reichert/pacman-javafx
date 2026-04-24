@@ -25,18 +25,18 @@ public class GhostModel3D implements Disposable {
 
 	private static final String OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/ghost.obj";
 
-    private static final String ID_DRESS = "Material.Dress";
-	private static final String ID_EYEBALLS = "Material.Eyeballs";
-	private static final String ID_PUPILS = "Material.Pupils";
+	private static final String ID_PUPILS   = "Object.Sphere.1.Group.Pupils";
+    private static final String ID_EYEBALLS = "Object.Sphere.2.Group.Eyeballs";
+    private static final String ID_DRESS    = "Object.Sphere.3.Group.Dress";
 
-	private final Map<String, MeshView> meshesByMaterialName;
+	private final Map<String, MeshView> meshViews;
 
 	private GhostModel3D() {
 		try {
 			final URL url = getClass().getResource(OBJ_FILE);
 			final var parser = new ObjFileParser(url, StandardCharsets.UTF_8);
 			final var builder = new TriangleMeshBuilder(parser.objModel(), parser.materialLibsMap());
-			meshesByMaterialName = builder.buildMeshViewsByMaterial();
+			meshViews = builder.buildMeshViewsByGroup();
 			// access meshes, fail fast
             dress();
 			eyeballs();
@@ -48,15 +48,15 @@ public class GhostModel3D implements Disposable {
 
 	@Override
 	public void dispose() {
-		meshesByMaterialName.clear();
+		meshViews.clear();
 	}
 
-	private MeshView meshViewOrFail(String materialName) {
-		final MeshView meshView = meshesByMaterialName.get(materialName);
+	private MeshView meshViewOrFail(String name) {
+		final MeshView meshView = meshViews.get(name);
 		if (meshView != null) {
 			return meshView;
 		}
-		throw new IllegalArgumentException("Mesh view for material %s does not exist".formatted(materialName));
+		throw new IllegalArgumentException("Mesh view for name %s does not exist".formatted(name));
 	}
 
 	public MeshView dress() {
