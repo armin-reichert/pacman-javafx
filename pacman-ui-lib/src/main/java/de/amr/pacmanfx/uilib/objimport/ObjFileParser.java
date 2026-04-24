@@ -372,7 +372,7 @@ public class ObjFileParser {
     }
 
     private FaceVertex parseFaceVertex(String ref) {
-        String[] parts = ref.split("/");
+        String[] parts = ref.split("/", -1);
 
         int v  = parseIndex(parts[0], objModel.vertices.size());
         int vt = parts.length > 1 && !parts[1].isEmpty()

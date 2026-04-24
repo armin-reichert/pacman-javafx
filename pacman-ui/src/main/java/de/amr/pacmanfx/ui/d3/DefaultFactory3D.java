@@ -120,9 +120,9 @@ public class DefaultFactory3D implements Factory3D {
         final GhostColorSet colorSet = ghostConfig.createGhostColorSet();
         final GhostMaterials materials = ghostMaterialsCache.computeIfAbsent(colorSet, this::createGhostMaterial);
         final GhostMeshes meshes = new GhostMeshes(
-            GhostModel3D.instance().dressMesh(),
-            GhostModel3D.instance().pupilsMesh(),
-            GhostModel3D.instance().eyeballsMesh()
+            GhostModel3D.instance().dress().getMesh(),
+            GhostModel3D.instance().pupils().getMesh(),
+            GhostModel3D.instance().eyeballs().getMesh()
         );
 
         return new GhostAppearance3D(

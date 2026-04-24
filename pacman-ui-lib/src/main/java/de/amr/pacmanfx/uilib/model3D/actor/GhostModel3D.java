@@ -7,7 +7,6 @@ package de.amr.pacmanfx.uilib.model3D.actor;
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.uilib.objimport.ObjFileParser;
 import de.amr.pacmanfx.uilib.objimport.TriangleMeshBuilder;
-import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 
 import java.net.URL;
@@ -34,13 +33,14 @@ public class GhostModel3D implements Disposable {
 
 	private GhostModel3D() {
 		try {
-			URL url = getClass().getResource(OBJ_FILE);
-			ObjFileParser parser = new ObjFileParser(url, StandardCharsets.UTF_8);
-			TriangleMeshBuilder builder = new TriangleMeshBuilder(parser.objModel(), parser.materialLibsMap());
+			final URL url = getClass().getResource(OBJ_FILE);
+			final var parser = new ObjFileParser(url, StandardCharsets.UTF_8);
+			final var builder = new TriangleMeshBuilder(parser.objModel(), parser.materialLibsMap());
 			meshesByMaterialName = builder.buildMeshViewsByMaterial();
-			dressMesh();
-			eyeballsMesh();
-			pupilsMesh();
+			// access meshes, fail fast
+            dress();
+			eyeballs();
+			pupils();
 		} catch (Exception x) {
 			throw new RuntimeException(x);
 		}
@@ -51,23 +51,23 @@ public class GhostModel3D implements Disposable {
 		meshesByMaterialName.clear();
 	}
 
-	private Mesh meshOrFail(String materialName) {
+	private MeshView meshViewOrFail(String materialName) {
 		final MeshView meshView = meshesByMaterialName.get(materialName);
 		if (meshView != null) {
-			return meshView.getMesh();
+			return meshView;
 		}
 		throw new IllegalArgumentException("Mesh view for material %s does not exist".formatted(materialName));
 	}
 
-	public Mesh dressMesh() {
-		return meshOrFail(ID_DRESS);
+	public MeshView dress() {
+		return meshViewOrFail(ID_DRESS);
 	}
 
-	public Mesh eyeballsMesh() {
-		return meshOrFail(ID_EYEBALLS);
+	public MeshView eyeballs() {
+		return meshViewOrFail(ID_EYEBALLS);
 	}
 
-	public Mesh pupilsMesh() {
-		return meshOrFail(ID_PUPILS);
+	public MeshView pupils() {
+		return meshViewOrFail(ID_PUPILS);
 	}
 }

@@ -202,13 +202,13 @@ public class EditorMaze3D extends Group {
     private Group createGhostBody(Color dressColor, double rotateY) {
         final Group body = new Group();
 
-        final MeshView dressMeshView = new MeshView(GhostModel3D.instance().dressMesh());
+        final MeshView dressMeshView = new MeshView(GhostModel3D.instance().dress().getMesh());
         dressMeshView.setMaterial(coloredPhongMaterial(dressColor));
 
-        final MeshView pupilsMeshView = new MeshView(GhostModel3D.instance().pupilsMesh());
+        final MeshView pupilsMeshView = new MeshView(GhostModel3D.instance().pupils().getMesh());
         pupilsMeshView.setMaterial(coloredPhongMaterial(Color.BLUE));
 
-        final MeshView eyeballsMeshView = new MeshView(GhostModel3D.instance().eyeballsMesh());
+        final MeshView eyeballsMeshView = new MeshView(GhostModel3D.instance().eyeballs().getMesh());
         eyeballsMeshView.setMaterial(coloredPhongMaterial(Color.WHITE));
 
         final var dressGroup = new Group(dressMeshView);
