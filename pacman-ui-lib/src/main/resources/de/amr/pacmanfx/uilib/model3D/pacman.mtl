@@ -1,5 +1,4 @@
-# Exported from Wings 3D 2.2.6.1
-newmtl grey_material
+newmtl Material.Eyes
 Ns 19.999999999999996
 d 1.0
 illum 2
@@ -8,7 +7,17 @@ Ka 0.0 0.0 0.0
 Ks 0.1 0.1 0.1
 Ke 0.0 0.0 0.0
 
-newmtl yellow_material
+newmtl Material.Palate
+Ns 19.999999999999996
+d 1.0
+illum 2
+Kd 0.112441 0.112441 0.112441
+Ka 0.0 0.0 0.0
+Ks 0.1 0.1 0.1
+Ke 0.0 0.0 0.0
+
+# Yellow color for the head
+newmtl Material.Head
 Ns 19.999999999999996
 d 1.0
 illum 2
