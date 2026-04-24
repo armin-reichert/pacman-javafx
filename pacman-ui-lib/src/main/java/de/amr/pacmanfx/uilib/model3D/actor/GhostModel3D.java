@@ -25,6 +25,7 @@ public class GhostModel3D implements Disposable {
     }
 
 	private static final String OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/ghost.obj";
+
     private static final String ID_DRESS = "Material.Dress";
 	private static final String ID_EYEBALLS = "Material.Eyeballs";
 	private static final String ID_PUPILS = "Material.Pupils";

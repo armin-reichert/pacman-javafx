@@ -5,7 +5,8 @@
 package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.uilib.objimport.Model3D;
+import de.amr.pacmanfx.uilib.objimport.ObjFileParserByCopilot;
+import de.amr.pacmanfx.uilib.objimport.TriangleMeshBuilderByCopilot;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -18,6 +19,9 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
@@ -42,33 +46,43 @@ public class PacManModel3D implements Disposable {
     }
 
 	private static final String OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pacman.obj";
-	private static final String ID_EYES = "Group.PacMan.Eyes";
-	private static final String ID_HEAD = "Group.PacMan.Head";
-	private static final String ID_PALATE = "Group.PacMan.Palate";
 
-	private final Model3D model3D;
+    private static final String ID_EYES = "Material.Eyes";
+	private static final String ID_HEAD = "Material.Head";
+	private static final String ID_PALATE = "Material.Palate";
+
+    private final Map<String, MeshView> meshesByMaterialName;
 
 	private PacManModel3D() {
 		try {
-			model3D = Model3D.importObj(getClass().getResource(OBJ_FILE));
+            URL url = getClass().getResource(OBJ_FILE);
+            ObjFileParserByCopilot parser = new ObjFileParserByCopilot(url, StandardCharsets.UTF_8);
+            TriangleMeshBuilderByCopilot builder = new TriangleMeshBuilderByCopilot(parser.objModel(), parser.materialLibsMap());
+            meshesByMaterialName = builder.buildMeshViewsByMaterial();
 			// fail fast
-			model3D.meshOrFail(ID_HEAD);
-			model3D.meshOrFail(ID_PALATE);
-			model3D.meshOrFail(ID_EYES);
+			meshOrFail(ID_HEAD);
+			meshOrFail(ID_PALATE);
+			meshOrFail(ID_EYES);
 		} catch (Exception x) {
 			throw new RuntimeException("Failed to load Pac-Man 3D model", x);
 		}
 	}
 
-	/**
-	 * Releases all resources associated with the underlying model.
-	 */
-	@Override
-	public void dispose() {
-		model3D.dispose();
-	}
+    @Override
+    public void dispose() {
+        meshesByMaterialName.clear();
+    }
 
-	/**
+    private Mesh meshOrFail(String materialName) {
+        final MeshView meshView = meshesByMaterialName.get(materialName);
+        if (meshView != null) {
+            return meshView.getMesh();
+        }
+        throw new IllegalArgumentException("Mesh view for material %s does not exist".formatted(materialName));
+    }
+
+
+    /**
 	 * Creates a fully assembled Pac-Man body with head, eyes, and palate.
 	 *
 	 * @param config the Pac configuration
@@ -77,10 +91,10 @@ public class PacManModel3D implements Disposable {
 	public Group createPacBody(PacConfig config) {
         final MeshView head = createHead(config);
 
-        final var eyes = new MeshView(model3D.meshOrFail(ID_EYES));
+        final var eyes = new MeshView(meshOrFail(ID_EYES));
         eyes.setMaterial(coloredPhongMaterial(config.colors().eyes()));
 
-        final var palate = new MeshView(model3D.meshOrFail(ID_PALATE));
+        final var palate = new MeshView(meshOrFail(ID_PALATE));
         palate.setMaterial((coloredPhongMaterial(config.colors().palate())));
 
 		final Group body = new Group(head, eyes, palate);
@@ -100,7 +114,7 @@ public class PacManModel3D implements Disposable {
 	public Group createBlindPacBody(PacConfig config) {
 		final MeshView head = createHead(config);
 
-        final var palate = new MeshView(model3D.meshOrFail(ID_PALATE));
+        final var palate = new MeshView(meshOrFail(ID_PALATE));
         palate.setMaterial(coloredPhongMaterial(config.colors().palate()));
 
 		final Group body = new Group(head, palate);
@@ -112,7 +126,7 @@ public class PacManModel3D implements Disposable {
     }
 
 	private MeshView createHead(PacConfig config) {
-		final Mesh headMesh = model3D.meshOrFail(ID_HEAD);
+		final Mesh headMesh = meshOrFail(ID_HEAD);
 		final var head = new MeshView(headMesh);
 
 		// If we would like to use the material defined in the OBJ file:
