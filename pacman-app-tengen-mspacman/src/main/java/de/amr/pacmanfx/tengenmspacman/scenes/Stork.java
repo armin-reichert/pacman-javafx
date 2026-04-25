@@ -11,13 +11,13 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.uilib.spriteanim.SpriteSpriteAnimationMap;
+import de.amr.pacmanfx.uilib.spriteanim.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.tengenmspacman.rendering.SpriteID.STORK;
 
 public class Stork extends Actor {
 
-    private static class StorkAnimations extends SpriteSpriteAnimationMap<SpriteID> {
+    private static class StorkAnimations extends SpriteAnimationMap<SpriteID> {
 
         public StorkAnimations() {
             super(TengenMsPacMan_SpriteSheet.instance());

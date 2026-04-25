@@ -9,12 +9,12 @@ import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.spriteanim.SpriteAnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
-import de.amr.pacmanfx.uilib.spriteanim.SpriteSpriteAnimationMap;
+import de.amr.pacmanfx.uilib.spriteanim.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_GhostAnimations extends SpriteSpriteAnimationMap<SpriteID> {
+public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
 
     private final SpriteAnimationContainer container;
     private final byte personality;

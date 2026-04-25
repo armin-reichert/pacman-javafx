@@ -15,13 +15,13 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class SpriteSpriteAnimationMap<SID> implements SpriteAnimationSet {
+public abstract class SpriteAnimationMap<SID> implements SpriteAnimationSet {
 
     protected final SpriteSheet<SID> spriteSheet;
     protected final Map<SpriteAnimationID, SpriteAnimation> animationsByID = new HashMap<>();
     protected SpriteAnimationID selectedID;
 
-    public SpriteSpriteAnimationMap(SpriteSheet<SID> spriteSheet) {
+    public SpriteAnimationMap(SpriteSheet<SID> spriteSheet) {
         this.spriteSheet = requireNonNull(spriteSheet);
     }
 

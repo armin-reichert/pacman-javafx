@@ -10,14 +10,14 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.spriteanim.SpriteAnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.spriteanim.SpriteSpriteAnimationMap;
+import de.amr.pacmanfx.uilib.spriteanim.SpriteAnimationMap;
 
 import java.util.Arrays;
 
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID.*;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_PacAnimations extends SpriteSpriteAnimationMap<SpriteID> {
+public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
     private final SpriteAnimationContainer container;
 

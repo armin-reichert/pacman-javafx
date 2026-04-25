@@ -11,11 +11,11 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.uilib.spriteanim.SpriteSpriteAnimationMap;
+import de.amr.pacmanfx.uilib.spriteanim.SpriteAnimationMap;
 
 public class Bag extends Actor {
 
-    public static class BagAnimations extends SpriteSpriteAnimationMap<SpriteID> {
+    public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
 
         public BagAnimations() {
             super(TengenMsPacMan_SpriteSheet.instance());
