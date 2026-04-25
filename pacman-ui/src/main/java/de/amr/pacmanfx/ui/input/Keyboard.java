@@ -46,6 +46,26 @@ public final class Keyboard {
 
     Keyboard() {}
 
+    public Set<KeyCode> pressedKeys() {
+        return pressedKeys;
+    }
+
+    public boolean shiftDown() {
+        return shiftDown;
+    }
+
+    public boolean controlDown() {
+        return controlDown;
+    }
+
+    public boolean altDown() {
+        return altDown;
+    }
+
+    public boolean metaDown() {
+        return metaDown;
+    }
+
     public void onKeyPressed(KeyEvent event) {
         if (Logger.isTraceEnabled()) Logger.trace("Key pressed: {}", event);
         if (!event.getCode().isModifierKey()) {
