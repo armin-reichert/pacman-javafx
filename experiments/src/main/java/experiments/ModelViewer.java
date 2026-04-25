@@ -103,8 +103,8 @@ public class ModelViewer extends Application {
     private MeshView importObjFile(File selectedFile) throws Exception {
         final URL url = selectedFile.toURI().toURL();
         final var parser = new ObjFileParser(url, StandardCharsets.UTF_8);
-        final var builder = new TriangleMeshBuilder(parser.parse());
-        var meshViews = builder.buildMeshViewsByGroup();
+        final var meshBuilder = new TriangleMeshBuilder(parser.parse());
+        var meshViews = meshBuilder.build(TriangleMeshBuilder.BuildMode.BY_GROUP);
         return meshViews.values().stream().findAny().orElse(null);
     }
 

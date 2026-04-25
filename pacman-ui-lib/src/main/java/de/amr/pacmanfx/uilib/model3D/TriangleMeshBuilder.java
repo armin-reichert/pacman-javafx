@@ -9,23 +9,25 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
-import org.tinylog.Logger;
 
 import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
-/**
- * Builds one MeshView per OBJ group.
- * No JavaFX Group nodes are created.
- */
 public class TriangleMeshBuilder {
+
+    public enum BuildMode {
+        BY_GROUP,
+        BY_OBJECT,
+        BY_MATERIAL
+    }
 
     private final ObjModel model;
     private final Map<String, PhongMaterial> materials;
 
     public TriangleMeshBuilder(ObjModel model) {
         this.model = requireNonNull(model);
+
         // Flatten material libraries
         materials = new HashMap<>();
         for (Map<String, ObjMaterial> lib : model.materialLibsMap().values()) {
@@ -36,6 +38,14 @@ public class TriangleMeshBuilder {
     /* -------------------------------------------------------------
      *  PUBLIC API
      * ------------------------------------------------------------- */
+
+    public Map<String, MeshView> build(BuildMode mode) {
+        return switch (mode) {
+            case BY_GROUP -> buildMeshViewsByGroup();
+            case BY_OBJECT -> buildMeshViewsByObject();
+            case BY_MATERIAL -> buildMeshViewsByMaterial();
+        };
+    }
 
     /**
      * Builds one MeshView per OBJ group.
@@ -54,6 +64,66 @@ public class TriangleMeshBuilder {
 
                 result.put(key, mv);
             }
+        }
+
+        return result;
+    }
+
+    /**
+     * Builds one MeshView per OBJ object.
+     * All groups inside the object are merged.
+     * Key format: "objectName"
+     */
+    public Map<String, MeshView> buildMeshViewsByObject() {
+        Map<String, MeshView> result = new LinkedHashMap<>();
+
+        for (ObjObject obj : model.objects()) {
+
+            List<ObjFace> allFaces = new ArrayList<>();
+            for (ObjGroup group : obj.groups) {
+                allFaces.addAll(group.faces);
+            }
+
+            MeshView mv = buildMeshViewForFaces(allFaces);
+            mv.setId(obj.name);
+
+            result.put(obj.name, mv);
+        }
+
+        return result;
+    }
+
+    /**
+     * Builds one MeshView per material.
+     * Key format: "materialName"
+     */
+    public Map<String, MeshView> buildMeshViewsByMaterial() {
+        Map<String, List<ObjFace>> facesByMaterial = new LinkedHashMap<>();
+
+        for (ObjObject obj : model.objects()) {
+            for (ObjGroup group : obj.groups) {
+                for (ObjFace face : group.faces) {
+                    facesByMaterial
+                        .computeIfAbsent(face.materialName, _ -> new ArrayList<>())
+                        .add(face);
+                }
+            }
+        }
+
+        Map<String, MeshView> result = new LinkedHashMap<>();
+
+        for (var entry : facesByMaterial.entrySet()) {
+            String matName = entry.getKey();
+            List<ObjFace> faces = entry.getValue();
+
+            MeshView mv = buildMeshViewForFaces(faces);
+            mv.setId(matName);
+
+            if (materials.containsKey(matName)) {
+                mv.setMaterial(materials.get(matName));
+            }
+
+            result.put(matName, mv);
         }
 
         return result;
@@ -92,17 +162,15 @@ public class TriangleMeshBuilder {
                 VertexKey key = new VertexKey(fv.vIndex, fv.vtIndex, fv.vnIndex);
 
                 int newIndex = vertexMap.computeIfAbsent(key, k -> {
-                    // Position
                     ObjVertex v = model.vertices().get(k.v);
                     points.add(v.x());
                     points.add(v.y());
                     points.add(v.z());
 
-                    // UV
                     if (k.vt >= 0) {
                         ObjTexCoord tc = model.texCoords().get(k.vt);
                         texCoords.add(tc.u());
-                        texCoords.add(1 - tc.v()); // JavaFX V-flip
+                        texCoords.add(1 - tc.v());
                     } else {
                         texCoords.add(0f);
                         texCoords.add(0f);
@@ -111,12 +179,10 @@ public class TriangleMeshBuilder {
                     return (points.size() / 3) - 1;
                 });
 
-                // JavaFX face format: vertexIndex, texCoordIndex
                 facesIdx.add(newIndex);
                 facesIdx.add(newIndex);
             }
 
-            // Smoothing group → JavaFX bitmask
             int sg = face.smoothingGroup != null ? (1 << face.smoothingGroup) : 0;
             smoothing.add(sg);
         }
@@ -147,25 +213,8 @@ public class TriangleMeshBuilder {
 
     private record VertexKey(int v, int vt, int vn) {}
 
-    // Note: Copilot says that for transparent colors to work, the mesh view must have:
-    // meshView.setCullFace(CullFace.NONE);
-    // meshView.setDrawMode(DrawMode.FILL);
-    // meshView.setDepthTest(DepthTest.ENABLE);
-    // meshView.setBlendMode(BlendMode.SRC_OVER);
     private static PhongMaterial createPhongMaterial(ObjMaterial objMaterial) {
-        if (objMaterial.illumination() != ObjMaterial.DEFAULT_ILLUMINATION) {
-            Logger.warn("{}: Illumination value {} will be ignored", objMaterial.name(), objMaterial.illumination());
-        }
-        if (!objMaterial.ambientColor().equals(ObjMaterial.DEFAULT_AMBIENT_COLOR)) {
-            Logger.warn("{}: Ambient Color value {} will be ignored", objMaterial.name(), objMaterial.ambientColor());
-        }
-        if (!objMaterial.emissiveColor().equals(ObjMaterial.DEFAULT_EMISSIVE_COLOR)) {
-            Logger.warn("{}: Emissive Color value {} will be ignored", objMaterial.name(), objMaterial.emissiveColor());
-        }
-        if (objMaterial.refractionIndex() != ObjMaterial.DEFAULT_REFRACTION_INDEX) {
-            Logger.warn("{}: Refraction Index value {} will be ignored", objMaterial.name(), objMaterial.refractionIndex());
-        }
-        final var phongMaterial = new PhongMaterial();
+        PhongMaterial phongMaterial = new PhongMaterial();
         phongMaterial.setDiffuseColor(fxColor(objMaterial.diffuseColor(), objMaterial.opacity()));
         phongMaterial.setSpecularColor(fxColor(objMaterial.specularColor(), objMaterial.opacity()));
         phongMaterial.setSpecularPower(objMaterial.specularExponent());

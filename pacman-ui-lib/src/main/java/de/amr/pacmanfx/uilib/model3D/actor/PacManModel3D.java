@@ -53,8 +53,8 @@ public class PacManModel3D {
 		try {
             final URL url = getClass().getResource(OBJ_FILE);
             final var parser = new ObjFileParser(url, StandardCharsets.UTF_8);
-            final var builder = new TriangleMeshBuilder(parser.parse());
-            meshViews = builder.buildMeshViewsByGroup();
+            final var meshBuilder = new TriangleMeshBuilder(parser.parse());
+            meshViews = meshBuilder.build(TriangleMeshBuilder.BuildMode.BY_GROUP);
 			// fail fast
             head();
             palate();
