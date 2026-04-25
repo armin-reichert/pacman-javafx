@@ -34,13 +34,18 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -146,21 +151,38 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
     }
 
-    private Pane createKeyboardMonitor() {
-        VBox box = new VBox();
-        box.setPrefSize(200, 100);
-        box.setMaxWidth(200);
-        box.setBackground(Background.fill(Color.color(0.2, 0.2, 0.2, 0.5)));
-        box.setBorder(Border.stroke(Color.WHITE));
+    private Node createKeyboardMonitor() {
+        final VBox box = new VBox();
+        box.setAlignment(Pos.TOP_CENTER);
+        box.setBackground(Background.fill(Color.TRANSPARENT));
+        box.setPrefSize(300, 50);
+        box.setMaxSize(300, 200);
+        box.setSpacing(3);
+        box.setStyle("""
+    -fx-border-color: #ccc;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+""");
+        StackPane.setMargin(box, new Insets(10));
         StackPane.setAlignment(box, Pos.TOP_RIGHT);
         box.visibleProperty().bind(PROPERTY_KEYBOARD_MONITOR_VISIBLE);
 
         Input.instance().keyboard.addListener(keyboard -> {
             box.getChildren().clear();
+
+            final Font titleFont = Font.font("Sans", FontWeight.BLACK, 16);
+            final Text title = new Text("Keyboard State");
+            title.setFill(Color.WHITE);
+            title.setFont(titleFont);
+            VBox.setMargin(title, new Insets(4));
+            box.getChildren().add(title);
+
+            final Font labelFont = Font.font("Monospace", FontWeight.BOLD, 16);
             keyboard.pressedKeys().stream().sorted().forEach(keyCode -> {
-                Text stateLabel = new Text();
-                stateLabel.setFill(Color.WHITE);
-                stateLabel.setFont(Font.font(16));
+                final Text stateLabel = new Text();
+                stateLabel.setFill(Color.LIGHTGRAY);
+                stateLabel.setFont(labelFont);
                 String modText = "";
                 if (keyboard.altDown()) modText += "Alt ";
                 if (keyboard.shiftDown()) modText += "Shift ";
@@ -168,9 +190,16 @@ public final class GameUI_Implementation extends PreferencesManager implements G
                 if (keyboard.metaDown()) modText += "Meta ";
                 stateLabel.setText(modText + keyCode.getName());
                 box.getChildren().add(stateLabel);
-                Logger.info("Keyboard state change occurred");
             });
+
+            final Text footer = new Text("Press Alt+K to close");
+            footer.setFill(Color.WHITE);
+            footer.setFont(titleFont);
+            VBox.setMargin(footer, new Insets(4));
+            box.getChildren().add(footer);
+
         });
+
         return box;
     }
 
