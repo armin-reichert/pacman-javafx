@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.uilib.model3D.actor;
 
-import de.amr.basics.Disposable;
 import de.amr.pacmanfx.uilib.objimport.ObjFileParser;
 import de.amr.pacmanfx.uilib.objimport.TriangleMeshBuilder;
 import javafx.geometry.Bounds;
@@ -31,10 +30,8 @@ import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
  * The model is loaded from a Wavefront OBJ file and split into named sub-meshes
  * (head, eyes, palate). This class also provides convenience factory methods for
  * creating fully assembled Pac-Man and Ms. Pac-Man 3D bodies.
- * <p>
- * Instances must be disposed via {@link #dispose()} to release mesh resources.
  */
-public class PacManModel3D implements Disposable {
+public class PacManModel3D {
 
     private static class LazyThreadSafeSingletonHolder {
         static final PacManModel3D SINGLETON = new PacManModel3D();
@@ -66,11 +63,6 @@ public class PacManModel3D implements Disposable {
 			throw new RuntimeException("Failed to load Pac-Man 3D model", x);
 		}
 	}
-
-    @Override
-    public void dispose() {
-        meshViews.clear();
-    }
 
     public MeshView head() {
         return meshViewOrFail(ID_HEAD);

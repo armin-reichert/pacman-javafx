@@ -13,7 +13,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-public class GhostModel3D implements Disposable {
+public class GhostModel3D {
 
     private static class LazyThreadSafeSingletonHolder {
         static final GhostModel3D SINGLETON = new GhostModel3D();
@@ -44,11 +44,6 @@ public class GhostModel3D implements Disposable {
 		} catch (Exception x) {
 			throw new RuntimeException(x);
 		}
-	}
-
-	@Override
-	public void dispose() {
-		meshViews.clear();
 	}
 
 	private MeshView meshViewOrFail(String name) {

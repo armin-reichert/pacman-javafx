@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.uilib.model3D.world;
 
-import de.amr.basics.Disposable;
 import de.amr.pacmanfx.uilib.objimport.ObjFileParser;
 import de.amr.pacmanfx.uilib.objimport.TriangleMeshBuilder;
 import javafx.scene.shape.MeshView;
@@ -13,7 +12,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-public class PelletModel3D implements Disposable {
+public class PelletModel3D {
 
     private static class LazyThreadSafeSingletonHolder {
         static final PelletModel3D SINGLETON = new PelletModel3D();
@@ -43,11 +42,6 @@ public class PelletModel3D implements Disposable {
 
     public MeshView pellet() {
         return meshViewOrFail(ID_PELLET);
-    }
-
-    @Override
-    public void dispose() {
-        meshViews.clear();
     }
 
     private MeshView meshViewOrFail(String name) {
