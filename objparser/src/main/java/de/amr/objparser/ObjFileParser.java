@@ -13,7 +13,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -149,13 +148,11 @@ public class ObjFileParser {
 
         final String libURL = objFileURLString.substring(0, endOfPath) + "/" + libName;
         Logger.debug("Material library URL: {}", libURL);
-
         try {
             final URI uri = new URI(libURL);
-            try (InputStream is = uri.toURL().openStream()) {
-                final var reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-                final ObjMtlFileParser parser = new ObjMtlFileParser();
-                parser.parse(reader);
+            final ObjMtlFileParser parser = new ObjMtlFileParser();
+            try (InputStream stream = uri.toURL().openStream()) {
+                parser.parse(stream, charset);
                 return parser.materialMap();
             }
         } catch (URISyntaxException e) {

@@ -7,10 +7,8 @@ package de.amr.pacmanfx.uilib.model3D;
 import de.amr.objparser.ObjMtlFileParser;
 import org.tinylog.Logger;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -30,11 +28,8 @@ public class MtlFileParserTest {
             }
             Logger.info("Parsing material file '{}'", path);
             final ObjMtlFileParser parser = new ObjMtlFileParser();
-            try {
-                try (InputStream is = url.openStream()) {
-                    final var reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-                    parser.parse(reader);
-                }
+            try (InputStream stream = url.openStream()) {
+                parser.parse(stream, StandardCharsets.UTF_8);
             } catch (IOException x) {
                 Logger.error(x, "Parsing error");
             }
