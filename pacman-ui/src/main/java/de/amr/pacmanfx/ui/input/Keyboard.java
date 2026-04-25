@@ -36,9 +36,40 @@ public final class Keyboard {
     public static KeyCombination alt_shift(KeyCode code) { return new KeyCodeCombination(code, SHIFT_DOWN, ALT_DOWN); }
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
+
+    private boolean shiftDown;
+    private boolean controlDown;
+    private boolean altDown;
+    private boolean metaDown;
+
     private final Map<KeyCombination, ActionBindingsManager> actionBindings = new HashMap<>();
 
     Keyboard() {}
+
+    public void onKeyPressed(KeyEvent event) {
+        if (Logger.isTraceEnabled()) Logger.trace("Key pressed: {}", event);
+        if (!event.getCode().isModifierKey()) {
+            pressedKeys.add(event.getCode());
+        } else {
+            updateModifierState(event);
+        }
+    }
+
+    public void onKeyReleased(KeyEvent event) {
+        if (Logger.isTraceEnabled()) Logger.trace("Key released: {}", event);
+        if (!event.getCode().isModifierKey()) {
+            pressedKeys.remove(event.getCode());
+        } else {
+            updateModifierState(event);
+        }
+    }
+
+    private void updateModifierState(KeyEvent event) {
+        shiftDown = event.isShiftDown();
+        controlDown = event.isControlDown();;
+        altDown = event.isAltDown();
+        metaDown = event.isMetaDown();
+    }
 
     public boolean isPressed(KeyCode keyCode) {
         return pressedKeys.contains(keyCode);
@@ -64,16 +95,6 @@ public final class Keyboard {
         }
     }
 
-    public void onKeyPressed(KeyEvent key) {
-        Logger.trace("Key pressed: {}", key);
-        pressedKeys.add(key.getCode());
-    }
-
-    public void onKeyReleased(KeyEvent key) {
-        Logger.trace("Key released: {}", key);
-        pressedKeys.remove(key.getCode());
-    }
-
     public boolean isMatching(KeyCombination combination) {
         return pressedKeys.stream()
             .anyMatch(key -> combination.match(syntheticKeyEvent(key)));
@@ -85,10 +106,10 @@ public final class Keyboard {
             "",
             "",
             keyCode,
-            pressedKeys.contains(KeyCode.SHIFT),
-            pressedKeys.contains(KeyCode.CONTROL),
-            pressedKeys.contains(KeyCode.ALT),
-            pressedKeys.contains(KeyCode.META)
+            shiftDown,
+            controlDown,
+            altDown,
+            metaDown
         );
     }
 }
