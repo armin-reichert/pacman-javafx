@@ -153,22 +153,22 @@ public class TriangleMeshBuilder {
     // meshView.setDepthTest(DepthTest.ENABLE);
     // meshView.setBlendMode(BlendMode.SRC_OVER);
     private static PhongMaterial createPhongMaterial(ObjMaterial objMaterial) {
-        if (objMaterial.illum() != ObjMaterial.DEFAULT_ILLUMINATION) {
-            Logger.warn("{}: Illumination value {} will be ignored", objMaterial.name(), objMaterial.illum());
+        if (objMaterial.illumination() != ObjMaterial.DEFAULT_ILLUMINATION) {
+            Logger.warn("{}: Illumination value {} will be ignored", objMaterial.name(), objMaterial.illumination());
         }
-        if (!objMaterial.ka().equals(ObjMaterial.DEFAULT_AMBIENT_COLOR)) {
-            Logger.warn("{}: Ambient Color value {} will be ignored", objMaterial.name(), objMaterial.ka());
+        if (!objMaterial.ambientColor().equals(ObjMaterial.DEFAULT_AMBIENT_COLOR)) {
+            Logger.warn("{}: Ambient Color value {} will be ignored", objMaterial.name(), objMaterial.ambientColor());
         }
-        if (!objMaterial.ke().equals(ObjMaterial.DEFAULT_EMISSIVE_COLOR)) {
-            Logger.warn("{}: Emissive Color value {} will be ignored", objMaterial.name(), objMaterial.ke());
+        if (!objMaterial.emissiveColor().equals(ObjMaterial.DEFAULT_EMISSIVE_COLOR)) {
+            Logger.warn("{}: Emissive Color value {} will be ignored", objMaterial.name(), objMaterial.emissiveColor());
         }
-        if (objMaterial.ni() != ObjMaterial.DEFAULT_REFRACTION_INDEX) {
-            Logger.warn("{}: Refraction Index value {} will be ignored", objMaterial.name(), objMaterial.ni());
+        if (objMaterial.refractionIndex() != ObjMaterial.DEFAULT_REFRACTION_INDEX) {
+            Logger.warn("{}: Refraction Index value {} will be ignored", objMaterial.name(), objMaterial.refractionIndex());
         }
         final var phongMaterial = new PhongMaterial();
-        phongMaterial.setDiffuseColor(fxColor(objMaterial.kd(), objMaterial.d()));
-        phongMaterial.setSpecularColor(fxColor(objMaterial.ks(), objMaterial.d()));
-        phongMaterial.setSpecularPower(objMaterial.ns());
+        phongMaterial.setDiffuseColor(fxColor(objMaterial.diffuseColor(), objMaterial.opacity()));
+        phongMaterial.setSpecularColor(fxColor(objMaterial.specularColor(), objMaterial.opacity()));
+        phongMaterial.setSpecularPower(objMaterial.specularExponent());
         return phongMaterial;
     }
 
