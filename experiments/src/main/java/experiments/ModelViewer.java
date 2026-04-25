@@ -3,7 +3,7 @@ package experiments;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
 import de.amr.pacmanfx.uilib.objimport.ObjFileParser;
-import de.amr.pacmanfx.uilib.objimport.TriangleMeshBuilder;
+import de.amr.pacmanfx.uilib.model3D.TriangleMeshBuilder;
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.control.Menu;

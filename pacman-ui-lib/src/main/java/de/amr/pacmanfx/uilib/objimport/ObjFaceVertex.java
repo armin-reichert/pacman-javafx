@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.objimport;
 
-class ObjFaceVertex {
+public class ObjFaceVertex {
     public final int vIndex;
     public final int vtIndex;
     public final int vnIndex;

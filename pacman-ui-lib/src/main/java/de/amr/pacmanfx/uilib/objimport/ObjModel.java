@@ -4,10 +4,7 @@
 
 package de.amr.pacmanfx.uilib.objimport;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ObjModel {
     final List<ObjVertex> vertices = new ArrayList<>();
@@ -21,4 +18,20 @@ public class ObjModel {
     ObjGroup currentGroup;
     String currentMaterialName;
     Integer currentSmoothingGroup;
+
+    public List<ObjVertex> vertices() {
+        return Collections.unmodifiableList(vertices);
+    }
+
+    public List<ObjTexCoord> texCoords() {
+        return Collections.unmodifiableList(texCoords);
+    }
+
+    public List<ObjObject> objects() {
+        return Collections.unmodifiableList(objects);
+    }
+
+    public Map<String, Map<String, ObjMaterial>> materialLibsMap() {
+        return Collections.unmodifiableMap(materialLibsMap);
+    }
 }

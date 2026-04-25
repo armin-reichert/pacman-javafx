@@ -1,5 +1,10 @@
-package de.amr.pacmanfx.uilib.objimport;
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
 
+package de.amr.pacmanfx.uilib.model3D;
+
+import de.amr.pacmanfx.uilib.objimport.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
@@ -22,7 +27,7 @@ public class TriangleMeshBuilder {
 
         // Flatten material libraries
         Map<String, PhongMaterial> materialMap = new HashMap<>();
-        for (Map<String, ObjMaterial> lib : model.materialLibsMap.values()) {
+        for (Map<String, ObjMaterial> lib : model.materialLibsMap().values()) {
             lib.forEach((name, material) -> materialMap.put(name, createPhongMaterial(material)));
         }
         this.materials = materialMap;
@@ -39,7 +44,7 @@ public class TriangleMeshBuilder {
     public Map<String, MeshView> buildMeshViewsByGroup() {
         Map<String, MeshView> result = new LinkedHashMap<>();
 
-        for (ObjObject obj : model.objects) {
+        for (ObjObject obj : model.objects()) {
             for (ObjGroup group : obj.groups) {
 
                 String key = obj.name + "." + group.name;
@@ -88,14 +93,14 @@ public class TriangleMeshBuilder {
 
                 int newIndex = vertexMap.computeIfAbsent(key, k -> {
                     // Position
-                    ObjVertex v = model.vertices.get(k.v);
+                    ObjVertex v = model.vertices().get(k.v);
                     points.add(v.x());
                     points.add(v.y());
                     points.add(v.z());
 
                     // UV
                     if (k.vt >= 0) {
-                        ObjTexCoord tc = model.texCoords.get(k.vt);
+                        ObjTexCoord tc = model.texCoords().get(k.vt);
                         texCoords.add(tc.u());
                         texCoords.add(1 - tc.v()); // JavaFX V-flip
                     } else {
@@ -148,27 +153,26 @@ public class TriangleMeshBuilder {
     // meshView.setDepthTest(DepthTest.ENABLE);
     // meshView.setBlendMode(BlendMode.SRC_OVER);
     private static PhongMaterial createPhongMaterial(ObjMaterial objMaterial) {
-        if (objMaterial.illum != ObjMaterial.DEFAULT_ILLUMINATION) {
-            Logger.warn("{}: Illumination value {} will be ignored", objMaterial.name, objMaterial.illum);
+        if (objMaterial.illum() != ObjMaterial.DEFAULT_ILLUMINATION) {
+            Logger.warn("{}: Illumination value {} will be ignored", objMaterial.name(), objMaterial.illum());
         }
-        if (!objMaterial.ka.equals(ObjMaterial.DEFAULT_AMBIENT_COLOR)) {
-            Logger.warn("{}: Ambient Color value {} will be ignored", objMaterial.name, objMaterial.ka);
+        if (!objMaterial.ka().equals(ObjMaterial.DEFAULT_AMBIENT_COLOR)) {
+            Logger.warn("{}: Ambient Color value {} will be ignored", objMaterial.name(), objMaterial.ka());
         }
-        if (!objMaterial.ke.equals(ObjMaterial.DEFAULT_EMISSIVE_COLOR)) {
-            Logger.warn("{}: Emissive Color value {} will be ignored", objMaterial.name, objMaterial.ke);
+        if (!objMaterial.ke().equals(ObjMaterial.DEFAULT_EMISSIVE_COLOR)) {
+            Logger.warn("{}: Emissive Color value {} will be ignored", objMaterial.name(), objMaterial.ke());
         }
-        if (objMaterial.ni != ObjMaterial.DEFAULT_REFRACTION_INDEX) {
-            Logger.warn("{}: Refraction Index value {} will be ignored", objMaterial.name, objMaterial.ni);
+        if (objMaterial.ni() != ObjMaterial.DEFAULT_REFRACTION_INDEX) {
+            Logger.warn("{}: Refraction Index value {} will be ignored", objMaterial.name(), objMaterial.ni());
         }
         final var phongMaterial = new PhongMaterial();
-        phongMaterial.setDiffuseColor(fxColor(objMaterial.kd, objMaterial.d));
-        phongMaterial.setSpecularColor(fxColor(objMaterial.ks, objMaterial.d));
-        phongMaterial.setSpecularPower(objMaterial.ns);
+        phongMaterial.setDiffuseColor(fxColor(objMaterial.kd(), objMaterial.d()));
+        phongMaterial.setSpecularColor(fxColor(objMaterial.ks(), objMaterial.d()));
+        phongMaterial.setSpecularPower(objMaterial.ns());
         return phongMaterial;
     }
 
     private static Color fxColor(ColorRGB colorRGB, double opacity) {
         return Color.color(colorRGB.red(), colorRGB.green(), colorRGB.blue(), opacity);
     }
-
 }

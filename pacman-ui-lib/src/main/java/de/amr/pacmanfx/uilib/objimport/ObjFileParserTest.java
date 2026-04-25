@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.uilib.objimport;
 
+import de.amr.pacmanfx.uilib.model3D.TriangleMeshBuilder;
 import javafx.scene.shape.MeshView;
 import org.tinylog.Logger;
 

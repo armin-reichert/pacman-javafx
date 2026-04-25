@@ -7,7 +7,7 @@ package de.amr.pacmanfx.uilib.objimport;
 import java.util.ArrayList;
 import java.util.List;
 
-class ObjFace {
+public class ObjFace {
     public final List<ObjFaceVertex> vertices = new ArrayList<>();
     public final String materialName;
     public final Integer smoothingGroup;

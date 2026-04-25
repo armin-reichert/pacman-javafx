@@ -7,7 +7,7 @@ package de.amr.pacmanfx.uilib.objimport;
 import java.util.ArrayList;
 import java.util.List;
 
-class ObjGroup {
+public class ObjGroup {
     public final String name;
     public final List<ObjFace> faces = new ArrayList<>();
 

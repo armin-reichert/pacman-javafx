@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.pacmanfx.uilib.objimport.ObjFileParser;
-import de.amr.pacmanfx.uilib.objimport.TriangleMeshBuilder;
+import de.amr.pacmanfx.uilib.model3D.TriangleMeshBuilder;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
