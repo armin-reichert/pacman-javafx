@@ -7,17 +7,16 @@ package de.amr.objparser;
 import java.util.*;
 
 public class ObjModel {
+    final Map<String, Map<String, ObjMaterial>> materialLibsMap = new HashMap<>();
+    final List<ObjObject> objects = new ArrayList<>();
     final List<ObjVertex> vertices = new ArrayList<>();
-    List<ObjTexCoord> texCoords = new ArrayList<>();
+    final List<ObjTexCoord> texCoords = new ArrayList<>();
     final List<ObjNormal> normals = new ArrayList<>();
 
-    final List<ObjObject> objects = new ArrayList<>();
-    final Map<String, Map<String, ObjMaterial>> materialLibsMap = new HashMap<>();
-
     ObjObject currentObject;
-    ObjGroup currentGroup;
-    String currentMaterialName;
-    Integer currentSmoothingGroup;
+    ObjGroup  currentGroup;
+    String    currentMaterialName;
+    Integer   currentSmoothingGroup;
 
     public List<ObjVertex> vertices() {
         return Collections.unmodifiableList(vertices);
