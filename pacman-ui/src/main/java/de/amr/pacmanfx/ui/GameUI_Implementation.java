@@ -38,14 +38,15 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -304,11 +305,15 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         stopGame();
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void load3DModels() {
         Logger.info("Preloading 3D models...");
         PacManModel3D.instance();
+        Logger.info("Pac-Man 3D model loaded");
         GhostModel3D.instance();
+        Logger.info("Ghost 3D model loaded");
         PelletModel3D.instance();
+        Logger.info("Pellet 3D model loaded");
     }
 
     // PreferencesManager interface
