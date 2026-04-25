@@ -10,10 +10,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static javafx.scene.input.KeyCombination.*;
 
@@ -21,6 +18,21 @@ import static javafx.scene.input.KeyCombination.*;
  * Handles keyboard input and matching of key combinations against registered action.
  */
 public final class Keyboard {
+
+    // Notification mechanism
+    public interface KeyboardListener {
+        void keyboardStateChanged(Keyboard keyboard);
+    }
+
+    private final Set<KeyboardListener> listeners = new HashSet<>();
+
+    public void addListener(KeyboardListener l) {
+        listeners.add(l);
+    }
+
+    public void removeListener(KeyboardListener l) {
+        listeners.remove(l);
+    }
 
     // Provide an API for the most common cases
     public static KeyCombination bare(KeyCode code) { return new KeyCodeCombination(code); }
@@ -47,7 +59,7 @@ public final class Keyboard {
     Keyboard() {}
 
     public Set<KeyCode> pressedKeys() {
-        return pressedKeys;
+        return Collections.unmodifiableSet(pressedKeys);
     }
 
     public boolean shiftDown() {
@@ -73,6 +85,8 @@ public final class Keyboard {
         }
         // Always update modifier state because e.g. SHIFT + S is a single event
         updateModifierState(event);
+
+        listeners.forEach(listener -> listener.keyboardStateChanged(this));
     }
 
     public void onKeyReleased(KeyEvent event) {
@@ -82,6 +96,8 @@ public final class Keyboard {
         }
         // Always update modifier state because e.g. SHIFT + S is a single event
         updateModifierState(event);
+
+        listeners.forEach(listener -> listener.keyboardStateChanged(this));
     }
 
     private void updateModifierState(KeyEvent event) {
