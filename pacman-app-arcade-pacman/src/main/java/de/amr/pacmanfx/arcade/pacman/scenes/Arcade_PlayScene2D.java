@@ -93,6 +93,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
         return Optional.of(menu);
     }
 
+    @Override
+    public void onEnteredFrom3DScene() {
+        gameContext().game().optGameLevel().ifPresent(this::adaptToGameLevel);
+    }
+
     // Game event handlers
 
     @Override
@@ -200,10 +205,14 @@ public class Arcade_PlayScene2D extends GameScene2D {
      */
     private void adaptToGameLevel(GameLevel level) {
         ui.soundManager().setEnabled(!level.isDemoLevel()); //TODO is this needed?
-        actionBindings.addAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
-        actionBindings.addAll(GameUI.STEERING_ACTION_BINDINGS);
-        actionBindings.addAll(GameUI.CHEAT_ACTION_BINDINGS);
+
+        if (!level.isDemoLevel()) {
+            actionBindings.addAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
+            actionBindings.addAll(GameUI.STEERING_ACTION_BINDINGS);
+            actionBindings.addAll(GameUI.CHEAT_ACTION_BINDINGS);
+        }
         actionBindings.assignToKeyboard();
+
         Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 

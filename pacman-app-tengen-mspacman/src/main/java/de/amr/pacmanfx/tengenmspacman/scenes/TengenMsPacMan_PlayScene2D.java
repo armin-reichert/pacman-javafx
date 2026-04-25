@@ -103,6 +103,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
+    public void onEnteredFrom3DScene() {
+        final Game game = gameContext().game();
+        game.hud().levelCounter(true).livesCounter(true).show();
+        game.optGameLevel().ifPresent(this::adaptToGameLevel);
+    }
+
+    @Override
     public void setCanvas(Canvas canvas) {
         this.canvas = requireNonNull(canvas);
         canvas.widthProperty() .bind(scalingProperty().multiply(NES_SCREEN_WIDTH));
@@ -252,7 +259,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent e) {
-        acceptGameLevel(e.level());
+        adaptToGameLevel(e.level());
     }
 
     @Override
@@ -293,20 +300,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         soundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
 
-    @Override
-    public void onEnteredFrom3DScene() {
-        final Game game = gameContext().game();
-        game.hud().levelCounter(true).livesCounter(true).show();
-        game.optGameLevel().ifPresent(this::acceptGameLevel);
-    }
-
     // private
 
-    private void acceptGameLevel(GameLevel level) {
+    private void adaptToGameLevel(GameLevel level) {
         dynamicCamera.enterTrackingMode();
         dynamicCamera.updateRange(level.worldMap());
 
-        // Action keyboard bindings
+        ui.soundManager().setEnabled(!level.isDemoLevel()); //TODO is this needed?
+
         if (level.isDemoLevel()) {
             actionBindings.addAny(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
             actionBindings.addAny(ACTION_QUIT_DEMO_LEVEL, TENGEN_SPECIFIC_BINDINGS);
@@ -319,6 +320,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         }
         Input.instance().joypad.setBindings(actionBindings);
         actionBindings.assignToKeyboard();
+
+        Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
     private void updateScaling() {
