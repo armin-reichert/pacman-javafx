@@ -106,12 +106,11 @@ public class ObjFileParser {
 
     public ObjModel parse() throws IOException {
         final var objModel = new ObjModel();
-        try (InputStream is = objFileURL.openStream()) {
-            parseMaterialLibraries(objModel, new BufferedReader(new InputStreamReader(is, charset)));
+        try (InputStream stream = objFileURL.openConnection().getInputStream()) {
+            parseMaterialLibraries(objModel, stream);
         }
-        try (InputStream is = objFileURL.openStream()) {
-            parseGeometry(objModel, new BufferedReader(new InputStreamReader(is, charset)));
-
+        try (InputStream stream = objFileURL.openConnection().getInputStream()) {
+            parseGeometry(objModel, stream);
         }
         return objModel;
     }
@@ -120,7 +119,8 @@ public class ObjFileParser {
      *  MATERIAL LIBRARIES
      * ------------------------------------------------------------- */
 
-    private void parseMaterialLibraries(ObjModel objModel, BufferedReader reader) throws IOException {
+    private void parseMaterialLibraries(ObjModel objModel, InputStream stream) throws IOException {
+        final var reader = new BufferedReader(new InputStreamReader(stream, charset));
         tokenizer = new Tokenizer(reader);
         for (Token token; (token = tokenizer.next()) != null; ) {
             if (token.keyword() == ObjKeyword.MATERIAL_LIB) {
@@ -165,7 +165,8 @@ public class ObjFileParser {
      *  OBJ PARSING
      * ------------------------------------------------------------- */
 
-    private void parseGeometry(ObjModel objModel, BufferedReader reader) throws IOException {
+    private void parseGeometry(ObjModel objModel, InputStream stream) throws IOException {
+        final var reader = new BufferedReader(new InputStreamReader(stream, charset));
         tokenizer = new Tokenizer(reader);
         Token token;
 
