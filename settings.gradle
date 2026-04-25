@@ -20,6 +20,7 @@ rootProject.name = "pacman-javafx"
 
 include(
     "basics",
+    "objparser",
     "pacman-core",
     "pacman-ui-lib",
     "pacman-ui",
@@ -29,5 +30,4 @@ include(
     "pacman-app-tengen-mspacman",
     "pacman-app-allgames",
     "pacman-app-mapeditor",
-    "experiments"
-)
+    "experiments")

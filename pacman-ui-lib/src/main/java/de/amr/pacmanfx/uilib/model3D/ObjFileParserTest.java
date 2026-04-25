@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.uilib.objimport.ObjFileParser;
+import de.amr.objparser.ObjFileParser;
 import javafx.scene.shape.MeshView;
 import org.tinylog.Logger;
 
@@ -22,7 +22,7 @@ public class ObjFileParserTest {
 
     static void main() {
         for (String path : FILE_PATHS) {
-            final URL url = ObjFileParser.class.getResource(path);
+            final URL url = ObjFileParserTest.class.getResource(path);
             if (url == null) {
                 Logger.error("Invalid OBJ file path {}", path);
                 return;

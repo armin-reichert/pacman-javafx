@@ -1,8 +1,6 @@
 package experiments;
 
-import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
-import de.amr.pacmanfx.uilib.objimport.ObjFileParser;
+import de.amr.objparser.ObjFileParser;
 import de.amr.pacmanfx.uilib.model3D.TriangleMeshBuilder;
 import javafx.application.Application;
 import javafx.scene.*;
@@ -23,8 +21,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class ModelViewer extends Application {
-
-    static final PacConfig PAC_CONFIG = UIConfig.DEFAULT_ENTITY_CONFIG.pacConfig();
 
     static final String REPOSITORY_DIR = System.getProperty("user.home") + "/git/pacman-javafx/";
     static final String DIR = REPOSITORY_DIR + "pacman-ui-lib/src/main/resources/de/amr/pacmanfx/uilib/model3D";

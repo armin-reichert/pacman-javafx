@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation project(":basics")
+    implementation project(":objparser")
     implementation project(":pacman-core")
     implementation project(":pacman-ui-lib")
     implementation project(":pacman-ui")

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.objimport;
+package de.amr.objparser;
 
 import org.tinylog.Logger;
 
