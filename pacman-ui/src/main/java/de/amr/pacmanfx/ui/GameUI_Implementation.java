@@ -37,11 +37,10 @@ import javafx.beans.binding.StringBinding;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -120,7 +119,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         BaseRenderer.setArcadeFont(GameUI_Resources.FONT_ARCADE_8);
 
         initLayout(mainSceneWidth,mainSceneHeight);
-        initActionBindings();
+        initGlobalActionBindings();
         initPropertyBindings();
         initScene();
         initStage();
@@ -143,8 +142,36 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private void initLayout(int mainSceneWidth, int mainSceneHeight) {
         sceneLayout.setPrefSize(mainSceneWidth, mainSceneHeight);
         // First child is placeholder for current view (start view, play view, ...)
-        sceneLayout.getChildren().setAll(new Region(), statusIconBox, flashMessageView);
+        sceneLayout.getChildren().setAll(new Region(), statusIconBox, flashMessageView, createKeyboardMonitor());
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
+    }
+
+    private Pane createKeyboardMonitor() {
+        VBox box = new VBox();
+        box.setPrefSize(200, 100);
+        box.setMaxWidth(200);
+        box.setBackground(Background.fill(Color.color(0.2, 0.2, 0.2, 0.5)));
+        box.setBorder(Border.stroke(Color.WHITE));
+        StackPane.setAlignment(box, Pos.TOP_RIGHT);
+        box.visibleProperty().bind(PROPERTY_KEYBOARD_MONITOR_VISIBLE);
+
+        Input.instance().keyboard.addListener(keyboard -> {
+            box.getChildren().clear();
+            keyboard.pressedKeys().stream().sorted().forEach(keyCode -> {
+                Text stateLabel = new Text();
+                stateLabel.setFill(Color.WHITE);
+                stateLabel.setFont(Font.font(16));
+                String modText = "";
+                if (keyboard.altDown()) modText += "Alt ";
+                if (keyboard.shiftDown()) modText += "Shift ";
+                if (keyboard.controlDown()) modText += "Control ";
+                if (keyboard.metaDown()) modText += "Meta ";
+                stateLabel.setText(modText + keyCode.getName());
+                box.getChildren().add(stateLabel);
+                Logger.info("Keyboard state change occurred");
+            });
+        });
+        return box;
     }
 
     private void initPropertyBindings() {
@@ -200,10 +227,11 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         return editorView;
     }
 
-    private void initActionBindings() {
-        actionBindings.addAny(CommonGameActions.ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
-        actionBindings.addAny(CommonGameActions.ACTION_OPEN_EDITOR,      GameUI.COMMON_BINDINGS);
-        actionBindings.addAny(CommonGameActions.ACTION_TOGGLE_MUTED,     GameUI.COMMON_BINDINGS);
+    private void initGlobalActionBindings() {
+        actionBindings.addAny(CommonGameActions.ACTION_ENTER_FULLSCREEN,        GameUI.COMMON_BINDINGS);
+        actionBindings.addAny(CommonGameActions.ACTION_OPEN_EDITOR,             GameUI.COMMON_BINDINGS);
+        actionBindings.addAny(CommonGameActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUI.COMMON_BINDINGS);
+        actionBindings.addAny(CommonGameActions.ACTION_TOGGLE_MUTED,            GameUI.COMMON_BINDINGS);
         actionBindings.assignToKeyboard();
     }
 

@@ -106,6 +106,7 @@ public interface GameUI extends Translator {
         new ActionBinding(ACTION_TOGGLE_AUTOPILOT,                 alt(KeyCode.A)),
         new ActionBinding(ACTION_TOGGLE_COLLISION_STRATEGY,        alt(KeyCode.S)),
         new ActionBinding(ACTION_TOGGLE_DEBUG_INFO,                alt(KeyCode.D)),
+        new ActionBinding(ACTION_TOGGLE_KEYBOARD_MONITOR,          alt(KeyCode.K)),
         new ActionBinding(ACTION_TOGGLE_MUTED,                     alt(KeyCode.M)),
         new ActionBinding(ACTION_TOGGLE_PAUSED,                    bare(KeyCode.P), bare(KeyCode.F5)),
         new ActionBinding(ACTION_TOGGLE_DASHBOARD,                 bare(KeyCode.F1), alt(KeyCode.B)),
@@ -130,6 +131,9 @@ public interface GameUI extends Translator {
 
     /** Whether debug information overlays are visible. */
     BooleanProperty PROPERTY_DEBUG_INFO_VISIBLE = new SimpleBooleanProperty(false);
+
+    /** Whether information about the currently pressed keys is displayed. */
+    BooleanProperty PROPERTY_KEYBOARD_MONITOR_VISIBLE = new SimpleBooleanProperty(false);
 
     /** Height of the mini-view (in pixels). */
     IntegerProperty PROPERTY_MINI_VIEW_HEIGHT = new SimpleIntegerProperty(400);

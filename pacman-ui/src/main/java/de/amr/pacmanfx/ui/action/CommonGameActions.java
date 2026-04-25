@@ -262,6 +262,13 @@ public final class CommonGameActions {
         }
     };
 
+    public static final GameAction ACTION_TOGGLE_KEYBOARD_MONITOR = new GameAction("TOGGLE_KEYBOARD_MONITOR") {
+        @Override
+        public void execute(GameUI ui) {
+            toggleBoolean(PROPERTY_KEYBOARD_MONITOR_VISIBLE);
+        }
+    };
+
     public static final GameAction ACTION_TOGGLE_MINI_VIEW_VISIBILITY = new GameAction("TOGGLE_MINI_VIEW_VISIBILITY") {
         @Override
         public void execute(GameUI ui) {
