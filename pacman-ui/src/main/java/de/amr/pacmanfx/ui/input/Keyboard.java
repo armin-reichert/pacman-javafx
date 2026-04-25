@@ -50,23 +50,23 @@ public final class Keyboard {
         if (Logger.isTraceEnabled()) Logger.trace("Key pressed: {}", event);
         if (!event.getCode().isModifierKey()) {
             pressedKeys.add(event.getCode());
-        } else {
-            updateModifierState(event);
         }
+        // Always update modifier state because e.g. SHIFT + S is a single event
+        updateModifierState(event);
     }
 
     public void onKeyReleased(KeyEvent event) {
         if (Logger.isTraceEnabled()) Logger.trace("Key released: {}", event);
         if (!event.getCode().isModifierKey()) {
             pressedKeys.remove(event.getCode());
-        } else {
-            updateModifierState(event);
         }
+        // Always update modifier state because e.g. SHIFT + S is a single event
+        updateModifierState(event);
     }
 
     private void updateModifierState(KeyEvent event) {
         shiftDown = event.isShiftDown();
-        controlDown = event.isControlDown();;
+        controlDown = event.isControlDown();
         altDown = event.isAltDown();
         metaDown = event.isMetaDown();
     }
@@ -96,8 +96,21 @@ public final class Keyboard {
     }
 
     public boolean isMatching(KeyCombination combination) {
-        return pressedKeys.stream()
-            .anyMatch(key -> combination.match(syntheticKeyEvent(key)));
+        KeyCode key = extractKeyCode(combination);
+
+        // If the key for this combination is not currently pressed, it cannot match
+        if (!pressedKeys.contains(key)) {
+            return false;
+        }
+
+        return combination.match(syntheticKeyEvent(key));
+    }
+
+    private KeyCode extractKeyCode(KeyCombination combination) {
+        if (combination instanceof KeyCodeCombination kc) {
+            return kc.getCode();
+        }
+        throw new IllegalArgumentException("Only KeyCodeCombination is supported");
     }
 
     private KeyEvent syntheticKeyEvent(KeyCode keyCode) {
