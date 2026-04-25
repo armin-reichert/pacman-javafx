@@ -154,7 +154,7 @@ public class ObjFileParser {
             final URI uri = new URI(libURL);
             try (InputStream is = uri.toURL().openStream()) {
                 final var reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-                final MtlFileParser parser = new MtlFileParser();
+                final ObjMtlFileParser parser = new ObjMtlFileParser();
                 parser.parse(reader);
                 return parser.materialMap();
             }

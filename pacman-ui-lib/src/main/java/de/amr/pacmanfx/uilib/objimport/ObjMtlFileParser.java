@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class MtlFileParser {
+public class ObjMtlFileParser {
 
     /**
      * Wavefront MTL material parameters.
@@ -344,13 +344,13 @@ public class MtlFileParser {
     }
 
     // float 3-tuple, each 0..1
-    private static ColorRGB parseColorRGB(String s, ColorRGB defaultColor) {
+    private static ObjColor parseColorRGB(String s, ObjColor defaultColor) {
         final String[] comp = s.trim().split("\\s+", 3);
         if (comp.length == 3) {
             float r = (float) Math.clamp(Float.parseFloat(comp[0]), 0.0, 1.0);
             float g = (float) Math.clamp(Float.parseFloat(comp[1]), 0.0, 1.0);
             float b = (float) Math.clamp(Float.parseFloat(comp[2]), 0.0, 1.0);
-            return new ColorRGB(r, g, b);
+            return new ObjColor(r, g, b);
         } else {
             Logger.error("Invalid color format: {}", s);
             return defaultColor;

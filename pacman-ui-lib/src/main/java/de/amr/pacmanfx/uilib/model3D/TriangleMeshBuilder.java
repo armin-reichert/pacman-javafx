@@ -172,7 +172,7 @@ public class TriangleMeshBuilder {
         return phongMaterial;
     }
 
-    private static Color fxColor(ColorRGB colorRGB, double opacity) {
-        return Color.color(colorRGB.red(), colorRGB.green(), colorRGB.blue(), opacity);
+    private static Color fxColor(ObjColor objColor, double opacity) {
+        return Color.color(objColor.red(), objColor.green(), objColor.blue(), opacity);
     }
 }

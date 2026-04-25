@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.uilib.objimport.MtlFileParser;
+import de.amr.pacmanfx.uilib.objimport.ObjMtlFileParser;
 import org.tinylog.Logger;
 
 import java.io.BufferedReader;
@@ -23,13 +23,13 @@ public class MtlFileParserTest {
 
     static void main() {
         for (String path : FILE_PATHS) {
-            final URL url = MtlFileParser.class.getResource(path);
+            final URL url = ObjMtlFileParser.class.getResource(path);
             if (url == null) {
                 Logger.error("Invalid OBJ file path {}", path);
                 return;
             }
             Logger.info("Parsing material file '{}'", path);
-            final MtlFileParser parser = new MtlFileParser();
+            final ObjMtlFileParser parser = new ObjMtlFileParser();
             try {
                 try (InputStream is = url.openStream()) {
                     final var reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));

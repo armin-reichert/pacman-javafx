@@ -63,10 +63,10 @@ package de.amr.pacmanfx.uilib.objimport;
 public class ObjMaterial {
     public static final float DEFAULT_OPACITY = 1;
     public static final byte DEFAULT_ILLUMINATION = 2;
-    public static final ColorRGB DEFAULT_AMBIENT_COLOR = ColorRGB.BLACK;
-    public static final ColorRGB DEFAULT_DIFFUSE_COLOR = ColorRGB.BLACK;
-    public static final ColorRGB DEFAULT_EMISSIVE_COLOR = ColorRGB.BLACK;
-    public static final ColorRGB DEFAULT_SPECULAR_COLOR = ColorRGB.BLACK;
+    public static final ObjColor DEFAULT_AMBIENT_COLOR = ObjColor.BLACK;
+    public static final ObjColor DEFAULT_DIFFUSE_COLOR = ObjColor.BLACK;
+    public static final ObjColor DEFAULT_EMISSIVE_COLOR = ObjColor.BLACK;
+    public static final ObjColor DEFAULT_SPECULAR_COLOR = ObjColor.BLACK;
     public static final float DEFAULT_REFRACTION_INDEX = 1.0f;
     public static final float DEFAULT_SPECULAR_POWER = 10.0f;
 
@@ -74,10 +74,10 @@ public class ObjMaterial {
 
     float d = DEFAULT_OPACITY;
     byte illum = DEFAULT_ILLUMINATION;
-    ColorRGB ka = DEFAULT_AMBIENT_COLOR;
-    ColorRGB kd = DEFAULT_DIFFUSE_COLOR;
-    ColorRGB ks = DEFAULT_SPECULAR_COLOR;
-    ColorRGB ke = DEFAULT_EMISSIVE_COLOR;
+    ObjColor ka = DEFAULT_AMBIENT_COLOR;
+    ObjColor kd = DEFAULT_DIFFUSE_COLOR;
+    ObjColor ks = DEFAULT_SPECULAR_COLOR;
+    ObjColor ke = DEFAULT_EMISSIVE_COLOR;
     float ni = DEFAULT_REFRACTION_INDEX;
     float ns = DEFAULT_SPECULAR_POWER;
 
@@ -97,19 +97,19 @@ public class ObjMaterial {
         return illum;
     }
 
-    public ColorRGB ambientColor() {
+    public ObjColor ambientColor() {
         return ka;
     }
 
-    public ColorRGB diffuseColor() {
+    public ObjColor diffuseColor() {
         return kd;
     }
 
-    public ColorRGB specularColor() {
+    public ObjColor specularColor() {
         return ks;
     }
 
-    public ColorRGB emissiveColor() {
+    public ObjColor emissiveColor() {
         return ke;
     }
 
