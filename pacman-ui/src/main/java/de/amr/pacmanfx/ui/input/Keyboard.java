@@ -10,7 +10,10 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static javafx.scene.input.KeyCombination.*;
 
@@ -34,9 +37,12 @@ public final class Keyboard {
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
     private final Map<KeyCombination, ActionBindingsManager> actionBindings = new HashMap<>();
-    private final List<KeyCombination> matches = new ArrayList<>(3);
 
     Keyboard() {}
+
+    public boolean isPressed(KeyCode keyCode) {
+        return pressedKeys.contains(keyCode);
+    }
 
     public void setBinding(KeyCombination combination, ActionBindingsManager bindingsManager) {
         if (actionBindings.get(combination) == bindingsManager) {
@@ -61,20 +67,28 @@ public final class Keyboard {
     public void onKeyPressed(KeyEvent key) {
         Logger.trace("Key pressed: {}", key);
         pressedKeys.add(key.getCode());
-        actionBindings.keySet().stream().filter(combination -> combination.match(key)).forEach(matches::add);
     }
 
     public void onKeyReleased(KeyEvent key) {
         Logger.trace("Key released: {}", key);
         pressedKeys.remove(key.getCode());
-        matches.clear();
     }
 
     public boolean isMatching(KeyCombination combination) {
-        return matches.contains(combination);
+        return pressedKeys.stream()
+            .anyMatch(key -> combination.match(syntheticKeyEvent(key)));
     }
 
-    public boolean isPressed(KeyCode keyCode) {
-        return pressedKeys.contains(keyCode);
+    private KeyEvent syntheticKeyEvent(KeyCode keyCode) {
+        return new KeyEvent(
+            KeyEvent.KEY_PRESSED,
+            "",
+            "",
+            keyCode,
+            pressedKeys.contains(KeyCode.SHIFT),
+            pressedKeys.contains(KeyCode.CONTROL),
+            pressedKeys.contains(KeyCode.ALT),
+            pressedKeys.contains(KeyCode.META)
+        );
     }
 }
