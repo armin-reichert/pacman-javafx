@@ -13,6 +13,8 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Builds one MeshView per OBJ group.
  * No JavaFX Group nodes are created.
@@ -23,14 +25,12 @@ public class TriangleMeshBuilder {
     private final Map<String, PhongMaterial> materials;
 
     public TriangleMeshBuilder(ObjModel model) {
-        this.model = model;
-
+        this.model = requireNonNull(model);
         // Flatten material libraries
-        Map<String, PhongMaterial> materialMap = new HashMap<>();
+        materials = new HashMap<>();
         for (Map<String, ObjMaterial> lib : model.materialLibsMap().values()) {
-            lib.forEach((name, material) -> materialMap.put(name, createPhongMaterial(material)));
+            lib.forEach((name, material) -> materials.put(name, createPhongMaterial(material)));
         }
-        this.materials = materialMap;
     }
 
     /* -------------------------------------------------------------
