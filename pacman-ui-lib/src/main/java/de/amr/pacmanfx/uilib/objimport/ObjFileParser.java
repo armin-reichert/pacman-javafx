@@ -126,13 +126,13 @@ public class ObjFileParser {
         for (Token token; (token = tokenizer.next()) != null; ) {
             if (token.keyword() == ObjKeyword.MATERIAL_LIB) {
                 final String libName = token.args();
-                Logger.info("Material library found: '{}'", libName);
+                Logger.debug("Material library found: '{}'", libName);
 
                 if (!objModel.materialLibsMap.containsKey(libName)) {
                     Map<String, ObjMaterial> lib = parseMaterialLibraryFile(libName);
                     if (lib != null) {
                         objModel.materialLibsMap.put(libName, lib);
-                        Logger.info("Material library parsed: {}", libName);
+                        Logger.debug("Material library parsed: {}", libName);
                     }
                 }
             }
@@ -148,7 +148,7 @@ public class ObjFileParser {
         }
 
         final String libURL = objFileURLString.substring(0, endOfPath) + "/" + libName;
-        Logger.info("Material library URL: {}", libURL);
+        Logger.debug("Material library URL: {}", libURL);
 
         try {
             final URI uri = new URI(libURL);
@@ -208,7 +208,7 @@ public class ObjFileParser {
         objModel.currentObject = obj;
         objModel.currentGroup = null;
 
-        Logger.info("Object created: {}", name);
+        Logger.debug("Object created: {}", name);
     }
 
     private void parseGroup(ObjModel objModel, String name) {
@@ -224,7 +224,7 @@ public class ObjFileParser {
         objModel.currentObject.groups.add(group);
         objModel.currentGroup = group;
 
-        Logger.info("Group created: {}", name);
+        Logger.debug("Group created: {}", name);
     }
 
     private void parseSmoothingGroup(ObjModel objModel, String args) {
@@ -242,7 +242,7 @@ public class ObjFileParser {
 
     private void parseMaterialUsage(ObjModel objModel, String name) {
         objModel.currentMaterialName = name;
-        Logger.info("Material usage: {}", name);
+        Logger.debug("Material usage: {}", name);
     }
 
     private ObjVertex parseVertex(String s) {

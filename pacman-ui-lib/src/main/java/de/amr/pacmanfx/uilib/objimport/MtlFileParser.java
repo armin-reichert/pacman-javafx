@@ -297,7 +297,7 @@ public class MtlFileParser {
             if (oldPhongMaterial != null) {
                 Logger.warn("Material replaced: '{}'={}", currentObjMaterial.name, oldPhongMaterial);
             } else {
-                Logger.info("Material added: '{}'={}", currentObjMaterial.name, currentObjMaterial);
+                Logger.debug("Material added: '{}'={}", currentObjMaterial.name, currentObjMaterial);
             }
             currentObjMaterial = null;
         }
