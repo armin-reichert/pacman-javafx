@@ -35,6 +35,10 @@ import java.util.Map;
 
 public class MeshViewerApp extends Application {
 
+    public static final int DEFAULT_ANGLE_X = 0;
+    public static final int DEFAULT_ANGLE_Y = 0;
+    public static final int DEFAULT_ZOOM = -50;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -62,9 +66,9 @@ public class MeshViewerApp extends Application {
 
     private double mouseOldX, mouseOldY;
 
-    private final Rotate rotateX = new Rotate(0, Rotate.X_AXIS);
-    private final Rotate rotateY = new Rotate(0, Rotate.Y_AXIS);
-    private final Translate zoom = new Translate(0, 0, -50);
+    private final Rotate rotateX = new Rotate(DEFAULT_ANGLE_X, Rotate.X_AXIS);
+    private final Rotate rotateY = new Rotate(DEFAULT_ANGLE_Y, Rotate.Y_AXIS);
+    private final Translate zoom = new Translate(0, 0, DEFAULT_ZOOM);
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.LINE);
 
@@ -237,6 +241,12 @@ public class MeshViewerApp extends Application {
         ));
     }
 
+    private void resetView() {
+        rotateX.setAngle(DEFAULT_ANGLE_X);
+        rotateY.setAngle(DEFAULT_ANGLE_Y);
+        zoom.setZ(DEFAULT_ZOOM);
+    }
+
     private void enableMouseControl(SubScene sub) {
 
         sub.setOnKeyTyped(e -> {
@@ -245,7 +255,12 @@ public class MeshViewerApp extends Application {
             }
         });
 
-        sub.setOnMouseClicked(_ -> sub.requestFocus());
+        sub.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                resetView();
+            }
+            sub.requestFocus();
+        });
 
         sub.setOnMousePressed(e -> {
             mouseOldX = e.getSceneX();
@@ -256,9 +271,13 @@ public class MeshViewerApp extends Application {
             double dx = e.getSceneX() - mouseOldX;
             double dy = e.getSceneY() - mouseOldY;
 
+            boolean shift = e.isShiftDown();
             if (e.getButton() == MouseButton.PRIMARY) {
-                rotateY.setAngle(rotateY.getAngle() + dx * 0.5);
-                rotateX.setAngle(rotateX.getAngle() - dy * 0.5);
+                if (!shift) {
+                    rotateY.setAngle(rotateY.getAngle() + dx * 0.5);
+                } else {
+                    rotateX.setAngle(rotateX.getAngle() - dy * 0.5);
+                }
             }
 
             mouseOldX = e.getSceneX();
