@@ -144,32 +144,84 @@ public class MeshViewerApp extends Application {
         return navigationPane;
     }
 
-    private TreeView<String> createObjModelTreeView(ObjModel objModel) {
+    public static sealed class NavigationTreeNode permits LabelNode, MeshNode { }
+
+    public static final class LabelNode extends NavigationTreeNode {
+        public final String label;
+
+        public LabelNode(String label) {
+            this.label = label;
+        }
+    }
+
+    public static final class MeshNode extends NavigationTreeNode {
+        public final String meshName;
+        public final MeshView meshView;
+
+        public MeshNode(String meshName, MeshView meshView) {
+            this.meshName = meshName;
+            this.meshView = meshView;
+        }
+    }
+
+    private TreeView<NavigationTreeNode> createObjModelTreeView(ObjModel objModel) {
         final MeshBuilder meshBuilder = new MeshBuilder(objModel);
 
         final String title = currentObjFile != null ? currentObjFile.getName() : "No OBJ file";
-        final TreeItem<String> root = new TreeItem<>(title);
+        final TreeItem<NavigationTreeNode> root = new TreeItem<>(new LabelNode(title));
         root.setExpanded(true);
 
         root.getChildren().add(createSubTree(meshBuilder.buildMeshViewsByObject(), "Mesh Views by Object"));
         root.getChildren().add(createSubTree(meshBuilder.buildMeshViewsByGroup(), "Mesh Views by Group"));
         root.getChildren().add(createSubTree(meshBuilder.buildMeshViewsByMaterial(), "Mesh Views by Material"));
 
-        final TreeView<String> treeView = new TreeView<>(root);
+        final TreeView<NavigationTreeNode> treeView = new TreeView<>(root);
         treeView.setShowRoot(true);
+
+        treeView.getSelectionModel().selectedItemProperty().addListener((_, _, selectedNode) -> {
+            switch (selectedNode.getValue()) {
+                case LabelNode labelNode -> Logger.info("Selected node has label '{}'", labelNode.label);
+                case MeshNode meshNode -> {
+                    String meshName = meshNode.meshName;
+                    MeshView meshView = meshNode.meshView;
+                    Logger.info("Selected node has mesh '{}': {}", meshName, meshView);
+
+                }
+                default -> Logger.info("Selected node has value {}", selectedNode.getValue());
+            }
+        });
+
+        treeView.setCellFactory(_ -> new TreeCell<>() {
+            @Override
+            protected void updateItem(NavigationTreeNode value, boolean empty) {
+                super.updateItem(value, empty);
+
+                if (empty || value == null) {
+                    setText(null);
+                    return;
+                }
+
+                setText(switch (value) {
+                    case LabelNode labelNode -> labelNode.label;
+                    case MeshNode meshNode -> meshNode.meshName;
+                    default -> "?";
+                });
+            }
+        });
+
 
         return treeView;
     }
 
-    private TreeItem<String> createSubTree(Map<String, MeshView> meshViews, String title) {
+    private TreeItem<NavigationTreeNode> createSubTree(Map<String, MeshView> meshViews, String title) {
         if (meshViews.isEmpty()) title += " (None)";
-        TreeItem<String> rootNode = new TreeItem<>(title);
-        rootNode.setExpanded(true);
+        final var root = new TreeItem<NavigationTreeNode>(new LabelNode(title));
+        root.setExpanded(true);
         for (String meshName : meshViews.keySet()) {
-            TreeItem<String> item = new TreeItem<>(meshName);
-            rootNode.getChildren().add(item);
+            final var item = new TreeItem<NavigationTreeNode>(new MeshNode(meshName, meshViews.get(meshName)));
+            root.getChildren().add(item);
         }
-        return rootNode;
+        return root;
     }
 
     private void setWorldContent(Group meshGroup) {
