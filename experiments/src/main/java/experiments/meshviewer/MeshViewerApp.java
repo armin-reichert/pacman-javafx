@@ -75,9 +75,7 @@ public class MeshViewerApp extends Application {
     private TreeView<NavigationTreeNode> treeView;
 
     // Data model
-    private File currentObjFile;
     private final ObjectProperty<ObjModel> objModel = new SimpleObjectProperty<>();
-    private MeshView currentMeshView;
 
     @Override
     public void start(Stage stage) {
@@ -116,10 +114,10 @@ public class MeshViewerApp extends Application {
                 new FileChooser.ExtensionFilter("OBJ Files", "*.obj")
             );
 
-            currentObjFile = chooser.showOpenDialog(stage);
-            if (currentObjFile != null) {
+            File objFile = chooser.showOpenDialog(stage);
+            if (objFile != null) {
                 try {
-                    loadMeshesFromFile(currentObjFile);
+                    loadMeshesFromFile(objFile);
                 } catch (Exception x) {
                     Logger.error(x);
                 }
@@ -129,22 +127,22 @@ public class MeshViewerApp extends Application {
         exitItem.setOnAction(_ -> Platform.exit());
 
         // --- LAYOUT ---
-        treeView = createObjModelTreeView(new ObjModel());
+        treeView = createObjModelTreeView(new ObjModel(), "OBJ");
         navigationPane = new VBox();
         navigationPane.setMinWidth(300);
         navigationPane.setMaxWidth(300);
         navigationPane.setBorder(Border.stroke(Color.RED));
         navigationPane.getChildren().add(treeView);
 
-        BorderPane root = new BorderPane();
-        root.setTop(menuBar);
-        root.setCenter(sub);
-        root.setLeft(navigationPane);
+        BorderPane rootPane = new BorderPane();
+        rootPane.setTop(menuBar);
+        rootPane.setCenter(sub);
+        rootPane.setLeft(navigationPane);
 
-        sub.widthProperty().bind(root.widthProperty().subtract(navigationPane.widthProperty()));
-        sub.heightProperty().bind(root.heightProperty());
+        sub.widthProperty().bind(rootPane.widthProperty().subtract(navigationPane.widthProperty()));
+        sub.heightProperty().bind(rootPane.heightProperty());
 
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(rootPane);
         stage.setScene(scene);
         stage.setTitle("Mesh Viewer");
         stage.setWidth(width);
@@ -155,13 +153,24 @@ public class MeshViewerApp extends Application {
             onObjModelChanged(newModel);
         });
 
-        Platform.runLater(() -> sub.requestFocus());
+        try {
+            loadMeshesFromURL(getClass().getResource("/newell_teaset/teapot.obj"));
+            TreeItem<NavigationTreeNode> rootItem = treeView.getRoot();
+            if (rootItem.getChildren().size() == 3) {
+                TreeItem<NavigationTreeNode> objectsItem = rootItem.getChildren().getFirst();
+                if (!objectsItem.getChildren().isEmpty()) {
+                    TreeItem<NavigationTreeNode> firstObjectItem = objectsItem.getChildren().getFirst();
+                    treeView.getSelectionModel().select(firstObjectItem);
+                }
+            }
+        } catch (Exception x) {
+            Logger.error(x, "Could not load teapot.obj");
+        }
     }
 
-    private TreeView<NavigationTreeNode> createObjModelTreeView(ObjModel objModel) {
+    private TreeView<NavigationTreeNode> createObjModelTreeView(ObjModel objModel, String title) {
         final MeshBuilder meshBuilder = new MeshBuilder(objModel);
 
-        final String title = currentObjFile != null ? currentObjFile.getName() : "No OBJ file";
         final TreeItem<NavigationTreeNode> root = new TreeItem<>(new LabelNode(title));
         root.setExpanded(true);
 
@@ -266,27 +275,30 @@ public class MeshViewerApp extends Application {
         });
     }
 
-    private void loadMeshesFromFile(File objFile) throws IOException {
-        final URL objFileURL = objFile.toURI().toURL();
+    private void loadMeshesFromURL(URL objFileURL) throws IOException {
         final var parser = new ObjFileParser(objFileURL, StandardCharsets.UTF_8);
         objModel.set(parser.parse());
     }
 
+    private void loadMeshesFromFile(File objFile) throws IOException {
+        loadMeshesFromURL(objFile.toURI().toURL());
+    }
+
     private void onObjModelChanged(ObjModel newModel) {
-        treeView = createObjModelTreeView(newModel);
+        treeView = createObjModelTreeView(newModel, "OBJ");
         navigationPane.getChildren().setAll(treeView);
     }
 
     private void setDisplayedMeshView(MeshView meshView) {
-
         if (meshView == null) return;
 
-        currentMeshView = meshView;
-        currentMeshView.setCullFace(CullFace.NONE);
-        currentMeshView.drawModeProperty().bind(drawMode);
-        center(currentMeshView);
+        meshView.setCullFace(CullFace.NONE);
+        meshView.drawModeProperty().bind(drawMode);
 
-        Group pivot = new Group(currentMeshView);
+        //TODO reconsider
+        center(meshView);
+
+        Group pivot = new Group(meshView);
         center(pivot);
         pivot.getTransforms().addAll(rotateX, rotateY);
 
