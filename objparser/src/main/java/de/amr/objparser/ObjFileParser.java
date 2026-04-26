@@ -111,6 +111,7 @@ public class ObjFileParser {
         try (InputStream stream = objFileURL.openConnection().getInputStream()) {
             parseGeometry(objModel, stream);
         }
+        objModel.setUrl(objFileURL.toString());
         return objModel;
     }
 

@@ -131,7 +131,7 @@ public class MeshViewerApp extends Application {
         exitItem.setOnAction(_ -> Platform.exit());
 
         // --- LAYOUT ---
-        treeView = createObjModelTreeView(new ObjModel(), "OBJ");
+        treeView = createObjModelTreeView(new ObjModel(), "No Model");
         navigationPane = new VBox();
         navigationPane.setMinWidth(300);
         navigationPane.setMaxWidth(300);
@@ -159,16 +159,20 @@ public class MeshViewerApp extends Application {
 
         try {
             loadMeshesFromURL(getClass().getResource("/newell_teaset/teapot.obj"));
-            TreeItem<NavigationTreeNode> rootItem = treeView.getRoot();
-            if (rootItem.getChildren().size() == 3) {
-                TreeItem<NavigationTreeNode> objectsItem = rootItem.getChildren().getFirst();
-                if (!objectsItem.getChildren().isEmpty()) {
-                    TreeItem<NavigationTreeNode> firstObjectItem = objectsItem.getChildren().getFirst();
-                    treeView.getSelectionModel().select(firstObjectItem);
-                }
-            }
+            selectFirstObjectNode();
         } catch (Exception x) {
             Logger.error(x, "Could not load teapot.obj");
+        }
+    }
+
+    private void selectFirstObjectNode() {
+        TreeItem<NavigationTreeNode> rootItem = treeView.getRoot();
+        if (rootItem.getChildren().size() == 3) {
+            TreeItem<NavigationTreeNode> objectsItem = rootItem.getChildren().getFirst();
+            if (!objectsItem.getChildren().isEmpty()) {
+                TreeItem<NavigationTreeNode> firstObjectItem = objectsItem.getChildren().getFirst();
+                treeView.getSelectionModel().select(firstObjectItem);
+            }
         }
     }
 
@@ -304,7 +308,11 @@ public class MeshViewerApp extends Application {
     }
 
     private void onObjModelChanged(ObjModel newModel) {
-        treeView = createObjModelTreeView(newModel, "OBJ");
+        String url = newModel.url();
+        int lastSlash = url.lastIndexOf('/');
+        url = url.substring(lastSlash + 1);
+        treeView = createObjModelTreeView(newModel, url);
+        selectFirstObjectNode();
         navigationPane.getChildren().setAll(treeView);
     }
 

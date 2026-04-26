@@ -13,10 +13,21 @@ public class ObjModel {
     final List<ObjTexCoord> texCoords = new ArrayList<>();
     final List<ObjNormal> normals = new ArrayList<>();
 
+    String    url;
     ObjObject currentObject;
     ObjGroup  currentGroup;
     String    currentMaterialName;
     Integer   currentSmoothingGroup;
+
+    public ObjModel() {}
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String url() {
+        return url;
+    }
 
     public List<ObjVertex> vertices() {
         return Collections.unmodifiableList(vertices);
