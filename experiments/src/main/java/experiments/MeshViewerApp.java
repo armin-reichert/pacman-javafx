@@ -13,11 +13,12 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.*;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
@@ -51,6 +52,11 @@ public class MeshViewerApp extends Application {
 
     private Group world;
     private SubScene sub;
+    private Pane navigationPane;
+
+    // Data model
+    private File currentObjFile;
+    private final ObjectProperty<ObjModel> objModel = new SimpleObjectProperty<>();
 
     @Override
     public void start(Stage stage) {
@@ -69,8 +75,6 @@ public class MeshViewerApp extends Application {
         sub = new SubScene(world, width, height, true, SceneAntialiasing.BALANCED);
         sub.setCamera(cam);
         sub.setFill(Color.gray(0.1));
-        sub.widthProperty().bind(stage.widthProperty());
-        sub.heightProperty().bind(stage.heightProperty());
 
         enableMouseControl(sub);
 
@@ -91,11 +95,10 @@ public class MeshViewerApp extends Application {
                 new FileChooser.ExtensionFilter("OBJ Files", "*.obj")
             );
 
-            File file = chooser.showOpenDialog(stage);
-            if (file != null) {
+            currentObjFile = chooser.showOpenDialog(stage);
+            if (currentObjFile != null) {
                 try {
-                    Group meshesGroup = loadMeshesFromFile(file);
-                    updateWorld(meshesGroup);
+                    loadMeshesFromFile(currentObjFile);
                 } catch (Exception x) {
                     Logger.error(x);
                 }
@@ -105,10 +108,17 @@ public class MeshViewerApp extends Application {
         exitItem.setOnAction(_ -> Platform.exit());
 
         // --- LAYOUT ---
+        Pane navigation = createNavigationPane();
+
         BorderPane root = new BorderPane();
         root.setTop(menuBar);
         root.setCenter(sub);
+        root.setLeft(navigation);
 
+        sub.widthProperty().bind(root.widthProperty().subtract(navigation.widthProperty()));
+        sub.heightProperty().bind(root.heightProperty());
+
+        // Scene and stage
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Mesh Viewer");
@@ -116,10 +126,53 @@ public class MeshViewerApp extends Application {
         stage.setHeight(height);
         stage.show();
 
+        objModel.addListener((_, _, newModel) -> {
+            onObjModelChanged(newModel);
+        });
+
         Platform.runLater(() -> sub.requestFocus());
     }
 
-    private void updateWorld(Group meshGroup) {
+    private Pane createNavigationPane() {
+        navigationPane = new VBox();
+        navigationPane.setMinWidth(300);
+        navigationPane.setMaxWidth(300);
+        navigationPane.setBorder(Border.stroke(Color.RED));
+
+        navigationPane.getChildren().add(createObjModelTreeView(new ObjModel()));
+
+        return navigationPane;
+    }
+
+    private TreeView<String> createObjModelTreeView(ObjModel objModel) {
+        final MeshBuilder meshBuilder = new MeshBuilder(objModel);
+
+        final String title = currentObjFile != null ? currentObjFile.getName() : "No OBJ file";
+        final TreeItem<String> root = new TreeItem<>(title);
+        root.setExpanded(true);
+
+        root.getChildren().add(createSubTree(meshBuilder.buildMeshViewsByObject(), "Mesh Views by Object"));
+        root.getChildren().add(createSubTree(meshBuilder.buildMeshViewsByGroup(), "Mesh Views by Group"));
+        root.getChildren().add(createSubTree(meshBuilder.buildMeshViewsByMaterial(), "Mesh Views by Material"));
+
+        final TreeView<String> treeView = new TreeView<>(root);
+        treeView.setShowRoot(true);
+
+        return treeView;
+    }
+
+    private TreeItem<String> createSubTree(Map<String, MeshView> meshViews, String title) {
+        if (meshViews.isEmpty()) title += " (None)";
+        TreeItem<String> rootNode = new TreeItem<>(title);
+        rootNode.setExpanded(true);
+        for (String meshName : meshViews.keySet()) {
+            TreeItem<String> item = new TreeItem<>(meshName);
+            rootNode.getChildren().add(item);
+        }
+        return rootNode;
+    }
+
+    private void setWorldContent(Group meshGroup) {
         Group pivot = new Group(meshGroup);
         pivot.getTransforms().addAll(rotateX, rotateY);
         world.getChildren().clear();
@@ -173,9 +226,14 @@ public class MeshViewerApp extends Application {
         });
     }
 
-    private Group loadMeshesFromFile(File file) throws IOException {
-        Map<String, MeshView> meshes = importMeshes(file);
+    private void loadMeshesFromFile(File objFile) throws IOException {
+        final URL objFileURL = objFile.toURI().toURL();
+        final var parser = new ObjFileParser(objFileURL, StandardCharsets.UTF_8);
+        objModel.set(parser.parse());
+    }
 
+    private void onObjModelChanged(ObjModel newModel) {
+        Map<String, MeshView> meshes = new MeshBuilder(objModel.get()).buildMeshViewsByGroup();
         Group meshGroup = new Group();
         for (MeshView mv : meshes.values()) {
             mv.setCullFace(CullFace.NONE);
@@ -183,13 +241,8 @@ public class MeshViewerApp extends Application {
             meshGroup.getChildren().add(mv);
         }
         center(meshGroup);
-        return meshGroup;
-    }
+        setWorldContent(meshGroup);
 
-    private Map<String, MeshView> importMeshes(File objFile) throws IOException {
-        final URL objFileURL = objFile.toURI().toURL();
-        final var parser = new ObjFileParser(objFileURL, StandardCharsets.UTF_8);
-        final ObjModel objModel = parser.parse();
-        return new MeshBuilder(objModel).buildMeshViewsByGroup();
+        navigationPane.getChildren().setAll(createObjModelTreeView(newModel));
     }
 }
