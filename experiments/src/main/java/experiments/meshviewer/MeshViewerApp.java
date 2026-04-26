@@ -15,10 +15,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
@@ -174,6 +171,7 @@ public class MeshViewerApp extends Application {
 
         final TreeView<NavigationTreeNode> treeView = new TreeView<>(root);
         treeView.setShowRoot(true);
+        VBox.setVgrow(treeView, Priority.ALWAYS);
 
         treeView.getSelectionModel().selectedItemProperty().addListener((_, _, selectedNode) -> {
             switch (selectedNode.getValue()) {
