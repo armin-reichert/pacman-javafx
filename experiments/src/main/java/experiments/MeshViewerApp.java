@@ -10,7 +10,10 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
+import javafx.geometry.Dimension2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
@@ -18,6 +21,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class MeshViewerApp extends Application {
@@ -26,7 +30,7 @@ public class MeshViewerApp extends Application {
 
     private final Rotate rotateX = new Rotate(0, Rotate.X_AXIS);
     private final Rotate rotateY = new Rotate(0, Rotate.Y_AXIS);
-    private final Translate zoom = new Translate(0, 0, -200);
+    private final Translate zoom = new Translate(0, 0, -50);
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
 
@@ -34,6 +38,9 @@ public class MeshViewerApp extends Application {
 
     @Override
     public void start(Stage stage) {
+
+        double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
+        double width = 1.2 * height;
 
         // Load your mesh
         MeshView mesh = GhostModel3D.instance().dress();
@@ -56,7 +63,7 @@ public class MeshViewerApp extends Application {
         cam.setNearClip(0.1);
         cam.setFarClip(10_000);
 
-        sub = new SubScene(world, 800, 800, true, SceneAntialiasing.BALANCED);
+        sub = new SubScene(world, width, height, true, SceneAntialiasing.BALANCED);
         sub.setCamera(cam);
         sub.setFill(Color.gray(0.1));
         sub.widthProperty().bind(stage.widthProperty());
@@ -67,8 +74,8 @@ public class MeshViewerApp extends Application {
 
         stage.setScene(scene);
         stage.setTitle("Mesh Viewer");
-        stage.setWidth(800);
-        stage.setHeight(800);
+        stage.setWidth(width);
+        stage.setHeight(height);
         stage.show();
 
         Platform.runLater(() -> sub.requestFocus());
@@ -90,6 +97,7 @@ public class MeshViewerApp extends Application {
                 drawMode.set(drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
             }
         });
+
         sub.setOnMouseClicked(e -> sub.requestFocus());
 
         sub.setOnMousePressed(e -> {
@@ -111,8 +119,13 @@ public class MeshViewerApp extends Application {
             mouseOldY = e.getSceneY();
         });
 
-        sub.setOnScroll(e -> {
-            zoom.setZ(zoom.getZ() + e.getDeltaY() * 0.1);
+        // Zoom
+        sub.setOnScroll(e -> zoom.setZ(zoom.getZ() + e.getDeltaY() * 0.1));
+        sub.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case PLUS  -> zoom.setZ(zoom.getZ() + 2);
+                case MINUS -> zoom.setZ(zoom.getZ() - 2);
+            }
         });
     }
 
@@ -120,5 +133,3 @@ public class MeshViewerApp extends Application {
         launch(args);
     }
 }
-
-
