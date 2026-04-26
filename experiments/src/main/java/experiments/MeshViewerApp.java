@@ -7,7 +7,6 @@ package experiments;
 import de.amr.objparser.ObjFileParser;
 import de.amr.objparser.ObjModel;
 import de.amr.pacmanfx.uilib.model3D.TriangleMeshBuilder;
-import de.amr.pacmanfx.uilib.model3D.actor.GhostModel3D;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -50,6 +49,7 @@ public class MeshViewerApp extends Application {
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
 
+    private Group world;
     private SubScene sub;
 
     @Override
@@ -58,10 +58,7 @@ public class MeshViewerApp extends Application {
         double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         double width = 1.2 * height;
 
-        Group pivot = new Group();
-        pivot.getTransforms().addAll(rotateX, rotateY);
-
-        Group world = new Group(pivot);
+        world = new Group();
 
         // Camera
         PerspectiveCamera cam = new PerspectiveCamera(true);
@@ -97,7 +94,8 @@ public class MeshViewerApp extends Application {
             File file = chooser.showOpenDialog(stage);
             if (file != null) {
                 try {
-                    loadMeshFromFile(file, world);
+                    Group meshesGroup = loadMeshesFromFile(file);
+                    updateWorld(meshesGroup);
                 } catch (Exception x) {
                     Logger.error(x);
                 }
@@ -119,6 +117,13 @@ public class MeshViewerApp extends Application {
         stage.show();
 
         Platform.runLater(() -> sub.requestFocus());
+    }
+
+    private void updateWorld(Group meshGroup) {
+        Group pivot = new Group(meshGroup);
+        pivot.getTransforms().addAll(rotateX, rotateY);
+        world.getChildren().clear();
+        world.getChildren().add(pivot);
     }
 
     private void center(Node node) {
@@ -168,10 +173,8 @@ public class MeshViewerApp extends Application {
         });
     }
 
-    private void loadMeshFromFile(File file, Group world) throws IOException {
+    private Group loadMeshesFromFile(File file) throws IOException {
         Map<String, MeshView> meshes = createMeshes(file);
-
-        world.getChildren().clear();
 
         Group meshGroup = new Group();
         for (MeshView mv : meshes.values()) {
@@ -180,10 +183,7 @@ public class MeshViewerApp extends Application {
             meshGroup.getChildren().add(mv);
         }
         center(meshGroup);
-
-        Group pivot = new Group(meshGroup);
-        pivot.getTransforms().addAll(rotateX, rotateY);
-        world.getChildren().add(pivot);
+        return meshGroup;
     }
 
     private Map<String, MeshView> createMeshes(File objFile) throws IOException {
