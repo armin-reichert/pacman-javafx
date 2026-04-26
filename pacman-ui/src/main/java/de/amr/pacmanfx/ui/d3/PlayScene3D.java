@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
@@ -64,7 +63,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     private final ChangeListener<DrawMode> drawModeChangeListener = (_, _, drawMode) -> {
         if (level3D != null) {
-            Ufx.setDrawMode(level3D, drawMode);
+            level3D.setDrawMode(drawMode);
         }
     };
 

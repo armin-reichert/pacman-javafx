@@ -49,6 +49,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -193,6 +194,28 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public MessageManager3D messageManager() {
         return messageManager;
+    }
+
+    public void setDrawMode(DrawMode drawMode) {
+        entities3D.all().forEach(entity -> {
+            switch (entity) {
+                case Pac3D pac3D -> setDrawMode(pac3D, drawMode);
+                case GhostAppearance3D ghost3D -> setDrawMode(ghost3D, drawMode);
+                case Maze3D maze3D -> setDrawMode(maze3D, drawMode); //TODO performance
+                default -> {}
+            }
+        });
+    }
+
+    private void setDrawMode(Group group, DrawMode drawMode) {
+        for (Node node : group.getChildren()) {
+            if (node instanceof Group subGroup) {
+                setDrawMode(subGroup, drawMode);
+            }
+            else if (node instanceof Shape3D shape3D) {
+                shape3D.setDrawMode(drawMode);
+            }
+        }
     }
 
     // Private area, no trespassing
@@ -695,4 +718,5 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         gameState.lock();
         seq.play();
     }
+
 }

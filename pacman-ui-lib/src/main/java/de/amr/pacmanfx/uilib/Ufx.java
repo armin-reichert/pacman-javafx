@@ -11,12 +11,8 @@ import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
@@ -96,23 +92,6 @@ public final class Ufx {
         } catch (Exception x) {
             Logger.error("Error running code in measurement", x);
             return Optional.empty();
-        }
-    }
-
-    /**
-     * Recursively sets the draw mode of all {@link Shape3D} nodes within the given group.
-     *
-     * @param group    the root group to modify
-     * @param drawMode the draw mode to set (e.g. {@link DrawMode#FILL} or {@link DrawMode#LINE})
-     */
-    public static void setDrawMode(Group group, DrawMode drawMode) {
-        for (Node node : group.getChildren()) {
-            if (node instanceof Group subGroup) {
-                setDrawMode(subGroup, drawMode);
-            }
-            else if (node instanceof Shape3D shape3D) {
-                shape3D.setDrawMode(drawMode);
-            }
         }
     }
 
