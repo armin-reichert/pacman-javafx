@@ -196,8 +196,8 @@ public class MeshViewerApp extends Application {
                 case MeshNode meshNode -> {
                     String meshName = meshNode.meshName;
                     MeshView meshView = meshNode.meshView;
-                    Logger.info("Selected node has mesh '{}': {}", meshName, meshView);
-                    setDisplayedMeshView(meshView);
+                    showMeshView(meshView);
+                    Logger.info("Mesh View displayed: {}", meshName);
                 }
                 default -> Logger.info("Selected node has value {}", selectedNode.getValue());
             }
@@ -316,7 +316,7 @@ public class MeshViewerApp extends Application {
         navigationPane.getChildren().setAll(treeView);
     }
 
-    private void setDisplayedMeshView(MeshView meshView) {
+    private void showMeshView(MeshView meshView) {
         if (meshView == null) return;
 
         meshView.setCullFace(CullFace.NONE);
