@@ -329,6 +329,10 @@ public class MeshViewerApp extends Application {
         center(pivot);
         pivot.getTransforms().addAll(rotateX, rotateY);
 
+        // Flip such that JavaFX displays objects as other frameworks
+        pivot.getTransforms().add(new Rotate(180, Rotate.X_AXIS));
+
         world.getChildren().setAll(pivot);
+        resetView();
     }
 }
