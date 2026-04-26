@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -155,9 +154,9 @@ public class ObjFileParser {
                 parser.parse(stream, charset);
                 return parser.materialMap();
             }
-        } catch (URISyntaxException e) {
-            Logger.error("Invalid material library URL: {}", libURL);
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            Logger.error("Material library parsing failed: URL={}", libURL);
+            return Map.of();
         }
     }
 

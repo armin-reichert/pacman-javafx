@@ -171,9 +171,9 @@ public class ObjMtlFileParser {
         }
     }
 
-    public record Token(Keyword keyword, String args, int lineNo) {
-        public Token(String keyword, String args, int lineNo) {
-            this(Keyword.fromText(keyword), args, lineNo);
+    public record Token(Keyword keyword, String text, String args, int lineNo) {
+        public Token(String text, String args, int lineNo) {
+            this(Keyword.fromText(text), text, args, lineNo);
         }
     }
 
@@ -278,7 +278,7 @@ public class ObjMtlFileParser {
                         currentObjMaterial.ks = parseColorRGB(token.args, ObjMaterial.DEFAULT_SPECULAR_COLOR);
                     }
                 }
-                default -> Logger.warn("Unknown keyword '{}' at line {}", token.keyword, token.lineNo);
+                default -> Logger.warn("Unknown keyword '{}' at line {}", token.text, token.lineNo);
             }
         }
 

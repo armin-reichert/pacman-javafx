@@ -1,4 +1,8 @@
-package experiments;
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package experiments.custommaps;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.ui.GameBox;

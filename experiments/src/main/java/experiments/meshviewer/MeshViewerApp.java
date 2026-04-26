@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package experiments;
+package experiments.meshviewer;
 
 import de.amr.objparser.ObjFileParser;
 import de.amr.objparser.ObjModel;
@@ -69,7 +69,7 @@ public class MeshViewerApp extends Application {
     private final Rotate rotateY = new Rotate(0, Rotate.Y_AXIS);
     private final Translate zoom = new Translate(0, 0, -50);
 
-    private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
+    private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.LINE);
 
     private Group world;
     private SubScene sub;
