@@ -42,6 +42,27 @@ public class MeshViewerApp extends Application {
         launch(args);
     }
 
+    public static sealed class NavigationTreeNode permits LabelNode, MeshNode { }
+
+    public static final class LabelNode extends NavigationTreeNode {
+        public final String label;
+
+        public LabelNode(String label) {
+            this.label = label;
+        }
+    }
+
+    public static final class MeshNode extends NavigationTreeNode {
+        public final String meshName;
+        public final MeshView meshView;
+
+        public MeshNode(String meshName, MeshView meshView) {
+            this.meshName = meshName;
+            this.meshView = meshView;
+        }
+    }
+
+
     private double mouseOldX, mouseOldY;
 
     private final Rotate rotateX = new Rotate(0, Rotate.X_AXIS);
@@ -54,9 +75,12 @@ public class MeshViewerApp extends Application {
     private SubScene sub;
     private Pane navigationPane;
 
+    private TreeView<NavigationTreeNode> treeView;
+
     // Data model
     private File currentObjFile;
     private final ObjectProperty<ObjModel> objModel = new SimpleObjectProperty<>();
+    private MeshView currentMeshView;
 
     @Override
     public void start(Stage stage) {
@@ -74,7 +98,7 @@ public class MeshViewerApp extends Application {
 
         sub = new SubScene(world, width, height, true, SceneAntialiasing.BALANCED);
         sub.setCamera(cam);
-        sub.setFill(Color.gray(0.1));
+        sub.setFill(Color.gray(0.5));
 
         enableMouseControl(sub);
 
@@ -108,17 +132,21 @@ public class MeshViewerApp extends Application {
         exitItem.setOnAction(_ -> Platform.exit());
 
         // --- LAYOUT ---
-        Pane navigation = createNavigationPane();
+        treeView = createObjModelTreeView(new ObjModel());
+        navigationPane = new VBox();
+        navigationPane.setMinWidth(300);
+        navigationPane.setMaxWidth(300);
+        navigationPane.setBorder(Border.stroke(Color.RED));
+        navigationPane.getChildren().add(treeView);
 
         BorderPane root = new BorderPane();
         root.setTop(menuBar);
         root.setCenter(sub);
-        root.setLeft(navigation);
+        root.setLeft(navigationPane);
 
-        sub.widthProperty().bind(root.widthProperty().subtract(navigation.widthProperty()));
+        sub.widthProperty().bind(root.widthProperty().subtract(navigationPane.widthProperty()));
         sub.heightProperty().bind(root.heightProperty());
 
-        // Scene and stage
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Mesh Viewer");
@@ -131,37 +159,6 @@ public class MeshViewerApp extends Application {
         });
 
         Platform.runLater(() -> sub.requestFocus());
-    }
-
-    private Pane createNavigationPane() {
-        navigationPane = new VBox();
-        navigationPane.setMinWidth(300);
-        navigationPane.setMaxWidth(300);
-        navigationPane.setBorder(Border.stroke(Color.RED));
-
-        navigationPane.getChildren().add(createObjModelTreeView(new ObjModel()));
-
-        return navigationPane;
-    }
-
-    public static sealed class NavigationTreeNode permits LabelNode, MeshNode { }
-
-    public static final class LabelNode extends NavigationTreeNode {
-        public final String label;
-
-        public LabelNode(String label) {
-            this.label = label;
-        }
-    }
-
-    public static final class MeshNode extends NavigationTreeNode {
-        public final String meshName;
-        public final MeshView meshView;
-
-        public MeshNode(String meshName, MeshView meshView) {
-            this.meshName = meshName;
-            this.meshView = meshView;
-        }
     }
 
     private TreeView<NavigationTreeNode> createObjModelTreeView(ObjModel objModel) {
@@ -185,7 +182,7 @@ public class MeshViewerApp extends Application {
                     String meshName = meshNode.meshName;
                     MeshView meshView = meshNode.meshView;
                     Logger.info("Selected node has mesh '{}': {}", meshName, meshView);
-
+                    setDisplayedMeshView(meshView);
                 }
                 default -> Logger.info("Selected node has value {}", selectedNode.getValue());
             }
@@ -222,13 +219,6 @@ public class MeshViewerApp extends Application {
             root.getChildren().add(item);
         }
         return root;
-    }
-
-    private void setWorldContent(Group meshGroup) {
-        Group pivot = new Group(meshGroup);
-        pivot.getTransforms().addAll(rotateX, rotateY);
-        world.getChildren().clear();
-        world.getChildren().add(pivot);
     }
 
     private void center(Node node) {
@@ -268,7 +258,7 @@ public class MeshViewerApp extends Application {
             mouseOldY = e.getSceneY();
         });
 
-        sub.setOnScroll(e -> zoom.setZ(zoom.getZ() + e.getDeltaY() * 0.1));
+        sub.setOnScroll(e -> zoom.setZ(zoom.getZ() + e.getDeltaY() * 0.05));
 
         sub.setOnKeyPressed(e -> {
             switch (e.getCode()) {
@@ -285,16 +275,23 @@ public class MeshViewerApp extends Application {
     }
 
     private void onObjModelChanged(ObjModel newModel) {
-        Map<String, MeshView> meshes = new MeshBuilder(objModel.get()).buildMeshViewsByGroup();
-        Group meshGroup = new Group();
-        for (MeshView mv : meshes.values()) {
-            mv.setCullFace(CullFace.NONE);
-            mv.drawModeProperty().bind(drawMode);
-            meshGroup.getChildren().add(mv);
-        }
-        center(meshGroup);
-        setWorldContent(meshGroup);
+        treeView = createObjModelTreeView(newModel);
+        navigationPane.getChildren().setAll(treeView);
+    }
 
-        navigationPane.getChildren().setAll(createObjModelTreeView(newModel));
+    private void setDisplayedMeshView(MeshView meshView) {
+
+        if (meshView == null) return;
+
+        currentMeshView = meshView;
+        currentMeshView.setCullFace(CullFace.NONE);
+        currentMeshView.drawModeProperty().bind(drawMode);
+        center(currentMeshView);
+
+        Group pivot = new Group(currentMeshView);
+        center(pivot);
+        pivot.getTransforms().addAll(rotateX, rotateY);
+
+        world.getChildren().setAll(pivot);
     }
 }
