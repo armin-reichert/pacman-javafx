@@ -5,7 +5,8 @@
 package de.amr.pacmanfx.uilib.model3D.world;
 
 import de.amr.objparser.ObjFileParser;
-import de.amr.pacmanfx.uilib.model3D.TriangleMeshBuilder;
+import de.amr.objparser.ObjModel;
+import de.amr.pacmanfx.uilib.model3D.MeshBuilder;
 import javafx.scene.shape.MeshView;
 
 import java.net.URL;
@@ -32,8 +33,8 @@ public class PelletModel3D {
         try {
             final URL url = getClass().getResource(OBJ_FILE);
             final var parser = new ObjFileParser(url, StandardCharsets.UTF_8);
-            final var meshBuilder = new TriangleMeshBuilder(parser.parse());
-            meshViews = meshBuilder.build(TriangleMeshBuilder.BuildMode.BY_GROUP);
+            final ObjModel objModel = parser.parse();
+            meshViews = MeshBuilder.build(objModel, MeshBuilder.BuildMode.BY_GROUP);
             pellet(); // fail fast
 		} catch (Exception x) {
 			throw new RuntimeException(x);

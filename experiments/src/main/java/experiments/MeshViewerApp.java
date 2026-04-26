@@ -6,7 +6,7 @@ package experiments;
 
 import de.amr.objparser.ObjFileParser;
 import de.amr.objparser.ObjModel;
-import de.amr.pacmanfx.uilib.model3D.TriangleMeshBuilder;
+import de.amr.pacmanfx.uilib.model3D.MeshBuilder;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -84,7 +84,7 @@ public class MeshViewerApp extends Application {
         fileMenu.getItems().addAll(openItem, exitItem);
         menuBar.getMenus().add(fileMenu);
 
-        openItem.setOnAction(e -> {
+        openItem.setOnAction(_ -> {
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Open OBJ File");
             chooser.getExtensionFilters().add(
@@ -102,7 +102,7 @@ public class MeshViewerApp extends Application {
             }
         });
 
-        exitItem.setOnAction(e -> Platform.exit());
+        exitItem.setOnAction(_ -> Platform.exit());
 
         // --- LAYOUT ---
         BorderPane root = new BorderPane();
@@ -143,7 +143,7 @@ public class MeshViewerApp extends Application {
             }
         });
 
-        sub.setOnMouseClicked(e -> sub.requestFocus());
+        sub.setOnMouseClicked(_ -> sub.requestFocus());
 
         sub.setOnMousePressed(e -> {
             mouseOldX = e.getSceneX();
@@ -174,7 +174,7 @@ public class MeshViewerApp extends Application {
     }
 
     private Group loadMeshesFromFile(File file) throws IOException {
-        Map<String, MeshView> meshes = createMeshes(file);
+        Map<String, MeshView> meshes = importMeshes(file);
 
         Group meshGroup = new Group();
         for (MeshView mv : meshes.values()) {
@@ -186,11 +186,10 @@ public class MeshViewerApp extends Application {
         return meshGroup;
     }
 
-    private Map<String, MeshView> createMeshes(File objFile) throws IOException {
-        URL objFileURL = objFile.toURI().toURL();
-        var parser = new ObjFileParser(objFileURL, StandardCharsets.UTF_8);
-        ObjModel objModel = parser.parse();
-        var meshBuilder = new TriangleMeshBuilder(objModel);
-        return meshBuilder.buildMeshViewsByGroup();
+    private Map<String, MeshView> importMeshes(File objFile) throws IOException {
+        final URL objFileURL = objFile.toURI().toURL();
+        final var parser = new ObjFileParser(objFileURL, StandardCharsets.UTF_8);
+        final ObjModel objModel = parser.parse();
+        return new MeshBuilder(objModel).buildMeshViewsByGroup();
     }
 }

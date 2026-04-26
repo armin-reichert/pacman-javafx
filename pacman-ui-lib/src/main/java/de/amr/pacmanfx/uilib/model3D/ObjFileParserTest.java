@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.objparser.ObjFileParser;
+import de.amr.objparser.ObjModel;
 import javafx.scene.shape.MeshView;
 import org.tinylog.Logger;
 
@@ -29,8 +30,8 @@ public class ObjFileParserTest {
             }
             try {
                 final ObjFileParser parser = new ObjFileParser(url, StandardCharsets.UTF_8);
-                TriangleMeshBuilder meshBuilder = new TriangleMeshBuilder(parser.parse());
-                Map<String, MeshView> meshes = meshBuilder.build(TriangleMeshBuilder.BuildMode.BY_GROUP);
+                final ObjModel objModel = parser.parse();
+                final Map<String, MeshView> meshes = MeshBuilder.build(objModel, MeshBuilder.BuildMode.BY_GROUP);
                 Logger.info("Constructed {} mesh views from OBJ model: {}", meshes.size(), meshes);
             } catch (IOException x) {
                 Logger.error(x, "Parsing error");

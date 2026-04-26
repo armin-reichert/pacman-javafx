@@ -14,7 +14,7 @@ import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
-public class TriangleMeshBuilder {
+public class MeshBuilder {
 
     public enum BuildMode {
         BY_GROUP,
@@ -25,7 +25,7 @@ public class TriangleMeshBuilder {
     private final ObjModel model;
     private final Map<String, PhongMaterial> materials;
 
-    public TriangleMeshBuilder(ObjModel model) {
+    public MeshBuilder(ObjModel model) {
         this.model = requireNonNull(model);
 
         // Flatten material libraries
@@ -38,6 +38,10 @@ public class TriangleMeshBuilder {
     /* -------------------------------------------------------------
      *  PUBLIC API
      * ------------------------------------------------------------- */
+
+    public static Map<String, MeshView> build(ObjModel objModel, BuildMode mode) {
+        return new MeshBuilder(objModel).build(mode);
+    }
 
     public Map<String, MeshView> build(BuildMode mode) {
         return switch (mode) {
