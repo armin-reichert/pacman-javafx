@@ -46,8 +46,8 @@ import java.util.Map;
 
 public class MeshViewerUI {
 
-    public static final Color FOCUS_COLOR = Color.gray(0.5);
-    public static final Color NOFOCUS_COLOR = Color.gray(0.25);
+    public static final Color FOCUS_COLOR = Color.gray(0.66);
+    public static final Color NOFOCUS_COLOR = Color.gray(0.5);
 
     public static final int DEFAULT_ANGLE_X = 0;
     public static final int DEFAULT_ANGLE_Y = 0;
