@@ -116,7 +116,7 @@ public class MeshViewerUI {
         TabPane tabPane = new TabPane(previewTab, objSourceTab);
         tabPane.setSide(Side.BOTTOM);
         tabPane.getSelectionModel().selectedItemProperty().addListener((_, _, selection) -> {
-            Logger.info("Selected tab: {}", selection);
+            Logger.debug("Selected tab: {}", selection);
             if (selection == previewTab) {
                 Platform.runLater(previewSubScene::requestFocus);
             }
