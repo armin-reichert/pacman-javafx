@@ -14,7 +14,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -105,11 +104,13 @@ public class ObjFileParser {
 
     public ObjModel parse() throws IOException {
         final var objModel = new ObjModel();
+/*
         try (InputStream stream = objFileURL.openConnection().getInputStream()) {
             final var reader = new BufferedReader(new InputStreamReader(stream, charset));
             String source = reader.lines().collect(Collectors.joining("\n"));
             objModel.setSource(source);
         }
+ */
         try (InputStream stream = objFileURL.openConnection().getInputStream()) {
             parseMaterialLibraries(objModel, stream);
         }

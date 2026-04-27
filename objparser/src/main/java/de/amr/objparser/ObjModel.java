@@ -20,7 +20,9 @@ public class ObjModel {
     String    currentMaterialName;
     Integer   currentSmoothingGroup;
 
-    public ObjModel() {}
+    public ObjModel() {
+        source = "No source";
+    }
 
     public void setUrl(String url) {
         this.url = url;
