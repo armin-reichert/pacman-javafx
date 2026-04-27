@@ -86,7 +86,21 @@ public class MeshViewerUI {
         cam.setNearClip(0.1);
         cam.setFarClip(10_000);
 
-        world = new Group();
+        // Light
+        AmbientLight ambient = new AmbientLight(Color.color(0.3, 0.3, 0.3));
+
+        PointLight keyLight = new PointLight(Color.WHITE);
+        keyLight.setTranslateX(200);
+        keyLight.setTranslateY(-200);
+        keyLight.setTranslateZ(-300);
+
+        PointLight fillLight = new PointLight(Color.color(0.6, 0.6, 0.8));
+        fillLight.setTranslateX(-200);
+        fillLight.setTranslateY(200);
+        fillLight.setTranslateZ(-300);
+
+        world = new Group(ambient, keyLight, fillLight);
+
         previewSubScene = new SubScene(world, width, height, true, SceneAntialiasing.BALANCED);
         previewSubScene.setCamera(cam);
         previewSubScene.setFill(NOFOCUS_COLOR);
