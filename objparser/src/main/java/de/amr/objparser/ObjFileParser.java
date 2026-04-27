@@ -104,20 +104,34 @@ public class ObjFileParser {
 
     public ObjModel parse() throws IOException {
         final var objModel = new ObjModel();
-/*
-        try (InputStream stream = objFileURL.openConnection().getInputStream()) {
-            final var reader = new BufferedReader(new InputStreamReader(stream, charset));
-            String source = reader.lines().collect(Collectors.joining("\n"));
-            objModel.setSource(source);
-        }
- */
-        try (InputStream stream = objFileURL.openConnection().getInputStream()) {
-            parseMaterialLibraries(objModel, stream);
-        }
-        try (InputStream stream = objFileURL.openConnection().getInputStream()) {
-            parseGeometry(objModel, stream);
-        }
         objModel.setUrl(objFileURL.toString());
+
+        try (InputStream stream = objFileURL.openConnection().getInputStream();
+             BufferedReader reader = new BufferedReader(new InputStreamReader(stream, charset))) {
+
+            tokenizer = new Tokenizer(reader);
+            Token token;
+
+            while ((token = tokenizer.next()) != null) {
+                switch (token.keyword()) {
+
+                    case MATERIAL_LIB -> parseMaterialLibraryRef(objModel, token.args());
+                    case OBJECT       -> parseObject(objModel, token.args());
+                    case GROUP        -> parseGroup(objModel, token.args());
+                    case SMOOTHING_GROUP -> parseSmoothingGroup(objModel, token.args());
+                    case MATERIAL_USAGE  -> parseMaterialUsage(objModel, token.args());
+
+                    case VERTEX        -> objModel.vertices.add(parseVertex(token.args()));
+                    case TEX_COORD     -> objModel.texCoords.add(parseTexCoord(token.args()));
+                    case VERTEX_NORMAL -> objModel.normals.add(parseNormal(token.args()));
+                    case FACE          -> parseFace(objModel, token.args());
+
+                    default -> Logger.warn("Unknown keyword '{}' at line {}",
+                        token.keyword().name(), token.lineNo());
+                }
+            }
+        }
+
         return objModel;
     }
 
@@ -125,21 +139,15 @@ public class ObjFileParser {
      *  MATERIAL LIBRARIES
      * ------------------------------------------------------------- */
 
-    private void parseMaterialLibraries(ObjModel objModel, InputStream stream) throws IOException {
-        final var reader = new BufferedReader(new InputStreamReader(stream, charset));
-        tokenizer = new Tokenizer(reader);
-        for (Token token; (token = tokenizer.next()) != null; ) {
-            if (token.keyword() == ObjKeyword.MATERIAL_LIB) {
-                final String libName = token.args();
-                Logger.debug("Material library found: '{}'", libName);
-                if (!objModel.materialLibsMap.containsKey(libName)) {
-                    Map<String, ObjMaterial> lib = parseMaterialLibraryFile(libName);
-                    if (lib != null) {
-                        objModel.materialLibsMap.put(libName, lib);
-                        Logger.debug("Material library parsed: {}", libName);
-                    }
-                }
-            }
+    private void parseMaterialLibraryRef(ObjModel objModel, String libName) {
+        if (objModel.materialLibsMap.containsKey(libName)) {
+            return;
+        }
+        Logger.debug("Material library found: '{}'", libName);
+        Map<String, ObjMaterial> lib = parseMaterialLibraryFile(libName);
+        if (lib != null && !lib.isEmpty()) {
+            objModel.materialLibsMap.put(libName, lib);
+            Logger.debug("Material library parsed: {}", libName);
         }
     }
 
