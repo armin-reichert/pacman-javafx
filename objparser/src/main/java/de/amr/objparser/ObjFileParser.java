@@ -142,7 +142,7 @@ public class ObjFileParser {
         }
     }
 
-    private Map<String, ObjMaterial> parseMaterialLibraryFile(String libName) throws IOException {
+    private Map<String, ObjMaterial> parseMaterialLibraryFile(String libName) {
         final String objFileURLString = objFileURL.toExternalForm();
         final int endOfPath = objFileURLString.lastIndexOf('/');
         if (endOfPath == -1) {
@@ -161,7 +161,7 @@ public class ObjFileParser {
                 return parser.materialMap();
             }
         } catch (Exception x) {
-            Logger.error(x, "Material library parsing failed: URL={}", libURL);
+            Logger.warn(x, "Material library parsing failed: URL={}", libURL);
             return Map.of();
         }
     }
