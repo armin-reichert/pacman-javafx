@@ -10,7 +10,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.spriteanim.SpriteAnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.spriteanim.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import java.util.Arrays;
 
