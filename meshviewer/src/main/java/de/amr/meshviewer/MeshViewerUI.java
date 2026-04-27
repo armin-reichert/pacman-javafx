@@ -14,6 +14,7 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
+import javafx.geometry.Point3D;
 import javafx.geometry.Side;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -72,7 +73,9 @@ public class MeshViewerUI {
     private double mouseOldX, mouseOldY;
 
     private Animation autoRotate;
+    private final Rotate autoRotateX = new Rotate(0, Rotate.X_AXIS);
     private final Rotate autoRotateY = new Rotate(0, Rotate.Y_AXIS);
+    private Point3D autoRotateAxis = Rotate.Y_AXIS; // horizontally be default
 
     public MeshViewerUI(Stage stage) {
         this.stage = stage;
@@ -238,14 +241,20 @@ public class MeshViewerUI {
         sourceView.setPrefWidth(600);
         sourceView.setPrefHeight(800);
         sourceView.setFont(font);
-        //sourceView.setStyle(style);
+        sourceView.setStyle(style);
         sourceView.textProperty().bind(objModel.map(ObjModel::source));
         return sourceView;
     }
 
     private void createAutoRotateAnimation() {
         autoRotate = new Timeline(
-            new KeyFrame(Duration.millis(16), _ -> autoRotateY.setAngle(autoRotateY.getAngle() - 0.5)) // ~60 FPS
+            new KeyFrame(Duration.millis(16), _ -> {
+                if (autoRotateAxis == Rotate.X_AXIS) {
+                    autoRotateX.setAngle(autoRotateX.getAngle() + 0.5);
+                } else {
+                    autoRotateY.setAngle(autoRotateY.getAngle() - 0.5);
+                }
+            }) // ~60 FPS
         );
         autoRotate.setCycleCount(Animation.INDEFINITE);
     }
@@ -359,6 +368,8 @@ public class MeshViewerUI {
     private void resetTransforms() {
         rotateX.setAngle(DEFAULT_ANGLE_X);
         rotateY.setAngle(DEFAULT_ANGLE_Y);
+        autoRotateX.setAngle(DEFAULT_ANGLE_X);
+        autoRotateY.setAngle(DEFAULT_ANGLE_Y);
         zoom.setZ(DEFAULT_ZOOM);
     }
 
@@ -386,11 +397,11 @@ public class MeshViewerUI {
             }
         });
         sub.setOnKeyTyped(e -> {
-            if ("w".equals(e.getCharacter())) {
-                drawMode.set(drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
-            }
-            else if (" ".equals(e.getCharacter())) {
-                toggleAutoplay();
+            switch (e.getCharacter()) {
+                case "x" -> autoRotateAxis = Rotate.X_AXIS;
+                case "y" -> autoRotateAxis = Rotate.Y_AXIS;
+                case "w" -> drawMode.set(drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+                case " " -> toggleAutoplay();
             }
         });
 
@@ -475,7 +486,7 @@ public class MeshViewerUI {
 
         // Flip around x-axis (otherwise many objects are upside-down initially)
         final var flipUpsideDown = new Rotate(180, Rotate.X_AXIS);
-        pivot.getTransforms().addAll(flipUpsideDown, rotateX, rotateY, autoRotateY);
+        pivot.getTransforms().addAll(flipUpsideDown, rotateX, rotateY, autoRotateX, autoRotateY);
 
         world.getChildren().setAll(pivot);
         resetTransforms();
