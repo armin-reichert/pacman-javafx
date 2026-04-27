@@ -35,36 +35,19 @@ import java.util.Map;
 
 public class MeshViewerApp extends Application {
 
+    public static final Color FOCUS_COLOR = Color.gray(0.5);
+    public static final Color NOFOCUS_COLOR = Color.gray(0.4);
+
     public static final int DEFAULT_ANGLE_X = 0;
     public static final int DEFAULT_ANGLE_Y = 0;
-    public static final int DEFAULT_ZOOM = -50;
+    public static final int DEFAULT_ZOOM    = -30;
 
     public static void main(String[] args) {
         launch(args);
     }
 
-    public static sealed class NavigationTreeNode permits LabelNode, MeshNode { }
-
-    public static final class LabelNode extends NavigationTreeNode {
-        public final String label;
-
-        public LabelNode(String label) {
-            this.label = label;
-        }
-    }
-
-    public static final class MeshNode extends NavigationTreeNode {
-        public final String meshName;
-        public final MeshView meshView;
-
-        public MeshNode(String meshName, MeshView meshView) {
-            this.meshName = meshName;
-            this.meshView = meshView;
-        }
-    }
-
-
-    private double mouseOldX, mouseOldY;
+    // Data model
+    private final ObjectProperty<ObjModel> objModel = new SimpleObjectProperty<>();
 
     private final Rotate rotateX = new Rotate(DEFAULT_ANGLE_X, Rotate.X_AXIS);
     private final Rotate rotateY = new Rotate(DEFAULT_ANGLE_Y, Rotate.Y_AXIS);
@@ -75,17 +58,15 @@ public class MeshViewerApp extends Application {
     private Group world;
     private SubScene sub;
     private Pane navigationPane;
-
     private TreeView<NavigationTreeNode> treeView;
 
-    // Data model
-    private final ObjectProperty<ObjModel> objModel = new SimpleObjectProperty<>();
+    private double mouseOldX, mouseOldY;
 
     @Override
     public void start(Stage stage) {
 
-        double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
-        double width = 1.2 * height;
+        final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
+        final double width = 1.5 * height;
 
         world = new Group();
 
@@ -97,7 +78,8 @@ public class MeshViewerApp extends Application {
 
         sub = new SubScene(world, width, height, true, SceneAntialiasing.BALANCED);
         sub.setCamera(cam);
-        sub.setFill(Color.gray(0.5));
+        sub.setFill(NOFOCUS_COLOR);
+        sub.fillProperty().bind(sub.focusedProperty().map(focussed -> focussed? FOCUS_COLOR : NOFOCUS_COLOR));
 
         enableMouseControl(sub);
 
@@ -132,6 +114,7 @@ public class MeshViewerApp extends Application {
 
         // --- LAYOUT ---
         treeView = createObjModelTreeView(new ObjModel(), "No Model");
+
         navigationPane = new VBox();
         navigationPane.setMinWidth(300);
         navigationPane.setMaxWidth(300);
@@ -189,6 +172,7 @@ public class MeshViewerApp extends Application {
         final TreeView<NavigationTreeNode> treeView = new TreeView<>(root);
         treeView.setShowRoot(true);
         VBox.setVgrow(treeView, Priority.ALWAYS);
+        treeView.setFocusTraversable(false);
 
         treeView.getSelectionModel().selectedItemProperty().addListener((_, _, selectedNode) -> {
             switch (selectedNode.getValue()) {
@@ -253,6 +237,16 @@ public class MeshViewerApp extends Application {
 
     private void enableMouseControl(SubScene sub) {
 
+        sub.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case PLUS  -> zoom.setZ(zoom.getZ() + 2);
+                case MINUS -> zoom.setZ(zoom.getZ() - 2);
+                case LEFT  -> rotateY(1);
+                case RIGHT -> rotateY(-1);
+                case UP    -> rotateX(-1);
+                case DOWN  -> rotateX(1);
+            }
+        });
         sub.setOnKeyTyped(e -> {
             if ("w".equals(e.getCharacter())) {
                 drawMode.set(drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
@@ -278,9 +272,9 @@ public class MeshViewerApp extends Application {
             boolean shift = e.isShiftDown();
             if (e.getButton() == MouseButton.PRIMARY) {
                 if (!shift) {
-                    rotateY.setAngle(rotateY.getAngle() + dx * 0.5);
+                    rotateY(dx * 0.5);
                 } else {
-                    rotateX.setAngle(rotateX.getAngle() - dy * 0.5);
+                    rotateX(- dy * 0.5);
                 }
             }
 
@@ -290,12 +284,14 @@ public class MeshViewerApp extends Application {
 
         sub.setOnScroll(e -> zoom.setZ(zoom.getZ() + e.getDeltaY() * 0.05));
 
-        sub.setOnKeyPressed(e -> {
-            switch (e.getCode()) {
-                case PLUS  -> zoom.setZ(zoom.getZ() + 2);
-                case MINUS -> zoom.setZ(zoom.getZ() - 2);
-            }
-        });
+    }
+
+    private void rotateX(double delta) {
+        rotateX.setAngle(rotateX.getAngle() + delta);
+    }
+
+    private void rotateY(double delta) {
+        rotateY.setAngle(rotateY.getAngle() + delta);
     }
 
     private void loadMeshesFromURL(URL objFileURL) throws IOException {
@@ -335,5 +331,7 @@ public class MeshViewerApp extends Application {
 
         world.getChildren().setAll(pivot);
         resetTransforms();
+
+        sub.requestFocus();
     }
 }
