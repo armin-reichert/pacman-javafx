@@ -245,7 +245,7 @@ public class MeshViewerApp extends Application {
         ));
     }
 
-    private void resetView() {
+    private void resetTransforms() {
         rotateX.setAngle(DEFAULT_ANGLE_X);
         rotateY.setAngle(DEFAULT_ANGLE_Y);
         zoom.setZ(DEFAULT_ZOOM);
@@ -261,7 +261,7 @@ public class MeshViewerApp extends Application {
 
         sub.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                resetView();
+                resetTransforms();
             }
             sub.requestFocus();
         });
@@ -323,6 +323,7 @@ public class MeshViewerApp extends Application {
         meshView.drawModeProperty().bind(drawMode);
 
         //TODO reconsider
+        meshView.getTransforms().clear();
         center(meshView);
 
         Group pivot = new Group(meshView);
@@ -333,6 +334,6 @@ public class MeshViewerApp extends Application {
         pivot.getTransforms().add(new Rotate(180, Rotate.X_AXIS));
 
         world.getChildren().setAll(pivot);
-        resetView();
+        resetTransforms();
     }
 }
