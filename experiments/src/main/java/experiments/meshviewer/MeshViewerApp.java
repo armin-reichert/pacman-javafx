@@ -35,6 +35,8 @@ import java.util.Map;
 
 public class MeshViewerApp extends Application {
 
+    public static final String TEAPOT_MODEL = "/newell_teaset/teapot.obj";
+
     public static final Color FOCUS_COLOR = Color.gray(0.5);
     public static final Color NOFOCUS_COLOR = Color.gray(0.4);
 
@@ -42,12 +44,11 @@ public class MeshViewerApp extends Application {
     public static final int DEFAULT_ANGLE_Y = 0;
     public static final int DEFAULT_ZOOM    = -30;
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         launch(args);
     }
 
-    // Data model
-    private final ObjectProperty<ObjModel> objModel = new SimpleObjectProperty<>();
+    private final ObjectProperty<ObjModel> objModel = new SimpleObjectProperty<>(new ObjModel());
 
     private final Rotate rotateX = new Rotate(DEFAULT_ANGLE_X, Rotate.X_AXIS);
     private final Rotate rotateY = new Rotate(DEFAULT_ANGLE_Y, Rotate.Y_AXIS);
@@ -68,14 +69,13 @@ public class MeshViewerApp extends Application {
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width = 1.5 * height;
 
-        world = new Group();
-
         // Camera
-        PerspectiveCamera cam = new PerspectiveCamera(true);
+        final var cam = new PerspectiveCamera(true);
         cam.getTransforms().add(zoom);
         cam.setNearClip(0.1);
         cam.setFarClip(10_000);
 
+        world = new Group();
         sub = new SubScene(world, width, height, true, SceneAntialiasing.BALANCED);
         sub.setCamera(cam);
         sub.setFill(NOFOCUS_COLOR);
@@ -83,7 +83,38 @@ public class MeshViewerApp extends Application {
 
         enableMouseControl(sub);
 
-        // --- MENU BAR ---
+        final MenuBar menuBar = createMenus(stage);
+
+        navigationPane = new VBox();
+        navigationPane.setMinWidth(300);
+        navigationPane.setMaxWidth(300);
+
+        final BorderPane rootPane = new BorderPane();
+        rootPane.setTop(menuBar);
+        rootPane.setLeft(navigationPane);
+        rootPane.setCenter(sub);
+
+        sub.widthProperty().bind(rootPane.widthProperty().subtract(navigationPane.widthProperty()));
+        sub.heightProperty().bind(rootPane.heightProperty());
+
+        final Scene scene = new Scene(rootPane);
+        stage.setScene(scene);
+        stage.setTitle("Mesh Viewer");
+        stage.setWidth(width);
+        stage.setHeight(height);
+        stage.show();
+
+        objModel.addListener((_, _, newObjModel) -> onObjModelChanged(newObjModel));
+
+        try {
+            loadMeshesFromURL(getClass().getResource(TEAPOT_MODEL));
+            selectFirstObjectNodeInTree();
+        } catch (Exception x) {
+            Logger.error(x, "Could not load teapot.obj");
+        }
+    }
+
+    private MenuBar createMenus(Stage stage) {
         MenuBar menuBar = new MenuBar();
 
         Menu fileMenu = new Menu("File");
@@ -112,55 +143,22 @@ public class MeshViewerApp extends Application {
 
         exitItem.setOnAction(_ -> Platform.exit());
 
-        // --- LAYOUT ---
-        treeView = createObjModelTreeView(new ObjModel(), "No Model");
-
-        navigationPane = new VBox();
-        navigationPane.setMinWidth(300);
-        navigationPane.setMaxWidth(300);
-        navigationPane.setBorder(Border.stroke(Color.RED));
-        navigationPane.getChildren().add(treeView);
-
-        BorderPane rootPane = new BorderPane();
-        rootPane.setTop(menuBar);
-        rootPane.setCenter(sub);
-        rootPane.setLeft(navigationPane);
-
-        sub.widthProperty().bind(rootPane.widthProperty().subtract(navigationPane.widthProperty()));
-        sub.heightProperty().bind(rootPane.heightProperty());
-
-        Scene scene = new Scene(rootPane);
-        stage.setScene(scene);
-        stage.setTitle("Mesh Viewer");
-        stage.setWidth(width);
-        stage.setHeight(height);
-        stage.show();
-
-        objModel.addListener((_, _, newModel) -> {
-            onObjModelChanged(newModel);
-        });
-
-        try {
-            loadMeshesFromURL(getClass().getResource("/newell_teaset/teapot.obj"));
-            selectFirstObjectNode();
-        } catch (Exception x) {
-            Logger.error(x, "Could not load teapot.obj");
-        }
+        return menuBar;
     }
 
-    private void selectFirstObjectNode() {
-        TreeItem<NavigationTreeNode> rootItem = treeView.getRoot();
-        if (rootItem.getChildren().size() == 3) {
-            TreeItem<NavigationTreeNode> objectsItem = rootItem.getChildren().getFirst();
+    private void selectFirstObjectNodeInTree() {
+        final TreeItem<NavigationTreeNode> rootItem = treeView.getRoot();
+        if (!rootItem.getChildren().isEmpty()) {
+            final TreeItem<NavigationTreeNode> objectsItem = rootItem.getChildren().getFirst();
             if (!objectsItem.getChildren().isEmpty()) {
-                TreeItem<NavigationTreeNode> firstObjectItem = objectsItem.getChildren().getFirst();
+                final TreeItem<NavigationTreeNode> firstObjectItem = objectsItem.getChildren().getFirst();
                 treeView.getSelectionModel().select(firstObjectItem);
             }
         }
     }
 
-    private TreeView<NavigationTreeNode> createObjModelTreeView(ObjModel objModel, String title) {
-        final MeshBuilder meshBuilder = new MeshBuilder(objModel);
+    private void updateNavigationPane(String title) {
+        final MeshBuilder meshBuilder = new MeshBuilder(objModel.get());
 
         final TreeItem<NavigationTreeNode> root = new TreeItem<>(new LabelNode(title));
         root.setExpanded(true);
@@ -169,7 +167,7 @@ public class MeshViewerApp extends Application {
         root.getChildren().add(createSubTree(meshBuilder.buildMeshViewsByGroup(), "Mesh Views by Group"));
         root.getChildren().add(createSubTree(meshBuilder.buildMeshViewsByMaterial(), "Mesh Views by Material"));
 
-        final TreeView<NavigationTreeNode> treeView = new TreeView<>(root);
+        treeView = new TreeView<>(root);
         treeView.setShowRoot(true);
         VBox.setVgrow(treeView, Priority.ALWAYS);
         treeView.setFocusTraversable(false);
@@ -205,8 +203,7 @@ public class MeshViewerApp extends Application {
             }
         });
 
-
-        return treeView;
+        navigationPane.getChildren().setAll(treeView);
     }
 
     private TreeItem<NavigationTreeNode> createSubTree(Map<String, MeshView> meshViews, String title) {
@@ -307,9 +304,8 @@ public class MeshViewerApp extends Application {
         String url = newModel.url();
         int lastSlash = url.lastIndexOf('/');
         url = url.substring(lastSlash + 1);
-        treeView = createObjModelTreeView(newModel, url);
-        selectFirstObjectNode();
-        navigationPane.getChildren().setAll(treeView);
+        updateNavigationPane(url);
+        selectFirstObjectNodeInTree();
     }
 
     private void showMeshView(MeshView meshView) {
