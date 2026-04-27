@@ -7,6 +7,9 @@ package experiments.meshviewer;
 import de.amr.objparser.ObjFileParser;
 import de.amr.objparser.ObjModel;
 import de.amr.pacmanfx.uilib.model3D.MeshBuilder;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -27,6 +30,7 @@ import javafx.scene.transform.Translate;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -58,10 +62,14 @@ public class MeshViewerUI {
     private final SubScene sub;
     private final Pane navigationPane;
     private final FileChooser fileChooser;
+
     private File workDir;
     private TreeView<NavigationTreeNode> treeView;
-
+    private Group pivot;
     private double mouseOldX, mouseOldY;
+
+    private Animation autoRotate;
+    private final Rotate autoRotateY = new Rotate(0, Rotate.Y_AXIS);
 
     public MeshViewerUI(Stage stage) {
         this.stage = stage;
@@ -145,6 +153,13 @@ public class MeshViewerUI {
     }
 
     // create UI
+
+    private void createAutoRotateAnimation() {
+        autoRotate = new Timeline(
+            new KeyFrame(Duration.millis(16), _ -> autoRotateY.setAngle(autoRotateY.getAngle() - 0.5)) // ~60 FPS
+        );
+        autoRotate.setCycleCount(Animation.INDEFINITE);
+    }
 
     private MenuBar createMenus(Stage stage) {
         MenuBar menuBar = new MenuBar();
@@ -278,6 +293,19 @@ public class MeshViewerUI {
             if ("w".equals(e.getCharacter())) {
                 drawMode.set(drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
             }
+            else if (" ".equals(e.getCharacter())) {
+                Logger.info("SPACE typed");
+                if (autoRotate == null) {
+                    createAutoRotateAnimation();
+                }
+                if (autoRotate.getStatus() == Animation.Status.RUNNING) {
+                    autoRotate.pause();
+                    Logger.info("Autorotate paused");
+                } else {
+                    autoRotate.play();
+                    Logger.info("Autorotate started");
+                }
+            }
         });
 
         sub.setOnMouseClicked(e -> {
@@ -298,10 +326,10 @@ public class MeshViewerUI {
 
             boolean shift = e.isShiftDown();
             if (e.getButton() == MouseButton.PRIMARY) {
-                if (!shift) {
-                    rotateY(dx * 0.5);
+                if (shift) {
+                    rotateX(-dx * 1.5);
                 } else {
-                    rotateX(- dy * 0.5);
+                    rotateY(-dy * 1.5);
                 }
             }
 
@@ -331,9 +359,9 @@ public class MeshViewerUI {
         meshView.getTransforms().clear();
         center(meshView);
 
-        final Group pivot = new Group(meshView);
+        pivot = new Group(meshView);
         center(pivot);
-        pivot.getTransforms().addAll(rotateX, rotateY);
+        pivot.getTransforms().addAll(rotateX, rotateY, autoRotateY);
         // Flip around x-axis (otherwise many objects are upside-down initially)
         pivot.getTransforms().add(new Rotate(180, Rotate.X_AXIS));
 
