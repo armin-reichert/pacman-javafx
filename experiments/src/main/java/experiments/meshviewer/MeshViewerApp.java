@@ -60,6 +60,8 @@ public class MeshViewerApp extends Application {
     private SubScene sub;
     private Pane navigationPane;
     private TreeView<NavigationTreeNode> treeView;
+    private FileChooser chooser;
+    private File workDir;
 
     private double mouseOldX, mouseOldY;
 
@@ -84,6 +86,12 @@ public class MeshViewerApp extends Application {
         enableMouseControl(sub);
 
         final MenuBar menuBar = createMenus(stage);
+
+        chooser = new FileChooser();
+        chooser.setTitle("Open OBJ File");
+        chooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("OBJ Files", "*.obj")
+        );
 
         navigationPane = new VBox();
         navigationPane.setMinWidth(300);
@@ -125,16 +133,14 @@ public class MeshViewerApp extends Application {
         menuBar.getMenus().add(fileMenu);
 
         openItem.setOnAction(_ -> {
-            FileChooser chooser = new FileChooser();
-            chooser.setTitle("Open OBJ File");
-            chooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("OBJ Files", "*.obj")
-            );
-
-            File objFile = chooser.showOpenDialog(stage);
+            if (workDir != null && workDir.exists()) {
+                chooser.setInitialDirectory(workDir);
+            }
+            final File objFile = chooser.showOpenDialog(stage);
             if (objFile != null) {
                 try {
                     loadMeshesFromFile(objFile);
+                    workDir = objFile.getParentFile();
                 } catch (Exception x) {
                     Logger.error(x);
                 }
