@@ -20,6 +20,7 @@ public class MtlFileParserTest {
     };
 
     static void main() {
+        int total = FILE_PATHS.length, passed = 0;
         for (String path : FILE_PATHS) {
             final URL url = MtlFileParserTest.class.getResource(path);
             if (url == null) {
@@ -30,9 +31,11 @@ public class MtlFileParserTest {
             final ObjMtlFileParser parser = new ObjMtlFileParser();
             try (InputStream stream = url.openStream()) {
                 parser.parse(stream, StandardCharsets.UTF_8);
+                ++passed;
             } catch (IOException x) {
                 Logger.error(x, "Parsing error");
             }
         }
+        Logger.info("{} of {} tests passed.", passed, total);
     }
 }
