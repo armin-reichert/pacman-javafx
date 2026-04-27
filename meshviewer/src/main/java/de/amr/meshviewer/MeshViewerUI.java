@@ -17,7 +17,9 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Side;
 import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -108,7 +110,7 @@ public class MeshViewerUI {
         previewTab.setClosable(false);
         previewTab.setContent(previewSubScene);
 
-        /*
+/*
         Tab objSourceTab = new Tab("Source");
         objSourceTab.setClosable(false);
         TextArea sourceView = createSourceView();
@@ -137,6 +139,7 @@ public class MeshViewerUI {
         stage.setWidth(width);
         stage.setHeight(height);
 
+        addFileDropSupport(scene);
         objModel.addListener((_, _, newObjModel) -> onObjModelChanged(newObjModel));
     }
 
@@ -174,6 +177,42 @@ public class MeshViewerUI {
     }
 
     // create UI
+
+    private void addFileDropSupport(Scene scene) {
+        // Accept file drag-over
+        scene.setOnDragOver(event -> {
+            if (event.getGestureSource() != scene &&
+                event.getDragboard().hasFiles()) {
+
+                event.acceptTransferModes(TransferMode.COPY);
+            }
+            event.consume();
+        });
+
+        // Handle file drop
+        scene.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+
+            if (db.hasFiles()) {
+                File file = db.getFiles().getFirst();
+
+                // Only accept OBJ files
+                if (file.getName().toLowerCase().endsWith(".obj")) {
+                    try {
+                        loadMeshesFromFile(file);
+                        workDir = file.getParentFile();
+                    } catch (Exception x) {
+                        Logger.error(x);
+                    }
+                    success = true;
+                }
+            }
+
+            event.setDropCompleted(success);
+            event.consume();
+        });
+    }
 
     private TextArea createSourceView() {
         final Font font = Font.font("Consolas", FontWeight.NORMAL, 14);
