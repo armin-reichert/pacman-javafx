@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.uilib.model3D.world;
 
+import de.amr.meshbuilder.MeshBuilder;
 import de.amr.objparser.ObjFileParser;
 import de.amr.objparser.ObjModel;
-import de.amr.meshbuilder.MeshBuilder;
 import javafx.scene.shape.MeshView;
 
 import java.net.URL;
@@ -25,7 +25,7 @@ public class PelletModel3D {
 
 	private static final String OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pellet.obj";
 
-    private static final String ID_PELLET = "Object.Pellet.Group.anon.0";
+    private static final String ID_PELLET = "Object.Pellet.Group.anon_0";
 
     private final Map<String, MeshView> meshViews;
 
