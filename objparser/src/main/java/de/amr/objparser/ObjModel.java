@@ -13,6 +13,7 @@ public class ObjModel {
     final List<ObjTexCoord> texCoords = new ArrayList<>();
     final List<ObjNormal> normals = new ArrayList<>();
 
+    String source;
     String    url;
     ObjObject currentObject;
     ObjGroup  currentGroup;
@@ -23,6 +24,14 @@ public class ObjModel {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String source() {
+        return source;
     }
 
     public String url() {

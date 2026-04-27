@@ -4,9 +4,9 @@
 
 package de.amr.meshviewer;
 
+import de.amr.meshbuilder.MeshBuilder;
 import de.amr.objparser.ObjFileParser;
 import de.amr.objparser.ObjModel;
-import de.amr.meshbuilder.MeshBuilder;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -14,6 +14,7 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
+import javafx.geometry.Side;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
@@ -25,6 +26,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.FileChooser;
@@ -58,7 +61,7 @@ public class MeshViewerUI {
 
     private final Stage stage;
     private final Group world;
-    private final SubScene sub;
+    private final SubScene previewSubScene;
     private final Pane navigationPane;
     private final FileChooser fileChooser;
 
@@ -82,12 +85,12 @@ public class MeshViewerUI {
         cam.setFarClip(10_000);
 
         world = new Group();
-        sub = new SubScene(world, width, height, true, SceneAntialiasing.BALANCED);
-        sub.setCamera(cam);
-        sub.setFill(NOFOCUS_COLOR);
-        sub.fillProperty().bind(sub.focusedProperty().map(focussed -> focussed? FOCUS_COLOR : NOFOCUS_COLOR));
+        previewSubScene = new SubScene(world, width, height, true, SceneAntialiasing.BALANCED);
+        previewSubScene.setCamera(cam);
+        previewSubScene.setFill(NOFOCUS_COLOR);
+        previewSubScene.fillProperty().bind(previewSubScene.focusedProperty().map(focussed -> focussed? FOCUS_COLOR : NOFOCUS_COLOR));
 
-        enableMouseControl(sub);
+        enableMouseControl(previewSubScene);
 
         final MenuBar menuBar = createMenus(stage);
 
@@ -101,13 +104,31 @@ public class MeshViewerUI {
         navigationPane.setMinWidth(300);
         navigationPane.setMaxWidth(300);
 
+        Tab previewTab = new Tab("Preview");
+        previewTab.setClosable(false);
+        previewTab.setContent(previewSubScene);
+
+        Tab objSourceTab = new Tab("Source");
+        objSourceTab.setClosable(false);
+        TextArea sourceView = createSourceView();
+        objSourceTab.setContent(sourceView);
+
+        TabPane tabPane = new TabPane(previewTab, objSourceTab);
+        tabPane.setSide(Side.BOTTOM);
+        tabPane.getSelectionModel().selectedItemProperty().addListener((_, _, selection) -> {
+            Logger.info("Selected tab: {}", selection);
+            if (selection == previewTab) {
+                Platform.runLater(previewSubScene::requestFocus);
+            }
+        });
+
         final BorderPane rootPane = new BorderPane();
         rootPane.setTop(menuBar);
         rootPane.setLeft(navigationPane);
-        rootPane.setCenter(sub);
+        rootPane.setCenter(tabPane);
 
-        sub.widthProperty().bind(rootPane.widthProperty().subtract(navigationPane.widthProperty()));
-        sub.heightProperty().bind(rootPane.heightProperty());
+        previewSubScene.widthProperty().bind(rootPane.widthProperty().subtract(navigationPane.widthProperty()));
+        previewSubScene.heightProperty().bind(rootPane.heightProperty());
 
         final Scene scene = new Scene(rootPane);
         stage.setScene(scene);
@@ -120,6 +141,7 @@ public class MeshViewerUI {
 
     public void show() {
         stage.show();
+        Platform.runLater(previewSubScene::requestFocus);
     }
 
     public void showObjModel(URL url) {
@@ -151,6 +173,21 @@ public class MeshViewerUI {
     }
 
     // create UI
+
+    private TextArea createSourceView() {
+        final Font font = Font.font("Consolas", FontWeight.NORMAL, 14);
+        final String style = "-fx-control-inner-background:#222; -fx-text-fill:#f0f0f0";
+
+        final var sourceView = new TextArea();
+        sourceView.setEditable(false);
+        sourceView.setWrapText(false);
+        sourceView.setPrefWidth(600);
+        sourceView.setPrefHeight(800);
+        sourceView.setFont(font);
+        sourceView.setStyle(style);
+        sourceView.textProperty().bind(objModel.map(ObjModel::source));
+        return sourceView;
+    }
 
     private void createAutoRotateAnimation() {
         autoRotate = new Timeline(
@@ -272,15 +309,26 @@ public class MeshViewerUI {
     }
 
     private void enableMouseControl(SubScene sub) {
-
         sub.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case PLUS  -> zoom.setZ(zoom.getZ() + 2);
                 case MINUS -> zoom.setZ(zoom.getZ() - 2);
-                case LEFT  -> rotateY(1);
-                case RIGHT -> rotateY(-1);
-                case UP    -> rotateX(-1);
-                case DOWN  -> rotateX(1);
+                case LEFT  -> {
+                    rotateY(-1);
+                    e.consume(); // do not deliver event to tab pane
+                }
+                case RIGHT -> {
+                    rotateY(1);
+                    e.consume(); // do not deliver event to tab pane
+                }
+                case UP    -> {
+                    rotateX(-1);
+                    e.consume(); // do not deliver event to tab pane
+                }
+                case DOWN  -> {
+                    rotateX(1);
+                    e.consume(); // do not deliver event to tab pane
+                }
             }
         });
         sub.setOnKeyTyped(e -> {
@@ -362,6 +410,6 @@ public class MeshViewerUI {
 
         world.getChildren().setAll(pivot);
         resetTransforms();
-        sub.requestFocus();
+        previewSubScene.requestFocus();
     }
 }
