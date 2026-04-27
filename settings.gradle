@@ -21,6 +21,7 @@ rootProject.name = "pacman-javafx"
 include(
     "basics",
     "objparser",
+    "meshviewer",
     "pacman-core",
     "pacman-ui-lib",
     "pacman-ui",

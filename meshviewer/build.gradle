@@ -8,6 +8,7 @@ plugins {
 
 dependencies {
     implementation(libs.bundles.tinylog)
+    implementation project(":objparser")
 }
 
 javafx {

@@ -2,11 +2,11 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package experiments.meshviewer;
+package de.amr.meshviewer;
 
 import de.amr.objparser.ObjFileParser;
 import de.amr.objparser.ObjModel;
-import de.amr.pacmanfx.uilib.model3D.MeshBuilder;
+import de.amr.meshbuilder.MeshBuilder;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -41,9 +41,8 @@ import java.util.Map;
 
 public class MeshViewerUI {
 
-
     public static final Color FOCUS_COLOR = Color.gray(0.5);
-    public static final Color NOFOCUS_COLOR = Color.gray(0.4);
+    public static final Color NOFOCUS_COLOR = Color.gray(0.25);
 
     public static final int DEFAULT_ANGLE_X = 0;
     public static final int DEFAULT_ANGLE_Y = 0;
@@ -64,8 +63,7 @@ public class MeshViewerUI {
     private final FileChooser fileChooser;
 
     private File workDir;
-    private TreeView<NavigationTreeNode> treeView;
-    private Group pivot;
+    private TreeView<NavigationTreeNode> navigationTreeView;
     private double mouseOldX, mouseOldY;
 
     private Animation autoRotate;
@@ -197,29 +195,25 @@ public class MeshViewerUI {
         final TreeItem<NavigationTreeNode> root = new TreeItem<>(new LabelNode(title));
         root.setExpanded(true);
 
-        root.getChildren().add(createSubTree(meshBuilder.buildMeshViewsByObject(), "Mesh Views by Object"));
-        root.getChildren().add(createSubTree(meshBuilder.buildMeshViewsByGroup(), "Mesh Views by Group"));
+        root.getChildren().add(createSubTree(meshBuilder.buildMeshViewsByObject(),   "Mesh Views by Object"));
+        root.getChildren().add(createSubTree(meshBuilder.buildMeshViewsByGroup(),    "Mesh Views by Group"));
         root.getChildren().add(createSubTree(meshBuilder.buildMeshViewsByMaterial(), "Mesh Views by Material"));
 
-        treeView = new TreeView<>(root);
-        treeView.setShowRoot(true);
-        VBox.setVgrow(treeView, Priority.ALWAYS);
-        treeView.setFocusTraversable(false);
+        navigationTreeView = new TreeView<>(root);
+        navigationTreeView.setFocusTraversable(false);
+        navigationTreeView.setShowRoot(true);
+        VBox.setVgrow(navigationTreeView, Priority.ALWAYS);
 
-        treeView.getSelectionModel().selectedItemProperty().addListener((_, _, selectedNode) -> {
-            switch (selectedNode.getValue()) {
-                case LabelNode labelNode -> Logger.info("Selected node has label '{}'", labelNode.label);
-                case MeshNode meshNode -> {
-                    String meshName = meshNode.meshName;
-                    MeshView meshView = meshNode.meshView;
-                    showMeshView(meshView);
-                    Logger.info("Mesh View displayed: {}", meshName);
-                }
-                default -> Logger.info("Selected node has value {}", selectedNode.getValue());
+        navigationTreeView.getSelectionModel().selectedItemProperty().addListener((_, _, item) -> {
+            if (item == null) return;
+            if (item.getValue() instanceof MeshNode meshNode) {
+                previewMeshView(meshNode.meshView);
+            } else {
+                Logger.info("Selected node has value {}", item.getValue());
             }
         });
 
-        treeView.setCellFactory(_ -> new TreeCell<>() {
+        navigationTreeView.setCellFactory(_ -> new TreeCell<>() {
             @Override
             protected void updateItem(NavigationTreeNode value, boolean empty) {
                 super.updateItem(value, empty);
@@ -237,7 +231,7 @@ public class MeshViewerUI {
             }
         });
 
-        navigationPane.getChildren().setAll(treeView);
+        navigationPane.getChildren().setAll(navigationTreeView);
     }
 
     private TreeItem<NavigationTreeNode> createSubTree(Map<String, MeshView> meshViews, String title) {
@@ -245,19 +239,19 @@ public class MeshViewerUI {
         final var root = new TreeItem<NavigationTreeNode>(new LabelNode(title));
         root.setExpanded(true);
         for (String meshName : meshViews.keySet()) {
-            final var item = new TreeItem<NavigationTreeNode>(new MeshNode(meshName, meshViews.get(meshName)));
-            root.getChildren().add(item);
+            final var child = new MeshNode(meshName, meshViews.get(meshName));
+            root.getChildren().add(new TreeItem<>(child));
         }
         return root;
     }
 
     private void selectFirstObjectNodeInTree() {
-        final TreeItem<NavigationTreeNode> rootItem = treeView.getRoot();
+        final TreeItem<NavigationTreeNode> rootItem = navigationTreeView.getRoot();
         if (!rootItem.getChildren().isEmpty()) {
             final TreeItem<NavigationTreeNode> objectsItem = rootItem.getChildren().getFirst();
             if (!objectsItem.getChildren().isEmpty()) {
                 final TreeItem<NavigationTreeNode> firstObjectItem = objectsItem.getChildren().getFirst();
-                treeView.getSelectionModel().select(firstObjectItem);
+                navigationTreeView.getSelectionModel().select(firstObjectItem);
             }
         }
     }
@@ -349,7 +343,7 @@ public class MeshViewerUI {
         rotateY.setAngle(rotateY.getAngle() + delta);
     }
 
-    private void showMeshView(MeshView meshView) {
+    private void previewMeshView(MeshView meshView) {
         if (meshView == null) return;
 
         meshView.setCullFace(CullFace.NONE);
@@ -359,11 +353,12 @@ public class MeshViewerUI {
         meshView.getTransforms().clear();
         center(meshView);
 
-        pivot = new Group(meshView);
+        Group pivot = new Group(meshView);
         center(pivot);
-        pivot.getTransforms().addAll(rotateX, rotateY, autoRotateY);
+
         // Flip around x-axis (otherwise many objects are upside-down initially)
-        pivot.getTransforms().add(new Rotate(180, Rotate.X_AXIS));
+        final var flipUpsideDown = new Rotate(180, Rotate.X_AXIS);
+        pivot.getTransforms().addAll(flipUpsideDown, rotateX, rotateY, autoRotateY);
 
         world.getChildren().setAll(pivot);
         resetTransforms();

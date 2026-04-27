@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.objparser.ObjFileParser;
 import de.amr.objparser.ObjModel;
-import de.amr.pacmanfx.uilib.model3D.MeshBuilder;
+import de.amr.meshbuilder.MeshBuilder;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;

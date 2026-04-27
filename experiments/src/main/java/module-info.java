@@ -12,6 +12,5 @@ module experiments {
     requires de.amr.objparser;
 
     exports experiments;
-    exports experiments.meshviewer;
     exports experiments.custommaps;
 }

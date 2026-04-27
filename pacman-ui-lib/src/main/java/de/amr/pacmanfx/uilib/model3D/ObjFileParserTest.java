@@ -31,7 +31,7 @@ public class ObjFileParserTest {
             try {
                 final ObjFileParser parser = new ObjFileParser(url, StandardCharsets.UTF_8);
                 final ObjModel objModel = parser.parse();
-                final Map<String, MeshView> meshes = MeshBuilder.build(objModel, MeshBuilder.BuildMode.BY_GROUP);
+                final Map<String, MeshView> meshes = de.amr.meshbuilder.MeshBuilder.build(objModel, de.amr.meshbuilder.MeshBuilder.BuildMode.BY_GROUP);
                 Logger.info("Constructed {} mesh views from OBJ model: {}", meshes.size(), meshes);
             } catch (IOException x) {
                 Logger.error(x, "Parsing error");

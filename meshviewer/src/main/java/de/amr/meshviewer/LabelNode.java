@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package experiments.meshviewer;
+package de.amr.meshviewer;
 
 public final class LabelNode extends NavigationTreeNode {
     public final String label;
