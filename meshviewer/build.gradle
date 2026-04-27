@@ -3,14 +3,24 @@
  */
 
 plugins {
+    id "application"
     alias(libs.plugins.javafx)
+    alias(libs.plugins.jlink)
+    alias(libs.plugins.osdetector)
 }
 
 dependencies {
-    implementation(libs.bundles.tinylog)
-    implementation project(":objparser")
+    implementation(
+        libs.bundles.tinylog,
+        project(":objparser")
+    )
 }
 
 javafx {
     modules = ["javafx.base", "javafx.graphics", "javafx.controls"]
+}
+
+application {
+    mainModule = "de.amr.meshviewer"
+    mainClass  = "de.amr.meshviewer.Main"
 }

@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -132,7 +131,6 @@ public class ObjFileParser {
             if (token.keyword() == ObjKeyword.MATERIAL_LIB) {
                 final String libName = token.args();
                 Logger.debug("Material library found: '{}'", libName);
-
                 if (!objModel.materialLibsMap.containsKey(libName)) {
                     Map<String, ObjMaterial> lib = parseMaterialLibraryFile(libName);
                     if (lib != null) {
@@ -155,14 +153,15 @@ public class ObjFileParser {
         final String libURL = objFileURLString.substring(0, endOfPath) + "/" + libName;
         Logger.debug("Material library URL: {}", libURL);
         try {
-            final URI uri = new URI(libURL);
+            @SuppressWarnings("deprecation")
+            final URL url = new URL(objFileURL, libName); // use this instead of URI to avoid issues with spaces in name
             final ObjMtlFileParser parser = new ObjMtlFileParser();
-            try (InputStream stream = uri.toURL().openStream()) {
+            try (InputStream stream = url.openStream()) {
                 parser.parse(stream, charset);
                 return parser.materialMap();
             }
-        } catch (Exception e) {
-            Logger.error("Material library parsing failed: URL={}", libURL);
+        } catch (Exception x) {
+            Logger.error(x, "Material library parsing failed: URL={}", libURL);
             return Map.of();
         }
     }

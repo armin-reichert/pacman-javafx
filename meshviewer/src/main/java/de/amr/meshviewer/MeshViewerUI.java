@@ -184,7 +184,7 @@ public class MeshViewerUI {
         sourceView.setPrefWidth(600);
         sourceView.setPrefHeight(800);
         sourceView.setFont(font);
-        sourceView.setStyle(style);
+        //sourceView.setStyle(style);
         sourceView.textProperty().bind(objModel.map(ObjModel::source));
         return sourceView;
     }
@@ -354,12 +354,12 @@ public class MeshViewerUI {
             if (e.getClickCount() == 2) {
                 resetTransforms();
             }
-            sub.requestFocus();
         });
 
         sub.setOnMousePressed(e -> {
             mouseOldX = e.getSceneX();
             mouseOldY = e.getSceneY();
+            e.consume();
         });
 
         sub.setOnMouseDragged(e -> {
