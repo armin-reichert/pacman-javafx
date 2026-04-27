@@ -57,7 +57,7 @@ public class MeshViewerUI {
     private final Rotate rotateY = new Rotate(DEFAULT_ANGLE_Y, Rotate.Y_AXIS);
     private final Translate zoom = new Translate(0, 0, DEFAULT_ZOOM);
 
-    private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.LINE);
+    private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
 
     private final Stage stage;
     private final Group world;
@@ -336,17 +336,7 @@ public class MeshViewerUI {
                 drawMode.set(drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
             }
             else if (" ".equals(e.getCharacter())) {
-                Logger.info("SPACE typed");
-                if (autoRotate == null) {
-                    createAutoRotateAnimation();
-                }
-                if (autoRotate.getStatus() == Animation.Status.RUNNING) {
-                    autoRotate.pause();
-                    Logger.info("Autorotate paused");
-                } else {
-                    autoRotate.play();
-                    Logger.info("Autorotate started");
-                }
+                toggleAutoplay();
             }
         });
 
@@ -379,7 +369,7 @@ public class MeshViewerUI {
             mouseOldY = e.getSceneY();
         });
 
-        sub.setOnScroll(e -> zoom.setZ(zoom.getZ() + e.getDeltaY() * 0.05));
+        sub.setOnScroll(e -> zoom.setZ(zoom.getZ() + e.getDeltaY() * 0.02));
 
     }
 
@@ -389,6 +379,31 @@ public class MeshViewerUI {
 
     private void rotateY(double delta) {
         rotateY.setAngle(rotateY.getAngle() + delta);
+    }
+
+    public void startAutoplay() {
+        if (autoRotate == null) {
+            createAutoRotateAnimation();
+        }
+        autoRotate.play();
+        Logger.info("Autorotate started");
+    }
+
+    public void pauseAutoplay() {
+        if (autoRotate == null) {
+            createAutoRotateAnimation();
+        }
+        autoRotate.pause();
+        Logger.info("Autorotate paused");
+
+    }
+
+    private void toggleAutoplay() {
+        if (autoRotate.getStatus() == Animation.Status.RUNNING) {
+            pauseAutoplay();
+        } else {
+            startAutoplay();
+        }
     }
 
     private void previewMeshView(MeshView meshView) {

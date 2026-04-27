@@ -15,6 +15,7 @@ public class MeshViewerApp extends Application {
     public void start(Stage stage) {
         MeshViewerUI ui = new MeshViewerUI(stage);
         ui.showObjModel(getClass().getResource(TEAPOT_MODEL));
+        ui.startAutoplay();
         ui.show();
     }
 }
