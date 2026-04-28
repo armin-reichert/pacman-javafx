@@ -42,10 +42,13 @@ public class MeshBuilder {
      * ------------------------------------------------------------- */
 
     public static Map<String, MeshView> build(ObjModel objModel, BuildMode mode) {
+        requireNonNull(objModel);
+        requireNonNull(mode);
         return new MeshBuilder(objModel).build(mode);
     }
 
     public Map<String, MeshView> build(BuildMode mode) {
+        requireNonNull(mode);
         return switch (mode) {
             case BY_GROUP -> buildMeshViewsByGroup();
             case BY_OBJECT -> buildMeshViewsByObject();
