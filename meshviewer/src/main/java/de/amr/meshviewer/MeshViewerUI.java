@@ -13,9 +13,6 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.geometry.Side;
@@ -26,8 +23,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
@@ -149,7 +144,7 @@ public class MeshViewerUI {
 
         final Scene scene = new Scene(rootPane);
         stage.setScene(scene);
-        stage.setTitle("Mesh Viewer");
+        stage.setTitle("OBJ Mesh Viewer");
         stage.setWidth(width);
         stage.setHeight(height);
 
@@ -329,21 +324,19 @@ public class MeshViewerUI {
         final TreeItem<NavigationTreeNode> root = new TreeItem<>(new LabelNode(title));
         root.setExpanded(true);
 
-        root.getChildren().add(createSubTree(meshBuilder.buildMeshViewsByObject(),   "Mesh Views by Object"));
-        root.getChildren().add(createSubTree(meshBuilder.buildMeshViewsByGroup(),    "Mesh Views by Group"));
-        root.getChildren().add(createSubTree(meshBuilder.buildMeshViewsByMaterial(), "Mesh Views by Material"));
+        addSubTree(root, meshBuilder.buildMeshViewsByObject(),   "Mesh Views by Object");
+        addSubTree(root, meshBuilder.buildMeshViewsByGroup(),    "Mesh Views by Group");
+        addSubTree(root, meshBuilder.buildMeshViewsByMaterial(), "Mesh Views by Material");
 
         navigationTreeView = new TreeView<>(root);
         navigationTreeView.setFocusTraversable(false);
         navigationTreeView.setShowRoot(true);
-        //VBox.setVgrow(navigationTreeView, Priority.ALWAYS);
 
         navigationTreeView.getSelectionModel().selectedItemProperty().addListener((_, _, item) -> {
             if (item == null) return;
+            Logger.info("Selected node: {}", item.getValue());
             if (item.getValue() instanceof MeshNode meshNode) {
                 previewMeshView(meshNode.meshView);
-            } else {
-                Logger.info("Selected node has value {}", item.getValue());
             }
         });
 
@@ -373,7 +366,7 @@ public class MeshViewerUI {
         navigationPane.setBottom(parsingTimeText);
     }
 
-    private TreeItem<NavigationTreeNode> createSubTree(Map<String, MeshView> meshViews, String title) {
+    private void addSubTree(TreeItem<NavigationTreeNode> parentTreeItem, Map<String, MeshView> meshViews, String title) {
         if (meshViews.isEmpty()) title += " (None)";
         final var root = new TreeItem<NavigationTreeNode>(new LabelNode(title));
         root.setExpanded(true);
@@ -381,7 +374,7 @@ public class MeshViewerUI {
             final var child = new MeshNode(meshName, meshViews.get(meshName));
             root.getChildren().add(new TreeItem<>(child));
         }
-        return root;
+        parentTreeItem.getChildren().add(root);
     }
 
     private void selectFirstObjectNodeInTree() {
