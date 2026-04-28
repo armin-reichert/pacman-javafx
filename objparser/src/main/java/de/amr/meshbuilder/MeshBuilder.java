@@ -239,7 +239,7 @@ public class MeshBuilder {
          * 3. Emissive color (JavaFX 17+)
          * --------------------------------------------------------- */
         try {
-            fx.getClass().getMethod("setSelfIlluminationMap", javafx.scene.image.Image.class);
+            fx.getClass().getMethod("setSelfIlluminationMap", Image.class);
             fx.setSelfIlluminationMap(null); // default
             if (!m.Ke.isBlack()) {
                 // JavaFX does not support emissive color directly,

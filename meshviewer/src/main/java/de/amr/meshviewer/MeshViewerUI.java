@@ -57,7 +57,7 @@ public class MeshViewerUI {
     public static final int DEFAULT_ZOOM    = -30;
     public static final double AUTO_ROTATE_SPEED = 0.1;
 
-    public static final int ZOOM_MIN = -200;
+    public static final int ZOOM_MIN = -1000;
     public static final int ZOOM_MAX = -2;
 
     private final ObjectProperty<ObjModel> objModel = new SimpleObjectProperty<>(new ObjModel());
@@ -493,8 +493,9 @@ public class MeshViewerUI {
     }
 
     private void zoom(double delta) {
-        if (zoom.getZ() < 0.5 * (ZOOM_MIN + ZOOM_MAX)) delta *= 2;
-        double z = Math.clamp(zoom.getZ() + delta, ZOOM_MIN, ZOOM_MAX);
+        //if (zoom.getZ() < 0.5 * (ZOOM_MIN + ZOOM_MAX)) delta *= 2;
+        //double z = Math.clamp(zoom.getZ() + delta, ZOOM_MIN, ZOOM_MAX);
+        double z = zoom.getZ() + delta;
         zoom.setZ(z);
     }
 

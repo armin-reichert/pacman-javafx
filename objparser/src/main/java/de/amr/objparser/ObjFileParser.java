@@ -132,6 +132,11 @@ public class ObjFileParser {
     }
 
     private void collectSourceLines(ObjModel objModel) throws IOException {
+        long lineCount = 0;
+        try (InputStream stream = objFileURL.openStream()) {
+            lineCount = countLines(stream);
+        }
+
         try (InputStream stream = objFileURL.openStream();
              var reader = new BufferedReader(new InputStreamReader(stream, charset))) {
 
@@ -146,11 +151,28 @@ public class ObjFileParser {
                 sb.append(line).append("\n");
             }
             if (reader.readLine() != null) {
-                sb.append("...Rest omitted");
+                sb.append("... of ").append(lineCount).append(" lines total");
             }
             objModel.setSource(sb.toString());
         }
     }
+
+    public static long countLines(InputStream in) throws IOException {
+        byte[] buffer = new byte[8192];
+        long count = 0;
+        int n;
+
+        while ((n = in.read(buffer)) != -1) {
+            for (int i = 0; i < n; i++) {
+                if (buffer[i] == '\n') {
+                    count++;
+                }
+            }
+        }
+
+        return count;
+    }
+
 
     /* -------------------------------------------------------------
      *  MATERIAL LIBRARIES
