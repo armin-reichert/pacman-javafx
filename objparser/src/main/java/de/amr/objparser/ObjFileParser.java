@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class ObjFileParser {
 
-    public static final int SOURCE_LINES_LIMIT = 1000;
+    public static final int SOURCE_LINES_LIMIT = 999;
 
     public enum ObjKeyword {
         OBJECT            ("o"),
@@ -107,53 +107,46 @@ public class ObjFileParser {
     public ObjModel parse() throws IOException {
         final var objModel = new ObjModel();
         objModel.setUrl(objFileURL.toString());
-
         collectSourceLines(objModel);
+        try (InputStream stream = objFileURL.openStream();
+             var reader = new BufferedReader(new InputStreamReader(stream, charset))) {
 
-        try (InputStream stream = objFileURL.openConnection().getInputStream();
-             var reader = new BufferedReader(new InputStreamReader(stream, charset)))
-        {
-            tokenizer = new Tokenizer(reader);
             Token token;
-
+            tokenizer = new Tokenizer(reader);
             while ((token = tokenizer.next()) != null) {
                 switch (token.keyword()) {
-
-                    case MATERIAL_LIB -> parseMaterialLibraryRef(objModel, token.args());
-                    case OBJECT       -> parseObject(objModel, token.args());
-                    case GROUP        -> parseGroup(objModel, token.args());
+                    case MATERIAL_LIB    -> parseMaterialLibraryRef(objModel, token.args());
+                    case OBJECT          -> parseObject(objModel, token.args());
+                    case GROUP           -> parseGroup(objModel, token.args());
                     case SMOOTHING_GROUP -> parseSmoothingGroup(objModel, token.args());
                     case MATERIAL_USAGE  -> parseMaterialUsage(objModel, token.args());
-
-                    case VERTEX        -> objModel.vertices.add(parseVertex(token.args()));
-                    case TEX_COORD     -> objModel.texCoords.add(parseTexCoord(token.args()));
-                    case VERTEX_NORMAL -> objModel.normals.add(parseNormal(token.args()));
-                    case FACE          -> parseFace(objModel, token.args());
-
-                    default -> Logger.warn("Unknown keyword '{}' at line {}",
-                        token.keyword().name(), token.lineNo());
+                    case VERTEX          -> objModel.vertices.add(parseVertex(token.args()));
+                    case TEX_COORD       -> objModel.texCoords.add(parseTexCoord(token.args()));
+                    case VERTEX_NORMAL   -> objModel.normals.add(parseNormal(token.args()));
+                    case FACE            -> parseFace(objModel, token.args());
+                    default -> Logger.warn("Unknown keyword '{}' at line {}", token.keyword().name(), token.lineNo());
                 }
             }
         }
-
         return objModel;
     }
 
     private void collectSourceLines(ObjModel objModel) throws IOException {
-        int lineNo = 0;
-        final StringBuilder sb = new StringBuilder();
-        try (InputStream stream = objFileURL.openConnection().getInputStream();
-             var reader = new BufferedReader(new InputStreamReader(stream, charset)))
-        {
-            while (true) {
+        try (InputStream stream = objFileURL.openStream();
+             var reader = new BufferedReader(new InputStreamReader(stream, charset))) {
+
+            final StringBuilder sb = new StringBuilder();
+            int lineNo = 1;
+            for (; lineNo <= SOURCE_LINES_LIMIT; ++lineNo) {
                 final String line = reader.readLine();
-                if (line == null) break;
-                if (++lineNo < SOURCE_LINES_LIMIT) {
-                    sb.append(line).append("\n");
-                } else {
-                    sb.append("...Rest omitted");
-                    break;
+                if (line == null) {
+                    objModel.setSource(sb.toString());
+                    return;
                 }
+                sb.append(line).append("\n");
+            }
+            if (reader.readLine() != null) {
+                sb.append("...Rest omitted");
             }
             objModel.setSource(sb.toString());
         }
