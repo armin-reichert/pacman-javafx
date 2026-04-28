@@ -3,7 +3,7 @@ g Mesh1 Teaspoon Model
 #Added (armin)
 mtllib spoon.mtl
 
-                 usemtl FrontColor
+usemtl FrontColor
 v 0.000107143 0.107143 -0.205357
 vt -0.0378881 0.188036
 vn -0.000792528 0.512283 0.858816
