@@ -1,5 +1,8 @@
 g Mesh1 Teacup Model
 
+#Added (armin)
+mtllib teacup.mtl
+
 usemtl FrontColor
 v 0 0.772727 -0.409091
 vt -0.0320145 0.788918

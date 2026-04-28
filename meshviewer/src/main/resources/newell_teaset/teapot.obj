@@ -1,5 +1,8 @@
 g Mesh1 Teapot Model
 
+#Added (armin)
+mtllib teapot.mtl
+
 usemtl FrontColor
 v 0 2.4 -1.4
 vt -0.109561 1.71761
