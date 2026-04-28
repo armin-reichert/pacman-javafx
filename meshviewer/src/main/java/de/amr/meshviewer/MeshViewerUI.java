@@ -446,6 +446,10 @@ public class MeshViewerUI {
         });
         previewSubScene.setOnKeyTyped(e -> {
             switch (e.getCharacter()) {
+                case "l" -> rotateY(-15);
+                case "r" -> rotateY(15);
+                case "L" -> rotateX(-15);
+                case "R" -> rotateX(15);
                 case "x" -> autoRotateAxis = Rotate.X_AXIS;
                 case "y" -> autoRotateAxis = Rotate.Y_AXIS;
                 case "w" -> drawMode.set(drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
@@ -494,11 +498,11 @@ public class MeshViewerUI {
     }
 
     private void rotateX(double delta) {
-        rotateX.setAngle(rotateX.getAngle() + delta);
+        rotateX.setAngle((rotateX.getAngle() + delta) % 360);
     }
 
     private void rotateY(double delta) {
-        rotateY.setAngle(rotateY.getAngle() + delta);
+        rotateY.setAngle((rotateY.getAngle() + delta) % 360);
     }
 
     public void startAutoplay() {
