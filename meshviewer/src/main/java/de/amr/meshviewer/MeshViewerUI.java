@@ -167,6 +167,7 @@ public class MeshViewerUI {
         try {
             loadMeshesFromURL(url);
             selectFirstObjectNodeInTree();
+            resetTransforms();
         } catch (Exception x) {
             Logger.error(x, "Could not load OBJ model, URL={}", url);
         }

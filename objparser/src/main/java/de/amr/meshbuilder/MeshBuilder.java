@@ -143,10 +143,12 @@ public class MeshBuilder {
         TriangleMesh mesh = buildMeshForFaces(faces);
         MeshView mv = new MeshView(mesh);
 
-        // Assign material if all faces share one
-        String mat = faces.getFirst().materialName;
-        if (mat != null && materials.containsKey(mat)) {
-            mv.setMaterial(materials.get(mat));
+        if (!faces.isEmpty()) {
+            // Assign material if all faces share one
+            String mat = faces.getFirst().materialName;
+            if (mat != null && materials.containsKey(mat)) {
+                mv.setMaterial(materials.get(mat));
+            }
         }
 
         return mv;
