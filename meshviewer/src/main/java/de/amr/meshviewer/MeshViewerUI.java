@@ -50,6 +50,9 @@ public class MeshViewerUI {
     public static final Color FOCUS_COLOR = Color.gray(0.66);
     public static final Color NOFOCUS_COLOR = Color.gray(0.5);
 
+    public static final Font SOURCE_FONT = Font.font("Consolas", FontWeight.NORMAL, 14);
+    public static final String SOURCE_STYLE = "-fx-control-inner-background:#222; -fx-text-fill:#f0f0f0";
+
     public static final int DEFAULT_ANGLE_X = 0;
     public static final int DEFAULT_ANGLE_Y = 0;
     public static final int DEFAULT_ZOOM    = -30;
@@ -231,16 +234,13 @@ public class MeshViewerUI {
     }
 
     private TextArea createSourceView() {
-        final Font font = Font.font("Consolas", FontWeight.NORMAL, 14);
-        final String style = "-fx-control-inner-background:#222; -fx-text-fill:#f0f0f0";
-
         final var sourceView = new TextArea();
         sourceView.setEditable(false);
         sourceView.setWrapText(false);
         sourceView.setPrefWidth(600);
         sourceView.setPrefHeight(800);
-        sourceView.setFont(font);
-        sourceView.setStyle(style);
+        sourceView.setFont(SOURCE_FONT);
+        sourceView.setStyle(SOURCE_STYLE);
         sourceView.textProperty().bind(objModel.map(ObjModel::source));
         return sourceView;
     }
