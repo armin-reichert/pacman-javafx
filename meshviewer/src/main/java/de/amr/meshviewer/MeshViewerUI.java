@@ -13,6 +13,9 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.geometry.Side;
@@ -31,6 +34,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.FileChooser;
@@ -65,11 +69,12 @@ public class MeshViewerUI {
     private final Translate zoom = new Translate(0, 0, DEFAULT_ZOOM);
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
+    private final ObjectProperty<Duration> parsingTime = new SimpleObjectProperty<>(Duration.ZERO);
 
     private final Stage stage;
     private final Group world;
     private final SubScene previewSubScene;
-    private final Pane navigationPane;
+    private final BorderPane navigationPane;
     private final FileChooser fileChooser;
 
     private File workDir;
@@ -113,7 +118,7 @@ public class MeshViewerUI {
             new FileChooser.ExtensionFilter("OBJ Files", "*.obj")
         );
 
-        navigationPane = new VBox();
+        navigationPane = new BorderPane();
         navigationPane.setMinWidth(300);
         navigationPane.setMaxWidth(300);
 
@@ -171,7 +176,11 @@ public class MeshViewerUI {
 
     private void loadMeshesFromURL(URL objFileURL) throws IOException {
         final var parser = new ObjFileParser(objFileURL, StandardCharsets.UTF_8);
-        objModel.set(parser.parse());
+        final long start = System.nanoTime();
+        final ObjModel parsedModel = parser.parse();
+        final long durationNanos = System.nanoTime() - start;
+        parsingTime.set(Duration.seconds(durationNanos / 1_000_000_000.0));
+        objModel.set(parsedModel);
     }
 
     private boolean loadMeshesFromFile(File objFile) {
@@ -327,7 +336,7 @@ public class MeshViewerUI {
         navigationTreeView = new TreeView<>(root);
         navigationTreeView.setFocusTraversable(false);
         navigationTreeView.setShowRoot(true);
-        VBox.setVgrow(navigationTreeView, Priority.ALWAYS);
+        //VBox.setVgrow(navigationTreeView, Priority.ALWAYS);
 
         navigationTreeView.getSelectionModel().selectedItemProperty().addListener((_, _, item) -> {
             if (item == null) return;
@@ -356,7 +365,12 @@ public class MeshViewerUI {
             }
         });
 
-        navigationPane.getChildren().setAll(navigationTreeView);
+        navigationPane.setCenter(navigationTreeView);
+
+
+        final Text parsingTimeText = new Text("Parsing time: xx.xxx sec");
+        parsingTimeText.textProperty().bind(parsingTime.map(duration -> "Parsing time: %.3f sec".formatted(duration.toSeconds())));
+        navigationPane.setBottom(parsingTimeText);
     }
 
     private TreeItem<NavigationTreeNode> createSubTree(Map<String, MeshView> meshViews, String title) {
