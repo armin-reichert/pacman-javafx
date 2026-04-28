@@ -5,10 +5,12 @@
 package de.amr.meshbuilder;
 
 import de.amr.objparser.*;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
+import org.tinylog.Logger;
 
 import java.util.*;
 
@@ -217,15 +219,107 @@ public class MeshBuilder {
 
     private record VertexKey(int v, int vt, int vn) {}
 
-    private static PhongMaterial createPhongMaterial(ObjMaterial objMaterial) {
-        PhongMaterial phongMaterial = new PhongMaterial();
-        phongMaterial.setDiffuseColor(fxColor(objMaterial.Kd, objMaterial.d));
-        phongMaterial.setSpecularColor(fxColor(objMaterial.Ks, objMaterial.d));
-        phongMaterial.setSpecularPower(objMaterial.Ns);
-        return phongMaterial;
+    private PhongMaterial createPhongMaterial(ObjMaterial m) {
+        PhongMaterial fx = new PhongMaterial();
+
+        /* ---------------------------------------------------------
+         * 1. Diffuse color + opacity
+         * --------------------------------------------------------- */
+        fx.setDiffuseColor(fxColor(m.Kd, m.d));
+
+        /* ---------------------------------------------------------
+         * 2. Specular color + shininess
+         * --------------------------------------------------------- */
+        fx.setSpecularColor(fxColor(m.Ks, 1.0));
+        fx.setSpecularPower(m.Ns);
+
+        /* ---------------------------------------------------------
+         * 3. Emissive color (JavaFX 17+)
+         * --------------------------------------------------------- */
+        try {
+            fx.getClass().getMethod("setSelfIlluminationMap", javafx.scene.image.Image.class);
+            fx.setSelfIlluminationMap(null); // default
+            if (!m.Ke.isBlack()) {
+                // JavaFX does not support emissive color directly,
+                // but we can approximate by tinting diffuse color slightly.
+                Color base = fx.getDiffuseColor();
+                Color glow = Color.color(
+                    clamp01(base.getRed()   + m.Ke.red()   * 0.2),
+                    clamp01(base.getGreen() + m.Ke.green() * 0.2),
+                    clamp01(base.getBlue()  + m.Ke.blue()  * 0.2),
+                    base.getOpacity()
+                );
+                fx.setDiffuseColor(glow);
+            }
+        } catch (NoSuchMethodException ignore) {
+            // Running on JavaFX < 17 → emissive unsupported
+        }
+
+        /* ---------------------------------------------------------
+         * 4. Diffuse texture
+         * --------------------------------------------------------- */
+        if (m.map_Kd != null) {
+            fx.setDiffuseMap(loadTexture(m.map_Kd));
+        }
+
+        /* ---------------------------------------------------------
+         * 5. Specular texture
+         * --------------------------------------------------------- */
+        if (m.map_Ks != null) {
+            fx.setSpecularMap(loadTexture(m.map_Ks));
+        }
+
+        /* ---------------------------------------------------------
+         * 6. Bump / normal map
+         * --------------------------------------------------------- */
+        if (m.map_bump != null) {
+            fx.setBumpMap(loadTexture(m.map_bump));
+        }
+
+        /* ---------------------------------------------------------
+         * 7. Opacity map (map_d)
+         * --------------------------------------------------------- */
+        if (m.map_d != null) {
+            fx.setDiffuseMap(loadTexture(m.map_d)); // JavaFX uses alpha channel
+        }
+
+        /* ---------------------------------------------------------
+         * 8. Emissive texture (JavaFX 17+)
+         * --------------------------------------------------------- */
+        if (m.map_Ke != null) {
+            try {
+                fx.setSelfIlluminationMap(loadTexture(m.map_Ke));
+            } catch (Throwable ignore) {
+                // JavaFX < 17
+            }
+        }
+
+        return fx;
     }
 
-    private static Color fxColor(ObjColor objColor, double opacity) {
-        return Color.color(objColor.red(), objColor.green(), objColor.blue(), opacity);
+    private static Color fxColor(ObjColor c, double opacity) {
+        return Color.color(c.red(), c.green(), c.blue(), opacity);
+    }
+
+    private static double clamp01(double v) {
+        return Math.clamp(v, 0, 1);
+    }
+
+    private Image loadTexture(String filename) {
+        try {
+            String fileURL = replaceFileName(model.url(), filename);
+            Logger.debug("Try to open texture file: " + fileURL);
+            var texture = new Image(fileURL);
+            Logger.debug("Texture loaded: {}", texture);
+            return texture;
+        } catch (Exception e) {
+            Logger.warn("Failed to load texture '{}': {}", filename, e.getMessage());
+            return null;
+        }
+    }
+
+    private String replaceFileName(String url, String filename) {
+        int lastSlash = url.lastIndexOf('/');
+        return url.substring(0, lastSlash) + "/" + filename;
     }
 }
