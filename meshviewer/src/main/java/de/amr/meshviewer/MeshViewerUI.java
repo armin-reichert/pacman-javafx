@@ -292,12 +292,22 @@ public class MeshViewerUI {
 
         exitItem.setOnAction(_ -> Platform.exit());
 
-        Menu viewMenu = new Menu("View");
-        CheckMenuItem miNavigationVisible = new CheckMenuItem("Navigation");
+        final Menu viewMenu = new Menu("View");
+
+        final CheckMenuItem miNavigationVisible = new CheckMenuItem("Navigation");
         miNavigationVisible.selectedProperty().bindBidirectional(navigationPane.managedProperty());
         navigationPane.visibleProperty().bind(navigationPane.managedProperty());
 
-        viewMenu.getItems().add(miNavigationVisible);
+        final CheckMenuItem miWireframeMode = new CheckMenuItem("Wireframe");
+        miWireframeMode.selectedProperty().addListener((_, _, sel) ->
+            drawMode.set(sel ? DrawMode.LINE : DrawMode.FILL)
+        );
+
+        drawMode.addListener((_, _, mode) ->
+            miWireframeMode.setSelected(mode == DrawMode.LINE)
+        );
+
+        viewMenu.getItems().addAll(miNavigationVisible, miWireframeMode);
         menuBar.getMenus().add(viewMenu);
 
         return menuBar;
