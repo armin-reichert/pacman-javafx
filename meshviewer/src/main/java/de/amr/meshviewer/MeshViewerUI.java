@@ -84,6 +84,8 @@ public class MeshViewerUI {
     private final Rotate autoRotateY = new Rotate(0, Rotate.Y_AXIS);
     private Point3D autoRotateAxis = Rotate.Y_AXIS; // horizontally be default
 
+    private Menu samplesMenu;
+
     public MeshViewerUI(Stage stage) {
         this.stage = stage;
 
@@ -168,6 +170,14 @@ public class MeshViewerUI {
         } catch (Exception x) {
             Logger.error(x, "Could not load OBJ model, URL={}", url);
         }
+    }
+
+    public void addSampleModel(String name, URL modelURL) {
+        MenuItem item = new MenuItem(name);
+        item.setOnAction(e -> {
+            showObjModel(modelURL);
+        });
+        samplesMenu.getItems().add(item);
     }
 
     // load data
@@ -286,7 +296,6 @@ public class MeshViewerUI {
         MenuItem exitItem = new MenuItem("Exit");
 
         fileMenu.getItems().addAll(openItem, exitItem);
-        menuBar.getMenus().add(fileMenu);
 
         openItem.setOnAction(_ -> {
             if (workDir != null && workDir.exists()) {
@@ -316,7 +325,11 @@ public class MeshViewerUI {
         );
 
         viewMenu.getItems().addAll(miNavigationVisible, miWireframeMode);
-        menuBar.getMenus().add(viewMenu);
+
+        samplesMenu = new Menu("Samples");
+
+        // Compose the menus
+        menuBar.getMenus().addAll(fileMenu, viewMenu, samplesMenu);
 
         return menuBar;
     }
