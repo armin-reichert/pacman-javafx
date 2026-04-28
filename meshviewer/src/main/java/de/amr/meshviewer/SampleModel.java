@@ -6,5 +6,5 @@ package de.amr.meshviewer;
 
 import java.net.URL;
 
-public record SampleModel(String title, URL url, double initialZoom) {
+public record SampleModel(String title, URL url, SampleState initialState) {
 }

@@ -82,7 +82,7 @@ public class MeshViewerUI {
     private TreeView<NavigationTreeNode> navigationTreeView;
     private double mouseOldX, mouseOldY;
 
-    private Animation autoRotate;
+    private Animation rotateAnimation;
     private final Rotate autoRotateX = new Rotate(0, Rotate.X_AXIS);
     private final Rotate autoRotateY = new Rotate(0, Rotate.Y_AXIS);
     private Point3D autoRotateAxis = Rotate.Y_AXIS; // horizontally be default
@@ -189,7 +189,17 @@ public class MeshViewerUI {
 
     public void showSampleModel(SampleModel sample) {
         showObjModel(sample.url());
-        zoom.setZ(sample.initialZoom());
+        zoom.setZ(sample.initialState().zoom());
+        rotateX.setAngle(sample.initialState().rotateX());
+        rotateY.setAngle(sample.initialState().rotateY());
+        if (rotateAnimation == null) {
+            createAutoRotateAnimation();
+        }
+        if (sample.initialState().autoRotate()) {
+            rotateAnimation.play();
+        } else {
+            rotateAnimation.stop();
+        }
     }
 
     // load data
@@ -288,7 +298,7 @@ public class MeshViewerUI {
     }
 
     private void createAutoRotateAnimation() {
-        autoRotate = new Timeline(
+        rotateAnimation = new Timeline(
             new KeyFrame(Duration.millis(16), _ -> {
                 if (autoRotateAxis == Rotate.X_AXIS) {
                     autoRotateX.setAngle(autoRotateX.getAngle() + AUTO_ROTATE_SPEED);
@@ -297,7 +307,7 @@ public class MeshViewerUI {
                 }
             }) // ~60 FPS
         );
-        autoRotate.setCycleCount(Animation.INDEFINITE);
+        rotateAnimation.setCycleCount(Animation.INDEFINITE);
     }
 
     private MenuBar createMenus(Stage stage) {
@@ -517,24 +527,24 @@ public class MeshViewerUI {
     }
 
     public void startAutoplay() {
-        if (autoRotate == null) {
+        if (rotateAnimation == null) {
             createAutoRotateAnimation();
         }
-        autoRotate.play();
+        rotateAnimation.play();
         Logger.info("Autorotate started");
     }
 
     public void pauseAutoplay() {
-        if (autoRotate == null) {
+        if (rotateAnimation == null) {
             createAutoRotateAnimation();
         }
-        autoRotate.pause();
+        rotateAnimation.pause();
         Logger.info("Autorotate paused");
 
     }
 
     private void toggleAutoplay() {
-        if (autoRotate.getStatus() == Animation.Status.RUNNING) {
+        if (rotateAnimation.getStatus() == Animation.Status.RUNNING) {
             pauseAutoplay();
         } else {
             startAutoplay();
