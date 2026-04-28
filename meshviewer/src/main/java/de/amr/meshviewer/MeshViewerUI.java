@@ -43,6 +43,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class MeshViewerUI {
@@ -55,9 +57,9 @@ public class MeshViewerUI {
 
     public static final int DEFAULT_ANGLE_X = 0;
     public static final int DEFAULT_ANGLE_Y = 0;
-    public static final int DEFAULT_ZOOM    = -30;
     public static final double AUTO_ROTATE_SPEED = 0.1;
 
+    public static final int DEFAULT_ZOOM = -30;
     public static final int ZOOM_MIN = -1000;
     public static final int ZOOM_MAX = -2;
 
@@ -85,6 +87,7 @@ public class MeshViewerUI {
     private final Rotate autoRotateY = new Rotate(0, Rotate.Y_AXIS);
     private Point3D autoRotateAxis = Rotate.Y_AXIS; // horizontally be default
 
+    private final List<SampleModel> sampleModels = new ArrayList<>();
     private Menu samplesMenu;
 
     public MeshViewerUI(Stage stage) {
@@ -161,6 +164,9 @@ public class MeshViewerUI {
 
     public void show() {
         stage.show();
+        if (!sampleModels.isEmpty()) {
+            showObjModel(sampleModels.getFirst().url());
+        }
         Platform.runLater(previewSubScene::requestFocus);
     }
 
@@ -174,9 +180,10 @@ public class MeshViewerUI {
         }
     }
 
-    public void addSampleModel(String name, URL modelURL) {
-        MenuItem item = new MenuItem(name);
-        item.setOnAction(_ -> showObjModel(modelURL));
+    public void addSampleModel(SampleModel sample) {
+        sampleModels.add(sample);
+        MenuItem item = new MenuItem(sample.title());
+        item.setOnAction(_ -> showObjModel(sample.url()));
         samplesMenu.getItems().add(item);
     }
 
@@ -492,9 +499,7 @@ public class MeshViewerUI {
     }
 
     private void zoom(double delta) {
-        //if (zoom.getZ() < 0.5 * (ZOOM_MIN + ZOOM_MAX)) delta *= 2;
-        //double z = Math.clamp(zoom.getZ() + delta, ZOOM_MIN, ZOOM_MAX);
-        double z = zoom.getZ() + delta;
+        double z = Math.clamp(zoom.getZ() + delta, ZOOM_MIN, ZOOM_MAX);
         zoom.setZ(z);
     }
 

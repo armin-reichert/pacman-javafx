@@ -9,21 +9,18 @@ import javafx.stage.Stage;
 
 public class MeshViewerApp extends Application {
 
-    record SampleModel(String title, String path) {}
-
-    private static final SampleModel[] SAMPLES = {
-        new SampleModel("Teapot", "/newell_teaset/teapot.obj"),
-        new SampleModel("Alien Animal", "/alien_animal/Alien Animal.obj"),
-        new SampleModel("Beagle", "/beagle/13041_Beagle_v1_L1.obj"),
+    private final SampleModel[] SAMPLES = {
+        new SampleModel("Teapot", getClass().getResource("/newell_teaset/teapot.obj"), MeshViewerUI.DEFAULT_ZOOM),
+        new SampleModel("Alien Animal", getClass().getResource("/alien_animal/Alien Animal.obj"), MeshViewerUI.DEFAULT_ZOOM),
+        new SampleModel("Beagle", getClass().getResource("/beagle/13041_Beagle_v1_L1.obj"), MeshViewerUI.DEFAULT_ZOOM),
     };
 
     @Override
     public void start(Stage stage) {
         MeshViewerUI ui = new MeshViewerUI(stage);
         for (SampleModel sample : SAMPLES) {
-            ui.addSampleModel(sample.title(), getClass().getResource(sample.path()));
+            ui.addSampleModel(sample);
         }
-        ui.showObjModel(getClass().getResource(SAMPLES[0].path()));
         ui.startAutoplay();
         ui.show();
     }
