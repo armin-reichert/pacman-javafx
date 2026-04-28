@@ -165,7 +165,7 @@ public class MeshViewerUI {
     public void show() {
         stage.show();
         if (!sampleModels.isEmpty()) {
-            showObjModel(sampleModels.getFirst().url());
+            showSampleModel(sampleModels.getFirst());
         }
         Platform.runLater(previewSubScene::requestFocus);
     }
@@ -183,8 +183,13 @@ public class MeshViewerUI {
     public void addSampleModel(SampleModel sample) {
         sampleModels.add(sample);
         MenuItem item = new MenuItem(sample.title());
-        item.setOnAction(_ -> showObjModel(sample.url()));
+        item.setOnAction(_ -> showSampleModel(sample));
         samplesMenu.getItems().add(item);
+    }
+
+    public void showSampleModel(SampleModel sample) {
+        showObjModel(sample.url());
+        zoom.setZ(sample.initialZoom());
     }
 
     // load data
@@ -494,13 +499,13 @@ public class MeshViewerUI {
             mouseOldY = e.getSceneY();
         });
 
-        previewSubScene.setOnScroll(e -> zoom.setZ(zoom.getZ() + e.getDeltaY() * 0.02));
-
+        previewSubScene.setOnScroll(e -> zoom(e.getDeltaY() * 0.02));
     }
 
     private void zoom(double delta) {
         double z = Math.clamp(zoom.getZ() + delta, ZOOM_MIN, ZOOM_MAX);
         zoom.setZ(z);
+        Logger.info("Zoom: " + z);
     }
 
     private void rotateX(double delta) {
