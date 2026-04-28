@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2021-2026 Armin Reichert (MIT License)
- */
-
 package de.amr.objparser;
 
 import org.tinylog.Logger;
@@ -15,144 +11,48 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Fully extended Wavefront MTL parser supporting all material properties,
+ * texture maps, and texture options.
+ */
 public class ObjMtlFileParser {
 
-    /**
-     * Wavefront MTL material parameters.
-     *
-     * <table border="1" cellpadding="4" cellspacing="0">
-     *   <tr><th>Keyword</th><th>Meaning</th><th>Description</th></tr>
-     *   <!-- Material name -->
-     *   <tr>
-     *     <td><code>newmtl</code></td>
-     *     <td>Material name</td>
-     *     <td>Begins a new material definition.</td>
-     *   </tr>
-     *   <!-- Illumination model -->
-     *   <tr>
-     *     <td><code>illum</code></td>
-     *     <td>Illumination model</td>
-     *     <td>Selects the lighting model (0–10). Controls shading, highlights, and reflection behavior.</td>
-     *   </tr>
-     *   <!-- Opacity / transparency -->
-     *   <tr>
-     *     <td><code>d</code></td>
-     *     <td>Opacity (dissolve)</td>
-     *     <td>Opacity factor (1.0 = fully opaque, 0.0 = fully transparent). Called “dissolve” in the original spec.</td>
-     *   </tr>
-     *   <tr>
-     *     <td><code>Tr</code></td>
-     *     <td>Transparency</td>
-     *     <td>Transparency factor (1.0 = fully transparent). Equivalent to <code>1 - d</code>.</td>
-     *   </tr>
-     *   <!-- Optical properties -->
-     *   <tr>
-     *     <td><code>Ns</code></td>
-     *     <td>Specular exponent</td>
-     *     <td>Phong shininess value (0–1000). Higher values produce tighter, sharper highlights.</td>
-     *   </tr>
-     *   <tr>
-     *     <td><code>Ni</code></td>
-     *     <td>Optical density (index of refraction)</td>
-     *     <td>Index of refraction (1.0 = air, 1.3–1.5 = glass, 2.0+ = dense materials).</td>
-     *   </tr>
-     *   <!-- Color components -->
-     *   <tr>
-     *     <td><code>Ka</code></td>
-     *     <td>Ambient color</td>
-     *     <td>RGB ambient reflectivity.</td>
-     *   </tr>
-     *   <tr>
-     *     <td><code>Kd</code></td>
-     *     <td>Diffuse color</td>
-     *     <td>RGB diffuse reflectivity (base color).</td>
-     *   </tr>
-     *   <tr>
-     *     <td><code>Ks</code></td>
-     *     <td>Specular color</td>
-     *     <td>RGB specular reflectivity (highlight color).</td>
-     *   </tr>
-     *   <tr>
-     *     <td><code>Ke</code></td>
-     *     <td>Emissive color</td>
-     *     <td>RGB emissive light color (self‑illumination).</td>
-     *   </tr>
-     *   <!-- Transmission filter -->
-     *   <tr>
-     *     <td><code>Tf</code></td>
-     *     <td>Transmission filter</td>
-     *     <td>RGB filter applied to transmitted light (used for colored glass).</td>
-     *   </tr>
-     *   <!-- Texture maps -->
-     *   <tr>
-     *     <td><code>map_Ka</code></td>
-     *     <td>Ambient texture</td>
-     *     <td>Texture map for ambient color.</td>
-     *   </tr>
-     *   <tr>
-     *     <td><code>map_Kd</code></td>
-     *     <td>Diffuse texture</td>
-     *     <td>Texture map for diffuse color (albedo).</td>
-     *   </tr>
-     *   <tr>
-     *     <td><code>map_Ks</code></td>
-     *     <td>Specular texture</td>
-     *     <td>Texture map for specular color.</td>
-     *   </tr>
-     *   <tr>
-     *     <td><code>map_Ke</code></td>
-     *     <td>Emissive texture</td>
-     *     <td>Texture map for emissive color.</td>
-     *   </tr>
-     *   <tr>
-     *     <td><code>map_Ns</code></td>
-     *     <td>Specular exponent map</td>
-     *     <td>Texture map controlling shininess per pixel.</td>
-     *   </tr>
-     *   <tr>
-     *     <td><code>map_d</code></td>
-     *     <td>Opacity map</td>
-     *     <td>Texture map controlling transparency.</td>
-     *   </tr>
-     *   <tr>
-     *     <td><code>map_Tr</code></td>
-     *     <td>Transparency map</td>
-     *     <td>Equivalent to <code>map_d</code> but inverted.</td>
-     *   </tr>
-     *   <tr>
-     *     <td><code>map_Bump</code>, <code>bump</code></td>
-     *     <td>Bump map</td>
-     *     <td>Height map used for bump mapping.</td>
-     *   </tr>
-     *   <tr>
-     *     <td><code>map_disp</code></td>
-     *     <td>Displacement map</td>
-     *     <td>Height map for geometric displacement.</td>
-     *   </tr>
-     *   <tr>
-     *     <td><code>map_refl</code></td>
-     *     <td>Reflection map</td>
-     *     <td>Environment reflection texture.</td>
-     *   </tr>
-     *   <!-- Reflection model -->
-     *   <tr>
-     *     <td><code>refl</code></td>
-     *     <td>Reflection model</td>
-     *     <td>Specifies reflection type (sphere, cube, etc.).</td>
-     *   </tr>
-     * </table>
-     */
+    /* -------------------------------------------------------------
+     *  KEYWORDS
+     * ------------------------------------------------------------- */
+
     public enum Keyword {
         NEW_MATERIAL       ("newmtl"),
-        OPACITY            ("d"), // "d" = "dissolve"
-        TRANSPARENCY       ("Tr"), // Tr = 1 - d
-        ILLUMINATION       ("illum"), // not used by JavaFX
-        AMBIENT_COLOR      ("Ka"), // not used by JavaFX
-        DIFFUSE_COLOR      ("Kd"),
-        EMISSIVE_COLOR     ("Ke"), // not used by JavaFX
-        SPECULAR_COLOR     ("Ks"),
-        REFRACTION_INDEX   ("Ni"), // not used by JavaFX
+
+        // Scalars
+        OPACITY            ("d"),
+        TRANSPARENCY       ("Tr"),
+        ILLUMINATION       ("illum"),
         SPECULAR_POWER     ("Ns"),
+        REFRACTION_INDEX   ("Ni"),
+
+        // Colors
+        AMBIENT_COLOR      ("Ka"),
+        DIFFUSE_COLOR      ("Kd"),
+        SPECULAR_COLOR     ("Ks"),
+        EMISSIVE_COLOR     ("Ke"),
+        TRANSMISSION_FILTER("Tf"),
+
+        // Texture maps
+        MAP_KA             ("map_Ka"),
+        MAP_KD             ("map_Kd"),
+        MAP_KS             ("map_Ks"),
+        MAP_KE             ("map_Ke"),
+        MAP_NS             ("map_Ns"),
+        MAP_D              ("map_d"),
+        MAP_TR             ("map_Tr"),
+        MAP_BUMP           ("map_Bump"),
+        BUMP               ("bump"),
+        MAP_DISP           ("disp"),
+        MAP_DECAL          ("decal"),
+        MAP_REFL           ("map_refl"),
+        REFL               ("refl"),
+
         UNKNOWN            ("");
 
         private final String text;
@@ -162,10 +62,8 @@ public class ObjMtlFileParser {
         }
 
         static Keyword fromText(String text) {
-            for (Keyword keyword : values()) {
-                if (keyword.text.equals(text)) {
-                    return keyword;
-                }
+            for (Keyword k : values()) {
+                if (k.text.equals(text)) return k;
             }
             return UNKNOWN;
         }
@@ -191,16 +89,11 @@ public class ObjMtlFileParser {
             while ((line = reader.readLine()) != null) {
                 lineNo++;
 
-                // Remove inline comments
                 int hash = line.indexOf('#');
-                if (hash >= 0) {
-                    line = line.substring(0, hash);
-                }
+                if (hash >= 0) line = line.substring(0, hash);
 
                 line = line.strip();
-                if (line.isEmpty()) {
-                    continue;
-                }
+                if (line.isEmpty()) continue;
 
                 String[] parts = line.split("\\s+", 2);
                 String keyword = parts[0];
@@ -209,75 +102,68 @@ public class ObjMtlFileParser {
                 return new Token(keyword, args, lineNo);
             }
 
-            return null; // EOF
+            return null;
         }
     }
 
+    /* -------------------------------------------------------------
+     *  STATE
+     * ------------------------------------------------------------- */
+
     private final Map<String, ObjMaterial> materialMap = new LinkedHashMap<>();
     private ObjMaterial currentObjMaterial;
-
     private Tokenizer tokenizer;
 
     public Map<String, ObjMaterial> materialMap() {
         return Collections.unmodifiableMap(materialMap);
     }
 
+    /* -------------------------------------------------------------
+     *  PARSER ENTRY POINT
+     * ------------------------------------------------------------- */
+
     public void parse(InputStream stream, Charset charset) throws IOException {
         final var reader = new BufferedReader(new InputStreamReader(stream, charset));
         tokenizer = new Tokenizer(reader);
-        Token token;
 
+        Token token;
         while ((token = tokenizer.next()) != null) {
             switch (token.keyword) {
+
                 case NEW_MATERIAL -> {
                     commitCurrentMaterial();
                     currentObjMaterial = new ObjMaterial(token.args);
                 }
-                case SPECULAR_POWER -> {
-                    if (materialDefStarted()) {
-                        currentObjMaterial.Ns = parseSpecularPower(token.args);
-                    }
-                }
-                case OPACITY -> {
-                    if (materialDefStarted()) {
-                        currentObjMaterial.d = parseOpacity(token.args);
-                    }
-                }
-                case TRANSPARENCY -> {
-                    if (materialDefStarted()) {
-                        currentObjMaterial.d = 1.0f - parseOpacity(token.args);
-                    }
-                }
-                case ILLUMINATION -> {
-                    if (materialDefStarted()) {
-                        currentObjMaterial.illum = parseIllumination(token.args);
-                    }
-                }
-                case REFRACTION_INDEX ->  {
-                    if (materialDefStarted()) {
-                        currentObjMaterial.Ni = parseRefractionIndex(token.args);
-                    }
-                }
-                case AMBIENT_COLOR ->  {
-                    if (materialDefStarted()) {
-                        currentObjMaterial.Ka = parseColorRGB(token.args, ObjMaterial.DEFAULT_COLOR);
-                    }
-                }
-                case DIFFUSE_COLOR ->  {
-                    if (materialDefStarted()) {
-                        currentObjMaterial.Kd = parseColorRGB(token.args, ObjMaterial.DEFAULT_COLOR);
-                    }
-                }
-                case EMISSIVE_COLOR -> {
-                    if (materialDefStarted()) {
-                        currentObjMaterial.Ke = parseColorRGB(token.args, ObjMaterial.DEFAULT_COLOR);
-                    }
-                }
-                case SPECULAR_COLOR -> {
-                    if (materialDefStarted()) {
-                        currentObjMaterial.Ks = parseColorRGB(token.args, ObjMaterial.DEFAULT_COLOR);
-                    }
-                }
+
+                /* --- Scalars --- */
+                case SPECULAR_POWER -> currentObjMaterial.Ns = parseSpecularPower(token.args);
+                case OPACITY        -> currentObjMaterial.d  = parseOpacity(token.args);
+                case TRANSPARENCY   -> currentObjMaterial.d  = 1.0f - parseOpacity(token.args);
+                case ILLUMINATION   -> currentObjMaterial.illum = parseIllumination(token.args);
+                case REFRACTION_INDEX -> currentObjMaterial.Ni = parseRefractionIndex(token.args);
+
+                /* --- Colors --- */
+                case AMBIENT_COLOR  -> currentObjMaterial.Ka = parseColorRGB(token.args, ObjMaterial.DEFAULT_COLOR);
+                case DIFFUSE_COLOR  -> currentObjMaterial.Kd = parseColorRGB(token.args, ObjMaterial.DEFAULT_COLOR);
+                case SPECULAR_COLOR -> currentObjMaterial.Ks = parseColorRGB(token.args, ObjMaterial.DEFAULT_COLOR);
+                case EMISSIVE_COLOR -> currentObjMaterial.Ke = parseColorRGB(token.args, ObjMaterial.DEFAULT_COLOR);
+                case TRANSMISSION_FILTER -> currentObjMaterial.Tf = parseColorRGB(token.args, ObjMaterial.DEFAULT_COLOR);
+
+                /* --- Texture maps --- */
+                case MAP_KA   -> parseTextureMap(currentObjMaterial, "map_Ka", token.args);
+                case MAP_KD   -> parseTextureMap(currentObjMaterial, "map_Kd", token.args);
+                case MAP_KS   -> parseTextureMap(currentObjMaterial, "map_Ks", token.args);
+                case MAP_KE   -> parseTextureMap(currentObjMaterial, "map_Ke", token.args);
+                case MAP_NS   -> parseTextureMap(currentObjMaterial, "map_Ns", token.args);
+                case MAP_D    -> parseTextureMap(currentObjMaterial, "map_d",  token.args);
+                case MAP_TR   -> parseTextureMap(currentObjMaterial, "map_Tr", token.args);
+                case MAP_BUMP -> parseTextureMap(currentObjMaterial, "map_Bump", token.args);
+                case BUMP     -> parseTextureMap(currentObjMaterial, "bump", token.args);
+                case MAP_DISP -> parseTextureMap(currentObjMaterial, "disp", token.args);
+                case MAP_DECAL-> parseTextureMap(currentObjMaterial, "decal", token.args);
+                case MAP_REFL -> parseTextureMap(currentObjMaterial, "map_refl", token.args);
+                case REFL     -> parseTextureMap(currentObjMaterial, "refl", token.args);
+
                 default -> Logger.warn("Unknown keyword '{}' at line {}", token.text, token.lineNo);
             }
         }
@@ -285,21 +171,87 @@ public class ObjMtlFileParser {
         commitCurrentMaterial();
     }
 
-    // Private
+    /* -------------------------------------------------------------
+     *  TEXTURE MAP PARSER
+     * ------------------------------------------------------------- */
 
-    private boolean materialDefStarted() {
-        if (currentObjMaterial == null) {
-            Logger.error("{}: No material definition has been started", tokenizer.lineNo);
-            return false;
+    private void parseTextureMap(ObjMaterial mat, String mapName, String args) {
+        String[] parts = args.split("\\s+");
+        int i = 0;
+
+        Map<String, Object> opts = new LinkedHashMap<>();
+
+        while (i < parts.length && parts[i].startsWith("-")) {
+            String opt = parts[i];
+
+            switch (opt) {
+                case "-o" -> {
+                    float u = Float.parseFloat(parts[++i]);
+                    float v = Float.parseFloat(parts[++i]);
+                    float w = Float.parseFloat(parts[++i]);
+                    opts.put("o", new float[]{u, v, w});
+                }
+                case "-s" -> {
+                    float u = Float.parseFloat(parts[++i]);
+                    float v = Float.parseFloat(parts[++i]);
+                    float w = Float.parseFloat(parts[++i]);
+                    opts.put("s", new float[]{u, v, w});
+                }
+                case "-t" -> {
+                    float u = Float.parseFloat(parts[++i]);
+                    float v = Float.parseFloat(parts[++i]);
+                    float w = Float.parseFloat(parts[++i]);
+                    opts.put("t", new float[]{u, v, w});
+                }
+                case "-mm" -> {
+                    float base = Float.parseFloat(parts[++i]);
+                    float gain = Float.parseFloat(parts[++i]);
+                    opts.put("mm", new float[]{base, gain});
+                }
+                case "-blendu", "-blendv", "-clamp", "-cc" -> {
+                    String val = parts[++i];
+                    opts.put(opt.substring(1), val.equalsIgnoreCase("on"));
+                }
+                case "-texres" -> {
+                    int res = Integer.parseInt(parts[++i]);
+                    opts.put("texres", res);
+                }
+                default -> Logger.warn("Unknown texture option '{}' in map '{}'", opt, mapName);
+            }
+
+            i++;
         }
-        return true;
+
+        String filename = parts[i];
+
+        switch (mapName) {
+            case "map_Ka" -> mat.map_Ka = filename;
+            case "map_Kd" -> mat.map_Kd = filename;
+            case "map_Ks" -> mat.map_Ks = filename;
+            case "map_Ke" -> mat.map_Ke = filename;
+            case "map_Ns" -> mat.map_Ns = filename;
+            case "map_d"  -> mat.map_d  = filename;
+            case "map_Tr" -> mat.map_d  = filename;
+            case "map_Bump", "bump" -> mat.map_bump = filename;
+            case "disp" -> mat.disp = filename;
+            case "decal" -> mat.decal = filename;
+            case "map_refl", "refl" -> mat.map_refl = filename;
+        }
+
+        if (!opts.isEmpty()) {
+            opts.forEach((k, v) -> mat.addTextureOption(mapName, k, v));
+        }
     }
+
+    /* -------------------------------------------------------------
+     *  HELPERS
+     * ------------------------------------------------------------- */
 
     private void commitCurrentMaterial() {
         if (currentObjMaterial != null) {
-            final ObjMaterial oldPhongMaterial = materialMap.put(currentObjMaterial.name(), currentObjMaterial);
-            if (oldPhongMaterial != null) {
-                Logger.warn("Material replaced: '{}'={}", currentObjMaterial.name(), oldPhongMaterial);
+            ObjMaterial old = materialMap.put(currentObjMaterial.name(), currentObjMaterial);
+            if (old != null) {
+                Logger.warn("Material replaced: '{}'={}", currentObjMaterial.name(), old);
             } else {
                 Logger.debug("Material added: '{}'={}", currentObjMaterial.name(), currentObjMaterial);
             }
@@ -307,57 +259,38 @@ public class ObjMtlFileParser {
         }
     }
 
-    // float, 0..1000
     private static float parseSpecularPower(String s) {
-        float value = Float.parseFloat(s);
-        if (0 <= value && value <= 1000) {
-            return value;
-        }
-        Logger.error("Specular Power Ns={} out-of-range 0..1000", value);
-        return ObjMaterial.DEFAULT_NS;
+        float v = Float.parseFloat(s);
+        return (v >= 0 && v <= 1000) ? v : ObjMaterial.DEFAULT_NS;
     }
 
-    // integer, 0..10
     private static byte parseIllumination(String s) {
-        int value = Integer.parseInt(s);
-        if (0 <= value && value <= 10) {
-            return (byte) value;
-        }
-        Logger.error("Illumination illum={} out-of-range 0..10", value);
-        return ObjMaterial.DEFAULT_ILLUM;
+        int v = Integer.parseInt(s);
+        return (v >= 0 && v <= 10) ? (byte) v : ObjMaterial.DEFAULT_ILLUM;
     }
 
-    // float, 0..1
     private static float parseOpacity(String s) {
-        float value = Float.parseFloat(s);
-        if (0 <= value && value <= 1) {
-            return value;
-        }
-        Logger.error("Opacity d={} out-of-range 0..1", value);
-        return ObjMaterial.DEFAULT_OPACITY;
+        float v = Float.parseFloat(s);
+        return (v >= 0 && v <= 1) ? v : ObjMaterial.DEFAULT_OPACITY;
     }
 
-    // float, 0.001..10
     private static float parseRefractionIndex(String s) {
-        float value = Float.parseFloat(s);
-        if (0.001f <= value && value <= 10f) {
-            return value;
-        }
-        Logger.error("Refraction Index Ni={} out of range 0.001..10", value);
-        return ObjMaterial.DEFAULT_NI;
+        float v = Float.parseFloat(s);
+        return (v >= 0.001f && v <= 10f) ? v : ObjMaterial.DEFAULT_NI;
     }
 
-    // float 3-tuple, each 0..1
-    private static ObjColor parseColorRGB(String s, ObjColor defaultColor) {
-        final String[] comp = s.trim().split("\\s+", 3);
-        if (comp.length == 3) {
-            float r = (float) Math.clamp(Float.parseFloat(comp[0]), 0.0, 1.0);
-            float g = (float) Math.clamp(Float.parseFloat(comp[1]), 0.0, 1.0);
-            float b = (float) Math.clamp(Float.parseFloat(comp[2]), 0.0, 1.0);
-            return new ObjColor(r, g, b);
-        } else {
-            Logger.error("Invalid color format: {}", s);
-            return defaultColor;
-        }
+    private static ObjColor parseColorRGB(String s, ObjColor def) {
+        String[] c = s.split("\\s+");
+        if (c.length != 3) return def;
+
+        float r = clamp01(Float.parseFloat(c[0]));
+        float g = clamp01(Float.parseFloat(c[1]));
+        float b = clamp01(Float.parseFloat(c[2]));
+
+        return new ObjColor(r, g, b);
+    }
+
+    private static float clamp01(float v) {
+        return Math.clamp(v, 0, 1);
     }
 }
