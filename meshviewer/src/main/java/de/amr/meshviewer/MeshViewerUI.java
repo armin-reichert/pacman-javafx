@@ -127,13 +127,12 @@ public class MeshViewerUI {
         previewTab.setClosable(false);
         previewTab.setContent(previewSubScene);
 
-/*
         Tab objSourceTab = new Tab("Source");
         objSourceTab.setClosable(false);
         TextArea sourceView = createSourceView();
         objSourceTab.setContent(sourceView);
-*/
-        TabPane tabPane = new TabPane(previewTab /*, objSourceTab*/);
+
+        TabPane tabPane = new TabPane(previewTab, objSourceTab);
         tabPane.setSide(Side.BOTTOM);
         tabPane.getSelectionModel().selectedItemProperty().addListener((_, _, selection) -> {
             Logger.debug("Selected tab: {}", selection);

@@ -1,4 +1,3 @@
-# Edited (Armin Reichert, 2026-04-27): do not use spaces in group IDs!
 g Mesh1 Teapot Model
 
 usemtl FrontColor

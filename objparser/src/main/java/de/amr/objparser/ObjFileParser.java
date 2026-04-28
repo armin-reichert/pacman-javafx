@@ -22,6 +22,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class ObjFileParser {
 
+    public static final int SOURCE_LINES_LIMIT = 1000;
+
     public enum ObjKeyword {
         OBJECT            ("o"),
         GROUP             ("g"),
@@ -106,9 +108,11 @@ public class ObjFileParser {
         final var objModel = new ObjModel();
         objModel.setUrl(objFileURL.toString());
 
-        try (InputStream stream = objFileURL.openConnection().getInputStream();
-             BufferedReader reader = new BufferedReader(new InputStreamReader(stream, charset))) {
+        collectSourceLines(objModel);
 
+        try (InputStream stream = objFileURL.openConnection().getInputStream();
+             var reader = new BufferedReader(new InputStreamReader(stream, charset)))
+        {
             tokenizer = new Tokenizer(reader);
             Token token;
 
@@ -133,6 +137,26 @@ public class ObjFileParser {
         }
 
         return objModel;
+    }
+
+    private void collectSourceLines(ObjModel objModel) throws IOException {
+        int lineNo = 0;
+        final StringBuilder sb = new StringBuilder();
+        try (InputStream stream = objFileURL.openConnection().getInputStream();
+             var reader = new BufferedReader(new InputStreamReader(stream, charset)))
+        {
+            while (true) {
+                final String line = reader.readLine();
+                if (line == null) break;
+                if (++lineNo < SOURCE_LINES_LIMIT) {
+                    sb.append(line).append("\n");
+                } else {
+                    sb.append("...Rest omitted");
+                    break;
+                }
+            }
+            objModel.setSource(sb.toString());
+        }
     }
 
     /* -------------------------------------------------------------
@@ -172,37 +196,6 @@ public class ObjFileParser {
         } catch (Exception x) {
             Logger.warn(x, "Material library parsing failed: URL={}", libURL);
             return Map.of();
-        }
-    }
-
-    /* -------------------------------------------------------------
-     *  OBJ PARSING
-     * ------------------------------------------------------------- */
-
-    private void parseGeometry(ObjModel objModel, InputStream stream) throws IOException {
-        final var reader = new BufferedReader(new InputStreamReader(stream, charset));
-        tokenizer = new Tokenizer(reader);
-        Token token;
-
-        while ((token = tokenizer.next()) != null) {
-            switch (token.keyword()) {
-
-                case OBJECT -> parseObject(objModel, token.args());
-                case GROUP  -> parseGroup(objModel, token.args());
-                case SMOOTHING_GROUP -> parseSmoothingGroup(objModel, token.args());
-                case MATERIAL_USAGE  -> parseMaterialUsage(objModel, token.args());
-
-                case VERTEX        -> objModel.vertices.add(parseVertex(token.args()));
-                case TEX_COORD     -> objModel.texCoords.add(parseTexCoord(token.args()));
-                case VERTEX_NORMAL -> objModel.normals.add(parseNormal(token.args()));
-
-                case FACE -> parseFace(objModel, token.args());
-
-                case MATERIAL_LIB -> Logger.debug("Material library definition ignored in 2nd pass");
-
-                default -> Logger.warn("Unknown keyword '{}' at line {}",
-                    token.keyword().text, token.lineNo());
-            }
         }
     }
 
