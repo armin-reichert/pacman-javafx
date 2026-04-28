@@ -93,29 +93,19 @@ public class MeshViewerUI {
         cam.setNearClip(0.1);
         cam.setFarClip(10_000);
 
-        // Light
-        AmbientLight ambient = new AmbientLight(Color.color(0.3, 0.3, 0.3));
+        world = new Group();
 
-        PointLight keyLight = new PointLight(Color.WHITE);
-        keyLight.setTranslateX(200);
-        keyLight.setTranslateY(-200);
-        keyLight.setTranslateZ(-300);
-
-        PointLight fillLight = new PointLight(Color.color(0.6, 0.6, 0.8));
-        fillLight.setTranslateX(-200);
-        fillLight.setTranslateY(200);
-        fillLight.setTranslateZ(-300);
-
-        world = new Group(ambient, keyLight, fillLight);
+        addLights(world);
 
         previewSubScene = new SubScene(world, width, height, true, SceneAntialiasing.BALANCED);
         previewSubScene.setCamera(cam);
         previewSubScene.setFill(NOFOCUS_COLOR);
         previewSubScene.fillProperty().bind(previewSubScene.focusedProperty().map(focussed -> focussed? FOCUS_COLOR : NOFOCUS_COLOR));
-
         enableMouseControl(previewSubScene);
 
-        final MenuBar menuBar = createMenus(stage);
+        final Pane previewArea = new Pane(previewSubScene);
+        previewSubScene.widthProperty().bind(previewArea.widthProperty());
+        previewSubScene.heightProperty().bind(previewArea.heightProperty());
 
         fileChooser = new FileChooser();
         fileChooser.setTitle("Open OBJ File");
@@ -129,7 +119,7 @@ public class MeshViewerUI {
 
         Tab previewTab = new Tab("Preview");
         previewTab.setClosable(false);
-        previewTab.setContent(previewSubScene);
+        previewTab.setContent(previewArea);
 
         Tab objSourceTab = new Tab("Source");
         objSourceTab.setClosable(false);
@@ -145,13 +135,12 @@ public class MeshViewerUI {
             }
         });
 
+        final MenuBar menuBar = createMenus(stage);
+
         final BorderPane rootPane = new BorderPane();
         rootPane.setTop(menuBar);
         rootPane.setLeft(navigationPane);
         rootPane.setCenter(tabPane);
-
-        previewSubScene.widthProperty().bind(rootPane.widthProperty().subtract(navigationPane.widthProperty()));
-        previewSubScene.heightProperty().bind(rootPane.heightProperty());
 
         final Scene scene = new Scene(rootPane);
         stage.setScene(scene);
@@ -160,6 +149,7 @@ public class MeshViewerUI {
         stage.setHeight(height);
 
         addFileDropSupport(scene);
+
         objModel.addListener((_, _, newObjModel) -> onObjModelChanged(newObjModel));
     }
 
@@ -197,6 +187,22 @@ public class MeshViewerUI {
     }
 
     // create UI
+
+    private void addLights(Group parent) {
+        final var ambient = new AmbientLight(Color.color(0.3, 0.3, 0.3));
+
+        final var keyLight = new PointLight(Color.WHITE);
+        keyLight.setTranslateX(200);
+        keyLight.setTranslateY(-200);
+        keyLight.setTranslateZ(-300);
+
+        final var fillLight = new PointLight(Color.color(0.6, 0.6, 0.8));
+        fillLight.setTranslateX(-200);
+        fillLight.setTranslateY(200);
+        fillLight.setTranslateZ(-300);
+
+        parent.getChildren().addAll(ambient, keyLight, fillLight);
+    }
 
     private void addFileDropSupport(Scene scene) {
         // Accept file drag-over
@@ -285,6 +291,14 @@ public class MeshViewerUI {
         });
 
         exitItem.setOnAction(_ -> Platform.exit());
+
+        Menu viewMenu = new Menu("View");
+        CheckMenuItem miNavigationVisible = new CheckMenuItem("Navigation");
+        miNavigationVisible.selectedProperty().bindBidirectional(navigationPane.managedProperty());
+        navigationPane.visibleProperty().bind(navigationPane.managedProperty());
+
+        viewMenu.getItems().add(miNavigationVisible);
+        menuBar.getMenus().add(viewMenu);
 
         return menuBar;
     }
