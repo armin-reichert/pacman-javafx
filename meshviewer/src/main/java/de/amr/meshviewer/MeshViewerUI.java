@@ -167,15 +167,22 @@ public class MeshViewerUI {
         }
     }
 
-    // Handle data model
+    // load data
 
     private void loadMeshesFromURL(URL objFileURL) throws IOException {
         final var parser = new ObjFileParser(objFileURL, StandardCharsets.UTF_8);
         objModel.set(parser.parse());
     }
 
-    private void loadMeshesFromFile(File objFile) throws IOException {
-        loadMeshesFromURL(objFile.toURI().toURL());
+    private boolean loadMeshesFromFile(File objFile) {
+        try {
+            loadMeshesFromURL(objFile.toURI().toURL());
+            workDir = objFile.getParentFile();
+            return true;
+        } catch (IOException x) {
+            Logger.error(x);
+            return false;
+        }
     }
 
     private void onObjModelChanged(ObjModel newModel) {
@@ -206,37 +213,36 @@ public class MeshViewerUI {
 
     private void addFileDropSupport(Scene scene) {
         // Accept file drag-over
-        scene.setOnDragOver(event -> {
-            if (event.getGestureSource() != scene &&
-                event.getDragboard().hasFiles()) {
-
-                event.acceptTransferModes(TransferMode.COPY);
+        scene.setOnDragOver(e -> {
+            if (e.getGestureSource() != scene && e.getDragboard().hasFiles()) {
+                e.acceptTransferModes(TransferMode.COPY);
+            } else {
+                // This seems to have no effect on Windows
+                e.acceptTransferModes(TransferMode.NONE);
             }
-            event.consume();
+            e.consume();
         });
 
         // Handle file drop
-        scene.setOnDragDropped(event -> {
-            Dragboard db = event.getDragboard();
+        scene.setOnDragDropped(e -> {
+            final Dragboard db = e.getDragboard();
             boolean success = false;
-
             if (db.hasFiles()) {
-                File file = db.getFiles().getFirst();
-
+                final File file = db.getFiles().getFirst();
                 // Only accept OBJ files
                 if (file.getName().toLowerCase().endsWith(".obj")) {
-                    try {
-                        loadMeshesFromFile(file);
-                        workDir = file.getParentFile();
-                    } catch (Exception x) {
-                        Logger.error(x);
-                    }
-                    success = true;
+                    success = loadMeshesFromFile(file);
                 }
             }
-
-            event.setDropCompleted(success);
-            event.consume();
+            e.setDropCompleted(success);
+            e.consume();
+            if (success) {
+                Platform.runLater(() -> {
+                    stage.toFront();
+                    stage.requestFocus();
+                    previewSubScene.requestFocus();
+                });
+            }
         });
     }
 
@@ -281,12 +287,7 @@ public class MeshViewerUI {
             }
             final File objFile = fileChooser.showOpenDialog(stage);
             if (objFile != null) {
-                try {
-                    loadMeshesFromFile(objFile);
-                    workDir = objFile.getParentFile();
-                } catch (Exception x) {
-                    Logger.error(x);
-                }
+                loadMeshesFromFile(objFile);
             }
         });
 
