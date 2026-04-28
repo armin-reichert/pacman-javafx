@@ -47,8 +47,8 @@ import java.util.Map;
 
 public class MeshViewerUI {
 
-    public static final Color FOCUS_COLOR = Color.gray(0.66);
-    public static final Color NOFOCUS_COLOR = Color.gray(0.5);
+    public static final Color FOCUSSED_COLOR = Color.gray(0.66);
+    public static final Color UNFOCUSSED_COLOR = Color.gray(0.5);
 
     public static final Font SOURCE_FONT = Font.font("Consolas", FontWeight.NORMAL, 14);
     public static final String SOURCE_STYLE = "-fx-control-inner-background:#222; -fx-text-fill:#f0f0f0";
@@ -99,9 +99,9 @@ public class MeshViewerUI {
 
         previewSubScene = new SubScene(world, width, height, true, SceneAntialiasing.BALANCED);
         previewSubScene.setCamera(cam);
-        previewSubScene.setFill(NOFOCUS_COLOR);
-        previewSubScene.fillProperty().bind(previewSubScene.focusedProperty().map(focussed -> focussed? FOCUS_COLOR : NOFOCUS_COLOR));
-        enableMouseControl(previewSubScene);
+        previewSubScene.fillProperty().bind(previewSubScene.focusedProperty()
+            .map(hasFocus -> hasFocus? FOCUSSED_COLOR : UNFOCUSSED_COLOR));
+        setPreviewControlHandlers();
 
         final Pane previewArea = new Pane(previewSubScene);
         previewSubScene.widthProperty().bind(previewArea.widthProperty());
@@ -397,11 +397,11 @@ public class MeshViewerUI {
         zoom.setZ(DEFAULT_ZOOM);
     }
 
-    private void enableMouseControl(SubScene sub) {
-        sub.setOnKeyPressed(e -> {
+    private void setPreviewControlHandlers() {
+        previewSubScene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
-                case PLUS  -> zoom.setZ(zoom.getZ() + 2);
-                case MINUS -> zoom.setZ(zoom.getZ() - 2);
+                case PLUS  -> zoom(1);
+                case MINUS -> zoom(-1);
                 case LEFT  -> {
                     rotateY(-1);
                     e.consume(); // do not deliver event to tab pane
@@ -420,7 +420,7 @@ public class MeshViewerUI {
                 }
             }
         });
-        sub.setOnKeyTyped(e -> {
+        previewSubScene.setOnKeyTyped(e -> {
             switch (e.getCharacter()) {
                 case "x" -> autoRotateAxis = Rotate.X_AXIS;
                 case "y" -> autoRotateAxis = Rotate.Y_AXIS;
@@ -429,19 +429,19 @@ public class MeshViewerUI {
             }
         });
 
-        sub.setOnMouseClicked(e -> {
+        previewSubScene.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
                 resetTransforms();
             }
         });
 
-        sub.setOnMousePressed(e -> {
+        previewSubScene.setOnMousePressed(e -> {
             mouseOldX = e.getSceneX();
             mouseOldY = e.getSceneY();
             e.consume();
         });
 
-        sub.setOnMouseDragged(e -> {
+        previewSubScene.setOnMouseDragged(e -> {
             double dx = e.getSceneX() - mouseOldX;
             double dy = e.getSceneY() - mouseOldY;
 
@@ -458,8 +458,14 @@ public class MeshViewerUI {
             mouseOldY = e.getSceneY();
         });
 
-        sub.setOnScroll(e -> zoom.setZ(zoom.getZ() + e.getDeltaY() * 0.02));
+        previewSubScene.setOnScroll(e -> zoom.setZ(zoom.getZ() + e.getDeltaY() * 0.02));
 
+    }
+
+    private void zoom(double delta) {
+        //TODO verify these bounds are useful
+        double z = Math.clamp(zoom.getZ() + delta, -100, -2);
+        zoom.setZ(z);
     }
 
     private void rotateX(double delta) {
