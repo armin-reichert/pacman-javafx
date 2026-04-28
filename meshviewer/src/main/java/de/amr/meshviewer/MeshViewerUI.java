@@ -41,6 +41,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -175,9 +176,7 @@ public class MeshViewerUI {
 
     public void addSampleModel(String name, URL modelURL) {
         MenuItem item = new MenuItem(name);
-        item.setOnAction(e -> {
-            showObjModel(modelURL);
-        });
+        item.setOnAction(_ -> showObjModel(modelURL));
         samplesMenu.getItems().add(item);
     }
 
@@ -206,8 +205,8 @@ public class MeshViewerUI {
     private void onObjModelChanged(ObjModel newModel) {
         String url = newModel.url();
         int lastSlash = url.lastIndexOf('/');
-        url = url.substring(lastSlash + 1);
-        updateNavigationPane(url);
+        String title = URLDecoder.decode(url.substring(lastSlash + 1), StandardCharsets.UTF_8);
+        updateNavigationPane(title);
         selectFirstObjectNodeInTree();
     }
 
