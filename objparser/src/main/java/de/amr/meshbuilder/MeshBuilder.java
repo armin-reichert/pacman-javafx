@@ -219,9 +219,9 @@ public class MeshBuilder {
 
     private static PhongMaterial createPhongMaterial(ObjMaterial objMaterial) {
         PhongMaterial phongMaterial = new PhongMaterial();
-        phongMaterial.setDiffuseColor(fxColor(objMaterial.diffuseColor(), objMaterial.opacity()));
-        phongMaterial.setSpecularColor(fxColor(objMaterial.specularColor(), objMaterial.opacity()));
-        phongMaterial.setSpecularPower(objMaterial.specularExponent());
+        phongMaterial.setDiffuseColor(fxColor(objMaterial.Kd, objMaterial.d));
+        phongMaterial.setSpecularColor(fxColor(objMaterial.Ks, objMaterial.d));
+        phongMaterial.setSpecularPower(objMaterial.Ns);
         return phongMaterial;
     }
 

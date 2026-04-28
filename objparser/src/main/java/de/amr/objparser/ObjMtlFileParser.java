@@ -235,7 +235,7 @@ public class ObjMtlFileParser {
                 }
                 case SPECULAR_POWER -> {
                     if (materialDefStarted()) {
-                        currentObjMaterial.ns = parseSpecularPower(token.args);
+                        currentObjMaterial.Ns = parseSpecularPower(token.args);
                     }
                 }
                 case OPACITY -> {
@@ -255,27 +255,27 @@ public class ObjMtlFileParser {
                 }
                 case REFRACTION_INDEX ->  {
                     if (materialDefStarted()) {
-                        currentObjMaterial.ni = parseRefractionIndex(token.args);
+                        currentObjMaterial.Ni = parseRefractionIndex(token.args);
                     }
                 }
                 case AMBIENT_COLOR ->  {
                     if (materialDefStarted()) {
-                        currentObjMaterial.ka = parseColorRGB(token.args, ObjMaterial.DEFAULT_AMBIENT_COLOR);
+                        currentObjMaterial.Ka = parseColorRGB(token.args, ObjMaterial.DEFAULT_COLOR);
                     }
                 }
                 case DIFFUSE_COLOR ->  {
                     if (materialDefStarted()) {
-                        currentObjMaterial.kd = parseColorRGB(token.args, ObjMaterial.DEFAULT_DIFFUSE_COLOR);
+                        currentObjMaterial.Kd = parseColorRGB(token.args, ObjMaterial.DEFAULT_COLOR);
                     }
                 }
                 case EMISSIVE_COLOR -> {
                     if (materialDefStarted()) {
-                        currentObjMaterial.ke = parseColorRGB(token.args, ObjMaterial.DEFAULT_EMISSIVE_COLOR);
+                        currentObjMaterial.Ke = parseColorRGB(token.args, ObjMaterial.DEFAULT_COLOR);
                     }
                 }
                 case SPECULAR_COLOR -> {
                     if (materialDefStarted()) {
-                        currentObjMaterial.ks = parseColorRGB(token.args, ObjMaterial.DEFAULT_SPECULAR_COLOR);
+                        currentObjMaterial.Ks = parseColorRGB(token.args, ObjMaterial.DEFAULT_COLOR);
                     }
                 }
                 default -> Logger.warn("Unknown keyword '{}' at line {}", token.text, token.lineNo);
@@ -297,11 +297,11 @@ public class ObjMtlFileParser {
 
     private void commitCurrentMaterial() {
         if (currentObjMaterial != null) {
-            final ObjMaterial oldPhongMaterial = materialMap.put(currentObjMaterial.name, currentObjMaterial);
+            final ObjMaterial oldPhongMaterial = materialMap.put(currentObjMaterial.name(), currentObjMaterial);
             if (oldPhongMaterial != null) {
-                Logger.warn("Material replaced: '{}'={}", currentObjMaterial.name, oldPhongMaterial);
+                Logger.warn("Material replaced: '{}'={}", currentObjMaterial.name(), oldPhongMaterial);
             } else {
-                Logger.debug("Material added: '{}'={}", currentObjMaterial.name, currentObjMaterial);
+                Logger.debug("Material added: '{}'={}", currentObjMaterial.name(), currentObjMaterial);
             }
             currentObjMaterial = null;
         }
@@ -314,7 +314,7 @@ public class ObjMtlFileParser {
             return value;
         }
         Logger.error("Specular Power Ns={} out-of-range 0..1000", value);
-        return ObjMaterial.DEFAULT_SPECULAR_POWER;
+        return ObjMaterial.DEFAULT_NS;
     }
 
     // integer, 0..10
@@ -324,7 +324,7 @@ public class ObjMtlFileParser {
             return (byte) value;
         }
         Logger.error("Illumination illum={} out-of-range 0..10", value);
-        return ObjMaterial.DEFAULT_ILLUMINATION;
+        return ObjMaterial.DEFAULT_ILLUM;
     }
 
     // float, 0..1
@@ -344,7 +344,7 @@ public class ObjMtlFileParser {
             return value;
         }
         Logger.error("Refraction Index Ni={} out of range 0.001..10", value);
-        return ObjMaterial.DEFAULT_REFRACTION_INDEX;
+        return ObjMaterial.DEFAULT_NI;
     }
 
     // float 3-tuple, each 0..1
