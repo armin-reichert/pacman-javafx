@@ -8,10 +8,10 @@ import java.util.*;
 
 public class ObjModel {
     final Map<String, Map<String, ObjMaterial>> materialLibsMap = new HashMap<>();
-    final List<ObjObject> objects = new ArrayList<>();
-    final List<ObjVertex> vertices = new ArrayList<>();
-    final List<ObjTexCoord> texCoords = new ArrayList<>();
-    final List<ObjNormal> normals = new ArrayList<>();
+    final List<ObjObject> objects = new ArrayList<>(10);
+    final List<ObjVertex> vertices = new ArrayList<>(1000);
+    final List<ObjTexCoord> texCoords = new ArrayList<>(500);
+    final List<ObjNormal> normals = new ArrayList<>(500);
 
     String source;
     String    url;
