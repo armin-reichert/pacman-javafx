@@ -434,6 +434,7 @@ public class MeshViewerUI {
             if (e.getClickCount() == 2) {
                 resetTransforms();
             }
+            previewSubScene.requestFocus();
         });
 
         previewSubScene.setOnMousePressed(e -> {
