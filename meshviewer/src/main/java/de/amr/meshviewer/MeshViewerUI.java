@@ -56,6 +56,7 @@ public class MeshViewerUI {
     public static final int DEFAULT_ANGLE_X = 0;
     public static final int DEFAULT_ANGLE_Y = 0;
     public static final int DEFAULT_ZOOM    = -30;
+    public static final double AUTO_ROTATE_SPEED = 0.1;
 
     private final ObjectProperty<ObjModel> objModel = new SimpleObjectProperty<>(new ObjModel());
 
@@ -249,9 +250,9 @@ public class MeshViewerUI {
         autoRotate = new Timeline(
             new KeyFrame(Duration.millis(16), _ -> {
                 if (autoRotateAxis == Rotate.X_AXIS) {
-                    autoRotateX.setAngle(autoRotateX.getAngle() + 0.5);
+                    autoRotateX.setAngle(autoRotateX.getAngle() + AUTO_ROTATE_SPEED);
                 } else {
-                    autoRotateY.setAngle(autoRotateY.getAngle() - 0.5);
+                    autoRotateY.setAngle(autoRotateY.getAngle() - AUTO_ROTATE_SPEED);
                 }
             }) // ~60 FPS
         );
@@ -488,7 +489,6 @@ public class MeshViewerUI {
         pivot.getTransforms().addAll(flipUpsideDown, rotateX, rotateY, autoRotateX, autoRotateY);
 
         world.getChildren().setAll(pivot);
-        resetTransforms();
         previewSubScene.requestFocus();
     }
 }
