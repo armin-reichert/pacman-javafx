@@ -96,7 +96,6 @@ public class ObjFileParser {
     private final URL objFileURL;
     private final Charset charset;
 
-    private Tokenizer tokenizer;
     private int anonMeshNameCount = 0;
 
     public ObjFileParser(URL objFileURL, Charset charset) throws IOException {
@@ -105,14 +104,13 @@ public class ObjFileParser {
     }
 
     public ObjModel parse() throws IOException {
-        final var objModel = new ObjModel();
-        objModel.setUrl(objFileURL.toString());
-        collectSourceLines(objModel);
+        final var objModel = createEmptyModel(objFileURL, charset);
+
         try (InputStream stream = objFileURL.openStream();
              var reader = new BufferedReader(new InputStreamReader(stream, charset))) {
 
             Token token;
-            tokenizer = new Tokenizer(reader);
+            final Tokenizer tokenizer = new Tokenizer(reader);
             while ((token = tokenizer.next()) != null) {
                 switch (token.keyword()) {
                     case MATERIAL_LIB    -> parseMaterialLibraryRef(objModel, token.args());
@@ -131,10 +129,10 @@ public class ObjFileParser {
         return objModel;
     }
 
-    private void collectSourceLines(ObjModel objModel) throws IOException {
-        long lineCount = 0;
+    private static ObjModel createEmptyModel(URL objFileURL, Charset charset) throws IOException {
+        long lineCount;
         try (InputStream stream = objFileURL.openStream()) {
-            lineCount = countLines(stream);
+            lineCount = countLinesFast(stream);
         }
 
         try (InputStream stream = objFileURL.openStream();
@@ -145,23 +143,27 @@ public class ObjFileParser {
             for (; lineNo <= SOURCE_LINES_LIMIT; ++lineNo) {
                 final String line = reader.readLine();
                 if (line == null) {
+                    final ObjModel objModel = new ObjModel(lineCount);
+                    objModel.setUrl(objFileURL.toExternalForm());
                     objModel.setSource(sb.toString());
-                    return;
+                    return objModel;
                 }
                 sb.append(line).append("\n");
             }
             if (reader.readLine() != null) {
                 sb.append("... of ").append(lineCount).append(" lines total");
             }
+            final ObjModel objModel = new ObjModel(lineNo);
+            objModel.setUrl(objFileURL.toExternalForm());
             objModel.setSource(sb.toString());
+            return objModel;
         }
     }
 
-    public static long countLines(InputStream in) throws IOException {
+    public static long countLinesFast(InputStream in) throws IOException {
         byte[] buffer = new byte[8192];
         long count = 0;
         int n;
-
         while ((n = in.read(buffer)) != -1) {
             for (int i = 0; i < n; i++) {
                 if (buffer[i] == '\n') {
@@ -169,10 +171,8 @@ public class ObjFileParser {
                 }
             }
         }
-
         return count;
     }
-
 
     /* -------------------------------------------------------------
      *  MATERIAL LIBRARIES

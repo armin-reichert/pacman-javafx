@@ -7,21 +7,30 @@ package de.amr.objparser;
 import java.util.*;
 
 public class ObjModel {
-    final Map<String, Map<String, ObjMaterial>> materialLibsMap = new HashMap<>();
-    final List<ObjObject> objects = new ArrayList<>(10);
-    final List<ObjVertex> vertices = new ArrayList<>(1000);
-    final List<ObjTexCoord> texCoords = new ArrayList<>(500);
-    final List<ObjNormal> normals = new ArrayList<>(500);
+    Map<String, Map<String, ObjMaterial>> materialLibsMap = new HashMap<>();
 
-    String source;
+    final List<ObjObject> objects;
+    final List<ObjVertex> vertices;
+    final List<ObjTexCoord> texCoords;
+    final List<ObjNormal> normals;
+
+    String    source = "";
     String    url;
+
     ObjObject currentObject;
     ObjGroup  currentGroup;
     String    currentMaterialName;
     Integer   currentSmoothingGroup;
 
     public ObjModel() {
-        source = "No source";
+        this(50);
+    }
+
+    public ObjModel(long lineCount) {
+        objects = new ArrayList<>((int) Math.max(5, lineCount / 2000));
+        vertices = new ArrayList<>((int)(lineCount / 3));
+        texCoords = new ArrayList<>((int)(lineCount / 10));
+        normals = new ArrayList<>((int)(lineCount / 10));
     }
 
     public void setUrl(String url) {
