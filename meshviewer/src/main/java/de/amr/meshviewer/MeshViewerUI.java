@@ -75,7 +75,8 @@ public class MeshViewerUI {
 
     private final Rotate rotateX = new Rotate(DEFAULT_ANGLE_X, Rotate.X_AXIS);
     private final Rotate rotateY = new Rotate(DEFAULT_ANGLE_Y, Rotate.Y_AXIS);
-    private final Translate zoom = new Translate(0, 0, DEFAULT_ZOOM);
+
+    private final Translate camZoom = new Translate(0, 0, DEFAULT_ZOOM);
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
     private final ObjectProperty<Duration> parsingTime = new SimpleObjectProperty<>(Duration.ZERO);
@@ -86,6 +87,9 @@ public class MeshViewerUI {
     private final SubScene previewSubScene;
     private final BorderPane navigationPane;
     private final FileChooser fileChooser;
+    private final PerspectiveCamera cam;
+
+    private Group pivot;
 
     private File workDir;
     private TreeView<NavigationTreeNode> navigationTreeView;
@@ -106,8 +110,8 @@ public class MeshViewerUI {
         final double width = 1.5 * height;
 
         // Camera
-        final var cam = new PerspectiveCamera(true);
-        cam.getTransforms().add(zoom);
+        cam = new PerspectiveCamera(true);
+        cam.getTransforms().addAll(camZoom);
         cam.setNearClip(0.1);
         cam.setFarClip(10_000);
 
@@ -177,7 +181,7 @@ public class MeshViewerUI {
         try {
             loadModelFromURL(url);
             selectFirstObjectNodeInTree();
-            resetTransforms();
+            resetTransformsAndCamera();
         } catch (Exception x) {
             Logger.error(x, "Cannot show OBJ model, URL={}", url);
         }
@@ -192,9 +196,20 @@ public class MeshViewerUI {
 
     public void showSampleModel(SampleModel sample) {
         showObjModel(sample.url());
-        zoom.setZ(sample.initialState().zoom());
-        rotateX.setAngle(sample.initialState().rotateX());
-        rotateY.setAngle(sample.initialState().rotateY());
+
+        SampleState initial = sample.initialState();
+        camZoom.setZ(initial.zoom());
+
+        if (initial.rotateX() != 0) {
+            pivot.getTransforms().addLast(new Rotate(initial.rotateX(), Rotate.X_AXIS));
+        }
+        if (initial.rotateY() != 0) {
+            pivot.getTransforms().addLast(new Rotate(initial.rotateY(), Rotate.Y_AXIS));
+        }
+        if (initial.rotateZ() != 0) {
+            pivot.getTransforms().addLast(new Rotate(initial.rotateZ(), Rotate.Z_AXIS));
+        }
+
         if (rotateAnimation == null) {
             createAutoRotateAnimation();
         }
@@ -234,7 +249,7 @@ public class MeshViewerUI {
         meshView.getTransforms().clear();
         center(meshView);
 
-        Group pivot = new Group(meshView);
+        pivot = new Group(meshView);
         center(pivot);
 
         // Flip around x-axis (otherwise many objects are upside-down initially)
@@ -404,12 +419,13 @@ public class MeshViewerUI {
         ));
     }
 
-    private void resetTransforms() {
+    private void resetTransformsAndCamera() {
         rotateX.setAngle(DEFAULT_ANGLE_X);
         rotateY.setAngle(DEFAULT_ANGLE_Y);
         autoRotateX.setAngle(DEFAULT_ANGLE_X);
         autoRotateY.setAngle(DEFAULT_ANGLE_Y);
-        zoom.setZ(DEFAULT_ZOOM);
+
+        camZoom.setZ(DEFAULT_ZOOM);
     }
 
     private void setPreviewControlHandlers() {
@@ -446,7 +462,7 @@ public class MeshViewerUI {
 
         previewSubScene.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                resetTransforms();
+                resetTransformsAndCamera();
             }
             previewSubScene.requestFocus();
         });
@@ -490,16 +506,16 @@ public class MeshViewerUI {
             flash("Autorotate vertically");
         }
         else if (KEY_ROTATE_LEFT.equals(key)) {
-            rotateYBy(-ROTATE_SINGLE_STEP_DEGREES);
-        }
-        else if (KEY_ROTATE_LEFT_LARGE.equals(key)) {
-            rotateYBy(-3 * ROTATE_SINGLE_STEP_DEGREES);
-        }
-        else if (KEY_ROTATE_RIGHT.equals(key)) {
             rotateYBy(ROTATE_SINGLE_STEP_DEGREES);
         }
-        else if (KEY_ROTATE_RIGHT_LARGE.equals(key)) {
+        else if (KEY_ROTATE_LEFT_LARGE.equals(key)) {
             rotateYBy(3 * ROTATE_SINGLE_STEP_DEGREES);
+        }
+        else if (KEY_ROTATE_RIGHT.equals(key)) {
+            rotateYBy(-ROTATE_SINGLE_STEP_DEGREES);
+        }
+        else if (KEY_ROTATE_RIGHT_LARGE.equals(key)) {
+            rotateYBy(-3 * ROTATE_SINGLE_STEP_DEGREES);
         }
         else if (KEY_WIREFRAME_TOGGLE.equals(key)) {
             final DrawMode mode = drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL;
@@ -552,8 +568,8 @@ public class MeshViewerUI {
     }
 
     private void zoomBy(double delta) {
-        double z = Math.clamp(zoom.getZ() + delta, ZOOM_MIN, ZOOM_MAX);
-        zoom.setZ(z);
+        double z = Math.clamp(camZoom.getZ() + delta, ZOOM_MIN, ZOOM_MAX);
+        camZoom.setZ(z);
         Logger.info("Zoom: " + z);
     }
 
