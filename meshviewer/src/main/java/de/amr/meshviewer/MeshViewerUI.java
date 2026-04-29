@@ -23,6 +23,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
@@ -88,6 +89,7 @@ public class MeshViewerUI {
 
     private final Stage stage;
     private final Group world;
+    private final FlashMessageOverlay flashMessageOverlay;
     private final SubScene previewSubScene;
     private final BorderPane navigationPane;
     private final FileChooser fileChooser;
@@ -126,7 +128,10 @@ public class MeshViewerUI {
             .map(hasFocus -> hasFocus? FOCUSSED_COLOR : UNFOCUSSED_COLOR));
         setPreviewControlHandlers();
 
-        final Pane previewArea = new Pane(previewSubScene);
+        flashMessageOverlay = new FlashMessageOverlay();
+
+        final StackPane previewArea = new StackPane(previewSubScene, flashMessageOverlay);
+
         previewSubScene.widthProperty().bind(previewArea.widthProperty());
         previewSubScene.heightProperty().bind(previewArea.heightProperty());
 
@@ -264,6 +269,10 @@ public class MeshViewerUI {
 
         world.getChildren().setAll(pivot);
         previewSubScene.requestFocus();
+    }
+
+    private void flash(String message) {
+        flashMessageOverlay.showMessage(message);
     }
 
     // create UI
@@ -512,9 +521,11 @@ public class MeshViewerUI {
     private void onKeyTypedInPreview(String key) {
         if (KEY_AUTO_ROTATE_HORIZONTALLY.equals(key)) {
             autoRotateAxis = Rotate.Y_AXIS;
+            flash("Autorotate horizontally");
         }
         else if (KEY_AUTO_ROTATE_VERTICALLY.equals(key)) {
             autoRotateAxis = Rotate.X_AXIS;
+            flash("Autorotate vertically");
         }
         else if (KEY_ROTATE_LEFT.equals(key)) {
             rotateYBy(-ROTATE_SINGLE_STEP_DEGREES);
@@ -529,10 +540,16 @@ public class MeshViewerUI {
             rotateYBy(3 * ROTATE_SINGLE_STEP_DEGREES);
         }
         else if (KEY_WIREFRAME_TOGGLE.equals(key)) {
-            drawMode.set(drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+            final DrawMode mode = drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL;
+            drawMode.set(mode);
         }
         else if (KEY_AUTOPLAY_TOGGLE.equals(key)) {
             toggleAutoRotate();
+            if (rotateAnimation.getStatus() == Animation.Status.PAUSED) {
+                flash("Autorotate paused");
+            } else {
+                flash("Autorotate started");
+            }
         }
     }
 
