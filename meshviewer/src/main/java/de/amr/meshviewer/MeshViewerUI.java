@@ -55,8 +55,8 @@ public class MeshViewerUI {
     public static final String KEY_AUTOPLAY_TOGGLE = " ";
     public static final String KEY_WIREFRAME_TOGGLE = "w";
 
-    public static final Color FOCUSSED_COLOR = Color.gray(0.66);
-    public static final Color UNFOCUSSED_COLOR = Color.gray(0.5);
+    public static final Color FOCUSSED_COLOR   = Color.gray(0.66);
+    public static final Color UNFOCUSSED_COLOR = Color.gray(0.33);
 
     public static final int ROTATE_SINGLE_STEP_DEGREES = 10;
 
