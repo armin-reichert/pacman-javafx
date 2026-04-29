@@ -15,21 +15,17 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
-import javafx.geometry.Side;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -61,9 +57,6 @@ public class MeshViewerUI {
 
     public static final Color FOCUSSED_COLOR = Color.gray(0.66);
     public static final Color UNFOCUSSED_COLOR = Color.gray(0.5);
-
-    public static final Font SOURCE_FONT = Font.font("Consolas", FontWeight.NORMAL, 14);
-    public static final String SOURCE_STYLE = "-fx-control-inner-background:#222; -fx-text-fill:#f0f0f0";
 
     public static final int ROTATE_SINGLE_STEP_DEGREES = 10;
 
@@ -145,30 +138,12 @@ public class MeshViewerUI {
         navigationPane.setMinWidth(300);
         navigationPane.setMaxWidth(300);
 
-        Tab previewTab = new Tab("Preview");
-        previewTab.setClosable(false);
-        previewTab.setContent(previewArea);
-
-        Tab objSourceTab = new Tab("Source");
-        objSourceTab.setClosable(false);
-        TextArea sourceView = createSourceView();
-        objSourceTab.setContent(sourceView);
-
-        TabPane tabPane = new TabPane(previewTab, objSourceTab);
-        tabPane.setSide(Side.BOTTOM);
-        tabPane.getSelectionModel().selectedItemProperty().addListener((_, _, selection) -> {
-            Logger.debug("Selected tab: {}", selection);
-            if (selection == previewTab) {
-                Platform.runLater(previewSubScene::requestFocus);
-            }
-        });
-
         final MenuBar menuBar = createMenus(stage);
 
         final BorderPane rootPane = new BorderPane();
         rootPane.setTop(menuBar);
         rootPane.setLeft(navigationPane);
-        rootPane.setCenter(tabPane);
+        rootPane.setCenter(previewArea);
 
         final Scene scene = new Scene(rootPane);
         stage.setScene(scene);
@@ -196,7 +171,6 @@ public class MeshViewerUI {
         } catch (IOException x) {
             Logger.error(x, "Cannot show OBJ model, file={}", objFile);
         }
-
     }
 
     public void showObjModel(URL url) {
@@ -291,18 +265,6 @@ public class MeshViewerUI {
         fillLight.setTranslateZ(-300);
 
         parent.getChildren().addAll(ambient, keyLight, fillLight);
-    }
-
-    private TextArea createSourceView() {
-        final var sourceView = new TextArea();
-        sourceView.setEditable(false);
-        sourceView.setWrapText(false);
-        sourceView.setPrefWidth(600);
-        sourceView.setPrefHeight(800);
-        sourceView.setFont(SOURCE_FONT);
-        sourceView.setStyle(SOURCE_STYLE);
-        sourceView.textProperty().bind(objModel.map(ObjModel::source));
-        return sourceView;
     }
 
     private void createAutoRotateAnimation() {
