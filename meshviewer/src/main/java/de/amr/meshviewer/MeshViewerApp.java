@@ -25,11 +25,10 @@ public class MeshViewerApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        MeshViewerUI ui = new MeshViewerUI(stage);
+        final MeshViewerUI ui = new MeshViewerUI(stage);
         for (SampleModel sample : SAMPLES) {
             ui.addSampleModel(sample);
         }
-        ui.startAutoRotate();
         ui.show();
     }
 }
