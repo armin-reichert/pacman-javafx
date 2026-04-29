@@ -74,6 +74,9 @@ public class MeshViewerUI {
     public static final int ZOOM_MIN = -1000;
     public static final int ZOOM_MAX = -2;
 
+    public static final double ZOOM_RATE_NORMAL = 0.02;
+    public static final double ZOOM_RATE_LARGE = 0.5;
+
     private final ObjectProperty<ObjModel> objModel = new SimpleObjectProperty<>(new ObjModel());
 
     private final Rotate rotateX = new Rotate(DEFAULT_ANGLE_X, Rotate.X_AXIS);
@@ -240,6 +243,29 @@ public class MeshViewerUI {
         selectFirstObjectNodeInTree();
     }
 
+    // display
+
+    private void displayMeshView(MeshView meshView) {
+        if (meshView == null) return;
+
+        meshView.setCullFace(CullFace.NONE);
+        meshView.drawModeProperty().bind(drawMode);
+
+        //TODO reconsider
+        meshView.getTransforms().clear();
+        center(meshView);
+
+        Group pivot = new Group(meshView);
+        center(pivot);
+
+        // Flip around x-axis (otherwise many objects are upside-down initially)
+        final var flipUpsideDown = new Rotate(180, Rotate.X_AXIS);
+        pivot.getTransforms().addAll(flipUpsideDown, rotateX, rotateY, autoRotateX, autoRotateY);
+
+        world.getChildren().setAll(pivot);
+        previewSubScene.requestFocus();
+    }
+
     // create UI
 
     private void addLights(Group parent) {
@@ -345,9 +371,8 @@ public class MeshViewerUI {
 
         navigationTreeView.getSelectionModel().selectedItemProperty().addListener((_, _, item) -> {
             if (item == null) return;
-            Logger.info("Selected node: {}", item.getValue());
             if (item.getValue() instanceof MeshNode meshNode) {
-                previewMeshView(meshNode.meshView);
+                displayMeshView(meshNode.meshView);
             }
         });
 
@@ -419,29 +444,34 @@ public class MeshViewerUI {
     private void setPreviewControlHandlers() {
         previewSubScene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
-                case PLUS  -> zoom(1);
-                case MINUS -> zoom(-1);
+                case PLUS  -> {
+                    zoomBy(1);
+                    e.consume();
+                }
+                case MINUS -> {
+                    zoomBy(-1);
+                    e.consume();
+                }
                 case LEFT  -> {
-                    rotateY(-1);
+                    rotateYBy(-1);
                     e.consume(); // do not deliver event to tab pane
                 }
                 case RIGHT -> {
-                    rotateY(1);
+                    rotateYBy(1);
                     e.consume(); // do not deliver event to tab pane
                 }
                 case UP    -> {
-                    rotateX(-1);
+                    rotateXBy(-1);
                     e.consume(); // do not deliver event to tab pane
                 }
                 case DOWN  -> {
-                    rotateX(1);
+                    rotateXBy(1);
                     e.consume(); // do not deliver event to tab pane
                 }
             }
         });
-        previewSubScene.setOnKeyTyped(e -> {
-            handlePreviewKeyTyped(e.getCharacter());
-        });
+
+        previewSubScene.setOnKeyTyped(e -> onKeyTypedInPreview(e.getCharacter()));
 
         previewSubScene.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
@@ -463,9 +493,9 @@ public class MeshViewerUI {
             boolean shift = e.isShiftDown();
             if (e.getButton() == MouseButton.PRIMARY) {
                 if (shift) {
-                    rotateX(-dx * 1.5);
+                    rotateXBy(-dx * 1.5);
                 } else {
-                    rotateY(-dy * 1.5);
+                    rotateYBy(-dy * 1.5);
                 }
             }
 
@@ -473,10 +503,13 @@ public class MeshViewerUI {
             mouseOldY = e.getSceneY();
         });
 
-        previewSubScene.setOnScroll(e -> zoom(e.getDeltaY() * 0.02));
+        previewSubScene.setOnScroll(e -> {
+            final double rate = e.isShiftDown() ? ZOOM_RATE_LARGE : ZOOM_RATE_NORMAL;
+            zoomBy(e.getDeltaY() * rate);
+        });
     }
 
-    private void handlePreviewKeyTyped(String key) {
+    private void onKeyTypedInPreview(String key) {
         if (KEY_AUTO_ROTATE_HORIZONTALLY.equals(key)) {
             autoRotateAxis = Rotate.Y_AXIS;
         }
@@ -484,26 +517,22 @@ public class MeshViewerUI {
             autoRotateAxis = Rotate.X_AXIS;
         }
         else if (KEY_ROTATE_LEFT.equals(key)) {
-            final int angle = -ROTATE_SINGLE_STEP_DEGREES;
-            rotateY(angle);
+            rotateYBy(-ROTATE_SINGLE_STEP_DEGREES);
         }
         else if (KEY_ROTATE_LEFT_LARGE.equals(key)) {
-            final int angle = -3 * ROTATE_SINGLE_STEP_DEGREES;
-            rotateY(angle);
+            rotateYBy(-3 * ROTATE_SINGLE_STEP_DEGREES);
         }
         else if (KEY_ROTATE_RIGHT.equals(key)) {
-            final int angle = ROTATE_SINGLE_STEP_DEGREES;
-            rotateY(angle);
+            rotateYBy(ROTATE_SINGLE_STEP_DEGREES);
         }
         else if (KEY_ROTATE_RIGHT_LARGE.equals(key)) {
-            final int angle = 3 * ROTATE_SINGLE_STEP_DEGREES;
-            rotateY(angle);
+            rotateYBy(3 * ROTATE_SINGLE_STEP_DEGREES);
         }
         else if (KEY_WIREFRAME_TOGGLE.equals(key)) {
             drawMode.set(drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
         }
         else if (KEY_AUTOPLAY_TOGGLE.equals(key)) {
-            toggleAutoplay();
+            toggleAutoRotate();
         }
     }
 
@@ -543,21 +572,21 @@ public class MeshViewerUI {
         });
     }
 
-    private void zoom(double delta) {
+    private void zoomBy(double delta) {
         double z = Math.clamp(zoom.getZ() + delta, ZOOM_MIN, ZOOM_MAX);
         zoom.setZ(z);
         Logger.info("Zoom: " + z);
     }
 
-    private void rotateX(double delta) {
+    private void rotateXBy(double delta) {
         rotateX.setAngle((rotateX.getAngle() + delta) % 360);
     }
 
-    private void rotateY(double delta) {
+    private void rotateYBy(double delta) {
         rotateY.setAngle((rotateY.getAngle() + delta) % 360);
     }
 
-    public void startAutoplay() {
+    public void startAutoRotate() {
         if (rotateAnimation == null) {
             createAutoRotateAnimation();
         }
@@ -565,41 +594,19 @@ public class MeshViewerUI {
         Logger.info("Autorotate started");
     }
 
-    public void pauseAutoplay() {
+    public void pauseAutoRotate() {
         if (rotateAnimation == null) {
             createAutoRotateAnimation();
         }
         rotateAnimation.pause();
         Logger.info("Autorotate paused");
-
     }
 
-    private void toggleAutoplay() {
+    private void toggleAutoRotate() {
         if (rotateAnimation.getStatus() == Animation.Status.RUNNING) {
-            pauseAutoplay();
+            pauseAutoRotate();
         } else {
-            startAutoplay();
+            startAutoRotate();
         }
-    }
-
-    private void previewMeshView(MeshView meshView) {
-        if (meshView == null) return;
-
-        meshView.setCullFace(CullFace.NONE);
-        meshView.drawModeProperty().bind(drawMode);
-
-        //TODO reconsider
-        meshView.getTransforms().clear();
-        center(meshView);
-
-        Group pivot = new Group(meshView);
-        center(pivot);
-
-        // Flip around x-axis (otherwise many objects are upside-down initially)
-        final var flipUpsideDown = new Rotate(180, Rotate.X_AXIS);
-        pivot.getTransforms().addAll(flipUpsideDown, rotateX, rotateY, autoRotateX, autoRotateY);
-
-        world.getChildren().setAll(pivot);
-        previewSubScene.requestFocus();
     }
 }

@@ -29,7 +29,7 @@ public class MeshViewerApp extends Application {
         for (SampleModel sample : SAMPLES) {
             ui.addSampleModel(sample);
         }
-        ui.startAutoplay();
+        ui.startAutoRotate();
         ui.show();
     }
 }
