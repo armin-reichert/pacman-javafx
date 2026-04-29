@@ -49,11 +49,22 @@ import java.util.Map;
 
 public class MeshViewerUI {
 
+    public static final String KEY_AUTO_ROTATE_HORIZONTALLY = "h";
+    public static final String KEY_AUTO_ROTATE_VERTICALLY = "v";
+    public static final String KEY_ROTATE_LEFT = "l";
+    public static final String KEY_ROTATE_LEFT_LARGE = "L";
+    public static final String KEY_ROTATE_RIGHT = "r";
+    public static final String KEY_ROTATE_RIGHT_LARGE = "R";
+    public static final String KEY_AUTOPLAY_TOGGLE = " ";
+    public static final String KEY_WIREFRAME_TOGGLE = "w";
+
     public static final Color FOCUSSED_COLOR = Color.gray(0.66);
     public static final Color UNFOCUSSED_COLOR = Color.gray(0.5);
 
     public static final Font SOURCE_FONT = Font.font("Consolas", FontWeight.NORMAL, 14);
     public static final String SOURCE_STYLE = "-fx-control-inner-background:#222; -fx-text-fill:#f0f0f0";
+
+    public static final int ROTATE_SINGLE_STEP_DEGREES = 10;
 
     public static final int DEFAULT_ANGLE_X = 0;
     public static final int DEFAULT_ANGLE_Y = 0;
@@ -429,16 +440,7 @@ public class MeshViewerUI {
             }
         });
         previewSubScene.setOnKeyTyped(e -> {
-            switch (e.getCharacter()) {
-                case "l" -> rotateY(-15);
-                case "r" -> rotateY(15);
-                case "L" -> rotateX(-15);
-                case "R" -> rotateX(15);
-                case "x" -> autoRotateAxis = Rotate.X_AXIS;
-                case "y" -> autoRotateAxis = Rotate.Y_AXIS;
-                case "w" -> drawMode.set(drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
-                case " " -> toggleAutoplay();
-            }
+            handlePreviewKeyTyped(e.getCharacter());
         });
 
         previewSubScene.setOnMouseClicked(e -> {
@@ -472,6 +474,37 @@ public class MeshViewerUI {
         });
 
         previewSubScene.setOnScroll(e -> zoom(e.getDeltaY() * 0.02));
+    }
+
+    private void handlePreviewKeyTyped(String key) {
+        if (KEY_AUTO_ROTATE_HORIZONTALLY.equals(key)) {
+            autoRotateAxis = Rotate.Y_AXIS;
+        }
+        else if (KEY_AUTO_ROTATE_VERTICALLY.equals(key)) {
+            autoRotateAxis = Rotate.X_AXIS;
+        }
+        else if (KEY_ROTATE_LEFT.equals(key)) {
+            final int angle = -ROTATE_SINGLE_STEP_DEGREES;
+            rotateY(angle);
+        }
+        else if (KEY_ROTATE_LEFT_LARGE.equals(key)) {
+            final int angle = -3 * ROTATE_SINGLE_STEP_DEGREES;
+            rotateY(angle);
+        }
+        else if (KEY_ROTATE_RIGHT.equals(key)) {
+            final int angle = ROTATE_SINGLE_STEP_DEGREES;
+            rotateY(angle);
+        }
+        else if (KEY_ROTATE_RIGHT_LARGE.equals(key)) {
+            final int angle = 3 * ROTATE_SINGLE_STEP_DEGREES;
+            rotateY(angle);
+        }
+        else if (KEY_WIREFRAME_TOGGLE.equals(key)) {
+            drawMode.set(drawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+        }
+        else if (KEY_AUTOPLAY_TOGGLE.equals(key)) {
+            toggleAutoplay();
+        }
     }
 
     private void addFileDropSupport(Scene scene) {
