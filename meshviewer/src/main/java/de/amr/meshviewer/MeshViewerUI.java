@@ -73,6 +73,9 @@ public class MeshViewerUI {
 
     private final ObjectProperty<ObjModel> objModel = new SimpleObjectProperty<>(new ObjModel());
 
+    // Flip around x-axis (otherwise many objects are upside-down initially)
+    private final Rotate flipUpsideDown = new Rotate(180, Rotate.X_AXIS);
+
     private final Rotate rotateX = new Rotate(DEFAULT_ANGLE_X, Rotate.X_AXIS);
     private final Rotate rotateY = new Rotate(DEFAULT_ANGLE_Y, Rotate.Y_AXIS);
 
@@ -223,8 +226,8 @@ public class MeshViewerUI {
         final var parser = new ObjFileParser(objFileURL, StandardCharsets.UTF_8);
         final long start = System.nanoTime();
         final ObjModel parsedModel = parser.parse();
-        final long durationNanos = System.nanoTime() - start;
-        parsingTime.set(Duration.seconds(durationNanos / 1_000_000_000.0));
+        final long millis = (System.nanoTime() - start) / 1_000_000;
+        parsingTime.set(Duration.millis(millis));
         objModel.set(parsedModel);
     }
 
@@ -251,8 +254,6 @@ public class MeshViewerUI {
         pivot = new Group(meshView);
         center(pivot);
 
-        // Flip around x-axis (otherwise many objects are upside-down initially)
-        final var flipUpsideDown = new Rotate(180, Rotate.X_AXIS);
         pivot.getTransforms().addAll(flipUpsideDown, rotateX, rotateY, autoRotateX, autoRotateY);
 
         world.getChildren().setAll(pivot);
