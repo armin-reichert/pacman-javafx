@@ -14,19 +14,18 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
-import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.FileChooser;
@@ -43,6 +42,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class MeshViewerUI {
 
@@ -71,6 +71,84 @@ public class MeshViewerUI {
     public static final double ZOOM_RATE_NORMAL = 0.02;
     public static final double ZOOM_RATE_LARGE = 0.5;
 
+
+    public class ObjModelInfoPanel extends GridPane {
+
+        private final Label lblVertices = new Label();
+        private final Label lblTexCoords = new Label();
+        private final Label lblNormals = new Label();
+        private final Label lblObjects = new Label();
+        private final Label lblGroups = new Label();
+        private final Label lblFaces = new Label();
+        private final Label lblSmoothingGroups = new Label();
+        private final Label lblMaterials = new Label();
+        private final Label lblLoadingTime = new Label();
+
+        public ObjModelInfoPanel() {
+            setHgap(10);
+            setVgap(6);
+            setPadding(new Insets(10));
+
+            addRow(0, new Label("Vertices:"), lblVertices);
+            addRow(1, new Label("TexCoords:"), lblTexCoords);
+            addRow(2, new Label("Normals:"), lblNormals);
+            addRow(3, new Label("Objects:"), lblObjects);
+            addRow(4, new Label("Groups:"), lblGroups);
+            addRow(5, new Label("Faces:"), lblFaces);
+            addRow(6, new Label("Smoothing Groups:"), lblSmoothingGroups);
+            addRow(7, new Label("Materials:"), lblMaterials);
+            addRow(8, new Label("LoadingTime:"), lblLoadingTime);
+        }
+
+        public void update(ObjModel model) {
+            if (model == null) {
+                lblVertices.setText("-");
+                lblTexCoords.setText("-");
+                lblNormals.setText("-");
+                lblObjects.setText("-");
+                lblGroups.setText("-");
+                lblFaces.setText("-");
+                lblSmoothingGroups.setText("-");
+                lblMaterials.setText("-");
+                lblLoadingTime.setText("-");
+                return;
+            }
+
+            lblVertices.setText(String.valueOf(model.vertexCount()));
+            lblTexCoords.setText(String.valueOf(model.texCoordCount()));
+            lblNormals.setText(String.valueOf(model.normalCount()));
+
+            lblObjects.setText(String.valueOf(model.objects.size()));
+
+            int groupCount = model.objects.stream()
+                .mapToInt(o -> o.groups.size())
+                .sum();
+            lblGroups.setText(String.valueOf(groupCount));
+
+            int faceCount = model.objects.stream()
+                .flatMap(o -> o.groups.stream())
+                .mapToInt(g -> g.faces.size())
+                .sum();
+            lblFaces.setText(String.valueOf(faceCount));
+
+            long smoothingGroups = model.objects.stream()
+                .flatMap(o -> o.groups.stream())
+                .flatMap(g -> g.faces.stream())
+                .map(f -> f.smoothingGroup)
+                .filter(Objects::nonNull)
+                .distinct()
+                .count();
+            lblSmoothingGroups.setText(String.valueOf(smoothingGroups));
+
+            int materialCount = model.materialLibsMap.values().stream()
+                .mapToInt(Map::size)
+                .sum();
+            lblMaterials.setText(String.valueOf(materialCount));
+
+            lblLoadingTime.setText("%.3f sec".formatted(loadingTime.get().toSeconds()));
+        }
+    }
+
     private final ObjectProperty<ObjModel> objModel = new SimpleObjectProperty<>();
 
     // Flip around x-axis (otherwise many objects are upside-down initially)
@@ -82,13 +160,14 @@ public class MeshViewerUI {
     private final Translate camZoom = new Translate(0, 0, DEFAULT_ZOOM);
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
-    private final ObjectProperty<Duration> parsingTime = new SimpleObjectProperty<>(Duration.ZERO);
+    private final ObjectProperty<Duration> loadingTime = new SimpleObjectProperty<>(Duration.ZERO);
 
     private final Stage stage;
     private final Group world;
     private final FlashMessageOverlay flashMessageOverlay;
     private final SubScene previewSubScene;
     private final BorderPane navigationPane;
+    private final ObjModelInfoPanel modelInfo;
     private final FileChooser fileChooser;
 
     private Group pivot;
@@ -144,11 +223,17 @@ public class MeshViewerUI {
         navigationPane.setMinWidth(300);
         navigationPane.setMaxWidth(300);
 
+        modelInfo = new ObjModelInfoPanel();
+
+        VBox leftPane = new VBox(navigationPane, modelInfo);
+        VBox.setVgrow(navigationPane, Priority.ALWAYS);
+
         final MenuBar menuBar = createMenus(stage);
 
         final BorderPane rootPane = new BorderPane();
         rootPane.setTop(menuBar);
-        rootPane.setLeft(navigationPane);
+
+        rootPane.setLeft(leftPane);
         rootPane.setCenter(previewArea);
 
         final Scene scene = new Scene(rootPane);
@@ -160,10 +245,13 @@ public class MeshViewerUI {
         addFileDropSupport(scene);
 
         objModel.addListener((_, _, newModel) -> {
-            final String url = newModel.url();
-            final String title = URLDecoder.decode(url.substring(url.lastIndexOf('/') + 1), StandardCharsets.UTF_8);
-            updateNavigationPane(title);
-            selectFirstObjectNodeInTree();
+            if (newModel != null) {
+                final String url = newModel.url();
+                final String title = URLDecoder.decode(url.substring(url.lastIndexOf('/') + 1), StandardCharsets.UTF_8);
+                updateNavigationPane(title);
+                selectFirstObjectNodeInTree();
+                modelInfo.update(newModel);
+            }
         });
     }
 
@@ -232,7 +320,7 @@ public class MeshViewerUI {
         final long start = System.nanoTime();
         final ObjModel parsedModel = parser.parse();
         final long millis = (System.nanoTime() - start) / 1_000_000;
-        parsingTime.set(Duration.millis(millis));
+        loadingTime.set(Duration.millis(millis));
         objModel.set(parsedModel);
     }
 
@@ -378,11 +466,6 @@ public class MeshViewerUI {
         });
 
         navigationPane.setCenter(navigationTreeView);
-
-
-        final Text parsingTimeText = new Text();
-        parsingTimeText.textProperty().bind(parsingTime.map(duration -> "Loading time: %.3f sec".formatted(duration.toSeconds())));
-        navigationPane.setBottom(parsingTimeText);
     }
 
     private void addSubTree(TreeItem<NavigationTreeNode> parentTreeItem, Map<String, MeshView> meshViews, String title) {
