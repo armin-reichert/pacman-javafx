@@ -170,13 +170,23 @@ public class MeshViewerUI {
         Platform.runLater(previewSubScene::requestFocus);
     }
 
+    public void showObjModel(File objFile) {
+        try {
+            showObjModel(objFile.toURI().toURL());
+            workDir = objFile.getParentFile();
+        } catch (IOException x) {
+            Logger.error(x, "Cannot show OBJ model, file={}", objFile);
+        }
+
+    }
+
     public void showObjModel(URL url) {
         try {
-            loadMeshesFromURL(url);
+            loadModelFromURL(url);
             selectFirstObjectNodeInTree();
             resetTransforms();
         } catch (Exception x) {
-            Logger.error(x, "Could not load OBJ model, URL={}", url);
+            Logger.error(x, "Cannot show OBJ model, URL={}", url);
         }
     }
 
@@ -202,26 +212,13 @@ public class MeshViewerUI {
         }
     }
 
-    // load data
-
-    private void loadMeshesFromURL(URL objFileURL) throws IOException {
+    private void loadModelFromURL(URL objFileURL) throws IOException {
         final var parser = new ObjFileParser(objFileURL, StandardCharsets.UTF_8);
         final long start = System.nanoTime();
         final ObjModel parsedModel = parser.parse();
         final long durationNanos = System.nanoTime() - start;
         parsingTime.set(Duration.seconds(durationNanos / 1_000_000_000.0));
         objModel.set(parsedModel);
-    }
-
-    private boolean loadMeshesFromFile(File objFile) {
-        try {
-            loadMeshesFromURL(objFile.toURI().toURL());
-            workDir = objFile.getParentFile();
-            return true;
-        } catch (IOException x) {
-            Logger.error(x);
-            return false;
-        }
     }
 
     private void onObjModelChanged(ObjModel newModel) {
@@ -248,41 +245,6 @@ public class MeshViewerUI {
         fillLight.setTranslateZ(-300);
 
         parent.getChildren().addAll(ambient, keyLight, fillLight);
-    }
-
-    private void addFileDropSupport(Scene scene) {
-        // Accept file drag-over
-        scene.setOnDragOver(e -> {
-            if (e.getGestureSource() != scene && e.getDragboard().hasFiles()) {
-                e.acceptTransferModes(TransferMode.COPY);
-            } else {
-                // This seems to have no effect on Windows
-                e.acceptTransferModes(TransferMode.NONE);
-            }
-            e.consume();
-        });
-
-        // Handle file drop
-        scene.setOnDragDropped(e -> {
-            final Dragboard db = e.getDragboard();
-            boolean success = false;
-            if (db.hasFiles()) {
-                final File file = db.getFiles().getFirst();
-                // Only accept OBJ files
-                if (file.getName().toLowerCase().endsWith(".obj")) {
-                    success = loadMeshesFromFile(file);
-                }
-            }
-            e.setDropCompleted(success);
-            e.consume();
-            if (success) {
-                Platform.runLater(() -> {
-                    stage.toFront();
-                    stage.requestFocus();
-                    previewSubScene.requestFocus();
-                });
-            }
-        });
     }
 
     private TextArea createSourceView() {
@@ -325,7 +287,7 @@ public class MeshViewerUI {
             }
             final File objFile = fileChooser.showOpenDialog(stage);
             if (objFile != null) {
-                loadMeshesFromFile(objFile);
+                showObjModel(objFile);
             }
         });
 
@@ -510,6 +472,42 @@ public class MeshViewerUI {
         });
 
         previewSubScene.setOnScroll(e -> zoom(e.getDeltaY() * 0.02));
+    }
+
+    private void addFileDropSupport(Scene scene) {
+        // Accept file drag-over
+        scene.setOnDragOver(e -> {
+            if (e.getGestureSource() != scene && e.getDragboard().hasFiles()) {
+                e.acceptTransferModes(TransferMode.COPY);
+            } else {
+                // This seems to have no effect on Windows
+                e.acceptTransferModes(TransferMode.NONE);
+            }
+            e.consume();
+        });
+
+        // Handle file drop
+        scene.setOnDragDropped(e -> {
+            final Dragboard db = e.getDragboard();
+            boolean success = false;
+            if (db.hasFiles()) {
+                final File file = db.getFiles().getFirst();
+                // Only accept OBJ files
+                if (file.getName().toLowerCase().endsWith(".obj")) {
+                    success = true;
+                    showObjModel(file);
+                }
+            }
+            e.setDropCompleted(success);
+            e.consume();
+            if (success) {
+                Platform.runLater(() -> {
+                    stage.toFront();
+                    stage.requestFocus();
+                    previewSubScene.requestFocus();
+                });
+            }
+        });
     }
 
     private void zoom(double delta) {
