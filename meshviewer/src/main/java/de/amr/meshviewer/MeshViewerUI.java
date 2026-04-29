@@ -65,13 +65,13 @@ public class MeshViewerUI {
     public static final double AUTO_ROTATE_SPEED = 0.1;
 
     public static final int DEFAULT_ZOOM = -30;
-    public static final int ZOOM_MIN = -1000;
+    public static final int ZOOM_MIN = -10_000;
     public static final int ZOOM_MAX = -2;
 
     public static final double ZOOM_RATE_NORMAL = 0.02;
     public static final double ZOOM_RATE_LARGE = 0.5;
 
-    private final ObjectProperty<ObjModel> objModel = new SimpleObjectProperty<>(new ObjModel());
+    private final ObjectProperty<ObjModel> objModel = new SimpleObjectProperty<>();
 
     // Flip around x-axis (otherwise many objects are upside-down initially)
     private final Rotate flipUpsideDown = new Rotate(180, Rotate.X_AXIS);
@@ -383,8 +383,8 @@ public class MeshViewerUI {
         navigationPane.setCenter(navigationTreeView);
 
 
-        final Text parsingTimeText = new Text("Parsing time: xx.xxx sec");
-        parsingTimeText.textProperty().bind(parsingTime.map(duration -> "Parsing time: %.3f sec".formatted(duration.toSeconds())));
+        final Text parsingTimeText = new Text();
+        parsingTimeText.textProperty().bind(parsingTime.map(duration -> "Loading time: %.3f sec".formatted(duration.toSeconds())));
         navigationPane.setBottom(parsingTimeText);
     }
 
@@ -430,13 +430,17 @@ public class MeshViewerUI {
 
     private void setPreviewControlHandlers() {
         previewSubScene.setOnKeyPressed(e -> {
+            boolean shift = e.isShiftDown();
+            boolean control = e.isControlDown();
             switch (e.getCode()) {
                 case PLUS  -> {
-                    zoomBy(1);
+                    int rate = control && shift ? 100 : shift ? 10 : 1;
+                    zoomBy(rate);
                     e.consume();
                 }
                 case MINUS -> {
-                    zoomBy(-1);
+                    int rate = control && shift ? 100 : shift ? 10 : 1;
+                    zoomBy(-rate);
                     e.consume();
                 }
                 case LEFT  -> {

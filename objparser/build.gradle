@@ -7,6 +7,7 @@ plugins {
 }
 
 dependencies {
+    implementation('it.unimi.dsi:fastutil:8.5.12')
     implementation(libs.bundles.tinylog)
     testImplementation(libs.junit.jupiter.api)
     testRuntimeOnly(libs.junit.jupiter.engine)

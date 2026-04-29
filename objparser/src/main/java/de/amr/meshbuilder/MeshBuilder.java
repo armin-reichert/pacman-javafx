@@ -32,7 +32,7 @@ public class MeshBuilder {
 
         // Flatten material libraries
         materials = new HashMap<>();
-        for (Map<String, ObjMaterial> lib : model.materialLibsMap().values()) {
+        for (Map<String, ObjMaterial> lib : model.materialLibsMap.values()) {
             lib.forEach((name, material) -> materials.put(name, createPhongMaterial(material)));
         }
     }
@@ -63,7 +63,7 @@ public class MeshBuilder {
     public Map<String, MeshView> buildMeshViewsByGroup() {
         Map<String, MeshView> result = new LinkedHashMap<>();
 
-        for (ObjObject obj : model.objects()) {
+        for (ObjObject obj : model.objects) {
             for (ObjGroup group : obj.groups) {
 
                 String key = obj.name + "." + group.name;
@@ -86,7 +86,7 @@ public class MeshBuilder {
     public Map<String, MeshView> buildMeshViewsByObject() {
         Map<String, MeshView> result = new LinkedHashMap<>();
 
-        for (ObjObject obj : model.objects()) {
+        for (ObjObject obj : model.objects) {
 
             List<ObjFace> allFaces = new ArrayList<>();
             for (ObjGroup group : obj.groups) {
@@ -109,7 +109,7 @@ public class MeshBuilder {
     public Map<String, MeshView> buildMeshViewsByMaterial() {
         Map<String, List<ObjFace>> facesByMaterial = new LinkedHashMap<>();
 
-        for (ObjObject obj : model.objects()) {
+        for (ObjObject obj : model.objects) {
             for (ObjGroup group : obj.groups) {
                 for (ObjFace face : group.faces) {
                     facesByMaterial
@@ -173,15 +173,25 @@ public class MeshBuilder {
                 VertexKey key = new VertexKey(fv.vIndex, fv.vtIndex, fv.vnIndex);
 
                 int newIndex = vertexMap.computeIfAbsent(key, k -> {
-                    ObjVertex v = model.vertices().get(k.v);
-                    points.add(v.x());
-                    points.add(v.y());
-                    points.add(v.z());
 
+                    // --- READ VERTEX FROM FASTUTIL FLOAT ARRAY ---
+                    int vIndex = k.v * 3;
+                    float vx = model.vertices.getFloat(vIndex);
+                    float vy = model.vertices.getFloat(vIndex + 1);
+                    float vz = model.vertices.getFloat(vIndex + 2);
+
+                    points.add(vx);
+                    points.add(vy);
+                    points.add(vz);
+
+                    // --- READ TEXCOORD FROM FASTUTIL FLOAT ARRAY ---
                     if (k.vt >= 0) {
-                        ObjTexCoord tc = model.texCoords().get(k.vt);
-                        texCoords.add(tc.u());
-                        texCoords.add(1 - tc.v());
+                        int tIndex = k.vt * 2;
+                        float u = model.texCoords.getFloat(tIndex);
+                        float v = model.texCoords.getFloat(tIndex + 1);
+
+                        texCoords.add(u);
+                        texCoords.add(1 - v); // JavaFX UV flip
                     } else {
                         texCoords.add(0f);
                         texCoords.add(0f);
@@ -205,6 +215,7 @@ public class MeshBuilder {
 
         return mesh;
     }
+
 
     /* -------------------------------------------------------------
      *  HELPERS

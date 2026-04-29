@@ -18,23 +18,158 @@ import java.util.Map;
 import static java.util.Objects.requireNonNull;
 
 /**
- * OBJ file parser created by Copilot AI.
+ * OBJ file parser (optimized with pre-scan and fast tokenizers).
  */
 public class ObjFileParser {
 
     public static final int SOURCE_LINES_LIMIT = 999;
 
+    /* -------------------------------------------------------------
+     *  SIZE INFO
+     * ------------------------------------------------------------- */
+
+    public record ObjSizeInfo(
+        long vertexCount,
+        long texCoordCount,
+        long normalCount,
+        long faceCount,
+        long faceIndexCount
+    ) {}
+
+    private ObjSizeInfo computeObjSizes(InputStream in) throws IOException {
+        long v = 0, vt = 0, vn = 0, f = 0, faceRefs = 0;
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, charset))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.isEmpty()) continue;
+
+                char c0 = line.charAt(0);
+                switch (c0) {
+                    case 'v' -> {
+                        if (line.startsWith("v ")) v++;
+                        else if (line.startsWith("vt ")) vt++;
+                        else if (line.startsWith("vn ")) vn++;
+                    }
+                    case 'f' -> {
+                        if (line.startsWith("f ")) {
+                            f++;
+                            faceRefs += countFaceReferences(line);
+                        }
+                    }
+                }
+            }
+        }
+
+        return new ObjSizeInfo(v, vt, vn, f, faceRefs);
+    }
+
+    private static int countFaceReferences(String line) {
+        int count = 0;
+        boolean inToken = false;
+        for (int i = 2; i < line.length(); i++) {
+            char c = line.charAt(i);
+            if (c == ' ') {
+                if (inToken) {
+                    count++;
+                    inToken = false;
+                }
+            } else {
+                inToken = true;
+            }
+        }
+        if (inToken) count++;
+        return count;
+    }
+
+    /* -------------------------------------------------------------
+     *  FAST TOKENIZERS
+     * ------------------------------------------------------------- */
+
+    private static final class FastSpaceTokenizer {
+        private String s;
+        private int len;
+        private int pos;
+
+        public void reset(String s) {
+            this.s = s;
+            this.len = s.length();
+            this.pos = 0;
+        }
+
+        public boolean hasNext() {
+            skipSpaces();
+            return pos < len;
+        }
+
+        public String next() {
+            skipSpaces();
+            int start = pos;
+            while (pos < len && s.charAt(pos) != ' ') {
+                pos++;
+            }
+            return s.substring(start, pos);
+        }
+
+        private void skipSpaces() {
+            while (pos < len && s.charAt(pos) == ' ') {
+                pos++;
+            }
+        }
+    }
+
+    private static final class FastFaceRefTokenizer {
+        // out = {v, vt, vn}
+        public void split(String ref, int[] out) {
+            int len = ref.length();
+            int part = 0;
+            int start = 0;
+
+            for (int i = 0; i < len; i++) {
+                if (ref.charAt(i) == '/') {
+                    out[part++] = parseInt(ref, start, i);
+                    start = i + 1;
+                }
+            }
+            out[part] = parseInt(ref, start, len);
+        }
+
+        private int parseInt(String s, int start, int end) {
+            if (start == end) return Integer.MIN_VALUE; // empty
+            int sign = 1;
+            int i = start;
+            if (s.charAt(i) == '-') {
+                sign = -1;
+                i++;
+            }
+            int val = 0;
+            while (i < end) {
+                val = val * 10 + (s.charAt(i) - '0');
+                i++;
+            }
+            return val * sign;
+        }
+    }
+
+    private final FastSpaceTokenizer spaceTok = new FastSpaceTokenizer();
+    private final FastFaceRefTokenizer faceTok = new FastFaceRefTokenizer();
+    private final int[] faceRef = new int[3];
+
+    /* -------------------------------------------------------------
+     *  TOKENIZER (line → keyword + args)
+     * ------------------------------------------------------------- */
+
     public enum ObjKeyword {
-        OBJECT            ("o"),
-        GROUP             ("g"),
-        MATERIAL_LIB      ("mtllib"),
-        MATERIAL_USAGE    ("usemtl"),
-        SMOOTHING_GROUP   ("s"),
-        VERTEX            ("v"),
-        VERTEX_NORMAL     ("vn"),
-        TEX_COORD         ("vt"),
-        FACE              ("f"),
-        UNKNOWN           ("");
+        OBJECT("o"),
+        GROUP("g"),
+        MATERIAL_LIB("mtllib"),
+        MATERIAL_USAGE("usemtl"),
+        SMOOTHING_GROUP("s"),
+        VERTEX("v"),
+        VERTEX_NORMAL("vn"),
+        TEX_COORD("vt"),
+        FACE("f"),
+        UNKNOWN("");
 
         private final String text;
 
@@ -82,9 +217,17 @@ public class ObjFileParser {
                     continue;
                 }
 
-                String[] parts = line.split("\\s+", 2);
-                String keyword = parts[0];
-                String args = parts.length > 1 ? parts[1].strip() : "";
+                // manual split into keyword + args (no regex)
+                int len = line.length();
+                int i = 0;
+                while (i < len && !Character.isWhitespace(line.charAt(i))) {
+                    i++;
+                }
+                String keyword = line.substring(0, i);
+                while (i < len && Character.isWhitespace(line.charAt(i))) {
+                    i++;
+                }
+                String args = i < len ? line.substring(i).strip() : "";
 
                 return new Token(keyword, args, lineNo);
             }
@@ -92,6 +235,10 @@ public class ObjFileParser {
             return null;
         }
     }
+
+    /* -------------------------------------------------------------
+     *  PARSER
+     * ------------------------------------------------------------- */
 
     private final URL objFileURL;
     private final Charset charset;
@@ -118,10 +265,29 @@ public class ObjFileParser {
                     case GROUP           -> parseGroup(objModel, token.args());
                     case SMOOTHING_GROUP -> parseSmoothingGroup(objModel, token.args());
                     case MATERIAL_USAGE  -> parseMaterialUsage(objModel, token.args());
-                    case VERTEX          -> objModel.vertices.add(parseVertex(token.args()));
-                    case TEX_COORD       -> objModel.texCoords.add(parseTexCoord(token.args()));
-                    case VERTEX_NORMAL   -> objModel.normals.add(parseNormal(token.args()));
-                    case FACE            -> parseFace(objModel, token.args());
+
+                    case VERTEX -> {
+                        ObjVertex v = parseVertex(token.args());
+                        objModel.vertices.add(v.x());
+                        objModel.vertices.add(v.y());
+                        objModel.vertices.add(v.z());
+                    }
+
+                    case TEX_COORD -> {
+                        ObjTexCoord tc = parseTexCoord(token.args());
+                        objModel.texCoords.add(tc.u());
+                        objModel.texCoords.add(tc.v());
+                    }
+
+                    case VERTEX_NORMAL -> {
+                        ObjNormal n = parseNormal(token.args());
+                        objModel.normals.add(n.x());
+                        objModel.normals.add(n.y());
+                        objModel.normals.add(n.z());
+                    }
+
+                    case FACE -> parseFace(objModel, token.args());
+
                     default -> Logger.warn("Unknown keyword '{}' at line {}", token.keyword().name(), token.lineNo());
                 }
             }
@@ -129,12 +295,25 @@ public class ObjFileParser {
         return objModel;
     }
 
-    private static ObjModel createEmptyModel(URL objFileURL, Charset charset) throws IOException {
+    /* -------------------------------------------------------------
+     *  MODEL CREATION WITH PRE-SCAN
+     * ------------------------------------------------------------- */
+
+    private ObjModel createEmptyModel(URL objFileURL, Charset charset) throws IOException {
+
+        // First pass: count geometry
+        ObjSizeInfo sizes;
+        try (InputStream stream = objFileURL.openStream()) {
+            sizes = computeObjSizes(stream);
+        }
+
+        // Count lines for metadata
         long lineCount;
         try (InputStream stream = objFileURL.openStream()) {
             lineCount = countLinesFast(stream);
         }
 
+        // Collect first N lines for debugging
         try (InputStream stream = objFileURL.openStream();
              var reader = new BufferedReader(new InputStreamReader(stream, charset))) {
 
@@ -143,20 +322,21 @@ public class ObjFileParser {
             for (; lineNo <= SOURCE_LINES_LIMIT; ++lineNo) {
                 final String line = reader.readLine();
                 if (line == null) {
-                    final ObjModel objModel = new ObjModel(lineCount);
-                    objModel.setUrl(objFileURL.toExternalForm());
-                    objModel.setSource(sb.toString());
-                    return objModel;
+                    ObjModel model = new ObjModel(sizes);
+                    model.setUrl(objFileURL.toExternalForm());
+                    model.setSource(sb.toString());
+                    return model;
                 }
                 sb.append(line).append("\n");
             }
             if (reader.readLine() != null) {
                 sb.append("... of ").append(lineCount).append(" lines total");
             }
-            final ObjModel objModel = new ObjModel(lineNo);
-            objModel.setUrl(objFileURL.toExternalForm());
-            objModel.setSource(sb.toString());
-            return objModel;
+
+            ObjModel model = new ObjModel(sizes);
+            model.setUrl(objFileURL.toExternalForm());
+            model.setSource(sb.toString());
+            return model;
         }
     }
 
@@ -202,7 +382,7 @@ public class ObjFileParser {
         Logger.debug("Material library URL: {}", libURL);
         try {
             @SuppressWarnings("deprecation")
-            final URL url = new URL(objFileURL, libName); // use this instead of URI to avoid issues with spaces in name
+            final URL url = new URL(objFileURL, libName); // avoid URI issues with spaces
             final ObjMtlFileParser parser = new ObjMtlFileParser();
             try (InputStream stream = url.openStream()) {
                 parser.parse(stream, charset);
@@ -266,29 +446,26 @@ public class ObjFileParser {
     }
 
     private ObjVertex parseVertex(String s) {
-        String[] parts = splitBySpace(s, 3);
-        return new ObjVertex(
-            Float.parseFloat(parts[0]),
-            Float.parseFloat(parts[1]),
-            Float.parseFloat(parts[2])
-        );
+        spaceTok.reset(s);
+        float x = Float.parseFloat(spaceTok.next());
+        float y = Float.parseFloat(spaceTok.next());
+        float z = Float.parseFloat(spaceTok.next());
+        return new ObjVertex(x, y, z);
     }
 
     private ObjTexCoord parseTexCoord(String s) {
-        String[] parts = splitBySpace(s, 3);
-        return new ObjTexCoord(
-            Float.parseFloat(parts[0]),
-            Float.parseFloat(parts[1])
-        );
+        spaceTok.reset(s);
+        float u = Float.parseFloat(spaceTok.next());
+        float v = Float.parseFloat(spaceTok.next());
+        return new ObjTexCoord(u, v);
     }
 
     private ObjNormal parseNormal(String s) {
-        String[] parts = splitBySpace(s, 3);
-        return new ObjNormal(
-            Float.parseFloat(parts[0]),
-            Float.parseFloat(parts[1]),
-            Float.parseFloat(parts[2])
-        );
+        spaceTok.reset(s);
+        float x = Float.parseFloat(spaceTok.next());
+        float y = Float.parseFloat(spaceTok.next());
+        float z = Float.parseFloat(spaceTok.next());
+        return new ObjNormal(x, y, z);
     }
 
     private void parseFace(ObjModel objModel, String args) {
@@ -299,10 +476,11 @@ public class ObjFileParser {
             parseGroup(objModel, "Group." + nextAnonName());
         }
 
-        String[] refs = args.split("\\s+");
         List<ObjFaceVertex> verts = new ArrayList<>();
 
-        for (String ref : refs) {
+        spaceTok.reset(args);
+        while (spaceTok.hasNext()) {
+            String ref = spaceTok.next();
             verts.add(parseFaceVertex(objModel, ref));
         }
 
@@ -310,21 +488,24 @@ public class ObjFileParser {
     }
 
     private ObjFaceVertex parseFaceVertex(ObjModel objModel, String ref) {
-        String[] parts = ref.split("/", -1);
+        faceTok.split(ref, faceRef);
 
-        int v  = parseIndex(parts[0], objModel.vertices.size());
-        int vt = parts.length > 1 && !parts[1].isEmpty()
-            ? parseIndex(parts[1], objModel.texCoords.size())
-            : -1;
-        int vn = parts.length > 2 && !parts[2].isEmpty()
-            ? parseIndex(parts[2], objModel.normals.size())
-            : -1;
+        int v  = parseIndex(faceRef[0], objModel.vertexCount());
+        int vt = faceRef[1] == Integer.MIN_VALUE ? -1 : parseIndex(faceRef[1], objModel.texCoordCount());
+        int vn = faceRef[2] == Integer.MIN_VALUE ? -1 : parseIndex(faceRef[2], objModel.normalCount());
 
         return new ObjFaceVertex(v, vt, vn);
     }
 
     private int parseIndex(String s, int size) {
         int idx = Integer.parseInt(s);
+        if (idx < 0) {
+            return size + idx;
+        }
+        return idx - 1;
+    }
+
+    private int parseIndex(int idx, int size) {
         if (idx < 0) {
             return size + idx;
         }
@@ -358,9 +539,5 @@ public class ObjFileParser {
 
     private String nextAnonName() {
         return "anon_" + anonMeshNameCount++;
-    }
-
-    private static String[] splitBySpace(String text, int n) {
-        return text.trim().split("\\s+", n);
     }
 }

@@ -1,40 +1,59 @@
-/*
- * Copyright (c) 2021-2026 Armin Reichert (MIT License)
- */
-
 package de.amr.objparser;
 
-import java.util.*;
+import it.unimi.dsi.fastutil.floats.FloatArrayList;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ObjModel {
-    Map<String, Map<String, ObjMaterial>> materialLibsMap = new HashMap<>();
 
-    final List<ObjObject> objects;
-    final List<ObjVertex> vertices;
-    final List<ObjTexCoord> texCoords;
-    final List<ObjNormal> normals;
+    // Geometry stored in fastutil primitive lists
+    public final FloatArrayList vertices;   // x,y,z,x,y,z,...
+    public final FloatArrayList texCoords;  // u,v,u,v,...
+    public final FloatArrayList normals;    // nx,ny,nz,...
 
-    String    source = "";
-    String    url;
+    // Object/group hierarchy (unchanged)
+    public final List<ObjObject> objects = new ArrayList<>();
 
-    ObjObject currentObject;
-    ObjGroup  currentGroup;
-    String    currentMaterialName;
-    Integer   currentSmoothingGroup;
+    // Material libraries
+    public final Map<String, Map<String, ObjMaterial>> materialLibsMap = new HashMap<>();
 
-    public ObjModel() {
-        this(50);
+    // Parsing state
+    public ObjObject currentObject;
+    public ObjGroup currentGroup;
+    public String currentMaterialName;
+    public Integer currentSmoothingGroup;
+
+    // Metadata
+    private String url;
+    private String source;
+
+    public ObjModel(ObjFileParser.ObjSizeInfo sizes) {
+
+        // Pre-allocate exact sizes (fastutil)
+        this.vertices  = new FloatArrayList((int) (sizes.vertexCount() * 3));
+        this.texCoords = new FloatArrayList((int) (sizes.texCoordCount() * 2));
+        this.normals   = new FloatArrayList((int) (sizes.normalCount() * 3));
+
+        // Objects and faces are created during parsing
+        this.currentObject = null;
+        this.currentGroup = null;
+        this.currentMaterialName = null;
+        this.currentSmoothingGroup = null;
     }
 
-    public ObjModel(long lineCount) {
-        objects = new ArrayList<>((int) Math.max(5, lineCount / 2000));
-        vertices = new ArrayList<>((int)(lineCount / 3));
-        texCoords = new ArrayList<>((int)(lineCount / 10));
-        normals = new ArrayList<>((int)(lineCount / 10));
-    }
+    /* -------------------------------------------------------------
+     * Metadata
+     * ------------------------------------------------------------- */
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String url() {
+        return url;
     }
 
     public void setSource(String source) {
@@ -45,23 +64,19 @@ public class ObjModel {
         return source;
     }
 
-    public String url() {
-        return url;
+    /* -------------------------------------------------------------
+     * Convenience API
+     * ------------------------------------------------------------- */
+
+    public int vertexCount() {
+        return vertices.size() / 3;
     }
 
-    public List<ObjVertex> vertices() {
-        return Collections.unmodifiableList(vertices);
+    public int texCoordCount() {
+        return texCoords.size() / 2;
     }
 
-    public List<ObjTexCoord> texCoords() {
-        return Collections.unmodifiableList(texCoords);
-    }
-
-    public List<ObjObject> objects() {
-        return Collections.unmodifiableList(objects);
-    }
-
-    public Map<String, Map<String, ObjMaterial>> materialLibsMap() {
-        return Collections.unmodifiableMap(materialLibsMap);
+    public int normalCount() {
+        return normals.size() / 3;
     }
 }
