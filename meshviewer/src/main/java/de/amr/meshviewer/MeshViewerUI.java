@@ -153,13 +153,18 @@ public class MeshViewerUI {
 
         final Scene scene = new Scene(rootPane);
         stage.setScene(scene);
-        stage.setTitle("OBJ Mesh Viewer");
+        stage.setTitle("JavaFX OBJ Mesh Viewer");
         stage.setWidth(width);
         stage.setHeight(height);
 
         addFileDropSupport(scene);
 
-        objModel.addListener((_, _, newObjModel) -> onObjModelChanged(newObjModel));
+        objModel.addListener((_, _, newModel) -> {
+            final String url = newModel.url();
+            final String title = URLDecoder.decode(url.substring(url.lastIndexOf('/') + 1), StandardCharsets.UTF_8);
+            updateNavigationPane(title);
+            selectFirstObjectNodeInTree();
+        });
     }
 
     public void show() {
@@ -229,14 +234,6 @@ public class MeshViewerUI {
         final long millis = (System.nanoTime() - start) / 1_000_000;
         parsingTime.set(Duration.millis(millis));
         objModel.set(parsedModel);
-    }
-
-    private void onObjModelChanged(ObjModel newModel) {
-        String url = newModel.url();
-        int lastSlash = url.lastIndexOf('/');
-        String title = URLDecoder.decode(url.substring(lastSlash + 1), StandardCharsets.UTF_8);
-        updateNavigationPane(title);
-        selectFirstObjectNodeInTree();
     }
 
     // display
@@ -432,15 +429,16 @@ public class MeshViewerUI {
         previewSubScene.setOnKeyPressed(e -> {
             boolean shift = e.isShiftDown();
             boolean control = e.isControlDown();
+            boolean control_shift = control && shift;
             switch (e.getCode()) {
                 case PLUS  -> {
-                    int rate = control && shift ? 100 : shift ? 10 : 1;
-                    zoomBy(rate);
+                    int delta = control_shift ? 100 : shift ? 10 : 1;
+                    zoomBy(delta);
                     e.consume();
                 }
                 case MINUS -> {
-                    int rate = control && shift ? 100 : shift ? 10 : 1;
-                    zoomBy(-rate);
+                    int delta = control_shift ? 100 : shift ? 10 : 1;
+                    zoomBy(-delta);
                     e.consume();
                 }
                 case LEFT  -> {
