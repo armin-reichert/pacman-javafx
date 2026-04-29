@@ -1,6 +1,3 @@
-/*
- * Copyright (c) 2021-2026 Armin Reichert (MIT License)
- */
 package de.amr.objparser;
 
 import org.tinylog.Logger;
@@ -13,12 +10,15 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
 /**
- * OBJ file parser (optimized with pre-scan and fast tokenizers).
+ * Fully optimized OBJ parser:
+ * - Pre-scan for exact sizes
+ * - Zero-allocation tokenizers
+ * - Fast float parser
+ * - Fastutil-compatible model
  */
 public class ObjFileParser {
 
@@ -83,6 +83,63 @@ public class ObjFileParser {
     }
 
     /* -------------------------------------------------------------
+     *  FAST FLOAT PARSER
+     * ------------------------------------------------------------- */
+
+    private static final class FastFloat {
+        public static float parse(String s, int start, int end) {
+            boolean neg = false;
+            int i = start;
+
+            if (i < end) {
+                char c = s.charAt(i);
+                if (c == '-') { neg = true; i++; }
+                else if (c == '+') i++;
+            }
+
+            double val = 0.0;
+
+            while (i < end) {
+                char c = s.charAt(i);
+                if (c < '0' || c > '9') break;
+                val = val * 10 + (c - '0');
+                i++;
+            }
+
+            if (i < end && s.charAt(i) == '.') {
+                i++;
+                double factor = 0.1;
+                while (i < end) {
+                    char c = s.charAt(i);
+                    if (c < '0' || c > '9') break;
+                    val += (c - '0') * factor;
+                    factor *= 0.1;
+                    i++;
+                }
+            }
+
+            if (i < end && (s.charAt(i) == 'e' || s.charAt(i) == 'E')) {
+                i++;
+                boolean expNeg = false;
+                if (i < end && s.charAt(i) == '-') { expNeg = true; i++; }
+                else if (i < end && s.charAt(i) == '+') i++;
+
+                int exp = 0;
+                while (i < end) {
+                    char c = s.charAt(i);
+                    if (c < '0' || c > '9') break;
+                    exp = exp * 10 + (c - '0');
+                    i++;
+                }
+
+                val = val * Math.pow(10, expNeg ? -exp : exp);
+            }
+
+            return neg ? (float)-val : (float)val;
+        }
+    }
+
+    /* -------------------------------------------------------------
      *  FAST TOKENIZERS
      * ------------------------------------------------------------- */
 
@@ -90,6 +147,8 @@ public class ObjFileParser {
         private String s;
         private int len;
         private int pos;
+        private int start;
+        private int end;
 
         public void reset(String s) {
             this.s = s;
@@ -97,29 +156,23 @@ public class ObjFileParser {
             this.pos = 0;
         }
 
-        public boolean hasNext() {
-            skipSpaces();
-            return pos < len;
+        public boolean next() {
+            while (pos < len && Character.isWhitespace(s.charAt(pos))) pos++;
+            if (pos >= len) return false;
+
+            start = pos;
+            while (pos < len && !Character.isWhitespace(s.charAt(pos))) pos++;
+            end = pos;
+            return true;
         }
 
-        public String next() {
-            skipSpaces();
-            int start = pos;
-            while (pos < len && s.charAt(pos) != ' ') {
-                pos++;
-            }
-            return s.substring(start, pos);
-        }
-
-        private void skipSpaces() {
-            while (pos < len && s.charAt(pos) == ' ') {
-                pos++;
-            }
-        }
+        public String source() { return s; }
+        public int tokenStart() { return start; }
+        public int tokenEnd() { return end; }
+        public String token() { return s.substring(start, end); }
     }
 
     private static final class FastFaceRefTokenizer {
-        // out = {v, vt, vn}
         public void split(String ref, int[] out) {
             int len = ref.length();
             int part = 0;
@@ -135,13 +188,10 @@ public class ObjFileParser {
         }
 
         private int parseInt(String s, int start, int end) {
-            if (start == end) return Integer.MIN_VALUE; // empty
+            if (start == end) return Integer.MIN_VALUE;
             int sign = 1;
             int i = start;
-            if (s.charAt(i) == '-') {
-                sign = -1;
-                i++;
-            }
+            if (s.charAt(i) == '-') { sign = -1; i++; }
             int val = 0;
             while (i < end) {
                 val = val * 10 + (s.charAt(i) - '0');
@@ -173,33 +223,21 @@ public class ObjFileParser {
 
         private final String text;
 
-        ObjKeyword(String text) {
-            this.text = text;
-        }
+        ObjKeyword(String text) { this.text = text; }
 
         static ObjKeyword fromText(String text) {
-            for (ObjKeyword keyword : values()) {
-                if (keyword.text.equals(text)) {
-                    return keyword;
-                }
-            }
+            for (ObjKeyword k : values()) if (k.text.equals(text)) return k;
             return UNKNOWN;
         }
     }
 
-    public record Token(ObjKeyword keyword, String args, int lineNo) {
-        public Token(String keyword, String args, int lineNo) {
-            this(ObjKeyword.fromText(keyword), args, lineNo);
-        }
-    }
+    public record Token(ObjKeyword keyword, String args, int lineNo) {}
 
     public static class Tokenizer {
         private final BufferedReader reader;
         private int lineNo = 0;
 
-        public Tokenizer(BufferedReader reader) {
-            this.reader = reader;
-        }
+        public Tokenizer(BufferedReader reader) { this.reader = reader; }
 
         public Token next() throws IOException {
             String line;
@@ -208,28 +246,20 @@ public class ObjFileParser {
                 lineNo++;
 
                 int hash = line.indexOf('#');
-                if (hash >= 0) {
-                    line = line.substring(0, hash);
-                }
+                if (hash >= 0) line = line.substring(0, hash);
 
                 line = line.strip();
-                if (line.isEmpty()) {
-                    continue;
-                }
+                if (line.isEmpty()) continue;
 
-                // manual split into keyword + args (no regex)
                 int len = line.length();
                 int i = 0;
-                while (i < len && !Character.isWhitespace(line.charAt(i))) {
-                    i++;
-                }
+                while (i < len && !Character.isWhitespace(line.charAt(i))) i++;
                 String keyword = line.substring(0, i);
-                while (i < len && Character.isWhitespace(line.charAt(i))) {
-                    i++;
-                }
-                String args = i < len ? line.substring(i).strip() : "";
 
-                return new Token(keyword, args, lineNo);
+                while (i < len && Character.isWhitespace(line.charAt(i))) i++;
+                String args = i < len ? line.substring(i) : "";
+
+                return new Token(ObjKeyword.fromText(keyword), args, lineNo);
             }
 
             return null;
@@ -245,7 +275,7 @@ public class ObjFileParser {
 
     private int anonMeshNameCount = 0;
 
-    public ObjFileParser(URL objFileURL, Charset charset) throws IOException {
+    public ObjFileParser(URL objFileURL, Charset charset) {
         this.objFileURL = requireNonNull(objFileURL);
         this.charset = requireNonNull(charset);
     }
@@ -258,6 +288,7 @@ public class ObjFileParser {
 
             Token token;
             final Tokenizer tokenizer = new Tokenizer(reader);
+
             while ((token = tokenizer.next()) != null) {
                 switch (token.keyword()) {
                     case MATERIAL_LIB    -> parseMaterialLibraryRef(objModel, token.args());
@@ -266,32 +297,17 @@ public class ObjFileParser {
                     case SMOOTHING_GROUP -> parseSmoothingGroup(objModel, token.args());
                     case MATERIAL_USAGE  -> parseMaterialUsage(objModel, token.args());
 
-                    case VERTEX -> {
-                        ObjVertex v = parseVertex(token.args());
-                        objModel.vertices.add(v.x());
-                        objModel.vertices.add(v.y());
-                        objModel.vertices.add(v.z());
-                    }
-
-                    case TEX_COORD -> {
-                        ObjTexCoord tc = parseTexCoord(token.args());
-                        objModel.texCoords.add(tc.u());
-                        objModel.texCoords.add(tc.v());
-                    }
-
-                    case VERTEX_NORMAL -> {
-                        ObjNormal n = parseNormal(token.args());
-                        objModel.normals.add(n.x());
-                        objModel.normals.add(n.y());
-                        objModel.normals.add(n.z());
-                    }
+                    case VERTEX -> parseVertexInto(objModel, token.args());
+                    case TEX_COORD -> parseTexCoordInto(objModel, token.args());
+                    case VERTEX_NORMAL -> parseNormalInto(objModel, token.args());
 
                     case FACE -> parseFace(objModel, token.args());
 
-                    default -> Logger.warn("Unknown keyword '{}' at line {}", token.keyword().name(), token.lineNo());
+                    default -> Logger.warn("Unknown keyword '{}' at line {}", token.keyword(), token.lineNo());
                 }
             }
         }
+
         return objModel;
     }
 
@@ -299,57 +315,42 @@ public class ObjFileParser {
      *  MODEL CREATION WITH PRE-SCAN
      * ------------------------------------------------------------- */
 
-    private ObjModel createEmptyModel(URL objFileURL, Charset charset) throws IOException {
-
-        // First pass: count geometry
+    private ObjModel createEmptyModel(URL url, Charset charset) throws IOException {
         ObjSizeInfo sizes;
-        try (InputStream stream = objFileURL.openStream()) {
+        try (InputStream stream = url.openStream()) {
             sizes = computeObjSizes(stream);
         }
 
-        // Count lines for metadata
         long lineCount;
-        try (InputStream stream = objFileURL.openStream()) {
+        try (InputStream stream = url.openStream()) {
             lineCount = countLinesFast(stream);
         }
 
-        // Collect first N lines for debugging
-        try (InputStream stream = objFileURL.openStream();
+        try (InputStream stream = url.openStream();
              var reader = new BufferedReader(new InputStreamReader(stream, charset))) {
 
             final StringBuilder sb = new StringBuilder();
             int lineNo = 1;
-            for (; lineNo <= SOURCE_LINES_LIMIT; ++lineNo) {
-                final String line = reader.readLine();
-                if (line == null) {
-                    ObjModel model = new ObjModel(sizes);
-                    model.setUrl(objFileURL.toExternalForm());
-                    model.setSource(sb.toString());
-                    return model;
-                }
+
+            for (; lineNo <= SOURCE_LINES_LIMIT; lineNo++) {
+                String line = reader.readLine();
+                if (line == null) break;
                 sb.append(line).append("\n");
-            }
-            if (reader.readLine() != null) {
-                sb.append("... of ").append(lineCount).append(" lines total");
             }
 
             ObjModel model = new ObjModel(sizes);
-            model.setUrl(objFileURL.toExternalForm());
+            model.setUrl(url.toExternalForm());
             model.setSource(sb.toString());
             return model;
         }
     }
 
     public static long countLinesFast(InputStream in) throws IOException {
-        byte[] buffer = new byte[8192];
+        byte[] buf = new byte[8192];
         long count = 0;
         int n;
-        while ((n = in.read(buffer)) != -1) {
-            for (int i = 0; i < n; i++) {
-                if (buffer[i] == '\n') {
-                    count++;
-                }
-            }
+        while ((n = in.read(buf)) != -1) {
+            for (int i = 0; i < n; i++) if (buf[i] == '\n') count++;
         }
         return count;
     }
@@ -359,38 +360,18 @@ public class ObjFileParser {
      * ------------------------------------------------------------- */
 
     private void parseMaterialLibraryRef(ObjModel objModel, String libName) {
-        if (objModel.materialLibsMap.containsKey(libName)) {
-            return;
-        }
-        Logger.debug("Material library found: '{}'", libName);
-        Map<String, ObjMaterial> lib = parseMaterialLibraryFile(libName);
-        if (lib != null && !lib.isEmpty()) {
-            objModel.materialLibsMap.put(libName, lib);
-            Logger.debug("Material library parsed: {}", libName);
-        }
-    }
+        if (objModel.materialLibsMap.containsKey(libName)) return;
 
-    private Map<String, ObjMaterial> parseMaterialLibraryFile(String libName) {
-        final String objFileURLString = objFileURL.toExternalForm();
-        final int endOfPath = objFileURLString.lastIndexOf('/');
-        if (endOfPath == -1) {
-            Logger.error("OBJ file URL has no path: {}", objFileURLString);
-            throw new RuntimeException();
-        }
-
-        final String libURL = objFileURLString.substring(0, endOfPath) + "/" + libName;
-        Logger.debug("Material library URL: {}", libURL);
         try {
             @SuppressWarnings("deprecation")
-            final URL url = new URL(objFileURL, libName); // avoid URI issues with spaces
-            final ObjMtlFileParser parser = new ObjMtlFileParser();
+            URL url = new URL(objFileURL, libName);
+            ObjMtlFileParser parser = new ObjMtlFileParser();
             try (InputStream stream = url.openStream()) {
                 parser.parse(stream, charset);
-                return parser.materialMap();
+                objModel.materialLibsMap.put(libName, parser.materialMap());
             }
         } catch (Exception x) {
-            Logger.warn(x, "Material library parsing failed: URL={}", libURL);
-            return Map.of();
+            Logger.warn(x, "Material library parsing failed: {}", libName);
         }
     }
 
@@ -398,142 +379,137 @@ public class ObjFileParser {
      *  PARSING HELPERS
      * ------------------------------------------------------------- */
 
-    private void parseObject(ObjModel objModel, String name) {
-        if (name.isEmpty()) {
-            name = "Object." + nextAnonName();
-        }
-
+    private void parseObject(ObjModel model, String name) {
+        if (name.isEmpty()) name = "Object." + nextAnonName();
         ObjObject obj = new ObjObject(name);
-        objModel.objects.add(obj);
-        objModel.currentObject = obj;
-        objModel.currentGroup = null;
-
-        Logger.debug("Object created: {}", name);
+        model.objects.add(obj);
+        model.currentObject = obj;
+        model.currentGroup = null;
     }
 
-    private void parseGroup(ObjModel objModel, String name) {
-        if (objModel.currentObject == null) {
-            parseObject(objModel, "Object." + nextAnonName());
-        }
-
-        if (name.isEmpty()) {
-            name = "Group." + nextAnonName();
-        }
-
+    private void parseGroup(ObjModel model, String name) {
+        if (model.currentObject == null) parseObject(model, "Object." + nextAnonName());
+        if (name.isEmpty()) name = "Group." + nextAnonName();
         ObjGroup group = new ObjGroup(name);
-        objModel.currentObject.groups.add(group);
-        objModel.currentGroup = group;
-
-        Logger.debug("Group created: {}", name);
+        model.currentObject.groups.add(group);
+        model.currentGroup = group;
     }
 
-    private void parseSmoothingGroup(ObjModel objModel, String args) {
-        if (args.equalsIgnoreCase("off") || args.equals("0")) {
-            objModel.currentSmoothingGroup = null;
+    private void parseSmoothingGroup(ObjModel model, String args) {
+        if (args.equals("off") || args.equals("0")) {
+            model.currentSmoothingGroup = null;
         } else {
             try {
-                objModel.currentSmoothingGroup = Integer.parseInt(args);
+                model.currentSmoothingGroup = Integer.parseInt(args);
             } catch (NumberFormatException e) {
-                Logger.error("Invalid smoothing group '{}'", args);
-                objModel.currentSmoothingGroup = null;
+                model.currentSmoothingGroup = null;
             }
         }
     }
 
-    private void parseMaterialUsage(ObjModel objModel, String name) {
-        objModel.currentMaterialName = name;
-        Logger.debug("Material usage: {}", name);
+    private void parseMaterialUsage(ObjModel model, String name) {
+        model.currentMaterialName = name;
     }
 
-    private ObjVertex parseVertex(String s) {
+    /* -------------------------------------------------------------
+     *  GEOMETRY PARSING (FAST FLOAT)
+     * ------------------------------------------------------------- */
+
+    private void parseVertexInto(ObjModel model, String s) {
         spaceTok.reset(s);
-        float x = Float.parseFloat(spaceTok.next());
-        float y = Float.parseFloat(spaceTok.next());
-        float z = Float.parseFloat(spaceTok.next());
-        return new ObjVertex(x, y, z);
+
+        spaceTok.next();
+        float x = FastFloat.parse(spaceTok.source(), spaceTok.tokenStart(), spaceTok.tokenEnd());
+
+        spaceTok.next();
+        float y = FastFloat.parse(spaceTok.source(), spaceTok.tokenStart(), spaceTok.tokenEnd());
+
+        spaceTok.next();
+        float z = FastFloat.parse(spaceTok.source(), spaceTok.tokenStart(), spaceTok.tokenEnd());
+
+        model.vertices.add(x);
+        model.vertices.add(y);
+        model.vertices.add(z);
     }
 
-    private ObjTexCoord parseTexCoord(String s) {
+    private void parseTexCoordInto(ObjModel model, String s) {
         spaceTok.reset(s);
-        float u = Float.parseFloat(spaceTok.next());
-        float v = Float.parseFloat(spaceTok.next());
-        return new ObjTexCoord(u, v);
+
+        spaceTok.next();
+        float u = FastFloat.parse(spaceTok.source(), spaceTok.tokenStart(), spaceTok.tokenEnd());
+
+        spaceTok.next();
+        float v = FastFloat.parse(spaceTok.source(), spaceTok.tokenStart(), spaceTok.tokenEnd());
+
+        model.texCoords.add(u);
+        model.texCoords.add(v);
     }
 
-    private ObjNormal parseNormal(String s) {
+    private void parseNormalInto(ObjModel model, String s) {
         spaceTok.reset(s);
-        float x = Float.parseFloat(spaceTok.next());
-        float y = Float.parseFloat(spaceTok.next());
-        float z = Float.parseFloat(spaceTok.next());
-        return new ObjNormal(x, y, z);
+
+        spaceTok.next();
+        float x = FastFloat.parse(spaceTok.source(), spaceTok.tokenStart(), spaceTok.tokenEnd());
+
+        spaceTok.next();
+        float y = FastFloat.parse(spaceTok.source(), spaceTok.tokenStart(), spaceTok.tokenEnd());
+
+        spaceTok.next();
+        float z = FastFloat.parse(spaceTok.source(), spaceTok.tokenStart(), spaceTok.tokenEnd());
+
+        model.normals.add(x);
+        model.normals.add(y);
+        model.normals.add(z);
     }
 
-    private void parseFace(ObjModel objModel, String args) {
-        if (objModel.currentObject == null) {
-            parseObject(objModel, "Object." + nextAnonName());
-        }
-        if (objModel.currentGroup == null) {
-            parseGroup(objModel, "Group." + nextAnonName());
-        }
+    /* -------------------------------------------------------------
+     *  FACE PARSING
+     * ------------------------------------------------------------- */
+
+    private void parseFace(ObjModel model, String args) {
+        if (model.currentObject == null) parseObject(model, "Object." + nextAnonName());
+        if (model.currentGroup == null) parseGroup(model, "Group." + nextAnonName());
 
         List<ObjFaceVertex> verts = new ArrayList<>();
 
         spaceTok.reset(args);
-        while (spaceTok.hasNext()) {
-            String ref = spaceTok.next();
-            verts.add(parseFaceVertex(objModel, ref));
+        while (spaceTok.next()) {
+            String ref = spaceTok.token();
+            verts.add(parseFaceVertex(model, ref));
         }
 
-        triangulateAndStoreFace(objModel, verts);
+        triangulate(model, verts);
     }
 
-    private ObjFaceVertex parseFaceVertex(ObjModel objModel, String ref) {
+    private ObjFaceVertex parseFaceVertex(ObjModel model, String ref) {
         faceTok.split(ref, faceRef);
 
-        int v  = parseIndex(faceRef[0], objModel.vertexCount());
-        int vt = faceRef[1] == Integer.MIN_VALUE ? -1 : parseIndex(faceRef[1], objModel.texCoordCount());
-        int vn = faceRef[2] == Integer.MIN_VALUE ? -1 : parseIndex(faceRef[2], objModel.normalCount());
+        int v  = parseIndex(faceRef[0], model.vertexCount());
+        int vt = faceRef[1] == Integer.MIN_VALUE ? -1 : parseIndex(faceRef[1], model.texCoordCount());
+        int vn = faceRef[2] == Integer.MIN_VALUE ? -1 : parseIndex(faceRef[2], model.normalCount());
 
         return new ObjFaceVertex(v, vt, vn);
     }
 
-    private int parseIndex(String s, int size) {
-        int idx = Integer.parseInt(s);
-        if (idx < 0) {
-            return size + idx;
-        }
-        return idx - 1;
-    }
-
     private int parseIndex(int idx, int size) {
-        if (idx < 0) {
-            return size + idx;
-        }
-        return idx - 1;
+        return idx < 0 ? size + idx : idx - 1;
     }
 
-    private void triangulateAndStoreFace(ObjModel objModel, List<ObjFaceVertex> vertices) {
-        if (vertices.size() < 3) {
-            Logger.error("Invalid face with <3 vertices");
-            return;
-        }
+    private void triangulate(ObjModel model, List<ObjFaceVertex> v) {
+        if (v.size() < 3) return;
 
-        ObjFaceVertex v0 = vertices.get(0);
+        ObjFaceVertex v0 = v.get(0);
 
-        for (int i = 1; i < vertices.size() - 1; i++) {
-            ObjFaceVertex v1 = vertices.get(i);
-            ObjFaceVertex v2 = vertices.get(i + 1);
+        for (int i = 1; i < v.size() - 1; i++) {
+            ObjFaceVertex v1 = v.get(i);
+            ObjFaceVertex v2 = v.get(i + 1);
 
-            ObjFace face = new ObjFace(
-                objModel.currentMaterialName,
-                objModel.currentSmoothingGroup
-            );
-
+            ObjFace face = new ObjFace(model.currentMaterialName, model.currentSmoothingGroup);
             face.vertices.add(v0);
             face.vertices.add(v1);
             face.vertices.add(v2);
 
-            objModel.currentGroup.faces.add(face);
+            model.currentGroup.faces.add(face);
         }
     }
 
