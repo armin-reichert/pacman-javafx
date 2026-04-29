@@ -39,10 +39,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.text.NumberFormat;
+import java.util.*;
 
 public class MeshViewerUI {
 
@@ -73,6 +71,8 @@ public class MeshViewerUI {
 
 
     public class ObjModelInfoPanel extends GridPane {
+
+        private static final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance(Locale.GERMANY);
 
         private final Label lblVertices = new Label();
         private final Label lblTexCoords = new Label();
@@ -114,22 +114,22 @@ public class MeshViewerUI {
                 return;
             }
 
-            lblVertices.setText(String.valueOf(model.vertexCount()));
-            lblTexCoords.setText(String.valueOf(model.texCoordCount()));
-            lblNormals.setText(String.valueOf(model.normalCount()));
+            lblVertices.setText(NUMBER_FORMAT.format(model.vertexCount()));
+            lblTexCoords.setText(NUMBER_FORMAT.format(model.texCoordCount()));
+            lblNormals.setText(NUMBER_FORMAT.format(model.normalCount()));
 
-            lblObjects.setText(String.valueOf(model.objects.size()));
+            lblObjects.setText(NUMBER_FORMAT.format(model.objects.size()));
 
             int groupCount = model.objects.stream()
                 .mapToInt(o -> o.groups.size())
                 .sum();
-            lblGroups.setText(String.valueOf(groupCount));
+            lblGroups.setText(NUMBER_FORMAT.format(groupCount));
 
             int faceCount = model.objects.stream()
                 .flatMap(o -> o.groups.stream())
                 .mapToInt(g -> g.faces.size())
                 .sum();
-            lblFaces.setText(String.valueOf(faceCount));
+            lblFaces.setText(NUMBER_FORMAT.format(faceCount));
 
             long smoothingGroups = model.objects.stream()
                 .flatMap(o -> o.groups.stream())
@@ -138,12 +138,12 @@ public class MeshViewerUI {
                 .filter(Objects::nonNull)
                 .distinct()
                 .count();
-            lblSmoothingGroups.setText(String.valueOf(smoothingGroups));
+            lblSmoothingGroups.setText(NUMBER_FORMAT.format(smoothingGroups));
 
             int materialCount = model.materialLibsMap.values().stream()
                 .mapToInt(Map::size)
                 .sum();
-            lblMaterials.setText(String.valueOf(materialCount));
+            lblMaterials.setText(NUMBER_FORMAT.format(materialCount));
 
             lblLoadingTime.setText("%.3f sec".formatted(loadingTime.get().toSeconds()));
         }
