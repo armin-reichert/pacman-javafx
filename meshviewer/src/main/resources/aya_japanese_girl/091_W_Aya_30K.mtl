@@ -1,5 +1,5 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# ì¬‚µ‚½ƒtƒ@ƒCƒ‹ : 05.11.2019 15:33:46
+# ï¿½ì¬ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½@ï¿½Cï¿½ï¿½ : 05.11.2019 15:33:46
 
 newmtl 091_W_Aya_2K_01
 	Ns 30.0000
@@ -12,5 +12,5 @@ newmtl 091_W_Aya_2K_01
 	Kd 1.0000 1.0000 1.0000
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka tex\091_W_Aya_2K_01.jpg
-	map_Kd tex\091_W_Aya_2K_01.jpg
+	map_Ka tex/091_W_Aya_2K_01.jpg
+	map_Kd tex/091_W_Aya_2K_01.jpg
