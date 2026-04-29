@@ -87,7 +87,6 @@ public class MeshViewerUI {
     private final SubScene previewSubScene;
     private final BorderPane navigationPane;
     private final FileChooser fileChooser;
-    private final PerspectiveCamera cam;
 
     private Group pivot;
 
@@ -110,7 +109,7 @@ public class MeshViewerUI {
         final double width = 1.5 * height;
 
         // Camera
-        cam = new PerspectiveCamera(true);
+        PerspectiveCamera cam = new PerspectiveCamera(true);
         cam.getTransforms().addAll(camZoom);
         cam.setNearClip(0.1);
         cam.setFarClip(10_000);
