@@ -392,7 +392,6 @@ public class MeshViewerUI {
     }
 
     private MenuBar createMenus(Stage stage) {
-        MenuBar menuBar = new MenuBar();
 
         // File menu
 
@@ -419,30 +418,22 @@ public class MeshViewerUI {
 
         final Menu viewMenu = new Menu("View");
 
-        final CheckMenuItem miNavigationVisible = new CheckMenuItem("Navigation");
-        miNavigationVisible.selectedProperty().bindBidirectional(navigationPane.managedProperty());
-        navigationPane.visibleProperty().bind(navigationPane.managedProperty());
+        final CheckMenuItem miNavigation = new CheckMenuItem("Navigation");
+        miNavigation.selectedProperty().bindBidirectional(navigationPane.managedProperty());
 
-        final CheckMenuItem miWireframeMode = new CheckMenuItem("Wireframe");
-        miWireframeMode.selectedProperty().addListener((_, _, sel) ->
-            drawMode.set(sel ? DrawMode.LINE : DrawMode.FILL)
-        );
+        final CheckMenuItem miWireframe = new CheckMenuItem("Wireframe");
+        miWireframe.selectedProperty().addListener((_, _, sel) -> drawMode.set(sel ? DrawMode.LINE : DrawMode.FILL));
+        drawMode.addListener((_, _, mode) -> miWireframe.setSelected(mode == DrawMode.LINE));
 
-        drawMode.addListener((_, _, mode) ->
-            miWireframeMode.setSelected(mode == DrawMode.LINE)
-        );
-
-        viewMenu.getItems().addAll(miNavigationVisible, miWireframeMode);
+        viewMenu.getItems().addAll(miNavigation, miWireframe);
 
         // Samples menu
 
         samplesMenu = new Menu("Samples");
         samplesMenu.disableProperty().bind(Bindings.isEmpty(sampleModels));
 
-        // Menu bar
 
-        menuBar.getMenus().addAll(fileMenu, viewMenu, samplesMenu);
-        return menuBar;
+        return new MenuBar(fileMenu, viewMenu, samplesMenu);
     }
 
     private void buildNavigationTree(String title) {
@@ -484,6 +475,8 @@ public class MeshViewerUI {
         });
 
         navigationPane.setCenter(navigationTreeView);
+        // If hidden, take no empty space in containing pane
+        navigationPane.visibleProperty().bind(navigationPane.managedProperty());
     }
 
     private void addSubTree(TreeItem<NavigationTreeNode> parent, Map<String, MeshView> meshViews, String title) {
