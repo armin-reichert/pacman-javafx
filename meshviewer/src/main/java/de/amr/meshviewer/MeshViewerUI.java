@@ -11,8 +11,11 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point3D;
@@ -36,11 +39,16 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+
+import static java.util.Objects.requireNonNull;
 
 public class MeshViewerUI {
 
@@ -176,12 +184,12 @@ public class MeshViewerUI {
     private TreeView<NavigationTreeNode> navigationTreeView;
     private double mouseOldX, mouseOldY;
 
-    private Animation rotateAnimation;
+    private Animation autoRotateAnimation;
     private final Rotate autoRotateX = new Rotate(0, Rotate.X_AXIS);
     private final Rotate autoRotateY = new Rotate(0, Rotate.Y_AXIS);
     private Point3D autoRotateAxis = Rotate.Y_AXIS; // horizontally be default
 
-    private final List<SampleModel> sampleModels = new ArrayList<>();
+    private final ObservableList<SampleModel> sampleModels = FXCollections.observableArrayList();
     private Menu samplesMenu;
 
     public MeshViewerUI(Stage stage) {
@@ -242,13 +250,13 @@ public class MeshViewerUI {
         stage.setWidth(width);
         stage.setHeight(height);
 
-        addFileDropSupport(scene);
+        addFileDragNDropSupport(scene);
 
         objModel.addListener((_, _, newModel) -> {
             if (newModel != null) {
                 final String url = newModel.url();
                 final String title = URLDecoder.decode(url.substring(url.lastIndexOf('/') + 1), StandardCharsets.UTF_8);
-                updateNavigationPane(title);
+                buildNavigationTree(title);
                 selectFirstObjectNodeInTree();
                 modelInfo.update(newModel);
             }
@@ -259,20 +267,23 @@ public class MeshViewerUI {
         stage.show();
         if (!sampleModels.isEmpty()) {
             showSampleModel(sampleModels.getFirst());
+            Platform.runLater(previewSubScene::requestFocus);
         }
-        Platform.runLater(previewSubScene::requestFocus);
     }
 
     public void showObjModel(File objFile) {
+        requireNonNull(objFile);
         try {
-            showObjModel(objFile.toURI().toURL());
+            final URL url = objFile.toURI().toURL();
+            showObjModel(url);
             workDir = objFile.getParentFile();
-        } catch (IOException x) {
+        } catch (MalformedURLException x) {
             Logger.error(x, "Cannot show OBJ model, file={}", objFile);
         }
     }
 
     public void showObjModel(URL url) {
+        requireNonNull(url);
         try {
             loadModelFromURL(url);
             selectFirstObjectNodeInTree();
@@ -305,13 +316,13 @@ public class MeshViewerUI {
             pivot.getTransforms().addLast(new Rotate(initial.rotateZ(), Rotate.Z_AXIS));
         }
 
-        if (rotateAnimation == null) {
+        if (autoRotateAnimation == null) {
             createAutoRotateAnimation();
         }
         if (sample.initialState().autoRotate()) {
-            rotateAnimation.play();
+            autoRotateAnimation.play();
         } else {
-            rotateAnimation.stop();
+            autoRotateAnimation.stop();
         }
     }
 
@@ -368,7 +379,7 @@ public class MeshViewerUI {
     }
 
     private void createAutoRotateAnimation() {
-        rotateAnimation = new Timeline(
+        autoRotateAnimation = new Timeline(
             new KeyFrame(Duration.millis(16), _ -> {
                 if (autoRotateAxis == Rotate.X_AXIS) {
                     autoRotateX.setAngle(autoRotateX.getAngle() + AUTO_ROTATE_SPEED);
@@ -377,13 +388,16 @@ public class MeshViewerUI {
                 }
             }) // ~60 FPS
         );
-        rotateAnimation.setCycleCount(Animation.INDEFINITE);
+        autoRotateAnimation.setCycleCount(Animation.INDEFINITE);
     }
 
     private MenuBar createMenus(Stage stage) {
         MenuBar menuBar = new MenuBar();
 
+        // File menu
+
         Menu fileMenu = new Menu("File");
+
         MenuItem openItem = new MenuItem("Open OBJ…");
         MenuItem exitItem = new MenuItem("Exit");
 
@@ -400,6 +414,8 @@ public class MeshViewerUI {
         });
 
         exitItem.setOnAction(_ -> Platform.exit());
+
+        // View menu
 
         final Menu viewMenu = new Menu("View");
 
@@ -418,20 +434,22 @@ public class MeshViewerUI {
 
         viewMenu.getItems().addAll(miNavigationVisible, miWireframeMode);
 
+        // Samples menu
+
         samplesMenu = new Menu("Samples");
+        samplesMenu.disableProperty().bind(Bindings.isEmpty(sampleModels));
 
-        // Compose the menus
+        // Menu bar
+
         menuBar.getMenus().addAll(fileMenu, viewMenu, samplesMenu);
-
         return menuBar;
     }
 
-    private void updateNavigationPane(String title) {
-        final MeshBuilder meshBuilder = new MeshBuilder(objModel.get());
-
+    private void buildNavigationTree(String title) {
         final TreeItem<NavigationTreeNode> root = new TreeItem<>(new LabelNode(title));
         root.setExpanded(true);
 
+        final MeshBuilder meshBuilder = new MeshBuilder(objModel.get());
         addSubTree(root, meshBuilder.buildMeshViewsByObject(),   "Mesh Views by Object");
         addSubTree(root, meshBuilder.buildMeshViewsByGroup(),    "Mesh Views by Group");
         addSubTree(root, meshBuilder.buildMeshViewsByMaterial(), "Mesh Views by Material");
@@ -460,7 +478,7 @@ public class MeshViewerUI {
                 setText(switch (value) {
                     case LabelNode labelNode -> labelNode.label;
                     case MeshNode meshNode -> meshNode.meshName;
-                    default -> "?";
+                    default -> "Unknown tree node";
                 });
             }
         });
@@ -468,40 +486,37 @@ public class MeshViewerUI {
         navigationPane.setCenter(navigationTreeView);
     }
 
-    private void addSubTree(TreeItem<NavigationTreeNode> parentTreeItem, Map<String, MeshView> meshViews, String title) {
+    private void addSubTree(TreeItem<NavigationTreeNode> parent, Map<String, MeshView> meshViews, String title) {
         if (meshViews.isEmpty()) title += " (None)";
-        final var root = new TreeItem<NavigationTreeNode>(new LabelNode(title));
+        final TreeItem<NavigationTreeNode> root = new TreeItem<>(new LabelNode(title));
         root.setExpanded(true);
         for (String meshName : meshViews.keySet()) {
-            final var child = new MeshNode(meshName, meshViews.get(meshName));
-            root.getChildren().add(new TreeItem<>(child));
+            final var meshNode = new MeshNode(meshName, meshViews.get(meshName));
+            root.getChildren().add(new TreeItem<>(meshNode));
         }
-        parentTreeItem.getChildren().add(root);
+        parent.getChildren().add(root);
     }
 
     private void selectFirstObjectNodeInTree() {
-        final TreeItem<NavigationTreeNode> rootItem = navigationTreeView.getRoot();
-        if (!rootItem.getChildren().isEmpty()) {
-            final TreeItem<NavigationTreeNode> objectsItem = rootItem.getChildren().getFirst();
-            if (!objectsItem.getChildren().isEmpty()) {
-                final TreeItem<NavigationTreeNode> firstObjectItem = objectsItem.getChildren().getFirst();
-                navigationTreeView.getSelectionModel().select(firstObjectItem);
+        final TreeItem<NavigationTreeNode> root = navigationTreeView.getRoot();
+        if (!root.getChildren().isEmpty()) {
+            final TreeItem<NavigationTreeNode> objects = root.getChildren().getFirst();
+            if (!objects.getChildren().isEmpty()) {
+                final TreeItem<NavigationTreeNode> firstObject = objects.getChildren().getFirst();
+                navigationTreeView.getSelectionModel().select(firstObject);
             }
         }
     }
 
     private void center(Node node) {
-        Bounds b = node.getBoundsInLocal();
-        node.getTransforms().add(new Translate(
-            -b.getCenterX(),
-            -b.getCenterY(),
-            -b.getCenterZ()
-        ));
+        final Bounds b = node.getBoundsInLocal();
+        node.getTransforms().add(new Translate(-b.getCenterX(), -b.getCenterY(), -b.getCenterZ()));
     }
 
     private void resetTransformsAndCamera() {
         rotateX.setAngle(DEFAULT_ANGLE_X);
         rotateY.setAngle(DEFAULT_ANGLE_Y);
+
         autoRotateX.setAngle(DEFAULT_ANGLE_X);
         autoRotateY.setAngle(DEFAULT_ANGLE_Y);
 
@@ -512,15 +527,15 @@ public class MeshViewerUI {
         previewSubScene.setOnKeyPressed(e -> {
             boolean shift = e.isShiftDown();
             boolean control = e.isControlDown();
-            boolean control_shift = control && shift;
+            boolean controlShift = control && shift;
             switch (e.getCode()) {
                 case PLUS  -> {
-                    int delta = control_shift ? 100 : shift ? 10 : 1;
+                    int delta = controlShift ? 100 : shift ? 10 : 1;
                     zoomBy(delta);
                     e.consume();
                 }
                 case MINUS -> {
-                    int delta = control_shift ? 100 : shift ? 10 : 1;
+                    int delta = controlShift ? 100 : shift ? 10 : 1;
                     zoomBy(-delta);
                     e.consume();
                 }
@@ -584,11 +599,11 @@ public class MeshViewerUI {
     private void onKeyTypedInPreview(String key) {
         if (KEY_AUTO_ROTATE_HORIZONTALLY.equals(key)) {
             autoRotateAxis = Rotate.Y_AXIS;
-            flash("Autorotate horizontally");
+            flash("Auto-Rotate horizontally");
         }
         else if (KEY_AUTO_ROTATE_VERTICALLY.equals(key)) {
             autoRotateAxis = Rotate.X_AXIS;
-            flash("Autorotate vertically");
+            flash("Auto-Rotate vertically");
         }
         else if (KEY_ROTATE_LEFT.equals(key)) {
             rotateYBy(ROTATE_SINGLE_STEP_DEGREES);
@@ -607,16 +622,11 @@ public class MeshViewerUI {
             drawMode.set(mode);
         }
         else if (KEY_AUTOPLAY_TOGGLE.equals(key)) {
-            toggleAutoRotate();
-            if (rotateAnimation.getStatus() == Animation.Status.PAUSED) {
-                flash("Autorotate paused");
-            } else {
-                flash("Autorotate started");
-            }
+            toggleAutoRotateWithFlashMessage();
         }
     }
 
-    private void addFileDropSupport(Scene scene) {
+    private void addFileDragNDropSupport(Scene scene) {
         // Accept file drag-over
         scene.setOnDragOver(e -> {
             if (e.getGestureSource() != scene && e.getDragboard().hasFiles()) {
@@ -667,26 +677,29 @@ public class MeshViewerUI {
     }
 
     public void startAutoRotate() {
-        if (rotateAnimation == null) {
-            createAutoRotateAnimation();
-        }
-        rotateAnimation.play();
-        Logger.info("Autorotate started");
+        autoRotateAnimation().play();
+        Logger.info("Auto-Rotate started");
     }
 
     public void pauseAutoRotate() {
-        if (rotateAnimation == null) {
-            createAutoRotateAnimation();
-        }
-        rotateAnimation.pause();
-        Logger.info("Autorotate paused");
+        autoRotateAnimation().pause();
+        Logger.info("Auto-Rotate paused");
     }
 
-    private void toggleAutoRotate() {
-        if (rotateAnimation.getStatus() == Animation.Status.RUNNING) {
+    private void toggleAutoRotateWithFlashMessage() {
+        if (autoRotateAnimation().getStatus() == Animation.Status.RUNNING) {
             pauseAutoRotate();
+            flash("Auto-Rotate paused");
         } else {
             startAutoRotate();
+            flash("Auto-Rotate started");
         }
+    }
+
+    private Animation autoRotateAnimation() {
+        if (autoRotateAnimation == null) {
+            createAutoRotateAnimation();
+        }
+        return autoRotateAnimation;
     }
 }
