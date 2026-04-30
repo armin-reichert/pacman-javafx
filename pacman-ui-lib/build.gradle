@@ -6,13 +6,16 @@ plugins {
     alias(libs.plugins.javafx)
 }
 
+repositories {
+    mavenLocal()
+}
+
 dependencies {
-    implementation(
-        project(":basics"),
-        project(":pacman-core"),
-        project(":objparser"),
-        libs.bundles.tinylog
-    )
+    implementation("de.amr:objparser")
+    implementation("de.amr:meshviewer")
+    implementation(project(":basics"))
+    implementation(project(":pacman-core"))
+    implementation(libs.bundles.tinylog)
 }
 
 javafx {

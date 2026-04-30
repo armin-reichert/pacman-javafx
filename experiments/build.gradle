@@ -3,8 +3,9 @@ plugins {
 }
 
 dependencies {
+    // references the sibling top-level project
+    implementation("de.amr:javafx-objimporter")
     implementation project(":basics")
-    implementation project(":objparser")
     implementation project(":pacman-core")
     implementation project(":pacman-ui-lib")
     implementation project(":pacman-ui")

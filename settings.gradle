@@ -18,10 +18,10 @@ dependencyResolutionManagement {
 
 rootProject.name = "pacman-javafx"
 
+includeBuild("../javafx-objimporter")
+
 include(
     "basics",
-    "objparser",
-    "meshviewer",
     "pacman-core",
     "pacman-ui-lib",
     "pacman-ui",

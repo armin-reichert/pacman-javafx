@@ -16,6 +16,7 @@ subprojects {
     // 2. Declare repositories
     repositories {
         mavenCentral()
+        mavenLocal()
     }
 
     // 3. Configure Java toolchain

@@ -10,6 +10,8 @@ plugins {
 
 dependencies {
     implementation(
+        "de.amr:objparser",
+        "de.amr:meshviewer",
         project(":basics"),
         project(":pacman-core"),
         project(":pacman-ui-lib"),

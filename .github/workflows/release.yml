@@ -24,8 +24,14 @@ jobs:
     name: Build and upload artifacts for ${{ matrix.os }} JDK ${{ matrix.java }}
     
     steps:
-      - name: Git checkout
+      - name: Checkout pacman-javafx project
         uses: actions/checkout@v4
+
+      - name: Checkout javafx-objimporter sibling project
+        uses: actions/checkout@v4
+        with:
+          repository: armin-reichert/javafx-objimporter
+          path: ../javafx-objimporter
 
       - name: Set up JDK
         uses: actions/setup-java@v4
