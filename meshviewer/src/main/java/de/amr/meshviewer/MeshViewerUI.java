@@ -17,14 +17,16 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
@@ -43,14 +45,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.text.NumberFormat;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
 public class MeshViewerUI {
+
+    public static final String STAGE_TITLE = "JavaFX OBJ Mesh Viewer";
 
     public static final String KEY_AUTO_ROTATE_HORIZONTALLY = "h";
     public static final String KEY_AUTO_ROTATE_VERTICALLY = "v";
@@ -77,88 +78,11 @@ public class MeshViewerUI {
     public static final double ZOOM_RATE_NORMAL = 0.02;
     public static final double ZOOM_RATE_LARGE = 0.5;
 
-    public class ObjModelInfoPanel extends GridPane {
-
-        private static final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance(Locale.GERMANY);
-
-        private final Label lblVertices = new Label();
-        private final Label lblTexCoords = new Label();
-        private final Label lblNormals = new Label();
-        private final Label lblObjects = new Label();
-        private final Label lblGroups = new Label();
-        private final Label lblFaces = new Label();
-        private final Label lblSmoothingGroups = new Label();
-        private final Label lblMaterials = new Label();
-        private final Label lblLoadingTime = new Label();
-
-        public ObjModelInfoPanel() {
-            setHgap(10);
-            setVgap(6);
-            setPadding(new Insets(10));
-
-            addRow(0, new Label("Vertices:"), lblVertices);
-            addRow(1, new Label("TexCoords:"), lblTexCoords);
-            addRow(2, new Label("Normals:"), lblNormals);
-            addRow(3, new Label("Objects:"), lblObjects);
-            addRow(4, new Label("Groups:"), lblGroups);
-            addRow(5, new Label("Faces:"), lblFaces);
-            addRow(6, new Label("Smoothing Groups:"), lblSmoothingGroups);
-            addRow(7, new Label("Materials:"), lblMaterials);
-            addRow(8, new Label("LoadingTime:"), lblLoadingTime);
-        }
-
-        public void update(ObjModel model) {
-            if (model == null) {
-                lblVertices.setText("-");
-                lblTexCoords.setText("-");
-                lblNormals.setText("-");
-                lblObjects.setText("-");
-                lblGroups.setText("-");
-                lblFaces.setText("-");
-                lblSmoothingGroups.setText("-");
-                lblMaterials.setText("-");
-                lblLoadingTime.setText("-");
-                return;
-            }
-
-            lblVertices.setText(NUMBER_FORMAT.format(model.vertexCount()));
-            lblTexCoords.setText(NUMBER_FORMAT.format(model.texCoordCount()));
-            lblNormals.setText(NUMBER_FORMAT.format(model.normalCount()));
-
-            lblObjects.setText(NUMBER_FORMAT.format(model.objects.size()));
-
-            int groupCount = model.objects.stream()
-                .mapToInt(o -> o.groups.size())
-                .sum();
-            lblGroups.setText(NUMBER_FORMAT.format(groupCount));
-
-            int faceCount = model.objects.stream()
-                .flatMap(o -> o.groups.stream())
-                .mapToInt(g -> g.faces.size())
-                .sum();
-            lblFaces.setText(NUMBER_FORMAT.format(faceCount));
-
-            long smoothingGroups = model.objects.stream()
-                .flatMap(o -> o.groups.stream())
-                .flatMap(g -> g.faces.stream())
-                .map(f -> f.smoothingGroup)
-                .filter(Objects::nonNull)
-                .distinct()
-                .count();
-            lblSmoothingGroups.setText(NUMBER_FORMAT.format(smoothingGroups));
-
-            int materialCount = model.materialLibsMap.values().stream()
-                .mapToInt(Map::size)
-                .sum();
-            lblMaterials.setText(NUMBER_FORMAT.format(materialCount));
-
-            lblLoadingTime.setText("%.3f sec".formatted(loadingTime.get().toSeconds()));
-        }
-    }
-
     private final ObjectProperty<ObjModel> objModel = new SimpleObjectProperty<>();
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
     private final ObjectProperty<Duration> loadingTime = new SimpleObjectProperty<>(Duration.ZERO);
+
+    private final ObservableList<SampleModel> sampleModels = FXCollections.observableArrayList();
 
     // Flip around x-axis (otherwise many objects are upside-down initially)
     private final Rotate flipYDirection = new Rotate(180, Rotate.X_AXIS);
@@ -168,100 +92,48 @@ public class MeshViewerUI {
 
     private final Translate camZoom = new Translate(0, 0, DEFAULT_ZOOM);
 
+    // UI
     private final Stage stage;
-    private final Group world;
-    private final FlashMessageOverlay flashMessageOverlay;
-    private final SubScene previewSubScene;
-    private final BorderPane navigationPane;
-    private final ObjModelInfoPanel modelInfo;
-    private final FileChooser fileChooser;
+    private BorderPane rootPane;
+    private Group world;
+    private FlashMessageOverlay flashMessageOverlay;
+    private SubScene previewSubScene;
+    private PerspectiveCamera cam;
+    private BorderPane navigationPane;
+    private ObjModelInfoPanel modelInfo;
+    private FileChooser fileChooser;
     // Displayed mesh view is contained in this group:
     private Group pivot;
     private TreeView<NavigationTreeNode> navigationTreeView;
+    private Menu samplesMenu;
 
     private File workDir;
     private double mouseOldX, mouseOldY;
 
+    // Animation
     private Animation autoRotateAnimation;
     private final Rotate autoRotateX = new Rotate(0, Rotate.X_AXIS);
     private final Rotate autoRotateY = new Rotate(0, Rotate.Y_AXIS);
     private Point3D autoRotateAxis = Rotate.Y_AXIS; // horizontally be default
 
-    private final ObservableList<SampleModel> sampleModels = FXCollections.observableArrayList();
-    private Menu samplesMenu;
-
     public MeshViewerUI(Stage stage) {
-        this.stage = stage;
+        this.stage = requireNonNull(stage);
 
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width = 1.5 * height;
 
-        // Camera
-        PerspectiveCamera cam = new PerspectiveCamera(true);
-        cam.getTransforms().addAll(camZoom);
-        cam.setNearClip(0.1);
-        cam.setFarClip(10_000);
-
-        world = new Group();
-
-        addLights(world);
-
-        previewSubScene = new SubScene(world, width, height, true, SceneAntialiasing.BALANCED);
-        previewSubScene.setCamera(cam);
-        previewSubScene.fillProperty().bind(previewSubScene.focusedProperty()
-            .map(hasFocus -> hasFocus? FOCUSSED_COLOR : UNFOCUSSED_COLOR));
-        setPreviewControlHandlers();
-
-        flashMessageOverlay = new FlashMessageOverlay();
-
-        final StackPane previewArea = new StackPane(previewSubScene, flashMessageOverlay);
-
-        previewSubScene.widthProperty().bind(previewArea.widthProperty());
-        previewSubScene.heightProperty().bind(previewArea.heightProperty());
-
-        fileChooser = new FileChooser();
-        fileChooser.setTitle("Open OBJ File");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OBJ Files", "*.obj"));
-
-        navigationPane = new BorderPane();
-        navigationPane.setMinWidth(300);
-        navigationPane.setMaxWidth(300);
-
-        createNavigationTree();
-        navigationPane.setCenter(navigationTreeView);
-        // If hidden, take no empty space in containing pane
-        navigationPane.visibleProperty().bind(navigationPane.managedProperty());
-
-        modelInfo = new ObjModelInfoPanel();
-
-        final VBox leftPane = new VBox(navigationPane, modelInfo);
-        VBox.setVgrow(navigationPane, Priority.ALWAYS);
-
-        final MenuBar menuBar = createMenus(stage);
-
-        final BorderPane rootPane = new BorderPane();
-        rootPane.setTop(menuBar);
-        rootPane.setLeft(leftPane);
-        rootPane.setCenter(previewArea);
-
-        final Scene scene = new Scene(rootPane);
-        stage.setScene(scene);
-        stage.setTitle("JavaFX OBJ Mesh Viewer");
-        stage.setWidth(width);
-        stage.setHeight(height);
-
-        addFileDragNDropSupport(scene);
+        createUI(width, height);
 
         objModel.addListener((_, _, newModel) -> {
             if (newModel != null) {
-                final String url = newModel.url();
-                final String title = URLDecoder.decode(url.substring(url.lastIndexOf('/') + 1), StandardCharsets.UTF_8);
-                populateNavigationTree(newModel, title);
+                populateNavigationTree(newModel, createTreeTitle(newModel));
                 selectFirstObjectNodeInNavigationTree();
-                modelInfo.update(newModel);
+                modelInfo.update(newModel, loadingTime.get());
             }
         });
     }
+
+    // Public
 
     public void show() {
         stage.show();
@@ -326,6 +198,70 @@ public class MeshViewerUI {
         }
     }
 
+    // Private
+
+    private void createUI(double width, double height) {
+        createCamera();
+        createLayout(width, height);
+        final Scene scene = new Scene(rootPane);
+        addFileDragNDropSupport(scene);
+        stage.setScene(scene);
+        stage.setTitle(STAGE_TITLE);
+        stage.setWidth(width);
+        stage.setHeight(height);
+    }
+
+    private void createCamera() {
+        cam = new PerspectiveCamera(true);
+        cam.getTransforms().addAll(camZoom);
+        cam.setNearClip(0.1);
+        cam.setFarClip(10_000);
+    }
+
+    private void createLayout(double width, double height) {
+        world = new Group();
+        addLights(world);
+
+        previewSubScene = new SubScene(world, width, height, true, SceneAntialiasing.BALANCED);
+        previewSubScene.setCamera(cam);
+        previewSubScene.fillProperty().bind(previewSubScene.focusedProperty()
+            .map(hasFocus -> hasFocus? FOCUSSED_COLOR : UNFOCUSSED_COLOR));
+        setPreviewControlHandlers();
+
+        flashMessageOverlay = new FlashMessageOverlay();
+
+        final StackPane previewArea = new StackPane(previewSubScene, flashMessageOverlay);
+
+        previewSubScene.widthProperty().bind(previewArea.widthProperty());
+        previewSubScene.heightProperty().bind(previewArea.heightProperty());
+
+        fileChooser = new FileChooser();
+        fileChooser.setTitle("Open OBJ File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OBJ Files", "*.obj"));
+
+        navigationPane = new BorderPane();
+        navigationPane.setMinWidth(300);
+        navigationPane.setMaxWidth(300);
+
+        createNavigationTree();
+        navigationPane.setCenter(navigationTreeView);
+        // If hidden, take no empty space in containing pane
+        navigationPane.visibleProperty().bind(navigationPane.managedProperty());
+
+        modelInfo = new ObjModelInfoPanel();
+
+        final VBox leftPane = new VBox(navigationPane, modelInfo);
+        VBox.setVgrow(navigationPane, Priority.ALWAYS);
+
+        final MenuBar menuBar = createMenus(stage);
+
+        rootPane = new BorderPane();
+        rootPane.setTop(menuBar);
+        rootPane.setLeft(leftPane);
+        rootPane.setCenter(previewArea);
+    }
+
+
     private void loadModelFromURL(URL objFileURL) throws IOException {
         final var parser = new ObjFileParser(objFileURL, StandardCharsets.UTF_8);
         final long start = System.nanoTime();
@@ -334,8 +270,6 @@ public class MeshViewerUI {
         loadingTime.set(Duration.millis(millis));
         objModel.set(parsedModel);
     }
-
-    // display
 
     private void displayMeshView(MeshView meshView) {
         if (meshView == null) return;
@@ -359,8 +293,6 @@ public class MeshViewerUI {
     private void flash(String message) {
         flashMessageOverlay.showMessage(message);
     }
-
-    // create UI
 
     private void addLights(Group parent) {
         final var ambient = new AmbientLight(Color.color(0.3, 0.3, 0.3));
@@ -392,7 +324,6 @@ public class MeshViewerUI {
     }
 
     private MenuBar createMenus(Stage stage) {
-
         // File menu
 
         Menu fileMenu = new Menu("File");
@@ -500,6 +431,11 @@ public class MeshViewerUI {
                 navigationTreeView.getSelectionModel().select(firstObject);
             }
         }
+    }
+
+    private String createTreeTitle(ObjModel objModel) {
+        final String url = objModel.url();
+        return URLDecoder.decode(url.substring(url.lastIndexOf('/') + 1), StandardCharsets.UTF_8);
     }
 
     private void center(Node node) {

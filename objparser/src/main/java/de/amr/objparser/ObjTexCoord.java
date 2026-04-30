@@ -4,5 +4,4 @@
 
 package de.amr.objparser;
 
-public record ObjTexCoord(float u, float v) {
-}
+public record ObjTexCoord(float u, float v) {}

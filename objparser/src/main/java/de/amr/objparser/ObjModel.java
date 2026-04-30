@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.objparser;
 
 import it.unimi.dsi.fastutil.floats.FloatArrayList;

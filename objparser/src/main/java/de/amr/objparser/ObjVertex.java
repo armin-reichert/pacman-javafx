@@ -4,5 +4,4 @@
 
 package de.amr.objparser;
 
-public record ObjVertex(float x, float y, float z) {
-}
+public record ObjVertex(float x, float y, float z) {}

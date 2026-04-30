@@ -4,14 +4,4 @@
 
 package de.amr.objparser;
 
-public class ObjFaceVertex {
-    public final int vIndex;
-    public final int vtIndex;
-    public final int vnIndex;
-
-    public ObjFaceVertex(int vIndex, int vtIndex, int vnIndex) {
-        this.vIndex = vIndex;
-        this.vtIndex = vtIndex;
-        this.vnIndex = vnIndex;
-    }
-}
+public record ObjFaceVertex(int vIndex, int vtIndex, int vnIndex) {}

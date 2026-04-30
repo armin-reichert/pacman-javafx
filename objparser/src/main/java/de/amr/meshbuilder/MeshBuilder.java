@@ -170,7 +170,7 @@ public class MeshBuilder {
         for (ObjFace face : faces) {
             for (ObjFaceVertex fv : face.vertices) {
 
-                VertexKey key = new VertexKey(fv.vIndex, fv.vtIndex, fv.vnIndex);
+                VertexKey key = new VertexKey(fv.vIndex(), fv.vtIndex(), fv.vnIndex());
 
                 int newIndex = vertexMap.computeIfAbsent(key, k -> {
 
