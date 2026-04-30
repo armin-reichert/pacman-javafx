@@ -244,6 +244,11 @@ public class MeshViewerUI {
         rootPane.setTop(menuBar);
         rootPane.setLeft(selectionArea);
         rootPane.setCenter(previewArea);
+
+        stage.heightProperty().addListener((_,_,h) -> {
+            Logger.info("State height is {}", h);
+            //TODO When the window is maximized and then unmaximized, the layout gets broken
+        });
     }
 
     private void loadModelFromURL(URL objFileURL) throws IOException {
