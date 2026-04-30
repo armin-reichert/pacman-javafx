@@ -25,7 +25,7 @@ jobs:
     
     steps:
       - name: Move up
-        run: cd $GITHUB_WORKSPACE
+        run: cd $GITHUB_WORKSPACE/..
 
       - name: Checkout pacman-javafx project
         uses: actions/checkout@v4
