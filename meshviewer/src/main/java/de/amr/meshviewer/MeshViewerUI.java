@@ -242,8 +242,8 @@ public class MeshViewerUI {
 
         rootPane = new BorderPane();
         rootPane.setTop(menuBar);
-        rootPane.setLeft(selectionArea);
         rootPane.setCenter(previewArea);
+        rootPane.setLeft(selectionArea);
 
         stage.heightProperty().addListener((_,_,h) -> {
             Logger.info("State height is {}", h);
@@ -365,10 +365,11 @@ public class MeshViewerUI {
 
         modelInfoPane = new ObjModelInfoPanel();
         modelInfoPane.setMinHeight(modelInfoPane.getPrefHeight());
-        modelInfoPane.setMaxHeight(modelInfoPane.getPrefHeight());
+        modelInfoPane.setMaxHeight(Region.USE_PREF_SIZE);
 
         selectionArea = new VBox(treeScrollPane, modelInfoPane);
         selectionArea.setFillWidth(true);
+        selectionArea.setMaxHeight(Double.MAX_VALUE);
     }
 
     private void createNavigationTree() {
