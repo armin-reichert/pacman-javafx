@@ -24,14 +24,19 @@ jobs:
     name: Build and upload artifacts for ${{ matrix.os }} JDK ${{ matrix.java }}
     
     steps:
+      - name: Move up
+        run: cd $GITHUB_WORKSPACE
+
       - name: Checkout pacman-javafx project
         uses: actions/checkout@v4
+        with:
+          path: pacman-javafx
 
       - name: Checkout javafx-objimporter sibling project
         uses: actions/checkout@v4
         with:
           repository: armin-reichert/javafx-objimporter
-          path: ../javafx-objimporter
+          path: javafx-objimporter
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -45,8 +50,9 @@ jobs:
       - name: Verify Gradle Wrapper
         uses: gradle/wrapper-validation-action@v2
 
-      - name: Execute gradle jpackage
-        run: ./gradlew --info --stacktrace jpackage
+      - name: Build
+        working-directory: pacman-javafx
+        run: ./gradlew jpackage
 
       - name: Upload Windows installer
         if: matrix.os == 'windows-latest'
