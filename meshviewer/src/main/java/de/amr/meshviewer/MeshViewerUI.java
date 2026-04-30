@@ -18,6 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
+import javafx.geometry.VPos;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.Dragboard;
@@ -201,12 +202,19 @@ public class MeshViewerUI {
     private void createUI(double width, double height) {
         createCamera();
         createLayout(width, height);
+
         final Scene scene = new Scene(rootPane);
+        setPreviewControlHandlers();
         addFileDragNDropSupport(scene);
+
         stage.setScene(scene);
         stage.setTitle(STAGE_TITLE);
         stage.setWidth(width);
         stage.setHeight(height);
+        stage.heightProperty().addListener((_,_,h) -> {
+            Logger.info("Stage height={}", h);
+            //TODO After resizing stage and resizing back, layout gets corrupt
+        });
     }
 
     private void createCamera() {
@@ -224,7 +232,6 @@ public class MeshViewerUI {
         previewSubScene.setCamera(cam);
         previewSubScene.fillProperty().bind(previewSubScene.focusedProperty()
             .map(hasFocus -> hasFocus? FOCUSSED_COLOR : UNFOCUSSED_COLOR));
-        setPreviewControlHandlers();
 
         flashMessageOverlay = new FlashMessageOverlay();
 
@@ -244,11 +251,6 @@ public class MeshViewerUI {
         rootPane.setTop(menuBar);
         rootPane.setCenter(previewArea);
         rootPane.setLeft(selectionArea);
-
-        stage.heightProperty().addListener((_,_,h) -> {
-            Logger.info("State height is {}", h);
-            //TODO When the window is maximized and then unmaximized, the layout gets broken
-        });
     }
 
     private void loadModelFromURL(URL objFileURL) throws IOException {
@@ -359,17 +361,18 @@ public class MeshViewerUI {
         createNavigationTree();
 
         final ScrollPane treeScrollPane = new ScrollPane(navigationTreeView);
+        treeScrollPane.setMaxHeight(300);
         treeScrollPane.setFitToWidth(true);
         treeScrollPane.setFitToHeight(true);
-        VBox.setVgrow(treeScrollPane, Priority.ALWAYS);
 
         modelInfoPane = new ObjModelInfoPanel();
-        modelInfoPane.setMinHeight(modelInfoPane.getPrefHeight());
-        modelInfoPane.setMaxHeight(Region.USE_PREF_SIZE);
+        modelInfoPane.maxHeightProperty().bind(modelInfoPane.prefHeightProperty());
 
-        selectionArea = new VBox(treeScrollPane, modelInfoPane);
+        Region spacer = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+
+        selectionArea = new VBox(treeScrollPane, spacer, modelInfoPane);
         selectionArea.setFillWidth(true);
-        selectionArea.setMaxHeight(Double.MAX_VALUE);
     }
 
     private void createNavigationTree() {
@@ -379,7 +382,6 @@ public class MeshViewerUI {
         navigationTreeView = new TreeView<>(root);
         navigationTreeView.setFocusTraversable(false);
         navigationTreeView.setShowRoot(true);
-        navigationTreeView.setPrefHeight(300);
 
         navigationTreeView.getSelectionModel().selectedItemProperty().addListener((_, _, item) -> {
             if (item == null) return;
