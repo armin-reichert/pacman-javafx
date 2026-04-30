@@ -1,114 +1,136 @@
-# Builds installers (msi, deb, dmg) for Windows, Linux and Mac-OS and attaches the installers for the
-# Pac-Man 3D game version to a release (when it is published via the GitHub UI).
-
 name: Release
 
 permissions:
-  contents: read
+  contents: write
 
 on:
   release:
-    types: [ created, edited ] # if this is omitted, the workflow starts 3 times when creating a release!
+    types: [created, edited]
 
 jobs:
-  
+
   build-and-upload-artifacts:
-    
+
     strategy:
       matrix:
-        os: [ windows-latest, ubuntu-latest, macos-14 ]
-        java: [ '25' ]
+        os: [windows-latest, ubuntu-latest, macos-14]
+        java: ['25']
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
-    name: Build and upload artifacts for ${{ matrix.os }} JDK ${{ matrix.java }}
-    
+    name: Build installers on ${{ matrix.os }}
+
     steps:
-      - name: Move up
+      # ------------------------------------------------------------
+      # 1. Move to parent directory so we can create sibling folders
+      # ------------------------------------------------------------
+      - name: Move to parent directory
         run: cd $GITHUB_WORKSPACE/..
 
-      - name: Checkout pacman-javafx project
+      # ------------------------------------------------------------
+      # 2. Checkout pacman-javafx into sibling folder
+      # ------------------------------------------------------------
+      - name: Checkout pacman-javafx
         uses: actions/checkout@v4
         with:
           path: pacman-javafx
 
-      - name: Checkout javafx-objimporter sibling project
+      # ------------------------------------------------------------
+      # 3. Checkout javafx-objimporter into sibling folder
+      # ------------------------------------------------------------
+      - name: Checkout javafx-objimporter
         uses: actions/checkout@v4
         with:
           repository: armin-reichert/javafx-objimporter
           path: javafx-objimporter
 
+      # ------------------------------------------------------------
+      # 4. Set up JDK
+      # ------------------------------------------------------------
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
 
-      - name: Echo JAVA_HOME
-        run: echo $JAVA_HOME
-
       - name: Verify Gradle Wrapper
         uses: gradle/wrapper-validation-action@v2
 
-      - name: Build
+      # ------------------------------------------------------------
+      # 5. Build installers using composite build
+      # ------------------------------------------------------------
+      - name: Build installers
         working-directory: pacman-javafx
-        run: ./gradlew jpackage
+        run: ./gradlew --info --stacktrace jpackage
 
+      # ------------------------------------------------------------
+      # 6. Upload installers (correct paths!)
+      # ------------------------------------------------------------
       - name: Upload Windows installer
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
           name: windows-installer
-          path: pacman-app-allgames/build/jpackage/*.msi
-          if-no-files-found: ignore
+          path: pacman-javafx/pacman-app-allgames/build/jpackage/*.msi
+          if-no-files-found: error
 
-      - name: Upload Linux deb
+      - name: Upload Linux installer
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
           name: linux-installer
-          path: pacman-app-allgames/build/jpackage/*.deb
-          if-no-files-found: ignore
+          path: pacman-javafx/pacman-app-allgames/build/jpackage/*.deb
+          if-no-files-found: error
 
-      - name: Upload Mac-OS dmg
+      - name: Upload macOS installer
         if: matrix.os == 'macos-14'
         uses: actions/upload-artifact@v4
         with:
           name: macos-installer
-          path: pacman-app-allgames/build/jpackage/*.dmg
-          if-no-files-found: ignore
+          path: pacman-javafx/pacman-app-allgames/build/jpackage/*.dmg
+          if-no-files-found: error
 
+  # ------------------------------------------------------------
+  # SECOND JOB: download artifacts and attach to release
+  # ------------------------------------------------------------
   download-and-release-artifacts:
     needs: build-and-upload-artifacts
+    runs-on: ubuntu-latest
     permissions:
       contents: write
-    runs-on: ubuntu-latest
+
     steps:
+      # ------------------------------------------------------------
+      # 1. Download installers into clean folders
+      # ------------------------------------------------------------
       - name: Download Windows installer
         uses: actions/download-artifact@v4
         with:
           name: windows-installer
-          path: pacman-app-allgames/build/jpackage/windows
+          path: installers/windows
 
       - name: Download Linux installer
         uses: actions/download-artifact@v4
         with:
           name: linux-installer
-          path: pacman-app-allgames/build/jpackage/linux
+          path: installers/linux
 
-      - name: Download Mac installer
+      - name: Download macOS installer
         uses: actions/download-artifact@v4
         with:
           name: macos-installer
-          path: pacman-app-allgames/build/jpackage/macos
+          path: installers/macos
 
-      - name: List files
-        run: ls -R
+      - name: List downloaded files
+        run: ls -R installers
 
-      - name: Attach installers to the release
+      # ------------------------------------------------------------
+      # 2. Attach installers to the GitHub Release
+      # ------------------------------------------------------------
+      - name: Attach installers to release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./pacman-app-allgames/build/jpackage/macos/*.dmg
-            ./pacman-app-allgames/build/jpackage/linux/*.deb
-            ./pacman-app-allgames/build/jpackage/windows/*.msi
+            installers/windows/*.msi
+            installers/linux/*.deb
+            installers/macos/*.dmg
