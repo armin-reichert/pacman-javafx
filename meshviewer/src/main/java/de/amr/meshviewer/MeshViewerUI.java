@@ -23,10 +23,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
@@ -99,12 +96,13 @@ public class MeshViewerUI {
     private FlashMessageOverlay flashMessageOverlay;
     private SubScene previewSubScene;
     private PerspectiveCamera cam;
-    private BorderPane navigationPane;
-    private ObjModelInfoPanel modelInfo;
+    private VBox selectionArea;
+    private ObjModelInfoPanel modelInfoPane;
     private FileChooser fileChooser;
     // Displayed mesh view is contained in this group:
     private Group pivot;
     private TreeView<NavigationTreeNode> navigationTreeView;
+    private MenuBar menuBar;
     private Menu samplesMenu;
 
     private File workDir;
@@ -128,7 +126,7 @@ public class MeshViewerUI {
             if (newModel != null) {
                 populateNavigationTree(newModel, createTreeTitle(newModel));
                 selectFirstObjectNodeInNavigationTree();
-                modelInfo.update(newModel, loadingTime.get());
+                modelInfoPane.update(newModel, loadingTime.get());
             }
         });
     }
@@ -239,28 +237,14 @@ public class MeshViewerUI {
         fileChooser.setTitle("Open OBJ File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OBJ Files", "*.obj"));
 
-        navigationPane = new BorderPane();
-        navigationPane.setMinWidth(300);
-        navigationPane.setMaxWidth(300);
-
-        createNavigationTree();
-        navigationPane.setCenter(navigationTreeView);
-        // If hidden, take no empty space in containing pane
-        navigationPane.visibleProperty().bind(navigationPane.managedProperty());
-
-        modelInfo = new ObjModelInfoPanel();
-
-        final VBox leftPane = new VBox(navigationPane, modelInfo);
-        VBox.setVgrow(navigationPane, Priority.ALWAYS);
-
-        final MenuBar menuBar = createMenus(stage);
+        createSelectionArea();
+        createMenus(stage, selectionArea);
 
         rootPane = new BorderPane();
         rootPane.setTop(menuBar);
-        rootPane.setLeft(leftPane);
+        rootPane.setLeft(selectionArea);
         rootPane.setCenter(previewArea);
     }
-
 
     private void loadModelFromURL(URL objFileURL) throws IOException {
         final var parser = new ObjFileParser(objFileURL, StandardCharsets.UTF_8);
@@ -323,7 +307,7 @@ public class MeshViewerUI {
         autoRotateAnimation.setCycleCount(Animation.INDEFINITE);
     }
 
-    private MenuBar createMenus(Stage stage) {
+    private void createMenus(Stage stage, Pane selectionArea) {
         // File menu
 
         Menu fileMenu = new Menu("File");
@@ -350,7 +334,7 @@ public class MeshViewerUI {
         final Menu viewMenu = new Menu("View");
 
         final CheckMenuItem miNavigation = new CheckMenuItem("Navigation");
-        miNavigation.selectedProperty().bindBidirectional(navigationPane.managedProperty());
+        miNavigation.selectedProperty().bindBidirectional(selectionArea.managedProperty());
 
         final CheckMenuItem miWireframe = new CheckMenuItem("Wireframe");
         miWireframe.selectedProperty().addListener((_, _, sel) -> drawMode.set(sel ? DrawMode.LINE : DrawMode.FILL));
@@ -363,8 +347,22 @@ public class MeshViewerUI {
         samplesMenu = new Menu("Samples");
         samplesMenu.disableProperty().bind(Bindings.isEmpty(sampleModels));
 
+        menuBar = new MenuBar(fileMenu, viewMenu, samplesMenu);
+    }
 
-        return new MenuBar(fileMenu, viewMenu, samplesMenu);
+    private void createSelectionArea() {
+        createNavigationTree();
+
+        final ScrollPane scrollTree = new ScrollPane(navigationTreeView);
+        scrollTree.setFitToWidth(true);
+        scrollTree.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollTree.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+        modelInfoPane = new ObjModelInfoPanel();
+        modelInfoPane.minHeightProperty().bind(modelInfoPane.prefHeightProperty());
+
+        selectionArea = new VBox(scrollTree, modelInfoPane);
+        selectionArea.setFillWidth(true);
     }
 
     private void createNavigationTree() {
@@ -374,6 +372,7 @@ public class MeshViewerUI {
         navigationTreeView = new TreeView<>(root);
         navigationTreeView.setFocusTraversable(false);
         navigationTreeView.setShowRoot(true);
+        navigationTreeView.setPrefHeight(300);
 
         navigationTreeView.getSelectionModel().selectedItemProperty().addListener((_, _, item) -> {
             if (item == null) return;
