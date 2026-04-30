@@ -353,15 +353,16 @@ public class MeshViewerUI {
     private void createSelectionArea() {
         createNavigationTree();
 
-        final ScrollPane scrollTree = new ScrollPane(navigationTreeView);
-        scrollTree.setFitToWidth(true);
-        scrollTree.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollTree.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        final ScrollPane treeScrollPane = new ScrollPane(navigationTreeView);
+        treeScrollPane.setFitToWidth(true);
+        treeScrollPane.setFitToHeight(true);
+        VBox.setVgrow(treeScrollPane, Priority.ALWAYS);
 
         modelInfoPane = new ObjModelInfoPanel();
-        modelInfoPane.minHeightProperty().bind(modelInfoPane.prefHeightProperty());
+        modelInfoPane.setMinHeight(modelInfoPane.getPrefHeight());
+        modelInfoPane.setMaxHeight(modelInfoPane.getPrefHeight());
 
-        selectionArea = new VBox(scrollTree, modelInfoPane);
+        selectionArea = new VBox(treeScrollPane, modelInfoPane);
         selectionArea.setFillWidth(true);
     }
 
