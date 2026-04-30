@@ -88,19 +88,19 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: windows-installer
-          path: pacman-app-allgames/build/jpackage/windows
+          path: pacman-javafx/pacman-app-allgames/build/jpackage/windows
 
       - name: Download Linux installer
         uses: actions/download-artifact@v4
         with:
           name: linux-installer
-          path: pacman-app-allgames/build/jpackage/linux
+          path: pacman-javafx/pacman-app-allgames/build/jpackage/linux
 
       - name: Download Mac installer
         uses: actions/download-artifact@v4
         with:
           name: macos-installer
-          path: pacman-app-allgames/build/jpackage/macos
+          path: pacman-javafx/pacman-app-allgames/build/jpackage/macos
 
       - name: List files
         run: ls -R
