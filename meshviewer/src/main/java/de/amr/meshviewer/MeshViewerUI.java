@@ -77,7 +77,6 @@ public class MeshViewerUI {
     public static final double ZOOM_RATE_NORMAL = 0.02;
     public static final double ZOOM_RATE_LARGE = 0.5;
 
-
     public class ObjModelInfoPanel extends GridPane {
 
         private static final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance(Locale.GERMANY);
@@ -158,17 +157,16 @@ public class MeshViewerUI {
     }
 
     private final ObjectProperty<ObjModel> objModel = new SimpleObjectProperty<>();
+    private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
+    private final ObjectProperty<Duration> loadingTime = new SimpleObjectProperty<>(Duration.ZERO);
 
     // Flip around x-axis (otherwise many objects are upside-down initially)
-    private final Rotate flipUpsideDown = new Rotate(180, Rotate.X_AXIS);
+    private final Rotate flipYDirection = new Rotate(180, Rotate.X_AXIS);
 
     private final Rotate rotateX = new Rotate(DEFAULT_ANGLE_X, Rotate.X_AXIS);
     private final Rotate rotateY = new Rotate(DEFAULT_ANGLE_Y, Rotate.Y_AXIS);
 
     private final Translate camZoom = new Translate(0, 0, DEFAULT_ZOOM);
-
-    private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
-    private final ObjectProperty<Duration> loadingTime = new SimpleObjectProperty<>(Duration.ZERO);
 
     private final Stage stage;
     private final Group world;
@@ -177,11 +175,11 @@ public class MeshViewerUI {
     private final BorderPane navigationPane;
     private final ObjModelInfoPanel modelInfo;
     private final FileChooser fileChooser;
-
+    // Displayed mesh view is contained in this group:
     private Group pivot;
+    private TreeView<NavigationTreeNode> navigationTreeView;
 
     private File workDir;
-    private TreeView<NavigationTreeNode> navigationTreeView;
     private double mouseOldX, mouseOldY;
 
     private Animation autoRotateAnimation;
@@ -223,24 +221,26 @@ public class MeshViewerUI {
 
         fileChooser = new FileChooser();
         fileChooser.setTitle("Open OBJ File");
-        fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("OBJ Files", "*.obj")
-        );
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OBJ Files", "*.obj"));
 
         navigationPane = new BorderPane();
         navigationPane.setMinWidth(300);
         navigationPane.setMaxWidth(300);
 
+        createNavigationTree();
+        navigationPane.setCenter(navigationTreeView);
+        // If hidden, take no empty space in containing pane
+        navigationPane.visibleProperty().bind(navigationPane.managedProperty());
+
         modelInfo = new ObjModelInfoPanel();
 
-        VBox leftPane = new VBox(navigationPane, modelInfo);
+        final VBox leftPane = new VBox(navigationPane, modelInfo);
         VBox.setVgrow(navigationPane, Priority.ALWAYS);
 
         final MenuBar menuBar = createMenus(stage);
 
         final BorderPane rootPane = new BorderPane();
         rootPane.setTop(menuBar);
-
         rootPane.setLeft(leftPane);
         rootPane.setCenter(previewArea);
 
@@ -256,8 +256,8 @@ public class MeshViewerUI {
             if (newModel != null) {
                 final String url = newModel.url();
                 final String title = URLDecoder.decode(url.substring(url.lastIndexOf('/') + 1), StandardCharsets.UTF_8);
-                buildNavigationTree(title);
-                selectFirstObjectNodeInTree();
+                populateNavigationTree(newModel, title);
+                selectFirstObjectNodeInNavigationTree();
                 modelInfo.update(newModel);
             }
         });
@@ -286,7 +286,7 @@ public class MeshViewerUI {
         requireNonNull(url);
         try {
             loadModelFromURL(url);
-            selectFirstObjectNodeInTree();
+            selectFirstObjectNodeInNavigationTree();
             resetTransformsAndCamera();
         } catch (Exception x) {
             Logger.error(x, "Cannot show OBJ model, URL={}", url);
@@ -350,7 +350,7 @@ public class MeshViewerUI {
         pivot = new Group(meshView);
         center(pivot);
 
-        pivot.getTransforms().addAll(flipUpsideDown, rotateX, rotateY, autoRotateX, autoRotateY);
+        pivot.getTransforms().addAll(flipYDirection, rotateX, rotateY, autoRotateX, autoRotateY);
 
         world.getChildren().setAll(pivot);
         previewSubScene.requestFocus();
@@ -436,14 +436,9 @@ public class MeshViewerUI {
         return new MenuBar(fileMenu, viewMenu, samplesMenu);
     }
 
-    private void buildNavigationTree(String title) {
-        final TreeItem<NavigationTreeNode> root = new TreeItem<>(new LabelNode(title));
+    private void createNavigationTree() {
+        final TreeItem<NavigationTreeNode> root = new TreeItem<>(new LabelNode("No OBJ file loaded"));
         root.setExpanded(true);
-
-        final MeshBuilder meshBuilder = new MeshBuilder(objModel.get());
-        addSubTree(root, meshBuilder.buildMeshViewsByObject(),   "Mesh Views by Object");
-        addSubTree(root, meshBuilder.buildMeshViewsByGroup(),    "Mesh Views by Group");
-        addSubTree(root, meshBuilder.buildMeshViewsByMaterial(), "Mesh Views by Material");
 
         navigationTreeView = new TreeView<>(root);
         navigationTreeView.setFocusTraversable(false);
@@ -473,13 +468,19 @@ public class MeshViewerUI {
                 });
             }
         });
-
-        navigationPane.setCenter(navigationTreeView);
-        // If hidden, take no empty space in containing pane
-        navigationPane.visibleProperty().bind(navigationPane.managedProperty());
     }
 
-    private void addSubTree(TreeItem<NavigationTreeNode> parent, Map<String, MeshView> meshViews, String title) {
+    private void populateNavigationTree(ObjModel objModel, String title) {
+        final TreeItem<NavigationTreeNode> root = navigationTreeView.getRoot();
+        root.setValue(new LabelNode(title));
+        root.getChildren().clear();
+        final MeshBuilder meshBuilder = new MeshBuilder(objModel);
+        addNavigationTreeLevel(meshBuilder.buildMeshViewsByObject(),   "Mesh Views by Object");
+        addNavigationTreeLevel(meshBuilder.buildMeshViewsByGroup(),    "Mesh Views by Group");
+        addNavigationTreeLevel(meshBuilder.buildMeshViewsByMaterial(), "Mesh Views by Material");
+    }
+
+    private void addNavigationTreeLevel(Map<String, MeshView> meshViews, String title) {
         if (meshViews.isEmpty()) title += " (None)";
         final TreeItem<NavigationTreeNode> root = new TreeItem<>(new LabelNode(title));
         root.setExpanded(true);
@@ -487,10 +488,10 @@ public class MeshViewerUI {
             final var meshNode = new MeshNode(meshName, meshViews.get(meshName));
             root.getChildren().add(new TreeItem<>(meshNode));
         }
-        parent.getChildren().add(root);
+        navigationTreeView.getRoot().getChildren().add(root);
     }
 
-    private void selectFirstObjectNodeInTree() {
+    private void selectFirstObjectNodeInNavigationTree() {
         final TreeItem<NavigationTreeNode> root = navigationTreeView.getRoot();
         if (!root.getChildren().isEmpty()) {
             final TreeItem<NavigationTreeNode> objects = root.getChildren().getFirst();
