@@ -36,7 +36,15 @@ In each [release](https://github.com/armin-reichert/pacman-javafx/releases) you 
 
 Prerequisites: You need to have a Java 25+ compiler and [Git](https://github.com/git-guides/install-git) installed on your computer.
 
-First clone this repository from GitHub:
+First clone the repository `javafx-objimporter` from GitHub, build and publish to your local Maven repository:
+
+```
+git clone https://github.com/armin-reichert/javafx-objimporter.git
+cd javafx-objimporter
+./gradlew publisToMavenLocal
+```
+
+Then clone this repository:
 
 ```
 git clone https://github.com/armin-reichert/pacman-javafx.git
