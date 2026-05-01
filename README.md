@@ -39,26 +39,20 @@ Prerequisites: You need to have a Java 25+ compiler and [Git](https://github.com
 First clone the repository `javafx-objimporter` from GitHub, build and publish to your local Maven repository:
 
 ```
+cd <your local Git folder>
 git clone https://github.com/armin-reichert/javafx-objimporter.git
 cd javafx-objimporter
 gradlew publishToMavenLocal
 ```
 
-Then clone this repository:
+Then clone this repository and call the build script:
 
 ```
+cd <your local Git folder>
 git clone https://github.com/armin-reichert/pacman-javafx.git
 cd pacman-javafx
+make clean (or ./make.sh clean on Linux)
 ```
-
-Then call the Gradle build script using one of
-
-```./gradlew clean jpackage``` (Any OS)
-
-```make clean``` (Windows)
-
-```./make.sh clean``` (Linux)
-
 
 On Linux (Ubuntu 24), I first had to install also
 - binutils: `sudo apt-get install binutils`
