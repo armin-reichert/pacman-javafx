@@ -7,8 +7,8 @@ plugins {
 }
 
 dependencies {
-    implementation("com.github.armin-reichert:objparser:0.0.1")
-    implementation("com.github.armin-reichert:meshviewer:0.0.1")
+    implementation("com.github.armin-reichert.javafx-objimporter:objparser:0.0.1")
+    implementation("com.github.armin-reichert.javafx-objimporter:meshviewer:0.0.1")
     implementation(project(":basics"))
     implementation(project(":pacman-core"))
     implementation(libs.bundles.tinylog)
