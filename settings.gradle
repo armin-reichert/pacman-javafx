@@ -1,6 +1,7 @@
 pluginManagement {
     repositories {
         gradlePluginPortal()
+        mavenLocal()
         mavenCentral()
     }
     plugins {
@@ -12,13 +13,12 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
+        mavenLocal()
         mavenCentral()
     }
 }
 
 rootProject.name = "pacman-javafx"
-
-includeBuild("../javafx-objimporter")
 
 include(
     "basics",
