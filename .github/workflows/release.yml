@@ -2,6 +2,7 @@ name: Release
 
 permissions:
   contents: write
+  packages: write
 
 on:
   release:
@@ -22,13 +23,7 @@ jobs:
 
     steps:
       # ------------------------------------------------------------
-      # 1. Move to parent directory so we can create sibling folders
-      # ------------------------------------------------------------
-      - name: Move to parent directory
-        run: cd $GITHUB_WORKSPACE/..
-
-      # ------------------------------------------------------------
-      # 2. Checkout pacman-javafx into sibling folder
+      # 1. Checkout pacman-javafx
       # ------------------------------------------------------------
       - name: Checkout pacman-javafx
         uses: actions/checkout@v4
@@ -36,7 +31,7 @@ jobs:
           path: pacman-javafx
 
       # ------------------------------------------------------------
-      # 3. Checkout javafx-objimporter into sibling folder
+      # 2. Checkout javafx-objimporter
       # ------------------------------------------------------------
       - name: Checkout javafx-objimporter
         uses: actions/checkout@v4
@@ -45,26 +40,39 @@ jobs:
           path: javafx-objimporter
 
       # ------------------------------------------------------------
-      # 4. Set up JDK
+      # 3. Set up JDK
       # ------------------------------------------------------------
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
+          server-id: github
+          settings-path: ${{ github.workspace }}
 
       - name: Verify Gradle Wrapper
         uses: gradle/wrapper-validation-action@v2
 
       # ------------------------------------------------------------
-      # 5. Build installers using composite build
+      # 4. Publish javafx-objimporter to GitHub Packages
+      # ------------------------------------------------------------
+      - name: Publish javafx-objimporter
+        working-directory: javafx-objimporter
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew --info --stacktrace publish
+
+      # ------------------------------------------------------------
+      # 5. Build pacman-javafx installers (using GitHub Packages)
       # ------------------------------------------------------------
       - name: Build installers
         working-directory: pacman-javafx
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew --info --stacktrace jpackage
 
       # ------------------------------------------------------------
-      # 6. Upload installers (correct paths!)
+      # 6. Upload installers
       # ------------------------------------------------------------
       - name: Upload Windows installer
         if: matrix.os == 'windows-latest'
@@ -100,9 +108,6 @@ jobs:
       contents: write
 
     steps:
-      # ------------------------------------------------------------
-      # 1. Download installers into clean folders
-      # ------------------------------------------------------------
       - name: Download Windows installer
         uses: actions/download-artifact@v4
         with:
@@ -124,9 +129,6 @@ jobs:
       - name: List downloaded files
         run: ls -R installers
 
-      # ------------------------------------------------------------
-      # 2. Attach installers to the GitHub Release
-      # ------------------------------------------------------------
       - name: Attach installers to release
         uses: softprops/action-gh-release@v1
         with:

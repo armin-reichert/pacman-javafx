@@ -1,45 +1,51 @@
-// Usage: alias(libs.plugins.<plugin_name>) loads plugin from the "version catalog"
-// at "gradle/libs.versions.toml".
 plugins {
-    id("java")
-    alias(libs.plugins.javafx)
-    alias(libs.plugins.osdetector)
+    alias(libs.plugins.javafx) apply false
+    alias(libs.plugins.osdetector) apply true
+}
+
+
+allprojects {
+    repositories {
+        maven {
+            url = uri("https://maven.pkg.github.com/armin-reichert/javafx-objimporter")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+        mavenCentral()
+        mavenLocal()
+    }
 }
 
 subprojects {
     // 1. Apply plugins
     apply(plugin: "java")
-    // For plugins loaded from the version catalog it has to be done like this:
-    pluginManager.apply(libs.plugins.javafx.get().getPluginId())
-    pluginManager.apply(libs.plugins.osdetector.get().getPluginId())
+    pluginManager.apply(libs.plugins.javafx.get().pluginId)
+    pluginManager.apply(libs.plugins.osdetector.get().pluginId)
 
-    // 2. Declare repositories
-    repositories {
-        mavenCentral()
-        mavenLocal()
-    }
-
-    // 3. Configure Java toolchain
+    // 2. Java toolchain
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
         }
     }
 
-    // 4. Configure JavaFX
+    // 3. JavaFX configuration
     javafx {
         version = libs.versions.javafx.get()
+        modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"]
     }
 
-    // 5. Configure tasks
+    // 4. Compiler settings
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
         options.compilerArgs.addAll(["-Xlint:deprecation", "-Xlint:unchecked"])
     }
 }
 
-// Define installer package format depending on operating system
-ext.installerPkg = [linux: "deb", "osx": "dmg", windows: "msi"][osdetector.os]
+// Installer package format
+ext.installerPkg = [linux: "deb", osx: "dmg", windows: "msi"][osdetector.os]
 
 logger.lifecycle("osdetector.os            = ${osdetector.os}")
 logger.lifecycle("osdetector.arch          = ${osdetector.arch}")
