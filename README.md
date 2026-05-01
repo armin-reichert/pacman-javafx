@@ -41,7 +41,7 @@ First clone the repository `javafx-objimporter` from GitHub, build and publish t
 ```
 git clone https://github.com/armin-reichert/javafx-objimporter.git
 cd javafx-objimporter
-./gradlew publisToMavenLocal
+gradlew publishToMavenLocal
 ```
 
 Then clone this repository:
