@@ -10,5 +10,9 @@ module experiments {
     requires de.amr.pacmanfx.ui;
     requires de.amr.basics;
 
+    requires de.amr.objparser;
+    requires de.amr.meshviewer;
+
     exports experiments.custommaps;
+    exports experiments.scooter;
 }
