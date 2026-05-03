@@ -7,11 +7,7 @@ plugins {
 allprojects {
     repositories {
         maven {
-            url = uri("https://maven.pkg.github.com/armin-reichert/javafx-objimporter")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
+            url = "https://dl.cloudsmith.io/public/armin-reichert-qt4o/javafx-objimporter/maven/"
         }
         mavenCentral()
         mavenLocal()
