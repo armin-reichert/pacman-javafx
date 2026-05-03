@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.uilib.model3D.actor;
 
+import de.amr.meshbuilder.MeshBuilder;
 import de.amr.objparser.ObjFileParser;
 import de.amr.objparser.ObjModel;
-import de.amr.meshbuilder.MeshBuilder;
 import javafx.scene.shape.MeshView;
 
 import java.net.URL;
@@ -45,27 +45,27 @@ public class GhostModel3D {
 			eyeballs();
 			pupils();
 		} catch (Exception x) {
-			throw new RuntimeException(x);
+			throw new RuntimeException("Failed to load ghost 3D model", x);
 		}
 	}
 
-	private MeshView meshViewOrFail(String name) {
-		final MeshView meshView = meshViewsForGroups.get(name);
+    public MeshView dress() {
+        return meshViewOrFail(GROUP_ID_DRESS);
+    }
+
+    public MeshView eyeballs() {
+        return meshViewOrFail(GROUP_ID_EYEBALLS);
+    }
+
+    public MeshView pupils() {
+        return meshViewOrFail(GROUP_ID_PUPILS);
+    }
+
+	private MeshView meshViewOrFail(String groupName) {
+		final MeshView meshView = meshViewsForGroups.get(groupName);
 		if (meshView != null) {
 			return meshView;
 		}
-		throw new IllegalArgumentException("Mesh view for name %s does not exist".formatted(name));
-	}
-
-	public MeshView dress() {
-		return meshViewOrFail(GROUP_ID_DRESS);
-	}
-
-	public MeshView eyeballs() {
-		return meshViewOrFail(GROUP_ID_EYEBALLS);
-	}
-
-	public MeshView pupils() {
-		return meshViewOrFail(GROUP_ID_PUPILS);
+		throw new IllegalArgumentException("Mesh view for group name %s does not exist".formatted(groupName));
 	}
 }

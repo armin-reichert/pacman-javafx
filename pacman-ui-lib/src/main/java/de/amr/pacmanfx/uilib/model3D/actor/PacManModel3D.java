@@ -44,18 +44,21 @@ public class PacManModel3D {
 
 	private static final String OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pacman.obj";
 
-    private static final String ID_EYES   = "Object.Sphere.1.Group.PacMan.Eyes";
-	private static final String ID_HEAD   = "Object.Sphere.2.Group.PacMan.Head";
-	private static final String ID_PALATE = "Object.Sphere.2.Group.PacMan.Palate";
+    private static final String GROUP_ID_EYES   = "Object.Sphere.1.Group.PacMan.Eyes";
+	private static final String GROUP_ID_HEAD   = "Object.Sphere.2.Group.PacMan.Head";
+	private static final String GROUP_ID_PALATE = "Object.Sphere.2.Group.PacMan.Palate";
 
-    private final Map<String, MeshView> meshViews;
+    private final Map<String, MeshView> meshViewsForGroups;
 
 	private PacManModel3D() {
+        final URL url = getClass().getResource(OBJ_FILE);
+        if (url == null) {
+            throw new RuntimeException("3D model cannot be loaded from file: " + OBJ_FILE);
+        }
+        final var parser = new ObjFileParser(url, StandardCharsets.UTF_8);
 		try {
-            final URL url = getClass().getResource(OBJ_FILE);
-            final var parser = new ObjFileParser(url, StandardCharsets.UTF_8);
 			final ObjModel objModel = parser.parse();
-			meshViews = MeshBuilder.build(objModel, MeshBuilder.BuildMode.BY_GROUP);
+			meshViewsForGroups = MeshBuilder.build(objModel, MeshBuilder.BuildMode.BY_GROUP);
 			// fail fast
             head();
             palate();
@@ -66,23 +69,23 @@ public class PacManModel3D {
 	}
 
     public MeshView head() {
-        return meshViewOrFail(ID_HEAD);
+        return meshViewOrFail(GROUP_ID_HEAD);
     }
 
     public MeshView palate() {
-        return meshViewOrFail(ID_PALATE);
+        return meshViewOrFail(GROUP_ID_PALATE);
     }
 
     public MeshView eyes() {
-        return meshViewOrFail(ID_EYES);
+        return meshViewOrFail(GROUP_ID_EYES);
     }
 
-    private MeshView meshViewOrFail(String name) {
-        final MeshView meshView = meshViews.get(name);
+    private MeshView meshViewOrFail(String groupName) {
+        final MeshView meshView = meshViewsForGroups.get(groupName);
         if (meshView != null) {
             return meshView;
         }
-        throw new IllegalArgumentException("Mesh view for name %s does not exist".formatted(name));
+        throw new IllegalArgumentException("Mesh view for group name %s does not exist".formatted(groupName));
     }
 
 
