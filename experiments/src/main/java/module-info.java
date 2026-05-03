@@ -11,7 +11,7 @@ module experiments {
     requires de.amr.basics;
 
     requires de.amr.objparser;
-    requires de.amr.meshviewer;
+    requires de.amr.meshbuilder;
 
     exports experiments.custommaps;
     exports experiments.scooter;

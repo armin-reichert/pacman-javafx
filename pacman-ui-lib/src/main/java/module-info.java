@@ -8,7 +8,7 @@ open module de.amr.pacmanfx.uilib {
     requires org.tinylog.api;
 
     requires de.amr.basics;
-    requires de.amr.meshviewer;
+    requires de.amr.meshbuilder;
     requires de.amr.objparser;
     requires de.amr.pacmanfx.core;
 
