@@ -25,18 +25,21 @@ public class GhostModel3D {
 
 	private static final String OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/ghost.obj";
 
-	private static final String ID_PUPILS   = "Object.Sphere.1.Group.Pupils";
-    private static final String ID_EYEBALLS = "Object.Sphere.2.Group.Eyeballs";
-    private static final String ID_DRESS    = "Object.Sphere.3.Group.Dress";
+	private static final String GROUP_ID_PUPILS   = "Object.Sphere.1.Group.Pupils";
+    private static final String GROUP_ID_EYEBALLS = "Object.Sphere.2.Group.Eyeballs";
+    private static final String GROUP_ID_DRESS    = "Object.Sphere.3.Group.Dress";
 
-	private final Map<String, MeshView> meshViews;
+	private final Map<String, MeshView> meshViewsForGroups;
 
 	private GhostModel3D() {
+        final URL url = getClass().getResource(OBJ_FILE);
+        if (url == null) {
+            throw new RuntimeException("3D model cannot be loaded from file: " + OBJ_FILE);
+        }
+        final var parser = new ObjFileParser(url, StandardCharsets.UTF_8);
 		try {
-			final URL url = getClass().getResource(OBJ_FILE);
-			final var parser = new ObjFileParser(url, StandardCharsets.UTF_8);
 			final ObjModel objModel = parser.parse();
-			meshViews = MeshBuilder.build(objModel, MeshBuilder.BuildMode.BY_GROUP);
+			meshViewsForGroups = MeshBuilder.build(objModel, MeshBuilder.BuildMode.BY_GROUP);
 			// access meshes, fail fast
             dress();
 			eyeballs();
@@ -47,7 +50,7 @@ public class GhostModel3D {
 	}
 
 	private MeshView meshViewOrFail(String name) {
-		final MeshView meshView = meshViews.get(name);
+		final MeshView meshView = meshViewsForGroups.get(name);
 		if (meshView != null) {
 			return meshView;
 		}
@@ -55,14 +58,14 @@ public class GhostModel3D {
 	}
 
 	public MeshView dress() {
-		return meshViewOrFail(ID_DRESS);
+		return meshViewOrFail(GROUP_ID_DRESS);
 	}
 
 	public MeshView eyeballs() {
-		return meshViewOrFail(ID_EYEBALLS);
+		return meshViewOrFail(GROUP_ID_EYEBALLS);
 	}
 
 	public MeshView pupils() {
-		return meshViewOrFail(ID_PUPILS);
+		return meshViewOrFail(GROUP_ID_PUPILS);
 	}
 }
