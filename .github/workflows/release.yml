@@ -54,25 +54,16 @@ jobs:
         uses: gradle/wrapper-validation-action@v2
 
       # ------------------------------------------------------------
-      # 4. Publish javafx-objimporter to GitHub Packages
-      # ------------------------------------------------------------
-      - name: Publish javafx-objimporter
-        working-directory: javafx-objimporter
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew --info --stacktrace publish
-
-      # ------------------------------------------------------------
-      # 5. Build pacman-javafx installers (using GitHub Packages)
+      # 4. Build pacman-javafx installers (using GitHub Packages)
       # ------------------------------------------------------------
       - name: Build installers
-        working-directory: pacman-javafx
+        working-directory: ${{ github.workspace }}/pacman-javafx
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew --info --stacktrace jpackage
 
       # ------------------------------------------------------------
-      # 6. Upload installers
+      # 5. Upload installers
       # ------------------------------------------------------------
       - name: Upload Windows installer
         if: matrix.os == 'windows-latest'

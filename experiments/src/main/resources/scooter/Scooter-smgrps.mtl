@@ -1,0 +1,128 @@
+# Object = Scooter-smgrps
+# Date = 2013/3/24
+# Original object = Scooter
+# Creator = (C) Copyright Andrew Kator & Jennifer Legaz
+# License = Creative Commons Attribution 3.0 United States License
+# Contributor = InteractiveMesh e.K. http://www.InteractiveMesh.com/impressum.html
+
+newmtl ChromAppear
+Ka 0.0 0.0 0.0
+Kd 0.87059 0.87059 0.87059
+Ks 0.30196 0.30196 0.30196
+Ns 16.138401
+illum 2 
+
+newmtl ControlsAppear
+Ka 0.0 0.0 0.0
+Kd 0.3451 0.3451 0.3451
+Ks 0.47059 0.47059 0.47059
+Ns 16.138401
+illum 2 
+
+newmtl EngineAppear
+Ka 0.0 0.0 0.0
+Kd 0.47059 0.47059 0.47059
+Ks 0.25098 0.25098 0.25098
+Ns 62.7855
+illum 2 
+
+newmtl MirrorAppear
+Ka 0.0 0.0 0.0
+Kd 0.28 0.28 0.28
+Ks 0.8 0.8 0.8
+Ns 128.0
+illum 2 
+
+newmtl PassengerGuardDarkAppear
+Ka 0.0 0.0 0.0
+Kd 0.3451 0.3451 0.3451
+Ks 0.40784 0.40784 0.40784
+Ns 62.4299
+illum 2 
+
+newmtl TailightAppear
+Ka 0.0 0.0 0.0
+Kd 0.8 0.0 0.0
+Ks 0.5 0.5 0.5
+Ns 32.2674
+illum 2 
+
+newmtl TireRubberAppear
+Ka 0.0 0.0 0.0
+Kd 0.30196 0.30196 0.30196
+Ks 0.4 0.4 0.4
+Ns 64.182495
+illum 2 
+
+newmtl SignalAppear
+Ka 0.0 0.0 0.0
+Kd 0.8 0.48 0.0
+Ks 0.50196 0.50196 0.50196
+Ns 63.8269
+illum 2 
+
+newmtl HeadLightAppear
+Ka 0.0 0.0 0.0
+Kd 0.69804 0.69804 0.81961
+Ks 0.50196 0.50196 0.50196
+Ns 31.9245
+d 0.75
+illum 2 
+
+newmtl SpeedometerGlasAppear
+Ka 0.0 0.0 0.0
+Kd 0.48 0.48 0.56
+Ks 0.5 0.5 0.5
+Ns 128.0
+d 0.3
+illum 2 
+
+newmtl SeatBackAppear
+Ka 0.0 0.0 0.0
+Kd 0.21176 0.21176 0.21176
+Ks 0.45098 0.45098 0.45098
+Ns 19.6563
+illum 2 
+
+newmtl RimAppear
+Ka 0.0 0.0 0.0
+Kd 0.9098 0.9098 0.9098
+Ks 0.28235 0.28235 0.28235
+Ns 13.331699
+illum 2 
+
+newmtl SpeedometerReflectorAppear
+Ka 0.0 0.0 0.0
+Kd 0.8 0.8 0.8
+Ks 1.5 1.5 1.5
+Ns 128.0
+illum 2 
+
+newmtl TireTreadAppear
+Ka 0.0 0.0 0.0
+Kd 0.14902 0.14902 0.14902
+Ks 0.63137 0.63137 0.63137
+Ns 11.9347
+illum 2 
+
+newmtl PassengerGuardAppear
+Ka 0.0 0.0 0.0
+Kd 1.0 0.4 0.4
+Ks 0.61176 0.61176 0.61176
+Ns 62.0743
+illum 2 
+
+newmtl ChromDarkerAppear
+Ka 0.0 0.0 0.0
+Kd 0.8 0.8 0.8
+Ks 0.25098 0.25098 0.25098
+Ns 32.2674
+illum 2 
+
+newmtl FrontColumnAppear
+Ka 0.0 0.0 0.0
+Kd 0.87059 0.87059 0.0
+Ks 0.30196 0.30196 0.30196
+Ns 64.881004
+illum 2 
+
