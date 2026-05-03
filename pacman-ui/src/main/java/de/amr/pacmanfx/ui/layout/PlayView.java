@@ -3,13 +3,12 @@
  */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.basics.fsm.State;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameFlow;
+import de.amr.pacmanfx.model.GameFlow.CanonicalGameState;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
@@ -91,13 +90,16 @@ public class PlayView extends StackPane implements View {
     private Dashboard dashboard;
 
     public PlayView(GameUI ui, Scene parentScene, DashboardConfig dashboardConfig) {
-        this.ui = requireNonNull(ui);
-        this.parentScene = requireNonNull(parentScene);
+        requireNonNull(ui);
+        requireNonNull(parentScene);
+        requireNonNull(dashboardConfig);
 
+        this.ui = ui;
+        this.parentScene = parentScene;
         this.contextMenu = new GameUI_ContextMenu(ui);
         this.helpLayer = new HelpLayer(canvasDecorationPane);
 
-        createDashboard(requireNonNull(dashboardConfig));
+        createDashboard(dashboardConfig);
         configureCanvasDecorationPane();
         composeLayout();
         configureActionBindings();
@@ -194,9 +196,8 @@ public class PlayView extends StackPane implements View {
 
     @Override
     public void onGameEvent(GameEvent gameEvent) {
-        final Game game = ui.gameContext().game();
-        final State<Game> gameState = game.flow().state();
         switch (gameEvent) {
+
             case LevelCreatedEvent levelCreatedEvent -> {
                 final GameLevel level = levelCreatedEvent.level();
                 final UIConfig uiConfig = ui.currentConfig();
@@ -206,16 +207,18 @@ public class PlayView extends StackPane implements View {
                 level.ghosts().forEach(ghost ->
                     ghost.setAnimations(uiConfig.createGhostAnimations(ghost.personality())));
 
-                miniView.onLevelCreated(level);
+                miniView.setGameLevel(level);
                 miniView.slideIn();
                 // size of game scene might have changed, so re-embed
                 optCurrentGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
             }
-            case GameStateChangeEvent _ -> {
-                if (gameState.nameMatches(GameFlow.CanonicalGameState.LEVEL_COMPLETE.name())) {
+
+            case GameStateChangeEvent stateChangeEvent -> {
+                if (stateChangeEvent.newState().nameMatches(CanonicalGameState.LEVEL_COMPLETE.name())) {
                     miniView.slideOut();
                 }
             }
+
             default -> {}
         }
 
@@ -334,7 +337,7 @@ public class PlayView extends StackPane implements View {
     private void composeLayout() {
         StackPane.setAlignment(PAUSED_ICON, Pos.CENTER);
         widgetLayer.setLeft(dashboard);
-        widgetLayer.setRight(miniView);
+        widgetLayer.setRight(miniView.container());
         canvasLayer.setCenter(canvasDecorationPane);
         getChildren().addAll(canvasLayer, widgetLayer, helpLayer, PAUSED_ICON);
     }
@@ -359,7 +362,7 @@ public class PlayView extends StackPane implements View {
             dashboard.visibleProperty(), GameUI.PROPERTY_MINI_VIEW_ON
         ));
 
-        miniView.visibleProperty().bind(Bindings.createObjectBinding(
+        miniView.container().visibleProperty().bind(Bindings.createObjectBinding(
             () -> GameUI.PROPERTY_MINI_VIEW_ON.get() && ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D),
             GameUI.PROPERTY_MINI_VIEW_ON, gameScene
         ));

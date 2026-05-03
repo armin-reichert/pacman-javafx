@@ -19,10 +19,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -35,78 +32,68 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.GameUI.*;
 import static java.util.Objects.requireNonNull;
 
-public class MiniGameView extends VBox {
+public class MiniGameView {
 
-    public static final Duration SLIDE_IN_DURATION = Duration.seconds(1);
+    public static final Duration SLIDE_IN_DURATION  = Duration.seconds(1);
     public static final Duration SLIDE_OUT_DURATION = Duration.seconds(2);
 
-    private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
+    private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
     private final ObjectProperty<Vector2i> worldSize = new SimpleObjectProperty<>(ARCADE_MAP_SIZE_IN_PIXELS);
 
-    private final HBox layout;
-    private final Canvas canvas;
+    private final Canvas canvas = new Canvas();
+    private final VBox container = new VBox();
+    private final HBox contentPane;
 
     private GameUI ui;
 
     private final BaseRenderer canvasRenderer;
-    private GameLevelRenderer gameLevelRenderer;
-    private ActorRenderer actorRenderer;
 
-    private long drawCallCount;
+    // Note: The renderers cannot be created in the constructor, because the game controller has not yet
+    //       selected a game variant when the constructor is called, so no UI configuration is available!
+    private GameLevelRenderer levelRenderer;
+    private ActorRenderer actorRenderer;
 
     private TranslateTransition slideInAnimation;
     private TranslateTransition slideOutAnimation;
 
-    public MiniGameView() {
-        canvas = new Canvas();
-        bindCanvasSize();
+    // Used in debug draw mode
+    private long drawCallCount;
 
+    public MiniGameView() {
         canvasRenderer = new BaseRenderer(canvas);
 
-        // The VBox fills the complete parent container height (why?), so we put the canvas
+        // The container fills the complete parent container height (why?), so we put the canvas
         // into an HBox that does not grow in height and provides some padding around the canvas.
-        layout = new HBox(canvas);
-        layout.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
-        layout.setPadding(new Insets(0, 10, 0, 10));
-        VBox.setVgrow(layout, Priority.NEVER);
-        getChildren().add(layout);
+        contentPane = new HBox(canvas);
+        contentPane.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
+        contentPane.setPadding(new Insets(0, 10, 0, 10));
+        VBox.setVgrow(contentPane, Priority.NEVER);
 
-        opacityProperty().bind(PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
+        container.getChildren().add(contentPane);
+
+        container.opacityProperty().bind(PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
+
         scaling.bind(Bindings.createDoubleBinding(
             () -> canvas.getHeight() / worldSize.get().y(),
             canvas.heightProperty(), worldSize
         ));
     }
 
-    private void bindCanvasSize() {
-        canvas.heightProperty().bind(PROPERTY_MINI_VIEW_HEIGHT);
-        canvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> {
-                Vector2i size = worldSize.get();
-                double aspect = (double) size.x() / size.y();
-                return aspect * canvas.getHeight();
-            },
-            worldSize, canvas.heightProperty()
-        ));
-    }
-
-    private void unbindCanvasSize() {
-        canvas.heightProperty().unbind();
-        canvas.widthProperty().unbind();
+    public Pane container() {
+        return container;
     }
 
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
+        bindCanvasSize();
     }
 
-    public void onLevelCreated(GameLevel gameLevel) {
-        worldSize.set(gameLevel.worldMap().terrainLayer().sizeInPixel());
-        /* TODO: The renderers cannot be created in the constructor because the game controller has not yet
-            selected a game variant when the constructor is called, so no UI configuration is available! */
+    public void setGameLevel(GameLevel level) {
+        worldSize.set(level.worldMap().terrainLayer().sizeInPixel());
 
-        gameLevelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
-        gameLevelRenderer.scalingProperty().bind(scaling);
-        gameLevelRenderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
+        levelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
+        levelRenderer.scalingProperty().bind(scaling);
+        levelRenderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
 
         actorRenderer = ui.currentConfig().createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scaling);
@@ -117,7 +104,7 @@ public class MiniGameView extends VBox {
         if (slideInAnimation != null) {
             slideInAnimation.stop();
         }
-        slideInAnimation = new TranslateTransition(SLIDE_IN_DURATION, this);
+        slideInAnimation = new TranslateTransition(SLIDE_IN_DURATION, container);
         slideInAnimation.setToY(0);
         slideInAnimation.setByY(10);
         slideInAnimation.setDelay(Duration.seconds(1));
@@ -131,8 +118,8 @@ public class MiniGameView extends VBox {
         if (slideOutAnimation != null) {
             slideOutAnimation.stop();
         }
-        slideOutAnimation = new TranslateTransition(SLIDE_OUT_DURATION, this);
-        slideOutAnimation.setToY(-layout.getHeight());
+        slideOutAnimation = new TranslateTransition(SLIDE_OUT_DURATION, container);
+        slideOutAnimation.setToY(-contentPane.getHeight());
         slideOutAnimation.setByY(10);
         slideOutAnimation.setDelay(Duration.seconds(2));
         slideOutAnimation.setInterpolator(Interpolator.EASE_IN);
@@ -149,7 +136,7 @@ public class MiniGameView extends VBox {
     public void draw() {
         drawCallCount += 1;
 
-        if (!isVisible() || gameLevelRenderer == null) {
+        if (!container.isVisible() || levelRenderer == null) {
             return;
         }
         canvasRenderer.clearCanvas();
@@ -166,8 +153,8 @@ public class MiniGameView extends VBox {
                 CommonRenderInfoKey.MAP_FLASHING, false,
                 CommonRenderInfoKey.TICK, ui.gameContext().clock().tickCount()
             ));
-            gameLevelRenderer.applyLevelSettings(level, info);
-            gameLevelRenderer.drawLevel(level, info);
+            levelRenderer.applyLevelSettings(level, info);
+            levelRenderer.drawLevel(level, info);
 
             level.optBonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
             actorRenderer.drawActor(level.pac());
@@ -184,4 +171,24 @@ public class MiniGameView extends VBox {
             );
         }
     }
+
+    // Private area
+
+    private void bindCanvasSize() {
+        canvas.heightProperty().bind(PROPERTY_MINI_VIEW_HEIGHT);
+        canvas.widthProperty().bind(Bindings.createDoubleBinding(
+            () -> {
+                final double aspect = (double) worldSize.get().x() / worldSize.get().y();
+                return aspect * canvas.getHeight();
+            },
+            worldSize, canvas.heightProperty()
+        ));
+    }
+
+    private void unbindCanvasSize() {
+        canvas.heightProperty().unbind();
+        canvas.widthProperty().unbind();
+    }
+
+
 }
