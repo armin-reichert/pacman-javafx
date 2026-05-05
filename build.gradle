@@ -6,11 +6,8 @@ plugins {
 
 allprojects {
     repositories {
-        maven {
-            url = "https://dl.cloudsmith.io/public/armin-reichert-qt4o/javafx-objimporter/maven/"
-        }
         mavenCentral()
-        //mavenLocal()
+        mavenLocal()  // for javafx-objimporter
     }
 }
 
