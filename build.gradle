@@ -10,7 +10,7 @@ allprojects {
             url = "https://dl.cloudsmith.io/public/armin-reichert-qt4o/javafx-objimporter/maven/"
         }
         mavenCentral()
-        mavenLocal()
+        //mavenLocal()
     }
 }
 
