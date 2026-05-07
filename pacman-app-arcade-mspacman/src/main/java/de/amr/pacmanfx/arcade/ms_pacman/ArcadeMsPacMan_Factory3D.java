@@ -7,10 +7,10 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.d3.DefaultFactory3D;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
+import de.amr.pacmanfx.uilib.model3D.PacManGameModel3D;
 import de.amr.pacmanfx.uilib.model3D.actor.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
-import de.amr.pacmanfx.uilib.model3D.actor.PacManModel3D;
 import javafx.scene.Group;
 
 import static java.util.Objects.requireNonNull;
@@ -26,6 +26,6 @@ public class ArcadeMsPacMan_Factory3D extends DefaultFactory3D {
     public Group createLivesCounterShape3D(EntityConfig entityConfig) {
         requireNonNull(entityConfig);
         final PacConfig pacConfig = entityConfig.pacConfig().withModifiedSize3D(entityConfig.livesCounter().shapeSize());
-        return PacManModel3D.instance().createMsPacManBody(pacConfig);
+        return PacManGameModel3D.instance().createMsPacManBody(pacConfig);
     }
 }

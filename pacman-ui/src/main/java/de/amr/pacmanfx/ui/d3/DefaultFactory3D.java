@@ -121,9 +121,9 @@ public class DefaultFactory3D implements Factory3D {
         final GhostColorSet colorSet = ghostConfig.createGhostColorSet();
         final GhostMaterials materials = ghostMaterialsCache.computeIfAbsent(colorSet, this::createGhostMaterial);
         final GhostMeshes meshes = new GhostMeshes(
-            PacManGameModel3D.instance().dress().getMesh(),
-            PacManGameModel3D.instance().pupils().getMesh(),
-            PacManGameModel3D.instance().eyeballs().getMesh()
+            PacManGameModel3D.instance().ghostDress().getMesh(),
+            PacManGameModel3D.instance().ghostPupils().getMesh(),
+            PacManGameModel3D.instance().ghostEyeballs().getMesh()
         );
 
         return new GhostAppearance3D(
@@ -140,7 +140,7 @@ public class DefaultFactory3D implements Factory3D {
     public Group createLivesCounterShape3D(EntityConfig entityConfig) {
         requireNonNull(entityConfig);
         final PacConfig pacConfig = entityConfig.pacConfig().withModifiedSize3D(entityConfig.livesCounter().shapeSize());
-        return PacManModel3D.instance().createPacBody(pacConfig);
+        return PacManGameModel3D.instance().createPacBody(pacConfig);
     }
 
     @Override

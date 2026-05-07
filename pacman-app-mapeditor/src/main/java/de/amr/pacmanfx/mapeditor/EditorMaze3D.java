@@ -121,7 +121,7 @@ public class EditorMaze3D extends Group {
 
         foodGroup.visibleProperty().bind(foodVisible);
 
-        pacmanShape3D = PacManModel3D.instance().createPacBody(PAC_CONFIG);
+        pacmanShape3D = PacManGameModel3D.instance().createPacBody(PAC_CONFIG);
         pacmanShape3D.visibleProperty().bind(actorsVisibleProperty());
 
         ghostShapes = new Group[] {
@@ -203,13 +203,13 @@ public class EditorMaze3D extends Group {
     private Group createGhostBody(Color dressColor, double rotateY) {
         final Group body = new Group();
 
-        final MeshView dressMeshView = new MeshView(PacManGameModel3D.instance().dress().getMesh());
+        final MeshView dressMeshView = new MeshView(PacManGameModel3D.instance().ghostDress().getMesh());
         dressMeshView.setMaterial(coloredPhongMaterial(dressColor));
 
-        final MeshView pupilsMeshView = new MeshView(PacManGameModel3D.instance().pupils().getMesh());
+        final MeshView pupilsMeshView = new MeshView(PacManGameModel3D.instance().ghostPupils().getMesh());
         pupilsMeshView.setMaterial(coloredPhongMaterial(Color.BLUE));
 
-        final MeshView eyeballsMeshView = new MeshView(PacManGameModel3D.instance().eyeballs().getMesh());
+        final MeshView eyeballsMeshView = new MeshView(PacManGameModel3D.instance().ghostEyeballs().getMesh());
         eyeballsMeshView.setMaterial(coloredPhongMaterial(Color.WHITE));
 
         final var dressGroup = new Group(dressMeshView);

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
+import de.amr.pacmanfx.uilib.model3D.PacManGameModel3D;
 import de.amr.pacmanfx.uilib.model3D.animation.HipSwayingAnimation;
 import de.amr.pacmanfx.uilib.model3D.animation.Pac3DChewingAnimation;
 import javafx.animation.Interpolator;
@@ -23,10 +24,10 @@ public class MsPacMan3D extends Pac3D {
 
         requireNonNull(pacConfig);
 
-        setBody(PacManModel3D.instance().createPacBody(pacConfig));
-        setJaw(PacManModel3D.instance().createBlindPacBody(pacConfig));
+        setBody(PacManGameModel3D.instance().createPacBody(pacConfig));
+        setJaw(PacManGameModel3D.instance().createBlindPacBody(pacConfig));
 
-        final Group femaleParts = PacManModel3D.instance().createFemaleBodyParts(pacConfig);
+        final Group femaleParts = PacManGameModel3D.instance().createFemaleBodyParts(pacConfig);
         getChildren().add(femaleParts);
 
         this.animations.register(AnimationID.PAC_CHEWING, new Pac3DChewingAnimation(this));
