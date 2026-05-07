@@ -7,6 +7,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.model3D.PacManGameModel3D;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
 import de.amr.pacmanfx.uilib.model3D.world.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Wall3D;
@@ -202,13 +203,13 @@ public class EditorMaze3D extends Group {
     private Group createGhostBody(Color dressColor, double rotateY) {
         final Group body = new Group();
 
-        final MeshView dressMeshView = new MeshView(GhostModel3D.instance().dress().getMesh());
+        final MeshView dressMeshView = new MeshView(PacManGameModel3D.instance().dress().getMesh());
         dressMeshView.setMaterial(coloredPhongMaterial(dressColor));
 
-        final MeshView pupilsMeshView = new MeshView(GhostModel3D.instance().pupils().getMesh());
+        final MeshView pupilsMeshView = new MeshView(PacManGameModel3D.instance().pupils().getMesh());
         pupilsMeshView.setMaterial(coloredPhongMaterial(Color.BLUE));
 
-        final MeshView eyeballsMeshView = new MeshView(GhostModel3D.instance().eyeballs().getMesh());
+        final MeshView eyeballsMeshView = new MeshView(PacManGameModel3D.instance().eyeballs().getMesh());
         eyeballsMeshView.setMaterial(coloredPhongMaterial(Color.WHITE));
 
         final var dressGroup = new Group(dressMeshView);

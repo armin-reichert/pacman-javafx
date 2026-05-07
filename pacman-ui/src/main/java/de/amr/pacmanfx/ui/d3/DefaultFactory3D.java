@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
+import de.amr.pacmanfx.uilib.model3D.PacManGameModel3D;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
@@ -120,9 +121,9 @@ public class DefaultFactory3D implements Factory3D {
         final GhostColorSet colorSet = ghostConfig.createGhostColorSet();
         final GhostMaterials materials = ghostMaterialsCache.computeIfAbsent(colorSet, this::createGhostMaterial);
         final GhostMeshes meshes = new GhostMeshes(
-            GhostModel3D.instance().dress().getMesh(),
-            GhostModel3D.instance().pupils().getMesh(),
-            GhostModel3D.instance().eyeballs().getMesh()
+            PacManGameModel3D.instance().dress().getMesh(),
+            PacManGameModel3D.instance().pupils().getMesh(),
+            PacManGameModel3D.instance().eyeballs().getMesh()
         );
 
         return new GhostAppearance3D(
