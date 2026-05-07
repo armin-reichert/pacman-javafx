@@ -17,6 +17,7 @@ import javafx.scene.transform.Translate;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -46,6 +47,7 @@ public class PacManGameModel3D {
     private static final String GROUP_ID_PAC_PALATE = "PacManPalate.PacManPalate_grey_wall";
 
     private final Map<String, MeshView> meshViewsForGroups;
+    private final Map<String, PhongMaterial> materials;
 
     private PacManGameModel3D() {
         final URL file = PacManGameModel3D.class.getResource(OBJ_FILE);
@@ -55,10 +57,16 @@ public class PacManGameModel3D {
         final ObjFileParser parser = new ObjFileParser(file, StandardCharsets.UTF_8);
         try {
             final ObjModel objModel = parser.parse();
-            meshViewsForGroups = MeshBuilder.build(objModel, MeshBuilder.BuildMode.BY_GROUP);
+            final MeshBuilder builder = new MeshBuilder(objModel);
+            meshViewsForGroups = builder.buildMeshViewsByGroup();
+            materials = new HashMap<>(builder.materials());
         } catch (Exception x) {
             throw new IllegalStateException(x);
         }
+    }
+
+    public Map<String, PhongMaterial> materials() {
+        return materials;
     }
 
     public MeshView ghostDress() {
@@ -138,6 +146,8 @@ public class PacManGameModel3D {
 
     private MeshView createHead(PacConfig config) {
         final var head = new MeshView(pacHead().getMesh());
+        // to use Pac-Man material from OBJ file:
+//        final PhongMaterial headMaterial = materials.getOrDefault("yellow_pacman", coloredPhongMaterial(config.colors().head()));
         final PhongMaterial headMaterial = coloredPhongMaterial(config.colors().head());
         head.setMaterial(headMaterial);
 
