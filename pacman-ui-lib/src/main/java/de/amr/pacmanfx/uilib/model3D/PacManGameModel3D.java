@@ -10,6 +10,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
+import static java.util.Objects.requireNonNull;
 
 public class PacManGameModel3D {
 
@@ -103,14 +105,6 @@ public class PacManGameModel3D {
         return assertMeshViewExists(GROUP_ID_PAC_EYES);
     }
 
-    private MeshView assertMeshViewExists(String name) {
-        final MeshView meshView = meshViews.get(name);
-        if (meshView != null) {
-            return meshView;
-        }
-        throw new IllegalArgumentException("Mesh view for group name %s does not exist".formatted(name));
-    }
-
     /**
      * Creates a fully assembled Pac-Man body with head, eyes, and palate.
      *
@@ -118,18 +112,13 @@ public class PacManGameModel3D {
      * @return a new Pac body group
      */
     public Group createPacBody(PacConfig config) {
+        requireNonNull(config);
         final MeshView head = createHead(config);
-
-        final var eyes = new MeshView(pacEyes().getMesh());
-        eyes.setMaterial(coloredPhongMaterial(config.colors().eyes()));
-
-        final var palate = new MeshView(pacPalate().getMesh());
-        palate.setMaterial((coloredPhongMaterial(config.colors().palate())));
-
+        final MeshView eyes = createMeshView(pacEyes().getMesh(), coloredPhongMaterial(config.colors().eyes()));
+        final MeshView palate = createMeshView(pacPalate().getMesh(), coloredPhongMaterial(config.colors().palate()));
         final Group body = new Group(head, eyes, palate);
         centerOverOrigin(head, List.of(eyes, palate));
         normalizeBodySize(body, config.size3D());
-
         return fixShapeOrientation(body);
     }
 
@@ -140,42 +129,13 @@ public class PacManGameModel3D {
      * @return a new Pac body without eyeballs
      */
     public Group createBlindPacBody(PacConfig config) {
+        requireNonNull(config);
         final MeshView head = createHead(config);
-
-        final var palate = new MeshView(pacPalate().getMesh());
-        palate.setMaterial(coloredPhongMaterial(config.colors().palate()));
-
+        final MeshView palate = createMeshView(pacPalate().getMesh(), coloredPhongMaterial(config.colors().palate()));
         final Group body = new Group(head, palate);
         centerOverOrigin(head, List.of(palate));
         normalizeBodySize(body, config.size3D());
-
         return fixShapeOrientation(body);
-    }
-
-    private MeshView createHead(PacConfig config) {
-        final var head = new MeshView(pacHead().getMesh());
-        // to use Pac-Man material from OBJ file:
-//        final PhongMaterial headMaterial = materials.getOrDefault("yellow_pacman", coloredPhongMaterial(config.colors().head()));
-        final PhongMaterial headMaterial = coloredPhongMaterial(config.colors().head());
-        head.setMaterial(headMaterial);
-
-        return head;
-    }
-
-    private static void centerOverOrigin(Node master, List<Node> slaves) {
-        final Bounds b = master.getBoundsInLocal();
-        final var centeredOverOrigin = new Translate(-b.getCenterX(), -b.getCenterY(), -b.getCenterZ());
-        master.getTransforms().add(centeredOverOrigin);
-        slaves.stream().map(Node::getTransforms).forEach(tf -> tf.add(centeredOverOrigin));
-    }
-
-    private static void normalizeBodySize(Node body, float size) {
-        final var bounds = body.getBoundsInLocal();
-        body.getTransforms().add(new Scale(
-            size / bounds.getWidth(),
-            size / bounds.getHeight(),
-            size / bounds.getDepth())
-        );
     }
 
     /**
@@ -185,6 +145,8 @@ public class PacManGameModel3D {
      * @return a new female parts group
      */
     public Group createFemaleBodyParts(PacConfig config) {
+        requireNonNull(config);
+
         final int sphereDivisions = 16; // 64 is default
 
         final PhongMaterial bowMaterial = coloredPhongMaterial(config.msColors().hairBow());
@@ -240,4 +202,45 @@ public class PacManGameModel3D {
         return new Group(createPacBody(config), createFemaleBodyParts(config));
     }
 
+    // private
+
+    private static MeshView createMeshView(Mesh mesh, PhongMaterial material) {
+        final MeshView meshView = new MeshView(mesh);
+        meshView.setMaterial(material);
+        return meshView;
+    }
+
+    private MeshView assertMeshViewExists(String name) {
+        final MeshView meshView = meshViews.get(name);
+        if (meshView != null) {
+            return meshView;
+        }
+        throw new IllegalArgumentException("Mesh view for group name %s does not exist".formatted(name));
+    }
+
+    private MeshView createHead(PacConfig config) {
+        final var head = new MeshView(pacHead().getMesh());
+        // to use Pac-Man material from OBJ file:
+//        final PhongMaterial headMaterial = materials.getOrDefault("yellow_pacman", coloredPhongMaterial(config.colors().head()));
+        final PhongMaterial headMaterial = coloredPhongMaterial(config.colors().head());
+        head.setMaterial(headMaterial);
+
+        return head;
+    }
+
+    private static void centerOverOrigin(Node master, List<Node> slaves) {
+        final Bounds b = master.getBoundsInLocal();
+        final var centeredOverOrigin = new Translate(-b.getCenterX(), -b.getCenterY(), -b.getCenterZ());
+        master.getTransforms().add(centeredOverOrigin);
+        slaves.stream().map(Node::getTransforms).forEach(tf -> tf.add(centeredOverOrigin));
+    }
+
+    private static void normalizeBodySize(Node body, float size) {
+        final var bounds = body.getBoundsInLocal();
+        body.getTransforms().add(new Scale(
+            size / bounds.getWidth(),
+            size / bounds.getHeight(),
+            size / bounds.getDepth())
+        );
+    }
 }
