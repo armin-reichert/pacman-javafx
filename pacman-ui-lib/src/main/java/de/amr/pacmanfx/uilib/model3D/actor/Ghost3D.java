@@ -47,6 +47,9 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
     private MeshView pupilsShape;
     private MeshView eyeballsShape;
 
+    private final Rotate facing = new Rotate(0, Rotate.Z_AXIS);
+    private final Scale scaling = new Scale(1, 1, 1);
+
     public Ghost3D(
         ManagedAnimationsRegistry animations,
         Ghost ghost,
@@ -65,6 +68,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         requireNonNegative(size);
 
         dressGroup = new Group(dressShape);
+
         final var eyesGroup = new Group(pupilsShape, eyeballsShape);
 
         getChildren().setAll(dressGroup, eyesGroup);
@@ -78,15 +82,10 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         dressShape.getTransforms().add(centeredOverOrigin);
         eyesGroup.getTransforms().add(centeredOverOrigin);
 
+        getTransforms().addAll(scaling, facing);
         PacManGameModel3D.fixShapeOrientation(this);
 
-        final Bounds bounds = getBoundsInLocal();
-        getTransforms().add(
-            new Scale(
-                size / bounds.getWidth(),
-                size / bounds.getHeight(),
-                size / bounds.getDepth())
-        );
+        setSize(size);
 
         animations.register(AnimationID.GHOST_DRESS.forGhost(ghost),    new DressAnimation(ghost, dressGroup));
         animations.register(AnimationID.GHOST_FLASHING.forGhost(ghost), new GhostFlashingAnimation(ghost, materialSet, colorSet));
@@ -104,6 +103,13 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         dressGroup = null;
     }
 
+    public void setSize(double size) {
+        final Bounds b = getBoundsInLocal();
+        scaling.setX(size / b.getWidth());
+        scaling.setY(size / b.getHeight());
+        scaling.setZ(size / b.getDepth());
+    }
+
     public Ghost ghost() {
         return ghost;
     }
@@ -118,8 +124,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
 
     public void turnTowards(Direction dir) {
         requireNonNull(dir);
-        setRotationAxis(Rotate.Z_AXIS);
-        setRotate(switch (dir) {
+        facing.setAngle(switch (dir) {
             case LEFT  -> 0;
             case UP    -> 90;
             case RIGHT -> 180;
