@@ -35,6 +35,11 @@ public class PacManGameModel3D {
         return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
+    public static <T extends Node> T fixShapeOrientation(T shape) {
+        shape.getTransforms().add(new Rotate(270,  Rotate.X_AXIS));
+        return shape;
+    }
+
     // Strange IDs
 
     // Blue ghost behind Pac-Man in the OBJ file has correct initial direction.
@@ -119,9 +124,8 @@ public class PacManGameModel3D {
         final Group body = new Group(head, eyes, palate);
         centerOverOrigin(head, eyes, palate);
         normalizeBodySize(body, config.size3D());
-        fixBodyRotation(body); //TODO fix in obj file
 
-        return body;
+        return fixShapeOrientation(body);
     }
 
     /**
@@ -139,9 +143,8 @@ public class PacManGameModel3D {
         final Group body = new Group(head, palate);
         centerOverOrigin(head, palate);
         normalizeBodySize(body, config.size3D());
-        fixBodyRotation(body); //TODO fix in obj file
 
-        return body;
+        return fixShapeOrientation(body);
     }
 
     private MeshView createHead(PacConfig config) {
@@ -162,12 +165,6 @@ public class PacManGameModel3D {
             -masterBounds.getCenterZ());
         master.getTransforms().add(centeredOverOrigin);
         Stream.of(slaves).map(Node::getTransforms).forEach(tf -> tf.add(centeredOverOrigin));
-    }
-
-    private static void fixBodyRotation(Node body) {
-        body.getTransforms().add(new Rotate(90,  Rotate.X_AXIS));
-        body.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
-        body.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
     }
 
     private static void normalizeBodySize(Node body, float size) {

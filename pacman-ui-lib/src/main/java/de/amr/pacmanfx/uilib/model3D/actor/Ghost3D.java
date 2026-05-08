@@ -10,6 +10,7 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
+import de.amr.pacmanfx.uilib.model3D.PacManGameModel3D;
 import javafx.animation.*;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
@@ -137,12 +138,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         dressShape.getTransforms().add(centeredOverOrigin);
         eyesGroup.getTransforms().add(centeredOverOrigin);
 
-        // TODO: change orientation in OBJ file?
-        getTransforms().addAll(
-            new Rotate(90, Rotate.X_AXIS),
-            new Rotate(180, Rotate.Y_AXIS),
-            new Rotate(180, Rotate.Z_AXIS)
-        );
+        PacManGameModel3D.fixShapeOrientation(this);
 
         final Bounds bounds = getBoundsInLocal();
         getTransforms().add(
