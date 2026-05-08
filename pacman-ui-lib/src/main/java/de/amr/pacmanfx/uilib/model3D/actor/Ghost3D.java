@@ -36,15 +36,16 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         }
     }
 
-    private final Ghost ghost;
-    private final GhostColorSet colorSet;
     private final ManagedAnimationsRegistry animations;
 
+    private final Ghost ghost;
+    private final GhostColorSet colorSet;
     private GhostMaterialSet materialSet;
+
+    private Group dressGroup;
     private MeshView dressShape;
     private MeshView pupilsShape;
     private MeshView eyeballsShape;
-    private Group dressGroup;
 
     public Ghost3D(
         ManagedAnimationsRegistry animations,
