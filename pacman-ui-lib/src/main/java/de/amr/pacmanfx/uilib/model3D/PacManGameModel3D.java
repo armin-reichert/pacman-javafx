@@ -52,7 +52,7 @@ public class PacManGameModel3D {
     private static final String GROUP_ID_PAC_HEAD   = "PacManHead.PacManHead_yellow_pacman";
     private static final String GROUP_ID_PAC_PALATE = "PacManPalate.PacManPalate_grey_wall";
 
-    private final Map<String, MeshView> meshViewsForGroups;
+    private final Map<String, MeshView> meshViews;
     private final Map<String, PhongMaterial> materials;
 
     private PacManGameModel3D() {
@@ -64,7 +64,7 @@ public class PacManGameModel3D {
         try {
             final ObjModel objModel = parser.parse();
             final MeshBuilder builder = new MeshBuilder(objModel);
-            meshViewsForGroups = builder.buildMeshViewsByGroup();
+            meshViews = builder.buildMeshViewsByGroup();
             materials = new HashMap<>(builder.materials());
         } catch (Exception x) {
             throw new IllegalStateException(x);
@@ -76,15 +76,15 @@ public class PacManGameModel3D {
     }
 
     public MeshView ghostDress() {
-        return meshViewOrFail(GROUP_ID_GHOST_DRESS);
+        return assertMeshViewExists(GROUP_ID_GHOST_DRESS);
     }
 
     public MeshView ghostEyeballs() {
-        return meshViewOrFail(GROUP_ID_GHOST_EYEBALLS);
+        return assertMeshViewExists(GROUP_ID_GHOST_EYEBALLS);
     }
 
     public MeshView ghostPupils() {
-        return meshViewOrFail(GROUP_ID_GHOST_PUPILS);
+        return assertMeshViewExists(GROUP_ID_GHOST_PUPILS);
     }
 
     public GhostMeshSet createGhostMeshSet() {
@@ -92,23 +92,23 @@ public class PacManGameModel3D {
     }
 
     public MeshView pacHead() {
-        return meshViewOrFail(GROUP_ID_PAC_HEAD);
+        return assertMeshViewExists(GROUP_ID_PAC_HEAD);
     }
 
     public MeshView pacPalate() {
-        return meshViewOrFail(GROUP_ID_PAC_PALATE);
+        return assertMeshViewExists(GROUP_ID_PAC_PALATE);
     }
 
     public MeshView pacEyes() {
-        return meshViewOrFail(GROUP_ID_PAC_EYES);
+        return assertMeshViewExists(GROUP_ID_PAC_EYES);
     }
 
-    private MeshView meshViewOrFail(String groupName) {
-        final MeshView meshView = meshViewsForGroups.get(groupName);
+    private MeshView assertMeshViewExists(String name) {
+        final MeshView meshView = meshViews.get(name);
         if (meshView != null) {
             return meshView;
         }
-        throw new IllegalArgumentException("Mesh view for group name %s does not exist".formatted(groupName));
+        throw new IllegalArgumentException("Mesh view for group name %s does not exist".formatted(name));
     }
 
     /**
