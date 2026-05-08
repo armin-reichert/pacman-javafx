@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.basics.math.Direction;
@@ -10,7 +11,6 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.GhostMaterialSet;
 import de.amr.pacmanfx.uilib.model3D.PacManGameModel3D;
-import javafx.animation.*;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.shape.MeshView;
@@ -33,22 +33,6 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         public String forGhost(Ghost ghost) {
             requireNonNull(ghost);
             return "%s_%d".formatted(name(), ghost.personality());
-        }
-    }
-
-    public class DressAnimation extends ManagedAnimation {
-
-        public DressAnimation() {
-            super("Ghost Dress Animation (%s)".formatted(ghost.name()));
-            setFactory(() -> {
-                final var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
-                // TODO: I expected this should be the z-axis but...
-                animation.setAxis(Rotate.Y_AXIS);
-                animation.setByAngle(30);
-                animation.setCycleCount(Animation.INDEFINITE);
-                animation.setAutoReverse(true);
-                return animation;
-            });
         }
     }
 
@@ -103,7 +87,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
                 size / bounds.getDepth())
         );
 
-        animations.register(AnimationID.GHOST_DRESS.forGhost(ghost),    new DressAnimation());
+        animations.register(AnimationID.GHOST_DRESS.forGhost(ghost),    new DressAnimation(ghost, dressGroup));
         animations.register(AnimationID.GHOST_FLASHING.forGhost(ghost), new GhostFlashingAnimation(ghost, materialSet, colorSet));
     }
 
