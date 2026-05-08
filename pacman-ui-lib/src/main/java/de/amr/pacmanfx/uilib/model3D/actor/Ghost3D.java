@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
@@ -50,51 +49,6 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
                 animation.setAutoReverse(true);
                 return animation;
             });
-        }
-    }
-
-    public class FlashingAnimation extends ManagedAnimation {
-
-        private Duration totalDuration = Duration.seconds(3);
-        private int numFlashes = 5;
-
-        public FlashingAnimation() {
-            super("Ghost Flashing (%s)".formatted(ghost.name()));
-            setFactory(this::createAnimationFX);
-        }
-
-        public void setTotalDuration(Duration totalDuration) {
-            this.totalDuration = requireNonNull(totalDuration);
-            invalidate();
-        }
-
-        public void setNumFlashes(int numFlashes) {
-            this.numFlashes = Validations.requireNonNegativeInt(numFlashes);
-            invalidate();
-        }
-
-        private Animation createAnimationFX() {
-            final Duration flashEndTime = totalDuration.divide(numFlashes);
-            final Duration highlightTime = flashEndTime.divide(3);
-            final GhostComponentMaterialSet flashingMaterialSet = materialSet.flashingMaterial();
-            final var flashingTimeline = new Timeline(
-                new KeyFrame(highlightTime,
-                    new KeyValue(flashingMaterialSet.dressMaterial().diffuseColorProperty(),  colorSet.flashing().dress()),
-                    new KeyValue(flashingMaterialSet.pupilsMaterial().diffuseColorProperty(), colorSet.flashing().pupils())
-                ),
-                new KeyFrame(flashEndTime,
-                    new KeyValue(flashingMaterialSet.dressMaterial().diffuseColorProperty(),  colorSet.frightened().dress()),
-                    new KeyValue(flashingMaterialSet.pupilsMaterial().diffuseColorProperty(), colorSet.frightened().pupils())
-                )
-            );
-            flashingTimeline.setCycleCount(numFlashes);
-            flashingTimeline.setOnFinished(_ -> {
-                flashingMaterialSet.dressMaterial().setDiffuseColor(colorSet.frightened().dress());
-                flashingMaterialSet.dressMaterial().setSpecularColor(colorSet.frightened().dress().brighter());
-                flashingMaterialSet.pupilsMaterial().setDiffuseColor(colorSet.frightened().pupils());
-                flashingMaterialSet.pupilsMaterial().setSpecularColor(colorSet.frightened().pupils().brighter());
-            });
-            return flashingTimeline;
         }
     }
 
@@ -150,7 +104,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         );
 
         animations.register(AnimationID.GHOST_DRESS.forGhost(ghost),    new DressAnimation());
-        animations.register(AnimationID.GHOST_FLASHING.forGhost(ghost), new FlashingAnimation());
+        animations.register(AnimationID.GHOST_FLASHING.forGhost(ghost), new GhostFlashingAnimation(ghost, materialSet, colorSet));
     }
 
     @Override
@@ -196,9 +150,9 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         setMaterialSet(materialSet.flashingMaterial());
         dressShape.setVisible(true);
 
-        animations.optAnimation(AnimationID.GHOST_FLASHING.forGhost(ghost), FlashingAnimation.class).ifPresent(flashing -> {
+        animations.optAnimation(AnimationID.GHOST_FLASHING.forGhost(ghost), GhostFlashingAnimation.class).ifPresent(flashing -> {
             // TODO: this is crap
-            if (flashing.numFlashes != numFlashes) {
+            if (flashing.numFlashes() != numFlashes) {
                 flashing.stop();
                 flashing.setNumFlashes(numFlashes);
                 flashing.setTotalDuration(Duration.millis(1990));
