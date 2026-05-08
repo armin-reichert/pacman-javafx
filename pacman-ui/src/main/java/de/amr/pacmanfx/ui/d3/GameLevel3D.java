@@ -37,7 +37,7 @@ import de.amr.pacmanfx.uilib.animation.EnergizerParticlesAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
+import de.amr.pacmanfx.uilib.model3D.GhostMaterialSet;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
@@ -444,8 +444,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final List<PhongMaterial> dressMaterials = ghostAppearancesByPersonality()
             .map(GhostAppearance3D::ghost3D)
             .map(Ghost3D::materials)
-            .map(GhostMaterials::normal)
-            .map(GhostComponentMaterials::dress)
+            .map(GhostMaterialSet::normalMaterial)
+            .map(GhostComponentMaterialSet::dressMaterial)
             .toList();
 
         final Maze3D maze3D = entities3D.unique(Maze3D.class);

@@ -6,4 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.actor;
 
 import javafx.scene.paint.PhongMaterial;
 
-public record GhostComponentMaterials(PhongMaterial dress, PhongMaterial eyeballs, PhongMaterial pupils) {}
+public record GhostComponentMaterialSet(
+    PhongMaterial dressMaterial,
+    PhongMaterial eyeballsMaterial,
+    PhongMaterial pupilsMaterial) {}

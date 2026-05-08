@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
+import de.amr.pacmanfx.uilib.model3D.GhostMaterialSet;
 import de.amr.pacmanfx.uilib.model3D.animation.Ghost3DBrakeAnimation;
 import de.amr.pacmanfx.uilib.model3D.animation.Ghost3DPointsAnimation;
 import javafx.beans.value.ChangeListener;
@@ -61,8 +61,8 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
         ManagedAnimationsRegistry animations,
         Ghost ghost,
         GhostColorSet colorSet,
-        GhostMeshes meshes,
-        GhostMaterials materials,
+        GhostMeshSet meshes,
+        GhostMaterialSet materials,
         double size)
     {
         this.animations = requireNonNull(animations);

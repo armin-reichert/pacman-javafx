@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
+import de.amr.pacmanfx.uilib.model3D.GhostMaterialSet;
 import de.amr.pacmanfx.uilib.model3D.PacManGameModel3D;
 import javafx.animation.*;
 import javafx.geometry.Bounds;
@@ -76,22 +76,23 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         private Animation createAnimationFX() {
             final Duration flashEndTime = totalDuration.divide(numFlashes);
             final Duration highlightTime = flashEndTime.divide(3);
+            final GhostComponentMaterialSet flashingMaterialSet = materialSet.flashingMaterial();
             final var flashingTimeline = new Timeline(
                 new KeyFrame(highlightTime,
-                    new KeyValue(materials.flashing().dress().diffuseColorProperty(),  colorSet.flashing().dress()),
-                    new KeyValue(materials.flashing().pupils().diffuseColorProperty(), colorSet.flashing().pupils())
+                    new KeyValue(flashingMaterialSet.dressMaterial().diffuseColorProperty(),  colorSet.flashing().dress()),
+                    new KeyValue(flashingMaterialSet.pupilsMaterial().diffuseColorProperty(), colorSet.flashing().pupils())
                 ),
                 new KeyFrame(flashEndTime,
-                    new KeyValue(materials.flashing().dress().diffuseColorProperty(),  colorSet.frightened().dress()),
-                    new KeyValue(materials.flashing().pupils().diffuseColorProperty(), colorSet.frightened().pupils())
+                    new KeyValue(flashingMaterialSet.dressMaterial().diffuseColorProperty(),  colorSet.frightened().dress()),
+                    new KeyValue(flashingMaterialSet.pupilsMaterial().diffuseColorProperty(), colorSet.frightened().pupils())
                 )
             );
             flashingTimeline.setCycleCount(numFlashes);
             flashingTimeline.setOnFinished(_ -> {
-                materials.flashing().dress().setDiffuseColor(colorSet.frightened().dress());
-                materials.flashing().dress().setSpecularColor(colorSet.frightened().dress().brighter());
-                materials.flashing().pupils().setDiffuseColor(colorSet.frightened().pupils());
-                materials.flashing().pupils().setSpecularColor(colorSet.frightened().pupils().brighter());
+                flashingMaterialSet.dressMaterial().setDiffuseColor(colorSet.frightened().dress());
+                flashingMaterialSet.dressMaterial().setSpecularColor(colorSet.frightened().dress().brighter());
+                flashingMaterialSet.pupilsMaterial().setDiffuseColor(colorSet.frightened().pupils());
+                flashingMaterialSet.pupilsMaterial().setSpecularColor(colorSet.frightened().pupils().brighter());
             });
             return flashingTimeline;
         }
@@ -101,7 +102,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
     private final GhostColorSet colorSet;
     private final ManagedAnimationsRegistry animations;
 
-    private GhostMaterials materials;
+    private GhostMaterialSet materialSet;
     private MeshView dressShape;
     private MeshView pupilsShape;
     private MeshView eyeballsShape;
@@ -111,17 +112,17 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         ManagedAnimationsRegistry animations,
         Ghost ghost,
         GhostColorSet colorSet,
-        GhostMeshes meshes,
-        GhostMaterials materials,
+        GhostMeshSet meshSet,
+        GhostMaterialSet materialSet,
         double size)
     {
-        this.animations = requireNonNull(animations);
-        this.ghost             = requireNonNull(ghost);
-        this.colorSet          = requireNonNull(colorSet);
-        this.dressShape        = new MeshView(requireNonNull(meshes.dress()));
-        this.pupilsShape       = new MeshView(requireNonNull(meshes.pupils()));
-        this.eyeballsShape     = new MeshView(requireNonNull(meshes.eyeballs()));
-        this.materials         = requireNonNull(materials);
+        this.animations    = requireNonNull(animations);
+        this.ghost         = requireNonNull(ghost);
+        this.colorSet      = requireNonNull(colorSet);
+        this.dressShape    = new MeshView(meshSet.dress());
+        this.pupilsShape   = new MeshView(meshSet.pupils());
+        this.eyeballsShape = new MeshView(meshSet.eyeballs());
+        this.materialSet = requireNonNull(materialSet);
         requireNonNegative(size);
 
         dressGroup = new Group(dressShape);
@@ -157,7 +158,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         animations.optAnimation(AnimationID.GHOST_DRESS.forGhost(ghost)).ifPresent(ManagedAnimation::dispose);
         animations.optAnimation(AnimationID.GHOST_FLASHING.forGhost(ghost)).ifPresent(ManagedAnimation::dispose);
         cleanupGroup(this, true);
-        materials = null;
+        materialSet = null;
         dressShape = null;
         pupilsShape = null;
         eyeballsShape = null;
@@ -172,8 +173,8 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         return colorSet;
     }
 
-    public GhostMaterials materials() {
-        return materials;
+    public GhostMaterialSet materials() {
+        return materialSet;
     }
 
     public void turnTowards(Direction dir) {
@@ -192,7 +193,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
             setFrightenedLook();
             return;
         }
-        setMaterials(materials.flashing());
+        setMaterialSet(materialSet.flashingMaterial());
         dressShape.setVisible(true);
 
         animations.optAnimation(AnimationID.GHOST_FLASHING.forGhost(ghost), FlashingAnimation.class).ifPresent(flashing -> {
@@ -206,31 +207,31 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         });
     }
 
-    private void setMaterials(GhostComponentMaterials materialSet) {
-        dressShape.setMaterial(materialSet.dress());
-        pupilsShape.setMaterial(materialSet.pupils());
-        eyeballsShape.setMaterial(materialSet.eyeballs());
+    private void setMaterialSet(GhostComponentMaterialSet materialSet) {
+        dressShape.setMaterial(materialSet.dressMaterial());
+        pupilsShape.setMaterial(materialSet.pupilsMaterial());
+        eyeballsShape.setMaterial(materialSet.eyeballsMaterial());
     }
 
     public void setNormalLook() {
         animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
         animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).playOrContinue();
         dressShape.setVisible(true);
-        setMaterials(materials.normal());
+        setMaterialSet(materialSet.normalMaterial());
     }
 
     public void setFrightenedLook() {
         animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
         animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).playOrContinue();
         dressShape.setVisible(true);
-        setMaterials(materials.frightened());
+        setMaterialSet(materialSet.frightenedMaterial());
     }
 
     public void setEyesOnlyLook() {
         animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
         animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).stop();
         dressShape.setVisible(false);
-        setMaterials(materials.normal());
+        setMaterialSet(materialSet.normalMaterial());
     }
 
     public void stopAnimations() {

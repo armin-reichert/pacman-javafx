@@ -3,6 +3,7 @@ package de.amr.pacmanfx.uilib.model3D;
 import de.amr.meshbuilder.MeshBuilder;
 import de.amr.objparser.ObjFileParser;
 import de.amr.objparser.ObjModel;
+import de.amr.pacmanfx.uilib.model3D.actor.GhostMeshSet;
 import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
@@ -84,6 +85,10 @@ public class PacManGameModel3D {
 
     public MeshView ghostPupils() {
         return meshViewOrFail(GROUP_ID_GHOST_PUPILS);
+    }
+
+    public GhostMeshSet createGhostMeshSet() {
+        return new GhostMeshSet(ghostDress().getMesh(), ghostPupils().getMesh(), ghostEyeballs().getMesh());
     }
 
     public MeshView pacHead() {

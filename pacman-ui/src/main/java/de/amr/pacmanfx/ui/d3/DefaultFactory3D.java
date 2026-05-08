@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
-import de.amr.pacmanfx.uilib.model3D.GhostMaterials;
+import de.amr.pacmanfx.uilib.model3D.GhostMaterialSet;
 import de.amr.pacmanfx.uilib.model3D.PacManGameModel3D;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
@@ -39,31 +39,31 @@ public class DefaultFactory3D implements Factory3D {
     public static final int DEFAULT_NUMBER_BOX_SIZE_Y = 8;
     public static final int DEFAULT_NUMBER_BOX_SIZE_Z = 8;
 
-    protected final Map<GhostColorSet, GhostMaterials> ghostMaterialsCache = new HashMap<>();
+    protected final Map<GhostColorSet, GhostMaterialSet> ghostMaterialsCache = new HashMap<>();
     protected double pelletRadius;
     protected Mesh scaledPelletMesh;
 
-    protected GhostMaterials createGhostMaterial(GhostColorSet colorSet) {
-        final var normalMaterials = new GhostComponentMaterials(
+    protected GhostMaterialSet createGhostMaterial(GhostColorSet colorSet) {
+        final var normalMaterials = new GhostComponentMaterialSet(
             coloredPhongMaterial(colorSet.normal().dress()),
             coloredPhongMaterial(colorSet.normal().eyeballs()),
             coloredPhongMaterial(colorSet.normal().pupils())
         );
 
-        final var frightenedMaterials = new GhostComponentMaterials(
+        final var frightenedMaterials = new GhostComponentMaterialSet(
             coloredPhongMaterial(colorSet.frightened().dress()),
             coloredPhongMaterial(colorSet.frightened().eyeballs()),
             coloredPhongMaterial(colorSet.frightened().pupils())
         );
 
-        final var flashingMaterials = new GhostComponentMaterials(
+        final var flashingMaterials = new GhostComponentMaterialSet(
             coloredPhongMaterial(colorSet.flashing().dress()),
             coloredPhongMaterial(colorSet.flashing().eyeballs()),
             coloredPhongMaterial(colorSet.flashing().pupils())
         );
 
         Logger.info("Created ghost materials for color set {}", colorSet);
-        return new GhostMaterials(normalMaterials, frightenedMaterials, flashingMaterials);
+        return new GhostMaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
     }
 
     protected Mesh scaledPelletMesh(Mesh originalPelletMesh, PelletConfig3D pelletConfig) {
@@ -119,18 +119,12 @@ public class DefaultFactory3D implements Factory3D {
         requireNonNull(animations);
 
         final GhostColorSet colorSet = ghostConfig.createGhostColorSet();
-        final GhostMaterials materials = ghostMaterialsCache.computeIfAbsent(colorSet, this::createGhostMaterial);
-        final GhostMeshes meshes = new GhostMeshes(
-            PacManGameModel3D.instance().ghostDress().getMesh(),
-            PacManGameModel3D.instance().ghostPupils().getMesh(),
-            PacManGameModel3D.instance().ghostEyeballs().getMesh()
-        );
-
+        final GhostMaterialSet materials = ghostMaterialsCache.computeIfAbsent(colorSet, this::createGhostMaterial);
         return new GhostAppearance3D(
             animations,
             ghost,
             colorSet,
-            meshes,
+            PacManGameModel3D.instance().createGhostMeshSet(),
             materials,
             ghostConfig.size3D()
         );
