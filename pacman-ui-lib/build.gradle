@@ -7,10 +7,9 @@ plugins {
 }
 
 dependencies {
-    implementation("de.amr66.objimporter:objparser:0.0.1")
-    implementation("de.amr66.objimporter:meshbuilder:0.0.1")
     implementation(project(":basics"))
     implementation(project(":pacman-core"))
+    implementation(libs.bundles.obj)
     implementation(libs.bundles.tinylog)
 }
 

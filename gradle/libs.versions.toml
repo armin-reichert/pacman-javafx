@@ -6,6 +6,7 @@ iconli  = "12.3.1"
 java    = "25"
 javafx  = "25.0.3"
 junit5  = "5.11.0"
+obj     = "0.0.1"
 tinylog = "2.7.0"
 
 # Usage: alias(libs.plugins.xyz)
@@ -22,10 +23,13 @@ iconli-fontawesome   = { module = "org.kordamp.ikonli:ikonli-fontawesome5-pack",
 iconli-javafx        = { module = "org.kordamp.ikonli:ikonli-javafx",                version.ref = "iconli" }
 junit-jupiter-api    = { group = "org.junit.jupiter", name = "junit-jupiter-api",    version.ref = "junit5" }
 junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit5" }
+obj-objparser        = { module = "de.amr66.objimporter:objparser",                  version.ref = "obj" }
+obj-meshbuilder      = { module = "de.amr66.objimporter:meshbuilder",                version.ref = "obj" }
 tinylog-api          = { module = "org.tinylog:tinylog-api",                         version.ref = "tinylog"}
 tinylog-impl         = { module = "org.tinylog:tinylog-impl",                        version.ref = "tinylog"}
 
 # Usage: implementation libs.bundles.xyz
 [bundles]
 iconli  = ["iconli-javafx", "iconli-fontawesome" ]
+obj     = ["obj-objparser", "obj-meshbuilder"]
 tinylog = ["tinylog-api", "tinylog-impl"]
