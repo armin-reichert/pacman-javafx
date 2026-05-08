@@ -19,8 +19,8 @@ import javafx.scene.transform.Translate;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 
@@ -127,7 +127,7 @@ public class PacManGameModel3D {
         palate.setMaterial((coloredPhongMaterial(config.colors().palate())));
 
         final Group body = new Group(head, eyes, palate);
-        centerOverOrigin(head, eyes, palate);
+        centerOverOrigin(head, List.of(eyes, palate));
         normalizeBodySize(body, config.size3D());
 
         return fixShapeOrientation(body);
@@ -146,7 +146,7 @@ public class PacManGameModel3D {
         palate.setMaterial(coloredPhongMaterial(config.colors().palate()));
 
         final Group body = new Group(head, palate);
-        centerOverOrigin(head, palate);
+        centerOverOrigin(head, List.of(palate));
         normalizeBodySize(body, config.size3D());
 
         return fixShapeOrientation(body);
@@ -162,14 +162,11 @@ public class PacManGameModel3D {
         return head;
     }
 
-    private static void centerOverOrigin(Node master, Node... slaves) {
-        final Bounds masterBounds = master.getBoundsInLocal();
-        final var centeredOverOrigin = new Translate(
-            -masterBounds.getCenterX(),
-            -masterBounds.getCenterY(),
-            -masterBounds.getCenterZ());
+    private static void centerOverOrigin(Node master, List<Node> slaves) {
+        final Bounds b = master.getBoundsInLocal();
+        final var centeredOverOrigin = new Translate(-b.getCenterX(), -b.getCenterY(), -b.getCenterZ());
         master.getTransforms().add(centeredOverOrigin);
-        Stream.of(slaves).map(Node::getTransforms).forEach(tf -> tf.add(centeredOverOrigin));
+        slaves.stream().map(Node::getTransforms).forEach(tf -> tf.add(centeredOverOrigin));
     }
 
     private static void normalizeBodySize(Node body, float size) {
