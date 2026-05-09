@@ -125,9 +125,9 @@ public class PacManGameModel3D {
      */
     public Group createPacBody(PacConfig config) {
         requireNonNull(config);
-        final MeshView head = createHead(config, true);
-        final MeshView eyes = createMeshView(pacEyes().getMesh(), coloredPhongMaterial(config.colors().eyes()));
-        final MeshView palate = createMeshView(pacPalate().getMesh(), coloredPhongMaterial(config.colors().palate()));
+        final MeshView head = createPacHead(config, true);
+        final MeshView eyes = createPacEyes(config);
+        final MeshView palate = createPacPalate(config);
         final Group body = new Group(head, eyes, palate);
         centerOverOrigin(head, List.of(eyes, palate));
         normalizeBodySize(body, config.size3D());
@@ -142,8 +142,8 @@ public class PacManGameModel3D {
      */
     public Group createBlindPacBody(PacConfig config) {
         requireNonNull(config);
-        final MeshView head = createHead(config, true);
-        final MeshView palate = createPalate(config);
+        final MeshView head = createPacHead(config, true);
+        final MeshView palate = createPacPalate(config);
         final Group body = new Group(head, palate);
         centerOverOrigin(head, List.of(palate));
         normalizeBodySize(body, config.size3D());
@@ -216,16 +216,19 @@ public class PacManGameModel3D {
 
     // private
 
-    private MeshView createHead(PacConfig config, boolean boring) {
+    private MeshView createPacHead(PacConfig config, boolean boring) {
         final PhongMaterial boringMaterial = coloredPhongMaterial(config.colors().head());
         return createMeshView(pacHead().getMesh(), boring
             ? boringMaterial
             : materials.getOrDefault("yellow_pacman", boringMaterial));
     }
 
-    private MeshView createPalate(PacConfig config) {
-        final PhongMaterial boringMaterial = coloredPhongMaterial(config.colors().palate());
-        return createMeshView(pacPalate().getMesh(), boringMaterial);
+    private MeshView createPacPalate(PacConfig config) {
+        return createMeshView(pacPalate().getMesh(), coloredPhongMaterial(config.colors().palate()));
+    }
+
+    private MeshView createPacEyes(PacConfig config) {
+        return createMeshView(pacEyes().getMesh(), coloredPhongMaterial(config.colors().eyes()));
     }
 
     private static MeshView createMeshView(Mesh mesh, PhongMaterial material) {
