@@ -20,7 +20,9 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
+import org.tinylog.Logger;
 
+import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -36,23 +38,24 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManGameModel3D {
 
-    private static final String OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pacman_marco/pacman.obj";
-
     private static class LazyThreadSafeSingletonHolder {
-        static final PacManGameModel3D SINGLETON = new PacManGameModel3D();
+        static final PacManGameModel3D SINGLETON = create();
+    }
+
+    private static PacManGameModel3D create() {
+        try {
+            return new PacManGameModel3D();
+        } catch (IOException x) {
+            Logger.error(x, "An error occurred on creation of the Pac-Man game 3D model");
+            throw new ExceptionInInitializerError(x);
+        }
     }
 
     public static PacManGameModel3D instance() {
         return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
-    /**
-     * Adds transform to Pac-Man and the used ghost mesh view such that they fit into the 3D play scene.
-     */
-    public static <T extends Node> T fixShapeOrientation(T node) {
-        node.getTransforms().add(new Rotate(270,  Rotate.X_AXIS));
-        return node;
-    }
+    private static final String OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pacman_marco/pacman.obj";
 
     // Strange IDs but it is what it is and it isn't what it isn't.
 
@@ -66,23 +69,27 @@ public class PacManGameModel3D {
     private static final String ID_PAC_EYES   = "PacManEyes.PacManEyes_grey_wall";
     private static final String ID_PAC_PALATE = "PacManPalate.PacManPalate_grey_wall";
 
+    /**
+     * Adds transform to Pac-Man and the used ghost mesh view such that they fit into the 3D play scene.
+     */
+    public static <T extends Node> T fixShapeOrientation(T node) {
+        node.getTransforms().add(new Rotate(270,  Rotate.X_AXIS));
+        return node;
+    }
+
     private final Map<String, MeshView> meshViews;
     private final Map<String, PhongMaterial> materials;
 
-    private PacManGameModel3D() {
-        final URL file = PacManGameModel3D.class.getResource(OBJ_FILE);
-        if (file == null) {
-            throw new IllegalArgumentException("Unable to locate " + OBJ_FILE);
+    private PacManGameModel3D() throws IOException {
+        final URL objFile = getClass().getResource(OBJ_FILE);
+        if (objFile == null) {
+            throw new ExceptionInInitializerError("Unable to create Pac-Man games 3D model from obj file " + OBJ_FILE);
         }
-        final ObjFileParser parser = new ObjFileParser(file, StandardCharsets.UTF_8);
-        try {
-            final ObjModel objModel = parser.parse();
-            final MeshBuilder builder = new MeshBuilder(objModel);
-            meshViews = builder.buildMeshViewsByGroup();
-            materials = new HashMap<>(builder.materials());
-        } catch (Exception x) {
-            throw new IllegalStateException(x);
-        }
+        final ObjFileParser parser = new ObjFileParser(objFile, StandardCharsets.UTF_8);
+        final ObjModel objModel = parser.parse();
+        final MeshBuilder builder = new MeshBuilder(objModel);
+        meshViews = builder.buildMeshViewsByGroup();
+        materials = new HashMap<>(builder.materials());
     }
 
     public Map<String, PhongMaterial> materials() {
@@ -156,7 +163,7 @@ public class PacManGameModel3D {
      * @param config Pac configuration
      * @return a new female parts group
      */
-    public Group createFemaleBodyParts(PacConfig config) {
+    public Group createFemalePacBodyParts(PacConfig config) {
         requireNonNull(config);
 
         final int sphereDivisions = 16; // 64 is default
@@ -211,7 +218,7 @@ public class PacManGameModel3D {
      * @return a new Ms Pac-Man body instance
      */
     public Group createMsPacManBody(PacConfig config) {
-        return new Group(createPacBody(config), createFemaleBodyParts(config));
+        return new Group(createPacBody(config), createFemalePacBodyParts(config));
     }
 
     // private

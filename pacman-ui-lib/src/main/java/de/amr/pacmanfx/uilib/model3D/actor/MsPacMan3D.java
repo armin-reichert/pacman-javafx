@@ -27,7 +27,7 @@ public class MsPacMan3D extends Pac3D {
         setBody(PacManGameModel3D.instance().createPacBody(pacConfig));
         setJaw(PacManGameModel3D.instance().createBlindPacBody(pacConfig));
 
-        final Group femaleParts = PacManGameModel3D.instance().createFemaleBodyParts(pacConfig);
+        final Group femaleParts = PacManGameModel3D.instance().createFemalePacBodyParts(pacConfig);
         getChildren().add(femaleParts);
 
         this.animations.register(AnimationID.PAC_CHEWING, new Pac3DChewingAnimation(this));
