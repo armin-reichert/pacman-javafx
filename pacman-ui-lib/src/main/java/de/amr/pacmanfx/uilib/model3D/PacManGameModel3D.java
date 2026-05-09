@@ -30,6 +30,10 @@ import java.util.Map;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
+/**
+ * Pac-Man game 3D model created from OBJ file provided by fellow 3D artist Gianmarco Cavallaccio
+ * (<a href="https://www.artstation.com/gianmart">Homepage</a>).
+ */
 public class PacManGameModel3D {
 
     private static final String OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pacman_marco/pacman.obj";
@@ -42,21 +46,25 @@ public class PacManGameModel3D {
         return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
-    public static <T extends Node> T fixShapeOrientation(T shape) {
-        shape.getTransforms().add(new Rotate(270,  Rotate.X_AXIS));
-        return shape;
+    /**
+     * Adds transform to Pac-Man and the used ghost mesh view such that they fit into the 3D play scene.
+     */
+    public static <T extends Node> T fixShapeOrientation(T node) {
+        node.getTransforms().add(new Rotate(270,  Rotate.X_AXIS));
+        return node;
     }
 
-    // Strange IDs
+    // Strange IDs but it is what it is and it isn't what it isn't.
 
-    // Blue ghost behind Pac-Man in the OBJ file has correct initial direction.
-    private static final String GROUP_ID_GHOST_DRESS    = "GhostCyanHead.GhostCyanHead_light_blue_ghost";
-    private static final String GROUP_ID_GHOST_EYEBALLS = "GhostCyanEyeballs.GhostCyanEyeballs_white";
-    private static final String GROUP_ID_GHOST_PUPILS   = "GhostCyanPupils.GhostCyanPupils_grey_wall";
+    // Blue ghost behind Pac-Man in the OBJ file
+    private static final String ID_GHOST_DRESS    = "GhostCyanHead.GhostCyanHead_light_blue_ghost";
+    private static final String ID_GHOST_EYEBALLS = "GhostCyanEyeballs.GhostCyanEyeballs_white";
+    private static final String ID_GHOST_PUPILS   = "GhostCyanPupils.GhostCyanPupils_grey_wall";
 
-    private static final String GROUP_ID_PAC_EYES   = "PacManEyes.PacManEyes_grey_wall";
-    private static final String GROUP_ID_PAC_HEAD   = "PacManHead.PacManHead_yellow_pacman";
-    private static final String GROUP_ID_PAC_PALATE = "PacManPalate.PacManPalate_grey_wall";
+    // Pac-Man mesh IDs
+    private static final String ID_PAC_HEAD   = "PacManHead.PacManHead_yellow_pacman";
+    private static final String ID_PAC_EYES   = "PacManEyes.PacManEyes_grey_wall";
+    private static final String ID_PAC_PALATE = "PacManPalate.PacManPalate_grey_wall";
 
     private final Map<String, MeshView> meshViews;
     private final Map<String, PhongMaterial> materials;
@@ -64,7 +72,7 @@ public class PacManGameModel3D {
     private PacManGameModel3D() {
         final URL file = PacManGameModel3D.class.getResource(OBJ_FILE);
         if (file == null) {
-            throw new IllegalStateException("Unable to locate " + OBJ_FILE);
+            throw new IllegalArgumentException("Unable to locate " + OBJ_FILE);
         }
         final ObjFileParser parser = new ObjFileParser(file, StandardCharsets.UTF_8);
         try {
@@ -82,15 +90,15 @@ public class PacManGameModel3D {
     }
 
     public MeshView ghostDress() {
-        return assertMeshViewExists(GROUP_ID_GHOST_DRESS);
+        return assertMeshViewExists(ID_GHOST_DRESS);
     }
 
     public MeshView ghostEyeballs() {
-        return assertMeshViewExists(GROUP_ID_GHOST_EYEBALLS);
+        return assertMeshViewExists(ID_GHOST_EYEBALLS);
     }
 
     public MeshView ghostPupils() {
-        return assertMeshViewExists(GROUP_ID_GHOST_PUPILS);
+        return assertMeshViewExists(ID_GHOST_PUPILS);
     }
 
     public GhostMeshSet createGhostMeshSet() {
@@ -98,15 +106,15 @@ public class PacManGameModel3D {
     }
 
     public MeshView pacHead() {
-        return assertMeshViewExists(GROUP_ID_PAC_HEAD);
+        return assertMeshViewExists(ID_PAC_HEAD);
     }
 
     public MeshView pacPalate() {
-        return assertMeshViewExists(GROUP_ID_PAC_PALATE);
+        return assertMeshViewExists(ID_PAC_PALATE);
     }
 
     public MeshView pacEyes() {
-        return assertMeshViewExists(GROUP_ID_PAC_EYES);
+        return assertMeshViewExists(ID_PAC_EYES);
     }
 
     /**
@@ -117,7 +125,7 @@ public class PacManGameModel3D {
      */
     public Group createPacBody(PacConfig config) {
         requireNonNull(config);
-        final MeshView head = createHead(config);
+        final MeshView head = createHead(config, true);
         final MeshView eyes = createMeshView(pacEyes().getMesh(), coloredPhongMaterial(config.colors().eyes()));
         final MeshView palate = createMeshView(pacPalate().getMesh(), coloredPhongMaterial(config.colors().palate()));
         final Group body = new Group(head, eyes, palate);
@@ -127,15 +135,15 @@ public class PacManGameModel3D {
     }
 
     /**
-     * Creates a Pac-Man body without eyes (used for blinking or special effects).
+     * Creates a Pac-Man body without eyes (used for jaw open/close animation).
      *
      * @param config the Pac configuration
-     * @return a new Pac body without eyeballs
+     * @return a Pac body without eyes
      */
     public Group createBlindPacBody(PacConfig config) {
         requireNonNull(config);
-        final MeshView head = createHead(config);
-        final MeshView palate = createMeshView(pacPalate().getMesh(), coloredPhongMaterial(config.colors().palate()));
+        final MeshView head = createHead(config, true);
+        final MeshView palate = createPalate(config);
         final Group body = new Group(head, palate);
         centerOverOrigin(head, List.of(palate));
         normalizeBodySize(body, config.size3D());
@@ -208,6 +216,18 @@ public class PacManGameModel3D {
 
     // private
 
+    private MeshView createHead(PacConfig config, boolean boring) {
+        final PhongMaterial boringMaterial = coloredPhongMaterial(config.colors().head());
+        return createMeshView(pacHead().getMesh(), boring
+            ? boringMaterial
+            : materials.getOrDefault("yellow_pacman", boringMaterial));
+    }
+
+    private MeshView createPalate(PacConfig config) {
+        final PhongMaterial boringMaterial = coloredPhongMaterial(config.colors().palate());
+        return createMeshView(pacPalate().getMesh(), boringMaterial);
+    }
+
     private static MeshView createMeshView(Mesh mesh, PhongMaterial material) {
         final MeshView meshView = new MeshView(mesh);
         meshView.setMaterial(material);
@@ -220,16 +240,6 @@ public class PacManGameModel3D {
             return meshView;
         }
         throw new IllegalArgumentException("Mesh view for group name %s does not exist".formatted(name));
-    }
-
-    private MeshView createHead(PacConfig config) {
-        final var head = new MeshView(pacHead().getMesh());
-        // to use Pac-Man material from OBJ file:
-//        final PhongMaterial headMaterial = materials.getOrDefault("yellow_pacman", coloredPhongMaterial(config.colors().head()));
-        final PhongMaterial headMaterial = coloredPhongMaterial(config.colors().head());
-        head.setMaterial(headMaterial);
-
-        return head;
     }
 
     private static void centerOverOrigin(Node master, List<Node> slaves) {
