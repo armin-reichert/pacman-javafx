@@ -57,7 +57,7 @@ public class PacManWorld3D {
         return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
-    private static final String PAC_MAN_WORLD_OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pacman_marco/pacman.obj";
+    private static final String PAC_MAN_WORLD_OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pacmanworld/pacman.obj";
 
     // Strange IDs but it is what it is and it isn't what it isn't.
 
