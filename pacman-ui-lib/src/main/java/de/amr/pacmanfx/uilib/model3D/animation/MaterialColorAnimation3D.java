@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.animation;
+package de.amr.pacmanfx.uilib.model3D.animation;
 
 import javafx.animation.Animation;
 import javafx.animation.Transition;
@@ -9,13 +9,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
 
-public class MaterialColorAnimation extends Transition {
+public class MaterialColorAnimation3D extends Transition {
 
     private final PhongMaterial material;
     private final Color fromColor;
     private final Color toColor;
 
-    public MaterialColorAnimation(Duration cycleDuration, PhongMaterial material, Color fromColor, Color toColor) {
+    public MaterialColorAnimation3D(Duration cycleDuration, PhongMaterial material, Color fromColor, Color toColor) {
         this.material = material;
         this.fromColor = fromColor;
         this.toColor = toColor;
