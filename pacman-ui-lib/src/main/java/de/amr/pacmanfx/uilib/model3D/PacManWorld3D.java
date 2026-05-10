@@ -33,9 +33,10 @@ import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Pac-Man game 3D model created from OBJ file provided by fellow 3D artist Gianmarco Cavallaccio
- * (<a href="https://www.artstation.com/gianmart">Homepage</a>). Only the Pac-Man and one ghost from that 3D model
- * are used. For the pellets, another model is used, and the maze is procedurally generated from the map data.
+ * Pac-Man game 3D model provided by fellow 3D artist Gianmarco Cavallaccio
+ * (<a href="https://www.artstation.com/gianmart">Homepage</a>).
+ * Only the Pac-Man and one ghost from that 3D model are used though.
+ * For the pellets, another model is used, and the maze is procedurally generated from the map data.
  */
 public class PacManWorld3D {
 
@@ -72,7 +73,7 @@ public class PacManWorld3D {
 
     // Pellet 3D model
     private static final String PELLET_OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pellet.obj";
-    private static final String ID_PELLET = "Object.Pellet.Group.anon_0";
+    private static final String ID_PELLET = "Object.Pellet";
 
     /**
      * Rotates Pac-Man / the used ghost to fit into the 3D play scene.
@@ -108,7 +109,7 @@ public class PacManWorld3D {
             throw new ExceptionInInitializerError("Unable to create 3D model from .obj file " + PELLET_OBJ_FILE);
         }
         final ObjModel objModel = new ObjFileParser(url, StandardCharsets.UTF_8).parse();
-        final Map<String, MeshView> meshViews = MeshBuilder.build(objModel, MeshBuilder.BuildMode.BY_GROUP);
+        final Map<String, MeshView> meshViews = MeshBuilder.build(objModel, MeshBuilder.BuildMode.BY_OBJECT);
         pelletMesh = requireNonNull(meshViews.get(ID_PELLET)).getMesh();
     }
 
