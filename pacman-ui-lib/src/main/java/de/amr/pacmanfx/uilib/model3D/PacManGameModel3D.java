@@ -34,7 +34,8 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Pac-Man game 3D model created from OBJ file provided by fellow 3D artist Gianmarco Cavallaccio
- * (<a href="https://www.artstation.com/gianmart">Homepage</a>).
+ * (<a href="https://www.artstation.com/gianmart">Homepage</a>). Only the Pac-Man and one ghost from that 3D model
+ * are used. For the pellets, another model is used, and the maze is procedurally generated from the map data.
  */
 public class PacManGameModel3D {
 
@@ -70,10 +71,10 @@ public class PacManGameModel3D {
     private static final String ID_PAC_PALATE = "PacManPalate.PacManPalate_grey_wall";
 
     /**
-     * Adds transform to Pac-Man and the used ghost mesh view such that they fit into the 3D play scene.
+     * Rotates Pac-Man / the used ghost to fit into the 3D play scene.
      */
     public static <T extends Node> T fixShapeOrientation(T node) {
-        node.getTransforms().add(new Rotate(270,  Rotate.X_AXIS));
+        node.getTransforms().add(new Rotate(270, Rotate.X_AXIS));
         return node;
     }
 
@@ -83,10 +84,9 @@ public class PacManGameModel3D {
     private PacManGameModel3D() throws IOException {
         final URL objFile = getClass().getResource(OBJ_FILE);
         if (objFile == null) {
-            throw new ExceptionInInitializerError("Unable to create Pac-Man games 3D model from obj file " + OBJ_FILE);
+            throw new ExceptionInInitializerError("Unable to create 3D model from .obj file " + OBJ_FILE);
         }
-        final ObjFileParser parser = new ObjFileParser(objFile, StandardCharsets.UTF_8);
-        final ObjModel objModel = parser.parse();
+        final ObjModel objModel = new ObjFileParser(objFile, StandardCharsets.UTF_8).parse();
         final MeshBuilder builder = new MeshBuilder(objModel);
         meshViews = builder.buildMeshViewsByGroup();
         materials = new HashMap<>(builder.materials());
@@ -137,8 +137,7 @@ public class PacManGameModel3D {
         final MeshView palate = createPacPalate(config);
         final Group body = new Group(head, eyes, palate);
         centerOverOrigin(head, List.of(eyes, palate));
-        normalizeBodySize(body, config.size3D());
-        return fixShapeOrientation(body);
+        return fixShapeOrientation(resize(body, config.size3D()));
     }
 
     /**
@@ -153,8 +152,7 @@ public class PacManGameModel3D {
         final MeshView palate = createPacPalate(config);
         final Group body = new Group(head, palate);
         centerOverOrigin(head, List.of(palate));
-        normalizeBodySize(body, config.size3D());
-        return fixShapeOrientation(body);
+        return fixShapeOrientation(resize(body, config.size3D()));
     }
 
     /**
@@ -254,17 +252,14 @@ public class PacManGameModel3D {
 
     private static void centerOverOrigin(Node master, List<Node> slaves) {
         final Bounds b = master.getBoundsInLocal();
-        final var centeredOverOrigin = new Translate(-b.getCenterX(), -b.getCenterY(), -b.getCenterZ());
-        master.getTransforms().add(centeredOverOrigin);
-        slaves.stream().map(Node::getTransforms).forEach(tf -> tf.add(centeredOverOrigin));
+        final var centerOverOrigin = new Translate(-b.getCenterX(), -b.getCenterY(), -b.getCenterZ());
+        master.getTransforms().add(centerOverOrigin);
+        slaves.stream().map(Node::getTransforms).forEach(tf -> tf.add(centerOverOrigin));
     }
 
-    private static void normalizeBodySize(Node body, float size) {
-        final var bounds = body.getBoundsInLocal();
-        body.getTransforms().add(new Scale(
-            size / bounds.getWidth(),
-            size / bounds.getHeight(),
-            size / bounds.getDepth())
-        );
+    private static <T extends Node> T resize(T body, float size) {
+        final Bounds b = body.getBoundsInLocal();
+        body.getTransforms().add(new Scale(size / b.getWidth(), size / b.getHeight(), size / b.getDepth()));
+        return body;
     }
 }
