@@ -117,32 +117,32 @@ public class PacManWorld3D {
         return pacManWorldMaterials;
     }
 
-    public MeshView ghostDress() {
-        return assertMeshViewExists(ID_GHOST_DRESS);
+    public Mesh ghostDressMesh() {
+        return assertMeshViewExists(ID_GHOST_DRESS).getMesh();
     }
 
-    public MeshView ghostEyeballs() {
-        return assertMeshViewExists(ID_GHOST_EYEBALLS);
+    public Mesh ghostEyeballsMesh() {
+        return assertMeshViewExists(ID_GHOST_EYEBALLS).getMesh();
     }
 
-    public MeshView ghostPupils() {
-        return assertMeshViewExists(ID_GHOST_PUPILS);
+    public Mesh ghostPupilsMesh() {
+        return assertMeshViewExists(ID_GHOST_PUPILS).getMesh();
     }
 
     public GhostMeshSet createGhostMeshSet() {
-        return new GhostMeshSet(ghostDress().getMesh(), ghostPupils().getMesh(), ghostEyeballs().getMesh());
+        return new GhostMeshSet(ghostDressMesh(), ghostPupilsMesh(), ghostEyeballsMesh());
     }
 
-    public MeshView pacHead() {
-        return assertMeshViewExists(ID_PAC_HEAD);
+    public Mesh pacHeadMesh() {
+        return assertMeshViewExists(ID_PAC_HEAD).getMesh();
     }
 
-    public MeshView pacPalate() {
-        return assertMeshViewExists(ID_PAC_PALATE);
+    public Mesh pacPalateMesh() {
+        return assertMeshViewExists(ID_PAC_PALATE).getMesh();
     }
 
-    public MeshView pacEyes() {
-        return assertMeshViewExists(ID_PAC_EYES);
+    public Mesh pacEyesMesh() {
+        return assertMeshViewExists(ID_PAC_EYES).getMesh();
     }
 
     public Mesh pelletMesh() { return pelletMesh; }
@@ -246,17 +246,17 @@ public class PacManWorld3D {
 
     private MeshView createPacHead(PacConfig config, boolean boring) {
         final PhongMaterial boringMaterial = coloredPhongMaterial(config.colors().head());
-        return createMeshView(pacHead().getMesh(), boring
+        return createMeshView(pacHeadMesh(), boring
             ? boringMaterial
             : pacManWorldMaterials.getOrDefault("yellow_pacman", boringMaterial));
     }
 
     private MeshView createPacPalate(PacConfig config) {
-        return createMeshView(pacPalate().getMesh(), coloredPhongMaterial(config.colors().palate()));
+        return createMeshView(pacPalateMesh(), coloredPhongMaterial(config.colors().palate()));
     }
 
     private MeshView createPacEyes(PacConfig config) {
-        return createMeshView(pacEyes().getMesh(), coloredPhongMaterial(config.colors().eyes()));
+        return createMeshView(pacEyesMesh(), coloredPhongMaterial(config.colors().eyes()));
     }
 
     private static MeshView createMeshView(Mesh mesh, PhongMaterial material) {
