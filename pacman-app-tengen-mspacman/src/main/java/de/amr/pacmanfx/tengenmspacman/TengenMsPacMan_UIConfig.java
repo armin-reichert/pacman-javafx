@@ -29,7 +29,7 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentColors;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostColors;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
 import de.amr.pacmanfx.uilib.model3D.pac.MsPacManComponentColors;
 import de.amr.pacmanfx.uilib.model3D.pac.PacColors;
@@ -77,24 +77,24 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
             16.0f),
         List.of(
             new GhostConfig(8.0f, 15.5f,
-                new GhostComponentColors(nesColor(0x05), nesColor(0x20), nesColor(0x11)),
-                new GhostComponentColors(nesColor(0x01), nesColor(0x20), nesColor(0x20)),
-                new GhostComponentColors(nesColor(0x20), nesColor(0x20), nesColor(0x20))
+                new GhostColors(nesColor(0x05), nesColor(0x20), nesColor(0x11)),
+                new GhostColors(nesColor(0x01), nesColor(0x20), nesColor(0x20)),
+                new GhostColors(nesColor(0x20), nesColor(0x20), nesColor(0x20))
             ),
             new GhostConfig(8.0f, 15.5f,
-                new GhostComponentColors(nesColor(0x25), nesColor(0x20), nesColor(0x11)),
-                new GhostComponentColors(nesColor(0x01), nesColor(0x20), nesColor(0x20)),
-                new GhostComponentColors(nesColor(0x20), nesColor(0x20), nesColor(0x20))
+                new GhostColors(nesColor(0x25), nesColor(0x20), nesColor(0x11)),
+                new GhostColors(nesColor(0x01), nesColor(0x20), nesColor(0x20)),
+                new GhostColors(nesColor(0x20), nesColor(0x20), nesColor(0x20))
             ),
             new GhostConfig(8.0f, 15.5f,
-                new GhostComponentColors(nesColor(0x11), nesColor(0x20), nesColor(0x11)),
-                new GhostComponentColors(nesColor(0x01), nesColor(0x20), nesColor(0x20)),
-                new GhostComponentColors(nesColor(0x20), nesColor(0x20), nesColor(0x20))
+                new GhostColors(nesColor(0x11), nesColor(0x20), nesColor(0x11)),
+                new GhostColors(nesColor(0x01), nesColor(0x20), nesColor(0x20)),
+                new GhostColors(nesColor(0x20), nesColor(0x20), nesColor(0x20))
             ),
             new GhostConfig(8.0f, 15.5f,
-                new GhostComponentColors(nesColor(0x16), nesColor(0x20), nesColor(0x11)),
-                new GhostComponentColors(nesColor(0x01), nesColor(0x20), nesColor(0x20)),
-                new GhostComponentColors(nesColor(0x20), nesColor(0x20), nesColor(0x20))
+                new GhostColors(nesColor(0x16), nesColor(0x20), nesColor(0x11)),
+                new GhostColors(nesColor(0x01), nesColor(0x20), nesColor(0x20)),
+                new GhostColors(nesColor(0x20), nesColor(0x20), nesColor(0x20))
             )
         ),
         new BonusConfig(8.0f, 14.5f),

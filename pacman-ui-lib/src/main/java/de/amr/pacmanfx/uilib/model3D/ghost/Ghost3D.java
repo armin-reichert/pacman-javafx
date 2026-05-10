@@ -40,7 +40,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
     private final ManagedAnimationsRegistry animations;
 
     private final Ghost ghost;
-    private final GhostColorSet colorSet;
+    private final GhostAppearanceColors colors;
     private GhostMaterialSet materialSet;
 
     private Group dressGroup;
@@ -54,14 +54,14 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
     public Ghost3D(
         ManagedAnimationsRegistry animations,
         Ghost ghost,
-        GhostColorSet colorSet,
+        GhostAppearanceColors colors,
         GhostMeshSet meshSet,
         GhostMaterialSet materialSet,
         double size)
     {
         this.animations    = requireNonNull(animations);
         this.ghost         = requireNonNull(ghost);
-        this.colorSet      = requireNonNull(colorSet);
+        this.colors        = requireNonNull(colors);
         this.dressShape    = new MeshView(meshSet.dress());
         this.pupilsShape   = new MeshView(meshSet.pupils());
         this.eyeballsShape = new MeshView(meshSet.eyeballs());
@@ -89,7 +89,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         setSize(size);
 
         animations.register(AnimationID.GHOST_DRESS.forGhost(ghost),    new GhostDressAnimation3D(ghost, dressGroup));
-        animations.register(AnimationID.GHOST_FLASHING.forGhost(ghost), new GhostFlashingAnimation3D(ghost, materialSet, colorSet));
+        animations.register(AnimationID.GHOST_FLASHING.forGhost(ghost), new GhostFlashingAnimation3D(ghost, materialSet, colors));
     }
 
     @Override
@@ -115,8 +115,8 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         return ghost;
     }
 
-    public GhostColorSet colorSet() {
-        return colorSet;
+    public GhostAppearanceColors colors() {
+        return colors;
     }
 
     public GhostMaterialSet materials() {

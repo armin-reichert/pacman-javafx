@@ -7,11 +7,11 @@ package de.amr.pacmanfx.uilib.model3D.ghost;
 public record GhostConfig(
     float size2D,
     float size3D,
-    GhostComponentColors normalColors,
-    GhostComponentColors frightenedColors,
-    GhostComponentColors flashingColors)
+    GhostColors normalColors,
+    GhostColors frightenedColors,
+    GhostColors flashingColors)
 {
-    public GhostColorSet createGhostColorSet() {
-        return new GhostColorSet(normalColors, frightenedColors, flashingColors);
+    public GhostAppearanceColors createGhostColorSet() {
+        return new GhostAppearanceColors(normalColors, frightenedColors, flashingColors);
     }
 }

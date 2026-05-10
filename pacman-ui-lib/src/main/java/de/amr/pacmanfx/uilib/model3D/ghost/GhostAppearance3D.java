@@ -59,19 +59,19 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
     public GhostAppearance3D(
         ManagedAnimationsRegistry animations,
         Ghost ghost,
-        GhostColorSet colorSet,
+        GhostAppearanceColors colors,
         GhostMeshSet meshes,
         GhostMaterialSet materials,
         double size)
     {
         this.animations = requireNonNull(animations);
         requireNonNull(ghost);
-        requireNonNull(colorSet);
+        requireNonNull(colors);
         requireNonNull(meshes);
         requireNonNull(materials);
         requireNonNegative(size);
 
-        ghost3D = new Ghost3D(animations, ghost, colorSet, meshes, materials, size);
+        ghost3D = new Ghost3D(animations, ghost, colors, meshes, materials, size);
 
         animations.register(AnimationID.GHOST_BRAKING.forGhost(ghost), new GhostBrakeAnimation3D(this));
         animations.register(AnimationID.GHOST_POINTS.forGhost(ghost), new GhostPointsAnimation3D(this));
