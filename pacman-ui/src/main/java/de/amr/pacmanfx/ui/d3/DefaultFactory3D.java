@@ -73,11 +73,31 @@ public class DefaultFactory3D implements Factory3D {
             final Bounds bounds = dummy.getBoundsInLocal();
             final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
             final double scaling = (2 * pelletRadius) / maxExtent;
-            scaledPelletMesh = MeshHelper.createScaledMesh(originalPelletMesh, scaling);
+            scaledPelletMesh = createScaledMesh(originalPelletMesh, scaling);
             Logger.info("Created scaled pellet mesh, config={}", pelletConfig);
         }
         return scaledPelletMesh;
     }
+
+    protected static Mesh createScaledMesh(Mesh original, double scale) {
+        if (!(original instanceof TriangleMesh mesh)) {
+            throw new IllegalArgumentException("Only TriangleMesh supported");
+        }
+
+        final TriangleMesh copy = new TriangleMesh();
+        copy.getTexCoords().addAll(mesh.getTexCoords());
+        copy.getFaces().addAll(mesh.getFaces());
+        copy.getFaceSmoothingGroups().addAll(mesh.getFaceSmoothingGroups());
+
+        final float[] points = mesh.getPoints().toArray(null);
+        for (int i = 0; i < points.length; i++) {
+            points[i] *= (float) scale;
+        }
+        copy.getPoints().addAll(points);
+
+        return copy;
+    }
+
 
     @Override
     public void dispose() {

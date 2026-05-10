@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.model3D.actor;
+package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -12,9 +12,9 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-public class DressAnimation extends ManagedAnimation {
+public class GhostDressAnimation3D extends ManagedAnimation {
 
-    public DressAnimation(Ghost ghost, Node dress) {
+    public GhostDressAnimation3D(Ghost ghost, Node dress) {
         super("Ghost Dress Animation (%s)".formatted(ghost.name()));
         setFactory(() -> {
             final var animation = new RotateTransition(Duration.seconds(0.3), dress);

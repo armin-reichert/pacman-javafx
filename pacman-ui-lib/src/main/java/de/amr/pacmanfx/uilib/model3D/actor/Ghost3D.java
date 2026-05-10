@@ -11,6 +11,8 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.GhostMaterialSet;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
+import de.amr.pacmanfx.uilib.model3D.animation.GhostDressAnimation3D;
+import de.amr.pacmanfx.uilib.model3D.animation.GhostFlashingAnimation3D;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.shape.MeshView;
@@ -87,8 +89,8 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
 
         setSize(size);
 
-        animations.register(AnimationID.GHOST_DRESS.forGhost(ghost),    new DressAnimation(ghost, dressGroup));
-        animations.register(AnimationID.GHOST_FLASHING.forGhost(ghost), new GhostFlashingAnimation(ghost, materialSet, colorSet));
+        animations.register(AnimationID.GHOST_DRESS.forGhost(ghost),    new GhostDressAnimation3D(ghost, dressGroup));
+        animations.register(AnimationID.GHOST_FLASHING.forGhost(ghost), new GhostFlashingAnimation3D(ghost, materialSet, colorSet));
     }
 
     @Override
@@ -140,7 +142,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         setMaterialSet(materialSet.flashingMaterial());
         dressShape.setVisible(true);
 
-        animations.optAnimation(AnimationID.GHOST_FLASHING.forGhost(ghost), GhostFlashingAnimation.class).ifPresent(flashing -> {
+        animations.optAnimation(AnimationID.GHOST_FLASHING.forGhost(ghost), GhostFlashingAnimation3D.class).ifPresent(flashing -> {
             // TODO: this is crap
             if (flashing.numFlashes() != numFlashes) {
                 flashing.stop();
