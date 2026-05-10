@@ -5,7 +5,7 @@ package de.amr.pacmanfx.uilib.model3D.actor;
 
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
-import de.amr.pacmanfx.uilib.model3D.PacManGameModel3D;
+import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.animation.HeadBangingAnimation;
 import de.amr.pacmanfx.uilib.model3D.animation.Pac3DChewingAnimation;
 import de.amr.pacmanfx.uilib.model3D.animation.PacMan3DDyingAnimation;
@@ -15,8 +15,8 @@ public class PacMan3D extends Pac3D {
     public PacMan3D(ManagedAnimationsRegistry animations, Pac pac, PacConfig pacConfig) {
         super(animations, pac);
 
-        setBody(PacManGameModel3D.instance().createPacBody(pacConfig));
-        setJaw(PacManGameModel3D.instance().createBlindPacBody(pacConfig));
+        setBody(PacManWorld3D.instance().createPacBody(pacConfig));
+        setJaw(PacManWorld3D.instance().createBlindPacBody(pacConfig));
 
         animations.register(AnimationID.PAC_CHEWING, new Pac3DChewingAnimation(this));
         animations.register(AnimationID.PAC_DYING,   new PacMan3DDyingAnimation(this));

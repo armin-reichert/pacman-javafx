@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.GhostMaterialSet;
-import de.amr.pacmanfx.uilib.model3D.PacManGameModel3D;
+import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
@@ -123,7 +123,7 @@ public class DefaultFactory3D implements Factory3D {
             animations,
             ghost,
             colorSet,
-            PacManGameModel3D.instance().createGhostMeshSet(),
+            PacManWorld3D.instance().createGhostMeshSet(),
             materials,
             ghostConfig.size3D()
         );
@@ -133,12 +133,12 @@ public class DefaultFactory3D implements Factory3D {
     public Group createLivesCounterShape3D(EntityConfig entityConfig) {
         requireNonNull(entityConfig);
         final PacConfig pacConfig = entityConfig.pacConfig().withModifiedSize3D(entityConfig.livesCounter().shapeSize());
-        return PacManGameModel3D.instance().createPacBody(pacConfig);
+        return PacManWorld3D.instance().createPacBody(pacConfig);
     }
 
     @Override
     public Pellet3D createPellet3D(PelletConfig3D pelletConfig, PhongMaterial material) {
-        final Mesh mesh = scaledPelletMesh(PacManGameModel3D.instance().pelletMesh(), pelletConfig);
+        final Mesh mesh = scaledPelletMesh(PacManWorld3D.instance().pelletMesh(), pelletConfig);
         final Shape3D shape = new MeshView(mesh);
         shape.setMaterial(material);
         return new Pellet3D(shape);

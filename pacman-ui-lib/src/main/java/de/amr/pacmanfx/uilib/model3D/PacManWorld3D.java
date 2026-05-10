@@ -37,22 +37,22 @@ import static java.util.Objects.requireNonNull;
  * (<a href="https://www.artstation.com/gianmart">Homepage</a>). Only the Pac-Man and one ghost from that 3D model
  * are used. For the pellets, another model is used, and the maze is procedurally generated from the map data.
  */
-public class PacManGameModel3D {
+public class PacManWorld3D {
 
     private static class LazyThreadSafeSingletonHolder {
-        static final PacManGameModel3D SINGLETON = create();
+        static final PacManWorld3D SINGLETON = create();
     }
 
-    private static PacManGameModel3D create() {
+    private static PacManWorld3D create() {
         try {
-            return new PacManGameModel3D();
+            return new PacManWorld3D();
         } catch (IOException x) {
             Logger.error(x, "An error occurred on creation of the Pac-Man game 3D model");
             throw new ExceptionInInitializerError(x);
         }
     }
 
-    public static PacManGameModel3D instance() {
+    public static PacManWorld3D instance() {
         return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
@@ -86,7 +86,7 @@ public class PacManGameModel3D {
     private Map<String, PhongMaterial> pacManWorldMaterials;
     private Mesh pelletMesh;
 
-    private PacManGameModel3D() throws IOException {
+    private PacManWorld3D() throws IOException {
         loadPacManWorldModel();
         loadPelletModel();
     }

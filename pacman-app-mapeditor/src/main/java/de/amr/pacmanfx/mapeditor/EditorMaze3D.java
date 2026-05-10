@@ -7,7 +7,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.model3D.PacManGameModel3D;
+import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
 import de.amr.pacmanfx.uilib.model3D.world.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Wall3D;
@@ -121,7 +121,7 @@ public class EditorMaze3D extends Group {
 
         foodGroup.visibleProperty().bind(foodVisible);
 
-        pacmanShape3D = PacManGameModel3D.instance().createPacBody(PAC_CONFIG);
+        pacmanShape3D = PacManWorld3D.instance().createPacBody(PAC_CONFIG);
         pacmanShape3D.visibleProperty().bind(actorsVisibleProperty());
 
         ghostShapes = new Group[] {
@@ -203,13 +203,13 @@ public class EditorMaze3D extends Group {
     private Group createGhostBody(Color dressColor, double rotateY) {
         final Group body = new Group();
 
-        final MeshView dressMeshView = new MeshView(PacManGameModel3D.instance().ghostDress().getMesh());
+        final MeshView dressMeshView = new MeshView(PacManWorld3D.instance().ghostDress().getMesh());
         dressMeshView.setMaterial(coloredPhongMaterial(dressColor));
 
-        final MeshView pupilsMeshView = new MeshView(PacManGameModel3D.instance().ghostPupils().getMesh());
+        final MeshView pupilsMeshView = new MeshView(PacManWorld3D.instance().ghostPupils().getMesh());
         pupilsMeshView.setMaterial(coloredPhongMaterial(Color.BLUE));
 
-        final MeshView eyeballsMeshView = new MeshView(PacManGameModel3D.instance().ghostEyeballs().getMesh());
+        final MeshView eyeballsMeshView = new MeshView(PacManWorld3D.instance().ghostEyeballs().getMesh());
         eyeballsMeshView.setMaterial(coloredPhongMaterial(Color.WHITE));
 
         final var dressGroup = new Group(dressMeshView);

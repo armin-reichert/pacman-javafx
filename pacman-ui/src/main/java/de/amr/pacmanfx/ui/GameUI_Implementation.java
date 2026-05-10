@@ -24,7 +24,7 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
-import de.amr.pacmanfx.uilib.model3D.PacManGameModel3D;
+import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
@@ -306,7 +306,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void load3DModels() {
         Logger.info("Preloading 3D models...");
-        PacManGameModel3D.instance();
+        PacManWorld3D.instance();
         Logger.info("Pac-Man scene 3D model loaded");
     }
 

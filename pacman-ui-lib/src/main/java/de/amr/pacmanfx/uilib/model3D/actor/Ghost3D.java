@@ -10,7 +10,7 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.GhostMaterialSet;
-import de.amr.pacmanfx.uilib.model3D.PacManGameModel3D;
+import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.shape.MeshView;
@@ -83,7 +83,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         eyesGroup.getTransforms().add(centeredOverOrigin);
 
         getTransforms().addAll(scaling, facing);
-        PacManGameModel3D.fixShapeOrientation(this);
+        PacManWorld3D.fixShapeOrientation(this);
 
         setSize(size);
 
