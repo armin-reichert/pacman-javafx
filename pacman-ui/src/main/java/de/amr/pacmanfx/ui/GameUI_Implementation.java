@@ -25,7 +25,6 @@ import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacManGameModel3D;
-import de.amr.pacmanfx.uilib.model3D.world.PelletModel3D;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
@@ -309,8 +308,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         Logger.info("Preloading 3D models...");
         PacManGameModel3D.instance();
         Logger.info("Pac-Man scene 3D model loaded");
-        PelletModel3D.instance();
-        Logger.info("Pellet 3D model loaded");
     }
 
     // PreferencesManager interface

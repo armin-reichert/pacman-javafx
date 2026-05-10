@@ -56,7 +56,7 @@ public class PacManGameModel3D {
         return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
-    private static final String OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pacman_marco/pacman.obj";
+    private static final String PAC_MAN_WORLD_OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pacman_marco/pacman.obj";
 
     // Strange IDs but it is what it is and it isn't what it isn't.
 
@@ -70,6 +70,10 @@ public class PacManGameModel3D {
     private static final String ID_PAC_EYES   = "PacManEyes.PacManEyes_grey_wall";
     private static final String ID_PAC_PALATE = "PacManPalate.PacManPalate_grey_wall";
 
+    // Pellet 3D model
+    private static final String PELLET_OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pellet.obj";
+    private static final String ID_PELLET = "Object.Pellet.Group.anon_0";
+
     /**
      * Rotates Pac-Man / the used ghost to fit into the 3D play scene.
      */
@@ -78,22 +82,38 @@ public class PacManGameModel3D {
         return node;
     }
 
-    private final Map<String, MeshView> meshViews;
-    private final Map<String, PhongMaterial> materials;
+    private Map<String, MeshView> pacManWorldMeshViews;
+    private Map<String, PhongMaterial> pacManWorldMaterials;
+    private Mesh pelletMesh;
 
     private PacManGameModel3D() throws IOException {
-        final URL objFile = getClass().getResource(OBJ_FILE);
-        if (objFile == null) {
-            throw new ExceptionInInitializerError("Unable to create 3D model from .obj file " + OBJ_FILE);
+        loadPacManWorldModel();
+        loadPelletModel();
+    }
+
+    private void loadPacManWorldModel() throws IOException {
+        final URL url = getClass().getResource(PAC_MAN_WORLD_OBJ_FILE);
+        if (url == null) {
+            throw new ExceptionInInitializerError("Unable to create 3D model from .obj file " + PAC_MAN_WORLD_OBJ_FILE);
         }
-        final ObjModel objModel = new ObjFileParser(objFile, StandardCharsets.UTF_8).parse();
-        final MeshBuilder builder = new MeshBuilder(objModel);
-        meshViews = builder.buildMeshViewsByGroup();
-        materials = new HashMap<>(builder.materials());
+        final ObjModel objModel = new ObjFileParser(url, StandardCharsets.UTF_8).parse();
+        final MeshBuilder meshBuilder = new MeshBuilder(objModel);
+        pacManWorldMeshViews = meshBuilder.buildMeshViewsByGroup();
+        pacManWorldMaterials = new HashMap<>(meshBuilder.materials());
+    }
+
+    private void loadPelletModel() throws IOException {
+        final URL url = getClass().getResource(PELLET_OBJ_FILE);
+        if (url == null) {
+            throw new ExceptionInInitializerError("Unable to create 3D model from .obj file " + PELLET_OBJ_FILE);
+        }
+        final ObjModel objModel = new ObjFileParser(url, StandardCharsets.UTF_8).parse();
+        final Map<String, MeshView> meshViews = MeshBuilder.build(objModel, MeshBuilder.BuildMode.BY_GROUP);
+        pelletMesh = requireNonNull(meshViews.get(ID_PELLET)).getMesh();
     }
 
     public Map<String, PhongMaterial> materials() {
-        return materials;
+        return pacManWorldMaterials;
     }
 
     public MeshView ghostDress() {
@@ -123,6 +143,8 @@ public class PacManGameModel3D {
     public MeshView pacEyes() {
         return assertMeshViewExists(ID_PAC_EYES);
     }
+
+    public Mesh pelletMesh() { return pelletMesh; }
 
     /**
      * Creates a fully assembled Pac-Man body with head, eyes, and palate.
@@ -225,7 +247,7 @@ public class PacManGameModel3D {
         final PhongMaterial boringMaterial = coloredPhongMaterial(config.colors().head());
         return createMeshView(pacHead().getMesh(), boring
             ? boringMaterial
-            : materials.getOrDefault("yellow_pacman", boringMaterial));
+            : pacManWorldMaterials.getOrDefault("yellow_pacman", boringMaterial));
     }
 
     private MeshView createPacPalate(PacConfig config) {
@@ -243,7 +265,7 @@ public class PacManGameModel3D {
     }
 
     private MeshView assertMeshViewExists(String name) {
-        final MeshView meshView = meshViews.get(name);
+        final MeshView meshView = pacManWorldMeshViews.get(name);
         if (meshView != null) {
             return meshView;
         }

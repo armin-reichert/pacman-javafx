@@ -18,7 +18,6 @@ import de.amr.pacmanfx.uilib.model3D.PacManGameModel3D;
 import de.amr.pacmanfx.uilib.model3D.actor.*;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
-import de.amr.pacmanfx.uilib.model3D.world.PelletModel3D;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -139,7 +138,7 @@ public class DefaultFactory3D implements Factory3D {
 
     @Override
     public Pellet3D createPellet3D(PelletConfig3D pelletConfig, PhongMaterial material) {
-        final Mesh mesh = scaledPelletMesh(PelletModel3D.instance().pellet().getMesh(), pelletConfig);
+        final Mesh mesh = scaledPelletMesh(PacManGameModel3D.instance().pelletMesh(), pelletConfig);
         final Shape3D shape = new MeshView(mesh);
         shape.setMaterial(material);
         return new Pellet3D(shape);
