@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
+import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;

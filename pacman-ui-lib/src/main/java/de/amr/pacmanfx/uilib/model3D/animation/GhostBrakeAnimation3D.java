@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostAppearance3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;

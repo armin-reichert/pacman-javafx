@@ -25,7 +25,7 @@ import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
-import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
+import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.CanvasDecorationPane;
 import javafx.beans.binding.Bindings;

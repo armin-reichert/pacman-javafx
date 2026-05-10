@@ -16,7 +16,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
-import de.amr.pacmanfx.uilib.model3D.actor.GhostConfig;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 

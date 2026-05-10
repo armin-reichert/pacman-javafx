@@ -20,7 +20,7 @@ import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
+import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
 import de.amr.pacmanfx.uilib.model3D.world.Scores3D;

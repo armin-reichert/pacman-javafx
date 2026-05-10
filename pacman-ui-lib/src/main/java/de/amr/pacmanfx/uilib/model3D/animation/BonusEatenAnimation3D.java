@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.model3D.actor.Bonus3D;
+import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;

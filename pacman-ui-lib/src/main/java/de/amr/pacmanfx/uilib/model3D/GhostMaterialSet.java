@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.uilib.model3D.actor.GhostComponentMaterialSet;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentMaterialSet;
 
 public record GhostMaterialSet(
     GhostComponentMaterialSet normalMaterial,

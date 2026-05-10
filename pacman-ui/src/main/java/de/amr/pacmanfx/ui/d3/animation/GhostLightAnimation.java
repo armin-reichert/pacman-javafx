@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.d3.animation;
 
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.model3D.actor.GhostAppearance3D;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostAppearance3D;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

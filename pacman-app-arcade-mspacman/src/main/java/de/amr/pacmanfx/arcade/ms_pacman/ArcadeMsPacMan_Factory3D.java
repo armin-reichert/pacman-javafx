@@ -8,9 +8,9 @@ import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.d3.DefaultFactory3D;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
-import de.amr.pacmanfx.uilib.model3D.actor.MsPacMan3D;
-import de.amr.pacmanfx.uilib.model3D.actor.Pac3D;
-import de.amr.pacmanfx.uilib.model3D.actor.PacConfig;
+import de.amr.pacmanfx.uilib.model3D.pac.MsPacMan3D;
+import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
+import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 import javafx.scene.Group;
 
 import static java.util.Objects.requireNonNull;
