@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.model3D.pac;
 
 public record PacConfig(
-    PacComponentColors colors,
+    PacColors colors,
     MsPacManComponentColors msColors,
     float size2D,
     float size3D)

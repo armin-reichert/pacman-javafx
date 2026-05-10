@@ -245,18 +245,18 @@ public class PacManWorld3D {
     // private
 
     private MeshView createPacHead(PacConfig config, boolean boring) {
-        final PhongMaterial boringMaterial = coloredPhongMaterial(config.colors().head());
+        final PhongMaterial boringMaterial = coloredPhongMaterial(config.colors().headColor());
         return createMeshView(pacHeadMesh(), boring
             ? boringMaterial
             : pacManWorldMaterials.getOrDefault("yellow_pacman", boringMaterial));
     }
 
     private MeshView createPacPalate(PacConfig config) {
-        return createMeshView(pacPalateMesh(), coloredPhongMaterial(config.colors().palate()));
+        return createMeshView(pacPalateMesh(), coloredPhongMaterial(config.colors().palateColor()));
     }
 
     private MeshView createPacEyes(PacConfig config) {
-        return createMeshView(pacEyesMesh(), coloredPhongMaterial(config.colors().eyes()));
+        return createMeshView(pacEyesMesh(), coloredPhongMaterial(config.colors().eyesColor()));
     }
 
     private static MeshView createMeshView(Mesh mesh, PhongMaterial material) {

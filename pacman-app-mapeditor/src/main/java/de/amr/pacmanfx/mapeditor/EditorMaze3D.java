@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.pac.MsPacManComponentColors;
-import de.amr.pacmanfx.uilib.model3D.pac.PacComponentColors;
+import de.amr.pacmanfx.uilib.model3D.pac.PacColors;
 import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 import de.amr.pacmanfx.uilib.model3D.world.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Wall3D;
@@ -43,10 +43,10 @@ public class EditorMaze3D extends Group {
 
     private static final PacConfig PAC_CONFIG =
         new PacConfig(
-            new PacComponentColors(
-                Color.YELLOW, // head
-                Color.SADDLEBROWN,  // palate
-                Color.BLACK // eyes
+            new PacColors(
+                Color.YELLOW, // headColor
+                Color.SADDLEBROWN,  // palateColor
+                Color.BLACK // eyesColor
             ),
             new MsPacManComponentColors(
                 Color.RED, // hair bow

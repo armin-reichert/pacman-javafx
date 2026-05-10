@@ -160,7 +160,7 @@ public abstract class Pac3D extends Group implements GameLevelEntity, Disposable
 
     public void createPowerLight(PacConfig pacConfig) {
         powerLight = new PointLight();
-        powerLight.setColor(pacConfig.colors().head().desaturate());
+        powerLight.setColor(pacConfig.colors().headColor().desaturate());
         powerLight.translateXProperty().bind(translateXProperty());
         powerLight.translateYProperty().bind(translateYProperty());
         powerLight.setTranslateZ(-30);

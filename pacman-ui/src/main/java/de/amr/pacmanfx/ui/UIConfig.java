@@ -20,7 +20,7 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentColors;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
 import de.amr.pacmanfx.uilib.model3D.pac.MsPacManComponentColors;
-import de.amr.pacmanfx.uilib.model3D.pac.PacComponentColors;
+import de.amr.pacmanfx.uilib.model3D.pac.PacColors;
 import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
@@ -78,10 +78,10 @@ public interface UIConfig extends Disposable {
      */
     EntityConfig DEFAULT_ENTITY_CONFIG = new EntityConfig(
         new PacConfig(
-            new PacComponentColors(
-                ARCADE_YELLOW, // head
-                ARCADE_BROWN,  // palate
-                Color.grayRgb(33) // eyes
+            new PacColors(
+                ARCADE_YELLOW, // headColor
+                ARCADE_BROWN,  // palateColor
+                Color.grayRgb(33) // eyesColor
             ),
             new MsPacManComponentColors(
                 ARCADE_RED, // hair bow

@@ -32,7 +32,7 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentColors;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
 import de.amr.pacmanfx.uilib.model3D.pac.MsPacManComponentColors;
-import de.amr.pacmanfx.uilib.model3D.pac.PacComponentColors;
+import de.amr.pacmanfx.uilib.model3D.pac.PacColors;
 import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -63,10 +63,10 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
 
     public static final EntityConfig TENGEN_ENTITY_CONFIG = new EntityConfig(
         new PacConfig(
-            new PacComponentColors(
-                nesColor(0x28), // head
-                nesColor(0x2d), // palate
-                nesColor(0x02)  // eyes
+            new PacColors(
+                nesColor(0x28), // headColor
+                nesColor(0x2d), // palateColor
+                nesColor(0x02)  // eyesColor
             ),
             new MsPacManComponentColors(
                 nesColor(0x05), // hair bow

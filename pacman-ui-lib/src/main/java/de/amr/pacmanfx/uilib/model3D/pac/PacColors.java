@@ -6,5 +6,5 @@ package de.amr.pacmanfx.uilib.model3D.pac;
 
 import javafx.scene.paint.Color;
 
-public record PacComponentColors(Color head, Color palate, Color eyes) {
+public record PacColors(Color headColor, Color palateColor, Color eyesColor) {
 }
