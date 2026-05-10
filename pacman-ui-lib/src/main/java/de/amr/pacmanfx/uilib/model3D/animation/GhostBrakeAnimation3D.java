@@ -15,11 +15,11 @@ import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
-public class Ghost3DBrakeAnimation extends ManagedAnimation {
+public class GhostBrakeAnimation3D extends ManagedAnimation {
 
     private final GhostAppearance3D ghostAppearance3D;
 
-    public Ghost3DBrakeAnimation(GhostAppearance3D ghostAppearance3D) {
+    public GhostBrakeAnimation3D(GhostAppearance3D ghostAppearance3D) {
         super("Ghost Braking (%s)".formatted(ghostAppearance3D.ghost().name()));
         this.ghostAppearance3D = requireNonNull(ghostAppearance3D);
         setFactory(this::createAnimationFX);

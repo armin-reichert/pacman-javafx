@@ -7,8 +7,8 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
-import de.amr.pacmanfx.uilib.model3D.animation.HipSwayingAnimation;
-import de.amr.pacmanfx.uilib.model3D.animation.Pac3DChewingAnimation;
+import de.amr.pacmanfx.uilib.model3D.animation.HipSwayingAnimation3D;
+import de.amr.pacmanfx.uilib.model3D.animation.PacChewingAnimation3D;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
@@ -30,7 +30,7 @@ public class MsPacMan3D extends Pac3D {
         final Group femaleParts = PacManWorld3D.instance().createFemalePacBodyParts(pacConfig);
         getChildren().add(femaleParts);
 
-        this.animations.register(AnimationID.PAC_CHEWING, new Pac3DChewingAnimation(this));
+        this.animations.register(AnimationID.PAC_CHEWING, new PacChewingAnimation3D(this));
 
         final var dyingAnimation = new ManagedAnimation("Ms. Pac-Man Dying");
         dyingAnimation.setFactory(() -> {
@@ -44,7 +44,7 @@ public class MsPacMan3D extends Pac3D {
         });
         animations.register(AnimationID.PAC_DYING, dyingAnimation);
 
-        final var movementAnimation = new HipSwayingAnimation(this);
+        final var movementAnimation = new HipSwayingAnimation3D(this);
         animations.register(AnimationID.PAC_MOVING, movementAnimation);
 
         setMovementAnimationPowerMode(false);
@@ -52,11 +52,11 @@ public class MsPacMan3D extends Pac3D {
 
     @Override
     public void updateMovementAnimation() {
-        animations.optAnimation(AnimationID.PAC_MOVING, HipSwayingAnimation.class).ifPresent(hsa -> hsa.update(pac));
+        animations.optAnimation(AnimationID.PAC_MOVING, HipSwayingAnimation3D.class).ifPresent(hsa -> hsa.update(pac));
     }
 
     @Override
     public void setMovementAnimationPowerMode(boolean power) {
-        animations.optAnimation(AnimationID.PAC_MOVING, HipSwayingAnimation.class).ifPresent(hsa -> hsa.setPowerMode(power));
+        animations.optAnimation(AnimationID.PAC_MOVING, HipSwayingAnimation3D.class).ifPresent(hsa -> hsa.setPowerMode(power));
     }
 }

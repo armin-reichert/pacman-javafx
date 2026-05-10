@@ -12,11 +12,11 @@ import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
-public class Pac3DChewingAnimation extends ManagedAnimation {
+public class PacChewingAnimation3D extends ManagedAnimation {
 
     private final Pac3D pac3D;
 
-    public Pac3DChewingAnimation(Pac3D pac3D) {
+    public PacChewingAnimation3D(Pac3D pac3D) {
         super("Pac-Man Chewing");
         this.pac3D = requireNonNull(pac3D);
         setFactory(this::createChewingAnimation);

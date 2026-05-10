@@ -21,12 +21,12 @@ import javafx.util.Duration;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 
-public class Bonus3DEdibleAnimation extends ManagedAnimation {
+public class BonusEdibleAnimation3D extends ManagedAnimation {
 
     private final Bonus bonus;
     private final Bonus3D shape;
 
-    public Bonus3DEdibleAnimation(Bonus bonus, Bonus3D bonus3D) {
+    public BonusEdibleAnimation3D(Bonus bonus, Bonus3D bonus3D) {
         super("Bonus (Edible, Symbol)");
         this.bonus = bonus;
         this.shape = bonus3D;

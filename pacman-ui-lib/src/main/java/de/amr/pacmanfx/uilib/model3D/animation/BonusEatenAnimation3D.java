@@ -12,11 +12,11 @@ import javafx.animation.RotateTransition;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-public class Bonus3DEatenAnimation extends ManagedAnimation {
+public class BonusEatenAnimation3D extends ManagedAnimation {
 
     private final Bonus3D bonus3D;
 
-    public Bonus3DEatenAnimation(Bonus3D bonus3D) {
+    public BonusEatenAnimation3D(Bonus3D bonus3D) {
         super("Bonus (Eaten, Points)");
         this.bonus3D = bonus3D;
         setFactory(this::createAnimationFX);

@@ -13,11 +13,11 @@ import static de.amr.pacmanfx.uilib.Ufx.doNow;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSecThen;
 import static java.util.Objects.requireNonNull;
 
-public class PacMan3DDyingAnimation extends ManagedAnimation {
+public class PacManDyingAnimation3D extends ManagedAnimation {
 
     private final PacMan3D pacMan3D;
 
-    public PacMan3DDyingAnimation(PacMan3D pacMan3D) {
+    public PacManDyingAnimation3D(PacMan3D pacMan3D) {
         super("PacMan_Dying");
         this.pacMan3D = requireNonNull(pacMan3D);
         setFactory(this::createAnimation);

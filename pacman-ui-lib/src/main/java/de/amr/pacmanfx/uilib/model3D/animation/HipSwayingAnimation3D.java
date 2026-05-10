@@ -14,7 +14,7 @@ import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
-public class HipSwayingAnimation extends ManagedAnimation {
+public class HipSwayingAnimation3D extends ManagedAnimation {
 
     private static final short HIP_ANGLE_FROM = -20;
     private static final short HIP_ANGLE_TO = 20;
@@ -24,7 +24,7 @@ public class HipSwayingAnimation extends ManagedAnimation {
 
     private final Node node;
 
-    public HipSwayingAnimation(Node node) {
+    public HipSwayingAnimation3D(Node node) {
         super("Ms. Pac-Man Hip Swaying");
         this.node = requireNonNull(node);
         setFactory(this::createWrappedAnimation);

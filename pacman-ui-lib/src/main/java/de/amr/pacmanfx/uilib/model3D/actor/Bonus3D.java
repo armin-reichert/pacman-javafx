@@ -10,8 +10,8 @@ import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.animation.Bonus3DEatenAnimation;
-import de.amr.pacmanfx.uilib.model3D.animation.Bonus3DEdibleAnimation;
+import de.amr.pacmanfx.uilib.model3D.animation.BonusEatenAnimation3D;
+import de.amr.pacmanfx.uilib.model3D.animation.BonusEdibleAnimation3D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -63,8 +63,8 @@ public class Bonus3D extends Box implements GameLevelEntity, DisposableGraphicsO
         pointsImageView.setFitWidth(pointsWidth);
         pointsTexture = new PhongMaterial(Color.GHOSTWHITE, pointsImageView.getImage(), null, null, null);
 
-        animations.register(AnimationID.BONUS_EDIBLE, new Bonus3DEdibleAnimation(bonus, this));
-        animations.register(AnimationID.BONUS_EATEN, new Bonus3DEatenAnimation(this));
+        animations.register(AnimationID.BONUS_EDIBLE, new BonusEdibleAnimation3D(bonus, this));
+        animations.register(AnimationID.BONUS_EATEN, new BonusEatenAnimation3D(this));
     }
 
     @Override
@@ -85,7 +85,7 @@ public class Bonus3D extends Box implements GameLevelEntity, DisposableGraphicsO
                 setTranslateX(center.x());
                 setTranslateY(center.y());
                 setTranslateZ(-HTS);
-                animations.animation(AnimationID.BONUS_EDIBLE, Bonus3DEdibleAnimation.class).update(gameLevel);
+                animations.animation(AnimationID.BONUS_EDIBLE, BonusEdibleAnimation3D.class).update(gameLevel);
             }
         }
     }

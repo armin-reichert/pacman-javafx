@@ -15,7 +15,7 @@ import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
-public class HeadBangingAnimation extends ManagedAnimation {
+public class HeadBangingAnimation3D extends ManagedAnimation {
     private static final short BANG_ANGLE_FROM = -10;
     private static final short BANG_ANGLE_TO = 15;
     private static final Duration BANG_TIME = Duration.seconds(0.3);
@@ -24,7 +24,7 @@ public class HeadBangingAnimation extends ManagedAnimation {
 
     private final Node node;
 
-    public HeadBangingAnimation(Node node) {
+    public HeadBangingAnimation3D(Node node) {
         super("Pac-Man Head Banging");
         this.node = requireNonNull(node);
         setFactory(this::createAnimationFX);

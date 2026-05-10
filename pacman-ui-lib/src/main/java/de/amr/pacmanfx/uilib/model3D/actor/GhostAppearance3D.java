@@ -13,8 +13,8 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.GhostMaterialSet;
-import de.amr.pacmanfx.uilib.model3D.animation.Ghost3DBrakeAnimation;
-import de.amr.pacmanfx.uilib.model3D.animation.Ghost3DPointsAnimation;
+import de.amr.pacmanfx.uilib.model3D.animation.GhostBrakeAnimation3D;
+import de.amr.pacmanfx.uilib.model3D.animation.GhostPointsAnimation3D;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
 import javafx.scene.shape.Shape3D;
@@ -74,8 +74,8 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
 
         ghost3D = new Ghost3D(animations, ghost, colorSet, meshes, materials, size);
 
-        animations.register(AnimationID.GHOST_BRAKING.forGhost(ghost), new Ghost3DBrakeAnimation(this));
-        animations.register(AnimationID.GHOST_POINTS.forGhost(ghost), new Ghost3DPointsAnimation(this));
+        animations.register(AnimationID.GHOST_BRAKING.forGhost(ghost), new GhostBrakeAnimation3D(this));
+        animations.register(AnimationID.GHOST_POINTS.forGhost(ghost), new GhostPointsAnimation3D(this));
 
         getChildren().add(ghost3D);
         updateTransform(ghost);
