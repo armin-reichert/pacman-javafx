@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.animation;
+package de.amr.pacmanfx.uilib.model3D.animation;
 
 import javafx.scene.paint.Material;
 import javafx.scene.shape.Sphere;
 
 import static java.util.Objects.requireNonNull;
 
-public class SphericalEnergizerParticle extends EnergizerParticle {
+public class SphericalEnergizerParticle3D extends EnergizerParticle3D {
 
     public enum Resolution { LOW, HIGH;
 
@@ -27,7 +27,7 @@ public class SphericalEnergizerParticle extends EnergizerParticle {
      * @param material the material applied to the sphere
      * @param resolution the mesh resolution
      */
-    public SphericalEnergizerParticle(double radius, Material material, Resolution resolution) {
+    public SphericalEnergizerParticle3D(double radius, Material material, Resolution resolution) {
         super(new Sphere(radius, resolution.divisions()));
         shape().setMaterial(material);
     }

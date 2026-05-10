@@ -33,11 +33,11 @@ import de.amr.pacmanfx.ui.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.uilib.animation.EnergizerParticlesAnimation;
+import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticlesAnimation3D;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.GhostMaterialSet;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostMaterialSet;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostAppearance3D;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentMaterialSet;
@@ -409,7 +409,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 energizer3D.stopPumping();
                 energizer3D.hide();
                 final Point3D center = energizer3D.shape().localToScene(Point3D.ZERO);
-                animations3D.animation(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, EnergizerParticlesAnimation.class).triggerEnergizerExplosion(center);
+                animations3D.animation(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, EnergizerParticlesAnimation3D.class).triggerEnergizerExplosion(center);
             });
         } else {
             pellet3DAtTile(tile).ifPresent(p3D -> removePelletAfterDelay(pelletContainer, p3D));
@@ -439,7 +439,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Particles animation
 
-    private EnergizerParticlesAnimation createParticlesAnimation() {
+    private EnergizerParticlesAnimation3D createParticlesAnimation() {
         // The bottom center positions of the swirls where the particles of exploded energizers eventually are displayed
         final List<Vector2f> swirlCenters = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
             .map(level::ghost)
@@ -456,8 +456,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         final Maze3D maze3D = entities3D.unique(Maze3D.class);
 
-        return new EnergizerParticlesAnimation(
-            EnergizerParticlesAnimation.DEFAULT_CONFIG,
+        return new EnergizerParticlesAnimation3D(
+            EnergizerParticlesAnimation3D.DEFAULT_CONFIG,
             swirlCenters,
             dressMaterials,
             maze3D.floor(),

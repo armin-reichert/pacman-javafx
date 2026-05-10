@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
-import de.amr.pacmanfx.uilib.model3D.GhostMaterialSet;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostMaterialSet;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostAppearance3D;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostColorSet;

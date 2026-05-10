@@ -7,7 +7,7 @@ package de.amr.pacmanfx.uilib.model3D.animation;
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.model3D.GhostMaterialSet;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostMaterialSet;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostColorSet;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentMaterialSet;
 import javafx.animation.Animation;

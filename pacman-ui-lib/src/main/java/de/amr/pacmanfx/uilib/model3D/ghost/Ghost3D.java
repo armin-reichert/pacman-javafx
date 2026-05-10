@@ -9,7 +9,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.GhostMaterialSet;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostDressAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostFlashingAnimation3D;

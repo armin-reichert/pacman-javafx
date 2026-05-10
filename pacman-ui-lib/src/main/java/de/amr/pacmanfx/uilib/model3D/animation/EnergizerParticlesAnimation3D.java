@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.animation;
+package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector3f;
-import de.amr.pacmanfx.uilib.animation.EnergizerParticle.FragmentState;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticle3D.FragmentState;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -30,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  * inside the ghost house where they accumulate to colored ghost shapes.
  * <p>Particles falling off from the maze are hidden at a certain height below the maze.</p>
  */
-public class EnergizerParticlesAnimation extends ManagedAnimation {
+public class EnergizerParticlesAnimation3D extends ManagedAnimation {
 
     public record Config(
         ExplosionConfig explosion,
@@ -87,11 +88,11 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
     private final List<Vector3f> swirlBaseCenters;
     private final Box floor3D;
     private final List<PhongMaterial> ghostDressMaterials;
-    private final Queue<EnergizerParticle> pool = new ArrayDeque<>();
-    private final List<EnergizerParticle> particles = new ArrayList<>();
+    private final Queue<EnergizerParticle3D> pool = new ArrayDeque<>();
+    private final List<EnergizerParticle3D> particles = new ArrayList<>();
     private final Group particlesGroup;
 
-    public EnergizerParticlesAnimation(
+    public EnergizerParticlesAnimation3D(
         Config config,
         List<Vector2f> swirlBaseCentersXY,
         List<PhongMaterial> ghostDressMaterials,
@@ -135,7 +136,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         requireNonNull(center);
         Logger.info("Trigger energizer explosion at point {}", center);
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
-            final EnergizerParticle p = getParticleFromPool();
+            final EnergizerParticle3D p = getParticleFromPool();
             p.setPosition(new Vector3f(center.getX(), center.getY(), center.getZ()));
             p.setVelocity(randomParticleVelocity(config.explosion()));
             p.setState(FragmentState.FLYING);
@@ -153,8 +154,8 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         Logger.info("Particle pool prefilled! Pool size={}", pool.size());
     }
 
-    private EnergizerParticle getParticleFromPool() {
-        EnergizerParticle particle = pool.poll();
+    private EnergizerParticle3D getParticleFromPool() {
+        EnergizerParticle3D particle = pool.poll();
         if (particle == null) {
             particle = createExplosionParticle();
         } else {
@@ -163,7 +164,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         return particle;
     }
 
-    private void releaseParticle(EnergizerParticle particle) {
+    private void releaseParticle(EnergizerParticle3D particle) {
         particles.remove(particle);
         particlesGroup.getChildren().remove(particle.shape());
         pool.offer(particle);
@@ -172,10 +173,10 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         Logger.debug("Particle released! Pool size={}", pool.size());
     }
 
-    private EnergizerParticle createExplosionParticle() {
+    private EnergizerParticle3D createExplosionParticle() {
         final PhongMaterial material = ghostDressMaterials.get(randomInt(0, 4));
         final double radius = Math.clamp(RANDOM_GENERATOR.nextGaussian(2, 0.1), 0.5, 4) * config.explosion().particleMeanRadius();
-        return new SphericalEnergizerParticle(radius, material, SphericalEnergizerParticle.Resolution.HIGH);
+        return new SphericalEnergizerParticle3D(radius, material, SphericalEnergizerParticle3D.Resolution.HIGH);
     }
 
     private Vector3f randomParticleVelocity(ExplosionConfig cfg) {
@@ -195,7 +196,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         }
     }
 
-    private void updateParticleState(EnergizerParticle particle) {
+    private void updateParticleState(EnergizerParticle3D particle) {
         switch (particle.state()) {
             case FLYING       -> updateStateFlying(particle);
             case ATTRACTED    -> updateStateAttracted(particle);
@@ -204,7 +205,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         }
     }
     
-    private void updateStateFlying(EnergizerParticle particle) {
+    private void updateStateFlying(EnergizerParticle3D particle) {
         particle.fly(config.explosion.gravity());
         if (particle.collidesWith(floor3D)) {
             onParticleLandedOnFloor(particle);
@@ -214,16 +215,16 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         }
     }
 
-    private boolean isParticleOutsideView(EnergizerParticle particle) {
+    private boolean isParticleOutsideView(EnergizerParticle3D particle) {
         return particle.position().z() >= 50; // positive z direction points down!
     }
     
-    private void onParticleLeftView(EnergizerParticle particle) {
+    private void onParticleLeftView(EnergizerParticle3D particle) {
         releaseParticle(particle);
         particle.setState(FragmentState.OUT_OF_VIEW);
     }
 
-    private void updateStateAttracted(EnergizerParticle particle) {
+    private void updateStateAttracted(EnergizerParticle3D particle) {
         final Vector3f target = swirlBaseCenters.get(particle.targetSwirlIndex());
         final boolean targetReached = moveParticleTowardsTarget(particle, target);
         if (targetReached) {
@@ -235,7 +236,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
      * assigned swirl inside the ghost house. Once it reaches its target position (on the swirl surface), it is
      * integrated into the swirl and moves forever on the swirl surface.
      */
-    private void onParticleLandedOnFloor(EnergizerParticle particle) {
+    private void onParticleLandedOnFloor(EnergizerParticle3D particle) {
         final byte ghostID = randomGhostID();
         final byte targetSwirlIndex = switch (ghostID) {
             case CYAN_GHOST_BASHFUL -> 0;
@@ -260,7 +261,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         particle.setState(FragmentState.ATTRACTED);
     }
 
-    private boolean moveParticleTowardsTarget(EnergizerParticle particle, Vector3f target) {
+    private boolean moveParticleTowardsTarget(EnergizerParticle3D particle, Vector3f target) {
         final double dist = particle.position().euclideanDist(target);
         final boolean targetReached = dist <= particle.velocity().length();
         if (!targetReached) {
@@ -272,14 +273,14 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         return targetReached;
     }
 
-    private void onParticleReachedTarget(EnergizerParticle particle) {
+    private void onParticleReachedTarget(EnergizerParticle3D particle) {
         particle.setAngle(Math.toRadians(randomInt(0, 360)));
         particle.setVelocity(new Vector3f(0, 0, -config.swirl().upwardsSpeed()));
         updateParticlePositionOnSwirlSurface(particle);
         particle.setState(FragmentState.INSIDE_SWIRL);
     }
 
-    private void updateStateInsideSwirl(EnergizerParticle particle) {
+    private void updateStateInsideSwirl(EnergizerParticle3D particle) {
         particle.move();
         final Vector3f pos = particle.position();
         if (pos.z() < -config.swirl().height()) {
@@ -294,7 +295,7 @@ public class EnergizerParticlesAnimation extends ManagedAnimation {
         updateParticlePositionOnSwirlSurface(particle);
     }
 
-    private void updateParticlePositionOnSwirlSurface(EnergizerParticle particle) {
+    private void updateParticlePositionOnSwirlSurface(EnergizerParticle3D particle) {
         final Vector3f swirlBaseCenter = swirlBaseCenters.get(particle.targetSwirlIndex());
         final var pos = new Vector3f(
             swirlBaseCenter.x() + config.swirl().radius() * Math.cos(particle.angle()),

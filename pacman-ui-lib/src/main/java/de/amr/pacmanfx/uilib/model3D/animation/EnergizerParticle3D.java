@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.animation;
+package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector3f;
@@ -40,7 +40,7 @@ import static java.util.Objects.requireNonNull;
  * <p>Subclasses must implement {@link #size()} and {@link #setSize(double)} to define how the visual
  * size of the particle is interpreted.
  */
-public abstract class EnergizerParticle implements Disposable {
+public abstract class EnergizerParticle3D implements Disposable {
 
     /**
      * Tests whether a sphere intersects an axis-aligned bounding box (AABB).
@@ -109,7 +109,7 @@ public abstract class EnergizerParticle implements Disposable {
      * @param shape3D         the render shape (non-null)
      * @param initialPosition the initial simulation position (non-null)
      */
-    protected EnergizerParticle(Shape3D shape3D, Vector3f initialPosition) {
+    protected EnergizerParticle3D(Shape3D shape3D, Vector3f initialPosition) {
         this.shape3D = requireNonNull(shape3D);
         setPosition(initialPosition);
         setVelocity(Vector3f.ZERO);
@@ -120,7 +120,7 @@ public abstract class EnergizerParticle implements Disposable {
      *
      * @param shape3D the render shape (non-null)
      */
-    protected EnergizerParticle(Shape3D shape3D) {
+    protected EnergizerParticle3D(Shape3D shape3D) {
         this(shape3D, Vector3f.ZERO);
     }
 

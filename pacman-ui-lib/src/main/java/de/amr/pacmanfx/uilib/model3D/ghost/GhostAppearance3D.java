@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.GhostMaterialSet;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostBrakeAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostPointsAnimation3D;
 import javafx.beans.value.ChangeListener;
