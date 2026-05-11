@@ -25,10 +25,10 @@ import org.tinylog.Logger;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
@@ -36,7 +36,10 @@ import static java.util.Objects.requireNonNull;
 /**
  * Pac-Man game 3D model provided by fellow 3D artist Gianmarco Cavallaccio
  * (<a href="https://www.artstation.com/gianmart">Homepage</a>).
- * Only the Pac-Man and one ghost from that 3D model are used though.
+ * <p>
+ * Only the Pac-Man and one ghost from that 3D model are used though. The materials defined in the OBJ file are also
+ * not used. Instead, we use colored materials created according to the color scheme needed for the games.
+ * <p>
  * For the pellets, another model is used, and the maze is procedurally generated from the map data.
  */
 public class PacManWorld3D {
@@ -62,15 +65,21 @@ public class PacManWorld3D {
 
     // Strange IDs but it is what it is and it isn't what it isn't.
 
-    // Blue ghost behind Pac-Man in the OBJ file
     private static final String ID_GHOST_DRESS    = "GhostCyanHead.GhostCyanHead_light_blue_ghost";
     private static final String ID_GHOST_EYEBALLS = "GhostCyanEyeballs.GhostCyanEyeballs_white";
     private static final String ID_GHOST_PUPILS   = "GhostCyanPupils.GhostCyanPupils_grey_wall";
+    private static final String ID_PAC_HEAD       = "PacManHead.PacManHead_yellow_pacman";
+    private static final String ID_PAC_EYES       = "PacManEyes.PacManEyes_grey_wall";
+    private static final String ID_PAC_PALATE     = "PacManPalate.PacManPalate_grey_wall";
 
-    // Pac-Man mesh IDs
-    private static final String ID_PAC_HEAD   = "PacManHead.PacManHead_yellow_pacman";
-    private static final String ID_PAC_EYES   = "PacManEyes.PacManEyes_grey_wall";
-    private static final String ID_PAC_PALATE = "PacManPalate.PacManPalate_grey_wall";
+    private static final Set<String> MESH_IDs = Set.of(
+        ID_GHOST_DRESS,
+        ID_GHOST_EYEBALLS,
+        ID_GHOST_PUPILS,
+        ID_PAC_HEAD,
+        ID_PAC_EYES,
+        ID_PAC_PALATE
+    );
 
     // Pellet 3D model
     private static final String PELLET_OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pellet.obj";
@@ -84,26 +93,26 @@ public class PacManWorld3D {
         return node;
     }
 
-    private Map<String, MeshView> meshViews;
-    private Map<String, PhongMaterial> materials;
+    private Map<String, Mesh> meshes;
     private Mesh pelletMesh;
 
     private PacManWorld3D() throws IOException {
-        loadPacManWorldModel(Set.of(
-            ID_PAC_EYES, ID_PAC_PALATE, ID_PAC_HEAD, ID_GHOST_DRESS, ID_GHOST_EYEBALLS, ID_GHOST_PUPILS));
+        loadPacManWorldModel();
         loadPelletModel();
-        checkMeshesCreated();
     }
 
-    private void loadPacManWorldModel(Set<String> meshIDs) throws IOException {
+    private void loadPacManWorldModel() throws IOException {
         final URL url = getClass().getResource(PAC_MAN_WORLD_OBJ_FILE);
         if (url == null) {
             throw new ExceptionInInitializerError("Unable to create 3D model from .obj file " + PAC_MAN_WORLD_OBJ_FILE);
         }
         final ObjModel onj = new ObjFileParser(url, StandardCharsets.UTF_8).parse();
         final MeshBuilder meshBuilder = new MeshBuilder(onj);
-        meshViews = meshBuilder.buildMeshViewsByGroup(meshIDs::contains);
-        materials = new HashMap<>(meshBuilder.materials());
+        meshes = meshBuilder.buildMeshViewsByGroup(MESH_IDs::contains)
+            .entrySet().stream()
+            .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getMesh()));
+
+        MESH_IDs.forEach(meshID -> requireNonNull(meshes.get(meshID)));
     }
 
     private void loadPelletModel() throws IOException {
@@ -114,32 +123,20 @@ public class PacManWorld3D {
         final ObjModel objModel = new ObjFileParser(url, StandardCharsets.UTF_8).parse();
         final Map<String, MeshView> meshViews = MeshBuilder.build(objModel, MeshBuilder.BuildMode.BY_OBJECT);
         pelletMesh = meshViews.get(ID_PELLET).getMesh();
-    }
 
-    private void checkMeshesCreated() {
-        pacEyesMesh();
-        pacHeadMesh();
-        pacEyesMesh();
-        ghostDressMesh();
-        ghostEyeballsMesh();
-        ghostPupilsMesh();
-        pelletMesh();
-    }
-
-    public Map<String, PhongMaterial> materials() {
-        return materials;
+        requireNonNull(pelletMesh);
     }
 
     public Mesh ghostDressMesh() {
-        return assertMeshViewExists(ID_GHOST_DRESS).getMesh();
+        return meshes.get(ID_GHOST_DRESS);
     }
 
     public Mesh ghostEyeballsMesh() {
-        return assertMeshViewExists(ID_GHOST_EYEBALLS).getMesh();
+        return meshes.get(ID_GHOST_EYEBALLS);
     }
 
     public Mesh ghostPupilsMesh() {
-        return assertMeshViewExists(ID_GHOST_PUPILS).getMesh();
+        return meshes.get(ID_GHOST_PUPILS);
     }
 
     public GhostMeshSet createGhostMeshSet() {
@@ -147,15 +144,15 @@ public class PacManWorld3D {
     }
 
     public Mesh pacHeadMesh() {
-        return assertMeshViewExists(ID_PAC_HEAD).getMesh();
+        return meshes.get(ID_PAC_HEAD);
     }
 
     public Mesh pacPalateMesh() {
-        return assertMeshViewExists(ID_PAC_PALATE).getMesh();
+        return meshes.get(ID_PAC_PALATE);
     }
 
     public Mesh pacEyesMesh() {
-        return assertMeshViewExists(ID_PAC_EYES).getMesh();
+        return meshes.get(ID_PAC_EYES);
     }
 
     public Mesh pelletMesh() { return pelletMesh; }
@@ -168,7 +165,7 @@ public class PacManWorld3D {
      */
     public Group createPacBody(PacConfig config) {
         requireNonNull(config);
-        final MeshView head = createPacHead(config, true);
+        final MeshView head = createPacHead(config);
         final MeshView eyes = createPacEyes(config);
         final MeshView palate = createPacPalate(config);
         final Group body = new Group(head, eyes, palate);
@@ -184,7 +181,7 @@ public class PacManWorld3D {
      */
     public Group createBlindPacBody(PacConfig config) {
         requireNonNull(config);
-        final MeshView head = createPacHead(config, true);
+        final MeshView head = createPacHead(config);
         final MeshView palate = createPacPalate(config);
         final Group body = new Group(head, palate);
         centerOverOrigin(head, List.of(palate));
@@ -257,11 +254,9 @@ public class PacManWorld3D {
 
     // private
 
-    private MeshView createPacHead(PacConfig config, boolean boring) {
+    private MeshView createPacHead(PacConfig config) {
         final PhongMaterial boringMaterial = coloredPhongMaterial(config.colors().headColor());
-        return createMeshView(pacHeadMesh(), boring
-            ? boringMaterial
-            : materials.getOrDefault("yellow_pacman", boringMaterial));
+        return createMeshView(pacHeadMesh(), boringMaterial);
     }
 
     private MeshView createPacPalate(PacConfig config) {
@@ -276,14 +271,6 @@ public class PacManWorld3D {
         final MeshView meshView = new MeshView(mesh);
         meshView.setMaterial(material);
         return meshView;
-    }
-
-    private MeshView assertMeshViewExists(String name) {
-        final MeshView meshView = meshViews.get(name);
-        if (meshView != null) {
-            return meshView;
-        }
-        throw new IllegalArgumentException("Mesh view for group name %s does not exist".formatted(name));
     }
 
     private static void centerOverOrigin(Node master, List<Node> slaves) {
