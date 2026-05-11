@@ -72,18 +72,20 @@ public class PacManWorld3D {
     private static final String ID_PAC_EYES       = "PacManEyes.PacManEyes_grey_wall";
     private static final String ID_PAC_PALATE     = "PacManPalate.PacManPalate_grey_wall";
 
+    private static final String ID_PELLET          = "Object.Pellet";
+
     private static final Set<String> MESH_IDs = Set.of(
         ID_GHOST_DRESS,
         ID_GHOST_EYEBALLS,
         ID_GHOST_PUPILS,
         ID_PAC_HEAD,
         ID_PAC_EYES,
-        ID_PAC_PALATE
+        ID_PAC_PALATE,
+        ID_PELLET
     );
 
     // Pellet 3D model
     private static final String PELLET_OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pellet.obj";
-    private static final String ID_PELLET = "Object.Pellet";
 
     /**
      * Rotates Pac-Man / the used ghost to fit into the 3D play scene.
@@ -94,11 +96,11 @@ public class PacManWorld3D {
     }
 
     private Map<String, Mesh> meshes;
-    private Mesh pelletMesh;
 
     private PacManWorld3D() throws IOException {
         loadPacManWorldModel();
         loadPelletModel();
+        MESH_IDs.forEach(meshID -> requireNonNull(meshes.get(meshID)));
     }
 
     private void loadPacManWorldModel() throws IOException {
@@ -111,8 +113,6 @@ public class PacManWorld3D {
         meshes = meshBuilder.buildMeshViewsByGroup(MESH_IDs::contains)
             .entrySet().stream()
             .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getMesh()));
-
-        MESH_IDs.forEach(meshID -> requireNonNull(meshes.get(meshID)));
     }
 
     private void loadPelletModel() throws IOException {
@@ -121,10 +121,10 @@ public class PacManWorld3D {
             throw new ExceptionInInitializerError("Unable to create 3D model from .obj file " + PELLET_OBJ_FILE);
         }
         final ObjModel objModel = new ObjFileParser(url, StandardCharsets.UTF_8).parse();
-        final Map<String, MeshView> meshViews = MeshBuilder.build(objModel, MeshBuilder.BuildMode.BY_OBJECT);
-        pelletMesh = meshViews.get(ID_PELLET).getMesh();
-
-        requireNonNull(pelletMesh);
+        final MeshBuilder builder = new MeshBuilder(objModel);
+        final MeshView pelletMeshView = builder.buildMeshViewsByObject(ID_PELLET::equals).get(ID_PELLET);
+        requireNonNull(pelletMeshView);
+        meshes.put(ID_PELLET, pelletMeshView.getMesh());
     }
 
     public Mesh ghostDressMesh() {
@@ -155,7 +155,7 @@ public class PacManWorld3D {
         return meshes.get(ID_PAC_EYES);
     }
 
-    public Mesh pelletMesh() { return pelletMesh; }
+    public Mesh pelletMesh() { return meshes.get(ID_PELLET); }
 
     /**
      * Creates a fully assembled Pac-Man body with head, eyes, and palate.
