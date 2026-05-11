@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
@@ -48,8 +49,8 @@ public class PacManWorld3D {
         try {
             return new PacManWorld3D();
         } catch (IOException x) {
-            Logger.error(x, "An error occurred on creation of the Pac-Man game 3D model");
-            throw new ExceptionInInitializerError(x);
+            Logger.error(x);
+            throw new ExceptionInInitializerError("An error occurred on creation of the Pac-Man game 3D model");
         }
     }
 
@@ -83,24 +84,26 @@ public class PacManWorld3D {
         return node;
     }
 
-    private Map<String, MeshView> pacManWorldMeshViews;
-    private Map<String, PhongMaterial> pacManWorldMaterials;
+    private Map<String, MeshView> meshViews;
+    private Map<String, PhongMaterial> materials;
     private Mesh pelletMesh;
 
     private PacManWorld3D() throws IOException {
-        loadPacManWorldModel();
+        loadPacManWorldModel(Set.of(
+            ID_PAC_EYES, ID_PAC_PALATE, ID_PAC_HEAD, ID_GHOST_DRESS, ID_GHOST_EYEBALLS, ID_GHOST_PUPILS));
         loadPelletModel();
+        checkMeshesCreated();
     }
 
-    private void loadPacManWorldModel() throws IOException {
+    private void loadPacManWorldModel(Set<String> meshIDs) throws IOException {
         final URL url = getClass().getResource(PAC_MAN_WORLD_OBJ_FILE);
         if (url == null) {
             throw new ExceptionInInitializerError("Unable to create 3D model from .obj file " + PAC_MAN_WORLD_OBJ_FILE);
         }
-        final ObjModel objModel = new ObjFileParser(url, StandardCharsets.UTF_8).parse();
-        final MeshBuilder meshBuilder = new MeshBuilder(objModel);
-        pacManWorldMeshViews = meshBuilder.buildMeshViewsByGroup();
-        pacManWorldMaterials = new HashMap<>(meshBuilder.materials());
+        final ObjModel onj = new ObjFileParser(url, StandardCharsets.UTF_8).parse();
+        final MeshBuilder meshBuilder = new MeshBuilder(onj);
+        meshViews = meshBuilder.buildMeshViewsByGroup(meshIDs::contains);
+        materials = new HashMap<>(meshBuilder.materials());
     }
 
     private void loadPelletModel() throws IOException {
@@ -110,11 +113,21 @@ public class PacManWorld3D {
         }
         final ObjModel objModel = new ObjFileParser(url, StandardCharsets.UTF_8).parse();
         final Map<String, MeshView> meshViews = MeshBuilder.build(objModel, MeshBuilder.BuildMode.BY_OBJECT);
-        pelletMesh = requireNonNull(meshViews.get(ID_PELLET)).getMesh();
+        pelletMesh = meshViews.get(ID_PELLET).getMesh();
+    }
+
+    private void checkMeshesCreated() {
+        pacEyesMesh();
+        pacHeadMesh();
+        pacEyesMesh();
+        ghostDressMesh();
+        ghostEyeballsMesh();
+        ghostPupilsMesh();
+        pelletMesh();
     }
 
     public Map<String, PhongMaterial> materials() {
-        return pacManWorldMaterials;
+        return materials;
     }
 
     public Mesh ghostDressMesh() {
@@ -248,7 +261,7 @@ public class PacManWorld3D {
         final PhongMaterial boringMaterial = coloredPhongMaterial(config.colors().headColor());
         return createMeshView(pacHeadMesh(), boring
             ? boringMaterial
-            : pacManWorldMaterials.getOrDefault("yellow_pacman", boringMaterial));
+            : materials.getOrDefault("yellow_pacman", boringMaterial));
     }
 
     private MeshView createPacPalate(PacConfig config) {
@@ -266,7 +279,7 @@ public class PacManWorld3D {
     }
 
     private MeshView assertMeshViewExists(String name) {
-        final MeshView meshView = pacManWorldMeshViews.get(name);
+        final MeshView meshView = meshViews.get(name);
         if (meshView != null) {
             return meshView;
         }
