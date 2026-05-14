@@ -42,7 +42,7 @@ public class NumberBox3D extends Group implements GameLevelEntity {
         getChildren().add(riseGroup);
     }
 
-    public Animation createAnimation() {
+    public Animation createAnimation(double riseHeight) {
         final Duration riseDuration = Duration.seconds(1);
 
         // rotate only rotateGroup
@@ -56,7 +56,7 @@ public class NumberBox3D extends Group implements GameLevelEntity {
         // translate only riseGroup (world-space Z)
         final var rise = new TranslateTransition(riseDuration, riseGroup);
         rise.setFromZ(0);
-        rise.setToZ(-40);
+        rise.setToZ(-riseHeight);
         rise.setInterpolator(Interpolator.EASE_IN);
 
         // fade material

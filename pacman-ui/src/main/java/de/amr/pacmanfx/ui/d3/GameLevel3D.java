@@ -638,18 +638,19 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             //TODO use Ghost3D
             final double x = ga3D.getTranslateX();
             final double y = ga3D.getTranslateY();
-            addAnimatedNumberBox(x, y, uiConfig.killedGhostPointsImage(numberIndex));
+            final double riseHeight = (numberIndex + 1) * 12;
+            addAnimatedNumberBox(x, y, riseHeight, uiConfig.killedGhostPointsImage(numberIndex));
         });
     }
 
-    private void addAnimatedNumberBox(double x, double y, Image numberImage) {
+    private void addAnimatedNumberBox(double x, double y, double riseHeight, Image numberImage) {
         final NumberBox3D numberBox3D = new NumberBox3D(numberImage);
         entities3D.add(numberBox3D);
         getChildren().add(numberBox3D);
         numberBox3D.setTranslateX(x);
         numberBox3D.setTranslateY(y);
         numberBox3D.setTranslateZ(-8);
-        final Animation animation = numberBox3D.createAnimation();
+        final Animation animation = numberBox3D.createAnimation(riseHeight);
         animation.setOnFinished(_ -> {
             Logger.info("Number box animation finished, {}", numberBox3D.riseGroupPosition());
             entities3D.remove(numberBox3D);
