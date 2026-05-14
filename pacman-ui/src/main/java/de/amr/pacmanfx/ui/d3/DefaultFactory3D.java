@@ -48,8 +48,7 @@ public class DefaultFactory3D implements Factory3D {
     public static final int DEFAULT_NUMBER_BOX_SIZE_Z = 8;
 
     protected final Map<GhostAppearanceColors, GhostMaterialSet> ghostMaterialsCache = new HashMap<>();
-
-    protected Map<Float, Mesh> pelletMeshesCache = new HashMap<>();
+    protected final Map<Float, Mesh> pelletMeshesCache = new HashMap<>();
 
     @Override
     public void dispose() {
