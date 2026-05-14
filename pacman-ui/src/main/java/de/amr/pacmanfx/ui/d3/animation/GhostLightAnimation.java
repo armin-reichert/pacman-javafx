@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.d3.animation;
 
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostAppearance3D;
+import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -30,11 +30,11 @@ public class GhostLightAnimation extends ManagedAnimation {
     public static final int LIGHT_MAX_RANGE = 30;
     public static final Duration LIGHT_CHANGE_INTERVAL = Duration.millis(3000);
 
-    private final List<GhostAppearance3D> ghosts3D;
+    private final List<Ghost3D> ghosts3D;
     private final PointLight light = new PointLight();
     private byte currentGhostID = RED_GHOST_SHADOW;
 
-    public GhostLightAnimation(List<GhostAppearance3D> ghosts3DInOrder) {
+    public GhostLightAnimation(List<Ghost3D> ghosts3DInOrder) {
         super("Ghost Light");
         this.ghosts3D = requireNonNull(ghosts3DInOrder);
         light.setMaxRange(LIGHT_MAX_RANGE);
@@ -55,10 +55,10 @@ public class GhostLightAnimation extends ManagedAnimation {
      * Moves the spotlight to the given ghost and updates its color.
      */
     private void illuminateGhost(byte ghostID) {
-        final GhostAppearance3D g3D = ghosts3D.get(ghostID);
-        light.setColor(g3D.ghost3D().colors().normalColor().dressColor());
-        light.translateXProperty().bind(g3D.translateXProperty());
-        light.translateYProperty().bind(g3D.translateYProperty());
+        final Ghost3D ghost3D = ghosts3D.get(ghostID);
+        light.setColor(ghost3D.colors().normalColor().dressColor());
+        light.translateXProperty().bind(ghost3D.translateXProperty());
+        light.translateYProperty().bind(ghost3D.translateYProperty());
         light.setTranslateZ(-LIGHT_HEIGHT_OVER_FLOOR);
         light.setLightOn(true);
         currentGhostID = ghostID;

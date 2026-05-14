@@ -92,7 +92,7 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public GhostAppearance3D createGhostAppearance3D(
+    public Ghost3D createGhostAppearance3D(
         Ghost ghost,
         GhostConfig ghostConfig,
         ManagedAnimationsRegistry animations)
@@ -109,7 +109,7 @@ public class DefaultFactory3D implements Factory3D {
             PacManWorld3D.instance().ghostEyeballsMesh()
         );
 
-        return new GhostAppearance3D(
+        return new Ghost3D(
             animations,
             ghost,
             colors,

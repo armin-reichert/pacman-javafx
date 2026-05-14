@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostAppearance3D;
+import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -17,9 +17,9 @@ import static java.util.Objects.requireNonNull;
 
 public class GhostBrakeAnimation3D extends ManagedAnimation {
 
-    private final GhostAppearance3D ghostAppearance3D;
+    private final Ghost3D ghostAppearance3D;
 
-    public GhostBrakeAnimation3D(GhostAppearance3D ghostAppearance3D) {
+    public GhostBrakeAnimation3D(Ghost3D ghostAppearance3D) {
         super("Ghost Braking (%s)".formatted(ghostAppearance3D.ghost().name()));
         this.ghostAppearance3D = requireNonNull(ghostAppearance3D);
         setFactory(this::createAnimationFX);

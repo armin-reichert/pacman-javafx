@@ -43,10 +43,7 @@ import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.NumberBox3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
-import javafx.animation.Animation;
-import javafx.animation.SequentialTransition;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
+import javafx.animation.*;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -90,12 +87,12 @@ import static java.util.Objects.requireNonNull;
  * @see PlayScene3D
  * @see Maze3D
  * @see Pac3D
- * @see GhostAppearance3D
+ * @see Ghost3D
  * @see DisposableGraphicsObject
  */
 public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
-    private static final Comparator<GhostAppearance3D> BY_GHOST_PERSONALITY = Comparator.comparingInt(ga3D -> ga3D.ghost().personality());
+    private static final Comparator<Ghost3D> BY_GHOST_PERSONALITY = Comparator.comparingInt(ga3D -> ga3D.ghost().personality());
 
     public enum AnimationID {
         ENERGIZER_PARTICLES_MOVEMENT,
@@ -204,7 +201,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         entities3D.all().forEach(entity -> {
             switch (entity) {
                 case Pac3D pac3D -> setDrawMode(pac3D, drawMode);
-                case GhostAppearance3D ghost3D -> setDrawMode(ghost3D, drawMode);
+                case Ghost3D ghost3D -> setDrawMode(ghost3D, drawMode);
                 case Maze3D maze3D -> setDrawMode(maze3D, drawMode); //TODO performance
                 default -> {}
             }
@@ -224,9 +221,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Private area, no trespassing
 
-    private Optional<GhostAppearance3D> ghostAppearance3D(byte personality) {
+    private Optional<Ghost3D> ghost3D(byte personality) {
         Validations.requireValidGhostPersonality(personality);
-        return entities3D.allWhere(GhostAppearance3D.class, ga3D -> ga3D.ghost().personality() == personality).findFirst();
+        return entities3D.allWhere(Ghost3D.class, ga3D -> ga3D.ghost().personality() == personality).findFirst();
     }
 
     /**
@@ -243,7 +240,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().addAll(maze3D.floor(), maze3D.particlesGroup());
         getChildren().addAll(levelCounter3D, livesCounter3D, pac3D);
         pac3D.powerLight().ifPresent(getChildren()::add);
-        entities3D.all(GhostAppearance3D.class).sorted(BY_GHOST_PERSONALITY).forEach(getChildren()::add);
+        entities3D.all(Ghost3D.class).sorted(BY_GHOST_PERSONALITY).forEach(getChildren()::add);
         entities3D.all(Energizer3D.class).map(Energizer3D::shape).forEach(getChildren()::add);
         entities3D.all(Pellet3D.class).map(Pellet3D::shape).forEach(getChildren()::add);
         getChildren().addAll(maze3D, maze3D.house().root(), maze3D.house().doors());
@@ -260,21 +257,16 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createGhostAppearances3D() {
         level.ghosts().map(ghost -> {
-            final var ga3D = createGhostAppearance3D(uiConfig.entityConfig().ghostConfigs().get(ghost.personality()), ghost);
+            final var ga3D = createGhost3D(uiConfig.entityConfig().ghostConfigs().get(ghost.personality()), ghost);
             ga3D.init(level);
             ga3D.setTranslateZ(-0.5 * ga3D.getBoundsInLocal().getDepth() - 1);
             return ga3D;
         }).forEach(entities3D::add);
     }
 
-    private GhostAppearance3D createGhostAppearance3D(GhostConfig ghostConfig, Ghost ghost) {
+    private Ghost3D createGhost3D(GhostConfig ghostConfig, Ghost ghost) {
         final var ghost3D = uiConfig.factory3D().createGhostAppearance3D(ghost, ghostConfig, animations3D);
         ghost3D.setNumFlashes(level.numFlashes());
-        final BooleanBinding visibleAndInsideWorld = Bindings.createBooleanBinding(
-            () -> ghost.isVisible() && !outsideWorld(level.worldMap(), ghost),
-            ghost.visibleProperty(), ghost.positionProperty()
-        );
-        ghost3D.visibleProperty().bind(visibleAndInsideWorld);
         return ghost3D;
     }
 
@@ -442,7 +434,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .toList();
 
         final List<PhongMaterial> dressMaterials = ghostAppearancesByPersonality()
-            .map(GhostAppearance3D::ghost3D)
             .map(Ghost3D::materials)
             .map(GhostMaterialSet::normalMaterial)
             .map(GhostComponentMaterialSet::dressMaterial)
@@ -586,7 +577,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void onHuntingStart() {
         entities3D.unique(Pac3D.class).init(level);
-        entities3D.all(GhostAppearance3D.class).forEach(ghost3D -> ghost3D.init(level));
+        entities3D.all(Ghost3D.class).forEach(ghost3D -> ghost3D.init(level));
         entities3D.all(Energizer3D.class).forEach(Energizer3D::startPumping);
         animations3D.animation(AnimationID.ENERGIZER_PARTICLES_MOVEMENT).playFromStart();
         animations3D.animation(AnimationID.GHOST_LIGHT).playFromStart();
@@ -601,7 +592,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         // Do not stop all animations!
         animations3D.animation(AnimationID.GHOST_LIGHT).stop();
         animations3D.animation(AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).stop();
-        entities3D.all(GhostAppearance3D.class).forEach(GhostAppearance3D::stopAllAnimations);
+        entities3D.all(Ghost3D.class).forEach(Ghost3D::stopAllAnimations);
         entities3D.first(Bonus3D.class).ifPresent(Bonus3D::expire);
 
         createPacDyingAnimationSequence(pac3D, gameState).play();
@@ -632,31 +623,49 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void onEatingGhost() {
         level.game().simulationStep().ghostsKilled.forEach(killedGhost -> {
-            final int numberIndex = level.energizerVictims().indexOf(killedGhost);
-            final GhostAppearance3D ga3D = ghostAppearance3D(killedGhost.personality()).orElseThrow();
-            ga3D.hideGhostAppearance();
-            //TODO use Ghost3D
-            final double x = ga3D.getTranslateX();
-            final double y = ga3D.getTranslateY();
-            final double riseHeight = (numberIndex + 1) * 12;
-            addAnimatedNumberBox(x, y, riseHeight, uiConfig.killedGhostPointsImage(numberIndex));
+            final int killIndex = level.energizerVictims().indexOf(killedGhost);
+            final Ghost3D ghost3D = ghost3D(killedGhost.personality()).orElseThrow();
+            final double riseHeight = (killIndex + 1) * 12;
+            replaceGhost3DByAnimatedNumberBox(ghost3D, riseHeight, uiConfig.killedGhostPointsImage(killIndex));
         });
     }
 
-    private void addAnimatedNumberBox(double x, double y, double riseHeight, Image numberImage) {
+    private void replaceGhost3DByAnimatedNumberBox(Ghost3D ghost3D, double riseHeight, Image numberImage) {
+        final double x = ghost3D.getTranslateX();
+        final double y = ghost3D.getTranslateY();
         final NumberBox3D numberBox3D = new NumberBox3D(numberImage);
-        entities3D.add(numberBox3D);
-        getChildren().add(numberBox3D);
         numberBox3D.setTranslateX(x);
         numberBox3D.setTranslateY(y);
         numberBox3D.setTranslateZ(-8);
-        final Animation animation = numberBox3D.createAnimation(riseHeight);
-        animation.setOnFinished(_ -> {
+
+        entities3D.add(numberBox3D);
+        getChildren().add(numberBox3D);
+
+        final Animation numberAnimation = numberBox3D.createAnimation(riseHeight);
+        numberAnimation.setOnFinished(_ -> {
             Logger.info("Number box animation finished, {}", numberBox3D.riseGroupPosition());
             entities3D.remove(numberBox3D);
             getChildren().remove(numberBox3D);
+            //TODO why do I get "duplicate children added" exceptions?
+            if (!getChildren().contains(ghost3D)) {
+                getChildren().add(ghost3D);
+            }
         });
-        animation.playFromStart();
+
+        final Animation hideGhost3DForOneSecond = new Timeline(
+            new KeyFrame(Duration.ZERO, e -> {
+                ghost3D.stopAllAnimations();
+                getChildren().remove(ghost3D);
+            }),
+            new KeyFrame(Duration.millis(1000), e -> {
+                if (!getChildren().contains(ghost3D)) {
+                    getChildren().add(ghost3D);
+                }
+            })
+        );
+
+        new ParallelTransition(hideGhost3DForOneSecond, numberAnimation).play();
+
         Logger.info("Number box animation started, {}", numberBox3D.riseGroupPosition());
     }
 
@@ -706,8 +715,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().addAll(animations3D.animation(AnimationID.GHOST_LIGHT, GhostLightAnimation.class).light());
     }
 
-    private Stream<GhostAppearance3D> ghostAppearancesByPersonality() {
-        return entities3D.all(GhostAppearance3D.class).sorted(BY_GHOST_PERSONALITY);
+    private Stream<Ghost3D> ghostAppearancesByPersonality() {
+        return entities3D.all(Ghost3D.class).sorted(BY_GHOST_PERSONALITY);
     }
 
     /**
