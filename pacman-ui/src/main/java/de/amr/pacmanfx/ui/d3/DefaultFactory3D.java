@@ -19,7 +19,6 @@ import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.ghost.*;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
-import de.amr.pacmanfx.uilib.model3D.pac.PacMan3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
 import javafx.beans.property.DoubleProperty;
@@ -92,8 +91,7 @@ public class DefaultFactory3D implements Factory3D {
         requireNonNull(pac);
         requireNonNull(pacConfig);
         requireNonNull(animations);
-
-        return new PacMan3D(animations, pac, pacConfig);
+        return Pac3D.createPacMan3D(animations, pac, pacConfig);
     }
 
     @Override

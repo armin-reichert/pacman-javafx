@@ -14,6 +14,9 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.Model3DHelper;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
+import de.amr.pacmanfx.uilib.model3D.animation.HeadBangingAnimation3D;
+import de.amr.pacmanfx.uilib.model3D.animation.PacChewingAnimation3D;
+import de.amr.pacmanfx.uilib.model3D.animation.PacManDyingAnimation3D;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.PhongMaterial;
@@ -32,9 +35,9 @@ import static de.amr.pacmanfx.uilib.model3D.Model3DHelper.scale;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Common base class for (Ms.) Pac-Man 3D representations.
+ * (Ms.) Pac-Man 3D representations.
  */
-public abstract class Pac3D extends Group
+public class Pac3D extends Group
     implements GameLevelEntity, DisposableGraphicsObject {
 
     public enum AnimationID { PAC_CHEWING, PAC_DYING, PAC_MOVING }
@@ -47,6 +50,17 @@ public abstract class Pac3D extends Group
         public abstract void update(Pac pac);
 
         public abstract void setPowerMode(boolean power);
+    }
+
+    public static Pac3D createPacMan3D(ManagedAnimationsRegistry animations, Pac pac, PacConfig config) {
+        final Pac3D pac3D = new Pac3D(animations, pac);
+        pac3D.setBody(createPacBody(config));
+        pac3D.setJaw(createBlindPacBody(config));
+        animations.register(AnimationID.PAC_CHEWING, new PacChewingAnimation3D(pac3D));
+        animations.register(AnimationID.PAC_DYING,   new PacManDyingAnimation3D(pac3D));
+        animations.register(AnimationID.PAC_MOVING,  new HeadBangingAnimation3D(pac3D));
+        pac3D.setMovementAnimationPowerMode(false);
+        return pac3D;
     }
 
     /**

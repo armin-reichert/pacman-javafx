@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.model3D.pac.PacMan3D;
+import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import javafx.animation.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -15,9 +15,9 @@ import static java.util.Objects.requireNonNull;
 
 public class PacManDyingAnimation3D extends ManagedAnimation {
 
-    private final PacMan3D pacMan3D;
+    private final Pac3D pacMan3D;
 
-    public PacManDyingAnimation3D(PacMan3D pacMan3D) {
+    public PacManDyingAnimation3D(Pac3D pacMan3D) {
         super("PacMan_Dying");
         this.pacMan3D = requireNonNull(pacMan3D);
         setFactory(this::createAnimation);
