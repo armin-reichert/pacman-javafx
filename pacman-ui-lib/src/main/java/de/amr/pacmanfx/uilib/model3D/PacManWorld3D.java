@@ -7,7 +7,6 @@ package de.amr.pacmanfx.uilib.model3D;
 import de.amr.meshbuilder.MeshBuilder;
 import de.amr.objparser.ObjFileParser;
 import de.amr.objparser.ObjModel;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostMeshSet;
 import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
@@ -137,10 +136,6 @@ public class PacManWorld3D {
 
     public Mesh ghostPupilsMesh() {
         return meshes.get(ID_GHOST_PUPILS);
-    }
-
-    public GhostMeshSet createGhostMeshSet() {
-        return new GhostMeshSet(ghostDressMesh(), ghostPupilsMesh(), ghostEyeballsMesh());
     }
 
     public Mesh pacHeadMesh() {

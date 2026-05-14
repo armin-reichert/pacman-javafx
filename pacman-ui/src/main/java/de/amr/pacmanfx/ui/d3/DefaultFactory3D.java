@@ -13,12 +13,8 @@ import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostMaterialSet;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostAppearance3D;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostAppearanceColors;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentMaterialSet;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
+import de.amr.pacmanfx.uilib.model3D.ghost.*;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 import de.amr.pacmanfx.uilib.model3D.pac.PacMan3D;
@@ -145,11 +141,17 @@ public class DefaultFactory3D implements Factory3D {
 
         final GhostAppearanceColors colors = ghostConfig.createGhostColorSet();
         final GhostMaterialSet materials = ghostMaterialsCache.computeIfAbsent(colors, this::createGhostMaterial);
+        final GhostMeshSet meshSet = new GhostMeshSet(
+            PacManWorld3D.instance().ghostDressMesh(),
+            PacManWorld3D.instance().ghostPupilsMesh(),
+            PacManWorld3D.instance().ghostEyeballsMesh()
+        );
+
         return new GhostAppearance3D(
             animations,
             ghost,
             colors,
-            PacManWorld3D.instance().createGhostMeshSet(),
+            meshSet,
             materials,
             ghostConfig.size3D()
         );
