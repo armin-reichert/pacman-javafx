@@ -4,30 +4,19 @@
 package de.amr.pacmanfx.uilib.model3D.animation;
 
 import javafx.animation.Animation;
-import javafx.animation.Transition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
 
-public class MaterialColorAnimation3D extends Transition {
+public class MaterialColorAnimation3D {
 
-    private final PhongMaterial material;
-    private final Color fromColor;
-    private final Color toColor;
-
-    public MaterialColorAnimation3D(Duration cycleDuration, PhongMaterial material, Color fromColor, Color toColor) {
-        this.material = material;
-        this.fromColor = fromColor;
-        this.toColor = toColor;
-        setAutoReverse(true);
-        setCycleCount(Animation.INDEFINITE);
-        setCycleDuration(cycleDuration);
-    }
-
-    @Override
-    protected void interpolate(double t) {
-        Color color = fromColor.interpolate(toColor, t);
-        material.setDiffuseColor(color);
-        material.setSpecularColor(color.brighter());
+    public static Animation create(double seconds, PhongMaterial material, Color fromColor, Color toColor) {
+        return new Timeline(
+            new KeyFrame(Duration.ZERO,  new KeyValue(material.diffuseColorProperty(), fromColor)),
+            new KeyFrame(Duration.seconds(seconds), new KeyValue(material.diffuseColorProperty(), toColor))
+        );
     }
 }

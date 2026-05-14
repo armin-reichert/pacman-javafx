@@ -41,7 +41,9 @@ import de.amr.pacmanfx.uilib.model3D.ghost.*;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
+import de.amr.pacmanfx.uilib.model3D.world.NumberBox3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
+import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -636,22 +638,25 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             //TODO use Ghost3D
             final double x = ga3D.getTranslateX();
             final double y = ga3D.getTranslateY();
-            placeNumberBoxAt(x, y, uiConfig.killedGhostPointsImage(numberIndex));
+            addAnimatedNumberBox(x, y, uiConfig.killedGhostPointsImage(numberIndex));
         });
     }
 
-    private void placeNumberBoxAt(double x, double y, Image numberImage) {
-        final NumberBox3D numberBox3D = new NumberBox3D(animations3D, numberImage);
+    private void addAnimatedNumberBox(double x, double y, Image numberImage) {
+        final NumberBox3D numberBox3D = new NumberBox3D(numberImage);
         entities3D.add(numberBox3D);
         getChildren().add(numberBox3D);
         numberBox3D.setTranslateX(x);
         numberBox3D.setTranslateY(y);
         numberBox3D.setTranslateZ(-8);
-        numberBox3D.animation().animationFX().setOnFinished(_ -> {
+        final Animation animation = numberBox3D.createAnimation();
+        animation.setOnFinished(_ -> {
+            Logger.info("Number box animation finished, {}", numberBox3D.riseGroupPosition());
             entities3D.remove(numberBox3D);
             getChildren().remove(numberBox3D);
         });
-        numberBox3D.animation().playFromStart();
+        animation.playFromStart();
+        Logger.info("Number box animation started, {}", numberBox3D.riseGroupPosition());
     }
 
     private void onLevelComplete() {
