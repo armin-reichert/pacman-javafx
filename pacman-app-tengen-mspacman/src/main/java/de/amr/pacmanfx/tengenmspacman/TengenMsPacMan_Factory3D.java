@@ -8,6 +8,7 @@ import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.d3.DefaultFactory3D;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
+import de.amr.pacmanfx.uilib.model3D.pac.Pac3DFactory;
 import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 import javafx.scene.Group;
 
@@ -20,13 +21,13 @@ public class TengenMsPacMan_Factory3D extends DefaultFactory3D {
         requireNonNull(pac);
         requireNonNull(pacConfig);
         requireNonNull(animations);
-        return Pac3D.createMsPacMan3D(animations, pac, pacConfig);
+        return Pac3DFactory.createMsPacMan3D(animations, pac, pacConfig);
     }
 
     @Override
     public Group createLivesCounterShape3D(EntityConfig entityConfig) {
         requireNonNull(entityConfig);
         final PacConfig pacConfig = entityConfig.pacConfig().withModifiedSize3D(entityConfig.livesCounter().shapeSize());
-        return Pac3D.createMsPacManBody(pacConfig);
+        return Pac3DFactory.createMsPacManBody(pacConfig);
     }
 }
