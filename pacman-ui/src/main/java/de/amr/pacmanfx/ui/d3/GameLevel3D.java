@@ -48,6 +48,7 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
@@ -132,7 +133,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createLivesCounter3D();
         createFood3D();
         createMessageManager();
-        addChildrenToGroup();
+        addEntitiesToSceneGraph();
 
         // Maze3D must exist when energizer animations are created!
         createAnimations(mapColorScheme);
@@ -232,7 +233,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Order matters for correct transparency: actors and effects must appear
      * in front of walls/house.
      */
-    private void addChildrenToGroup() {
+    private void addEntitiesToSceneGraph() {
         final Maze3D maze3D = entities3D.unique(Maze3D.class);
         final Pac3D pac3D = entities3D.unique(Pac3D.class);
         final LevelCounter3D levelCounter3D = entities3D.unique(LevelCounter3D.class);
@@ -629,11 +630,28 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void onEatingGhost() {
         level.game().simulationStep().ghostsKilled.forEach(killedGhost -> {
-            final GhostAppearance3D ga3D = ghostAppearance3D(killedGhost.personality()).orElseThrow();
             final int numberIndex = level.energizerVictims().indexOf(killedGhost);
-            final NumberBox3D number3D = new NumberBox3D(animations3D, uiConfig.killedGhostPointsImage(numberIndex));
-            ga3D.showAsNumber(number3D);
+            final GhostAppearance3D ga3D = ghostAppearance3D(killedGhost.personality()).orElseThrow();
+            ga3D.hideGhostAppearance();
+            //TODO use Ghost3D
+            final double x = ga3D.getTranslateX();
+            final double y = ga3D.getTranslateY();
+            placeNumberBoxAt(x, y, uiConfig.killedGhostPointsImage(numberIndex));
         });
+    }
+
+    private void placeNumberBoxAt(double x, double y, Image numberImage) {
+        final NumberBox3D numberBox3D = new NumberBox3D(animations3D, numberImage);
+        entities3D.add(numberBox3D);
+        getChildren().add(numberBox3D);
+        numberBox3D.setTranslateX(x);
+        numberBox3D.setTranslateY(y);
+        numberBox3D.setTranslateZ(-8);
+        numberBox3D.animation().animationFX().setOnFinished(_ -> {
+            entities3D.remove(numberBox3D);
+            getChildren().remove(numberBox3D);
+        });
+        numberBox3D.animation().playFromStart();
     }
 
     private void onLevelComplete() {

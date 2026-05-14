@@ -45,7 +45,7 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
 
     private final ManagedAnimationsRegistry animations;
     private final Ghost3D ghost3D;
-    private NumberBox3D numberBox3D;
+    //private NumberBox3D numberBox3D;
 
     private int numFlashes;
 
@@ -108,17 +108,9 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
         ghost3D.animateDress(ghost3D.isVisible());
     }
 
-    public void showAsNumber(NumberBox3D numberBox3D) {
-        this.numberBox3D = requireNonNull(numberBox3D);
-        if (getChildren().size() == 1) {
-            getChildren().add(numberBox3D);
-        } else {
-            getChildren().set(1, numberBox3D);
-        }
+    public void hideGhostAppearance() {
         ghost3D.stopAnimations();
         ghost3D.setVisible(false);
-
-        enableNumberAppearance();
     }
 
     public void setNumFlashes(int numFlashes) {
@@ -142,24 +134,7 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
 
     // private area, no trespassing
 
-    private void disableNumberAppearance() {
-        if (numberBox3D != null) {
-            numberBox3D.setVisible(false);
-            numberBox3D.animation().stop();
-        }
-    }
-
-    private void enableNumberAppearance() {
-        if (numberBox3D != null) {
-            numberBox3D.setVisible(true);
-            numberBox3D.animation().playFromStart();
-            Logger.info("Ghost {} is now shown as number", ghost3D.ghost().name());
-        }
-        else Logger.error("Cannot enable number appearance: no number shape exists");
-    }
-
     private void setGhostAppearance(GhostAppearance ghostAppearance) {
-        disableNumberAppearance();
         switch (ghostAppearance) {
             case NORMAL     -> ghost3D.setNormalLook();
             case FRIGHTENED -> ghost3D.setFrightenedLook();
