@@ -68,7 +68,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     private MeshView pupilsShape;
     private MeshView eyeballsShape;
 
-    private final Rotate facing = new Rotate(0, Rotate.Z_AXIS);
+    private final Rotate facingRotation = new Rotate(0, Rotate.Z_AXIS);
     private final Scale scaling = new Scale(1, 1, 1);
 
     private int numFlashes;
@@ -96,30 +96,28 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         this.materialSet = requireNonNull(materialSet);
         this.size = requireNonNegative(size);
 
+        final Group facingGroup = new Group();
         dressGroup = new Group(dressShape);
         final var eyesGroup = new Group(pupilsShape, eyeballsShape);
-        getChildren().setAll(dressGroup, eyesGroup);
+
+        getChildren().setAll(facingGroup);
+        getTransforms().addAll(scaling);
+
+        facingGroup.getChildren().addAll(dressGroup, eyesGroup);
+        facingGroup.getTransforms().addAll(facingRotation, PacManWorld3D.ORIENTATION_ADJUSTMENT);
 
         final Bounds dressBounds = dressShape.getBoundsInLocal();
-        var centeredOverOrigin = new Translate(
-            -dressBounds.getCenterX(),
-            -dressBounds.getCenterY(),
-            -dressBounds.getCenterZ()
-        );
-        dressShape.getTransforms().add(centeredOverOrigin);
-        eyesGroup.getTransforms().add(centeredOverOrigin);
-
-        setSize(size);
+        final Translate originCentered = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
+        dressShape.getTransforms().add(originCentered);
+        eyesGroup.getTransforms().add(originCentered);
 
         animations.register(AnimationID.GHOST_DRESS.forGhost(ghost),    new GhostDressAnimation3D(ghost, dressGroup));
         animations.register(AnimationID.GHOST_FLASHING.forGhost(ghost), new GhostFlashingAnimation3D(ghost, materialSet, colors));
         animations.register(AnimationID.GHOST_BRAKING.forGhost(ghost), new GhostBrakeAnimation3D(this));
 
-        getTransforms().addAll(scaling, facing, PacManWorld3D.ORIENTATION_ADJUSTMENT);
+        setSize(size);
         updateTransform(ghost);
-
         addPropertyChangeListeners();
-
         setGhostAppearance(GhostAppearance.NORMAL);
     }
 
@@ -146,16 +144,6 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
                 flashing.setTotalDuration(Duration.millis(1990));
             }
             flashing.playOrContinue();
-        });
-    }
-
-    public void turnTowards(Direction dir) {
-        requireNonNull(dir);
-        facing.setAngle(switch (dir) {
-            case LEFT  -> 0;
-            case UP    -> 90;
-            case RIGHT -> 180;
-            case DOWN  -> 270;
         });
     }
 
@@ -289,7 +277,12 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(- (0.5 * size + HEIGHT_OVER_FLOOR));
-        turnTowards(ghost.wishDir());
+        facingRotation.setAngle(switch (ghost.wishDir()) {
+            case LEFT  -> 0;
+            case UP    -> 90;
+            case RIGHT -> 180;
+            case DOWN  -> 270;
+        });
     }
 
     private void updateAppearance(GameLevel level) {
