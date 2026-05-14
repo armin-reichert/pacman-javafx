@@ -33,7 +33,7 @@ import static java.util.Objects.requireNonNull;
 public class GhostAppearance3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
     public enum AnimationID {
-        GHOST_BRAKING, GHOST_POINTS;
+        GHOST_BRAKING;
 
         public String forGhost(Ghost ghost) {
             requireNonNull(ghost);
@@ -88,7 +88,6 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
         wishDirChangeListener = null;
         stopAllAnimations();
         animations.optAnimation(AnimationID.GHOST_BRAKING.forGhost(ghost())).ifPresent(ManagedAnimation::dispose);
-        animations.optAnimation(AnimationID.GHOST_POINTS.forGhost(ghost())).ifPresent(ManagedAnimation::dispose);
         cleanupGroup(this, true);
     }
 
@@ -136,7 +135,6 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
 
     public void stopAllAnimations() {
         animations.optAnimation(AnimationID.GHOST_BRAKING.forGhost(ghost())).ifPresent(ManagedAnimation::stop);
-        animations.optAnimation(AnimationID.GHOST_POINTS.forGhost(ghost())).ifPresent(ManagedAnimation::stop);
         if (ghost3D != null) {
             ghost3D.stopAnimations();
         }
