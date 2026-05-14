@@ -48,7 +48,6 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
@@ -632,9 +631,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         level.game().simulationStep().ghostsKilled.forEach(killedGhost -> {
             final GhostAppearance3D ga3D = ghostAppearance3D(killedGhost.personality()).orElseThrow();
             final int numberIndex = level.energizerVictims().indexOf(killedGhost);
-            final Image numberImage = uiConfig.killedGhostPointsImage(numberIndex);
-            final NumberBox3D numberShape3D = new NumberBox3D(numberImage);
-            ga3D.showAsNumber(numberShape3D);
+            final NumberBox3D number3D = new NumberBox3D(animations3D, uiConfig.killedGhostPointsImage(numberIndex));
+            ga3D.showAsNumber(number3D);
         });
     }
 

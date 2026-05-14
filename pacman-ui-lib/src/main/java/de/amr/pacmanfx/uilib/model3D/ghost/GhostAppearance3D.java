@@ -13,13 +13,9 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostBrakeAnimation3D;
-import de.amr.pacmanfx.uilib.model3D.animation.GhostPointsAnimation3D;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
-import javafx.scene.shape.Shape3D;
 import org.tinylog.Logger;
-
-import java.util.Optional;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
@@ -49,7 +45,7 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
 
     private final ManagedAnimationsRegistry animations;
     private final Ghost3D ghost3D;
-    private Shape3D numberShape3D;
+    private NumberBox3D numberBox3D;
 
     private int numFlashes;
 
@@ -74,7 +70,7 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
         ghost3D = new Ghost3D(animations, ghost, colors, meshes, materials, size);
 
         animations.register(AnimationID.GHOST_BRAKING.forGhost(ghost), new GhostBrakeAnimation3D(this));
-        animations.register(AnimationID.GHOST_POINTS.forGhost(ghost), new GhostPointsAnimation3D(this));
+//        animations.register(AnimationID.GHOST_POINTS.forGhost(ghost), new GhostPointsAnimation3D(this));
 
         getChildren().add(ghost3D);
         updateTransform(ghost);
@@ -113,12 +109,12 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
         ghost3D.animateDress(ghost3D.isVisible());
     }
 
-    public void showAsNumber(Shape3D numberShape3D) {
-        this.numberShape3D = requireNonNull(numberShape3D);
+    public void showAsNumber(NumberBox3D numberBox3D) {
+        this.numberBox3D = requireNonNull(numberBox3D);
         if (getChildren().size() == 1) {
-            getChildren().add(numberShape3D);
+            getChildren().add(numberBox3D);
         } else {
-            getChildren().set(1, numberShape3D);
+            getChildren().set(1, numberBox3D);
         }
         ghost3D.stopAnimations();
         ghost3D.setVisible(false);
@@ -132,10 +128,6 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
 
     public Ghost3D ghost3D() {
         return ghost3D;
-    }
-
-    public Optional<Shape3D> optNumberShape3D() {
-        return Optional.ofNullable(numberShape3D);
     }
 
     public Ghost ghost() {
@@ -153,16 +145,16 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
     // private area, no trespassing
 
     private void disableNumberAppearance() {
-        if (numberShape3D != null) {
-            numberShape3D.setVisible(false);
-            animations.optAnimation(AnimationID.GHOST_POINTS.forGhost(ghost())).ifPresent(ManagedAnimation::stop);
+        if (numberBox3D != null) {
+            numberBox3D.setVisible(false);
+            numberBox3D.animation().stop();
         }
     }
 
     private void enableNumberAppearance() {
-        if (numberShape3D != null) {
-            numberShape3D.setVisible(true);
-            animations.optAnimation(AnimationID.GHOST_POINTS.forGhost(ghost())).ifPresent(ManagedAnimation::playFromStart);
+        if (numberBox3D != null) {
+            numberBox3D.setVisible(true);
+            numberBox3D.animation().playFromStart();
             Logger.info("Ghost {} is now shown as number", ghost3D.ghost().name());
         }
         else Logger.error("Cannot enable number appearance: no number shape exists");
