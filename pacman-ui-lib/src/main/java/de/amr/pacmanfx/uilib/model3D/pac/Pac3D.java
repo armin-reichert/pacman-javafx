@@ -12,23 +12,78 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
+import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
+import de.amr.pacmanfx.uilib.model3D.PacManWorld3DAccess;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
 
+import java.util.List;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
 /**
  * Common base class for (Ms.) Pac-Man 3D representations.
  */
-public abstract class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
+public abstract class Pac3D extends Group
+    implements GameLevelEntity, DisposableGraphicsObject {
 
     public enum AnimationID { PAC_CHEWING, PAC_DYING, PAC_MOVING }
+
+    /**
+     * Creates a fully assembled Pac-Man body with head, eyes, and palate.
+     *
+     * @param config the Pac configuration
+     * @return a new Pac body group
+     */
+    public static Group createPacBody(PacConfig config) {
+        requireNonNull(config);
+        final MeshView head = createPacHead(config);
+        final MeshView eyes = createPacEyes(config);
+        final MeshView palate = createPacPalate(config);
+        final Group body = new Group(head, eyes, palate);
+        PacManWorld3DAccess.centerOverOrigin(head, List.of(eyes, palate));
+        return PacManWorld3DAccess.fixShapeOrientation(PacManWorld3DAccess.resize(body, config.size3D()));
+    }
+
+    /**
+     * Creates a Pac-Man body without eyes (used for jaw open/close animation).
+     *
+     * @param config the Pac configuration
+     * @return a Pac body without eyes
+     */
+    public static Group createBlindPacBody(PacConfig config) {
+        requireNonNull(config);
+        final MeshView head = createPacHead(config);
+        final MeshView palate = createPacPalate(config);
+        final Group body = new Group(head, palate);
+        PacManWorld3DAccess.centerOverOrigin(head, List.of(palate));
+        return PacManWorld3DAccess.fixShapeOrientation(PacManWorld3DAccess.resize(body, config.size3D()));
+    }
+
+    public static MeshView createPacHead(PacConfig config) {
+        final PhongMaterial boringMaterial = coloredPhongMaterial(config.colors().headColor());
+        return PacManWorld3DAccess.createMeshView(PacManWorld3D.instance().pacHeadMesh(), boringMaterial);
+    }
+
+    public static MeshView createPacPalate(PacConfig config) {
+        return PacManWorld3DAccess.createMeshView(
+            PacManWorld3D.instance().pacPalateMesh(),
+            coloredPhongMaterial(config.colors().palateColor()));
+    }
+
+    public static MeshView createPacEyes(PacConfig config) {
+        return PacManWorld3DAccess.createMeshView(
+            PacManWorld3D.instance().pacEyesMesh(),
+            coloredPhongMaterial(config.colors().eyesColor()));
+    }
 
     protected final Pac pac;
     protected final ManagedAnimationsRegistry animations;

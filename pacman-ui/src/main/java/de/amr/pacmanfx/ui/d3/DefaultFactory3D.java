@@ -47,6 +47,9 @@ public class DefaultFactory3D implements Factory3D {
     public static final int DEFAULT_NUMBER_BOX_SIZE_Y = 8;
     public static final int DEFAULT_NUMBER_BOX_SIZE_Z = 8;
 
+    public static final int FLOOR_SPECULAR_POWER = 128;
+    public static final int WALL_BASE_SPECULAR_POWER = 64;
+
     protected final Map<GhostAppearanceColors, GhostMaterialSet> ghostMaterialsCache = new HashMap<>();
     protected final Map<Float, Mesh> pelletMeshesCache = new HashMap<>();
 
@@ -59,11 +62,11 @@ public class DefaultFactory3D implements Factory3D {
     @Override
     public MazeMaterials3D createMazeMaterials(WorldMapColorScheme colorScheme, DoubleProperty wallOpacity, ObjectProperty<Color> floorColor) {
         final PhongMaterial floorMaterial = colorBoundPhongMaterial(floorColor);
-        floorMaterial.setSpecularPower(128);
+        floorMaterial.setSpecularPower(FLOOR_SPECULAR_POWER);
 
         final PhongMaterial wallBaseMaterial = colorBoundPhongMaterial(wallOpacity.map(
             opacity -> UfxColors.colorWithOpacity(Color.valueOf(colorScheme.wallStroke()), opacity.doubleValue())));
-        wallBaseMaterial.setSpecularPower(64);
+        wallBaseMaterial.setSpecularPower(WALL_BASE_SPECULAR_POWER);
 
         final PhongMaterial wallTopMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.wallFill()));
 
@@ -125,7 +128,7 @@ public class DefaultFactory3D implements Factory3D {
     public Group createLivesCounterShape3D(EntityConfig entityConfig) {
         requireNonNull(entityConfig);
         final PacConfig pacConfig = entityConfig.pacConfig().withModifiedSize3D(entityConfig.livesCounter().shapeSize());
-        return PacManWorld3D.instance().createPacBody(pacConfig);
+        return Pac3D.createPacBody(pacConfig);
     }
 
     @Override
@@ -160,7 +163,7 @@ public class DefaultFactory3D implements Factory3D {
         return numberShape3D;
     }
 
-    protected GhostMaterialSet createGhostMaterial(GhostAppearanceColors colors) {
+    public GhostMaterialSet createGhostMaterial(GhostAppearanceColors colors) {
         final var normalMaterials = new GhostComponentMaterialSet(
             coloredPhongMaterial(colors.normalColor().dressColor()),
             coloredPhongMaterial(colors.normalColor().eyeballsColor()),
@@ -183,7 +186,7 @@ public class DefaultFactory3D implements Factory3D {
         return new GhostMaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
     }
 
-    protected Mesh scaledPelletMesh(Mesh pelletMesh, PelletConfig3D config) {
+    public Mesh scaledPelletMesh(Mesh pelletMesh, PelletConfig3D config) {
         requireNonNull(pelletMesh);
         requireNonNull(config);
         if (!(pelletMesh instanceof TriangleMesh triangleMesh)) {

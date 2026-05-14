@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
+import de.amr.pacmanfx.uilib.model3D.PacManWorld3DAccess;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostDressAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostFlashingAnimation3D;
 import javafx.geometry.Bounds;
@@ -84,7 +84,7 @@ public class Ghost3D extends Group implements DisposableGraphicsObject {
         eyesGroup.getTransforms().add(centeredOverOrigin);
 
         getTransforms().addAll(scaling, facing);
-        PacManWorld3D.fixShapeOrientation(this);
+        PacManWorld3DAccess.fixShapeOrientation(this);
 
         setSize(size);
 
