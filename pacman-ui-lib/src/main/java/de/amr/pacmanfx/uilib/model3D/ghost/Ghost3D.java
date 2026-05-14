@@ -63,7 +63,6 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     private GhostMaterialSet materialSet;
     private final double size;
 
-    private Group dressGroup;
     private MeshView dressShape;
     private MeshView pupilsShape;
     private MeshView eyeballsShape;
@@ -97,7 +96,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         this.size = requireNonNegative(size);
 
         final Group facingGroup = new Group();
-        dressGroup = new Group(dressShape);
+        final Group dressGroup = new Group(dressShape);
         final var eyesGroup = new Group(pupilsShape, eyeballsShape);
 
         getChildren().setAll(facingGroup);
@@ -189,18 +188,19 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         removePropertyChangeListeners();
         positionChangeListener = null;
         wishDirChangeListener = null;
+
         stopAllAnimations();
-        animations.optAnimation(AnimationID.GHOST_BRAKING.forGhost(ghost())).ifPresent(ManagedAnimation::dispose);
+        for (AnimationID animationID : AnimationID.values()) {
+            animations.optAnimation(animationID.forGhost(ghost())).ifPresent(ManagedAnimation::dispose);
+        }
+
         cleanupGroup(this, true);
 
-        animations.optAnimation(AnimationID.GHOST_DRESS.forGhost(ghost)).ifPresent(ManagedAnimation::dispose);
-        animations.optAnimation(AnimationID.GHOST_FLASHING.forGhost(ghost)).ifPresent(ManagedAnimation::dispose);
-        cleanupGroup(this, true);
         materialSet = null;
+
         dressShape = null;
         pupilsShape = null;
         eyeballsShape = null;
-        dressGroup = null;
     }
 
     @Override
