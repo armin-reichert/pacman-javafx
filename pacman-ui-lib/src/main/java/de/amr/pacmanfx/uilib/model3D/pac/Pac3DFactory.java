@@ -31,11 +31,10 @@ public class Pac3DFactory {
 
     public static Pac3D createPacMan3D(ManagedAnimationsRegistry animations, Pac pac, PacConfig config) {
         final Pac3D pac3D = new Pac3D(animations, pac);
-        pac3D.setBody(createPacBody(config));
-        pac3D.setJaw(createBlindPacBody(config));
-        animations.register(Pac3D.AnimationID.PAC_CHEWING, new PacChewingAnimation3D(pac3D));
-        animations.register(Pac3D.AnimationID.PAC_DYING,   new PacManDyingAnimation3D(pac3D));
-        animations.register(Pac3D.AnimationID.PAC_MOVING,  new HeadBangingAnimation3D(pac3D));
+        pac3D.setBodyAndJaw(createPacBody(config), createBlindPacBody(config));
+        animations.register(Pac3D.AnimationID.CHEWING, new PacChewingAnimation3D(pac3D));
+        animations.register(Pac3D.AnimationID.DYING,   new PacManDyingAnimation3D(pac3D));
+        animations.register(Pac3D.AnimationID.MOVING,  new HeadBangingAnimation3D(pac3D));
         pac3D.setMovementAnimationPowerMode(false);
         return pac3D;
     }
@@ -94,13 +93,12 @@ public class Pac3DFactory {
 
     public static Pac3D createMsPacMan3D(ManagedAnimationsRegistry animations, Pac msPacMan, PacConfig config) {
         final Pac3D msPacMan3D = new Pac3D(animations, msPacMan);
-        msPacMan3D.setBody(createPacBody(config));
-        msPacMan3D.setJaw(createBlindPacBody(config));
+        msPacMan3D.setBodyAndJaw(createPacBody(config), createBlindPacBody(config));
 
         final Group femaleParts = createFemalePacBodyParts(config);
         msPacMan3D.getChildren().add(femaleParts);
 
-        animations.register(Pac3D.AnimationID.PAC_CHEWING, new PacChewingAnimation3D(msPacMan3D));
+        animations.register(Pac3D.AnimationID.CHEWING, new PacChewingAnimation3D(msPacMan3D));
 
         final var dyingAnimation = new ManagedAnimation("Ms. Pac-Man Dying");
         dyingAnimation.setFactory(() -> {
@@ -112,10 +110,10 @@ public class Pac3DFactory {
             spinning.setCycleCount(4);
             return spinning;
         });
-        animations.register(Pac3D.AnimationID.PAC_DYING, dyingAnimation);
+        animations.register(Pac3D.AnimationID.DYING, dyingAnimation);
 
         final var movementAnimation = new HipSwayingAnimation3D(msPacMan3D);
-        animations.register(Pac3D.AnimationID.PAC_MOVING, movementAnimation);
+        animations.register(Pac3D.AnimationID.MOVING, movementAnimation);
 
         msPacMan3D.setMovementAnimationPowerMode(false);
 

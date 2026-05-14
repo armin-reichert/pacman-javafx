@@ -620,12 +620,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             doNow(() -> {
                 // One last fart before dying animation starts
                 pac3D.update(level);
-                animations3D.animation(Pac3D.AnimationID.PAC_CHEWING).stop();
-                animations3D.animation(Pac3D.AnimationID.PAC_MOVING).stop();
+                animations3D.animation(Pac3D.AnimationID.CHEWING).stop();
+                animations3D.animation(Pac3D.AnimationID.MOVING).stop();
             }),
             pauseSec(1.5),
             doNow(() -> soundEffects().ifPresent(GameSoundEffects::playPacDeadSound)),
-            animations3D.animation(Pac3D.AnimationID.PAC_DYING).animationFX(),
+            animations3D.animation(Pac3D.AnimationID.DYING).animationFX(),
             pauseSec(0.5)
         );
         animationSequence.setOnFinished(_ -> {

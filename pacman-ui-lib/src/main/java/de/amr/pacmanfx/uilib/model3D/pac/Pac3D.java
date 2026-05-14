@@ -26,10 +26,9 @@ import static java.util.Objects.requireNonNull;
 /**
  * (Ms.) Pac-Man 3D representations.
  */
-public class Pac3D extends Group
-    implements GameLevelEntity, DisposableGraphicsObject {
+public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
-    public enum AnimationID { PAC_CHEWING, PAC_DYING, PAC_MOVING }
+    public enum AnimationID {CHEWING, DYING, MOVING}
 
     protected final Pac pac;
     protected final ManagedAnimationsRegistry animations;
@@ -44,26 +43,14 @@ public class Pac3D extends Group
         getTransforms().add(moveRotation);
     }
 
-    public void setBody(Group body) {
+    public void setBodyAndJaw(Group body, Group jaw) {
         this.body = requireNonNull(body);
-        if (jaw == null) {
-            getChildren().setAll(body);
-        } else {
-            getChildren().setAll(body, jaw);
-        }
+        this.jaw = requireNonNull(jaw);
+        getChildren().setAll(body, jaw);
     }
 
     public Group jaw() {
         return jaw;
-    }
-
-    public void setJaw(Group jaw) {
-        this.jaw = requireNonNull(jaw);
-        if (body == null) {
-            getChildren().setAll(jaw);
-        } else {
-            getChildren().setAll(body, jaw);
-        }
     }
 
     @Override
@@ -94,11 +81,11 @@ public class Pac3D extends Group
             updatePositionAndRotation();
             updateVisibility(level.worldMap());
             updatePowerLight();
-            animations.optAnimation(AnimationID.PAC_MOVING).ifPresent(movementAnimation -> {
+            animations.optAnimation(AnimationID.MOVING).ifPresent(movementAnimation -> {
                 movementAnimation.playOrContinue();
                 updateMovementAnimation();
             });
-            animations.optAnimation(AnimationID.PAC_CHEWING).ifPresent(chewingAnimation -> {
+            animations.optAnimation(AnimationID.CHEWING).ifPresent(chewingAnimation -> {
                 if (pac.isParalyzed()) {
                     chewingAnimation.stop();
                 } else {
@@ -116,25 +103,25 @@ public class Pac3D extends Group
     }
 
     public void setMovementAnimationPowerMode(boolean power) {
-        animations.optAnimation(AnimationID.PAC_MOVING, Pac3DMovementAnimation.class)
+        animations.optAnimation(AnimationID.MOVING, Pac3DMovementAnimation.class)
             .ifPresent(movement -> movement.setPowerMode(power));
     }
 
     public void updateMovementAnimation() {
-        animations.optAnimation(AnimationID.PAC_MOVING, Pac3DMovementAnimation.class)
+        animations.optAnimation(AnimationID.MOVING, Pac3DMovementAnimation.class)
             .ifPresent(movement -> movement.update(pac));
     }
 
     protected void stopChewingAnimation() {
-        animations.optAnimation(AnimationID.PAC_CHEWING).ifPresent(ManagedAnimation::stop);
+        animations.optAnimation(AnimationID.CHEWING).ifPresent(ManagedAnimation::stop);
     }
 
     protected void stopMovementAnimation() {
-        animations.optAnimation(AnimationID.PAC_MOVING).ifPresent(ManagedAnimation::stop);
+        animations.optAnimation(AnimationID.MOVING).ifPresent(ManagedAnimation::stop);
     }
 
     protected void stopDyingAnimation() {
-        animations.optAnimation(AnimationID.PAC_DYING).ifPresent(ManagedAnimation::stop);
+        animations.optAnimation(AnimationID.DYING).ifPresent(ManagedAnimation::stop);
     }
 
     protected void stopAnimations() {

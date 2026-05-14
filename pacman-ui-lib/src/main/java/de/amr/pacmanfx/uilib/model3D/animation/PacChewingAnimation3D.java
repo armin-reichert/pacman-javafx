@@ -10,20 +10,14 @@ import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static java.util.Objects.requireNonNull;
-
 public class PacChewingAnimation3D extends ManagedAnimation {
-
-    private final Pac3D pac3D;
 
     public PacChewingAnimation3D(Pac3D pac3D) {
         super("Pac-Man Chewing");
-        this.pac3D = requireNonNull(pac3D);
-        setFactory(this::createChewingAnimation);
+        setFactory(() -> createChewingAnimation(pac3D.jaw()));
     }
 
-    private Animation createChewingAnimation() {
-        final Group jaw = pac3D.jaw();
+    private Animation createChewingAnimation(Group jaw) {
         final var mouthClosed = new KeyValue[]{
             new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
             new KeyValue(jaw.rotateProperty(), -54, Interpolator.LINEAR)
