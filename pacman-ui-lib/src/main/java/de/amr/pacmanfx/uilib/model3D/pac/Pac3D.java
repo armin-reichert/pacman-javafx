@@ -12,8 +12,8 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.Model3DHelper;
+import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.PhongMaterial;
@@ -27,6 +27,8 @@ import java.util.Optional;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
+import static de.amr.pacmanfx.uilib.model3D.Model3DHelper.centerOverOrigin;
+import static de.amr.pacmanfx.uilib.model3D.Model3DHelper.scale;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -49,8 +51,10 @@ public abstract class Pac3D extends Group
         final MeshView eyes = createPacEyes(config);
         final MeshView palate = createPacPalate(config);
         final Group body = new Group(head, eyes, palate);
-        Model3DHelper.centerOverOrigin(head, List.of(eyes, palate));
-        return Model3DHelper.adjustOrientation(Model3DHelper.scale(body, config.size3D()));
+        centerOverOrigin(head, List.of(eyes, palate));
+        scale(body, config.size3D());
+        body.getTransforms().add(PacManWorld3D.ORIENTATION_ADJUSTMENT);
+        return body;
     }
 
     /**
@@ -64,8 +68,10 @@ public abstract class Pac3D extends Group
         final MeshView head = createPacHead(config);
         final MeshView palate = createPacPalate(config);
         final Group body = new Group(head, palate);
-        Model3DHelper.centerOverOrigin(head, List.of(palate));
-        return Model3DHelper.adjustOrientation(Model3DHelper.scale(body, config.size3D()));
+        centerOverOrigin(head, List.of(palate));
+        scale(body, config.size3D());
+        body.getTransforms().add(PacManWorld3D.ORIENTATION_ADJUSTMENT);
+        return body;
     }
 
     public static MeshView createPacHead(PacConfig config) {

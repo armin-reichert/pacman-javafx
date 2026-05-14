@@ -9,6 +9,7 @@ import de.amr.objparser.ObjFileParser;
 import de.amr.objparser.ObjModel;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
+import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
 
 import java.io.IOException;
@@ -43,6 +44,8 @@ public class PacManWorld3D {
             throw new ExceptionInInitializerError("An error occurred on creation of the Pac-Man game 3D model");
         }
     }
+
+    public static final  Rotate ORIENTATION_ADJUSTMENT = new Rotate(270, Rotate.X_AXIS);
 
     public static PacManWorld3D instance() {
         return LazyThreadSafeSingletonHolder.SINGLETON;

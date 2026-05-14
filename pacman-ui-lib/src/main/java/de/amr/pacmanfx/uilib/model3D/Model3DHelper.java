@@ -9,7 +9,6 @@ import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
-import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
@@ -41,16 +40,5 @@ public interface Model3DHelper {
         final Bounds b = shape.getBoundsInLocal();
         shape.getTransforms().add(new Scale(size / b.getWidth(), size / b.getHeight(), size / b.getDepth()));
         return shape;
-    }
-
-    Rotate PAC_ORIENTATION_ADJUSTMENT = new Rotate(270, Rotate.X_AXIS);
-
-    /**
-     * Rotates Pac-Man / the used ghost to the orientation required by the 3D play scene.
-     */
-    static <T extends Node> T adjustOrientation(T node) {
-        requireNonNull(node);
-        node.getTransforms().add(PAC_ORIENTATION_ADJUSTMENT);
-        return node;
     }
 }
