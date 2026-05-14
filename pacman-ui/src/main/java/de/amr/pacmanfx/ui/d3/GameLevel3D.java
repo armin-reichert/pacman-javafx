@@ -43,7 +43,6 @@ import de.amr.pacmanfx.uilib.model3D.ghost.GhostAppearance3D;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentMaterialSet;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
-import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
@@ -567,7 +566,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Game game = level.game();
         soundEffects().ifPresent(GameSoundEffects::stopSiren);
         if (!game.isLevelCompleted()) {
-            pac3D.setMovementPowerMode(true);
+            pac3D.setPowerMode(true);
             animations3D.animation(AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).playFromStart();
             soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
@@ -577,7 +576,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Handles Pac losing power: stops power animation/sound.
      */
     public void onPacLostPower(PacLostPowerEvent ignoredEvent) {
-        entities3D.unique(Pac3D.class).setMovementPowerMode(false);
+        entities3D.unique(Pac3D.class).setPowerMode(false);
         animations3D.animation(AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).stop();
         soundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }

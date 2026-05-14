@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.uilib.model3D.pac;
 
 import de.amr.pacmanfx.model.actors.Pac;
@@ -24,15 +28,13 @@ import javafx.util.Duration;
 import java.util.List;
 
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
-import static de.amr.pacmanfx.uilib.model3D.Model3DHelper.centerOverOrigin;
-import static de.amr.pacmanfx.uilib.model3D.Model3DHelper.scale;
+import static de.amr.pacmanfx.uilib.model3D.Model3DHelper.scaleTo;
 import static java.util.Objects.requireNonNull;
 
 public class Pac3DFactory {
 
     public static Pac3D createPacMan3D(ManagedAnimationsRegistry animations, Pac pac, PacConfig config) {
-        final Pac3D pac3D = new Pac3D(animations, pac);
-        pac3D.setBodyAndJaw(createPacBody(config), createBlindPacBody(config));
+        final Pac3D pac3D = new Pac3D(animations, pac, createPacBody(config), createBlindPacBody(config));
         animations.register(Pac3D.AnimationID.CHEWING, new PacChewingAnimation3D(pac3D));
         animations.register(Pac3D.AnimationID.DYING,   new PacManDyingAnimation3D(pac3D));
         animations.register(Pac3D.AnimationID.MOVING,  new HeadBangingAnimation3D(pac3D));
@@ -44,17 +46,14 @@ public class Pac3DFactory {
         powerLight.setTranslateZ(-30);
         pac3D.setPowerLight(powerLight);
 
-        pac3D.setMovementPowerMode(false);
+        pac3D.setPowerMode(false);
 
         return pac3D;
     }
 
     public static Pac3D createMsPacMan3D(ManagedAnimationsRegistry animations, Pac msPacMan, PacConfig config) {
-        final Pac3D msPacMan3D = new Pac3D(animations, msPacMan);
-        msPacMan3D.setBodyAndJaw(createPacBody(config), createBlindPacBody(config));
-
-        final Group femaleParts = createFemalePacBodyParts(config);
-        msPacMan3D.getChildren().add(femaleParts);
+        final Pac3D msPacMan3D = new Pac3D(animations, msPacMan, createPacBody(config), createBlindPacBody(config));
+        msPacMan3D.getChildren().add(createFemalePacBodyParts(config));
 
         animations.register(Pac3D.AnimationID.CHEWING, new PacChewingAnimation3D(msPacMan3D));
 
@@ -70,8 +69,7 @@ public class Pac3DFactory {
         });
         animations.register(Pac3D.AnimationID.DYING, dyingAnimation);
 
-        final var movementAnimation = new HipSwayingAnimation3D(msPacMan3D);
-        animations.register(Pac3D.AnimationID.MOVING, movementAnimation);
+        animations.register(Pac3D.AnimationID.MOVING, new HipSwayingAnimation3D(msPacMan3D));
 
         final var powerLight = new PointLight();
         powerLight.setColor(config.colors().headColor().desaturate());
@@ -80,7 +78,7 @@ public class Pac3DFactory {
         powerLight.setTranslateZ(-30);
         msPacMan3D.setPowerLight(powerLight);
 
-        msPacMan3D.setMovementPowerMode(false);
+        msPacMan3D.setPowerMode(false);
 
         return msPacMan3D;
     }
@@ -97,9 +95,11 @@ public class Pac3DFactory {
         final MeshView eyes = createPacEyes(config);
         final MeshView palate = createPacPalate(config);
         final Group body = new Group(head, eyes, palate);
-        centerOverOrigin(head, List.of(eyes, palate));
-        scale(body, config.size3D());
-        body.getTransforms().add(PacManWorld3D.ORIENTATION_ADJUSTMENT);
+        final Translate toOrigin = Model3DHelper.translateToOrigin(head);
+        List.of(head, eyes, palate).forEach(node -> node.getTransforms().add(toOrigin));
+        body.getTransforms().addAll(
+            scaleTo(body, config.size3D()),
+            PacManWorld3D.ORIENTATION_ADJUSTMENT);
         return body;
     }
 
@@ -114,9 +114,11 @@ public class Pac3DFactory {
         final MeshView head = createPacHead(config);
         final MeshView palate = createPacPalate(config);
         final Group body = new Group(head, palate);
-        centerOverOrigin(head, List.of(palate));
-        scale(body, config.size3D());
-        body.getTransforms().add(PacManWorld3D.ORIENTATION_ADJUSTMENT);
+        final Translate toOrigin = Model3DHelper.translateToOrigin(head);
+        List.of(head, palate).forEach(node -> node.getTransforms().add(toOrigin));
+        body.getTransforms().addAll(
+            scaleTo(body, config.size3D()),
+            PacManWorld3D.ORIENTATION_ADJUSTMENT);
         return body;
     }
 
