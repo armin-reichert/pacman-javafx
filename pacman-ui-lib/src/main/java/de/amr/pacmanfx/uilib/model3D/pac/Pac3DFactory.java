@@ -7,7 +7,6 @@ package de.amr.pacmanfx.uilib.model3D.pac;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
-import de.amr.pacmanfx.uilib.model3D.Model3DHelper;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.animation.HeadBangingAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.HipSwayingAnimation3D;
@@ -15,20 +14,22 @@ import de.amr.pacmanfx.uilib.model3D.animation.PacChewingAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.PacManDyingAnimation3D;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import java.util.List;
 
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
-import static de.amr.pacmanfx.uilib.model3D.Model3DHelper.scaleTo;
 import static java.util.Objects.requireNonNull;
 
 public class Pac3DFactory {
@@ -95,7 +96,7 @@ public class Pac3DFactory {
         final MeshView eyes = createPacEyes(config);
         final MeshView palate = createPacPalate(config);
         final Group body = new Group(head, eyes, palate);
-        final Translate toOrigin = Model3DHelper.translateToOrigin(head);
+        final Translate toOrigin = moveToOrigin(head);
         List.of(head, eyes, palate).forEach(node -> node.getTransforms().add(toOrigin));
         body.getTransforms().addAll(
             scaleTo(body, config.size3D()),
@@ -114,7 +115,7 @@ public class Pac3DFactory {
         final MeshView head = createPacHead(config);
         final MeshView palate = createPacPalate(config);
         final Group body = new Group(head, palate);
-        final Translate toOrigin = Model3DHelper.translateToOrigin(head);
+        final Translate toOrigin = moveToOrigin(head);
         List.of(head, palate).forEach(node -> node.getTransforms().add(toOrigin));
         body.getTransforms().addAll(
             scaleTo(body, config.size3D()),
@@ -124,19 +125,21 @@ public class Pac3DFactory {
 
     public static MeshView createPacHead(PacConfig config) {
         final PhongMaterial boringMaterial = coloredPhongMaterial(config.colors().headColor());
-        return Model3DHelper.createMeshView(PacManWorld3D.instance().pacHeadMesh(), boringMaterial);
+        final MeshView head = new MeshView(PacManWorld3D.instance().pacHeadMesh());
+        head.setMaterial(boringMaterial);
+        return head;
     }
 
     public static MeshView createPacPalate(PacConfig config) {
-        return Model3DHelper.createMeshView(
-            PacManWorld3D.instance().pacPalateMesh(),
-            coloredPhongMaterial(config.colors().palateColor()));
+        final MeshView palate = new MeshView(PacManWorld3D.instance().pacPalateMesh());
+        palate.setMaterial(coloredPhongMaterial(config.colors().palateColor()));
+        return palate;
     }
 
     public static MeshView createPacEyes(PacConfig config) {
-        return Model3DHelper.createMeshView(
-            PacManWorld3D.instance().pacEyesMesh(),
-            coloredPhongMaterial(config.colors().eyesColor()));
+        final MeshView eyes = new MeshView(PacManWorld3D.instance().pacEyesMesh());
+        eyes.setMaterial(coloredPhongMaterial(config.colors().eyesColor()));
+        return eyes;
     }
 
     /**
@@ -201,5 +204,17 @@ public class Pac3DFactory {
      */
     public static Group createMsPacManBody(PacConfig config) {
         return new Group(createPacBody(config), createFemalePacBodyParts(config));
+    }
+
+    private static Translate moveToOrigin(Node node) {
+        requireNonNull(node);
+        final Bounds b = node.getBoundsInLocal();
+        return new Translate(-b.getCenterX(), -b.getCenterY(), -b.getCenterZ());
+    }
+
+    private static Scale scaleTo(Node node, float size) {
+        requireNonNull(node);
+        final Bounds b = node.getBoundsInLocal();
+        return new Scale(size / b.getWidth(), size / b.getHeight(), size / b.getDepth());
     }
 }
