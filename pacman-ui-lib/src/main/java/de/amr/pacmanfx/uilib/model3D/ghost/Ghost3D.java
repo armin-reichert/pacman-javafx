@@ -120,67 +120,22 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         setGhostAppearance(GhostAppearance.NORMAL);
     }
 
-    public void setSize(double size) {
-        final Bounds b = getBoundsInLocal();
-        scaling.setX(size / b.getWidth());
-        scaling.setY(size / b.getHeight());
-        scaling.setZ(size / b.getDepth());
+    @Override
+    public void init(GameLevel level) {
+        stopAllAnimations();
+        updateTransform(ghost());
+        setGhostAppearance(GhostAppearance.NORMAL);
     }
 
-    public void setFlashingLook(int numFlashes) {
-        if (numFlashes == 0) {
-            setFrightenedLook();
-            return;
+    @Override
+    public void update(GameLevel level) {
+        updateVisibility(level.worldMap());
+        updateTransform(ghost());
+        updateAppearance(level);
+        if (ghost().moveInfo().tunnelEntered) {
+            animations.animation(AnimationID.GHOST_BRAKING.forGhost(ghost())).playFromStart();
         }
-        setMaterialSet(materialSet.flashingMaterial());
-        dressShape.setVisible(true);
-
-        animations.optAnimation(AnimationID.GHOST_FLASHING.forGhost(ghost), GhostFlashingAnimation3D.class).ifPresent(flashing -> {
-            // TODO: this is crap
-            if (flashing.numFlashes() != numFlashes) {
-                flashing.stop();
-                flashing.setNumFlashes(numFlashes);
-                flashing.setTotalDuration(Duration.millis(1990));
-            }
-            flashing.playOrContinue();
-        });
-    }
-
-    private void setMaterialSet(GhostComponentMaterialSet materialSet) {
-        dressShape.setMaterial(materialSet.dressMaterial());
-        pupilsShape.setMaterial(materialSet.pupilsMaterial());
-        eyeballsShape.setMaterial(materialSet.eyeballsMaterial());
-    }
-
-    public void setNormalLook() {
-        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
-        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).playOrContinue();
-        dressShape.setVisible(true);
-        setMaterialSet(materialSet.normalMaterial());
-    }
-
-    public void setFrightenedLook() {
-        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
-        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).playOrContinue();
-        dressShape.setVisible(true);
-        setMaterialSet(materialSet.frightenedMaterial());
-    }
-
-    public void setEyesOnlyLook() {
-        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
-        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).stop();
-        dressShape.setVisible(false);
-        setMaterialSet(materialSet.normalMaterial());
-    }
-
-    public void animateDress(boolean on) {
-        animations.optAnimation(AnimationID.GHOST_DRESS.forGhost(ghost)).ifPresent(dressAnimation -> {
-            if (on) {
-                dressAnimation.playOrContinue();
-            } else {
-                dressAnimation.stop();
-            }
-        });
+        animateDress(isVisible());
     }
 
     @Override
@@ -201,29 +156,6 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         dressShape = null;
         pupilsShape = null;
         eyeballsShape = null;
-    }
-
-    @Override
-    public void init(GameLevel level) {
-        stopAllAnimations();
-        updateTransform(ghost());
-        setGhostAppearance(GhostAppearance.NORMAL);
-    }
-
-    @Override
-    public void update(GameLevel level) {
-        updateVisibility(level.worldMap());
-        updateTransform(ghost());
-        updateAppearance(level);
-        if (ghost().moveInfo().tunnelEntered) {
-            animations.animation(AnimationID.GHOST_BRAKING.forGhost(ghost())).playFromStart();
-        }
-        animateDress(isVisible());
-    }
-
-    private void updateVisibility(WorldMap worldMap) {
-        final boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * worldMap.numCols() - HTS;
-        setVisible(ghost.isVisible() && !outsideWorld);
     }
 
     public Ghost ghost() {
@@ -249,6 +181,74 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     }
 
     // private area, no trespassing
+
+    private void setSize(double size) {
+        final Bounds b = getBoundsInLocal();
+        scaling.setX(size / b.getWidth());
+        scaling.setY(size / b.getHeight());
+        scaling.setZ(size / b.getDepth());
+    }
+
+    private void updateVisibility(WorldMap worldMap) {
+        final boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * worldMap.numCols() - HTS;
+        setVisible(ghost.isVisible() && !outsideWorld);
+    }
+
+    private void setMaterialSet(GhostComponentMaterialSet materialSet) {
+        dressShape.setMaterial(materialSet.dressMaterial());
+        pupilsShape.setMaterial(materialSet.pupilsMaterial());
+        eyeballsShape.setMaterial(materialSet.eyeballsMaterial());
+    }
+
+    private void setFlashingLook(int numFlashes) {
+        if (numFlashes == 0) {
+            setFrightenedLook();
+            return;
+        }
+        setMaterialSet(materialSet.flashingMaterial());
+        dressShape.setVisible(true);
+
+        animations.optAnimation(AnimationID.GHOST_FLASHING.forGhost(ghost), GhostFlashingAnimation3D.class).ifPresent(flashing -> {
+            // TODO: this is crap
+            if (flashing.numFlashes() != numFlashes) {
+                flashing.stop();
+                flashing.setNumFlashes(numFlashes);
+                flashing.setTotalDuration(Duration.millis(1990));
+            }
+            flashing.playOrContinue();
+        });
+    }
+
+    private void setNormalLook() {
+        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
+        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).playOrContinue();
+        dressShape.setVisible(true);
+        setMaterialSet(materialSet.normalMaterial());
+    }
+
+    private void setFrightenedLook() {
+        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
+        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).playOrContinue();
+        dressShape.setVisible(true);
+        setMaterialSet(materialSet.frightenedMaterial());
+    }
+
+    private void setEyesOnlyLook() {
+        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
+        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).stop();
+        dressShape.setVisible(false);
+        setMaterialSet(materialSet.normalMaterial());
+    }
+
+    private void animateDress(boolean on) {
+        animations.optAnimation(AnimationID.GHOST_DRESS.forGhost(ghost)).ifPresent(dressAnimation -> {
+            if (on) {
+                dressAnimation.playOrContinue();
+            } else {
+                dressAnimation.stop();
+            }
+        });
+    }
 
     private void setGhostAppearance(GhostAppearance ghostAppearance) {
         switch (ghostAppearance) {
