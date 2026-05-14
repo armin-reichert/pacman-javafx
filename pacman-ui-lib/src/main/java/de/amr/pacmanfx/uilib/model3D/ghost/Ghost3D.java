@@ -72,8 +72,8 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
     private int numFlashes;
 
-    private ChangeListener<Vector2f> positionChangeListener = (_, _, _) -> updateTransform(ghost());
-    private ChangeListener<Direction> wishDirChangeListener = (_, _, _) -> updateTransform(ghost());
+    private ChangeListener<Vector2f> positionChangeListener = (_, _, _) -> updateTransform();
+    private ChangeListener<Direction> wishDirChangeListener = (_, _, _) -> updateTransform();
 
     public Ghost3D(
         ManagedAnimationsRegistry animations,
@@ -115,7 +115,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         animations.register(AnimationID.GHOST_BRAKING.forGhost(ghost), new GhostBrakeAnimation3D(this));
 
         setSize(size);
-        updateTransform(ghost);
+        updateTransform();
         addPropertyChangeListeners();
         setGhostAppearance(GhostAppearance.NORMAL);
     }
@@ -123,17 +123,17 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     @Override
     public void init(GameLevel level) {
         stopAllAnimations();
-        updateTransform(ghost());
+        updateTransform();
         setGhostAppearance(GhostAppearance.NORMAL);
     }
 
     @Override
     public void update(GameLevel level) {
         updateVisibility(level.worldMap());
-        updateTransform(ghost());
+        updateTransform();
         updateAppearance(level);
-        if (ghost().moveInfo().tunnelEntered) {
-            animations.animation(AnimationID.GHOST_BRAKING.forGhost(ghost())).playFromStart();
+        if (ghost.moveInfo().tunnelEntered) {
+            animations.animation(AnimationID.GHOST_BRAKING.forGhost(ghost)).playFromStart();
         }
         animateDress(isVisible());
     }
@@ -146,7 +146,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
         stopAllAnimations();
         for (AnimationID animationID : AnimationID.values()) {
-            animations.optAnimation(animationID.forGhost(ghost())).ifPresent(ManagedAnimation::dispose);
+            animations.optAnimation(animationID.forGhost(ghost)).ifPresent(ManagedAnimation::dispose);
         }
 
         cleanupGroup(this, true);
@@ -263,16 +263,16 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     }
 
     private void addPropertyChangeListeners() {
-        ghost().positionProperty().addListener(positionChangeListener);
-        ghost().wishDirProperty().addListener(wishDirChangeListener);
+        ghost.positionProperty().addListener(positionChangeListener);
+        ghost.wishDirProperty().addListener(wishDirChangeListener);
     }
 
     private void removePropertyChangeListeners() {
-        ghost().positionProperty().removeListener(positionChangeListener);
-        ghost().wishDirProperty().removeListener(wishDirChangeListener);
+        ghost.positionProperty().removeListener(positionChangeListener);
+        ghost.wishDirProperty().removeListener(wishDirChangeListener);
     }
 
-    private void updateTransform(Ghost ghost) {
+    private void updateTransform() {
         final Vector2f center = ghost.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
@@ -286,7 +286,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     }
 
     private void updateAppearance(GameLevel level) {
-        final GhostState ghostState = ghost().state();
+        final GhostState ghostState = ghost.state();
 
         // Let ghost shown as number alone
         if (ghostState == GhostState.EATEN) return;
@@ -294,7 +294,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         final boolean powerActive = level.pac().powerTimer().isRunning();
         final boolean powerFading = level.pac().isPowerFading(level);
         // ghosts that already got killed in the current power phase do not look frightened anymore
-        final boolean killedAlready = level.energizerVictims().contains(ghost());
+        final boolean killedAlready = level.energizerVictims().contains(ghost);
 
         setGhostAppearance(switch (ghostState) {
             case LOCKED, LEAVING_HOUSE -> powerActive && !killedAlready
