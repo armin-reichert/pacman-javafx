@@ -45,7 +45,6 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
 
     private final ManagedAnimationsRegistry animations;
     private final Ghost3D ghost3D;
-    //private NumberBox3D numberBox3D;
 
     private int numFlashes;
 
@@ -70,7 +69,6 @@ public class GhostAppearance3D extends Group implements GameLevelEntity, Disposa
         ghost3D = new Ghost3D(animations, ghost, colors, meshes, materials, size);
 
         animations.register(AnimationID.GHOST_BRAKING.forGhost(ghost), new GhostBrakeAnimation3D(this));
-//        animations.register(AnimationID.GHOST_POINTS.forGhost(ghost), new GhostPointsAnimation3D(this));
 
         getChildren().add(ghost3D);
         updateTransform(ghost);
