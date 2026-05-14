@@ -117,14 +117,4 @@ public class MsPacMan3D extends Pac3D {
 
         setMovementAnimationPowerMode(false);
     }
-
-    @Override
-    public void updateMovementAnimation() {
-        animations.optAnimation(AnimationID.PAC_MOVING, HipSwayingAnimation3D.class).ifPresent(hsa -> hsa.update(pac));
-    }
-
-    @Override
-    public void setMovementAnimationPowerMode(boolean power) {
-        animations.optAnimation(AnimationID.PAC_MOVING, HipSwayingAnimation3D.class).ifPresent(hsa -> hsa.setPowerMode(power));
-    }
 }

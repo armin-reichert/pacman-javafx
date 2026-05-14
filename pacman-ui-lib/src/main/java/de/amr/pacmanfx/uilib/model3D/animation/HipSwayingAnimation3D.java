@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -14,7 +14,7 @@ import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
-public class HipSwayingAnimation3D extends ManagedAnimation {
+public class HipSwayingAnimation3D extends Pac3D.MovementAnimation {
 
     private static final short HIP_ANGLE_FROM = -20;
     private static final short HIP_ANGLE_TO = 20;

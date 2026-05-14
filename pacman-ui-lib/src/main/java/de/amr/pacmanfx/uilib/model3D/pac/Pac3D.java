@@ -39,6 +39,16 @@ public abstract class Pac3D extends Group
 
     public enum AnimationID { PAC_CHEWING, PAC_DYING, PAC_MOVING }
 
+    public static abstract class MovementAnimation extends ManagedAnimation {
+        public MovementAnimation(String label) {
+            super(label);
+        }
+
+        public abstract void update(Pac pac);
+
+        public abstract void setPowerMode(boolean power);
+    }
+
     /**
      * Creates a fully assembled Pac-Man body with head, eyes, and palate.
      *
@@ -178,9 +188,15 @@ public abstract class Pac3D extends Group
         return Optional.ofNullable(powerLight);
     }
 
-    public void setMovementAnimationPowerMode(boolean power) {}
+    public void setMovementAnimationPowerMode(boolean power) {
+        animations.optAnimation(AnimationID.PAC_MOVING, MovementAnimation.class)
+            .ifPresent(movement -> movement.setPowerMode(power));
+    }
 
-    public abstract void updateMovementAnimation();
+    public void updateMovementAnimation() {
+        animations.optAnimation(AnimationID.PAC_MOVING, MovementAnimation.class)
+            .ifPresent(movement -> movement.update(pac));
+    }
 
     protected void stopChewingAnimation() {
         animations.optAnimation(AnimationID.PAC_CHEWING).ifPresent(ManagedAnimation::stop);
