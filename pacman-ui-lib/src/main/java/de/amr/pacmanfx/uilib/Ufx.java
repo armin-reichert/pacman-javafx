@@ -214,7 +214,7 @@ public final class Ufx {
         return pause;
     }
 
-    public static TriangleMesh createScaledMesh(TriangleMesh mesh, double scale) {
+    public static TriangleMesh createScaledTriangleMesh(TriangleMesh mesh, double scale) {
         requireNonNull(mesh);
 
         final TriangleMesh result = new TriangleMesh();

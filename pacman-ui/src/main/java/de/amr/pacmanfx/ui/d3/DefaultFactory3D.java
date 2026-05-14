@@ -192,11 +192,9 @@ public class DefaultFactory3D implements Factory3D {
         }
         return pelletMeshesCache.computeIfAbsent(config.radius(), r -> {
             Logger.info("Computing scaled pellet mesh of radius {}", r);
-            final MeshView meshView = new MeshView(pelletMesh);
-            final Bounds b = meshView.getBoundsInLocal();
-            final double size = max( max(b.getWidth(), b.getHeight()), b.getDepth());
-            final double scaling = (2 * r) / size;
-            return Ufx.createScaledMesh(triangleMesh, scaling);
+            final Bounds bounds = new MeshView(pelletMesh).getBoundsInLocal();
+            final double extend = max( max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
+            return Ufx.createScaledTriangleMesh(triangleMesh, (2 * r) / extend);
         });
     }
 }
