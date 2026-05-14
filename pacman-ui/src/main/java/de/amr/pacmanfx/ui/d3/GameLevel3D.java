@@ -33,15 +33,11 @@ import de.amr.pacmanfx.ui.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticlesAnimation3D;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostMaterialSet;
-import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostAppearance3D;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentMaterialSet;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
+import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticlesAnimation3D;
+import de.amr.pacmanfx.uilib.model3D.ghost.*;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
@@ -52,6 +48,7 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
@@ -641,7 +638,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         level.game().simulationStep().ghostsKilled.forEach(killedGhost -> {
             final GhostAppearance3D ga3D = ghostAppearance3D(killedGhost.personality()).orElseThrow();
             final int numberIndex = level.energizerVictims().indexOf(killedGhost);
-            final Shape3D numberShape3D = uiConfig.factory3D().createNumberShape3D(uiConfig, numberIndex);
+            final Image numberImage = uiConfig.killedGhostPointsImage(numberIndex);
+            final NumberBox3D numberShape3D = new NumberBox3D(numberImage);
             ga3D.showAsNumber(numberShape3D);
         });
     }

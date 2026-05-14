@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
@@ -26,7 +26,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.*;
@@ -43,9 +42,6 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultFactory3D implements Factory3D {
 
-    public static final int DEFAULT_NUMBER_BOX_SIZE_X = 14;
-    public static final int DEFAULT_NUMBER_BOX_SIZE_Y = 8;
-    public static final int DEFAULT_NUMBER_BOX_SIZE_Z = 8;
 
     public static final int FLOOR_SPECULAR_POWER = 128;
     public static final int WALL_BASE_SPECULAR_POWER = 64;
@@ -150,16 +146,6 @@ public class DefaultFactory3D implements Factory3D {
         energizer3D.setInflatedSize(config.scalingInflated());
         energizer3D.setExpandedSize(config.scalingExpanded());
         return energizer3D;
-    }
-
-    @Override
-    public Shape3D createNumberShape3D(UIConfig uiConfig, int numberIndex) {
-        final Image image = uiConfig.killedGhostPointsImage(numberIndex);
-        final PhongMaterial material = new PhongMaterial();
-        material.setDiffuseMap(image);
-        final var numberShape3D = new Box(DEFAULT_NUMBER_BOX_SIZE_X, DEFAULT_NUMBER_BOX_SIZE_Y, DEFAULT_NUMBER_BOX_SIZE_Z);
-        numberShape3D.setMaterial(material);
-        return numberShape3D;
     }
 
     public GhostMaterialSet createGhostMaterial(GhostAppearanceColors colors) {

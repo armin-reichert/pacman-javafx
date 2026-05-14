@@ -9,7 +9,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
@@ -26,7 +25,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Shape3D;
 
 public interface Factory3D extends Disposable {
 
@@ -69,8 +67,6 @@ public interface Factory3D extends Disposable {
     Pellet3D createPellet3D(PelletConfig3D pelletConfig, PhongMaterial material);
 
     Energizer3D createEnergizer3D(EnergizerConfig3D config, ManagedAnimationsRegistry animations, PhongMaterial material);
-
-    Shape3D createNumberShape3D(UIConfig uiConfig, int numberIndex);
 
     MazeMaterials3D createMazeMaterials(WorldMapColorScheme colorScheme, DoubleProperty wallOpacity, ObjectProperty<Color> floorColor);
 }
