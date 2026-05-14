@@ -13,6 +13,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.TriangleMesh;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
@@ -211,5 +212,21 @@ public final class Ufx {
         var pause = new PauseTransition(javafx.util.Duration.seconds(seconds));
         pause.setOnFinished(_ -> action.run());
         return pause;
+    }
+
+    public static TriangleMesh createScaledMesh(TriangleMesh mesh, double scale) {
+        requireNonNull(mesh);
+
+        final TriangleMesh result = new TriangleMesh();
+        result.getTexCoords().addAll(mesh.getTexCoords());
+        result.getFaces().addAll(mesh.getFaces());
+        result.getFaceSmoothingGroups().addAll(mesh.getFaceSmoothingGroups());
+        final float[] points = mesh.getPoints().toArray(null);
+        for (int i = 0; i < points.length; i++) {
+            points[i] *= (float) scale;
+        }
+        result.getPoints().addAll(points);
+
+        return result;
     }
 }

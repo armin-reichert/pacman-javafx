@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.basics.Disposable;
@@ -13,12 +14,11 @@ import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
-import de.amr.pacmanfx.uilib.UfxColors;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostAppearance3D;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
 import javafx.beans.property.DoubleProperty;
@@ -27,9 +27,6 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
-
-import static de.amr.pacmanfx.uilib.Ufx.colorBoundPhongMaterial;
-import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 
 public interface Factory3D extends Disposable {
 
@@ -75,16 +72,5 @@ public interface Factory3D extends Disposable {
 
     Shape3D createNumberShape3D(UIConfig uiConfig, int numberIndex);
 
-    default MazeMaterials3D createMazeMaterials(WorldMapColorScheme colorScheme, DoubleProperty wallOpacity, ObjectProperty<Color> floorColor) {
-        final PhongMaterial floorMaterial = colorBoundPhongMaterial(floorColor);
-        floorMaterial.setSpecularPower(128);
-
-        final PhongMaterial wallBaseMaterial = colorBoundPhongMaterial(wallOpacity.map(
-            opacity -> UfxColors.colorWithOpacity(Color.valueOf(colorScheme.wallStroke()), opacity.doubleValue())));
-        wallBaseMaterial.setSpecularPower(64);
-
-        final PhongMaterial wallTopMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.wallFill()));
-
-        return new MazeMaterials3D(floorMaterial, wallBaseMaterial, wallTopMaterial);
-    }
+    MazeMaterials3D createMazeMaterials(WorldMapColorScheme colorScheme, DoubleProperty wallOpacity, ObjectProperty<Color> floorColor);
 }

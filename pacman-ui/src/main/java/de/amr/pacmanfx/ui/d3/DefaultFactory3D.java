@@ -12,6 +12,8 @@ import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
+import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.UfxColors;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.ghost.*;
@@ -20,9 +22,12 @@ import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 import de.amr.pacmanfx.uilib.model3D.pac.PacMan3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.*;
 import org.tinylog.Logger;
@@ -31,7 +36,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.pacmanfx.ui.GameUI.*;
+import static de.amr.pacmanfx.uilib.Ufx.colorBoundPhongMaterial;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
+import static java.lang.Math.max;
 import static java.util.Objects.requireNonNull;
 
 public class DefaultFactory3D implements Factory3D {
@@ -41,69 +48,27 @@ public class DefaultFactory3D implements Factory3D {
     public static final int DEFAULT_NUMBER_BOX_SIZE_Z = 8;
 
     protected final Map<GhostAppearanceColors, GhostMaterialSet> ghostMaterialsCache = new HashMap<>();
-    protected double pelletRadius;
-    protected Mesh scaledPelletMesh;
 
-    protected GhostMaterialSet createGhostMaterial(GhostAppearanceColors colors) {
-        final var normalMaterials = new GhostComponentMaterialSet(
-            coloredPhongMaterial(colors.normalColor().dressColor()),
-            coloredPhongMaterial(colors.normalColor().eyeballsColor()),
-            coloredPhongMaterial(colors.normalColor().pupilsColor())
-        );
-
-        final var frightenedMaterials = new GhostComponentMaterialSet(
-            coloredPhongMaterial(colors.frightenedColor().dressColor()),
-            coloredPhongMaterial(colors.frightenedColor().eyeballsColor()),
-            coloredPhongMaterial(colors.frightenedColor().pupilsColor())
-        );
-
-        final var flashingMaterials = new GhostComponentMaterialSet(
-            coloredPhongMaterial(colors.flashingColor().dressColor()),
-            coloredPhongMaterial(colors.flashingColor().eyeballsColor()),
-            coloredPhongMaterial(colors.flashingColor().pupilsColor())
-        );
-
-        Logger.info("Created ghost materials for color set {}", colors);
-        return new GhostMaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
-    }
-
-    protected Mesh scaledPelletMesh(Mesh originalPelletMesh, PelletConfig3D pelletConfig) {
-        requireNonNull(pelletConfig);
-        if (scaledPelletMesh == null || pelletConfig.radius() != pelletRadius) {
-            pelletRadius = pelletConfig.radius();
-            final var dummy = new MeshView(originalPelletMesh);
-            final Bounds bounds = dummy.getBoundsInLocal();
-            final double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
-            final double scaling = (2 * pelletRadius) / maxExtent;
-            scaledPelletMesh = createScaledMesh(originalPelletMesh, scaling);
-            Logger.info("Created scaled pellet mesh, config={}", pelletConfig);
-        }
-        return scaledPelletMesh;
-    }
-
-    protected static Mesh createScaledMesh(Mesh original, double scale) {
-        if (!(original instanceof TriangleMesh mesh)) {
-            throw new IllegalArgumentException("Only TriangleMesh supported");
-        }
-
-        final TriangleMesh copy = new TriangleMesh();
-        copy.getTexCoords().addAll(mesh.getTexCoords());
-        copy.getFaces().addAll(mesh.getFaces());
-        copy.getFaceSmoothingGroups().addAll(mesh.getFaceSmoothingGroups());
-
-        final float[] points = mesh.getPoints().toArray(null);
-        for (int i = 0; i < points.length; i++) {
-            points[i] *= (float) scale;
-        }
-        copy.getPoints().addAll(points);
-
-        return copy;
-    }
-
+    protected Map<Float, Mesh> pelletMeshesCache = new HashMap<>();
 
     @Override
     public void dispose() {
         ghostMaterialsCache.clear();
+        pelletMeshesCache.clear();
+    }
+
+    @Override
+    public MazeMaterials3D createMazeMaterials(WorldMapColorScheme colorScheme, DoubleProperty wallOpacity, ObjectProperty<Color> floorColor) {
+        final PhongMaterial floorMaterial = colorBoundPhongMaterial(floorColor);
+        floorMaterial.setSpecularPower(128);
+
+        final PhongMaterial wallBaseMaterial = colorBoundPhongMaterial(wallOpacity.map(
+            opacity -> UfxColors.colorWithOpacity(Color.valueOf(colorScheme.wallStroke()), opacity.doubleValue())));
+        wallBaseMaterial.setSpecularPower(64);
+
+        final PhongMaterial wallTopMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.wallFill()));
+
+        return new MazeMaterials3D(floorMaterial, wallBaseMaterial, wallTopMaterial);
     }
 
     @Override
@@ -194,5 +159,44 @@ public class DefaultFactory3D implements Factory3D {
         final var numberShape3D = new Box(DEFAULT_NUMBER_BOX_SIZE_X, DEFAULT_NUMBER_BOX_SIZE_Y, DEFAULT_NUMBER_BOX_SIZE_Z);
         numberShape3D.setMaterial(material);
         return numberShape3D;
+    }
+
+    protected GhostMaterialSet createGhostMaterial(GhostAppearanceColors colors) {
+        final var normalMaterials = new GhostComponentMaterialSet(
+            coloredPhongMaterial(colors.normalColor().dressColor()),
+            coloredPhongMaterial(colors.normalColor().eyeballsColor()),
+            coloredPhongMaterial(colors.normalColor().pupilsColor())
+        );
+
+        final var frightenedMaterials = new GhostComponentMaterialSet(
+            coloredPhongMaterial(colors.frightenedColor().dressColor()),
+            coloredPhongMaterial(colors.frightenedColor().eyeballsColor()),
+            coloredPhongMaterial(colors.frightenedColor().pupilsColor())
+        );
+
+        final var flashingMaterials = new GhostComponentMaterialSet(
+            coloredPhongMaterial(colors.flashingColor().dressColor()),
+            coloredPhongMaterial(colors.flashingColor().eyeballsColor()),
+            coloredPhongMaterial(colors.flashingColor().pupilsColor())
+        );
+
+        Logger.info("Created ghost materials for color set {}", colors);
+        return new GhostMaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
+    }
+
+    protected Mesh scaledPelletMesh(Mesh pelletMesh, PelletConfig3D config) {
+        requireNonNull(pelletMesh);
+        requireNonNull(config);
+        if (!(pelletMesh instanceof TriangleMesh triangleMesh)) {
+            throw new IllegalArgumentException("Cannot scale pellet mesh (mo triangle mesh");
+        }
+        return pelletMeshesCache.computeIfAbsent(config.radius(), r -> {
+            Logger.info("Computing scaled pellet mesh of radius {}", r);
+            final MeshView meshView = new MeshView(pelletMesh);
+            final Bounds b = meshView.getBoundsInLocal();
+            final double size = max( max(b.getWidth(), b.getHeight()), b.getDepth());
+            final double scaling = (2 * r) / size;
+            return Ufx.createScaledMesh(triangleMesh, scaling);
+        });
     }
 }
