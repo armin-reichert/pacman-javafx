@@ -12,6 +12,7 @@ import de.amr.pacmanfx.uilib.model3D.animation.PacManDyingAnimation3D;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
+import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
@@ -35,8 +36,53 @@ public class Pac3DFactory {
         animations.register(Pac3D.AnimationID.CHEWING, new PacChewingAnimation3D(pac3D));
         animations.register(Pac3D.AnimationID.DYING,   new PacManDyingAnimation3D(pac3D));
         animations.register(Pac3D.AnimationID.MOVING,  new HeadBangingAnimation3D(pac3D));
-        pac3D.setMovementAnimationPowerMode(false);
+
+        final var powerLight = new PointLight();
+        powerLight.setColor(config.colors().headColor().desaturate());
+        powerLight.translateXProperty().bind(pac3D.translateXProperty());
+        powerLight.translateYProperty().bind(pac3D.translateYProperty());
+        powerLight.setTranslateZ(-30);
+        pac3D.setPowerLight(powerLight);
+
+        pac3D.setMovementPowerMode(false);
+
         return pac3D;
+    }
+
+    public static Pac3D createMsPacMan3D(ManagedAnimationsRegistry animations, Pac msPacMan, PacConfig config) {
+        final Pac3D msPacMan3D = new Pac3D(animations, msPacMan);
+        msPacMan3D.setBodyAndJaw(createPacBody(config), createBlindPacBody(config));
+
+        final Group femaleParts = createFemalePacBodyParts(config);
+        msPacMan3D.getChildren().add(femaleParts);
+
+        animations.register(Pac3D.AnimationID.CHEWING, new PacChewingAnimation3D(msPacMan3D));
+
+        final var dyingAnimation = new ManagedAnimation("Ms. Pac-Man Dying");
+        dyingAnimation.setFactory(() -> {
+            var spinning = new RotateTransition(Duration.seconds(0.25), msPacMan3D);
+            spinning.setAxis(Rotate.Z_AXIS);
+            spinning.setFromAngle(0);
+            spinning.setToAngle(360);
+            spinning.setInterpolator(Interpolator.LINEAR);
+            spinning.setCycleCount(4);
+            return spinning;
+        });
+        animations.register(Pac3D.AnimationID.DYING, dyingAnimation);
+
+        final var movementAnimation = new HipSwayingAnimation3D(msPacMan3D);
+        animations.register(Pac3D.AnimationID.MOVING, movementAnimation);
+
+        final var powerLight = new PointLight();
+        powerLight.setColor(config.colors().headColor().desaturate());
+        powerLight.translateXProperty().bind(msPacMan3D.translateXProperty());
+        powerLight.translateYProperty().bind(msPacMan3D.translateYProperty());
+        powerLight.setTranslateZ(-30);
+        msPacMan3D.setPowerLight(powerLight);
+
+        msPacMan3D.setMovementPowerMode(false);
+
+        return msPacMan3D;
     }
 
     /**
@@ -89,35 +135,6 @@ public class Pac3DFactory {
         return Model3DHelper.createMeshView(
             PacManWorld3D.instance().pacEyesMesh(),
             coloredPhongMaterial(config.colors().eyesColor()));
-    }
-
-    public static Pac3D createMsPacMan3D(ManagedAnimationsRegistry animations, Pac msPacMan, PacConfig config) {
-        final Pac3D msPacMan3D = new Pac3D(animations, msPacMan);
-        msPacMan3D.setBodyAndJaw(createPacBody(config), createBlindPacBody(config));
-
-        final Group femaleParts = createFemalePacBodyParts(config);
-        msPacMan3D.getChildren().add(femaleParts);
-
-        animations.register(Pac3D.AnimationID.CHEWING, new PacChewingAnimation3D(msPacMan3D));
-
-        final var dyingAnimation = new ManagedAnimation("Ms. Pac-Man Dying");
-        dyingAnimation.setFactory(() -> {
-            var spinning = new RotateTransition(Duration.seconds(0.25), msPacMan3D);
-            spinning.setAxis(Rotate.Z_AXIS);
-            spinning.setFromAngle(0);
-            spinning.setToAngle(360);
-            spinning.setInterpolator(Interpolator.LINEAR);
-            spinning.setCycleCount(4);
-            return spinning;
-        });
-        animations.register(Pac3D.AnimationID.DYING, dyingAnimation);
-
-        final var movementAnimation = new HipSwayingAnimation3D(msPacMan3D);
-        animations.register(Pac3D.AnimationID.MOVING, movementAnimation);
-
-        msPacMan3D.setMovementAnimationPowerMode(false);
-
-        return msPacMan3D;
     }
 
     /**

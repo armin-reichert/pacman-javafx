@@ -53,6 +53,10 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
         return jaw;
     }
 
+    public void setPowerLight(PointLight powerLight) {
+        this.powerLight = powerLight;
+    }
+
     @Override
     public void dispose() {
         for (var animID : AnimationID.values()) {
@@ -65,13 +69,15 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
     @Override
     public void init(GameLevel level) {
         requireNonNull(level);
-        stopAnimations();
+        animations.optAnimation(AnimationID.CHEWING).ifPresent(ManagedAnimation::stop);
+        animations.optAnimation(AnimationID.MOVING).ifPresent(ManagedAnimation::stop);
+        animations.optAnimation(AnimationID.DYING).ifPresent(ManagedAnimation::stop);
         setScaleX(1.0);
         setScaleY(1.0);
         setScaleZ(1.0);
         updatePositionAndRotation();
         updateVisibility(level.worldMap());
-        setMovementAnimationPowerMode(false);
+        setMovementPowerMode(false);
     }
 
     @Override
@@ -83,7 +89,7 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
             updatePowerLight();
             animations.optAnimation(AnimationID.MOVING).ifPresent(movementAnimation -> {
                 movementAnimation.playOrContinue();
-                updateMovementAnimation();
+                animations.optAnimation(AnimationID.MOVING, Pac3DMovementAnimation.class).ifPresent(movement -> movement.update(pac));
             });
             animations.optAnimation(AnimationID.CHEWING).ifPresent(chewingAnimation -> {
                 if (pac.isParalyzed()) {
@@ -93,8 +99,8 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
                 }
             });
         } else {
-            stopMovementAnimation();
-            stopChewingAnimation();
+            animations.optAnimation(AnimationID.MOVING).ifPresent(ManagedAnimation::stop);
+            animations.optAnimation(AnimationID.CHEWING).ifPresent(ManagedAnimation::stop);
         }
     }
 
@@ -102,35 +108,11 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
         return Optional.ofNullable(powerLight);
     }
 
-    public void setMovementAnimationPowerMode(boolean power) {
-        animations.optAnimation(AnimationID.MOVING, Pac3DMovementAnimation.class)
-            .ifPresent(movement -> movement.setPowerMode(power));
+    public void setMovementPowerMode(boolean power) {
+        animations.optAnimation(AnimationID.MOVING, Pac3DMovementAnimation.class).ifPresent(movement -> movement.setPowerMode(power));
     }
 
-    public void updateMovementAnimation() {
-        animations.optAnimation(AnimationID.MOVING, Pac3DMovementAnimation.class)
-            .ifPresent(movement -> movement.update(pac));
-    }
-
-    protected void stopChewingAnimation() {
-        animations.optAnimation(AnimationID.CHEWING).ifPresent(ManagedAnimation::stop);
-    }
-
-    protected void stopMovementAnimation() {
-        animations.optAnimation(AnimationID.MOVING).ifPresent(ManagedAnimation::stop);
-    }
-
-    protected void stopDyingAnimation() {
-        animations.optAnimation(AnimationID.DYING).ifPresent(ManagedAnimation::stop);
-    }
-
-    protected void stopAnimations() {
-        stopChewingAnimation();
-        stopMovementAnimation();
-        stopDyingAnimation();
-    }
-
-    protected void updatePositionAndRotation() {
+    private void updatePositionAndRotation() {
         final Vector2f center = pac.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
@@ -144,17 +126,9 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
         moveRotation.setAngle(angle);
     }
 
-    protected void updateVisibility(WorldMap worldMap) {
+    private void updateVisibility(WorldMap worldMap) {
         final boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * worldMap.numCols() - HTS;
         setVisible(pac.isVisible() && !outsideWorld);
-    }
-
-    public void createPowerLight(PacConfig pacConfig) {
-        powerLight = new PointLight();
-        powerLight.setColor(pacConfig.colors().headColor().desaturate());
-        powerLight.translateXProperty().bind(translateXProperty());
-        powerLight.translateYProperty().bind(translateYProperty());
-        powerLight.setTranslateZ(-30);
     }
 
     /**

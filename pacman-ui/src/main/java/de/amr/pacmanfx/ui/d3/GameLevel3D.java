@@ -258,9 +258,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createPac3D() {
-        final PacConfig pacConfig = uiConfig.entityConfig().pacConfig();
-        final var pac3D = uiConfig.factory3D().createPac3D(level.pac(), pacConfig, animations3D);
-        pac3D.createPowerLight(pacConfig);
+        final Pac3D pac3D = uiConfig.factory3D().createPac3D(
+            level.pac(),
+            uiConfig.entityConfig().pacConfig(),
+            animations3D
+        );
         entities3D.add(pac3D);
     }
 
@@ -565,7 +567,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Game game = level.game();
         soundEffects().ifPresent(GameSoundEffects::stopSiren);
         if (!game.isLevelCompleted()) {
-            pac3D.setMovementAnimationPowerMode(true);
+            pac3D.setMovementPowerMode(true);
             animations3D.animation(AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).playFromStart();
             soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
@@ -575,7 +577,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Handles Pac losing power: stops power animation/sound.
      */
     public void onPacLostPower(PacLostPowerEvent ignoredEvent) {
-        entities3D.unique(Pac3D.class).setMovementAnimationPowerMode(false);
+        entities3D.unique(Pac3D.class).setMovementPowerMode(false);
         animations3D.animation(AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).stop();
         soundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
