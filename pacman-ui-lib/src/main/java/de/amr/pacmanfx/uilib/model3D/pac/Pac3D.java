@@ -13,7 +13,7 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
-import de.amr.pacmanfx.uilib.model3D.PacManWorld3DAccess;
+import de.amr.pacmanfx.uilib.model3D.Model3DHelper;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.PhongMaterial;
@@ -49,8 +49,8 @@ public abstract class Pac3D extends Group
         final MeshView eyes = createPacEyes(config);
         final MeshView palate = createPacPalate(config);
         final Group body = new Group(head, eyes, palate);
-        PacManWorld3DAccess.centerOverOrigin(head, List.of(eyes, palate));
-        return PacManWorld3DAccess.fixShapeOrientation(PacManWorld3DAccess.resize(body, config.size3D()));
+        Model3DHelper.centerOverOrigin(head, List.of(eyes, palate));
+        return Model3DHelper.adjustOrientation(Model3DHelper.scale(body, config.size3D()));
     }
 
     /**
@@ -64,23 +64,23 @@ public abstract class Pac3D extends Group
         final MeshView head = createPacHead(config);
         final MeshView palate = createPacPalate(config);
         final Group body = new Group(head, palate);
-        PacManWorld3DAccess.centerOverOrigin(head, List.of(palate));
-        return PacManWorld3DAccess.fixShapeOrientation(PacManWorld3DAccess.resize(body, config.size3D()));
+        Model3DHelper.centerOverOrigin(head, List.of(palate));
+        return Model3DHelper.adjustOrientation(Model3DHelper.scale(body, config.size3D()));
     }
 
     public static MeshView createPacHead(PacConfig config) {
         final PhongMaterial boringMaterial = coloredPhongMaterial(config.colors().headColor());
-        return PacManWorld3DAccess.createMeshView(PacManWorld3D.instance().pacHeadMesh(), boringMaterial);
+        return Model3DHelper.createMeshView(PacManWorld3D.instance().pacHeadMesh(), boringMaterial);
     }
 
     public static MeshView createPacPalate(PacConfig config) {
-        return PacManWorld3DAccess.createMeshView(
+        return Model3DHelper.createMeshView(
             PacManWorld3D.instance().pacPalateMesh(),
             coloredPhongMaterial(config.colors().palateColor()));
     }
 
     public static MeshView createPacEyes(PacConfig config) {
-        return PacManWorld3DAccess.createMeshView(
+        return Model3DHelper.createMeshView(
             PacManWorld3D.instance().pacEyesMesh(),
             coloredPhongMaterial(config.colors().eyesColor()));
     }

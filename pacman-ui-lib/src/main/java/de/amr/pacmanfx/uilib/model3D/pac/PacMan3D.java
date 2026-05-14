@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.uilib.model3D.pac;
 
 import de.amr.pacmanfx.model.actors.Pac;
@@ -46,6 +47,4 @@ public class PacMan3D extends Pac3D {
         animations.optAnimation(Pac3D.AnimationID.PAC_MOVING, HeadBangingAnimation3D.class)
             .ifPresent(hba -> hba.setPowerMode(power));
     }
-
-
 }
