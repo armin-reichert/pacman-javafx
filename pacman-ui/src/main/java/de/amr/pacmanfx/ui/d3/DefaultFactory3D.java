@@ -29,12 +29,10 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.*;
-import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.uilib.Ufx.colorBoundPhongMaterial;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.lang.Math.max;
@@ -72,32 +70,20 @@ public class DefaultFactory3D implements Factory3D {
     @Override
     public Maze3D createMaze3D(
         GameLevel level,
-        EntityConfig entityConfig,
+        EntityConfig config,
         WorldMapColorScheme colorScheme,
         ManagedAnimationsRegistry animations)
     {
-        final Maze3D maze3D = new Maze3D(level, this, entityConfig, colorScheme, animations);
-        maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
-        maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
-        maze3D.floorColorProperty().bind(PROPERTY_3D_FLOOR_COLOR);
-        return maze3D;
+        return new Maze3D(level, this, config, colorScheme, animations);
     }
 
     @Override
-    public Pac3D createPac3D(Pac pac, PacConfig pacConfig, ManagedAnimationsRegistry animations) {
-        requireNonNull(pac);
-        requireNonNull(pacConfig);
-        requireNonNull(animations);
-        return Pac3DFactory.createPacMan3D(animations, pac, pacConfig);
+    public Pac3D createPac3D(Pac pac, PacConfig config, ManagedAnimationsRegistry animations) {
+        return Pac3DFactory.createPacMan3D(animations, pac, config);
     }
 
     @Override
     public Ghost3D createGhost3D(Ghost ghost, GhostConfig config, ManagedAnimationsRegistry animations) {
-        requireNonNull(ghost);
-        requireNonNull(config);
-        requireNonNull(animations);
-
-        final GhostMaterialSet materials = ghostMaterialsCache.computeIfAbsent(config.colors(), this::createGhostMaterial);
         return new Ghost3D(
             animations,
             ghost,
@@ -105,20 +91,21 @@ public class DefaultFactory3D implements Factory3D {
             new GhostMeshSet(
                 PacManWorld3D.instance().ghostDressMesh(),
                 PacManWorld3D.instance().ghostPupilsMesh(),
-                PacManWorld3D.instance().ghostEyeballsMesh()),
-            materials);
+                PacManWorld3D.instance().ghostEyeballsMesh()
+            ),
+            ghostMaterialsCache.computeIfAbsent(config.colors(), this::createGhostMaterial));
     }
 
     @Override
-    public Group createLivesCounterShape3D(EntityConfig entityConfig) {
-        requireNonNull(entityConfig);
-        final PacConfig pacConfig = entityConfig.pacConfig().withModifiedSize3D(entityConfig.livesCounter().shapeSize());
+    public Group createLivesCounterShape3D(EntityConfig config) {
+        requireNonNull(config);
+        final PacConfig pacConfig = config.pacConfig().withModifiedSize3D(config.livesCounter().shapeSize());
         return Pac3DFactory.createPacBody(pacConfig);
     }
 
     @Override
-    public Pellet3D createPellet3D(PelletConfig3D pelletConfig, PhongMaterial material) {
-        final Mesh mesh = scaledPelletMesh(PacManWorld3D.instance().pelletMesh(), pelletConfig);
+    public Pellet3D createPellet3D(PelletConfig3D config, PhongMaterial material) {
+        final Mesh mesh = scaledPelletMesh(PacManWorld3D.instance().pelletMesh(), config);
         final Shape3D shape = new MeshView(mesh);
         shape.setMaterial(material);
         return new Pellet3D(shape);
@@ -157,7 +144,6 @@ public class DefaultFactory3D implements Factory3D {
             coloredPhongMaterial(colors.flashingColors().pupilsColor())
         );
 
-        Logger.info("Created ghost materials for color set {}", colors);
         return new GhostMaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
     }
 
@@ -168,7 +154,6 @@ public class DefaultFactory3D implements Factory3D {
             throw new IllegalArgumentException("Cannot scale pellet mesh (mo triangle mesh");
         }
         return pelletMeshesCache.computeIfAbsent(config.radius(), r -> {
-            Logger.info("Computing scaled pellet mesh of radius {}", r);
             final Bounds bounds = new MeshView(pelletMesh).getBoundsInLocal();
             final double extend = max( max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
             return Ufx.createScaledTriangleMesh(triangleMesh, (2 * r) / extend);

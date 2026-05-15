@@ -17,14 +17,14 @@ import static java.util.Objects.requireNonNull;
 public class ArcadeMsPacMan_Factory3D extends DefaultFactory3D {
 
     @Override
-    public Pac3D createPac3D(Pac pac, PacConfig pacConfig, ManagedAnimationsRegistry animations) {
-        return Pac3DFactory.createMsPacMan3D(animations, pac, pacConfig);
+    public Pac3D createPac3D(Pac pac, PacConfig config, ManagedAnimationsRegistry animations) {
+        return Pac3DFactory.createMsPacMan3D(animations, pac, config);
     }
 
     @Override
-    public Group createLivesCounterShape3D(EntityConfig entityConfig) {
-        requireNonNull(entityConfig);
-        final PacConfig pacConfig = entityConfig.pacConfig().withModifiedSize3D(entityConfig.livesCounter().shapeSize());
+    public Group createLivesCounterShape3D(EntityConfig config) {
+        requireNonNull(config);
+        final PacConfig pacConfig = config.pacConfig().withModifiedSize3D(config.livesCounter().shapeSize());
         return Pac3DFactory.createMsPacManBody(pacConfig);
     }
 }

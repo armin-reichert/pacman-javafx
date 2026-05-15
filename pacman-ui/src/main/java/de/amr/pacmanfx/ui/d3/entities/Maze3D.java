@@ -87,9 +87,10 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         WorldMapColorScheme colorScheme,
         ManagedAnimationsRegistry animations)
     {
+        requireNonNull(level);
         requireNonNull(factory3D);
         requireNonNull(entityConfig);
-        requireNonNull(level);
+        requireNonNull(animations);
 
         materials3D = factory3D.createMazeMaterials(colorScheme, wallOpacity, floorColor);
         createFloor3D(entityConfig.floor(), level);

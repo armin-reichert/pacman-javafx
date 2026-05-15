@@ -60,7 +60,7 @@ import java.util.stream.Stream;
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.GameFlow.CanonicalGameState.*;
-import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_WALL_HEIGHT;
+import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
@@ -296,6 +296,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createMaze3D(WorldMapColorScheme colorScheme) {
         final var maze3D = uiConfig.factory3D().createMaze3D(level, uiConfig.entityConfig(), colorScheme, animations3D);
+        maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
+        maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
+        maze3D.floorColorProperty().bind(PROPERTY_3D_FLOOR_COLOR);
         entities3D.add(maze3D);
     }
 

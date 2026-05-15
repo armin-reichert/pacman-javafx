@@ -35,6 +35,10 @@ import static java.util.Objects.requireNonNull;
 public class Pac3DFactory {
 
     public static Pac3D createPacMan3D(ManagedAnimationsRegistry animations, Pac pac, PacConfig config) {
+        requireNonNull(animations);
+        requireNonNull(pac);
+        requireNonNull(config);
+
         final Pac3D pac3D = new Pac3D(animations, pac, createPacBody(config), createBlindPacBody(config));
         animations.register(Pac3D.AnimationID.CHEWING, new PacChewingAnimation3D(pac3D));
         animations.register(Pac3D.AnimationID.DYING,   new PacManDyingAnimation3D(pac3D));
