@@ -8,7 +8,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
@@ -25,7 +25,7 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
 
     public enum AnimationID {CHEWING, DYING, MOVING}
 
-    private final ManagedAnimationsRegistry animations;
+    private final AnimationRegistry animations;
     private final Pac pac;
 
     private final Group bodyGroup;
@@ -39,7 +39,7 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
     private final Pac3DAnimationController animationController;
 
     public Pac3D(
-        ManagedAnimationsRegistry animations,
+        AnimationRegistry animations,
         Pac pac,
         Group body,
         Group jaw)

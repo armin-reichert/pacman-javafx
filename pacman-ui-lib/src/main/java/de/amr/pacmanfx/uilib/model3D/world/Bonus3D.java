@@ -8,7 +8,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.animation.BonusEatenAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.BonusEdibleAnimation3D;
@@ -36,14 +36,14 @@ public class Bonus3D extends Box implements GameLevelEntity, DisposableGraphicsO
     public enum AnimationID {BONUS_EDIBLE, BONUS_EATEN}
 
     private final Bonus bonus;
-    private final ManagedAnimationsRegistry animations;
+    private final AnimationRegistry animations;
 
     private final double symbolWidth;
     private final double pointsWidth;
     private PhongMaterial symbolTexture;
     private PhongMaterial pointsTexture;
 
-    public Bonus3D(ManagedAnimationsRegistry animations, Bonus bonus, Image symbolImage, double symbolWidth, Image pointsImage, double pointsWidth) {
+    public Bonus3D(AnimationRegistry animations, Bonus bonus, Image symbolImage, double symbolWidth, Image pointsImage, double pointsWidth) {
         this.animations = requireNonNull(animations);
         this.bonus = requireNonNull(bonus);
         this.symbolWidth = requireNonNegative(symbolWidth);

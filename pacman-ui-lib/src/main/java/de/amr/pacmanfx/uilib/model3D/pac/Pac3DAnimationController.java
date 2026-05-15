@@ -3,15 +3,15 @@ package de.amr.pacmanfx.uilib.model3D.pac;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import javafx.scene.PointLight;
 import org.tinylog.Logger;
 
 public class Pac3DAnimationController {
 
-    private final ManagedAnimationsRegistry animations;
+    private final AnimationRegistry animations;
 
-    public Pac3DAnimationController(ManagedAnimationsRegistry animations) {
+    public Pac3DAnimationController(AnimationRegistry animations) {
         this.animations = animations;
     }
 

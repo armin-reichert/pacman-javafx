@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.UfxColors;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.ghost.*;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
@@ -72,18 +72,18 @@ public class DefaultFactory3D implements Factory3D {
         GameLevel level,
         EntityConfig config,
         WorldMapColorScheme colorScheme,
-        ManagedAnimationsRegistry animations)
+        AnimationRegistry animations)
     {
         return new Maze3D(level, this, config, colorScheme, animations);
     }
 
     @Override
-    public Pac3D createPac3D(Pac pac, PacConfig config, ManagedAnimationsRegistry animations) {
+    public Pac3D createPac3D(Pac pac, PacConfig config, AnimationRegistry animations) {
         return Pac3DFactory.createPacMan3D(animations, pac, config);
     }
 
     @Override
-    public Ghost3D createGhost3D(Ghost ghost, GhostConfig config, ManagedAnimationsRegistry animations) {
+    public Ghost3D createGhost3D(Ghost ghost, GhostConfig config, AnimationRegistry animations) {
         return new Ghost3D(
             animations,
             ghost,
@@ -112,7 +112,7 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Energizer3D createEnergizer3D(EnergizerConfig3D config, ManagedAnimationsRegistry animations, PhongMaterial material) {
+    public Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animations, PhongMaterial material) {
         final var energizer3D = new Energizer3D(animations);
         energizer3D.setShapeFactory(() -> {
             final var shape = new Sphere(config.radius(), 48);

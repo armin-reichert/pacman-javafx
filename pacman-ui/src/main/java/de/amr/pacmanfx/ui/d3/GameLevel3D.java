@@ -32,7 +32,7 @@ import de.amr.pacmanfx.ui.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticlesAnimation3D;
@@ -103,7 +103,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private final GameLevel level;
     private final GameLevelEntitySet entities3D = new GameLevelEntitySet();
-    private final ManagedAnimationsRegistry animations3D = new ManagedAnimationsRegistry();
+    private final AnimationRegistry animations3D = new AnimationRegistry();
     private final UIConfig uiConfig;
     private final RandomTextPicker gameOverMessagePicker;
 
@@ -171,7 +171,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return entities3D;
     }
 
-    public ManagedAnimationsRegistry animations() {
+    public AnimationRegistry animations() {
         return animations3D;
     }
 

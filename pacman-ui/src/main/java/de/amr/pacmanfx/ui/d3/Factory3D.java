@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
@@ -32,7 +32,7 @@ public interface Factory3D extends Disposable {
         GameLevel level,
         EntityConfig entityConfig,
         WorldMapColorScheme colorScheme,
-        ManagedAnimationsRegistry animations);
+        AnimationRegistry animations);
 
     /**
      * Creates the 3D representation of Pac for this game variant, including model,
@@ -43,7 +43,7 @@ public interface Factory3D extends Disposable {
      * @param animations the registry where animations are stored
      * @return the 3D representation of Pac
      */
-    Pac3D createPac3D(Pac pac, PacConfig pacConfig, ManagedAnimationsRegistry animations);
+    Pac3D createPac3D(Pac pac, PacConfig pacConfig, AnimationRegistry animations);
 
     /**
      * Creates the 3D representation of a ghost for this game variant, including
@@ -54,7 +54,7 @@ public interface Factory3D extends Disposable {
      * @param animations the registry where animations are stored
      * @return the 3D representation of a ghost
      */
-    Ghost3D createGhost3D(Ghost ghost, GhostConfig ghostConfig, ManagedAnimationsRegistry animations);
+    Ghost3D createGhost3D(Ghost ghost, GhostConfig ghostConfig, AnimationRegistry animations);
 
     /**
      * Creates the 3D representation of the lives counter for this variant.
@@ -66,7 +66,7 @@ public interface Factory3D extends Disposable {
 
     Pellet3D createPellet3D(PelletConfig3D pelletConfig, PhongMaterial material);
 
-    Energizer3D createEnergizer3D(EnergizerConfig3D config, ManagedAnimationsRegistry animations, PhongMaterial material);
+    Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animations, PhongMaterial material);
 
     MazeMaterials3D createMazeMaterials(WorldMapColorScheme colorScheme, DoubleProperty wallOpacity, ObjectProperty<Color> floorColor);
 }

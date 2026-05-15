@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.pac;
 
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.animation.HeadBangingAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.HipSwayingAnimation3D;
@@ -34,7 +34,7 @@ import static java.util.Objects.requireNonNull;
 
 public class Pac3DFactory {
 
-    public static Pac3D createPacMan3D(ManagedAnimationsRegistry animations, Pac pac, PacConfig config) {
+    public static Pac3D createPacMan3D(AnimationRegistry animations, Pac pac, PacConfig config) {
         requireNonNull(animations);
         requireNonNull(pac);
         requireNonNull(config);
@@ -56,7 +56,7 @@ public class Pac3DFactory {
         return pac3D;
     }
 
-    public static Pac3D createMsPacMan3D(ManagedAnimationsRegistry animations, Pac msPacMan, PacConfig config) {
+    public static Pac3D createMsPacMan3D(AnimationRegistry animations, Pac msPacMan, PacConfig config) {
         final Pac3D msPacMan3D = new Pac3D(animations, msPacMan, createPacBody(config), createBlindPacBody(config));
         msPacMan3D.bodyGroup().getChildren().add(createFemalePacBodyParts(config));
 

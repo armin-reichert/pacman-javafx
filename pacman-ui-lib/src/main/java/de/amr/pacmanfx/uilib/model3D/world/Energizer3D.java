@@ -8,7 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -69,7 +69,7 @@ public class Energizer3D implements GameLevelEntity, DisposableGraphicsObject {
         return animation;
     }
 
-    private final ManagedAnimationsRegistry animations;
+    private final AnimationRegistry animations;
     private Vector2i tile;
     private Point3D center;
 
@@ -80,7 +80,7 @@ public class Energizer3D implements GameLevelEntity, DisposableGraphicsObject {
     private Supplier<Shape3D> shapeFactory;
     private Shape3D shape;
 
-    public Energizer3D(ManagedAnimationsRegistry animations) {
+    public Energizer3D(AnimationRegistry animations) {
         this.animations = requireNonNull(animations);
         this.shapeFactory = Energizer3D::createDefaultShape;
         setLocation(Vector2i.ZERO, HTS);

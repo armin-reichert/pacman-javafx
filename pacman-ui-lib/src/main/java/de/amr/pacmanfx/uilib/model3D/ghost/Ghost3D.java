@@ -8,7 +8,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostBrakeAnimation3D;
@@ -46,7 +46,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
     public record AnimationKey(AnimationID animationID, byte ghostID) {}
 
-    private final ManagedAnimationsRegistry animations;
+    private final AnimationRegistry animations;
     private final Ghost ghost;
     private final GhostConfig config;
 
@@ -64,7 +64,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     private Ghost3DAppearanceController appearanceController;
 
     public Ghost3D(
-        ManagedAnimationsRegistry animations,
+        AnimationRegistry animations,
         Ghost ghost,
         GhostConfig config,
         GhostMeshSet meshSet,
@@ -123,7 +123,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         return materialSet;
     }
 
-    public ManagedAnimationsRegistry animations() {
+    public AnimationRegistry animations() {
         return animations;
     }
 
