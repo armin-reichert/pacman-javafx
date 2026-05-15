@@ -129,9 +129,6 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     public void update(GameLevel level) {
         updateVisibility(level.worldMap());
         updateTransform();
-        if (ghost.moveInfo().tunnelEntered) {
-            animations.animation(AnimationID.GHOST_BRAKING.forGhost(ghost)).playFromStart();
-        }
 
         appearanceController.update(this, level);
     }
@@ -170,6 +167,10 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
     public GhostMaterialSet materials() {
         return materialSet;
+    }
+
+    public ManagedAnimationsRegistry animations() {
+        return animations;
     }
 
     public void stopAllAnimations() {

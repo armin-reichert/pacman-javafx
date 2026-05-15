@@ -5,10 +5,9 @@
 package de.amr.pacmanfx.uilib.model3D.ghost;
 
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import org.tinylog.Logger;
-
-import static java.util.Objects.requireNonNull;
 
 public class Ghost3DAppearanceController {
 
@@ -53,6 +52,7 @@ public class Ghost3DAppearanceController {
             case NORMAL -> {
                 ghost3D.setNormalLook();
                 ghost3D.animateDress(ghost3D.isVisible());
+                brakeIfTunnelEntered(ghost3D);
             }
             case FRIGHTENED -> {
                 ghost3D.setFrightenedLook();
@@ -68,5 +68,12 @@ public class Ghost3DAppearanceController {
             }
         }
         Logger.debug("Ghost appearance for {} is now {}", ghost3D.ghost().name(), ghostAppearance);
+    }
+
+    private void brakeIfTunnelEntered(Ghost3D ghost3D) {
+        final Ghost ghost = ghost3D.ghost();
+        if (ghost.moveInfo().tunnelEntered) {
+            ghost3D.animations().animation(Ghost3D.AnimationID.GHOST_BRAKING.forGhost(ghost)).playFromStart();
+        }
     }
 }
