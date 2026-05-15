@@ -9,7 +9,6 @@ import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
@@ -26,11 +25,9 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -68,7 +65,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     private final Rotate facingRotation = new Rotate(0, Rotate.Z_AXIS);
     private final Scale scaling = new Scale(1, 1, 1);
 
-    private int numFlashes;
+    private final Ghost3DAppearanceController appearanceController;
 
     private ChangeListener<Vector2f> positionChangeListener = (_, _, _) -> updateTransform();
     private ChangeListener<Direction> wishDirChangeListener = (_, _, _) -> updateTransform();
@@ -118,25 +115,28 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         setSize(config.size3D());
         updateTransform();
         addPropertyChangeListeners();
-        setGhostAppearance(GhostAppearance.NORMAL);
+
+        appearanceController = new Ghost3DAppearanceController(this);
+//        appearanceController.setGhostAppearance(GhostAppearance.NORMAL);
     }
 
     @Override
     public void init(GameLevel level) {
         stopAllAnimations();
         updateTransform();
-        setGhostAppearance(GhostAppearance.NORMAL);
+        appearanceController.setGhostAppearance(GhostAppearance.NORMAL);
     }
 
     @Override
     public void update(GameLevel level) {
         updateVisibility(level.worldMap());
         updateTransform();
-        updateAppearance(level);
         if (ghost.moveInfo().tunnelEntered) {
             animations.animation(AnimationID.GHOST_BRAKING.forGhost(ghost)).playFromStart();
         }
         animateDress(isVisible());
+
+        appearanceController.updateAppearance(level);
     }
 
     @Override
@@ -159,6 +159,10 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         eyeballsShape = null;
     }
 
+    public Ghost3DAppearanceController appearanceController() {
+        return appearanceController;
+    }
+
     public Ghost ghost() {
         return ghost;
     }
@@ -171,14 +175,64 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         return materialSet;
     }
 
-    public void setNumFlashes(int numFlashes) {
-        this.numFlashes = requireNonNegativeInt(numFlashes);
-    }
-
     public void stopAllAnimations() {
         for (AnimationID animationID : AnimationID.values()) {
             animations.optAnimation(animationID.forGhost(ghost)).ifPresent(ManagedAnimation::stop);
         }
+    }
+
+    public void setNormalLook() {
+        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
+        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).playOrContinue();
+        dressShape.setVisible(true);
+        setMaterialSet(materialSet.normalMaterial());
+    }
+
+    public void setFrightenedLook() {
+        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
+        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).playOrContinue();
+        dressShape.setVisible(true);
+        setMaterialSet(materialSet.frightenedMaterial());
+    }
+
+    public void setFlashingLook(int numFlashes) {
+        if (numFlashes == 0) {
+            setFrightenedLook();
+            return;
+        }
+        setMaterialSet(materialSet.flashingMaterial());
+        dressShape.setVisible(true);
+
+        animations.optAnimation(AnimationID.GHOST_FLASHING.forGhost(ghost), GhostFlashingAnimation3D.class).ifPresent(flashing -> {
+            // TODO: this is crap
+            if (flashing.numFlashes() != numFlashes) {
+                flashing.stop();
+                flashing.setNumFlashes(numFlashes);
+                flashing.setTotalDuration(Duration.millis(1990));
+            }
+            flashing.playOrContinue();
+        });
+    }
+
+    public void setEyesOnlyLook() {
+        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
+        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).stop();
+        dressShape.setVisible(false);
+        setMaterialSet(materialSet.normalMaterial());
+    }
+
+    public void animateDress(boolean on) {
+        animations.optAnimation(AnimationID.GHOST_DRESS.forGhost(ghost)).ifPresent(dressAnimation -> {
+            if (on) {
+                dressAnimation.playOrContinue();
+            } else {
+                dressAnimation.stop();
+            }
+        });
+    }
+
+    public GhostAppearance frightenedAppearance(boolean powerFading) {
+        return powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
     }
 
     // private area, no trespassing
@@ -199,68 +253,6 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         dressShape.setMaterial(materialSet.dressMaterial());
         pupilsShape.setMaterial(materialSet.pupilsMaterial());
         eyeballsShape.setMaterial(materialSet.eyeballsMaterial());
-    }
-
-    private void setFlashingLook(int numFlashes) {
-        if (numFlashes == 0) {
-            setFrightenedLook();
-            return;
-        }
-        setMaterialSet(materialSet.flashingMaterial());
-        dressShape.setVisible(true);
-
-        animations.optAnimation(AnimationID.GHOST_FLASHING.forGhost(ghost), GhostFlashingAnimation3D.class).ifPresent(flashing -> {
-            // TODO: this is crap
-            if (flashing.numFlashes() != numFlashes) {
-                flashing.stop();
-                flashing.setNumFlashes(numFlashes);
-                flashing.setTotalDuration(Duration.millis(1990));
-            }
-            flashing.playOrContinue();
-        });
-    }
-
-    private void setNormalLook() {
-        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
-        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).playOrContinue();
-        dressShape.setVisible(true);
-        setMaterialSet(materialSet.normalMaterial());
-    }
-
-    private void setFrightenedLook() {
-        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
-        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).playOrContinue();
-        dressShape.setVisible(true);
-        setMaterialSet(materialSet.frightenedMaterial());
-    }
-
-    private void setEyesOnlyLook() {
-        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
-        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).stop();
-        dressShape.setVisible(false);
-        setMaterialSet(materialSet.normalMaterial());
-    }
-
-    private void animateDress(boolean on) {
-        animations.optAnimation(AnimationID.GHOST_DRESS.forGhost(ghost)).ifPresent(dressAnimation -> {
-            if (on) {
-                dressAnimation.playOrContinue();
-            } else {
-                dressAnimation.stop();
-            }
-        });
-    }
-
-    private void setGhostAppearance(GhostAppearance ghostAppearance) {
-        switch (ghostAppearance) {
-            case NORMAL     -> setNormalLook();
-            case FRIGHTENED -> setFrightenedLook();
-            case EYES       -> setEyesOnlyLook();
-            case FLASHING   -> setFlashingLook(numFlashes);
-        }
-        animateDress(true);
-
-        Logger.debug("Ghost appearance for {} is now {}", ghost.name(), ghostAppearance);
     }
 
     private void addPropertyChangeListeners() {
@@ -286,28 +278,4 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         });
     }
 
-    private void updateAppearance(GameLevel level) {
-        final GhostState ghostState = ghost.state();
-
-        // Let ghost shown as number alone
-        if (ghostState == GhostState.EATEN) return;
-
-        final boolean powerActive = level.pac().powerTimer().isRunning();
-        final boolean powerFading = level.pac().isPowerFading(level);
-        // ghosts that already got killed in the current power phase do not look frightened anymore
-        final boolean killedAlready = level.energizerVictims().contains(ghost);
-
-        setGhostAppearance(switch (ghostState) {
-            case LOCKED, LEAVING_HOUSE -> powerActive && !killedAlready
-                ? frightenedAppearance(powerFading)
-                : GhostAppearance.NORMAL;
-            case FRIGHTENED -> frightenedAppearance(powerFading);
-            case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EYES;
-            default -> GhostAppearance.NORMAL;
-        });
-    }
-
-    private GhostAppearance frightenedAppearance(boolean powerFading) {
-        return powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
-    }
 }

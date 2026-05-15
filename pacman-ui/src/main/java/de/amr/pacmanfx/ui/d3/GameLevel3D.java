@@ -266,7 +266,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private Ghost3D createGhost3D(GhostConfig ghostConfig, Ghost ghost) {
         final var ghost3D = uiConfig.factory3D().createGhost3D(ghost, ghostConfig, animations3D);
-        ghost3D.setNumFlashes(level.numFlashes());
+        ghost3D.appearanceController().setNumFlashes(level.numFlashes());
         return ghost3D;
     }
 
