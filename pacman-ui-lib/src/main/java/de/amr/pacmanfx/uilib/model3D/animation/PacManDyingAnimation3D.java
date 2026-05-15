@@ -47,7 +47,7 @@ public class PacManDyingAnimation3D extends ManagedAnimation {
 
         final var deathFight = new ParallelTransition(spinning, new SequentialTransition(shrinking, expanding), sinking);
         return new SequentialTransition(
-            doNow(pacMan3D::updatePowerLight),
+            doNow(() -> pacMan3D.powerLight().ifPresent(powerLight -> powerLight.setLightOn(false))),
             deathFight,
             pauseSecThen(1.0, () -> {
                 pacMan3D.setVisible(false);

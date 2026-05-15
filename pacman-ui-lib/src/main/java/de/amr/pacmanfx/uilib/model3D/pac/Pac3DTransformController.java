@@ -24,6 +24,10 @@ public class Pac3DTransformController {
         final Pac pac = pac3D.pac();
         final Vector2f center = pac.center();
 
+        if (!pac.isAlive()) {
+            return;
+        }
+
         pac3D.setTranslateX(center.x());
         pac3D.setTranslateY(center.y());
         pac3D.setTranslateZ(-10);
