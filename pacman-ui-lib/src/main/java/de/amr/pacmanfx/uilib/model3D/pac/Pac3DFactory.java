@@ -5,15 +5,12 @@
 package de.amr.pacmanfx.uilib.model3D.pac;
 
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.animation.HeadBangingAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.HipSwayingAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.PacChewingAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.PacManDyingAnimation3D;
-import javafx.animation.Interpolator;
-import javafx.animation.RotateTransition;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -22,10 +19,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
-import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
-import javafx.util.Duration;
 
 import java.util.List;
 
@@ -44,13 +39,7 @@ public class Pac3DFactory {
         animations.register(Pac3D.AnimationID.DYING,   new PacManDyingAnimation3D(pac3D));
         animations.register(Pac3D.AnimationID.MOVING,  new HeadBangingAnimation3D(pac3D));
 
-        final var powerLight = new PointLight();
-        powerLight.setColor(config.colors().headColor().desaturate());
-        powerLight.translateXProperty().bind(pac3D.translateXProperty());
-        powerLight.translateYProperty().bind(pac3D.translateYProperty());
-        powerLight.setTranslateZ(-30);
-        pac3D.setPowerLight(powerLight);
-
+        addPowerLight(pac3D, config.colors().headColor().desaturate());
         pac3D.setPowerMode(false);
 
         return pac3D;
@@ -61,31 +50,22 @@ public class Pac3DFactory {
         msPacMan3D.bodyGroup().getChildren().add(createFemalePacBodyParts(config));
 
         animations.register(Pac3D.AnimationID.CHEWING, new PacChewingAnimation3D(msPacMan3D));
-
-        final var dyingAnimation = new ManagedAnimation("Ms. Pac-Man Dying");
-        dyingAnimation.setFactory(() -> {
-            var spinning = new RotateTransition(Duration.seconds(0.25), msPacMan3D);
-            spinning.setAxis(Rotate.Z_AXIS);
-            spinning.setFromAngle(0);
-            spinning.setToAngle(360);
-            spinning.setInterpolator(Interpolator.LINEAR);
-            spinning.setCycleCount(4);
-            return spinning;
-        });
-        animations.register(Pac3D.AnimationID.DYING, dyingAnimation);
-
+        animations.register(Pac3D.AnimationID.DYING, new MsPacMan3DDyingAnimation(msPacMan3D));
         animations.register(Pac3D.AnimationID.MOVING, new HipSwayingAnimation3D(msPacMan3D));
 
-        final var powerLight = new PointLight();
-        powerLight.setColor(config.colors().headColor().desaturate());
-        powerLight.translateXProperty().bind(msPacMan3D.translateXProperty());
-        powerLight.translateYProperty().bind(msPacMan3D.translateYProperty());
-        powerLight.setTranslateZ(-30);
-        msPacMan3D.setPowerLight(powerLight);
-
+        addPowerLight(msPacMan3D, config.colors().headColor().desaturate());
         msPacMan3D.setPowerMode(false);
 
         return msPacMan3D;
+    }
+
+    private static void addPowerLight(Pac3D pac3D, Color color) {
+        final var powerLight = new PointLight();
+        powerLight.setColor(color);
+        powerLight.translateXProperty().bind(pac3D.translateXProperty());
+        powerLight.translateYProperty().bind(pac3D.translateYProperty());
+        powerLight.setTranslateZ(-30);
+        pac3D.setPowerLight(powerLight);
     }
 
     /**
