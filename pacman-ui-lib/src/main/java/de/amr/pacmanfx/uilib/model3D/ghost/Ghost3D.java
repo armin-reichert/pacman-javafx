@@ -54,9 +54,9 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
     private Group dressGroup;
 
-    private MeshView dressShape;
-    private MeshView pupilsShape;
-    private MeshView eyeballsShape;
+    private MeshView dressMeshView;
+    private MeshView pupilsMeshView;
+    private MeshView eyeballsMeshView;
 
     private final Rotate facingRotation = new Rotate(0, Rotate.Z_AXIS);
 
@@ -75,7 +75,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         this.config = requireNonNull(config);
         this.materialSet = requireNonNull(materialSet);
 
-        buildHierarchyAndSetTransforms(requireNonNull(meshSet));
+        buildHierarchy(meshSet);
 
         animations.register(AnimationID.NORMAL.key(ghost), new GhostDressAnimation3D(ghost, dressGroup));
         animations.register(AnimationID.FLASHING.key(ghost), new GhostFlashingAnimation3D(ghost, materialSet, config.colors()));
@@ -106,9 +106,9 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         transformController = null;
         appearanceController = null;
         materialSet = null;
-        dressShape = null;
-        pupilsShape = null;
-        eyeballsShape = null;
+        dressMeshView = null;
+        pupilsMeshView = null;
+        eyeballsMeshView = null;
     }
 
     public Ghost ghost() {
@@ -148,14 +148,14 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     public void lookNormal() {
         flashingDressAnimation().stop();
         normalDressAnimation().playOrContinue();
-        dressShape.setVisible(true);
+        dressMeshView.setVisible(true);
         setShapeMaterials(materialSet.normalMaterial());
     }
 
     public void lookFrightened() {
         flashingDressAnimation().stop();
         normalDressAnimation().playOrContinue();
-        dressShape.setVisible(true);
+        dressMeshView.setVisible(true);
         setShapeMaterials(materialSet.frightenedMaterial());
     }
 
@@ -165,7 +165,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
             return;
         }
         setShapeMaterials(materialSet.flashingMaterial());
-        dressShape.setVisible(true);
+        dressMeshView.setVisible(true);
 
         final GhostFlashingAnimation3D flashing = (GhostFlashingAnimation3D) flashingDressAnimation();
         // TODO: this is total crap and needs to be reimplemented
@@ -179,7 +179,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
     public void lookEyesOnly() {
         stopAllAnimations();
-        dressShape.setVisible(false);
+        dressMeshView.setVisible(false);
         setShapeMaterials(materialSet.normalMaterial());
     }
 
@@ -200,57 +200,58 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
     /*
         this (Group)
-          + facingGroup (Group: facing rotation, model orientation adaption)
-             - dressShape (MeshView, dress rotation animation)
-             + eyesGroup (Group)
-               - pupilsShape (MeshView)
-               - eyeballsShape (MeshView)
+           facingGroup (facing rotation, model orientation adaption)
+              dressGroup
+                 dressMeshView (dress rotation animation)
+              eyesGroup
+                 pupilsMeshView
+                 eyeballsMeshView
      */
-    private void buildHierarchyAndSetTransforms(GhostMeshSet meshSet) {
-        Group facingGroup, eyesGroup;
+    private void buildHierarchy(GhostMeshSet meshSet) {
+        requireNonNull(meshSet);
 
-        getChildren().add(
-            facingGroup = new Group(
-                dressGroup = new Group(
-                    dressShape = new MeshView(meshSet.dress())
-                ),
-                eyesGroup = new Group(
-                    pupilsShape   = new MeshView(meshSet.pupils()),
-                    eyeballsShape = new MeshView(meshSet.eyeballs())
-                )
-            )
+        // 1. Create meshes
+        dressMeshView    = new MeshView(meshSet.dress());
+        pupilsMeshView   = new MeshView(meshSet.pupils());
+        eyeballsMeshView = new MeshView(meshSet.eyeballs());
+
+        // 2. Create groups
+        dressGroup = new Group(dressMeshView);
+        Group eyesGroup = new Group(pupilsMeshView, eyeballsMeshView);
+        Group facingGroup = new Group(dressGroup, eyesGroup);
+
+        // 3. Apply transforms to the correct groups
+        facingGroup.getTransforms().addAll(
+            facingRotation,
+            PacManWorld3D.ORIENTATION_ADJUSTMENT
         );
 
-        // Set transforms
-
-        // Scale ghost shapes to configured size
-
-        final Bounds dressBounds = dressShape.getBoundsInLocal();
-
-        final Translate centerAtOrigin = new Translate(
+        // 4. Center meshes
+        Bounds dressBounds = dressMeshView.getBoundsInLocal();
+        Translate center = new Translate(
             -dressBounds.getCenterX(),
             -dressBounds.getCenterY(),
-            -dressBounds.getCenterZ());
+            -dressBounds.getCenterZ()
+        );
+        dressMeshView.getTransforms().add(center);
+        eyesGroup.getTransforms().add(center);
 
-        dressShape.getTransforms().add(centerAtOrigin);
-        eyesGroup .getTransforms().add(centerAtOrigin);
-
-        final Scale scale = new Scale(
+        // 5. Add scaling to the root node
+        final Scale scaling = new Scale(
             config().size3D() / dressBounds.getWidth(),
             config().size3D() / dressBounds.getHeight(),
             config().size3D() / dressBounds.getDepth());
+        getTransforms().add(scaling);
 
-        getTransforms().add(scale);
-
-        // Attach facing rotation and 3D model to JavaFX orientation adjustment
-
-        facingGroup.getTransforms().setAll(facingRotation, PacManWorld3D.ORIENTATION_ADJUSTMENT);
+        // 6. Add the facing group as the only child
+        getChildren().setAll(facingGroup);
     }
 
+
     private void setShapeMaterials(GhostComponentMaterialSet materialSet) {
-        dressShape.setMaterial(materialSet.dressMaterial());
-        pupilsShape.setMaterial(materialSet.pupilsMaterial());
-        eyeballsShape.setMaterial(materialSet.eyeballsMaterial());
+        dressMeshView.setMaterial(materialSet.dressMaterial());
+        pupilsMeshView.setMaterial(materialSet.pupilsMaterial());
+        eyeballsMeshView.setMaterial(materialSet.eyeballsMaterial());
     }
 
     private ManagedAnimation normalDressAnimation() {
