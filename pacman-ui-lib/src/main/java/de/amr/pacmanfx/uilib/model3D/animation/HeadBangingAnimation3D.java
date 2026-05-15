@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.pacmanfx.model.actors.Pac;
@@ -23,16 +24,16 @@ public class HeadBangingAnimation3D extends Pac3DMovementAnimation {
     private static final float POWER_ANGLE_AMPLIFICATION = 2;
     private static final float POWER_RATE = 2;
 
-    private final Node node;
+    private final Node targetGroup;
 
-    public HeadBangingAnimation3D(Node node) {
+    public HeadBangingAnimation3D(Node targetGroup) {
         super("Pac-Man Head Banging");
-        this.node = requireNonNull(node);
+        this.targetGroup = requireNonNull(targetGroup);
         setFactory(this::createAnimationFX);
     }
 
     private Animation createAnimationFX() {
-        var rotateTransition = new RotateTransition(BANG_TIME, node);
+        var rotateTransition = new RotateTransition(BANG_TIME, targetGroup);
         rotateTransition.setAxis(Rotate.X_AXIS);
         rotateTransition.setCycleCount(Animation.INDEFINITE);
         rotateTransition.setAutoReverse(true);
@@ -45,8 +46,8 @@ public class HeadBangingAnimation3D extends Pac3DMovementAnimation {
         super.stop();
         if (animationFX != null) {
             var rotateTransition = (RotateTransition) animationFX;
-            node.setRotationAxis(rotateTransition.getAxis());
-            node.setRotate(0);
+            targetGroup.setRotationAxis(rotateTransition.getAxis());
+            targetGroup.setRotate(0);
         }
     }
 
@@ -55,8 +56,8 @@ public class HeadBangingAnimation3D extends Pac3DMovementAnimation {
         super.pause();
         if (animationFX != null) {
             var rotateTransition = (RotateTransition) animationFX;
-            node.setRotationAxis(rotateTransition.getAxis());
-            node.setRotate(0);
+            targetGroup.setRotationAxis(rotateTransition.getAxis());
+            targetGroup.setRotate(0);
         }
     }
 

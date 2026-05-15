@@ -58,7 +58,7 @@ public class Pac3DFactory {
 
     public static Pac3D createMsPacMan3D(ManagedAnimationsRegistry animations, Pac msPacMan, PacConfig config) {
         final Pac3D msPacMan3D = new Pac3D(animations, msPacMan, createPacBody(config), createBlindPacBody(config));
-        msPacMan3D.getChildren().add(createFemalePacBodyParts(config));
+        msPacMan3D.bodyGroup().getChildren().add(createFemalePacBodyParts(config));
 
         animations.register(Pac3D.AnimationID.CHEWING, new PacChewingAnimation3D(msPacMan3D));
 

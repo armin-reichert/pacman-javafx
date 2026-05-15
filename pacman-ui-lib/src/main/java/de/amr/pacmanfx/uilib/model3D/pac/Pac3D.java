@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
+import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.transform.Rotate;
@@ -31,19 +32,48 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
 
     public enum AnimationID {CHEWING, DYING, MOVING}
 
-    private final Pac pac;
     private final ManagedAnimationsRegistry animations;
-    private final Group jaw;
-    private PointLight powerLight;
-    private final Rotate moveRotation = new Rotate();
+    private final Pac pac;
 
-    public Pac3D(ManagedAnimationsRegistry animations, Pac pac, Group body, Group jaw) {
+    private final Group bodyGroup;
+    private final Group jaw;
+
+    private PointLight powerLight;
+
+    private final Rotate facingRotation = new Rotate(0, Rotate.Z_AXIS);
+
+    private final Pac3DTransformController transformController = new Pac3DTransformController();
+
+    public Pac3D(
+        ManagedAnimationsRegistry animations,
+        Pac pac,
+        Group body,
+        Group jaw)
+    {
         this.animations = requireNonNull(animations);
         this.pac = requireNonNull(pac);
+
         requireNonNull(body);
         this.jaw = requireNonNull(jaw);
-        getChildren().addAll(body, jaw);
-        getTransforms().add(moveRotation);
+
+        bodyGroup = new Group(body, jaw);
+        final Group facingGroup = new Group(bodyGroup);
+
+        facingGroup.getTransforms().addAll(facingRotation);
+
+        getChildren().setAll(facingGroup);
+    }
+
+    public Pac pac() {
+        return pac;
+    }
+
+    public Rotate facingRotation() {
+        return facingRotation;
+    }
+
+    public Group bodyGroup() {
+        return bodyGroup;
     }
 
     public Group jaw() {
@@ -66,24 +96,27 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
     @Override
     public void init(GameLevel level) {
         requireNonNull(level);
+
+        transformController.init(this, level.worldMap());
+
         animations.optAnimation(AnimationID.CHEWING).ifPresent(ManagedAnimation::stop);
         animations.optAnimation(AnimationID.MOVING).ifPresent(ManagedAnimation::stop);
         animations.optAnimation(AnimationID.DYING).ifPresent(ManagedAnimation::stop);
         setScaleX(1.0);
         setScaleY(1.0);
         setScaleZ(1.0);
-        updatePositionAndRotation();
-        updateVisibility(level.worldMap());
         setPowerMode(false);
     }
 
     @Override
     public void update(GameLevel level) {
         requireNonNull(level);
+
         if (pac.isAlive()) {
-            updatePositionAndRotation();
-            updateVisibility(level.worldMap());
+            transformController.update(this, level.worldMap());
+
             updatePowerLight();
+
             animations.optAnimation(AnimationID.MOVING).ifPresent(movementAnimation -> {
                 movementAnimation.playOrContinue();
                 animations.optAnimation(AnimationID.MOVING, Pac3DMovementAnimation.class).ifPresent(movement -> movement.update(pac));
@@ -95,7 +128,8 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
                     chewingAnimation.playOrContinue();
                 }
             });
-        } else {
+        }
+        else {
             animations.optAnimation(AnimationID.MOVING).ifPresent(ManagedAnimation::stop);
             animations.optAnimation(AnimationID.CHEWING).ifPresent(ManagedAnimation::stop);
         }
@@ -125,26 +159,5 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
         } else {
             powerLight.setLightOn(false);
         }
-    }
-
-    // --- private
-
-    private void updatePositionAndRotation() {
-        final Vector2f center = pac.center();
-        setTranslateX(center.x());
-        setTranslateY(center.y());
-        final double angle = switch (pac.moveDir()) {
-            case LEFT  -> 0;
-            case UP    -> 90;
-            case RIGHT -> 180;
-            case DOWN  -> 270;
-        };
-        moveRotation.setAxis(Rotate.Z_AXIS);
-        moveRotation.setAngle(angle);
-    }
-
-    private void updateVisibility(WorldMap worldMap) {
-        final boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * worldMap.numCols() - HTS;
-        setVisible(pac.isVisible() && !outsideWorld);
     }
 }
