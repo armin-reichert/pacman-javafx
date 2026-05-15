@@ -7,7 +7,6 @@ package de.amr.pacmanfx.uilib.model3D.ghost;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -21,8 +20,6 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -107,14 +104,13 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
     @Override
     public void init(GameLevel level) {
-        transformController.update();
+        transformController.update(level.worldMap());
         appearanceController.init(this, level);
     }
 
     @Override
     public void update(GameLevel level) {
-        updateVisibility(level.worldMap());
-        transformController.update();
+        transformController.update(level.worldMap());
         appearanceController.update(this, level);
     }
 
@@ -228,11 +224,6 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         scaling.setX(size / b.getWidth());
         scaling.setY(size / b.getHeight());
         scaling.setZ(size / b.getDepth());
-    }
-
-    private void updateVisibility(WorldMap worldMap) {
-        final boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * worldMap.numCols() - HTS;
-        setVisible(ghost.isVisible() && !outsideWorld);
     }
 
     private void setMaterialSet(GhostComponentMaterialSet materialSet) {

@@ -270,7 +270,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         appearanceController.setNumFlashes(level.numFlashes());
         ghost3D.setAppearanceController(appearanceController);
 
-        final var transformController = new Ghost3DTransformController(ghost3D);
+        final var transformController = new Ghost3DTransformController(ghost3D, level.worldMap());
         ghost3D.setTransformController(transformController);
 
         return ghost3D;
