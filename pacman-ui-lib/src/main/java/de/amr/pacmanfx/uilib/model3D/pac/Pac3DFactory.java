@@ -29,8 +29,10 @@ import static java.util.Objects.requireNonNull;
 
 public class Pac3DFactory {
 
-    public static Pac3D createPacMan3D(AnimationRegistry animations, Pac pac, PacConfig config) {
-        final Pac3D pacMan3D = createPac3D(animations, pac, config);
+    public static Pac3D createPacMan3D(AnimationRegistry animations, Pac pacMan, PacConfig config) {
+        final Pac3D pacMan3D = new Pac3D(animations, pacMan, createPacBody(config, true), createPacBody(config, false));
+
+        addPowerLight(pacMan3D, config.colors().headColor().desaturate());
 
         animations.register(Pac3D.AnimationID.CHEWING, new PacChewingAnimation3D(pacMan3D));
         animations.register(Pac3D.AnimationID.DYING,   new PacManDyingAnimation3D(pacMan3D));
@@ -40,25 +42,16 @@ public class Pac3DFactory {
     }
 
     public static Pac3D createMsPacMan3D(AnimationRegistry animations, Pac msPacMan, PacConfig config) {
-        final Pac3D msPacMan3D = createPac3D(animations, msPacMan, config);
+        final Pac3D msPacMan3D = new Pac3D(animations, msPacMan, createPacBody(config, true), createPacBody(config, false));
         msPacMan3D.bodyGroup().getChildren().add(createFemalePacBodyParts(config));
+
+        addPowerLight(msPacMan3D, config.colors().headColor().desaturate());
 
         animations.register(Pac3D.AnimationID.CHEWING, new PacChewingAnimation3D(msPacMan3D));
         animations.register(Pac3D.AnimationID.DYING,   new MsPacManDyingAnimation3D(msPacMan3D));
         animations.register(Pac3D.AnimationID.MOVING,  new HipSwayingAnimation3D(msPacMan3D));
 
         return msPacMan3D;
-    }
-
-    private static Pac3D createPac3D(AnimationRegistry animations, Pac pac, PacConfig config) {
-        requireNonNull(animations);
-        requireNonNull(pac);
-        requireNonNull(config);
-
-        final Pac3D pac3D = new Pac3D(animations, pac, createPacBody(config, true), createPacBody(config, false));
-        addPowerLight(pac3D, config.colors().headColor().desaturate());
-
-        return pac3D;
     }
 
     private static void addPowerLight(Pac3D pac3D, Color color) {
