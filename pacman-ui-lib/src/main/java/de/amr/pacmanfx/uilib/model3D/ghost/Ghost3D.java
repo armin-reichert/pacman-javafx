@@ -52,9 +52,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
     private GhostMaterialSet materialSet;
 
-    private Group facingGroup;
     private Group dressGroup;
-    private Group eyesGroup;
 
     private MeshView dressShape;
     private MeshView pupilsShape;
@@ -77,7 +75,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         this.config = requireNonNull(config);
         this.materialSet = requireNonNull(materialSet);
 
-        buildTransformHierarchy(requireNonNull(meshSet));
+        buildHierarchyAndSetTransforms(requireNonNull(meshSet));
 
         animations.register(AnimationID.NORMAL.key(ghost), new GhostDressAnimation3D(ghost, dressGroup));
         animations.register(AnimationID.FLASHING.key(ghost), new GhostFlashingAnimation3D(ghost, materialSet, config.colors()));
@@ -200,17 +198,33 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         requireNonNull(appearanceController, "No appearance controller has been assigned");
     }
 
-    private void buildTransformHierarchy(GhostMeshSet meshSet) {
-        dressShape    = new MeshView(meshSet.dress());
-        pupilsShape   = new MeshView(meshSet.pupils());
-        eyeballsShape = new MeshView(meshSet.eyeballs());
+    /*
+        this (Group)
+          + facingGroup (Group)
+             + dressGroup (Group)
+               - dressShape (MeshView)
+             + eyesGroup (Group)
+               - pupilsShape (MeshView)
+               - eyeballsShape (MeshView)
+     */
+    private void buildHierarchyAndSetTransforms(GhostMeshSet meshSet) {
+        Group facingGroup, eyesGroup;
 
-        dressGroup    = new Group(dressShape);
-        eyesGroup     = new Group(pupilsShape, eyeballsShape);
-        facingGroup   = new Group(dressGroup, eyesGroup);
-        getChildren().setAll(facingGroup);
+        getChildren().add(
+            facingGroup = new Group(
+                dressGroup = new Group(
+                    dressShape = new MeshView(meshSet.dress())
+                ),
+                eyesGroup = new Group(
+                    pupilsShape   = new MeshView(meshSet.pupils()),
+                    eyeballsShape = new MeshView(meshSet.eyeballs())
+                )
+            )
+        );
 
         // Set transforms
+
+        // Scale ghost shapes to configured size
 
         final Bounds dressBounds = dressShape.getBoundsInLocal();
 
@@ -227,9 +241,11 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
             config().size3D() / dressBounds.getHeight(),
             config().size3D() / dressBounds.getDepth());
 
-        facingGroup.getTransforms().setAll(facingRotation, PacManWorld3D.ORIENTATION_ADJUSTMENT);
-
         getTransforms().add(scale);
+
+        // Attach facing rotation and 3D model to JavaFX orientation adjustment
+
+        facingGroup.getTransforms().setAll(facingRotation, PacManWorld3D.ORIENTATION_ADJUSTMENT);
     }
 
     private void setShapeMaterials(GhostComponentMaterialSet materialSet) {
