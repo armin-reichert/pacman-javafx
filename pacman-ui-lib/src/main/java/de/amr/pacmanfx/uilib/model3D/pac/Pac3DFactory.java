@@ -79,9 +79,15 @@ public class Pac3DFactory {
      */
     public static Group createPacBody(PacConfig config, boolean withEyes) {
         requireNonNull(config);
-        final MeshView head = createPacHead(config);
-        final MeshView eyes = createPacEyes(config);
-        final MeshView palate = createPacPalate(config);
+
+        final MeshView head = new MeshView(PacManWorld3D.instance().pacHeadMesh());
+        head.setMaterial(coloredPhongMaterial(config.colors().headColor()));
+
+        final MeshView eyes = new MeshView(PacManWorld3D.instance().pacEyesMesh());
+        eyes.setMaterial(coloredPhongMaterial(config.colors().eyesColor()));
+
+        final MeshView palate = new MeshView(PacManWorld3D.instance().pacPalateMesh());
+        palate.setMaterial(coloredPhongMaterial(config.colors().palateColor()));
 
         final List<Node> parts = withEyes ? List.of(head, eyes, palate) : List.of(head, palate);
         final Group body = new Group(parts);
@@ -96,31 +102,6 @@ public class Pac3DFactory {
         return body;
     }
 
-    public static MeshView createPacHead(PacConfig config) {
-        final PhongMaterial boringMaterial = coloredPhongMaterial(config.colors().headColor());
-        final MeshView head = new MeshView(PacManWorld3D.instance().pacHeadMesh());
-        head.setMaterial(boringMaterial);
-        return head;
-    }
-
-    public static MeshView createPacPalate(PacConfig config) {
-        final MeshView palate = new MeshView(PacManWorld3D.instance().pacPalateMesh());
-        palate.setMaterial(coloredPhongMaterial(config.colors().palateColor()));
-        return palate;
-    }
-
-    public static MeshView createPacEyes(PacConfig config) {
-        final MeshView eyes = new MeshView(PacManWorld3D.instance().pacEyesMesh());
-        eyes.setMaterial(coloredPhongMaterial(config.colors().eyesColor()));
-        return eyes;
-    }
-
-    /**
-     * Creates the additional female parts used for Ms. Pac-Man (hair bow, pearls, etc.).
-     *
-     * @param config Pac configuration
-     * @return a new female parts group
-     */
     public static Group createFemalePacBodyParts(PacConfig config) {
         requireNonNull(config);
 
@@ -166,17 +147,6 @@ public class Pac3DFactory {
         boobRight.getTransforms().addAll(new Translate(bx, by, bz));
 
         return new Group(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
-    }
-
-    /**
-     * Creates a complete Ms. Pac-Man body consisting of a Pac-Man base body
-     * plus the additional female parts.
-     *
-     * @param config Pac configuration
-     * @return a new Ms Pac-Man body instance
-     */
-    public static Group createMsPacManBody(PacConfig config) {
-        return new Group(createPacBody(config, true), createFemalePacBodyParts(config));
     }
 
     private static Translate moveToOrigin(Node node) {

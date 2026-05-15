@@ -18,16 +18,19 @@ public class TengenMsPacMan_Factory3D extends DefaultFactory3D {
 
     @Override
     public Pac3D createPac3D(Pac pac, PacConfig config, AnimationRegistry animations) {
-        requireNonNull(pac);
-        requireNonNull(config);
-        requireNonNull(animations);
         return Pac3DFactory.createMsPacMan3D(animations, pac, config);
     }
 
     @Override
-    public Group createLivesCounterShape3D(EntityConfig config) {
-        requireNonNull(config);
-        final PacConfig pacConfig = config.pacConfig().withModifiedSize3D(config.livesCounter().shapeSize());
-        return Pac3DFactory.createMsPacManBody(pacConfig);
+    public Group createLivesCounterShape3D(EntityConfig entityConfig) {
+        requireNonNull(entityConfig);
+
+        final PacConfig config = entityConfig.pacConfig()
+            .withModifiedSize3D(entityConfig.livesCounter().shapeSize());
+
+        return new Group(
+            Pac3DFactory.createPacBody(config, true),
+            Pac3DFactory.createFemalePacBodyParts(config)
+        );
     }
 }
