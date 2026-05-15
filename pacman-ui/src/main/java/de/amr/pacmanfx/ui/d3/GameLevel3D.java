@@ -265,9 +265,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private Ghost3D createGhost3D(GhostConfig ghostConfig, Ghost ghost) {
         final var ghost3D = uiConfig.factory3D().createGhost3D(ghost, ghostConfig, animations3D);
+
         final var appearanceController = new Ghost3DAppearanceController();
         appearanceController.setNumFlashes(level.numFlashes());
         ghost3D.setAppearanceController(appearanceController);
+
+        final var transformController = new Ghost3DTransformController(ghost3D);
+        ghost3D.setTransformController(transformController);
+
         return ghost3D;
     }
 
@@ -642,11 +647,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         });
 
         final Animation hideGhost3DForOneSecond = new Timeline(
-            new KeyFrame(Duration.ZERO, e -> {
+            new KeyFrame(Duration.ZERO, _ -> {
                 ghost3D.stopAllAnimations();
                 getChildren().remove(ghost3D);
             }),
-            new KeyFrame(Duration.millis(1000), e -> {
+            new KeyFrame(Duration.millis(1000), _ -> {
                 if (!getChildren().contains(ghost3D)) {
                     getChildren().add(ghost3D);
                 }

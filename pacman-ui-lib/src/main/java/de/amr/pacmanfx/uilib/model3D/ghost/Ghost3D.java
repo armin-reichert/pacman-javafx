@@ -4,8 +4,6 @@
 
 package de.amr.pacmanfx.uilib.model3D.ghost;
 
-import de.amr.basics.math.Direction;
-import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -13,15 +11,12 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostBrakeAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostDressAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostFlashingAnimation3D;
-import javafx.beans.value.ChangeListener;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.shape.MeshView;
-import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
@@ -50,25 +45,22 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         }
     }
 
-    private static final double HEIGHT_OVER_FLOOR = 2.0;
-
     private final ManagedAnimationsRegistry animations;
     private final Ghost ghost;
     private final GhostConfig config;
 
     private GhostMaterialSet materialSet;
 
+    private final Group facingGroup = new Group();
+
     private MeshView dressShape;
     private MeshView pupilsShape;
     private MeshView eyeballsShape;
 
-    private final Rotate facingRotation = new Rotate(0, Rotate.Z_AXIS);
     private final Scale scaling = new Scale(1, 1, 1);
 
+    private Ghost3DTransformController transformController;
     private Ghost3DAppearanceController appearanceController;
-
-    private ChangeListener<Vector2f> positionChangeListener = (_, _, _) -> updateTransform();
-    private ChangeListener<Direction> wishDirChangeListener = (_, _, _) -> updateTransform();
 
     public Ghost3D(
         ManagedAnimationsRegistry animations,
@@ -88,7 +80,6 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
         this.materialSet = requireNonNull(materialSet);
 
-        final Group facingGroup = new Group();
         final Group dressGroup = new Group(dressShape);
         final var eyesGroup = new Group(pupilsShape, eyeballsShape);
 
@@ -96,7 +87,6 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         getTransforms().addAll(scaling);
 
         facingGroup.getChildren().addAll(dressGroup, eyesGroup);
-        facingGroup.getTransforms().addAll(facingRotation, PacManWorld3D.ORIENTATION_ADJUSTMENT);
 
         final Bounds dressBounds = dressShape.getBoundsInLocal();
         final Translate originCentered = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
@@ -113,34 +103,23 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
             new GhostBrakeAnimation3D(this));
 
         setSize(config.size3D());
-        updateTransform();
-        addPropertyChangeListeners();
-    }
-
-    public void setAppearanceController(Ghost3DAppearanceController appearanceController) {
-        this.appearanceController = requireNonNull(appearanceController);
     }
 
     @Override
     public void init(GameLevel level) {
-        updateTransform();
+        transformController.update();
         appearanceController.init(this, level);
     }
 
     @Override
     public void update(GameLevel level) {
         updateVisibility(level.worldMap());
-        updateTransform();
-
+        transformController.update();
         appearanceController.update(this, level);
     }
 
     @Override
     public void dispose() {
-        removePropertyChangeListeners();
-        positionChangeListener = null;
-        wishDirChangeListener = null;
-
         stopAllAnimations();
         for (AnimationID animationID : AnimationID.values()) {
             animations.optAnimation(animationID.forGhost(ghost)).ifPresent(ManagedAnimation::dispose);
@@ -149,7 +128,6 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         cleanupGroup(this, true);
 
         materialSet = null;
-
         dressShape = null;
         pupilsShape = null;
         eyeballsShape = null;
@@ -171,10 +149,22 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         return animations;
     }
 
+    public Group facingGroup() {
+        return facingGroup;
+    }
+
     public void stopAllAnimations() {
         for (AnimationID animationID : AnimationID.values()) {
             animations.optAnimation(animationID.forGhost(ghost)).ifPresent(ManagedAnimation::stop);
         }
+    }
+
+    public void setTransformController(Ghost3DTransformController transformController) {
+        this.transformController = requireNonNull(transformController);
+    }
+
+    public void setAppearanceController(Ghost3DAppearanceController appearanceController) {
+        this.appearanceController = requireNonNull(appearanceController);
     }
 
     public void setNormalLook() {
@@ -249,28 +239,5 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         dressShape.setMaterial(materialSet.dressMaterial());
         pupilsShape.setMaterial(materialSet.pupilsMaterial());
         eyeballsShape.setMaterial(materialSet.eyeballsMaterial());
-    }
-
-    private void addPropertyChangeListeners() {
-        ghost.positionProperty().addListener(positionChangeListener);
-        ghost.wishDirProperty().addListener(wishDirChangeListener);
-    }
-
-    private void removePropertyChangeListeners() {
-        ghost.positionProperty().removeListener(positionChangeListener);
-        ghost.wishDirProperty().removeListener(wishDirChangeListener);
-    }
-
-    private void updateTransform() {
-        final Vector2f center = ghost.center();
-        setTranslateX(center.x());
-        setTranslateY(center.y());
-        setTranslateZ(-(config.size3D()/2 + HEIGHT_OVER_FLOOR));
-        facingRotation.setAngle(switch (ghost.wishDir()) {
-            case LEFT  -> 0;
-            case UP    -> 90;
-            case RIGHT -> 180;
-            case DOWN  -> 270;
-        });
     }
 }
