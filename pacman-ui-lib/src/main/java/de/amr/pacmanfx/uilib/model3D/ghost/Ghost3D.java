@@ -34,13 +34,15 @@ import static java.util.Objects.requireNonNull;
 public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
     public enum AnimationID {
-        GHOST_BRAKING, GHOST_DRESS, GHOST_FLASHING;
+        BRAKING, NORMAL, FLASHING;
 
-        public String forGhost(Ghost ghost) {
+        public AnimationKey key(Ghost ghost) {
             requireNonNull(ghost);
-            return "%s_%d".formatted(name(), ghost.personality());
+            return new AnimationKey(this, ghost.personality());
         }
     }
+
+    public record AnimationKey(AnimationID animationID, byte ghostID) {}
 
     private final ManagedAnimationsRegistry animations;
     private final Ghost ghost;
@@ -75,9 +77,9 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         buildStructure(meshSet);
         setTransforms();
 
-        animations.register(AnimationID.GHOST_DRESS.forGhost(ghost), new GhostDressAnimation3D(ghost, dressGroup));
-        animations.register(AnimationID.GHOST_FLASHING.forGhost(ghost), new GhostFlashingAnimation3D(ghost, materialSet, config.colors()));
-        animations.register(AnimationID.GHOST_BRAKING.forGhost(ghost), new GhostBrakeAnimation3D(this));
+        animations.register(AnimationID.NORMAL.key(ghost), new GhostDressAnimation3D(ghost, dressGroup));
+        animations.register(AnimationID.FLASHING.key(ghost), new GhostFlashingAnimation3D(ghost, materialSet, config.colors()));
+        animations.register(AnimationID.BRAKING.key(ghost), new GhostBrakeAnimation3D(this));
     }
 
     public void init(GameLevel level) {
@@ -97,7 +99,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     public void dispose() {
         stopAllAnimations();
         for (AnimationID animationID : AnimationID.values()) {
-            animations.optAnimation(animationID.forGhost(ghost)).ifPresent(ManagedAnimation::dispose);
+            animations.optAnimation(animationID.key(ghost)).ifPresent(ManagedAnimation::dispose);
         }
         cleanupGroup(this, true);
 
@@ -131,7 +133,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
     public void stopAllAnimations() {
         for (AnimationID animationID : AnimationID.values()) {
-            animations.optAnimation(animationID.forGhost(ghost)).ifPresent(ManagedAnimation::stop);
+            animations.optAnimation(animationID.key(ghost)).ifPresent(ManagedAnimation::stop);
         }
     }
 
@@ -144,15 +146,15 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     }
 
     public void setNormalLook() {
-        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
-        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).playOrContinue();
+        animations.animation(AnimationID.FLASHING.key(ghost)).stop();
+        animations.animation(AnimationID.NORMAL.key(ghost)).playOrContinue();
         dressShape.setVisible(true);
         setShapeMaterials(materialSet.normalMaterial());
     }
 
     public void setFrightenedLook() {
-        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
-        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).playOrContinue();
+        animations.animation(AnimationID.FLASHING.key(ghost)).stop();
+        animations.animation(AnimationID.NORMAL.key(ghost)).playOrContinue();
         dressShape.setVisible(true);
         setShapeMaterials(materialSet.frightenedMaterial());
     }
@@ -165,7 +167,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         setShapeMaterials(materialSet.flashingMaterial());
         dressShape.setVisible(true);
 
-        animations.optAnimation(AnimationID.GHOST_FLASHING.forGhost(ghost), GhostFlashingAnimation3D.class).ifPresent(flashing -> {
+        animations.optAnimation(AnimationID.FLASHING.key(ghost), GhostFlashingAnimation3D.class).ifPresent(flashing -> {
             // TODO: this is crap
             if (flashing.numFlashes() != numFlashes) {
                 flashing.stop();
@@ -177,14 +179,14 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     }
 
     public void setEyesOnlyLook() {
-        animations.animation(AnimationID.GHOST_FLASHING.forGhost(ghost)).stop();
-        animations.animation(AnimationID.GHOST_DRESS.forGhost(ghost)).stop();
+        animations.animation(AnimationID.FLASHING.key(ghost)).stop();
+        animations.animation(AnimationID.NORMAL.key(ghost)).stop();
         dressShape.setVisible(false);
         setShapeMaterials(materialSet.normalMaterial());
     }
 
     public void animateDress(boolean on) {
-        animations.optAnimation(AnimationID.GHOST_DRESS.forGhost(ghost)).ifPresent(dressAnimation -> {
+        animations.optAnimation(AnimationID.NORMAL.key(ghost)).ifPresent(dressAnimation -> {
             if (on) {
                 dressAnimation.playOrContinue();
             } else {
