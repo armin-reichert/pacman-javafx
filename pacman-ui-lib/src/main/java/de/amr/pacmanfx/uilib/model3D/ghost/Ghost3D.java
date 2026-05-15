@@ -10,12 +10,14 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
+import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostBrakeAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostDressAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostFlashingAnimation3D;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.shape.MeshView;
+import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
@@ -58,6 +60,8 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     private MeshView pupilsShape;
     private MeshView eyeballsShape;
 
+    private final Rotate facingRotation = new Rotate(0, Rotate.Z_AXIS);
+
     private Ghost3DTransformController transformController;
     private Ghost3DAppearanceController appearanceController;
 
@@ -83,14 +87,14 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     @Override
     public void init(GameLevel level) {
         assertControllersAssigned();
-        transformController.update(level.worldMap());
+        transformController.init(this, level.worldMap());
         appearanceController.init(this);
     }
 
     @Override
     public void update(GameLevel level) {
         assertControllersAssigned();
-        transformController.update(level.worldMap());
+        transformController.update(this, level.worldMap());
         appearanceController.update(this, level);
     }
 
@@ -125,8 +129,8 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         return animations;
     }
 
-    public Group facingGroup() {
-        return facingGroup;
+    public Rotate facingRotation() {
+        return facingRotation;
     }
 
     public void stopAllAnimations() {
@@ -222,6 +226,8 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
             config().size3D() / dressBounds.getWidth(),
             config().size3D() / dressBounds.getHeight(),
             config().size3D() / dressBounds.getDepth());
+
+        facingGroup.getTransforms().setAll(facingRotation, PacManWorld3D.ORIENTATION_ADJUSTMENT);
 
         getTransforms().add(scale);
     }
