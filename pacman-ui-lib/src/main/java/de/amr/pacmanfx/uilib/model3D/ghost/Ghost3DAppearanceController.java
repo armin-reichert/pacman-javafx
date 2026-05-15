@@ -7,7 +7,7 @@ package de.amr.pacmanfx.uilib.model3D.ghost;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
-import org.tinylog.Logger;
+import de.amr.pacmanfx.model.actors.Pac;
 
 public class Ghost3DAppearanceController {
 
@@ -21,33 +21,41 @@ public class Ghost3DAppearanceController {
         this.numFlashes = numFlashes;
     }
 
-    public void init(Ghost3D ghost3D, GameLevel level) {
+    public void init(Ghost3D ghost3D) {
         ghost3D.stopAllAnimations();
         setGhostAppearance(ghost3D, GhostAppearance.NORMAL);
     }
 
     public void update(Ghost3D ghost3D, GameLevel level) {
-        final GhostState ghostState = ghost3D.ghost().state();
-
-        // Let ghost shown as number alone
-        if (ghostState == GhostState.EATEN) return;
-
-        final boolean powerActive = level.pac().powerTimer().isRunning();
-        final boolean powerFading = level.pac().isPowerFading(level);
-        // ghosts that already got killed in the current power phase do not look frightened anymore
-        final boolean killedAlready = level.energizerVictims().contains(ghost3D.ghost());
-
-        setGhostAppearance(ghost3D, switch (ghostState) {
-            case LOCKED, LEAVING_HOUSE -> powerActive && !killedAlready
-                ? ghost3D.frightenedAppearance(powerFading)
-                : GhostAppearance.NORMAL;
-            case FRIGHTENED -> ghost3D.frightenedAppearance(powerFading);
-            case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EYES;
-            default -> GhostAppearance.NORMAL;
-        });
+        // Eaten ghost is invisible and needs no update
+        if (ghost3D.ghost().state() != GhostState.EATEN) {
+            final GhostAppearance appearance = computeAppearance(ghost3D, level);
+            setGhostAppearance(ghost3D, appearance);
+        }
     }
 
-    public void setGhostAppearance(Ghost3D ghost3D, GhostAppearance ghostAppearance) {
+    private GhostAppearance computeAppearance(Ghost3D ghost3D, GameLevel level) {
+        final Pac pac = level.pac();
+        final Ghost ghost = ghost3D.ghost();
+        return switch (ghost.state()) {
+            case LOCKED, LEAVING_HOUSE -> {
+                final boolean powerActive = pac.powerTimer().isRunning();
+                final boolean powerFading = pac.isPowerFading(level);
+                final boolean killedDuringCurrentPhase = level.energizerVictims().contains(ghost);
+                yield powerActive && !killedDuringCurrentPhase
+                    ? ghost3D.frightenedAppearance(powerFading)
+                    : GhostAppearance.NORMAL;
+            }
+            case FRIGHTENED -> {
+                final boolean powerFading = pac.isPowerFading(level);
+                yield ghost3D.frightenedAppearance(powerFading);
+            }
+            case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EYES;
+            default -> GhostAppearance.NORMAL;
+        };
+    }
+
+    private void setGhostAppearance(Ghost3D ghost3D, GhostAppearance ghostAppearance) {
         switch (ghostAppearance) {
             case NORMAL -> {
                 ghost3D.setNormalLook();
@@ -67,7 +75,6 @@ public class Ghost3DAppearanceController {
                 ghost3D.animateDress(false);
             }
         }
-        Logger.debug("Ghost appearance for {} is now {}", ghost3D.ghost().name(), ghostAppearance);
     }
 
     private void brakeIfTunnelEntered(Ghost3D ghost3D) {

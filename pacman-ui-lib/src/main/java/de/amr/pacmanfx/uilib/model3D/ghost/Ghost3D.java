@@ -82,7 +82,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
     public void init(GameLevel level) {
         transformController.update(level.worldMap());
-        appearanceController.init(this, level);
+        appearanceController.init(this);
     }
 
     @Override
