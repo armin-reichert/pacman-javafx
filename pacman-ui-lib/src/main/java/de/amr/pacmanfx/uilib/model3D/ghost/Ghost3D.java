@@ -99,7 +99,10 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         animations.register(AnimationID.GHOST_BRAKING.forGhost(ghost),
             new GhostBrakeAnimation3D(this));
 
-        setSize(config.size3D());
+        scaling.setX(config().size3D() / dressBounds.getWidth());
+        scaling.setY(config().size3D() / dressBounds.getHeight());
+        scaling.setZ(config().size3D() / dressBounds.getDepth());
+
     }
 
     @Override
@@ -218,13 +221,6 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     }
 
     // private area, no trespassing
-
-    private void setSize(double size) {
-        final Bounds b = getBoundsInLocal();
-        scaling.setX(size / b.getWidth());
-        scaling.setY(size / b.getHeight());
-        scaling.setZ(size / b.getDepth());
-    }
 
     private void setMaterialSet(GhostComponentMaterialSet materialSet) {
         dressShape.setMaterial(materialSet.dressMaterial());
