@@ -15,6 +15,9 @@ public class Pac3DTransformController {
 
     public void init(Pac3D pac3D, WorldMap worldMap) {
         update(pac3D, worldMap);
+        pac3D.setScaleX(1.0);
+        pac3D.setScaleY(1.0);
+        pac3D.setScaleZ(1.0);
     }
 
     public void update(Pac3D pac3D, WorldMap worldMap) {

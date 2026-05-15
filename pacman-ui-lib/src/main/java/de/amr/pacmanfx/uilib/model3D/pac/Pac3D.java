@@ -4,16 +4,13 @@
 
 package de.amr.pacmanfx.uilib.model3D.pac;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimationsRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.transform.Rotate;
@@ -21,8 +18,6 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -102,9 +97,6 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
         animations.optAnimation(AnimationID.CHEWING).ifPresent(ManagedAnimation::stop);
         animations.optAnimation(AnimationID.MOVING).ifPresent(ManagedAnimation::stop);
         animations.optAnimation(AnimationID.DYING).ifPresent(ManagedAnimation::stop);
-        setScaleX(1.0);
-        setScaleY(1.0);
-        setScaleZ(1.0);
         setPowerMode(false);
     }
 
