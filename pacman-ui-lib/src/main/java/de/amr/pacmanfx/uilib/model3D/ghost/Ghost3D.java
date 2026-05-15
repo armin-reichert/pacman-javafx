@@ -97,7 +97,6 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
     @Override
     public void dispose() {
-        stopAllAnimations();
         for (AnimationID animationID : AnimationID.values()) {
             animations.optAnimation(animationID.key(ghost)).ifPresent(ManagedAnimation::dispose);
         }
@@ -146,15 +145,15 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     }
 
     public void setNormalLook() {
-        animations.animation(AnimationID.FLASHING.key(ghost)).stop();
-        animations.animation(AnimationID.NORMAL.key(ghost)).playOrContinue();
+        flashingDressAnimation().stop();
+        normalDressAnimation().playOrContinue();
         dressShape.setVisible(true);
         setShapeMaterials(materialSet.normalMaterial());
     }
 
     public void setFrightenedLook() {
-        animations.animation(AnimationID.FLASHING.key(ghost)).stop();
-        animations.animation(AnimationID.NORMAL.key(ghost)).playOrContinue();
+        flashingDressAnimation().stop();
+        normalDressAnimation().playOrContinue();
         dressShape.setVisible(true);
         setShapeMaterials(materialSet.frightenedMaterial());
     }
@@ -167,32 +166,28 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         setShapeMaterials(materialSet.flashingMaterial());
         dressShape.setVisible(true);
 
-        animations.optAnimation(AnimationID.FLASHING.key(ghost), GhostFlashingAnimation3D.class).ifPresent(flashing -> {
-            // TODO: this is crap
-            if (flashing.numFlashes() != numFlashes) {
-                flashing.stop();
-                flashing.setNumFlashes(numFlashes);
-                flashing.setTotalDuration(Duration.millis(1990));
-            }
-            flashing.playOrContinue();
-        });
+        final GhostFlashingAnimation3D flashing = (GhostFlashingAnimation3D) flashingDressAnimation();
+        // TODO: this is total crap and needs to be reimplemented
+        if (flashing.numFlashes() != numFlashes) {
+            flashing.stop();
+            flashing.setNumFlashes(numFlashes);
+            flashing.setTotalDuration(Duration.millis(1990));
+        }
+        flashing.playOrContinue();
     }
 
     public void setEyesOnlyLook() {
-        animations.animation(AnimationID.FLASHING.key(ghost)).stop();
-        animations.animation(AnimationID.NORMAL.key(ghost)).stop();
+        stopAllAnimations();
         dressShape.setVisible(false);
         setShapeMaterials(materialSet.normalMaterial());
     }
 
-    public void animateDress(boolean on) {
-        animations.optAnimation(AnimationID.NORMAL.key(ghost)).ifPresent(dressAnimation -> {
-            if (on) {
-                dressAnimation.playOrContinue();
-            } else {
-                dressAnimation.stop();
-            }
-        });
+    public void animateNormalDress(boolean on) {
+        if (on) {
+            normalDressAnimation().playOrContinue();
+        } else {
+            normalDressAnimation().stop();
+        }
     }
 
     public GhostAppearance frightenedAppearance(boolean powerFading) {
@@ -238,5 +233,13 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         dressShape.setMaterial(materialSet.dressMaterial());
         pupilsShape.setMaterial(materialSet.pupilsMaterial());
         eyeballsShape.setMaterial(materialSet.eyeballsMaterial());
+    }
+
+    private ManagedAnimation normalDressAnimation() {
+        return animations.animation(AnimationID.NORMAL.key(ghost));
+    }
+
+    private ManagedAnimation flashingDressAnimation() {
+        return animations.animation(AnimationID.FLASHING.key(ghost));
     }
 }
