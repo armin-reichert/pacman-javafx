@@ -160,7 +160,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
             return;
         }
 
-        level3D.entities().all().forEach(e -> e.update(level));
+        level3D.entities().all().forEach(entity -> entity.update(level));
         updateHUD3D(level);
         perspectives.updatePerspective(level);
         soundEffects().ifPresent(soundEffects -> {
