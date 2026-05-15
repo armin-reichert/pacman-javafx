@@ -17,8 +17,8 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostAppearanceColors;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostColors;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostStateColors;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentColors;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
 import de.amr.pacmanfx.uilib.model3D.pac.MsPacManComponentColors;
 import de.amr.pacmanfx.uilib.model3D.pac.PacColors;
@@ -93,28 +93,28 @@ public interface UIConfig extends Disposable {
             16.0f),
         List.of(
             new GhostConfig(8.0f, 15.5f,
-                new GhostAppearanceColors(
-                    new GhostColors(ARCADE_RED, ARCADE_WHITE, ARCADE_BLUE),
-                    new GhostColors(ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE),
-                    new GhostColors(ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED))
+                new GhostStateColors(
+                    new GhostComponentColors(ARCADE_RED, ARCADE_WHITE, ARCADE_BLUE),
+                    new GhostComponentColors(ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE),
+                    new GhostComponentColors(ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED))
             ),
             new GhostConfig(8.0f, 15.5f,
-                new GhostAppearanceColors(
-                    new GhostColors(ARCADE_PINK, ARCADE_WHITE, ARCADE_BLUE),
-                    new GhostColors(ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE),
-                    new GhostColors(ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED))
+                new GhostStateColors(
+                    new GhostComponentColors(ARCADE_PINK, ARCADE_WHITE, ARCADE_BLUE),
+                    new GhostComponentColors(ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE),
+                    new GhostComponentColors(ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED))
             ),
             new GhostConfig(8.0f, 15.5f,
-                new GhostAppearanceColors(
-                    new GhostColors(ARCADE_CYAN, ARCADE_WHITE, ARCADE_BLUE),
-                    new GhostColors(ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE),
-                    new GhostColors(ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED))
+                new GhostStateColors(
+                    new GhostComponentColors(ARCADE_CYAN, ARCADE_WHITE, ARCADE_BLUE),
+                    new GhostComponentColors(ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE),
+                    new GhostComponentColors(ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED))
             ),
             new GhostConfig(8.0f, 15.5f,
-                new GhostAppearanceColors(
-                    new GhostColors(ARCADE_ORANGE, ARCADE_WHITE, ARCADE_BLUE),
-                    new GhostColors(ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE),
-                    new GhostColors(ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED))
+                new GhostStateColors(
+                    new GhostComponentColors(ARCADE_ORANGE, ARCADE_WHITE, ARCADE_BLUE),
+                    new GhostComponentColors(ARCADE_BLUE, ARCADE_ROSE, ARCADE_ROSE),
+                    new GhostComponentColors(ARCADE_WHITE, ARCADE_ROSE, ARCADE_RED))
             )
         ),
         new BonusConfig(8.0f, 14.5f),

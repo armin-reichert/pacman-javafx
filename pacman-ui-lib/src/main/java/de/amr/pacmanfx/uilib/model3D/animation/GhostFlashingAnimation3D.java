@@ -8,7 +8,7 @@ import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostMaterialSet;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostAppearanceColors;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostStateColors;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentMaterialSet;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -21,11 +21,11 @@ import static java.util.Objects.requireNonNull;
 public class GhostFlashingAnimation3D extends ManagedAnimation {
 
     private final GhostMaterialSet materialSet;
-    private final GhostAppearanceColors colors;
+    private final GhostStateColors colors;
     private Duration totalDuration = Duration.seconds(3);
     private int numFlashes = 5;
 
-    public GhostFlashingAnimation3D(Ghost ghost, GhostMaterialSet materialSet, GhostAppearanceColors colors) {
+    public GhostFlashingAnimation3D(Ghost ghost, GhostMaterialSet materialSet, GhostStateColors colors) {
         super("Ghost Flashing (%s)".formatted(ghost.name()));
         this.materialSet = materialSet;
         this.colors = colors;

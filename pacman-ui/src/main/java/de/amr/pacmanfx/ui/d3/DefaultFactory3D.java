@@ -46,7 +46,7 @@ public class DefaultFactory3D implements Factory3D {
     public static final int FLOOR_SPECULAR_POWER = 128;
     public static final int WALL_BASE_SPECULAR_POWER = 64;
 
-    protected final Map<GhostAppearanceColors, GhostMaterialSet> ghostMaterialsCache = new HashMap<>();
+    protected final Map<GhostStateColors, GhostMaterialSet> ghostMaterialsCache = new HashMap<>();
     protected final Map<Float, Mesh> pelletMeshesCache = new HashMap<>();
 
     @Override
@@ -138,7 +138,7 @@ public class DefaultFactory3D implements Factory3D {
         return energizer3D;
     }
 
-    public GhostMaterialSet createGhostMaterial(GhostAppearanceColors colors) {
+    public GhostMaterialSet createGhostMaterial(GhostStateColors colors) {
         final var normalMaterials = new GhostComponentMaterialSet(
             coloredPhongMaterial(colors.normalColors().dressColor()),
             coloredPhongMaterial(colors.normalColors().eyeballsColor()),

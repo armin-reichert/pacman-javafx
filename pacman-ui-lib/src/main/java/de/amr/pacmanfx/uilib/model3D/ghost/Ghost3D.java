@@ -247,7 +247,6 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         getChildren().setAll(facingGroup);
     }
 
-
     private void setShapeMaterials(GhostComponentMaterialSet materialSet) {
         dressMeshView.setMaterial(materialSet.dressMaterial());
         pupilsMeshView.setMaterial(materialSet.pupilsMaterial());
