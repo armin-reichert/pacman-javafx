@@ -12,11 +12,9 @@ import static java.util.Objects.requireNonNull;
 
 public class Ghost3DAppearanceController {
 
-    private final Ghost3D ghost3D;
     private int numFlashes;
 
-    public Ghost3DAppearanceController(Ghost3D ghost3D) {
-        this.ghost3D = requireNonNull(ghost3D);
+    public Ghost3DAppearanceController() {
         numFlashes = 3;
     }
 
@@ -24,7 +22,7 @@ public class Ghost3DAppearanceController {
         this.numFlashes = numFlashes;
     }
 
-    public void updateAppearance(GameLevel level) {
+    public void update(Ghost3D ghost3D, GameLevel level) {
         final GhostState ghostState = ghost3D.ghost().state();
 
         // Let ghost shown as number alone
@@ -35,7 +33,7 @@ public class Ghost3DAppearanceController {
         // ghosts that already got killed in the current power phase do not look frightened anymore
         final boolean killedAlready = level.energizerVictims().contains(ghost3D.ghost());
 
-        setGhostAppearance(switch (ghostState) {
+        setGhostAppearance(ghost3D, switch (ghostState) {
             case LOCKED, LEAVING_HOUSE -> powerActive && !killedAlready
                 ? ghost3D.frightenedAppearance(powerFading)
                 : GhostAppearance.NORMAL;
@@ -45,7 +43,7 @@ public class Ghost3DAppearanceController {
         });
     }
 
-    public void setGhostAppearance(GhostAppearance ghostAppearance) {
+    public void setGhostAppearance(Ghost3D ghost3D, GhostAppearance ghostAppearance) {
         switch (ghostAppearance) {
             case NORMAL -> ghost3D.setNormalLook();
             case FRIGHTENED -> ghost3D.setFrightenedLook();

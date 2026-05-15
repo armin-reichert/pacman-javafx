@@ -73,12 +73,14 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     public Ghost3D(
         ManagedAnimationsRegistry animations,
         Ghost ghost,
+        Ghost3DAppearanceController appearanceController,
         GhostConfig config,
         GhostMeshSet meshSet,
         GhostMaterialSet materialSet)
     {
         this.animations = requireNonNull(animations);
         this.ghost = requireNonNull(ghost);
+        this.appearanceController = requireNonNull(appearanceController);
         this.config = requireNonNull(config);
 
         requireNonNull(meshSet);
@@ -115,16 +117,13 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         setSize(config.size3D());
         updateTransform();
         addPropertyChangeListeners();
-
-        appearanceController = new Ghost3DAppearanceController(this);
-//        appearanceController.setGhostAppearance(GhostAppearance.NORMAL);
     }
 
     @Override
     public void init(GameLevel level) {
         stopAllAnimations();
         updateTransform();
-        appearanceController.setGhostAppearance(GhostAppearance.NORMAL);
+        appearanceController.setGhostAppearance(this, GhostAppearance.NORMAL);
     }
 
     @Override
@@ -135,8 +134,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
             animations.animation(AnimationID.GHOST_BRAKING.forGhost(ghost)).playFromStart();
         }
         animateDress(isVisible());
-
-        appearanceController.updateAppearance(level);
+        appearanceController.update(this, level);
     }
 
     @Override
@@ -277,5 +275,4 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
             case DOWN  -> 270;
         });
     }
-
 }
