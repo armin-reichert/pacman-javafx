@@ -45,7 +45,6 @@ public class Pac3DAnimationController {
     public void setPowerMode(boolean power) {
         animations.optAnimation(Pac3D.AnimationID.MOVING, Pac3DMovementAnimation.class)
             .ifPresent(movement -> movement.setPowerMode(power));
-
     }
 
     /**

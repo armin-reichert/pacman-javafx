@@ -34,7 +34,7 @@ public class AnimationRegistry {
         requireNonNull(type);
         final ManagedAnimation managedAnimation = animationMap.get(key);
         if (managedAnimation == null) {
-            Logger.error("No animation with key '{}' exists");
+            Logger.error("No animation with key '{}' exists", key);
             throw new NoSuchElementException();
         }
         if (type.isInstance(managedAnimation)) {

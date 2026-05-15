@@ -13,11 +13,11 @@ import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
-public class MsPacMan3DDyingAnimation extends ManagedAnimation {
+public class MsPacManDyingAnimation3D extends ManagedAnimation {
 
     private final Pac3D msPacMan3D;
 
-    public MsPacMan3DDyingAnimation(Pac3D msPacMan3D) {
+    public MsPacManDyingAnimation3D(Pac3D msPacMan3D) {
         super("Ms. Pac-Man Dying");
         this.msPacMan3D = requireNonNull(msPacMan3D);
         setFactory(this::createAnimation);
