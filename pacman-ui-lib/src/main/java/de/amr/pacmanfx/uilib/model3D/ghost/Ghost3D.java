@@ -71,17 +71,16 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         this.animations = requireNonNull(animations);
         this.ghost = requireNonNull(ghost);
         this.config = requireNonNull(config);
-        requireNonNull(meshSet);
         this.materialSet = requireNonNull(materialSet);
 
-        buildStructure(meshSet);
-        setTransforms();
+        buildTransformHierarchy(requireNonNull(meshSet));
 
         animations.register(AnimationID.NORMAL.key(ghost), new GhostDressAnimation3D(ghost, dressGroup));
         animations.register(AnimationID.FLASHING.key(ghost), new GhostFlashingAnimation3D(ghost, materialSet, config.colors()));
         animations.register(AnimationID.BRAKING.key(ghost), new GhostBrakeAnimation3D(this));
     }
 
+    @Override
     public void init(GameLevel level) {
         assertControllersAssigned();
         transformController.update(level.worldMap());
@@ -144,23 +143,23 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         this.appearanceController = requireNonNull(appearanceController);
     }
 
-    public void setNormalLook() {
+    public void lookNormal() {
         flashingDressAnimation().stop();
         normalDressAnimation().playOrContinue();
         dressShape.setVisible(true);
         setShapeMaterials(materialSet.normalMaterial());
     }
 
-    public void setFrightenedLook() {
+    public void lookFrightened() {
         flashingDressAnimation().stop();
         normalDressAnimation().playOrContinue();
         dressShape.setVisible(true);
         setShapeMaterials(materialSet.frightenedMaterial());
     }
 
-    public void setFlashingLook(int numFlashes) {
+    public void lookFlashing(int numFlashes) {
         if (numFlashes == 0) {
-            setFrightenedLook();
+            lookFrightened();
             return;
         }
         setShapeMaterials(materialSet.flashingMaterial());
@@ -176,7 +175,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         flashing.playOrContinue();
     }
 
-    public void setEyesOnlyLook() {
+    public void lookEyesOnly() {
         stopAllAnimations();
         dressShape.setVisible(false);
         setShapeMaterials(materialSet.normalMaterial());
@@ -190,28 +189,24 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         }
     }
 
-    public GhostAppearance frightenedAppearance(boolean powerFading) {
-        return powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
-    }
-
-    // private area, no trespassing
+    // Private Area, no trespassing!
 
     private void assertControllersAssigned() {
         requireNonNull(transformController, "No transform controller has been assigned");
         requireNonNull(appearanceController, "No appearance controller has been assigned");
     }
 
-    private void buildStructure(GhostMeshSet meshSet) {
+    private void buildTransformHierarchy(GhostMeshSet meshSet) {
         dressShape    = new MeshView(meshSet.dress());
         pupilsShape   = new MeshView(meshSet.pupils());
         eyeballsShape = new MeshView(meshSet.eyeballs());
-        dressGroup = new Group(dressShape);
-        eyesGroup = new Group(pupilsShape, eyeballsShape);
-        facingGroup = new Group(dressGroup, eyesGroup);
+        dressGroup    = new Group(dressShape);
+        eyesGroup     = new Group(pupilsShape, eyeballsShape);
+        facingGroup   = new Group(dressGroup, eyesGroup);
         getChildren().setAll(facingGroup);
-    }
 
-    private void setTransforms() {
+        // Set transforms
+
         final Bounds dressBounds = dressShape.getBoundsInLocal();
 
         final Translate centerAtOrigin = new Translate(
@@ -219,14 +214,15 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
             -dressBounds.getCenterY(),
             -dressBounds.getCenterZ());
 
+        dressShape.getTransforms().add(centerAtOrigin);
+        eyesGroup .getTransforms().add(centerAtOrigin);
+
         final Scale scale = new Scale(
             config().size3D() / dressBounds.getWidth(),
             config().size3D() / dressBounds.getHeight(),
             config().size3D() / dressBounds.getDepth());
 
         getTransforms().add(scale);
-        dressShape.getTransforms().add(centerAtOrigin);
-        eyesGroup.getTransforms().add(centerAtOrigin);
     }
 
     private void setShapeMaterials(GhostComponentMaterialSet materialSet) {

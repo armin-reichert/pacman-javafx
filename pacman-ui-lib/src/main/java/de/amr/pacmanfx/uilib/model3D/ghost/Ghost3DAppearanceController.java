@@ -43,12 +43,12 @@ public class Ghost3DAppearanceController {
                 final boolean powerFading = pac.isPowerFading(level);
                 final boolean killedDuringCurrentPhase = level.energizerVictims().contains(ghost);
                 yield powerActive && !killedDuringCurrentPhase
-                    ? ghost3D.frightenedAppearance(powerFading)
+                    ? powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED
                     : GhostAppearance.NORMAL;
             }
             case FRIGHTENED -> {
                 final boolean powerFading = pac.isPowerFading(level);
-                yield ghost3D.frightenedAppearance(powerFading);
+                yield powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
             }
             case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EYES;
             default -> GhostAppearance.NORMAL;
@@ -58,20 +58,20 @@ public class Ghost3DAppearanceController {
     private void setGhostAppearance(Ghost3D ghost3D, GhostAppearance ghostAppearance) {
         switch (ghostAppearance) {
             case NORMAL -> {
-                ghost3D.setNormalLook();
+                ghost3D.lookNormal();
                 ghost3D.animateNormalDress(ghost3D.isVisible());
                 brakeIfTunnelEntered(ghost3D);
             }
             case FRIGHTENED -> {
-                ghost3D.setFrightenedLook();
+                ghost3D.lookFrightened();
                 ghost3D.animateNormalDress(ghost3D.isVisible());
             }
             case FLASHING -> {
-                ghost3D.setFlashingLook(numFlashes);
+                ghost3D.lookFlashing(numFlashes);
                 ghost3D.animateNormalDress(ghost3D.isVisible());
             }
             case EYES -> {
-                ghost3D.setEyesOnlyLook();
+                ghost3D.lookEyesOnly();
                 ghost3D.animateNormalDress(false);
             }
         }
