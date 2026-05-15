@@ -18,7 +18,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.TerrainLayer;
-import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
@@ -266,7 +265,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private Ghost3D createGhost3D(GhostConfig ghostConfig, Ghost ghost) {
         final var ghost3D = uiConfig.factory3D().createGhost3D(ghost, ghostConfig, animations3D);
-        ghost3D.appearanceController().setNumFlashes(level.numFlashes());
+        final var appearanceController = new Ghost3DAppearanceController();
+        appearanceController.setNumFlashes(level.numFlashes());
+        ghost3D.setAppearanceController(appearanceController);
         return ghost3D;
     }
 
@@ -305,18 +306,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             });
         messageManager.setMessageCenter(MessageManager3D.MessageType.TEST,
             vec2_float(terrain.numCols() * HTS, (terrain.numRows() - 2) * TS));
-    }
-
-    /**
-     * Determines if the given ghost's center position is outside the visible world bounds.
-     *
-     * @param worldMap the world map
-     * @param ghost the ghost to check
-     * @return true if the ghost is outside the world bounds
-     */
-    private static boolean outsideWorld(WorldMap worldMap, Ghost ghost) {
-        final Vector2f center = ghost.center();
-        return center.x() < HTS || center.x() > worldMap.numCols() * TS - HTS;
     }
 
     // Bonus

@@ -65,7 +65,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     private final Rotate facingRotation = new Rotate(0, Rotate.Z_AXIS);
     private final Scale scaling = new Scale(1, 1, 1);
 
-    private final Ghost3DAppearanceController appearanceController;
+    private Ghost3DAppearanceController appearanceController;
 
     private ChangeListener<Vector2f> positionChangeListener = (_, _, _) -> updateTransform();
     private ChangeListener<Direction> wishDirChangeListener = (_, _, _) -> updateTransform();
@@ -73,14 +73,12 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     public Ghost3D(
         ManagedAnimationsRegistry animations,
         Ghost ghost,
-        Ghost3DAppearanceController appearanceController,
         GhostConfig config,
         GhostMeshSet meshSet,
         GhostMaterialSet materialSet)
     {
         this.animations = requireNonNull(animations);
         this.ghost = requireNonNull(ghost);
-        this.appearanceController = requireNonNull(appearanceController);
         this.config = requireNonNull(config);
 
         requireNonNull(meshSet);
@@ -119,6 +117,10 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         addPropertyChangeListeners();
     }
 
+    public void setAppearanceController(Ghost3DAppearanceController appearanceController) {
+        this.appearanceController = requireNonNull(appearanceController);
+    }
+
     @Override
     public void init(GameLevel level) {
         updateTransform();
@@ -151,10 +153,6 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         dressShape = null;
         pupilsShape = null;
         eyeballsShape = null;
-    }
-
-    public Ghost3DAppearanceController appearanceController() {
-        return appearanceController;
     }
 
     public Ghost ghost() {

@@ -101,7 +101,6 @@ public class DefaultFactory3D implements Factory3D {
         return new Ghost3D(
             animations,
             ghost,
-            new Ghost3DAppearanceController(),
             config,
             new GhostMeshSet(
                 PacManWorld3D.instance().ghostDressMesh(),
