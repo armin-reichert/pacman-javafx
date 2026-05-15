@@ -200,9 +200,8 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
     /*
         this (Group)
-          + facingGroup (Group)
-             + dressGroup (Group)
-               - dressShape (MeshView)
+          + facingGroup (Group: facing rotation, model orientation adaption)
+             - dressShape (MeshView, dress rotation animation)
              + eyesGroup (Group)
                - pupilsShape (MeshView)
                - eyeballsShape (MeshView)
