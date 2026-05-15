@@ -121,9 +121,8 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
     @Override
     public void init(GameLevel level) {
-        stopAllAnimations();
         updateTransform();
-        appearanceController.setGhostAppearance(this, GhostAppearance.NORMAL);
+        appearanceController.init(this, level);
     }
 
     @Override
@@ -133,7 +132,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         if (ghost.moveInfo().tunnelEntered) {
             animations.animation(AnimationID.GHOST_BRAKING.forGhost(ghost)).playFromStart();
         }
-        animateDress(isVisible());
+
         appearanceController.update(this, level);
     }
 

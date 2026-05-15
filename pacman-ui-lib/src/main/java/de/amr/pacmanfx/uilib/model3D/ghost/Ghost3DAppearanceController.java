@@ -22,6 +22,11 @@ public class Ghost3DAppearanceController {
         this.numFlashes = numFlashes;
     }
 
+    public void init(Ghost3D ghost3D, GameLevel level) {
+        ghost3D.stopAllAnimations();
+        setGhostAppearance(ghost3D, GhostAppearance.NORMAL);
+    }
+
     public void update(Ghost3D ghost3D, GameLevel level) {
         final GhostState ghostState = ghost3D.ghost().state();
 
@@ -45,13 +50,23 @@ public class Ghost3DAppearanceController {
 
     public void setGhostAppearance(Ghost3D ghost3D, GhostAppearance ghostAppearance) {
         switch (ghostAppearance) {
-            case NORMAL -> ghost3D.setNormalLook();
-            case FRIGHTENED -> ghost3D.setFrightenedLook();
-            case EYES -> ghost3D.setEyesOnlyLook();
-            case FLASHING -> ghost3D.setFlashingLook(numFlashes);
+            case NORMAL -> {
+                ghost3D.setNormalLook();
+                ghost3D.animateDress(ghost3D.isVisible());
+            }
+            case FRIGHTENED -> {
+                ghost3D.setFrightenedLook();
+                ghost3D.animateDress(ghost3D.isVisible());
+            }
+            case FLASHING -> {
+                ghost3D.setFlashingLook(numFlashes);
+                ghost3D.animateDress(ghost3D.isVisible());
+            }
+            case EYES -> {
+                ghost3D.setEyesOnlyLook();
+                ghost3D.animateDress(false);
+            }
         }
-        ghost3D.animateDress(true);
-
         Logger.debug("Ghost appearance for {} is now {}", ghost3D.ghost().name(), ghostAppearance);
     }
 }
