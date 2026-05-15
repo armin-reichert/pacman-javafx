@@ -4,12 +4,9 @@
 
 package de.amr.pacmanfx.uilib.model3D.ghost;
 
-import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.WeakChangeListener;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -18,25 +15,10 @@ public class Ghost3DTransformController {
 
     private static final double HEIGHT_OVER_FLOOR = 2.0;
 
-    private boolean listenersRegistered;
-
     public Ghost3DTransformController() {}
 
     public void init(Ghost3D ghost3D, WorldMap worldMap) {
-        addListeners(ghost3D, worldMap);
         update(ghost3D, worldMap);
-    }
-
-    private void addListeners(Ghost3D ghost3D, WorldMap worldMap) {
-        if (listenersRegistered) return;
-
-        final ChangeListener<Vector2f> positionListener = (_,_,_) -> update(ghost3D, worldMap);
-        ghost3D.ghost().positionProperty().addListener(new WeakChangeListener<>(positionListener));
-
-        final ChangeListener<Direction> wishDirListener = (_,_,_) -> update(ghost3D, worldMap);
-        ghost3D.ghost().wishDirProperty().addListener(new WeakChangeListener<>(wishDirListener));
-
-        listenersRegistered = true;
     }
 
     public void update(Ghost3D ghost3D, WorldMap worldMap) {
