@@ -101,15 +101,12 @@ public class DefaultFactory3D implements Factory3D {
         return new Ghost3D(
             animations,
             ghost,
-            config.colors(),
+            config,
             new GhostMeshSet(
                 PacManWorld3D.instance().ghostDressMesh(),
                 PacManWorld3D.instance().ghostPupilsMesh(),
-                PacManWorld3D.instance().ghostEyeballsMesh()
-            ),
-            materials,
-            config.size3D()
-        );
+                PacManWorld3D.instance().ghostEyeballsMesh()),
+            materials);
     }
 
     @Override

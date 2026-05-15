@@ -30,7 +30,6 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
 
@@ -57,12 +56,10 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     private static final double HEIGHT_OVER_FLOOR = 2.0;
 
     private final ManagedAnimationsRegistry animations;
-
     private final Ghost ghost;
+    private final GhostConfig config;
 
-    private final GhostAppearanceColors colors;
     private GhostMaterialSet materialSet;
-    private final double size;
 
     private MeshView dressShape;
     private MeshView pupilsShape;
@@ -79,14 +76,13 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     public Ghost3D(
         ManagedAnimationsRegistry animations,
         Ghost ghost,
-        GhostAppearanceColors colors,
+        GhostConfig config,
         GhostMeshSet meshSet,
-        GhostMaterialSet materialSet,
-        double size)
+        GhostMaterialSet materialSet)
     {
         this.animations = requireNonNull(animations);
         this.ghost = requireNonNull(ghost);
-        this.colors = requireNonNull(colors);
+        this.config = requireNonNull(config);
 
         requireNonNull(meshSet);
         this.dressShape    = new MeshView(meshSet.dress());
@@ -94,7 +90,6 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         this.eyeballsShape = new MeshView(meshSet.eyeballs());
 
         this.materialSet = requireNonNull(materialSet);
-        this.size = requireNonNegative(size);
 
         final Group facingGroup = new Group();
         final Group dressGroup = new Group(dressShape);
@@ -111,11 +106,16 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         dressShape.getTransforms().add(originCentered);
         eyesGroup.getTransforms().add(originCentered);
 
-        animations.register(AnimationID.GHOST_DRESS.forGhost(ghost),    new GhostDressAnimation3D(ghost, dressGroup));
-        animations.register(AnimationID.GHOST_FLASHING.forGhost(ghost), new GhostFlashingAnimation3D(ghost, materialSet, colors));
-        animations.register(AnimationID.GHOST_BRAKING.forGhost(ghost), new GhostBrakeAnimation3D(this));
+        animations.register(AnimationID.GHOST_DRESS.forGhost(ghost),
+            new GhostDressAnimation3D(ghost, dressGroup));
 
-        setSize(size);
+        animations.register(AnimationID.GHOST_FLASHING.forGhost(ghost),
+            new GhostFlashingAnimation3D(ghost, materialSet, config.colors()));
+
+        animations.register(AnimationID.GHOST_BRAKING.forGhost(ghost),
+            new GhostBrakeAnimation3D(this));
+
+        setSize(config.size3D());
         updateTransform();
         addPropertyChangeListeners();
         setGhostAppearance(GhostAppearance.NORMAL);
@@ -163,8 +163,8 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         return ghost;
     }
 
-    public GhostAppearanceColors colors() {
-        return colors;
+    public GhostConfig config() {
+        return config;
     }
 
     public GhostMaterialSet materials() {
@@ -277,7 +277,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         final Vector2f center = ghost.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
-        setTranslateZ(- (0.5 * size + HEIGHT_OVER_FLOOR));
+        setTranslateZ(-(config.size3D()/2 + HEIGHT_OVER_FLOOR));
         facingRotation.setAngle(switch (ghost.wishDir()) {
             case LEFT  -> 0;
             case UP    -> 90;

@@ -10,6 +10,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.PointLight;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -43,7 +44,7 @@ public class GhostLightAnimation extends ManagedAnimation {
 
     @Override
     public void playFromStart() {
-        illuminateGhost(RED_GHOST_SHADOW);
+        illuminateGhost(RED_GHOST_SHADOW, lightColor(RED_GHOST_SHADOW));
         super.playFromStart();
     }
 
@@ -54,9 +55,9 @@ public class GhostLightAnimation extends ManagedAnimation {
     /**
      * Moves the spotlight to the given ghost and updates its color.
      */
-    private void illuminateGhost(byte ghostID) {
+    private void illuminateGhost(byte ghostID, Color color) {
         final Ghost3D ghost3D = ghosts3D.get(ghostID);
-        light.setColor(ghost3D.colors().normalColors().dressColor());
+        light.setColor(color);
         light.translateXProperty().bind(ghost3D.translateXProperty());
         light.translateYProperty().bind(ghost3D.translateYProperty());
         light.setTranslateZ(-LIGHT_HEIGHT_OVER_FLOOR);
@@ -85,7 +86,7 @@ public class GhostLightAnimation extends ManagedAnimation {
     private void passGhostLightToNextHunter() {
         final byte nextID = findNextHunter();
         if (nextID != -1) {
-            illuminateGhost(nextID);
+            illuminateGhost(nextID, lightColor(nextID));
         } else {
             turnLightOff();
         }
@@ -104,5 +105,9 @@ public class GhostLightAnimation extends ManagedAnimation {
 
     private byte nextGhostID(int id) {
         return (byte) ((id + 1) % ghosts3D.size());
+    }
+
+    private Color lightColor(byte id) {
+        return ghosts3D.get(id).config().colors().normalColors().dressColor();
     }
 }
