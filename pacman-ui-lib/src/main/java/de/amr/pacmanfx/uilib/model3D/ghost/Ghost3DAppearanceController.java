@@ -59,16 +59,16 @@ public class Ghost3DAppearanceController {
         switch (ghostAppearance) {
             case NORMAL -> {
                 ghost3D.lookNormal();
-                ghost3D.animateNormalDress(ghost3D.isVisible());
+                ghost3D.animateNormalDress(true);
                 brakeIfTunnelEntered(ghost3D);
             }
             case FRIGHTENED -> {
                 ghost3D.lookFrightened();
-                ghost3D.animateNormalDress(ghost3D.isVisible());
+                ghost3D.animateNormalDress(true);
             }
             case FLASHING -> {
                 ghost3D.lookFlashing(numFlashes);
-                ghost3D.animateNormalDress(ghost3D.isVisible());
+                ghost3D.animateNormalDress(true);
             }
             case EYES -> {
                 ghost3D.lookEyesOnly();

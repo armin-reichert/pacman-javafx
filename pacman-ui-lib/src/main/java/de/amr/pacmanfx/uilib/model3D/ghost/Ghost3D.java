@@ -200,6 +200,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         dressShape    = new MeshView(meshSet.dress());
         pupilsShape   = new MeshView(meshSet.pupils());
         eyeballsShape = new MeshView(meshSet.eyeballs());
+
         dressGroup    = new Group(dressShape);
         eyesGroup     = new Group(pupilsShape, eyeballsShape);
         facingGroup   = new Group(dressGroup, eyesGroup);
