@@ -81,12 +81,14 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     }
 
     public void init(GameLevel level) {
+        assertControllersAssigned();
         transformController.update(level.worldMap());
         appearanceController.init(this);
     }
 
     @Override
     public void update(GameLevel level) {
+        assertControllersAssigned();
         transformController.update(level.worldMap());
         appearanceController.update(this, level);
     }
@@ -196,6 +198,11 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     }
 
     // private area, no trespassing
+
+    private void assertControllersAssigned() {
+        requireNonNull(transformController, "No transform controller has been assigned");
+        requireNonNull(appearanceController, "No appearance controller has been assigned");
+    }
 
     private void buildStructure(GhostMeshSet meshSet) {
         dressShape    = new MeshView(meshSet.dress());
