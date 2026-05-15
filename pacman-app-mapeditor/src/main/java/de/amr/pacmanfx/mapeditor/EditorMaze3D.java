@@ -124,7 +124,7 @@ public class EditorMaze3D extends Group {
 
         foodGroup.visibleProperty().bind(foodVisible);
 
-        pacmanShape3D = Pac3DFactory.createPacBody(PAC_CONFIG);
+        pacmanShape3D = Pac3DFactory.createPacBody(PAC_CONFIG, true);
         pacmanShape3D.visibleProperty().bind(actorsVisibleProperty());
 
         ghostShapes = new Group[] {

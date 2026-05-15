@@ -55,7 +55,7 @@ public class Pac3DFactory {
         requireNonNull(pac);
         requireNonNull(config);
 
-        final Pac3D pac3D = new Pac3D(animations, pac, createPacBody(config), createBlindPacBody(config));
+        final Pac3D pac3D = new Pac3D(animations, pac, createPacBody(config, true), createPacBody(config, false));
         addPowerLight(pac3D, config.colors().headColor().desaturate());
 
         return pac3D;
@@ -74,38 +74,25 @@ public class Pac3DFactory {
      * Creates a fully assembled Pac-Man body with head, eyes, and palate.
      *
      * @param config the Pac configuration
+     * @param withEyes if Pac has eyes
      * @return a new Pac body group
      */
-    public static Group createPacBody(PacConfig config) {
+    public static Group createPacBody(PacConfig config, boolean withEyes) {
         requireNonNull(config);
         final MeshView head = createPacHead(config);
         final MeshView eyes = createPacEyes(config);
         final MeshView palate = createPacPalate(config);
-        final Group body = new Group(head, eyes, palate);
-        final Translate toOrigin = moveToOrigin(head);
-        List.of(head, eyes, palate).forEach(node -> node.getTransforms().add(toOrigin));
-        body.getTransforms().addAll(
-            scaleTo(body, config.size3D()),
-            PacManWorld3D.ORIENTATION_ADJUSTMENT);
-        return body;
-    }
 
-    /**
-     * Creates a Pac-Man body without eyes (used for jaw open/close animation).
-     *
-     * @param config the Pac configuration
-     * @return a Pac body without eyes
-     */
-    public static Group createBlindPacBody(PacConfig config) {
-        requireNonNull(config);
-        final MeshView head = createPacHead(config);
-        final MeshView palate = createPacPalate(config);
-        final Group body = new Group(head, palate);
+        final List<Node> parts = withEyes ? List.of(head, eyes, palate) : List.of(head, palate);
+        final Group body = new Group(parts);
+
         final Translate toOrigin = moveToOrigin(head);
-        List.of(head, palate).forEach(node -> node.getTransforms().add(toOrigin));
+        parts.forEach(node -> node.getTransforms().add(toOrigin));
+
         body.getTransforms().addAll(
             scaleTo(body, config.size3D()),
             PacManWorld3D.ORIENTATION_ADJUSTMENT);
+
         return body;
     }
 
@@ -189,7 +176,7 @@ public class Pac3DFactory {
      * @return a new Ms Pac-Man body instance
      */
     public static Group createMsPacManBody(PacConfig config) {
-        return new Group(createPacBody(config), createFemalePacBodyParts(config));
+        return new Group(createPacBody(config, true), createFemalePacBodyParts(config));
     }
 
     private static Translate moveToOrigin(Node node) {

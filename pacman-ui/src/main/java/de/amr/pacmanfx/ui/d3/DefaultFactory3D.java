@@ -100,7 +100,7 @@ public class DefaultFactory3D implements Factory3D {
     public Group createLivesCounterShape3D(EntityConfig config) {
         requireNonNull(config);
         final PacConfig pacConfig = config.pacConfig().withModifiedSize3D(config.livesCounter().shapeSize());
-        return Pac3DFactory.createPacBody(pacConfig);
+        return Pac3DFactory.createPacBody(pacConfig, true);
     }
 
     @Override
