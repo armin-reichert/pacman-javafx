@@ -92,30 +92,23 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Ghost3D createGhostAppearance3D(
-        Ghost ghost,
-        GhostConfig ghostConfig,
-        ManagedAnimationsRegistry animations)
-    {
+    public Ghost3D createGhost3D(Ghost ghost, GhostConfig config, ManagedAnimationsRegistry animations) {
         requireNonNull(ghost);
-        requireNonNull(ghostConfig);
+        requireNonNull(config);
         requireNonNull(animations);
 
-        final GhostAppearanceColors colors = ghostConfig.createGhostColorSet();
-        final GhostMaterialSet materials = ghostMaterialsCache.computeIfAbsent(colors, this::createGhostMaterial);
-        final GhostMeshSet meshSet = new GhostMeshSet(
-            PacManWorld3D.instance().ghostDressMesh(),
-            PacManWorld3D.instance().ghostPupilsMesh(),
-            PacManWorld3D.instance().ghostEyeballsMesh()
-        );
-
+        final GhostMaterialSet materials = ghostMaterialsCache.computeIfAbsent(config.colors(), this::createGhostMaterial);
         return new Ghost3D(
             animations,
             ghost,
-            colors,
-            meshSet,
+            config.colors(),
+            new GhostMeshSet(
+                PacManWorld3D.instance().ghostDressMesh(),
+                PacManWorld3D.instance().ghostPupilsMesh(),
+                PacManWorld3D.instance().ghostEyeballsMesh()
+            ),
             materials,
-            ghostConfig.size3D()
+            config.size3D()
         );
     }
 
@@ -150,21 +143,21 @@ public class DefaultFactory3D implements Factory3D {
 
     public GhostMaterialSet createGhostMaterial(GhostAppearanceColors colors) {
         final var normalMaterials = new GhostComponentMaterialSet(
-            coloredPhongMaterial(colors.normalColor().dressColor()),
-            coloredPhongMaterial(colors.normalColor().eyeballsColor()),
-            coloredPhongMaterial(colors.normalColor().pupilsColor())
+            coloredPhongMaterial(colors.normalColors().dressColor()),
+            coloredPhongMaterial(colors.normalColors().eyeballsColor()),
+            coloredPhongMaterial(colors.normalColors().pupilsColor())
         );
 
         final var frightenedMaterials = new GhostComponentMaterialSet(
-            coloredPhongMaterial(colors.frightenedColor().dressColor()),
-            coloredPhongMaterial(colors.frightenedColor().eyeballsColor()),
-            coloredPhongMaterial(colors.frightenedColor().pupilsColor())
+            coloredPhongMaterial(colors.frightenedColors().dressColor()),
+            coloredPhongMaterial(colors.frightenedColors().eyeballsColor()),
+            coloredPhongMaterial(colors.frightenedColors().pupilsColor())
         );
 
         final var flashingMaterials = new GhostComponentMaterialSet(
-            coloredPhongMaterial(colors.flashingColor().dressColor()),
-            coloredPhongMaterial(colors.flashingColor().eyeballsColor()),
-            coloredPhongMaterial(colors.flashingColor().pupilsColor())
+            coloredPhongMaterial(colors.flashingColors().dressColor()),
+            coloredPhongMaterial(colors.flashingColors().eyeballsColor()),
+            coloredPhongMaterial(colors.flashingColors().pupilsColor())
         );
 
         Logger.info("Created ghost materials for color set {}", colors);

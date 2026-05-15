@@ -56,7 +56,7 @@ public class GhostLightAnimation extends ManagedAnimation {
      */
     private void illuminateGhost(byte ghostID) {
         final Ghost3D ghost3D = ghosts3D.get(ghostID);
-        light.setColor(ghost3D.colors().normalColor().dressColor());
+        light.setColor(ghost3D.colors().normalColors().dressColor());
         light.translateXProperty().bind(ghost3D.translateXProperty());
         light.translateYProperty().bind(ghost3D.translateYProperty());
         light.setTranslateZ(-LIGHT_HEIGHT_OVER_FLOOR);

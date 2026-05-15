@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.uilib.model3D.ghost;
 
 public record GhostAppearanceColors(
-    GhostColors normalColor,
-    GhostColors frightenedColor,
-    GhostColors flashingColor) {
-}
+    GhostColors normalColors,
+    GhostColors frightenedColors,
+    GhostColors flashingColors)
+{}

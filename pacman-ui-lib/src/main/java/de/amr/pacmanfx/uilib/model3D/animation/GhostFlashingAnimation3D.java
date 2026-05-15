@@ -52,20 +52,20 @@ public class GhostFlashingAnimation3D extends ManagedAnimation {
         final GhostComponentMaterialSet flashingMaterialSet = materialSet.flashingMaterial();
         final var flashingTimeline = new Timeline(
             new KeyFrame(highlightTime,
-                new KeyValue(flashingMaterialSet.dressMaterial().diffuseColorProperty(), colors.flashingColor().dressColor()),
-                new KeyValue(flashingMaterialSet.pupilsMaterial().diffuseColorProperty(), colors.flashingColor().pupilsColor())
+                new KeyValue(flashingMaterialSet.dressMaterial().diffuseColorProperty(), colors.flashingColors().dressColor()),
+                new KeyValue(flashingMaterialSet.pupilsMaterial().diffuseColorProperty(), colors.flashingColors().pupilsColor())
             ),
             new KeyFrame(flashEndTime,
-                new KeyValue(flashingMaterialSet.dressMaterial().diffuseColorProperty(), colors.frightenedColor().dressColor()),
-                new KeyValue(flashingMaterialSet.pupilsMaterial().diffuseColorProperty(), colors.frightenedColor().pupilsColor())
+                new KeyValue(flashingMaterialSet.dressMaterial().diffuseColorProperty(), colors.frightenedColors().dressColor()),
+                new KeyValue(flashingMaterialSet.pupilsMaterial().diffuseColorProperty(), colors.frightenedColors().pupilsColor())
             )
         );
         flashingTimeline.setCycleCount(numFlashes);
         flashingTimeline.setOnFinished(_ -> {
-            flashingMaterialSet.dressMaterial().setDiffuseColor(colors.frightenedColor().dressColor());
-            flashingMaterialSet.dressMaterial().setSpecularColor(colors.frightenedColor().dressColor().brighter());
-            flashingMaterialSet.pupilsMaterial().setDiffuseColor(colors.frightenedColor().pupilsColor());
-            flashingMaterialSet.pupilsMaterial().setSpecularColor(colors.frightenedColor().pupilsColor().brighter());
+            flashingMaterialSet.dressMaterial().setDiffuseColor(colors.frightenedColors().dressColor());
+            flashingMaterialSet.dressMaterial().setSpecularColor(colors.frightenedColors().dressColor().brighter());
+            flashingMaterialSet.pupilsMaterial().setDiffuseColor(colors.frightenedColors().pupilsColor());
+            flashingMaterialSet.pupilsMaterial().setSpecularColor(colors.frightenedColors().pupilsColor().brighter());
         });
         return flashingTimeline;
     }

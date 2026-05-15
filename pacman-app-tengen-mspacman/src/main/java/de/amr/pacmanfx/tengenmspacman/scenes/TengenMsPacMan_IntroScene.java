@@ -72,7 +72,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
         final List<GhostConfig> ghostConfigs = uiConfig.entityConfig().ghostConfigs();
         ghostColors = Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
-            .map(personality -> ghostConfigs.get(personality).normalColors().dressColor())
+            .map(personality -> ghostConfigs.get(personality).colors().normalColors().dressColor())
             .toArray(Color[]::new);
 
         marquee = new Marquee();
