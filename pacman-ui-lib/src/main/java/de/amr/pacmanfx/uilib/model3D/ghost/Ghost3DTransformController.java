@@ -18,10 +18,6 @@ public class Ghost3DTransformController {
 
     private static final double HEIGHT_OVER_FLOOR = 2.0;
 
-    private ChangeListener<Vector2f> positionListener;
-    private ChangeListener<Direction> wishDirListener;
-
-
     private boolean listenersRegistered;
 
     public Ghost3DTransformController() {}
@@ -34,10 +30,10 @@ public class Ghost3DTransformController {
     private void addListeners(Ghost3D ghost3D, WorldMap worldMap) {
         if (listenersRegistered) return;
 
-        positionListener = (_,_,_) -> update(ghost3D, worldMap);
+        final ChangeListener<Vector2f> positionListener = (_,_,_) -> update(ghost3D, worldMap);
         ghost3D.ghost().positionProperty().addListener(new WeakChangeListener<>(positionListener));
 
-        wishDirListener = (_,_,_) -> update(ghost3D, worldMap);
+        final ChangeListener<Direction> wishDirListener = (_,_,_) -> update(ghost3D, worldMap);
         ghost3D.ghost().wishDirProperty().addListener(new WeakChangeListener<>(wishDirListener));
 
         listenersRegistered = true;
