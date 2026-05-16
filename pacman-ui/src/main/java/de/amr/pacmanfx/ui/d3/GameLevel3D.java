@@ -175,8 +175,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return animationRegistry;
     }
 
-    public Optional<GameSoundEffects> soundEffects() {
-        return uiConfig.soundEffects();
+    public Optional<GameSoundEffects> optSoundEffects() {
+        return uiConfig.optSoundEffects();
     }
 
     public GameLevel level() {
@@ -464,7 +464,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     public void onBonusActivated(BonusActivatedEvent gameEvent) {
         addOrReplaceBonus3D(gameEvent.bonus());
-        soundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
+        optSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
 
     /**
@@ -472,7 +472,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     public void onBonusEaten(BonusEatenEvent ignoredEvent) {
         entities3D.first(Bonus3D.class).ifPresent(Bonus3D::showEaten);
-        soundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
+        optSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     /**
@@ -480,7 +480,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     public void onBonusExpired(BonusExpiredEvent ignoredEvent) {
         entities3D.first(Bonus3D.class).ifPresent(Bonus3D::expire);
-        soundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
+        optSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
     /**
@@ -498,7 +498,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final State<Game> state = game.flow().state();
         final boolean silent = game.isDemoLevelRunning() || state instanceof TestState;
         if (!silent) {
-            soundEffects().ifPresent(GameSoundEffects::playGameReadySound);
+            optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
         messageManager().showMessage(MessageManager3D.MessageType.READY);
     }
@@ -507,7 +507,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Plays sound when a ghost is eaten.
      */
     public void onGhostEaten(GhostEatenEvent ignoredEvent) {
-        soundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
+        optSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
     }
 
     /**
@@ -518,7 +518,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             removeAllPellets3D(this);
         } else {
             eatFoodAtTile(this, gameEvent.pac().tile());
-            soundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
+            optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
         }
     }
 
@@ -528,11 +528,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void onPacGetsPower(PacGetsPowerEvent ignoredEvent) {
         final Pac3D pac3D = entities3D.unique(Pac3D.class);
         final Game game = level.game();
-        soundEffects().ifPresent(GameSoundEffects::stopSiren);
+        optSoundEffects().ifPresent(GameSoundEffects::stopSiren);
         if (!game.isLevelCompleted()) {
             pac3D.setPowerMode(true);
             animationRegistry.animation(AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).playFromStart();
-            soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+            optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
     }
 
@@ -542,11 +542,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void onPacLostPower(PacLostPowerEvent ignoredEvent) {
         entities3D.unique(Pac3D.class).setPowerMode(false);
         animationRegistry.animation(AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).stop();
-        soundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
+        optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
 
     public void onSpecialScoreReached(SpecialScoreEvent ignoredEvent) {
-        soundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
+        optSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
 
     // Private state-specific handlers
@@ -567,7 +567,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Pac3D pac3D = entities3D.unique(Pac3D.class);
         gameState.lock();
 
-        soundEffects().ifPresent(GameSoundEffects::stopAll);
+        optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
         // Do not stop all animations!
         animationRegistry.animation(AnimationID.GHOST_LIGHT).stop();
@@ -589,7 +589,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 animationRegistry.animation(Pac3D.AnimationID.MOVING).stop();
             }),
             pauseSec(1.5),
-            doNow(() -> soundEffects().ifPresent(GameSoundEffects::playPacDeadSound)),
+            doNow(() -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound)),
             animationRegistry.animation(Pac3D.AnimationID.DYING).animationFX(),
             pauseSec(0.5)
         );
@@ -652,7 +652,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final State<Game> gameState = level.game().flow().state();
         final Maze3D maze3D = entities3D.unique(Maze3D.class);
 
-        soundEffects().ifPresent(GameSoundEffects::stopAll);
+        optSoundEffects().ifPresent(GameSoundEffects::stopAll);
         animationRegistry().stopAllAnimations();
         cleanupFoodAndParticles();
         maze3D.house().hideDoors();
@@ -668,7 +668,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         if (!level.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
             ui.showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
         }
-        soundEffects().ifPresent(GameSoundEffects::playGameOverSound);
+        optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 
     private void cleanupFoodAndParticles() {

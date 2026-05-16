@@ -51,7 +51,7 @@ public abstract class GameScene implements GameEventListener, Disposable {
      * @return the (optional) game sound effects
      */
     public Optional<GameSoundEffects> soundEffects() {
-        return ui().currentConfig().soundEffects();
+        return ui().currentConfig().optSoundEffects();
 
     }
     /**

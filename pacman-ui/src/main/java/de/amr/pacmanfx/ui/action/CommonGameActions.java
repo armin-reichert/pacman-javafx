@@ -293,7 +293,7 @@ public final class CommonGameActions {
             toggleBoolean(gameContext.clock().updatesDisabledProperty());
             if (gameContext.clock().getUpdatesDisabled()) {
                 ui.soundManager().stopAll();
-                ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::stopAll);
+                ui.currentConfig().optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             }
             Logger.info("Game ({}) {}", ui.gameContext().gameVariantName(), ui.gameContext().clock().getUpdatesDisabled() ? "paused" : "resumed");
         }

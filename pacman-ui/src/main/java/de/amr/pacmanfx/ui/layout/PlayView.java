@@ -491,7 +491,7 @@ public class PlayView extends StackPane implements View {
         playScene3D.fadeIn();
 
         if (level.pac().powerTimer().isRunning()) {
-            ui.currentConfig().soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+            ui.currentConfig().optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
 
         ui.gameContext().clock().setUpdatesDisabled(false);

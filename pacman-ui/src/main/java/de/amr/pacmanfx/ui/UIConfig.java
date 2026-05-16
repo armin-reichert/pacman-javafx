@@ -176,7 +176,7 @@ public interface UIConfig extends Disposable {
 
     Factory3D factory3D();
 
-    Optional<GameSoundEffects> soundEffects();
+    Optional<GameSoundEffects> optSoundEffects();
 
     /**
      * Returns the scene-configuration object that determines which scene should be

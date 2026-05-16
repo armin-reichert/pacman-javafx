@@ -235,7 +235,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     }
 
     @Override
-    public Optional<GameSoundEffects> soundEffects() {
+    public Optional<GameSoundEffects> optSoundEffects() {
         return Optional.ofNullable(soundEffects);
     }
 

@@ -334,7 +334,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public Optional<GameSoundEffects> soundEffects() {
+    public Optional<GameSoundEffects> optSoundEffects() {
         return Optional.ofNullable(soundEffects);
     }
 
