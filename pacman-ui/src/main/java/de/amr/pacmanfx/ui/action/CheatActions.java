@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.GameFlow.CanonicalGameState;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_Resources;
+import de.amr.pacmanfx.ui.GameUIConstants;
 
 import java.util.List;
 import java.util.Optional;
@@ -127,7 +127,7 @@ public final class CheatActions {
             }
         }
         game.cheats().usingAutopilotProperty().set(on);
-        ui.voicePlayer().playVoice(on ? GameUI_Resources.VOICE_AUTOPILOT_ON : GameUI_Resources.VOICE_AUTOPILOT_OFF);
+        ui.voicePlayer().playVoice(on ? GameUIConstants.VOICE_AUTOPILOT_ON : GameUIConstants.VOICE_AUTOPILOT_OFF);
         ui.showFlashMessage(ui.translate(on ? "autopilot_on" : "autopilot_off"));
 
     }
@@ -157,7 +157,7 @@ public final class CheatActions {
     public static void setImmunity(GameUI ui, boolean on) {
         final Game game = ui.gameContext().game();
         game.cheats().immuneProperty().set(on);
-        ui.voicePlayer().playVoice(on ? GameUI_Resources.VOICE_IMMUNITY_ON : GameUI_Resources.VOICE_IMMUNITY_OFF);
+        ui.voicePlayer().playVoice(on ? GameUIConstants.VOICE_IMMUNITY_ON : GameUIConstants.VOICE_IMMUNITY_OFF);
         ui.showFlashMessage(ui.translate(on ? "player_immunity_on" : "player_immunity_off"));
     }
 

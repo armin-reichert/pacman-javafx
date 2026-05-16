@@ -8,22 +8,93 @@ import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
+import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
+import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
+import static de.amr.pacmanfx.uilib.UfxBackgrounds.createImageBackground;
 
 public class GameUIConstants {
 
     private GameUIConstants() {}
+
+    /**
+     * Resource manager for UI assets (fonts, images, sounds).
+     */
+    public static final ResourceManager UI_RESOURCES = () -> GameUI.class;
+    /**
+     * Voice media for immunity activation.
+     */
+    public static final Media VOICE_IMMUNITY_ON = UI_RESOURCES.loadMedia("sound/voice/immunity-on.mp3");
+    /**
+     * Voice media for immunity deactivation.
+     */
+    public static final Media VOICE_IMMUNITY_OFF = UI_RESOURCES.loadMedia("sound/voice/immunity-off.mp3");
+    /**
+     * Voice media for game start explanation.
+     */
+    public static final Media VOICE_EXPLAIN_GAME_START = UI_RESOURCES.loadMedia("sound/voice/press-key.mp3");
+    /**
+     * Voice media for autopilot activation.
+     */
+    public static final Media VOICE_AUTOPILOT_ON = UI_RESOURCES.loadMedia("sound/voice/autopilot-on.mp3");
+    /**
+     * Voice media for autopilot deactivation.
+     */
+    public static final Media VOICE_AUTOPILOT_OFF = UI_RESOURCES.loadMedia("sound/voice/autopilot-off.mp3");
+    /**
+     * Good Pac-Man font (alternative variant).
+     */
+    public static final Font FONT_PAC_FONT_GOOD = UI_RESOURCES.loadFont("fonts/PacfontGood.ttf", 8);
+    /**
+     * Standard Pac-Man font.
+     */
+    public static final Font FONT_PAC_FONT = UI_RESOURCES.loadFont("fonts/Pacfont.ttf", 8);
+    /**
+     * Condensed monospace font for UI elements.
+     */
+    public static final Font FONT_CONDENSED = UI_RESOURCES.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12);
+    /**
+     * Monospaced font for debug/info text.
+     */
+    public static final Font FONT_MONOSPACED = UI_RESOURCES.loadFont("fonts/fantasquesansmono-bold.otf", 12);
+    /**
+     * Handwriting-style font for messages.
+     */
+    public static final Font FONT_HANDWRITING = UI_RESOURCES.loadFont("fonts/Molle-Italic.ttf", 9);
+    /**
+     * Arcade font size 8.
+     */
+    public static final Font FONT_ARCADE_8 = UI_RESOURCES.loadFont("fonts/emulogic.ttf", 8);
+    /**
+     * Arcade font size 6.
+     */
+    public static final Font FONT_ARCADE_6 = UI_RESOURCES.loadFont("fonts/emulogic.ttf", 6);
+    /**
+     * Background image using Pac-Man wallpaper.
+     */
+    public static final Background BACKGROUND_PAC_MAN_WALLPAPER = createImageBackground(UI_RESOURCES.loadImage("graphics/pacman_wallpaper.png"));
+    /**
+     * Localized text bundle for the UI.
+     */
+    public static final ResourceBundle LOCALIZED_TEXTS = UI_RESOURCES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
+    /**
+     * Path to the main UI stylesheet.
+     */
+    public static final String STYLE_SHEET_PATH = "/de/amr/pacmanfx/ui/css/style.css";
 
     /** Cheat key bindings (Alt + key). */
     public static final Set<ActionBinding> CHEAT_ACTION_BINDINGS = Set.of(

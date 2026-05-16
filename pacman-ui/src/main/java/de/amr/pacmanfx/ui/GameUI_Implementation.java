@@ -120,7 +120,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
                 SpriteAnimationContainer.instance().update(now);
             }
         };
-        BaseRenderer.setArcadeFont(GameUI_Resources.FONT_ARCADE_8);
+        BaseRenderer.setArcadeFont(GameUIConstants.FONT_ARCADE_8);
 
         initLayout(mainSceneWidth,mainSceneHeight);
         initGlobalActionBindings();
@@ -228,7 +228,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         sceneLayout.backgroundProperty().bind(Bindings.createObjectBinding(
             () -> currentGameSceneHasID(GameSceneConfig.CommonSceneID.PLAY_SCENE_3D)
                 ? Background.fill(Gradients.Samples.random())
-                : GameUI_Resources.BACKGROUND_PAC_MAN_WALLPAPER,
+                : GameUIConstants.BACKGROUND_PAC_MAN_WALLPAPER,
             // depends on:
             viewManager.currentViewProperty(),
             playView().gameSceneProperty()
@@ -264,7 +264,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     private void initScene() {
-        scene.getStylesheets().add(GameUI_Resources.STYLE_SHEET_PATH);
+        scene.getStylesheets().add(GameUIConstants.STYLE_SHEET_PATH);
 
         scene.addEventFilter(KeyEvent.KEY_PRESSED,  Input.instance().keyboard::onKeyPressed);
         scene.addEventFilter(KeyEvent.KEY_RELEASED, Input.instance().keyboard::onKeyReleased);
@@ -367,7 +367,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public ResourceBundle localizedTexts() {
-        return GameUI_Resources.LOCALIZED_TEXTS;
+        return GameUIConstants.LOCALIZED_TEXTS;
     }
 
     @Override

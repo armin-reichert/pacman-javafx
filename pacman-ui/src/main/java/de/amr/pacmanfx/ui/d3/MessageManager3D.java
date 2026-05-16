@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.ui.GameUI_Resources;
+import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
@@ -120,7 +120,7 @@ public class MessageManager3D implements DisposableGraphicsObject {
             .backgroundColor(Color.BLACK)
             .borderColor(Color.WHITE)
             .displaySeconds(displaySeconds)
-            .font(GameUI_Resources.FONT_ARCADE_6)
+            .font(GameUIConstants.FONT_ARCADE_6)
             .text(messageText)
             .textColor(Color.YELLOW)
             .build(animations);

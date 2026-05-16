@@ -18,7 +18,6 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
-import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -60,7 +59,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onSceneStart() {
-        ui.voicePlayer().playVoice(GameUI_Resources.VOICE_EXPLAIN_GAME_START);
+        ui.voicePlayer().playVoice(GameUIConstants.VOICE_EXPLAIN_GAME_START);
 
         actionBindings.addAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         actionBindings.addAll(GameUIConstants.SCENE_TESTS_BINDINGS);

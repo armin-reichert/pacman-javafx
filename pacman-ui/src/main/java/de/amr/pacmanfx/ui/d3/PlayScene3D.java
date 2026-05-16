@@ -14,7 +14,6 @@ import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
-import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
@@ -367,7 +366,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         if (scores3D != null) {
             subSceneRoot.getChildren().remove(scores3D);
         }
-        scores3D = new Scores3D(ui.translate("score.score"), ui.translate("score.high_score"), GameUI_Resources.FONT_ARCADE_8);
+        scores3D = new Scores3D(ui.translate("score.score"), ui.translate("score.high_score"), GameUIConstants.FONT_ARCADE_8);
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
         scores3D.translateXProperty().bind(level3DParent.translateXProperty().add(TS));
