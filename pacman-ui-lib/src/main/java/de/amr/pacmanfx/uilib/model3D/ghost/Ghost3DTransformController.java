@@ -13,8 +13,6 @@ import static de.amr.pacmanfx.Globals.TS;
 
 public class Ghost3DTransformController {
 
-    private static final double HEIGHT_OVER_FLOOR = 2.0;
-
     public Ghost3DTransformController() {}
 
     public void init(Ghost3D ghost3D, WorldMap worldMap) {
