@@ -27,15 +27,14 @@ public class Ghost3DTransformController {
         ghost3D.setTranslateY(center.y());
         ghost3D.setTranslateZ(-0.5 * ghost3D.getBoundsInParent().getDepth());
 
-        ghost3D.facingRotation().setAngle(switch (ghost.wishDir()) {
+        ghost3D.facingRotate().setAngle(switch (ghost.wishDir()) {
             case LEFT  -> 0;
             case UP    -> 90;
             case RIGHT -> 180;
             case DOWN  -> 270;
         });
 
-        final boolean outsideWorld = ghost3D.getTranslateX() < HTS
-            || ghost3D.getTranslateX() > TS * worldMap.numCols() - HTS;
-        ghost3D.setVisible(ghost.isVisible() && !outsideWorld);
+        final boolean outside = center.x() < HTS || center.x() > TS * worldMap.numCols() - HTS;
+        ghost3D.setVisible(ghost.isVisible() && !outside);
     }
 }

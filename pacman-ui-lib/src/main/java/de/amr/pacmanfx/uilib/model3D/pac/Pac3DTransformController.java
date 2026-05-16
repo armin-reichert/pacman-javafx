@@ -15,6 +15,7 @@ public class Pac3DTransformController {
 
     public void init(Pac3D pac3D, WorldMap worldMap) {
         update(pac3D, worldMap);
+        pac3D.setTranslateZ(-8); //TODO
         pac3D.setScaleX(1.0);
         pac3D.setScaleY(1.0);
         pac3D.setScaleZ(1.0);
@@ -22,25 +23,23 @@ public class Pac3DTransformController {
 
     public void update(Pac3D pac3D, WorldMap worldMap) {
         final Pac pac = pac3D.pac();
-        final Vector2f center = pac.center();
 
         if (!pac.isAlive()) {
             return;
         }
 
+        final Vector2f center = pac.center();
         pac3D.setTranslateX(center.x());
         pac3D.setTranslateY(center.y());
-        pac3D.setTranslateZ(-8); //TODO
 
-        pac3D.facingRotation().setAngle(switch (pac.moveDir()) {
+        pac3D.facingRotate().setAngle(switch (pac.moveDir()) {
             case LEFT  -> 0;
             case UP    -> 90;
             case RIGHT -> 180;
             case DOWN  -> 270;
         });
 
-        final boolean outsideWorld = pac3D.getTranslateX() < HTS
-            || pac3D.getTranslateX() > TS * worldMap.numCols() - HTS;
-        pac3D.setVisible(pac.isVisible() && !outsideWorld);
+        final boolean outside = center.x() < HTS || center.x() > TS * worldMap.numCols() - HTS;
+        pac3D.setVisible(pac.isVisible() && !outside);
     }
 }

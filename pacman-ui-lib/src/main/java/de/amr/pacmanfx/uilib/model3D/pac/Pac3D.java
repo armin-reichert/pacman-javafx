@@ -33,7 +33,7 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
 
     private PointLight powerLight;
 
-    private final Rotate facingRotation = new Rotate(0, Rotate.Z_AXIS);
+    private final Rotate facingRotate = new Rotate(0, Rotate.Z_AXIS);
 
     private final Pac3DTransformController transformController;
     private final Pac3DAnimationController animationController;
@@ -56,7 +56,7 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
         bodyGroup = new Group(body, jaw);
         final Group facingGroup = new Group(bodyGroup);
 
-        facingGroup.getTransforms().addAll(facingRotation);
+        facingGroup.getTransforms().addAll(facingRotate);
 
         getChildren().setAll(facingGroup);
     }
@@ -65,8 +65,8 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
         return pac;
     }
 
-    public Rotate facingRotation() {
-        return facingRotation;
+    public Rotate facingRotate() {
+        return facingRotate;
     }
 
     public Group bodyGroup() {

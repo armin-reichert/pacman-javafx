@@ -53,7 +53,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     private MeshView pupilsMeshView;
     private MeshView eyeballsMeshView;
 
-    private final Rotate facingRotation = new Rotate(0, Rotate.Z_AXIS);
+    private final Rotate facingRotate = new Rotate(0, Rotate.Z_AXIS);
 
     private Ghost3DTransformController transformController;
     private Ghost3DAppearanceController appearanceController;
@@ -119,8 +119,8 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         return animations;
     }
 
-    public Rotate facingRotation() {
-        return facingRotation;
+    public Rotate facingRotate() {
+        return facingRotate;
     }
 
     public Group dressGroup() {
@@ -187,7 +187,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
         // 3. Apply transforms to the correct groups
         facingGroup.getTransforms().addAll(
-            facingRotation,
+            facingRotate,
             PacManWorld3D.ORIENTATION_ADJUSTMENT
         );
 
