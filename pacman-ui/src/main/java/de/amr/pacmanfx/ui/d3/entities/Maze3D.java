@@ -162,16 +162,14 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         Logger.info("Disposed 3D maze");
     }
 
-    // ──────────────────────────────────────────────────────────────
-    // Private creation helpers (no Javadoc changes needed)
-    // ──────────────────────────────────────────────────────────────
+    // Private area
 
     private void createObstacles3D(MazeConfig3D mazeConfig, GameLevel level) {
-        obstacles3D = new MazeObstacles3D();
-        getChildren().add(obstacles3D);
         final float wallThickness = mazeConfig.obstacleWallThickness();
         final float cornerRadius  = mazeConfig.obstacleCornerRadius();
+        obstacles3D = new MazeObstacles3D();
         obstacles3D.renderObstacles(level, wallThickness, cornerRadius, materials3D, wallBaseHeight);
+        getChildren().add(obstacles3D);
     }
 
     private void createFloor3D(FloorConfig3D floorConfig, GameLevel level) {
@@ -180,10 +178,11 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         final float height = terrainSize.y();
         final float thickness = floorConfig.thickness();
         floor3D = new MazeFloor3D(materials3D.floor(), width, height, thickness);
-        floor3D.getTransforms().add(new Translate(-floorConfig.padding(), 0, 0));
         floor3D.setTranslateX(0.5 * width);
         floor3D.setTranslateY(0.5 * height);
         floor3D.setTranslateZ(0.5 * thickness);
+        floor().getTransforms().add(new Translate(-floorConfig.padding(), 0, 0));
+        getChildren().add(floor3D);
     }
 
     private void createArcadeHouse3D(AnimationRegistry animations, HouseConfig3D houseConfig, GameLevel level, WorldMapColorScheme colorScheme) {

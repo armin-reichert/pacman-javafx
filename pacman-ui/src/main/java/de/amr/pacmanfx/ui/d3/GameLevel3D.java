@@ -227,7 +227,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Pac3D pac3D = entities3D.unique(Pac3D.class);
         final LevelCounter3D levelCounter3D = entities3D.unique(LevelCounter3D.class);
         final LivesCounter3D livesCounter3D = entities3D.unique(LivesCounter3D.class);
-        getChildren().addAll(maze3D.floor(), maze3D.particlesGroup());
+        getChildren().addAll(maze3D.particlesGroup());
         getChildren().addAll(levelCounter3D, livesCounter3D, pac3D);
         pac3D.powerLight().ifPresent(getChildren()::add);
         entities3D.all(Ghost3D.class).sorted(BY_GHOST_PERSONALITY).forEach(getChildren()::add);
