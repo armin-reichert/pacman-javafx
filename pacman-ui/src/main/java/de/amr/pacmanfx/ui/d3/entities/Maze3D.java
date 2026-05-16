@@ -26,7 +26,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
 import org.tinylog.Logger;
@@ -43,7 +42,6 @@ import static java.util.Objects.requireNonNull;
  * {@code Maze3D} is the top-level container that assembles and manages all visual 3D elements:
  * <ul>
  *   <li>{@link MazeMaterials3D} – shared materials and property bindings</li>
- *   <li>{@link MazeFloor3D} – the floor plane</li>
  *   <li>{@link MazeHouse3D} – the ghost house (if the map contains one)</li>
  * </ul>
  * <p>
@@ -55,7 +53,6 @@ import static java.util.Objects.requireNonNull;
  * <strong>Note:</strong> {@code floor3D}, {@code food3D} and {@code particlesGroup} are created
  * but <em>not</em> added as children by this class; the caller is responsible for adding them.
  *
- * @see MazeFloor3D
  * @see MazeHouse3D
  * @see MazeMaterials3D
  */
@@ -190,7 +187,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
     /**
      * Disposes all 3D resources created by this maze.
      * <p>
-     * Unbinds properties, disposes all sub-components, disposes every {@link Wall3D} among the direct children,
+     * Unbinds properties, disposes all subcomponents, disposes every {@link Wall3D} among the direct children,
      * and clears the scene-graph children. After calling {@code dispose()}, this instance must not be used again.
      */
     @Override
