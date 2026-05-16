@@ -23,7 +23,7 @@ public class BonusEatenAnimation3D extends ManagedAnimation {
     }
 
     private Animation createAnimationFX() {
-        final var animation = new RotateTransition(Duration.seconds(1), bonus3D);
+        final var animation = new RotateTransition(Duration.seconds(1), bonus3D.shape3D());
         animation.setAxis(Rotate.X_AXIS);
         animation.setByAngle(360);
         animation.setInterpolator(Interpolator.LINEAR);

@@ -7,8 +7,8 @@ import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.animation.BonusEatenAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.BonusEdibleAnimation3D;
@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -31,7 +32,7 @@ import static java.util.Objects.requireNonNull;
  * on each of its faces. When eaten, the bonus symbol is replaced by the points earned for eating the bonus.
  * For a moving bonus, the rotating cube moves through the world and rotates towards its current move direction.</p>
  */
-public class Bonus3D extends Box implements GameLevelEntity, DisposableGraphicsObject {
+public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
 
     public enum AnimationID {BONUS_EDIBLE, BONUS_EATEN}
 
@@ -43,15 +44,15 @@ public class Bonus3D extends Box implements GameLevelEntity, DisposableGraphicsO
     private PhongMaterial symbolTexture;
     private PhongMaterial pointsTexture;
 
+    private final Shape3D shape3D;
+
     public Bonus3D(AnimationRegistry animations, Bonus bonus, Image symbolImage, double symbolWidth, Image pointsImage, double pointsWidth) {
         this.animations = requireNonNull(animations);
         this.bonus = requireNonNull(bonus);
         this.symbolWidth = requireNonNegative(symbolWidth);
         this.pointsWidth = requireNonNegative(pointsWidth);
 
-        setWidth(symbolWidth);
-        setHeight(TS);
-        setDepth(TS);
+        shape3D = new Box(symbolWidth, TS, TS);
 
         var symbolImageView = new ImageView(requireNonNull(symbolImage));
         symbolImageView.setPreserveRatio(true);
@@ -73,7 +74,7 @@ public class Bonus3D extends Box implements GameLevelEntity, DisposableGraphicsO
         pointsTexture = null;
         animations.optAnimation(AnimationID.BONUS_EDIBLE).ifPresent(ManagedAnimation::dispose);
         animations.optAnimation(AnimationID.BONUS_EATEN).ifPresent(ManagedAnimation::dispose);
-        cleanupShape3D(this);
+        cleanupShape3D(shape3D);
     }
 
     @Override
@@ -82,34 +83,42 @@ public class Bonus3D extends Box implements GameLevelEntity, DisposableGraphicsO
             case INACTIVE, EATEN -> {}
             case EDIBLE -> {
                 final Vector2f center = bonus.center();
-                setTranslateX(center.x());
-                setTranslateY(center.y());
-                setTranslateZ(-HTS);
+                shape3D.setTranslateX(center.x());
+                shape3D.setTranslateY(center.y());
+                shape3D.setTranslateZ(-HTS);
                 animations.animation(AnimationID.BONUS_EDIBLE, BonusEdibleAnimation3D.class).update(gameLevel);
             }
         }
     }
 
+    public Shape3D shape3D() {
+        return shape3D;
+    }
+
     public void showEdible() {
-        setVisible(true);
-        setWidth(symbolWidth);
-        setMaterial(symbolTexture);
+        shape3D.setVisible(true);
+        if (shape3D instanceof Box box) {
+            box.setWidth(symbolWidth);
+        }
+        shape3D.setMaterial(symbolTexture);
         animations.animation(AnimationID.BONUS_EDIBLE).playFromStart();
     }
 
     public void showEaten() {
         animations.animation(AnimationID.BONUS_EDIBLE).stop();
-        setVisible(true);
-        setWidth(pointsWidth);
-        setMaterial(pointsTexture);
-        setRotationAxis(Rotate.X_AXIS);
-        setRotate(0);
+        shape3D.setVisible(true);
+        if (shape3D instanceof Box box) {
+            box.setWidth(pointsWidth);
+        }
+        shape3D.setMaterial(pointsTexture);
+        shape3D.setRotationAxis(Rotate.X_AXIS);
+        shape3D.setRotate(0);
         animations.animation(AnimationID.BONUS_EATEN).playFromStart();
     }
 
     public void expire() {
         animations.optAnimation(AnimationID.BONUS_EDIBLE).ifPresent(ManagedAnimation::stop);
         animations.optAnimation(AnimationID.BONUS_EATEN).ifPresent(ManagedAnimation::stop);
-        setVisible(false);
+        shape3D.setVisible(false);
     }
 }

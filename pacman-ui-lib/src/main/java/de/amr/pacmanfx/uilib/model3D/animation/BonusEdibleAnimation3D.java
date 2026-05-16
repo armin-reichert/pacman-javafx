@@ -24,17 +24,17 @@ import static de.amr.pacmanfx.Globals.TS;
 public class BonusEdibleAnimation3D extends ManagedAnimation {
 
     private final Bonus bonus;
-    private final Bonus3D shape;
+    private final Bonus3D bonus3D;
 
     public BonusEdibleAnimation3D(Bonus bonus, Bonus3D bonus3D) {
         super("Bonus (Edible, Symbol)");
         this.bonus = bonus;
-        this.shape = bonus3D;
+        this.bonus3D = bonus3D;
         setFactory(this::createAnimationFX);
     }
 
     private Animation createAnimationFX() {
-        var animation = new RotateTransition(Duration.seconds(1), shape);
+        var animation = new RotateTransition(Duration.seconds(1), bonus3D.shape3D());
         animation.setAxis(Rotate.X_AXIS);
         animation.setFromAngle(0);
         animation.setToAngle(360);
@@ -48,7 +48,7 @@ public class BonusEdibleAnimation3D extends ManagedAnimation {
             RotateTransition rotateTransition = (RotateTransition) animationFX;
             Vector2f center = bonus.center();
             boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
-            shape.setVisible(bonus.state() == BonusState.EDIBLE && !outsideWorld);
+            bonus3D.shape3D().setVisible(bonus.state() == BonusState.EDIBLE && !outsideWorld);
             Direction moveDir = bonus.moveDir();
             Point3D axis = moveDir.isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
             rotateTransition.setRate(moveDir == Direction.DOWN || moveDir == Direction.LEFT ? 1 : -1);
