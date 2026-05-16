@@ -221,7 +221,6 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         final float width = terrainSize.x() + 2 * floorConfig.padding();
         final float height = terrainSize.y();
         final float thickness = floorConfig.thickness();
-//        floor3D = new MazeFloor3D(materials3D.floor(), width, height, thickness);
 
         floor3D = new Box(width, height, thickness);
         floor3D.drawModeProperty().bind(GameUIConstants.PROPERTY_3D_DRAW_MODE);
@@ -230,6 +229,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         floor3D.setTranslateX(0.5 * width - floorConfig.padding());
         floor3D.setTranslateY(0.5 * height);
         floor3D.setTranslateZ(0.5 * thickness);
+
         getChildren().add(floor3D);
     }
 
