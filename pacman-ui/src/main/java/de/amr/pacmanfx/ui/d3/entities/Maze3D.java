@@ -26,7 +26,9 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Box;
 import org.tinylog.Logger;
 
 import java.util.Optional;
@@ -107,7 +109,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
     private final ObjectProperty<Color> floorColor = new SimpleObjectProperty<>(Color.GRAY);
 
     private MazeMaterials3D materials3D;
-    private MazeFloor3D floor3D;
+    private Box floor3D;
     private MazeHouse3D house3D;
 
     private final Group particlesGroup = new Group();
@@ -167,7 +169,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
     }
 
     /** @return the floor component */
-    public MazeFloor3D floor() {
+    public Box floor() {
         return floor3D;
     }
 
@@ -181,6 +183,9 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         return particlesGroup;
     }
 
+    public double floorTop() {
+        return floor().getTranslateZ() - 0.5 * floor().getDepth();
+    }
 
     /**
      * Disposes all 3D resources created by this maze.
@@ -195,8 +200,10 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
 
         materials3D = null;
 
-        if (floor3D != null)     { floor3D.dispose();     floor3D = null; }
-        if (house3D != null)     { house3D.dispose();     house3D = null; }
+        if (house3D != null) {
+            house3D.dispose();
+            house3D = null;
+        }
 
         cleanupGroup(particlesGroup, true);
         cleanupGroup(this, true);
@@ -217,7 +224,12 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         final float width = terrainSize.x() + 2 * floorConfig.padding();
         final float height = terrainSize.y();
         final float thickness = floorConfig.thickness();
-        floor3D = new MazeFloor3D(materials3D.floor(), width, height, thickness);
+//        floor3D = new MazeFloor3D(materials3D.floor(), width, height, thickness);
+
+        floor3D = new Box(width, height, thickness);
+        floor3D.drawModeProperty().bind(GameUIConstants.PROPERTY_3D_DRAW_MODE);
+        floor3D.setMaterial(materials3D.floor());
+
         floor3D.setTranslateX(0.5 * width - floorConfig.padding());
         floor3D.setTranslateY(0.5 * height);
         floor3D.setTranslateZ(0.5 * thickness);
