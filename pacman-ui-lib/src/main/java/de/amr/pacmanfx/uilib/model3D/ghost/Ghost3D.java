@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
 public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
     public enum AnimationID {
-        BRAKING, NORMAL, FLASHING;
+        BRAKING, DRESS, FLASHING;
 
         public AnimationKey key(Ghost ghost) {
             requireNonNull(ghost);
@@ -76,10 +76,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         this.materialSet = requireNonNull(materialSet);
 
         buildHierarchy(meshSet);
-
-        animations.register(AnimationID.NORMAL.key(ghost), new GhostDressAnimation3D(ghost, dressGroup));
-        animations.register(AnimationID.FLASHING.key(ghost), new GhostFlashingAnimation3D(ghost, materialSet, config.colors()));
-        animations.register(AnimationID.BRAKING.key(ghost), new GhostBrakeAnimation3D(this));
+        registerAnimations();
     }
 
     @Override
@@ -131,6 +128,10 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         return facingRotation;
     }
 
+    public Group dressGroup() {
+        return dressGroup;
+    }
+
     public void stopAllAnimations() {
         for (AnimationID animationID : AnimationID.values()) {
             animations.optAnimation(animationID.key(ghost)).ifPresent(ManagedAnimation::stop);
@@ -167,7 +168,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         setShapeMaterials(materialSet.flashingMaterial());
         dressMeshView.setVisible(true);
 
-        final GhostFlashingAnimation3D flashing = (GhostFlashingAnimation3D) flashingDressAnimation();
+        final GhostFlashingAnimation3D flashing = flashingDressAnimation();
         // TODO: this is total crap and needs to be reimplemented
         if (flashing.numFlashes() != numFlashes) {
             flashing.stop();
@@ -201,8 +202,8 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     /*
         this (Group)
            facingGroup (facing rotation, model orientation adaption)
-              dressGroup
-                 dressMeshView (dress rotation animation)
+              dressGroup (dress rotation animation)
+                 dressMeshView
               eyesGroup
                  pupilsMeshView
                  eyeballsMeshView
@@ -253,11 +254,17 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         eyeballsMeshView.setMaterial(materialSet.eyeballsMaterial());
     }
 
-    private ManagedAnimation normalDressAnimation() {
-        return animations.animation(AnimationID.NORMAL.key(ghost));
+    private void registerAnimations() {
+        animations.register(AnimationID.DRESS.key(ghost), new GhostDressAnimation3D(this));
+        animations.register(AnimationID.FLASHING.key(ghost), new GhostFlashingAnimation3D(ghost, materialSet, config.colors()));
+        animations.register(AnimationID.BRAKING.key(ghost), new GhostBrakeAnimation3D(this));
     }
 
-    private ManagedAnimation flashingDressAnimation() {
-        return animations.animation(AnimationID.FLASHING.key(ghost));
+    private ManagedAnimation normalDressAnimation() {
+        return animations.animation(AnimationID.DRESS.key(ghost));
+    }
+
+    private GhostFlashingAnimation3D flashingDressAnimation() {
+        return animations.optAnimation(AnimationID.FLASHING.key(ghost), GhostFlashingAnimation3D.class).orElseThrow();
     }
 }
