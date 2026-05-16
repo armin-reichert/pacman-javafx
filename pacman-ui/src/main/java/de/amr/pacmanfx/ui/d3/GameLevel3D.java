@@ -284,7 +284,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
         maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
         maze3D.floorColorProperty().bind(PROPERTY_3D_FLOOR_COLOR);
-        maze3D.floor().drawModeProperty().bind(PROPERTY_3D_DRAW_MODE);
+        maze3D.floor().plane().drawModeProperty().bind(PROPERTY_3D_DRAW_MODE);
         entities3D.add(maze3D);
     }
 
@@ -345,7 +345,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         // Pellets
         final PelletConfig3D pelletConfig3D = uiConfig.entityConfig().pellet();
         final var pelletMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
-        final double pelletZ = maze3D.floorTop() - pelletConfig3D.floorElevation();
+        final double pelletZ = maze3D.floor().top() - pelletConfig3D.floorElevation();
         foodLayer.tiles()
             .filter(foodLayer::hasFoodAtTile)
             .filter(tile -> !foodLayer.isEnergizerTile(tile))
@@ -358,7 +358,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         // Energizers
         // TODO: Use different material?
         final EnergizerConfig3D energizerConfig3D = uiConfig.entityConfig().energizer();
-        final double energizerZ = maze3D.floorTop() - energizerConfig3D.floorElevation();
+        final double energizerZ = maze3D.floor().top() - energizerConfig3D.floorElevation();
         foodLayer.tiles()
             .filter(foodLayer::hasFoodAtTile)
             .filter(foodLayer::isEnergizerTile)
@@ -428,7 +428,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             EnergizerParticlesAnimation3D.DEFAULT_CONFIG,
             swirlCenters,
             dressMaterials,
-            maze3D.floor(),
+            maze3D.floor().plane(),
             maze3D.particlesGroup()
         );
     }

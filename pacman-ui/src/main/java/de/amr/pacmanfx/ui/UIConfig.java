@@ -119,7 +119,7 @@ public interface UIConfig extends Disposable {
         ),
         new BonusConfig(8.0f, 14.5f),
         new EnergizerConfig3D(3, 3.5f, 6.0f, 0.2f, 1.0f),
-        new FloorConfig3D(5f, 0.5f),
+        new FloorConfig3D(20f, 0.5f),
         new HouseConfig3D(12.0f, 0.4f, 12.0f, 2.5f),
         new LevelCounterConfig3D(10.0f, 6.0f),
         new LivesCounterConfig3D(

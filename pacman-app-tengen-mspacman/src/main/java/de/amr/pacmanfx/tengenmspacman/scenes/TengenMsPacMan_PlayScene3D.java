@@ -55,8 +55,8 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
                     color -> createLevelInfoImage(tengenGame, level.number(), infoWidth, infoHeight, color)));
                 // Display the level info at front side of floor just over the surface
                 final Maze3D maze3D = level3D.entities().unique(Maze3D.class);
-                levelInfo.setTranslateY(maze3D.floor().getHeight() - levelInfo.getFitHeight());
-                levelInfo.setTranslateZ(-maze3D.floor().getDepth());
+                levelInfo.setTranslateY(maze3D.floor().plane().getHeight() - levelInfo.getFitHeight());
+                levelInfo.setTranslateZ(-maze3D.floor().plane().getDepth());
                 level3D.getChildren().add(levelInfo);
             }
         });

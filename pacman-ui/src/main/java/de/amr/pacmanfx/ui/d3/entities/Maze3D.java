@@ -137,10 +137,6 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         return particlesGroup;
     }
 
-    /** @return the Z-coordinate of the top surface of the floor */
-    public double floorTop() {
-        return floor3D.getTranslateZ() - 0.5 * floor3D.getDepth();
-    }
 
     /**
      * Disposes all 3D resources created by this maze.
