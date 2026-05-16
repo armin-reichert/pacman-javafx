@@ -24,13 +24,7 @@ import javafx.scene.transform.Translate;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Represents the different 3D appearances of a ghost. One of:
- * <ul>
- * <li>{@link GhostAppearance#NORMAL}: colored ghost, blue eyes,
- * <li>{@link GhostAppearance#FRIGHTENED}: blue ghost, empty, "pinkish" eyes (looking blind),
- * <li>{@link GhostAppearance#FLASHING}: blue-white flashing skin, pink-red flashing eyes,
- * <li>{@link GhostAppearance#EYES} eyes only,
- * </ul>
+ * Represents the 3D appearance of a ghost.
  */
 public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
