@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.Obstacle;
 import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d3.MazeMaterials3D;
 import de.amr.pacmanfx.uilib.model3D.world.TerrainRenderer3D;
 import javafx.beans.property.DoubleProperty;
@@ -34,6 +35,8 @@ public class MazeObstacles3D extends Group implements Disposable {
             wall3D.setBaseMaterial(materials.wallBase());
             wall3D.setTopMaterial(materials.wallTop());
             wall3D.bindBaseHeight(wallBaseHeight);
+            wall3D.base().drawModeProperty().bind(GameUI.PROPERTY_3D_DRAW_MODE);
+            wall3D.top().drawModeProperty().bind(GameUI.PROPERTY_3D_DRAW_MODE);
             getChildren().addAll(wall3D.base(), wall3D.top());
             return wall3D;
         });

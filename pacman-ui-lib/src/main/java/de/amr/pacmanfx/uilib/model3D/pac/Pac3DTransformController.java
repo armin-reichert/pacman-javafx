@@ -30,7 +30,7 @@ public class Pac3DTransformController {
 
         pac3D.setTranslateX(center.x());
         pac3D.setTranslateY(center.y());
-        pac3D.setTranslateZ(-10);
+        pac3D.setTranslateZ(-8); //TODO
 
         pac3D.facingRotation().setAngle(switch (pac.moveDir()) {
             case LEFT  -> 0;
