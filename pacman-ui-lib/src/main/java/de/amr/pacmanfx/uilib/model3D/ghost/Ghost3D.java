@@ -131,6 +131,10 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         return dressGroup;
     }
 
+    public MeshView dressMeshView() {
+        return dressMeshView;
+    }
+
     public void stopAllAnimations() {
         for (AnimationID animationID : AnimationID.values()) {
             animations.optAnimation(animationID.key(ghost)).ifPresent(ManagedAnimation::stop);
@@ -145,53 +149,21 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         this.appearanceController = requireNonNull(appearanceController);
     }
 
-    public void lookNormal() {
-        flashingDressAnimation().stop();
-        normalDressAnimation().playOrContinue();
-        dressMeshView.setVisible(true);
-        setShapeMaterials(materialSet.normalMaterial());
+    public ManagedAnimation normalDressAnimation() {
+        return animations.animation(AnimationID.DRESS.key(ghost));
     }
 
-    public void lookFrightened() {
-        flashingDressAnimation().stop();
-        normalDressAnimation().playOrContinue();
-        dressMeshView.setVisible(true);
-        setShapeMaterials(materialSet.frightenedMaterial());
+    public GhostFlashingAnimation3D flashingDressAnimation() {
+        return animations.optAnimation(AnimationID.FLASHING.key(ghost), GhostFlashingAnimation3D.class).orElseThrow();
     }
 
-    public void lookFlashing(int numFlashes) {
-        if (numFlashes == 0) {
-            lookFrightened();
-            return;
-        }
-        setShapeMaterials(materialSet.flashingMaterial());
-        dressMeshView.setVisible(true);
-
-        final GhostFlashingAnimation3D flashing = flashingDressAnimation();
-        flashing.setNumFlashes(numFlashes);
-        flashing.playOrContinue();
-    }
-
-    public void lookEyesOnly() {
-        stopAllAnimations();
-        dressMeshView.setVisible(false);
-        setShapeMaterials(materialSet.normalMaterial());
-    }
-
-    public void animateNormalDress(boolean on) {
-        if (on) {
-            normalDressAnimation().playOrContinue();
-        } else {
-            normalDressAnimation().stop();
-        }
+    public void setShapeMaterials(GhostComponentMaterialSet materialSet) {
+        dressMeshView.setMaterial(materialSet.dressMaterial());
+        pupilsMeshView.setMaterial(materialSet.pupilsMaterial());
+        eyeballsMeshView.setMaterial(materialSet.eyeballsMaterial());
     }
 
     // Private Area, no trespassing!
-
-    private void assertControllersAssigned() {
-        requireNonNull(transformController, "No transform controller has been assigned");
-        requireNonNull(appearanceController, "No appearance controller has been assigned");
-    }
 
     /*
         this (Group)
@@ -242,23 +214,14 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         getChildren().setAll(facingGroup);
     }
 
-    private void setShapeMaterials(GhostComponentMaterialSet materialSet) {
-        dressMeshView.setMaterial(materialSet.dressMaterial());
-        pupilsMeshView.setMaterial(materialSet.pupilsMaterial());
-        eyeballsMeshView.setMaterial(materialSet.eyeballsMaterial());
-    }
-
     private void registerAnimations() {
         animations.register(AnimationID.DRESS.key(ghost), new GhostDressAnimation3D(this, 30));
         animations.register(AnimationID.FLASHING.key(ghost), new GhostFlashingAnimation3D(this));
         animations.register(AnimationID.BRAKING.key(ghost), new GhostBrakeAnimation3D(this));
     }
 
-    private ManagedAnimation normalDressAnimation() {
-        return animations.animation(AnimationID.DRESS.key(ghost));
-    }
-
-    private GhostFlashingAnimation3D flashingDressAnimation() {
-        return animations.optAnimation(AnimationID.FLASHING.key(ghost), GhostFlashingAnimation3D.class).orElseThrow();
+    private void assertControllersAssigned() {
+        requireNonNull(transformController, "No transform controller has been assigned");
+        requireNonNull(appearanceController, "No appearance controller has been assigned");
     }
 }

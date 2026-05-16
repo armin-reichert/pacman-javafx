@@ -58,21 +58,16 @@ public class Ghost3DAppearanceController {
     private void setGhostAppearance(Ghost3D ghost3D, GhostAppearance ghostAppearance) {
         switch (ghostAppearance) {
             case NORMAL -> {
-                ghost3D.lookNormal();
-                ghost3D.animateNormalDress(true);
-                brakeIfTunnelEntered(ghost3D);
+                lookNormal(ghost3D);
             }
             case FRIGHTENED -> {
-                ghost3D.lookFrightened();
-                ghost3D.animateNormalDress(true);
+                lookFrightened(ghost3D);
             }
             case FLASHING -> {
-                ghost3D.lookFlashing(numFlashes);
-                ghost3D.animateNormalDress(true);
+                lookFlashing(ghost3D, numFlashes);
             }
             case EYES -> {
-                ghost3D.lookEyesOnly();
-                ghost3D.animateNormalDress(false);
+                lookEyesOnly(ghost3D);
             }
         }
     }
@@ -82,5 +77,39 @@ public class Ghost3DAppearanceController {
         if (ghost.moveInfo().tunnelEntered) {
             ghost3D.animations().animation(Ghost3D.AnimationID.BRAKING.key(ghost)).playFromStart();
         }
+    }
+
+    private void lookNormal(Ghost3D ghost3D) {
+        ghost3D.flashingDressAnimation().stop();
+        ghost3D.normalDressAnimation().playOrContinue();
+        ghost3D.dressMeshView().setVisible(true);
+        ghost3D.setShapeMaterials(ghost3D.materials().normalMaterial());
+        brakeIfTunnelEntered(ghost3D);
+    }
+
+    private void lookFlashing(Ghost3D ghost3D, int numFlashes) {
+        if (numFlashes == 0) {
+            lookFrightened(ghost3D);
+            return;
+        }
+        ghost3D.setShapeMaterials(ghost3D.materials().flashingMaterial());
+        ghost3D.dressMeshView().setVisible(true);
+
+        ghost3D.normalDressAnimation().playOrContinue();
+        ghost3D.flashingDressAnimation().setNumFlashes(numFlashes);
+        ghost3D.flashingDressAnimation().playOrContinue();
+    }
+
+    private void lookFrightened(Ghost3D ghost3D) {
+        ghost3D.flashingDressAnimation().stop();
+        ghost3D.normalDressAnimation().playOrContinue();
+        ghost3D.dressMeshView().setVisible(true);
+        ghost3D.setShapeMaterials(ghost3D.materials().frightenedMaterial());
+    }
+
+    private void lookEyesOnly(Ghost3D ghost3D) {
+        ghost3D.stopAllAnimations();
+        ghost3D.dressMeshView().setVisible(false);
+        ghost3D.setShapeMaterials(ghost3D.materials().normalMaterial());
     }
 }
