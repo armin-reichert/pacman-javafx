@@ -6,7 +6,6 @@ package de.amr.pacmanfx.uilib.model3D.ghost;
 
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 
 public class Ghost3DAppearanceController {
@@ -27,11 +26,8 @@ public class Ghost3DAppearanceController {
     }
 
     public void update(Ghost3D ghost3D, GameLevel level) {
-        // Eaten ghost is invisible and needs no update
-        if (ghost3D.ghost().state() != GhostState.EATEN) {
-            final GhostAppearance appearance = computeAppearance(ghost3D, level);
-            setGhostAppearance(ghost3D, appearance);
-        }
+        final GhostAppearance appearance = computeAppearance(ghost3D, level);
+        setGhostAppearance(ghost3D, appearance);
     }
 
     private GhostAppearance computeAppearance(Ghost3D ghost3D, GameLevel level) {
@@ -51,6 +47,7 @@ public class Ghost3DAppearanceController {
                 yield powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
             }
             case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EYES;
+            case EATEN -> GhostAppearance.EATEN;
             default -> GhostAppearance.NORMAL;
         };
     }
@@ -61,6 +58,7 @@ public class Ghost3DAppearanceController {
             case FRIGHTENED -> lookFrightened(ghost3D);
             case FLASHING -> lookFlashing(ghost3D, numFlashes);
             case EYES -> lookEyesOnly(ghost3D);
+            case EATEN -> lookEaten(ghost3D);
         }
     }
 
@@ -103,6 +101,10 @@ public class Ghost3DAppearanceController {
         ghost3D.stopAllAnimations();
         ghost3D.dressMeshView().setVisible(false);
         selectMaterialSet(ghost3D, ghost3D.materials().normalMaterial());
+    }
+
+    private void lookEaten(Ghost3D ghost3D) {
+        ghost3D.setVisible(false);
     }
 
     private void selectMaterialSet(Ghost3D ghost3D, GhostComponentMaterialSet materialSet) {
