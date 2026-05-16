@@ -21,8 +21,10 @@ public class Ghost3DAppearanceController {
     public void update(Ghost3D ghost3D, GameLevel level) {
         final Pac pac = level.pac();
         final Ghost ghost = ghost3D.ghost();
+
         final GhostAppearance appearance = switch (ghost.state()) {
             case LOCKED, LEAVING_HOUSE -> {
+                //TODO maybe the (model) ghost should store the "frightened no more" state?
                 final boolean powerActive = pac.powerTimer().isRunning();
                 final boolean powerFading = pac.isPowerFading(level);
                 final boolean killedDuringCurrentPhase = level.energizerVictims().contains(ghost);
@@ -30,14 +32,12 @@ public class Ghost3DAppearanceController {
                     ? powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED
                     : GhostAppearance.NORMAL;
             }
-            case FRIGHTENED -> {
-                final boolean powerFading = pac.isPowerFading(level);
-                yield powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
-            }
+            case FRIGHTENED -> pac.isPowerFading(level) ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
             case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EYES;
             case EATEN -> GhostAppearance.EATEN;
             default -> GhostAppearance.NORMAL;
         };
+
         switch (appearance) {
             case NORMAL -> lookNormal(ghost3D);
             case FRIGHTENED -> lookFrightened(ghost3D);
