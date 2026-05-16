@@ -12,6 +12,8 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.animation.BonusEatenAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.BonusEdibleAnimation3D;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -19,9 +21,9 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 
 import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
@@ -44,6 +46,9 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
     private PhongMaterial symbolTexture;
     private PhongMaterial pointsTexture;
 
+    private final Translate translate = new Translate();
+
+    private final Group top;
     private final Shape3D shape3D;
 
     public Bonus3D(AnimationRegistry animations, Bonus bonus, Image symbolImage, double symbolWidth, Image pointsImage, double pointsWidth) {
@@ -52,7 +57,12 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
         this.symbolWidth = requireNonNegative(symbolWidth);
         this.pointsWidth = requireNonNegative(pointsWidth);
 
-        shape3D = new Box(symbolWidth, TS, TS);
+        shape3D = new Box(symbolWidth, 8, 8);
+
+        top = new Group();
+        top.getChildren().add(shape3D);
+
+        top.getTransforms().add(translate);
 
         var symbolImageView = new ImageView(requireNonNull(symbolImage));
         symbolImageView.setPreserveRatio(true);
@@ -83,12 +93,16 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
             case INACTIVE, EATEN -> {}
             case EDIBLE -> {
                 final Vector2f center = bonus.center();
-                shape3D.setTranslateX(center.x());
-                shape3D.setTranslateY(center.y());
-                shape3D.setTranslateZ(-HTS);
+                translate.setX(center.x());
+                translate.setY(center.y());
+                translate.setZ(-HTS);
                 animations.animation(AnimationID.BONUS_EDIBLE, BonusEdibleAnimation3D.class).update(gameLevel);
             }
         }
+    }
+
+    public Node node() {
+        return top;
     }
 
     public Shape3D shape3D() {

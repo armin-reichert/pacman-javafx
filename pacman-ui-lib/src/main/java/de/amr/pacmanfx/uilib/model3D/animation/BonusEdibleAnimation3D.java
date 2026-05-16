@@ -48,7 +48,7 @@ public class BonusEdibleAnimation3D extends ManagedAnimation {
             RotateTransition rotateTransition = (RotateTransition) animationFX;
             Vector2f center = bonus.center();
             boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
-            bonus3D.shape3D().setVisible(bonus.state() == BonusState.EDIBLE && !outsideWorld);
+            bonus3D.node().setVisible(bonus.state() == BonusState.EDIBLE && !outsideWorld);
             Direction moveDir = bonus.moveDir();
             Point3D axis = moveDir.isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
             rotateTransition.setRate(moveDir == Direction.DOWN || moveDir == Direction.LEFT ? 1 : -1);

@@ -316,9 +316,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         existing.forEach(bonus3D -> {
             bonus3D.dispose();
             entities3D.remove(bonus3D);
-            getChildren().remove(bonus3D.shape3D());
+            getChildren().remove(bonus3D.node());
         });
-        getChildren().add(createBonus3D(bonus).shape3D());
+        getChildren().add(createBonus3D(bonus).node());
     }
 
     private Bonus3D createBonus3D(Bonus bonus) {
