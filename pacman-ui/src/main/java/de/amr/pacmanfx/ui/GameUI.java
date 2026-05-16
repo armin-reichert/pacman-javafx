@@ -33,8 +33,6 @@ import java.util.Optional;
  * <h2>Responsibilities</h2>
  * <ul>
  *   <li>Manage the JavaFX stage and all active views</li>
- *   <li>Provide global UI properties (colors, debug flags, 3D settings, etc.)</li>
- *   <li>Handle keyboard bindings and dispatch actions</li>
  *   <li>Coordinate sound, voice playback, and preferences</li>
  *   <li>Expose lifecycle operations (show, restart, terminate)</li>
  *   <li>Provide access to the current game scene and its configuration</li>

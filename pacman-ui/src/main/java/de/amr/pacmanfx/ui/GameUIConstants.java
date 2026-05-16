@@ -76,38 +76,55 @@ public class GameUIConstants {
      * Implementations should bind this to the rendering surface.
      */
     public static final ObjectProperty<Color> PROPERTY_CANVAS_BACKGROUND_COLOR = new SimpleObjectProperty<>(Color.BLACK);
+
     /** Whether canvas font smoothing is enabled. */
     public static final BooleanProperty PROPERTY_CANVAS_FONT_SMOOTHING = new SimpleBooleanProperty(false);
+
     /** Whether debug information overlays are visible. */
     public static final BooleanProperty PROPERTY_DEBUG_INFO_VISIBLE = new SimpleBooleanProperty(false);
+
     /** Whether information about the currently pressed keys is displayed. */
     public static final BooleanProperty PROPERTY_KEYBOARD_MONITOR_VISIBLE = new SimpleBooleanProperty(false);
+
     /** Height of the mini-view (in pixels). */
     public static final IntegerProperty PROPERTY_MINI_VIEW_HEIGHT = new SimpleIntegerProperty(400);
+
     /** Whether the mini-view is currently visible. */
     public static final BooleanProperty PROPERTY_MINI_VIEW_ON = new SimpleBooleanProperty(false);
+
     /** Opacity of the mini-view (0–100%). */
     public static final IntegerProperty PROPERTY_MINI_VIEW_OPACITY_PERCENT = new SimpleIntegerProperty(69);
+
     /** Whether all audio output is muted. */
     public static final BooleanProperty PROPERTY_MUTED = new SimpleBooleanProperty(false);
+
     /** Number of simulation steps executed per clock tick. */
     public static final IntegerProperty PROPERTY_SIMULATION_STEPS = new SimpleIntegerProperty(1);
+
     /** Whether 3D axes are visible in the 3D play scene. */
     public static final BooleanProperty PROPERTY_3D_AXES_VISIBLE = new SimpleBooleanProperty(false);
+
     /** Draw mode for 3D geometry (fill or wireframe). */
     public static final ObjectProperty<DrawMode> PROPERTY_3D_DRAW_MODE = new SimpleObjectProperty<>(DrawMode.FILL);
+
     /** Whether 3D rendering is enabled at all. */
     public static final BooleanProperty PROPERTY_3D_ENABLED = new SimpleBooleanProperty(false);
+
     /** Floor color used in 3D mode. */
     public static final ObjectProperty<Color> PROPERTY_3D_FLOOR_COLOR = new SimpleObjectProperty<>(Color.rgb(20, 20, 20));
+
     /** Light color used in 3D mode. */
     public static final ObjectProperty<Color> PROPERTY_3D_LIGHT_COLOR = new SimpleObjectProperty<>(Color.WHITE);
+
     /** Currently active 3D camera perspective. */
     public static final ObjectProperty<PerspectiveID> PROPERTY_3D_PERSPECTIVE_ID = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
+
     /** Height of 3D walls (in world units). */
     public static final DoubleProperty PROPERTY_3D_WALL_HEIGHT = new SimpleDoubleProperty();
+
     /** Opacity of 3D walls (0.0–1.0). */
     public static final DoubleProperty PROPERTY_3D_WALL_OPACITY = new SimpleDoubleProperty(1.0);
+
     /** Default duration for flash messages. */
     public static final Duration DEFAULT_FLASH_MESSAGE_DURATION = Duration.seconds(1.5);
 }
