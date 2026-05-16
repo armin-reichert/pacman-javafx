@@ -37,6 +37,7 @@ public class BonusRollingThroughWorldAnimation3D {
     }
 
     private double normalize(double angle) {
-        return angle % 360;
+        double na = angle % 360;
+        return na < 0 ? na + 360 : na;
     }
 }
