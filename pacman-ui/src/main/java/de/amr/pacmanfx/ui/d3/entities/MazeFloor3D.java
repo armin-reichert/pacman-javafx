@@ -25,7 +25,6 @@ public class MazeFloor3D extends Box implements DisposableGraphicsObject {
         setTranslateY(0.5 * height);
         setTranslateZ(0.5 * thickness);
 
-        //TODO rethink this. It complicates collision handling
         getTransforms().add(new Translate(-padding, 0, 0));
     }
 
