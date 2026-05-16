@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.d3;
 
-import de.amr.basics.Disposable;
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2f;
@@ -65,29 +64,7 @@ import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Represents the complete 3D visualization of a single Pac-Man game level.
- * <p>
- * This class serves as the root node for all 3D elements of a level, including:
- * <ul>
- *   <li>Maze (floor, walls, house, pellets, energizers, particles)</li>
- *   <li>Actors (Pac-Man, ghosts, bonus symbol)</li>
- *   <li>Counters (lives, level number)</li>
- *   <li>Lights (ambient + ghost-specific point light)</li>
- *   <li>Dynamic messages (READY!, test mode, etc.)</li>
- *   <li>Animations (level complete, flashing walls, etc.)</li>
- * </ul>
- * <p>
- * It manages component creation, per-frame updates, draw mode changes, and full resource
- * cleanup via {@link DisposableGraphicsObject} and a {@link List} of {@link Disposable} components.
- * <p>
- * Instances are created by {@link PlayScene3D} and disposed when the level ends or the
- * 3D view is deactivated.
- *
- * @see PlayScene3D
- * @see Maze3D
- * @see Pac3D
- * @see Ghost3D
- * @see DisposableGraphicsObject
+ * Represents the 3D visualization of a Pac-Man game level.
  */
 public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
@@ -150,7 +127,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
         Logger.info("Cleaned game level 3D");
     }
-
 
     /**
      * Starts the lives counter symbols following Pac-Man with their eyes.

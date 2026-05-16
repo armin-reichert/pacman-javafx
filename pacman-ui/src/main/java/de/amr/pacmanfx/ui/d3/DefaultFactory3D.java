@@ -40,7 +40,6 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultFactory3D implements Factory3D {
 
-
     public static final int FLOOR_SPECULAR_POWER = 128;
     public static final int WALL_BASE_SPECULAR_POWER = 64;
 
