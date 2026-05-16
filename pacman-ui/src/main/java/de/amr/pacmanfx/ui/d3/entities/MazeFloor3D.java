@@ -17,19 +17,13 @@ public class MazeFloor3D extends Group implements DisposableGraphicsObject {
 
     private final Box plane;
 
-    public MazeFloor3D(PhongMaterial floorMaterial, float width, float height, float thickness, float padding) {
+    public MazeFloor3D(PhongMaterial floorMaterial, float width, float height, float thickness) {
         requireNonNull(floorMaterial);
 
         plane = new Box(width, height, thickness);
         plane.setMaterial(floorMaterial);
 
         getChildren().add(plane);
-
-        setTranslateX(0.5 * width);
-        setTranslateY(0.5 * height);
-        setTranslateZ(0.5 * thickness);
-
-        getTransforms().add(new Translate(-padding, 0, 0));
     }
 
     public Box plane() {

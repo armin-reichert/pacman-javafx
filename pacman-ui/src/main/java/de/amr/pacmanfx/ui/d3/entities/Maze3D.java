@@ -24,6 +24,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Translate;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -177,7 +178,12 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         final float width = terrainSize.x() + 2 * floorConfig.padding();
         final float height = terrainSize.y();
-        floor3D = new MazeFloor3D(materials3D.floor(), width, height, floorConfig.thickness(), floorConfig.padding());
+        final float thickness = floorConfig.thickness();
+        floor3D = new MazeFloor3D(materials3D.floor(), width, height, thickness);
+        floor3D.getTransforms().add(new Translate(-floorConfig.padding(), 0, 0));
+        floor3D.setTranslateX(0.5 * width);
+        floor3D.setTranslateY(0.5 * height);
+        floor3D.setTranslateZ(0.5 * thickness);
     }
 
     private void createArcadeHouse3D(AnimationRegistry animations, HouseConfig3D houseConfig, GameLevel level, WorldMapColorScheme colorScheme) {
