@@ -7,8 +7,8 @@ package de.amr.pacmanfx.uilib.model3D.ghost;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostBrakeAnimation3D;
@@ -20,7 +20,6 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
-import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
@@ -169,12 +168,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         dressMeshView.setVisible(true);
 
         final GhostFlashingAnimation3D flashing = flashingDressAnimation();
-        // TODO: this is total crap and needs to be reimplemented
-        if (flashing.numFlashes() != numFlashes) {
-            flashing.stop();
-            flashing.setNumFlashes(numFlashes);
-            flashing.setTotalDuration(Duration.millis(1990));
-        }
+        flashing.setNumFlashes(numFlashes);
         flashing.playOrContinue();
     }
 
@@ -255,7 +249,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     }
 
     private void registerAnimations() {
-        animations.register(AnimationID.DRESS.key(ghost), new GhostDressAnimation3D(this));
+        animations.register(AnimationID.DRESS.key(ghost), new GhostDressAnimation3D(this, 30));
         animations.register(AnimationID.FLASHING.key(ghost), new GhostFlashingAnimation3D(ghost, materialSet, config.colors()));
         animations.register(AnimationID.BRAKING.key(ghost), new GhostBrakeAnimation3D(this));
     }

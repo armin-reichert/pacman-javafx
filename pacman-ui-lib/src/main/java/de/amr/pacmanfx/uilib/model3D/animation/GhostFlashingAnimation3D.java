@@ -16,6 +16,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
+import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
 
 public class GhostFlashingAnimation3D extends ManagedAnimation {
@@ -23,7 +24,7 @@ public class GhostFlashingAnimation3D extends ManagedAnimation {
     private final GhostMaterialSet materialSet;
     private final GhostStateColors colors;
     private Duration totalDuration = Duration.seconds(3);
-    private int numFlashes = 5;
+    private int numFlashes;
 
     public GhostFlashingAnimation3D(Ghost ghost, GhostMaterialSet materialSet, GhostStateColors colors) {
         super("Ghost Flashing (%s)".formatted(ghost.name()));
@@ -42,8 +43,12 @@ public class GhostFlashingAnimation3D extends ManagedAnimation {
     }
 
     public void setNumFlashes(int numFlashes) {
-        this.numFlashes = Validations.requireNonNegativeInt(numFlashes);
-        invalidate();
+        requireNonNegativeInt(numFlashes);
+        if (this.numFlashes != numFlashes) {
+            stop();
+            this.numFlashes = numFlashes;
+            setTotalDuration(Duration.millis(1990));
+        }
     }
 
     private Animation createAnimationFX() {

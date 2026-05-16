@@ -11,17 +11,23 @@ import javafx.animation.RotateTransition;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+/**
+ * Rotates the ghost dress back and forth.
+ */
 public class GhostDressAnimation3D extends ManagedAnimation {
 
-    public GhostDressAnimation3D(Ghost3D ghost3D) {
+    private static final float FULL_CYCLE_SEC = 0.6f;
+
+    public GhostDressAnimation3D(Ghost3D ghost3D, int angle) {
         super("Ghost Dress Animation (%s)".formatted(ghost3D.ghost().name()));
         setFactory(() -> {
-            final var animation = new RotateTransition(Duration.seconds(0.3), ghost3D.dressGroup());
-            animation.setAxis(Rotate.Y_AXIS); // Note: Y axis!
-            animation.setByAngle(30);
-            animation.setCycleCount(Animation.INDEFINITE);
-            animation.setAutoReverse(true);
-            return animation;
+            final var dressRotation = new RotateTransition(Duration.seconds(FULL_CYCLE_SEC / 2), ghost3D.dressGroup());
+            dressRotation.setAxis(Rotate.Y_AXIS); // Note: Y axis!
+            dressRotation.setFromAngle(-angle);
+            dressRotation.setToAngle(angle);
+            dressRotation.setCycleCount(Animation.INDEFINITE);
+            dressRotation.setAutoReverse(true);
+            return dressRotation;
         });
     }
 }
