@@ -7,33 +7,21 @@ package de.amr.pacmanfx.uilib.model3D.ghost;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 
 public class Ghost3DAppearanceController {
 
-    private int numFlashes;
-
-    public Ghost3DAppearanceController() {
-        numFlashes = 3;
-    }
-
-    public void setNumFlashes(int numFlashes) {
-        this.numFlashes = numFlashes;
-    }
+    public Ghost3DAppearanceController() {}
 
     public void init(Ghost3D ghost3D) {
         ghost3D.stopAllAnimations();
-        setGhostAppearance(ghost3D, GhostAppearance.NORMAL);
+        lookNormal(ghost3D);
     }
 
     public void update(Ghost3D ghost3D, GameLevel level) {
-        final GhostAppearance appearance = computeAppearance(ghost3D, level);
-        setGhostAppearance(ghost3D, appearance);
-    }
-
-    private GhostAppearance computeAppearance(Ghost3D ghost3D, GameLevel level) {
         final Pac pac = level.pac();
         final Ghost ghost = ghost3D.ghost();
-        return switch (ghost.state()) {
+        final GhostAppearance appearance = switch (ghost.state()) {
             case LOCKED, LEAVING_HOUSE -> {
                 final boolean powerActive = pac.powerTimer().isRunning();
                 final boolean powerFading = pac.isPowerFading(level);
@@ -50,13 +38,10 @@ public class Ghost3DAppearanceController {
             case EATEN -> GhostAppearance.EATEN;
             default -> GhostAppearance.NORMAL;
         };
-    }
-
-    private void setGhostAppearance(Ghost3D ghost3D, GhostAppearance ghostAppearance) {
-        switch (ghostAppearance) {
+        switch (appearance) {
             case NORMAL -> lookNormal(ghost3D);
             case FRIGHTENED -> lookFrightened(ghost3D);
-            case FLASHING -> lookFlashing(ghost3D, numFlashes);
+            case FLASHING -> lookFlashing(ghost3D, level.numFlashes());
             case EYES -> lookEyesOnly(ghost3D);
             case EATEN -> lookEaten(ghost3D);
         }
@@ -70,10 +55,11 @@ public class Ghost3DAppearanceController {
     }
 
     private void lookNormal(Ghost3D ghost3D) {
-        ghost3D.flashingDressAnimation().stop();
-        ghost3D.normalDressAnimation().playOrContinue();
         ghost3D.dressMeshView().setVisible(true);
         selectMaterialSet(ghost3D, ghost3D.materials().normalMaterial());
+
+        ghost3D.dressColorFlashingAnimation().ifPresent(ManagedAnimation::stop);
+        ghost3D.dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
         brakeIfTunnelEntered(ghost3D);
     }
 
@@ -82,25 +68,29 @@ public class Ghost3DAppearanceController {
             lookFrightened(ghost3D);
             return;
         }
-        selectMaterialSet(ghost3D, ghost3D.materials().flashingMaterial());
         ghost3D.dressMeshView().setVisible(true);
+        selectMaterialSet(ghost3D, ghost3D.materials().flashingMaterial());
 
-        ghost3D.normalDressAnimation().playOrContinue();
-        ghost3D.flashingDressAnimation().setNumFlashes(numFlashes);
-        ghost3D.flashingDressAnimation().playOrContinue();
+        ghost3D.dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
+        ghost3D.dressColorFlashingAnimation().ifPresent(flashing -> {
+            flashing.setNumFlashes(numFlashes);
+            flashing.playOrContinue();
+        });
     }
 
     private void lookFrightened(Ghost3D ghost3D) {
-        ghost3D.flashingDressAnimation().stop();
-        ghost3D.normalDressAnimation().playOrContinue();
         ghost3D.dressMeshView().setVisible(true);
         selectMaterialSet(ghost3D, ghost3D.materials().frightenedMaterial());
+
+        ghost3D.dressColorFlashingAnimation().ifPresent(ManagedAnimation::stop);
+        ghost3D.dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
     }
 
     private void lookEyesOnly(Ghost3D ghost3D) {
-        ghost3D.stopAllAnimations();
         ghost3D.dressMeshView().setVisible(false);
         selectMaterialSet(ghost3D, ghost3D.materials().normalMaterial());
+
+        ghost3D.stopAllAnimations();
     }
 
     private void lookEaten(Ghost3D ghost3D) {

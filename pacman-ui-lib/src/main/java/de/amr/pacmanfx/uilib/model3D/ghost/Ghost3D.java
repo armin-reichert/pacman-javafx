@@ -21,6 +21,8 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
+import java.util.Optional;
+
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -151,12 +153,12 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         this.appearanceController = requireNonNull(appearanceController);
     }
 
-    public ManagedAnimation normalDressAnimation() {
-        return animations.animation(AnimationID.DRESS.key(ghost));
+    public Optional<GhostDressAnimation3D> dressAnimation() {
+        return animations.optAnimation(AnimationID.DRESS.key(ghost), GhostDressAnimation3D.class);
     }
 
-    public GhostFlashingAnimation3D flashingDressAnimation() {
-        return animations.optAnimation(AnimationID.FLASHING.key(ghost), GhostFlashingAnimation3D.class).orElseThrow();
+    public Optional<GhostFlashingAnimation3D> dressColorFlashingAnimation() {
+        return animations.optAnimation(AnimationID.FLASHING.key(ghost), GhostFlashingAnimation3D.class);
     }
 
     // Private Area, no trespassing!
