@@ -250,7 +250,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
     private void registerAnimations() {
         animations.register(AnimationID.DRESS.key(ghost), new GhostDressAnimation3D(this, 30));
-        animations.register(AnimationID.FLASHING.key(ghost), new GhostFlashingAnimation3D(ghost, materialSet, config.colors()));
+        animations.register(AnimationID.FLASHING.key(ghost), new GhostFlashingAnimation3D(this));
         animations.register(AnimationID.BRAKING.key(ghost), new GhostBrakeAnimation3D(this));
     }
 
