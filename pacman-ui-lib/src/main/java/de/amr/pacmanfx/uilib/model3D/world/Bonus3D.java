@@ -7,11 +7,12 @@ import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.animation.BonusEatenAnimation3D;
-import de.amr.pacmanfx.uilib.model3D.animation.BonusEdibleAnimation3D;
+import de.amr.pacmanfx.uilib.model3D.animation.BonusRollingThroughWorldAnimation3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -24,6 +25,7 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
 import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
@@ -47,9 +49,14 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
     private PhongMaterial pointsTexture;
 
     private final Translate translate = new Translate();
+    private final Rotate rotateX = new Rotate(0, Rotate.X_AXIS);
+    private final Rotate rotateY = new Rotate(0, Rotate.Y_AXIS);
 
     private final Group top;
+    private final Group rollingGroup;
     private final Shape3D shape3D;
+
+    private final BonusRollingThroughWorldAnimation3D rollingAnimation;
 
     public Bonus3D(AnimationRegistry animations, Bonus bonus, Image symbolImage, double symbolWidth, Image pointsImage, double pointsWidth) {
         this.animations = requireNonNull(animations);
@@ -59,8 +66,11 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
 
         shape3D = new Box(symbolWidth, 8, 8);
 
+        rollingGroup = new Group(shape3D);
+        rollingGroup.getTransforms().addAll(rotateX, rotateY);
+
         top = new Group();
-        top.getChildren().add(shape3D);
+        top.getChildren().add(rollingGroup);
 
         top.getTransforms().add(translate);
 
@@ -74,31 +84,32 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
         pointsImageView.setFitWidth(pointsWidth);
         pointsTexture = new PhongMaterial(Color.GHOSTWHITE, pointsImageView.getImage(), null, null, null);
 
-        animations.register(AnimationID.BONUS_EDIBLE, new BonusEdibleAnimation3D(bonus, this));
+        rollingAnimation = new BonusRollingThroughWorldAnimation3D(this);
         animations.register(AnimationID.BONUS_EATEN, new BonusEatenAnimation3D(this));
     }
 
     @Override
-    public void dispose() {
-        symbolTexture = null;
-        pointsTexture = null;
-        animations.optAnimation(AnimationID.BONUS_EDIBLE).ifPresent(ManagedAnimation::dispose);
-        animations.optAnimation(AnimationID.BONUS_EATEN).ifPresent(ManagedAnimation::dispose);
-        cleanupShape3D(shape3D);
-    }
-
-    @Override
-    public void update(GameLevel gameLevel) {
+    public void update(GameLevel level) {
         switch (bonus.state()) {
             case INACTIVE, EATEN -> {}
             case EDIBLE -> {
-                final Vector2f center = bonus.center();
-                translate.setX(center.x());
-                translate.setY(center.y());
-                translate.setZ(-HTS);
-                animations.animation(AnimationID.BONUS_EDIBLE, BonusEdibleAnimation3D.class).update(gameLevel);
+                updatePosition(level);
+                rollingAnimation.update();
             }
         }
+    }
+
+    @Override
+    public void dispose() {
+        animations.optAnimation(AnimationID.BONUS_EDIBLE).ifPresent(ManagedAnimation::dispose);
+        animations.optAnimation(AnimationID.BONUS_EATEN).ifPresent(ManagedAnimation::dispose);
+        cleanupShape3D(shape3D);
+        symbolTexture = null;
+        pointsTexture = null;
+    }
+
+    public Bonus bonus() {
+        return bonus;
     }
 
     public Node node() {
@@ -109,24 +120,34 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
         return shape3D;
     }
 
+    public Rotate rotateX() {
+        return rotateX;
+    }
+
+    public Rotate rotateY() {
+        return rotateY;
+    }
+
     public void showEdible() {
         shape3D.setVisible(true);
         if (shape3D instanceof Box box) {
             box.setWidth(symbolWidth);
         }
         shape3D.setMaterial(symbolTexture);
-        animations.animation(AnimationID.BONUS_EDIBLE).playFromStart();
     }
 
     public void showEaten() {
-        animations.animation(AnimationID.BONUS_EDIBLE).stop();
         shape3D.setVisible(true);
         if (shape3D instanceof Box box) {
             box.setWidth(pointsWidth);
         }
         shape3D.setMaterial(pointsTexture);
-        shape3D.setRotationAxis(Rotate.X_AXIS);
-        shape3D.setRotate(0);
+
+        // restore neutral orientation
+        rotateX.setAngle(0);
+        rotateY.setAngle(0);
+
+        // Rotate around x-axis
         animations.animation(AnimationID.BONUS_EATEN).playFromStart();
     }
 
@@ -134,5 +155,15 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
         animations.optAnimation(AnimationID.BONUS_EDIBLE).ifPresent(ManagedAnimation::stop);
         animations.optAnimation(AnimationID.BONUS_EATEN).ifPresent(ManagedAnimation::stop);
         shape3D.setVisible(false);
+    }
+
+    private void updatePosition(GameLevel level) {
+        final Vector2f center = bonus.center();
+        translate.setX(center.x());
+        translate.setY(center.y());
+        translate.setZ(-HTS);
+
+        boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
+        top.setVisible(bonus.state() == BonusState.EDIBLE && !outsideWorld);
     }
 }
