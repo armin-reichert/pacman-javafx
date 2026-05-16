@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
@@ -140,7 +141,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         gameVariantNameListener = (_, _, newVariant) -> ui.gameContext().setGameVariantName(newVariant.name());
         menu.entryGameVariant().valueProperty().addListener(gameVariantNameListener);
 
-        play3DListener = (_, _, play3D) -> GameUI.PROPERTY_3D_ENABLED.set(play3D);
+        play3DListener = (_, _, play3D) -> GameUIConstants.PROPERTY_3D_ENABLED.set(play3D);
         menu.entryPlay3D().valueProperty().addListener(play3DListener);
 
         cutScenesEnabledListener = (_,_,enabled) -> ui.gameContext().game().flow().setCutScenesEnabled(enabled);

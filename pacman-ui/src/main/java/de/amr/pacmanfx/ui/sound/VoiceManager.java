@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.sound;
 
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUIConstants;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import org.tinylog.Logger;
@@ -22,7 +22,7 @@ public class VoiceManager {
         }
         stopVoice();
         player = new MediaPlayer(voiceMedia);
-        player.muteProperty().bind(GameUI.PROPERTY_MUTED);
+        player.muteProperty().bind(GameUIConstants.PROPERTY_MUTED);
         player.setOnError(() ->
             Logger.error("Voice playback error: {}", player.getError())
         );

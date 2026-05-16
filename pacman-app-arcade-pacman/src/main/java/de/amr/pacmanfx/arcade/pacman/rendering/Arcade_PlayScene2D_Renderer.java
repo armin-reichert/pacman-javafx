@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -68,7 +68,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
             levelRenderer.drawLevel(level, info);
             updateActorZOrder(level);
             actorsInZOrder.forEach(actorRenderer::drawActor);
-            if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+            if (GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
                 debugRenderer.draw(scene);
             }
         });

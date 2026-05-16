@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import javafx.beans.value.ChangeListener;
@@ -32,7 +33,7 @@ import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PLAY_SCE
  * </ul>
  *
  * The menu keeps its perspective selection synchronized with the global
- * {@link GameUI#PROPERTY_3D_PERSPECTIVE_ID} property. When the property changes
+ * {@link GameUIConstants#PROPERTY_3D_PERSPECTIVE_ID} property. When the property changes
  * externally, the corresponding radio button is automatically selected.
  *
  * <p>Instances must be disposed via {@link #dispose()} to remove listeners and
@@ -72,7 +73,7 @@ public class PlaySceneContextMenu extends GameUI_ContextMenu implements Disposab
 
         addLocalizedTitleItem("scene_display");
         addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
-        addLocalizedCheckBox(GameUI.PROPERTY_MINI_VIEW_ON, "pip");
+        addLocalizedCheckBox(GameUIConstants.PROPERTY_MINI_VIEW_ON, "pip");
 
         addLocalizedTitleItem("select_perspective");
         for (PerspectiveID id : PerspectiveID.values()) {
@@ -80,11 +81,11 @@ public class PlaySceneContextMenu extends GameUI_ContextMenu implements Disposab
             item.setUserData(id);
             item.setToggleGroup(perspectivesGroup);
 
-            if (id == GameUI.PROPERTY_3D_PERSPECTIVE_ID.get()) {
+            if (id == GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.get()) {
                 item.setSelected(true);
             }
 
-            item.setOnAction(_ -> GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(id));
+            item.setOnAction(_ -> GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(id));
         }
 
         addLocalizedTitleItem("pacman");
@@ -92,10 +93,10 @@ public class PlaySceneContextMenu extends GameUI_ContextMenu implements Disposab
         addLocalizedCheckBox(game.cheats().immuneProperty(), "immunity");
 
         addSeparator();
-        addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
+        addLocalizedCheckBox(GameUIConstants.PROPERTY_MUTED, "muted");
         addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
 
-        GameUI.PROPERTY_3D_PERSPECTIVE_ID.addListener(perspectiveListener);
+        GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.addListener(perspectiveListener);
     }
 
     /**
@@ -105,6 +106,6 @@ public class PlaySceneContextMenu extends GameUI_ContextMenu implements Disposab
      */
     @Override
     public void dispose() {
-        GameUI.PROPERTY_3D_PERSPECTIVE_ID.removeListener(perspectiveListener);
+        GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.removeListener(perspectiveListener);
     }
 }

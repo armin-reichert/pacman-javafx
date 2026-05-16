@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene.SceneState;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -101,7 +101,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
             drawJoypadKeyBinding(Input.instance().joypad.currentKeyBinding());
         }
 
-        if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }

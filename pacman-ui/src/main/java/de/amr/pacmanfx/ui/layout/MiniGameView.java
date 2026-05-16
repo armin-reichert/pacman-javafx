@@ -8,6 +8,7 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -29,7 +30,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.GameUI.*;
 import static java.util.Objects.requireNonNull;
 
 public class MiniGameView {
@@ -65,13 +65,13 @@ public class MiniGameView {
         // The container fills the complete parent container height (why?), so we put the canvas
         // into an HBox that does not grow in height and provides some padding around the canvas.
         contentPane = new HBox(canvas);
-        contentPane.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
+        contentPane.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
         contentPane.setPadding(new Insets(0, 10, 0, 10));
         VBox.setVgrow(contentPane, Priority.NEVER);
 
         container.getChildren().add(contentPane);
 
-        container.opacityProperty().bind(PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
+        container.opacityProperty().bind(GameUIConstants.PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
 
         scaling.bind(Bindings.createDoubleBinding(
             () -> canvas.getHeight() / worldSize.get().y(),
@@ -93,11 +93,11 @@ public class MiniGameView {
 
         levelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
         levelRenderer.scalingProperty().bind(scaling);
-        levelRenderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
+        levelRenderer.backgroundColorProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
 
         actorRenderer = ui.currentConfig().createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scaling);
-        actorRenderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
+        actorRenderer.backgroundColorProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
     }
 
     public void slideIn() {
@@ -163,7 +163,7 @@ public class MiniGameView {
                 .forEach(ghost -> actorRenderer.drawActor(ghost));
         }
 
-        if (PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             canvasRenderer.fillTextCentered(
                 "scaling: %.2f, draw calls: %d".formatted(scaling.doubleValue(), drawCallCount),
                 Color.WHITE, Font.font(14 * scaling.get()),
@@ -175,7 +175,7 @@ public class MiniGameView {
     // Private area
 
     private void bindCanvasSize() {
-        canvas.heightProperty().bind(PROPERTY_MINI_VIEW_HEIGHT);
+        canvas.heightProperty().bind(GameUIConstants.PROPERTY_MINI_VIEW_HEIGHT);
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> {
                 final double aspect = (double) worldSize.get().x() / worldSize.get().y();

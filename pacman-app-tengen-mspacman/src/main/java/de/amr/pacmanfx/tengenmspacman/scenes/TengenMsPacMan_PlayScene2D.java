@@ -17,6 +17,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.input.Input;
@@ -47,7 +48,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
 import static de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplayMode.SCROLLING;
-import static de.amr.pacmanfx.ui.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
+import static de.amr.pacmanfx.ui.GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
 import static java.util.Objects.requireNonNull;
 
@@ -178,7 +179,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         menu.addLocalizedCheckBox(game.cheats().usingAutopilotProperty(), "autopilot");
         menu.addLocalizedCheckBox(game.cheats().immuneProperty(), "immunity");
         menu.addSeparator();
-        menu.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
+        menu.addLocalizedCheckBox(GameUIConstants.PROPERTY_MUTED, "muted");
         menu.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
 
         return Optional.of(menu);
@@ -314,7 +315,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         } else {
             // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
             actionBindings.addAll(STEERING_BINDINGS);
-            actionBindings.addAll(GameUI.CHEAT_ACTION_BINDINGS);
+            actionBindings.addAll(GameUIConstants.CHEAT_ACTION_BINDINGS);
             actionBindings.addAny(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
             actionBindings.addAny(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
         }

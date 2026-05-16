@@ -20,6 +20,7 @@ import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
@@ -60,7 +61,6 @@ import java.util.stream.Stream;
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.GameFlow.CanonicalGameState.*;
-import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
@@ -281,10 +281,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createMaze3D(WorldMapColorScheme colorScheme) {
         final var maze3D = uiConfig.factory3D().createMaze3D(level, uiConfig.entityConfig(), colorScheme, animationRegistry);
-        maze3D.wallOpacityProperty().bind(PROPERTY_3D_WALL_OPACITY);
-        maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
-        maze3D.floorColorProperty().bind(PROPERTY_3D_FLOOR_COLOR);
-        maze3D.floor().plane().drawModeProperty().bind(PROPERTY_3D_DRAW_MODE);
+        maze3D.wallOpacityProperty().bind(GameUIConstants.PROPERTY_3D_WALL_OPACITY);
+        maze3D.wallBaseHeightProperty().bind(GameUIConstants.PROPERTY_3D_WALL_HEIGHT);
+        maze3D.floorColorProperty().bind(GameUIConstants.PROPERTY_3D_FLOOR_COLOR);
+        maze3D.floor().plane().drawModeProperty().bind(GameUIConstants.PROPERTY_3D_DRAW_MODE);
         entities3D.add(maze3D);
     }
 
@@ -708,11 +708,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     public void playLevelEndAnimation(Maze3D maze3D, GameLevel level, State<Game> gameState) {
         final boolean cutScene = level.cutSceneNumber() != 0;
-        final PerspectiveID perspectiveBeforeAnimation = GameUI.PROPERTY_3D_PERSPECTIVE_ID.get();
+        final PerspectiveID perspectiveBeforeAnimation = GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.get();
 
         final var seq = new SequentialTransition(
             pauseSecThen(2, () -> {
-                GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
+                GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
                 maze3D.wallBaseHeightProperty().unbind();
             }),
             animationRegistry.animation(cutScene ? AnimationID.LEVEL_COMPLETED_SHORT: AnimationID.LEVEL_COMPLETED_FULL).animationFX(),
@@ -720,8 +720,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         );
 
         seq.setOnFinished(_ -> {
-            GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(perspectiveBeforeAnimation);
-            maze3D.wallBaseHeightProperty().bind(PROPERTY_3D_WALL_HEIGHT);
+            GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(perspectiveBeforeAnimation);
+            maze3D.wallBaseHeightProperty().bind(GameUIConstants.PROPERTY_3D_WALL_HEIGHT);
             gameState.expire();
         });
 

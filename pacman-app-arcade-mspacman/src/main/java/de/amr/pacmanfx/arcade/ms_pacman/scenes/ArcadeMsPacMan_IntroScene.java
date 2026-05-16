@@ -17,6 +17,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -62,7 +63,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         ui.voicePlayer().playVoice(GameUI_Resources.VOICE_EXPLAIN_GAME_START);
 
         actionBindings.addAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
-        actionBindings.addAll(GameUI.SCENE_TESTS_BINDINGS);
+        actionBindings.addAll(GameUIConstants.SCENE_TESTS_BINDINGS);
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);

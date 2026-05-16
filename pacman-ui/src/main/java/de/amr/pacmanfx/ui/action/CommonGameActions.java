@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.ViewManager.ViewID;
@@ -23,7 +24,6 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
-import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggleBoolean;
 
 /**
@@ -76,8 +76,8 @@ public final class CommonGameActions {
     public static final GameAction ACTION_PERSPECTIVE_NEXT = new GameAction("PERSPECTIVE_NEXT") {
         @Override
         public void execute(GameUI ui) {
-            PerspectiveID id = PROPERTY_3D_PERSPECTIVE_ID.get().next();
-            PROPERTY_3D_PERSPECTIVE_ID.set(id);
+            PerspectiveID id = GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.get().next();
+            GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(id);
             String msgKey = ui.translate("camera_perspective", ui.translate("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
@@ -86,8 +86,8 @@ public final class CommonGameActions {
     public static final GameAction ACTION_PERSPECTIVE_PREVIOUS = new GameAction("PERSPECTIVE_PREVIOUS") {
         @Override
         public void execute(GameUI ui) {
-            PerspectiveID id = PROPERTY_3D_PERSPECTIVE_ID.get().prev();
-            PROPERTY_3D_PERSPECTIVE_ID.set(id);
+            PerspectiveID id = GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.get().prev();
+            GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(id);
             String msgKey = ui.translate("camera_perspective", ui.translate("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
@@ -246,14 +246,14 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_DEBUG_INFO = new GameAction("TOGGLE_DEBUG_INFO") {
         @Override
         public void execute(GameUI ui) {
-            toggleBoolean(PROPERTY_DEBUG_INFO_VISIBLE);
+            toggleBoolean(GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE);
         }
     };
 
     public static final GameAction ACTION_TOGGLE_DRAW_MODE = new GameAction("TOGGLE_DRAW_MODE") {
         @Override
         public void execute(GameUI ui) {
-            PROPERTY_3D_DRAW_MODE.set(PROPERTY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+            GameUIConstants.PROPERTY_3D_DRAW_MODE.set(GameUIConstants.PROPERTY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
         }
 
         @Override
@@ -265,16 +265,16 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_KEYBOARD_MONITOR = new GameAction("TOGGLE_KEYBOARD_MONITOR") {
         @Override
         public void execute(GameUI ui) {
-            toggleBoolean(PROPERTY_KEYBOARD_MONITOR_VISIBLE);
+            toggleBoolean(GameUIConstants.PROPERTY_KEYBOARD_MONITOR_VISIBLE);
         }
     };
 
     public static final GameAction ACTION_TOGGLE_MINI_VIEW_VISIBILITY = new GameAction("TOGGLE_MINI_VIEW_VISIBILITY") {
         @Override
         public void execute(GameUI ui) {
-            toggleBoolean(PROPERTY_MINI_VIEW_ON);
+            toggleBoolean(GameUIConstants.PROPERTY_MINI_VIEW_ON);
             if (!ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D)) {
-                ui.showFlashMessage(ui.translate(PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
+                ui.showFlashMessage(ui.translate(GameUIConstants.PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
             }
         }
     };
@@ -282,7 +282,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_MUTED = new GameAction("TOGGLE_MUTED") {
         @Override
         public void execute(GameUI ui) {
-            PROPERTY_MUTED.set(!PROPERTY_MUTED.get());
+            GameUIConstants.PROPERTY_MUTED.set(!GameUIConstants.PROPERTY_MUTED.get());
         }
     };
 
@@ -308,9 +308,9 @@ public final class CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
-            toggleBoolean(PROPERTY_3D_ENABLED);
+            toggleBoolean(GameUIConstants.PROPERTY_3D_ENABLED);
             if (!isPlaySceneActive(ui)) {
-                final boolean usePlayScene3D = PROPERTY_3D_ENABLED.get();
+                final boolean usePlayScene3D = GameUIConstants.PROPERTY_3D_ENABLED.get();
                 ui.showFlashMessage(ui.translate(usePlayScene3D ? "use_3D_scene" : "use_2D_scene"));
             }
             if (canSwitchSceneNow(game)) {

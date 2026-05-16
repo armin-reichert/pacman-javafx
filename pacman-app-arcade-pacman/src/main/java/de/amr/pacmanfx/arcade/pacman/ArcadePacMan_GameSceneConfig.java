@@ -12,7 +12,7 @@ import de.amr.pacmanfx.ui.GameSceneConfig;
 import de.amr.pacmanfx.ui.GameUI;
 
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.*;
-import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.GameUIConstants.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {

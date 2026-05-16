@@ -165,7 +165,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 """);
         StackPane.setMargin(box, new Insets(10));
         StackPane.setAlignment(box, Pos.TOP_RIGHT);
-        box.visibleProperty().bind(PROPERTY_KEYBOARD_MONITOR_VISIBLE);
+        box.visibleProperty().bind(GameUIConstants.PROPERTY_KEYBOARD_MONITOR_VISIBLE);
 
         Input.instance().keyboard.addListener(keyboard -> {
             box.getChildren().clear();
@@ -203,15 +203,15 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     private void initPropertyBindings() {
-        soundManager.muteProperty().bind(GameUI.PROPERTY_MUTED);
+        soundManager.muteProperty().bind(GameUIConstants.PROPERTY_MUTED);
 
         statusIconBox.visibleProperty().bind(
             viewManager.selectedIDProperty().map(viewID -> viewID == PLAY_VIEW || viewID == START_VIEW));
 
         titleBinding = createStringBinding(
             () -> {
-                final boolean debug  = PROPERTY_DEBUG_INFO_VISIBLE.get();
-                final boolean is3D   = PROPERTY_3D_ENABLED.get();
+                final boolean debug  = GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get();
+                final boolean is3D   = GameUIConstants.PROPERTY_3D_ENABLED.get();
                 final boolean paused = gameContext.clock().getUpdatesDisabled();
                 final GameScene gameScene = optGameScene().orElse(null);
                 return computeStageTitle(viewManager.currentView(), gameScene, debug, is3D, paused);
@@ -219,8 +219,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
             gameContext.gameVariantNameProperty(),
             viewManager.currentViewProperty(),
             playView().gameSceneProperty(),
-            PROPERTY_DEBUG_INFO_VISIBLE,
-            PROPERTY_3D_ENABLED,
+            GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE,
+            GameUIConstants.PROPERTY_3D_ENABLED,
             gameContext.clock().updatesDisabledProperty()
         );
         stage.titleProperty().bind(titleBinding);
@@ -256,10 +256,10 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     private void initGlobalActionBindings() {
-        actionBindings.addAny(CommonGameActions.ACTION_ENTER_FULLSCREEN,        GameUI.COMMON_BINDINGS);
-        actionBindings.addAny(CommonGameActions.ACTION_OPEN_EDITOR,             GameUI.COMMON_BINDINGS);
-        actionBindings.addAny(CommonGameActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUI.COMMON_BINDINGS);
-        actionBindings.addAny(CommonGameActions.ACTION_TOGGLE_MUTED,            GameUI.COMMON_BINDINGS);
+        actionBindings.addAny(CommonGameActions.ACTION_ENTER_FULLSCREEN,        GameUIConstants.COMMON_BINDINGS);
+        actionBindings.addAny(CommonGameActions.ACTION_OPEN_EDITOR,             GameUIConstants.COMMON_BINDINGS);
+        actionBindings.addAny(CommonGameActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.addAny(CommonGameActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
         actionBindings.assignToKeyboard();
     }
 
@@ -432,8 +432,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     @Override
     public void show() {
         // These need the current UI config to be initialized
-        PROPERTY_3D_WALL_HEIGHT .set(currentConfig().entityConfig().maze().obstacleBaseHeight());
-        PROPERTY_3D_WALL_OPACITY.set(currentConfig().entityConfig().maze().obstacleOpacity());
+        GameUIConstants.PROPERTY_3D_WALL_HEIGHT .set(currentConfig().entityConfig().maze().obstacleBaseHeight());
+        GameUIConstants.PROPERTY_3D_WALL_OPACITY.set(currentConfig().entityConfig().maze().obstacleOpacity());
 
         logPreferences();
         dashboard().init(this);

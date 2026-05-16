@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -12,8 +13,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
 import java.util.List;
-
-import static de.amr.pacmanfx.ui.GameUI.*;
 
 /**
  * General settings and simulation control.
@@ -56,18 +55,18 @@ public class DashboardSectionGeneral extends DashboardSection {
         btnStep.setText(null);
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
         btnStep.disableProperty().bind(ui.gameContext().clock().updatesDisabledProperty().not());
-        setAction(btnStep, () -> ui.gameContext().clock().makeSteps(PROPERTY_SIMULATION_STEPS.get(), true));
+        setAction(btnStep, () -> ui.gameContext().clock().makeSteps(GameUIConstants.PROPERTY_SIMULATION_STEPS.get(), true));
 
-        addIntSpinner("Num Steps", 1, 50, PROPERTY_SIMULATION_STEPS);
+        addIntSpinner("Num Steps", 1, 50, GameUIConstants.PROPERTY_SIMULATION_STEPS);
         var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
         setEditor(sliderTargetFPS, ui.gameContext().clock().targetFrameRateProperty());
 
         addDynamicLabeledValue("", () -> "FPS: %.1f (Target: %d)".formatted(ui.gameContext().clock().fps(), ui.gameContext().clock().targetFrameRate()));
         addDynamicLabeledValue("Total Updates",  ui.gameContext().clock()::pausableUpdatesCount);
 
-        addColorPicker("Canvas Color", PROPERTY_CANVAS_BACKGROUND_COLOR);
-        addCheckBox("Font Smoothing", PROPERTY_CANVAS_FONT_SMOOTHING);
-        addCheckBox("Show Debug Info", PROPERTY_DEBUG_INFO_VISIBLE);
+        addColorPicker("Canvas Color", GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
+        addCheckBox("Font Smoothing", GameUIConstants.PROPERTY_CANVAS_FONT_SMOOTHING);
+        addCheckBox("Show Debug Info", GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE);
         addCheckBox("Time Measured", ui.gameContext().clock().timeMeasuredProperty());
     }
 }

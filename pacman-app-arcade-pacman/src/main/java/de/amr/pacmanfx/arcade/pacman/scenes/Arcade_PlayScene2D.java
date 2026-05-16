@@ -16,6 +16,7 @@ import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -88,7 +89,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
             }
         });
         menu.addSeparator();
-        menu.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
+        menu.addLocalizedCheckBox(GameUIConstants.PROPERTY_MUTED, "muted");
         menu.addLocalizedActionItem(CommonGameActions.ACTION_QUIT_GAME_SCENE, "quit");
         return Optional.of(menu);
     }
@@ -208,8 +209,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
         if (!level.isDemoLevel()) {
             actionBindings.addAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
-            actionBindings.addAll(GameUI.STEERING_ACTION_BINDINGS);
-            actionBindings.addAll(GameUI.CHEAT_ACTION_BINDINGS);
+            actionBindings.addAll(GameUIConstants.STEERING_ACTION_BINDINGS);
+            actionBindings.addAll(GameUIConstants.CHEAT_ACTION_BINDINGS);
         }
         actionBindings.assignToKeyboard();
 

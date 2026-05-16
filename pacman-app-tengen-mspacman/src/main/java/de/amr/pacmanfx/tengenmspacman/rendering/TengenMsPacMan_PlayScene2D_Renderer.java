@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_PlayScene2D;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -117,7 +117,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             levelRenderer.drawDoor(worldMap); // ghosts appear under door, so draw door over again
             actorsInZOrder.forEach(actorRenderer::drawActor);
             ctx.restore();
-            if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+            if (GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
                 ctx.getCanvas().setClip(null); // also show normally clipped region (to see how Pac-Man travels through portals)
                 debugRenderer.draw(playScene2D);
             }

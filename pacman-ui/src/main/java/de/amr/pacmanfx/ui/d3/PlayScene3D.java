@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.GameUI_Resources;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
@@ -38,8 +39,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_DRAW_MODE;
-import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_LIGHT_COLOR;
+import static de.amr.pacmanfx.ui.GameUIConstants.PROPERTY_3D_DRAW_MODE;
+import static de.amr.pacmanfx.ui.GameUIConstants.PROPERTY_3D_LIGHT_COLOR;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
@@ -79,7 +80,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         subScene.setCamera(camera);
 
         final var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(GameUI.PROPERTY_3D_AXES_VISIBLE);
+        coordinateSystem.visibleProperty().bind(GameUIConstants.PROPERTY_3D_AXES_VISIBLE);
 
         ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);
@@ -134,7 +135,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onSceneStart() {
-        perspectives.activeIDProperty().bind(GameUI.PROPERTY_3D_PERSPECTIVE_ID);
+        perspectives.activeIDProperty().bind(GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID);
         PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
     }
@@ -195,7 +196,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
             optGameLevel().ifPresent(level -> {
                 replaceGameLevel3D(level);
                 level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level.number());
-                GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
+                GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
             });
             return;
         }

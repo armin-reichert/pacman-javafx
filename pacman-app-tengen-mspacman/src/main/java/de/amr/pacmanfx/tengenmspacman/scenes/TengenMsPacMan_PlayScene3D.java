@@ -11,6 +11,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
@@ -22,7 +23,7 @@ import javafx.scene.paint.Color;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_PAC_BOOSTER;
-import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_FLOOR_COLOR;
+import static de.amr.pacmanfx.ui.GameUIConstants.PROPERTY_3D_FLOOR_COLOR;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man.
@@ -86,7 +87,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         } else {
             actionBindings.addAll(TengenMsPacMan_ActionBindings.STEERING_BINDINGS);
             actionBindings.addAny(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
-            actionBindings.addAll(GameUI.CHEAT_ACTION_BINDINGS);
+            actionBindings.addAll(GameUIConstants.CHEAT_ACTION_BINDINGS);
         }
         bindPlaySceneActions();
 

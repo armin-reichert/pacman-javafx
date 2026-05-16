@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CutScene3;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -35,7 +35,7 @@ public class TengenMsPacMan_CutScene3_Renderer extends BaseRenderer implements G
                 actorRenderer.drawActor(cutScene.pacMan());
             }
         }
-        if (GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }
