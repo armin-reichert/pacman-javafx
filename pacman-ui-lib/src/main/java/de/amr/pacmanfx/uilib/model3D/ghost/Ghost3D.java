@@ -129,6 +129,14 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         return dressMeshView;
     }
 
+    public MeshView eyeballsMeshView() {
+        return eyeballsMeshView;
+    }
+
+    public MeshView pupilsMeshView() {
+        return pupilsMeshView;
+    }
+
     public void stopAllAnimations() {
         for (AnimationID animationID : AnimationID.values()) {
             animations.optAnimation(animationID.key(ghost)).ifPresent(ManagedAnimation::stop);
@@ -149,12 +157,6 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
     public GhostFlashingAnimation3D flashingDressAnimation() {
         return animations.optAnimation(AnimationID.FLASHING.key(ghost), GhostFlashingAnimation3D.class).orElseThrow();
-    }
-
-    public void setShapeMaterials(GhostComponentMaterialSet materialSet) {
-        dressMeshView.setMaterial(materialSet.dressMaterial());
-        pupilsMeshView.setMaterial(materialSet.pupilsMaterial());
-        eyeballsMeshView.setMaterial(materialSet.eyeballsMaterial());
     }
 
     // Private Area, no trespassing!

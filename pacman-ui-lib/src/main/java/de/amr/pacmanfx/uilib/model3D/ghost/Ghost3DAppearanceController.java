@@ -57,18 +57,10 @@ public class Ghost3DAppearanceController {
 
     private void setGhostAppearance(Ghost3D ghost3D, GhostAppearance ghostAppearance) {
         switch (ghostAppearance) {
-            case NORMAL -> {
-                lookNormal(ghost3D);
-            }
-            case FRIGHTENED -> {
-                lookFrightened(ghost3D);
-            }
-            case FLASHING -> {
-                lookFlashing(ghost3D, numFlashes);
-            }
-            case EYES -> {
-                lookEyesOnly(ghost3D);
-            }
+            case NORMAL -> lookNormal(ghost3D);
+            case FRIGHTENED -> lookFrightened(ghost3D);
+            case FLASHING -> lookFlashing(ghost3D, numFlashes);
+            case EYES -> lookEyesOnly(ghost3D);
         }
     }
 
@@ -83,7 +75,7 @@ public class Ghost3DAppearanceController {
         ghost3D.flashingDressAnimation().stop();
         ghost3D.normalDressAnimation().playOrContinue();
         ghost3D.dressMeshView().setVisible(true);
-        ghost3D.setShapeMaterials(ghost3D.materials().normalMaterial());
+        selectMaterialSet(ghost3D, ghost3D.materials().normalMaterial());
         brakeIfTunnelEntered(ghost3D);
     }
 
@@ -92,7 +84,7 @@ public class Ghost3DAppearanceController {
             lookFrightened(ghost3D);
             return;
         }
-        ghost3D.setShapeMaterials(ghost3D.materials().flashingMaterial());
+        selectMaterialSet(ghost3D, ghost3D.materials().flashingMaterial());
         ghost3D.dressMeshView().setVisible(true);
 
         ghost3D.normalDressAnimation().playOrContinue();
@@ -104,12 +96,18 @@ public class Ghost3DAppearanceController {
         ghost3D.flashingDressAnimation().stop();
         ghost3D.normalDressAnimation().playOrContinue();
         ghost3D.dressMeshView().setVisible(true);
-        ghost3D.setShapeMaterials(ghost3D.materials().frightenedMaterial());
+        selectMaterialSet(ghost3D, ghost3D.materials().frightenedMaterial());
     }
 
     private void lookEyesOnly(Ghost3D ghost3D) {
         ghost3D.stopAllAnimations();
         ghost3D.dressMeshView().setVisible(false);
-        ghost3D.setShapeMaterials(ghost3D.materials().normalMaterial());
+        selectMaterialSet(ghost3D, ghost3D.materials().normalMaterial());
+    }
+
+    private void selectMaterialSet(Ghost3D ghost3D, GhostComponentMaterialSet materialSet) {
+        ghost3D.dressMeshView().setMaterial(materialSet.dressMaterial());
+        ghost3D.pupilsMeshView().setMaterial(materialSet.pupilsMaterial());
+        ghost3D.eyeballsMeshView().setMaterial(materialSet.eyeballsMaterial());
     }
 }
