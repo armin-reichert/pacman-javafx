@@ -8,7 +8,6 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.GameSceneConfig;
 import de.amr.pacmanfx.ui.GameUI;
 
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.*;
@@ -42,7 +41,7 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
             case PREPARING_GAME_START -> CommonSceneID.START_SCENE;
             case INTRO -> CommonSceneID.INTRO_SCENE;
             case INTERMISSION -> resolveCutSceneID(game);
-            case CutScenesTestState<?> testState -> GameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
+            case CutScenesTestState<?> testState -> AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
         };
     }

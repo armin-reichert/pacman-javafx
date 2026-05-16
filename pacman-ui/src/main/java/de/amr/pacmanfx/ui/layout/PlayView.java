@@ -53,7 +53,7 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
-import static de.amr.pacmanfx.ui.GameSceneConfig.identifySceneSwitchType;
+import static de.amr.pacmanfx.ui.AbstractGameSceneConfig.identifySceneSwitchType;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;

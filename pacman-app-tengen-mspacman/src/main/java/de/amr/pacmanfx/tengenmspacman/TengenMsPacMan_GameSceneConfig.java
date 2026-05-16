@@ -8,7 +8,6 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
 import de.amr.pacmanfx.ui.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.GameSceneConfig;
 import de.amr.pacmanfx.ui.GameUI;
 
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState.*;
@@ -52,7 +51,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
             case SHOWING_HALL_OF_FAME -> TengenMsPacMan_UIConfig.TengenSceneID.HALL_OF_FAME;
             case INTRO -> CommonSceneID.INTRO_SCENE;
             case INTERMISSION -> resolveCutSceneID(game);
-            case CutScenesTestState testState -> GameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
+            case CutScenesTestState testState -> AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
         };
     }
