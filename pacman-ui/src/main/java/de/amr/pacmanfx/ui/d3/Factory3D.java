@@ -8,6 +8,7 @@ import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.EntityConfig;
@@ -29,7 +30,7 @@ import javafx.scene.paint.PhongMaterial;
 public interface Factory3D extends Disposable {
 
     Maze3D createMaze3D(
-        GameLevel level,
+        TerrainLayer terrain,
         EntityConfig entityConfig,
         WorldMapColorScheme colorScheme,
         AnimationRegistry animations);

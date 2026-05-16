@@ -13,7 +13,6 @@ import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.FloorConfig3D;
-import de.amr.pacmanfx.ui.config.HouseConfig3D;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.d3.MazeMaterials3D;
@@ -30,7 +29,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
 import org.tinylog.Logger;
 
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -59,11 +57,12 @@ import static java.util.Objects.requireNonNull;
 public class Maze3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
     private static void addObstacles(
-        Group group, WorldMap worldMap,
+        Group group,
+        TerrainLayer terrain,
         float wallThickness, float cornerRadius, MazeMaterials3D materials, DoubleProperty wallBaseHeight)
     {
         final TerrainRenderer3D renderer3D = new TerrainRenderer3D();
-        final House house = worldMap.terrainLayer().optHouse().orElse(null);
+        final House house = terrain.optHouse().orElse(null);
         final var wall3DCount = new AtomicInteger(0);
         renderer3D.setOnWallCreated(wall3D -> {
             wall3DCount.incrementAndGet();
@@ -78,10 +77,10 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
 
         final var stopWatch = new StopWatch();
         // render all obstacles found in map except the house placeholder obstacle
-        for (Obstacle obstacle : worldMap.terrainLayer().obstacles()) {
+        for (Obstacle obstacle : terrain.obstacles()) {
             final Vector2f startPoint = obstacle.startPoint().toVector2f();
             if (house == null || !house.contains(tileAt(startPoint))) {
-                renderer3D.renderObstacle3D(obstacle, isWorldBorder(worldMap.terrainLayer(), obstacle), wallThickness, cornerRadius);
+                renderer3D.renderObstacle3D(obstacle, isWorldBorder(terrain, obstacle), wallThickness, cornerRadius);
             }
         }
         final var passedTimeMillis = stopWatch.passedTime().toMillis();
@@ -114,7 +113,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
     /**
      * Creates a new 3D maze for the given level.
      *
-     * @param level         the game level whose world map is rendered
+     * @param terrain       the game level terrain
      * @param factory3D     the factory for 3D entities
      * @param entityConfig  3D configuration
      * @param colorScheme   the map color scheme
@@ -123,21 +122,26 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
      * @throws NullPointerException if any required argument is {@code null}
      */
     public Maze3D(
-        GameLevel level,
+        TerrainLayer terrain,
         Factory3D factory3D,
         EntityConfig entityConfig,
         WorldMapColorScheme colorScheme,
         AnimationRegistry animations)
     {
-        requireNonNull(level);
+        requireNonNull(terrain);
         requireNonNull(factory3D);
         requireNonNull(entityConfig);
         requireNonNull(animations);
 
         materials3D = factory3D.createMazeMaterials(colorScheme, wallOpacity, floorColor);
-        createAndAddFloor3D(entityConfig.floor(), level);
-        createAndAddObstacles3D(entityConfig.maze(), level);
-        house3D = createArcadeHouse3D(animations, entityConfig.house(), level.worldMap(), colorScheme)
+
+        createAndAddFloor3D(entityConfig.floor(), terrain);
+        createAndAddObstacles3D(entityConfig.maze(), terrain);
+
+        house3D = terrain.optHouse()
+            .filter(ArcadeHouse.class::isInstance)
+            .map(ArcadeHouse.class::cast)
+            .map(arcadeHouse -> new MazeHouse3D(colorScheme, entityConfig.house(), animations, arcadeHouse))
             .orElseThrow(IllegalStateException::new);
     }
 
@@ -210,14 +214,14 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
 
     // Private area
 
-    private void createAndAddObstacles3D(MazeConfig3D mazeConfig, GameLevel level) {
+    private void createAndAddObstacles3D(MazeConfig3D mazeConfig, TerrainLayer terrain) {
         final float wallThickness = mazeConfig.obstacleWallThickness();
         final float cornerRadius  = mazeConfig.obstacleCornerRadius();
-        addObstacles(this, level.worldMap(), wallThickness, cornerRadius, materials3D, wallBaseHeight);
+        addObstacles(this, terrain, wallThickness, cornerRadius, materials3D, wallBaseHeight);
     }
 
-    private void createAndAddFloor3D(FloorConfig3D floorConfig, GameLevel level) {
-        final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
+    private void createAndAddFloor3D(FloorConfig3D floorConfig, TerrainLayer terrain) {
+        final Vector2i terrainSize = terrain.sizeInPixel();
         final float width = terrainSize.x() + 2 * floorConfig.padding();
         final float height = terrainSize.y();
         final float thickness = floorConfig.thickness();
@@ -231,13 +235,5 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         floor3D.setTranslateZ(0.5 * thickness);
 
         getChildren().add(floor3D);
-    }
-
-    private Optional<MazeHouse3D> createArcadeHouse3D(
-        AnimationRegistry animations, HouseConfig3D houseConfig, WorldMap worldMap, WorldMapColorScheme colorScheme) {
-        return worldMap.terrainLayer().optHouse()
-            .filter(ArcadeHouse.class::isInstance)
-            .map(ArcadeHouse.class::cast)
-            .map(arcadeHouse -> new MazeHouse3D(colorScheme, houseConfig, animations, arcadeHouse));
     }
 }

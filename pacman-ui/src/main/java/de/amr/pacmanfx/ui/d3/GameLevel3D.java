@@ -280,7 +280,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createMaze3D(WorldMapColorScheme colorScheme) {
-        final var maze3D = uiConfig.factory3D().createMaze3D(level, uiConfig.entityConfig(), colorScheme, animationRegistry);
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final var maze3D = uiConfig.factory3D().createMaze3D(terrain, uiConfig.entityConfig(), colorScheme, animationRegistry);
         maze3D.wallOpacityProperty().bind(GameUIConstants.PROPERTY_3D_WALL_OPACITY);
         maze3D.wallBaseHeightProperty().bind(GameUIConstants.PROPERTY_3D_WALL_HEIGHT);
         maze3D.floorColorProperty().bind(GameUIConstants.PROPERTY_3D_FLOOR_COLOR);

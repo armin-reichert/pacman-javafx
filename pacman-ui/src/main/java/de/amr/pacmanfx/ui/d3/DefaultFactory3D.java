@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.ui.d3;
 
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.EntityConfig;
@@ -69,12 +69,12 @@ public class DefaultFactory3D implements Factory3D {
 
     @Override
     public Maze3D createMaze3D(
-        GameLevel level,
+        TerrainLayer terrain,
         EntityConfig config,
         WorldMapColorScheme colorScheme,
         AnimationRegistry animations)
     {
-        return new Maze3D(level, this, config, colorScheme, animations);
+        return new Maze3D(terrain, this, config, colorScheme, animations);
     }
 
     @Override
