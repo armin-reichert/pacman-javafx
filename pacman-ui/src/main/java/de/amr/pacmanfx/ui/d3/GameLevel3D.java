@@ -125,7 +125,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         final WorldMapColorScheme mapColorScheme = uiConfig.colorScheme(level.worldMap());
         createPac3D();
-        createGhostAppearances3D();
+        createGhosts3D();
         createMaze3D(mapColorScheme);
         createLevelCounter3D();
         createLivesCounter3D();
@@ -245,12 +245,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         entities3D.add(pac3D);
     }
 
-    private void createGhostAppearances3D() {
+    private void createGhosts3D() {
         level.ghosts().map(ghost -> {
-            final var ga3D = createGhost3D(uiConfig.entityConfig().ghostConfigs().get(ghost.personality()), ghost);
-            ga3D.init(level);
-            ga3D.setTranslateZ(-0.5 * ga3D.getBoundsInLocal().getDepth() - 1);
-            return ga3D;
+            final GhostConfig config = uiConfig.entityConfig().ghostConfigs().get(ghost.personality());
+            final Ghost3D ghost3D = createGhost3D(config, ghost);
+            ghost3D.init(level);
+            return ghost3D;
         }).forEach(entities3D::add);
     }
 
