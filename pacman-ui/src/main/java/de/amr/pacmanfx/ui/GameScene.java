@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui;
 import de.amr.basics.Disposable;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
@@ -29,8 +30,21 @@ public abstract class GameScene implements GameEventListener, Disposable {
     protected final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
     protected final GameUI ui;
 
+    private GameEventListener listenerDelegate;
+
     public GameScene(GameUI ui) {
         this.ui = requireNonNull(ui);
+    }
+
+    public void setListenerDelegate(GameEventListener listenerDelegate) {
+        this.listenerDelegate = requireNonNull(listenerDelegate);
+    }
+
+    @Override
+    public void onGameEvent(GameEvent event) {
+        if (listenerDelegate != null) {
+            listenerDelegate.onGameEvent(event);
+        }
     }
 
     /**
