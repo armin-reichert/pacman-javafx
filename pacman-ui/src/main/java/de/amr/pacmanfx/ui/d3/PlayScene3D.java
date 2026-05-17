@@ -56,6 +56,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     protected final PerspectiveManager perspectives;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
 
+    protected GameLevel3DController level3DController = new GameLevel3DController();
     protected GameLevel3D level3D;
     protected Scores3D scores3D;
     protected PlaySceneContextMenu contextMenu;
@@ -199,37 +200,37 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
             });
             return;
         }
-        if (level3D != null) level3D.handleGameStateChange(ui, event);
+        level3DController.handleGameStateChange(level3D, event);
     }
 
     @Override
     public void onBonusActivated(BonusActivatedEvent event) {
-        level3D.onBonusActivated(event);
+        level3DController.onBonusActivated(level3D, event);
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent event) {
-        level3D.onBonusEaten(event);
+        level3DController.onBonusEaten(level3D, event);
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent event)  {
-        level3D.onBonusExpired(event);
+        level3DController.onBonusExpired(level3D, event);
     }
 
     @Override
     public void onGameContinued(GameContinuedEvent event) {
-        level3D.onGameContinues(event);
+        level3DController.onGameContinues(level3D, event);
     }
 
     @Override
     public void onGameStarted(GameStartedEvent event) {
-        level3D.onGameStarts(event);
+        level3DController.onGameStarts(level3D, event);
     }
 
     @Override
     public void onGhostEaten(GhostEatenEvent event) {
-        level3D.onGhostEaten(event);
+        level3DController.onGhostEaten(level3D, event);
     }
 
     @Override
@@ -256,22 +257,22 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        level3D.onPacEatsFood(e, gameContext().clock().tickCount());
+        level3DController.onPacEatsFood(level3D, e, gameContext().clock().tickCount());
     }
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        level3D.onPacGetsPower(e);
+        level3DController.onPacGetsPower(level3D, e);
     }
 
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
-        level3D.onPacLostPower(e);
+        level3DController.onPacLostPower(level3D, e);
     }
 
     @Override
     public void onSpecialScore(SpecialScoreEvent e) {
-        level3D.onSpecialScoreReached(e);
+        level3DController.onSpecialScoreReached(level3D, e);
     }
 
     @Override

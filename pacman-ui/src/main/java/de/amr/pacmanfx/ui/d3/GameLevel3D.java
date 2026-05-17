@@ -1,24 +1,21 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.basics.fsm.State;
-import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.Validations;
-import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntitySet;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.BonusConfig;
@@ -39,6 +36,7 @@ import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticlesAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.ghost.*;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
+import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.NumberBox3D;
@@ -63,7 +61,6 @@ import java.util.stream.Stream;
 
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.model.GameFlow.CanonicalGameState.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
@@ -71,8 +68,6 @@ import static java.util.Objects.requireNonNull;
  * Represents the 3D visualization of a Pac-Man game level.
  */
 public class GameLevel3D extends Group implements DisposableGraphicsObject {
-
-    private static final Comparator<Ghost3D> BY_GHOST_PERSONALITY = Comparator.comparingInt(ga3D -> ga3D.ghost().personality());
 
     public enum AnimationID {
         ENERGIZER_PARTICLES_MOVEMENT,
@@ -82,10 +77,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         WALL_COLOR_FLASHING
     }
 
+    private static final Comparator<Ghost3D> BY_PERSONALITY = Comparator.comparingInt(ghost3D -> ghost3D.ghost().personality());
+
     private final GameLevel level;
     private final GameLevelEntitySet entities3D = new GameLevelEntitySet();
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final UIConfig uiConfig;
+
     private final RandomTextPicker gameOverMessagePicker;
 
     private MessageManager3D messageManager;
@@ -105,8 +103,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         gameOverMessagePicker = new RandomTextPicker(localizedTexts, "game.over");
 
         final WorldMapColorScheme mapColorScheme = uiConfig.colorScheme(level.worldMap());
-        createPac3D();
-        createGhosts3D();
+        createPac3D(uiConfig.entityConfig().pacConfig());
+        createGhosts3D(uiConfig.entityConfig().ghostConfigs());
         createMaze3D(mapColorScheme);
         createLevelCounter3D();
         createLivesCounter3D();
@@ -180,7 +178,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Private area, no trespassing
 
-    private Optional<Ghost3D> ghost3D(byte personality) {
+    protected Optional<Ghost3D> ghost3D(byte personality) {
         Validations.requireValidGhostPersonality(personality);
         return entities3D.allWhere(Ghost3D.class, ghost3D -> ghost3D.ghost().personality() == personality).findFirst();
     }
@@ -194,24 +192,20 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().addAll(maze3D.particlesGroup());
         getChildren().addAll(levelCounter3D, livesCounter3D, pac3D);
         pac3D.powerLight().ifPresent(getChildren()::add);
-        entities3D.all(Ghost3D.class).sorted(BY_GHOST_PERSONALITY).forEach(getChildren()::add);
+        entities3D.all(Ghost3D.class).sorted(BY_PERSONALITY).forEach(getChildren()::add);
         entities3D.all(Energizer3D.class).map(Energizer3D::shape).forEach(getChildren()::add);
         entities3D.all(Pellet3D.class).map(Pellet3D::shape).forEach(getChildren()::add);
         getChildren().addAll(maze3D, maze3D.house().root(), maze3D.house().doors());
     }
 
-    private void createPac3D() {
-        final Pac3D pac3D = uiConfig.factory3D().createPac3D(
-            level.pac(),
-            uiConfig.entityConfig().pacConfig(),
-            animationRegistry
-        );
+    private void createPac3D(PacConfig config) {
+        final Pac3D pac3D = uiConfig.factory3D().createPac3D(level.pac(), config, animationRegistry);
         entities3D.add(pac3D);
     }
 
-    private void createGhosts3D() {
+    private void createGhosts3D(List<GhostConfig> ghostConfigs) {
         level.ghosts().map(ghost -> {
-            final GhostConfig config = uiConfig.entityConfig().ghostConfigs().get(ghost.personality());
+            final GhostConfig config = ghostConfigs.get(ghost.personality());
             final Ghost3D ghost3D = createGhost3D(config, ghost);
             ghost3D.init(level);
             return ghost3D;
@@ -279,7 +273,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Bonus
 
-    private void addOrReplaceBonus3D(Bonus bonus) {
+    protected void addOrReplaceBonus3D(Bonus bonus) {
         // Make list copy to avoid exception when removing inside for-each
         List.copyOf(entities3D.all(Bonus3D.class).toList()).forEach(bonus3D -> {
             entities3D.remove(bonus3D);
@@ -299,6 +293,46 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         entities3D.add(bonus3D);
         return bonus3D;
     }
+
+    protected void replaceGhost3DByAnimatedNumberBox(Ghost3D ghost3D, double riseHeight, Image numberImage) {
+        final double x = ghost3D.getTranslateX();
+        final double y = ghost3D.getTranslateY();
+        final NumberBox3D numberBox3D = new NumberBox3D(numberImage);
+        numberBox3D.setTranslateX(x);
+        numberBox3D.setTranslateY(y);
+        numberBox3D.setTranslateZ(-8);
+
+        entities3D.add(numberBox3D);
+        getChildren().add(numberBox3D);
+
+        final Animation numberAnimation = numberBox3D.createAnimation(riseHeight);
+        numberAnimation.setOnFinished(_ -> {
+            Logger.info("Number box animation finished, {}", numberBox3D.riseGroupPosition());
+            entities3D.remove(numberBox3D);
+            getChildren().remove(numberBox3D);
+            //TODO why do I get "duplicate children added" exceptions?
+            if (!getChildren().contains(ghost3D)) {
+                getChildren().add(ghost3D);
+            }
+        });
+
+        final Animation hideGhost3DForOneSecond = new Timeline(
+            new KeyFrame(Duration.ZERO, _ -> {
+                ghost3D.stopAllAnimations();
+                getChildren().remove(ghost3D);
+            }),
+            new KeyFrame(Duration.millis(1000), _ -> {
+                if (!getChildren().contains(ghost3D)) {
+                    getChildren().add(ghost3D);
+                }
+            })
+        );
+
+        new ParallelTransition(hideGhost3DForOneSecond, numberAnimation).play();
+
+        Logger.info("Number box animation started, {}", numberBox3D.riseGroupPosition());
+    }
+
 
     // Food (pellets and energizers)
 
@@ -338,7 +372,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .forEach(entities3D::add);
     }
 
-    private void eatFoodAtTile(Group pelletContainer, Vector2i tile) {
+    protected void eatFoodAtTile(Vector2i tile) {
         final boolean energizerEaten = level.worldMap().foodLayer().isEnergizerTile(tile);
         if (energizerEaten) {
             energizer3DAt(tile).ifPresent(energizer3D -> {
@@ -349,7 +383,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 animationRegistry.animation(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, EnergizerParticlesAnimation3D.class).triggerEnergizerExplosion(center);
             });
         } else {
-            pellet3DAtTile(tile).ifPresent(p3D -> removePelletAfterDelay(pelletContainer, p3D));
+            pellet3DAtTile(tile).ifPresent(this::removePelletAfterDelay);
         }
     }
 
@@ -361,17 +395,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return entities3D.allWhere(Pellet3D.class, p3D -> tile.equals(p3D.tile())).findFirst();
     }
 
-    private void removePelletAfterDelay(Group pelletContainer, Pellet3D pellet3D) {
-        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> pelletContainer.getChildren().remove(pellet3D.shape())).play();
+    private void removePelletAfterDelay(Pellet3D pellet3D) {
+        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> getChildren().remove(pellet3D.shape())).play();
     }
 
     /**
      * Removes all pellet visualizations (used when all pellets are eaten at once).
      */
-    public void removeAllPellets3D(Group pelletContainer) {
+    public void removeAllPellets3D() {
         entities3D.all(Pellet3D.class)
             .map(Pellet3D::shape)
-            .forEach(shape -> pelletContainer.getChildren().remove(shape));
+            .forEach(shape -> getChildren().remove(shape));
     }
 
     // Particles animation
@@ -384,7 +418,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .map(pos -> pos.plus(HTS, HTS))
             .toList();
 
-        final List<PhongMaterial> dressMaterials = ghostAppearancesByPersonality()
+        final List<PhongMaterial> dressMaterials = ghosts3DByPersonality().stream()
             .map(Ghost3D::materials)
             .map(GhostMaterialSet::normalMaterial)
             .map(GhostComponentMaterialSet::dressMaterial)
@@ -401,155 +435,35 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         );
     }
 
-    // Event handling
 
-    /**
-     * Dispatches game state change events to the appropriate handler method.
-     *
-     * @param ui    the game UI
-     * @param event the state change event
-     */
-    public void handleGameStateChange(GameUI ui, GameStateChangeEvent event) {
-        requireNonNull(ui);
-        requireNonNull(event);
-        final State<Game> gameState = event.newState();
-        if (gameState.nameMatches(STARTING_GAME_OR_LEVEL.name())) {
-            onStartingGame();
-        } else if (gameState.nameMatches(LEVEL_PLAYING.name())) {
-            onHuntingStart();
-        } else if (gameState.nameMatches(PACMAN_DYING.name())) {
-            onPacManDying(gameState);
-        } else if (gameState.nameMatches(EATING_GHOST.name())) {
-            onEatingGhost();
-        } else if (gameState.nameMatches(LEVEL_COMPLETE.name())) {
-            onLevelComplete();
-        } else if (gameState.nameMatches(GAME_OVER.name())) {
-            onGameOver(ui);
-        }
+    protected void cleanupFoodAndParticles() {
+        animationRegistry.animation(AnimationID.ENERGIZER_PARTICLES_MOVEMENT).stop();
+        entities3D.all(Energizer3D.class).forEach(energizer3D -> {
+            energizer3D.stopPumping();
+            energizer3D.hide();
+        });
+        // Hide 3D food explicitly (handles cheat-eat-all case)
+        entities3D.all(Pellet3D.class).forEach(pellet3D -> pellet3D.shape().setVisible(false));
+        entities3D.unique(Maze3D.class).particlesGroup().getChildren().clear();
     }
 
-    /**
-     * Handles bonus activation: updates 3D representation and plays sound.
-     */
-    public void onBonusActivated(BonusActivatedEvent gameEvent) {
-        addOrReplaceBonus3D(gameEvent.bonus());
-        optSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
+    // Animations
+
+    private List<Ghost3D> ghosts3DByPersonality() {
+        return entities3D.all(Ghost3D.class).sorted(BY_PERSONALITY).toList();
     }
 
-    /**
-     * Handles bonus eaten: shows eaten animation and plays sound.
-     */
-    public void onBonusEaten(BonusEatenEvent ignoredEvent) {
-        entities3D.first(Bonus3D.class).ifPresent(Bonus3D::lookEaten);
-        optSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
+    private void createAnimations(WorldMapColorScheme colorScheme) {
+        animationRegistry.register(AnimationID.WALL_COLOR_FLASHING, new WallColorFlashingAnimation(this, colorScheme));
+        animationRegistry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this));
+        animationRegistry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
+        animationRegistry.register(AnimationID.GHOST_LIGHT, new GhostLightAnimation(ghosts3DByPersonality()));
+        animationRegistry.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, createParticlesAnimation());
+        //TODO: this is somewhat ugly
+        getChildren().addAll(animationRegistry.animation(AnimationID.GHOST_LIGHT, GhostLightAnimation.class).light());
     }
 
-    /**
-     * Handles bonus expiration: expires 3D bonus and plays sound.
-     */
-    public void onBonusExpired(BonusExpiredEvent ignoredEvent) {
-        entities3D.first(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
-        optSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
-    }
-
-    /**
-     * Shows the "READY!" message when the game continues.
-     */
-    public void onGameContinues(GameContinuedEvent ignoredEvent) {
-        messageManager().showMessage(MessageManager3D.MessageType.READY);
-    }
-
-    /**
-     * Plays game ready sound unless in demo or test mode.
-     */
-    public void onGameStarts(GameStartedEvent event) {
-        final Game game = event.game();
-        final State<Game> state = game.flow().state();
-        final boolean silent = game.isDemoLevelRunning() || state instanceof TestState;
-        if (!silent) {
-            optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
-        }
-        messageManager().showMessage(MessageManager3D.MessageType.READY);
-    }
-
-    /**
-     * Plays sound when a ghost is eaten.
-     */
-    public void onGhostEaten(GhostEatenEvent ignoredEvent) {
-        optSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
-    }
-
-    /**
-     * Handles Pac eating food: updates 3D food and plays munching sound (with rate limiting).
-     */
-    public void onPacEatsFood(PacEatsFoodEvent gameEvent, long tick) {
-        if (gameEvent.allPellets()) {
-            removeAllPellets3D(this);
-        } else {
-            eatFoodAtTile(this, gameEvent.pac().tile());
-            optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
-        }
-    }
-
-    /**
-     * Handles Pac gaining power: stops siren, starts power animation/sound.
-     */
-    public void onPacGetsPower(PacGetsPowerEvent event) {
-        final Pac3D pac3D = entities3D.unique(Pac3D.class);
-        final Game game = event.game();
-        optSoundEffects().ifPresent(GameSoundEffects::stopSiren);
-        if (!game.isLevelCompleted()) {
-            pac3D.setPowerMode(true);
-            animationRegistry.animation(AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).playFromStart();
-            optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
-        }
-    }
-
-    /**
-     * Handles Pac losing power: stops power animation/sound.
-     */
-    public void onPacLostPower(PacLostPowerEvent ignoredEvent) {
-        entities3D.unique(Pac3D.class).setPowerMode(false);
-        animationRegistry.animation(AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).stop();
-        optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
-    }
-
-    public void onSpecialScoreReached(SpecialScoreEvent ignoredEvent) {
-        optSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
-    }
-
-    // Private state-specific handlers
-
-    private void onStartingGame() {
-        entities3D.all().forEach(e -> e.init(level));
-    }
-
-    private void onHuntingStart() {
-        entities3D.unique(Pac3D.class).init(level);
-        entities3D.all(Ghost3D.class).forEach(ghost3D -> ghost3D.init(level));
-        entities3D.all(Energizer3D.class).forEach(Energizer3D::startPumping);
-        animationRegistry.animation(AnimationID.ENERGIZER_PARTICLES_MOVEMENT).playFromStart();
-        animationRegistry.animation(AnimationID.GHOST_LIGHT).playFromStart();
-    }
-
-    private void onPacManDying(State<Game> gameState) {
-        final Pac3D pac3D = entities3D.unique(Pac3D.class);
-        gameState.lock();
-
-        optSoundEffects().ifPresent(GameSoundEffects::stopAll);
-
-        // Do not stop all animations!
-        animationRegistry.animation(AnimationID.GHOST_LIGHT).stop();
-        animationRegistry.animation(AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).stop();
-        entities3D.all(Ghost3D.class).forEach(Ghost3D::stopAllAnimations);
-        entities3D.first(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
-
-        createPacDyingAnimationSequence(pac3D, gameState).play();
-    }
-
-    // others
-
-    private SequentialTransition createPacDyingAnimationSequence(Pac3D pac3D, State<Game> gameState) {
+    protected SequentialTransition createPacDyingAnimationSequence(Pac3D pac3D, State<Game> gameState) {
         final var animationSequence = new SequentialTransition(
             doNow(() -> {
                 // One last fart before dying animation starts
@@ -569,112 +483,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return animationSequence;
     }
 
-    private void onEatingGhost() {
-        level.game().simulationStep().ghostsKilled.forEach(killedGhost -> {
-            final int killIndex = level.energizerVictims().indexOf(killedGhost);
-            final Ghost3D ghost3D = ghost3D(killedGhost.personality()).orElseThrow();
-            final double riseHeight = (killIndex + 1) * 12;
-            replaceGhost3DByAnimatedNumberBox(ghost3D, riseHeight, uiConfig.killedGhostPointsImage(killIndex));
-        });
-    }
-
-    private void replaceGhost3DByAnimatedNumberBox(Ghost3D ghost3D, double riseHeight, Image numberImage) {
-        final double x = ghost3D.getTranslateX();
-        final double y = ghost3D.getTranslateY();
-        final NumberBox3D numberBox3D = new NumberBox3D(numberImage);
-        numberBox3D.setTranslateX(x);
-        numberBox3D.setTranslateY(y);
-        numberBox3D.setTranslateZ(-8);
-
-        entities3D.add(numberBox3D);
-        getChildren().add(numberBox3D);
-
-        final Animation numberAnimation = numberBox3D.createAnimation(riseHeight);
-        numberAnimation.setOnFinished(_ -> {
-            Logger.info("Number box animation finished, {}", numberBox3D.riseGroupPosition());
-            entities3D.remove(numberBox3D);
-            getChildren().remove(numberBox3D);
-            //TODO why do I get "duplicate children added" exceptions?
-            if (!getChildren().contains(ghost3D)) {
-                getChildren().add(ghost3D);
-            }
-        });
-
-        final Animation hideGhost3DForOneSecond = new Timeline(
-            new KeyFrame(Duration.ZERO, _ -> {
-                ghost3D.stopAllAnimations();
-                getChildren().remove(ghost3D);
-            }),
-            new KeyFrame(Duration.millis(1000), _ -> {
-                if (!getChildren().contains(ghost3D)) {
-                    getChildren().add(ghost3D);
-                }
-            })
-        );
-
-        new ParallelTransition(hideGhost3DForOneSecond, numberAnimation).play();
-
-        Logger.info("Number box animation started, {}", numberBox3D.riseGroupPosition());
-    }
-
-    private void onLevelComplete() {
-        final State<Game> gameState = level.game().flow().state();
-        final Maze3D maze3D = entities3D.unique(Maze3D.class);
-
-        optSoundEffects().ifPresent(GameSoundEffects::stopAll);
-        animationRegistry().stopAllAnimations();
-        cleanupFoodAndParticles();
-        maze3D.house().hideDoors();
-        entities3D.first(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
-        messageManager.hideMessage();
-        playLevelEndAnimation(maze3D, level, gameState);
-    }
-
-    private void onGameOver(GameUI ui) {
-        animationRegistry.animation(AnimationID.GHOST_LIGHT).stop();
-        cleanupFoodAndParticles();
-        entities3D.first(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
-        if (!level.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
-            ui.showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
-        }
-        optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
-    }
-
-    private void cleanupFoodAndParticles() {
-        animationRegistry.animation(AnimationID.ENERGIZER_PARTICLES_MOVEMENT).stop();
-        entities3D.all(Energizer3D.class).forEach(energizer3D -> {
-            energizer3D.stopPumping();
-            energizer3D.hide();
-        });
-        // Hide 3D food explicitly (handles cheat-eat-all case)
-        entities3D.all(Pellet3D.class).forEach(pellet3D -> pellet3D.shape().setVisible(false));
-        entities3D.unique(Maze3D.class).particlesGroup().getChildren().clear();
-    }
-
-    // Animations
-
-    private void createAnimations(WorldMapColorScheme colorScheme) {
-        animationRegistry.register(AnimationID.WALL_COLOR_FLASHING, new WallColorFlashingAnimation(this, colorScheme));
-        animationRegistry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this));
-        animationRegistry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
-        animationRegistry.register(AnimationID.GHOST_LIGHT, new GhostLightAnimation(ghostAppearancesByPersonality().toList()));
-        animationRegistry.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, createParticlesAnimation());
-        //TODO: this is somewhat ugly
-        getChildren().addAll(animationRegistry.animation(AnimationID.GHOST_LIGHT, GhostLightAnimation.class).light());
-    }
-
-    private Stream<Ghost3D> ghostAppearancesByPersonality() {
-        return entities3D.all(Ghost3D.class).sorted(BY_GHOST_PERSONALITY);
-    }
-
     /**
      * Plays the level completion animation sequence and resets game timer.
      *
      * @param maze3D the 3D maze to be animated
-     * @param level the completed level (used to determine animation details)
      * @param gameState the current game state (used to determine cut-scene follow-up)
      */
-    public void playLevelEndAnimation(Maze3D maze3D, GameLevel level, State<Game> gameState) {
+    public void playLevelEndAnimation(Maze3D maze3D, State<Game> gameState) {
         final boolean cutScene = level.cutSceneNumber() != 0;
         final PerspectiveID perspectiveBeforeAnimation = GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.get();
 
@@ -695,6 +510,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         gameState.lock();
         seq.play();
+    }
+
+    protected void showRandomGameOverMessage() {
+        //TODO access to UI instance for flash messages
+        //ui.showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
     }
 
 }
