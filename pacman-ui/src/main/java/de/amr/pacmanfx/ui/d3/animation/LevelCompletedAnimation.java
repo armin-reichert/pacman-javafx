@@ -76,24 +76,18 @@ public class LevelCompletedAnimation extends ManagedAnimation {
             levelRotation(rotationAxis),
             pauseSecThen(0.5, () -> level3D.optSoundEffects().ifPresent(GameSoundEffects::playLevelCompleteSound)),
             pauseSec(0.5),
-            mazeWallsAndHouseAnimation(maze3D),
+            mazeWallsAndHouseDisappearAnimation(level3D),
             pauseSecThen(1.0, () -> level3D.optSoundEffects().ifPresent(GameSoundEffects::playLevelChangedSound))
         );
     }
 
-    /**
-     * Creates an animation that gradually lowers the house and maze walls until they disappear, then hides the maze.
-     *
-     * @param maze3D the maze whose walls and house are animated
-     * @return the animation
-     */
-    private Animation mazeWallsAndHouseAnimation(Maze3D maze3D) {
+    private Animation mazeWallsAndHouseDisappearAnimation(GameLevel3D level3D) {
         return new Timeline(
             new KeyFrame(Duration.seconds(0.5), new KeyValue(
-                maze3D.house().wallBaseHeightProperty(), 0, Interpolator.EASE_IN)),
+                level3D.maze3D().house().wallBaseHeightProperty(), 0, Interpolator.EASE_IN)),
             new KeyFrame(Duration.seconds(1.5), new KeyValue(
-                maze3D.wallBaseHeightProperty(), 0, Interpolator.EASE_IN)),
-            new KeyFrame(Duration.seconds(2.5), _ -> maze3D.setVisible(false))
+                level3D.maze3D().wallBaseHeightProperty(), 0, Interpolator.EASE_IN)),
+            new KeyFrame(Duration.seconds(2.5), _ -> level3D.setVisible(false))
         );
     }
 

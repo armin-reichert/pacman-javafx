@@ -82,7 +82,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final GameLevelEntitySet entities3D = new GameLevelEntitySet();
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final UIConfig uiConfig;
-
+    private Maze3D maze3D;
     private MessageManager3D messageManager;
 
     /**
@@ -159,13 +159,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return messageManager;
     }
 
+    public Maze3D maze3D() {
+        return maze3D;
+    }
+
     public void setDrawMode(DrawMode drawMode) {
         requireNonNull(drawMode);
         entities3D.all().forEach(entity -> {
             switch (entity) {
                 case Pac3D pac3D -> setDrawMode(pac3D, drawMode);
                 case Ghost3D ghost3D -> setDrawMode(ghost3D, drawMode);
-                case Maze3D maze3D -> setDrawMode(maze3D, drawMode);
+                case Maze3D m3D -> setDrawMode(m3D, drawMode);
                 default -> {}
             }
         });
@@ -234,7 +238,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createMaze3D(WorldMapColorScheme colorScheme) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final var maze3D = uiConfig.factory3D().createMaze3D(terrain, uiConfig.entityConfig(), colorScheme, animationRegistry);
+        maze3D = uiConfig.factory3D().createMaze3D(terrain, uiConfig.entityConfig(), colorScheme, animationRegistry);
         maze3D.wallOpacityProperty().bind(GameUIConstants.PROPERTY_3D_WALL_OPACITY);
         maze3D.wallBaseHeightProperty().bind(GameUIConstants.PROPERTY_3D_WALL_HEIGHT);
         maze3D.floorColorProperty().bind(GameUIConstants.PROPERTY_3D_FLOOR_COLOR);
