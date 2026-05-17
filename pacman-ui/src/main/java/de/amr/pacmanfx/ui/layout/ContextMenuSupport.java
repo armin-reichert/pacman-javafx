@@ -34,13 +34,13 @@ public interface ContextMenuSupport {
 
     static MenuItem addLocalizedActionItem(ContextMenu menu, GameUI ui, Runnable action, String globalAssetsKey, Object... args) {
         var actionItem = new MenuItem(ui.translate(globalAssetsKey, args));
-        actionItem.setOnAction(e -> action.run());
+        actionItem.setOnAction(_ -> action.run());
         return add(menu, actionItem);
     }
 
     static MenuItem addLocalizedActionItem(ContextMenu menu, GameUI ui, GameAction action, String globalAssetsKey, Object... args) {
         var actionItem = new MenuItem(ui.translate(globalAssetsKey, args));
-        actionItem.setOnAction(e -> action.executeIfEnabled(ui));
+        actionItem.setOnAction(_ -> action.executeIfEnabled(ui));
         return add(menu, actionItem);
     }
 
