@@ -38,6 +38,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.image.Image;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
@@ -59,6 +60,8 @@ import static de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
+import static de.amr.pacmanfx.ui.layout.ContextMenuSupport.addLocalizedActionItem;
+import static de.amr.pacmanfx.ui.layout.ContextMenuSupport.addLocalizedTitleItem;
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.border;
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.paintBackground;
 import static java.util.Objects.requireNonNull;
@@ -79,7 +82,7 @@ public class PlayView extends StackPane implements View {
     private final BorderPane canvasLayer = new BorderPane();
     private final BorderPane widgetLayer = new BorderPane();
     private final HelpLayer helpLayer;
-    private final GameUI_ContextMenu contextMenu;
+    private final ContextMenu contextMenu;
 
     private final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
 
@@ -99,7 +102,7 @@ public class PlayView extends StackPane implements View {
 
         this.ui = ui;
         this.parentScene = parentScene;
-        this.contextMenu = new GameUI_ContextMenu(ui);
+        this.contextMenu = new ContextMenu();
         this.helpLayer = new HelpLayer(canvasDecorationPane);
 
         createDashboard(dashboardConfig);
@@ -405,13 +408,13 @@ public class PlayView extends StackPane implements View {
     }
 
     private void handleContextMenuRequest(ContextMenuEvent event) {
-        contextMenu.clear();
+        contextMenu.getItems().clear();
         optCurrentGameScene().ifPresent(gameScene -> {
             if (ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D)) {
-                contextMenu.addLocalizedTitleItem("scene_display");
-                contextMenu.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
+                addLocalizedTitleItem(contextMenu, ui,"scene_display");
+                addLocalizedActionItem(contextMenu, ui,ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
             }
-            gameScene.supplyContextMenu().ifPresent(sceneMenu -> contextMenu.addAll(sceneMenu.itemsCopy()));
+            gameScene.supplyContextMenu().ifPresent(sceneMenu -> contextMenu.getItems().addAll(sceneMenu.getItems()));
         });
         if (!contextMenu.getItems().isEmpty()) {
             contextMenu.requestFocus();

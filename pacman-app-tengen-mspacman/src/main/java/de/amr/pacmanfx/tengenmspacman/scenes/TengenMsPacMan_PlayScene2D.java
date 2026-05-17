@@ -21,7 +21,6 @@ import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.input.Input;
-import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -30,6 +29,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Background;
@@ -50,6 +50,7 @@ import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.GAME
 import static de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplayMode.SCROLLING;
 import static de.amr.pacmanfx.ui.GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
+import static de.amr.pacmanfx.ui.layout.ContextMenuSupport.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -158,16 +159,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public Optional<GameUI_ContextMenu> supplyContextMenu() {
+    public Optional<ContextMenu> supplyContextMenu() {
         final Game game = gameContext().game();
         final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
-        final var menu = new GameUI_ContextMenu(ui);
+        final var menu = new ContextMenu();
 
-        final RadioMenuItem miScaledToFit = menu.addLocalizedRadioButton("scaled_to_fit");
+        final RadioMenuItem miScaledToFit = addLocalizedRadioButton(menu, ui, "scaled_to_fit");
         miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
         miScaledToFit.setOnAction(_ -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCALED_TO_FIT));
 
-        final RadioMenuItem miScrolling = menu.addLocalizedRadioButton("scrolling");
+        final RadioMenuItem miScrolling = addLocalizedRadioButton(menu, ui, "scrolling");
         miScrolling.setSelected(displayMode == SCROLLING);
         miScrolling.setOnAction(_ -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SCROLLING));
 
@@ -175,12 +176,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         miScaledToFit.setToggleGroup(toggleGroup);
         miScrolling.setToggleGroup(toggleGroup);
 
-        menu.addLocalizedTitleItem("pacman");
-        menu.addLocalizedCheckBox(game.cheats().usingAutopilotProperty(), "autopilot");
-        menu.addLocalizedCheckBox(game.cheats().immuneProperty(), "immunity");
-        menu.addSeparator();
-        menu.addLocalizedCheckBox(GameUIConstants.PROPERTY_MUTED, "muted");
-        menu.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
+        addLocalizedTitleItem(menu, ui, "pacman");
+        addLocalizedCheckBox(menu, ui, game.cheats().usingAutopilotProperty(), "autopilot");
+        addLocalizedCheckBox(menu, ui, game.cheats().immuneProperty(), "immunity");
+        addSeparator(menu);
+        addLocalizedCheckBox(menu, ui, GameUIConstants.PROPERTY_MUTED, "muted");
+        addLocalizedActionItem(menu, ui, ACTION_QUIT_GAME_SCENE, "quit");
 
         return Optional.of(menu);
     }

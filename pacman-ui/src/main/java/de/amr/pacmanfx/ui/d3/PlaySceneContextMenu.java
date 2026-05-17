@@ -8,8 +8,8 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
-import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import javafx.beans.value.ChangeListener;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
@@ -18,6 +18,7 @@ import java.util.Objects;
 
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
+import static de.amr.pacmanfx.ui.layout.ContextMenuSupport.*;
 
 /**
  * Context menu for the play scene in 2D/3D mode.
@@ -39,7 +40,7 @@ import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PLAY_SCE
  * <p>Instances must be disposed via {@link #dispose()} to remove listeners and
  * avoid memory leaks.</p>
  */
-public class PlaySceneContextMenu extends GameUI_ContextMenu implements Disposable {
+public class PlaySceneContextMenu extends ContextMenu implements Disposable {
 
     /**
      * Toggle group containing all perspective radio buttons.
@@ -67,17 +68,15 @@ public class PlaySceneContextMenu extends GameUI_ContextMenu implements Disposab
      * @throws NullPointerException if {@code ui} is {@code null}
      */
     public PlaySceneContextMenu(GameUI ui) {
-        super(ui);
-
         final Game game = ui.gameContext().game();
 
-        addLocalizedTitleItem("scene_display");
-        addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
-        addLocalizedCheckBox(GameUIConstants.PROPERTY_MINI_VIEW_ON, "pip");
+        addLocalizedTitleItem(this, ui, "scene_display");
+        addLocalizedActionItem(this, ui, ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
+        addLocalizedCheckBox(this, ui, GameUIConstants.PROPERTY_MINI_VIEW_ON, "pip");
 
-        addLocalizedTitleItem("select_perspective");
+        addLocalizedTitleItem(this, ui, "select_perspective");
         for (PerspectiveID id : PerspectiveID.values()) {
-            final RadioMenuItem item = addLocalizedRadioButton("perspective_id_" + id.name());
+            final RadioMenuItem item = addLocalizedRadioButton(this, ui, "perspective_id_" + id.name());
             item.setUserData(id);
             item.setToggleGroup(perspectivesGroup);
 
@@ -88,13 +87,13 @@ public class PlaySceneContextMenu extends GameUI_ContextMenu implements Disposab
             item.setOnAction(_ -> GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(id));
         }
 
-        addLocalizedTitleItem("pacman");
-        addLocalizedCheckBox(game.cheats().usingAutopilotProperty(), "autopilot");
-        addLocalizedCheckBox(game.cheats().immuneProperty(), "immunity");
+        addLocalizedTitleItem(this, ui, "pacman");
+        addLocalizedCheckBox(this, ui, game.cheats().usingAutopilotProperty(), "autopilot");
+        addLocalizedCheckBox(this, ui, game.cheats().immuneProperty(), "immunity");
 
-        addSeparator();
-        addLocalizedCheckBox(GameUIConstants.PROPERTY_MUTED, "muted");
-        addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
+        addSeparator(this);
+        addLocalizedCheckBox(this, ui, GameUIConstants.PROPERTY_MUTED, "muted");
+        addLocalizedActionItem(this, ui, ACTION_QUIT_GAME_SCENE, "quit");
 
         GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.addListener(perspectiveListener);
     }

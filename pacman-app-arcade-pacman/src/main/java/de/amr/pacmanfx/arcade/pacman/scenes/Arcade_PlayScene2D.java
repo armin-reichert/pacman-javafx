@@ -21,14 +21,15 @@ import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ContextMenu;
 import org.tinylog.Logger;
 
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.pacmanfx.ui.layout.ContextMenuSupport.*;
 
 /**
  * 2D play scene for Arcade game variants.
@@ -68,11 +69,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public Optional<GameUI_ContextMenu> supplyContextMenu() {
+    public Optional<ContextMenu> supplyContextMenu() {
         final Game game = gameContext().game();
-        final var menu = new GameUI_ContextMenu(ui);
-        menu.addLocalizedTitleItem("pacman");
-        menu.addLocalizedCheckBox(game.cheats().usingAutopilotProperty(), "autopilot").setOnAction(e -> {
+        final var menu = new ContextMenu();
+        addLocalizedTitleItem(menu, ui, "pacman");
+        addLocalizedCheckBox(menu, ui, game.cheats().usingAutopilotProperty(), "autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
                 CheatActions.ACTION_ACTIVATE_AUTOPILOT.executeIfEnabled(ui);
@@ -80,7 +81,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
                 CheatActions.ACTION_DEACTIVATE_AUTOPILOT.executeIfEnabled(ui);
             }
         });
-        menu.addLocalizedCheckBox(game.cheats().immuneProperty(), "immunity").setOnAction(e -> {
+        addLocalizedCheckBox(menu, ui, game.cheats().immuneProperty(), "immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
                 CheatActions.ACTION_ACTIVATE_IMMUNITY.executeIfEnabled(ui);
@@ -88,9 +89,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
                 CheatActions.ACTION_DEACTIVATE_IMMUNITY.executeIfEnabled(ui);
             }
         });
-        menu.addSeparator();
-        menu.addLocalizedCheckBox(GameUIConstants.PROPERTY_MUTED, "muted");
-        menu.addLocalizedActionItem(CommonGameActions.ACTION_QUIT_GAME_SCENE, "quit");
+        addSeparator(menu);
+        addLocalizedCheckBox(menu, ui, GameUIConstants.PROPERTY_MUTED, "muted");
+        addLocalizedActionItem(menu, ui, CommonGameActions.ACTION_QUIT_GAME_SCENE, "quit");
+
         return Optional.of(menu);
     }
 

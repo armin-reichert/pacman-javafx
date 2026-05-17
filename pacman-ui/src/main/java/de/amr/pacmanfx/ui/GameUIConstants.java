@@ -16,6 +16,7 @@ import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 
 import java.util.ResourceBundle;
@@ -111,6 +112,10 @@ public class GameUIConstants {
      */
     public static final String STYLE_SHEET_PATH = "/de/amr/pacmanfx/ui/css/style.css";
 
+    public static final Color CONTEXT_MENU_DEFAULT_TITLE_COLOR = Color.CORNFLOWERBLUE;
+
+    public static final Font CONTEXT_MENU_DEFAULT_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14.0f);
+
     /** Cheat key bindings (Alt + key). */
     public static final Set<ActionBinding> CHEAT_ACTION_BINDINGS = Set.of(
         new ActionBinding(CheatActions.ACTION_EAT_ALL_PELLETS,  alt(KeyCode.E)),
@@ -118,6 +123,7 @@ public class GameUIConstants {
         new ActionBinding(CheatActions.ACTION_ENTER_NEXT_LEVEL, alt(KeyCode.N)),
         new ActionBinding(CheatActions.ACTION_KILL_GHOSTS,      alt(KeyCode.X))
     );
+
     /** Steering key bindings (arrow keys, optionally with Ctrl). */
     public static final Set<ActionBinding> STEERING_ACTION_BINDINGS = Set.of(
         new ActionBinding(ACTION_STEER_UP,    bare(KeyCode.UP),    control(KeyCode.UP)),
@@ -125,12 +131,14 @@ public class GameUIConstants {
         new ActionBinding(ACTION_STEER_LEFT,  bare(KeyCode.LEFT),  control(KeyCode.LEFT)),
         new ActionBinding(ACTION_STEER_RIGHT, bare(KeyCode.RIGHT), control(KeyCode.RIGHT))
     );
+
     /** Key bindings for scene/level test utilities. */
     public static final Set<ActionBinding> SCENE_TESTS_BINDINGS = Set.of(
         new ActionBinding(TestActions.ACTION_CUT_SCENES_TEST,      alt(KeyCode.C)),
         new ActionBinding(TestActions.ACTION_SHORT_LEVEL_TEST,     alt(KeyCode.T)),
         new ActionBinding(TestActions.ACTION_MEDIUM_LEVEL_TEST,    alt_shift(KeyCode.T))
     );
+
     /** Common global key bindings used across all views/scenes. */
     public static final Set<ActionBinding> COMMON_BINDINGS = Set.of(
         new ActionBinding(ACTION_BOOT_SHOW_PLAY_VIEW,              bare(KeyCode.F3)),
@@ -156,11 +164,13 @@ public class GameUIConstants {
         new ActionBinding(ACTION_TOGGLE_MINI_VIEW_VISIBILITY,      bare(KeyCode.F2)),
         new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_2D_3D,          alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
     );
+
     /**
      * Global property for the canvas background color.
      * <p>
      * Implementations should bind this to the rendering surface.
      */
+
     public static final ObjectProperty<Color> PROPERTY_CANVAS_BACKGROUND_COLOR = new SimpleObjectProperty<>(Color.BLACK);
 
     /** Whether canvas font smoothing is enabled. */

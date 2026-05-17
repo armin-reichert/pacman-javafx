@@ -12,9 +12,9 @@ import de.amr.pacmanfx.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
 import de.amr.pacmanfx.ui.input.Input;
-import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.SubScene;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ScrollEvent;
 import org.tinylog.Logger;
 
@@ -154,7 +154,7 @@ public abstract class GameScene implements GameEventListener, Disposable {
     /**
      * @return context menu provided by this game scene which is merged into the view's context menu
      */
-    public Optional<GameUI_ContextMenu> supplyContextMenu() {
+    public Optional<ContextMenu> supplyContextMenu() {
         return Optional.empty();
     }
 }

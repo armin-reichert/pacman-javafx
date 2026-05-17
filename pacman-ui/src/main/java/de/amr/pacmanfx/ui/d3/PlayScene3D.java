@@ -12,7 +12,6 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
-import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
@@ -22,6 +21,7 @@ import de.amr.pacmanfx.uilib.model3D.world.Scores3D;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.*;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
@@ -197,7 +197,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     @Override
-    public Optional<GameUI_ContextMenu> supplyContextMenu() {
+    public Optional<ContextMenu> supplyContextMenu() {
         contextMenu = new PlaySceneContextMenu(ui);
         return Optional.of(contextMenu);
     }
