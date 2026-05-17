@@ -35,7 +35,9 @@ public class GameScene2D extends GameScene {
     public static final float MAX_SCALING = 5.0f;
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
+
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
+
     protected Canvas canvas;
 
     public GameScene2D(GameUI ui) {

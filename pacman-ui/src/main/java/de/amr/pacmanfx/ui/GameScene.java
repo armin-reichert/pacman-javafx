@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.Disposable;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.DefaultGameEventListener;
 import de.amr.pacmanfx.event.GameEventListener;
@@ -24,10 +24,47 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Common base class of all game scenes (2D and 3D).
+ * Abstract base class for all game scenes (2D and 3D).
+ * <p>
+ * A {@code GameScene} provides:
+ * <ul>
+ *   <li>Access to the global {@link GameContext}</li>
+ *   <li>Scene lifecycle hooks ({@link #onSceneStart()}, {@link #onTick(long)}, {@link #onSceneEnd()})</li>
+ *   <li>Keyboard action binding via {@link ActionBindingsManager}</li>
+ *   <li>Optional sound effects</li>
+ *   <li>Optional JavaFX {@link SubScene} for 3D scenes</li>
+ *   <li>Optional context menu contribution</li>
+ *   <li>A pluggable {@link GameEventListener}</li>
+ * </ul>
+ *
+ * <h2>Lifecycle</h2>
+ * <ul>
+ *   <li>{@link #init()} — activates the scene and assigns input bindings</li>
+ *   <li>{@link #update()} — called once per game tick</li>
+ *   <li>{@link #end()} — deactivates the scene, removes bindings, stops sounds</li>
+ * </ul>
+ *
+ * <h2>Input</h2>
+ * Keyboard input is resolved through {@link ActionBindingsManager}.
+ * {@link #onUserInput()} executes the first matching action.
+ *
+ * <h2>Event Handling</h2>
+ * A scene owns a {@link GameEventListener}.
+ * The default handler processes generic UI updates and sound‑stop events.
+ *
+ * <h2>Subscenes</h2>
+ * 3D scenes override {@link #optSubScene()}.
+ * 2D scenes typically return {@code Optional.empty()}.
+ *
+ * <h2>Context Menu</h2>
+ * Scenes may contribute menu items via {@link #supplyContextMenu()}.
  */
 public abstract class GameScene implements Disposable {
 
+    /**
+     * Default event handler used by scenes unless replaced.
+     * Handles generic UI updates and global sound stop events.
+     */
     public static class DefaultGameEventHandler extends DefaultGameEventListener {
 
         private final GameScene gameScene;
@@ -53,10 +90,11 @@ public abstract class GameScene implements Disposable {
         public void onGenericChange(GenericChangeEvent event) {
             gameScene.ui().forceGameSceneUpdate();
         }
-
     }
 
-    protected final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
+    protected final ActionBindingsManager actionBindings =
+        new GameActionBindingsManager(Input.instance().keyboard);
+
     protected final GameUI ui;
 
     private GameEventListener gameEventHandler = new DefaultGameEventListener();
@@ -74,44 +112,41 @@ public abstract class GameScene implements Disposable {
         return gameEventHandler;
     }
 
-    /**
-     * @return the game UI
-     */
+    /** @return the game UI */
     public GameUI ui() {
         return ui;
     }
 
     /**
-     * @return (optional) JavaFX subscene associated with this game scene. 2D scenes without camera do not need one.
+     * @return optional JavaFX subscene for this scene (3D scenes override)
      */
     public Optional<SubScene> optSubScene() {
         return Optional.empty();
     }
 
     /**
-     * @return the (optional) game sound effects
+     * @return optional sound effects for this scene
      */
     public Optional<GameSoundEffects> soundEffects() {
         return ui().currentConfig().optSoundEffects();
-
     }
+
     /**
-     * @return the global context providing access to some global data as the currently selected game variant or the
-     *         coin mechanism used by Arcade games
+     * @return global game context
      */
     public GameContext gameContext() {
         return ui().gameContext();
     }
 
     /**
-     * @return the action bindings defined for this game scene
+     * @return action bindings for this scene
      */
     public ActionBindingsManager actionBindings() {
         return actionBindings;
     }
 
     /**
-     * Called when the scene becomes the current one.
+     * Activates the scene and assigns keyboard bindings.
      */
     public final void init() {
         onSceneStart();
@@ -119,6 +154,9 @@ public abstract class GameScene implements Disposable {
         Logger.info("Game scene {} initialized", getClass().getSimpleName());
     }
 
+    /**
+     * Deactivates the scene, removes bindings, stops sounds.
+     */
     public final void end() {
         onSceneEnd();
         actionBindings.removeFromKeyboard();
@@ -127,6 +165,9 @@ public abstract class GameScene implements Disposable {
         Logger.info("Game scene {} ends", getClass().getSimpleName());
     }
 
+    /**
+     * Called once per game tick.
+     */
     public void update() {
         final long tick = gameContext().clock().tickCount();
         if (Logger.isTraceEnabled()) {
@@ -135,45 +176,33 @@ public abstract class GameScene implements Disposable {
         onTick(tick);
     }
 
-    /**
-     * Called when the scene is initialized.
-     * Subclasses implement their setup logic here (loading assets, configuring
-     * input, preparing animations, etc.).
-     */
+    /** Called when the scene becomes active. */
     public void onSceneStart() {}
 
-    /**
-     * Called on every tick of the game clock.
-     *
-     * @param tick the current game clock tick count
-     */
+    /** Called every game tick. */
     public void onTick(long tick) {}
 
-    /**
-     * Called when the scene ends.
-     * Subclasses implement cleanup logic here (stopping animations, releasing
-     * temporary resources, etc.).
-     */
+    /** Called when the scene is deactivated. */
     public void onSceneEnd() {}
 
+    /** Called when the scene is embedded into the UI. */
     public void onEmbeddedIntoUI() {}
 
     /**
-     * Called when a key combination has been pressed inside this game scene. By default, the first matching action
-     * defined in the action bindings is executed.
+     * Called when a key combination is pressed inside this scene.
+     * Executes the first matching action.
      */
     public void onUserInput() {
         actionBindings().matchingAction().ifPresent(action -> action.executeIfEnabled(ui()));
     }
 
     /**
-     * Called when a scroll event (mouse wheel event) has been triggered inside this game scene
-     * @param scrollEvent the scroll event
+     * Called when a scroll event occurs inside this scene.
      */
     public void onScroll(ScrollEvent scrollEvent) {}
 
     /**
-     * @return context menu provided by this game scene which is merged into the view's context menu
+     * @return optional context menu contributed by this scene
      */
     public Optional<ContextMenu> supplyContextMenu() {
         return Optional.empty();
