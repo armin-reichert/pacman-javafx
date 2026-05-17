@@ -135,7 +135,7 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
             case ArcadeMsPacMan_CutScene3  ignored -> new ArcadeMsPacMan_CutScene3_Renderer(this, gameScene2D, canvas);
             default -> throw new IllegalStateException("Illegal game scene: " + gameScene2D);
         };
-        return gameScene2D.adaptRenderer(renderer);
+        return gameScene2D.configureRenderer(renderer);
     }
 
     @Override
@@ -150,7 +150,7 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
         requireNonNull(gameScene2D);
         final var hudRenderer = new ArcadeMsPacMan_HeadsUpDisplayRenderer(canvas);
         hudRenderer.setImageSmoothing(true);
-        gameScene2D.adaptRenderer(hudRenderer);
+        gameScene2D.configureRenderer(hudRenderer);
         return hudRenderer;
     }
 

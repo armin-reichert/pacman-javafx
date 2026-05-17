@@ -39,8 +39,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private static class GameEventHandler extends GameScene.DefaultGameEventHandler {
 
-        public GameEventHandler(Arcade_PlayScene2D scene) {
-            super(scene);
+        public GameEventHandler(Arcade_PlayScene2D gameScene) {
+            super(gameScene);
         }
 
         @Override

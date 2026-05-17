@@ -21,7 +21,7 @@ public class ArcadeMsPacMan_CutScene1_Renderer extends BaseRenderer implements G
 
     public ArcadeMsPacMan_CutScene1_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
-        actorRenderer = scene.adaptRenderer((ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
+        actorRenderer = scene.configureRenderer((ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 

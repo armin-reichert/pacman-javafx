@@ -22,7 +22,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
 
     public ArcadeMsPacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
-        copyrightRenderer = scene.adaptRenderer(new CopyrightRenderer(canvas,
+        copyrightRenderer = scene.configureRenderer(new CopyrightRenderer(canvas,
             scene.ui().currentConfig().assets().image("logo.midway")));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }

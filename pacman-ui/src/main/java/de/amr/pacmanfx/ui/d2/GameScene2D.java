@@ -58,11 +58,11 @@ public class GameScene2D extends GameScene {
      * Binds renderer properties (background color, scaling) to this scene's
      * corresponding properties.
      *
-     * @param renderer the renderer to adapt
      * @param <T>      renderer type
+     * @param renderer the renderer to adapt
      * @return the same renderer instance for fluent usage
      */
-    public <T extends Renderer> T adaptRenderer(T renderer) {
+    public <T extends Renderer> T configureRenderer(T renderer) {
         renderer.backgroundColorProperty().bind(backgroundProperty());
         renderer.scalingProperty().bind(scalingProperty());
         return renderer;

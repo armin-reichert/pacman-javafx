@@ -5,7 +5,6 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
@@ -282,7 +281,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             case ArcadePacMan_CutScene3 ignored  -> new ArcadePacMan_CutScene3_Renderer(gameScene2D, canvas);
             default -> throw new IllegalStateException("Illegal game scene: " + gameScene2D);
         };
-        return gameScene2D.adaptRenderer(renderer);
+        return gameScene2D.configureRenderer(renderer);
     }
 
     @Override
@@ -297,7 +296,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         requireNonNull(gameScene2D);
         final var hudRenderer = new ArcadePacMan_HeadsUpDisplay_Renderer(canvas);
         hudRenderer.setImageSmoothing(true);
-        gameScene2D.adaptRenderer(hudRenderer);
+        gameScene2D.configureRenderer(hudRenderer);
         return hudRenderer;
     }
 

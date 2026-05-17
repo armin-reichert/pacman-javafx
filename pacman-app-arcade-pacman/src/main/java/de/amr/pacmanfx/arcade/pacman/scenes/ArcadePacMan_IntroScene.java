@@ -37,8 +37,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private static class GameEventHandler extends GameScene.DefaultGameEventHandler {
 
-        public GameEventHandler(ArcadePacMan_IntroScene scene) {
-            super(scene);
+        public GameEventHandler(ArcadePacMan_IntroScene gameScene) {
+            super(gameScene);
         }
 
         @Override

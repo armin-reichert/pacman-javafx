@@ -154,7 +154,7 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceManager {
             case ArcadeMsPacMan_CutScene3  ignored -> new ArcadeMsPacMan_CutScene3_Renderer(this, gameScene2D, canvas);
             default -> throw new IllegalStateException("Unexpected value: " + gameScene2D);
         };
-        return gameScene2D.adaptRenderer(renderer);
+        return gameScene2D.configureRenderer(renderer);
     }
 
     @Override
@@ -166,7 +166,7 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceManager {
     public HeadsUpDisplay_Renderer createHUDRenderer(GameScene2D gameScene2D, Canvas canvas) {
         final var hudRenderer = new ArcadeMsPacMan_HeadsUpDisplayRenderer(canvas);
         hudRenderer.setImageSmoothing(true);
-        gameScene2D.adaptRenderer(hudRenderer);
+        gameScene2D.configureRenderer(hudRenderer);
         return hudRenderer;
     }
 
