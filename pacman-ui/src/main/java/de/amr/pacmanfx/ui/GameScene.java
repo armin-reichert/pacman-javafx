@@ -70,7 +70,7 @@ public abstract class GameScene implements Disposable {
         private final GameScene gameScene;
 
         public DefaultGameEventHandler(GameScene gameScene) {
-            this.gameScene = gameScene;
+            this.gameScene = requireNonNull(gameScene);
         }
 
         public GameScene gameScene() {
@@ -82,7 +82,7 @@ public abstract class GameScene implements Disposable {
         }
 
         @Override
-        public void onStopAllSounds(StopAllSoundsEvent e) {
+        public void onStopAllSounds(StopAllSoundsEvent event) {
             gameScene.soundEffects().ifPresent(GameSoundEffects::stopAll);
         }
 
@@ -92,8 +92,7 @@ public abstract class GameScene implements Disposable {
         }
     }
 
-    protected final ActionBindingsManager actionBindings =
-        new GameActionBindingsManager(Input.instance().keyboard);
+    protected final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
 
     protected final GameUI ui;
 
@@ -151,7 +150,7 @@ public abstract class GameScene implements Disposable {
     public final void init() {
         onSceneStart();
         actionBindings.assignToKeyboard();
-        Logger.info("Game scene {} initialized", getClass().getSimpleName());
+        Logger.trace("Game scene {} initialized", getClass().getSimpleName());
     }
 
     /**
@@ -162,17 +161,14 @@ public abstract class GameScene implements Disposable {
         actionBindings.removeFromKeyboard();
         actionBindings.dispose();
         soundEffects().ifPresent(GameSoundEffects::stopAll);
-        Logger.info("Game scene {} ends", getClass().getSimpleName());
+        Logger.trace("Game scene {} ends", getClass().getSimpleName());
     }
 
     /**
      * Called once per game tick.
      */
-    public void update() {
+    public final void update() {
         final long tick = gameContext().clock().tickCount();
-        if (Logger.isTraceEnabled()) {
-            Logger.trace("{}: Tick {}", getClass().getSimpleName(), tick);
-        }
         onTick(tick);
     }
 
