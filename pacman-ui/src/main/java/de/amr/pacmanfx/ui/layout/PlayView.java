@@ -7,8 +7,8 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.CanonicalGameState;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
@@ -21,6 +21,7 @@ import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
+import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.input.Input;
@@ -45,6 +46,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
+import javafx.util.Duration;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
@@ -52,8 +54,8 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
 import static de.amr.pacmanfx.ui.AbstractGameSceneConfig.identifySceneSwitchType;
+import static de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
@@ -489,7 +491,6 @@ public class PlayView extends StackPane implements View {
         playScene3D.initPac3D(pac3D, level);
         playScene3D.updateHUD3D(level);
         playScene3D.replaceActionBindings(level);
-        playScene3D.fadeIn();
 
         if (level.pac().powerTimer().isRunning()) {
             ui.currentConfig().optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
@@ -497,6 +498,8 @@ public class PlayView extends StackPane implements View {
 
         ui.gameContext().clock().setUpdatesDisabled(false);
         Logger.info("3D scene {} entered from 3D scene {}", playScene3D.getClass().getSimpleName(), currentScene.getClass().getSimpleName());
+
+        new PlaySceneFadeInAnimation(Duration.seconds(3), playScene3D).play();
     }
 
     private void switchPlaySceneTo2D(GameScene currentScene, GameScene nextScene) {

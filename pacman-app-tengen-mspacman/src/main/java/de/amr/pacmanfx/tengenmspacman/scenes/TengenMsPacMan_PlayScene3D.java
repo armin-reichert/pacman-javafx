@@ -89,7 +89,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             actionBindings.addAny(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
             actionBindings.addAll(GameUIConstants.CHEAT_ACTION_BINDINGS);
         }
-        bindPlaySceneActions();
+        bindActions();
 
         actionBindings.assignToKeyboard();
     }

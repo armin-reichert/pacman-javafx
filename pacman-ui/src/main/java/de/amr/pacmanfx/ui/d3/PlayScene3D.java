@@ -42,17 +42,14 @@ import static de.amr.pacmanfx.ui.input.Keyboard.control;
 
 public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
-    /** Duration of the fade-in animation when the 3D scene becomes active. */
-    public static final Duration FADE_IN_DURATION = Duration.seconds(3);
-
-    protected final Group subSceneRoot = new Group();
-    protected final Group level3DParent = new Group();
-    protected final SubScene subScene;
+    protected final PlayScene3DGameEventHandler gameEventHandler = new PlayScene3DGameEventHandler(this);
 
     protected final PerspectiveManager perspectives;
-    protected final PlayScene3DGameEventHandler controller = new PlayScene3DGameEventHandler(this);
 
-    protected final PerspectiveCamera camera = new PerspectiveCamera(true);
+    protected final Group subSceneRoot = new Group();
+    protected final SubScene subScene;
+    protected final PerspectiveCamera camera;
+    protected final Group level3DParent = new Group();
     protected GameLevel3D level3D;
     protected Scores3D scores3D;
     protected PlaySceneContextMenu contextMenu;
@@ -74,8 +71,10 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
         gameOverMessagePicker = new RandomTextPicker(ui.translator(), "game.over");
 
+        camera = new PerspectiveCamera(true);
         perspectives = new PerspectiveManager(camera);
-        // Initial size is irrelevant (will be bound to parent scene size later)
+
+        // Initial size is irrelevant (will be bound to parent scene size)
         subScene = new SubScene(subSceneRoot, 88, 88, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
 
@@ -86,33 +85,29 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);
 
         subSceneRoot.getChildren().addAll(level3DParent, coordinateSystem, ambientLight);
-        bindPlaySceneActions();
 
-        setListenerDelegate(controller);
+        bindActions();
+        setListenerDelegate(gameEventHandler);
     }
 
     public SubScene subScene() {
         return subScene;
     }
 
-    public Optional<GameLevel3D> optGameLevel3D() {
-        return Optional.ofNullable(level3D);
-    }
-
-    protected Optional<GameLevel> optGameLevel() {
-        return gameContext().game().optGameLevel();
-    }
-
     public PerspectiveManager perspectiveManager() {
         return perspectives;
     }
 
-    public Optional<Scores3D> optScores3D() {
-        return Optional.ofNullable(scores3D);
+    public Optional<GameLevel3D> optGameLevel3D() {
+        return Optional.ofNullable(level3D);
     }
 
-    public void fadeIn() {
-        new PlaySceneFadeInAnimation(FADE_IN_DURATION, this).play();
+    public Optional<GameLevel> optGameLevel() {
+        return gameContext().game().optGameLevel();
+    }
+
+    public Optional<Scores3D> optScores3D() {
+        return Optional.ofNullable(scores3D);
     }
 
     @Override
@@ -201,7 +196,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     /**
      * Binds global scene-level keyboard actions (perspective switching, drone controls, etc.).
      */
-    protected void bindPlaySceneActions() {
+    protected void bindActions() {
         final Set<ActionBinding> bindings = Set.of(
             new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,       alt(KeyCode.LEFT)),
             new ActionBinding(ACTION_PERSPECTIVE_NEXT,           alt(KeyCode.RIGHT)),
