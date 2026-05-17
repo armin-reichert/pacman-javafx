@@ -38,7 +38,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     @Override
-    protected void decorateGameLevel3D(GameLevel3D level3D) {
+    protected void decorate(GameLevel3D level3D) {
         final Game game = gameContext().game();
         if (!(game instanceof TengenMsPacMan_GameModel tengenGame)) {
             throw new IllegalStateException("Cannot use Tengen play scene 3D in game of class %s"

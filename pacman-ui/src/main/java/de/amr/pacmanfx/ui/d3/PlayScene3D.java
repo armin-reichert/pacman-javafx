@@ -38,9 +38,9 @@ import static de.amr.pacmanfx.ui.GameUIConstants.PROPERTY_3D_LIGHT_COLOR;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
+import static java.util.Objects.requireNonNull;
 
 public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
-
 
     protected final PlayScene3DGameEventHandler gameEventHandler = new PlayScene3DGameEventHandler(this);
 
@@ -204,6 +204,12 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     // Other stuff
 
+    /**
+     * Can be overridden by 3D scenes that e.g. decorate the 3D level with additional stuff as done by the
+     * Tengen Ms. Pac-Man game that displays the level number, game difficulty, map category, booster mode etc.
+     */
+    protected void decorate(GameLevel3D level3D) {}
+
     protected void showRandomGameOverMessage() {
         ui.showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
     }
@@ -212,28 +218,12 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         actionBindings.addAll(bindings);
     }
 
-    /**
-     * Can be overridden by 3D scenes that e.g. decorate the 3D level with
-     * additional stuff as done by the Tengen Ms. Pac-Man game that displays the game difficulty, map category etc.
-     */
-    protected void decorateGameLevel3D(GameLevel3D level3D) {}
-
-    /**
-     * Hook for replacing action bindings when a new level starts.
-     * <p>Empty by default — override in subclasses if needed (e.g. variant-specific keys).</p>
-     *
-     * @param level the new game level
-     */
     public void replaceActionBindings(GameLevel level) {
         // No-op — override in subclasses if variant needs different bindings
     }
 
-    /**
-     * Updates the 3D score and high-score display based on current game state.
-     *
-     * @param level current game level
-     */
     public void updateHUD3D(GameLevel level) {
+        requireNonNull(level);
         // If score is disabled, show "GAME OVER" text
         final Score score = level.game().score();
         if (score.isEnabled()) {
@@ -248,32 +238,37 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     public void initPac3D(Pac3D pac3D, GameLevel level) {
+        requireNonNull(pac3D);
+        requireNonNull(level);
         pac3D.init(level);
         pac3D.update(level);
     }
 
     public void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
+        requireNonNull(foodLayer);
         level3D.entities().all(Pellet3D.class)
-            .forEach(p3D -> p3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(p3D.tile())));
+            .forEach(pellet3D -> pellet3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
         level3D.entities().all(Energizer3D.class)
-            .forEach(e3D -> e3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(e3D.tile())));
+            .forEach(energizer3D -> energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
         if (startEnergizerPumping) {
-            level3D.entities().allWhere(Energizer3D.class, e3D -> e3D.shape().isVisible())
+            level3D.entities()
+                .allWhere(Energizer3D.class, energizer3D -> energizer3D.shape().isVisible())
                 .forEach(Energizer3D::startPumping);
         }
     }
 
     public void replaceGameLevel3D(GameLevel level) {
+        requireNonNull(level);
         if (level3D != null) {
-            Logger.info("Replacing game level 3D...");
+            Logger.info("Old 3D game level gets disposed...");
             level3D.dispose();
         }
         level3D = new GameLevel3D(level, ui.currentConfig(), ui.translator());
-        decorateGameLevel3D(level3D);
-        level3DParent.getChildren().setAll(level3D);
-        level3D.entities().all().forEach(e -> e.init(level));
+        decorate(level3D);
+        level3D.entities().all().forEach(entity -> entity.init(level));
         level3D.startLivesCounterTrackingPac();
-        Logger.info("Created and added new game level 3D to play scene");
+        level3DParent.getChildren().setAll(level3D);
+        Logger.info("Created and added new 3D game level to play scene");
     }
 
     // Scores are always displayed towards viewer, independent of level camera perspective
