@@ -11,7 +11,6 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.action.ActionBinding;
-import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
@@ -42,14 +41,17 @@ import static de.amr.pacmanfx.ui.input.Keyboard.control;
 
 public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
+
     protected final PlayScene3DGameEventHandler gameEventHandler = new PlayScene3DGameEventHandler(this);
 
-    protected final PerspectiveManager perspectives;
+    protected PerspectiveManager perspectives;
 
-    protected final Group subSceneRoot = new Group();
-    protected final SubScene subScene;
-    protected final PerspectiveCamera camera;
-    protected final Group level3DParent = new Group();
+    protected Set<ActionBinding> bindings;
+
+    protected Group subSceneRoot;
+    protected SubScene subScene;
+    protected PerspectiveCamera camera;
+    protected Group level3DParent = new Group();
     protected GameLevel3D level3D;
     protected Scores3D scores3D;
     protected PlaySceneContextMenu contextMenu;
@@ -68,14 +70,20 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
      */
     public PlayScene3D(GameUI ui) {
         super(ui);
-
         gameOverMessagePicker = new RandomTextPicker(ui.translator(), "game.over");
+        createSubScene();
+        createBindings();
+        bindActions();
+        setListenerDelegate(gameEventHandler);
+    }
+
+    // Initial subscene size is irrelevant (will be bound to parent scene size)
+    private void createSubScene() {
+        subSceneRoot = new Group();
+        subScene = new SubScene(subSceneRoot, 888, 666, true, SceneAntialiasing.BALANCED);
 
         camera = new PerspectiveCamera(true);
         perspectives = new PerspectiveManager(camera);
-
-        // Initial size is irrelevant (will be bound to parent scene size)
-        subScene = new SubScene(subSceneRoot, 88, 88, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
 
         final var coordinateSystem = new CoordinateSystem();
@@ -85,9 +93,17 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);
 
         subSceneRoot.getChildren().addAll(level3DParent, coordinateSystem, ambientLight);
+    }
 
-        bindActions();
-        setListenerDelegate(gameEventHandler);
+    private void createBindings() {
+        bindings = Set.of(
+            new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,       alt(KeyCode.LEFT)),
+            new ActionBinding(ACTION_PERSPECTIVE_NEXT,           alt(KeyCode.RIGHT)),
+            new ActionBinding(perspectives.actionDroneClimb(),   control(KeyCode.MINUS)),
+            new ActionBinding(perspectives.actionDroneDescent(), control(KeyCode.PLUS)),
+            new ActionBinding(perspectives.actionDroneReset(),   control(KeyCode.DIGIT0)),
+            new ActionBinding(ACTION_TOGGLE_DRAW_MODE,           alt(KeyCode.W))
+        );
     }
 
     public SubScene subScene() {
@@ -141,7 +157,6 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     public void onSceneEnd() {
         perspectives.activeIDProperty().unbind();
         PROPERTY_3D_DRAW_MODE.removeListener(drawModeChangeListener);
-        //removeAndDisposeGameLevel3D();
         disposeContextMenu();
     }
 
@@ -193,18 +208,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         ui.showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
     }
 
-    /**
-     * Binds global scene-level keyboard actions (perspective switching, drone controls, etc.).
-     */
     protected void bindActions() {
-        final Set<ActionBinding> bindings = Set.of(
-            new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,       alt(KeyCode.LEFT)),
-            new ActionBinding(ACTION_PERSPECTIVE_NEXT,           alt(KeyCode.RIGHT)),
-            new ActionBinding(perspectives.actionDroneClimb(),   control(KeyCode.MINUS)),
-            new ActionBinding(perspectives.actionDroneDescent(), control(KeyCode.PLUS)),
-            new ActionBinding(perspectives.actionDroneReset(),   control(KeyCode.DIGIT0)),
-            new ActionBinding(ACTION_TOGGLE_DRAW_MODE,           alt(KeyCode.W))
-        );
         actionBindings.addAll(bindings);
     }
 
