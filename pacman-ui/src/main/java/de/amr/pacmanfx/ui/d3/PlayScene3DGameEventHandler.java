@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.basics.fsm.State;
@@ -36,33 +40,29 @@ public class PlayScene3DGameEventHandler implements GameEventListener {
     @Override
     public void onGameStateChange(GameStateChangeEvent event) {
         requireNonNull(event);
-        final State<Game> gameState = event.newState();
+        final State<Game> newGameState = event.newState();
 
         //TODO ugly
-        if (gameState instanceof TestState) {
-            playScene3D.optGameLevel3D().ifPresent(level3D -> {
-                playScene3D.replaceGameLevel3D(level3D.level());
-                level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level3D.level().number());
-                GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
-            });
+        if (newGameState instanceof TestState) {
+            handleTestState();
         }
-        else if (STARTING_GAME_OR_LEVEL.matches(gameState)) {
-            onStartingGame(assertLevel3D());
+        else if (STARTING_GAME_OR_LEVEL.matches(newGameState)) {
+            onStartingGame();
         }
-        else if (LEVEL_PLAYING.matches(gameState)) {
-            onHuntingStart(assertLevel3D());
+        else if (LEVEL_PLAYING.matches(newGameState)) {
+            onHuntingStart();
         }
-        else if (PACMAN_DYING.matches(gameState)) {
-            onPacManDying(assertLevel3D(), gameState);
+        else if (PACMAN_DYING.matches(newGameState)) {
+            onPacManDying(newGameState);
         }
-        else if (EATING_GHOST.matches(gameState)) {
-            onEatingGhost(assertLevel3D());
+        else if (EATING_GHOST.matches(newGameState)) {
+            onEatingGhost();
         }
-        else if (LEVEL_COMPLETE.matches(gameState)) {
-            onLevelComplete(assertLevel3D());
+        else if (LEVEL_COMPLETE.matches(newGameState)) {
+            onLevelComplete();
         }
-        else if (GAME_OVER.matches(gameState)) {
-            onGameOver(assertLevel3D());
+        else if (GAME_OVER.matches(newGameState)) {
+            onGameOver();
         }
     }
 
@@ -165,11 +165,13 @@ public class PlayScene3DGameEventHandler implements GameEventListener {
 
     // Private state-specific handlers
 
-    private void onStartingGame(GameLevel3D level3D) {
+    private void onStartingGame() {
+        GameLevel3D level3D = assertLevel3D();
         level3D.entities().all().forEach(entity -> entity.init(level3D.level()));
     }
 
-    private void onHuntingStart(GameLevel3D level3D) {
+    private void onHuntingStart() {
+        GameLevel3D level3D = assertLevel3D();
         level3D.entities().unique(Pac3D.class).init(level3D.level());
         level3D.entities().all(Ghost3D.class).forEach(ghost3D -> ghost3D.init(level3D.level()));
         level3D.entities().all(Energizer3D.class).forEach(Energizer3D::startPumping);
@@ -177,7 +179,8 @@ public class PlayScene3DGameEventHandler implements GameEventListener {
         level3D.animationRegistry().animation(GameLevel3D.AnimationID.GHOST_LIGHT).playFromStart();
     }
 
-    private void onPacManDying(GameLevel3D level3D, State<Game> gameState) {
+    private void onPacManDying(State<Game> gameState) {
+        GameLevel3D level3D = assertLevel3D();
         final Pac3D pac3D = level3D.entities().unique(Pac3D.class);
         gameState.lock();
 
@@ -192,7 +195,8 @@ public class PlayScene3DGameEventHandler implements GameEventListener {
         level3D.createPacDyingAnimationSequence(pac3D, gameState).play();
     }
 
-    private void onEatingGhost(GameLevel3D level3D) {
+    private void onEatingGhost() {
+        GameLevel3D level3D = assertLevel3D();
         final GameLevel level = level3D.level();
         //TODO rethink this mess
         level.game().simulationStep().ghostsKilled.forEach(killedGhost -> {
@@ -203,7 +207,8 @@ public class PlayScene3DGameEventHandler implements GameEventListener {
         });
     }
 
-    private void onLevelComplete(GameLevel3D level3D) {
+    private void onLevelComplete() {
+        GameLevel3D level3D = assertLevel3D();
         final State<Game> gameState = level3D.level().game().flow().state();
 
         final Maze3D maze3D = level3D.entities().unique(Maze3D.class);
@@ -217,7 +222,8 @@ public class PlayScene3DGameEventHandler implements GameEventListener {
         level3D.playLevelEndAnimation(maze3D, gameState);
     }
 
-    private void onGameOver(GameLevel3D level3D) {
+    private void onGameOver() {
+        GameLevel3D level3D = assertLevel3D();
         if (!level3D.level().isDemoLevel() && RandomNumberSupport.chance(0.25)) {
             playScene3D.showRandomGameOverMessage();
         }
@@ -225,6 +231,14 @@ public class PlayScene3DGameEventHandler implements GameEventListener {
         level3D.cleanupFoodAndParticles();
         level3D.entities().first(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
+    }
+
+    private void handleTestState() {
+        playScene3D.optGameLevel3D().ifPresent(level3D -> {
+            playScene3D.replaceGameLevel3D(level3D.level());
+            level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level3D.level().number());
+            GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
+        });
     }
 
     private GameLevel3D assertLevel3D() {
