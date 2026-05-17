@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.*;
+import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Point3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -76,17 +77,19 @@ public class LevelCompletedAnimation extends ManagedAnimation {
             levelRotation(rotationAxis),
             pauseSecThen(0.5, () -> level3D.optSoundEffects().ifPresent(GameSoundEffects::playLevelCompleteSound)),
             pauseSec(0.5),
-            mazeWallsAndHouseDisappearAnimation(level3D),
+            mazeWallsAndHouseDisappearAnimation(level3D, maze3D.house().wallBaseHeightProperty(), maze3D.wallBaseHeightProperty()),
             pauseSecThen(1.0, () -> level3D.optSoundEffects().ifPresent(GameSoundEffects::playLevelChangedSound))
         );
     }
 
-    private Animation mazeWallsAndHouseDisappearAnimation(GameLevel3D level3D) {
+    private Animation mazeWallsAndHouseDisappearAnimation(
+        GameLevel3D level3D,
+        DoubleProperty mazeWallHeight,
+        DoubleProperty houseWallHeight)
+    {
         return new Timeline(
-            new KeyFrame(Duration.seconds(0.5), new KeyValue(
-                level3D.maze3D().house().wallBaseHeightProperty(), 0, Interpolator.EASE_IN)),
-            new KeyFrame(Duration.seconds(1.5), new KeyValue(
-                level3D.maze3D().wallBaseHeightProperty(), 0, Interpolator.EASE_IN)),
+            new KeyFrame(Duration.seconds(0.5), new KeyValue(houseWallHeight, 0, Interpolator.EASE_IN)),
+            new KeyFrame(Duration.seconds(1.5), new KeyValue(mazeWallHeight, 0, Interpolator.EASE_IN)),
             new KeyFrame(Duration.seconds(2.5), _ -> level3D.setVisible(false))
         );
     }
