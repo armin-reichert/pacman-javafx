@@ -45,6 +45,9 @@ public abstract class GameScene implements GameEventListener, Disposable {
         if (listenerDelegate != null) {
             listenerDelegate.onGameEvent(event);
         }
+        else {
+            GameEventListener.super.onGameEvent(event);
+        }
     }
 
     /**
