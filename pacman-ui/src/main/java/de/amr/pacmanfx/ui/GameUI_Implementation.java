@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
@@ -22,13 +21,13 @@ import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
-import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -82,7 +81,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private final DirectoryWatchdog customDirWatchdog;
     private final UIConfigManager uiConfigManager = new UIConfigManager();
     private final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
-    private final AnimationTimer spriteAnimationTimer;
+    private final SpriteAnimator spriteAnimator = new SpriteAnimator();
     private final SoundManager soundManager = new SoundManager();
     private final VoiceManager voiceManager = new VoiceManager();
     private final GameContext gameContext;
@@ -114,12 +113,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         viewManager.setPlayView(new PlayView(this, scene, DEFAULT_DASHBOARD_CONFIG));
         viewManager.setEditorViewFactory(this::createEditorView);
 
-        spriteAnimationTimer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                SpriteAnimationContainer.instance().update(now);
-            }
-        };
         BaseRenderer.setArcadeFont(GameUIConstants.FONT_ARCADE_8);
 
         initLayout(mainSceneWidth,mainSceneHeight);
@@ -441,7 +434,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         stage.centerOnScreen();
         stage.show();
         flashMessageView.start();
-        spriteAnimationTimer.start();
+        spriteAnimator.start();
         Platform.runLater(customDirWatchdog::startWatching);
     }
 
@@ -477,6 +470,11 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
+    public SpriteAnimator spriteAnimator() {
+        return spriteAnimator;
+    }
+
+    @Override
     public Stage stage() {
         return stage;
     }
@@ -496,8 +494,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     public void terminate() {
         Logger.info("Application is terminated now. There is no way back!");
         stopGame();
-        spriteAnimationTimer.stop();
-        SpriteAnimationContainer.instance().clear();
+        spriteAnimator.stop();
+        spriteAnimator.clear();
         flashMessageView.stop();
         customDirWatchdog.dispose();
     }

@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.MapColorScheme;
@@ -27,11 +26,12 @@ import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostStateColors;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentColors;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostStateColors;
 import de.amr.pacmanfx.uilib.model3D.pac.MsPacManComponentColors;
 import de.amr.pacmanfx.uilib.model3D.pac.PacColors;
 import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
@@ -311,21 +311,21 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     }
 
     @Override
-    public Ghost createGhostWithAnimations(byte personality) {
+    public Ghost createGhostWithAnimations(SpriteAnimator spriteAnimator, byte personality) {
         final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(personality));
+        ghost.setAnimations(createGhostAnimations(spriteAnimator, personality));
         ghost.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public TengenMsPacMan_GhostAnimations createGhostAnimations(byte personality) {
-        return new TengenMsPacMan_GhostAnimations(SpriteAnimationContainer.instance(), personality);
+    public TengenMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimator spriteAnimator, byte personality) {
+        return new TengenMsPacMan_GhostAnimations(spriteAnimator, personality);
     }
 
     @Override
-    public TengenMsPacMan_PacAnimations createPacAnimations() {
-        return new TengenMsPacMan_PacAnimations(SpriteAnimationContainer.instance());
+    public TengenMsPacMan_PacAnimations createPacAnimations(SpriteAnimator spriteAnimator) {
+        return new TengenMsPacMan_PacAnimations(spriteAnimator);
     }
 
     // Helpers

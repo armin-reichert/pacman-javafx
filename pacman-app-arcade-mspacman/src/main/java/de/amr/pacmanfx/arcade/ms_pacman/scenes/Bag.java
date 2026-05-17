@@ -11,6 +11,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
@@ -20,8 +21,11 @@ public class Bag extends Actor {
 
     public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
 
-        public BagAnimations() {
+        private final SpriteAnimator spriteAnimator;
+
+        public BagAnimations(SpriteAnimator spriteAnimator) {
             super(ArcadeMsPacMan_SpriteSheet.instance());
+            this.spriteAnimator = spriteAnimator;
         }
 
         @Override
@@ -31,12 +35,14 @@ public class Bag extends Actor {
                     SpriteAnimationBuilder.builder()
                         .singleSprite(spriteSheet.sprite(JUNIOR_PAC))
                         .initiallyStopped()
-                        .build(SpriteAnimationContainer.instance());
+                        .build(spriteAnimator);
+
                 case ArcadeMsPacMan_AnimationID.BAG ->
                     SpriteAnimationBuilder.builder()
                         .singleSprite(spriteSheet.sprite(BLUE_BAG))
                         .initiallyStopped()
-                        .build(SpriteAnimationContainer.instance());
+                        .build(spriteAnimator);
+
                 default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
             };
         }
@@ -44,8 +50,8 @@ public class Bag extends Actor {
 
     private boolean open;
 
-    public Bag() {
-        setAnimations(new BagAnimations());
+    public Bag(SpriteAnimator spriteAnimator) {
+        setAnimations(new BagAnimations(spriteAnimator));
     }
 
     public void setOpen(boolean open) {

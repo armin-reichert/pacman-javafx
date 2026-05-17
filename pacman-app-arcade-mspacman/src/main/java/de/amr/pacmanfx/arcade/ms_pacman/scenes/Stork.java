@@ -11,14 +11,18 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 public class Stork extends Actor {
 
     public static class StorkAnimations extends SpriteAnimationMap<SpriteID> {
 
-        public StorkAnimations() {
+        private final SpriteAnimator spriteAnimator;
+
+        public StorkAnimations(SpriteAnimator spriteAnimator) {
             super(ArcadeMsPacMan_SpriteSheet.instance());
+            this.spriteAnimator = spriteAnimator;
         }
 
         @Override
@@ -28,13 +32,13 @@ public class Stork extends Actor {
                     .sprites(spriteSheet.sprites(SpriteID.STORK))
                     .frameTicks(8)
                     .repeated()
-                    .build(SpriteAnimationContainer.instance());
+                    .build(spriteAnimator);
             }
             throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         }
     }
 
-    public Stork() {
-        setAnimations(new StorkAnimations());
+    public Stork(SpriteAnimator spriteAnimator) {
+        setAnimations(new StorkAnimations(spriteAnimator));
     }
 }

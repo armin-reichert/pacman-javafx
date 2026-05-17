@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Factory3D;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
@@ -24,6 +23,7 @@ import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -184,21 +184,21 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public Ghost createGhostWithAnimations(byte personality) {
+    public Ghost createGhostWithAnimations(SpriteAnimator spriteAnimator, byte personality) {
         final Ghost ghost = ArcadePacMan_GameModel.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(personality));
+        ghost.setAnimations(createGhostAnimations(spriteAnimator, personality));
         ghost.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public ArcadePacMan_GhostAnimations createGhostAnimations(byte personality) {
-        return new ArcadePacMan_GhostAnimations(SpriteAnimationContainer.instance(), personality);
+    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimator spriteAnimator, byte personality) {
+        return new ArcadePacMan_GhostAnimations(spriteAnimator, personality);
     }
 
     @Override
-    public ArcadePacMan_PacAnimations createPacAnimations() {
-        return new ArcadePacMan_PacAnimations(SpriteAnimationContainer.instance(), spriteSheet());
+    public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimator spriteAnimator) {
+        return new ArcadePacMan_PacAnimations(spriteAnimator, spriteSheet());
     }
 
     @Override

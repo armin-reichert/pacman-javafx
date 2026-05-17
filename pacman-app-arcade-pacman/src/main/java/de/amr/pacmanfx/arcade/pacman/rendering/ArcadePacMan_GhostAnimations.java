@@ -9,6 +9,7 @@ import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.spriteanim.SpriteAnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
@@ -16,12 +17,12 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
 
-    private final SpriteAnimationContainer container;
+    private final SpriteAnimator container;
     private final byte personality;
 
-    public ArcadePacMan_GhostAnimations(SpriteAnimationContainer container, byte personality) {
+    public ArcadePacMan_GhostAnimations(SpriteAnimator spriteAnimator, byte personality) {
         super(ArcadePacMan_SpriteSheet.instance());
-        this.container = requireNonNull(container);
+        this.container = requireNonNull(spriteAnimator);
         this.personality = requireValidGhostPersonality(personality);
     }
 

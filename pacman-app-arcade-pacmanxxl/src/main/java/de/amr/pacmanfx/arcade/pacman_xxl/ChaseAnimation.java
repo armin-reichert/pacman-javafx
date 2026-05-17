@@ -9,6 +9,7 @@ import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.UIConfig;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -71,7 +72,7 @@ class ChaseAnimation {
         timeline.stop();
     }
 
-    public void init(UIConfig uiConfig, Canvas canvas) {
+    public void init(UIConfig uiConfig, Canvas canvas, SpriteAnimator spriteAnimator) {
         requireNonNull(uiConfig);
         requireNonNull(canvas);
 
@@ -79,7 +80,7 @@ class ChaseAnimation {
         actorRenderer.scalingProperty().bind(scalingProperty());
 
         pac = ArcadePacMan_GameModel.createPacMan();
-        pac.setAnimations(uiConfig.createPacAnimations());
+        pac.setAnimations(uiConfig.createPacAnimations(spriteAnimator));
         pac.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
         pac.playAnimation();
         pac.setX(numTilesX * TS);
@@ -89,10 +90,10 @@ class ChaseAnimation {
         pac.setVisible(true);
 
         ghosts = List.of(
-            uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW),
-            uiConfig.createGhostWithAnimations(PINK_GHOST_SPEEDY),
-            uiConfig.createGhostWithAnimations(CYAN_GHOST_BASHFUL),
-            uiConfig.createGhostWithAnimations(ORANGE_GHOST_POKEY)
+            uiConfig.createGhostWithAnimations(spriteAnimator, RED_GHOST_SHADOW),
+            uiConfig.createGhostWithAnimations(spriteAnimator, PINK_GHOST_SPEEDY),
+            uiConfig.createGhostWithAnimations(spriteAnimator, CYAN_GHOST_BASHFUL),
+            uiConfig.createGhostWithAnimations(spriteAnimator, ORANGE_GHOST_POKEY)
         );
         for (Ghost ghost : ghosts) {
             ghost.setX((numTilesX + 4) * TS + ghost.personality() * GHOST_DISTANCE);

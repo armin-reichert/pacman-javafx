@@ -13,22 +13,14 @@ import static java.util.Objects.requireNonNull;
 
 public class SpriteAnimationContainer  {
 
-    private static class LazyThreadSafeSingletonHolder {
-        static final SpriteAnimationContainer SINGLETON = new SpriteAnimationContainer();
-    }
-
-    public static SpriteAnimationContainer instance() {
-        return LazyThreadSafeSingletonHolder.SINGLETON;
-    }
-
     private final Set<SpriteAnimation> active = new HashSet<>();
     private final Set<SpriteAnimation> pendingAdd = new HashSet<>();
     private final Set<SpriteAnimation> pendingRemove = new HashSet<>();
     private boolean clearRequest;
 
-    private SpriteAnimationContainer() {}
+    public SpriteAnimationContainer() {}
 
-    public void update(long now) {
+    public void updateAnimations(long now) {
 
         if (clearRequest) {
             active.clear();

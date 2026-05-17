@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.layout.MiniGameView;
 import de.amr.pacmanfx.ui.layout.ViewManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.Translator;
 import javafx.stage.Stage;
@@ -76,6 +77,8 @@ public interface GameUI extends Translator {
      * Returns the sound manager responsible for playing sound effects.
      */
     SoundManager soundManager();
+
+    SpriteAnimator spriteAnimator();
 
     /**
      * Returns the preferences manager storing UI-related settings.

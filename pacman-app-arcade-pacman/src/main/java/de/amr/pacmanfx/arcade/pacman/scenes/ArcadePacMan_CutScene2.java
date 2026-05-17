@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.spriteanim.SpriteAnimationID;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
@@ -70,12 +69,12 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     public void onSceneStart() {
         final UIConfig uiConfig = ui.currentConfig();
         pacMan = createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations());
-        blinky = uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW);
+        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimator()));
+        blinky = uiConfig.createGhostWithAnimations(ui.spriteAnimator(), RED_GHOST_SHADOW);
         nailDressAnimation = SpriteAnimationBuilder.builder()
             .sprites(ArcadePacMan_SpriteSheet.instance().sprites(SpriteID.RED_GHOST_STRETCHED))
             .initiallyStopped()
-            .build(SpriteAnimationContainer.instance());
+            .build(ui.spriteAnimator());
         sceneTick = -1;
     }
 
