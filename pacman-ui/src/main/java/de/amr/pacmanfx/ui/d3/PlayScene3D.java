@@ -357,7 +357,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         decorateGameLevel3D(level3D);
         level3DParent.getChildren().setAll(level3D);
         level3D.entities().all().forEach(e -> e.init(level));
-        level3D.startTrackingPac();
+        level3D.startLivesCounterTrackingPac();
         Logger.info("Created and added new game level 3D to play scene");
     }
 

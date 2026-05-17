@@ -129,13 +129,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             messageManager.dispose();
             messageManager = null;
         }
-        Logger.info("Cleaned game level 3D");
     }
 
     /**
      * Starts the lives counter symbols following Pac-Man with their eyes.
      */
-    public void startTrackingPac() {
+    public void startLivesCounterTrackingPac() {
         final LivesCounter3D livesCounter3D = entities3D.unique(LivesCounter3D.class);
         final Pac3D pac3D = entities3D.unique(Pac3D.class);
         livesCounter3D.startTracking(pac3D);
@@ -168,37 +167,25 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     public void setDrawMode(DrawMode drawMode) {
+        requireNonNull(drawMode);
         entities3D.all().forEach(entity -> {
             switch (entity) {
                 case Pac3D pac3D -> setDrawMode(pac3D, drawMode);
                 case Ghost3D ghost3D -> setDrawMode(ghost3D, drawMode);
-                case Maze3D maze3D -> setDrawMode(maze3D, drawMode); //TODO performance
+                case Maze3D maze3D -> setDrawMode(maze3D, drawMode);
                 default -> {}
             }
         });
-    }
-
-    private void setDrawMode(Group group, DrawMode drawMode) {
-        for (Node node : group.getChildren()) {
-            if (node instanceof Group subGroup) {
-                setDrawMode(subGroup, drawMode);
-            }
-            else if (node instanceof Shape3D shape3D) {
-                shape3D.setDrawMode(drawMode);
-            }
-        }
     }
 
     // Private area, no trespassing
 
     private Optional<Ghost3D> ghost3D(byte personality) {
         Validations.requireValidGhostPersonality(personality);
-        return entities3D.allWhere(Ghost3D.class, ga3D -> ga3D.ghost().personality() == personality).findFirst();
+        return entities3D.allWhere(Ghost3D.class, ghost3D -> ghost3D.ghost().personality() == personality).findFirst();
     }
 
-    /*
-     * Order matters for correct transparency: actors and effects must appear in front of walls/house.
-     */
+    // Order matters for correct transparency: actors and effects must appear in front of walls/house.
     private void buildHierarchy() {
         final Maze3D maze3D = entities3D.unique(Maze3D.class);
         final Pac3D pac3D = entities3D.unique(Pac3D.class);
@@ -277,6 +264,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             });
         messageManager.setMessageCenter(MessageManager3D.MessageType.TEST,
             vec2_float(terrain.numCols() * HTS, (terrain.numRows() - 2) * TS));
+    }
+
+    private void setDrawMode(Group group, DrawMode drawMode) {
+        for (Node node : group.getChildren()) {
+            if (node instanceof Group subGroup) {
+                setDrawMode(subGroup, drawMode);
+            }
+            else if (node instanceof Shape3D shape3D) {
+                shape3D.setDrawMode(drawMode);
+            }
+        }
     }
 
     // Bonus
@@ -496,9 +494,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Handles Pac gaining power: stops siren, starts power animation/sound.
      */
-    public void onPacGetsPower(PacGetsPowerEvent ignoredEvent) {
+    public void onPacGetsPower(PacGetsPowerEvent event) {
         final Pac3D pac3D = entities3D.unique(Pac3D.class);
-        final Game game = level.game();
+        final Game game = event.game();
         optSoundEffects().ifPresent(GameSoundEffects::stopSiren);
         if (!game.isLevelCompleted()) {
             pac3D.setPowerMode(true);
