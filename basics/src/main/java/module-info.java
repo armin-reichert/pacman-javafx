@@ -4,6 +4,7 @@
 module de.amr.basics {
 
     requires org.tinylog.api;
+    requires javafx.graphics;
 
     exports de.amr.basics;
     exports de.amr.basics.filesystem;

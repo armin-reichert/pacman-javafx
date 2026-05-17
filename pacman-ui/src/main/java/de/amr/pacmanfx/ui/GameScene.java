@@ -6,8 +6,9 @@ package de.amr.pacmanfx.ui;
 import de.amr.basics.Disposable;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.event.DefaultGameEventListener;
 import de.amr.pacmanfx.event.GameEventListener;
+import de.amr.pacmanfx.event.GenericChangeEvent;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
@@ -25,29 +26,52 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common base class of all game scenes (2D and 3D).
  */
-public abstract class GameScene implements GameEventListener, Disposable {
+public abstract class GameScene implements Disposable {
+
+    public static class DefaultGameEventHandler extends DefaultGameEventListener {
+
+        private final GameScene gameScene;
+
+        public DefaultGameEventHandler(GameScene gameScene) {
+            this.gameScene = gameScene;
+        }
+
+        public GameScene gameScene() {
+            return gameScene;
+        }
+
+        public GameUI ui() {
+            return gameScene().ui();
+        }
+
+        @Override
+        public void onStopAllSounds(StopAllSoundsEvent e) {
+            gameScene.soundEffects().ifPresent(GameSoundEffects::stopAll);
+        }
+
+        @Override
+        public void onGenericChange(GenericChangeEvent event) {
+            gameScene.ui().forceGameSceneUpdate();
+        }
+
+    }
 
     protected final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
     protected final GameUI ui;
 
-    private GameEventListener listenerDelegate;
+    private GameEventListener gameEventHandler = new DefaultGameEventListener();
 
     public GameScene(GameUI ui) {
         this.ui = requireNonNull(ui);
+        setGameEventHandler(new DefaultGameEventHandler(this));
     }
 
-    public void setListenerDelegate(GameEventListener listenerDelegate) {
-        this.listenerDelegate = requireNonNull(listenerDelegate);
+    public void setGameEventHandler(GameEventListener delegate) {
+        gameEventHandler = requireNonNull(delegate);
     }
 
-    @Override
-    public void onGameEvent(GameEvent event) {
-        if (listenerDelegate != null) {
-            listenerDelegate.onGameEvent(event);
-        }
-        else {
-            GameEventListener.super.onGameEvent(event);
-        }
+    public GameEventListener gameEventHandler() {
+        return gameEventHandler;
     }
 
     /**
@@ -100,7 +124,6 @@ public abstract class GameScene implements GameEventListener, Disposable {
         actionBindings.removeFromKeyboard();
         actionBindings.dispose();
         soundEffects().ifPresent(GameSoundEffects::stopAll);
-        SpriteAnimationContainer.instance().clear();
         Logger.info("Game scene {} ends", getClass().getSimpleName());
     }
 
@@ -148,11 +171,6 @@ public abstract class GameScene implements GameEventListener, Disposable {
      * @param scrollEvent the scroll event
      */
     public void onScroll(ScrollEvent scrollEvent) {}
-
-    @Override
-    public void onStopAllSounds(StopAllSoundsEvent e) {
-        soundEffects().ifPresent(GameSoundEffects::stopAll);
-    }
 
     /**
      * @return context menu provided by this game scene which is merged into the view's context menu

@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import javafx.scene.Node;
@@ -11,37 +11,7 @@ import javafx.scene.Node;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-/**
- * Represents a visual UI component within the game's view system.
- * <p>
- * A {@code View} encapsulates:
- * <ul>
- *   <li>a root JavaFX node inserted into the scene graph,</li>
- *   <li>its own keyboard action bindings,</li>
- *   <li>lifecycle callbacks for entering and leaving the view,</li>
- *   <li>optional dynamic title text for the main window,</li>
- *   <li>optional per-frame rendering logic.</li>
- * </ul>
- *
- * <h2>Lifecycle</h2>
- * Views follow a simple lifecycle managed by the {@link ViewManager}:
- * <ol>
- *   <li>{@link #onEnter()} is called when the view becomes active.</li>
- *   <li>{@link #render()} may be called periodically while the view is active.</li>
- *   <li>{@link #onExit()} is called when the view is replaced or hidden.</li>
- * </ol>
- *
- * <h2>Input Handling</h2>
- * Each view provides its own {@link ActionBindingsManager}, allowing it to define
- * view-specific keyboard shortcuts. The default {@link #onKeyboardInput(GameUI)}
- * implementation resolves the current key state into a {@link de.amr.pacmanfx.ui.action.GameAction}
- * and executes it if enabled.
- *
- * <h2>Event Handling</h2>
- * As a {@link GameEventListener}, a view may react to game events such as level changes,
- * score updates, or state transitions.
- */
-public interface View extends GameEventListener {
+public interface View {
 
     /**
      * Returns the action bindings manager responsible for resolving keyboard input

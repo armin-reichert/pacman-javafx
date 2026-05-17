@@ -74,7 +74,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         createSubScene();
         createBindings();
         bindActions();
-        setListenerDelegate(gameEventHandler);
+        setGameEventHandler(gameEventHandler);
     }
 
     // Initial subscene size is irrelevant (will be bound to parent scene size)

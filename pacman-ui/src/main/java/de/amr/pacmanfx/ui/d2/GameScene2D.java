@@ -5,7 +5,6 @@ package de.amr.pacmanfx.ui.d2;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.event.GenericChangeEvent;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
@@ -69,15 +68,6 @@ public class GameScene2D extends GameScene {
 
     // TODO: rethink
     public void onEnteredFrom3DScene() {}
-
-    /**
-     * Handles unspecified change events.
-     * Currently used only for testing cut scenes.
-     */
-    @Override
-    public void onGenericChange(GenericChangeEvent event) {
-        ui.forceGameSceneUpdate();
-    }
 
     /**
      * Sets the canvas used for rendering this scene.

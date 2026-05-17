@@ -11,7 +11,7 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
-public class SpriteAnimationContainer {
+public class SpriteAnimationContainer  {
 
     private static class LazyThreadSafeSingletonHolder {
         static final SpriteAnimationContainer SINGLETON = new SpriteAnimationContainer();

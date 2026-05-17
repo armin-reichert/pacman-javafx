@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.event.DefaultGameEventListener;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
@@ -72,6 +73,8 @@ import static java.util.Objects.requireNonNull;
 public class PlayView extends StackPane implements View {
 
     private static final FontIcon PAUSED_ICON = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
+
+    private final GameEventHandler gameEventHandler = new GameEventHandler(this);
 
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
 
@@ -198,38 +201,49 @@ public class PlayView extends StackPane implements View {
         }
     }
 
-    // GameEventListener interface
+    // GameEvent handling
 
-    @Override
-    public void onGameEvent(GameEvent gameEvent) {
-        switch (gameEvent) {
+    private static class GameEventHandler extends DefaultGameEventListener {
 
-            case LevelCreatedEvent levelCreatedEvent -> {
-                final GameLevel level = levelCreatedEvent.level();
-                final UIConfig uiConfig = ui.currentConfig();
+        private final PlayView playView;
 
-                //TODO this should be done elsewhere
-                level.pac().setAnimations(uiConfig.createPacAnimations());
-                level.ghosts().forEach(ghost ->
-                    ghost.setAnimations(uiConfig.createGhostAnimations(ghost.personality())));
-
-                miniView.setGameLevel(level);
-                miniView.slideIn();
-                // size of game scene might have changed, so re-embed
-                optCurrentGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
-            }
-
-            case GameStateChangeEvent stateChangeEvent -> {
-                if (stateChangeEvent.newState().matchesByName(CanonicalGameState.LEVEL_COMPLETE.name())) {
-                    miniView.slideOut();
-                }
-            }
-
-            default -> {}
+        public GameEventHandler(PlayView playView) {
+            this.playView = playView;
         }
 
-        updateGameScene();
-        optCurrentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
+        @Override
+        public void onGameEvent(GameEvent gameEvent) {
+            switch (gameEvent) {
+
+                case LevelCreatedEvent levelCreatedEvent -> {
+                    final GameLevel level = levelCreatedEvent.level();
+                    final UIConfig uiConfig = playView.ui.currentConfig();
+
+                    //TODO this should be done elsewhere
+                    level.pac().setAnimations(uiConfig.createPacAnimations());
+                    level.ghosts().forEach(ghost ->
+                        ghost.setAnimations(uiConfig.createGhostAnimations(ghost.personality())));
+
+                    playView.miniView.setGameLevel(level);
+                    playView.miniView.slideIn();
+                    // size of game scene might have changed, so re-embed
+                    playView.optCurrentGameScene().ifPresent(gameScene -> playView.embedGameScene(playView.parentScene, gameScene));
+                }
+
+                case GameStateChangeEvent stateChangeEvent -> {
+                    if (stateChangeEvent.newState().matchesByName(CanonicalGameState.LEVEL_COMPLETE.name())) {
+                        playView.miniView.slideOut();
+                    }
+                }
+
+                default -> {}
+            }
+
+            playView.updateGameScene();
+
+            // Call game event handler for current game scene
+            playView.optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
+        }
     }
 
     // ---
@@ -303,7 +317,7 @@ public class PlayView extends StackPane implements View {
         if (oldGameVariantName != null) {
             Logger.info("Cleanup game variant {}...", oldGameVariantName);
             final Game game = ui.gameContext().gameByVariantName(oldGameVariantName);
-            game.flow().removeGameEventListener(this);
+            game.flow().removeGameEventListener(gameEventHandler);
             ui.uiConfigManager().dispose(oldGameVariantName);
             ui.soundManager().dispose();
             ui.stage().getIcons().removeAll();
@@ -312,7 +326,7 @@ public class PlayView extends StackPane implements View {
         if (newGameVariantName != null) {
             Logger.info("Initialize game variant {}...", newGameVariantName);
             final Game game = ui.gameContext().gameByVariantName(newGameVariantName);
-            game.flow().addGameEventListener(this);
+            game.flow().addGameEventListener(gameEventHandler);
 
             final UIConfig uiConfig = ui.config(newGameVariantName);
             uiConfig.init(ui);

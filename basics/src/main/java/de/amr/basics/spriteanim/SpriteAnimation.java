@@ -13,6 +13,7 @@ import static java.util.Objects.requireNonNull;
 public class SpriteAnimation {
 
     private final SpriteAnimationContainer container;
+
     private final int fps;
     private RectShort[] sprites;
     private int currentFrameIndex;
@@ -44,6 +45,7 @@ public class SpriteAnimation {
             lastUpdateTime = now;
         }
     }
+
     public void start() {
         if (!running) {
             container.register(this);
@@ -65,7 +67,6 @@ public class SpriteAnimation {
 
     public void setSprites(RectShort[] sprites) {
         if (this.sprites == sprites) {
-            //Logger.info("Sprites unchanged");
             return;
         }
         this.sprites = requireNonNull(sprites);

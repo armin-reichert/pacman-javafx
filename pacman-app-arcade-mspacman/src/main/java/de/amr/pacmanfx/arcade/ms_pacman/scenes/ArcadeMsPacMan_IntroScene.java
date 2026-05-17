@@ -16,6 +16,7 @@ import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.UIConfig;
@@ -34,6 +35,18 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
  * The ghosts and Ms. Pac-Man are introduced on a billboard and are marching in one after another.
  */
 public class ArcadeMsPacMan_IntroScene extends GameScene2D {
+
+    private static class GameEventHandler extends GameScene.DefaultGameEventHandler {
+
+        public GameEventHandler(GameScene gameScene) {
+            super(gameScene);
+        }
+
+        @Override
+        public void onCreditAdded(CreditAddedEvent e) {
+            gameScene().soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+        }
+    }
 
     public static final int TITLE_X          = TS * 10;
     public static final int TITLE_Y          = TS * 8;
@@ -54,6 +67,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     public ArcadeMsPacMan_IntroScene(GameUI ui) {
         super(ui);
+        setGameEventHandler(new GameEventHandler(this));
         sceneController = new StateMachine<>(this, List.of(SceneState.values()));
     }
 
@@ -95,11 +109,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void onTick(long tick) {
         sceneController.update();
-    }
-
-    @Override
-    public void onCreditAdded(CreditAddedEvent e) {
-        soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
     }
 
     // Scene controller FSM

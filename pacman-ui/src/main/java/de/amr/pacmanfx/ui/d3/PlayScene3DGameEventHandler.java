@@ -10,6 +10,7 @@ import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
+import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.d3.animation.WallColorFlashingAnimation;
@@ -25,18 +26,21 @@ import javafx.util.Duration;
 import static de.amr.pacmanfx.model.CanonicalGameState.*;
 import static java.util.Objects.requireNonNull;
 
-public class PlayScene3DGameEventHandler implements GameEventListener {
-
-    private final PlayScene3D playScene3D;
+public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandler {
 
     public PlayScene3DGameEventHandler(PlayScene3D playScene3D) {
-        this.playScene3D = requireNonNull(playScene3D);
+        super(playScene3D);
+    }
+
+    @Override
+    public PlayScene3D gameScene() {
+        return (PlayScene3D) super.gameScene();
     }
 
     // TODO: remove (only used by GameState.TESTING_CUT_SCENES)
     @Override
     public void onGenericChange(GenericChangeEvent event) {
-        playScene3D.ui().forceGameSceneUpdate();
+        ui().forceGameSceneUpdate();
     }
 
     @Override
@@ -109,7 +113,7 @@ public class PlayScene3DGameEventHandler implements GameEventListener {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent event) {
-        playScene3D.replaceGameLevel3D(event.level());
+        gameScene().replaceGameLevel3D(event.level());
     }
 
     @Override
@@ -117,13 +121,13 @@ public class PlayScene3DGameEventHandler implements GameEventListener {
         final GameLevel level = event.level();
         final State<Game> state = level.game().flow().state();
         if (state instanceof TestState) {
-            playScene3D.replaceGameLevel3D(level);
+            gameScene().replaceGameLevel3D(level);
             assertLevel3D().entities().all(Energizer3D.class).forEach(Energizer3D::startPumping);
             assertLevel3D().messageManager().showMessage(MessageManager3D.MessageType.TEST, level.number());
         }
         assertLevel3D().entities().all().forEach(e -> e.init(level));
-        playScene3D.replaceActionBindings(level);
-        new PlaySceneFadeInAnimation(Duration.seconds(3), playScene3D).play();
+        gameScene().replaceActionBindings(level);
+        new PlaySceneFadeInAnimation(Duration.seconds(3), gameScene()).play();
     }
 
     @Override
@@ -131,7 +135,7 @@ public class PlayScene3DGameEventHandler implements GameEventListener {
         if (gameEvent.allPellets()) {
             assertLevel3D().removeAllPellets3D();
         } else {
-            final long tick = playScene3D.ui().gameContext().clock().tickCount();
+            final long tick = ui().gameContext().clock().tickCount();
             assertLevel3D().eatFoodAtTile(gameEvent.pac().tile());
             assertLevel3D().optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
         }
@@ -227,7 +231,7 @@ public class PlayScene3DGameEventHandler implements GameEventListener {
     private void onGameOver() {
         GameLevel3D level3D = assertLevel3D();
         if (!level3D.level().isDemoLevel() && RandomNumberSupport.chance(0.25)) {
-            playScene3D.showRandomGameOverMessage();
+            gameScene().showRandomGameOverMessage();
         }
         level3D.animationRegistry().animation(GameLevel3D.AnimationID.GHOST_LIGHT).stop();
         level3D.cleanupFoodAndParticles();
@@ -236,14 +240,14 @@ public class PlayScene3DGameEventHandler implements GameEventListener {
     }
 
     private void handleTestState() {
-        playScene3D.optGameLevel3D().ifPresent(level3D -> {
-            playScene3D.replaceGameLevel3D(level3D.level());
+        gameScene().optGameLevel3D().ifPresent(level3D -> {
+            gameScene().replaceGameLevel3D(level3D.level());
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level3D.level().number());
             GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
         });
     }
 
     private GameLevel3D assertLevel3D() {
-        return playScene3D.optGameLevel3D().orElseThrow();
+        return gameScene().optGameLevel3D().orElseThrow();
     }
 }

@@ -15,6 +15,7 @@ import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.UIConfig;
@@ -33,6 +34,19 @@ import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
  * The ghosts are presented one by one, then Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
  */
 public class ArcadePacMan_IntroScene extends GameScene2D {
+
+    private static class GameEventHandler extends GameScene.DefaultGameEventHandler {
+
+        public GameEventHandler(ArcadePacMan_IntroScene scene) {
+            super(scene);
+        }
+
+        @Override
+        public void onCreditAdded(CreditAddedEvent e) {
+            gameScene().soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+        }
+
+    }
 
     public static final int NUM_GHOSTS = 4;
 
@@ -86,6 +100,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         flow = new StateMachine<>();
         flow.setContext(this);
         flow.addStates(SceneState.values());
+
+        setGameEventHandler(new GameEventHandler(this));
     }
 
     @Override
@@ -128,11 +144,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     public void onTick(long tick) {
         flow.update();
-    }
-
-    @Override
-    public void onCreditAdded(CreditAddedEvent e) {
-        soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
     }
 
     private void startChasingPacMan() {
