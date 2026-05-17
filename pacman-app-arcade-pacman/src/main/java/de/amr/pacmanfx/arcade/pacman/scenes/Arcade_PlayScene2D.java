@@ -37,74 +37,6 @@ import static de.amr.pacmanfx.ui.layout.ContextMenuSupport.*;
  */
 public class Arcade_PlayScene2D extends GameScene2D {
 
-    private LevelCompletedAnimation levelCompletedAnimation;
-
-    public Arcade_PlayScene2D(GameUI ui) {
-        super(ui);
-        setGameEventHandler(new GameEventHandler(this));
-    }
-
-    @Override
-    public void onTick(long tick) {
-        final Arcade_GameModel game = gameContext().game();
-        game.optGameLevel().ifPresent(level -> {
-            updateLivesCounter(level);
-            soundEffects().ifPresent(sfx -> {
-                sfx.setEnabled(!level.isDemoLevel());
-                sfx.playLevelRunningSound(level);
-            });
-        });
-    }
-
-    /**
-     * Note: Scene is also used in Pac-Man XXL game variant where world map can have non-Arcade size!
-     *
-     * @return Unscaled scene size in pixels as (width, height)
-     */
-    @Override
-    public Vector2i unscaledSceneSize() {
-        return gameContext().game().optGameLevel()
-            .map(GameLevel::worldMap)
-            .map(WorldMap::terrainLayer)
-            .map(TerrainLayer::sizeInPixel)
-            .orElse(ARCADE_MAP_SIZE_IN_PIXELS);
-    }
-
-    @Override
-    public Optional<ContextMenu> supplyContextMenu() {
-        final Game game = gameContext().game();
-        final var menu = new ContextMenu();
-        addLocalizedTitleItem(menu, ui, "pacman");
-        addLocalizedCheckBox(menu, ui, game.cheats().usingAutopilotProperty(), "autopilot").setOnAction(e -> {
-            final var checkBox = (CheckMenuItem) e.getSource();
-            if (checkBox.isSelected()) {
-                CheatActions.ACTION_ACTIVATE_AUTOPILOT.executeIfEnabled(ui);
-            } else {
-                CheatActions.ACTION_DEACTIVATE_AUTOPILOT.executeIfEnabled(ui);
-            }
-        });
-        addLocalizedCheckBox(menu, ui, game.cheats().immuneProperty(), "immunity").setOnAction(e -> {
-            final var checkBox = (CheckMenuItem) e.getSource();
-            if (checkBox.isSelected()) {
-                CheatActions.ACTION_ACTIVATE_IMMUNITY.executeIfEnabled(ui);
-            } else {
-                CheatActions.ACTION_DEACTIVATE_IMMUNITY.executeIfEnabled(ui);
-            }
-        });
-        addSeparator(menu);
-        addLocalizedCheckBox(menu, ui, GameUIConstants.PROPERTY_MUTED, "muted");
-        addLocalizedActionItem(menu, ui, CommonGameActions.ACTION_QUIT_GAME_SCENE, "quit");
-
-        return Optional.of(menu);
-    }
-
-    @Override
-    public void onEnteredFrom3DScene() {
-        gameContext().game().optGameLevel().ifPresent(this::adaptToGameLevel);
-    }
-
-    // Game event handlers
-
     private static class GameEventHandler extends GameScene.DefaultGameEventHandler {
 
         public GameEventHandler(Arcade_PlayScene2D scene) {
@@ -206,6 +138,72 @@ public class Arcade_PlayScene2D extends GameScene2D {
         public void onSpecialScore(SpecialScoreEvent e) {
             gameScene().soundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
         }
+    }
+
+    private LevelCompletedAnimation levelCompletedAnimation;
+
+    public Arcade_PlayScene2D(GameUI ui) {
+        super(ui);
+        setGameEventHandler(new GameEventHandler(this));
+    }
+
+    @Override
+    public void onTick(long tick) {
+        final Arcade_GameModel game = gameContext().game();
+        game.optGameLevel().ifPresent(level -> {
+            updateLivesCounter(level);
+            soundEffects().ifPresent(sfx -> {
+                sfx.setEnabled(!level.isDemoLevel());
+                sfx.playLevelRunningSound(level);
+            });
+        });
+    }
+
+    /**
+     * Note: Scene is also used in Pac-Man XXL game variant where world map can have non-Arcade size!
+     *
+     * @return Unscaled scene size in pixels as (width, height)
+     */
+    @Override
+    public Vector2i unscaledSceneSize() {
+        return gameContext().game().optGameLevel()
+            .map(GameLevel::worldMap)
+            .map(WorldMap::terrainLayer)
+            .map(TerrainLayer::sizeInPixel)
+            .orElse(ARCADE_MAP_SIZE_IN_PIXELS);
+    }
+
+    @Override
+    public Optional<ContextMenu> supplyContextMenu() {
+        final Game game = gameContext().game();
+        final var menu = new ContextMenu();
+        addLocalizedTitleItem(menu, ui, "pacman");
+        addLocalizedCheckBox(menu, ui, game.cheats().usingAutopilotProperty(), "autopilot").setOnAction(e -> {
+            final var checkBox = (CheckMenuItem) e.getSource();
+            if (checkBox.isSelected()) {
+                CheatActions.ACTION_ACTIVATE_AUTOPILOT.executeIfEnabled(ui);
+            } else {
+                CheatActions.ACTION_DEACTIVATE_AUTOPILOT.executeIfEnabled(ui);
+            }
+        });
+        addLocalizedCheckBox(menu, ui, game.cheats().immuneProperty(), "immunity").setOnAction(e -> {
+            final var checkBox = (CheckMenuItem) e.getSource();
+            if (checkBox.isSelected()) {
+                CheatActions.ACTION_ACTIVATE_IMMUNITY.executeIfEnabled(ui);
+            } else {
+                CheatActions.ACTION_DEACTIVATE_IMMUNITY.executeIfEnabled(ui);
+            }
+        });
+        addSeparator(menu);
+        addLocalizedCheckBox(menu, ui, GameUIConstants.PROPERTY_MUTED, "muted");
+        addLocalizedActionItem(menu, ui, CommonGameActions.ACTION_QUIT_GAME_SCENE, "quit");
+
+        return Optional.of(menu);
+    }
+
+    @Override
+    public void onEnteredFrom3DScene() {
+        gameContext().game().optGameLevel().ifPresent(this::adaptToGameLevel);
     }
 
     // Others
