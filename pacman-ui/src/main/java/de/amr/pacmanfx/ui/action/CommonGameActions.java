@@ -7,7 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameFlow.CanonicalGameState;
+import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
@@ -335,13 +335,13 @@ public final class CommonGameActions {
         }
 
         private boolean isTestModeRunning(Game game) {
-            return game.flow().state().nameMatches(
+            return game.flow().state().matchesByName(
                 LevelShortTestState.class.getSimpleName(),
                 LevelMediumTestState.class.getSimpleName());
         }
 
         private boolean canSwitchSceneNow(Game game) {
-            return game.flow().state().nameMatches(CanonicalGameState.LEVEL_PLAYING.name());
+            return game.flow().state().matchesByName(CanonicalGameState.LEVEL_PLAYING.name());
         }
     };
 }

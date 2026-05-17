@@ -8,7 +8,7 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameFlow.CanonicalGameState;
+import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
@@ -215,7 +215,7 @@ public class PlayView extends StackPane implements View {
             }
 
             case GameStateChangeEvent stateChangeEvent -> {
-                if (stateChangeEvent.newState().nameMatches(CanonicalGameState.LEVEL_COMPLETE.name())) {
+                if (stateChangeEvent.newState().matchesByName(CanonicalGameState.LEVEL_COMPLETE.name())) {
                     miniView.slideOut();
                 }
             }

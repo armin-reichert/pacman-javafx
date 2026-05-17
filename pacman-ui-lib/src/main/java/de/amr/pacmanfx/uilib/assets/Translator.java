@@ -12,17 +12,17 @@ import static java.util.Objects.requireNonNull;
 
 public interface Translator {
 
-    ResourceBundle localizedTexts();
+    ResourceBundle translator();
 
     default String translate(String keyOrPattern, Object... args) {
         requireNonNull(keyOrPattern);
         requireNonNull(args);
-        if (localizedTexts() == null) {
+        if (translator() == null) {
             Logger.error("No localized text resources available");
             return "???";
         }
-        if (localizedTexts().containsKey(keyOrPattern)) {
-            return MessageFormat.format(localizedTexts().getString(keyOrPattern), args);
+        if (translator().containsKey(keyOrPattern)) {
+            return MessageFormat.format(translator().getString(keyOrPattern), args);
         }
         Logger.error("Missing localized text for key {}", keyOrPattern);
         return "[" + keyOrPattern + "]";

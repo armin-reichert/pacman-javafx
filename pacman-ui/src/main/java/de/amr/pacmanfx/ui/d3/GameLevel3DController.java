@@ -1,7 +1,6 @@
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.basics.fsm.State;
-import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
@@ -14,7 +13,7 @@ import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 
-import static de.amr.pacmanfx.model.GameFlow.CanonicalGameState.*;
+import static de.amr.pacmanfx.model.CanonicalGameState.*;
 import static java.util.Objects.requireNonNull;
 
 public class GameLevel3DController {
@@ -22,17 +21,17 @@ public class GameLevel3DController {
     public void handleGameStateChange(GameLevel3D level3D, GameStateChangeEvent event) {
         requireNonNull(event);
         final State<Game> gameState = event.newState();
-        if (gameState.nameMatches(STARTING_GAME_OR_LEVEL.name())) {
+        if (STARTING_GAME_OR_LEVEL.matches(gameState)) {
             onStartingGame(level3D);
-        } else if (gameState.nameMatches(LEVEL_PLAYING.name())) {
+        } else if (LEVEL_PLAYING.matches(gameState)) {
             onHuntingStart(level3D);
-        } else if (gameState.nameMatches(PACMAN_DYING.name())) {
+        } else if (PACMAN_DYING.matches(gameState)) {
             onPacManDying(level3D, gameState);
-        } else if (gameState.nameMatches(EATING_GHOST.name())) {
+        } else if (EATING_GHOST.matches(gameState)) {
             onEatingGhost(level3D);
-        } else if (gameState.nameMatches(LEVEL_COMPLETE.name())) {
+        } else if (LEVEL_COMPLETE.matches(gameState)) {
             onLevelComplete(level3D);
-        } else if (gameState.nameMatches(GAME_OVER.name())) {
+        } else if (GAME_OVER.matches(gameState)) {
             onGameOver(level3D);
         }
     }
@@ -187,9 +186,6 @@ public class GameLevel3DController {
         level3D.animationRegistry().animation(GameLevel3D.AnimationID.GHOST_LIGHT).stop();
         level3D.cleanupFoodAndParticles();
         level3D.entities().first(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
-        if (!level3D.level().isDemoLevel() && RandomNumberSupport.chance(0.25)) {
-            level3D.showRandomGameOverMessage();
-        }
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 }

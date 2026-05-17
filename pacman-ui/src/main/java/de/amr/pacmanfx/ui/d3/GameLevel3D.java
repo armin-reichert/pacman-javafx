@@ -31,7 +31,6 @@ import de.amr.pacmanfx.ui.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticlesAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.ghost.*;
@@ -84,8 +83,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final UIConfig uiConfig;
 
-    private final RandomTextPicker gameOverMessagePicker;
-
     private MessageManager3D messageManager;
 
     /**
@@ -99,8 +96,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
         requireNonNull(localizedTexts);
-
-        gameOverMessagePicker = new RandomTextPicker(localizedTexts, "game.over");
 
         final WorldMapColorScheme mapColorScheme = uiConfig.colorScheme(level.worldMap());
         createPac3D(uiConfig.entityConfig().pacConfig());
@@ -511,10 +506,4 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         gameState.lock();
         seq.play();
     }
-
-    protected void showRandomGameOverMessage() {
-        //TODO access to UI instance for flash messages
-        //ui.showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
-    }
-
 }

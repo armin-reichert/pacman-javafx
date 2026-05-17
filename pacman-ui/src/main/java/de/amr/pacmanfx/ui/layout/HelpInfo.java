@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameFlow.CanonicalGameState;
+import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import javafx.geometry.Insets;
@@ -30,13 +30,13 @@ public class HelpInfo {
         final boolean demoLevel = game.isDemoLevelRunning();
 
         final HelpInfo helpInfo = new HelpInfo(ui);
-        if (state.nameMatches(CanonicalGameState.INTRO.name())) {
+        if (state.matchesByName(CanonicalGameState.INTRO.name())) {
             helpInfo.addInfoForIntroScene(game);
         }
-        else if (state.nameMatches(CanonicalGameState.PREPARING_GAME_START.name())) {
+        else if (state.matchesByName(CanonicalGameState.PREPARING_GAME_START.name())) {
             helpInfo.addInfoForCreditScene(game);
         }
-        else if (state.nameMatches(
+        else if (state.matchesByName(
             CanonicalGameState.STARTING_GAME_OR_LEVEL.name(),
             CanonicalGameState.LEVEL_PLAYING.name(),
             CanonicalGameState.PACMAN_DYING.name(),

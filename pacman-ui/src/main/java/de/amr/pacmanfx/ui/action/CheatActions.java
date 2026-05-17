@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.event.PacEatsFoodEvent;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameFlow.CanonicalGameState;
+import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.GameUI;
@@ -50,7 +50,7 @@ public final class CheatActions {
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.gameContext().game();
             return realLevel(game).isPresent()
-                && game.flow().state().nameMatches(CanonicalGameState.LEVEL_PLAYING.name());
+                && game.flow().state().matchesByName(CanonicalGameState.LEVEL_PLAYING.name());
         }
     };
 
@@ -73,7 +73,7 @@ public final class CheatActions {
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.gameContext().game();
             return realLevel(game).isPresent()
-                && game.flow().state().nameMatches(CanonicalGameState.LEVEL_PLAYING.name());
+                && game.flow().state().matchesByName(CanonicalGameState.LEVEL_PLAYING.name());
         }
     };
 
@@ -92,7 +92,7 @@ public final class CheatActions {
             final Game game = ui.gameContext().game();
             final Optional<GameLevel> realLevel = realLevel(game);
             return realLevel.isPresent()
-                && game.flow().state().nameMatches(CanonicalGameState.LEVEL_PLAYING.name())
+                && game.flow().state().matchesByName(CanonicalGameState.LEVEL_PLAYING.name())
                 && realLevel.get().number() < game.lastLevelNumber();
         }
     };

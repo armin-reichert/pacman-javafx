@@ -8,8 +8,8 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
+import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameFlow;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
@@ -366,7 +366,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
-    public ResourceBundle localizedTexts() {
+    public ResourceBundle translator() {
         return GameUIConstants.LOCALIZED_TEXTS;
     }
 
@@ -418,14 +418,14 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         });
 
         stopGame();
-        game.flow().restartStateWithName(GameFlow.CanonicalGameState.BOOT.name());
+        game.flow().restartStateWithName(CanonicalGameState.BOOT.name());
         showStartView();
     }
 
     @Override
     public void restart() {
         stopGame();
-        gameContext.game().flow().restartStateWithName(GameFlow.CanonicalGameState.BOOT.name());
+        gameContext.game().flow().restartStateWithName(CanonicalGameState.BOOT.name());
         Platform.runLater(gameContext.clock()::start);
     }
 

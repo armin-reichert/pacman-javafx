@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.event.GenericChangeEvent;
+import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameFlow;
 
 public class CutScenesTestState<GAME extends Game> extends TestState<GAME> {
 
@@ -26,7 +26,7 @@ public class CutScenesTestState<GAME extends Game> extends TestState<GAME> {
                 //TODO find another solution and get rid of this event type
                 game.flow().publishGameEvent(new GenericChangeEvent(game, "Cut Scene Test"));
             } else {
-                game.flow().enterStateWithName(GameFlow.CanonicalGameState.INTRO.name());
+                game.flow().enterStateWithName(CanonicalGameState.INTRO.name());
             }
         }
     }

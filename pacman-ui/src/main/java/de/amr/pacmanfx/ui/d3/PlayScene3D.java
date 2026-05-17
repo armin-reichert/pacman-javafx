@@ -5,10 +5,9 @@
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.basics.fsm.State;
+import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.Score;
+import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.ui.GameScene;
@@ -19,6 +18,7 @@ import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
+import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
@@ -68,11 +68,15 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         }
     };
 
+    private final RandomTextPicker gameOverMessagePicker;
+
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
     public PlayScene3D(GameUI ui) {
         super(ui);
+
+        gameOverMessagePicker = new RandomTextPicker(ui.translator(), "game.over");
 
         perspectives = new PerspectiveManager(camera);
         // Initial size is irrelevant (will be bound to parent scene size later)
@@ -200,7 +204,18 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
             });
             return;
         }
+
+        //TODO ugly
+        if (CanonicalGameState.GAME_OVER.matches(event.newState())) {
+            if (!level3D.level().isDemoLevel() && RandomNumberSupport.chance(0.25)) {
+                ui.showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
+            }
+        }
+
+
+
         level3DController.handleGameStateChange(level3D, event);
+
     }
 
     @Override
@@ -354,7 +369,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
             Logger.info("Replacing game level 3D...");
             level3D.dispose();
         }
-        level3D = new GameLevel3D(level, ui.currentConfig(), ui.localizedTexts());
+        level3D = new GameLevel3D(level, ui.currentConfig(), ui.translator());
         decorateGameLevel3D(level3D);
         level3DParent.getChildren().setAll(level3D);
         level3D.entities().all().forEach(e -> e.init(level));
