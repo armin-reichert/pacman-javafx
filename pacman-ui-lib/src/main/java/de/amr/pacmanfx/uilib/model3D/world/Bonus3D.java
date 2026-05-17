@@ -45,15 +45,16 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
 
     private final double symbolWidth;
     private final double pointsWidth;
+
     private PhongMaterial symbolTexture;
     private PhongMaterial pointsTexture;
 
     private final Translate translate = new Translate();
+
     private final Rotate rotateX = new Rotate(0, Rotate.X_AXIS);
     private final Rotate rotateY = new Rotate(0, Rotate.Y_AXIS);
 
-    private final Group top;
-    private final Group rollingGroup;
+    private final Group root;
     private final Shape3D shape3D;
 
     private final BonusRollingThroughWorldAnimation3D rollingAnimation;
@@ -66,20 +67,20 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
 
         shape3D = new Box(symbolWidth, 8, 8);
 
-        rollingGroup = new Group(shape3D);
+        final Group rollingGroup = new Group(shape3D);
         rollingGroup.getTransforms().addAll(rotateX, rotateY);
 
-        top = new Group();
-        top.getChildren().add(rollingGroup);
+        root = new Group();
+        root.getChildren().add(rollingGroup);
 
-        top.getTransforms().add(translate);
+        root.getTransforms().add(translate);
 
-        var symbolImageView = new ImageView(requireNonNull(symbolImage));
+        final var symbolImageView = new ImageView(requireNonNull(symbolImage));
         symbolImageView.setPreserveRatio(true);
         symbolImageView.setFitWidth(symbolWidth);
         symbolTexture = new PhongMaterial(Color.GHOSTWHITE, symbolImageView.getImage(), null, null, null);
 
-        var pointsImageView = new ImageView(requireNonNull(pointsImage));
+        final var pointsImageView = new ImageView(requireNonNull(pointsImage));
         pointsImageView.setPreserveRatio(true);
         pointsImageView.setFitWidth(pointsWidth);
         pointsTexture = new PhongMaterial(Color.GHOSTWHITE, pointsImageView.getImage(), null, null, null);
@@ -112,8 +113,8 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
         return bonus;
     }
 
-    public Node node() {
-        return top;
+    public Node root() {
+        return root;
     }
 
     public Shape3D shape3D() {
@@ -128,7 +129,7 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
         return rotateY;
     }
 
-    public void showEdible() {
+    public void lookEdible() {
         shape3D.setVisible(true);
         if (shape3D instanceof Box box) {
             box.setWidth(symbolWidth);
@@ -136,7 +137,7 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
         shape3D.setMaterial(symbolTexture);
     }
 
-    public void showEaten() {
+    public void lookEaten() {
         shape3D.setVisible(true);
         if (shape3D instanceof Box box) {
             box.setWidth(pointsWidth);
@@ -151,7 +152,7 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
         animations.animation(AnimationID.BONUS_EATEN).playFromStart();
     }
 
-    public void expire() {
+    public void lookExpired() {
         animations.optAnimation(AnimationID.BONUS_EDIBLE).ifPresent(ManagedAnimation::stop);
         animations.optAnimation(AnimationID.BONUS_EATEN).ifPresent(ManagedAnimation::stop);
         shape3D.setVisible(false);
@@ -164,6 +165,6 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
         translate.setZ(-HTS);
 
         boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
-        top.setVisible(bonus.state() == BonusState.EDIBLE && !outsideWorld);
+        root.setVisible(bonus.state() == BonusState.EDIBLE && !outsideWorld);
     }
 }

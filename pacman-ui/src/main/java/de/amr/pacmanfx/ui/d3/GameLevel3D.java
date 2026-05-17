@@ -21,6 +21,7 @@ import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.UIConfig;
+import de.amr.pacmanfx.ui.config.BonusConfig;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.ui.d3.animation.GhostLightAnimation;
@@ -54,7 +55,10 @@ import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import static de.amr.basics.math.Vector2f.vec2_float;
@@ -108,7 +112,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createLivesCounter3D();
         createFood3D();
         createMessageManager();
-        addEntitiesToSceneGraph();
+        buildHierarchy();
 
         // Maze3D must exist when energizer animations are created!
         createAnimations(mapColorScheme);
@@ -192,13 +196,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return entities3D.allWhere(Ghost3D.class, ga3D -> ga3D.ghost().personality() == personality).findFirst();
     }
 
-    /**
-     * Arranges all direct children in the correct rendering order.
-     * <p>
-     * Order matters for correct transparency: actors and effects must appear
-     * in front of walls/house.
+    /*
+     * Order matters for correct transparency: actors and effects must appear in front of walls/house.
      */
-    private void addEntitiesToSceneGraph() {
+    private void buildHierarchy() {
         final Maze3D maze3D = entities3D.unique(Maze3D.class);
         final Pac3D pac3D = entities3D.unique(Pac3D.class);
         final LevelCounter3D levelCounter3D = entities3D.unique(LevelCounter3D.class);
@@ -280,30 +281,23 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Bonus
 
-    /**
-     * Replaces or creates the bonus visualization for the given bonus item.
-     *
-     * @param bonus the new bonus
-     */
     private void addOrReplaceBonus3D(Bonus bonus) {
-        requireNonNull(uiConfig);
-        requireNonNull(bonus);
-        // Avoid exception when removing inside for-each
-        final List<Bonus3D> existing = new ArrayList<>(entities3D.all(Bonus3D.class).toList());
-        existing.forEach(bonus3D -> {
-            bonus3D.dispose();
+        // Make list copy to avoid exception when removing inside for-each
+        List.copyOf(entities3D.all(Bonus3D.class).toList()).forEach(bonus3D -> {
             entities3D.remove(bonus3D);
-            getChildren().remove(bonus3D.node());
+            getChildren().remove(bonus3D.root());
+            bonus3D.dispose();
         });
-        getChildren().add(createBonus3D(bonus).node());
+        final Bonus3D bonus3D = createBonus3D(bonus);
+        getChildren().add(bonus3D.root());
+        bonus3D.lookEdible();
     }
 
     private Bonus3D createBonus3D(Bonus bonus) {
-        final var bonusConfig = uiConfig.entityConfig().bonusConfig();
-        final var bonus3D = new Bonus3D(animationRegistry, bonus,
-            uiConfig.bonusSymbolImage(bonus.symbol()), bonusConfig.bonusSymbolWidth(),
-            uiConfig.bonusValueImage(bonus.symbol()),  bonusConfig.bonusPointsWidth());
-        bonus3D.showEdible();
+        final BonusConfig config = uiConfig.entityConfig().bonusConfig();
+        final Bonus3D bonus3D = new Bonus3D(animationRegistry, bonus,
+            uiConfig.bonusSymbolImage(bonus.symbol()), config.bonusSymbolWidth(),
+            uiConfig.bonusValueImage(bonus.symbol()),  config.bonusPointsWidth());
         entities3D.add(bonus3D);
         return bonus3D;
     }
@@ -448,7 +442,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Handles bonus eaten: shows eaten animation and plays sound.
      */
     public void onBonusEaten(BonusEatenEvent ignoredEvent) {
-        entities3D.first(Bonus3D.class).ifPresent(Bonus3D::showEaten);
+        entities3D.first(Bonus3D.class).ifPresent(Bonus3D::lookEaten);
         optSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
@@ -456,7 +450,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Handles bonus expiration: expires 3D bonus and plays sound.
      */
     public void onBonusExpired(BonusExpiredEvent ignoredEvent) {
-        entities3D.first(Bonus3D.class).ifPresent(Bonus3D::expire);
+        entities3D.first(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         optSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
@@ -550,7 +544,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         animationRegistry.animation(AnimationID.GHOST_LIGHT).stop();
         animationRegistry.animation(AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).stop();
         entities3D.all(Ghost3D.class).forEach(Ghost3D::stopAllAnimations);
-        entities3D.first(Bonus3D.class).ifPresent(Bonus3D::expire);
+        entities3D.first(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
 
         createPacDyingAnimationSequence(pac3D, gameState).play();
     }
@@ -633,7 +627,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         animationRegistry().stopAllAnimations();
         cleanupFoodAndParticles();
         maze3D.house().hideDoors();
-        entities3D.first(Bonus3D.class).ifPresent(Bonus3D::expire);
+        entities3D.first(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         messageManager.hideMessage();
         playLevelEndAnimation(maze3D, level, gameState);
     }
@@ -641,7 +635,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void onGameOver(GameUI ui) {
         animationRegistry.animation(AnimationID.GHOST_LIGHT).stop();
         cleanupFoodAndParticles();
-        entities3D.first(Bonus3D.class).ifPresent(Bonus3D::expire);
+        entities3D.first(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         if (!level.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
             ui.showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
         }
