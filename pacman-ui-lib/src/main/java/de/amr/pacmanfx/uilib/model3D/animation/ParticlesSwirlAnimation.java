@@ -20,18 +20,6 @@ public class ParticlesSwirlAnimation implements Disposable {
         this.baseCenter = requireNonNull(baseCenter);
     }
 
-    public void addParticle(EnergizerParticle3D particle) {
-        particle.setAngle(Math.toRadians(randomInt(0, 360)));
-        particle.setVelocity(new Vector3f(0, 0, -config.upwardsSpeed()));
-        particles.add(particle);
-    }
-
-    public void update() {
-        for (var p : particles) {
-            updateStateInsideSwirl(p);
-        }
-    }
-
     @Override
     public void dispose() {
         for (var p : particles) {
@@ -40,22 +28,34 @@ public class ParticlesSwirlAnimation implements Disposable {
         particles.clear();
     }
 
-    private void updateStateInsideSwirl(EnergizerParticle3D particle) {
+    public void addParticle(EnergizerParticle3D particle) {
+        requireNonNull(particle);
+        particle.setAngle(Math.toRadians(randomInt(0, 360)));
+        particle.setVelocity(new Vector3f(0, 0, -config.upwardsSpeed()));
+        particles.add(particle);
+    }
+
+    public void update() {
+        for (var p : particles) {
+            updateParticle(p);
+        }
+    }
+
+    private void updateParticle(EnergizerParticle3D particle) {
         particle.move();
         final Vector3f pos = particle.position();
         if (pos.z() < -config.height()) {
-            // reached top of swirl: move to bottom of floor
+            // reached top of swirl: wrap to base z
             particle.setPosition(new Vector3f(pos.x(), pos.y(), baseCenter.z() - 0.5 * particle.size()));
         }
-        // Rotate on swirl surface
+        rotateOnSurface(particle);
+    }
+
+    private void rotateOnSurface(EnergizerParticle3D particle) {
         particle.setAngle(particle.angle() + config.rotationSpeed());
         if (particle.angle() > Math.TAU) {
             particle.setAngle(particle.angle() - Math.TAU);
         }
-        updateParticlePositionOnSwirlSurface(particle);
-    }
-
-    private void updateParticlePositionOnSwirlSurface(EnergizerParticle3D particle) {
         final var pos = new Vector3f(
             baseCenter.x() + config.radius() * Math.cos(particle.angle()),
             baseCenter.y() + config.radius() * Math.sin(particle.angle()),
