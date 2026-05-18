@@ -34,13 +34,11 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticlesAnimation3D;
+import de.amr.pacmanfx.uilib.model3D.animation.NumberBox3DRisingAnimation;
 import de.amr.pacmanfx.uilib.model3D.ghost.*;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
-import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
-import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
-import de.amr.pacmanfx.uilib.model3D.world.NumberBox3D;
-import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
+import de.amr.pacmanfx.uilib.model3D.world.*;
 import javafx.animation.*;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -303,10 +301,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         //TODO Wrap into ManagedAnimation
 
-        final Animation numberBoxRising = new NumberBox3D.RisingAnimation(numberBox3D, (killIndex + 1) * 12).createAnimation();
+        final Animation numberBoxRising = new NumberBox3DRisingAnimation(numberBox3D, (killIndex + 1) * 12).createAnimation();
 
         numberBoxRising.setOnFinished(_ -> {
-            Logger.info("Number box animation finished, {}", numberBox3D.riseGroupPosition());
             entities3D.remove(numberBox3D);
             getChildren().remove(numberBox3D);
             //TODO why do I get "duplicate children added" exceptions?
