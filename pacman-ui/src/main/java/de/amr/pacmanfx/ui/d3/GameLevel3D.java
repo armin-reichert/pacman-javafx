@@ -118,7 +118,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .map(GhostComponentMaterialSet::dressMaterial)
             .toList();
 
-        particlePool = new EnergizerParticle3DPool(1000, this::createExplosionParticle);
+        particlePool = new EnergizerParticle3DPool(1000, this::createExplosionParticle, particle -> {
+            particle.reset();
+            particle.shape().setVisible(false);
+
+        });
         // Maze3D must exist when energizer animations are created!
         createAnimations(mapColorScheme);
 

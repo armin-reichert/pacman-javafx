@@ -9,6 +9,7 @@ import org.tinylog.Logger;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class EnergizerParticle3DPool implements Disposable {
@@ -16,10 +17,12 @@ public class EnergizerParticle3DPool implements Disposable {
     static final int AMOUNT_ADDED_WHEN_EMPTY = 100;
 
     private final Queue<EnergizerParticle3D> q = new ArrayDeque<>();
-    private final Supplier<EnergizerParticle3D> particleFactory;
+    private final Supplier<EnergizerParticle3D> constructor;
+    private final Consumer<EnergizerParticle3D> finalizer;
 
-    public EnergizerParticle3DPool(int size, Supplier<EnergizerParticle3D> particleFactory) {
-        this.particleFactory = particleFactory;
+    public EnergizerParticle3DPool(int size, Supplier<EnergizerParticle3D> constructor, Consumer<EnergizerParticle3D> finalizer) {
+        this.constructor = constructor;
+        this.finalizer = finalizer;
         addNewParticles(size);
     }
 
@@ -32,14 +35,13 @@ public class EnergizerParticle3DPool implements Disposable {
 
     private void addNewParticles(int count) {
         for (int i = 0; i < count; ++i) {
-            q.add(particleFactory.get());
+            q.add(constructor.get());
         }
         Logger.info("Particle pool increased by {}! Pool size={}", count, q.size());
     }
 
     public void recycle(EnergizerParticle3D particle) {
-        particle.reset();
-        particle.shape().setVisible(false);
+        finalizer.accept(particle);
         q.offer(particle);
     }
 
