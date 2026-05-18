@@ -87,7 +87,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
     private final List<PhongMaterial> ghostDressMaterials;
     private final List<EnergizerParticle3D> particles = new ArrayList<>();
     private final Group particlesGroup;
-    private final EnergizerParticle3DPool particlePool;
+    private final Pool<EnergizerParticle3D> particlePool;
     private final List<ParticlesSwirlAnimation> swirlAnimations = new ArrayList<>();
 
 
@@ -96,7 +96,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         List<Vector2f> swirlBaseCentersXY,
         List<PhongMaterial> ghostDressMaterials,
         Box floor3D,
-        EnergizerParticle3DPool particlePool,
+        Pool<EnergizerParticle3D> particlePool,
         Group particlesGroup)
     {
         super("Energizer Particles Animation");
@@ -143,7 +143,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         requireNonNull(center);
         Logger.info("Trigger energizer explosion at point {}", center);
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
-            final EnergizerParticle3D p = particlePool.getParticle();
+            final EnergizerParticle3D p = particlePool.getEntry();
             p.setPosition(new Vector3f(center.getX(), center.getY(), center.getZ()));
             p.setVelocity(randomParticleVelocity(config.explosion()));
             p.setState(FragmentState.FLYING);
@@ -156,7 +156,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
     private void releaseParticle(EnergizerParticle3D particle) {
         particles.remove(particle);
         particlesGroup.getChildren().remove(particle.shape());
-        particlePool.recycle(particle);
+        particlePool.recycleEntry(particle);
     }
 
     private Vector3f randomParticleVelocity(ExplosionConfig cfg) {

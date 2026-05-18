@@ -88,7 +88,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private MessageManager3D messageManager;
 
     private final List<PhongMaterial> ghostDressMaterials;
-    private final EnergizerParticle3DPool particlePool;
+    private final Pool<EnergizerParticle3D> particlePool;
 
     /**
      * Creates a new 3D level representation for the given game level.
@@ -118,7 +118,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .map(GhostComponentMaterialSet::dressMaterial)
             .toList();
 
-        particlePool = new EnergizerParticle3DPool(1000, this::createExplosionParticle, particle -> {
+        particlePool = new Pool<>(1000, this::createExplosionParticle, particle -> {
             particle.reset();
             particle.shape().setVisible(false);
 
