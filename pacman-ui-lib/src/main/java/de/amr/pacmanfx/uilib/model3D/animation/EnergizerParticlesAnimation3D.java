@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.basics.math.Vector2f;
@@ -17,10 +18,8 @@ import javafx.scene.shape.Box;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 import static de.amr.basics.math.RandomNumberSupport.*;
 import static de.amr.pacmanfx.Globals.*;
@@ -69,8 +68,6 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         new SwirlConfig(4, 20, 0.3f, 0.05f)
     );
 
-    private static final float INITIAL_POOL_PERCENTAGE = 0.75f;
-
     private static final Duration FRAME_DURATION = Duration.millis(1000.0 / 60);
 
     private static final byte[] GHOST_IDS = {
@@ -88,11 +85,12 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
     private final List<Vector3f> swirlBaseCenters;
     private final Box floor3D;
     private final List<PhongMaterial> ghostDressMaterials;
-    private final Queue<EnergizerParticle3D> pool = new ArrayDeque<>();
     private final List<EnergizerParticle3D> particles = new ArrayList<>();
     private final Group particlesGroup;
 
     private final List<ParticlesSwirlAnimation> swirlAnimations = new ArrayList<>();
+
+    private final EnergizerParticle3DPool particlePool;
 
     public EnergizerParticlesAnimation3D(
         Config config,
@@ -115,8 +113,9 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
             swirlAnimations.add(swirlAnimation);
         });
 
+        particlePool = new EnergizerParticle3DPool(1000, this::createExplosionParticle);
+
         setFactory(this::createAnimationDriver);
-        prefillPool();
     }
 
     private Animation createAnimationDriver() {
@@ -139,14 +138,14 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
             Logger.info("Disposed {} particles", particleCount);
         }
         particlesGroup.getChildren().clear();
-        pool.clear();
+        particlePool.dispose();
     }
 
     public void triggerEnergizerExplosion(Point3D center) {
         requireNonNull(center);
         Logger.info("Trigger energizer explosion at point {}", center);
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
-            final EnergizerParticle3D p = getParticleFromPool();
+            final EnergizerParticle3D p = particlePool.getParticle();
             p.setPosition(new Vector3f(center.getX(), center.getY(), center.getZ()));
             p.setVelocity(randomParticleVelocity(config.explosion()));
             p.setState(FragmentState.FLYING);
@@ -156,31 +155,11 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         }
     }
 
-    private void prefillPool() {
-        final int prefillCount = (int) (config.explosion.particleCount() * INITIAL_POOL_PERCENTAGE);
-        for (int i = 0; i < prefillCount; ++i) {
-            pool.offer(createExplosionParticle());
-        }
-        Logger.info("Particle pool prefilled! Pool size={}", pool.size());
-    }
-
-    private EnergizerParticle3D getParticleFromPool() {
-        EnergizerParticle3D particle = pool.poll();
-        if (particle == null) {
-            particle = createExplosionParticle();
-        } else {
-            Logger.debug("Particle obtained from pool! Pool size={}", pool.size());
-        }
-        return particle;
-    }
 
     private void releaseParticle(EnergizerParticle3D particle) {
         particles.remove(particle);
         particlesGroup.getChildren().remove(particle.shape());
-        pool.offer(particle);
-        particle.reset();
-        particle.shape().setVisible(false);
-        Logger.debug("Particle released! Pool size={}", pool.size());
+        particlePool.recycle(particle);
     }
 
     private EnergizerParticle3D createExplosionParticle() {
