@@ -92,6 +92,8 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
     private final List<EnergizerParticle3D> particles = new ArrayList<>();
     private final Group particlesGroup;
 
+    private final List<ParticlesSwirlAnimation> swirlAnimations = new ArrayList<>();
+
     public EnergizerParticlesAnimation3D(
         Config config,
         List<Vector2f> swirlBaseCentersXY,
@@ -107,19 +109,27 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         this.floor3D = requireNonNull(floor3D);
         this.particlesGroup = requireNonNull(particlesGroup);
 
-        this.swirlBaseCenters = swirlBaseCentersXY.stream().map(xy -> new Vector3f(xy.x(), xy.y(), floorSurfaceZ())).toList();
+        swirlBaseCenters = swirlBaseCentersXY.stream().map(xy -> new Vector3f(xy.x(), xy.y(), floorSurfaceZ())).toList();
+        swirlBaseCenters.forEach(center -> {
+            final var swirlAnimation = new ParticlesSwirlAnimation(config.swirl, center);
+            swirlAnimations.add(swirlAnimation);
+        });
+
         setFactory(this::createAnimationDriver);
         prefillPool();
     }
 
     private Animation createAnimationDriver() {
-        final var driver = new Timeline(new KeyFrame(FRAME_DURATION, _ -> updateParticleState()));
+        final var driver = new Timeline(new KeyFrame(FRAME_DURATION, _ -> update()));
         driver.setCycleCount(Animation.INDEFINITE);
         return driver;
     }
 
     @Override
     protected void freeResources() {
+
+        swirlAnimations.forEach(ParticlesSwirlAnimation::dispose);
+
         final int particleCount = particles.size();
         if (particleCount > 0) {
             for (var particle : particles) {
@@ -189,22 +199,25 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         );
     }
 
-    private void updateParticleState() {
-        // Iterate backwards to avoid concurrent modification exception
-        for (int i = particles.size() - 1; i >= 0; --i) {
-            updateParticleState(particles.get(i));
+    private void update() {
+        updateParticles();
+        for (ParticlesSwirlAnimation swirlAnimation : swirlAnimations) {
+            swirlAnimation.update();
         }
     }
 
-    private void updateParticleState(EnergizerParticle3D particle) {
-        switch (particle.state()) {
-            case FLYING       -> updateStateFlying(particle);
-            case ATTRACTED    -> updateStateAttracted(particle);
-            case INSIDE_SWIRL -> updateStateInsideSwirl(particle);
-            case OUT_OF_VIEW  -> {}
+    private void updateParticles() {
+        // Iterate backwards to avoid concurrent modification exception
+        for (int i = particles.size() - 1; i >= 0; --i) {
+            final var particle = particles.get(i);
+            switch (particle.state()) {
+                case FLYING       -> updateStateFlying(particle);
+                case ATTRACTED    -> updateStateAttracted(particle);
+                case OUT_OF_VIEW  -> {}
+            }
         }
     }
-    
+
     private void updateStateFlying(EnergizerParticle3D particle) {
         particle.fly(config.explosion.gravity());
         if (particle.collidesWith(floor3D)) {
@@ -274,35 +287,8 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
     }
 
     private void onParticleReachedTarget(EnergizerParticle3D particle) {
-        particle.setAngle(Math.toRadians(randomInt(0, 360)));
-        particle.setVelocity(new Vector3f(0, 0, -config.swirl().upwardsSpeed()));
-        updateParticlePositionOnSwirlSurface(particle);
-        particle.setState(FragmentState.INSIDE_SWIRL);
-    }
-
-    private void updateStateInsideSwirl(EnergizerParticle3D particle) {
-        particle.move();
-        final Vector3f pos = particle.position();
-        if (pos.z() < -config.swirl().height()) {
-            // reached top of swirl: move to bottom of floor
-            particle.setPosition(new Vector3f(pos.x(), pos.y(), floorSurfaceZ() - 0.5 * particle.size()));
-        }
-        // Rotate on swirl surface
-        particle.setAngle(particle.angle() + config.swirl().rotationSpeed());
-        if (particle.angle() > Math.TAU) {
-            particle.setAngle(particle.angle() - Math.TAU);
-        }
-        updateParticlePositionOnSwirlSurface(particle);
-    }
-
-    private void updateParticlePositionOnSwirlSurface(EnergizerParticle3D particle) {
-        final Vector3f swirlBaseCenter = swirlBaseCenters.get(particle.targetSwirlIndex());
-        final var pos = new Vector3f(
-            swirlBaseCenter.x() + config.swirl().radius() * Math.cos(particle.angle()),
-            swirlBaseCenter.y() + config.swirl().radius() * Math.sin(particle.angle()),
-            particle.position().z()
-        );
-        particle.setPosition(pos);
+        this.particles.remove(particle);
+        swirlAnimations.get(particle.targetSwirlIndex()).addParticle(particle);
     }
 
     private double floorSurfaceZ() {

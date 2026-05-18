@@ -79,8 +79,6 @@ public abstract class EnergizerParticle3D implements Disposable {
         FLYING,
         /** Movement toward a target position (e.g., ghost house). */
         ATTRACTED,
-        /** Circular or spiral motion inside the ghost-house swirl. */
-        INSIDE_SWIRL,
         /** Particle has left the simulation space and should be removed. */
         OUT_OF_VIEW
     }
