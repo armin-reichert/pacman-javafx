@@ -9,6 +9,7 @@ import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUIConstants;
@@ -22,6 +23,8 @@ import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.util.Duration;
+
+import java.util.List;
 
 import static de.amr.pacmanfx.model.CanonicalGameState.*;
 import static java.util.Objects.requireNonNull;
@@ -202,19 +205,16 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     }
 
     private void onEatingGhost() {
-        GameLevel3D level3D = assertLevel3D();
-        final GameLevel level = level3D.level();
-        //TODO rethink this mess
-        level.game().simulationStep().ghostsKilled.forEach(killedGhost -> {
-            final int killIndex = level.energizerVictims().indexOf(killedGhost);
-            final Ghost3D ghost3D = level3D.ghost3D(killedGhost.personality()).orElseThrow();
-            final double riseHeight = (killIndex + 1) * 12;
-            level3D.replaceGhost3DByAnimatedNumberBox(ghost3D, riseHeight, level3D.uiConfig().killedGhostPointsImage(killIndex));
+        final GameLevel3D level3D = assertLevel3D();
+        final List<Ghost> currentlyKilledGhosts = level3D.level().game().simulationStep().ghostsKilled;
+        currentlyKilledGhosts.forEach(ghost -> {
+            final int killedIndex = level3D.level().energizerVictims().indexOf(ghost);
+            level3D.playHideGhostShowPointsAnimation(ghost.personality(), killedIndex);
         });
     }
 
     private void onLevelComplete() {
-        GameLevel3D level3D = assertLevel3D();
+        final GameLevel3D level3D = assertLevel3D();
         final State<Game> gameState = level3D.level().game().flow().state();
 
         final Maze3D maze3D = level3D.entities().unique(Maze3D.class);
