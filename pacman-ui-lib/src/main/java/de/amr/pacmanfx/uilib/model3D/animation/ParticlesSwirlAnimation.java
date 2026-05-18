@@ -11,11 +11,11 @@ import static java.util.Objects.requireNonNull;
 
 public class ParticlesSwirlAnimation implements Disposable {
 
-    private final EnergizerParticlesAnimation3D.SwirlConfig config;
+    private final SwirlConfig config;
     private final Vector3f baseCenter;
     private final Set<EnergizerParticle3D> particles = new HashSet<>();
 
-    public ParticlesSwirlAnimation(EnergizerParticlesAnimation3D.SwirlConfig config, Vector3f baseCenter) {
+    public ParticlesSwirlAnimation(SwirlConfig config, Vector3f baseCenter) {
         this.config = requireNonNull(config);
         this.baseCenter = requireNonNull(baseCenter);
     }

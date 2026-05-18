@@ -32,37 +32,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class EnergizerParticlesAnimation3D extends ManagedAnimation {
 
-    public record Config(
-        ExplosionConfig explosion,
-        AttractionConfig attraction,
-        SwirlConfig swirl)
-    {}
-
-    public record ExplosionConfig(
-        Vector3f gravity,
-        int   particleCount,
-        float particleMeanRadius,
-        float particleMinSpeedXY,
-        float particleMaxSpeedXY,
-        float particleMinSpeedZ,
-        float particleMaxSpeedZ)
-    {}
-
-    public record AttractionConfig(
-        float acceleration,
-        float particleSize,
-        float particleMinSpeed,
-        float particleMaxSpeed)
-    {}
-
-    public record SwirlConfig(
-        float radius,
-        float height,
-        float upwardsSpeed,
-        float rotationSpeed)
-    {}
-
-    public static final Config DEFAULT_CONFIG = new Config(
+    public static final ParticleAnimationConfig DEFAULT_CONFIG = new ParticleAnimationConfig(
         new ExplosionConfig(new Vector3f(0, 0, 0.1f), 300, 0.25f, 0.05f, 0.4f, 1.5f, 6),
         new AttractionConfig(0.004f, 0.4f, 0.3f, 0.5f),
         new SwirlConfig(4, 20, 0.3f, 0.05f)
@@ -81,7 +51,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         return GHOST_IDS[randomInt(0, GHOST_IDS.length)];
     }
 
-    private final Config config;
+    private final ParticleAnimationConfig config;
     private final List<Vector3f> swirlBaseCenters;
     private final Box floor3D;
     private final List<PhongMaterial> ghostDressMaterials;
@@ -90,9 +60,8 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
     private final Pool<EnergizerParticle3D> particlePool;
     private final List<ParticlesSwirlAnimation> swirlAnimations = new ArrayList<>();
 
-
     public EnergizerParticlesAnimation3D(
-        Config config,
+        ParticleAnimationConfig config,
         List<Vector2f> swirlBaseCentersXY,
         List<PhongMaterial> ghostDressMaterials,
         Box floor3D,
@@ -110,7 +79,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
 
         swirlBaseCenters = swirlBaseCentersXY.stream().map(xy -> new Vector3f(xy.x(), xy.y(), floorSurfaceZ())).toList();
         swirlBaseCenters.forEach(center -> {
-            final var swirlAnimation = new ParticlesSwirlAnimation(config.swirl, center);
+            final var swirlAnimation = new ParticlesSwirlAnimation(config.swirl(), center);
             swirlAnimations.add(swirlAnimation);
         });
 
@@ -189,7 +158,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
     }
 
     private void updateStateFlying(EnergizerParticle3D particle) {
-        particle.fly(config.explosion.gravity());
+        particle.fly(config.explosion().gravity());
         if (particle.collidesWith(floor3D)) {
             onParticleLandedOnFloor(particle);
         }
@@ -237,7 +206,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         particle.setPosition(new Vector3f(particle.position().x(), particle.position().y(), z));
 
         final Vector3f swirlCenter = swirlBaseCenters.get(targetSwirlIndex);
-        final float speed = randomFloat(config.attraction().particleMinSpeed, config.attraction().particleMaxSpeed);
+        final float speed = randomFloat(config.attraction().particleMinSpeed(), config.attraction().particleMaxSpeed());
         final Vector3f velocity = swirlCenter.sub(particle.position()).setToLength(speed);
         particle.setVelocity(velocity);
 

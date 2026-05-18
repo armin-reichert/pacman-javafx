@@ -129,13 +129,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         setMouseTransparent(true); // this increases performance they say...
     }
 
-    private EnergizerParticle3D createExplosionParticle() {
-        final EnergizerParticlesAnimation3D.ExplosionConfig config = EnergizerParticlesAnimation3D.DEFAULT_CONFIG.explosion();
-        final PhongMaterial material = ghostDressMaterials.get(randomInt(0, 4));
-        final double radius = Math.clamp(RANDOM_GENERATOR.nextGaussian(2, 0.1), 0.5, 4) * config.particleMeanRadius();
-        return new SphericalEnergizerParticle3D(radius, material, SphericalEnergizerParticle3D.Resolution.HIGH);
-    }
-
     @Override
     public void dispose() {
         animationRegistry.dispose();
@@ -421,6 +414,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     // Particles animation
+
+    private EnergizerParticle3D createExplosionParticle() {
+        final ExplosionConfig config = EnergizerParticlesAnimation3D.DEFAULT_CONFIG.explosion();
+        final PhongMaterial material = ghostDressMaterials.get(randomInt(0, 4));
+        final double radius = Math.clamp(RANDOM_GENERATOR.nextGaussian(2, 0.1), 0.5, 4) * config.particleMeanRadius();
+        return new SphericalEnergizerParticle3D(radius, material, SphericalEnergizerParticle3D.Resolution.HIGH);
+    }
 
     private EnergizerParticlesAnimation3D createParticlesAnimation() {
         // The bottom center positions of the swirls where the particles of exploded energizers eventually are displayed
