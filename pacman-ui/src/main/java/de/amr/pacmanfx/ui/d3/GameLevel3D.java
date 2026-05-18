@@ -33,12 +33,14 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticlesAnimation3D;
-import de.amr.pacmanfx.uilib.model3D.animation.NumberBox3DRisingAnimation;
+import de.amr.pacmanfx.uilib.model3D.animation.*;
 import de.amr.pacmanfx.uilib.model3D.ghost.*;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
-import de.amr.pacmanfx.uilib.model3D.world.*;
+import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
+import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
+import de.amr.pacmanfx.uilib.model3D.world.NumberBox3D;
+import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
 import javafx.animation.*;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -57,6 +59,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
+import static de.amr.basics.math.RandomNumberSupport.RANDOM_GENERATOR;
+import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
@@ -83,6 +87,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final UIConfig uiConfig;
     private MessageManager3D messageManager;
 
+    private final List<PhongMaterial> ghostDressMaterials;
+    private final EnergizerParticle3DPool particlePool;
+
     /**
      * Creates a new 3D level representation for the given game level.
      *
@@ -105,16 +112,31 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createMessageManager();
         buildHierarchy();
 
+        ghostDressMaterials = ghosts3DByPersonality().stream()
+            .map(Ghost3D::materials)
+            .map(GhostMaterialSet::normalMaterial)
+            .map(GhostComponentMaterialSet::dressMaterial)
+            .toList();
+
+        particlePool = new EnergizerParticle3DPool(1000, this::createExplosionParticle);
         // Maze3D must exist when energizer animations are created!
         createAnimations(mapColorScheme);
 
         setMouseTransparent(true); // this increases performance they say...
     }
 
+    private EnergizerParticle3D createExplosionParticle() {
+        final EnergizerParticlesAnimation3D.ExplosionConfig config = EnergizerParticlesAnimation3D.DEFAULT_CONFIG.explosion();
+        final PhongMaterial material = ghostDressMaterials.get(randomInt(0, 4));
+        final double radius = Math.clamp(RANDOM_GENERATOR.nextGaussian(2, 0.1), 0.5, 4) * config.particleMeanRadius();
+        return new SphericalEnergizerParticle3D(radius, material, SphericalEnergizerParticle3D.Resolution.HIGH);
+    }
+
     @Override
     public void dispose() {
         animationRegistry.dispose();
         entities3D.dispose();
+        particlePool.dispose();
         cleanupGroup(this, true);
         if (messageManager != null) {
             messageManager.dispose();
@@ -404,23 +426,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .map(pos -> pos.plus(HTS, HTS))
             .toList();
 
-        final List<PhongMaterial> dressMaterials = ghosts3DByPersonality().stream()
-            .map(Ghost3D::materials)
-            .map(GhostMaterialSet::normalMaterial)
-            .map(GhostComponentMaterialSet::dressMaterial)
-            .toList();
-
         final Maze3D maze3D = entities3D.unique(Maze3D.class);
 
         return new EnergizerParticlesAnimation3D(
             EnergizerParticlesAnimation3D.DEFAULT_CONFIG,
             swirlCenters,
-            dressMaterials,
+            ghostDressMaterials,
             maze3D.floor(),
+            particlePool,
             maze3D.particlesGroup()
         );
     }
-
 
     protected void cleanupFoodAndParticles() {
         animationRegistry.animation(AnimationID.ENERGIZER_PARTICLES_MOVEMENT).stop();

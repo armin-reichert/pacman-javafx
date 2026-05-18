@@ -87,16 +87,16 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
     private final List<PhongMaterial> ghostDressMaterials;
     private final List<EnergizerParticle3D> particles = new ArrayList<>();
     private final Group particlesGroup;
-
+    private final EnergizerParticle3DPool particlePool;
     private final List<ParticlesSwirlAnimation> swirlAnimations = new ArrayList<>();
 
-    private final EnergizerParticle3DPool particlePool;
 
     public EnergizerParticlesAnimation3D(
         Config config,
         List<Vector2f> swirlBaseCentersXY,
         List<PhongMaterial> ghostDressMaterials,
         Box floor3D,
+        EnergizerParticle3DPool particlePool,
         Group particlesGroup)
     {
         super("Energizer Particles Animation");
@@ -105,6 +105,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         requireNonNull(swirlBaseCentersXY);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
         this.floor3D = requireNonNull(floor3D);
+        this.particlePool = requireNonNull(particlePool);
         this.particlesGroup = requireNonNull(particlesGroup);
 
         swirlBaseCenters = swirlBaseCentersXY.stream().map(xy -> new Vector3f(xy.x(), xy.y(), floorSurfaceZ())).toList();
@@ -112,8 +113,6 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
             final var swirlAnimation = new ParticlesSwirlAnimation(config.swirl, center);
             swirlAnimations.add(swirlAnimation);
         });
-
-        particlePool = new EnergizerParticle3DPool(1000, this::createExplosionParticle);
 
         setFactory(this::createAnimationDriver);
     }
@@ -138,7 +137,6 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
             Logger.info("Disposed {} particles", particleCount);
         }
         particlesGroup.getChildren().clear();
-        particlePool.dispose();
     }
 
     public void triggerEnergizerExplosion(Point3D center) {
@@ -155,17 +153,10 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         }
     }
 
-
     private void releaseParticle(EnergizerParticle3D particle) {
         particles.remove(particle);
         particlesGroup.getChildren().remove(particle.shape());
         particlePool.recycle(particle);
-    }
-
-    private EnergizerParticle3D createExplosionParticle() {
-        final PhongMaterial material = ghostDressMaterials.get(randomInt(0, 4));
-        final double radius = Math.clamp(RANDOM_GENERATOR.nextGaussian(2, 0.1), 0.5, 4) * config.explosion().particleMeanRadius();
-        return new SphericalEnergizerParticle3D(radius, material, SphericalEnergizerParticle3D.Resolution.HIGH);
     }
 
     private Vector3f randomParticleVelocity(ExplosionConfig cfg) {

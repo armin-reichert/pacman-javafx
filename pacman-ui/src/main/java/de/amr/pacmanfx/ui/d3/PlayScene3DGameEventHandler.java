@@ -175,8 +175,9 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     // Private state-specific handlers
 
     private void onStartingGame() {
-        GameLevel3D level3D = assertLevel3D();
-        level3D.entities().all().forEach(entity -> entity.init(level3D.level()));
+        gameScene().optGameLevel3D().ifPresent(level3D -> {
+            level3D.entities().all().forEach(entity -> entity.init(level3D.level()));
+        });
     }
 
     private void onHuntingStart() {
