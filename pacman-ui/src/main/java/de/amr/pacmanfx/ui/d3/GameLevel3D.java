@@ -301,9 +301,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         entities3D.add(numberBox3D);
         getChildren().add(numberBox3D);
 
-        final double riseHeight = (killIndex + 1) * 12;
-        final Animation numberAnimation = numberBox3D.createAnimation(riseHeight);
-        numberAnimation.setOnFinished(_ -> {
+        //TODO Wrap into ManagedAnimation
+
+        final Animation numberBoxRising = new NumberBox3D.RisingAnimation(numberBox3D, (killIndex + 1) * 12).createAnimation();
+
+        numberBoxRising.setOnFinished(_ -> {
             Logger.info("Number box animation finished, {}", numberBox3D.riseGroupPosition());
             entities3D.remove(numberBox3D);
             getChildren().remove(numberBox3D);
@@ -314,22 +316,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         });
 
         final Animation hideGhost3DForOneSecond = new Timeline(
-            new KeyFrame(Duration.ZERO, _ -> {
-                ghost3D.stopAllAnimations();
-                getChildren().remove(ghost3D);
-            }),
-            new KeyFrame(Duration.millis(1000), _ -> {
-                if (!getChildren().contains(ghost3D)) {
-                    getChildren().add(ghost3D);
-                }
-            })
+            new KeyFrame(Duration.ZERO,       _ -> getChildren().remove(ghost3D)),
+            new KeyFrame(Duration.seconds(1), _ -> getChildren().add(ghost3D))
         );
 
-        new ParallelTransition(hideGhost3DForOneSecond, numberAnimation).play();
-
-        Logger.info("Number box animation started, {}", numberBox3D.riseGroupPosition());
+        new ParallelTransition(hideGhost3DForOneSecond, numberBoxRising).play();
     }
-
 
     // Food (pellets and energizers)
 
