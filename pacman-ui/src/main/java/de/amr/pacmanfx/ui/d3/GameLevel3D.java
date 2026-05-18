@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
@@ -70,6 +71,12 @@ import static java.util.Objects.requireNonNull;
  * Represents the 3D visualization of a Pac-Man game level.
  */
 public class GameLevel3D extends Group implements DisposableGraphicsObject {
+
+    public static final ParticleAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticleAnimationConfig(
+        new ExplosionConfig(new Vector3f(0, 0, 0.1f), 300, 0.25f, 0.05f, 0.4f, 1.5f, 6),
+        new AttractionConfig(0.004f, 0.4f, 0.3f, 0.5f),
+        new SwirlConfig(4, 20, 0.3f, 0.05f)
+    );
 
     public enum AnimationID {
         ENERGIZER_PARTICLES_MOVEMENT,
@@ -416,7 +423,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // Particles animation
 
     private EnergizerParticle3D createExplosionParticle() {
-        final ExplosionConfig config = EnergizerParticlesAnimation3D.DEFAULT_CONFIG.explosion();
+        final ExplosionConfig config = DEFAULT_PARTICLE_ANIMATION_CONFIG.explosion();
         final PhongMaterial material = ghostDressMaterials.get(randomInt(0, 4));
         final double radius = Math.clamp(RANDOM_GENERATOR.nextGaussian(2, 0.1), 0.5, 4) * config.particleMeanRadius();
         return new SphericalEnergizerParticle3D(radius, material, SphericalEnergizerParticle3D.Resolution.HIGH);
@@ -433,7 +440,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Maze3D maze3D = entities3D.unique(Maze3D.class);
 
         return new EnergizerParticlesAnimation3D(
-            EnergizerParticlesAnimation3D.DEFAULT_CONFIG,
+            DEFAULT_PARTICLE_ANIMATION_CONFIG,
             swirlCenters,
             ghostDressMaterials,
             maze3D.floor(),
