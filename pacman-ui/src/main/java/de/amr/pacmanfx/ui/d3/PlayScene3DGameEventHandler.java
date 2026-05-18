@@ -185,10 +185,9 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         level3D.animationRegistry().animation(GameLevel3D.AnimationID.GHOST_LIGHT).playFromStart();
     }
 
-    private void onPacManDying(State<Game> gameState) {
+    private void onPacManDying(State<Game> dyingState) {
         GameLevel3D level3D = assertLevel3D();
         final Pac3D pac3D = level3D.entities().unique(Pac3D.class);
-        gameState.lock();
 
         level3D.optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
@@ -198,7 +197,8 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         level3D.entities().all(Ghost3D.class).forEach(Ghost3D::stopAllAnimations);
         level3D.entities().first(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
 
-        level3D.createPacDyingAnimationSequence(pac3D, gameState).play();
+        dyingState.lock();
+        level3D.createPacDyingAnimationSeq(pac3D, dyingState::expire).play();
     }
 
     private void onEatingGhost() {

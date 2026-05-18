@@ -30,6 +30,7 @@ import de.amr.pacmanfx.ui.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticlesAnimation3D;
@@ -82,7 +83,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final GameLevelEntitySet entities3D = new GameLevelEntitySet();
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final UIConfig uiConfig;
-    private Maze3D maze3D;
     private MessageManager3D messageManager;
 
     /**
@@ -157,10 +157,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public MessageManager3D messageManager() {
         return messageManager;
-    }
-
-    public Maze3D maze3D() {
-        return maze3D;
     }
 
     public void setDrawMode(DrawMode drawMode) {
@@ -238,7 +234,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createMaze3D(WorldMapColorScheme colorScheme) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        maze3D = uiConfig.factory3D().createMaze3D(terrain, uiConfig.entityConfig(), colorScheme, animationRegistry);
+        final Maze3D maze3D = uiConfig.factory3D().createMaze3D(terrain, uiConfig.entityConfig(), colorScheme, animationRegistry);
         maze3D.wallOpacityProperty().bind(GameUIConstants.PROPERTY_3D_WALL_OPACITY);
         maze3D.wallBaseHeightProperty().bind(GameUIConstants.PROPERTY_3D_WALL_HEIGHT);
         maze3D.floorColorProperty().bind(GameUIConstants.PROPERTY_3D_FLOOR_COLOR);
@@ -462,24 +458,20 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().addAll(animationRegistry.animation(AnimationID.GHOST_LIGHT, GhostLightAnimation.class).light());
     }
 
-    protected SequentialTransition createPacDyingAnimationSequence(Pac3D pac3D, State<Game> gameState) {
-        final var animationSequence = new SequentialTransition(
-            doNow(() -> {
-                // One last fart before dying animation starts
+    protected Animation createPacDyingAnimationSeq(Pac3D pac3D, Runnable resumeGame) {
+        return new SequentialTransition(
+            Ufx.doNow(() -> {
                 pac3D.update(level);
                 animationRegistry.animation(Pac3D.AnimationID.CHEWING).stop();
                 animationRegistry.animation(Pac3D.AnimationID.MOVING).stop();
             }),
-            pauseSec(1.5),
-            doNow(() -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound)),
+
+            Ufx.pauseSecThen(1.5, () -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound)),
+
             animationRegistry.animation(Pac3D.AnimationID.DYING).animationFX(),
-            pauseSec(0.5)
+
+            Ufx.pauseSecThen(0.5, resumeGame)
         );
-        animationSequence.setOnFinished(_ -> {
-            pac3D.setVisible(false);
-            gameState.expire();
-        });
-        return animationSequence;
     }
 
     /**
