@@ -292,10 +292,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     protected void playHideGhostShowPointsAnimation(byte killedGhostPersonality, int killIndex) {
         final Ghost3D ghost3D = ghost3D(killedGhostPersonality).orElseThrow();
         final Image pointsImage = uiConfig.killedGhostPointsImage(killIndex);
+
         final NumberBox3D numberBox3D = new NumberBox3D(pointsImage);
         numberBox3D.setTranslateX(ghost3D.getTranslateX());
         numberBox3D.setTranslateY(ghost3D.getTranslateY());
-        numberBox3D.setTranslateZ(-8);
+        numberBox3D.setTranslateZ(ghost3D.getTranslateZ());
 
         entities3D.add(numberBox3D);
         getChildren().add(numberBox3D);
