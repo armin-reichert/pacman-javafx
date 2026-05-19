@@ -93,9 +93,6 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
 
         final int particleCount = particles.size();
         if (particleCount > 0) {
-            for (var particle : particles) {
-                particle.dispose();
-            }
             particles.clear();
             Logger.info("Disposed {} particles", particleCount);
         }
@@ -194,9 +191,9 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         particle.shape().setMaterial(ghostDressMaterials.get(ghostID));
 
         particle.setTargetSwirlIndex(targetSwirlIndex);
-        particle.setSize(config.attraction().particleSize());
+        particle.shape().setRadius(0.5 * config.attraction().particleSize());
 
-        final double z = floorSurfaceZ() - 0.5 * particle.size();
+        final double z = floorSurfaceZ() - particle.shape().getRadius();
         particle.setPosition(new Vector3f(particle.position().x(), particle.position().y(), z));
 
         final Vector3f swirlCenter = swirlBaseCenters.get(targetSwirlIndex);

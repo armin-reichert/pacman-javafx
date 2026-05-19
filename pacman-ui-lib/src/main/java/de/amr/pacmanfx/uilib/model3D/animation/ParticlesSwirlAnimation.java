@@ -22,9 +22,6 @@ public class ParticlesSwirlAnimation implements Disposable {
 
     @Override
     public void dispose() {
-        for (var p : particles) {
-            p.dispose();
-        }
         particles.clear();
     }
 
@@ -46,7 +43,7 @@ public class ParticlesSwirlAnimation implements Disposable {
         final Vector3f pos = particle.position();
         if (pos.z() < -config.height()) {
             // reached top of swirl: wrap to base z
-            particle.setPosition(new Vector3f(pos.x(), pos.y(), baseCenter.z() - 0.5 * particle.size()));
+            particle.setPosition(new Vector3f(pos.x(), pos.y(), baseCenter.z() - particle.shape().getRadius()));
         }
         rotateOnSurface(particle);
     }

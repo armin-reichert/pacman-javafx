@@ -4,48 +4,20 @@
 
 package de.amr.pacmanfx.uilib.model3D.animation;
 
-import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Point3D;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.Sphere;
 
 import static java.util.Objects.requireNonNull;
 
 /**
  * Base class for 3D particle fragments used in the energizer explosion animation.
- *
- * <p>A particle consists of:
- * <ul>
- *   <li>a concrete {@link Shape3D} instance used purely for rendering, and</li>
- *   <li>a simulation state (position, velocity, angle, motion state) that determines how the particle moves.</li>
- * </ul>
- *
- * <p>The particle moves freely in three-dimensional space according to its velocity. Subclasses define
- * the concrete geometry (e.g., sphere, box, mesh) and how its visual size is interpreted. The geometry
- * may be replaced at runtime (for example, to change mesh resolution); the particle automatically
- * re-applies its current position to the new shape.
- *
- * <p>During the explosion sequence, a particle may transition through several motion states:
- * <ul>
- *   <li><b>FLYING</b> – free movement under velocity and optional gravity</li>
- *   <li><b>ATTRACTED</b> – movement toward a target position (e.g., the ghost house)</li>
- *   <li><b>INSIDE_SWIRL</b> – circular or spiral motion inside the ghost-house swirl</li>
- *   <li><b>OUT_OF_WORLD</b> – particle has left the valid simulation space and can be removed</li>
- * </ul>
- *
- * <p>The particle’s position is maintained independently of the shape’s transforms. The shape’s
- * translation is updated whenever the particle moves or when the geometry is replaced.
- *
- * <p>Subclasses must implement {@link #size()} and {@link #setSize(double)} to define how the visual
- * size of the particle is interpreted.
  */
-public abstract class EnergizerParticle3D implements Disposable {
+public class EnergizerParticle3D {
 
-    /**
-     * Motion states of a particle during the explosion animation.
-     */
     public enum ParticleState {
         /** Flight under velocity and gravity. */
         FLYING_THROUGH_AIR,
@@ -55,43 +27,23 @@ public abstract class EnergizerParticle3D implements Disposable {
         OUT_OF_VIEW
     }
 
-    /** The render shape of this particle. */
-    private Shape3D shape3D;
+    private final Sphere sphere;
 
-    /** Current motion state of this particle. */
     private ParticleState state = ParticleState.FLYING_THROUGH_AIR;
 
-    /** Index used by the swirl system to assign a swirl target or orbit slot. */
     private byte targetSwirlIndex;
 
-    /** Current position (center) of the particle in 3D space. */
     private Vector3f position;
 
-    /** Current velocity of the particle in 3D space. */
     private Vector3f velocity;
 
-    /** Current angular position of the particle (used for swirl motion). */
     private float angle;
 
-    /**
-     * Creates a particle with the given shape and initial position.
-     *
-     * @param shape3D         the render shape (non-null)
-     * @param initialPosition the initial simulation position (non-null)
-     */
-    protected EnergizerParticle3D(Shape3D shape3D, Vector3f initialPosition) {
-        this.shape3D = requireNonNull(shape3D);
+    public EnergizerParticle3D(double radius, PhongMaterial material, Vector3f initialPosition) {
+        sphere = new Sphere(radius, 8);
+        sphere.setMaterial(material);
         setPosition(initialPosition);
         setVelocity(Vector3f.ZERO);
-    }
-
-    /**
-     * Creates a particle at the origin with the given shape.
-     *
-     * @param shape3D the render shape (non-null)
-     */
-    protected EnergizerParticle3D(Shape3D shape3D) {
-        this(shape3D, Vector3f.ZERO);
     }
 
     public void reset() {
@@ -101,24 +53,8 @@ public abstract class EnergizerParticle3D implements Disposable {
         velocity = Vector3f.ZERO;
     }
 
-    /**
-     * Returns the 3D shape used to render this particle.
-     *
-     * @return the particle's {@link Shape3D}
-     */
-    public Shape3D shape() {
-        return shape3D;
-    }
-
-    /**
-     * Replaces the particle’s render shape. The new shape is positioned at the particle’s
-     * current simulation position.
-     *
-     * @param shape3D the new render shape (non-null)
-     */
-    protected void setShape3D(Shape3D shape3D) {
-        this.shape3D = requireNonNull(shape3D);
-        updateShapeTranslate();
+    public Sphere shape() {
+        return sphere;
     }
 
     /**
@@ -173,21 +109,6 @@ public abstract class EnergizerParticle3D implements Disposable {
     }
 
     /**
-     * Sets the visual size of this particle. The meaning of “size” depends on the concrete subclass
-     * (e.g., sphere diameter, box edge length).
-     *
-     * @param size the new size value
-     */
-    public abstract void setSize(double size);
-
-    /**
-     * Returns the visual size of this particle. The meaning of “size” depends on the concrete subclass.
-     *
-     * @return the particle size
-     */
-    public abstract double size();
-
-    /**
      * Sets the particle’s motion state.
      *
      * @param state the new state (non-null)
@@ -219,15 +140,6 @@ public abstract class EnergizerParticle3D implements Disposable {
         this.targetSwirlIndex = index;
     }
 
-    /**
-     * Checks whether this particle intersects the given box.
-     *
-     * <p>The particle is approximated as a sphere with radius {@code size() / 2}.
-     * The box is treated as an axis-aligned bounding box (AABB) in parent coordinates.
-     *
-     * @param box the box to test against
-     * @return {@code true} if the particle intersects the box
-     */
     public boolean collidesWith(Box box) {
         final Point3D shapeCenter = new Point3D(position.x(), position.y(), position.z());
 
@@ -245,7 +157,7 @@ public abstract class EnergizerParticle3D implements Disposable {
             boxOrigin.getZ() + 0.5 * box.getDepth()
         );
 
-        return Ufx.intersectsSphereAABB(shapeCenter, 0.5 * size(), boxMin, boxMax);
+        return Ufx.intersectsSphereAABB(shapeCenter, sphere.getRadius(), boxMin, boxMax);
     }
 
     /**
@@ -270,8 +182,8 @@ public abstract class EnergizerParticle3D implements Disposable {
     }
 
     private void updateShapeTranslate() {
-        shape3D.setTranslateX(position.x());
-        shape3D.setTranslateY(position.y());
-        shape3D.setTranslateZ(position.z());
+        sphere.setTranslateX(position.x());
+        sphere.setTranslateY(position.y());
+        sphere.setTranslateZ(position.z());
     }
 }
