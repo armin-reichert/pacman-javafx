@@ -99,8 +99,8 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceManager {
         soundManager.registerMediaPlayer(PacManGameSoundID.BONUS_ACTIVE,      url("sound/Fruit_Bounce.mp3"));
         soundManager.registerAudioClipURL(PacManGameSoundID.BONUS_EATEN,      url("sound/Fruit.mp3"));
         soundManager.registerAudioClipURL(PacManGameSoundID.COIN_INSERTED,    url("sound/credit.wav"));
-        soundManager.register(PacManGameSoundID.ENERGIZER_EXPLOSION_1,        localResources.url("sound/explosion1.mp3"));
-        soundManager.register(PacManGameSoundID.ENERGIZER_EXPLOSION_2,        localResources.url("sound/explosion2.mp3"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.ENERGIZER_EXPLOSION_1,        localResources.url("sound/explosion1.mp3"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.ENERGIZER_EXPLOSION_2,        localResources.url("sound/explosion2.mp3"));
         soundManager.registerAudioClipURL(PacManGameSoundID.EXTRA_LIFE,       url("sound/ExtraLife.mp3"));
         soundManager.registerMediaPlayer(PacManGameSoundID.GAME_OVER,         url("sound/game-over.mp3"));
         soundManager.registerMediaPlayer(PacManGameSoundID.GAME_READY,        url("sound/Start.mp3"));
