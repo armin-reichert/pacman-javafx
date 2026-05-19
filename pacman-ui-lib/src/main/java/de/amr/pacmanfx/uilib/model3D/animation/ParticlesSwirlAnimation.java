@@ -40,7 +40,7 @@ public class ParticlesSwirlAnimation implements Disposable {
 
     private void updateParticle(EnergizerParticle3D particle) {
         particle.move();
-        final Vector3f pos = particle.position();
+        final Vector3f pos = particle.pos();
         if (pos.z() < -config.height()) {
             // reached top of swirl: wrap to base z
             particle.setPosition(new Vector3f(pos.x(), pos.y(), baseCenter.z() - particle.shape().getRadius()));
@@ -56,7 +56,7 @@ public class ParticlesSwirlAnimation implements Disposable {
         final var pos = new Vector3f(
             baseCenter.x() + config.radius() * Math.cos(particle.angle()),
             baseCenter.y() + config.radius() * Math.sin(particle.angle()),
-            particle.position().z()
+            particle.pos().z()
         );
         particle.setPosition(pos);
     }

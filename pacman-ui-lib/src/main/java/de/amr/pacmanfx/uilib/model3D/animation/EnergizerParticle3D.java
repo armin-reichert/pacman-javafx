@@ -22,7 +22,7 @@ public class EnergizerParticle3D {
         /** Flight under velocity and gravity. */
         FLYING_THROUGH_AIR,
         /** Movement toward a target position (e.g., ghost house). */
-        ATTRACTED_BY_HOUSE,
+        ATTRACTED_BY_SWIRL,
         /** Particle has left the simulation space and should be removed. */
         OUT_OF_WORLD
     }
@@ -78,7 +78,7 @@ public class EnergizerParticle3D {
      *
      * @return the particle position
      */
-    public Vector3f position() {
+    public Vector3f pos() {
         return position;
     }
 

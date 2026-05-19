@@ -103,7 +103,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final Pool<EnergizerParticle3D> particlePool;
 
     // Not sure where to specify this
-    private ParticleAnimationConfig particleAnimationConfig = DEFAULT_PARTICLE_ANIMATION_CONFIG;
+    private final ParticleAnimationConfig particleAnimationConfig = DEFAULT_PARTICLE_ANIMATION_CONFIG;
 
     private MessageManager3D messageManager;
 
@@ -405,7 +405,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 energizer3D.stopPumping();
                 energizer3D.hide();
                 final Point3D center = energizer3D.shape().localToScene(Point3D.ZERO);
-                animationRegistry.animation(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, EnergizerParticlesAnimation3D.class).triggerEnergizerExplosion(center);
+                animationRegistry.animation(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, EnergizerParticlesAnimation3D.class).triggerExplosion(center);
             });
         } else {
             pellet3DAtTile(tile).ifPresent(this::removePelletAfterDelay);
@@ -460,7 +460,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             maze3D.particlesGroup()
         );
         animation.setFloorCollisionTest(particle -> particle.collidesWith(maze3D.floor()));
-        animation.setOutOfWorldTest(particle -> particle.position().z() > 50); // positive z is below maze floor
+        animation.setOutOfWorldTest(particle -> particle.pos().z() > 50); // positive z is below maze floor
 
         return animation;
     }

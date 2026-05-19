@@ -14,7 +14,6 @@ import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +71,12 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
             swirlAnimations.add(swirlAnimation);
         });
 
-        setFactory(this::createAnimationTimer);
+        // Animation is just periodic call of update method
+        setFactory(() -> {
+            final var timeline = new Timeline(new KeyFrame(FRAME_DURATION, _ -> tick()));
+            timeline.setCycleCount(Animation.INDEFINITE);
+            return timeline;
+        });
     }
 
     public void setFloorCollisionTest(Predicate<EnergizerParticle3D> floorCollisionTest) {
@@ -83,12 +87,6 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         this.outOfWorldTest = outOfWorldTest;
     }
 
-    private Animation createAnimationTimer() {
-        final var driver = new Timeline(new KeyFrame(FRAME_DURATION, _ -> update()));
-        driver.setCycleCount(Animation.INDEFINITE);
-        return driver;
-    }
-
     @Override
     protected void freeResources() {
         swirlAnimations.forEach(ParticlesSwirlAnimation::dispose);
@@ -96,17 +94,17 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         particlesGroup.getChildren().clear();
     }
 
-    public void triggerEnergizerExplosion(Point3D center) {
-        requireNonNull(center);
-        Logger.info("Trigger energizer explosion at point {}", center);
+    public void triggerExplosion(Point3D explosionCenter) {
+        requireNonNull(explosionCenter);
+        final var position = new Vector3f(explosionCenter.getX(), explosionCenter.getY(), explosionCenter.getZ());
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
-            final EnergizerParticle3D p = particlePool.getEntry();
-            p.setPosition(new Vector3f(center.getX(), center.getY(), center.getZ()));
-            p.setVelocity(randomParticleVelocity(config.explosion()));
-            p.setState(ParticleState.FLYING_THROUGH_AIR);
-            p.shape().setVisible(true);
-            particles.add(p);
-            particlesGroup.getChildren().add(p.shape());
+            final EnergizerParticle3D particle = particlePool.getEntry();
+            particle.setPosition(position);
+            particle.setVelocity(randomParticleVelocity(config.explosion()));
+            particle.setState(ParticleState.FLYING_THROUGH_AIR);
+            particle.shape().setVisible(true);
+            particles.add(particle);
+            particlesGroup.getChildren().add(particle.shape());
         }
     }
 
@@ -116,17 +114,17 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         particlePool.recycleEntry(particle);
     }
 
-    private Vector3f randomParticleVelocity(ExplosionConfig cfg) {
+    private Vector3f randomParticleVelocity(ExplosionConfig config) {
         final int xDir = chance(0.5) ? -1 : 1;
         final int yDir = chance(0.5) ? -1 : 1;
         return new Vector3f(
-            xDir * randomFloat(cfg.particleMinSpeedXY(), cfg.particleMaxSpeedXY()),
-            yDir * randomFloat(cfg.particleMinSpeedXY(), cfg.particleMaxSpeedXY()),
-            -randomFloat(cfg.particleMinSpeedZ(), cfg.particleMaxSpeedZ())
+            xDir * randomFloat(config.particleMinSpeedXY(), config.particleMaxSpeedXY()),
+            yDir * randomFloat(config.particleMinSpeedXY(), config.particleMaxSpeedXY()),
+            -randomFloat(config.particleMinSpeedZ(), config.particleMaxSpeedZ())
         );
     }
 
-    private void update() {
+    private void tick() {
         updateParticles();
         for (ParticlesSwirlAnimation swirlAnimation : swirlAnimations) {
             swirlAnimation.update();
@@ -139,7 +137,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
             final var particle = particles.get(i);
             switch (particle.state()) {
                 case FLYING_THROUGH_AIR -> updateStateFlying(particle);
-                case ATTRACTED_BY_HOUSE -> updateStateAttracted(particle);
+                case ATTRACTED_BY_SWIRL -> updateStateAttracted(particle);
                 case OUT_OF_WORLD -> {}
             }
         }
@@ -151,11 +149,11 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
             onParticleLandedOnFloor(particle);
         }
         else if (outOfWorldTest.test(particle)) {
-            onParticleLeftView(particle);
+            onParticleOutOfWorld(particle);
         }
     }
 
-    private void onParticleLeftView(EnergizerParticle3D particle) {
+    private void onParticleOutOfWorld(EnergizerParticle3D particle) {
         releaseParticle(particle);
         particle.setState(ParticleState.OUT_OF_WORLD);
     }
@@ -174,31 +172,35 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
      */
     private void onParticleLandedOnFloor(EnergizerParticle3D particle) {
         final byte personality = randomGhostPersonality();
-        final byte targetSwirlIndex = switch (personality) {
+        final byte targetSwirlIndex = computeTargetSwirlIndex(personality);
+        final Vector3f swirlCenter = swirlBases.get(targetSwirlIndex);
+
+        particle.setTargetSwirlIndex(targetSwirlIndex);
+
+        // Place particle exactly on floor surface, assuming floor surface at z=0
+        particle.setPosition(new Vector3f(particle.pos().x(), particle.pos().y(), -particle.shape().getRadius()));
+
+        // Let particle move at random speed towards its swirl's center
+        final float speed = randomFloat(config.attraction().particleMinSpeed(), config.attraction().particleMaxSpeed());
+        particle.setVelocity(swirlCenter.sub(particle.pos()).setToLength(speed));
+
+        particle.setState(ParticleState.ATTRACTED_BY_SWIRL);
+
+        particle.shape().setMaterial(ghostDressMaterials.get(personality));
+        particle.shape().setRadius(0.5 * config.attraction().particleSize());
+    }
+
+    private static byte computeTargetSwirlIndex(byte personality) {
+        return switch (personality) {
             case CYAN_GHOST_BASHFUL -> 0;
             case RED_GHOST_SHADOW, PINK_GHOST_SPEEDY -> 1;
             case ORANGE_GHOST_POKEY -> 2;
-            default -> throw new IllegalArgumentException("Illegal ghost ID: " + personality);
+            default -> throw new IllegalArgumentException("Illegal ghost personality: " + personality);
         };
-
-        particle.shape().setMaterial(ghostDressMaterials.get(personality));
-
-        particle.setTargetSwirlIndex(targetSwirlIndex);
-        particle.shape().setRadius(0.5 * config.attraction().particleSize());
-
-        // assuming floor surface at z=0
-        particle.setPosition(new Vector3f(particle.position().x(), particle.position().y(), -particle.shape().getRadius()));
-
-        final Vector3f swirlCenter = swirlBases.get(targetSwirlIndex);
-        final float speed = randomFloat(config.attraction().particleMinSpeed(), config.attraction().particleMaxSpeed());
-        final Vector3f velocity = swirlCenter.sub(particle.position()).setToLength(speed);
-        particle.setVelocity(velocity);
-
-        particle.setState(ParticleState.ATTRACTED_BY_HOUSE);
     }
 
     private boolean moveParticleTowardsTarget(EnergizerParticle3D particle, Vector3f target) {
-        final double dist = particle.position().euclideanDist(target);
+        final double dist = particle.pos().euclideanDist(target);
         final boolean targetReached = dist <= particle.velocity().length();
         if (!targetReached) {
             particle.move();
