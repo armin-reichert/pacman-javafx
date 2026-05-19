@@ -7,7 +7,7 @@ package de.amr.pacmanfx.uilib.model3D.animation;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticle3D.FragmentState;
+import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticle3D.ParticleState;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -109,7 +109,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
             final EnergizerParticle3D p = particlePool.getEntry();
             p.setPosition(new Vector3f(center.getX(), center.getY(), center.getZ()));
             p.setVelocity(randomParticleVelocity(config.explosion()));
-            p.setState(FragmentState.FLYING);
+            p.setState(ParticleState.FLYING_THROUGH_AIR);
             p.shape().setVisible(true);
             particles.add(p);
             particlesGroup.getChildren().add(p.shape());
@@ -144,8 +144,8 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         for (int i = particles.size() - 1; i >= 0; --i) {
             final var particle = particles.get(i);
             switch (particle.state()) {
-                case FLYING       -> updateStateFlying(particle);
-                case ATTRACTED    -> updateStateAttracted(particle);
+                case FLYING_THROUGH_AIR -> updateStateFlying(particle);
+                case ATTRACTED_BY_HOUSE -> updateStateAttracted(particle);
                 case OUT_OF_VIEW  -> {}
             }
         }
@@ -167,7 +167,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
     
     private void onParticleLeftView(EnergizerParticle3D particle) {
         releaseParticle(particle);
-        particle.setState(FragmentState.OUT_OF_VIEW);
+        particle.setState(ParticleState.OUT_OF_VIEW);
     }
 
     private void updateStateAttracted(EnergizerParticle3D particle) {
@@ -204,7 +204,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         final Vector3f velocity = swirlCenter.sub(particle.position()).setToLength(speed);
         particle.setVelocity(velocity);
 
-        particle.setState(FragmentState.ATTRACTED);
+        particle.setState(ParticleState.ATTRACTED_BY_HOUSE);
     }
 
     private boolean moveParticleTowardsTarget(EnergizerParticle3D particle, Vector3f target) {

@@ -74,11 +74,11 @@ public abstract class EnergizerParticle3D implements Disposable {
     /**
      * Motion states of a particle during the explosion animation.
      */
-    public enum FragmentState {
-        /** Free flight under velocity and gravity. */
-        FLYING,
+    public enum ParticleState {
+        /** Flight under velocity and gravity. */
+        FLYING_THROUGH_AIR,
         /** Movement toward a target position (e.g., ghost house). */
-        ATTRACTED,
+        ATTRACTED_BY_HOUSE,
         /** Particle has left the simulation space and should be removed. */
         OUT_OF_VIEW
     }
@@ -87,7 +87,7 @@ public abstract class EnergizerParticle3D implements Disposable {
     private Shape3D shape3D;
 
     /** Current motion state of this particle. */
-    private FragmentState state = FragmentState.FLYING;
+    private ParticleState state = ParticleState.FLYING_THROUGH_AIR;
 
     /** Index used by the swirl system to assign a swirl target or orbit slot. */
     private byte targetSwirlIndex;
@@ -123,7 +123,7 @@ public abstract class EnergizerParticle3D implements Disposable {
     }
 
     public void reset() {
-        state = FragmentState.FLYING;
+        state = ParticleState.FLYING_THROUGH_AIR;
         targetSwirlIndex = -1;
         position = Vector3f.ZERO;
         velocity = Vector3f.ZERO;
@@ -220,14 +220,14 @@ public abstract class EnergizerParticle3D implements Disposable {
      *
      * @param state the new state (non-null)
      */
-    public void setState(FragmentState state) {
+    public void setState(ParticleState state) {
         this.state = requireNonNull(state);
     }
 
     /**
      * @return the current motion state of this particle
      */
-    public FragmentState state() {
+    public ParticleState state() {
         return state;
     }
 
