@@ -33,6 +33,7 @@ import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.animation.*;
 import de.amr.pacmanfx.uilib.model3D.ghost.*;
@@ -90,6 +91,48 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         LEVEL_COMPLETED_FULL, 
         LEVEL_COMPLETED_SHORT,
         WALL_COLOR_FLASHING
+    }
+
+    private class ManagedEnergizerParticlesAnimation3D extends ManagedAnimation {
+
+        EnergizerParticlesAnimation3D energizerParticlesAnimation3D;
+
+        public ManagedEnergizerParticlesAnimation3D() {
+            super("Energizer Particles Animation");
+            setFactory(this::createAnimationFX);
+        }
+
+        public void triggerExplosion(Point3D center) {
+            animationFX(); // ensure wrapped animation is created
+            energizerParticlesAnimation3D.triggerExplosion(center);
+        }
+
+        private Animation createAnimationFX() {
+            final Maze3D maze3D = entities3D.unique(Maze3D.class);
+            final House house = level.worldMap().terrainLayer().house();
+
+            // The 3 ghost revival positions inside the house from left to right
+            final List<Vector3f> swirlBases = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
+                .map(house::ghostRevivalTile)
+                .map(tile -> tile.scaled(TS).plus(HTS, HTS))
+                .map(pos -> new Vector3f(pos.x(), pos.y(), 0))
+                .toList();
+
+            energizerParticlesAnimation3D = new EnergizerParticlesAnimation3D(
+                particleAnimationConfig,
+                swirlBases,
+                ghostDressMaterials,
+                particlePool,
+                maze3D.particlesGroup()
+            );
+            energizerParticlesAnimation3D.setFloorCollisionTest(particle -> particle.collidesWith(maze3D.floor()));
+            energizerParticlesAnimation3D.setOutOfWorldTest(particle -> particle.pos().z() > 50); // positive z is below maze floor
+
+            final var timeline = new Timeline(new KeyFrame(Duration.millis(16.666), _ -> energizerParticlesAnimation3D.tick()));
+            timeline.setCycleCount(Animation.INDEFINITE);
+
+            return timeline;
+        }
     }
 
     private static final Comparator<Ghost3D> BY_PERSONALITY = Comparator.comparingInt(ghost3D -> ghost3D.ghost().personality());
@@ -404,12 +447,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 Logger.info("Eat energizer 3D at tile " + tile);
                 energizer3D.stopPumping();
                 energizer3D.hide();
-                final Point3D center = energizer3D.shape().localToScene(Point3D.ZERO);
-                animationRegistry.animation(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, EnergizerParticlesAnimation3D.class).triggerExplosion(center);
+                triggerEnergizerExplosion(energizer3D.shape().localToScene(Point3D.ZERO));
             });
         } else {
             pellet3DAtTile(tile).ifPresent(this::removePelletAfterDelay);
         }
+    }
+
+    private void triggerEnergizerExplosion(Point3D center) {
+        final ManagedEnergizerParticlesAnimation3D particlesAnimation = animationRegistry
+            .animation(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, ManagedEnergizerParticlesAnimation3D.class);
+        particlesAnimation.triggerExplosion(center);
     }
 
     private Optional<Energizer3D> energizer3DAt(Vector2i tile) {
@@ -441,30 +489,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return new EnergizerParticle3D(radius, material, Vector3f.ZERO);
     }
 
-    private EnergizerParticlesAnimation3D createParticlesAnimation(House house) {
-
-        // The 3 ghost revival positions inside the house from left to right
-        final List<Vector3f> swirlCenters = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
-            .map(house::ghostRevivalTile)
-            .map(tile -> tile.scaled(TS).plus(HTS, HTS))
-            .map(pos -> new Vector3f(pos.x(), pos.y(), 0))
-            .toList();
-
-        final Maze3D maze3D = entities3D.unique(Maze3D.class);
-
-        final var animation = new EnergizerParticlesAnimation3D(
-            particleAnimationConfig,
-            swirlCenters,
-            ghostDressMaterials,
-            particlePool,
-            maze3D.particlesGroup()
-        );
-        animation.setFloorCollisionTest(particle -> particle.collidesWith(maze3D.floor()));
-        animation.setOutOfWorldTest(particle -> particle.pos().z() > 50); // positive z is below maze floor
-
-        return animation;
-    }
-
     protected void cleanupFoodAndParticles() {
         animationRegistry.animation(AnimationID.ENERGIZER_PARTICLES_MOVEMENT).stop();
         entities3D.all(Energizer3D.class).forEach(energizer3D -> {
@@ -487,8 +511,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
 
-        level.worldMap().terrainLayer().optHouse().ifPresent(house ->
-            animationRegistry.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, createParticlesAnimation(house)));
+        animationRegistry.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, new ManagedEnergizerParticlesAnimation3D());
 
         //TODO: this is ugly and should be changed
         final var ghostLightAnimation = new GhostLightAnimation(ghosts3DByPersonality());

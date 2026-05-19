@@ -4,16 +4,12 @@
 
 package de.amr.pacmanfx.uilib.model3D.animation;
 
+import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector3f;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticle3D.ParticleState;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
-import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +24,7 @@ import static java.util.Objects.requireNonNull;
  * inside the ghost house where they accumulate to colored ghost shapes.
  * <p>Particles falling off from the maze are hidden at a certain height below the maze.</p>
  */
-public class EnergizerParticlesAnimation3D extends ManagedAnimation {
-
-    private static final Duration FRAME_DURATION = Duration.millis(16.666); // 60 Hz
+public class EnergizerParticlesAnimation3D implements Disposable {
 
     private static final byte[] GHOST_PERSONALITIES = {
         RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY
@@ -67,8 +61,6 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         Pool<EnergizerParticle3D> particlePool,
         Group particlesGroup)
     {
-        super("Energizer Particles Animation");
-
         this.config = requireNonNull(config);
         this.swirlBases = requireNonNull(swirlBases);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
@@ -76,13 +68,6 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         this.particlesGroup = requireNonNull(particlesGroup);
 
         swirlBases.forEach(base -> swirlAnimations.add(new ParticlesSwirlAnimation(config.swirl(), base)));
-
-        // Animation consists of periodic calls to update method
-        setFactory(() -> {
-            final var timeline = new Timeline(new KeyFrame(FRAME_DURATION, _ -> tick()));
-            timeline.setCycleCount(Animation.INDEFINITE);
-            return timeline;
-        });
     }
 
     public void setFloorCollisionTest(Predicate<EnergizerParticle3D> floorCollisionTest) {
@@ -94,7 +79,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
     }
 
     @Override
-    protected void freeResources() {
+    public void dispose() {
         swirlAnimations.forEach(ParticlesSwirlAnimation::dispose);
         particles.clear();
         particlesGroup.getChildren().clear();
@@ -130,7 +115,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         );
     }
 
-    private void tick() {
+    public void tick() {
         updateParticles();
         for (ParticlesSwirlAnimation swirlAnimation : swirlAnimations) {
             swirlAnimation.update();

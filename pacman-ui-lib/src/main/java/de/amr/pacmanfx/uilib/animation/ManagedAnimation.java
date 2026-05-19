@@ -87,7 +87,7 @@ public class ManagedAnimation implements Disposable {
      *
      * @return the wrapped JavaFX animation instance
      */
-    public Animation animationFX() {
+    public final Animation animationFX() {
         if (animationFX == null) {
             createAnimationFX();
         }
