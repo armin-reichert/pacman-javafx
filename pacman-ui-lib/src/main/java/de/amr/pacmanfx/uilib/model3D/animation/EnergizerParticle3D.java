@@ -168,7 +168,7 @@ public class EnergizerParticle3D {
      */
     public void fly(Vector3f gravity) {
         requireNonNull(gravity);
-        velocity = velocity.add(gravity);
+        velocity = velocity.plus(gravity);
         move();
     }
 
@@ -177,7 +177,7 @@ public class EnergizerParticle3D {
      * and updating the shape’s translation.
      */
     public void move() {
-        position = position.add(velocity);
+        position = position.plus(velocity);
         updateShapeTranslate();
     }
 

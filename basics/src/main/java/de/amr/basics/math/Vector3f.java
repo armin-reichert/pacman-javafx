@@ -20,16 +20,16 @@ public record Vector3f(float x, float y, float z) {
         this(v.x, v.y, v.z);
     }
 
-    public Vector3f add(Vector3f v) {
-        return new Vector3f(x + v.x, y + v.y, z + v.z);
+    public Vector3f plus(Vector3f v) {
+        return v == ZERO ? this : new Vector3f(x + v.x, y + v.y, z + v.z);
     }
 
-    public Vector3f sub(Vector3f v) {
-        return new Vector3f(x - v.x, y - v.y, z - v.z);
+    public Vector3f minus(Vector3f v) {
+        return v == ZERO ? this : new Vector3f(x - v.x, y - v.y, z - v.z);
     }
 
     public Vector3f mul(float s) {
-        return new Vector3f(s*x, s*y, s*z);
+        return s == 0 ? ZERO : new Vector3f(s*x, s*y, s*z);
     }
 
     /**
@@ -39,30 +39,35 @@ public record Vector3f(float x, float y, float z) {
      * @return the dot product
      */
     public float dot(Vector3f v) {
-        return x * v.x + y * v.y + z * v.z;
+        return v == ZERO ? 0 : x * v.x + y * v.y + z * v.z;
     }
 
     /**
      * @return the length of this vector
      */
     public float length() {
-        return (float) Math.sqrt(x * x + y * y + z * z);
+        return this == ZERO ? 0 : (float) Math.sqrt(x * x + y * y + z * z);
     }
 
     /**
      * @return normalized (length 1) vector
      */
     public Vector3f normalized() {
-        final float norm = 1.0f / length();
-        return new Vector3f(x * norm, y * norm, z * norm);
+        return setToLength(1);
     }
 
-    public Vector3f setToLength(float newLength) {
-        final float factor = newLength / length();
-        return new Vector3f(x * factor, y * factor, z * factor);
+    /**
+     * @param length the new length
+     * @return This vector scaled to the given length.
+     *         If this vector is the zero vector or the new length is 0, returns the zero vector.
+     */
+    public Vector3f setToLength(float length) {
+        if (this == ZERO) return this;
+        final float myLength = length();
+        return myLength == 0 || length == 0 ? ZERO : mul(length / myLength);
     }
 
     public double euclideanDist(Vector3f v) {
-        return sub(v).length();
+        return minus(v).length();
     }
 }

@@ -188,7 +188,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
 
         // Let particle move at random speed towards its swirl's center
         final float speed = randomFloat(config.attraction().particleMinSpeed(), config.attraction().particleMaxSpeed());
-        particle.setVelocity(swirlCenter.sub(particle.pos()).setToLength(speed));
+        particle.setVelocity(swirlCenter.minus(particle.pos()).setToLength(speed));
 
         particle.setState(ParticleState.ATTRACTED_BY_SWIRL);
 
@@ -197,15 +197,16 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
     }
 
     private boolean moveParticleTowardsTarget(EnergizerParticle3D particle, Vector3f target) {
-        final double dist = particle.pos().euclideanDist(target);
-        final boolean targetReached = dist < particle.velocity().length();
-        if (!targetReached) {
-            particle.move();
-            final float newSpeed = particle.velocity().length() + config.attraction().acceleration();
-            final Vector3f newVelocity = particle.velocity().normalized().mul(newSpeed);
-            particle.setVelocity(newVelocity);
+        final double distanceToTarget = particle.pos().euclideanDist(target);
+        final float speed = particle.velocity().length();
+        if (distanceToTarget < speed) {
+            return true; // target reached
         }
-        return targetReached;
+        particle.move();
+        final float newSpeed = speed + config.attraction().acceleration();
+        particle.setVelocity(particle.velocity().setToLength(newSpeed));
+        final double newDistanceToTarget = particle.pos().euclideanDist(target);
+        return newDistanceToTarget < newSpeed;
     }
 
     private void onParticleReachedTarget(EnergizerParticle3D particle) {
