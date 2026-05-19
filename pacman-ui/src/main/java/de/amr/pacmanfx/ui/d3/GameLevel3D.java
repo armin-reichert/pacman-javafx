@@ -97,6 +97,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final List<PhongMaterial> ghostDressMaterials;
     private final Pool<EnergizerParticle3D> particlePool;
 
+    private ParticleAnimationConfig particleAnimationConfig = DEFAULT_PARTICLE_ANIMATION_CONFIG;
+
     /**
      * Creates a new 3D level representation for the given game level.
      *
@@ -126,7 +128,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .toList();
 
         particlePool = new Pool<>(1000,
-            () -> createExplosionParticle(DEFAULT_PARTICLE_ANIMATION_CONFIG.explosion()),
+            () -> createExplosionParticle(particleAnimationConfig.explosion()),
             particle -> {
                 particle.reset();
                 particle.shape().setVisible(false);
@@ -443,7 +445,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Maze3D maze3D = entities3D.unique(Maze3D.class);
 
         final var animation = new EnergizerParticlesAnimation3D(
-            DEFAULT_PARTICLE_ANIMATION_CONFIG, //TODO
+            particleAnimationConfig,
             swirlCenters,
             ghostDressMaterials,
             particlePool,
