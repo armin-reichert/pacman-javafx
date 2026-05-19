@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.basics.fsm.State;
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.Validations;
@@ -15,6 +14,7 @@ import de.amr.pacmanfx.model.GameLevelEntitySet;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.FoodLayer;
+import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUIConstants;
@@ -125,11 +125,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .map(GhostComponentMaterialSet::dressMaterial)
             .toList();
 
-        particlePool = new Pool<>(1000, this::createExplosionParticle, particle -> {
-            particle.reset();
-            particle.shape().setVisible(false);
+        particlePool = new Pool<>(1000,
+            () -> createExplosionParticle(DEFAULT_PARTICLE_ANIMATION_CONFIG.explosion()),
+            particle -> {
+                particle.reset();
+                particle.shape().setVisible(false);
+            }
+        );
 
-        });
         // Maze3D must exist when energizer animations are created!
         createAnimations(mapColorScheme);
 
@@ -422,31 +425,34 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Particles animation
 
-    private EnergizerParticle3D createExplosionParticle() {
-        final ExplosionConfig config = DEFAULT_PARTICLE_ANIMATION_CONFIG.explosion();
+    private EnergizerParticle3D createExplosionParticle(ExplosionConfig config) {
         final PhongMaterial material = ghostDressMaterials.get(randomInt(0, 4));
         final double radius = Math.clamp(RANDOM_GENERATOR.nextGaussian(2, 0.1), 0.5, 4) * config.particleMeanRadius();
         return new EnergizerParticle3D(radius, material, Vector3f.ZERO);
     }
 
-    private EnergizerParticlesAnimation3D createParticlesAnimation() {
-        // The bottom center positions of the swirls where the particles of exploded energizers eventually are displayed
-        final List<Vector2f> swirlCenters = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
-            .map(level::ghost)
-            .map(Ghost::startPosition)
-            .map(pos -> pos.plus(HTS, HTS))
+    private EnergizerParticlesAnimation3D createParticlesAnimation(House house) {
+
+        // The 3 ghost revival positions inside the house from left to right
+        final List<Vector3f> swirlCenters = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
+            .map(house::ghostRevivalTile)
+            .map(tile -> tile.scaled(TS).plus(HTS, HTS))
+            .map(pos -> new Vector3f(pos.x(), pos.y(), 0))
             .toList();
 
         final Maze3D maze3D = entities3D.unique(Maze3D.class);
 
-        return new EnergizerParticlesAnimation3D(
-            DEFAULT_PARTICLE_ANIMATION_CONFIG,
+        final var animation = new EnergizerParticlesAnimation3D(
+            DEFAULT_PARTICLE_ANIMATION_CONFIG, //TODO
             swirlCenters,
             ghostDressMaterials,
-            maze3D.floor(),
             particlePool,
             maze3D.particlesGroup()
         );
+        animation.setFloorCollisionTest(particle -> particle.collidesWith(maze3D.floor()));
+        animation.setOutOfWorldTest(particle -> particle.position().z() > 50); // positive z is below maze floor
+
+        return animation;
     }
 
     protected void cleanupFoodAndParticles() {
@@ -470,10 +476,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         animationRegistry.register(AnimationID.WALL_COLOR_FLASHING, new WallColorFlashingAnimation(this, colorScheme));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
-        animationRegistry.register(AnimationID.GHOST_LIGHT, new GhostLightAnimation(ghosts3DByPersonality()));
-        animationRegistry.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, createParticlesAnimation());
-        //TODO: this is somewhat ugly
-        getChildren().addAll(animationRegistry.animation(AnimationID.GHOST_LIGHT, GhostLightAnimation.class).light());
+
+        level.worldMap().terrainLayer().optHouse().ifPresent(house ->
+            animationRegistry.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, createParticlesAnimation(house)));
+
+        //TODO: this is ugly and should be changed
+        final var ghostLightAnimation = new GhostLightAnimation(ghosts3DByPersonality());
+        animationRegistry.register(AnimationID.GHOST_LIGHT, ghostLightAnimation);
+        getChildren().addAll(ghostLightAnimation.light());
     }
 
     protected Animation createPacDyingAnimationSeq(Pac3D pac3D, Runnable resumeGame) {

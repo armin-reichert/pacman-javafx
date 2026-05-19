@@ -24,7 +24,7 @@ public class EnergizerParticle3D {
         /** Movement toward a target position (e.g., ghost house). */
         ATTRACTED_BY_HOUSE,
         /** Particle has left the simulation space and should be removed. */
-        OUT_OF_VIEW
+        OUT_OF_WORLD
     }
 
     private final Sphere sphere;
