@@ -25,54 +25,37 @@ public class SoundManager implements Disposable {
 
     private final BooleanProperty muteProperty = new SimpleBooleanProperty(false);
 
-    private final Map<SoundID, Object> map = new HashMap<>();
+    private final Map<SoundID, Object> soundMap = new HashMap<>();
 
     public SoundManager() {}
 
     @Override
     public void dispose() {
+        final int numEntries = soundMap.size();
         stopAll();
         enabledProperty.unbind();
-        final int numEntries = map.size();
-        map.clear();
+        soundMap.clear();
         Logger.info("{} sound objects removed", numEntries);
     }
 
-    public MediaPlayer mediaPlayer(SoundID key) {
-        requireNonNull(key);
-        if (!map.containsKey(key)) {
-            throw new IllegalArgumentException("Unknown media player key '%s'".formatted(key));
-        }
-        if (map.get(key) instanceof MediaPlayer mediaPlayer) {
-            return mediaPlayer;
-        }
-        throw new IllegalArgumentException("Sound entry with key '%s' is not a media player".formatted(key));
-    }
-
-    public void register(SoundID key, Object value) {
-        Object prevValue = map.put(key, value);
-        if (prevValue != null) {
-            Logger.warn("Replaced sound '{}', was {}", key, value);
-        }
-    }
-
-    public void registerAudioClipURL(SoundID key, URL url) {
-        requireNonNull(key);
+    public void setAudioClip(SoundID soundID, URL url) {
+        requireNonNull(soundID);
         requireNonNull(url);
-        register(key, url);
+        registerSoundURL(soundID, url);
     }
 
-    public void registerMediaPlayer(SoundID key, URL url) {
-        requireNonNull(key);
+    public void setMediaPlayer(SoundID soundID, URL url) {
+        requireNonNull(soundID);
         requireNonNull(url);
-        var mediaPlayer = new MediaPlayer(new Media(url.toExternalForm()));
-        mediaPlayer.setVolume(1.0);
-        mediaPlayer.muteProperty().bind(Bindings.createBooleanBinding(
+
+        final var player = new MediaPlayer(new Media(url.toExternalForm()));
+        player.setVolume(1.0);
+        player.muteProperty().bind(Bindings.createBooleanBinding(
             () -> muteProperty().get() || !enabledProperty().get(),
             muteProperty(), enabledProperty()
         ));
-        Logger.info("Media player: key='{}', URL='{}'", key, url);
-        register(key, mediaPlayer);
+
+        registerSoundURL(soundID, player);
     }
 
     public BooleanProperty enabledProperty() {
@@ -91,8 +74,14 @@ public class SoundManager implements Disposable {
         return muteProperty;
     }
 
+    public boolean isMute() {
+        return muteProperty.get();
+    }
+
     public void loop(SoundID soundID) {
-        Object value = map.get(soundID);
+        requireNonNull(soundID);
+
+        final Object value = soundMap.get(soundID);
         if (value == null) {
             return; // ignore missing sound
         }
@@ -109,70 +98,83 @@ public class SoundManager implements Disposable {
 
     public void play(SoundID soundID, int repetitions) {
         requireNonNull(soundID);
-        if (muteProperty.get()) {
-            Logger.trace("Sound '{}' not played (reason: muted)", soundID);
+        if (isMute() || !isEnabled()) {
             return;
         }
-        if (!enabledProperty.get()) {
-            Logger.trace("Sound '{}' not played (reason: disabled)", soundID);
-            return;
-        }
-        if (!map.containsKey(soundID)) {
+        if (!soundMap.containsKey(soundID)) {
             Logger.error("Sound '{}' not played (reason: not registered)", soundID);
             return;
         }
-        Object value = map.get(soundID);
+        final Object value = soundMap.get(soundID);
         switch (value) {
-            case MediaPlayer mediaPlayer -> {
-                Logger.trace("Play media player ({} times) with ID '{}'",
-                    repetitions == MediaPlayer.INDEFINITE ? "indefinite" : repetitions, soundID);
-                mediaPlayer.setCycleCount(repetitions);
-                mediaPlayer.play();
+            case MediaPlayer player -> {
+                player.setCycleCount(repetitions);
+                player.play();
             }
             case URL url -> {
-                Logger.trace("Create and play audio clip ({} times) with ID '{}'",
-                    repetitions == MediaPlayer.INDEFINITE ? "indefinite" : repetitions, soundID);
-                final var audioClip = new AudioClip(url.toExternalForm());
-                audioClip.setCycleCount(repetitions);
-                audioClip.play(1.0); //TODO add volume parameter?
+                final var clip = new AudioClip(url.toExternalForm());
+                clip.setCycleCount(repetitions);
+                clip.play(1.0); //TODO add volume parameter?
             }
-            default -> throw new IllegalStateException("Unexpected value: " + value);
+            default -> throw new IllegalStateException("Unexpected sound map value %s".formatted(value));
         }
     }
 
     public boolean isPlaying(SoundID soundID) {
         requireNonNull(soundID);
-        Object value = map.get(soundID);
-        if (value instanceof MediaPlayer mediaPlayer) {
-            return mediaPlayer.getStatus() ==  MediaPlayer.Status.PLAYING;
-        }
-        return false;
+        final Object value = soundMap.get(soundID);
+        return value instanceof MediaPlayer player
+            && (player.getStatus() == MediaPlayer.Status.PLAYING);
     }
 
     public void pause(SoundID soundID) {
         requireNonNull(soundID);
-        Object value = map.get(soundID);
-        if (value instanceof MediaPlayer mediaPlayer) {
-            mediaPlayer.pause();
+        final Object value = soundMap.get(soundID);
+        if (value instanceof MediaPlayer player) {
+            player.pause();
         }
-        else if (value instanceof URL) {
-            Logger.warn("Audio clip '{}' cannot be paused", soundID);
+        else if (value instanceof URL url) {
+            Logger.warn("Audio clip id='{}' url='{}' cannot be paused", soundID, url);
         }
     }
 
     public void stop(SoundID soundID)  {
         requireNonNull(soundID);
-        Object value = map.get(soundID);
-        if (value instanceof MediaPlayer mediaPlayer) {
-            mediaPlayer.stop();
+        final Object value = soundMap.get(soundID);
+        if (value instanceof MediaPlayer player) {
+            player.stop();
         }
-        else if (value instanceof URL) {
-            Logger.warn("Audio clip '{}' cannot be stopped", soundID);
+        else if (value instanceof URL url) {
+            Logger.warn("Audio clip id='{}' url='{}' cannot be stopped", soundID, url);
         }
     }
 
     public void stopAll() {
-        map.values().stream().filter(MediaPlayer.class::isInstance).map(MediaPlayer.class::cast).forEach(MediaPlayer::stop);
+        soundMap.values().stream()
+            .filter(MediaPlayer.class::isInstance)
+            .map(MediaPlayer.class::cast)
+            .forEach(MediaPlayer::stop);
         Logger.debug("All sounds (media players, siren, voice) stopped");
+    }
+
+    public MediaPlayer mediaPlayer(SoundID soundID) {
+        requireNonNull(soundID);
+        if (!soundMap.containsKey(soundID)) {
+            throw new IllegalArgumentException("Unknown sound ID '%s'".formatted(soundID));
+        }
+        if (!(soundMap.get(soundID) instanceof MediaPlayer player)) {
+            throw new IllegalArgumentException("Sound entry with id='%s' is not a media player".formatted(soundID));
+        }
+        return player;
+    }
+
+    // private
+
+    private void registerSoundURL(SoundID soundID, Object object) {
+        final Object prevValue = soundMap.put(soundID, object);
+        if (prevValue != null) {
+            Logger.warn("Replaced sound id='{}': {} (was: {})", soundID, object);
+        }
+        Logger.info("Registered sound id='{}': {}", soundID, object);
     }
 }
