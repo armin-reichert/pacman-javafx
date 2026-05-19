@@ -40,6 +40,15 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         return GHOST_PERSONALITIES[randomInt(0, GHOST_PERSONALITIES.length)];
     }
 
+    private static byte computeTargetSwirlIndex(byte personality) {
+        return switch (personality) {
+            case CYAN_GHOST_BASHFUL -> 0;
+            case RED_GHOST_SHADOW, PINK_GHOST_SPEEDY -> 1;
+            case ORANGE_GHOST_POKEY -> 2;
+            default -> throw new IllegalArgumentException("Illegal ghost personality: " + personality);
+        };
+    }
+
     private final ParticleAnimationConfig config;
     private final List<Vector3f> swirlBases;
     private final List<PhongMaterial> ghostDressMaterials;
@@ -66,12 +75,9 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         this.particlePool = requireNonNull(particlePool);
         this.particlesGroup = requireNonNull(particlesGroup);
 
-        swirlBases.forEach(center -> {
-            final var swirlAnimation = new ParticlesSwirlAnimation(config.swirl(), center);
-            swirlAnimations.add(swirlAnimation);
-        });
+        swirlBases.forEach(base -> swirlAnimations.add(new ParticlesSwirlAnimation(config.swirl(), base)));
 
-        // Animation is just periodic call of update method
+        // Animation consists of periodic calls to update method
         setFactory(() -> {
             final var timeline = new Timeline(new KeyFrame(FRAME_DURATION, _ -> tick()));
             timeline.setCycleCount(Animation.INDEFINITE);
@@ -190,18 +196,9 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation {
         particle.shape().setRadius(0.5 * config.attraction().particleSize());
     }
 
-    private static byte computeTargetSwirlIndex(byte personality) {
-        return switch (personality) {
-            case CYAN_GHOST_BASHFUL -> 0;
-            case RED_GHOST_SHADOW, PINK_GHOST_SPEEDY -> 1;
-            case ORANGE_GHOST_POKEY -> 2;
-            default -> throw new IllegalArgumentException("Illegal ghost personality: " + personality);
-        };
-    }
-
     private boolean moveParticleTowardsTarget(EnergizerParticle3D particle, Vector3f target) {
         final double dist = particle.pos().euclideanDist(target);
-        final boolean targetReached = dist <= particle.velocity().length();
+        final boolean targetReached = dist < particle.velocity().length();
         if (!targetReached) {
             particle.move();
             final float newSpeed = particle.velocity().length() + config.attraction().acceleration();
