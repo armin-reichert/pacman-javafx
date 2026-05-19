@@ -220,8 +220,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private void adaptToGameLevel(GameLevel level) {
         ui.soundManager().setEnabled(!level.isDemoLevel()); //TODO is this needed?
 
+        actionBindings.addAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         if (!level.isDemoLevel()) {
-            actionBindings.addAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
             actionBindings.addAll(GameUIConstants.STEERING_ACTION_BINDINGS);
             actionBindings.addAll(GameUIConstants.CHEAT_ACTION_BINDINGS);
         }
