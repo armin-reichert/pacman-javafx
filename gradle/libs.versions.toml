@@ -2,6 +2,7 @@
 
 # Usage: libs.versions.xyz.get()
 [versions]
+gson     = "2.11.0"
 iconli  = "12.3.1"
 java    = "25"
 javafx  = "25.0.3"
@@ -19,6 +20,7 @@ osdetector = { id = "com.google.osdetector", version = "1.7.3" }
 #    implementation libs.bundles.xyz
 #    testImplementation libs.junit.jupiter.api
 [libraries]
+gson                 = { module = "com.google.code.gson:gson", version.ref = "gson"}
 iconli-fontawesome   = { module = "org.kordamp.ikonli:ikonli-fontawesome5-pack",     version.ref = "iconli" }
 iconli-javafx        = { module = "org.kordamp.ikonli:ikonli-javafx",                version.ref = "iconli" }
 junit-jupiter-api    = { group = "org.junit.jupiter", name = "junit-jupiter-api",    version.ref = "junit5" }

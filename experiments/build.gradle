@@ -8,7 +8,9 @@ dependencies {
     implementation project(":pacman-ui-lib")
     implementation project(":pacman-ui")
     implementation project(":pacman-app-mapeditor")
-    implementation libs.bundles.obj
+//    implementation libs.bundles.obj
+    implementation(project(":objparser"))
+    implementation(project(":meshbuilder"))
     implementation libs.bundles.tinylog
 }
 
