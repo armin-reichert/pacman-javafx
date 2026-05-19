@@ -49,6 +49,8 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceManager {
         return ArcadeMsPacMan_UIConfig.class;
     }
 
+    private final ResourceManager localResources = this::getClass;
+
     private final AssetMap assets = new AssetMap();
     private final ArcadeMsPacMan_Factory3D factory3D = new ArcadeMsPacMan_Factory3D();
     private final GameSceneConfig gameSceneConfig = new PacManXXL_MsPacMan_GameSceneConfig();
@@ -97,6 +99,8 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceManager {
         soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,      url("sound/Fruit_Bounce.mp3"));
         soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      url("sound/Fruit.mp3"));
         soundManager.registerAudioClipURL(SoundID.COIN_INSERTED,    url("sound/credit.wav"));
+        soundManager.register(SoundID.ENERGIZER_EXPLOSION_1,        localResources.url("sound/explosion1.mp3"));
+        soundManager.register(SoundID.ENERGIZER_EXPLOSION_2,        localResources.url("sound/explosion2.mp3"));
         soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,       url("sound/ExtraLife.mp3"));
         soundManager.registerMediaPlayer(SoundID.GAME_OVER,         url("sound/game-over.mp3"));
         soundManager.registerMediaPlayer(SoundID.GAME_READY,        url("sound/Start.mp3"));

@@ -517,7 +517,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
                 activateNextBonus();
                 simStep.bonusIndex = level.currentBonusIndex();
             }
-            flow().publishGameEvent(new PacEatsFoodEvent(this, pac, false));
+            flow().publishGameEvent(new PacEatsFoodEvent(this, pac, simStep.energizerFound, false));
         }
     }
 

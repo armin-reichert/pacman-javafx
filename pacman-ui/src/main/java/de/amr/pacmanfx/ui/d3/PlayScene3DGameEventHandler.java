@@ -141,6 +141,9 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
             final long tick = ui().gameContext().clock().tickCount();
             assertLevel3D().eatFoodAtTile(gameEvent.pac().tile());
             assertLevel3D().optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
+            if (gameEvent.energizer()) {
+                gameScene().soundEffects().ifPresent(GameSoundEffects::playEnergizerExplosion);
+            }
         }
     }
 

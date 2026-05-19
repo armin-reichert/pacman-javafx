@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.sound;
 
+import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -91,6 +92,11 @@ public class GameSoundEffects {
      */
     public void playCoinInsertedSound() {
         soundManager.play(SoundID.COIN_INSERTED);
+    }
+
+    public void playEnergizerExplosion() {
+        final int choice = RandomNumberSupport.randomInt(0, 2);
+        soundManager.play(choice == 0 ? SoundID.ENERGIZER_EXPLOSION_1 : SoundID.ENERGIZER_EXPLOSION_2);
     }
 
     /**
