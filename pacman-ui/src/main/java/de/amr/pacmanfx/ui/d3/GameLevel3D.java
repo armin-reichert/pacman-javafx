@@ -73,7 +73,13 @@ import static java.util.Objects.requireNonNull;
 public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public static final ParticleAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticleAnimationConfig(
-        new ExplosionConfig(new Vector3f(0, 0, 0.1f), 300, 0.25f, 0.05f, 0.4f, 1.5f, 6),
+        new ExplosionConfig(
+            new Vector3f(0, 0, 0.1f), // gravity
+            300, // num particles by explosion
+            0.25f, // mean particle radius
+            0.1f, 0.4f, // min/max particle speed horizontally (x-y plane)
+            1.5f, 6
+        ), // min/max particle speed vertically (z direction)
         new AttractionConfig(0.004f, 0.4f, 0.3f, 0.5f),
         new SwirlConfig(4, 20, 0.3f, 0.05f)
     );
@@ -92,12 +98,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final GameLevelEntitySet entities3D = new GameLevelEntitySet();
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final UIConfig uiConfig;
-    private MessageManager3D messageManager;
 
     private final List<PhongMaterial> ghostDressMaterials;
     private final Pool<EnergizerParticle3D> particlePool;
 
+    // Not sure where to specify this
     private ParticleAnimationConfig particleAnimationConfig = DEFAULT_PARTICLE_ANIMATION_CONFIG;
+
+    private MessageManager3D messageManager;
 
     /**
      * Creates a new 3D level representation for the given game level.
