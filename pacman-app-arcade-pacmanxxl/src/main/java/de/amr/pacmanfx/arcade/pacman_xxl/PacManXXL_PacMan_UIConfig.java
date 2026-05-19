@@ -90,23 +90,23 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     private void initSound(SoundManager soundManager) {
-        soundManager.setAudioClip(PacManGameSoundID.BONUS_EATEN,      url("sound/eat_fruit.mp3"));
-        soundManager.setAudioClip(PacManGameSoundID.COIN_INSERTED,    url("sound/credit.wav"));
+        soundManager.setAudioClip(PacManGameSoundID.BONUS_EATEN,           url("sound/eat_fruit.mp3"));
+        soundManager.setAudioClip(PacManGameSoundID.COIN_INSERTED,         url("sound/credit.wav"));
         soundManager.setAudioClip(PacManGameSoundID.ENERGIZER_EXPLOSION_1, localResources.url("sound/explosion1.mp3"));
         soundManager.setAudioClip(PacManGameSoundID.ENERGIZER_EXPLOSION_2, localResources.url("sound/explosion2.mp3"));
-        soundManager.setAudioClip(PacManGameSoundID.EXTRA_LIFE,       url("sound/extend.mp3"));
-        soundManager.setAudioClip(PacManGameSoundID.GAME_OVER,        url("sound/common/game-over.mp3"));
-        soundManager.setMediaPlayer(PacManGameSoundID.GAME_READY,        url("sound/game_start.mp3"));
-        soundManager.setAudioClip(PacManGameSoundID.GHOST_EATEN,      url("sound/eat_ghost.mp3"));
-        soundManager.setMediaPlayer(PacManGameSoundID.GHOST_RETURNS,     url("sound/retreating.mp3"));
-        soundManager.setMediaPlayer(PacManGameSoundID.INTERMISSION_1,    url("sound/intermission.mp3"));
-        soundManager.setMediaPlayer(PacManGameSoundID.INTERMISSION_2,    url("sound/intermission.mp3"));
-        soundManager.setMediaPlayer(PacManGameSoundID.INTERMISSION_3,    url("sound/intermission.mp3"));
-        soundManager.setAudioClip(PacManGameSoundID.LEVEL_CHANGED,    url("sound/common/sweep.mp3"));
-        soundManager.setMediaPlayer(PacManGameSoundID.LEVEL_COMPLETE,    url("sound/common/level-complete.mp3"));
-        soundManager.setMediaPlayer(PacManGameSoundID.PAC_MAN_DEATH,     url("sound/pacman_death.wav"));
-        soundManager.setAudioClip(PacManGameSoundID.PAC_MAN_MUNCHING, url("sound/munch.wav"));
-        soundManager.setMediaPlayer(PacManGameSoundID.PAC_MAN_POWER,     url("sound/ghost-turn-to-blue.mp3"));
+        soundManager.setAudioClip(PacManGameSoundID.EXTRA_LIFE,            url("sound/extend.mp3"));
+        soundManager.setAudioClip(PacManGameSoundID.GAME_OVER,             url("sound/common/game-over.mp3"));
+        soundManager.setMediaPlayer(PacManGameSoundID.GAME_READY,          url("sound/game_start.mp3"));
+        soundManager.setAudioClip(PacManGameSoundID.GHOST_EATEN,           url("sound/eat_ghost.mp3"));
+        soundManager.setMediaPlayer(PacManGameSoundID.GHOST_RETURNS,       url("sound/retreating.mp3"));
+        soundManager.setMediaPlayer(PacManGameSoundID.INTERMISSION_1,      url("sound/intermission.mp3"));
+        soundManager.setMediaPlayer(PacManGameSoundID.INTERMISSION_2,      url("sound/intermission.mp3"));
+        soundManager.setMediaPlayer(PacManGameSoundID.INTERMISSION_3,      url("sound/intermission.mp3"));
+        soundManager.setAudioClip(PacManGameSoundID.LEVEL_CHANGED,         url("sound/common/sweep.mp3"));
+        soundManager.setMediaPlayer(PacManGameSoundID.LEVEL_COMPLETE,      url("sound/common/level-complete.mp3"));
+        soundManager.setMediaPlayer(PacManGameSoundID.PAC_MAN_DEATH,       url("sound/pacman_death.wav"));
+        soundManager.setAudioClip(PacManGameSoundID.PAC_MAN_MUNCHING,      url("sound/munch.wav"));
+        soundManager.setMediaPlayer(PacManGameSoundID.PAC_MAN_POWER,       url("sound/ghost-turn-to-blue.mp3"));
 
         soundEffects = new GameSoundEffects(soundManager);
         soundEffects.setMunchingSoundDelay((byte) 9);
