@@ -11,6 +11,7 @@ import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.TriangleMesh;
@@ -228,5 +229,34 @@ public final class Ufx {
         result.getPoints().addAll(points);
 
         return result;
+    }
+
+    /**
+     * Tests whether a sphere intersects an axis-aligned bounding box (AABB).
+     *
+     * <p>The algorithm:
+     * <ol>
+     *   <li>Clamp the sphere center to the AABB.</li>
+     *   <li>Compute the squared distance between the sphere center and the clamped point.</li>
+     *   <li>Intersection occurs if the squared distance is less than or equal to {@code radius²}.</li>
+     * </ol>
+     *
+     * @param sphereCenter the sphere center in the same coordinate system as the AABB
+     * @param radius       the sphere radius
+     * @param boxMin       minimum AABB corner
+     * @param boxMax       maximum AABB corner
+     * @return {@code true} if the sphere intersects the AABB
+     */
+    public static boolean intersectsSphereAABB(Point3D sphereCenter, double radius, Point3D boxMin, Point3D boxMax) {
+
+        final double x = Math.clamp(sphereCenter.getX(), boxMin.getX(), boxMax.getX());
+        final double y = Math.clamp(sphereCenter.getY(), boxMin.getY(), boxMax.getY());
+        final double z = Math.clamp(sphereCenter.getZ(), boxMin.getZ(), boxMax.getZ());
+
+        final double dx = sphereCenter.getX() - x;
+        final double dy = sphereCenter.getY() - y;
+        final double dz = sphereCenter.getZ() - z;
+
+        return dx * dx + dy * dy + dz * dz <= radius * radius;
     }
 }

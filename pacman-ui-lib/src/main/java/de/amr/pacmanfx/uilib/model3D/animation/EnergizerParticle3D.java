@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector3f;
+import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Point3D;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Shape3D;
@@ -41,35 +42,6 @@ import static java.util.Objects.requireNonNull;
  * size of the particle is interpreted.
  */
 public abstract class EnergizerParticle3D implements Disposable {
-
-    /**
-     * Tests whether a sphere intersects an axis-aligned bounding box (AABB).
-     *
-     * <p>The algorithm:
-     * <ol>
-     *   <li>Clamp the sphere center to the AABB.</li>
-     *   <li>Compute the squared distance between the sphere center and the clamped point.</li>
-     *   <li>Intersection occurs if the squared distance is less than or equal to {@code radius²}.</li>
-     * </ol>
-     *
-     * @param sphereCenter the sphere center in the same coordinate system as the AABB
-     * @param radius       the sphere radius
-     * @param boxMin       minimum AABB corner
-     * @param boxMax       maximum AABB corner
-     * @return {@code true} if the sphere intersects the AABB
-     */
-    public static boolean intersectsSphereAABB(Point3D sphereCenter, double radius, Point3D boxMin, Point3D boxMax) {
-
-        final double x = Math.clamp(sphereCenter.getX(), boxMin.getX(), boxMax.getX());
-        final double y = Math.clamp(sphereCenter.getY(), boxMin.getY(), boxMax.getY());
-        final double z = Math.clamp(sphereCenter.getZ(), boxMin.getZ(), boxMax.getZ());
-
-        final double dx = sphereCenter.getX() - x;
-        final double dy = sphereCenter.getY() - y;
-        final double dz = sphereCenter.getZ() - z;
-
-        return dx * dx + dy * dy + dz * dz <= radius * radius;
-    }
 
     /**
      * Motion states of a particle during the explosion animation.
@@ -273,7 +245,7 @@ public abstract class EnergizerParticle3D implements Disposable {
             boxOrigin.getZ() + 0.5 * box.getDepth()
         );
 
-        return intersectsSphereAABB(shapeCenter, 0.5 * size(), boxMin, boxMax);
+        return Ufx.intersectsSphereAABB(shapeCenter, 0.5 * size(), boxMin, boxMax);
     }
 
     /**
