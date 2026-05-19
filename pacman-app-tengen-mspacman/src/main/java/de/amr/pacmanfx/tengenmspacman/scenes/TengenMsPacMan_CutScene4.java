@@ -10,6 +10,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
@@ -18,6 +19,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import org.tinylog.Logger;
 
@@ -84,12 +86,12 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniors = new ArrayList<>();
         juniorCreationTimes = new ArrayList<>();
 
-        ui.soundManager().play(SoundID.INTERMISSION_4);
+        ui.soundManager().play(PacManGameSoundID.INTERMISSION_4);
     }
 
     @Override
     public void onSceneEnd() {
-        ui.soundManager().stop(SoundID.INTERMISSION_4);
+        ui.soundManager().stop(PacManGameSoundID.INTERMISSION_4);
     }
 
     @Override
@@ -181,8 +183,12 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniors.add(junior);
         juniorCreationTimes.add(tick);
 
-        String id = SoundID.INTERMISSION_4 + ".junior." + randomInt(1, 3); // 1 or 2
-        ui.soundManager().loop(id);
+        SoundID soundID = switch (randomInt(1, 3)) {
+            case 1 -> TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_1;
+            case 2 -> TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_2;
+            default -> throw new IllegalArgumentException();
+        };
+        ui.soundManager().loop(soundID);
 
         Logger.info("Junior spawned at tick {}", tick);
     }

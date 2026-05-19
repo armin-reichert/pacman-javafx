@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
-import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.pacmanfx.Globals.TS;
 
@@ -112,7 +112,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (sceneTimer.atSecond(1)) {
-            ui.soundManager().play(SoundID.INTERMISSION_3);
+            ui.soundManager().play(PacManGameSoundID.INTERMISSION_3);
         } else if (sceneTimer.atSecond(3)) {
             enterStateDeliverJunior();
         }

@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.JoypadButton;
-import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
@@ -81,12 +81,12 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimator()));
 
-        ui.soundManager().play(SoundID.INTERMISSION_2);
+        ui.soundManager().play(PacManGameSoundID.INTERMISSION_2);
     }
 
     @Override
     public void onSceneEnd() {
-        ui.soundManager().stop(SoundID.INTERMISSION_2);
+        ui.soundManager().stop(PacManGameSoundID.INTERMISSION_2);
     }
 
     @Override

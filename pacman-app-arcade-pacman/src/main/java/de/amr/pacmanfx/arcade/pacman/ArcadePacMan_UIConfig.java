@@ -27,7 +27,7 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.UfxImages;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
@@ -234,21 +234,21 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     private void initSound(SoundManager soundManager) {
-        soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      url("sound/eat_fruit.mp3"));
-        soundManager.registerAudioClipURL(SoundID.COIN_INSERTED,    url("sound/credit.wav"));
-        soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,       url("sound/extend.mp3"));
-        soundManager.registerAudioClipURL(SoundID.GAME_OVER,        url("sound/common/game-over.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GAME_READY,        url("sound/game_start.mp3"));
-        soundManager.registerAudioClipURL(SoundID.GHOST_EATEN,      url("sound/eat_ghost.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,     url("sound/retreating.mp3"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_1,    url("sound/intermission.mp3"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_2,    url("sound/intermission.mp3"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_3,    url("sound/intermission.mp3"));
-        soundManager.registerAudioClipURL(SoundID.LEVEL_CHANGED,    url("sound/common/sweep.mp3"));
-        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,    url("sound/common/level-complete.mp3"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,     url("sound/pacman_death.wav"));
-        soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING, url("sound/munch.wav"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,     url("sound/ghost-turn-to-blue.mp3"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.BONUS_EATEN,      url("sound/eat_fruit.mp3"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.COIN_INSERTED,    url("sound/credit.wav"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.EXTRA_LIFE,       url("sound/extend.mp3"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.GAME_OVER,        url("sound/common/game-over.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.GAME_READY,        url("sound/game_start.mp3"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.GHOST_EATEN,      url("sound/eat_ghost.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.GHOST_RETURNS,     url("sound/retreating.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.INTERMISSION_1,    url("sound/intermission.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.INTERMISSION_2,    url("sound/intermission.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.INTERMISSION_3,    url("sound/intermission.mp3"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.LEVEL_CHANGED,    url("sound/common/sweep.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.LEVEL_COMPLETE,    url("sound/common/level-complete.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.PAC_MAN_DEATH,     url("sound/pacman_death.wav"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.PAC_MAN_MUNCHING, url("sound/munch.wav"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.PAC_MAN_POWER,     url("sound/ghost-turn-to-blue.mp3"));
 
         soundEffects = new GameSoundEffects(soundManager);
         soundEffects.setMunchingSoundDelay((byte) 9);

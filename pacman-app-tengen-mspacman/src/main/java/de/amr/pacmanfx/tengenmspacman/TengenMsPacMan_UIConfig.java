@@ -24,7 +24,7 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -341,30 +341,31 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     }
 
     private void initSound(SoundManager soundManager) {
-        soundManager.registerAudioClipURL("audio.option.selection_changed",    LOCAL_RESOURCES.url("sound/ms-select1.wav"));
-        soundManager.registerAudioClipURL("audio.option.value_changed",        LOCAL_RESOURCES.url("sound/ms-select2.wav"));
 
-        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,      LOCAL_RESOURCES.url("sound/fruitbounce.wav"));
-        soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      LOCAL_RESOURCES.url("sound/ms-fruit.wav"));
-        soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,       LOCAL_RESOURCES.url("sound/ms-extralife.wav"));
-        soundManager.registerAudioClipURL(SoundID.GAME_OVER,        LOCAL_RESOURCES.url("sound/common/game-over.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GAME_READY,        LOCAL_RESOURCES.url("sound/ms-start.wav"));
-        soundManager.registerAudioClipURL(SoundID.GHOST_EATEN,      LOCAL_RESOURCES.url("sound/ms-ghosteat.wav"));
-        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,     LOCAL_RESOURCES.url("sound/ms-eyes.wav"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_1,    LOCAL_RESOURCES.url("sound/theymeet.wav"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_2,    LOCAL_RESOURCES.url("sound/thechase.wav"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_3,    LOCAL_RESOURCES.url("sound/junior.wav"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_4,    LOCAL_RESOURCES.url("sound/theend.wav"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_4 + ".junior.1", LOCAL_RESOURCES.url("sound/ms-theend1.wav"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_4 + ".junior.2", LOCAL_RESOURCES.url("sound/ms-theend2.wav"));
-        soundManager.registerAudioClipURL(SoundID.LEVEL_CHANGED,     LOCAL_RESOURCES.url("sound/common/sweep.mp3"));
-        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,     LOCAL_RESOURCES.url("sound/common/level-complete.mp3"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,      LOCAL_RESOURCES.url("sound/ms-death.wav"));
-        soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING,  LOCAL_RESOURCES.url("sound/ms-dot.wav"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,      LOCAL_RESOURCES.url("sound/ms-power.wav"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.BONUS_ACTIVE,      LOCAL_RESOURCES.url("sound/fruitbounce.wav"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.BONUS_EATEN,      LOCAL_RESOURCES.url("sound/ms-fruit.wav"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.EXTRA_LIFE,       LOCAL_RESOURCES.url("sound/ms-extralife.wav"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.GAME_OVER,        LOCAL_RESOURCES.url("sound/common/game-over.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.GAME_READY,        LOCAL_RESOURCES.url("sound/ms-start.wav"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.GHOST_EATEN,      LOCAL_RESOURCES.url("sound/ms-ghosteat.wav"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.GHOST_RETURNS,     LOCAL_RESOURCES.url("sound/ms-eyes.wav"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.INTERMISSION_1,    LOCAL_RESOURCES.url("sound/theymeet.wav"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.INTERMISSION_2,    LOCAL_RESOURCES.url("sound/thechase.wav"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.INTERMISSION_3,    LOCAL_RESOURCES.url("sound/junior.wav"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.INTERMISSION_4,    LOCAL_RESOURCES.url("sound/theend.wav"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.LEVEL_CHANGED,     LOCAL_RESOURCES.url("sound/common/sweep.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.LEVEL_COMPLETE,     LOCAL_RESOURCES.url("sound/common/level-complete.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.PAC_MAN_DEATH,      LOCAL_RESOURCES.url("sound/ms-death.wav"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.PAC_MAN_MUNCHING,  LOCAL_RESOURCES.url("sound/ms-dot.wav"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.PAC_MAN_POWER,      LOCAL_RESOURCES.url("sound/ms-power.wav"));
+
+        soundManager.registerMediaPlayer(TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_1, LOCAL_RESOURCES.url("sound/ms-theend1.wav"));
+        soundManager.registerMediaPlayer(TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_2, LOCAL_RESOURCES.url("sound/ms-theend2.wav"));
+        soundManager.registerAudioClipURL(TengenMsPacManSoundID.OPTION_SELECTION_CHANGE, LOCAL_RESOURCES.url("sound/ms-select1.wav"));
+        soundManager.registerAudioClipURL(TengenMsPacManSoundID.OPTION_VALUE_CHANGE,     LOCAL_RESOURCES.url("sound/ms-select2.wav"));
 
         //TODO fix the sound file instead
-        final MediaPlayer bounceSound = soundManager.mediaPlayer(SoundID.BONUS_ACTIVE);
+        final MediaPlayer bounceSound = soundManager.mediaPlayer(PacManGameSoundID.BONUS_ACTIVE);
         if (bounceSound != null) {
             bounceSound.setRate(0.25);
         }

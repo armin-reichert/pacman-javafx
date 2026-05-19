@@ -25,7 +25,7 @@ public class SoundManager implements Disposable {
 
     private final BooleanProperty muteProperty = new SimpleBooleanProperty(false);
 
-    private final Map<Object, Object> map = new HashMap<>();
+    private final Map<SoundID, Object> map = new HashMap<>();
 
     public SoundManager() {}
 
@@ -38,7 +38,7 @@ public class SoundManager implements Disposable {
         Logger.info("{} sound objects removed", numEntries);
     }
 
-    public MediaPlayer mediaPlayer(Object key) {
+    public MediaPlayer mediaPlayer(SoundID key) {
         requireNonNull(key);
         if (!map.containsKey(key)) {
             throw new IllegalArgumentException("Unknown media player key '%s'".formatted(key));
@@ -49,20 +49,20 @@ public class SoundManager implements Disposable {
         throw new IllegalArgumentException("Sound entry with key '%s' is not a media player".formatted(key));
     }
 
-    public void register(Object key, Object value) {
+    public void register(SoundID key, Object value) {
         Object prevValue = map.put(key, value);
         if (prevValue != null) {
             Logger.warn("Replaced sound '{}', was {}", key, value);
         }
     }
 
-    public void registerAudioClipURL(Object key, URL url) {
+    public void registerAudioClipURL(SoundID key, URL url) {
         requireNonNull(key);
         requireNonNull(url);
         register(key, url);
     }
 
-    public void registerMediaPlayer(Object key, URL url) {
+    public void registerMediaPlayer(SoundID key, URL url) {
         requireNonNull(key);
         requireNonNull(url);
         var mediaPlayer = new MediaPlayer(new Media(url.toExternalForm()));
@@ -91,7 +91,7 @@ public class SoundManager implements Disposable {
         return muteProperty;
     }
 
-    public void loop(Object soundID) {
+    public void loop(SoundID soundID) {
         Object value = map.get(soundID);
         if (value == null) {
             return; // ignore missing sound
@@ -103,11 +103,11 @@ public class SoundManager implements Disposable {
         play(soundID, MediaPlayer.INDEFINITE);
     }
 
-    public void play(Object soundID) {
+    public void play(SoundID soundID) {
         play(soundID, 1);
     }
 
-    public void play(Object soundID, int repetitions) {
+    public void play(SoundID soundID, int repetitions) {
         requireNonNull(soundID);
         if (muteProperty.get()) {
             Logger.trace("Sound '{}' not played (reason: muted)", soundID);
@@ -140,7 +140,7 @@ public class SoundManager implements Disposable {
         }
     }
 
-    public boolean isPlaying(Object soundID) {
+    public boolean isPlaying(SoundID soundID) {
         requireNonNull(soundID);
         Object value = map.get(soundID);
         if (value instanceof MediaPlayer mediaPlayer) {
@@ -149,7 +149,7 @@ public class SoundManager implements Disposable {
         return false;
     }
 
-    public void pause(Object soundID) {
+    public void pause(SoundID soundID) {
         requireNonNull(soundID);
         Object value = map.get(soundID);
         if (value instanceof MediaPlayer mediaPlayer) {
@@ -160,7 +160,7 @@ public class SoundManager implements Disposable {
         }
     }
 
-    public void stop(Object soundID)  {
+    public void stop(SoundID soundID)  {
         requireNonNull(soundID);
         Object value = map.get(soundID);
         if (value instanceof MediaPlayer mediaPlayer) {

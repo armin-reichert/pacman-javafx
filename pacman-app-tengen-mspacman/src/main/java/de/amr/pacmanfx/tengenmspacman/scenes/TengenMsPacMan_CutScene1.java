@@ -18,7 +18,7 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.JoypadButton;
-import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.basics.spriteanim.SpriteAnimationSet.singleSpriteAnimSet;
 import static de.amr.pacmanfx.Globals.*;
@@ -129,12 +129,12 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
         collided = false;
 
-        ui.soundManager().play(SoundID.INTERMISSION_1);
+        ui.soundManager().play(PacManGameSoundID.INTERMISSION_1);
     }
 
     @Override
     public void onSceneEnd() {
-        ui.soundManager().stop(SoundID.INTERMISSION_1);
+        ui.soundManager().stop(PacManGameSoundID.INTERMISSION_1);
     }
 
     @Override

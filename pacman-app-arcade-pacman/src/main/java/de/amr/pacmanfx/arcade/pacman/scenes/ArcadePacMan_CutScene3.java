@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
-import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 
@@ -50,7 +50,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
             return;
         }
         if (sceneTick == TICK_ANIMATION_START) {
-            ui.soundManager().play(SoundID.INTERMISSION_3, 2);
+            ui.soundManager().play(PacManGameSoundID.INTERMISSION_3, 2);
             startBlinkyChasingPacMan();
         }
         else if (sceneTick == TICK_BLINKY_RUNNING_NAKED){

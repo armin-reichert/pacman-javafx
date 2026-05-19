@@ -69,48 +69,48 @@ public class GameSoundEffects {
      * Starts looping the bonus active sound.
      */
     public void playBonusActiveSound() {
-        soundManager.loop(SoundID.BONUS_ACTIVE);
+        soundManager.loop(PacManGameSoundID.BONUS_ACTIVE);
     }
 
     /**
      * Stops the bonus active sound.
      */
     public void playBonusExpiredSound() {
-        soundManager.stop(SoundID.BONUS_ACTIVE);
+        soundManager.stop(PacManGameSoundID.BONUS_ACTIVE);
     }
 
     /**
      * Stops the bonus active loop and plays the bonus eaten sound once.
      */
     public void playBonusEatenSound() {
-        soundManager.stop(SoundID.BONUS_ACTIVE);
-        soundManager.play(SoundID.BONUS_EATEN);
+        soundManager.stop(PacManGameSoundID.BONUS_ACTIVE);
+        soundManager.play(PacManGameSoundID.BONUS_EATEN);
     }
 
     /**
      * Plays the coin insertion sound effect.
      */
     public void playCoinInsertedSound() {
-        soundManager.play(SoundID.COIN_INSERTED);
+        soundManager.play(PacManGameSoundID.COIN_INSERTED);
     }
 
     public void playEnergizerExplosion() {
         final int choice = RandomNumberSupport.randomInt(0, 2);
-        soundManager.play(choice == 0 ? SoundID.ENERGIZER_EXPLOSION_1 : SoundID.ENERGIZER_EXPLOSION_2);
+        soundManager.play(choice == 0 ? PacManGameSoundID.ENERGIZER_EXPLOSION_1 : PacManGameSoundID.ENERGIZER_EXPLOSION_2);
     }
 
     /**
      * Plays the extra life awarded sound.
      */
     public void playExtraLifeSound() {
-        soundManager.play(SoundID.EXTRA_LIFE);
+        soundManager.play(PacManGameSoundID.EXTRA_LIFE);
     }
 
     /**
      * Plays the game ready / start sound (usually at level beginning).
      */
     public void playGameReadySound() {
-        soundManager.play(SoundID.GAME_READY);
+        soundManager.play(PacManGameSoundID.GAME_READY);
     }
 
     /**
@@ -118,22 +118,22 @@ public class GameSoundEffects {
      */
     public void playGameOverSound() {
         stopAll();
-        soundManager.play(SoundID.GAME_OVER);
+        soundManager.play(PacManGameSoundID.GAME_OVER);
     }
 
     /**
      * Plays the sound when a ghost is eaten.
      */
     public void playGhostEatenSound() {
-        soundManager.play(SoundID.GHOST_EATEN);
+        soundManager.play(PacManGameSoundID.GHOST_EATEN);
     }
 
     /**
      * Starts looping the ghost returning/ghost in house sound if not already playing.
      */
     public void playGhostReturningToHouseSound() {
-        if (!soundManager.isPlaying(SoundID.GHOST_RETURNS)) {
-            soundManager.loop(SoundID.GHOST_RETURNS);
+        if (!soundManager.isPlaying(PacManGameSoundID.GHOST_RETURNS)) {
+            soundManager.loop(PacManGameSoundID.GHOST_RETURNS);
         }
     }
 
@@ -141,7 +141,7 @@ public class GameSoundEffects {
      * Stops the ghost returning sound if currently playing.
      */
     public void stopGhostReturningToHouseSound() {
-        soundManager.stop(SoundID.GHOST_RETURNS);
+        soundManager.stop(PacManGameSoundID.GHOST_RETURNS);
     }
 
     /**
@@ -149,7 +149,7 @@ public class GameSoundEffects {
      */
     public void playLevelChangedSound() {
         stopAll();
-        soundManager.play(SoundID.LEVEL_CHANGED);
+        soundManager.play(PacManGameSoundID.LEVEL_CHANGED);
     }
 
     /**
@@ -157,7 +157,7 @@ public class GameSoundEffects {
      */
     public void playLevelCompleteSound() {
         stopAll();
-        soundManager.play(SoundID.LEVEL_COMPLETE);
+        soundManager.play(PacManGameSoundID.LEVEL_COMPLETE);
     }
 
     /**
@@ -183,7 +183,7 @@ public class GameSoundEffects {
      */
     public void playPacDeadSound() {
         stopAll();
-        soundManager.play(SoundID.PAC_MAN_DEATH);
+        soundManager.play(PacManGameSoundID.PAC_MAN_DEATH);
     }
 
     /**
@@ -194,7 +194,7 @@ public class GameSoundEffects {
         long passed = tick - lastMunchingSoundPlayedTick;
         Logger.debug("Pac found food, tick={} passed since last time={}", tick, passed);
         if (passed > munchingSoundDelay || munchingSoundDelay == 0) {
-            soundManager.play(SoundID.PAC_MAN_MUNCHING);
+            soundManager.play(PacManGameSoundID.PAC_MAN_MUNCHING);
             lastMunchingSoundPlayedTick = tick;
         }
     }
@@ -204,14 +204,14 @@ public class GameSoundEffects {
      */
     public void playPacPowerSound() {
         stopSiren();
-        soundManager.loop(SoundID.PAC_MAN_POWER);
+        soundManager.loop(PacManGameSoundID.PAC_MAN_POWER);
     }
 
     /**
      * Stops the Pac-Man power sound.
      */
     public void stopPacPowerSound() {
-        soundManager.stop(SoundID.PAC_MAN_POWER);
+        soundManager.stop(PacManGameSoundID.PAC_MAN_POWER);
     }
 
     /**

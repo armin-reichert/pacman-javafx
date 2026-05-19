@@ -25,7 +25,7 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -96,24 +96,24 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     private void initSound(SoundManager soundManager) {
-        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,      url("sound/Fruit_Bounce.mp3"));
-        soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      url("sound/Fruit.mp3"));
-        soundManager.registerAudioClipURL(SoundID.COIN_INSERTED,    url("sound/credit.wav"));
-        soundManager.register(SoundID.ENERGIZER_EXPLOSION_1,        localResources.url("sound/explosion1.mp3"));
-        soundManager.register(SoundID.ENERGIZER_EXPLOSION_2,        localResources.url("sound/explosion2.mp3"));
-        soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,       url("sound/ExtraLife.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GAME_OVER,         url("sound/game-over.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GAME_READY,        url("sound/Start.mp3"));
-        soundManager.registerAudioClipURL(SoundID.GHOST_EATEN,      url("sound/Ghost.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,     url("sound/GhostEyes.mp3"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_1,    url("sound/Act_1_They_Meet.mp3"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_2,    url("sound/Act_2_The_Chase.mp3"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_3,    url("sound/Act_3_Junior.mp3"));
-        soundManager.registerAudioClipURL(SoundID.LEVEL_CHANGED,    url("sound/sweep.mp3"));
-        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,    url("sound/level-complete.mp3"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,     url("sound/Died.mp3"));
-        soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING, url("sound/munch.wav"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,     url("sound/ScaredGhost.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.BONUS_ACTIVE,      url("sound/Fruit_Bounce.mp3"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.BONUS_EATEN,      url("sound/Fruit.mp3"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.COIN_INSERTED,    url("sound/credit.wav"));
+        soundManager.register(PacManGameSoundID.ENERGIZER_EXPLOSION_1,        localResources.url("sound/explosion1.mp3"));
+        soundManager.register(PacManGameSoundID.ENERGIZER_EXPLOSION_2,        localResources.url("sound/explosion2.mp3"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.EXTRA_LIFE,       url("sound/ExtraLife.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.GAME_OVER,         url("sound/game-over.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.GAME_READY,        url("sound/Start.mp3"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.GHOST_EATEN,      url("sound/Ghost.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.GHOST_RETURNS,     url("sound/GhostEyes.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.INTERMISSION_1,    url("sound/Act_1_They_Meet.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.INTERMISSION_2,    url("sound/Act_2_The_Chase.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.INTERMISSION_3,    url("sound/Act_3_Junior.mp3"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.LEVEL_CHANGED,    url("sound/sweep.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.LEVEL_COMPLETE,    url("sound/level-complete.mp3"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.PAC_MAN_DEATH,     url("sound/Died.mp3"));
+        soundManager.registerAudioClipURL(PacManGameSoundID.PAC_MAN_MUNCHING, url("sound/munch.wav"));
+        soundManager.registerMediaPlayer(PacManGameSoundID.PAC_MAN_POWER,     url("sound/ScaredGhost.mp3"));
 
         soundEffects = new GameSoundEffects(soundManager);
         soundEffects.setMunchingSoundDelay((byte) 0);
