@@ -2,18 +2,28 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.model3D.animation;
+package de.amr.pacmanfx.ui.d3.animation;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector3f;
+import de.amr.pacmanfx.model.world.House;
+import de.amr.pacmanfx.ui.d3.GameLevel3D;
+import de.amr.pacmanfx.ui.d3.entities.Maze3D;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.model3D.animation.*;
 import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticle3D.ParticleState;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static de.amr.basics.math.RandomNumberSupport.*;
 import static de.amr.pacmanfx.Globals.*;
@@ -24,7 +34,7 @@ import static java.util.Objects.requireNonNull;
  * inside the ghost house where they accumulate to colored ghost shapes.
  * <p>Particles falling off from the maze are hidden at a certain height below the maze.</p>
  */
-public class EnergizerParticlesAnimation3D implements Disposable {
+public class EnergizerParticlesAnimation3D extends ManagedAnimation implements Disposable {
 
     private static final byte[] GHOST_PERSONALITIES = {
         RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY
@@ -55,19 +65,40 @@ public class EnergizerParticlesAnimation3D implements Disposable {
     private Predicate<EnergizerParticle3D> outOfWorldTest = _ -> false;
 
     public EnergizerParticlesAnimation3D(
-        ParticleAnimationConfig config,
-        List<Vector3f> swirlBases,
+        GameLevel3D level3D,
         List<PhongMaterial> ghostDressMaterials,
         Pool<EnergizerParticle3D> particlePool,
+        ParticleAnimationConfig config,
         Group particlesGroup)
     {
+        super("Energizer particles animation");
+
         this.config = requireNonNull(config);
-        this.swirlBases = requireNonNull(swirlBases);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
         this.particlePool = requireNonNull(particlePool);
         this.particlesGroup = requireNonNull(particlesGroup);
 
+        final Maze3D maze3D = level3D.entities().unique(Maze3D.class);
+        final House house = level3D.level().worldMap().terrainLayer().house();
+
+        // The 3 ghost revival positions inside the house from left to right
+        swirlBases = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
+            .map(house::ghostRevivalTile)
+            .map(tile -> tile.scaled(TS).plus(HTS, HTS))
+            .map(pos -> new Vector3f(pos.x(), pos.y(), 0))
+            .toList();
+
         swirlBases.forEach(base -> swirlAnimations.add(new ParticlesSwirlAnimation(config.swirl(), base)));
+
+        setFloorCollisionTest(particle -> particle.collidesWith(maze3D.floor()));
+        setOutOfWorldTest(particle -> particle.pos().z() > 50); // positive z is below maze floor
+
+        setFactory(() -> {
+            final var timeline = new Timeline(new KeyFrame(Duration.millis(16.666), _ -> tick()));
+            timeline.setCycleCount(Animation.INDEFINITE);
+
+            return timeline;
+        });
     }
 
     public void setFloorCollisionTest(Predicate<EnergizerParticle3D> floorCollisionTest) {
@@ -79,7 +110,7 @@ public class EnergizerParticlesAnimation3D implements Disposable {
     }
 
     @Override
-    public void dispose() {
+    public void freeResources() {
         swirlAnimations.forEach(ParticlesSwirlAnimation::dispose);
         particles.clear();
         particlesGroup.getChildren().clear();

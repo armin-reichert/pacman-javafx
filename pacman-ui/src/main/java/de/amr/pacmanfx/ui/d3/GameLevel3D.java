@@ -277,12 +277,16 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return entities3D.all(Ghost3D.class).sorted(BY_PERSONALITY);
     }
 
-    private void createAnimations(WorldMapColorScheme colorScheme, ParticleAnimationConfig particleAnimationConfig) {
+    private void createAnimations(
+        WorldMapColorScheme colorScheme,
+        ParticleAnimationConfig particleAnimationConfig)
+    {
         animationRegistry.register(AnimationID.WALL_COLOR_FLASHING, new WallColorFlashingAnimation(this, colorScheme));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
-        animationRegistry.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT,
-            new ManagedEnergizerParticlesAnimation3D(this, ghostDressMaterials, particlePool, particleAnimationConfig));
+        animationRegistry.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, new EnergizerParticlesAnimation3D(
+            this, ghostDressMaterials, particlePool, particleAnimationConfig, entities3D.unique(Maze3D.class).particlesGroup()
+        ));
 
         //TODO: this is ugly and should be changed
         final var ghostLightAnimation = new GhostLightAnimation(ghosts3DByPersonality().toList());
