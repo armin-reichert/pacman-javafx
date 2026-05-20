@@ -242,97 +242,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         });
     }
 
-    // Private area, no trespassing
-
     public Optional<Ghost3D> ghost3D(byte personality) {
         Validations.requireValidGhostPersonality(personality);
         return entities3D.allWhere(Ghost3D.class, ghost3D -> ghost3D.ghost().personality() == personality).findFirst();
-    }
-
-    // Order matters for correct transparency!
-    private void buildHierarchy() {
-        final Maze3D maze3D = entities3D.unique(Maze3D.class);
-        final Pac3D pac3D = entities3D.unique(Pac3D.class);
-        final LevelCounter3D levelCounter3D = entities3D.unique(LevelCounter3D.class);
-        final LivesCounter3D livesCounter3D = entities3D.unique(LivesCounter3D.class);
-        getChildren().addAll(levelCounter3D, livesCounter3D, pac3D);
-        pac3D.powerLight().ifPresent(getChildren()::add);
-        entities3D.all(Ghost3D.class).sorted(BY_PERSONALITY).forEach(getChildren()::add);
-        entities3D.all(Energizer3D.class).map(Energizer3D::shape).forEach(getChildren()::add);
-        entities3D.all(Pellet3D.class).map(Pellet3D::shape).forEach(getChildren()::add);
-        getChildren().addAll(maze3D.particlesGroup());
-        getChildren().addAll(maze3D, maze3D.house().root(), maze3D.house().doors());
-    }
-
-    private void createPac3D(PacConfig config) {
-        final Pac3D pac3D = uiConfig.factory3D().createPac3D(level.pac(), config, animationRegistry);
-        entities3D.add(pac3D);
-    }
-
-    private void createGhosts3D(List<GhostConfig> ghostConfigs) {
-        level.ghosts().map(ghost -> {
-            final GhostConfig config = ghostConfigs.get(ghost.personality());
-            final Ghost3D ghost3D = createGhost3D(config, ghost);
-            ghost3D.init(level);
-            return ghost3D;
-        }).forEach(entities3D::add);
-    }
-
-    private Ghost3D createGhost3D(GhostConfig ghostConfig, Ghost ghost) {
-        final var ghost3D = uiConfig.factory3D().createGhost3D(ghost, ghostConfig, animationRegistry);
-        ghost3D.setAppearanceController(new Ghost3DAppearanceController());
-        ghost3D.setTransformController(new Ghost3DTransformController());
-        return ghost3D;
-    }
-
-    private void createLivesCounter3D() {
-        final var counter3D = new LivesCounter3D(uiConfig);
-        counter3D.setTranslateX(2 * TS);
-        counter3D.setTranslateY(2 * TS);
-        entities3D.add(counter3D);
-    }
-
-    private void createLevelCounter3D() {
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final var counter3D = new LevelCounter3D(animationRegistry, uiConfig);
-        counter3D.setTranslateX(TS(terrain.numCols() - 2));
-        counter3D.setTranslateY(TS(2));
-        counter3D.setTranslateZ(-uiConfig.entityConfig().levelCounter().elevation());
-        entities3D.add(counter3D);
-    }
-
-    private void createMaze3D(WorldMapColorScheme colorScheme) {
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final Maze3D maze3D = uiConfig.factory3D().createMaze3D(terrain, uiConfig.entityConfig(), colorScheme, animationRegistry);
-        maze3D.wallOpacityProperty().bind(GameUIConstants.PROPERTY_3D_WALL_OPACITY);
-        maze3D.wallBaseHeightProperty().bind(GameUIConstants.PROPERTY_3D_WALL_HEIGHT);
-        maze3D.floorColorProperty().bind(GameUIConstants.PROPERTY_3D_FLOOR_COLOR);
-        entities3D.add(maze3D);
-    }
-
-    private void createMessageManager() {
-        this.messageManager = new MessageManager3D(animationRegistry, this);
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        terrain.optHouse().ifPresentOrElse(
-            house -> messageManager.setMessageCenter(MessageManager3D.MessageType.READY, house.centerPositionUnderHouse()),
-            () -> {
-                Logger.error("No house in this game level! WTF?");
-                final double x = terrain.numCols() * HTS, y = terrain.numRows() * HTS;
-                messageManager.setMessageCenter(MessageManager3D.MessageType.READY, vec2_float(x, y));
-            });
-        messageManager.setMessageCenter(MessageManager3D.MessageType.TEST,
-            vec2_float(terrain.numCols() * HTS, (terrain.numRows() - 2) * TS));
-    }
-
-    private void setDrawMode(Group group, DrawMode drawMode) {
-        for (Node node : group.getChildren()) {
-            if (node instanceof Group subGroup) {
-                setDrawMode(subGroup, drawMode);
-            }
-            else if (node instanceof Shape3D shape3D) {
-                shape3D.setDrawMode(drawMode);
-            }
-        }
     }
 
     // Bonus
@@ -515,5 +427,93 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         gameState.lock();
         seq.play();
+    }
+
+    // Private area, no trespassing
+
+    // Order matters for correct transparency!
+    private void buildHierarchy() {
+        final Maze3D maze3D = entities3D.unique(Maze3D.class);
+        final Pac3D pac3D = entities3D.unique(Pac3D.class);
+        final LevelCounter3D levelCounter3D = entities3D.unique(LevelCounter3D.class);
+        final LivesCounter3D livesCounter3D = entities3D.unique(LivesCounter3D.class);
+        getChildren().addAll(levelCounter3D, livesCounter3D, pac3D);
+        pac3D.powerLight().ifPresent(getChildren()::add);
+        entities3D.all(Ghost3D.class).sorted(BY_PERSONALITY).forEach(getChildren()::add);
+        entities3D.all(Energizer3D.class).map(Energizer3D::shape).forEach(getChildren()::add);
+        entities3D.all(Pellet3D.class).map(Pellet3D::shape).forEach(getChildren()::add);
+        getChildren().addAll(maze3D.particlesGroup());
+        getChildren().addAll(maze3D, maze3D.house().root(), maze3D.house().doors());
+    }
+
+    private void createPac3D(PacConfig config) {
+        final Pac3D pac3D = uiConfig.factory3D().createPac3D(level.pac(), config, animationRegistry);
+        entities3D.add(pac3D);
+    }
+
+    private void createGhosts3D(List<GhostConfig> ghostConfigs) {
+        level.ghosts().map(ghost -> {
+            final GhostConfig config = ghostConfigs.get(ghost.personality());
+            final Ghost3D ghost3D = createGhost3D(config, ghost);
+            ghost3D.init(level);
+            return ghost3D;
+        }).forEach(entities3D::add);
+    }
+
+    private Ghost3D createGhost3D(GhostConfig ghostConfig, Ghost ghost) {
+        final var ghost3D = uiConfig.factory3D().createGhost3D(ghost, ghostConfig, animationRegistry);
+        ghost3D.setAppearanceController(new Ghost3DAppearanceController());
+        ghost3D.setTransformController(new Ghost3DTransformController());
+        return ghost3D;
+    }
+
+    private void createLivesCounter3D() {
+        final var counter3D = new LivesCounter3D(uiConfig);
+        counter3D.setTranslateX(2 * TS);
+        counter3D.setTranslateY(2 * TS);
+        entities3D.add(counter3D);
+    }
+
+    private void createLevelCounter3D() {
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final var counter3D = new LevelCounter3D(animationRegistry, uiConfig);
+        counter3D.setTranslateX(TS(terrain.numCols() - 2));
+        counter3D.setTranslateY(TS(2));
+        counter3D.setTranslateZ(-uiConfig.entityConfig().levelCounter().elevation());
+        entities3D.add(counter3D);
+    }
+
+    private void createMaze3D(WorldMapColorScheme colorScheme) {
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final Maze3D maze3D = uiConfig.factory3D().createMaze3D(terrain, uiConfig.entityConfig(), colorScheme, animationRegistry);
+        maze3D.wallOpacityProperty().bind(GameUIConstants.PROPERTY_3D_WALL_OPACITY);
+        maze3D.wallBaseHeightProperty().bind(GameUIConstants.PROPERTY_3D_WALL_HEIGHT);
+        maze3D.floorColorProperty().bind(GameUIConstants.PROPERTY_3D_FLOOR_COLOR);
+        entities3D.add(maze3D);
+    }
+
+    private void createMessageManager() {
+        this.messageManager = new MessageManager3D(animationRegistry, this);
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        terrain.optHouse().ifPresentOrElse(
+            house -> messageManager.setMessageCenter(MessageManager3D.MessageType.READY, house.centerPositionUnderHouse()),
+            () -> {
+                Logger.error("No house in this game level! WTF?");
+                final double x = terrain.numCols() * HTS, y = terrain.numRows() * HTS;
+                messageManager.setMessageCenter(MessageManager3D.MessageType.READY, vec2_float(x, y));
+            });
+        messageManager.setMessageCenter(MessageManager3D.MessageType.TEST,
+            vec2_float(terrain.numCols() * HTS, (terrain.numRows() - 2) * TS));
+    }
+
+    private void setDrawMode(Group group, DrawMode drawMode) {
+        for (Node node : group.getChildren()) {
+            if (node instanceof Group subGroup) {
+                setDrawMode(subGroup, drawMode);
+            }
+            else if (node instanceof Shape3D shape3D) {
+                shape3D.setDrawMode(drawMode);
+            }
+        }
     }
 }

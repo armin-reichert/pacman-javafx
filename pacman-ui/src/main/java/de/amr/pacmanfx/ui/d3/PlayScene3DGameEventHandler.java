@@ -21,7 +21,9 @@ import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
+import de.amr.pacmanfx.uilib.model3D.world.NumberBox3D;
 import javafx.animation.Animation;
+import javafx.scene.image.Image;
 
 import java.util.List;
 
@@ -210,11 +212,30 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     private void onEatingGhost() {
         final GameLevel3D level3D = assertLevel3D();
-        final List<Ghost> currentlyKilledGhosts = game().simulationStep().ghostsKilled;
-        currentlyKilledGhosts.forEach(ghost -> {
-            final int killedIndex = level3D.level().energizerVictims().indexOf(ghost);
-            new HideGhostShowPointsAnimation3D(level3D, ghost.personality(), killedIndex).playFromStart();
+        game().simulationStep().ghostsKilled.forEach(ghost -> {
+            final Ghost3D ghost3D = level3D.ghost3D(ghost.personality()).orElseThrow();
+            final int killIndex = level3D.level().energizerVictims().indexOf(ghost);
+            final Image pointsImage = level3D.uiConfig().killedGhostPointsImage(killIndex);
+            final NumberBox3D numberBox3D = createGhostPointsNumberBox3D(ghost3D, pointsImage);
+            level3D.entities().add(numberBox3D);
+            level3D.getChildren().add(numberBox3D);
+
+            final double risingHeight = (killIndex + 1) * 12;
+            final var animation = new HideGhostShowPointsAnimation3D(ghost3D, numberBox3D, risingHeight);
+            animation.animationFX().setOnFinished(_ -> {
+                level3D.entities().remove(numberBox3D);
+                level3D.getChildren().remove(numberBox3D);
+            });
+            animation.playFromStart();
         });
+    }
+
+    private NumberBox3D createGhostPointsNumberBox3D(Ghost3D ghost3D, Image pointsImage) {
+        final NumberBox3D numberBox3D = new NumberBox3D(pointsImage);
+        numberBox3D.setTranslateX(ghost3D.getTranslateX());
+        numberBox3D.setTranslateY(ghost3D.getTranslateY());
+        numberBox3D.setTranslateZ(ghost3D.getTranslateZ());
+        return numberBox3D;
     }
 
     private void onLevelComplete() {

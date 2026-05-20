@@ -14,15 +14,15 @@ import javafx.util.Duration;
 import static java.util.Objects.requireNonNull;
 
 /**
- * After a 3D ghost gets eaten, a rotating box displaying the earned points appears,
+ * A rotating box displaying the earned points for eating a ghost,
  * rises to a certain height and fades out.
  */
-public class NumberBox3DRisingAnimation {
+public class NumberBoxRisingAnimation3D {
 
     private final NumberBox3D numberBox3D;
     private final double risingHeight;
 
-    public NumberBox3DRisingAnimation(NumberBox3D numberBox3D, double risingHeight) {
+    public NumberBoxRisingAnimation3D(NumberBox3D numberBox3D, double risingHeight) {
         this.numberBox3D = requireNonNull(numberBox3D);
         this.risingHeight = risingHeight;
     }
