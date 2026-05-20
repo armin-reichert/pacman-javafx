@@ -15,21 +15,16 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
  */
 public class ArcadePacMan_StartScene extends GameScene2D {
 
-    private static class GameEventHandler extends GameScene.DefaultGameEventHandler {
-
-        public GameEventHandler(GameScene gameScene) {
-            super(gameScene);
-        }
-
-        @Override
-        public void onCreditAdded(CreditAddedEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
-        }
-    }
-
     public ArcadePacMan_StartScene(GameUI ui) {
         super(ui);
-        setGameEventHandler(new GameEventHandler(this));
+
+        final var gameEventHandler = new GameScene.DefaultGameEventHandler(this) {
+            @Override
+            public void onCreditAdded(CreditAddedEvent e) {
+                soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+            }
+        };
+        setGameEventHandler(gameEventHandler);
     }
 
     @Override
