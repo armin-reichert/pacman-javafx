@@ -11,7 +11,9 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.action.ActionBinding;
+import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
@@ -66,6 +68,8 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     };
 
     private final RandomTextPicker gameOverMessagePicker;
+
+    private final ManagedAnimation fadeInAnimation = new PlaySceneFadeInAnimation(Duration.seconds(3), this);
 
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
@@ -122,6 +126,10 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     public Optional<GameLevel> optGameLevel() {
         return gameContext().game().optGameLevel();
+    }
+
+    public ManagedAnimation fadeInAnimation() {
+        return fadeInAnimation;
     }
 
     @Override

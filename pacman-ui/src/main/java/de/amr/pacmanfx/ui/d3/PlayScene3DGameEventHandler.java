@@ -13,8 +13,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUIConstants;
-import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
-import de.amr.pacmanfx.ui.d3.animation.WallColorFlashingAnimation;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -23,7 +21,6 @@ import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import javafx.animation.Animation;
-import javafx.util.Duration;
 
 import java.util.List;
 
@@ -131,7 +128,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         }
         assertLevel3D().entities().all().forEach(e -> e.init(level));
         gameScene().replaceActionBindings(level);
-        new PlaySceneFadeInAnimation(Duration.seconds(3), gameScene()).play();
+        gameScene().fadeInAnimation().playFromStart();
     }
 
     @Override
