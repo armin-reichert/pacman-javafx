@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.GameLevelEntitySet;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.FoodLayer;
-import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUIConstants;
@@ -20,16 +19,12 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.BonusConfig;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
-import de.amr.pacmanfx.ui.d3.animation.GhostLightAnimation;
-import de.amr.pacmanfx.ui.d3.animation.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui.d3.animation.LevelCompletedAnimationShort;
-import de.amr.pacmanfx.ui.d3.animation.WallColorFlashingAnimation;
+import de.amr.pacmanfx.ui.d3.animation.*;
 import de.amr.pacmanfx.ui.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.animation.*;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
@@ -41,17 +36,12 @@ import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
-import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.Comparator;
@@ -80,60 +70,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         WALL_COLOR_FLASHING
     }
 
-    public class ManagedEnergizerParticlesAnimation3D extends ManagedAnimation {
-
-        EnergizerParticlesAnimation3D energizerParticlesAnimation3D;
-
-        public ManagedEnergizerParticlesAnimation3D() {
-            super("Energizer Particles Animation");
-            setFactory(this::createAnimationFX);
-        }
-
-        public void triggerExplosion(Point3D center) {
-            animationFX(); // ensure wrapped animation is created
-            energizerParticlesAnimation3D.triggerExplosion(center);
-        }
-
-        private Animation createAnimationFX() {
-            final Maze3D maze3D = entities3D.unique(Maze3D.class);
-            final House house = level.worldMap().terrainLayer().house();
-
-            // The 3 ghost revival positions inside the house from left to right
-            final List<Vector3f> swirlBases = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
-                .map(house::ghostRevivalTile)
-                .map(tile -> tile.scaled(TS).plus(HTS, HTS))
-                .map(pos -> new Vector3f(pos.x(), pos.y(), 0))
-                .toList();
-
-            energizerParticlesAnimation3D = new EnergizerParticlesAnimation3D(
-                particleAnimationConfig,
-                swirlBases,
-                ghostDressMaterials,
-                particlePool,
-                maze3D.particlesGroup()
-            );
-            energizerParticlesAnimation3D.setFloorCollisionTest(particle -> particle.collidesWith(maze3D.floor()));
-            energizerParticlesAnimation3D.setOutOfWorldTest(particle -> particle.pos().z() > 50); // positive z is below maze floor
-
-            final var timeline = new Timeline(new KeyFrame(Duration.millis(16.666), _ -> energizerParticlesAnimation3D.tick()));
-            timeline.setCycleCount(Animation.INDEFINITE);
-
-            return timeline;
-        }
-    }
-
     private static final Comparator<Ghost3D> BY_PERSONALITY = Comparator.comparingInt(ghost3D -> ghost3D.ghost().personality());
 
     private final GameLevel level;
     private final GameLevelEntitySet entities3D = new GameLevelEntitySet();
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final UIConfig uiConfig;
-
     private final List<PhongMaterial> ghostDressMaterials;
     private final Pool<EnergizerParticle3D> particlePool;
-
-    private final ParticleAnimationConfig particleAnimationConfig;
-
     private MessageManager3D messageManager;
 
     /**
@@ -147,7 +91,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public GameLevel3D(GameLevel level, UIConfig uiConfig, ParticleAnimationConfig particleAnimationConfig, ResourceBundle localizedTexts) {
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
-        this.particleAnimationConfig = requireNonNull(particleAnimationConfig);
         requireNonNull(localizedTexts);
 
         final WorldMapColorScheme mapColorScheme = uiConfig.colorScheme(level.worldMap());
@@ -173,7 +116,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         );
 
         // Maze3D must exist when energizer animations are created!
-        createAnimations(mapColorScheme);
+        createAnimations(mapColorScheme, particleAnimationConfig);
 
         setMouseTransparent(true); // this increases performance they say...
     }
@@ -334,12 +277,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return entities3D.all(Ghost3D.class).sorted(BY_PERSONALITY);
     }
 
-    private void createAnimations(WorldMapColorScheme colorScheme) {
+    private void createAnimations(WorldMapColorScheme colorScheme, ParticleAnimationConfig particleAnimationConfig) {
         animationRegistry.register(AnimationID.WALL_COLOR_FLASHING, new WallColorFlashingAnimation(this, colorScheme));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
-
-        animationRegistry.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, new ManagedEnergizerParticlesAnimation3D());
+        animationRegistry.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT,
+            new ManagedEnergizerParticlesAnimation3D(this, ghostDressMaterials, particlePool, particleAnimationConfig));
 
         //TODO: this is ugly and should be changed
         final var ghostLightAnimation = new GhostLightAnimation(ghosts3DByPersonality().toList());
