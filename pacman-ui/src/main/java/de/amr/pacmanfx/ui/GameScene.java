@@ -96,7 +96,7 @@ public abstract class GameScene implements Disposable {
 
     protected final GameUI ui;
 
-    private GameEventListener gameEventHandler = new DefaultGameEventListener();
+    private GameEventListener gameEventHandler;
 
     public GameScene(GameUI ui) {
         this.ui = requireNonNull(ui);

@@ -23,6 +23,7 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -97,10 +98,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     public ArcadePacMan_IntroScene(GameUI ui) {
         super(ui);
-        flow = new StateMachine<>();
-        flow.setContext(this);
-        flow.addStates(SceneState.values());
 
+        flow = new StateMachine<>(this, List.of(SceneState.values()));
         setGameEventHandler(new GameEventHandler(this));
     }
 
