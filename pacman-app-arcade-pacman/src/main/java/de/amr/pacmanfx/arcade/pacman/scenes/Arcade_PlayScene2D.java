@@ -8,21 +8,17 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
-import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
-import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import org.tinylog.Logger;
@@ -37,114 +33,15 @@ import static de.amr.pacmanfx.ui.layout.ContextMenuSupport.*;
  */
 public class Arcade_PlayScene2D extends GameScene2D {
 
-    private static class GameEventHandler extends GameScene.DefaultGameEventHandler {
-
-        public GameEventHandler(Arcade_PlayScene2D gameScene) {
-            super(gameScene);
-        }
-
-        @Override
-        public Arcade_PlayScene2D gameScene() {
-            return (Arcade_PlayScene2D) super.gameScene();
-        }
-
-        @Override
-        public void onBonusActivated(BonusActivatedEvent e) {
-            // This is the sound in Ms. Pac-Man when the bonus wanders the maze. In Pac-Man, this is a no-op.
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
-        }
-
-        @Override
-        public void onBonusEaten(BonusEatenEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
-        }
-
-        @Override
-        public void onBonusExpired(BonusExpiredEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
-        }
-
-        @Override
-        public void onCreditAdded(CreditAddedEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
-        }
-
-        @Override
-        public void onGameContinued(GameContinuedEvent e) {
-            e.game().optGameLevel().ifPresent(level -> gameScene().resetActorAnimations(level));
-        }
-
-        @Override
-        public void onGameStarted(GameStartedEvent e) {
-            final Game game = e.game();
-            final boolean silent = game.isDemoLevelRunning() || game.flow().state() instanceof TestState;
-            if (!silent) {
-                gameScene().soundEffects().ifPresent(GameSoundEffects::playGameReadySound);
-            }
-        }
-
-        @Override
-        public void onGameStateChange(GameStateChangeEvent e) {
-            final Game game = e.game();
-            if (e.newState() == Arcade_GameState.LEVEL_COMPLETE) {
-                final GameLevel level = game.optGameLevel().orElseThrow();
-                gameScene().soundEffects().ifPresent(GameSoundEffects::stopAll);
-                gameScene().levelCompletedAnimation = new LevelCompletedAnimation(level, () -> level.game().flow().state().expire());
-                gameScene().levelCompletedAnimation.play();
-            } else if (e.newState() == Arcade_GameState.GAME_OVER) {
-                gameScene().soundEffects().ifPresent(GameSoundEffects::playGameOverSound);
-                game.hud().credit(true);
-            }
-        }
-
-        @Override
-        public void onGhostEaten(GhostEatenEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
-        }
-
-        @Override
-        public void onLevelCreated(LevelCreatedEvent e) {
-            gameScene().adaptToGameLevel(e.level());
-        }
-
-        @Override
-        public void onPacDead(PacDeadEvent e) {
-            // Trigger end of game state PACMAN_DYING after dying animation has finished
-            e.game().flow().state().expire();
-        }
-
-        @Override
-        public void onPacDying(PacDyingEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
-        }
-
-        @Override
-        public void onPacEatsFood(PacEatsFoodEvent e) {
-            final long tick = gameScene().gameContext().clock().tickCount();
-            gameScene().soundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
-        }
-
-        @Override
-        public void onPacGetsPower(PacGetsPowerEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
-        }
-
-        @Override
-        public void onPacLostPower(PacLostPowerEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
-        }
-
-        @Override
-        public void onSpecialScore(SpecialScoreEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
-        }
-    }
-
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public Arcade_PlayScene2D(GameUI ui) {
         super(ui);
-        setGameEventHandler(new GameEventHandler(this));
+        setGameEventHandler(new Arcade_PlayScene2DGameEventHandler(this));
+    }
+
+    public LevelCompletedAnimation levelCompletedAnimation() {
+        return levelCompletedAnimation;
     }
 
     @Override
@@ -203,7 +100,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onEnteredFrom3DScene() {
-        gameContext().game().optGameLevel().ifPresent(this::adaptToGameLevel);
+        gameContext().game().optGameLevel().ifPresent(this::acceptGameLevel);
     }
 
     // Others
@@ -217,9 +114,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
      * If the 3D play scene is shown when the game level gets created, the onLevelCreated() method of this
      * scene is not called, so we have to accept the game level again when switching from the 3D scene to this one.
      */
-    private void adaptToGameLevel(GameLevel level) {
-        ui.soundManager().setEnabled(!level.isDemoLevel()); //TODO is this needed?
-
+    protected void acceptGameLevel(GameLevel level) {
         actionBindings.addAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         if (!level.isDemoLevel()) {
             actionBindings.addAll(GameUIConstants.STEERING_ACTION_BINDINGS);
@@ -227,7 +122,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
         }
         actionBindings.assignToKeyboard();
 
-        Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
+        ui.soundManager().setEnabled(!level.isDemoLevel()); //TODO is this needed?
+        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameContext().game().flow().state().expire());
+
+        Logger.info("Game scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
     // Private
@@ -241,7 +139,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         game.hud().setVisibleLifeCount(count);
     }
 
-    private void resetActorAnimations(GameLevel level) {
+    protected void resetActorAnimations(GameLevel level) {
         level.pac().animations().selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
