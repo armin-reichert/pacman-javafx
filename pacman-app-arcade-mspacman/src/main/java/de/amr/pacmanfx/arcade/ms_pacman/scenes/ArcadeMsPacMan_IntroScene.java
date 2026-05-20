@@ -36,18 +36,6 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
  */
 public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
-    private static class GameEventHandler extends GameScene.DefaultGameEventHandler {
-
-        public GameEventHandler(GameScene gameScene) {
-            super(gameScene);
-        }
-
-        @Override
-        public void onCreditAdded(CreditAddedEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
-        }
-    }
-
     public static final int TITLE_X          = TS * 10;
     public static final int TITLE_Y          = TS * 8;
     public static final int TOP_Y            = TS * 11;
@@ -67,7 +55,15 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     public ArcadeMsPacMan_IntroScene(GameUI ui) {
         super(ui);
-        setGameEventHandler(new GameEventHandler(this));
+
+        final var gameEventHandler = new GameScene.DefaultGameEventHandler(this) {
+            @Override
+            public void onCreditAdded(CreditAddedEvent e) {
+                soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+            }
+        };
+        setGameEventHandler(gameEventHandler);
+
         sceneController = new StateMachine<>(this, List.of(SceneState.values()));
     }
 

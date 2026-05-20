@@ -36,19 +36,6 @@ import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
  */
 public class ArcadePacMan_IntroScene extends GameScene2D {
 
-    private static class GameEventHandler extends GameScene.DefaultGameEventHandler {
-
-        public GameEventHandler(ArcadePacMan_IntroScene gameScene) {
-            super(gameScene);
-        }
-
-        @Override
-        public void onCreditAdded(CreditAddedEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
-        }
-
-    }
-
     public static final int NUM_GHOSTS = 4;
 
     // State STARTING
@@ -100,7 +87,14 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         super(ui);
 
         flow = new StateMachine<>(this, List.of(SceneState.values()));
-        setGameEventHandler(new GameEventHandler(this));
+
+        final var gameEventHandler = new GameScene.DefaultGameEventHandler(this) {
+            @Override
+            public void onCreditAdded(CreditAddedEvent e) {
+                soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+            }
+        };
+        setGameEventHandler(gameEventHandler);
     }
 
     @Override
