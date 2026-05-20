@@ -509,19 +509,16 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().addAll(ghostLightAnimation.light());
     }
 
-    protected Animation createPacDyingAnimationSeq(Pac3D pac3D, Runnable resumeGame) {
+    protected Animation createPacDyingAnimationSeq(Pac3D pac3D) {
         return new SequentialTransition(
             Ufx.doNow(() -> {
                 pac3D.update(level);
                 animationRegistry.animation(Pac3D.AnimationID.CHEWING).stop();
                 animationRegistry.animation(Pac3D.AnimationID.MOVING).stop();
             }),
-
             Ufx.pauseSecThen(1.5, () -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound)),
-
             animationRegistry.animation(Pac3D.AnimationID.DYING).animationFX(),
-
-            Ufx.pauseSecThen(0.5, resumeGame)
+            Ufx.pauseSec(0.5)
         );
     }
 

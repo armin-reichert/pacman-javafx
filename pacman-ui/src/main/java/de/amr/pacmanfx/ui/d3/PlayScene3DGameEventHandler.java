@@ -22,6 +22,7 @@ import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
+import javafx.animation.Animation;
 import javafx.util.Duration;
 
 import java.util.List;
@@ -56,7 +57,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
             handleTestState();
         }
         else if (STARTING_GAME_OR_LEVEL.matches(newGameState)) {
-            onStartingGame();
+            onStartingGameOrLevel();
         }
         else if (LEVEL_PLAYING.matches(newGameState)) {
             onHuntingStart();
@@ -177,14 +178,13 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     // Private state-specific handlers
 
-    private void onStartingGame() {
-        gameScene().optGameLevel3D().ifPresent(level3D -> {
-            level3D.entities().all().forEach(entity -> entity.init(level3D.level()));
-        });
+    private void onStartingGameOrLevel() {
+        gameScene().optGameLevel3D()
+            .ifPresent(level3D -> level3D.entities().all().forEach(entity -> entity.init(level3D.level())));
     }
 
     private void onHuntingStart() {
-        GameLevel3D level3D = assertLevel3D();
+        final GameLevel3D level3D = assertLevel3D();
         level3D.entities().unique(Pac3D.class).init(level3D.level());
         level3D.entities().all(Ghost3D.class).forEach(ghost3D -> ghost3D.init(level3D.level()));
         level3D.entities().all(Energizer3D.class).forEach(Energizer3D::startPumping);
@@ -192,20 +192,22 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         level3D.animationRegistry().animation(GameLevel3D.AnimationID.GHOST_LIGHT).playFromStart();
     }
 
-    private void onPacManDying(State<Game> dyingState) {
-        GameLevel3D level3D = assertLevel3D();
+    private void onPacManDying(State<Game> gameState) {
+        final GameLevel3D level3D = assertLevel3D();
         final Pac3D pac3D = level3D.entities().unique(Pac3D.class);
 
         level3D.optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
         // Do not stop all animations!
         level3D.animationRegistry().animation(GameLevel3D.AnimationID.GHOST_LIGHT).stop();
-        level3D.animationRegistry().animation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING, WallColorFlashingAnimation.class).stop();
+        level3D.animationRegistry().animation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING).stop();
         level3D.entities().all(Ghost3D.class).forEach(Ghost3D::stopAllAnimations);
-        level3D.entities().first(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
+        level3D.entities().all(Bonus3D.class).forEach(Bonus3D::lookExpired);
 
-        dyingState.lock();
-        level3D.createPacDyingAnimationSeq(pac3D, dyingState::expire).play();
+        final Animation animation = level3D.createPacDyingAnimationSeq(pac3D);
+        animation.setOnFinished(_ -> gameState.expire());
+        gameState.lock();
+        animation.play();
     }
 
     private void onEatingGhost() {
