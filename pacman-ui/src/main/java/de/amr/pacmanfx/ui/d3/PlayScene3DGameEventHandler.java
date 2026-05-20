@@ -292,8 +292,39 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         level3D.cleanupFoodAndParticles();
         level3D.entities().first(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         level3D.messageManager().hideMessage();
-        level3D.playLevelEndAnimation(maze3D, gameState);
+
+        playLevelEndAnimation(level3D.animationRegistry(), maze3D, gameState, level3D.level().cutSceneNumber() != 0);
     }
+
+    private void playLevelEndAnimation(AnimationRegistry animationRegistry, Maze3D maze3D, State<Game> gameState, boolean cutSceneAfter) {
+        gameState.lock();
+
+        final PerspectiveID perspectiveBeforeAnimation = GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.get();
+
+        final Animation resetCameraPerspective = pauseSecThen(2, () -> {
+            GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
+            maze3D.wallBaseHeightProperty().unbind();
+        });
+
+        final Animation levelCompletion = animationRegistry.animation(
+            cutSceneAfter ? GameLevel3D.AnimationID.LEVEL_COMPLETED_SHORT : GameLevel3D.AnimationID.LEVEL_COMPLETED_FULL
+        ).animationFX();
+
+        final Animation restoreCameraPerspective = Ufx.pauseSecThen(0.25, () -> {
+            GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(perspectiveBeforeAnimation);
+            maze3D.wallBaseHeightProperty().bind(GameUIConstants.PROPERTY_3D_WALL_HEIGHT);
+        });
+
+        final var seq = new SequentialTransition(
+            resetCameraPerspective,
+            levelCompletion,
+            restoreCameraPerspective
+        );
+        seq.setOnFinished(_ -> gameState.expire());
+
+        seq.play();
+    }
+
 
     private void onGameOver() {
         GameLevel3D level3D = assertLevel3D();

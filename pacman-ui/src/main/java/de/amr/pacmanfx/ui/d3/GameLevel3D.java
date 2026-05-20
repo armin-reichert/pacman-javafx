@@ -4,11 +4,9 @@
 
 package de.amr.pacmanfx.ui.d3;
 
-import de.amr.basics.fsm.State;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.Validations;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntitySet;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -26,12 +24,10 @@ import de.amr.pacmanfx.ui.d3.animation.GhostLightAnimation;
 import de.amr.pacmanfx.ui.d3.animation.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.d3.animation.LevelCompletedAnimationShort;
 import de.amr.pacmanfx.ui.d3.animation.WallColorFlashingAnimation;
-import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -47,7 +43,6 @@ import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
-import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -69,7 +64,7 @@ import static de.amr.basics.math.RandomNumberSupport.RANDOM_GENERATOR;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.uilib.Ufx.*;
+import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -360,35 +355,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final var ghostLightAnimation = new GhostLightAnimation(ghosts3DByPersonality().toList());
         animationRegistry.register(AnimationID.GHOST_LIGHT, ghostLightAnimation);
         getChildren().addAll(ghostLightAnimation.light());
-    }
-
-    /**
-     * Plays the level completion animation sequence and resets game timer.
-     *
-     * @param maze3D the 3D maze to be animated
-     * @param gameState the current game state (used to determine cut-scene follow-up)
-     */
-    public void playLevelEndAnimation(Maze3D maze3D, State<Game> gameState) {
-        final boolean cutScene = level.cutSceneNumber() != 0;
-        final PerspectiveID perspectiveBeforeAnimation = GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.get();
-
-        final var seq = new SequentialTransition(
-            pauseSecThen(2, () -> {
-                GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
-                maze3D.wallBaseHeightProperty().unbind();
-            }),
-            animationRegistry.animation(cutScene ? AnimationID.LEVEL_COMPLETED_SHORT: AnimationID.LEVEL_COMPLETED_FULL).animationFX(),
-            pauseSec(0.25)
-        );
-
-        seq.setOnFinished(_ -> {
-            GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(perspectiveBeforeAnimation);
-            maze3D.wallBaseHeightProperty().bind(GameUIConstants.PROPERTY_3D_WALL_HEIGHT);
-            gameState.expire();
-        });
-
-        gameState.lock();
-        seq.play();
     }
 
     // Private area, no trespassing
