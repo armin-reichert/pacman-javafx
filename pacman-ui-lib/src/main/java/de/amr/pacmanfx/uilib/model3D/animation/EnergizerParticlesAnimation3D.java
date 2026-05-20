@@ -151,10 +151,29 @@ public class EnergizerParticlesAnimation3D implements Disposable {
 
     private void updateStateAttracted(EnergizerParticle3D particle) {
         final Vector3f target = swirlBases.get(particle.targetSwirlIndex());
-        final boolean targetReached = moveParticleTowardsTarget(particle, target);
-        if (targetReached) {
+        if (particleReachedTarget(particle, target)) {
             onParticleReachedTarget(particle);
         }
+        else {
+             moveParticle(particle, config.attraction().acceleration());
+        }
+    }
+
+    private boolean particleReachedTarget(EnergizerParticle3D particle, Vector3f target) {
+        final double distanceToTarget = particle.pos().euclideanDist(target);
+        final float speed = particle.velocity().length();
+        return (distanceToTarget < speed);
+    }
+
+    private void moveParticle(EnergizerParticle3D particle, float acceleration) {
+        particle.move();
+        final float newSpeed = particle.velocity().length() + acceleration;
+        particle.setVelocity(particle.velocity().setToLength(newSpeed));
+    }
+
+    private void onParticleReachedTarget(EnergizerParticle3D particle) {
+        particles.remove(particle);
+        swirlAnimations.get(particle.targetSwirlIndex()).addParticle(particle);
     }
 
     /* When a particle lands on the maze floor, it is resized to a uniform size and gets attracted by a randomly
@@ -179,23 +198,5 @@ public class EnergizerParticlesAnimation3D implements Disposable {
 
         particle.shape().setMaterial(ghostDressMaterials.get(personality));
         particle.shape().setRadius(0.5 * config.attraction().particleSize());
-    }
-
-    private boolean moveParticleTowardsTarget(EnergizerParticle3D particle, Vector3f target) {
-        final double distanceToTarget = particle.pos().euclideanDist(target);
-        final float speed = particle.velocity().length();
-        if (distanceToTarget < speed) {
-            return true; // target reached
-        }
-        particle.move();
-        final float newSpeed = speed + config.attraction().acceleration();
-        particle.setVelocity(particle.velocity().setToLength(newSpeed));
-        final double newDistanceToTarget = particle.pos().euclideanDist(target);
-        return newDistanceToTarget < newSpeed;
-    }
-
-    private void onParticleReachedTarget(EnergizerParticle3D particle) {
-        this.particles.remove(particle);
-        swirlAnimations.get(particle.targetSwirlIndex()).addParticle(particle);
     }
 }
