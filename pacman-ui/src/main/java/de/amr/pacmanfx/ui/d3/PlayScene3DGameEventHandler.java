@@ -6,10 +6,10 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.RandomNumberSupport;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUIConstants;
@@ -17,19 +17,25 @@ import de.amr.pacmanfx.ui.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.NumberBox3D;
+import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
 import javafx.animation.Animation;
+import javafx.animation.SequentialTransition;
+import javafx.geometry.Point3D;
 import javafx.scene.image.Image;
 
-import java.util.List;
-
 import static de.amr.pacmanfx.model.CanonicalGameState.*;
+import static de.amr.pacmanfx.uilib.Ufx.pauseSecThen;
 
 public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandler {
+
+    public static final double PELLET_EATING_DELAY_SEC = 0.05;
 
     public PlayScene3DGameEventHandler(PlayScene3D playScene3D) {
         super(playScene3D);
@@ -138,18 +144,34 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         if (event.allPellets()) {
             assertLevel3D().removeAllPellets3D();
         } else {
+            final Vector2i tile = event.pac().tile();
             final GameLevel3D level3D = assertLevel3D();
-            final long tick = gameContext().clock().tickCount();
-            level3D.eatFoodAtTile(event.pac().tile());
-            soundEffects().ifPresent(sfx -> {
-                if (event.energizer()) {
-                    sfx.playEnergizerExplosion();
-                } else {
-                    sfx.playPacMunchingSound(tick);
-                }
-            });
+            if (event.energizer()) {
+                level3D.energizer3DAt(tile).ifPresent(energizer3D -> {
+                    energizer3D.stopPumping();
+                    energizer3D.hide();
+                    triggerEnergizerExplosion(level3D, energizer3D.shape().localToScene(Point3D.ZERO));
+                });
+                soundEffects().ifPresent(GameSoundEffects::playEnergizerExplosion);
+            }
+            else {
+                level3D.pellet3DAtTile(tile).ifPresent(pellet3D -> removePelletAfterDelay(level3D, pellet3D));
+                final long tick = gameContext().clock().tickCount();
+                soundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
+            }
         }
     }
+
+    private void triggerEnergizerExplosion(GameLevel3D level3D, Point3D center) {
+        final var particlesAnimation = level3D.animationRegistry()
+            .animation(GameLevel3D.AnimationID.ENERGIZER_PARTICLES_MOVEMENT, GameLevel3D.ManagedEnergizerParticlesAnimation3D.class);
+        particlesAnimation.triggerExplosion(center);
+    }
+
+    private void removePelletAfterDelay(GameLevel3D level3D, Pellet3D pellet3D) {
+        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> level3D.getChildren().remove(pellet3D.shape())).play();
+    }
+
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent event) {
@@ -205,10 +227,28 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         level3D.entities().all(Bonus3D.class).forEach(Bonus3D::lookExpired);
 
         gameState.lock();
-        final Animation dyingAnimationSeq = level3D.createPacDyingAnimationSeq(pac3D);
+        final Animation dyingAnimationSeq = createPacDyingAnimationSeq(level3D.animationRegistry(), pac3D, level3D.level());
         dyingAnimationSeq.setOnFinished(_ -> gameState.expire());
         dyingAnimationSeq.play();
     }
+
+    private Animation createPacDyingAnimationSeq(AnimationRegistry animationRegistry, Pac3D pac3D, GameLevel level) {
+        final Animation pacStopping = Ufx.doNow(() -> {
+            pac3D.update(level);
+            animationRegistry.animation(Pac3D.AnimationID.CHEWING).stop();
+            animationRegistry.animation(Pac3D.AnimationID.MOVING).stop();
+        });
+
+        final Animation pacDying = animationRegistry.animation(Pac3D.AnimationID.DYING).animationFX();
+
+        return new SequentialTransition(
+            pacStopping,
+            Ufx.pauseSecThen(1.5, () -> soundEffects().ifPresent(GameSoundEffects::playPacDeadSound)),
+            pacDying,
+            Ufx.pauseSec(0.5)
+        );
+    }
+
 
     private void onEatingGhost() {
         final GameLevel3D level3D = assertLevel3D();

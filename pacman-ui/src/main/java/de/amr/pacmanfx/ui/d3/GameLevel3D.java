@@ -85,7 +85,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         WALL_COLOR_FLASHING
     }
 
-    private class ManagedEnergizerParticlesAnimation3D extends ManagedAnimation {
+    public class ManagedEnergizerParticlesAnimation3D extends ManagedAnimation {
 
         EnergizerParticlesAnimation3D energizerParticlesAnimation3D;
 
@@ -272,8 +272,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Food (pellets and energizers)
 
-    public static final double PELLET_EATING_DELAY_SEC = 0.05;
-
     private void createFood3D() {
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         final Maze3D maze3D = entities3D.unique(Maze3D.class);
@@ -308,37 +306,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .forEach(entities3D::add);
     }
 
-    protected void eatFoodAtTile(Vector2i tile) {
-        final boolean energizerEaten = level.worldMap().foodLayer().isEnergizerTile(tile);
-        if (energizerEaten) {
-            energizer3DAt(tile).ifPresent(energizer3D -> {
-                Logger.info("Eat energizer 3D at tile " + tile);
-                energizer3D.stopPumping();
-                energizer3D.hide();
-                triggerEnergizerExplosion(energizer3D.shape().localToScene(Point3D.ZERO));
-            });
-        } else {
-            pellet3DAtTile(tile).ifPresent(this::removePelletAfterDelay);
-        }
-    }
-
-    private void triggerEnergizerExplosion(Point3D center) {
-        final ManagedEnergizerParticlesAnimation3D particlesAnimation = animationRegistry
-            .animation(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, ManagedEnergizerParticlesAnimation3D.class);
-        particlesAnimation.triggerExplosion(center);
-    }
-
-    private Optional<Energizer3D> energizer3DAt(Vector2i tile) {
+    protected Optional<Energizer3D> energizer3DAt(Vector2i tile) {
         return entities3D.allWhere(Energizer3D.class, e3D -> tile.equals(e3D.tile())).findFirst();
     }
 
-    private Optional<Pellet3D> pellet3DAtTile(Vector2i tile) {
+    protected Optional<Pellet3D> pellet3DAtTile(Vector2i tile) {
         return entities3D.allWhere(Pellet3D.class, p3D -> tile.equals(p3D.tile())).findFirst();
     }
 
-    private void removePelletAfterDelay(Pellet3D pellet3D) {
-        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> getChildren().remove(pellet3D.shape())).play();
-    }
 
     /**
      * Removes all pellet visualizations (used when all pellets are eaten at once).
@@ -385,19 +360,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final var ghostLightAnimation = new GhostLightAnimation(ghosts3DByPersonality().toList());
         animationRegistry.register(AnimationID.GHOST_LIGHT, ghostLightAnimation);
         getChildren().addAll(ghostLightAnimation.light());
-    }
-
-    protected Animation createPacDyingAnimationSeq(Pac3D pac3D) {
-        return new SequentialTransition(
-            Ufx.doNow(() -> {
-                pac3D.update(level);
-                animationRegistry.animation(Pac3D.AnimationID.CHEWING).stop();
-                animationRegistry.animation(Pac3D.AnimationID.MOVING).stop();
-            }),
-            Ufx.pauseSecThen(1.5, () -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound)),
-            animationRegistry.animation(Pac3D.AnimationID.DYING).animationFX(),
-            Ufx.pauseSec(0.5)
-        );
     }
 
     /**
