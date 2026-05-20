@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUIConstants;
+import de.amr.pacmanfx.ui.d3.animation.HideGhostShowPointsAnimation;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -212,7 +213,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         final List<Ghost> currentlyKilledGhosts = game().simulationStep().ghostsKilled;
         currentlyKilledGhosts.forEach(ghost -> {
             final int killedIndex = level3D.level().energizerVictims().indexOf(ghost);
-            level3D.playHideGhostShowPointsAnimation(ghost.personality(), killedIndex);
+            new HideGhostShowPointsAnimation(level3D, ghost.personality(), killedIndex).playFromStart();
         });
     }
 

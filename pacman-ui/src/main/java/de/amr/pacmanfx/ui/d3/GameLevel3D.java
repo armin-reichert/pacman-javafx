@@ -44,13 +44,14 @@ import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
-import de.amr.pacmanfx.uilib.model3D.world.NumberBox3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
-import javafx.animation.*;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Timeline;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
@@ -243,7 +244,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Private area, no trespassing
 
-    protected Optional<Ghost3D> ghost3D(byte personality) {
+    public Optional<Ghost3D> ghost3D(byte personality) {
         Validations.requireValidGhostPersonality(personality);
         return entities3D.allWhere(Ghost3D.class, ghost3D -> ghost3D.ghost().personality() == personality).findFirst();
     }
@@ -355,39 +356,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             uiConfig.bonusValueImage(bonus.symbol()),  config.bonusPointsWidth());
         entities3D.add(bonus3D);
         return bonus3D;
-    }
-
-    protected void playHideGhostShowPointsAnimation(byte killedGhostPersonality, int killIndex) {
-        final Ghost3D ghost3D = ghost3D(killedGhostPersonality).orElseThrow();
-        final Image pointsImage = uiConfig.killedGhostPointsImage(killIndex);
-
-        final NumberBox3D numberBox3D = new NumberBox3D(pointsImage);
-        numberBox3D.setTranslateX(ghost3D.getTranslateX());
-        numberBox3D.setTranslateY(ghost3D.getTranslateY());
-        numberBox3D.setTranslateZ(ghost3D.getTranslateZ());
-
-        entities3D.add(numberBox3D);
-        getChildren().add(numberBox3D);
-
-        //TODO Wrap into ManagedAnimation
-
-        final Animation numberBoxRising = new NumberBox3DRisingAnimation(numberBox3D, (killIndex + 1) * 12).createAnimation();
-
-        numberBoxRising.setOnFinished(_ -> {
-            entities3D.remove(numberBox3D);
-            getChildren().remove(numberBox3D);
-            //TODO why do I get "duplicate children added" exceptions?
-            if (!getChildren().contains(ghost3D)) {
-                getChildren().add(ghost3D);
-            }
-        });
-
-        final Animation hideGhost3DForOneSecond = new Timeline(
-            new KeyFrame(Duration.ZERO,       _ -> getChildren().remove(ghost3D)),
-            new KeyFrame(Duration.seconds(1), _ -> getChildren().add(ghost3D))
-        );
-
-        new ParallelTransition(hideGhost3DForOneSecond, numberBoxRising).play();
     }
 
     // Food (pellets and energizers)
