@@ -10,6 +10,8 @@ import de.amr.pacmanfx.event.DefaultGameEventListener;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.GenericChangeEvent;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
+import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
 import de.amr.pacmanfx.ui.input.Input;
@@ -78,12 +80,28 @@ public abstract class GameScene implements Disposable {
         }
 
         public GameUI ui() {
-            return gameScene().ui();
+            return gameScene.ui();
+        }
+
+        public GameContext gameContext() {
+            return gameScene.gameContext();
+        }
+
+        public Game game() {
+            return gameContext().game();
+        }
+
+        public Optional<GameLevel> optGameLevel() {
+            return gameContext().game().optGameLevel();
+        }
+
+        public Optional<GameSoundEffects> soundEffects() {
+            return gameScene.soundEffects();
         }
 
         @Override
         public void onStopAllSounds(StopAllSoundsEvent event) {
-            gameScene.soundEffects().ifPresent(GameSoundEffects::stopAll);
+            soundEffects().ifPresent(GameSoundEffects::stopAll);
         }
 
         @Override

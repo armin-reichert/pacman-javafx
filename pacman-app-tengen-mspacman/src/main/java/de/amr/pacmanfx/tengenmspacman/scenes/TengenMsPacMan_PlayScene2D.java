@@ -4,25 +4,20 @@
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
-import de.amr.pacmanfx.model.GameLevelMessageType;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
-import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.input.Input;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.beans.property.DoubleProperty;
@@ -59,120 +54,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
-    private static class GameEventHandler extends GameScene.DefaultGameEventHandler {
-
-        public GameEventHandler(GameScene gameScene) {
-            super(gameScene);
-        }
-
-        @Override
-        public TengenMsPacMan_PlayScene2D gameScene() {
-            return (TengenMsPacMan_PlayScene2D) super.gameScene();
-        }
-
-        @Override
-        public void onBonusActivated(BonusActivatedEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
-        }
-
-        @Override
-        public void onBonusEaten(BonusEatenEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
-        }
-
-        @Override
-        public void onBonusExpired(BonusExpiredEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
-        }
-
-        @Override
-        public void onGameContinued(GameContinuedEvent e) {
-            final TengenMsPacMan_GameModel game = gameScene().gameContext().game();
-            game.optGameLevel().ifPresent(level -> {
-                gameScene().resetAnimations(level);
-                game.showMessage(level, GameLevelMessageType.READY);
-                gameScene().dynamicCamera.playIntroSequence();
-            });
-        }
-
-        @Override
-        public void onGameStarted(GameStartedEvent e) {
-            final Game game = e.game();
-            final boolean silent = game.isDemoLevelRunning() || game.flow().state() instanceof TestState;
-            if (!silent) {
-                gameScene().soundEffects().ifPresent(GameSoundEffects::playGameReadySound);
-            }
-        }
-
-        @Override
-        public void onGameStateChange(GameStateChangeEvent e) {
-            final Game game = gameScene().gameContext().game();
-            switch (e.newState()) {
-                case TengenMsPacMan_GameState.LEVEL_COMPLETE -> {
-                    final GameLevel level = game.optGameLevel().orElseThrow();
-                    gameScene().soundEffects().ifPresent(GameSoundEffects::stopAll);
-                    gameScene().playLevelCompleteAnimation(level);
-                }
-                case TengenMsPacMan_GameState.GAME_OVER -> {
-                    final GameLevel level = game.optGameLevel().orElseThrow();
-                    gameScene().soundEffects().ifPresent(GameSoundEffects::stopAll);
-                    gameScene().dynamicCamera.enterManualMode();
-                    gameScene().dynamicCamera.setToTopPosition();
-                    level.optMessage().ifPresent(message -> gameScene().startGameOverMessageAnimation(message));
-                }
-                default -> {}
-            }
-        }
-
-        @Override
-        public void onGhostEaten(GhostEatenEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
-        }
-
-        @Override
-        public void onLevelCreated(LevelCreatedEvent e) {
-            gameScene().adaptToGameLevel(e.level());
-        }
-
-        @Override
-        public void onLevelStarted(LevelStartedEvent e) {
-            e.game().optGameLevel().ifPresent(level -> gameScene().resetAnimations(level));
-            gameScene().dynamicCamera.playIntroSequence();
-        }
-
-        @Override
-        public void onPacDead(PacDeadEvent e) {
-            e.game().flow().state().expire();
-        }
-
-        @Override
-        public void onPacDying(PacDyingEvent e) {
-            gameScene().dynamicCamera.enterManualMode();
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
-        }
-
-        @Override
-        public void onPacEatsFood(PacEatsFoodEvent e) {
-            final long tick = gameScene().gameContext().clock().tickCount();
-            gameScene().soundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
-        }
-
-        @Override
-        public void onPacGetsPower(PacGetsPowerEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
-        }
-
-        @Override
-        public void onPacLostPower(PacLostPowerEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
-        }
-
-        @Override
-        public void onSpecialScore(SpecialScoreEvent e) {
-            gameScene().soundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
-        }
-    }
-
     public static final Vector2i DEFAULT_SIZE = new Vector2i(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
 
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SCREEN_HEIGHT);
@@ -188,7 +69,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     public TengenMsPacMan_PlayScene2D(GameUI ui) {
         super(ui);
 
-        setGameEventHandler(new GameEventHandler(this));
+        setGameEventHandler(new TengenMsPacMan_PlayScene2DGameEventHandler(this));
 
         fixedCamera = new PerspectiveCamera(false);
 
@@ -225,7 +106,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     public void onEnteredFrom3DScene() {
         final Game game = gameContext().game();
         game.hud().levelCounter(true).livesCounter(true).show();
-        game.optGameLevel().ifPresent(this::adaptToGameLevel);
+        game.optGameLevel().ifPresent(this::acceptGameLevel);
     }
 
     @Override
@@ -317,7 +198,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     // private
 
-    private void adaptToGameLevel(GameLevel level) {
+    protected void acceptGameLevel(GameLevel level) {
         dynamicCamera.enterTrackingMode();
         dynamicCamera.updateRange(level.worldMap());
 
@@ -358,19 +239,19 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         game.hud().levelNumber(game.mapCategory() != MapCategory.ARCADE);
     }
 
-    private void playLevelCompleteAnimation(GameLevel level) {
+    protected void playLevelCompleteAnimation(GameLevel level) {
         levelCompletedAnimation = new LevelCompletedAnimation(level, () -> level.game().flow().state().expire());
         levelCompletedAnimation.play();
     }
 
-    private void startGameOverMessageAnimation(GameLevelMessage message) {
+    protected void startGameOverMessageAnimation(GameLevelMessage message) {
         if (message instanceof MovingGameLevelMessage movingMessage) {
             double messageWidth = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, Font.font(BaseRenderer.arcadeFont().getFamily(), TS));
             movingMessage.startMovement(unscaledSceneSize().x(), messageWidth);
         }
     }
 
-    private void resetAnimations(GameLevel level) {
+    protected void resetAnimations(GameLevel level) {
         final TengenMsPacMan_GameModel game = gameContext().game();
         level.pac().selectAnimation(game.isBoosterActive()
             ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER

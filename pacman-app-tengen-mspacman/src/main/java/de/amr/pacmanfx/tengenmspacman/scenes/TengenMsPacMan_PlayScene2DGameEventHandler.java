@@ -2,28 +2,35 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.pacman.scenes;
+package de.amr.pacmanfx.tengenmspacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.event.*;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameLevelMessageType;
 import de.amr.pacmanfx.model.test.TestState;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
-public class Arcade_PlayScene2DGameEventHandler extends GameScene.DefaultGameEventHandler {
+public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.DefaultGameEventHandler {
 
-    public Arcade_PlayScene2DGameEventHandler(Arcade_PlayScene2D gameScene) {
+    public TengenMsPacMan_PlayScene2DGameEventHandler(GameScene gameScene) {
         super(gameScene);
     }
 
     @Override
-    public Arcade_PlayScene2D gameScene() {
-        return (Arcade_PlayScene2D) super.gameScene();
+    public TengenMsPacMan_PlayScene2D gameScene() {
+        return (TengenMsPacMan_PlayScene2D) super.gameScene();
+    }
+
+    @Override
+    public TengenMsPacMan_GameModel game() {
+        return (TengenMsPacMan_GameModel) super.game();
     }
 
     @Override
     public void onBonusActivated(BonusActivatedEvent e) {
-        // This is the sound in Ms. Pac-Man when the bonus wanders the maze. In Pac-Man, this is a no-op.
         soundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
 
@@ -38,13 +45,12 @@ public class Arcade_PlayScene2DGameEventHandler extends GameScene.DefaultGameEve
     }
 
     @Override
-    public void onCreditAdded(CreditAddedEvent e) {
-        soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
-    }
-
-    @Override
     public void onGameContinued(GameContinuedEvent e) {
-        optGameLevel().ifPresent(level -> gameScene().resetActorAnimations(level));
+        optGameLevel().ifPresent(level -> {
+            gameScene().resetAnimations(level);
+            gameScene().dynamicCamera().playIntroSequence();
+            game().showMessage(level, GameLevelMessageType.READY);
+        });
     }
 
     @Override
@@ -57,12 +63,20 @@ public class Arcade_PlayScene2DGameEventHandler extends GameScene.DefaultGameEve
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
-        if (e.newState() == Arcade_GameState.LEVEL_COMPLETE) {
-            soundEffects().ifPresent(GameSoundEffects::stopAll);
-            gameScene().levelCompletedAnimation().play();
-        } else if (e.newState() == Arcade_GameState.GAME_OVER) {
-            soundEffects().ifPresent(GameSoundEffects::playGameOverSound);
-            game().hud().credit(true);
+        switch (e.newState()) {
+            case TengenMsPacMan_GameState.LEVEL_COMPLETE -> {
+                final GameLevel level = optGameLevel().orElseThrow();
+                soundEffects().ifPresent(GameSoundEffects::stopAll);
+                gameScene().playLevelCompleteAnimation(level);
+            }
+            case TengenMsPacMan_GameState.GAME_OVER -> {
+                final GameLevel level = optGameLevel().orElseThrow();
+                soundEffects().ifPresent(GameSoundEffects::stopAll);
+                gameScene().dynamicCamera().enterManualMode();
+                gameScene().dynamicCamera().setToTopPosition();
+                level.optMessage().ifPresent(message -> gameScene().startGameOverMessageAnimation(message));
+            }
+            default -> {}
         }
     }
 
@@ -77,13 +91,19 @@ public class Arcade_PlayScene2DGameEventHandler extends GameScene.DefaultGameEve
     }
 
     @Override
+    public void onLevelStarted(LevelStartedEvent e) {
+        optGameLevel().ifPresent(level -> gameScene().resetAnimations(level));
+        gameScene().dynamicCamera().playIntroSequence();
+    }
+
+    @Override
     public void onPacDead(PacDeadEvent e) {
-        // Trigger end of game state PACMAN_DYING after dying animation has finished
         game().flow().state().expire();
     }
 
     @Override
     public void onPacDying(PacDyingEvent e) {
+        gameScene().dynamicCamera().enterManualMode();
         soundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
     }
 
