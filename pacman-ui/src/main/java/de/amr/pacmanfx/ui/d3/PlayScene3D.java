@@ -19,6 +19,8 @@ import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
 import de.amr.pacmanfx.uilib.model3D.world.Scores3D;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.*;
 import javafx.scene.control.ContextMenu;
@@ -42,10 +44,10 @@ import static java.util.Objects.requireNonNull;
 
 public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
+    public final DoubleProperty scoreOpacity = new SimpleDoubleProperty(0);
+
     protected final PlayScene3DGameEventHandler gameEventHandler = new PlayScene3DGameEventHandler(this);
-
     protected PerspectiveManager perspectives;
-
     protected Set<ActionBinding> bindings;
 
     protected Group subSceneRoot;
@@ -120,10 +122,6 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     public Optional<GameLevel> optGameLevel() {
         return gameContext().game().optGameLevel();
-    }
-
-    public Optional<Scores3D> optScores3D() {
-        return Optional.ofNullable(scores3D);
     }
 
     @Override
@@ -271,18 +269,23 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         Logger.info("Created and added new 3D game level to play scene");
     }
 
-    // Scores are always displayed towards viewer, independent of level camera perspective
     private void replaceScores3D() {
-        if (scores3D != null) {
-            subSceneRoot.getChildren().remove(scores3D);
-        }
+        final Scores3D oldScores3D = scores3D;
+
         scores3D = new Scores3D(ui.translate("score.score"), ui.translate("score.high_score"), GameUIConstants.FONT_ARCADE_8);
+        scores3D.textOpacity.bind(scoreOpacity);
+
+        // Scores are always displayed towards viewer, independent of camera perspective
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
+
         scores3D.translateXProperty().bind(level3DParent.translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3DParent.translateYProperty().subtract(4.5 * TS));
         scores3D.translateZProperty().bind(level3DParent.translateZProperty().subtract(4.5 * TS));
-        scores3D.setVisible(false);
+
+        if (oldScores3D != null) {
+            subSceneRoot.getChildren().remove(oldScores3D);
+        }
         subSceneRoot.getChildren().add(scores3D);
     }
 

@@ -76,7 +76,6 @@ public class LevelCompletedAnimation extends ManagedAnimation {
             pauseSec(0.5),
             levelRotation(rotationAxis),
             pauseSecThen(0.5, () -> level3D.optSoundEffects().ifPresent(GameSoundEffects::playLevelCompleteSound)),
-            pauseSec(0.5),
             mazeWallsAndHouseDisappearAnimation(level3D, maze3D.house().wallBaseHeightProperty(), maze3D.wallBaseHeightProperty()),
             pauseSecThen(1.0, () -> level3D.optSoundEffects().ifPresent(GameSoundEffects::playLevelChangedSound))
         );

@@ -221,6 +221,8 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         final GameLevel3D level3D = assertLevel3D();
         final State<Game> gameState = level3D.level().game().flow().state();
 
+        gameScene().scoreOpacity.set(0);
+
         final Maze3D maze3D = level3D.entities().unique(Maze3D.class);
         maze3D.house().hideDoors();
 

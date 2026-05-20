@@ -3,6 +3,8 @@
  */
 package de.amr.pacmanfx.uilib.model3D.world;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -15,22 +17,28 @@ import static de.amr.pacmanfx.Globals.TS;
  */
 public class Scores3D extends GridPane {
 
+    public final DoubleProperty textOpacity = new SimpleDoubleProperty(1);
+
     private final Text textDisplayLeft;
     private final Text textDisplayRight;
 
     public Scores3D(String titleTextLeft, String titleTextRight, Font font) {
         var titleDisplayLeft = new Text(titleTextLeft);
+        titleDisplayLeft.opacityProperty().bind(textOpacity);
         titleDisplayLeft.setFill(Color.GHOSTWHITE);
         titleDisplayLeft.setFont(font);
 
         textDisplayLeft = new Text();
+        textDisplayLeft.opacityProperty().bind(textOpacity);
         textDisplayLeft.setFont(font);
 
         var titleDisplayRight = new Text(titleTextRight);
+        titleDisplayRight.opacityProperty().bind(textOpacity);
         titleDisplayRight.setFill(Color.GHOSTWHITE);
         titleDisplayRight.setFont(font);
 
         textDisplayRight = new Text();
+        textDisplayRight.opacityProperty().bind(textOpacity);
         textDisplayRight.setFill(Color.YELLOW);
         textDisplayRight.setFont(font);
 

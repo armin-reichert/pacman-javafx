@@ -29,14 +29,20 @@ public class PlaySceneFadeInAnimation {
     public PlaySceneFadeInAnimation(Duration fadeInDuration, PlayScene3D playScene3D) {
         timeline = new Timeline(
             new KeyFrame(Duration.ZERO, _ -> {
-                playScene3D.subScene().setFill(Color.BLACK);
-                playScene3D.optGameLevel3D().ifPresent(level3D -> level3D.setVisible(true));
-                playScene3D.optScores3D().ifPresent(scores3D -> scores3D.setVisible(true));
-                // TODO: Verify if startControlling is required here (may be redundant)
+                // TODO: required?
                 playScene3D.perspectiveManager().currentPerspective().ifPresent(Perspective::startControlling);
+                playScene3D.optGameLevel3D().ifPresent(level3D -> level3D.setVisible(true));
             }),
+
+            new KeyFrame(Duration.ZERO,
+                new KeyValue(playScene3D.subScene().fillProperty(), Color.BLACK),
+                new KeyValue(playScene3D.scoreOpacity, 0)
+            ),
+
             new KeyFrame(fadeInDuration,
-                new KeyValue(playScene3D.subScene().fillProperty(), Color.TRANSPARENT, Interpolator.EASE_IN))
+                new KeyValue(playScene3D.subScene().fillProperty(), Color.TRANSPARENT, Interpolator.EASE_IN),
+                new KeyValue(playScene3D.scoreOpacity, 1, Interpolator.EASE_IN)
+            )
         );
     }
 
