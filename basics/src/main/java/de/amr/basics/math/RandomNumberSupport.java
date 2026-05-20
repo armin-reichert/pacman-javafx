@@ -5,6 +5,8 @@ package de.amr.basics.math;
 
 import java.util.random.RandomGenerator;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Utility interface providing convenient static methods for generating random numbers
  * using a shared, thread-safe {@link RandomGenerator}.
@@ -102,5 +104,10 @@ public interface RandomNumberSupport {
             maxExclusive = tmp;
         }
         return min + (maxExclusive - min) * RANDOM_GENERATOR.nextFloat();
+    }
+
+    static byte randomByteArrayElement(byte[] array) {
+        requireNonNull(array);
+        return array[randomInt(0, array.length)];
     }
 }

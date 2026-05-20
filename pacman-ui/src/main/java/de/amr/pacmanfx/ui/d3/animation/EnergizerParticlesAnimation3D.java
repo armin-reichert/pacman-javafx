@@ -19,6 +19,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +40,6 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation implements D
     private static final byte[] GHOST_PERSONALITIES = {
         RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY
     };
-
-    private static byte randomGhostPersonality() {
-        return GHOST_PERSONALITIES[randomInt(0, GHOST_PERSONALITIES.length)];
-    }
 
     private static byte computeTargetSwirlIndex(byte personality) {
         return switch (personality) {
@@ -90,23 +87,19 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation implements D
 
         swirlBases.forEach(base -> swirlAnimations.add(new ParticlesSwirlAnimation(config.swirl(), base)));
 
-        setFloorCollisionTest(particle -> particle.collidesWith(maze3D.floor()));
-        setOutOfWorldTest(particle -> particle.pos().z() > 50); // positive z is below maze floor
+        floorCollisionTest = particle -> particle.collidesWith(maze3D.floor());
+        outOfWorldTest = particle -> particle.pos().z() > 50; // positive z is below maze floor
 
         setFactory(() -> {
-            final var timeline = new Timeline(new KeyFrame(Duration.millis(16.666), _ -> tick()));
+            final var timeline = new Timeline(new KeyFrame(Duration.millis(16.666), _ -> {
+                updateParticles();
+                for (ParticlesSwirlAnimation swirlAnimation : swirlAnimations) {
+                    swirlAnimation.update();
+                }
+            }));
             timeline.setCycleCount(Animation.INDEFINITE);
-
             return timeline;
         });
-    }
-
-    public void setFloorCollisionTest(Predicate<EnergizerParticle3D> floorCollisionTest) {
-        this.floorCollisionTest = floorCollisionTest;
-    }
-
-    public void setOutOfWorldTest(Predicate<EnergizerParticle3D> outOfWorldTest) {
-        this.outOfWorldTest = outOfWorldTest;
     }
 
     @Override
@@ -144,13 +137,6 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation implements D
             yDir * randomFloat(config.particleMinSpeedXY(), config.particleMaxSpeedXY()),
             -randomFloat(config.particleMinSpeedZ(), config.particleMaxSpeedZ())
         );
-    }
-
-    public void tick() {
-        updateParticles();
-        for (ParticlesSwirlAnimation swirlAnimation : swirlAnimations) {
-            swirlAnimation.update();
-        }
     }
 
     private void updateParticles() {
@@ -198,7 +184,8 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation implements D
 
     private void moveParticle(EnergizerParticle3D particle, float acceleration) {
         particle.move();
-        final float newSpeed = particle.velocity().length() + acceleration;
+        final float newSpeed = Math.clamp(particle.velocity().length() + acceleration, 0, 1.5f);
+        Logger.info("New speed: " + newSpeed);
         particle.setVelocity(particle.velocity().setToLength(newSpeed));
     }
 
@@ -212,7 +199,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation implements D
      * integrated into the swirl and moves forever on the swirl surface.
      */
     private void onParticleLandedOnFloor(EnergizerParticle3D particle) {
-        final byte personality = randomGhostPersonality();
+        final byte personality = randomByteArrayElement(GHOST_PERSONALITIES);
         final byte targetSwirlIndex = computeTargetSwirlIndex(personality);
         final Vector3f swirlCenter = swirlBases.get(targetSwirlIndex);
 
