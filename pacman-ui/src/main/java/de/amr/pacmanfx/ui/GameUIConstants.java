@@ -4,11 +4,16 @@
 
 package de.amr.pacmanfx.ui;
 
+import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.pacmanfx.uilib.model3D.animation.AttractionConfig;
+import de.amr.pacmanfx.uilib.model3D.animation.ExplosionConfig;
+import de.amr.pacmanfx.uilib.model3D.animation.ParticleAnimationConfig;
+import de.amr.pacmanfx.uilib.model3D.animation.SwirlConfig;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
@@ -163,6 +168,18 @@ public class GameUIConstants {
         new ActionBinding(ACTION_TOGGLE_IMMUNITY,                  alt(KeyCode.I)),
         new ActionBinding(ACTION_TOGGLE_MINI_VIEW_VISIBILITY,      bare(KeyCode.F2)),
         new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_2D_3D,          alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
+    );
+
+    public static final ParticleAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticleAnimationConfig(
+        new ExplosionConfig(
+            new Vector3f(0, 0, 0.1f), // gravity
+            300,        // num particles by explosion
+            0.25f,      // mean particle radius
+            0.1f, 0.4f, // min/max particle speed horizontally (xy-plane)
+            1.5f, 6     // min/max particle speed horizontally (z-direction)
+        ),
+        new AttractionConfig(0.004f, 0.4f, 0.3f, 0.5f),
+        new SwirlConfig(4, 20, 0.3f, 0.05f)
     );
 
     /**

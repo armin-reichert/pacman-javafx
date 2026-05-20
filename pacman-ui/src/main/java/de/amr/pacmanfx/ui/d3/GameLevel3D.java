@@ -36,7 +36,10 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.animation.*;
-import de.amr.pacmanfx.uilib.model3D.ghost.*;
+import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
+import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3DAppearanceController;
+import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3DTransformController;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
@@ -72,18 +75,6 @@ import static java.util.Objects.requireNonNull;
  * Represents the 3D visualization of a Pac-Man game level.
  */
 public class GameLevel3D extends Group implements DisposableGraphicsObject {
-
-    public static final ParticleAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticleAnimationConfig(
-        new ExplosionConfig(
-            new Vector3f(0, 0, 0.1f), // gravity
-            300, // num particles by explosion
-            0.25f, // mean particle radius
-            0.1f, 0.4f, // min/max particle speed horizontally (x-y plane)
-            1.5f, 6
-        ), // min/max particle speed vertically (z direction)
-        new AttractionConfig(0.004f, 0.4f, 0.3f, 0.5f),
-        new SwirlConfig(4, 20, 0.3f, 0.05f)
-    );
 
     public enum AnimationID {
         ENERGIZER_PARTICLES_MOVEMENT,
@@ -145,8 +136,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final List<PhongMaterial> ghostDressMaterials;
     private final Pool<EnergizerParticle3D> particlePool;
 
-    // Not sure where to specify this
-    private final ParticleAnimationConfig particleAnimationConfig = DEFAULT_PARTICLE_ANIMATION_CONFIG;
+    private final ParticleAnimationConfig particleAnimationConfig;
 
     private MessageManager3D messageManager;
 
@@ -155,11 +145,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      *
      * @param level          the game level to visualize
      * @param uiConfig       the global UI configuration (provides 3D settings, colors, models)
+     * @param particleAnimationConfig particle animation configuration
      * @param localizedTexts the resource bundle containing the localized UI texts
      */
-    public GameLevel3D(GameLevel level, UIConfig uiConfig, ResourceBundle localizedTexts) {
+    public GameLevel3D(GameLevel level, UIConfig uiConfig, ParticleAnimationConfig particleAnimationConfig, ResourceBundle localizedTexts) {
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
+        this.particleAnimationConfig = requireNonNull(particleAnimationConfig);
         requireNonNull(localizedTexts);
 
         final WorldMapColorScheme mapColorScheme = uiConfig.colorScheme(level.worldMap());
@@ -172,10 +164,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createMessageManager();
         buildHierarchy();
 
-        ghostDressMaterials = ghosts3DByPersonality().stream()
-            .map(Ghost3D::materials)
-            .map(GhostMaterialSet::normalMaterial)
-            .map(GhostComponentMaterialSet::dressMaterial)
+        ghostDressMaterials = ghosts3DByPersonality()
+            .map(ghost3D -> ghost3D.materials().normalMaterial().dressMaterial())
             .toList();
 
         particlePool = new Pool<>(1000,
@@ -502,8 +492,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Animations
 
-    private List<Ghost3D> ghosts3DByPersonality() {
-        return entities3D.all(Ghost3D.class).sorted(BY_PERSONALITY).toList();
+    private Stream<Ghost3D> ghosts3DByPersonality() {
+        return entities3D.all(Ghost3D.class).sorted(BY_PERSONALITY);
     }
 
     private void createAnimations(WorldMapColorScheme colorScheme) {
@@ -514,7 +504,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         animationRegistry.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, new ManagedEnergizerParticlesAnimation3D());
 
         //TODO: this is ugly and should be changed
-        final var ghostLightAnimation = new GhostLightAnimation(ghosts3DByPersonality());
+        final var ghostLightAnimation = new GhostLightAnimation(ghosts3DByPersonality().toList());
         animationRegistry.register(AnimationID.GHOST_LIGHT, ghostLightAnimation);
         getChildren().addAll(ghostLightAnimation.light());
     }
