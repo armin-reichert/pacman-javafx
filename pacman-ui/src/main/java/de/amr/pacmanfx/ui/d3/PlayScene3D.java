@@ -48,7 +48,6 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     public final DoubleProperty scoreOpacity = new SimpleDoubleProperty(0);
 
-    protected final PlayScene3DGameEventHandler gameEventHandler = new PlayScene3DGameEventHandler(this);
     protected PerspectiveManager perspectives;
     protected Set<ActionBinding> bindings;
 
@@ -80,7 +79,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         createSubScene();
         createBindings();
         bindActions();
-        setGameEventHandler(gameEventHandler);
+        setGameEventHandler(new PlayScene3DGameEventHandler(this));
     }
 
     // Initial subscene size is irrelevant (will be bound to parent scene size)
