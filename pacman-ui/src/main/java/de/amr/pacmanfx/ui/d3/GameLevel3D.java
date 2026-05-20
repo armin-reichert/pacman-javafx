@@ -248,18 +248,18 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return entities3D.allWhere(Ghost3D.class, ghost3D -> ghost3D.ghost().personality() == personality).findFirst();
     }
 
-    // Order matters for correct transparency: actors and effects must appear in front of walls/house.
+    // Order matters for correct transparency!
     private void buildHierarchy() {
         final Maze3D maze3D = entities3D.unique(Maze3D.class);
         final Pac3D pac3D = entities3D.unique(Pac3D.class);
         final LevelCounter3D levelCounter3D = entities3D.unique(LevelCounter3D.class);
         final LivesCounter3D livesCounter3D = entities3D.unique(LivesCounter3D.class);
-        getChildren().addAll(maze3D.particlesGroup());
         getChildren().addAll(levelCounter3D, livesCounter3D, pac3D);
         pac3D.powerLight().ifPresent(getChildren()::add);
         entities3D.all(Ghost3D.class).sorted(BY_PERSONALITY).forEach(getChildren()::add);
         entities3D.all(Energizer3D.class).map(Energizer3D::shape).forEach(getChildren()::add);
         entities3D.all(Pellet3D.class).map(Pellet3D::shape).forEach(getChildren()::add);
+        getChildren().addAll(maze3D.particlesGroup());
         getChildren().addAll(maze3D, maze3D.house().root(), maze3D.house().doors());
     }
 
