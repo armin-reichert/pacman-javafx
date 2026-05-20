@@ -31,13 +31,13 @@ import static java.util.Objects.requireNonNull;
  */
 public class LivesCounter3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
-    private final ObjectProperty<Color> pillarColor = new SimpleObjectProperty<>(Color.grayRgb(120));
+    private final ObjectProperty<Color> pillarColor = new SimpleObjectProperty<>(Color.grayRgb(200));
     private final ObjectProperty<PhongMaterial> pillarMaterial = new SimpleObjectProperty<>(new PhongMaterial());
     private final DoubleProperty pillarHeight = new SimpleDoubleProperty(8);
 
     private final DoubleProperty plateThickness = new SimpleDoubleProperty(1);
     private final DoubleProperty plateRadius = new SimpleDoubleProperty(6);
-    private final ObjectProperty<Color> plateColor = new SimpleObjectProperty<>(Color.grayRgb(180));
+    private final ObjectProperty<Color> plateColor = new SimpleObjectProperty<>(Color.grayRgb(100));
     private final ObjectProperty<PhongMaterial> plateMaterial = new SimpleObjectProperty<>(new PhongMaterial());
 
     private final IntegerProperty livesCount = new SimpleIntegerProperty(0);
@@ -82,7 +82,7 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
         final var standsGroup = new Group();
         getChildren().add(standsGroup);
 
-        final var counterShapes = new Node[entityConfig.livesCounter().capacity()];
+        final var counterShapes = new Node[entityConfig.livesCounter().numShapes()];
         for (int i = 0; i < counterShapes.length; ++i) {
             counterShapes[i] = uiConfig.factory3D().createLivesCounterShape3D(uiConfig.entityConfig());
         }

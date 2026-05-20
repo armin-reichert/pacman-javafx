@@ -4,11 +4,4 @@
 
 package de.amr.pacmanfx.ui.config;
 
-import javafx.scene.paint.Color;
-
-public record LivesCounterConfig3D(
-    int capacity,
-    Color pillarColor,
-    Color plateColor,
-    float shapeSize
-) {}
+public record LivesCounterConfig3D(int numShapes, float shapeSize) {}

@@ -8,7 +8,6 @@ import de.amr.pacmanfx.Validations;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.Transition;
-import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point3D;
@@ -20,10 +19,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import org.tinylog.Logger;
 
-import java.io.PrintWriter;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Locale;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
@@ -51,30 +48,6 @@ public final class Ufx {
         final double height = Math.floor(heightFraction * availableHeight);
         final double width = Math.floor(aspectRatio * height);
         return new Vector2i((int)width, (int)height);
-    }
-
-    /**
-     * Launches the given JavaFX application class. If an exception occurs during startup,
-     * the full stack trace is written to {@code oh_shit.txt}.
-     *
-     * @param appClass the JavaFX {@link Application} subclass to launch
-     * @param args     optional application arguments
-     */
-    public static void startApplication(Class<? extends Application> appClass, String... args) {
-        try {
-            Logger.info("Java runtime: {}", Runtime.version());
-            Logger.info("User Language: {}", System.getProperty("user.language"));
-            Logger.info("User Country: {}", System.getProperty("user.country"));
-            Logger.info("Default Locale: {}", Locale.getDefault());
-            Application.launch(appClass, args);
-        } catch (Throwable x) {
-            x.printStackTrace(System.err);
-            try (var pw = new PrintWriter("oh_shit.txt")) {
-                x.printStackTrace(pw);
-            } catch (Exception e) {
-                e.printStackTrace(System.err);
-            }
-        }
     }
 
     /**
@@ -145,7 +118,7 @@ public final class Ufx {
 
     /**
      * Creates a {@link PhongMaterial} using the given color for both diffuse and specular components.
-     * The specular color is automatically brightened.
+     * The specular color is automatically set.
      *
      * @param color the base color
      * @return a configured {@link PhongMaterial}
@@ -153,8 +126,9 @@ public final class Ufx {
      */
     public static PhongMaterial coloredPhongMaterial(Color color) {
         requireNonNull(color);
-        var material = new PhongMaterial(color);
-        material.setSpecularColor(color.brighter());
+        final var material = new PhongMaterial(color);
+        material.setSpecularColor(deriveSpecular(color, 0.8));
+        material.setSpecularPower(80);
         return material;
     }
 
@@ -167,10 +141,39 @@ public final class Ufx {
      */
     public static PhongMaterial colorBoundPhongMaterial(ObservableValue<Color> colorProperty) {
         requireNonNull(colorProperty);
-        var material = new PhongMaterial();
+        final var material = new PhongMaterial();
         material.diffuseColorProperty().bind(colorProperty);
-        material.specularColorProperty().bind(colorProperty.map(Color::brighter));
+        material.specularColorProperty().bind(colorProperty.map(color -> deriveSpecular(color, 0.8)));
+        material.setSpecularPower(80);
         return material;
+    }
+
+    public static Color deriveSpecular(Color diffuse, double boost) {
+        // Clamp boost to [0, 1]
+        boost = Math.clamp(boost, 0.0, 1.0);
+
+        // Extract channels
+        double r = diffuse.getRed();
+        double g = diffuse.getGreen();
+        double b = diffuse.getBlue();
+
+        // Normalize so brightest channel becomes 1.0
+        double max = Math.max(r, Math.max(g, b));
+        if (max == 0.0) {
+            return Color.BLACK; // avoid division by zero
+        }
+
+        double rn = r / max;
+        double gn = g / max;
+        double bn = b / max;
+
+        // Apply boost factor
+        return new Color(
+            rn * boost,
+            gn * boost,
+            bn * boost,
+            1.0
+        );
     }
 
     /**

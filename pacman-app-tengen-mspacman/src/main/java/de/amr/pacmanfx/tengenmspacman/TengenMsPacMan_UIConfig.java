@@ -107,11 +107,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
         new FloorConfig3D(5f, 0.5f),
         new HouseConfig3D(12.0f, 0.4f, 12.0f, 2.5f),
         new LevelCounterConfig3D(10.0f, 6.0f),
-        new LivesCounterConfig3D(
-            5,
-            Color.grayRgb(120),
-            Color.grayRgb(180),
-            12.0f),
+        new LivesCounterConfig3D(5, 12.0f),
         new MazeConfig3D(4.0f, 4.0f, 1.0f, 2.25f, "0x2a2a2a"),
         new PelletConfig3D(1.0f, 6.0f)
     );
