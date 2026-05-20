@@ -14,43 +14,43 @@ import java.util.function.Supplier;
 
 public class Pool<T> implements Disposable {
 
-    static final int AMOUNT_ADDED_WHEN_EMPTY = 100;
+    private final int newEntryCount;
+    private final Queue<T> entrySet = new ArrayDeque<>();
+    private final Supplier<T> entryFactory;
+    private final Consumer<T> onEntryRecycle;
 
-    private final Queue<T> entryQ = new ArrayDeque<>();
-    private final Supplier<T> constructor;
-    private final Consumer<T> destructor;
-
-    public Pool(int size, Supplier<T> entryConstructor, Consumer<T> entryDestructor) {
-        this.constructor = entryConstructor;
-        this.destructor = entryDestructor;
-        addNewEntries(size);
+    public Pool(int initialSize, int newEntryCount, Supplier<T> entryFactory, Consumer<T> onEntryRecycle) {
+        this.newEntryCount = newEntryCount;
+        this.entryFactory = entryFactory;
+        this.onEntryRecycle = onEntryRecycle;
+        addNewEntries(initialSize);
     }
 
-    public T getEntry() {
-        if (entryQ.isEmpty()) {
-            addNewEntries(AMOUNT_ADDED_WHEN_EMPTY);
+    public T requestEntry() {
+        if (entrySet.isEmpty()) {
+            addNewEntries(newEntryCount);
         }
-        return entryQ.poll();
-    }
-
-    private void addNewEntries(int count) {
-        for (int i = 0; i < count; ++i) {
-            entryQ.add(constructor.get());
-        }
-        Logger.info("Particle pool increased by {}! Pool size={}", count, entryQ.size());
+        return entrySet.poll();
     }
 
     public void recycleEntry(T entry) {
-        destructor.accept(entry);
-        entryQ.offer(entry);
+        onEntryRecycle.accept(entry);
+        entrySet.offer(entry);
     }
 
     public void dispose() {
-        for (T entry : entryQ) {
+        for (T entry : entrySet) {
             if (entry instanceof Disposable disposable) {
                 disposable.dispose();
             }
         }
-        entryQ.clear();
+        entrySet.clear();
+    }
+
+    private void addNewEntries(int count) {
+        for (int i = 0; i < count; ++i) {
+            entrySet.add(entryFactory.get());
+        }
+        Logger.info("Particle pool increased by {}! Pool size={}", count, entrySet.size());
     }
 }

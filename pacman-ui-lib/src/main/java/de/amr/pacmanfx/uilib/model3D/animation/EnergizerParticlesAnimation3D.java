@@ -89,7 +89,7 @@ public class EnergizerParticlesAnimation3D implements Disposable {
         requireNonNull(explosionCenter);
         final var position = new Vector3f(explosionCenter.getX(), explosionCenter.getY(), explosionCenter.getZ());
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
-            final EnergizerParticle3D particle = particlePool.getEntry();
+            final EnergizerParticle3D particle = particlePool.requestEntry();
             particle.setPosition(position);
             particle.setVelocity(randomParticleVelocity(config.explosion()));
             particle.setState(ParticleState.FLYING_THROUGH_AIR);

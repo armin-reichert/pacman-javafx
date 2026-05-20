@@ -164,7 +164,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .map(ghost3D -> ghost3D.materials().normalMaterial().dressMaterial())
             .toList();
 
-        particlePool = new Pool<>(1000,
+        particlePool = new Pool<>(1000, 200,
             () -> createExplosionParticle(particleAnimationConfig.explosion()),
             particle -> {
                 particle.reset();
