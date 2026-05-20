@@ -56,7 +56,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation implements D
     private final List<EnergizerParticle3D> particles = new ArrayList<>();
     private final Group particlesGroup;
     private final Pool<EnergizerParticle3D> particlePool;
-    private final List<ParticlesSwirlAnimation> swirlAnimations = new ArrayList<>();
+    private final List<ParticlesSwirlAnimation3D> swirlAnimations = new ArrayList<>();
 
     private Predicate<EnergizerParticle3D> floorCollisionTest = _ -> false;
     private Predicate<EnergizerParticle3D> outOfWorldTest = _ -> false;
@@ -85,7 +85,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation implements D
             .map(pos -> new Vector3f(pos.x(), pos.y(), 0))
             .toList();
 
-        swirlBases.forEach(base -> swirlAnimations.add(new ParticlesSwirlAnimation(config.swirl(), base)));
+        swirlBases.forEach(base -> swirlAnimations.add(new ParticlesSwirlAnimation3D(config.swirl(), base)));
 
         floorCollisionTest = particle -> particle.collidesWith(maze3D.floor());
         outOfWorldTest = particle -> particle.pos().z() > 50; // positive z is below maze floor
@@ -93,7 +93,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation implements D
         setFactory(() -> {
             final var timeline = new Timeline(new KeyFrame(Duration.millis(16.666), _ -> {
                 updateParticles();
-                for (ParticlesSwirlAnimation swirlAnimation : swirlAnimations) {
+                for (ParticlesSwirlAnimation3D swirlAnimation : swirlAnimations) {
                     swirlAnimation.update();
                 }
             }));
@@ -104,7 +104,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation implements D
 
     @Override
     public void freeResources() {
-        swirlAnimations.forEach(ParticlesSwirlAnimation::dispose);
+        swirlAnimations.forEach(ParticlesSwirlAnimation3D::dispose);
         particles.clear();
         particlesGroup.getChildren().clear();
     }

@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.basics.Disposable;
+import de.amr.pacmanfx.Validations;
 import org.tinylog.Logger;
 
 import java.util.ArrayDeque;
@@ -20,7 +21,7 @@ public class Pool<T> implements Disposable {
     private final Consumer<T> onEntryRecycle;
 
     public Pool(int initialSize, int newEntryCount, Supplier<T> entryFactory, Consumer<T> onEntryRecycle) {
-        this.newEntryCount = newEntryCount;
+        this.newEntryCount = Validations.requireNonNegativeInt(newEntryCount);
         this.entryFactory = entryFactory;
         this.onEntryRecycle = onEntryRecycle;
         addNewEntries(initialSize);
@@ -51,6 +52,6 @@ public class Pool<T> implements Disposable {
         for (int i = 0; i < count; ++i) {
             entrySet.add(entryFactory.get());
         }
-        Logger.info("Particle pool increased by {}! Pool size={}", count, entrySet.size());
+        Logger.info("Pool increased by {}! New size={}", count, entrySet.size());
     }
 }

@@ -9,13 +9,13 @@ import java.util.Set;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static java.util.Objects.requireNonNull;
 
-public class ParticlesSwirlAnimation implements Disposable {
+public class ParticlesSwirlAnimation3D implements Disposable {
 
     private final SwirlConfig config;
     private final Vector3f baseCenter;
     private final Set<EnergizerParticle3D> particles = new HashSet<>();
 
-    public ParticlesSwirlAnimation(SwirlConfig config, Vector3f baseCenter) {
+    public ParticlesSwirlAnimation3D(SwirlConfig config, Vector3f baseCenter) {
         this.config = requireNonNull(config);
         this.baseCenter = requireNonNull(baseCenter);
     }
