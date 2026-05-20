@@ -9,10 +9,7 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.animation.NumberBox3DRisingAnimation;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.model3D.world.NumberBox3D;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.ParallelTransition;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 
@@ -33,8 +30,6 @@ public class HideGhostShowPointsAnimation3D extends ManagedAnimation {
             gameLevel3D.entities().add(numberBox3D);
             gameLevel3D.getChildren().add(numberBox3D);
 
-            //TODO Wrap into ManagedAnimation
-
             final Animation numberBoxRising = new NumberBox3DRisingAnimation(numberBox3D, (killIndex + 1) * 12).createAnimation();
 
             numberBoxRising.setOnFinished(_ -> {
@@ -46,12 +41,12 @@ public class HideGhostShowPointsAnimation3D extends ManagedAnimation {
                 }
             });
 
-            final Animation hideGhost3DForOneSecond = new Timeline(
-                new KeyFrame(Duration.ZERO, _ -> gameLevel3D.getChildren().remove(ghost3D)),
-                new KeyFrame(Duration.seconds(1), _ -> gameLevel3D.getChildren().add(ghost3D))
+            final Animation hideGhost3D = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(ghost3D.visibleProperty(), false)),
+                new KeyFrame(Duration.seconds(1), new KeyValue(ghost3D.visibleProperty(), true))
             );
 
-            return new ParallelTransition(hideGhost3DForOneSecond, numberBoxRising);
+            return new ParallelTransition(hideGhost3D, numberBoxRising);
         });
     }
 }
