@@ -309,16 +309,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return entities3D.allWhere(Pellet3D.class, p3D -> tile.equals(p3D.tile())).findFirst();
     }
 
-
-    /**
-     * Removes all pellet visualizations (used when all pellets are eaten at once).
-     */
-    public void removeAllPellets3D() {
-        entities3D.all(Pellet3D.class)
-            .map(Pellet3D::shape)
-            .forEach(shape -> getChildren().remove(shape));
-    }
-
     // Particles animation
 
     private EnergizerParticle3D createExplosionParticle(ExplosionConfig config) {

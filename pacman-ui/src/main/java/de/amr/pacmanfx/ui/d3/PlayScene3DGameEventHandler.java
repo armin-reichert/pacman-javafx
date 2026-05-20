@@ -141,11 +141,13 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent event) {
+        final GameLevel3D level3D = assertLevel3D();
         if (event.allPellets()) {
-            assertLevel3D().removeAllPellets3D();
+            level3D.entities().all(Pellet3D.class)
+                .map(Pellet3D::shape)
+                .forEach(shape -> level3D.getChildren().remove(shape));
         } else {
             final Vector2i tile = event.pac().tile();
-            final GameLevel3D level3D = assertLevel3D();
             if (event.energizer()) {
                 level3D.energizer3DAt(tile).ifPresent(energizer3D -> {
                     energizer3D.stopPumping();
