@@ -16,9 +16,9 @@ import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 
-public class HideGhostShowPointsAnimation extends ManagedAnimation {
+public class HideGhostShowPointsAnimation3D extends ManagedAnimation {
 
-    public HideGhostShowPointsAnimation(GameLevel3D gameLevel3D, byte killedGhostPersonality, int killIndex) {
+    public HideGhostShowPointsAnimation3D(GameLevel3D gameLevel3D, byte killedGhostPersonality, int killIndex) {
         super("Hide ghost and show points");
 
         setFactory(() -> {
