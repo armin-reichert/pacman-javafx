@@ -178,7 +178,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
             return;
         }
 
-        level3D.entities().all().forEach(entity -> entity.update(level));
+        level3D.entities().selectAll().forEach(entity -> entity.update(level));
         updateHUD3D(level);
         perspectives.updatePerspective(level);
         soundEffects().ifPresent(soundEffects -> {
@@ -251,13 +251,13 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     public void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
         requireNonNull(foodLayer);
-        level3D.entities().all(Pellet3D.class)
+        level3D.entities().selectAllOfType(Pellet3D.class)
             .forEach(pellet3D -> pellet3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
-        level3D.entities().all(Energizer3D.class)
+        level3D.entities().selectAllOfType(Energizer3D.class)
             .forEach(energizer3D -> energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
         if (startEnergizerPumping) {
             level3D.entities()
-                .allWhere(Energizer3D.class, energizer3D -> energizer3D.shape().isVisible())
+                .selectWhere(Energizer3D.class, energizer3D -> energizer3D.shape().isVisible())
                 .forEach(Energizer3D::startPumping);
         }
     }
@@ -270,7 +270,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         }
         level3D = new GameLevel3D(level, ui.currentConfig(), GameUIConstants.DEFAULT_PARTICLE_ANIMATION_CONFIG, ui.translator());
         decorate(level3D);
-        level3D.entities().all().forEach(entity -> entity.init(level));
+        level3D.entities().selectAll().forEach(entity -> entity.init(level));
         level3D.startLivesCounterTrackingPac();
         level3DParent.getChildren().setAll(level3D);
         Logger.info("Created and added new 3D game level to play scene");

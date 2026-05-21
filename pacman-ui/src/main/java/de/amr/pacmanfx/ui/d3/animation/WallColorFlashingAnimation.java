@@ -73,6 +73,6 @@ public class WallColorFlashingAnimation extends ManagedAnimation {
     }
 
     private Optional<PhongMaterial> wallTopMaterial() {
-        return level3D.entities().first(Maze3D.class).map(Maze3D::materials).map(MazeMaterials3D::wallTop);
+        return level3D.entities().anyOfType(Maze3D.class).map(Maze3D::materials).map(MazeMaterials3D::wallTop);
     }
 }
