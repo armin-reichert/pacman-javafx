@@ -20,7 +20,7 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.BonusConfig;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
-import de.amr.pacmanfx.ui.d3.animation.GhostLightAnimation;
+import de.amr.pacmanfx.ui.d3.animation.GhostLightRelayAnimation;
 import de.amr.pacmanfx.ui.d3.animation.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.d3.animation.LevelCompletedAnimationShort;
 import de.amr.pacmanfx.ui.d3.animation.WallColorFlashingAnimation;
@@ -314,7 +314,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createGhostLightAnimation() {
-        final var ghostLightAnimation = new GhostLightAnimation(ghostHunterLight, ghosts3DByPersonality().toList());
+        final var ghostLightAnimation = new GhostLightRelayAnimation(ghostHunterLight, ghosts3DByPersonality().toList());
         animationRegistry.register(AnimationID.GHOST_LIGHT, ghostLightAnimation);
     }
 

@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
  * <p>The reason for this strategy instead of just giving each ghost its own light is that JavaFX can only
  * have 4(?) point lights per scene.</p>
  */
-public class GhostLightAnimation extends ManagedAnimation {
+public class GhostLightRelayAnimation extends ManagedAnimation {
 
     public static final float LIGHT_HEIGHT_OVER_FLOOR = 25.0f;
     public static final int LIGHT_MAX_RANGE = 30;
@@ -37,7 +37,7 @@ public class GhostLightAnimation extends ManagedAnimation {
     private final List<Ghost3D> ghosts3D;
     private byte currentGhostID = RED_GHOST_SHADOW;
 
-    public GhostLightAnimation(PointLight light, List<Ghost3D> ghosts3DInOrder) {
+    public GhostLightRelayAnimation(PointLight light, List<Ghost3D> ghosts3DInOrder) {
         super("Ghost Light Animation");
 
         this.light = requireNonNull(light);
