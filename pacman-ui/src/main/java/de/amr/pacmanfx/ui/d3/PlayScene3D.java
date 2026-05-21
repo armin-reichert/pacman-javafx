@@ -96,6 +96,64 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         return fadeInAnimation;
     }
 
+    public void replaceActionBindings(GameLevel level) {
+        // No-op — override in subclasses if variant needs different bindings
+    }
+
+    public void updateHUD3D(GameLevel level) {
+        requireNonNull(level);
+        // If score is disabled, show "GAME OVER" text
+        final Score score = level.game().score();
+        if (score.isEnabled()) {
+            scores3D.showScore(score.points(), score.levelNumber());
+        } else {
+            scores3D.showTextForScore(ui.translate("score.game_over"), ui.currentConfig().assets().color("color.game_over_message"));
+        }
+
+        // High score is always visible
+        final Score highScore = level.game().highScore();
+        scores3D.showHighScore(highScore.points(), highScore.levelNumber());
+    }
+
+    public void initPac3D(Pac3D pac3D, GameLevel level) {
+        requireNonNull(pac3D);
+        requireNonNull(level);
+        pac3D.init(level);
+        pac3D.update(level);
+    }
+
+    public void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
+        requireNonNull(foodLayer);
+        level3D.pellets3D().forEach(pellet3D -> pellet3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
+        level3D.energizers3D().forEach(energizer3D -> {
+            energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile()));
+            if (startEnergizerPumping && energizer3D.shape().isVisible()) {
+                energizer3D.startPumping();
+            }
+        });
+    }
+
+    public void replaceGameLevel3D(GameLevel level) {
+        requireNonNull(level);
+        if (level3D != null) {
+            Logger.info("Old 3D game level gets disposed...");
+            level3D.dispose();
+        }
+        level3D = new GameLevel3D(level, ui.currentConfig());
+        decorate(level3D);
+        level3D.entities().selectAll().forEach(entity -> entity.init(level));
+        level3D.startLivesCounterTrackingPac();
+        level3DParent.getChildren().setAll(level3D);
+
+        level3D.createAnimations(GameUIConstants.DEFAULT_PARTICLE_ANIMATION_CONFIG);
+
+        Logger.info("Created and added new 3D game level to play scene");
+    }
+
+    public void showRandomGameOverMessage() {
+        ui.showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
+    }
+
     @Override
     public void dispose() {
         actionBindings.dispose();
@@ -106,15 +164,15 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         ambientLight = null;
     }
 
+    // ────────────────────────────────────────────────────────────────────────────
+    // GameScene interface implementation
+    // ────────────────────────────────────────────────────────────────────────────
+
     @Override
     public void onEmbeddedIntoUI() {
         // TODO: reconsider whether scores need recreation here (variant/font change?)
         replaceScores3D();
     }
-
-    // ────────────────────────────────────────────────────────────────────────────
-    // GameScene interface implementation
-    // ────────────────────────────────────────────────────────────────────────────
 
     @Override
     public void onSceneStart() {
@@ -209,66 +267,8 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
      */
     protected void decorate(GameLevel3D level3D) {}
 
-    protected void showRandomGameOverMessage() {
-        ui.showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
-    }
-
     protected void bindActions() {
         actionBindings.addAll(bindings);
-    }
-
-    public void replaceActionBindings(GameLevel level) {
-        // No-op — override in subclasses if variant needs different bindings
-    }
-
-    public void updateHUD3D(GameLevel level) {
-        requireNonNull(level);
-        // If score is disabled, show "GAME OVER" text
-        final Score score = level.game().score();
-        if (score.isEnabled()) {
-            scores3D.showScore(score.points(), score.levelNumber());
-        } else {
-            scores3D.showTextForScore(ui.translate("score.game_over"), ui.currentConfig().assets().color("color.game_over_message"));
-        }
-
-        // High score is always visible
-        final Score highScore = level.game().highScore();
-        scores3D.showHighScore(highScore.points(), highScore.levelNumber());
-    }
-
-    public void initPac3D(Pac3D pac3D, GameLevel level) {
-        requireNonNull(pac3D);
-        requireNonNull(level);
-        pac3D.init(level);
-        pac3D.update(level);
-    }
-
-    public void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
-        requireNonNull(foodLayer);
-        level3D.pellets3D().forEach(pellet3D -> pellet3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
-        level3D.energizers3D().forEach(energizer3D -> {
-            energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile()));
-            if (startEnergizerPumping && energizer3D.shape().isVisible()) {
-                energizer3D.startPumping();
-            }
-        });
-    }
-
-    public void replaceGameLevel3D(GameLevel level) {
-        requireNonNull(level);
-        if (level3D != null) {
-            Logger.info("Old 3D game level gets disposed...");
-            level3D.dispose();
-        }
-        level3D = new GameLevel3D(level, ui.currentConfig());
-        decorate(level3D);
-        level3D.entities().selectAll().forEach(entity -> entity.init(level));
-        level3D.startLivesCounterTrackingPac();
-        level3DParent.getChildren().setAll(level3D);
-
-        level3D.createAnimations(GameUIConstants.DEFAULT_PARTICLE_ANIMATION_CONFIG);
-
-        Logger.info("Created and added new 3D game level to play scene");
     }
 
     private void replaceScores3D() {
