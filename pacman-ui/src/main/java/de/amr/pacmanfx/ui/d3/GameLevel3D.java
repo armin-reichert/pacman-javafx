@@ -91,6 +91,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private Pac3D pac3D;
     private Maze3D maze3D;
     private List<Ghost3D> ghosts3D;
+    private LivesCounter3D livesCounter3D;
+    private LevelCounter3D levelCounter3D;
 
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final PointLight ghostHunterLight = new PointLight();
@@ -136,7 +138,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Starts the lives counter symbols following Pac-Man with their eyes.
      */
     public void startLivesCounterTrackingPac() {
-        final LivesCounter3D livesCounter3D = entities3D.uniqueOfType(LivesCounter3D.class);
         livesCounter3D.startTracking(pac3D);
     }
 
@@ -314,19 +315,19 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createLivesCounter3D() {
-        final var counter3D = new LivesCounter3D(uiConfig);
-        counter3D.setTranslateX(2 * TS);
-        counter3D.setTranslateY(2 * TS);
-        entities3D.add(counter3D);
+        livesCounter3D = new LivesCounter3D(uiConfig);
+        livesCounter3D.setTranslateX(2 * TS);
+        livesCounter3D.setTranslateY(2 * TS);
+        entities3D.add(livesCounter3D);
     }
 
     private void createLevelCounter3D() {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final var counter3D = new LevelCounter3D(animationRegistry, uiConfig);
-        counter3D.setTranslateX(TS(terrain.numCols() - 2));
-        counter3D.setTranslateY(TS(2));
-        counter3D.setTranslateZ(-uiConfig.entityConfig().levelCounter().elevation());
-        entities3D.add(counter3D);
+        levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
+        levelCounter3D.setTranslateX(TS(terrain.numCols() - 2));
+        levelCounter3D.setTranslateY(TS(2));
+        levelCounter3D.setTranslateZ(-uiConfig.entityConfig().levelCounter().elevation());
+        entities3D.add(levelCounter3D);
     }
 
     private void createMessageManager() {
@@ -345,8 +346,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Order matters for correct transparency!
     private void buildHierarchy() {
-        final LevelCounter3D levelCounter3D = entities3D.uniqueOfType(LevelCounter3D.class);
-        final LivesCounter3D livesCounter3D = entities3D.uniqueOfType(LivesCounter3D.class);
         getChildren().addAll(levelCounter3D, livesCounter3D, pac3D);
         pac3D.powerLight().ifPresent(getChildren()::add);
         entities3D.selectAllOfType(Ghost3D.class).sorted(BY_PERSONALITY).forEach(getChildren()::add);
