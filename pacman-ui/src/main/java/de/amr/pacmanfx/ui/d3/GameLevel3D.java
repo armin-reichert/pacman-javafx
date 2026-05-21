@@ -81,7 +81,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private static class EntityCache {
         Pac3D pac3D;
         Maze3D maze3D;
-        List<Ghost3D> ghosts3D; // order: RED, PINK, CYAN, ORANGE
+        Ghost3D[] ghosts3D; // order: RED, PINK, CYAN, ORANGE
         LivesCounter3D livesCounter3D;
         LevelCounter3D levelCounter3D;
         final Map<Vector2i, Energizer3D> energizer3DByTile = new HashMap<>();
@@ -90,8 +90,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         void clear() {
             pac3D = null;
             maze3D = null;
-            ghosts3D.clear();
-            ghosts3D = null;
+            if (ghosts3D != null) {
+                ghosts3D = null;
+            }
             livesCounter3D = null;
             levelCounter3D = null;
             energizer3DByTile.clear();
@@ -207,12 +208,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     public List<Ghost3D> ghosts3D() {
-        return entityCache.ghosts3D;
+        return List.of(entityCache.ghosts3D);
     }
 
     public Ghost3D ghost3D(byte personality) {
         requireValidGhostPersonality(personality);
-        return entityCache.ghosts3D.get(personality);
+        return entityCache.ghosts3D[personality];
     }
 
     public Optional<Energizer3D> energizer3DAt(Vector2i tile) {
@@ -274,19 +275,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final PelletConfig3D pelletConfig3D = uiConfig.entityConfig().pellet();
         final double pelletZ = entityCache.maze3D.floorTop() - pelletConfig3D.floorElevation();
 
-        foodLayer.tiles()
-            .filter(tile -> !foodLayer.isEnergizerTile(tile))
-            .filter(foodLayer::hasFoodAtTile)
-            .map(tile -> createPellet3D(tile, pelletZ, foodMaterial))
-            .forEach(entitySet::add);
-
         final EnergizerConfig3D energizerConfig3D = uiConfig.entityConfig().energizer();
         final double energizerZ = entityCache.maze3D.floorTop() - energizerConfig3D.floorElevation();
 
         foodLayer.tiles()
             .filter(foodLayer::hasFoodAtTile)
-            .filter(foodLayer::isEnergizerTile)
-            .map(tile -> createEnergizer3D(tile, energizerZ, foodMaterial))
+            .map(tile -> foodLayer.isEnergizerTile(tile)
+                ? createEnergizer3D(tile, energizerZ, foodMaterial)
+                : createPellet3D(tile, pelletZ, foodMaterial))
             .forEach(entitySet::add);
     }
 
@@ -328,8 +324,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 final Ghost3D ghost3D = createGhost3D(ghostConfigs.get(ghost.personality()), ghost);
                 ghost3D.init(level);
                 return ghost3D;
-            }).toList();
-        entityCache.ghosts3D.forEach(entitySet::add);
+            }).toArray(Ghost3D[]::new);
+
+        for (var ghost3D : entityCache.ghosts3D) {
+            entitySet.add(ghost3D);
+        }
     }
 
     private Ghost3D createGhost3D(GhostConfig ghostConfig, Ghost ghost) {
