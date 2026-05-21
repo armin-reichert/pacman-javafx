@@ -7,11 +7,10 @@ package de.amr.pacmanfx.ui.d3.animation.energizer;
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.model.world.House;
-import de.amr.pacmanfx.ui.d3.GameLevel3D;
-import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.model3D.animation.*;
+import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticle3D;
 import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticle3D.ParticleState;
+import de.amr.pacmanfx.uilib.model3D.animation.Pool;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -58,15 +57,17 @@ public class ParticlesAnimation3D extends ManagedAnimation implements Disposable
     private final Pool<EnergizerParticle3D> particlePool;
     private final List<SwirlAnimation3D> swirlAnimations = new ArrayList<>();
 
-    private Predicate<EnergizerParticle3D> floorCollisionTest = _ -> false;
-    private Predicate<EnergizerParticle3D> outOfWorldTest = _ -> false;
+    private final Predicate<EnergizerParticle3D> floorCollisionTest;
+    private final Predicate<EnergizerParticle3D> outOfWorldTest;
 
     public ParticlesAnimation3D(
-        GameLevel3D level3D,
+        House house,
         List<PhongMaterial> ghostDressMaterials,
         Pool<EnergizerParticle3D> particlePool,
         ParticlesAnimationConfig config,
-        Group particlesGroup)
+        Group particlesGroup,
+        Predicate<EnergizerParticle3D> floorCollisionTest,
+        Predicate<EnergizerParticle3D> outOfWorldTest)
     {
         super("Energizer particles animation");
 
@@ -74,9 +75,8 @@ public class ParticlesAnimation3D extends ManagedAnimation implements Disposable
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
         this.particlePool = requireNonNull(particlePool);
         this.particlesGroup = requireNonNull(particlesGroup);
-
-        final Maze3D maze3D = level3D.entities().unique(Maze3D.class);
-        final House house = level3D.level().worldMap().terrainLayer().house();
+        this.floorCollisionTest = requireNonNull(floorCollisionTest);
+        this.outOfWorldTest = requireNonNull(outOfWorldTest);
 
         // The 3 ghost revival positions inside the house from left to right
         swirlBases = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
@@ -86,9 +86,6 @@ public class ParticlesAnimation3D extends ManagedAnimation implements Disposable
             .toList();
 
         swirlBases.forEach(base -> swirlAnimations.add(new SwirlAnimation3D(config.swirl(), base)));
-
-        floorCollisionTest = particle -> particle.collidesWith(maze3D.floor());
-        outOfWorldTest = particle -> particle.pos().z() > 50; // positive z is below maze floor
 
         setFactory(() -> {
             final var timeline = new Timeline(new KeyFrame(Duration.millis(16.666), _ -> {
@@ -185,7 +182,6 @@ public class ParticlesAnimation3D extends ManagedAnimation implements Disposable
     private void moveParticle(EnergizerParticle3D particle, float acceleration) {
         particle.move();
         final float newSpeed = Math.clamp(particle.velocity().length() + acceleration, 0, 1.5f);
-        Logger.info("New speed: " + newSpeed);
         particle.setVelocity(particle.velocity().setToLength(newSpeed));
     }
 

@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.GameLevelEntitySet;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.FoodLayer;
+import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUIConstants;
@@ -19,9 +20,12 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.config.BonusConfig;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
-import de.amr.pacmanfx.ui.d3.animation.*;
-import de.amr.pacmanfx.ui.d3.animation.energizer.ParticlesAnimation3D;
+import de.amr.pacmanfx.ui.d3.animation.GhostLightAnimation;
+import de.amr.pacmanfx.ui.d3.animation.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.d3.animation.LevelCompletedAnimationShort;
+import de.amr.pacmanfx.ui.d3.animation.WallColorFlashingAnimation;
 import de.amr.pacmanfx.ui.d3.animation.energizer.ExplosionConfig;
+import de.amr.pacmanfx.ui.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.d3.animation.energizer.ParticlesAnimationConfig;
 import de.amr.pacmanfx.ui.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.LivesCounter3D;
@@ -29,7 +33,8 @@ import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.model3D.animation.*;
+import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticle3D;
+import de.amr.pacmanfx.uilib.model3D.animation.Pool;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3DAppearanceController;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3DTransformController;
@@ -41,6 +46,7 @@ import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
@@ -56,7 +62,8 @@ import java.util.stream.Stream;
 import static de.amr.basics.math.RandomNumberSupport.RANDOM_GENERATOR;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.basics.math.Vector2f.vec2_float;
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
@@ -82,6 +89,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final List<PhongMaterial> ghostDressMaterials;
     private final Pool<EnergizerParticle3D> particlePool;
     private MessageManager3D messageManager;
+    private final PointLight ghostHunterLight = new PointLight();
 
     /**
      * Creates a new 3D level representation for the given game level.
@@ -287,14 +295,27 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         animationRegistry.register(AnimationID.WALL_COLOR_FLASHING, new WallColorFlashingAnimation(this, colorScheme));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
-        animationRegistry.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, new ParticlesAnimation3D(
-            this, ghostDressMaterials, particlePool, particlesAnimationConfig, entities3D.unique(Maze3D.class).particlesGroup()
-        ));
+        createEnergizerParticlesAnimation(particlesAnimationConfig);
+        createGhostLightAnimation();
+    }
 
-        //TODO: this is ugly and should be changed
-        final var ghostLightAnimation = new GhostLightAnimation(ghosts3DByPersonality().toList());
+    private void createEnergizerParticlesAnimation(ParticlesAnimationConfig particlesAnimationConfig) {
+        final Maze3D maze3D = entities3D.unique(Maze3D.class);
+        final House house = level.worldMap().terrainLayer().house();
+        animationRegistry.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, new ParticlesAnimation3D(
+            house,
+            ghostDressMaterials,
+            particlePool,
+            particlesAnimationConfig,
+            maze3D.particlesGroup(),
+            particle -> particle.collidesWith(maze3D.floor()),
+            particle -> particle.pos().z() > 50 // positive z is below maze floor
+        ));
+    }
+
+    private void createGhostLightAnimation() {
+        final var ghostLightAnimation = new GhostLightAnimation(ghostHunterLight, ghosts3DByPersonality().toList());
         animationRegistry.register(AnimationID.GHOST_LIGHT, ghostLightAnimation);
-        getChildren().addAll(ghostLightAnimation.light());
     }
 
     // Private area, no trespassing
@@ -312,6 +333,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         entities3D.all(Pellet3D.class).map(Pellet3D::shape).forEach(getChildren()::add);
         getChildren().addAll(maze3D.particlesGroup());
         getChildren().addAll(maze3D, maze3D.house().root(), maze3D.house().doors());
+        getChildren().add(ghostHunterLight);
     }
 
     private void createPac3D(PacConfig config) {
