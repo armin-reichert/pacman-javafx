@@ -80,35 +80,6 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         setGameEventHandler(new PlayScene3DGameEventHandler(this));
     }
 
-    // Initial subscene size is irrelevant (will be bound to parent scene size)
-    private void createSubScene() {
-        subSceneRoot = new Group();
-        subScene = new SubScene(subSceneRoot, 888, 666, true, SceneAntialiasing.BALANCED);
-
-        camera = new PerspectiveCamera(true);
-        perspectives = new PerspectiveManager(camera);
-        subScene.setCamera(camera);
-
-        final var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(GameUIConstants.PROPERTY_3D_AXES_VISIBLE);
-
-        ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);
-
-        subSceneRoot.getChildren().addAll(level3DParent, coordinateSystem, ambientLight);
-    }
-
-    private void createBindings() {
-        bindings = Set.of(
-            new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,       alt(KeyCode.LEFT)),
-            new ActionBinding(ACTION_PERSPECTIVE_NEXT,           alt(KeyCode.RIGHT)),
-            new ActionBinding(perspectives.actionDroneClimb(),   control(KeyCode.MINUS)),
-            new ActionBinding(perspectives.actionDroneDescent(), control(KeyCode.PLUS)),
-            new ActionBinding(perspectives.actionDroneReset(),   control(KeyCode.DIGIT0)),
-            new ActionBinding(ACTION_TOGGLE_DRAW_MODE,           alt(KeyCode.W))
-        );
-    }
-
     public SubScene subScene() {
         return subScene;
     }
@@ -119,10 +90,6 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     public Optional<GameLevel3D> optGameLevel3D() {
         return Optional.ofNullable(level3D);
-    }
-
-    public Optional<GameLevel> optGameLevel() {
-        return gameContext().game().optGameLevel();
     }
 
     public ManagedAnimation fadeInAnimation() {
@@ -165,7 +132,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onTick(long tick) {
-        final GameLevel level = optGameLevel().orElse(null);
+        final GameLevel level = gameContext().game().optGameLevel().orElse(null);
         if (level == null) {
             Logger.info("Tick {}: Game level not yet created, update ignored", tick);
             return;
@@ -206,6 +173,35 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     // Other stuff
+
+    // Initial subscene size is irrelevant (will be bound to parent scene size)
+    private void createSubScene() {
+        subSceneRoot = new Group();
+        subScene = new SubScene(subSceneRoot, 888, 666, true, SceneAntialiasing.BALANCED);
+
+        camera = new PerspectiveCamera(true);
+        perspectives = new PerspectiveManager(camera);
+        subScene.setCamera(camera);
+
+        final var coordinateSystem = new CoordinateSystem();
+        coordinateSystem.visibleProperty().bind(GameUIConstants.PROPERTY_3D_AXES_VISIBLE);
+
+        ambientLight = new AmbientLight();
+        ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);
+
+        subSceneRoot.getChildren().addAll(level3DParent, coordinateSystem, ambientLight);
+    }
+
+    private void createBindings() {
+        bindings = Set.of(
+            new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,       alt(KeyCode.LEFT)),
+            new ActionBinding(ACTION_PERSPECTIVE_NEXT,           alt(KeyCode.RIGHT)),
+            new ActionBinding(perspectives.actionDroneClimb(),   control(KeyCode.MINUS)),
+            new ActionBinding(perspectives.actionDroneDescent(), control(KeyCode.PLUS)),
+            new ActionBinding(perspectives.actionDroneReset(),   control(KeyCode.DIGIT0)),
+            new ActionBinding(ACTION_TOGGLE_DRAW_MODE,           alt(KeyCode.W))
+        );
+    }
 
     /**
      * Can be overridden by 3D scenes that e.g. decorate the 3D level with additional stuff as done by the
