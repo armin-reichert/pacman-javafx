@@ -11,8 +11,12 @@ import javafx.animation.Transition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point3D;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -130,6 +134,17 @@ public final class Ufx {
         material.setSpecularColor(deriveSpecular(color, 0.8));
         material.setSpecularPower(80);
         return material;
+    }
+
+    public static void setDrawMode(Group group, DrawMode drawMode) {
+        for (Node node : group.getChildren()) {
+            if (node instanceof Group subGroup) {
+                setDrawMode(subGroup, drawMode);
+            }
+            else if (node instanceof Shape3D shape3D) {
+                shape3D.setDrawMode(drawMode);
+            }
+        }
     }
 
     /**
