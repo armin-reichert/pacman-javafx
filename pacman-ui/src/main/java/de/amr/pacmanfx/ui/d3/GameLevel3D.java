@@ -78,21 +78,36 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private static final Comparator<Ghost3D> BY_PERSONALITY = Comparator.comparingInt(ghost3D -> ghost3D.ghost().personality());
 
+    private static class EntityCache {
+        Pac3D pac3D;
+        Maze3D maze3D;
+        List<Ghost3D> ghosts3D; // order: RED, PINK, CYAN, ORANGE
+        LivesCounter3D livesCounter3D;
+        LevelCounter3D levelCounter3D;
+        final Map<Vector2i, Energizer3D> energizer3DByTile = new HashMap<>();
+        final Map<Vector2i, Pellet3D> pellet3DByTile = new HashMap<>();
+
+        void clear() {
+            pac3D = null;
+            maze3D = null;
+            ghosts3D.clear();
+            ghosts3D = null;
+            livesCounter3D = null;
+            levelCounter3D = null;
+            energizer3DByTile.clear();
+            pellet3DByTile.clear();
+        }
+    }
+
     // Access to game model
     private final GameLevel level;
 
     private final UIConfig uiConfig;
 
-    private final GameLevelEntitySet entities3D = new GameLevelEntitySet();
+    private final GameLevelEntitySet entitySet = new GameLevelEntitySet();
 
-    // Cache for efficiency
-    private Pac3D pac3D;
-    private Maze3D maze3D;
-    private List<Ghost3D> ghosts3D; // order: RED, PINK, CYAN, ORANGE
-    private LivesCounter3D livesCounter3D;
-    private LevelCounter3D levelCounter3D;
-    private final Map<Vector2i, Energizer3D> energizer3DByTile = new HashMap<>();
-    private final Map<Vector2i, Pellet3D> pellet3DByTile = new HashMap<>();
+    private final EntityCache entityCache = new EntityCache();
+
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final PointLight ghostHunterLight = new PointLight();
 
@@ -137,18 +152,15 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Starts the lives counter symbols following Pac-Man with their eyes.
      */
     public void startLivesCounterTrackingPac() {
-        livesCounter3D.startTracking(pac3D);
+        entityCache.livesCounter3D.startTracking(entityCache.pac3D);
     }
 
     @Override
     public void dispose() {
         animationRegistry.dispose();
 
-        // clear entity caches
-        ghosts3D.clear();
-        energizer3DByTile.clear();
-        pellet3DByTile.clear();
-        entities3D.dispose();
+        entityCache.clear();
+        entitySet.dispose();
 
         if (particlePool != null) {
             particlePool.dispose();
@@ -183,56 +195,56 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     public GameLevelEntitySet entities() {
-        return entities3D;
+        return entitySet;
     }
 
     public Maze3D maze3D() {
-        return maze3D;
+        return entityCache.maze3D;
     }
 
     public Pac3D pac3D() {
-        return pac3D;
+        return entityCache.pac3D;
     }
 
     public List<Ghost3D> ghosts3D() {
-        return ghosts3D;
+        return entityCache.ghosts3D;
     }
 
     public Ghost3D ghost3D(byte personality) {
         requireValidGhostPersonality(personality);
-        return ghosts3D.get(personality);
+        return entityCache.ghosts3D.get(personality);
     }
 
     public Optional<Energizer3D> energizer3DAt(Vector2i tile) {
-        return Optional.ofNullable(energizer3DByTile.get(tile));
+        return Optional.ofNullable(entityCache.energizer3DByTile.get(tile));
     }
 
     public Optional<Pellet3D> pellet3DAtTile(Vector2i tile) {
-        return Optional.ofNullable(pellet3DByTile.get(tile));
+        return Optional.ofNullable(entityCache.pellet3DByTile.get(tile));
     }
 
     public void cleanupFoodAndParticles() {
         animationRegistry.optAnimation(AnimationID.PARTICLES).ifPresent(ManagedAnimation::stop);
-        entities3D.selectAllOfType(Energizer3D.class).forEach(energizer3D -> {
+        entitySet.selectAllOfType(Energizer3D.class).forEach(energizer3D -> {
             energizer3D.stopPumping();
             energizer3D.hide();
         });
         // Hide 3D food explicitly (handles cheat-eat-all case)
-        entities3D.selectAllOfType(Pellet3D.class).forEach(pellet3D -> pellet3D.shape().setVisible(false));
-        maze3D.particlesGroup().getChildren().clear();
+        entitySet.selectAllOfType(Pellet3D.class).forEach(pellet3D -> pellet3D.shape().setVisible(false));
+        entityCache.maze3D.particlesGroup().getChildren().clear();
     }
 
     public void setDrawMode(DrawMode drawMode) {
         requireNonNull(drawMode);
-        entities3D.selectAllOfType(Pac3D.class).forEach(pac3D -> Ufx.setDrawMode(pac3D, drawMode));
-        entities3D.selectAllOfType(Ghost3D.class).forEach(ghost3D -> Ufx.setDrawMode(ghost3D, drawMode));
-        Ufx.setDrawMode(maze3D, drawMode);
+        entitySet.selectAllOfType(Pac3D.class).forEach(pac3D -> Ufx.setDrawMode(pac3D, drawMode));
+        entitySet.selectAllOfType(Ghost3D.class).forEach(ghost3D -> Ufx.setDrawMode(ghost3D, drawMode));
+        Ufx.setDrawMode(entityCache.maze3D, drawMode);
     }
 
     public void addOrReplaceBonus3D(Bonus bonus) {
         // Make list copy to avoid exception when removing inside for-each
-        List.copyOf(entities3D.selectAllOfType(Bonus3D.class).toList()).forEach(bonus3D -> {
-            entities3D.remove(bonus3D);
+        List.copyOf(entitySet.selectAllOfType(Bonus3D.class).toList()).forEach(bonus3D -> {
+            entitySet.remove(bonus3D);
             getChildren().remove(bonus3D.root());
             bonus3D.dispose();
         });
@@ -246,11 +258,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void createMaze3D() {
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        maze3D = uiConfig.factory3D().createMaze3D(terrain, uiConfig.entityConfig(), colorScheme, animationRegistry);
-        maze3D.wallOpacityProperty().bind(GameUIConstants.PROPERTY_3D_WALL_OPACITY);
-        maze3D.wallBaseHeightProperty().bind(GameUIConstants.PROPERTY_3D_WALL_HEIGHT);
-        maze3D.floorColorProperty().bind(GameUIConstants.PROPERTY_3D_FLOOR_COLOR);
-        entities3D.add(maze3D);
+        entityCache.maze3D = uiConfig.factory3D().createMaze3D(terrain, uiConfig.entityConfig(), colorScheme, animationRegistry);
+        entityCache.maze3D.wallOpacityProperty().bind(GameUIConstants.PROPERTY_3D_WALL_OPACITY);
+        entityCache.maze3D.wallBaseHeightProperty().bind(GameUIConstants.PROPERTY_3D_WALL_HEIGHT);
+        entityCache.maze3D.floorColorProperty().bind(GameUIConstants.PROPERTY_3D_FLOOR_COLOR);
+        entitySet.add(entityCache.maze3D);
     }
 
     private void createFood3D() {
@@ -260,28 +272,28 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final PhongMaterial foodMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
 
         final PelletConfig3D pelletConfig3D = uiConfig.entityConfig().pellet();
-        final double pelletZ = maze3D.floorTop() - pelletConfig3D.floorElevation();
+        final double pelletZ = entityCache.maze3D.floorTop() - pelletConfig3D.floorElevation();
 
         foodLayer.tiles()
             .filter(tile -> !foodLayer.isEnergizerTile(tile))
             .filter(foodLayer::hasFoodAtTile)
             .map(tile -> createPellet3D(tile, pelletZ, foodMaterial))
-            .forEach(entities3D::add);
+            .forEach(entitySet::add);
 
         final EnergizerConfig3D energizerConfig3D = uiConfig.entityConfig().energizer();
-        final double energizerZ = maze3D.floorTop() - energizerConfig3D.floorElevation();
+        final double energizerZ = entityCache.maze3D.floorTop() - energizerConfig3D.floorElevation();
 
         foodLayer.tiles()
             .filter(foodLayer::hasFoodAtTile)
             .filter(foodLayer::isEnergizerTile)
             .map(tile -> createEnergizer3D(tile, energizerZ, foodMaterial))
-            .forEach(entities3D::add);
+            .forEach(entitySet::add);
     }
 
     private Pellet3D createPellet3D(Vector2i tile, double z, PhongMaterial foodMaterial) {
         final Pellet3D pellet3D = uiConfig.factory3D().createPellet3D(uiConfig.entityConfig().pellet(), foodMaterial);
         pellet3D.setLocation(tile, z);
-        pellet3DByTile.put(tile, pellet3D);
+        entityCache.pellet3DByTile.put(tile, pellet3D);
         return pellet3D;
     }
 
@@ -289,7 +301,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Energizer3D energizer3D = uiConfig.factory3D().createEnergizer3D(
             uiConfig.entityConfig().energizer(), animationRegistry, foodMaterial);
         energizer3D.setLocation(tile, z);
-        energizer3DByTile.put(tile, energizer3D);
+        entityCache.energizer3DByTile.put(tile, energizer3D);
         return energizer3D;
     }
 
@@ -298,26 +310,26 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Bonus3D bonus3D = new Bonus3D(animationRegistry, bonus,
             uiConfig.bonusSymbolImage(bonus.symbol()), config.bonusSymbolWidth(),
             uiConfig.bonusValueImage(bonus.symbol()),  config.bonusPointsWidth());
-        entities3D.add(bonus3D);
+        entitySet.add(bonus3D);
         return bonus3D;
     }
 
     private void createPac3D() {
         final PacConfig config = uiConfig.entityConfig().pacConfig();
-        pac3D = uiConfig.factory3D().createPac3D(level.pac(), config, animationRegistry);
-        entities3D.add(pac3D);
+        entityCache.pac3D = uiConfig.factory3D().createPac3D(level.pac(), config, animationRegistry);
+        entitySet.add(entityCache.pac3D);
     }
 
     private void createGhosts3D() {
         final List<GhostConfig> ghostConfigs = uiConfig.entityConfig().ghostConfigs();
-        ghosts3D = Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
+        entityCache.ghosts3D = Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
             .map(level::ghost)
             .map(ghost -> {
                 final Ghost3D ghost3D = createGhost3D(ghostConfigs.get(ghost.personality()), ghost);
                 ghost3D.init(level);
                 return ghost3D;
             }).toList();
-        ghosts3D.forEach(entities3D::add);
+        entityCache.ghosts3D.forEach(entitySet::add);
     }
 
     private Ghost3D createGhost3D(GhostConfig ghostConfig, Ghost ghost) {
@@ -328,19 +340,19 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createLivesCounter3D() {
-        livesCounter3D = new LivesCounter3D(uiConfig);
-        livesCounter3D.setTranslateX(2 * TS);
-        livesCounter3D.setTranslateY(2 * TS);
-        entities3D.add(livesCounter3D);
+        entityCache.livesCounter3D = new LivesCounter3D(uiConfig);
+        entityCache.livesCounter3D.setTranslateX(2 * TS);
+        entityCache.livesCounter3D.setTranslateY(2 * TS);
+        entitySet.add(entityCache.livesCounter3D);
     }
 
     private void createLevelCounter3D() {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
-        levelCounter3D.setTranslateX(TS(terrain.numCols() - 2));
-        levelCounter3D.setTranslateY(TS(2));
-        levelCounter3D.setTranslateZ(-uiConfig.entityConfig().levelCounter().elevation());
-        entities3D.add(levelCounter3D);
+        entityCache.levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
+        entityCache.levelCounter3D.setTranslateX(TS(terrain.numCols() - 2));
+        entityCache.levelCounter3D.setTranslateY(TS(2));
+        entityCache.levelCounter3D.setTranslateZ(-uiConfig.entityConfig().levelCounter().elevation());
+        entitySet.add(entityCache.levelCounter3D);
     }
 
     private void createMessageManager() {
@@ -359,20 +371,20 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Order matters for correct transparency!
     private void buildHierarchy() {
-        getChildren().addAll(levelCounter3D, livesCounter3D, pac3D);
-        pac3D.powerLight().ifPresent(getChildren()::add);
-        entities3D.selectAllOfType(Ghost3D.class).sorted(BY_PERSONALITY).forEach(getChildren()::add);
-        entities3D.selectAllOfType(Energizer3D.class).map(Energizer3D::shape).forEach(getChildren()::add);
-        entities3D.selectAllOfType(Pellet3D.class).map(Pellet3D::shape).forEach(getChildren()::add);
-        getChildren().addAll(maze3D.particlesGroup());
-        getChildren().addAll(maze3D, maze3D.house().root(), maze3D.house().doors());
+        getChildren().addAll(entityCache.levelCounter3D, entityCache.livesCounter3D, entityCache.pac3D);
+        entityCache.pac3D.powerLight().ifPresent(getChildren()::add);
+        entitySet.selectAllOfType(Ghost3D.class).sorted(BY_PERSONALITY).forEach(getChildren()::add);
+        entitySet.selectAllOfType(Energizer3D.class).map(Energizer3D::shape).forEach(getChildren()::add);
+        entitySet.selectAllOfType(Pellet3D.class).map(Pellet3D::shape).forEach(getChildren()::add);
+        getChildren().addAll(entityCache.maze3D.particlesGroup());
+        getChildren().addAll(entityCache.maze3D, entityCache.maze3D.house().root(), entityCache.maze3D.house().doors());
         getChildren().add(ghostHunterLight);
     }
 
     // --- Animations
 
     private void createEnergizerParticlesAnimation(ParticlesAnimationConfig particlesAnimationConfig) {
-        final List<PhongMaterial> ghostDressMaterials = entities3D.selectAllOfType(Ghost3D.class).sorted(BY_PERSONALITY)
+        final List<PhongMaterial> ghostDressMaterials = entitySet.selectAllOfType(Ghost3D.class).sorted(BY_PERSONALITY)
             .map(ghost3D -> ghost3D.materials().normalMaterial().dressMaterial())
             .toList();
 
@@ -398,15 +410,15 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             ghostDressMaterials,
             particlePool,
             particlesAnimationConfig,
-            maze3D.particlesGroup(),
-            particle -> particle.collidesWith(maze3D.floor()),
+            entityCache.maze3D.particlesGroup(),
+            particle -> particle.collidesWith(entityCache.maze3D.floor()),
             particle -> particle.pos().z() > 50 // positive z is below maze floor
         ));
     }
 
     private void createGhostLightAnimation() {
         final var ghostLightAnimation = new GhostLightRelayAnimation(ghostHunterLight,
-            entities3D.selectAllOfType(Ghost3D.class).sorted(BY_PERSONALITY).toList());
+            entitySet.selectAllOfType(Ghost3D.class).sorted(BY_PERSONALITY).toList());
         animationRegistry.register(AnimationID.GHOST_LIGHT, ghostLightAnimation);
     }
 }
