@@ -18,7 +18,6 @@ import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;

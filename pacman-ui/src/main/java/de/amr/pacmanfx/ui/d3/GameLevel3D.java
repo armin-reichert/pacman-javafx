@@ -400,7 +400,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         final ExplosionConfig config = particlesAnimationConfig.explosion();
 
-        particlePool = new Pool<>(1000, 200,
+        particlePool = new Pool<>(300, 300,
             () -> {
                 final PhongMaterial material = ghostDressMaterials.get(randomInt(0, 4));
                 final double scale = Math.clamp(RANDOM_GENERATOR.nextGaussian(2, 0.1), 0.5, 4);
