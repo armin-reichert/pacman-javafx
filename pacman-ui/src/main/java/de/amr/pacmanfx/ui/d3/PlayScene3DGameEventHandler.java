@@ -13,13 +13,14 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUIConstants;
-import de.amr.pacmanfx.ui.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.d3.animation.HideGhostShowPointsAnimation3D;
+import de.amr.pacmanfx.ui.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
@@ -30,6 +31,8 @@ import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.geometry.Point3D;
 import javafx.scene.image.Image;
+
+import java.util.Optional;
 
 import static de.amr.pacmanfx.model.CanonicalGameState.*;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSecThen;
@@ -166,9 +169,8 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     }
 
     private void triggerEnergizerExplosion(GameLevel3D level3D, Point3D center) {
-        final var particlesAnimation = level3D.animationRegistry()
-            .animation(GameLevel3D.AnimationID.ENERGIZER_PARTICLES_MOVEMENT, ParticlesAnimation3D.class);
-        particlesAnimation.triggerExplosion(center);
+        level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.PARTICLES, ParticlesAnimation3D.class)
+            .ifPresent(animation -> animation.triggerExplosion(center));
     }
 
     private void removePelletAfterDelay(GameLevel3D level3D, Pellet3D pellet3D) {
@@ -183,7 +185,8 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         soundEffects().ifPresent(GameSoundEffects::stopSiren);
         if (!game().isLevelCompleted()) {
             pac3D.setPowerMode(true);
-            level3D.animationRegistry().animation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING).playFromStart();
+            level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING)
+                .ifPresent(ManagedAnimation::playFromStart);
             soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
     }
@@ -192,8 +195,9 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     public void onPacLostPower(PacLostPowerEvent ignoredEvent) {
         final GameLevel3D level3D = assertLevel3D();
         level3D.entities().uniqueOfType(Pac3D.class).setPowerMode(false);
-        level3D.animationRegistry().animation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING).stop();
         soundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
+        level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING)
+            .ifPresent(ManagedAnimation::stop);
     }
 
     @Override
@@ -213,8 +217,12 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         level3D.entities().uniqueOfType(Pac3D.class).init(level3D.level());
         level3D.entities().selectAllOfType(Ghost3D.class).forEach(ghost3D -> ghost3D.init(level3D.level()));
         level3D.entities().selectAllOfType(Energizer3D.class).forEach(Energizer3D::startPumping);
-        level3D.animationRegistry().animation(GameLevel3D.AnimationID.ENERGIZER_PARTICLES_MOVEMENT).playFromStart();
-        level3D.animationRegistry().animation(GameLevel3D.AnimationID.GHOST_LIGHT).playFromStart();
+
+        level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.PARTICLES)
+            .ifPresent(ManagedAnimation::playFromStart);
+
+        level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.GHOST_LIGHT)
+            .ifPresent(ManagedAnimation::playFromStart);
     }
 
     private void onPacManDying(State<Game> gameState) {
@@ -224,8 +232,9 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         soundEffects().ifPresent(GameSoundEffects::stopAll);
 
         // Do not stop all animations!
-        level3D.animationRegistry().animation(GameLevel3D.AnimationID.GHOST_LIGHT).stop();
-        level3D.animationRegistry().animation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING).stop();
+        level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
+        level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
+
         level3D.entities().selectAllOfType(Ghost3D.class).forEach(Ghost3D::stopAllAnimations);
         level3D.entities().selectAllOfType(Bonus3D.class).forEach(Bonus3D::lookExpired);
 
@@ -300,6 +309,17 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     }
 
     private void playLevelEndAnimation(AnimationRegistry animationRegistry, Maze3D maze3D, State<Game> gameState, boolean cutSceneAfter) {
+        final GameLevel3D.AnimationID animationID = cutSceneAfter
+            ? GameLevel3D.AnimationID.LEVEL_COMPLETED_SHORT
+            : GameLevel3D.AnimationID.LEVEL_COMPLETED_FULL;
+
+        final Optional<ManagedAnimation> levelEndAnimation = animationRegistry.optAnimation(animationID);
+
+        if (levelEndAnimation.isEmpty()) {
+            Ufx.pauseSecThen(2, gameState::expire).play();
+            return;
+        }
+
         gameState.lock();
 
         final PerspectiveID perspectiveBeforeAnimation = GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.get();
@@ -309,10 +329,6 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
             maze3D.wallBaseHeightProperty().unbind();
         });
 
-        final Animation levelCompletion = animationRegistry.animation(
-            cutSceneAfter ? GameLevel3D.AnimationID.LEVEL_COMPLETED_SHORT : GameLevel3D.AnimationID.LEVEL_COMPLETED_FULL
-        ).animationFX();
-
         final Animation restoreCameraPerspective = Ufx.pauseSecThen(0.25, () -> {
             GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(perspectiveBeforeAnimation);
             maze3D.wallBaseHeightProperty().bind(GameUIConstants.PROPERTY_3D_WALL_HEIGHT);
@@ -320,14 +336,13 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
         final var seq = new SequentialTransition(
             resetCameraPerspective,
-            levelCompletion,
+            levelEndAnimation.get().animationFX(),
             restoreCameraPerspective
         );
         seq.setOnFinished(_ -> gameState.expire());
 
         seq.play();
     }
-
 
     private void onGameOver() {
         GameLevel3D level3D = assertLevel3D();

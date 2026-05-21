@@ -31,6 +31,7 @@ import de.amr.pacmanfx.ui.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticle3D;
 import de.amr.pacmanfx.uilib.model3D.animation.Pool;
@@ -73,7 +74,7 @@ import static java.util.Objects.requireNonNull;
 public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public enum AnimationID {
-        ENERGIZER_PARTICLES_MOVEMENT,
+        PARTICLES,
         GHOST_LIGHT,
         LEVEL_COMPLETED_FULL, 
         LEVEL_COMPLETED_SHORT,
@@ -87,19 +88,19 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final UIConfig uiConfig;
     private final List<PhongMaterial> ghostDressMaterials;
-    private final Pool<EnergizerParticle3D> particlePool;
-    private MessageManager3D messageManager;
     private final PointLight ghostHunterLight = new PointLight();
+
+    private Pool<EnergizerParticle3D> particlePool;
+    private MessageManager3D messageManager;
 
     /**
      * Creates a new 3D level representation for the given game level.
      *
      * @param level          the game level to visualize
      * @param uiConfig       the global UI configuration (provides 3D settings, colors, models)
-     * @param particlesAnimationConfig particle animation configuration
      * @param localizedTexts the resource bundle containing the localized UI texts
      */
-    public GameLevel3D(GameLevel level, UIConfig uiConfig, ParticlesAnimationConfig particlesAnimationConfig, ResourceBundle localizedTexts) {
+    public GameLevel3D(GameLevel level, UIConfig uiConfig, ResourceBundle localizedTexts) {
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
         requireNonNull(localizedTexts);
@@ -118,30 +119,30 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .map(ghost3D -> ghost3D.materials().normalMaterial().dressMaterial())
             .toList();
 
-        particlePool = new Pool<>(1000, 200,
-            () -> createExplosionParticle(particlesAnimationConfig.explosion()),
-            particle -> {
-                particle.reset();
-                particle.shape().setVisible(false);
-            }
-        );
-
-        // Maze3D must exist when energizer animations are created!
-        createAnimations(mapColorScheme, particlesAnimationConfig);
-
         setMouseTransparent(true); // this increases performance they say...
+    }
+
+    public void createAnimations(ParticlesAnimationConfig particlesAnimationConfig) {
+        final WorldMapColorScheme mapColorScheme = uiConfig.colorScheme(level.worldMap());
+        animationRegistry.register(AnimationID.WALL_COLOR_FLASHING, new WallColorFlashingAnimation(this, mapColorScheme));
+        animationRegistry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this));
+        animationRegistry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
+        createEnergizerParticlesAnimation(particlesAnimationConfig);
+        createGhostLightAnimation();
     }
 
     @Override
     public void dispose() {
         animationRegistry.dispose();
         entities3D.dispose();
-        particlePool.dispose();
-        cleanupGroup(this, true);
+        if (particlePool != null) {
+            particlePool.dispose();
+        }
         if (messageManager != null) {
             messageManager.dispose();
             messageManager = null;
         }
+        cleanupGroup(this, true);
     }
 
     /**
@@ -268,7 +269,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     protected void cleanupFoodAndParticles() {
-        animationRegistry.animation(AnimationID.ENERGIZER_PARTICLES_MOVEMENT).stop();
+        animationRegistry.optAnimation(AnimationID.PARTICLES).ifPresent(ManagedAnimation::stop);
         entities3D.selectAllOfType(Energizer3D.class).forEach(energizer3D -> {
             energizer3D.stopPumping();
             energizer3D.hide();
@@ -282,21 +283,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return entities3D.selectAllOfType(Ghost3D.class).sorted(BY_PERSONALITY);
     }
 
-    private void createAnimations(
-        WorldMapColorScheme colorScheme,
-        ParticlesAnimationConfig particlesAnimationConfig)
-    {
-        animationRegistry.register(AnimationID.WALL_COLOR_FLASHING, new WallColorFlashingAnimation(this, colorScheme));
-        animationRegistry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this));
-        animationRegistry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
-        createEnergizerParticlesAnimation(particlesAnimationConfig);
-        createGhostLightAnimation();
-    }
-
     private void createEnergizerParticlesAnimation(ParticlesAnimationConfig particlesAnimationConfig) {
         final Maze3D maze3D = entities3D.uniqueOfType(Maze3D.class);
         final House house = level.worldMap().terrainLayer().house();
-        animationRegistry.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, new ParticlesAnimation3D(
+        particlePool = new Pool<>(1000, 200,
+            () -> createExplosionParticle(particlesAnimationConfig.explosion()),
+            particle -> {
+                particle.reset();
+                particle.shape().setVisible(false);
+            }
+        );
+        animationRegistry.register(AnimationID.PARTICLES, new ParticlesAnimation3D(
             house,
             ghostDressMaterials,
             particlePool,

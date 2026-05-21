@@ -32,17 +32,16 @@ public class AnimationRegistry {
     public <T extends ManagedAnimation> T animation(Object key, Class<T> type) {
         requireNonNull(key);
         requireNonNull(type);
-        final ManagedAnimation managedAnimation = animationMap.get(key);
-        if (managedAnimation == null) {
-            Logger.error("No animation with key '{}' exists", key);
-            throw new NoSuchElementException();
+        final ManagedAnimation ma = animationMap.get(key);
+        if (ma == null) {
+            Logger.error("No animation with key='{}' exists", key);
+            return null;
         }
-        if (type.isInstance(managedAnimation)) {
-            return (T) managedAnimation;
+        if (type.isInstance(ma)) {
+            return (T) ma;
         }
-        Logger.error("Animation with key '{}' has wrong type: {}, expected: {}",
-            key, managedAnimation.getClass().getSimpleName(), type.getSimpleName());
-        throw new NoSuchElementException();
+        Logger.error("Animation key='{}' has wrong type: {}, expected: {}", key, ma.getClass().getSimpleName(), type.getSimpleName());
+        return null;
     }
 
     public ManagedAnimation animation(Object key) {

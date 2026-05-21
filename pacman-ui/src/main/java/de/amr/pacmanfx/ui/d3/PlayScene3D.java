@@ -268,11 +268,14 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
             Logger.info("Old 3D game level gets disposed...");
             level3D.dispose();
         }
-        level3D = new GameLevel3D(level, ui.currentConfig(), GameUIConstants.DEFAULT_PARTICLE_ANIMATION_CONFIG, ui.translator());
+        level3D = new GameLevel3D(level, ui.currentConfig(), ui.translator());
         decorate(level3D);
         level3D.entities().selectAll().forEach(entity -> entity.init(level));
         level3D.startLivesCounterTrackingPac();
         level3DParent.getChildren().setAll(level3D);
+
+        level3D.createAnimations(GameUIConstants.DEFAULT_PARTICLE_ANIMATION_CONFIG);
+
         Logger.info("Created and added new 3D game level to play scene");
     }
 
