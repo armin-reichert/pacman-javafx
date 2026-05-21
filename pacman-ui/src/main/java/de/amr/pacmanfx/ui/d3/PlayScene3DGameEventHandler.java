@@ -181,10 +181,9 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     @Override
     public void onPacGetsPower(PacGetsPowerEvent event) {
         final GameLevel3D level3D = assertLevel3D();
-        final Pac3D pac3D = level3D.entities().uniqueOfType(Pac3D.class);
         soundEffects().ifPresent(GameSoundEffects::stopSiren);
         if (!game().isLevelCompleted()) {
-            pac3D.setPowerMode(true);
+            level3D.pac3D().setPowerMode(true);
             level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING)
                 .ifPresent(ManagedAnimation::playFromStart);
             soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
@@ -194,7 +193,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     @Override
     public void onPacLostPower(PacLostPowerEvent ignoredEvent) {
         final GameLevel3D level3D = assertLevel3D();
-        level3D.entities().uniqueOfType(Pac3D.class).setPowerMode(false);
+        level3D.pac3D().setPowerMode(false);
         soundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING)
             .ifPresent(ManagedAnimation::stop);
@@ -214,8 +213,8 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     private void onHuntingStart() {
         final GameLevel3D level3D = assertLevel3D();
-        level3D.entities().uniqueOfType(Pac3D.class).init(level3D.level());
-        level3D.entities().selectAllOfType(Ghost3D.class).forEach(ghost3D -> ghost3D.init(level3D.level()));
+        level3D.pac3D().init(level3D.level());
+        level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level3D.level()));
         level3D.entities().selectAllOfType(Energizer3D.class).forEach(Energizer3D::startPumping);
 
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.PARTICLES)
@@ -227,7 +226,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     private void onPacManDying(State<Game> gameState) {
         final GameLevel3D level3D = assertLevel3D();
-        final Pac3D pac3D = level3D.entities().uniqueOfType(Pac3D.class);
+        final Pac3D pac3D = level3D.pac3D();
 
         soundEffects().ifPresent(GameSoundEffects::stopAll);
 

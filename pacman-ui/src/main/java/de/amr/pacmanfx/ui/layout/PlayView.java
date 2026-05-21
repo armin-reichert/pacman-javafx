@@ -502,10 +502,10 @@ public class PlayView extends StackPane implements View {
         playScene3D.replaceActionBindings(level);
         playScene3D.initFood3D(level.worldMap().foodLayer(), true);
 
-        final GameLevel3D gameLevel3D = playScene3D.optGameLevel3D().orElseThrow();
-        final Pac3D pac3D = gameLevel3D.entities().uniqueOfType(Pac3D.class);
+        final GameLevel3D level3D = playScene3D.optGameLevel3D().orElseThrow();
+        final Pac3D pac3D = level3D.pac3D();
         playScene3D.initPac3D(pac3D, level);
-        gameLevel3D.startLivesCounterTrackingPac();
+        level3D.startLivesCounterTrackingPac();
 
         if (level.pac().powerTimer().isRunning()) {
             ui.currentConfig().optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);

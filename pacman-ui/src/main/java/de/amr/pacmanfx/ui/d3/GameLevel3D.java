@@ -137,7 +137,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      */
     public void startLivesCounterTrackingPac() {
         final LivesCounter3D livesCounter3D = entities3D.uniqueOfType(LivesCounter3D.class);
-        final Pac3D pac3D = entities3D.uniqueOfType(Pac3D.class);
         livesCounter3D.startTracking(pac3D);
     }
 
@@ -346,7 +345,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Order matters for correct transparency!
     private void buildHierarchy() {
-        final Pac3D pac3D = entities3D.uniqueOfType(Pac3D.class);
         final LevelCounter3D levelCounter3D = entities3D.uniqueOfType(LevelCounter3D.class);
         final LivesCounter3D livesCounter3D = entities3D.uniqueOfType(LivesCounter3D.class);
         getChildren().addAll(levelCounter3D, livesCounter3D, pac3D);
