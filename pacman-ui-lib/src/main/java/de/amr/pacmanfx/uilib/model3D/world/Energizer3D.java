@@ -5,10 +5,8 @@
 package de.amr.pacmanfx.uilib.model3D.world;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelEntity;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -26,7 +24,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class Energizer3D implements GameLevelEntity, DisposableGraphicsObject {
+public class Energizer3D implements DisposableGraphicsObject {
 
     public enum AnimationID {
         ENERGIZER_PUMPING;
@@ -93,11 +91,6 @@ public class Energizer3D implements GameLevelEntity, DisposableGraphicsObject {
         if (shape != null) {
             updateShapeLocation();
         }
-    }
-
-    @Override
-    public void init(GameLevel level) {
-        stopPumping();
     }
 
     @Override

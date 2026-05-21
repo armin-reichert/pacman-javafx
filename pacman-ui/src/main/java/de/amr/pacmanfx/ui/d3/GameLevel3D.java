@@ -78,7 +78,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private static final Comparator<Ghost3D> BY_PERSONALITY = Comparator.comparingInt(ghost3D -> ghost3D.ghost().personality());
 
-    private static class EntityCache {
+    public static class EntityCache {
         Pac3D pac3D;
         Maze3D maze3D;
         Ghost3D[] ghosts3D; // order: RED, PINK, CYAN, ORANGE
@@ -195,6 +195,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return messageManager;
     }
 
+    public EntityCache entityCache() {
+        return entityCache;
+    }
+
     public GameLevelEntitySet entities() {
         return entitySet;
     }
@@ -216,8 +220,16 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return entityCache.ghosts3D[personality];
     }
 
+    public Stream<Energizer3D> energizers3D() {
+        return entityCache.energizer3DByTile.values().stream();
+    }
+
     public Optional<Energizer3D> energizer3DAt(Vector2i tile) {
         return Optional.ofNullable(entityCache.energizer3DByTile.get(tile));
+    }
+
+    public Stream<Pellet3D> pellets3D() {
+        return entityCache.pellet3DByTile.values().stream();
     }
 
     public Optional<Pellet3D> pellet3DAtTile(Vector2i tile) {
@@ -280,16 +292,18 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         foodLayer.tiles()
             .filter(foodLayer::hasFoodAtTile)
-            .map(tile -> foodLayer.isEnergizerTile(tile)
-                ? createEnergizer3D(tile, energizerZ, foodMaterial)
-                : createPellet3D(tile, pelletZ, foodMaterial))
-            .forEach(entitySet::add);
+            .forEach(tile -> {
+                if (foodLayer.isEnergizerTile(tile)) {
+                    entityCache.energizer3DByTile.put(tile, createEnergizer3D(tile, energizerZ, foodMaterial));
+                } else {
+                    entityCache.pellet3DByTile.put(tile, createPellet3D(tile, pelletZ, foodMaterial));
+                }
+            });
     }
 
     private Pellet3D createPellet3D(Vector2i tile, double z, PhongMaterial foodMaterial) {
         final Pellet3D pellet3D = uiConfig.factory3D().createPellet3D(uiConfig.entityConfig().pellet(), foodMaterial);
         pellet3D.setLocation(tile, z);
-        entityCache.pellet3DByTile.put(tile, pellet3D);
         return pellet3D;
     }
 
@@ -297,7 +311,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Energizer3D energizer3D = uiConfig.factory3D().createEnergizer3D(
             uiConfig.entityConfig().energizer(), animationRegistry, foodMaterial);
         energizer3D.setLocation(tile, z);
-        entityCache.energizer3DByTile.put(tile, energizer3D);
         return energizer3D;
     }
 

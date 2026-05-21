@@ -135,7 +135,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         if (gameState instanceof TestState) {
             gameScene().replaceGameLevel3D(level);
             final GameLevel3D level3D = assertLevel3D();
-            level3D.entities().selectAllOfType(Energizer3D.class).forEach(Energizer3D::startPumping);
+            level3D.energizers3D().forEach(Energizer3D::startPumping);
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level.number());
         }
         assertLevel3D().entities().selectAll().forEach(e -> e.init(level));
@@ -147,9 +147,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     public void onPacEatsFood(PacEatsFoodEvent event) {
         final GameLevel3D level3D = assertLevel3D();
         if (event.allPellets()) {
-            level3D.entities().selectAllOfType(Pellet3D.class)
-                .map(Pellet3D::shape)
-                .forEach(shape -> level3D.getChildren().remove(shape));
+            level3D.pellets3D().map(Pellet3D::shape).forEach(shape -> level3D.getChildren().remove(shape));
         } else {
             final Vector2i tile = event.pac().tile();
             if (event.energizer()) {
@@ -215,7 +213,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         final GameLevel3D level3D = assertLevel3D();
         level3D.pac3D().init(level3D.level());
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level3D.level()));
-        level3D.entities().selectAllOfType(Energizer3D.class).forEach(Energizer3D::startPumping);
+        level3D.energizers3D().forEach(Energizer3D::startPumping);
 
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.PARTICLES)
             .ifPresent(ManagedAnimation::playFromStart);
@@ -234,7 +232,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
 
-        level3D.entities().selectAllOfType(Ghost3D.class).forEach(Ghost3D::stopAllAnimations);
+        level3D.ghosts3D().forEach(Ghost3D::stopAllAnimations);
         level3D.entities().selectAllOfType(Bonus3D.class).forEach(Bonus3D::lookExpired);
 
         gameState.lock();

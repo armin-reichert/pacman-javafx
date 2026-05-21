@@ -13,7 +13,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class Pellet3D implements GameLevelEntity, DisposableGraphicsObject {
+public class Pellet3D implements DisposableGraphicsObject {
 
     private Shape3D shape;
     private Vector2i tile;

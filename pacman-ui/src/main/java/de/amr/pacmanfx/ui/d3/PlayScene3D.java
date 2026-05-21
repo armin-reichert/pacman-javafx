@@ -17,8 +17,6 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
-import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
-import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
 import de.amr.pacmanfx.uilib.model3D.world.Scores3D;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.beans.property.DoubleProperty;
@@ -251,15 +249,13 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     public void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
         requireNonNull(foodLayer);
-        level3D.entities().selectAllOfType(Pellet3D.class)
-            .forEach(pellet3D -> pellet3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
-        level3D.entities().selectAllOfType(Energizer3D.class)
-            .forEach(energizer3D -> energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
-        if (startEnergizerPumping) {
-            level3D.entities()
-                .selectWhere(Energizer3D.class, energizer3D -> energizer3D.shape().isVisible())
-                .forEach(Energizer3D::startPumping);
-        }
+        level3D.pellets3D().forEach(pellet3D -> pellet3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
+        level3D.energizers3D().forEach(energizer3D -> {
+            energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile()));
+            if (startEnergizerPumping && energizer3D.shape().isVisible()) {
+                energizer3D.startPumping();
+            }
+        });
     }
 
     public void replaceGameLevel3D(GameLevel level) {
