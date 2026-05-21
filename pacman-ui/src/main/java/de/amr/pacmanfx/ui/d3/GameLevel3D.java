@@ -52,15 +52,13 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Stream;
 
 import static de.amr.basics.math.RandomNumberSupport.RANDOM_GENERATOR;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.basics.math.Vector2f.vec2_float;
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
@@ -87,13 +85,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private final GameLevelEntitySet entities3D = new GameLevelEntitySet();
 
-    // Cached for efficiency
+    // Cache for efficiency
     private Pac3D pac3D;
     private Maze3D maze3D;
-    private List<Ghost3D> ghosts3D;
+    private List<Ghost3D> ghosts3D; // order: RED, PINK, CYAN, ORANGE
     private LivesCounter3D livesCounter3D;
     private LevelCounter3D levelCounter3D;
-
+    private final Map<Vector2i, Energizer3D> energizer3DByTile = new HashMap<>();
+    private final Map<Vector2i, Pellet3D> pellet3DByTile = new HashMap<>();
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final PointLight ghostHunterLight = new PointLight();
 
@@ -144,7 +143,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     @Override
     public void dispose() {
         animationRegistry.dispose();
+
+        // clear entity caches
+        ghosts3D.clear();
+        energizer3DByTile.clear();
+        pellet3DByTile.clear();
         entities3D.dispose();
+
         if (particlePool != null) {
             particlePool.dispose();
         }
@@ -193,17 +198,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return ghosts3D;
     }
 
-    public Optional<Ghost3D> ghost3D(byte personality) {
+    public Ghost3D ghost3D(byte personality) {
         requireValidGhostPersonality(personality);
-        return ghosts3D.stream().filter(ghost3D -> ghost3D.ghost().personality() == personality).findFirst();
+        return ghosts3D.get(personality);
     }
 
     public Optional<Energizer3D> energizer3DAt(Vector2i tile) {
-        return entities3D.selectWhere(Energizer3D.class, e3D -> tile.equals(e3D.tile())).findFirst();
+        return Optional.ofNullable(energizer3DByTile.get(tile));
     }
 
     public Optional<Pellet3D> pellet3DAtTile(Vector2i tile) {
-        return entities3D.selectWhere(Pellet3D.class, p3D -> tile.equals(p3D.tile())).findFirst();
+        return Optional.ofNullable(pellet3DByTile.get(tile));
     }
 
     public void cleanupFoodAndParticles() {
@@ -276,6 +281,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private Pellet3D createPellet3D(Vector2i tile, double z, PhongMaterial foodMaterial) {
         final Pellet3D pellet3D = uiConfig.factory3D().createPellet3D(uiConfig.entityConfig().pellet(), foodMaterial);
         pellet3D.setLocation(tile, z);
+        pellet3DByTile.put(tile, pellet3D);
         return pellet3D;
     }
 
@@ -283,6 +289,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Energizer3D energizer3D = uiConfig.factory3D().createEnergizer3D(
             uiConfig.entityConfig().energizer(), animationRegistry, foodMaterial);
         energizer3D.setLocation(tile, z);
+        energizer3DByTile.put(tile, energizer3D);
         return energizer3D;
     }
 
@@ -303,7 +310,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createGhosts3D() {
         final List<GhostConfig> ghostConfigs = uiConfig.entityConfig().ghostConfigs();
-        ghosts3D = level.ghosts()
+        ghosts3D = Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
+            .map(level::ghost)
             .map(ghost -> {
                 final Ghost3D ghost3D = createGhost3D(ghostConfigs.get(ghost.personality()), ghost);
                 ghost3D.init(level);
