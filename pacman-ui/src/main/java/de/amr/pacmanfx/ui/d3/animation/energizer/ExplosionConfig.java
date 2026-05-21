@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.uilib.model3D.animation;
+package de.amr.pacmanfx.ui.d3.animation.energizer;
 
 import de.amr.basics.math.Vector3f;
 

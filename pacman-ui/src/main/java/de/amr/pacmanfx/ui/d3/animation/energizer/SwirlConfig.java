@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.uilib.model3D.animation;
+package de.amr.pacmanfx.ui.d3.animation.energizer;
 
 public record SwirlConfig(
     float radius,

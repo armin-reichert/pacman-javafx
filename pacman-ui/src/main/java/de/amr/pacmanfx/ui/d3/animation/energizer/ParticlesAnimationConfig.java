@@ -1,6 +1,6 @@
-package de.amr.pacmanfx.uilib.model3D.animation;
+package de.amr.pacmanfx.ui.d3.animation.energizer;
 
-public record ParticleAnimationConfig(
+public record ParticlesAnimationConfig(
     ExplosionConfig explosion,
     AttractionConfig attraction,
     SwirlConfig swirl) {

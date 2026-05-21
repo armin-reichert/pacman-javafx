@@ -10,10 +10,10 @@ import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.model3D.animation.AttractionConfig;
-import de.amr.pacmanfx.uilib.model3D.animation.ExplosionConfig;
-import de.amr.pacmanfx.uilib.model3D.animation.ParticleAnimationConfig;
-import de.amr.pacmanfx.uilib.model3D.animation.SwirlConfig;
+import de.amr.pacmanfx.ui.d3.animation.energizer.AttractionConfig;
+import de.amr.pacmanfx.ui.d3.animation.energizer.ExplosionConfig;
+import de.amr.pacmanfx.ui.d3.animation.energizer.ParticlesAnimationConfig;
+import de.amr.pacmanfx.ui.d3.animation.energizer.SwirlConfig;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
@@ -170,7 +170,7 @@ public class GameUIConstants {
         new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_2D_3D,          alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
     );
 
-    public static final ParticleAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticleAnimationConfig(
+    public static final ParticlesAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticlesAnimationConfig(
         new ExplosionConfig(
             new Vector3f(0, 0, 0.1f), // gravity
             300,        // num particles by explosion

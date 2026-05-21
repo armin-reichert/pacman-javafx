@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUIConstants;
-import de.amr.pacmanfx.ui.d3.animation.EnergizerParticlesAnimation3D;
+import de.amr.pacmanfx.ui.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
@@ -167,7 +167,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     private void triggerEnergizerExplosion(GameLevel3D level3D, Point3D center) {
         final var particlesAnimation = level3D.animationRegistry()
-            .animation(GameLevel3D.AnimationID.ENERGIZER_PARTICLES_MOVEMENT, EnergizerParticlesAnimation3D.class);
+            .animation(GameLevel3D.AnimationID.ENERGIZER_PARTICLES_MOVEMENT, ParticlesAnimation3D.class);
         particlesAnimation.triggerExplosion(center);
     }
 

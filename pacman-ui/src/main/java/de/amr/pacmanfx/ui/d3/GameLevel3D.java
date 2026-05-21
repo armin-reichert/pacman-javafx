@@ -20,6 +20,9 @@ import de.amr.pacmanfx.ui.config.BonusConfig;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.ui.d3.animation.*;
+import de.amr.pacmanfx.ui.d3.animation.energizer.ParticlesAnimation3D;
+import de.amr.pacmanfx.ui.d3.animation.energizer.ExplosionConfig;
+import de.amr.pacmanfx.ui.d3.animation.energizer.ParticlesAnimationConfig;
 import de.amr.pacmanfx.ui.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
@@ -85,10 +88,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      *
      * @param level          the game level to visualize
      * @param uiConfig       the global UI configuration (provides 3D settings, colors, models)
-     * @param particleAnimationConfig particle animation configuration
+     * @param particlesAnimationConfig particle animation configuration
      * @param localizedTexts the resource bundle containing the localized UI texts
      */
-    public GameLevel3D(GameLevel level, UIConfig uiConfig, ParticleAnimationConfig particleAnimationConfig, ResourceBundle localizedTexts) {
+    public GameLevel3D(GameLevel level, UIConfig uiConfig, ParticlesAnimationConfig particlesAnimationConfig, ResourceBundle localizedTexts) {
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
         requireNonNull(localizedTexts);
@@ -108,7 +111,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .toList();
 
         particlePool = new Pool<>(1000, 200,
-            () -> createExplosionParticle(particleAnimationConfig.explosion()),
+            () -> createExplosionParticle(particlesAnimationConfig.explosion()),
             particle -> {
                 particle.reset();
                 particle.shape().setVisible(false);
@@ -116,7 +119,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         );
 
         // Maze3D must exist when energizer animations are created!
-        createAnimations(mapColorScheme, particleAnimationConfig);
+        createAnimations(mapColorScheme, particlesAnimationConfig);
 
         setMouseTransparent(true); // this increases performance they say...
     }
@@ -279,13 +282,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createAnimations(
         WorldMapColorScheme colorScheme,
-        ParticleAnimationConfig particleAnimationConfig)
+        ParticlesAnimationConfig particlesAnimationConfig)
     {
         animationRegistry.register(AnimationID.WALL_COLOR_FLASHING, new WallColorFlashingAnimation(this, colorScheme));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
-        animationRegistry.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, new EnergizerParticlesAnimation3D(
-            this, ghostDressMaterials, particlePool, particleAnimationConfig, entities3D.unique(Maze3D.class).particlesGroup()
+        animationRegistry.register(AnimationID.ENERGIZER_PARTICLES_MOVEMENT, new ParticlesAnimation3D(
+            this, ghostDressMaterials, particlePool, particlesAnimationConfig, entities3D.unique(Maze3D.class).particlesGroup()
         ));
 
         //TODO: this is ugly and should be changed

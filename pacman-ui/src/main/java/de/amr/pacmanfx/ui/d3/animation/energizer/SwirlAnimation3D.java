@@ -1,7 +1,8 @@
-package de.amr.pacmanfx.uilib.model3D.animation;
+package de.amr.pacmanfx.ui.d3.animation.energizer;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector3f;
+import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticle3D;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,13 +10,13 @@ import java.util.Set;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static java.util.Objects.requireNonNull;
 
-public class ParticlesSwirlAnimation3D implements Disposable {
+public class SwirlAnimation3D implements Disposable {
 
     private final SwirlConfig config;
     private final Vector3f baseCenter;
     private final Set<EnergizerParticle3D> particles = new HashSet<>();
 
-    public ParticlesSwirlAnimation3D(SwirlConfig config, Vector3f baseCenter) {
+    public SwirlAnimation3D(SwirlConfig config, Vector3f baseCenter) {
         this.config = requireNonNull(config);
         this.baseCenter = requireNonNull(baseCenter);
     }

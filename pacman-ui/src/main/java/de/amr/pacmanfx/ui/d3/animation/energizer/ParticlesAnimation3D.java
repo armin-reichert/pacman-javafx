@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.d3.animation;
+package de.amr.pacmanfx.ui.d3.animation.energizer;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector3f;
@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
  * inside the ghost house where they accumulate to colored ghost shapes.
  * <p>Particles falling off from the maze are hidden at a certain height below the maze.</p>
  */
-public class EnergizerParticlesAnimation3D extends ManagedAnimation implements Disposable {
+public class ParticlesAnimation3D extends ManagedAnimation implements Disposable {
 
     private static final byte[] GHOST_PERSONALITIES = {
         RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY
@@ -50,22 +50,22 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation implements D
         };
     }
 
-    private final ParticleAnimationConfig config;
+    private final ParticlesAnimationConfig config;
     private final List<Vector3f> swirlBases;
     private final List<PhongMaterial> ghostDressMaterials;
     private final List<EnergizerParticle3D> particles = new ArrayList<>();
     private final Group particlesGroup;
     private final Pool<EnergizerParticle3D> particlePool;
-    private final List<ParticlesSwirlAnimation3D> swirlAnimations = new ArrayList<>();
+    private final List<SwirlAnimation3D> swirlAnimations = new ArrayList<>();
 
     private Predicate<EnergizerParticle3D> floorCollisionTest = _ -> false;
     private Predicate<EnergizerParticle3D> outOfWorldTest = _ -> false;
 
-    public EnergizerParticlesAnimation3D(
+    public ParticlesAnimation3D(
         GameLevel3D level3D,
         List<PhongMaterial> ghostDressMaterials,
         Pool<EnergizerParticle3D> particlePool,
-        ParticleAnimationConfig config,
+        ParticlesAnimationConfig config,
         Group particlesGroup)
     {
         super("Energizer particles animation");
@@ -85,7 +85,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation implements D
             .map(pos -> new Vector3f(pos.x(), pos.y(), 0))
             .toList();
 
-        swirlBases.forEach(base -> swirlAnimations.add(new ParticlesSwirlAnimation3D(config.swirl(), base)));
+        swirlBases.forEach(base -> swirlAnimations.add(new SwirlAnimation3D(config.swirl(), base)));
 
         floorCollisionTest = particle -> particle.collidesWith(maze3D.floor());
         outOfWorldTest = particle -> particle.pos().z() > 50; // positive z is below maze floor
@@ -93,7 +93,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation implements D
         setFactory(() -> {
             final var timeline = new Timeline(new KeyFrame(Duration.millis(16.666), _ -> {
                 updateParticles();
-                for (ParticlesSwirlAnimation3D swirlAnimation : swirlAnimations) {
+                for (SwirlAnimation3D swirlAnimation : swirlAnimations) {
                     swirlAnimation.update();
                 }
             }));
@@ -104,7 +104,7 @@ public class EnergizerParticlesAnimation3D extends ManagedAnimation implements D
 
     @Override
     public void freeResources() {
-        swirlAnimations.forEach(ParticlesSwirlAnimation3D::dispose);
+        swirlAnimations.forEach(SwirlAnimation3D::dispose);
         particles.clear();
         particlesGroup.getChildren().clear();
     }
