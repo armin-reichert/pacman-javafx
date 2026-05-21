@@ -6,16 +6,12 @@ package de.amr.pacmanfx.ui.d3.animation;
 
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
-import de.amr.pacmanfx.ui.d3.MazeMaterials3D;
-import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
-
-import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -52,11 +48,10 @@ public class WallColorFlashingAnimation extends ManagedAnimation {
 
             @Override
             protected void interpolate(double t) {
-                wallTopMaterial().ifPresent(wallTopMaterial -> {
-                    final Color color = fromColor.interpolate(toColor, t);
-                    wallTopMaterial.setDiffuseColor(color);
-                    wallTopMaterial.setSpecularColor(color.brighter());
-                });
+                final PhongMaterial wallTopMaterial = wallTopMaterial();
+                final Color color = fromColor.interpolate(toColor, t);
+                wallTopMaterial.setDiffuseColor(color);
+                wallTopMaterial.setSpecularColor(color.brighter());
             }
         };
     }
@@ -65,14 +60,13 @@ public class WallColorFlashingAnimation extends ManagedAnimation {
     public void stop() {
         super.stop();
         // reset wall colors
-        wallTopMaterial().ifPresent(wallTopMaterial -> {
-            final Color wallFillColor = Color.valueOf(colorScheme.wallFill());
-            wallTopMaterial.setDiffuseColor(wallFillColor);
-            wallTopMaterial.setSpecularColor(wallFillColor.brighter());
-        });
+        final PhongMaterial wallTopMaterial = wallTopMaterial();
+        final Color wallFillColor = Color.valueOf(colorScheme.wallFill());
+        wallTopMaterial.setDiffuseColor(wallFillColor);
+        wallTopMaterial.setSpecularColor(wallFillColor.brighter());
     }
 
-    private Optional<PhongMaterial> wallTopMaterial() {
-        return level3D.entities().anyOfType(Maze3D.class).map(Maze3D::materials).map(MazeMaterials3D::wallTop);
+    private PhongMaterial wallTopMaterial() {
+        return level3D.maze3D().materials().wallTop();
     }
 }

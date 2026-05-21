@@ -84,7 +84,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private final GameLevel level;
 
     private final UIConfig uiConfig;
+
     private final GameLevelEntitySet entities3D = new GameLevelEntitySet();
+
+    // Cached for efficiency
+    private Pac3D pac3D;
+    private Maze3D maze3D;
+    private List<Ghost3D> ghosts3D;
+
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private final PointLight ghostHunterLight = new PointLight();
 
@@ -174,9 +181,21 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return entities3D;
     }
 
+    public Maze3D maze3D() {
+        return maze3D;
+    }
+
+    public Pac3D pac3D() {
+        return pac3D;
+    }
+
+    public List<Ghost3D> ghosts3D() {
+        return ghosts3D;
+    }
+
     public Optional<Ghost3D> ghost3D(byte personality) {
         requireValidGhostPersonality(personality);
-        return entities3D.selectWhere(Ghost3D.class, ghost3D -> ghost3D.ghost().personality() == personality).findFirst();
+        return ghosts3D.stream().filter(ghost3D -> ghost3D.ghost().personality() == personality).findFirst();
     }
 
     public Optional<Energizer3D> energizer3DAt(Vector2i tile) {
@@ -195,14 +214,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         });
         // Hide 3D food explicitly (handles cheat-eat-all case)
         entities3D.selectAllOfType(Pellet3D.class).forEach(pellet3D -> pellet3D.shape().setVisible(false));
-        entities3D.uniqueOfType(Maze3D.class).particlesGroup().getChildren().clear();
+        maze3D.particlesGroup().getChildren().clear();
     }
 
     public void setDrawMode(DrawMode drawMode) {
         requireNonNull(drawMode);
         entities3D.selectAllOfType(Pac3D.class).forEach(pac3D -> Ufx.setDrawMode(pac3D, drawMode));
         entities3D.selectAllOfType(Ghost3D.class).forEach(ghost3D -> Ufx.setDrawMode(ghost3D, drawMode));
-        Ufx.setDrawMode(entities3D.uniqueOfType(Maze3D.class), drawMode);
+        Ufx.setDrawMode(maze3D, drawMode);
     }
 
     public void addOrReplaceBonus3D(Bonus bonus) {
@@ -222,7 +241,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void createMaze3D() {
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final Maze3D maze3D = uiConfig.factory3D().createMaze3D(terrain, uiConfig.entityConfig(), colorScheme, animationRegistry);
+        maze3D = uiConfig.factory3D().createMaze3D(terrain, uiConfig.entityConfig(), colorScheme, animationRegistry);
         maze3D.wallOpacityProperty().bind(GameUIConstants.PROPERTY_3D_WALL_OPACITY);
         maze3D.wallBaseHeightProperty().bind(GameUIConstants.PROPERTY_3D_WALL_HEIGHT);
         maze3D.floorColorProperty().bind(GameUIConstants.PROPERTY_3D_FLOOR_COLOR);
@@ -232,7 +251,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void createFood3D() {
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final FoodLayer foodLayer = level.worldMap().foodLayer();
-        final Maze3D maze3D = entities3D.uniqueOfType(Maze3D.class);
 
         final PhongMaterial foodMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
 
@@ -274,19 +292,19 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createPac3D() {
         final PacConfig config = uiConfig.entityConfig().pacConfig();
-        final Pac3D pac3D = uiConfig.factory3D().createPac3D(level.pac(), config, animationRegistry);
+        pac3D = uiConfig.factory3D().createPac3D(level.pac(), config, animationRegistry);
         entities3D.add(pac3D);
     }
 
     private void createGhosts3D() {
         final List<GhostConfig> ghostConfigs = uiConfig.entityConfig().ghostConfigs();
-        level.ghosts()
+        ghosts3D = level.ghosts()
             .map(ghost -> {
                 final Ghost3D ghost3D = createGhost3D(ghostConfigs.get(ghost.personality()), ghost);
                 ghost3D.init(level);
                 return ghost3D;
-            })
-            .forEach(entities3D::add);
+            }).toList();
+        ghosts3D.forEach(entities3D::add);
     }
 
     private Ghost3D createGhost3D(GhostConfig ghostConfig, Ghost ghost) {
@@ -328,7 +346,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Order matters for correct transparency!
     private void buildHierarchy() {
-        final Maze3D maze3D = entities3D.uniqueOfType(Maze3D.class);
         final Pac3D pac3D = entities3D.uniqueOfType(Pac3D.class);
         final LevelCounter3D levelCounter3D = entities3D.uniqueOfType(LevelCounter3D.class);
         final LivesCounter3D livesCounter3D = entities3D.uniqueOfType(LivesCounter3D.class);
@@ -364,7 +381,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             }
         );
 
-        final Maze3D maze3D = entities3D.uniqueOfType(Maze3D.class);
         final House house = level.worldMap().terrainLayer().house();
 
         animationRegistry.register(AnimationID.PARTICLES, new ParticlesAnimation3D(

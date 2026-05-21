@@ -296,8 +296,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
         gameScene().scoreOpacity.set(0);
 
-        final Maze3D maze3D = level3D.entities().uniqueOfType(Maze3D.class);
-        maze3D.house().hideDoors();
+        level3D.maze3D().house().hideDoors();
 
         soundEffects().ifPresent(GameSoundEffects::stopAll);
         level3D.animationRegistry().stopAllAnimations();
@@ -305,7 +304,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         level3D.entities().anyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         level3D.messageManager().hideMessage();
 
-        playLevelEndAnimation(level3D.animationRegistry(), maze3D, gameState, level3D.level().cutSceneNumber() != 0);
+        playLevelEndAnimation(level3D.animationRegistry(), level3D.maze3D(), gameState, level3D.level().cutSceneNumber() != 0);
     }
 
     private void playLevelEndAnimation(AnimationRegistry animationRegistry, Maze3D maze3D, State<Game> gameState, boolean cutSceneAfter) {
