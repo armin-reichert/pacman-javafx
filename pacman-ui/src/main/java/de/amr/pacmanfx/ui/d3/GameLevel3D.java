@@ -254,31 +254,36 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         final PhongMaterial foodMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
 
-        // Pellets
         final PelletConfig3D pelletConfig3D = uiConfig.entityConfig().pellet();
         final double pelletZ = maze3D.floorTop() - pelletConfig3D.floorElevation();
+
         foodLayer.tiles()
             .filter(tile -> !foodLayer.isEnergizerTile(tile))
             .filter(foodLayer::hasFoodAtTile)
-            .map(tile -> {
-                final Pellet3D pellet3D = uiConfig.factory3D().createPellet3D(pelletConfig3D, foodMaterial);
-                pellet3D.setLocation(tile, pelletZ);
-                return pellet3D;
-            })
+            .map(tile -> createPellet3D(tile, pelletZ, foodMaterial))
             .forEach(entities3D::add);
 
-        // Energizers
         final EnergizerConfig3D energizerConfig3D = uiConfig.entityConfig().energizer();
         final double energizerZ = maze3D.floorTop() - energizerConfig3D.floorElevation();
+
         foodLayer.tiles()
             .filter(foodLayer::hasFoodAtTile)
             .filter(foodLayer::isEnergizerTile)
-            .map(tile -> {
-                final Energizer3D energizer3D = uiConfig.factory3D().createEnergizer3D(energizerConfig3D, animationRegistry, foodMaterial);
-                energizer3D.setLocation(tile, energizerZ);
-                return energizer3D;
-            })
+            .map(tile -> createEnergizer3D(tile, energizerZ, foodMaterial))
             .forEach(entities3D::add);
+    }
+
+    private Pellet3D createPellet3D(Vector2i tile, double z, PhongMaterial foodMaterial) {
+        final Pellet3D pellet3D = uiConfig.factory3D().createPellet3D(uiConfig.entityConfig().pellet(), foodMaterial);
+        pellet3D.setLocation(tile, z);
+        return pellet3D;
+    }
+
+    private Energizer3D createEnergizer3D(Vector2i tile, double z, PhongMaterial foodMaterial) {
+        final Energizer3D energizer3D = uiConfig.factory3D().createEnergizer3D(
+            uiConfig.entityConfig().energizer(), animationRegistry, foodMaterial);
+        energizer3D.setLocation(tile, z);
+        return energizer3D;
     }
 
     private Bonus3D createBonus3D(Bonus bonus) {
