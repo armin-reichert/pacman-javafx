@@ -15,6 +15,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.List;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static java.util.Objects.requireNonNull;
@@ -44,11 +45,17 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
         this.ghosts3D = requireNonNull(ghosts3DInOrder);
 
         setFactory(() -> {
-            final var timeline = new Timeline(new KeyFrame(LIGHT_CHANGE_INTERVAL, _ -> passGhostLightToNextHunter()));
+            final var timeline = new Timeline(
+                new KeyFrame(LIGHT_CHANGE_INTERVAL, _ -> passGhostLightToNextHunter()));
             timeline.setCycleCount(Animation.INDEFINITE);
             timeline.statusProperty().addListener((_, _, status) -> {
-                if (status == Animation.Status.STOPPED) {
-                    light.setLightOn(false);
+                switch (status) {
+                    case STOPPED -> {
+                        light.setLightOn(false);
+                        currentGhostID = RED_GHOST_SHADOW;
+                    }
+                    case PAUSED -> {}
+                    case RUNNING -> illuminateGhost(currentGhostID);
                 }
             });
             return timeline;
@@ -56,51 +63,34 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
         light.setMaxRange(LIGHT_MAX_RANGE);
     }
 
-    @Override
-    public void playFromStart() {
-        illuminateGhost(RED_GHOST_SHADOW, lightColor(RED_GHOST_SHADOW));
-        super.playFromStart();
-    }
-
-    /**
-     * Moves the spotlight to the given ghost and updates its color.
-     */
-    private void illuminateGhost(byte ghostID, Color color) {
-        final Ghost3D ghost3D = ghosts3D.get(ghostID);
-        light.setColor(color);
+    private void illuminateGhost(byte personality) {
+        final Ghost3D ghost3D = ghosts3D.get(personality);
+        final Color lightColor = ghosts3D.get(personality).config().colors().normalColors().dressColor();
+        light.setColor(lightColor);
         light.translateXProperty().bind(ghost3D.translateXProperty());
         light.translateYProperty().bind(ghost3D.translateYProperty());
         light.setTranslateZ(-LIGHT_HEIGHT_OVER_FLOOR);
         light.setLightOn(true);
-        currentGhostID = ghostID;
-        Logger.info("Ghost light passed to ghost {}", currentGhostID);
+        currentGhostID = personality;
+        Logger.trace("Ghost light passed to ghost {}", currentGhostID);
     }
 
     private void passGhostLightToNextHunter() {
-        final byte nextID = findNextHunter();
-        if (nextID != -1) {
-            illuminateGhost(nextID, lightColor(nextID));
-        } else {
-            light.setLightOn(false);
-        }
+        findNextHunter().ifPresentOrElse(this::illuminateGhost, () -> light.setLightOn(false));
     }
 
-    private byte findNextHunter() {
-        byte id = nextGhostID(currentGhostID);
-        while (id != currentGhostID) {
-            if (ghosts3D.get(id).ghost().state() == GhostState.HUNTING_PAC) {
-                return id;
+    private Optional<Byte> findNextHunter() {
+        byte next = nextGhostPersonality(currentGhostID);
+        while (next != currentGhostID) {
+            if (ghosts3D.get(next).ghost().state() == GhostState.HUNTING_PAC) {
+                return Optional.of(next);
             }
-            id = nextGhostID(id);
+            next = nextGhostPersonality(next);
         }
-        return -1;
+        return Optional.empty();
     }
 
-    private byte nextGhostID(int id) {
-        return (byte) ((id + 1) % ghosts3D.size());
-    }
-
-    private Color lightColor(byte id) {
-        return ghosts3D.get(id).config().colors().normalColors().dressColor();
+    private byte nextGhostPersonality(int personality) {
+        return (byte) ((personality + 1) % ghosts3D.size());
     }
 }
