@@ -370,13 +370,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Order matters for correct transparency!
     private void buildHierarchy() {
-        getChildren().addAll(entityCache.levelCounter3D, entityCache.livesCounter3D, entityCache.pac3D);
+        getChildren().add(entityCache.levelCounter3D);
+        getChildren().add(entityCache.livesCounter3D);
+        getChildren().add(entityCache.pac3D);
         entityCache.pac3D.powerLight().ifPresent(getChildren()::add);
-        entitySet.selectAllOfType(Ghost3D.class).sorted(BY_PERSONALITY).forEach(getChildren()::add);
-        entitySet.selectAllOfType(Energizer3D.class).map(Energizer3D::shape).forEach(getChildren()::add);
-        entitySet.selectAllOfType(Pellet3D.class).map(Pellet3D::shape).forEach(getChildren()::add);
-        getChildren().addAll(entityCache.maze3D.particlesGroup());
-        getChildren().addAll(entityCache.maze3D, entityCache.maze3D.house().root(), entityCache.maze3D.house().doors());
+        for (var ghost3D : entityCache.ghosts3D) { getChildren().add(ghost3D); }
+        entityCache.energizer3DByTile.values().stream().map(Energizer3D::shape).forEach(getChildren()::add);
+        entityCache.pellet3DByTile.values().stream().map(Pellet3D::shape).forEach(getChildren()::add);
+        getChildren().add(entityCache.maze3D.particlesGroup());
+        getChildren().add(entityCache.maze3D);
+        getChildren().add(entityCache.maze3D.house().root());
+        getChildren().add(entityCache.maze3D.house().doors());
         getChildren().add(ghostHunterLight);
     }
 
