@@ -76,8 +76,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         WALL_COLOR_FLASHING
     }
 
-    private static final Comparator<Ghost3D> BY_PERSONALITY = Comparator.comparingInt(ghost3D -> ghost3D.ghost().personality());
-
     public static class EntityCache {
         Pac3D pac3D;
         Maze3D maze3D;
@@ -193,10 +191,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public MessageManager3D messageManager() {
         return messageManager;
-    }
-
-    public EntityCache entityCache() {
-        return entityCache;
     }
 
     public GameLevelEntitySet entities() {
@@ -400,7 +394,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // --- Animations
 
     private void createEnergizerParticlesAnimation(ParticlesAnimationConfig particlesAnimationConfig) {
-        final List<PhongMaterial> ghostDressMaterials = entitySet.selectAllOfType(Ghost3D.class).sorted(BY_PERSONALITY)
+        final List<PhongMaterial> ghostDressMaterials = Stream.of(entityCache.ghosts3D)
             .map(ghost3D -> ghost3D.materials().normalMaterial().dressMaterial())
             .toList();
 
@@ -433,8 +427,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createGhostLightAnimation() {
-        final var ghostLightAnimation = new GhostLightRelayAnimation(ghostHunterLight,
-            entitySet.selectAllOfType(Ghost3D.class).sorted(BY_PERSONALITY).toList());
+        final var ghostLightAnimation = new GhostLightRelayAnimation(ghostHunterLight, List.of(entityCache.ghosts3D));
         animationRegistry.register(AnimationID.GHOST_LIGHT, ghostLightAnimation);
     }
 }
