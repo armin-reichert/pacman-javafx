@@ -5,7 +5,6 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -58,7 +57,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             }
             case  55 -> {
                 movingText.setPosition(TS(9), TS(13));
-                movingText.setVelocity(Vector2f.ZERO);
+                movingText.setVelocity(0, 0);
             }
             case 113 -> {
                 ghost.setPosition(unscaledSceneSize().x() - TS, GHOST_Y);

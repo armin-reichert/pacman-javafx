@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.model.actors;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
@@ -125,7 +124,7 @@ public class Bonus extends MovingActor {
         switch (state) {
             case EDIBLE -> {
                 boolean edibleStateOver;
-                if (velocity().equals(Vector2f.ZERO)) {
+                if (velocityX() == 0 && velocityY() == 0) {
                     edibleStateOver = timer.hasExpired();
                 }
                 else {

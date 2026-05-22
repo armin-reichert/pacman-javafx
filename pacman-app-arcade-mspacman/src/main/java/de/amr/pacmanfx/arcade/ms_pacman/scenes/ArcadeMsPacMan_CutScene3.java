@@ -138,7 +138,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         stork.playAnimation();
 
         bag.setPosition(stork.x() - 14, stork.y() + 3);
-        bag.setVelocity(stork.velocity());
+        bag.setVelocityX(stork.velocityX());
         bag.setAcceleration(Vector2f.ZERO);
         bag.show();
         bag.setOpen(false);
@@ -165,7 +165,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
                 bag.setY(LANE_Y);
             } else {
                 bag.setOpen(true);
-                bag.setVelocity(Vector2f.ZERO);
+                bag.setVelocity(0, 0);
                 setSceneState(SceneState.STORK_LEAVES_SCENE, 3 * Globals.NUM_TICKS_PER_SEC);
             }
         }

@@ -149,10 +149,10 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                     flyingBag.show();
                 }
                 case 320 -> // reaches ground, starts bouncing
-                    flyingBag.setVelocity(-0.5f, flyingBag.velocity().y());
+                    flyingBag.setVelocityX(-0.5f);
                 case 380 -> {
                     flyingBag.setOpen(true);
-                    flyingBag.setVelocity(Vector2f.ZERO);
+                    flyingBag.setVelocity(0, 0);
                     flyingBag.setAcceleration(Vector2f.ZERO);
                 }
                 case 640 -> darkness = true;
@@ -164,10 +164,9 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         stork.move();
         if (!flyingBag.isOpen()) {
             flyingBag.move();
-            Vector2f velocity = flyingBag.velocity();
             if (flyingBag.y() > GROUND_Y) {
                 flyingBag.setY(GROUND_Y);
-                flyingBag.setVelocity(0.9f * velocity.x(), -0.3f * velocity.y());
+                flyingBag.setVelocity(0.9f * flyingBag.velocityX(), -0.3f * flyingBag.velocityY());
             }
         }
     }

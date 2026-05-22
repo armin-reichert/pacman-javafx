@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
@@ -53,7 +52,8 @@ public class Pac extends MovingActor {
             ", visible=" + isVisible() +
             ", x=" + x() +
             ", y=" + y() +
-            ", velocity=" + velocity() +
+            ", velocityX=" + velocityX() +
+            ", velocityY=" + velocityY() +
             ", acceleration=" + acceleration() +
             '}';
     }
@@ -208,6 +208,8 @@ public class Pac extends MovingActor {
      * or if he is resting for an indefinite time.
      */
     public boolean isParalyzed() {
-        return velocity().equals(Vector2f.ZERO) || !moveInfo.moved || restingTicks == REST_FOREVER;
+        return (velocityX() == 0 && velocityY() == 0)
+            || !moveInfo.moved
+            || restingTicks == REST_FOREVER;
     }
 }

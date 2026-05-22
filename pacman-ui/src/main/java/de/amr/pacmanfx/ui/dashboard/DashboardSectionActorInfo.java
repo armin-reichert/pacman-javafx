@@ -62,7 +62,7 @@ public class DashboardSectionActorInfo extends DashboardSection {
 
     private String actorMovementInfo(GameLevel level, MovingActor movingActor) {
         if (movingActor == null) return NO_INFO;
-        var speed = movingActor.velocity().length() * 60f;
+        var speed = movingActor.computeSpeed() * NUM_TICKS_PER_SEC;
         var blocked = !movingActor.moveInfo().moved;
         var reverseText = movingActor.turnBackRequested() ? "REV!" : "";
         return blocked

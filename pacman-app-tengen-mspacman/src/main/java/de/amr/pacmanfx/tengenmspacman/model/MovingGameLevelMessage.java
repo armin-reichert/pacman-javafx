@@ -37,7 +37,7 @@ public class MovingGameLevelMessage extends GameLevelMessage {
     }
 
     public void stopMovement() {
-        setVelocity(Vector2f.ZERO);
+        setVelocity(0,0);
         playing = false;
     }
 

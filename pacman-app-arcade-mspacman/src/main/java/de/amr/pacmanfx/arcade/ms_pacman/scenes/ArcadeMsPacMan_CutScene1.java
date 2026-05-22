@@ -214,13 +214,13 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
             inky.setMoveDir(Direction.RIGHT);
             inky.setWishDir(Direction.RIGHT);
             inky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
-            inky.setVelocity(inky.velocity().minus(0, 2.0f));
+            inky.setVelocityY(inky.velocityY() - 2.0f);
             inky.setAcceleration(0, 0.4f);
 
             pinky.setMoveDir(Direction.LEFT);
             pinky.setWishDir(Direction.LEFT);
             pinky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
-            pinky.setVelocity(pinky.velocity().minus(0, 2.0f));
+            pinky.setVelocityY(pinky.velocityY() - 2.0f);
             pinky.setAcceleration(0, 0.4f);
         }
 

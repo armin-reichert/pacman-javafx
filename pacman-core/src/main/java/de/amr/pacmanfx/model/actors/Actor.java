@@ -21,7 +21,6 @@ import static java.util.Objects.requireNonNull;
 public class Actor {
 
     public static final Vector2f DEFAULT_ACCELERATION = Vector2f.ZERO;
-    public static final Vector2f DEFAULT_VELOCITY = Vector2f.ZERO;
     public static final boolean DEFAULT_VISIBILITY = false;
     public static final float DEFAULT_X = 0;
     public static final float DEFAULT_Y = 0;
@@ -31,7 +30,9 @@ public class Actor {
     private FloatProperty x;
     private FloatProperty y;
 
-    private ObjectProperty<Vector2f> velocity;
+    private float velocityX;
+    private float velocityY;
+
     private ObjectProperty<Vector2f> acceleration;
 
     /**
@@ -41,7 +42,8 @@ public class Actor {
         setVisible(DEFAULT_VISIBILITY);
         setX(DEFAULT_X);
         setY(DEFAULT_Y);
-        setVelocity(DEFAULT_VELOCITY);
+        velocityX = 0;
+        velocityY = 0;
         setAcceleration(DEFAULT_ACCELERATION);
     }
 
@@ -118,25 +120,30 @@ public class Actor {
 
     public Vector2f center() { return new Vector2f(x(), y()).plus(HTS, HTS); }
 
-    public final ObjectProperty<Vector2f> velocityProperty() {
-        if (velocity == null) {
-            velocity = new SimpleObjectProperty<>(DEFAULT_VELOCITY);
-        }
-        return velocity;
+
+    public float velocityX() {
+        return velocityX;
     }
 
-    public Vector2f velocity() {
-        return velocity != null ? velocityProperty().get() : DEFAULT_VELOCITY;
+    public void setVelocityX(double velocityX) {
+        this.velocityX = (float) velocityX;
     }
 
-    public void setVelocity(Vector2f vector) {
-        requireNonNull(vector, "Velocity vector must not be null");
-        if (velocity == null && vector.equals(DEFAULT_VELOCITY)) return;
-        velocityProperty().set(vector);
+    public float velocityY() {
+        return velocityY;
     }
 
-    public void setVelocity(float vx, float vy) {
-        setVelocity(new Vector2f(vx, vy));
+    public void setVelocityY(double velocityY) {
+        this.velocityY = (float) velocityY;
+    }
+
+    public void setVelocity(double vx, double vy) {
+        this.velocityX = (float) vx;
+        this.velocityY = (float) vy;
+    }
+
+    public double computeSpeed() {
+        return Math.hypot(velocityX, velocityY);
     }
 
     public final ObjectProperty<Vector2f> accelerationProperty() {
@@ -164,9 +171,10 @@ public class Actor {
      * Moves this actor by its current velocity and increases its velocity by its current acceleration.
      */
     public void move() {
-        setX(x() + velocity().x());
-        setY(y() + velocity().y());
-        setVelocity(velocity().plus(acceleration()));
+        setX(x() + velocityX);
+        setY(y() + velocityY);
+        velocityX += acceleration().x();
+        velocityY += acceleration().y();
     }
 
     /**

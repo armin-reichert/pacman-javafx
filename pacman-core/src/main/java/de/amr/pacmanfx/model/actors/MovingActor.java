@@ -91,7 +91,8 @@ public class MovingActor extends Actor {
             "visible=" + isVisible() +
             ", x=" + x() +
             ", y=" + y() +
-            ", velocity=" + velocity() +
+            ", velocityX=" + velocityX() +
+            ", velocityY=" + velocityY() +
             ", acceleration=" + acceleration() +
             ", moveDir=" + moveDir() +
             ", wishDir=" + wishDir() +
@@ -203,8 +204,8 @@ public class MovingActor extends Actor {
         requireNonNull(dir);
         if (moveDir == null && dir.equals(DEFAULT_MOVE_DIR)) return;
         moveDirProperty().set(dir);
-        double speed = velocity().length();
-        setVelocity(speed == 0 ? Vector2f.ZERO : dir.vector().scaled(speed));
+        double speed = computeSpeed();
+        setVelocity(dir.vector().x() * speed, dir.vector().y() * speed);
     }
 
     /**
@@ -284,7 +285,7 @@ public class MovingActor extends Actor {
         if (speed < 0) {
             throw new IllegalArgumentException("Speed must not be negative but is: " + speed);
         }
-        setVelocity(speed == 0 ? Vector2f.ZERO : moveDir().vector().scaled(speed));
+        setVelocity(moveDir().vector().x() * speed, moveDir().vector().y() * speed);
     }
 
     public boolean isNewTileEntered() {
@@ -378,7 +379,7 @@ public class MovingActor extends Actor {
     }
 
     private void tryMovingTowards(GameLevel level, Vector2i tileBeforeMoving, Direction dir) {
-        final Vector2f newVelocity = dir.vector().scaled(velocity().length());
+        final Vector2f newVelocity = dir.vector().scaled(computeSpeed());
         final Vector2f touchPosition = center().plus(dir.vector().scaled((float) HTS)).plus(newVelocity);
         final Vector2i touchedTile = tileAt(touchPosition);
         final boolean turn = dir.vector().isOrthogonalTo(moveDir().vector());
@@ -406,11 +407,11 @@ public class MovingActor extends Actor {
         if (turn && corneringSpeedDelta != 0) {
             Vector2f cornerVelocity = newVelocity.plus(dir.vector().scaled(corneringSpeedDelta));
             Logger.trace("{} velocity around corner: {}", name(), cornerVelocity.length());
-            setVelocity(cornerVelocity);
+            setVelocity(cornerVelocity.x(), cornerVelocity.y());
             move();
-            setVelocity(newVelocity);
+            setVelocity(newVelocity.x(), newVelocity.y());
         } else {
-            setVelocity(newVelocity);
+            setVelocity(newVelocity.x(), newVelocity.y());
             move();
         }
 
