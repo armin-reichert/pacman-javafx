@@ -7,10 +7,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationID;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 
 import static de.amr.pacmanfx.Globals.*;
 import static java.util.Objects.requireNonNull;
@@ -24,12 +21,16 @@ import static java.util.Objects.requireNonNull;
 public class Actor {
 
     public static final Vector2f DEFAULT_ACCELERATION = Vector2f.ZERO;
-    public static final Vector2f DEFAULT_POSITION = Vector2f.ZERO;
     public static final Vector2f DEFAULT_VELOCITY = Vector2f.ZERO;
     public static final boolean DEFAULT_VISIBILITY = false;
+    public static final float DEFAULT_X = 0;
+    public static final float DEFAULT_Y = 0;
 
-    private ObjectProperty<Vector2f> position;
     private BooleanProperty visible;
+
+    private FloatProperty x;
+    private FloatProperty y;
+
     private ObjectProperty<Vector2f> velocity;
     private ObjectProperty<Vector2f> acceleration;
 
@@ -38,7 +39,8 @@ public class Actor {
      */
     public void reset() {
         setVisible(DEFAULT_VISIBILITY);
-        setPosition(DEFAULT_POSITION);
+        setX(DEFAULT_X);
+        setY(DEFAULT_Y);
         setVelocity(DEFAULT_VELOCITY);
         setAcceleration(DEFAULT_ACCELERATION);
     }
@@ -67,50 +69,54 @@ public class Actor {
         setVisible(false);
     }
 
-    public void setX(double x) {
-        setPosition((float) x, position().y());
+    public FloatProperty xProperty() {
+        if (x == null) {
+            x = new SimpleFloatProperty(DEFAULT_X);
+        }
+        return x;
+    }
+
+    public void setX(double value) {
+        if (x == null && value == DEFAULT_X) return;
+        xProperty().set((float) value);
     }
 
     public float x() {
-        return position().x();
+        return x == null ? DEFAULT_X : xProperty().get();
     }
 
-    public void setY(double y) {
-        setPosition(position().x(), (float) y);
+    public FloatProperty yProperty() {
+        if (y == null) {
+            y = new SimpleFloatProperty(DEFAULT_Y);
+        }
+        return y;
+    }
+
+    public void setY(double value) {
+        if (y == null && value == DEFAULT_Y) return;
+        yProperty().set((float) value);
     }
 
     public float y() {
-        return position().y();
+        return y == null ? DEFAULT_Y : yProperty().get();
     }
 
-    public ObjectProperty<Vector2f> positionProperty() {
-        if (position == null) {
-            position = new SimpleObjectProperty<>(DEFAULT_POSITION);
-        }
-        return position;
-    }
-
-    /**
-     * @return upper left corner of the entity collision box which is a square of size 1 tile.
-     */
     public Vector2f position() {
-        return position == null ? DEFAULT_POSITION : positionProperty().get();
+        return new Vector2f(x(), y());
     }
 
-    public void setPosition(float x, float y) {
-        setPosition(new Vector2f(x, y));
+    public void setPosition(double x, double y) {
+        setX(x);
+        setY(y);
     }
 
-    public void setPosition(Vector2f pos) {
-        requireNonNull(pos, "Position of actor must not be null");
-        if (position == null && DEFAULT_POSITION.equals(pos)) return;
-        positionProperty().set(pos);
+    public void setPosition(Vector2f position) {
+        requireNonNull(position);
+        setX(position.x());
+        setY(position.y());
     }
 
-    /**
-     * @return center of the entity collision box which is a square of size 1 tile.
-     */
-    public Vector2f center() { return position().plus(HTS, HTS); }
+    public Vector2f center() { return new Vector2f(x(), y()).plus(HTS, HTS); }
 
     public final ObjectProperty<Vector2f> velocityProperty() {
         if (velocity == null) {
@@ -158,7 +164,8 @@ public class Actor {
      * Moves this actor by its current velocity and increases its velocity by its current acceleration.
      */
     public void move() {
-        setPosition(position().plus(velocity()));
+        setX(x() + velocity().x());
+        setY(y() + velocity().y());
         setVelocity(velocity().plus(acceleration()));
     }
 
@@ -174,7 +181,10 @@ public class Actor {
      * @return Offset inside current tile: (0, 0) if centered, range: [-4, +4)
      */
     public Vector2f offset() {
-        return position().minus(tile().scaled((float)TS));
+        final Vector2i tile = tile();
+        final float ox = x() - tile.x() * TS;
+        final float oy = y() - tile.y() * TS;
+        return new Vector2f(ox, oy);
     }
 
     // Animation support

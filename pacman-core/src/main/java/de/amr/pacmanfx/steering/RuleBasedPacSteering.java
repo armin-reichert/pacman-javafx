@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.steering;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.model.GameLevel;
@@ -127,7 +128,7 @@ public class RuleBasedPacSteering implements Steering {
             pac.setTargetTile(prey.tile());
         } else if (isEdibleBonusNearPac(gameLevel, pac)) {
             Logger.trace("Active bonus detected, get it!");
-            gameLevel.optBonus().ifPresent(bonus -> pac.setTargetTile(tileAt(bonus.position())));
+            gameLevel.optBonus().ifPresent(bonus -> pac.setTargetTile(tileAt(bonus.x(), bonus.y())));
         } else {
             pac.setTargetTile(findTileFarthestFromGhosts(gameLevel, pac, findNearestFoodTiles(gameLevel)));
         }
@@ -140,7 +141,7 @@ public class RuleBasedPacSteering implements Steering {
     private boolean isEdibleBonusNearPac(GameLevel gameLevel, Pac pac) {
         if (gameLevel.optBonus().isPresent()) {
             var bonus = gameLevel.optBonus().get();
-            var tile = tileAt(bonus.position());
+            var tile = tileAt(bonus.x(), bonus.y());
             return bonus.state() == BonusState.EDIBLE
                 && tile.manhattanDist(pac.tile()) <= CollectedData.MAX_BONUS_HARVEST_DIST;
         }

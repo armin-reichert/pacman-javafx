@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.model;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.event.*;
@@ -342,7 +343,8 @@ public abstract class AbstractGameModel implements Game, GameCheats {
     protected void makeReadyForPlaying(GameLevel level) {
         final Pac pac = level.pac();
         pac.reset(); // initially invisible!
-        pac.setPosition(level.worldMap().terrainLayer().pacStartPosition());
+        final Vector2f startPosition = level.worldMap().terrainLayer().pacStartPosition();
+        pac.setPosition(startPosition);
         pac.setMoveDir(Direction.LEFT);
         pac.setWishDir(Direction.LEFT);
         pac.powerTimer().resetToIndefiniteDuration();

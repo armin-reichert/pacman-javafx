@@ -89,7 +89,8 @@ public class MovingActor extends Actor {
     public String toString() {
         return "MovingActor{" +
             "visible=" + isVisible() +
-            ", position=" + position() +
+            ", x=" + x() +
+            ", y=" + y() +
             ", velocity=" + velocity() +
             ", acceleration=" + acceleration() +
             ", moveDir=" + moveDir() +
@@ -164,7 +165,8 @@ public class MovingActor extends Actor {
      */
     public void placeAtTile(int tx, int ty, float ox, float oy) {
         var prevTile = tile();
-        setPosition(tx * TS + ox, ty * TS + oy);
+        setX(tx * TS + ox);
+        setY(ty * TS + oy);
         newTileEntered = !tile().equals(prevTile);
     }
 

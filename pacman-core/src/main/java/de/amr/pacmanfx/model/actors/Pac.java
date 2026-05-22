@@ -51,7 +51,8 @@ public class Pac extends MovingActor {
             ", restingTime=" + restingTicks +
             ", starvingTime=" + starvingTicks +
             ", visible=" + isVisible() +
-            ", position=" + position() +
+            ", x=" + x() +
+            ", y=" + y() +
             ", velocity=" + velocity() +
             ", acceleration=" + acceleration() +
             '}';

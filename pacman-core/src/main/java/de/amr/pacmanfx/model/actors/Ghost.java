@@ -108,7 +108,8 @@ public class Ghost extends MovingActor {
                 "name=" + name() +
                 ", state=" + (state != null ? state() : DEFAULT_STATE) +
                 ", visible=" + isVisible() +
-                ", position=" + position() +
+                ", x=" + x() +
+                ", y=" + y() +
                 ", velocity=" + velocity() +
                 ", acceleration=" + acceleration() +
                 ", moveDir=" + moveDir() +
@@ -292,15 +293,14 @@ public class Ghost extends MovingActor {
         if (home.isVisitedBy(this)) {
             final float minY = (home.minTile().y() + 1) * TS + HTS;
             final float maxY = (home.maxTile().y() - 1) * TS - HTS;
-            final float y = position().y();
-            if (y <= minY) {
+            if (y() <= minY) {
                 setMoveDir(DOWN);
                 setWishDir(DOWN);
-            } else if (y >= maxY) {
+            } else if (y() >= maxY) {
                 setMoveDir(UP);
                 setWishDir(UP);
             }
-            setY(Math.clamp(y, minY, maxY));
+            setY(Math.clamp(y(), minY, maxY));
             setSpeed(speed);
             move();
         } else {
@@ -323,9 +323,8 @@ public class Ghost extends MovingActor {
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
     private void updateStateLeavingHouse(GameLevel level, float speed) {
-        final Vector2f position = position();
         final Vector2f houseEntryPosition = home.entryPosition();
-        if (position.y() <= houseEntryPosition.y()) {
+        if (y() <= houseEntryPosition.y()) {
             // outside at house entry
             setY(houseEntryPosition.y());
             setMoveDir(LEFT);
@@ -335,7 +334,7 @@ public class Ghost extends MovingActor {
         }
         else {
             // still inside house
-            final float centerX = position.x() + HTS;
+            final float centerX = x() + HTS;
             final float houseCenterX = home.center().x();
             if (differsAtMost(0.5f * speed, centerX, houseCenterX)) {
                 // align horizontally and raise
@@ -422,8 +421,11 @@ public class Ghost extends MovingActor {
      */
     private void updateStateReturningToHouse(GameLevel level, float speed) {
         final Vector2f houseEntry = home.entryPosition();
-        if (position().roughlyEquals(houseEntry, speed, 0)) {
-            setPosition(houseEntry);
+        //TODO
+        final Vector2f position = new Vector2f(x(), y());
+        if (position.roughlyEquals(houseEntry, speed, 0)) {
+            setX(houseEntry.x());
+            setY(houseEntry.y());
             setMoveDir(DOWN);
             setWishDir(DOWN);
             setState(GhostState.ENTERING_HOUSE);
@@ -442,10 +444,12 @@ public class Ghost extends MovingActor {
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
     private void updateStateEnteringHouse(GameLevel ignored, float speed) {
-        final Vector2f position = position();
         final Vector2f revivalPosition = halfTileRightOf(home.ghostRevivalTile(personality()));
+        //TODO
+        final Vector2f position = new Vector2f(x(), y());
         if (position.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
-            setPosition(revivalPosition);
+            setX(revivalPosition.x());
+            setY(revivalPosition.y());
             setMoveDir(UP);
             setWishDir(UP);
             setState(GhostState.LOCKED);

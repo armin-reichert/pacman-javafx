@@ -39,6 +39,8 @@ subprojects {
 // Installer package format
 ext.installerPkg = [linux: "deb", osx: "dmg", windows: "msi"][osdetector.os]
 
+logger.lifecycle("Project root: ${rootDir}")
+
 logger.lifecycle("osdetector.os            = ${osdetector.os}")
 logger.lifecycle("osdetector.arch          = ${osdetector.arch}")
 logger.lifecycle("osdetector.classifier    = ${osdetector.classifier}")

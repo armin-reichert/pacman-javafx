@@ -18,7 +18,8 @@ public class GameLevelMessage extends Actor {
 
     public GameLevelMessage(GameLevelMessageType type, Vector2f position) {
         this.type = requireNonNull(type);
-        setPosition(requireNonNull(position));
+        setX(position.x());
+        setY(position.y());
     }
 
     public GameLevelMessageType type() {
