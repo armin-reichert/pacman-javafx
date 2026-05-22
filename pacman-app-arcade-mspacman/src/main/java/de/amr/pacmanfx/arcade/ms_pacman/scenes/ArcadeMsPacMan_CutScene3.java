@@ -138,7 +138,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         stork.playAnimation();
 
         bag.setPosition(stork.x() - 14, stork.y() + 3);
-        bag.setVelocityX(stork.velocityX());
+        bag.setVelX(stork.velX());
         bag.setAcceleration(Vector2f.ZERO);
         bag.show();
         bag.setOpen(false);

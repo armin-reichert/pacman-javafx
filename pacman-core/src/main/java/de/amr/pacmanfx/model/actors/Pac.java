@@ -52,8 +52,8 @@ public class Pac extends MovingActor {
             ", visible=" + isVisible() +
             ", x=" + x() +
             ", y=" + y() +
-            ", velocityX=" + velocityX() +
-            ", velocityY=" + velocityY() +
+            ", velocityX=" + velX() +
+            ", velocityY=" + velY() +
             ", acceleration=" + acceleration() +
             '}';
     }
@@ -208,7 +208,7 @@ public class Pac extends MovingActor {
      * or if he is resting for an indefinite time.
      */
     public boolean isParalyzed() {
-        return (velocityX() == 0 && velocityY() == 0)
+        return (velX() == 0 && velY() == 0)
             || !moveInfo.moved
             || restingTicks == REST_FOREVER;
     }

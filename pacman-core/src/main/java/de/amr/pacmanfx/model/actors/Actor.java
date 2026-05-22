@@ -30,8 +30,8 @@ public class Actor {
     private FloatProperty x;
     private FloatProperty y;
 
-    private float velocityX;
-    private float velocityY;
+    private float velX;
+    private float velY;
 
     private ObjectProperty<Vector2f> acceleration;
 
@@ -42,8 +42,8 @@ public class Actor {
         setVisible(DEFAULT_VISIBILITY);
         setX(DEFAULT_X);
         setY(DEFAULT_Y);
-        velocityX = 0;
-        velocityY = 0;
+        velX = 0;
+        velY = 0;
         setAcceleration(DEFAULT_ACCELERATION);
     }
 
@@ -120,30 +120,29 @@ public class Actor {
 
     public Vector2f center() { return new Vector2f(x(), y()).plus(HTS, HTS); }
 
-
-    public float velocityX() {
-        return velocityX;
+    public float velX() {
+        return velX;
     }
 
-    public void setVelocityX(double velocityX) {
-        this.velocityX = (float) velocityX;
+    public void setVelX(double velX) {
+        this.velX = (float) velX;
     }
 
-    public float velocityY() {
-        return velocityY;
+    public float velY() {
+        return velY;
     }
 
-    public void setVelocityY(double velocityY) {
-        this.velocityY = (float) velocityY;
+    public void setVelY(double velY) {
+        this.velY = (float) velY;
     }
 
     public void setVelocity(double vx, double vy) {
-        this.velocityX = (float) vx;
-        this.velocityY = (float) vy;
+        this.velX = (float) vx;
+        this.velY = (float) vy;
     }
 
     public double computeSpeed() {
-        return Math.hypot(velocityX, velocityY);
+        return Math.hypot(velX, velY);
     }
 
     public final ObjectProperty<Vector2f> accelerationProperty() {
@@ -171,10 +170,10 @@ public class Actor {
      * Moves this actor by its current velocity and increases its velocity by its current acceleration.
      */
     public void move() {
-        setX(x() + velocityX);
-        setY(y() + velocityY);
-        velocityX += acceleration().x();
-        velocityY += acceleration().y();
+        setX(x() + velX);
+        setY(y() + velY);
+        velX += acceleration().x();
+        velY += acceleration().y();
     }
 
     /**

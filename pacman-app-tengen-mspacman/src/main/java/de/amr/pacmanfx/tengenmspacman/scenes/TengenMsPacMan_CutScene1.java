@@ -207,13 +207,13 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                     inky.setMoveDir(Direction.RIGHT);
                     inky.setWishDir(Direction.RIGHT);
                     inky.setSpeed(SPEED_AFTER_COLLISION);
-                    inky.setVelocityY(inky.velocityY() - 2.0f);
+                    inky.setVelY(inky.velY() - 2.0f);
                     inky.setAcceleration(0, 0.4f);
 
                     pinky.setMoveDir(Direction.LEFT);
                     pinky.setWishDir(Direction.LEFT);
                     pinky.setSpeed(SPEED_AFTER_COLLISION);
-                    pinky.setVelocityY(pinky.velocityY() - 2.0f);
+                    pinky.setVelY(pinky.velY() - 2.0f);
                     pinky.setAcceleration(0, 0.4f);
                 }
                 case 530 -> {

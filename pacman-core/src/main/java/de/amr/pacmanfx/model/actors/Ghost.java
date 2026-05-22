@@ -110,8 +110,8 @@ public class Ghost extends MovingActor {
                 ", visible=" + isVisible() +
                 ", x=" + x() +
                 ", y=" + y() +
-                ", velocityX=" + velocityX() +
-                ", velocityY=" + velocityY() +
+                ", velocityX=" + velX() +
+                ", velocityY=" + velY() +
                 ", acceleration=" + acceleration() +
                 ", moveDir=" + moveDir() +
                 ", wishDir=" + wishDir() +
