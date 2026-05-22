@@ -394,7 +394,7 @@ public class MovingActor extends Actor {
         }
 
         if (turn) {
-            float offset = dir.isHorizontal() ? computeOffset().y() : computeOffset().x();
+            float offset = dir.isHorizontal() ? computeOffsetY() : computeOffsetX();
             boolean atTurnPosition = Math.abs(offset) <= 1;
             if (atTurnPosition) {
                 Logger.trace("Reached turn position ({})", name());

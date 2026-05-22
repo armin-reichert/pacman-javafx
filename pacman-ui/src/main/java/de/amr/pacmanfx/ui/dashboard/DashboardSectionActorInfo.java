@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
@@ -50,14 +49,17 @@ public class DashboardSectionActorInfo extends DashboardSection {
         addGhostInfo(gameSupplier, ORANGE_GHOST_POKEY);
     }
 
-    private String actorLocationInfo(GameLevel level, MovingActor movingActor) {
-        if (movingActor == null) return NO_INFO;
-        Vector2i tile = movingActor.computeTile();
-        Vector2f offset = movingActor.computeOffset();
+    private String actorLocationInfo(GameLevel level, MovingActor actor) {
+        if (actor == null) return NO_INFO;
+
+        final Vector2i tile = actor.computeTile();
+        final float offsetX = actor.computeOffsetX();
+        final float offsetY = actor.computeOffsetY();
+
         return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
             tile.x(), tile.y(),
-            offset.x(), offset.y(),
-            movingActor.isNewTileEntered() ? " NEW" : "");
+            offsetX, offsetY,
+            actor.isNewTileEntered() ? " NEW" : "");
     }
 
     private String actorMovementInfo(GameLevel level, MovingActor movingActor) {

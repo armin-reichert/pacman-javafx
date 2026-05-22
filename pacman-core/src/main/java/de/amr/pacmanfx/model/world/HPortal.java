@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.model.world;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import org.tinylog.Logger;
@@ -40,7 +39,7 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
 
     public boolean tryTeleporting(MovingActor actor) {
         final Vector2i actorTile = actor.computeTile();
-        final Vector2f offset = actor.computeOffset();
+        final float offsetX = actor.computeOffsetX();
         if (actorTile.y() != leftBorderEntryTile().y()) {
             return false;
         }
@@ -48,14 +47,14 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
         final Vector2i rightWrappingTile = rightBorderEntryTile().plus(depth, 0);
         switch (actor.moveDir()) {
             case LEFT -> {
-                if (actorTile.equals(leftWrappingTile) && offset.x() == 0) {
+                if (actorTile.equals(leftWrappingTile) && offsetX == 0) {
                     actor.placeAtTile(rightWrappingTile.x(), rightWrappingTile.y(), -1, 0);
                     Logger.info("{} teleported from {} to {}", actor.name(), actorTile, rightWrappingTile);
                     return true;
                 }
             }
             case RIGHT -> {
-                if (actorTile.equals(rightWrappingTile) && offset.x() == 0) {
+                if (actorTile.equals(rightWrappingTile) && offsetX == 0) {
                     actor.placeAtTile(leftWrappingTile.x(), leftWrappingTile.y(), 1, 0);
                     Logger.info("{} teleported from {} to {}", actor.name(), actorTile, leftWrappingTile);
                     return true;

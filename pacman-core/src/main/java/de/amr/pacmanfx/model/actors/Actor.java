@@ -179,13 +179,19 @@ public class Actor {
     }
 
     /**
-     * @return Offset inside current tile: (0, 0) if centered, range: [-4, +4)
+     * @return x-offset inside current tile: (0, 0) if centered, range: [-4, +4)
      */
-    public Vector2f computeOffset() {
+    public float computeOffsetX() {
         final Vector2i tile = computeTile();
-        final float ox = x - tile.x() * TS;
-        final float oy = y - tile.y() * TS;
-        return new Vector2f(ox, oy);
+        return x - tile.x() * TS;
+    }
+
+    /**
+     * @return y-offset inside current tile: (0, 0) if centered, range: [-4, +4)
+     */
+    public float computeOffsetY() {
+        final Vector2i tile = computeTile();
+        return y - tile.y() * TS;
     }
 
     // --- Sprite animation support
