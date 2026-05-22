@@ -93,7 +93,8 @@ public class MovingActor extends Actor {
             ", y=" + y() +
             ", velocityX=" + velX() +
             ", velocityY=" + velY() +
-            ", acceleration=" + acceleration() +
+            ", accelerationX=" + accX() +
+            ", accelerationY=" + accY() +
             ", moveDir=" + moveDir() +
             ", wishDir=" + wishDir() +
             ", targetTile=" + targetTile() +

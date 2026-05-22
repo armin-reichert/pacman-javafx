@@ -54,7 +54,8 @@ public class Pac extends MovingActor {
             ", y=" + y() +
             ", velocityX=" + velX() +
             ", velocityY=" + velY() +
-            ", acceleration=" + acceleration() +
+            ", accelerationX=" + accX() +
+            ", accelerationY=" + accY() +
             '}';
     }
 

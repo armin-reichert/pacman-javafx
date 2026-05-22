@@ -7,7 +7,10 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationID;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleFloatProperty;
 
 import static de.amr.pacmanfx.Globals.*;
 import static java.util.Objects.requireNonNull;
@@ -15,15 +18,12 @@ import static java.util.Objects.requireNonNull;
 /**
  * Base class for all game actors like Pac-Man, the ghosts and the bonus entities.
  * <p>
- * Each actor has a position, velocity, acceleration and visibility property.
+ * Each actor has a position, velocity, acceleration and visibility.
  * </p>
  */
 public class Actor {
 
-    public static final Vector2f DEFAULT_ACCELERATION = Vector2f.ZERO;
     public static final boolean DEFAULT_VISIBILITY = false;
-    public static final float DEFAULT_X = 0;
-    public static final float DEFAULT_Y = 0;
 
     private BooleanProperty visible;
 
@@ -33,18 +33,18 @@ public class Actor {
     private float velX;
     private float velY;
 
-    private ObjectProperty<Vector2f> acceleration;
+    private float accX;
+    private float accY;
 
     /**
      * Resets all properties of this actor thingy to their default state. Note: actor is invisible by default!
      */
     public void reset() {
         setVisible(DEFAULT_VISIBILITY);
-        setX(DEFAULT_X);
-        setY(DEFAULT_Y);
-        velX = 0;
-        velY = 0;
-        setAcceleration(DEFAULT_ACCELERATION);
+        setX(0);
+        setY(0);
+        velX = velY = 0;
+        accX = accY = 0;
     }
 
     public BooleanProperty visibleProperty() {
@@ -73,34 +73,34 @@ public class Actor {
 
     public FloatProperty xProperty() {
         if (x == null) {
-            x = new SimpleFloatProperty(DEFAULT_X);
+            x = new SimpleFloatProperty(0);
         }
         return x;
     }
 
     public void setX(double value) {
-        if (x == null && value == DEFAULT_X) return;
+        if (x == null && value == 0) return;
         xProperty().set((float) value);
     }
 
     public float x() {
-        return x == null ? DEFAULT_X : xProperty().get();
+        return x == null ? 0 : xProperty().get();
     }
 
     public FloatProperty yProperty() {
         if (y == null) {
-            y = new SimpleFloatProperty(DEFAULT_Y);
+            y = new SimpleFloatProperty(0);
         }
         return y;
     }
 
     public void setY(double value) {
-        if (y == null && value == DEFAULT_Y) return;
+        if (y == null && value == 0) return;
         yProperty().set((float) value);
     }
 
     public float y() {
-        return y == null ? DEFAULT_Y : yProperty().get();
+        return y == null ? 0 : yProperty().get();
     }
 
     public Vector2f position() {
@@ -118,6 +118,13 @@ public class Actor {
         setY(position.y());
     }
 
+    /**
+     * We define the position of each actor as the left-upper corner of a square with side-length 1 tile (8 pixels).
+     * The center position of an actor is the center of this square. This has some advantages but also
+     * some drawbacks, as everything in life.
+     *
+     * @return the center position of the actor
+     */
     public Vector2f center() { return new Vector2f(x(), y()).plus(HTS, HTS); }
 
     public float velX() {
@@ -145,40 +152,44 @@ public class Actor {
         return Math.hypot(velX, velY);
     }
 
-    public final ObjectProperty<Vector2f> accelerationProperty() {
-        if (acceleration == null) {
-            acceleration = new SimpleObjectProperty<>(DEFAULT_ACCELERATION);
-        }
-        return acceleration;
+    public float accX() {
+        return accX;
     }
 
-    public Vector2f acceleration() {
-        return acceleration != null ? accelerationProperty().get() : DEFAULT_ACCELERATION;
+    public void setAccX(float accX) {
+        this.accX = accX;
     }
 
-    public void setAcceleration(Vector2f vector) {
-        requireNonNull(vector, "Acceleration vector must not be null");
-        if (acceleration == null && vector.equals(DEFAULT_ACCELERATION)) return;
-        accelerationProperty().set(vector);
+    public float accY() {
+        return accY;
+    }
+
+    public void setAccY(float accY) {
+        this.accY = accY;
     }
 
     public void setAcceleration(float ax, float ay) {
-        setAcceleration(new Vector2f(ax, ay));
+        this.accX = ax;
+        this.accY = ay;
     }
 
     /**
-     * Moves this actor by its current velocity and increases its velocity by its current acceleration.
+     * An accelerated movement.
+     * Changes the position of this actor by the current velocity vector and then increases the velocity
+     * by the current acceleration.
      */
     public void move() {
         setX(x() + velX);
         setY(y() + velY);
-        velX += acceleration().x();
-        velY += acceleration().y();
+        velX += accX;
+        velY += accY;
     }
 
     /**
-     * @return Tile containing the center of the actor's one-size-square "collision box". Actor position denotes
-     *         the left-upper corner of that box
+     * In Pac-Man games, the current tile coordinate of an actor is defined as the tile containing the
+     * actor's center position.
+     *
+     * @return the tile coordinate containing the {@link #center()} position of the actor.
      */
     public Vector2i tile() {
         return tileAt(center());
@@ -194,7 +205,7 @@ public class Actor {
         return new Vector2f(ox, oy);
     }
 
-    // Animation support
+    // --- Sprite animation support
 
     protected SpriteAnimationSet animations = SpriteAnimationSet.emptyAnimSet();
 

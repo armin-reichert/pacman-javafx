@@ -5,7 +5,6 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
@@ -153,7 +152,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                 case 380 -> {
                     flyingBag.setOpen(true);
                     flyingBag.setVelocity(0, 0);
-                    flyingBag.setAcceleration(Vector2f.ZERO);
+                    flyingBag.setAcceleration(0, 0);
                 }
                 case 640 -> darkness = true;
                 case TICK_EXPIRES -> gameState.expire();

@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
@@ -139,7 +138,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
         bag.setPosition(stork.x() - 14, stork.y() + 3);
         bag.setVelX(stork.velX());
-        bag.setAcceleration(Vector2f.ZERO);
+        bag.setAcceleration(0, 0);
         bag.show();
         bag.setOpen(false);
         numBagBounces = 0;

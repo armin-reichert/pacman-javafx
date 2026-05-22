@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
@@ -233,11 +232,11 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
             // Collision with ground?
             if (inky.y() > MIDDLE_LANE_Y) {
                 inky.setY(MIDDLE_LANE_Y);
-                inky.setAcceleration(Vector2f.ZERO);
+                inky.setAcceleration(0, 0);
             }
             if (pinky.y() > MIDDLE_LANE_Y) {
                 pinky.setY(MIDDLE_LANE_Y);
-                pinky.setAcceleration(Vector2f.ZERO);
+                pinky.setAcceleration(0, 0);
             }
         }
     }
