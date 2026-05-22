@@ -5,8 +5,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.basics.spriteanim.SpriteAnimationID;
+import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -29,7 +28,7 @@ public class Bag extends Actor {
         }
 
         @Override
-        protected SpriteAnimation createAnimation(SpriteAnimationID animationID) {
+        protected SpriteAnimation createAnimation(AnimationIdentifier animationID) {
             return switch (animationID) {
                 case ArcadeMsPacMan_AnimationID.JUNIOR ->
                     SpriteAnimationBuilder.builder()

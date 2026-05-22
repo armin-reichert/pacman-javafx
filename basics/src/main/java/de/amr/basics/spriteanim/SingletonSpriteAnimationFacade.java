@@ -7,9 +7,14 @@ import de.amr.basics.math.RectShort;
 
 import static java.util.Objects.requireNonNull;
 
-record SingleSpriteSpriteAnimationSet(RectShort sprite) implements SpriteAnimationSet {
+/**
+ * Implementation of the sprite animation facade for a single sprite (a big nothingburger).
+ *
+ * @param sprite the singleton sprite
+ */
+record SingletonSpriteAnimationFacade(RectShort sprite) implements SpriteAnimationFacade {
 
-    public SingleSpriteSpriteAnimationSet(RectShort sprite) {
+    public SingletonSpriteAnimationFacade(RectShort sprite) {
         this.sprite = requireNonNull(sprite);
     }
 
@@ -19,17 +24,17 @@ record SingleSpriteSpriteAnimationSet(RectShort sprite) implements SpriteAnimati
     }
 
     @Override
-    public Object animation(SpriteAnimationID animationID) {
+    public Object animation(AnimationIdentifier animationID) {
         return null;
     }
 
     @Override
-    public SpriteAnimationID selectedAnimationID() {
+    public AnimationIdentifier selectedAnimationID() {
         return null;
     }
 
     @Override
-    public void setAnimationFrame(SpriteAnimationID animationID, int frameIndex) {}
+    public void setAnimationFrame(AnimationIdentifier animationID, int frameIndex) {}
 
     @Override
     public int currentFrame() {

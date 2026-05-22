@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.basics.spriteanim.SpriteAnimationID;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
@@ -17,17 +17,17 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
 
-    private final SpriteAnimationContainer container;
+    private final SpriteAnimationSet container;
     private final byte personality;
 
-    public ArcadeMsPacMan_GhostAnimations(SpriteAnimationContainer container, byte personality) {
+    public ArcadeMsPacMan_GhostAnimations(SpriteAnimationSet container, byte personality) {
         super(ArcadeMsPacMan_SpriteSheet.instance());
         this.container = requireNonNull(container);
         this.personality = requireValidGhostPersonality(personality);
     }
 
     @Override
-    protected SpriteAnimation createAnimation(SpriteAnimationID animationID) {
+    protected SpriteAnimation createAnimation(AnimationIdentifier animationID) {
         return switch (animationID) {
             case ArcadePacMan_AnimationID.GHOST_NORMAL -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().ghostNormalSprites(personality, Direction.LEFT))
@@ -66,7 +66,7 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     }
 
     @Override
-    public void setAnimationFrame(SpriteAnimationID animationID, int frameIndex) {
+    public void setAnimationFrame(AnimationIdentifier animationID, int frameIndex) {
         super.setAnimationFrame(animationID, frameIndex);
         if (ArcadePacMan_AnimationID.GHOST_POINTS.equals(animationID)) {
             animation(ArcadePacMan_AnimationID.GHOST_POINTS).setCurrentFrameIndex(frameIndex);

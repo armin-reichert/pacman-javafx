@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.basics.spriteanim.SpriteAnimationID;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
@@ -16,15 +16,15 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
-    private final SpriteAnimationContainer container;
+    private final SpriteAnimationSet container;
 
-    public ArcadeMsPacMan_PacAnimations(SpriteAnimationContainer container) {
+    public ArcadeMsPacMan_PacAnimations(SpriteAnimationSet container) {
         super(ArcadeMsPacMan_SpriteSheet.instance());
         this.container = requireNonNull(container);
     }
 
     @Override
-    protected SpriteAnimation createAnimation(SpriteAnimationID animationID) {
+    protected SpriteAnimation createAnimation(AnimationIdentifier animationID) {
         return switch (animationID) {
             case ArcadePacMan_AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet.sprite(SpriteID.MS_PACMAN_FULL))

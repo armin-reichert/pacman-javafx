@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationFacade;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -42,7 +42,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     }
 
     private RectShort computePacSprite(Pac pac) {
-        final SpriteAnimationSet animations = pac.animations();
+        final SpriteAnimationFacade animations = pac.animations();
         if (animations.isSelected(ArcadePacMan_AnimationID.PAC_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().pacMunchingSprites(pac.moveDir());
             return spriteOrDefault(sprites, animations.currentFrame());
@@ -53,7 +53,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
-        final SpriteAnimationSet animations = ghost.animations();
+        final SpriteAnimationFacade animations = ghost.animations();
         if (animations.isSelected(ArcadePacMan_AnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.wishDir());
             return spriteOrDefault(sprites, animations.currentFrame());

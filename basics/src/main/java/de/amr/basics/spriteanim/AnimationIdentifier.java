@@ -4,6 +4,9 @@
 
 package de.amr.basics.spriteanim;
 
-public interface SpriteAnimationID {
+/**
+ * Marker interface for animation ID types.
+ */
+public interface AnimationIdentifier {
     String name();
 }

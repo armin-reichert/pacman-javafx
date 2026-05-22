@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.math.Vector3f;
+import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntitySet;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -68,7 +69,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
-    public enum AnimationID {
+    public enum AnimationID implements AnimationIdentifier {
         GHOST_LIGHT,
         LEVEL_COMPLETED_FULL, 
         LEVEL_COMPLETED_SHORT,

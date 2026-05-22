@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.d3.entities;
 
+import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.ui.UIConfig;
@@ -30,7 +31,9 @@ import static java.util.Objects.requireNonNull;
 
 public class LevelCounter3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
-    public enum AnimationID { LEVEL_COUNTER_SPINNING }
+    public enum AnimationID implements AnimationIdentifier {
+        LEVEL_COUNTER_SPINNING
+    }
 
     private final AnimationRegistry animations;
     private final UIConfig uiConfig;

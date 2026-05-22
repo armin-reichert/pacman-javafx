@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.uilib.widgets;
 
 import de.amr.basics.Disposable;
+import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -25,7 +26,9 @@ import static java.util.Objects.requireNonNull;
 
 public class MessageView extends ImageView implements Disposable {
 
-    public enum AnimationID { MESSAGE_MOVING }
+    public enum AnimationID implements AnimationIdentifier {
+        MESSAGE_MOVING
+    }
 
     public static class Builder {
         private Color borderColor = Color.BLUE;

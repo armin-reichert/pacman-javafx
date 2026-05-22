@@ -4,42 +4,69 @@
 
 package de.amr.basics.spriteanim;
 
-import de.amr.basics.math.RectShort;
+import org.tinylog.Logger;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
-public interface SpriteAnimationSet {
+public class SpriteAnimationSet {
 
-    static SpriteAnimationSet emptyAnimSet() {
-        return EMPTY;
+    private final Set<SpriteAnimation> active = new HashSet<>();
+    private final Set<SpriteAnimation> pendingAdd = new HashSet<>();
+    private final Set<SpriteAnimation> pendingRemove = new HashSet<>();
+    private boolean clearRequest;
+
+    public SpriteAnimationSet() {}
+
+    public void updateAnimations(long now) {
+
+        if (clearRequest) {
+            active.clear();
+            pendingAdd.clear();
+            pendingRemove.clear();
+            clearRequest = false;
+            if (Logger.isTraceEnabled()) {
+                Logger.trace("Sprite animation cache cleared");
+            }
+        }
+
+        // Apply pending removals
+        if (!pendingRemove.isEmpty()) {
+            active.removeAll(pendingRemove);
+            pendingRemove.clear();
+            if (Logger.isTraceEnabled()) {
+                Logger.trace("Sprite animation unregistered (cache size={})", active.size());
+            }
+        }
+
+        // Apply pending additions
+        if (!pendingAdd.isEmpty()) {
+            active.addAll(pendingAdd);
+            pendingAdd.clear();
+            if (Logger.isTraceEnabled()) {
+                Logger.trace("Sprite animations registered (cache size={})", active.size());
+            }
+        }
+
+        // Now safe to iterate
+        for (SpriteAnimation animation : active) {
+            animation.update(now);
+        }
     }
 
-    static SpriteAnimationSet singleSpriteAnimSet(RectShort sprite) {
-        return new SingleSpriteSpriteAnimationSet(sprite);
+    public void register(SpriteAnimation animation) {
+        requireNonNull(animation);
+        pendingAdd.add(animation);
     }
 
-    SpriteAnimationSet EMPTY = new EmptySpriteAnimationSet();
-
-    Object animation(SpriteAnimationID animationID);
-
-    SpriteAnimationID selectedAnimationID();
-
-    default boolean isSelected(SpriteAnimationID animationID) {
-        requireNonNull(animationID);
-        return animationID.equals(selectedAnimationID());
+    public void unregister(SpriteAnimation animation) {
+        requireNonNull(animation);
+        pendingRemove.add(animation);
     }
 
-    void setAnimationFrame(SpriteAnimationID animationID, int frameIndex);
-
-    default void selectAnimation(SpriteAnimationID animationID) { setAnimationFrame(animationID, 0); }
-
-    void playSelectedAnimation();
-
-    void stopSelectedAnimation();
-
-    void resetSelectedAnimation();
-
-    RectShort currentSprite();
-
-    int currentFrame();
+    public void clear() {
+        clearRequest = true;
+    }
 }

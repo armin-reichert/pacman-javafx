@@ -6,19 +6,23 @@ package de.amr.basics.spriteanim;
 
 import de.amr.basics.math.RectShort;
 
-public class EmptySpriteAnimationSet implements SpriteAnimationSet {
+/**
+ * Null object for sprite animation facade interface.
+ */
+public class EmptySpriteAnimationFacade implements SpriteAnimationFacade {
+
     @Override
-    public Object animation(SpriteAnimationID animationID) {
+    public Object animation(AnimationIdentifier animationID) {
         return null;
     }
 
     @Override
-    public SpriteAnimationID selectedAnimationID() {
+    public AnimationIdentifier selectedAnimationID() {
         return null;
     }
 
     @Override
-    public void setAnimationFrame(SpriteAnimationID animationID, int frameIndex) {}
+    public void setAnimationFrame(AnimationIdentifier animationID, int frameIndex) {}
 
     @Override
     public void playSelectedAnimation() {}

@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.uilib.model3D.world;
 
 import de.amr.basics.math.Vector2f;
+import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -38,7 +39,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
 
-    public enum AnimationID {BONUS_EDIBLE, BONUS_EATEN}
+    public enum AnimationID implements AnimationIdentifier {
+        BONUS_EDIBLE,
+        BONUS_EATEN
+    }
 
     private final Bonus bonus;
     private final AnimationRegistry animations;

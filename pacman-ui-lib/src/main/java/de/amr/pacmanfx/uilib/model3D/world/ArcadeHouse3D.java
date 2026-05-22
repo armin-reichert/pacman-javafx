@@ -5,6 +5,7 @@ package de.amr.pacmanfx.uilib.model3D.world;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -52,7 +53,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
 
-    public enum AnimationID { HOUSE_DOORS_MELTING }
+    public enum AnimationID implements AnimationIdentifier {
+        HOUSE_DOORS_MELTING
+    }
 
     private static final int DOOR_VERTICAL_BAR_COUNT = 4;
 

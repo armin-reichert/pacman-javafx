@@ -20,7 +20,7 @@ import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
-import static de.amr.basics.spriteanim.SpriteAnimationSet.singleSpriteAnimSet;
+import static de.amr.basics.spriteanim.SpriteAnimationFacade.singleSpriteAnimationFacade;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
@@ -125,7 +125,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         pinky.setSpeed(0);
 
         heart = new Actor();
-        heart.setAnimations(singleSpriteAnimSet(spriteSheet.sprite(SpriteID.HEART)));
+        heart.setAnimations(singleSpriteAnimationFacade(spriteSheet.sprite(SpriteID.HEART)));
 
         collided = false;
 

@@ -3,9 +3,9 @@
  */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.basics.spriteanim.SpriteAnimationID;
+import de.amr.basics.spriteanim.AnimationIdentifier;
 
-public enum TengenMsPacMan_AnimationID implements SpriteAnimationID {
+public enum TengenMsPacMan_AnimationID implements AnimationIdentifier {
     MS_PAC_MAN_BOOSTER,
     MS_PAC_MAN_WAVING_HAND,
     MS_PAC_MAN_TURNING_AWAY,

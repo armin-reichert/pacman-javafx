@@ -1,9 +1,9 @@
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import javafx.animation.AnimationTimer;
 
-public class SpriteAnimator extends SpriteAnimationContainer {
+public class SpriteAnimator extends SpriteAnimationSet {
 
     private final AnimationTimer timer = new AnimationTimer() {
         @Override

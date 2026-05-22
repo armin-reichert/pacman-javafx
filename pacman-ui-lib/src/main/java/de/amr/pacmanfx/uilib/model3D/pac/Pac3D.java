@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.uilib.model3D.pac;
 
+import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -23,7 +24,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
-    public enum AnimationID {CHEWING, DYING, MOVING}
+    public enum AnimationID implements AnimationIdentifier {
+        CHEWING,
+        DYING,
+        MOVING
+    }
 
     private final AnimationRegistry animations;
     private final Pac pac;
