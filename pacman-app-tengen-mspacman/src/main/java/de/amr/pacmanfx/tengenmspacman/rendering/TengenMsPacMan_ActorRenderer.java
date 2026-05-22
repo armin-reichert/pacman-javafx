@@ -37,12 +37,12 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         if (!actor.isVisible()) return;
 
         switch (actor) {
-            case Bonus bonus -> drawSpriteCentered(computeBonusSprite(bonus), bonus.center());
-            case Ghost ghost -> drawSpriteCentered(computeGhostSprite(ghost), ghost.center());
-            case Pac pac -> drawFacingSpriteCentered(computePacSprite(pac), pac.center());
+            case Bonus bonus -> drawSpriteCentered(computeBonusSprite(bonus), bonus.computeCenter());
+            case Ghost ghost -> drawSpriteCentered(computeGhostSprite(ghost), ghost.computeCenter());
+            case Pac pac -> drawFacingSpriteCentered(computePacSprite(pac), pac.computeCenter());
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Stork stork -> drawStork(stork);
-            default -> drawSpriteCentered(actor.animations().currentSprite(), actor.center());
+            default -> drawSpriteCentered(actor.animations().currentSprite(), actor.computeCenter());
         }
     }
 
@@ -110,7 +110,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     private void drawClapperBoard(Clapperboard clapperboard) {
         clapperboard.sprite().ifPresent(sprite -> {
             double numberX = clapperboard.x() + 8, numberY = clapperboard.y() + 18; // baseline
-            drawSpriteCentered(sprite, clapperboard.center());
+            drawSpriteCentered(sprite, clapperboard.computeCenter());
             // over-paint number from sprite sheet
             ctx.save();
             ctx.scale(scaling(), scaling());
@@ -129,7 +129,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawStork(Stork stork) {
-        drawSpriteCentered(stork.animations().currentSprite(), stork.center());
+        drawSpriteCentered(stork.animations().currentSprite(), stork.computeCenter());
         if (stork.isBagReleasedFromBeak()) {
             // Sprite sheet has no stork without bag under its beak so we over-paint the bag
             ctx.setFill(backgroundColor());

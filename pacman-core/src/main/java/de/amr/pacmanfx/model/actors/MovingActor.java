@@ -166,10 +166,10 @@ public class MovingActor extends Actor {
      * @param oy y-offset inside tile
      */
     public void placeAtTile(int tx, int ty, float ox, float oy) {
-        var prevTile = tile();
+        var prevTile = computeTile();
         setX(tx * TS + ox);
         setY(ty * TS + oy);
-        newTileEntered = !tile().equals(prevTile);
+        newTileEntered = !computeTile().equals(prevTile);
     }
 
     /**
@@ -246,7 +246,7 @@ public class MovingActor extends Actor {
      * @return the tile located the given number of tiles towards the current move direction of the actor.
      */
     public Vector2i tilesAhead(int numTiles) {
-        return tile().plus(moveDir().vector().scaled(numTiles));
+        return computeTile().plus(moveDir().vector().scaled(numTiles));
     }
 
     /**
@@ -300,7 +300,7 @@ public class MovingActor extends Actor {
             return; // we don't need no navigation, dim dit didit didit...
         }
 
-        final Vector2i currentTile = tile();
+        final Vector2i currentTile = computeTile();
         if (level.worldMap().terrainLayer().isTileInPortalSpace(currentTile)) {
             return;
         }
@@ -357,21 +357,21 @@ public class MovingActor extends Actor {
         }
         if (turnBackRequested && canTurnBack()) {
             setWishDir(moveDir().opposite());
-            Logger.trace("{}: turned back at tile {}", name(), tile());
+            Logger.trace("{}: turned back at tile {}", name(), computeTile());
             turnBackRequested = false;
         }
-        tryMovingTowards(level, tile(), wishDir());
+        tryMovingTowards(level, computeTile(), wishDir());
         if (moveInfo.moved) {
             setMoveDir(wishDir());
         } else {
-            tryMovingTowards(level, tile(), moveDir());
+            tryMovingTowards(level, computeTile(), moveDir());
         }
     }
 
     private boolean tryTeleporting(TerrainLayer terrain) {
         if (moveDir().isHorizontal()) {
             return terrain.horizontalPortals().stream()
-                .filter(portal -> portal.tileY() == tile().y())
+                .filter(portal -> portal.tileY() == computeTile().y())
                 .findFirst()
                 .map(portal -> portal.tryTeleporting(this))
                 .orElse(false);
@@ -381,24 +381,24 @@ public class MovingActor extends Actor {
 
     private void tryMovingTowards(GameLevel level, Vector2i tileBeforeMoving, Direction dir) {
         final Vector2f newVelocity = dir.vector().scaled(computeSpeed());
-        final Vector2f touchPosition = center().plus(dir.vector().scaled((float) HTS)).plus(newVelocity);
-        final Vector2i touchedTile = tileAt(touchPosition);
+        final Vector2f touchPosition = computeCenter().plus(dir.vector().scaled((float) HTS)).plus(newVelocity);
+        final Vector2i touchedTile = computeTileAt(touchPosition);
         final boolean turn = dir.vector().isOrthogonalTo(moveDir().vector());
 
         if (!canAccessTile(level, touchedTile)) {
             if (!turn) {
-                placeAtTile(tile()); // adjust over tile (would move forward against wall)
+                placeAtTile(computeTile()); // adjust over tile (would move forward against wall)
             }
             Logger.debug("Cannot move %s into tile %s".formatted(dir, touchedTile));
             return;
         }
 
         if (turn) {
-            float offset = dir.isHorizontal() ? offset().y() : offset().x();
+            float offset = dir.isHorizontal() ? computeOffset().y() : computeOffset().x();
             boolean atTurnPosition = Math.abs(offset) <= 1;
             if (atTurnPosition) {
                 Logger.trace("Reached turn position ({})", name());
-                placeAtTile(tile()); // adjust over tile (starts moving around corner)
+                placeAtTile(computeTile()); // adjust over tile (starts moving around corner)
             } else {
                 Logger.debug("Wants to take corner towards %s but not at turn position".formatted(dir));
                 return;
@@ -416,7 +416,7 @@ public class MovingActor extends Actor {
             move();
         }
 
-        final Vector2i tileAfterMoving = tile();
+        final Vector2i tileAfterMoving = computeTile();
         newTileEntered = !tileBeforeMoving.equals(tileAfterMoving);
 
         moveInfo.moved = true;

@@ -14,7 +14,7 @@ public enum CollisionStrategy {
         public boolean collide(Actor either, Actor other) {
             requireNonNull(either, "Actor to check for collision must not be null");
             requireNonNull(other, "Actor to check for collision must not be null");
-            return either.tile().equals(other.tile());
+            return either.computeTile().equals(other.computeTile());
         }
     },
 
@@ -24,7 +24,7 @@ public enum CollisionStrategy {
         public boolean collide(Actor either, Actor other) {
             requireNonNull(either, "Actor to check for collision must not be null");
             requireNonNull(other, "Actor to check for collision must not be null");
-            float dist = either.center().euclideanDist(other.center());
+            float dist = either.computeCenter().euclideanDist(other.computeCenter());
             if (dist < COLLISION_SENSITIVITY_PIXELS) {
                 Logger.info("Collision detected (dist={}): {} collides with {}", dist, either, other);
                 return true;

@@ -149,7 +149,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         if (event.allPellets()) {
             level3D.pellets3D().map(Pellet3D::shape).forEach(shape -> level3D.getChildren().remove(shape));
         } else {
-            final Vector2i tile = event.pac().tile();
+            final Vector2i tile = event.pac().computeTile();
             if (event.energizer()) {
                 level3D.energizer3DAt(tile).ifPresent(energizer3D -> {
                     energizer3D.stopPumping();

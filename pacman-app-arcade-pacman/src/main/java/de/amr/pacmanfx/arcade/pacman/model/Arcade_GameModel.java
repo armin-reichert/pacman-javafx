@@ -311,7 +311,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         final int alreadyKilled = level.energizerVictims().size();
         final int points = killedGhostValue(alreadyKilled);
         scorePoints(level, points);
-        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
+        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.computeTile());
 
         ghost.setState(GhostState.EATEN);
         // Animation index is 0-based, so use animation frame 0 to show points for first killed ghost...

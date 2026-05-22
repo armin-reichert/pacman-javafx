@@ -86,7 +86,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
 
     private void drawDirectionIndicator(MovingActor movingActor) {
         ctx.save();
-        Vector2f center = movingActor.center();
+        Vector2f center = movingActor.computeCenter();
         Vector2f arrowHead = center.plus(movingActor.wishDir().vector().scaled(12f)).scaled(scaling());
         Vector2f guyCenter = center.scaled(scaling());
         double radius = scaled(2), diameter = 2 * radius;

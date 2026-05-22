@@ -14,7 +14,7 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
 import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.tileAt;
+import static de.amr.pacmanfx.Globals.computeTileAt;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
@@ -72,7 +72,7 @@ public class Action_IdentifyTileAndObstacle extends EditorUIAction<String> {
 
     private String identifyObstacleStartingAtTile(WorldMap worldMap) {
         Obstacle obstacleStartingAtTile = worldMap.terrainLayer().obstacles().stream()
-            .filter(obstacle -> tileAt(obstacle.startPoint().minus(HTS, 0).toVector2f()).equals(tile))
+            .filter(obstacle -> computeTileAt(obstacle.startPoint().minus(HTS, 0).toVector2f()).equals(tile))
             .findFirst().orElse(null);
         if (obstacleStartingAtTile == null) return null;
         String encoding = obstacleStartingAtTile.encoding();

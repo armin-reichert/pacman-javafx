@@ -34,11 +34,11 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         requireNonNull(actor);
         if (!actor.isVisible()) return;
         switch (actor) {
-            case Pac pac                   -> drawSpriteCentered(computePacSprite(pac), pac.center());
-            case Ghost ghost               -> drawSpriteCentered(computeGhostSprite(ghost), ghost.center());
-            case Bonus bonus               -> drawSpriteCentered(computeBonusSprite(bonus), bonus.center());
+            case Pac pac                   -> drawSpriteCentered(computePacSprite(pac), pac.computeCenter());
+            case Ghost ghost               -> drawSpriteCentered(computeGhostSprite(ghost), ghost.computeCenter());
+            case Bonus bonus               -> drawSpriteCentered(computeBonusSprite(bonus), bonus.computeCenter());
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            default                        -> drawSpriteCentered(actor.animations().currentSprite(), actor.center());
+            default                        -> drawSpriteCentered(actor.animations().currentSprite(), actor.computeCenter());
         }
     }
 
@@ -76,7 +76,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         final int spriteIndex = clapperboard.state(); //TODO decouple
         if (0 <= spriteIndex && spriteIndex < sprites.length) {
             final RectShort sprite = sprites[spriteIndex];
-            drawSpriteCentered(sprite, clapperboard.center());
+            drawSpriteCentered(sprite, clapperboard.computeCenter());
             // Draw number and title
             final double numberX = scaled(clapperboard.x() + sprite.width() - 25);
             final double textX = scaled(clapperboard.x() + sprite.width());

@@ -22,8 +22,8 @@ public class OrangeGhostPokey extends Ghost {
 
     @Override
     public Vector2i chasingTargetTile(GameLevel gameLevel) {
-        return tile().euclideanDist(gameLevel.pac().tile()) < ESCAPE_DISTANCE_IN_TILES
+        return computeTile().euclideanDist(gameLevel.pac().computeTile()) < ESCAPE_DISTANCE_IN_TILES
             ? gameLevel.worldMap().terrainLayer().ghostScatterTile(personality())
-            : gameLevel.pac().tile();
+            : gameLevel.pac().computeTile();
     }
 }

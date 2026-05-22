@@ -65,7 +65,7 @@ public interface House {
      * @return tells if the given actor is located inside the house
      */
     default boolean isVisitedBy(Actor actor) {
-        return contains(requireNonNull(actor).tile());
+        return contains(requireNonNull(actor).computeTile());
     }
 
     default Vector2f center() {

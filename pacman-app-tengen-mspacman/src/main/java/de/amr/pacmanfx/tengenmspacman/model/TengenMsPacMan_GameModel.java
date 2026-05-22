@@ -544,7 +544,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             return;
         }
 
-        final Vector2i houseEntry = tileAt(house.entryPosition());
+        final Vector2i houseEntry = computeTileAt(house.entryPosition());
         final Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
 
         final List<HPortal> portals = terrain.horizontalPortals();
@@ -668,7 +668,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         ghost.setState(GhostState.EATEN);
         ghost.selectAnimationAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, killedSoFar);
         scorePoints(level, points);
-        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
+        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.computeTile());
         level.pac().hide();
         level.ghosts().forEach(Ghost::stopAnimation);
         flow().publishGameEvent(new GhostEatenEvent(this, ghost));

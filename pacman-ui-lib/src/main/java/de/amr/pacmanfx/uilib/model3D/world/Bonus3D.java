@@ -159,7 +159,7 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
     }
 
     private void updatePosition(GameLevel level) {
-        final Vector2f center = bonus.center();
+        final Vector2f center = bonus.computeCenter();
         translate.setX(center.x());
         translate.setY(center.y());
         translate.setZ(-HTS);

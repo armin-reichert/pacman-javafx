@@ -21,6 +21,6 @@ public class CyanGhostBashful extends Ghost {
 
     @Override
     public Vector2i chasingTargetTile(GameLevel gameLevel) {
-        return gameLevel.pac().tilesAheadWithOverflowBug(2).scaled(2).minus(gameLevel.ghost(RED_GHOST_SHADOW).tile());
+        return gameLevel.pac().tilesAheadWithOverflowBug(2).scaled(2).minus(gameLevel.ghost(RED_GHOST_SHADOW).computeTile());
     }
 }

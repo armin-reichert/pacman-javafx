@@ -471,7 +471,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
 
             // If collision happened while teleporting (horizontally), move collided actors into visible world
             final TerrainLayer terrain = level.worldMap().terrainLayer();
-            terrain.hPortalContainingTile(pac.tile()).ifPresent(hPortal -> {
+            terrain.hPortalContainingTile(pac.computeTile()).ifPresent(hPortal -> {
                 if (pac.moveDir() == Direction.LEFT) {
                     pac.setX(hPortal.rightBorderEntryTile().x() * TS + HTS);
                 } else if (pac.moveDir() == Direction.RIGHT) {
@@ -556,7 +556,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
             .filter(bonus -> collisionStrategy().collide(level.pac(), bonus))
             .orElse(null);
 
-        final Vector2i pacTile = level.pac().tile();
+        final Vector2i pacTile = level.pac().computeTile();
         if (level.worldMap().foodLayer().hasFoodAtTile(pacTile)) {
             simStep.foodTile = pacTile;
             simStep.energizerFound = level.worldMap().foodLayer().isEnergizerTile(pacTile);

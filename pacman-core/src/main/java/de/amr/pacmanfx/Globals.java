@@ -7,7 +7,6 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 
 import static de.amr.basics.math.Vector2f.vec2_float;
-import static de.amr.basics.math.Vector2i.vec2_int;
 import static java.util.Objects.requireNonNull;
 
 public final class Globals {
@@ -82,9 +81,9 @@ public final class Globals {
      * @param position a position
      * @return tile containing given position
      */
-    public static Vector2i tileAt(Vector2f position) {
+    public static Vector2i computeTileAt(Vector2f position) {
         requireNonNull(position);
-        return tileAt(position.x(), position.y());
+        return computeTileAt(position.x(), position.y());
     }
 
     /**
@@ -92,10 +91,10 @@ public final class Globals {
      * @param y y position
      * @return tile containing given position
      */
-    public static Vector2i tileAt(float x, float y) {
+    public static Vector2i computeTileAt(float x, float y) {
         float tx = x >= 0 ? x / TS : (x - TS) / TS;
         float ty = y >= 0 ? y / TS : (y - TS) / TS;
-        return vec2_int((int) tx, (int) ty);
+        return new Vector2i((int) tx, (int) ty);
     }
 
     /**

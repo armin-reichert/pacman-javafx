@@ -79,7 +79,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         // render all obstacles found in map except the house placeholder obstacle
         for (Obstacle obstacle : terrain.obstacles()) {
             final Vector2f startPoint = obstacle.startPoint().toVector2f();
-            if (house == null || !house.contains(tileAt(startPoint))) {
+            if (house == null || !house.contains(computeTileAt(startPoint))) {
                 renderer3D.renderObstacle3D(obstacle, isWorldBorder(terrain, obstacle), wallThickness, cornerRadius);
             }
         }

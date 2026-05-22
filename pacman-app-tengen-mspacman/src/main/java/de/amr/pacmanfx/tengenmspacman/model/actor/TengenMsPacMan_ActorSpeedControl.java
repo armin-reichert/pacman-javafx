@@ -63,7 +63,7 @@ public class TengenMsPacMan_ActorSpeedControl implements ActorSpeedControl {
     public float ghostSpeed(GameLevel level, Ghost ghost) {
         final int levelNumber = level.number();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final Vector2i tile = ghost.tile();
+        final Vector2i tile = ghost.computeTile();
         final GhostState state = ghost.state();
         final boolean insideHouse = terrain.house().isVisitedBy(ghost);
         final boolean tunnelSlowdown = terrain.isTunnel(tile);

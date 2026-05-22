@@ -28,7 +28,7 @@ public class Pac3DTransformController {
             return;
         }
 
-        final Vector2f center = pac.center();
+        final Vector2f center = pac.computeCenter();
         pac3D.setTranslateX(center.x());
         pac3D.setTranslateY(center.y());
 

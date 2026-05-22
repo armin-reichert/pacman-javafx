@@ -52,8 +52,8 @@ public class DashboardSectionActorInfo extends DashboardSection {
 
     private String actorLocationInfo(GameLevel level, MovingActor movingActor) {
         if (movingActor == null) return NO_INFO;
-        Vector2i tile = movingActor.tile();
-        Vector2f offset = movingActor.offset();
+        Vector2i tile = movingActor.computeTile();
+        Vector2f offset = movingActor.computeOffset();
         return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
             tile.x(), tile.y(),
             offset.x(), offset.y(),

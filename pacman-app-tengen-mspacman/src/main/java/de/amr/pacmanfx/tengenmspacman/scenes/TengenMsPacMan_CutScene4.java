@@ -222,8 +222,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     private int compareBySmallestDistToSceneCenter(Pac junior, Direction dir1, Direction dir2) {
-        Vector2f pos1 = junior.tile().plus(dir1.vector()).scaled(TS).toVector2f();
-        Vector2f pos2 = junior.tile().plus(dir2.vector()).scaled(TS).toVector2f();
+        Vector2f pos1 = junior.computeTile().plus(dir1.vector()).scaled(TS).toVector2f();
+        Vector2f pos2 = junior.computeTile().plus(dir2.vector()).scaled(TS).toVector2f();
         Vector2f center = unscaledSceneSize().scaled(0.5);
         return Double.compare(pos1.euclideanDist(center), pos2.euclideanDist(center));
     }

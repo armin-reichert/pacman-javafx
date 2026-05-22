@@ -142,7 +142,7 @@ public class Ghost extends MovingActor {
      * @return the current target tile when chasing Pac-Man
      */
     public Vector2i chasingTargetTile(GameLevel level) {
-        return level.pac().tile();
+        return level.pac().computeTile();
     }
 
     /**
@@ -157,7 +157,7 @@ public class Ghost extends MovingActor {
      */
     public void roam(GameLevel level) {
         requireNonNull(level);
-        final Vector2i tile = tile();
+        final Vector2i tile = computeTile();
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
         final boolean stuck = !moveInfo.moved;
         if ((newTileEntered || stuck) && !teleporting) {
@@ -201,7 +201,7 @@ public class Ghost extends MovingActor {
         if (specialTerrainTiles.contains(tile)
                 && state() == GhostState.HUNTING_PAC
                 && terrainLayer.content(tile) == TerrainTile.ONE_WAY_DOWN.$
-                && tile.equals(tile().plus(UP.vector()))
+                && tile.equals(computeTile().plus(UP.vector()))
         ) {
             Logger.debug("Hunting {} cannot move up to special tile {}", name(), tile);
             return false;

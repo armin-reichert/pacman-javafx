@@ -50,7 +50,7 @@ public interface TengenMsPacMan_ActorFactory {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final boolean firstScatterPhase = level.huntingTimer().phaseIndex() == 0;
-            final boolean takeRandomDir = ghost.isNewTileEntered() && terrain.isIntersection(ghost.tile());
+            final boolean takeRandomDir = ghost.isNewTileEntered() && terrain.isIntersection(ghost.computeTile());
             if (firstScatterPhase && takeRandomDir) {
                 selectRandomWishDir(ghost, level);
                 ghost.setSpeed(speed);
@@ -70,7 +70,7 @@ public interface TengenMsPacMan_ActorFactory {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final boolean firstScatterPhase = level.huntingTimer().phaseIndex() == 0;
-            final boolean takeRandomDir = ghost.isNewTileEntered() && terrain.isIntersection(ghost.tile());
+            final boolean takeRandomDir = ghost.isNewTileEntered() && terrain.isIntersection(ghost.computeTile());
             if (firstScatterPhase && takeRandomDir) {
                 selectRandomWishDir(ghost, level);
                 ghost.setSpeed(speed);
@@ -86,7 +86,7 @@ public interface TengenMsPacMan_ActorFactory {
     }
 
     private static void selectRandomWishDir(Ghost ghost, GameLevel level) {
-        final Vector2i tile = ghost.tile();
+        final Vector2i tile = ghost.computeTile();
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
         if (teleporting) {
             return;
@@ -105,7 +105,7 @@ public interface TengenMsPacMan_ActorFactory {
     }
 
     private static boolean isAcceptableWishDir(GameLevel level, Ghost ghost, Direction dir) {
-        final Vector2i neighborTile = ghost.tile().plus(dir.vector());
+        final Vector2i neighborTile = ghost.computeTile().plus(dir.vector());
         return dir != ghost.moveDir().opposite() && ghost.canAccessTile(level, neighborTile);
     }
 }

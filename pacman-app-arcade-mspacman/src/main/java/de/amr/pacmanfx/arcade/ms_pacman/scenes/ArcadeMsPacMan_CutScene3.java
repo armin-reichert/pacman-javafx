@@ -151,7 +151,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         bag.move();
 
         // release bag from storks beak?
-        if (stork.tile().x() == 20) {
+        if (stork.computeTile().x() == 20) {
             bag.setAcceleration(0, 0.04f); // gravity
             stork.setVelocity(-1, 0);
         }

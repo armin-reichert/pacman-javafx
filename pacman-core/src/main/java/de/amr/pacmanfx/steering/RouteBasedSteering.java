@@ -45,7 +45,7 @@ public class RouteBasedSteering implements Steering {
             movingActor.setTargetTile(currentTarget());
             movingActor.navigateTowardsTarget(gameLevel);
             Logger.trace("New target tile for {}={}s", movingActor.name(), movingActor.targetTile());
-        } else if (movingActor.tile().equals(currentTarget())) {
+        } else if (movingActor.computeTile().equals(currentTarget())) {
             nextTarget(gameLevel, movingActor);
             Logger.trace("New target tile for {}={}", movingActor.name(), movingActor.targetTile());
         }

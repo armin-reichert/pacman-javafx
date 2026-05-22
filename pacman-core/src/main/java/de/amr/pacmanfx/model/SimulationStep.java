@@ -54,7 +54,7 @@ public class SimulationStep {
     public List<String> createReport() {
         var messages = new ArrayList<String>();
         for (Ghost ghost : ghostsCollidingWithPac) {
-            messages.add("%s collided with Pac at tile %s, state after collision: %s".formatted(ghost.name(), ghost.tile(), ghost.state()));
+            messages.add("%s collided with Pac at tile %s, state after collision: %s".formatted(ghost.name(), ghost.computeTile(), ghost.state()));
         }
         if (energizerFound) {
             messages.add("Energizer found at " + foodTile);
@@ -75,7 +75,7 @@ public class SimulationStep {
             messages.add("Pac lost power");
         }
         if (pacKiller != null) {
-            messages.add("Pac killed by %s at tile %s".formatted(pacKiller.name(), pacKiller.tile()));
+            messages.add("Pac killed by %s at tile %s".formatted(pacKiller.name(), pacKiller.computeTile()));
         }
         if (extraLifeWon) {
             messages.add("Extra life won for scoring %d points".formatted(extraLifeScore));
@@ -84,7 +84,7 @@ public class SimulationStep {
             messages.add("%s unlocked: %s".formatted(ghostReleasedFromJailhouse.name(), ghostReleaseInfo));
         }
         for (Ghost ghost : ghostsKilled) {
-            messages.add("%s killed at %s".formatted(ghost.name(), ghost.tile()));
+            messages.add("%s killed at %s".formatted(ghost.name(), ghost.computeTile()));
         }
         return messages;
     }

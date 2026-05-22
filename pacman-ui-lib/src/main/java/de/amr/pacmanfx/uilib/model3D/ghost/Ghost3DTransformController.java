@@ -21,7 +21,7 @@ public class Ghost3DTransformController {
 
     public void update(Ghost3D ghost3D, WorldMap worldMap) {
         final Ghost ghost = ghost3D.ghost();
-        final Vector2f center = ghost.center();
+        final Vector2f center = ghost.computeCenter();
 
         ghost3D.setTranslateX(center.x());
         ghost3D.setTranslateY(center.y());

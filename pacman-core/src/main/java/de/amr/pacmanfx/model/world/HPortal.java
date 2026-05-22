@@ -39,8 +39,8 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
     }
 
     public boolean tryTeleporting(MovingActor actor) {
-        final Vector2i actorTile = actor.tile();
-        final Vector2f offset = actor.offset();
+        final Vector2i actorTile = actor.computeTile();
+        final Vector2f offset = actor.computeOffset();
         if (actorTile.y() != leftBorderEntryTile().y()) {
             return false;
         }

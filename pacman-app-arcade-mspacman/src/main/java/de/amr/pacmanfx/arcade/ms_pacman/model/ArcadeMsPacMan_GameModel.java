@@ -60,7 +60,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     private static Ghost applyModifiedShadowBehavior(RedGhostShadow ghost) {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
-            final Vector2i tile = ghost.tile();
+            final Vector2i tile = ghost.computeTile();
             final boolean teleporting = terrain.isTileInPortalSpace(tile);
             if (teleporting) {
                 ghost.setSpeed(speed);
@@ -88,7 +88,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     private static Ghost applyModifiedAmbushBehavior(Ghost ghost) {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
-            final Vector2i tile = ghost.tile();
+            final Vector2i tile = ghost.computeTile();
             final boolean teleporting = terrain.isTileInPortalSpace(tile);
             if (teleporting) {
                 ghost.setSpeed(speed);
@@ -114,7 +114,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     private static void selectRandomWishDir(Ghost ghost, GameLevel level) {
         for (final Direction dir : Direction.shuffled()) {
-            final Vector2i neighbor = ghost.tile().plus(dir.vector());
+            final Vector2i neighbor = ghost.computeTile().plus(dir.vector());
             final boolean acceptable = dir != ghost.moveDir().opposite() && ghost.canAccessTile(level, neighbor);
             if (acceptable) {
                 ghost.setWishDir(dir);
@@ -418,7 +418,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             }
         }
 
-        final Vector2i houseEntry = tileAt(house.entryPosition());
+        final Vector2i houseEntry = computeTileAt(house.entryPosition());
         final Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         final List<Vector2i> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).toList();
 

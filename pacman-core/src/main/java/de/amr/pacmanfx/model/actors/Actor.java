@@ -8,9 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationID;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleFloatProperty;
 
 import static de.amr.pacmanfx.Globals.*;
 import static java.util.Objects.requireNonNull;
@@ -27,8 +25,8 @@ public class Actor {
 
     private BooleanProperty visible;
 
-    private FloatProperty x;
-    private FloatProperty y;
+    private float x;
+    private float y;
 
     private float velX;
     private float velY;
@@ -41,8 +39,7 @@ public class Actor {
      */
     public void reset() {
         setVisible(DEFAULT_VISIBILITY);
-        setX(0);
-        setY(0);
+        x = y = 0;
         velX = velY = 0;
         accX = accY = 0;
     }
@@ -58,7 +55,7 @@ public class Actor {
         return visible == null ? DEFAULT_VISIBILITY : visibleProperty().get();
     }
 
-    public void setVisible(boolean value) {
+    public final void setVisible(boolean value) {
         if (visible == null && DEFAULT_VISIBILITY == value) return;
         visibleProperty().set(value);
     }
@@ -71,67 +68,42 @@ public class Actor {
         setVisible(false);
     }
 
-    public FloatProperty xProperty() {
-        if (x == null) {
-            x = new SimpleFloatProperty(0);
-        }
-        return x;
-    }
-
-    public void setX(double value) {
-        if (x == null && value == 0) return;
-        xProperty().set((float) value);
+    public final void setX(double x) {
+        this.x = (float) x;
     }
 
     public float x() {
-        return x == null ? 0 : xProperty().get();
+        return x;
     }
 
-    public FloatProperty yProperty() {
-        if (y == null) {
-            y = new SimpleFloatProperty(0);
-        }
-        return y;
-    }
-
-    public void setY(double value) {
-        if (y == null && value == 0) return;
-        yProperty().set((float) value);
+    public final void setY(double y) {
+        this.y = (float) y;
     }
 
     public float y() {
-        return y == null ? 0 : yProperty().get();
+        return y;
     }
 
     public Vector2f position() {
-        return new Vector2f(x(), y());
+        return new Vector2f(x, y);
     }
 
-    public void setPosition(double x, double y) {
-        setX(x);
-        setY(y);
+    public final void setPosition(double x, double y) {
+        this.x = (float) x;
+        this.y = (float) y;
     }
 
-    public void setPosition(Vector2f position) {
+    public final void setPosition(Vector2f position) {
         requireNonNull(position);
         setX(position.x());
         setY(position.y());
     }
 
-    /**
-     * We define the position of each actor as the left-upper corner of a square with side-length 1 tile (8 pixels).
-     * The center position of an actor is the center of this square. This has some advantages but also
-     * some drawbacks, as everything in life.
-     *
-     * @return the center position of the actor
-     */
-    public Vector2f center() { return new Vector2f(x(), y()).plus(HTS, HTS); }
-
     public float velX() {
         return velX;
     }
 
-    public void setVelX(double velX) {
+    public final void setVelX(double velX) {
         this.velX = (float) velX;
     }
 
@@ -139,11 +111,11 @@ public class Actor {
         return velY;
     }
 
-    public void setVelY(double velY) {
+    public final void setVelY(double velY) {
         this.velY = (float) velY;
     }
 
-    public void setVelocity(double vx, double vy) {
+    public final void setVelocity(double vx, double vy) {
         this.velX = (float) vx;
         this.velY = (float) vy;
     }
@@ -156,7 +128,7 @@ public class Actor {
         return accX;
     }
 
-    public void setAccX(float accX) {
+    public final void setAccX(float accX) {
         this.accX = accX;
     }
 
@@ -164,11 +136,11 @@ public class Actor {
         return accY;
     }
 
-    public void setAccY(float accY) {
+    public final void setAccY(float accY) {
         this.accY = accY;
     }
 
-    public void setAcceleration(float ax, float ay) {
+    public final void setAcceleration(float ax, float ay) {
         this.accX = ax;
         this.accY = ay;
     }
@@ -179,29 +151,40 @@ public class Actor {
      * by the current acceleration.
      */
     public void move() {
-        setX(x() + velX);
-        setY(y() + velY);
+        x += velX;
+        y += velY;
         velX += accX;
         velY += accY;
     }
 
     /**
+     * We define the position of each actor as the left-upper corner of a square with side-length 1 tile (8 pixels).
+     * The center position of an actor is the center of this square. This has some advantages but also
+     * some drawbacks, as everything in life.
+     *
+     * @return the center position of the actor
+     */
+    public Vector2f computeCenter() { return new Vector2f(x + HTS, y + HTS); }
+
+    /**
      * In Pac-Man games, the current tile coordinate of an actor is defined as the tile containing the
      * actor's center position.
      *
-     * @return the tile coordinate containing the {@link #center()} position of the actor.
+     * @return the tile coordinate containing the {@link #computeCenter()} position of the actor.
      */
-    public Vector2i tile() {
-        return tileAt(center());
+    public Vector2i computeTile() {
+        final float cx = x + HTS;
+        final float cy = y + HTS;
+        return computeTileAt(cx, cy);
     }
 
     /**
      * @return Offset inside current tile: (0, 0) if centered, range: [-4, +4)
      */
-    public Vector2f offset() {
-        final Vector2i tile = tile();
-        final float ox = x() - tile.x() * TS;
-        final float oy = y() - tile.y() * TS;
+    public Vector2f computeOffset() {
+        final Vector2i tile = computeTile();
+        final float ox = x - tile.x() * TS;
+        final float oy = y - tile.y() * TS;
         return new Vector2f(ox, oy);
     }
 
