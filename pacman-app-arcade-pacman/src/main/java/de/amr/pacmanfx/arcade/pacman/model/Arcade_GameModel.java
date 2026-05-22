@@ -80,7 +80,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected int bonus1PelletsEaten;
     protected int bonus2PelletsEaten;
 
-    protected Map<Integer, Integer> cutSceneNumberAfterLevelNumber = Map.of();
+    protected Map<Integer, Integer> cutSceneNumberAfterLevelNumber;
 
     protected Arcade_GameModel(CoinMechanism coinMechanism, File highscoreFile) {
         super(highscoreFile);
@@ -166,7 +166,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     protected void checkRedGhostCruiseElroyActivation(GameLevel level) {
-        final RedGhostShadow redGhost = (RedGhostShadow) level.ghost(Globals.RED_GHOST_SHADOW);
+        final Ghost redGhost = level.ghost(Globals.RED_GHOST_SHADOW);
         if (redGhost != null) {
             final LevelData data = levelData(level.number());
             final int uneatenFoodCount = level.worldMap().foodLayer().remainingFoodCount();

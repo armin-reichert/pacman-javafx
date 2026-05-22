@@ -8,7 +8,9 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostFactory;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import org.tinylog.Logger;
 
@@ -38,15 +40,15 @@ public interface TengenMsPacMan_ActorFactory {
      */
     static Ghost createGhost(byte personality) {
         return switch (personality) {
-            case RED_GHOST_SHADOW -> applyModifiedShadowBehavior(new RedGhostShadow("Blinky"));
-            case PINK_GHOST_SPEEDY -> applyModifiedAmbushBehavior(new PinkGhostAmbusher("Pinky"));
-            case CYAN_GHOST_BASHFUL -> new CyanGhostBashful("Inky");
-            case ORANGE_GHOST_POKEY -> new OrangeGhostPokey("Sue");
+            case RED_GHOST_SHADOW   -> modifyShadowBehavior(GhostFactory.createRedGhostShadow("Blinky"));
+            case PINK_GHOST_SPEEDY  -> modifyAmbushBehavior(GhostFactory.createPinkGhostAmbusher("Pinky"));
+            case CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
+            case ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Sue");
             default -> throw new IllegalArgumentException();
         };
     }
 
-    private static Ghost applyModifiedShadowBehavior(RedGhostShadow ghost) {
+    private static Ghost modifyShadowBehavior(Ghost ghost) {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final boolean firstScatterPhase = level.huntingTimer().phaseIndex() == 0;
@@ -58,7 +60,9 @@ public interface TengenMsPacMan_ActorFactory {
             } else {
                 // Normal behavior of red ghost
                 final boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || ghost.elroyState().enabled();
-                final Vector2i targetTile = chase ? ghost.chasingTargetTile(level) : terrain.ghostScatterTile(ghost.personality());
+                final Vector2i targetTile = chase
+                    ? ghost.chasingTargetTileStrategy().apply(level)
+                    : terrain.ghostScatterTile(ghost.personality());
                 ghost.setSpeed(speed);
                 ghost.tryMovingTowardsTargetTile(level, targetTile);
             }
@@ -66,7 +70,7 @@ public interface TengenMsPacMan_ActorFactory {
         return ghost;
     }
 
-    private static Ghost applyModifiedAmbushBehavior(Ghost ghost) {
+    private static Ghost modifyAmbushBehavior(Ghost ghost) {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final boolean firstScatterPhase = level.huntingTimer().phaseIndex() == 0;
@@ -77,7 +81,9 @@ public interface TengenMsPacMan_ActorFactory {
                 ghost.tryMovingOrTeleporting(level);
             } else {
                 final boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
-                final Vector2i targetTile = chase ? ghost.chasingTargetTile(level) : terrain.ghostScatterTile(ghost.personality());
+                final Vector2i targetTile = chase
+                    ? ghost.chasingTargetTileStrategy().apply(level)
+                    : terrain.ghostScatterTile(ghost.personality());
                 ghost.setSpeed(speed);
                 ghost.tryMovingTowardsTargetTile(level, targetTile);
             }

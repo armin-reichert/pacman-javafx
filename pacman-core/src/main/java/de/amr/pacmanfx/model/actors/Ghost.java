@@ -21,6 +21,7 @@ import org.tinylog.Logger;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import static de.amr.basics.math.Direction.*;
 import static de.amr.pacmanfx.Globals.*;
@@ -41,6 +42,11 @@ public class Ghost extends MovingActor {
     private Vector2f startPosition;
     private House home;
 
+    // Only used by red ghost in Arcade Pac-Man
+    private final ElroyState elroyState = new ElroyState();
+
+    private Function<GameLevel, Vector2i> chasingTargetTileStrategy = _ -> null;
+
     /**
      * Default hunting behavior is to retreat towards the scatter tile in scatter phase
      * and to go towards current target tile in chasing phase.
@@ -50,7 +56,7 @@ public class Ghost extends MovingActor {
         requireNonNull(speed);
         setSpeed(speed);
         final Vector2i targetTile = level.huntingTimer().phase() == HuntingPhase.CHASING
-            ? chasingTargetTile(level)
+            ? chasingTargetTileStrategy.apply(level)
             : level.worldMap().terrainLayer().ghostScatterTile(personality());
         tryMovingTowardsTargetTile(level, targetTile);
     };
@@ -61,12 +67,26 @@ public class Ghost extends MovingActor {
         corneringSpeedDelta = -1.0f;
     }
 
+    @Override
+    public void reset() {
+        super.reset();
+        elroyState().reset();
+    }
+
     public BiConsumer<GameLevel, Float> huntingStrategy() {
         return huntingStrategy;
     }
 
     public void setHuntingStrategy(BiConsumer<GameLevel, Float> huntingStrategy) {
-        this.huntingStrategy = huntingStrategy;
+        this.huntingStrategy = requireNonNull(huntingStrategy);
+    }
+
+    public Function<GameLevel, Vector2i> chasingTargetTileStrategy() {
+        return chasingTargetTileStrategy;
+    }
+
+    public void setChasingTargetTileStrategy(Function<GameLevel, Vector2i> chasingTargetTileStrategy) {
+        this.chasingTargetTileStrategy = requireNonNull(chasingTargetTileStrategy);
     }
 
     public void setHome(House home) {
@@ -102,6 +122,8 @@ public class Ghost extends MovingActor {
         return startPosition;
     }
 
+    public ElroyState elroyState() { return elroyState; }
+
     @Override
     public String toString() {
         return "Ghost{" +
@@ -120,7 +142,8 @@ public class Ghost extends MovingActor {
                 ", newTileEntered=" + newTileEntered +
                 ", turnBackRequested=" + turnBackRequested +
                 ", canTeleport=" + canTeleport +
-                ", corneringSpeedUp" + corneringSpeedDelta +
+                ", corneringSpeedUp=" + corneringSpeedDelta +
+                ", elroy state=" + elroyState +
                 '}';
     }
 
@@ -132,17 +155,8 @@ public class Ghost extends MovingActor {
      * Notifies this ghost about Pac-Man's assassination so he can react accordingly (send condolence message etc.)
      * @param ignored the game level where this happens
      */
-    public void onPacKilled(GameLevel ignored) {}
-
-    /**
-     * Subclasses implement this method to define the target tile of the ghost when hunting Pac-Man through
-     * the current game level.
-     *
-     * @param level the game level this ghost lives in
-     * @return the current target tile when chasing Pac-Man
-     */
-    public Vector2i chasingTargetTile(GameLevel level) {
-        return level.pac().computeTile();
+    public void onPacKilled(GameLevel ignored) {
+        elroyState().setEnabled(false);
     }
 
     /**

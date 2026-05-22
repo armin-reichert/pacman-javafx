@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.arcade.pacman.model;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.RedGhostShadow;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel.levelData;
@@ -58,9 +58,9 @@ public class Arcade_ActorSpeedControl implements ActorSpeedControl {
     public float ghostSpeedAttacking(GameLevel level, Ghost ghost) {
         final int levelNumber = level.number();
         final LevelData data = levelData(levelNumber);
-        if (ghost instanceof RedGhostShadow redGhostShadow) {
-            return switch (redGhostShadow.elroyState().mode()) {
-                case ZERO -> data.pctGhostSpeed() * BASE_SPEED_ONE_PERCENT;
+        if (ghost.personality() == Globals.RED_GHOST_SHADOW) {
+            return switch (ghost.elroyState().mode()) {
+                case ZERO -> data.pctGhostSpeed()  * BASE_SPEED_ONE_PERCENT;
                 case ONE  -> data.pctElroy1Speed() * BASE_SPEED_ONE_PERCENT;
                 case TWO  -> data.pctElroy2Speed() * BASE_SPEED_ONE_PERCENT;
             };

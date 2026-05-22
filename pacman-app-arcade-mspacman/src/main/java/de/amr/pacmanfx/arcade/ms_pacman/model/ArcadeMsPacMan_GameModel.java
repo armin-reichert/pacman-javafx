@@ -49,67 +49,71 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      */
     public static Ghost createGhost(byte personality) {
         return switch (personality) {
-            case RED_GHOST_SHADOW -> applyModifiedShadowBehavior(new RedGhostShadow("Blinky"));
-            case PINK_GHOST_SPEEDY -> applyModifiedAmbushBehavior(new PinkGhostAmbusher("Pinky"));
-            case CYAN_GHOST_BASHFUL -> new CyanGhostBashful("Inky");
-            case ORANGE_GHOST_POKEY -> new OrangeGhostPokey("Sue");
+            case RED_GHOST_SHADOW   -> applyModifiedShadowBehavior(GhostFactory.createRedGhostShadow("Blinky"));
+            case PINK_GHOST_SPEEDY  -> applyModifiedAmbushBehavior(GhostFactory.createPinkGhostAmbusher("Pinky"));
+            case CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
+            case ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Sue");
             default -> throw new IllegalArgumentException("Illegal ghost personality: %d".formatted(personality));
         };
     }
 
-    private static Ghost applyModifiedShadowBehavior(RedGhostShadow ghost) {
-        ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
+    private static Ghost applyModifiedShadowBehavior(Ghost redGhost) {
+        redGhost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
-            final Vector2i tile = ghost.computeTile();
+            final Vector2i tile = redGhost.computeTile();
             final boolean teleporting = terrain.isTileInPortalSpace(tile);
             if (teleporting) {
-                ghost.setSpeed(speed);
-                ghost.tryMovingOrTeleporting(level);
+                redGhost.setSpeed(speed);
+                redGhost.tryMovingOrTeleporting(level);
                 return;
             }
             final boolean takeRandomDir = level.huntingTimer().phaseIndex() == 0
-                && ghost.isNewTileEntered()
+                && redGhost.isNewTileEntered()
                 && terrain.isIntersection(tile);
             if (takeRandomDir) {
-                selectRandomWishDir(ghost, level);
-                ghost.setSpeed(speed);
-                ghost.tryMovingOrTeleporting(level);
+                selectRandomWishDir(redGhost, level);
+                redGhost.setSpeed(speed);
+                redGhost.tryMovingOrTeleporting(level);
             } else {
                 // Normal behavior of red ghost
-                final boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || ghost.elroyState().enabled();
-                final Vector2i targetTile = chase ? ghost.chasingTargetTile(level) : terrain.ghostScatterTile(ghost.personality());
-                ghost.setSpeed(speed);
-                ghost.tryMovingTowardsTargetTile(level, targetTile);
+                final boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || redGhost.elroyState().enabled();
+                final Vector2i targetTile = chase
+                    ? redGhost.chasingTargetTileStrategy().apply(level)
+                    : terrain.ghostScatterTile(redGhost.personality());
+                redGhost.setSpeed(speed);
+                redGhost.tryMovingTowardsTargetTile(level, targetTile);
             }
         });
-        return ghost;
+        return redGhost;
     }
 
-    private static Ghost applyModifiedAmbushBehavior(Ghost ghost) {
-        ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
+    private static Ghost applyModifiedAmbushBehavior(Ghost pinkGhost) {
+        pinkGhost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
-            final Vector2i tile = ghost.computeTile();
+            final Vector2i tile = pinkGhost.computeTile();
             final boolean teleporting = terrain.isTileInPortalSpace(tile);
             if (teleporting) {
-                ghost.setSpeed(speed);
-                ghost.tryMovingOrTeleporting(level);
+                pinkGhost.setSpeed(speed);
+                pinkGhost.tryMovingOrTeleporting(level);
                 return;
             }
             final boolean takeRandomDir = level.huntingTimer().phaseIndex() == 0
-                && ghost.isNewTileEntered()
+                && pinkGhost.isNewTileEntered()
                 && terrain.isIntersection(tile);
             if (takeRandomDir) {
-                selectRandomWishDir(ghost, level);
-                ghost.setSpeed(speed);
-                ghost.tryMovingOrTeleporting(level);
+                selectRandomWishDir(pinkGhost, level);
+                pinkGhost.setSpeed(speed);
+                pinkGhost.tryMovingOrTeleporting(level);
             } else {
                 final boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
-                final Vector2i targetTile = chase ? ghost.chasingTargetTile(level) : terrain.ghostScatterTile(ghost.personality());
-                ghost.setSpeed(speed);
-                ghost.tryMovingTowardsTargetTile(level, targetTile);
+                final Vector2i targetTile = chase
+                    ? pinkGhost.chasingTargetTileStrategy().apply(level)
+                    : terrain.ghostScatterTile(pinkGhost.personality());
+                pinkGhost.setSpeed(speed);
+                pinkGhost.tryMovingTowardsTargetTile(level, targetTile);
             }
         });
-        return ghost;
+        return pinkGhost;
     }
 
     private static void selectRandomWishDir(Ghost ghost, GameLevel level) {
@@ -328,9 +332,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     private void createGateKeeper() {
         this.gateKeeper = new GateKeeper();
         this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
-            if (prisoner.personality() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW) instanceof RedGhostShadow blinky) {
+            if (prisoner.personality() == ORANGE_GHOST_POKEY) {
+                final Ghost blinky = level.ghost(RED_GHOST_SHADOW);
                 if (blinky.elroyState().mode() != ElroyState.Mode.ZERO && !blinky.elroyState().enabled()) {
-                    Logger.debug("Re-enable Blinky 'Cruise Elroy' mode because {} got released:", prisoner.name());
+                    Logger.debug("Re-enable {}'s Cruise Elroy mode because {} got released:", blinky.name(), prisoner.name());
                     blinky.elroyState().setEnabled(true);
                 }
             }
