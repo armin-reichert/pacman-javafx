@@ -11,13 +11,13 @@ import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
 
 import static de.amr.pacmanfx.tengenmspacman.rendering.SpriteID.STORK;
 
 public class Stork extends Actor {
 
-    private static class StorkAnimations extends SpriteAnimationMap<SpriteID> {
+    private static class StorkAnimations extends SpriteAnimationContainer<SpriteID> {
 
         private final SpriteAnimator spriteAnimator;
 
@@ -42,7 +42,7 @@ public class Stork extends Actor {
     private boolean bagReleasedFromBeak;
 
     public Stork(SpriteAnimator spriteAnimator) {
-        setAnimations(new StorkAnimations(spriteAnimator));
+        setAnimationManager(new StorkAnimations(spriteAnimator));
     }
 
     public void setBagReleasedFromBeak(boolean released) {

@@ -81,8 +81,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         final UIConfig uiConfig = ui.currentConfig();
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimator()));
-        msPacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        msPacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimator()));
+        msPacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
 
         ghosts = List.of(
             uiConfig.createGhostWithAnimations(ui.spriteAnimator(), RED_GHOST_SHADOW),
@@ -119,8 +119,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.setMoveDir(Direction.LEFT);
                 scene.msPacMan.setSpeed(ACTOR_SPEED);
                 scene.msPacMan.setVisible(true);
-                scene.msPacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
-                scene.msPacMan.playAnimation();
+                scene.msPacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+                scene.msPacMan.animationManager().playSelected();
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33.5f, TS * 20);
                     ghost.setMoveDir(Direction.LEFT);
@@ -128,8 +128,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     ghost.setSpeed(ACTOR_SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setVisible(true);
-                    ghost.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
-                    ghost.playAnimation();
+                    ghost.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+                    ghost.animationManager().playSelected();
                 }
                 scene.presentedGhostPersonality = RED_GHOST_SHADOW;
             }
@@ -176,8 +176,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     }
                     else if (ghost.y() <= endPositionY) {
                         ghost.setSpeed(0);
-                        ghost.stopAnimation();
-                        ghost.resetAnimation();
+                        ghost.animationManager().stopSelected();
+                        ghost.animationManager().resetSelected();
                         return true;
                     }
                     else {
@@ -195,7 +195,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= STOP_X_MS_PACMAN) {
                     scene.msPacMan.setSpeed(0);
-                    scene.msPacMan.resetAnimation();
+                    scene.msPacMan.animationManager().resetSelected();
                     scene.sceneController.enterState(READY_TO_PLAY);
                 }
             }

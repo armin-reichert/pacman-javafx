@@ -11,11 +11,11 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
 
 public class Stork extends Actor {
 
-    public static class StorkAnimations extends SpriteAnimationMap<SpriteID> {
+    public static class StorkAnimations extends SpriteAnimationContainer<SpriteID> {
 
         private final SpriteAnimator spriteAnimator;
 
@@ -38,6 +38,6 @@ public class Stork extends Actor {
     }
 
     public Stork(SpriteAnimator spriteAnimator) {
-        setAnimations(new StorkAnimations(spriteAnimator));
+        setAnimationManager(new StorkAnimations(spriteAnimator));
     }
 }

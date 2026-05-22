@@ -20,7 +20,7 @@ import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
-import static de.amr.basics.spriteanim.SpriteAnimationFacade.singleSpriteAnimationFacade;
+import static de.amr.basics.spriteanim.AnimationFacade.singletonAnimationFacade;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
@@ -101,13 +101,13 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimator()));
+        msPacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimator()));
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
         msPacMan.setSpeed(0);
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimator()));
+        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimator()));
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
         pacMan.setSpeed(0);
@@ -125,7 +125,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         pinky.setSpeed(0);
 
         heart = new Actor();
-        heart.setAnimations(singleSpriteAnimationFacade(spriteSheet.sprite(SpriteID.HEART)));
+        heart.setAnimationManager(singletonAnimationFacade(spriteSheet.sprite(SpriteID.HEART)));
 
         collided = false;
 
@@ -160,24 +160,24 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             switch ((int) gameStateTick) {
                 case 130 -> {
                     pacMan.setSpeed(SPEED_CHASING);
-                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.playAnimation();
+                    pacMan.animationManager().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    pacMan.animationManager().playSelected();
                     pacMan.show();
 
                     msPacMan.setSpeed(SPEED_CHASING);
-                    msPacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
-                    msPacMan.playAnimation();
+                    msPacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+                    msPacMan.animationManager().playSelected();
                     msPacMan.show();
                 }
                 case 160 -> {
                     inky.setSpeed(SPEED_CHASING);
-                    inky.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
-                    inky.playAnimation();
+                    inky.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+                    inky.animationManager().playSelected();
                     inky.show();
 
                     pinky.setSpeed(SPEED_CHASING);
-                    pinky.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
-                    pinky.playAnimation();
+                    pinky.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+                    pinky.animationManager().playSelected();
                     pinky.show();
                 }
                 case 400 -> {
@@ -225,8 +225,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                     msPacMan.setMoveDir(Direction.RIGHT);
                 }
                 case 545 -> {
-                    pacMan.resetAnimation();
-                    msPacMan.resetAnimation();
+                    pacMan.animationManager().resetSelected();
+                    msPacMan.animationManager().resetSelected();
                 }
                 case 560 -> {
                     heart.setPosition(0.5f * (pacMan.x() + msPacMan.x()), pacMan.y() - TS(2));

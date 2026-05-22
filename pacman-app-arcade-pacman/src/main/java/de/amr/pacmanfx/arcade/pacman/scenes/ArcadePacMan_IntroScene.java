@@ -109,7 +109,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         blinking = new Pulse(10, Pulse.State.ON);
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimator()));
+        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimator()));
 
         ghosts[0] = uiConfig.createGhostWithAnimations(ui.spriteAnimator(), RED_GHOST_SHADOW);
         ghosts[1] = uiConfig.createGhostWithAnimations(ui.spriteAnimator(), PINK_GHOST_SPEEDY);
@@ -144,8 +144,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         pacMan.setPosition(TS * 28, TS * 20);
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(CHASING_SPEED);
-        pacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
-        pacMan.playAnimation();
+        pacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pacMan.animationManager().playSelected();
         pacMan.show();
         for (Ghost ghost : ghosts) {
             ghost.setState(GhostState.HUNTING_PAC);
@@ -154,8 +154,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             ghost.setSpeed(CHASING_SPEED);
             ghost.setPosition(pacMan.x() + 16 * ghost.personality() + 18, pacMan.y());
             ghost.show();
-            ghost.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
-            ghost.playAnimation();
+            ghost.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            ghost.animationManager().playSelected();
         }
     }
 
@@ -182,7 +182,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private void turnCardsStopPacMan() {
         pacMan.setSpeed(0);
-        pacMan.stopAnimation();
+        pacMan.animationManager().stopSelected();
         for (Ghost ghost : ghosts) {
             ghost.setState(FRIGHTENED);
             ghost.setMoveDir(Direction.RIGHT);
@@ -192,8 +192,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     private void turnCardsRestartPacMan() {
-        pacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
-        pacMan.playAnimation();
+        pacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pacMan.animationManager().playSelected();
         pacMan.setSpeed(CHASING_SPEED);
     }
 
@@ -216,12 +216,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private void eatGhostAndStopChasing(Ghost victim, long tick) {
         victim.setState(EATEN);
-        victim.selectAnimationAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, numGhostsEaten++);
+        victim.animationManager().selectAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, numGhostsEaten++);
         pacMan.hide();
         pacMan.setSpeed(0);
         for (Ghost ghost : ghosts) {
             ghost.setSpeed(0);
-            ghost.stopAnimation();
+            ghost.animationManager().stopSelected();
         }
         lastGhostEatenTick = tick;
     }
@@ -235,8 +235,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             } else {
                 ghost.show();
                 ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
-                ghost.selectAnimation(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
-                ghost.playAnimation();
+                ghost.animationManager().select(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
+                ghost.animationManager().playSelected();
             }
         }
     }

@@ -299,8 +299,8 @@ public abstract class AbstractGameModel implements Game, GameCheats {
         level.huntingTimer().startFirstPhase(level.number());
         level.blinking().setStartState(Pulse.State.ON);
         level.blinking().restart();
-        level.pac().playAnimation();
-        level.ghosts().forEach(Actor::playAnimation);
+        level.pac().animationManager().playSelected();
+        level.ghosts().forEach(ghost -> ghost.animationManager().playSelected());
         flow().publishGameEvent(new HuntingPhaseStartedEvent(this, level.huntingTimer().phaseIndex(), level.huntingTimer().phase()));
     }
 
@@ -325,10 +325,10 @@ public abstract class AbstractGameModel implements Game, GameCheats {
         pac.powerTimer().reset(0);
         Logger.info("Power timer stopped and reset to zero.");
         pac.setSpeed(0);
-        pac.stopAnimation();
-        pac.selectAnimation(ArcadePacMan_AnimationID.PAC_FULL);
+        pac.animationManager().stopSelected();
+        pac.animationManager().select(ArcadePacMan_AnimationID.PAC_FULL);
 
-        level.ghosts().forEach(Ghost::stopAnimation);
+        level.ghosts().forEach(ghost -> ghost.animationManager().stopSelected());
         level.optBonus().ifPresent(Bonus::setInactive);
     }
 
@@ -348,7 +348,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
         pac.setMoveDir(Direction.LEFT);
         pac.setWishDir(Direction.LEFT);
         pac.powerTimer().resetToIndefiniteDuration();
-        pac.resetAnimation();
+        pac.animationManager().resetSelected();
 
         level.ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
@@ -357,7 +357,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
             ghost.setMoveDir(startDir);
             ghost.setWishDir(startDir);
             ghost.setState(GhostState.LOCKED);
-            ghost.resetAnimation();
+            ghost.animationManager().resetSelected();
         });
 
         level.blinking().setStartState(Pulse.State.ON); // Energizers are visible when ON

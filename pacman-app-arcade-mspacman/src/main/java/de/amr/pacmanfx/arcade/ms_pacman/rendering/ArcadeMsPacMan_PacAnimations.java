@@ -10,11 +10,11 @@ import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
 
 import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
+public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationContainer<SpriteID> {
 
     private final SpriteAnimationSet container;
 

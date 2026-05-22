@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.SpriteAnimationFacade;
+import de.amr.basics.spriteanim.AnimationFacade;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -38,26 +38,26 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case Ghost ghost               -> drawSpriteCentered(computeGhostSprite(ghost), ghost.computeCenter());
             case Bonus bonus               -> drawSpriteCentered(computeBonusSprite(bonus), bonus.computeCenter());
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            default                        -> drawSpriteCentered(actor.animations().currentSprite(), actor.computeCenter());
+            default                        -> drawSpriteCentered(actor.animationManager().currentSprite(), actor.computeCenter());
         }
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
-        final SpriteAnimationFacade animations = ghost.animations();
-        if (animations.isSelected(ArcadePacMan_AnimationID.GHOST_NORMAL)) {
+        final AnimationFacade animationManager = ghost.animationManager();
+        if (animationManager.isSelected(ArcadePacMan_AnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.wishDir());
-            return spriteOrDefault(sprites, animations.currentFrame());
+            return spriteOrDefault(sprites, animationManager.currentFrame());
         }
-        else if (animations.isSelected(ArcadePacMan_AnimationID.GHOST_EYES)) {
+        else if (animationManager.isSelected(ArcadePacMan_AnimationID.GHOST_EYES)) {
             return spriteSheet().ghostEyesSprite(ghost.wishDir());
         }
         else {
-            return animations.currentSprite();
+            return animationManager.currentSprite();
         }
     }
 
     private RectShort computePacSprite(Pac pac) {
-        final SpriteAnimationFacade animations = pac.animations();
+        final AnimationFacade animations = pac.animationManager();
         if (animations.isSelected(ArcadePacMan_AnimationID.PAC_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.moveDir());
             return spriteOrDefault(sprites, animations.currentFrame());

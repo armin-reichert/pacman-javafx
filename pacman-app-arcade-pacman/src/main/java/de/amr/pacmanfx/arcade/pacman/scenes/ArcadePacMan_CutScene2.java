@@ -69,7 +69,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     public void onSceneStart() {
         final UIConfig uiConfig = ui.currentConfig();
         pacMan = createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimator()));
+        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimator()));
         blinky = uiConfig.createGhostWithAnimations(ui.spriteAnimator(), RED_GHOST_SHADOW);
         nailDressAnimation = SpriteAnimationBuilder.builder()
             .sprites(ArcadePacMan_SpriteSheet.instance().sprites(SpriteID.RED_GHOST_STRETCHED))
@@ -115,12 +115,12 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private void dressRaptures() {
         setNailDressAnimationState(NailDressState.RAPTURED);
         blinky.setX(blinky.x() - 4);
-        blinky.selectAnimation(ArcadePacMan_AnimationID.BLINKY_DAMAGED);
+        blinky.animationManager().select(ArcadePacMan_AnimationID.BLINKY_DAMAGED);
     }
 
     private void blinkyStopsMoving() {
         blinky.setSpeed(0);
-        blinky.stopAnimation();
+        blinky.animationManager().stopSelected();
     }
 
     private void blinkyGetsCaughtOnNail() {
@@ -133,8 +133,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
         blinky.setSpeed(1.25f);
-        blinky.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
-        blinky.playAnimation();
+        blinky.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        blinky.animationManager().playSelected();
         blinky.show();
     }
 
@@ -142,8 +142,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         pacMan.placeAtTile(28, 20);
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(1.15f);
-        pacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
-        pacMan.playAnimation();
+        pacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pacMan.animationManager().playSelected();
         pacMan.show();
     }
 
@@ -152,6 +152,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     }
 
     private SpriteAnimation blinkyAnimation(AnimationIdentifier animationID) {
-        return (SpriteAnimation) blinky.animations().animation(animationID);
+        return (SpriteAnimation) blinky.animationManager().animation(animationID);
     }
 }

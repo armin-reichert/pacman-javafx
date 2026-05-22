@@ -90,7 +90,7 @@ public class Pac extends MovingActor {
         restingTicks = 0;
         starvingTicks = 0;
         corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
-        selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        animationManager.select(ArcadePacMan_AnimationID.PAC_MUNCHING);
     }
 
     public BooleanProperty deadProperty() {
@@ -171,9 +171,9 @@ public class Pac extends MovingActor {
         tryMovingOrTeleporting(level);
 
         if (moveInfo.moved) {
-            playAnimation();
+            animationManager.playSelected();
         } else {
-            stopAnimation();
+            animationManager.stopSelected();
         }
     }
 

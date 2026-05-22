@@ -5,7 +5,6 @@ package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.model.*;
-import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 
 public class LevelMediumTestState<GAME extends Game> extends TestState<GAME> {
@@ -18,8 +17,8 @@ public class LevelMediumTestState<GAME extends Game> extends TestState<GAME> {
         final GameLevel level = game.optGameLevel().orElseThrow();
         level.pac().usingAutopilotProperty().unbind();
         level.pac().setUsingAutopilot(true);
-        level.pac().playAnimation();
-        level.ghosts().forEach(Actor::playAnimation);
+        level.pac().animationManager().playSelected();
+        level.ghosts().forEach(ghost -> ghost.animationManager().playSelected());
         level.pac().show();
         level.ghosts().forEach(Ghost::show);
         GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);

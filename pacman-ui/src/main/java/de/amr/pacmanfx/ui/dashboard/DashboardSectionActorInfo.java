@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -111,7 +111,7 @@ public class DashboardSectionActorInfo extends DashboardSection {
     }
 
     private String ghostAnimationInfo(GameLevel level, Ghost ghost) {
-        if (ghost.animations() instanceof SpriteAnimationMap<?> spriteAnimations) {
+        if (ghost.animationManager() instanceof SpriteAnimationContainer<?> spriteAnimations) {
             return spriteAnimations.selectedAnimationID() != null
                 ? String.valueOf(spriteAnimations.selectedAnimationID())
                 : NO_INFO;

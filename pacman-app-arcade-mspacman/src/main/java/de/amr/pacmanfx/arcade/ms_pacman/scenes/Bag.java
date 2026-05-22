@@ -11,14 +11,14 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
 
 public class Bag extends Actor {
 
-    public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
+    public static class BagAnimations extends SpriteAnimationContainer<SpriteID> {
 
         private final SpriteAnimator spriteAnimator;
 
@@ -50,12 +50,12 @@ public class Bag extends Actor {
     private boolean open;
 
     public Bag(SpriteAnimator spriteAnimator) {
-        setAnimations(new BagAnimations(spriteAnimator));
+        setAnimationManager(new BagAnimations(spriteAnimator));
     }
 
     public void setOpen(boolean open) {
         this.open = open;
-        animations.selectAnimation(open ? ArcadeMsPacMan_AnimationID.JUNIOR : ArcadeMsPacMan_AnimationID.BAG);
+        animationManager.select(open ? ArcadeMsPacMan_AnimationID.JUNIOR : ArcadeMsPacMan_AnimationID.BAG);
     }
 
     public boolean isOpen() {

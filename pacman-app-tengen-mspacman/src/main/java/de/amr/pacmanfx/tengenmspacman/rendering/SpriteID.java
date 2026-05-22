@@ -3,9 +3,9 @@
  */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.basics.spriteanim.AnimationIdentifier;
+import de.amr.basics.spriteanim.SpriteIdentifier;
 
-public enum SpriteID implements AnimationIdentifier {
+public enum SpriteID implements SpriteIdentifier {
     LARGE_MS_PAC_MAN_TEXT,
     INFO_FRAME,
     INFO_BOOSTER,

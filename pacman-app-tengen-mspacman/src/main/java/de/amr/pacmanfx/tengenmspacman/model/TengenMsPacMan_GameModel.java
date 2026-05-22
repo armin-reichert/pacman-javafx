@@ -173,7 +173,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public void activatePacBooster(Pac pac, boolean active) {
         requireNonNull(pac);
-        pac.selectAnimation(active ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pac.animationManager().select(active ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : ArcadePacMan_AnimationID.PAC_MUNCHING);
         boosterActive = active;
     }
 
@@ -288,7 +288,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             highScore.load();
             highScore.setEnabled(true);
         } catch (IOException x) {
-            Logger.error(x, "Error loading highscore file {}", highScore.file().getAbsolutePath());
+            Logger.error(x, "Error loading high-score file {}", highScore.file().getAbsolutePath());
         }
     }
 
@@ -300,7 +300,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         try {
             updateHighScore();
         } catch (IOException x) {
-            Logger.error(x, "Error updating highscore file {}", highScore.file().getAbsolutePath());
+            Logger.error(x, "Error updating high-score file {}", highScore.file().getAbsolutePath());
         }
     }
 
@@ -630,18 +630,18 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
             pac.setSpeed(0);
             pac.setDead(true);
-            pac.stopAnimation();
+            pac.animationManager().stopSelected();
 
             level.ghosts().forEach(ghost -> ghost.onPacKilled(level));
             flow().publishGameEvent(new StopAllSoundsEvent(this));
         }
         else if (tick == TICK_PACMAN_DYING_HIDE_GHOSTS) {
             level.ghosts().forEach(Ghost::hide);
-            pac.selectAnimation(ArcadePacMan_AnimationID.PAC_DYING);
-            pac.resetAnimation();
+            pac.animationManager().select(ArcadePacMan_AnimationID.PAC_DYING);
+            pac.animationManager().resetSelected();
         }
         else if (tick == TICK_PACMAN_DYING_START_PAC_ANIMATION) {
-            pac.playAnimation();
+            pac.animationManager().playSelected();
             flow().publishGameEvent(new PacDyingEvent(this, pac));
         }
         else if (tick == TICK_PACMAN_DYING_HIDE_PAC) {
@@ -666,11 +666,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         victims.add(ghost);
         ghost.setState(GhostState.EATEN);
-        ghost.selectAnimationAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, killedSoFar);
+        ghost.animationManager().selectAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, killedSoFar);
         scorePoints(level, points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.computeTile());
         level.pac().hide();
-        level.ghosts().forEach(Ghost::stopAnimation);
+        level.ghosts().forEach(g -> g.animationManager().stopSelected());
         flow().publishGameEvent(new GhostEatenEvent(this, ghost));
     }
 
@@ -684,7 +684,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         else if (tick == TICK_EATING_GHOST_COMPLETE) {
             level.pac().show();
             level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
-            level.ghosts().forEach(Actor::playAnimation);
+            level.ghosts().forEach(actor -> actor.animationManager().playSelected());
         }
     }
 

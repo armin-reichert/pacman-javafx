@@ -80,9 +80,9 @@ class ChaseAnimation {
         actorRenderer.scalingProperty().bind(scalingProperty());
 
         pac = ArcadePacMan_GameModel.createPacMan();
-        pac.setAnimations(uiConfig.createPacAnimations(spriteAnimator));
-        pac.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
-        pac.playAnimation();
+        pac.setAnimationManager(uiConfig.createPacAnimations(spriteAnimator));
+        pac.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pac.animationManager().playSelected();
         pac.setX(numTilesX * TS);
         pac.setMoveDir(Direction.LEFT);
         pac.setWishDir(Direction.LEFT);
@@ -101,8 +101,8 @@ class ChaseAnimation {
             ghost.setWishDir(Direction.LEFT);
             ghost.setSpeed(GHOST_CHASE_SPEED);
             ghost.setVisible(true);
-            ghost.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
-            ghost.playAnimation();
+            ghost.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            ghost.animationManager().playSelected();
         }
 
         state = ChasingState.GHOSTS_CHASING_PAC;
@@ -135,8 +135,8 @@ class ChaseAnimation {
                 ghost.setWishDir(Direction.LEFT);
                 ghost.setX((numTilesX + 4) * TS + ghost.personality() * 2 * TS);
                 ghost.setSpeed(1.05f);
-                ghost.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
-                ghost.playAnimation();
+                ghost.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+                ghost.animationManager().playSelected();
             }
             state = ChasingState.GHOSTS_CHASING_PAC;
         }
@@ -151,7 +151,7 @@ class ChaseAnimation {
                 }
             }
             if (eatenGhostIndex != -1) {
-                ghosts.get(eatenGhostIndex).selectAnimationAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, eatenGhostIndex);
+                ghosts.get(eatenGhostIndex).animationManager().selectAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, eatenGhostIndex);
                 if (eatenGhostIndex > 0) {
                     ghosts.get(eatenGhostIndex - 1).setVisible(false);
                 }
@@ -172,8 +172,8 @@ class ChaseAnimation {
                 ghost.setMoveDir(Direction.RIGHT);
                 ghost.setWishDir(Direction.RIGHT);
                 ghost.setSpeed(0.58f);
-                ghost.selectAnimation(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
-                ghost.playAnimation();
+                ghost.animationManager().select(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
+                ghost.animationManager().playSelected();
             }
             // Let Pac-Man chase the ghosts from left to right side of the screen
             state = ChasingState.PAC_CHASING_GHOSTS;

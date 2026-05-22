@@ -37,7 +37,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     public void onSceneStart() {
         final UIConfig uiConfig = ui.currentConfig();
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimator()));
+        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimator()));
         blinky = uiConfig.createGhostWithAnimations(ui.spriteAnimator(), RED_GHOST_SHADOW);
         sceneTick = -1;
     }
@@ -69,8 +69,8 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     private void startBigPacManChasingBlinky() {
         pacMan.placeAtTile(-3, 18, 0, 6.5f);
         pacMan.setMoveDir(Direction.RIGHT);
-        pacMan.selectAnimation(ArcadePacMan_PacAnimations.AnimationID.ANIM_BIG_PAC_MAN);
-        pacMan.playAnimation();
+        pacMan.animationManager().select(ArcadePacMan_PacAnimations.AnimationID.ANIM_BIG_PAC_MAN);
+        pacMan.animationManager().playSelected();
     }
 
     private void startBlinkyEscapingPacMan() {
@@ -78,24 +78,24 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         blinky.setMoveDir(Direction.RIGHT);
         blinky.setWishDir(Direction.RIGHT);
         blinky.setSpeed(0.75f);
-        blinky.selectAnimation(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
-        blinky.playAnimation();
+        blinky.animationManager().select(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
+        blinky.animationManager().playSelected();
     }
 
     private void startBlinkyChasingPacMan() {
         pacMan.placeAtTile(29, 20);
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(1.25f);
-        pacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
-        pacMan.playAnimation();
+        pacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pacMan.animationManager().playSelected();
         pacMan.show();
 
         blinky.placeAtTile(32, 20);
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
         blinky.setSpeed(1.3f);
-        blinky.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
-        blinky.playAnimation();
+        blinky.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        blinky.animationManager().playSelected();
         blinky.show();
     }
 }

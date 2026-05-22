@@ -54,9 +54,9 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     public void onSceneStart() {
         final UIConfig uiConfig = ui.currentConfig();
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimator()));
+        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimator()));
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimator()));
+        msPacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimator()));
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.setPosition(TS(3), TS(10));
         clapperboard.startAnimation();
@@ -96,12 +96,12 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     private void enterStateChasing() {
         pacMan.setMoveDir(Direction.RIGHT);
-        pacMan.selectAnimation(ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-        pacMan.playAnimation();
+        pacMan.animationManager().select(ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+        pacMan.animationManager().playSelected();
 
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
-        msPacMan.playAnimation();
+        msPacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        msPacMan.animationManager().playSelected();
 
         setSceneState(SceneState.CHASING, TickTimer.INDEFINITE);
     }

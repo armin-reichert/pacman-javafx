@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.SpriteAnimationFacade;
+import de.amr.basics.spriteanim.AnimationFacade;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -37,32 +37,32 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
             case Pac pac -> computePacSprite(pac);
             case Ghost ghost -> computeGhostSprite(ghost);
             case Bonus bonus -> computeBonusSprite(bonus);
-            default -> actor.animations().currentSprite();
+            default -> actor.animationManager().currentSprite();
         };
     }
 
     private RectShort computePacSprite(Pac pac) {
-        final SpriteAnimationFacade animations = pac.animations();
-        if (animations.isSelected(ArcadePacMan_AnimationID.PAC_MUNCHING)) {
+        final AnimationFacade animationManager = pac.animationManager();
+        if (animationManager.isSelected(ArcadePacMan_AnimationID.PAC_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().pacMunchingSprites(pac.moveDir());
-            return spriteOrDefault(sprites, animations.currentFrame());
+            return spriteOrDefault(sprites, animationManager.currentFrame());
         }
         else {
-            return animations.currentSprite();
+            return animationManager.currentSprite();
         }
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
-        final SpriteAnimationFacade animations = ghost.animations();
-        if (animations.isSelected(ArcadePacMan_AnimationID.GHOST_NORMAL)) {
+        final AnimationFacade animationManager = ghost.animationManager();
+        if (animationManager.isSelected(ArcadePacMan_AnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.wishDir());
-            return spriteOrDefault(sprites, animations.currentFrame());
+            return spriteOrDefault(sprites, animationManager.currentFrame());
         }
-        else if (animations.isSelected(ArcadePacMan_AnimationID.GHOST_EYES)) {
+        else if (animationManager.isSelected(ArcadePacMan_AnimationID.GHOST_EYES)) {
             return spriteSheet().ghostEyesSprite(ghost.wishDir());
         }
         else {
-            return animations.currentSprite();
+            return animationManager.currentSprite();
         }
     }
 

@@ -11,11 +11,11 @@ import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
 
 public class Bag extends Actor {
 
-    public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
+    public static class BagAnimations extends SpriteAnimationContainer<SpriteID> {
 
         private final SpriteAnimator spriteAnimator;
 
@@ -45,13 +45,13 @@ public class Bag extends Actor {
     private boolean open;
 
     public Bag(SpriteAnimator spriteAnimator) {
-        setAnimations(new BagAnimations(spriteAnimator));
+        setAnimationManager(new BagAnimations(spriteAnimator));
         setOpen(false);
     }
 
     public void setOpen(boolean open) {
         this.open = open;
-        animations.selectAnimation(open ? ArcadeMsPacMan_AnimationID.JUNIOR : ArcadeMsPacMan_AnimationID.BAG);
+        animationManager.select(open ? ArcadeMsPacMan_AnimationID.JUNIOR : ArcadeMsPacMan_AnimationID.BAG);
     }
 
     public boolean isOpen() {

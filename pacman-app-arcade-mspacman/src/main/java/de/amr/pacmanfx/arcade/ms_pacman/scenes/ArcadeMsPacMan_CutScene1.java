@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
-import static de.amr.basics.spriteanim.SpriteAnimationFacade.singleSpriteAnimationFacade;
+import static de.amr.basics.spriteanim.AnimationFacade.singletonAnimationFacade;
 import static de.amr.pacmanfx.Globals.*;
 
 /**
@@ -77,17 +77,17 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimator()));
+        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimator()));
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimator()));
+        msPacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimator()));
 
         inky = uiConfig.createGhostWithAnimations(ui.spriteAnimator(), CYAN_GHOST_BASHFUL);
 
         pinky = uiConfig.createGhostWithAnimations(ui.spriteAnimator(), PINK_GHOST_SPEEDY);
 
         heart = new Actor();
-        heart.setAnimations(singleSpriteAnimationFacade(spriteSheet.sprite(SpriteID.HEART)));
+        heart.setAnimationManager(singletonAnimationFacade(spriteSheet.sprite(SpriteID.HEART)));
 
         clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.setPosition(TS(3), TS(10));
@@ -134,31 +134,31 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
         pacMan.setSpeed(SPEED_PAC_CHASING);
-        pacMan.selectAnimation(ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-        pacMan.playAnimation();
+        pacMan.animationManager().select(ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+        pacMan.animationManager().playSelected();
         pacMan.show();
 
         inky.setMoveDir(Direction.RIGHT);
         inky.setWishDir(Direction.RIGHT);
         inky.setPosition(pacMan.x() - 6 * TS, pacMan.y());
         inky.setSpeed(SPEED_GHOST_CHASING);
-        inky.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
-        inky.playAnimation();
+        inky.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        inky.animationManager().playSelected();
         inky.show();
 
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(TS * 30, LOWER_LANE_Y);
         msPacMan.setSpeed(SPEED_PAC_CHASING);
-        msPacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
-        msPacMan.playAnimation();
+        msPacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        msPacMan.animationManager().playSelected();
         msPacMan.show();
 
         pinky.setMoveDir(Direction.LEFT);
         pinky.setWishDir(Direction.LEFT);
         pinky.setPosition(msPacMan.x() + 6 * TS, msPacMan.y());
         pinky.setSpeed(SPEED_GHOST_CHASING);
-        pinky.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
-        pinky.playAnimation();
+        pinky.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        pinky.animationManager().playSelected();
         pinky.show();
 
         setState(SceneState.CHASED_BY_GHOSTS, TickTimer.INDEFINITE);
@@ -244,13 +244,13 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private void enterStateInHeaven() {
         pacMan.setSpeed(0);
         pacMan.setMoveDir(Direction.LEFT);
-        pacMan.stopAnimation();
-        pacMan.resetAnimation();
+        pacMan.animationManager().stopSelected();
+        pacMan.animationManager().resetSelected();
 
         msPacMan.setSpeed(0);
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.stopAnimation();
-        msPacMan.resetAnimation();
+        msPacMan.animationManager().stopSelected();
+        msPacMan.animationManager().resetSelected();
 
         inky.hide();
         pinky.hide();

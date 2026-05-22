@@ -12,9 +12,9 @@ import static java.util.Objects.requireNonNull;
  *
  * @param sprite the singleton sprite
  */
-record SingletonSpriteAnimationFacade(RectShort sprite) implements SpriteAnimationFacade {
+record SingletonAnimationFacade(RectShort sprite) implements AnimationFacade {
 
-    public SingletonSpriteAnimationFacade(RectShort sprite) {
+    public SingletonAnimationFacade(RectShort sprite) {
         this.sprite = requireNonNull(sprite);
     }
 
@@ -37,16 +37,19 @@ record SingletonSpriteAnimationFacade(RectShort sprite) implements SpriteAnimati
     public void setAnimationFrame(AnimationIdentifier animationID, int frameIndex) {}
 
     @Override
+    public void select(AnimationIdentifier animationID) {}
+
+    @Override
     public int currentFrame() {
         return 0;
     }
 
     @Override
-    public void playSelectedAnimation() {}
+    public void playSelected() {}
 
     @Override
-    public void stopSelectedAnimation() {}
+    public void stopSelected() {}
 
     @Override
-    public void resetSelectedAnimation() {}
+    public void resetSelected() {}
 }

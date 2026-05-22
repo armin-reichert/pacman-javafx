@@ -92,10 +92,10 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimator()));
+        msPacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimator()));
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimator()));
+        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimator()));
 
         stork = new Stork(ui.spriteAnimator());
         flyingBag = new Bag(ui.spriteAnimator());
@@ -120,22 +120,22 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.setPosition(TS * 3, GROUND_Y - 4);
                     pacMan.setSpeed(0);
-                    pacMan.selectAnimation(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.animations().stopSelectedAnimation();
+                    pacMan.animationManager().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    pacMan.animationManager().stopSelected();
                     pacMan.show();
 
                     msPacMan.setMoveDir(Direction.RIGHT);
                     msPacMan.setPosition(TS * 5, GROUND_Y - 4);
                     msPacMan.setSpeed(0);
-                    msPacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
-                    msPacMan.animations().stopSelectedAnimation();
+                    msPacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+                    msPacMan.animationManager().stopSelected();
                     msPacMan.show();
 
                     stork.setPosition(RIGHT_BORDER, TS * 7);
                     stork.setVelocity(-0.8f, 0);
                     stork.setBagReleasedFromBeak(false);
-                    stork.selectAnimation(ArcadeMsPacMan_AnimationID.STORK_FLYING);
-                    stork.playAnimation();
+                    stork.animationManager().select(ArcadeMsPacMan_AnimationID.STORK_FLYING);
+                    stork.animationManager().playSelected();
                     stork.show();
                 }
                 case 240 -> {

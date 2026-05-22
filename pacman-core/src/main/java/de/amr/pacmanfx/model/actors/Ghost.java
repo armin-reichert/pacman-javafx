@@ -18,7 +18,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -91,10 +90,6 @@ public class Ghost extends MovingActor {
 
     public void setHome(House home) {
         this.home = home;
-    }
-
-    public Optional<House> optHome() {
-        return Optional.ofNullable(home);
     }
 
     /**
@@ -271,11 +266,11 @@ public class Ghost extends MovingActor {
 
         // "onEntry" action:
         switch (newState) {
-            case LOCKED, HUNTING_PAC -> selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
-            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(ArcadePacMan_AnimationID.GHOST_EYES);
+            case LOCKED, HUNTING_PAC -> animationManager.select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            case ENTERING_HOUSE, RETURNING_HOME -> animationManager.select(ArcadePacMan_AnimationID.GHOST_EYES);
             case FRIGHTENED -> {
-                selectAnimation(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
-                playAnimation();
+                animationManager.select(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
+                animationManager.playSelected();
             }
             case EATEN -> {}
         }
@@ -325,7 +320,7 @@ public class Ghost extends MovingActor {
         if (isInDanger(level)) {
             playFrightenedAnimation(level, level.pac());
         } else {
-            selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            animationManager.select(ArcadePacMan_AnimationID.GHOST_NORMAL);
         }
     }
 
@@ -367,7 +362,7 @@ public class Ghost extends MovingActor {
             if (isInDanger(level)) {
                 playFrightenedAnimation(level, level.pac());
             } else {
-                selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
+                animationManager.select(ArcadePacMan_AnimationID.GHOST_NORMAL);
             }
         }
     }
@@ -414,9 +409,9 @@ public class Ghost extends MovingActor {
 
     private void playFrightenedAnimation(GameLevel level, Pac pac) {
         if (pac.isPowerFadingStarting(level)) {
-            selectAnimation(ArcadePacMan_AnimationID.GHOST_FLASHING);
+            animationManager.select(ArcadePacMan_AnimationID.GHOST_FLASHING);
         } else if (!pac.isPowerFading(level)) {
-            selectAnimation(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
+            animationManager.select(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
         }
     }
 

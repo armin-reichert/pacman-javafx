@@ -309,8 +309,8 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     @Override
     public Ghost createGhostWithAnimations(SpriteAnimator spriteAnimator, byte personality) {
         final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(spriteAnimator, personality));
-        ghost.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        ghost.setAnimationManager(createGhostAnimations(spriteAnimator, personality));
+        ghost.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;
     }
 

@@ -31,7 +31,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -184,18 +184,18 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceManager {
     @Override
     public Ghost createGhostWithAnimations(SpriteAnimator spriteAnimator, byte personality) {
         final Ghost ghost = ArcadeMsPacMan_GameModel.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(spriteAnimator, personality));
-        ghost.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        ghost.setAnimationManager(createGhostAnimations(spriteAnimator, personality));
+        ghost.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public SpriteAnimationMap<SpriteID> createGhostAnimations(SpriteAnimator spriteAnimator,byte personality) {
+    public SpriteAnimationContainer<SpriteID> createGhostAnimations(SpriteAnimator spriteAnimator, byte personality) {
         return new ArcadeMsPacMan_GhostAnimations(spriteAnimator, personality);
     }
 
     @Override
-    public SpriteAnimationMap<SpriteID> createPacAnimations(SpriteAnimator spriteAnimator) {
+    public SpriteAnimationContainer<SpriteID> createPacAnimations(SpriteAnimator spriteAnimator) {
         return new ArcadeMsPacMan_PacAnimations(spriteAnimator);
     }
 

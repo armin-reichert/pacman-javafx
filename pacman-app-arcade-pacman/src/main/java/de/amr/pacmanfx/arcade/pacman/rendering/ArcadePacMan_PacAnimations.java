@@ -9,11 +9,11 @@ import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
 
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
+public class ArcadePacMan_PacAnimations extends SpriteAnimationContainer<SpriteID> {
 
     public enum AnimationID implements AnimationIdentifier {
         ANIM_BIG_PAC_MAN,

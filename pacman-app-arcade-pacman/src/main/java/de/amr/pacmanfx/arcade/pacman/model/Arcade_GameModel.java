@@ -274,7 +274,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         if (tick == 1) {
             gateKeeper.resetCounterAndSetEnabled(true);
             level.huntingTimer().stop();
-            pac.stopAnimation();
+            pac.animationManager().stopSelected();
             pac.powerTimer().stop();
             pac.powerTimer().reset(0);
             Logger.info("Power timer stopped and reset to zero.");
@@ -285,11 +285,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
         else if (tick == Arcade_GameState.TICK_PACMAN_DYING_HIDE_GHOSTS) {
             level.ghosts().forEach(Ghost::hide);
-            pac.animations().selectAnimation(ArcadePacMan_AnimationID.PAC_DYING);
-            pac.animations().resetSelectedAnimation();
+            pac.animationManager().select(ArcadePacMan_AnimationID.PAC_DYING);
+            pac.animationManager().resetSelected();
         }
         else if (tick == Arcade_GameState.TICK_PACMAN_DYING_START_ANIMATION) {
-            pac.playAnimation();
+            pac.animationManager().playSelected();
             flow().publishGameEvent(new PacDyingEvent(this, pac));
         }
         else if (tick == Arcade_GameState.TICK_PACMAN_DYING_HIDE_PAC) {
@@ -315,12 +315,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         ghost.setState(GhostState.EATEN);
         // Animation index is 0-based, so use animation frame 0 to show points for first killed ghost...
-        ghost.selectAnimationAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, alreadyKilled);
+        ghost.animationManager().selectAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, alreadyKilled);
 
         level.energizerVictims().add(ghost);
         level.incrementGhostKillCount();
         level.pac().hide();
-        level.ghosts().forEach(Ghost::stopAnimation);
+        level.ghosts().forEach(g -> g.animationManager().stopSelected());
         flow().publishGameEvent(new GhostEatenEvent(this, ghost));
     }
 
@@ -335,7 +335,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         else if (tick == Arcade_GameState.TICK_EATING_GHOST_DURATION) {
             level.pac().show();
             level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
-            level.ghosts().forEach(Actor::playAnimation);
+            level.ghosts().forEach(ghost -> ghost.animationManager().playSelected());
         }
     }
 

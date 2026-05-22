@@ -38,7 +38,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     public void onSceneStart() {
         final UIConfig uiConfig = ui.currentConfig();
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(ui.spriteAnimator()));
+        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimator()));
         blinky = uiConfig.createGhostWithAnimations(ui.spriteAnimator(), RED_GHOST_SHADOW);
         sceneTick = -1;
     }
@@ -68,8 +68,8 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         blinky.placeAtTile(-1, 20);
         blinky.setMoveDir(Direction.RIGHT);
         blinky.setWishDir(Direction.RIGHT);
-        blinky.selectAnimation(ArcadePacMan_AnimationID.BLINKY_NAKED);
-        blinky.playAnimation();
+        blinky.animationManager().select(ArcadePacMan_AnimationID.BLINKY_NAKED);
+        blinky.animationManager().playSelected();
     }
 
     private void startBlinkyChasingPacMan() {
@@ -77,14 +77,14 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(1.25f);
         pacMan.show();
-        pacMan.selectAnimation(ArcadePacMan_AnimationID.PAC_MUNCHING);
-        pacMan.playAnimation();
+        pacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pacMan.animationManager().playSelected();
         blinky.placeAtTile(35, 20);
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
         blinky.setSpeed(1.25f);
         blinky.show();
-        blinky.selectAnimation(ArcadePacMan_AnimationID.BLINKY_DRESS_PATCHED);
-        blinky.playAnimation();
+        blinky.animationManager().select(ArcadePacMan_AnimationID.BLINKY_DRESS_PATCHED);
+        blinky.animationManager().playSelected();
     }
 }

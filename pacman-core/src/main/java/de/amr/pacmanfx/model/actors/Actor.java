@@ -5,8 +5,7 @@ package de.amr.pacmanfx.model.actors;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.spriteanim.AnimationIdentifier;
-import de.amr.basics.spriteanim.SpriteAnimationFacade;
+import de.amr.basics.spriteanim.AnimationFacade;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -194,37 +193,13 @@ public class Actor {
         return y - tile.y() * TS;
     }
 
-    // --- Sprite animation support
+    protected AnimationFacade animationManager = AnimationFacade.emptyAnimationFacade();
 
-    protected SpriteAnimationFacade animations = SpriteAnimationFacade.emptyAnimationFacade();
-
-    public SpriteAnimationFacade animations() {
-        return animations;
+    public void setAnimationManager(AnimationFacade animationManager) {
+        this.animationManager = animationManager;
     }
 
-    public void setAnimations(SpriteAnimationFacade animations) {
-        this.animations = requireNonNull(animations);
-    }
-
-    public void selectAnimation(AnimationIdentifier animationID) {
-        requireNonNull(animationID);
-        animations.selectAnimation(animationID);
-    }
-
-    public void selectAnimationAtFrame(AnimationIdentifier animationID, int frameIndex) {
-        requireNonNull(animationID);
-        animations.setAnimationFrame(animationID, frameIndex);
-    }
-
-    public void playAnimation() {
-        animations.playSelectedAnimation();
-    }
-
-    public void stopAnimation() {
-        animations.stopSelectedAnimation();
-    }
-
-    public void resetAnimation() {
-        animations.resetSelectedAnimation();
+    public AnimationFacade animationManager() {
+        return animationManager;
     }
 }
