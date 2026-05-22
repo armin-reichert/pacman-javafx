@@ -17,11 +17,11 @@ public class Bag extends Actor {
 
     public static class BagAnimations extends SpriteAnimationContainer<SpriteID> {
 
-        private final SpriteAnimator spriteAnimator;
+        private final SpriteAnimator animator;
 
-        public BagAnimations(SpriteAnimator spriteAnimator) {
+        public BagAnimations(SpriteAnimator animator) {
             super(TengenMsPacMan_SpriteSheet.instance());
-            this.spriteAnimator = spriteAnimator;
+            this.animator = animator;
         }
 
         @Override
@@ -30,12 +30,12 @@ public class Bag extends Actor {
                 case ArcadeMsPacMan_AnimationID.BAG -> SpriteAnimationBuilder.builder()
                     .singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG))
                     .initiallyStopped()
-                    .build(spriteAnimator);
+                    .build(animator);
 
                 case ArcadeMsPacMan_AnimationID.JUNIOR -> SpriteAnimationBuilder.builder()
                     .singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC))
                     .initiallyStopped()
-                    .build(spriteAnimator);
+                    .build(animator);
 
                 default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
             };

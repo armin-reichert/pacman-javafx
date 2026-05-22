@@ -6,9 +6,9 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
 
 import static java.util.Objects.requireNonNull;
@@ -19,11 +19,11 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationContainer<SpriteI
         ANIM_BIG_PAC_MAN,
     }
 
-    private final SpriteAnimationSet container;
+    private final SpriteAnimator animator;
 
-    public ArcadePacMan_PacAnimations(SpriteAnimationSet container, ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_PacAnimations(SpriteAnimator animator, ArcadePacMan_SpriteSheet spriteSheet) {
         super(spriteSheet);
-        this.container = requireNonNull(container);
+        this.animator = requireNonNull(animator);
     }
 
     @Override
@@ -32,24 +32,24 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationContainer<SpriteI
             case ArcadePacMan_AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet.sprite(SpriteID.PACMAN_FULL))
                 .initiallyStopped()
-                .build(container);
+                .build(animator);
 
             // Renderer draws sprites depending on Pac-Man move direction!
             case ArcadePacMan_AnimationID.PAC_MUNCHING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().pacMunchingSprites(Direction.LEFT))
                 .repeated()
-                .build(container);
+                .build(animator);
 
             case ArcadePacMan_AnimationID.PAC_DYING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.PACMAN_DYING))
                 .frameTicks(8)
-                .build(container);
+                .build(animator);
 
             case AnimationID.ANIM_BIG_PAC_MAN -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.PACMAN_BIG))
                 .frameTicks(3)
                 .repeated()
-                .build(container);
+                .build(animator);
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };

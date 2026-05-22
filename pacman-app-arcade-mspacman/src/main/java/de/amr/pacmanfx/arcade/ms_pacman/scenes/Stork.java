@@ -17,11 +17,11 @@ public class Stork extends Actor {
 
     public static class StorkAnimations extends SpriteAnimationContainer<SpriteID> {
 
-        private final SpriteAnimator spriteAnimator;
+        private final SpriteAnimator animator;
 
-        public StorkAnimations(SpriteAnimator spriteAnimator) {
+        public StorkAnimations(SpriteAnimator animator) {
             super(ArcadeMsPacMan_SpriteSheet.instance());
-            this.spriteAnimator = spriteAnimator;
+            this.animator = animator;
         }
 
         @Override
@@ -31,7 +31,7 @@ public class Stork extends Actor {
                     .sprites(spriteSheet.sprites(SpriteID.STORK))
                     .frameTicks(8)
                     .repeated()
-                    .build(spriteAnimator);
+                    .build(animator);
             }
             throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         }
