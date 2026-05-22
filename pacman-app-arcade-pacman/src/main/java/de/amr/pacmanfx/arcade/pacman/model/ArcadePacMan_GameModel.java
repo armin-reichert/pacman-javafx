@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
@@ -50,6 +51,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         return pacMan;
     }
 
+    /*
     public static Ghost createGhost(byte personality) {
         return switch (personality) {
             case RED_GHOST_SHADOW ->  GhostFactory.createRedGhostShadow("Blinky");
@@ -59,6 +61,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
             default -> throw new IllegalArgumentException("Illegal ghost personality: %d".formatted(personality));
         };
     }
+     */
 
     protected static final List<Vector2i> DEMO_LEVEL_ROUTE = List.of(
         vec2_int(9, 26), vec2_int(9, 29), vec2_int(12,29), vec2_int(12, 32), vec2_int(26,32),
@@ -202,7 +205,13 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     protected Ghost createGhost(byte personality, TerrainLayer terrain, House house, String startTileProperty, Set<Vector2i> specialTiles) {
-        final Ghost ghost = createGhost(personality);
+        final Ghost ghost = switch (personality) {
+            case RED_GHOST_SHADOW -> GhostFactory.createRedGhostShadow("Blinky");
+            case PINK_GHOST_SPEEDY -> GhostFactory.createPinkGhostAmbusher("Pinky");
+            case CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
+            case ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
+            default -> throw new IllegalArgumentException("Unknown personality: " + personality);
+        };
         ghost.setHome(house);
         ghost.setSpecialTerrainTiles(specialTiles);
         setGhostStartPosition(ghost, terrain.getTileProperty(startTileProperty));

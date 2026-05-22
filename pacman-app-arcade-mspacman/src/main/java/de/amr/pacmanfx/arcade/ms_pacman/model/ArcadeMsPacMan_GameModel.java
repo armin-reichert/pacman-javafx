@@ -49,15 +49,15 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      */
     public static Ghost createGhost(byte personality) {
         return switch (personality) {
-            case RED_GHOST_SHADOW   -> applyModifiedShadowBehavior(GhostFactory.createRedGhostShadow("Blinky"));
-            case PINK_GHOST_SPEEDY  -> applyModifiedAmbushBehavior(GhostFactory.createPinkGhostAmbusher("Pinky"));
+            case RED_GHOST_SHADOW   -> modifyShadowBehavior(GhostFactory.createRedGhostShadow("Blinky"));
+            case PINK_GHOST_SPEEDY  -> modifyAmbushBehavior(GhostFactory.createPinkGhostAmbusher("Pinky"));
             case CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
             case ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Sue");
             default -> throw new IllegalArgumentException("Illegal ghost personality: %d".formatted(personality));
         };
     }
 
-    private static Ghost applyModifiedShadowBehavior(Ghost redGhost) {
+    private static Ghost modifyShadowBehavior(Ghost redGhost) {
         redGhost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final Vector2i tile = redGhost.computeTile();
@@ -87,7 +87,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         return redGhost;
     }
 
-    private static Ghost applyModifiedAmbushBehavior(Ghost pinkGhost) {
+    private static Ghost modifyAmbushBehavior(Ghost pinkGhost) {
         pinkGhost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final Vector2i tile = pinkGhost.computeTile();

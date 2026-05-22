@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman;
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.Validations;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
@@ -15,6 +14,7 @@ import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostFactory;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameScene;
@@ -46,6 +46,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.INTRO;
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.PREPARING_GAME_START;
 import static de.amr.pacmanfx.ui.input.Keyboard.bare;
@@ -310,7 +312,13 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
 
     @Override
     public Ghost createGhostWithAnimations(SpriteAnimator spriteAnimator, byte personality) {
-        final Ghost ghost = ArcadePacMan_GameModel.createGhost(personality);
+        final Ghost ghost = switch (personality) {
+            case RED_GHOST_SHADOW -> GhostFactory.createRedGhostShadow("Blinky");
+            case PINK_GHOST_SPEEDY -> GhostFactory.createPinkGhostAmbusher("Pinky");
+            case CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
+            case ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
+            default -> throw new IllegalArgumentException("Unknown personality: " + personality);
+        };
         ghost.setAnimations(createGhostAnimations(spriteAnimator, personality));
         ghost.selectAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;
