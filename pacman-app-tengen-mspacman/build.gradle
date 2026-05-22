@@ -15,12 +15,9 @@ dependencies {
 }
 
 javafx {
+    version = libs.versions.javafx.get()
     modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"]
 }
-
-/*
- * Copyright (c) 2021-2026 Armin Reichert (MIT License)
- */
 
 /*
 application {

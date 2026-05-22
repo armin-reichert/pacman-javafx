@@ -15,5 +15,6 @@ dependencies {
 }
 
 javafx {
-    modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"]
+    version = libs.versions.javafx.get()
+    modules = ["javafx.base", "javafx.graphics", "javafx.controls"]
 }
