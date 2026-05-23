@@ -4,12 +4,12 @@
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -72,7 +72,7 @@ class ChaseAnimation {
         timeline.stop();
     }
 
-    public void init(UIConfig uiConfig, Canvas canvas, SpriteAnimator spriteAnimator) {
+    public void init(UIConfig uiConfig, Canvas canvas, SpriteAnimationSet spriteAnimationSet) {
         requireNonNull(uiConfig);
         requireNonNull(canvas);
 
@@ -80,7 +80,7 @@ class ChaseAnimation {
         actorRenderer.scalingProperty().bind(scalingProperty());
 
         pac = ArcadePacMan_GameModel.createPacMan();
-        pac.setAnimationManager(uiConfig.createPacAnimations(spriteAnimator));
+        pac.setAnimationManager(uiConfig.createPacAnimations(spriteAnimationSet));
         pac.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
         pac.animationManager().playSelected();
         pac.setX(numTilesX * TS);
@@ -90,10 +90,10 @@ class ChaseAnimation {
         pac.setVisible(true);
 
         ghosts = List.of(
-            uiConfig.createGhostWithAnimations(spriteAnimator, RED_GHOST_SHADOW),
-            uiConfig.createGhostWithAnimations(spriteAnimator, PINK_GHOST_SPEEDY),
-            uiConfig.createGhostWithAnimations(spriteAnimator, CYAN_GHOST_BASHFUL),
-            uiConfig.createGhostWithAnimations(spriteAnimator, ORANGE_GHOST_POKEY)
+            uiConfig.createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW),
+            uiConfig.createGhostWithAnimations(spriteAnimationSet, PINK_GHOST_SPEEDY),
+            uiConfig.createGhostWithAnimations(spriteAnimationSet, CYAN_GHOST_BASHFUL),
+            uiConfig.createGhostWithAnimations(spriteAnimationSet, ORANGE_GHOST_POKEY)
         );
         for (Ghost ghost : ghosts) {
             ghost.setX((numTilesX + 4) * TS + ghost.personality() * GHOST_DISTANCE);

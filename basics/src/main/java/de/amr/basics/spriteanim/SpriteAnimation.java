@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class SpriteAnimation {
 
-    private final SpriteAnimationSet container;
+    private final SpriteAnimationSet animationSet;
 
     private final int fps;
     private RectShort[] sprites;
@@ -22,8 +22,8 @@ public class SpriteAnimation {
     private long lastUpdateTime;
     private long frameDuration;
 
-    public SpriteAnimation(SpriteAnimationSet container, int fps) {
-        this.container = requireNonNull(container);
+    public SpriteAnimation(SpriteAnimationSet animationSet, int fps) {
+        this.animationSet = requireNonNull(animationSet);
         if (fps <= 0) {
             throw new IllegalArgumentException("Illegal FPS value: %d".formatted(fps));
         }
@@ -48,14 +48,14 @@ public class SpriteAnimation {
 
     public void start() {
         if (!running) {
-            container.register(this);
+            animationSet.register(this);
             running = true;
             lastUpdateTime = now();
         }
     }
 
     public void stop() {
-        container.unregister(this);
+        animationSet.unregister(this);
         running = false;
     }
 

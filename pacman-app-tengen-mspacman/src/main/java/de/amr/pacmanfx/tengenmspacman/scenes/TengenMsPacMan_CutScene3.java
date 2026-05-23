@@ -92,13 +92,13 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimator()));
+        msPacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimator()));
+        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
 
-        stork = new Stork(ui.spriteAnimator());
-        flyingBag = new Bag(ui.spriteAnimator());
+        stork = new Stork(ui.spriteAnimationSet());
+        flyingBag = new Bag(ui.spriteAnimationSet());
 
         darkness = false;
 

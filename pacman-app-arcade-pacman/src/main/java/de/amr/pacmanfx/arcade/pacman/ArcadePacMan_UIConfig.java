@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.RectShort;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
@@ -30,7 +31,6 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.UfxImages;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -311,7 +311,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public Ghost createGhostWithAnimations(SpriteAnimator spriteAnimator, byte personality) {
+    public Ghost createGhostWithAnimations(SpriteAnimationSet animationSet, byte personality) {
         final Ghost ghost = switch (personality) {
             case RED_GHOST_SHADOW -> GhostFactory.createRedGhostShadow("Blinky");
             case PINK_GHOST_SPEEDY -> GhostFactory.createPinkGhostAmbusher("Pinky");
@@ -319,20 +319,20 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             case ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
             default -> throw new IllegalArgumentException("Unknown personality: " + personality);
         };
-        ghost.setAnimationManager(createGhostAnimations(spriteAnimator, personality));
+        ghost.setAnimationManager(createGhostAnimations(animationSet, personality));
         ghost.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimator spriteAnimator, byte personality) {
+    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimationSet animationSet, byte personality) {
         Validations.requireValidGhostPersonality(personality);
-        return new ArcadePacMan_GhostAnimations(spriteAnimator, personality);
+        return new ArcadePacMan_GhostAnimations(animationSet, personality);
     }
 
     @Override
-    public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimator spriteAnimator) {
-        return new ArcadePacMan_PacAnimations(spriteAnimator, spriteSheet());
+    public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimationSet animationSet) {
+        return new ArcadePacMan_PacAnimations(animationSet, spriteSheet());
     }
 
     @Override

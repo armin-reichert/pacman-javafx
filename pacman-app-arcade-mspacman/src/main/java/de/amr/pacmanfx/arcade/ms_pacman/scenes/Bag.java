@@ -3,14 +3,14 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
+import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.AnimationIdentifier;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
@@ -20,11 +20,11 @@ public class Bag extends Actor {
 
     public static class BagAnimations extends SpriteAnimationContainer<SpriteID> {
 
-        private final SpriteAnimator animator;
+        private final SpriteAnimationSet animationSet;
 
-        public BagAnimations(SpriteAnimator animator) {
+        public BagAnimations(SpriteAnimationSet animationSet) {
             super(ArcadeMsPacMan_SpriteSheet.instance());
-            this.animator = animator;
+            this.animationSet = animationSet;
         }
 
         @Override
@@ -34,13 +34,13 @@ public class Bag extends Actor {
                     SpriteAnimationBuilder.builder()
                         .singleSprite(spriteSheet.sprite(JUNIOR_PAC))
                         .initiallyStopped()
-                        .build(animator);
+                        .build(animationSet);
 
                 case ArcadeMsPacMan_AnimationID.BAG ->
                     SpriteAnimationBuilder.builder()
                         .singleSprite(spriteSheet.sprite(BLUE_BAG))
                         .initiallyStopped()
-                        .build(animator);
+                        .build(animationSet);
 
                 default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
             };
@@ -49,8 +49,8 @@ public class Bag extends Actor {
 
     private boolean open;
 
-    public Bag(SpriteAnimator spriteAnimator) {
-        setAnimationManager(new BagAnimations(spriteAnimator));
+    public Bag(SpriteAnimationSet animationSet) {
+        setAnimationManager(new BagAnimations(animationSet));
     }
 
     public void setOpen(boolean open) {

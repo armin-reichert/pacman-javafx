@@ -7,8 +7,8 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.AnimationIdentifier;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
@@ -20,12 +20,12 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationContainer<Spr
     public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator
     public static final int FLASHING_TICKS = 7;  // TODO check this in emulator
 
-    private final SpriteAnimator animator;
+    private final SpriteAnimationSet animationSet;
     private final byte personality;
 
-    public TengenMsPacMan_GhostAnimations(SpriteAnimator animator, byte personality) {
+    public TengenMsPacMan_GhostAnimations(SpriteAnimationSet animationSet, byte personality) {
         super(TengenMsPacMan_SpriteSheet.instance());
-        this.animator = requireNonNull(animator);
+        this.animationSet = requireNonNull(animationSet);
         this.personality = requireValidGhostPersonality(personality);
     }
 
@@ -41,28 +41,28 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationContainer<Spr
                 .sprites(spriteSheet().ghostNormalSprites(personality, Direction.LEFT))
                 .frameTicks(NORMAL_TICKS)
                 .repeated()
-                .build(animator);
+                .build(animationSet);
 
             case ArcadePacMan_AnimationID.GHOST_FRIGHTENED -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.GHOST_FRIGHTENED))
                 .frameTicks(FRIGHTENED_TICKS)
                 .repeated()
-                .build(animator);
+                .build(animationSet);
 
             case ArcadePacMan_AnimationID.GHOST_FLASHING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.GHOST_FLASHING))
                 .frameTicks(FLASHING_TICKS)
                 .repeated()
-                .build(animator);
+                .build(animationSet);
 
             case ArcadePacMan_AnimationID.GHOST_EYES -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet().ghostEyesSprite(Direction.LEFT))
-                .build(animator);
+                .build(animationSet);
 
             case ArcadePacMan_AnimationID.GHOST_POINTS -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.GHOST_NUMBERS))
                 .initiallyStopped()
-                .build(animator);
+                .build(animationSet);
 
             default -> throw new IllegalArgumentException("Illegal animation ID " + animationID);
         };

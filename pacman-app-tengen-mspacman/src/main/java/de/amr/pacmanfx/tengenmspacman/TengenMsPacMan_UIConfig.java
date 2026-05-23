@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.MapColorScheme;
@@ -26,7 +27,6 @@ import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentColors;
@@ -307,21 +307,21 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     }
 
     @Override
-    public Ghost createGhostWithAnimations(SpriteAnimator spriteAnimator, byte personality) {
+    public Ghost createGhostWithAnimations(SpriteAnimationSet animationSet, byte personality) {
         final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(personality);
-        ghost.setAnimationManager(createGhostAnimations(spriteAnimator, personality));
+        ghost.setAnimationManager(createGhostAnimations(animationSet, personality));
         ghost.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public TengenMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimator spriteAnimator, byte personality) {
-        return new TengenMsPacMan_GhostAnimations(spriteAnimator, personality);
+    public TengenMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationSet animationSet, byte personality) {
+        return new TengenMsPacMan_GhostAnimations(animationSet, personality);
     }
 
     @Override
-    public TengenMsPacMan_PacAnimations createPacAnimations(SpriteAnimator spriteAnimator) {
-        return new TengenMsPacMan_PacAnimations(spriteAnimator);
+    public TengenMsPacMan_PacAnimations createPacAnimations(SpriteAnimationSet animationSet) {
+        return new TengenMsPacMan_PacAnimations(animationSet);
     }
 
     // Helpers

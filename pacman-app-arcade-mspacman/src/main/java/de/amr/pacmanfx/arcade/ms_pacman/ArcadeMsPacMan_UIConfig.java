@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.basics.math.RectShort;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_MapSelector;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
@@ -28,7 +29,6 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.UfxImages;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -162,22 +162,22 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
         return actorRenderer;
     }
 
-    public Ghost createGhostWithAnimations(SpriteAnimator spriteAnimator, byte personality) {
+    public Ghost createGhostWithAnimations(SpriteAnimationSet animationSet, byte personality) {
         final Ghost ghost = ArcadeMsPacMan_GameModel.createGhost(personality);
-        ghost.setAnimationManager(createGhostAnimations(spriteAnimator, personality));
+        ghost.setAnimationManager(createGhostAnimations(animationSet, personality));
         ghost.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public ArcadeMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimator spriteAnimator, byte personality) {
+    public ArcadeMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationSet animationSet, byte personality) {
         requireValidGhostPersonality(personality);
-        return new ArcadeMsPacMan_GhostAnimations(spriteAnimator, personality);
+        return new ArcadeMsPacMan_GhostAnimations(animationSet, personality);
     }
 
     @Override
-    public ArcadeMsPacMan_PacAnimations createPacAnimations(SpriteAnimator spriteAnimator) {
-        return new ArcadeMsPacMan_PacAnimations(spriteAnimator);
+    public ArcadeMsPacMan_PacAnimations createPacAnimations(SpriteAnimationSet animationSet) {
+        return new ArcadeMsPacMan_PacAnimations(animationSet);
     }
 
     @Override

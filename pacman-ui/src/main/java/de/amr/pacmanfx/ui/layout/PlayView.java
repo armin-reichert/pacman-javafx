@@ -72,7 +72,7 @@ public class PlayView extends StackPane implements View {
 
     private static final FontIcon PAUSED_ICON = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
 
-    private final GameEventHandler gameEventHandler = new GameEventHandler(this);
+    private final GameEventHandler gameEventHandler = new GameEventHandler();
 
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
 
@@ -201,13 +201,9 @@ public class PlayView extends StackPane implements View {
 
     // GameEvent handling
 
-    private static class GameEventHandler extends DefaultGameEventListener {
+    private class GameEventHandler extends DefaultGameEventListener {
 
-        private final PlayView playView;
-
-        public GameEventHandler(PlayView playView) {
-            this.playView = playView;
-        }
+        public GameEventHandler() {}
 
         @Override
         public void onGameEvent(GameEvent gameEvent) {
@@ -215,32 +211,32 @@ public class PlayView extends StackPane implements View {
 
                 case LevelCreatedEvent levelCreatedEvent -> {
                     final GameLevel level = levelCreatedEvent.level();
-                    final UIConfig uiConfig = playView.ui.currentConfig();
+                    final UIConfig uiConfig = ui.currentConfig();
 
                     //TODO this should be done elsewhere
-                    level.pac().setAnimationManager(uiConfig.createPacAnimations(playView.ui.spriteAnimator()));
+                    level.pac().setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
                     level.ghosts().forEach(ghost ->
-                        ghost.setAnimationManager(uiConfig.createGhostAnimations(playView.ui.spriteAnimator(), ghost.personality())));
+                        ghost.setAnimationManager(uiConfig.createGhostAnimations(ui.spriteAnimationSet(), ghost.personality())));
 
-                    playView.miniView.setGameLevel(level);
-                    playView.miniView.slideIn();
+                    miniView.setGameLevel(level);
+                    miniView.slideIn();
                     // size of game scene might have changed, so re-embed
-                    playView.optCurrentGameScene().ifPresent(gameScene -> playView.embedGameScene(playView.parentScene, gameScene));
+                    optCurrentGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
                 }
 
                 case GameStateChangeEvent stateChangeEvent -> {
                     if (stateChangeEvent.newState().matchesByName(CanonicalGameState.LEVEL_COMPLETE.name())) {
-                        playView.miniView.slideOut();
+                        miniView.slideOut();
                     }
                 }
 
                 default -> {}
             }
 
-            playView.updateGameScene();
+            updateGameScene();
 
             // Call game event handler for current game scene
-            playView.optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
+            optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
         }
     }
 

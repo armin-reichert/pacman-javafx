@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
@@ -21,7 +22,7 @@ import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
@@ -81,7 +82,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private final DirectoryWatchdog customDirWatchdog;
     private final UIConfigManager uiConfigManager = new UIConfigManager();
     private final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
-    private final SpriteAnimator spriteAnimator = new SpriteAnimator();
+    private final SpriteAnimationTimer spriteAnimationTimer = new SpriteAnimationTimer();
+    private final SpriteAnimationSet spriteAnimationSet = new SpriteAnimationSet();
     private final SoundManager soundManager = new SoundManager();
     private final VoiceManager voiceManager = new VoiceManager();
     private final GameContext gameContext;
@@ -124,6 +126,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
         // preload to make 3D scene creation faster
         load3DModels();
+
+        spriteAnimationTimer.setSpriteAnimationSet(spriteAnimationSet);
     }
 
     private void initGameClock() {
@@ -434,7 +438,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         stage.centerOnScreen();
         stage.show();
         flashMessageView.start();
-        spriteAnimator.start();
+        spriteAnimationTimer.start();
         Platform.runLater(customDirWatchdog::startWatching);
     }
 
@@ -470,8 +474,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
-    public SpriteAnimator spriteAnimator() {
-        return spriteAnimator;
+    public SpriteAnimationSet spriteAnimationSet() {
+        return spriteAnimationSet;
     }
 
     @Override
@@ -494,8 +498,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     public void terminate() {
         Logger.info("Application is terminated now. There is no way back!");
         stopGame();
-        spriteAnimator.stop();
-        spriteAnimator.clear();
+        spriteAnimationTimer.stop();
+        spriteAnimationSet.clear();
         flashMessageView.stop();
         customDirWatchdog.dispose();
     }

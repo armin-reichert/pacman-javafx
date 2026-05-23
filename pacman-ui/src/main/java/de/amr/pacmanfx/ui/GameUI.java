@@ -5,13 +5,13 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.layout.MiniGameView;
 import de.amr.pacmanfx.ui.layout.ViewManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimator;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.Translator;
 import javafx.stage.Stage;
@@ -78,7 +78,7 @@ public interface GameUI extends Translator {
      */
     SoundManager soundManager();
 
-    SpriteAnimator spriteAnimator();
+    SpriteAnimationSet spriteAnimationSet();
 
     /**
      * Returns the preferences manager storing UI-related settings.

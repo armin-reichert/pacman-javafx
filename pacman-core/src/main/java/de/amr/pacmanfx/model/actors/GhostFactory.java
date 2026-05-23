@@ -36,6 +36,7 @@ public class GhostFactory {
         final Ghost ghost = new Ghost(Globals.PINK_GHOST_SPEEDY, name);
 
         ghost.setChasingTargetTileStrategy(level -> level.pac().tilesAheadWithOverflowBug(4));
+
         ghost.reset();
         return ghost;
     }
