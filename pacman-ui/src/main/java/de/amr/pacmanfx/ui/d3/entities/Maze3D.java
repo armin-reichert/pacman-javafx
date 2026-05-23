@@ -11,12 +11,9 @@ import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.Obstacle;
 import de.amr.pacmanfx.model.world.TerrainLayer;
-import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUIConstants;
-import de.amr.pacmanfx.ui.config.WorldConfig;
 import de.amr.pacmanfx.ui.config.FloorConfig3D;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
-import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.world.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Wall3D;
@@ -99,11 +96,12 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
 
     private Map<String, PhongMaterial> materials;
 
-    public Maze3D() {
-    }
+    public Maze3D() {}
 
-    public void setMaterials(Map<String, PhongMaterial> materials) {
+    public void build(Map<String, PhongMaterial> materials, MazeConfig3D mazeConfig, FloorConfig3D floorConfig3D, TerrainLayer terrain) {
         this.materials = materials;
+        buildFloor(materials, floorConfig3D, terrain);
+        buildObstacles(materials, mazeConfig, terrain);
     }
 
     public Map<String, PhongMaterial> materials() {
@@ -169,13 +167,13 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         Logger.info("Disposed 3D maze");
     }
 
-    public void createAndAddObstacles3D(MazeConfig3D mazeConfig, TerrainLayer terrain, Map<String, PhongMaterial> materials) {
+    private void buildObstacles(Map<String, PhongMaterial> materials, MazeConfig3D mazeConfig, TerrainLayer terrain) {
         final float wallThickness = mazeConfig.obstacleWallThickness();
         final float cornerRadius  = mazeConfig.obstacleCornerRadius();
         addObstacles(this, terrain, wallThickness, cornerRadius, materials, wallBaseHeight);
     }
 
-    public void createAndAddFloor3D(FloorConfig3D floorConfig, TerrainLayer terrain, Map<String, PhongMaterial> materials) {
+    private void buildFloor(Map<String, PhongMaterial> materials, FloorConfig3D floorConfig, TerrainLayer terrain) {
         final Vector2i terrainSize = terrain.sizeInPixel();
         final float width = terrainSize.x() + 2 * floorConfig.padding();
         final float height = terrainSize.y();
@@ -191,5 +189,4 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
 
         getChildren().add(floor3D);
     }
-
 }
