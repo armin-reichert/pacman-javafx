@@ -9,7 +9,7 @@ import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 
 import java.util.List;
 
-public record EntityConfig(
+public record WorldConfig(
     PacConfig pacConfig,
     List<GhostConfig> ghostConfigs,
     BonusConfig bonusConfig,

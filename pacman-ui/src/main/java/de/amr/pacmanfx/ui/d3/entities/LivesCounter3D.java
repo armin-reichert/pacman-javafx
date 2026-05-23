@@ -7,8 +7,8 @@ import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.GameFlow;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
-import de.amr.pacmanfx.ui.UIConfig;
-import de.amr.pacmanfx.ui.config.EntityConfig;
+import de.amr.pacmanfx.ui.config.WorldConfig;
+import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.d3.animation.NodePositionTracker;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -71,10 +71,9 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
         }
     }
 
-    public LivesCounter3D(UIConfig uiConfig) {
-        requireNonNull(uiConfig);
-
-        final EntityConfig entityConfig = uiConfig.entityConfig();
+    public LivesCounter3D(Factory3D factory3D, WorldConfig worldConfig) {
+        requireNonNull(factory3D);
+        requireNonNull(worldConfig);
 
         pillarMaterial.bind(pillarColor.map(Ufx::coloredPhongMaterial));
         plateMaterial.bind((plateColor.map(Ufx::coloredPhongMaterial)));
@@ -82,9 +81,9 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
         final var standsGroup = new Group();
         getChildren().add(standsGroup);
 
-        final var counterShapes = new Node[entityConfig.livesCounter().numShapes()];
+        final var counterShapes = new Node[worldConfig.livesCounter().numShapes()];
         for (int i = 0; i < counterShapes.length; ++i) {
-            counterShapes[i] = uiConfig.factory3D().createLivesCounterShape3D(uiConfig.entityConfig());
+            counterShapes[i] = factory3D.createLivesCounterShape3D(worldConfig);
         }
         for (int i = 0; i < counterShapes.length; ++i) {
             final Node shape = counterShapes[i];

@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.world.Obstacle;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUIConstants;
-import de.amr.pacmanfx.ui.config.EntityConfig;
+import de.amr.pacmanfx.ui.config.WorldConfig;
 import de.amr.pacmanfx.ui.config.FloorConfig3D;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.d3.Factory3D;
@@ -102,7 +102,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
      *
      * @param terrain       the game level terrain
      * @param factory3D     the factory for 3D entities
-     * @param entityConfig  3D configuration
+     * @param worldConfig  3D configuration
      * @param colorScheme   the map color scheme
      *
      * @throws NullPointerException if any required argument is {@code null}
@@ -110,17 +110,17 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
     public Maze3D(
         TerrainLayer terrain,
         Factory3D factory3D,
-        EntityConfig entityConfig,
+        WorldConfig worldConfig,
         WorldMapColorScheme colorScheme)
     {
         requireNonNull(terrain);
         requireNonNull(factory3D);
-        requireNonNull(entityConfig);
+        requireNonNull(worldConfig);
 
         materials = factory3D.createMazeMaterials(colorScheme, wallOpacity, floorColor);
 
-        createAndAddFloor3D(entityConfig.floor(), terrain);
-        createAndAddObstacles3D(entityConfig.maze(), terrain);
+        createAndAddFloor3D(worldConfig.floor(), terrain);
+        createAndAddObstacles3D(worldConfig.maze(), terrain);
     }
 
     public void setHouse3D(MazeHouse3D house3D) {

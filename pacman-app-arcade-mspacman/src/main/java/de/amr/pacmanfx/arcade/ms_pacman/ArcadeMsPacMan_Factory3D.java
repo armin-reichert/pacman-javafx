@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.config.EntityConfig;
+import de.amr.pacmanfx.ui.config.WorldConfig;
 import de.amr.pacmanfx.ui.d3.DefaultFactory3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
@@ -17,16 +17,16 @@ import static java.util.Objects.requireNonNull;
 public class ArcadeMsPacMan_Factory3D extends DefaultFactory3D {
 
     @Override
-    public Pac3D createPac3D(Pac pac, PacConfig config, AnimationRegistry animations) {
-        return Pac3DFactory.createMsPacMan3D(animations, pac, config);
+    public Pac3D createPac3D(Pac pac, PacConfig config, AnimationRegistry animationRegistry) {
+        return Pac3DFactory.createMsPacMan3D(animationRegistry, pac, config);
     }
 
     @Override
-    public Group createLivesCounterShape3D(EntityConfig entityConfig) {
-        requireNonNull(entityConfig);
+    public Group createLivesCounterShape3D(WorldConfig worldConfig) {
+        requireNonNull(worldConfig);
 
-        final PacConfig config = entityConfig.pacConfig()
-            .withModifiedSize3D(entityConfig.livesCounter().shapeSize());
+        final PacConfig config = worldConfig.pacConfig()
+            .withModifiedSize3D(worldConfig.livesCounter().shapeSize());
 
         return new Group(
             Pac3DFactory.createPacBody(config, true),

@@ -10,8 +10,8 @@ import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
-import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
+import de.amr.pacmanfx.ui.config.WorldConfig;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.d3.entities.MazeHouse3D;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -30,7 +30,10 @@ import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.*;
+import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.Sphere;
+import javafx.scene.shape.TriangleMesh;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +49,7 @@ public class DefaultFactory3D implements Factory3D {
     public static final int WALL_BASE_SPECULAR_POWER = 64;
 
     protected final Map<GhostStateColors, GhostMaterialSet> ghostMaterialsCache = new HashMap<>();
-    protected final Map<Float, Mesh> pelletMeshesCache = new HashMap<>();
+    protected final Map<Float, TriangleMesh> pelletMeshesCache = new HashMap<>();
 
     @Override
     public void dispose() {
@@ -56,11 +59,14 @@ public class DefaultFactory3D implements Factory3D {
 
     @Override
     public Map<String, PhongMaterial> createMazeMaterials(WorldMapColorScheme colorScheme, DoubleProperty wallOpacity, ObjectProperty<Color> floorColor) {
+        requireNonNull(colorScheme);
+        requireNonNull(wallOpacity);
+        requireNonNull(floorColor);
 
         final PhongMaterial floorMaterial = new PhongMaterial();
         floorMaterial.diffuseColorProperty().bind(floorColor);
+        floorMaterial.specularColorProperty().bind(floorColor.map(Color::brighter));
         floorMaterial.setSpecularPower(FLOOR_SPECULAR_POWER);
-        floorMaterial.setSpecularColor(Color.rgb(220, 220, 220));
 
         final PhongMaterial wallBaseMaterial = colorBoundPhongMaterial(
             wallOpacity.map(opacity ->
@@ -78,34 +84,33 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Maze3D createMaze3D(
-        TerrainLayer terrain,
-        EntityConfig config,
-        WorldMapColorScheme colorScheme,
-        AnimationRegistry animationRegistry)
-    {
+    public Maze3D createMaze3D(TerrainLayer terrain, WorldConfig config, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry) {
+        requireNonNull(terrain);
+        requireNonNull(config);
+        requireNonNull(colorScheme);
+        requireNonNull(animationRegistry);
+
         final var maze3D = new Maze3D(terrain, this, config, colorScheme);
 
         // Currently, only Arcade house is supported
         terrain.optHouse()
             .filter(ArcadeHouse.class::isInstance)
             .map(ArcadeHouse.class::cast)
-            .ifPresent(house -> {
-                maze3D.setHouse3D(new MazeHouse3D(colorScheme, config.house(), animationRegistry, house));
-        });
+            .map(house -> new MazeHouse3D(colorScheme, config.house(), animationRegistry, house))
+            .ifPresent(maze3D::setHouse3D);
 
         return maze3D;
     }
 
     @Override
-    public Pac3D createPac3D(Pac pac, PacConfig config, AnimationRegistry animations) {
-        return Pac3DFactory.createPacMan3D(animations, pac, config);
+    public Pac3D createPac3D(Pac pac, PacConfig config, AnimationRegistry animationRegistry) {
+        return Pac3DFactory.createPacMan3D(animationRegistry, pac, config);
     }
 
     @Override
-    public Ghost3D createGhost3D(Ghost ghost, GhostConfig config, AnimationRegistry animations) {
+    public Ghost3D createGhost3D(Ghost ghost, GhostConfig config, AnimationRegistry animationRegistry) {
         return new Ghost3D(
-            animations,
+            animationRegistry,
             ghost,
             config,
             new GhostMeshSet(
@@ -117,23 +122,32 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Group createLivesCounterShape3D(EntityConfig config) {
-        requireNonNull(config);
-        final PacConfig pacConfig = config.pacConfig().withModifiedSize3D(config.livesCounter().shapeSize());
+    public Group createLivesCounterShape3D(WorldConfig worldConfig) {
+        requireNonNull(worldConfig);
+
+        final PacConfig pacConfig = worldConfig.pacConfig().withModifiedSize3D(worldConfig.livesCounter().shapeSize());
+
         return Pac3DFactory.createPacBody(pacConfig, true);
     }
 
     @Override
     public Pellet3D createPellet3D(PelletConfig3D config, PhongMaterial material) {
-        final Mesh mesh = scaledPelletMesh(PacManWorld3D.instance().pelletMesh(), config);
-        final Shape3D shape = new MeshView(mesh);
-        shape.setMaterial(material);
-        return new Pellet3D(shape);
+        requireNonNull(config);
+        requireNonNull(material);
+
+        final Sphere oval = new Sphere(config.radius());
+        oval.setMaterial(material);
+        oval.setScaleX(1.25);
+        return new Pellet3D(oval);
     }
 
     @Override
-    public Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animations, PhongMaterial material) {
-        final var energizer3D = new Energizer3D(animations);
+    public Energizer3D createEnergizer3D(EnergizerConfig3D config, PhongMaterial material, AnimationRegistry animationRegistry) {
+        requireNonNull(config);
+        requireNonNull(material);
+        requireNonNull(animationRegistry);
+
+        final var energizer3D = new Energizer3D(animationRegistry);
         energizer3D.setShapeFactory(() -> {
             final var shape = new Sphere(config.radius(), 48);
             shape.setMaterial(material);
@@ -142,10 +156,13 @@ public class DefaultFactory3D implements Factory3D {
         energizer3D.setPumpingFrequency(config.pumpingFrequency());
         energizer3D.setInflatedSize(config.scalingInflated());
         energizer3D.setExpandedSize(config.scalingExpanded());
+
         return energizer3D;
     }
 
     public GhostMaterialSet createGhostMaterial(GhostStateColors colors) {
+        requireNonNull(colors);
+
         final var normalMaterials = new GhostComponentMaterialSet(
             coloredPhongMaterial(colors.normalColors().dressColor()),
             coloredPhongMaterial(colors.normalColors().eyeballsColor()),
@@ -167,16 +184,11 @@ public class DefaultFactory3D implements Factory3D {
         return new GhostMaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
     }
 
-    public Mesh scaledPelletMesh(Mesh pelletMesh, PelletConfig3D config) {
-        requireNonNull(pelletMesh);
-        requireNonNull(config);
-        if (!(pelletMesh instanceof TriangleMesh triangleMesh)) {
-            throw new IllegalArgumentException("Cannot scale pellet mesh (mo triangle mesh");
-        }
+    private TriangleMesh scaledPelletMesh(TriangleMesh pelletMesh, PelletConfig3D config) {
         return pelletMeshesCache.computeIfAbsent(config.radius(), r -> {
             final Bounds bounds = new MeshView(pelletMesh).getBoundsInLocal();
             final double extend = max( max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
-            return Ufx.createScaledTriangleMesh(triangleMesh, (2 * r) / extend);
+            return Ufx.createScaledTriangleMesh(pelletMesh, (2 * r) / extend);
         });
     }
 }

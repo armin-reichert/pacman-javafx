@@ -45,7 +45,7 @@ public class LevelCounter3D extends Group implements GameLevelEntity, Disposable
 
     @Override
     public void init(GameLevel level) {
-        final LevelCounterConfig3D config = uiConfig.entityConfig().levelCounter();
+        final LevelCounterConfig3D config = uiConfig.worldConfig().levelCounter();
         final float cubeSize = config.symbolSize();
         final List<Byte> symbols = level.game().levelCounter().symbols();
         getChildren().clear();

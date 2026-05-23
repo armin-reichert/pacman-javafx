@@ -62,7 +62,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
         return NES_COLORS[index];
     }
 
-    public static final EntityConfig TENGEN_ENTITY_CONFIG = new EntityConfig(
+    public static final WorldConfig TENGEN_WORLD_CONFIG = new WorldConfig(
         new PacConfig(
             new PacColors(
                 nesColor(0x28), // headColor
@@ -109,7 +109,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
         new LevelCounterConfig3D(10.0f, 6.0f),
         new LivesCounterConfig3D(5, 12.0f),
         new MazeConfig3D(4.0f, 4.0f, 1.0f, 2.25f, "0x2a2a2a"),
-        new PelletConfig3D(1.0f, 6.0f)
+        new PelletConfig3D(0.8f, 6.0f)
     );
 
     /** Defines additional Tengen-specific scene IDs */
@@ -236,8 +236,8 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     }
 
     @Override
-    public EntityConfig entityConfig() {
-        return TENGEN_ENTITY_CONFIG;
+    public WorldConfig worldConfig() {
+        return TENGEN_WORLD_CONFIG;
     }
 
     @Override

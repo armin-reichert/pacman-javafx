@@ -53,7 +53,10 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.basics.math.RandomNumberSupport.RANDOM_GENERATOR;
@@ -266,7 +269,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void createMaze3D() {
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        entityCache.maze3D = uiConfig.factory3D().createMaze3D(terrain, uiConfig.entityConfig(), colorScheme, animationRegistry);
+        entityCache.maze3D = uiConfig.factory3D().createMaze3D(terrain, uiConfig.worldConfig(), colorScheme, animationRegistry);
         entityCache.maze3D.wallOpacityProperty().bind(GameUIConstants.PROPERTY_3D_WALL_OPACITY);
         entityCache.maze3D.wallBaseHeightProperty().bind(GameUIConstants.PROPERTY_3D_WALL_HEIGHT);
         entityCache.maze3D.floorColorProperty().bind(GameUIConstants.PROPERTY_3D_FLOOR_COLOR);
@@ -279,10 +282,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         final PhongMaterial foodMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
 
-        final PelletConfig3D pelletConfig3D = uiConfig.entityConfig().pellet();
+        final PelletConfig3D pelletConfig3D = uiConfig.worldConfig().pellet();
         final double pelletZ = entityCache.maze3D.floorTop() - pelletConfig3D.floorElevation();
 
-        final EnergizerConfig3D energizerConfig3D = uiConfig.entityConfig().energizer();
+        final EnergizerConfig3D energizerConfig3D = uiConfig.worldConfig().energizer();
         final double energizerZ = entityCache.maze3D.floorTop() - energizerConfig3D.floorElevation();
 
         foodLayer.tiles()
@@ -297,20 +300,20 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private Pellet3D createPellet3D(Vector2i tile, double z, PhongMaterial foodMaterial) {
-        final Pellet3D pellet3D = uiConfig.factory3D().createPellet3D(uiConfig.entityConfig().pellet(), foodMaterial);
+        final Pellet3D pellet3D = uiConfig.factory3D().createPellet3D(uiConfig.worldConfig().pellet(), foodMaterial);
         pellet3D.setLocation(tile, z);
         return pellet3D;
     }
 
     private Energizer3D createEnergizer3D(Vector2i tile, double z, PhongMaterial foodMaterial) {
         final Energizer3D energizer3D = uiConfig.factory3D().createEnergizer3D(
-            uiConfig.entityConfig().energizer(), animationRegistry, foodMaterial);
+            uiConfig.worldConfig().energizer(), foodMaterial, animationRegistry);
         energizer3D.setLocation(tile, z);
         return energizer3D;
     }
 
     private Bonus3D createBonus3D(Bonus bonus) {
-        final BonusConfig config = uiConfig.entityConfig().bonusConfig();
+        final BonusConfig config = uiConfig.worldConfig().bonusConfig();
         final Bonus3D bonus3D = new Bonus3D(animationRegistry, bonus,
             uiConfig.bonusSymbolImage(bonus.symbol()), config.bonusSymbolWidth(),
             uiConfig.bonusValueImage(bonus.symbol()),  config.bonusPointsWidth());
@@ -319,13 +322,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createPac3D() {
-        final PacConfig config = uiConfig.entityConfig().pacConfig();
+        final PacConfig config = uiConfig.worldConfig().pacConfig();
         entityCache.pac3D = uiConfig.factory3D().createPac3D(level.pac(), config, animationRegistry);
         entitySet.add(entityCache.pac3D);
     }
 
     private void createGhosts3D() {
-        final List<GhostConfig> ghostConfigs = uiConfig.entityConfig().ghostConfigs();
+        final List<GhostConfig> ghostConfigs = uiConfig.worldConfig().ghostConfigs();
         entityCache.ghosts3D = Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
             .map(level::ghost)
             .map(ghost -> {
@@ -347,7 +350,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createLivesCounter3D() {
-        entityCache.livesCounter3D = new LivesCounter3D(uiConfig);
+        entityCache.livesCounter3D = new LivesCounter3D(uiConfig.factory3D(), uiConfig.worldConfig());
         entityCache.livesCounter3D.setTranslateX(2 * TS);
         entityCache.livesCounter3D.setTranslateY(2 * TS);
         entitySet.add(entityCache.livesCounter3D);
@@ -358,7 +361,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         entityCache.levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
         entityCache.levelCounter3D.setTranslateX(TS(terrain.numCols() - 2));
         entityCache.levelCounter3D.setTranslateY(TS(2));
-        entityCache.levelCounter3D.setTranslateZ(-uiConfig.entityConfig().levelCounter().elevation());
+        entityCache.levelCounter3D.setTranslateZ(-uiConfig.worldConfig().levelCounter().elevation());
         entitySet.add(entityCache.levelCounter3D);
     }
 

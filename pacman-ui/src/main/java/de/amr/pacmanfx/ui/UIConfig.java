@@ -51,7 +51,7 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
  *   <li>animation sets for Pac-Man/Ms. Pac-Man and the four ghosts</li>
  *   <li>maze color schemes</li>
  *   <li>variant-specific behavior (sound timing, bonus visuals, boot-screen regions, …)</li>
- *   <li>3D entity rendering parameters (via {@link #entityConfig()})</li>
+ *   <li>3D entity rendering parameters (via {@link #worldConfig()})</li>
  * </ul>
  *
  * <p>Implementations are typically created once per game variant and remain active for
@@ -75,10 +75,10 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 public interface UIConfig extends Disposable {
 
     /**
-     * Default 3D entity rendering configuration used when a variant does not override it.
+     * Default 3D rendering configuration used when a variant does not override it.
      * Values are tuned to the classic Arcade Pac-Man look.
      */
-    EntityConfig DEFAULT_ENTITY_CONFIG = new EntityConfig(
+    WorldConfig DEFAULT_WORLD_CONFIG = new WorldConfig(
         new PacConfig(
             new PacColors(
                 ARCADE_YELLOW, // headColor
@@ -125,7 +125,7 @@ public interface UIConfig extends Disposable {
         new LevelCounterConfig3D(10.0f, 6.0f),
         new LivesCounterConfig3D(5, 12.0f),
         new MazeConfig3D(4.0f, 4.0f, 1.0f, 2.25f, "0x2a2a2a"),
-        new PelletConfig3D(1.0f, 6.0f)
+        new PelletConfig3D(0.8f, 6.0f)
     );
 
     /**
@@ -193,12 +193,12 @@ public interface UIConfig extends Disposable {
     /**
      * Returns the 3D rendering parameters for entities (Pac-Man, ghosts, pellets, …).
      * <p>
-     * Most variants can return {@link #DEFAULT_ENTITY_CONFIG}.
+     * Most variants can return {@link #DEFAULT_WORLD_CONFIG}.
      *
-     * @return 3D entity rendering configuration
+     * @return 3D world rendering configuration
      */
-    default EntityConfig entityConfig() {
-        return DEFAULT_ENTITY_CONFIG;
+    default WorldConfig worldConfig() {
+        return DEFAULT_WORLD_CONFIG;
     }
 
     /**
@@ -221,7 +221,7 @@ public interface UIConfig extends Disposable {
         final Color wallFillColor = Color.valueOf(colorScheme.wallFill());
         if (wallFillColor.getBrightness() < 0.1) {
             return new WorldMapColorScheme(
-                entityConfig().maze().darkWallFillColor(),
+                worldConfig().maze().darkWallFillColor(),
                 colorScheme.wallStroke(),
                 colorScheme.door(),
                 colorScheme.pellet());

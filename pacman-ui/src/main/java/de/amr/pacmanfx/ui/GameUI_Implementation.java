@@ -431,8 +431,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     @Override
     public void show() {
         // These need the current UI config to be initialized
-        GameUIConstants.PROPERTY_3D_WALL_HEIGHT .set(currentConfig().entityConfig().maze().obstacleBaseHeight());
-        GameUIConstants.PROPERTY_3D_WALL_OPACITY.set(currentConfig().entityConfig().maze().obstacleOpacity());
+        GameUIConstants.PROPERTY_3D_WALL_HEIGHT .set(currentConfig().worldConfig().maze().obstacleBaseHeight());
+        GameUIConstants.PROPERTY_3D_WALL_OPACITY.set(currentConfig().worldConfig().maze().obstacleOpacity());
 
         logPreferences();
         dashboard().init(this);
