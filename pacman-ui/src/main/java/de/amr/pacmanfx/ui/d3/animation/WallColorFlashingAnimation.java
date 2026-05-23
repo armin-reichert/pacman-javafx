@@ -5,15 +5,12 @@
 package de.amr.pacmanfx.ui.d3.animation;
 
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Animation that continuously interpolates the maze wall color between
@@ -24,22 +21,14 @@ import static java.util.Objects.requireNonNull;
  */
 public class WallColorFlashingAnimation extends ManagedAnimation {
 
-    private final GameLevel3D level3D;
-    private final WorldMapColorScheme colorScheme;
     private final Color fromColor;
     private final Color toColor;
 
-    public WallColorFlashingAnimation(GameLevel3D level3D, WorldMapColorScheme colorScheme) {
+    public WallColorFlashingAnimation(WorldMapColorScheme colorScheme, PhongMaterial wallMaterial) {
         super("Wall Color Flashing");
-        this.level3D = requireNonNull(level3D);
-        this.colorScheme = requireNonNull(colorScheme);
         this.fromColor = Color.valueOf(colorScheme.wallFill());
         this.toColor = Color.valueOf(colorScheme.wallStroke());
-        setFactory(this::createAnimationFX);
-    }
-
-    private Animation createAnimationFX() {
-        return new Transition() {
+        setFactory(() -> new Transition() {
             {
                 setAutoReverse(true);
                 setCycleCount(Animation.INDEFINITE);
@@ -48,25 +37,19 @@ public class WallColorFlashingAnimation extends ManagedAnimation {
 
             @Override
             protected void interpolate(double t) {
-                final PhongMaterial wallTopMaterial = wallTopMaterial();
                 final Color color = fromColor.interpolate(toColor, t);
-                wallTopMaterial.setDiffuseColor(color);
-                wallTopMaterial.setSpecularColor(color.brighter());
+                wallMaterial.setDiffuseColor(color);
+                wallMaterial.setSpecularColor(color.brighter());
             }
-        };
-    }
 
-    @Override
-    public void stop() {
-        super.stop();
-        // reset wall colors
-        final PhongMaterial wallTopMaterial = wallTopMaterial();
-        final Color wallFillColor = Color.valueOf(colorScheme.wallFill());
-        wallTopMaterial.setDiffuseColor(wallFillColor);
-        wallTopMaterial.setSpecularColor(wallFillColor.brighter());
-    }
-
-    private PhongMaterial wallTopMaterial() {
-        return level3D.maze3D().materials().get("wallTopMaterial");
+            @Override
+            public void stop() {
+                super.stop();
+                // reset wall colors
+                final Color wallFillColor = Color.valueOf(colorScheme.wallFill());
+                wallMaterial.setDiffuseColor(wallFillColor);
+                wallMaterial.setSpecularColor(wallFillColor.brighter());
+            }
+        });
     }
 }

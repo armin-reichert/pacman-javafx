@@ -144,7 +144,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public void createAnimations(ParticlesAnimationConfig particlesConfig) {
         final WorldMapColorScheme mapColorScheme = uiConfig.colorScheme(level.worldMap());
-        animationRegistry.register(AnimationID.WALL_COLOR_FLASHING, new WallColorFlashingAnimation(this, mapColorScheme));
+        animationRegistry.register(AnimationID.WALL_COLOR_FLASHING,
+            new WallColorFlashingAnimation(mapColorScheme, maze3D().materials().get("wallTopMaterial")));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
         createEnergizerParticlesAnimation(particlesConfig);

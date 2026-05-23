@@ -91,36 +91,23 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
 
     private final ObjectProperty<Color> floorColor = new SimpleObjectProperty<>(Color.GRAY);
 
-    private final Map<String, PhongMaterial> materials;
     private Box floor3D;
+
     private MazeHouse3D house3D;
 
     private final Group particlesGroup = new Group();
 
-    /**
-     * Creates a new 3D maze for the given level.
-     *
-     * @param terrain       the game level terrain
-     * @param factory3D     the factory for 3D entities
-     * @param worldConfig  3D configuration
-     * @param colorScheme   the map color scheme
-     *
-     * @throws NullPointerException if any required argument is {@code null}
-     */
-    public Maze3D(
-        TerrainLayer terrain,
-        Factory3D factory3D,
-        WorldConfig worldConfig,
-        WorldMapColorScheme colorScheme)
-    {
-        requireNonNull(terrain);
-        requireNonNull(factory3D);
-        requireNonNull(worldConfig);
+    private Map<String, PhongMaterial> materials;
 
-        materials = factory3D.createMazeMaterials(colorScheme, wallOpacity, floorColor);
+    public Maze3D() {
+    }
 
-        createAndAddFloor3D(worldConfig.floor(), terrain);
-        createAndAddObstacles3D(worldConfig.maze(), terrain);
+    public void setMaterials(Map<String, PhongMaterial> materials) {
+        this.materials = materials;
+    }
+
+    public Map<String, PhongMaterial> materials() {
+        return materials;
     }
 
     public void setHouse3D(MazeHouse3D house3D) {
@@ -132,12 +119,10 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         house3D.update(level);
     }
 
-    /** @return the property controlling the base height of all walls */
     public DoubleProperty wallBaseHeightProperty() {
         return wallBaseHeight;
     }
 
-    /** @return the property controlling the opacity of all wall materials */
     public DoubleProperty wallOpacityProperty() {
         return wallOpacity;
     }
@@ -146,22 +131,14 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         return floorColor;
     }
 
-    /** @return the shared materials used by all maze components */
-    public Map<String, PhongMaterial> materials() {
-        return materials;
-    }
-
-    /** @return the floor component */
     public Box floor() {
         return floor3D;
     }
 
-    /** @return the ghost house component, or {@code null} if the map has no house */
     public MazeHouse3D house() {
         return house3D;
     }
 
-    /** @return the group for dynamic particle effects (energizer explosions etc.) */
     public Group particlesGroup() {
         return particlesGroup;
     }
@@ -192,15 +169,13 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         Logger.info("Disposed 3D maze");
     }
 
-    // Private area
-
-    private void createAndAddObstacles3D(MazeConfig3D mazeConfig, TerrainLayer terrain) {
+    public void createAndAddObstacles3D(MazeConfig3D mazeConfig, TerrainLayer terrain, Map<String, PhongMaterial> materials) {
         final float wallThickness = mazeConfig.obstacleWallThickness();
         final float cornerRadius  = mazeConfig.obstacleCornerRadius();
         addObstacles(this, terrain, wallThickness, cornerRadius, materials, wallBaseHeight);
     }
 
-    private void createAndAddFloor3D(FloorConfig3D floorConfig, TerrainLayer terrain) {
+    public void createAndAddFloor3D(FloorConfig3D floorConfig, TerrainLayer terrain, Map<String, PhongMaterial> materials) {
         final Vector2i terrainSize = terrain.sizeInPixel();
         final float width = terrainSize.x() + 2 * floorConfig.padding();
         final float height = terrainSize.y();
@@ -216,4 +191,5 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
 
         getChildren().add(floor3D);
     }
+
 }

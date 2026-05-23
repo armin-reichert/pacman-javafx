@@ -85,12 +85,4 @@ public interface Factory3D extends Disposable {
      * @return 3D energizer representation
      */
     Energizer3D createEnergizer3D(EnergizerConfig3D config, PhongMaterial material, AnimationRegistry animationRegistry);
-
-    /**
-     * @param colorScheme world map colors
-     * @param wallOpacity wall opacity
-     * @param floorColor floor surface color
-     * @return map of Phong materials used for maze creation
-     */
-    Map<String, PhongMaterial> createMazeMaterials(WorldMapColorScheme colorScheme, DoubleProperty wallOpacity, ObjectProperty<Color> floorColor);
 }

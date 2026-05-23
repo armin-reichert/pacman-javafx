@@ -58,11 +58,32 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Map<String, PhongMaterial> createMazeMaterials(WorldMapColorScheme colorScheme, DoubleProperty wallOpacity, ObjectProperty<Color> floorColor) {
+    public Maze3D createMaze3D(TerrainLayer terrain, WorldConfig config, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry) {
+        requireNonNull(terrain);
+        requireNonNull(config);
         requireNonNull(colorScheme);
-        requireNonNull(wallOpacity);
-        requireNonNull(floorColor);
+        requireNonNull(animationRegistry);
 
+        final var maze3D = new Maze3D();
+
+        //TODO this cyclic dependency is dubious
+        final Map<String, PhongMaterial> materials = createMazeMaterials(colorScheme, maze3D.wallOpacityProperty(), maze3D.floorColorProperty());
+        maze3D.setMaterials(materials);
+
+        maze3D.createAndAddFloor3D(config.floor(), terrain, materials);
+        maze3D.createAndAddObstacles3D(config.maze(), terrain, materials);
+
+        // Currently, only Arcade house is supported
+        terrain.optHouse()
+            .filter(ArcadeHouse.class::isInstance)
+            .map(ArcadeHouse.class::cast)
+            .map(house -> new MazeHouse3D(colorScheme, config.house(), animationRegistry, house))
+            .ifPresent(maze3D::setHouse3D);
+
+        return maze3D;
+    }
+
+    private Map<String, PhongMaterial> createMazeMaterials(WorldMapColorScheme colorScheme, DoubleProperty wallOpacity, ObjectProperty<Color> floorColor) {
         final PhongMaterial floorMaterial = new PhongMaterial();
         floorMaterial.diffuseColorProperty().bind(floorColor);
         floorMaterial.specularColorProperty().bind(floorColor.map(Color::brighter));
@@ -81,25 +102,6 @@ public class DefaultFactory3D implements Factory3D {
             "wallBaseMaterial", wallBaseMaterial,
             "wallTopMaterial", wallTopMaterial
         );
-    }
-
-    @Override
-    public Maze3D createMaze3D(TerrainLayer terrain, WorldConfig config, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry) {
-        requireNonNull(terrain);
-        requireNonNull(config);
-        requireNonNull(colorScheme);
-        requireNonNull(animationRegistry);
-
-        final var maze3D = new Maze3D(terrain, this, config, colorScheme);
-
-        // Currently, only Arcade house is supported
-        terrain.optHouse()
-            .filter(ArcadeHouse.class::isInstance)
-            .map(ArcadeHouse.class::cast)
-            .map(house -> new MazeHouse3D(colorScheme, config.house(), animationRegistry, house))
-            .ifPresent(maze3D::setHouse3D);
-
-        return maze3D;
     }
 
     @Override
