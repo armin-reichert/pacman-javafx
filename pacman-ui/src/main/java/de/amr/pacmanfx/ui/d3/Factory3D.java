@@ -30,11 +30,16 @@ import java.util.Map;
 
 public interface Factory3D extends Disposable {
 
-    Maze3D createMaze3D(
-        TerrainLayer terrain,
-        EntityConfig entityConfig,
-        WorldMapColorScheme colorScheme,
-        AnimationRegistry animations);
+    /**
+     * Creates a 3D maze.
+     *
+     * @param terrain the terrain layer
+     * @param entityConfig entity configuration
+     * @param colorScheme the map color scheme
+     * @param animationRegistry the animation registry
+     * @return a 3D maze representing the given terrain
+     */
+    Maze3D createMaze3D(TerrainLayer terrain, EntityConfig entityConfig, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry);
 
     /**
      * Creates the 3D representation of Pac for this game variant, including model,

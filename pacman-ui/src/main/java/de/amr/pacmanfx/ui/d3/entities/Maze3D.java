@@ -8,13 +8,15 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
-import de.amr.pacmanfx.model.world.*;
+import de.amr.pacmanfx.model.world.House;
+import de.amr.pacmanfx.model.world.Obstacle;
+import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.FloorConfig3D;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.d3.Factory3D;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.world.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Wall3D;
@@ -102,7 +104,6 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
      * @param factory3D     the factory for 3D entities
      * @param entityConfig  3D configuration
      * @param colorScheme   the map color scheme
-     * @param animations registry for animations used by 3D components
      *
      * @throws NullPointerException if any required argument is {@code null}
      */
@@ -110,24 +111,20 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         TerrainLayer terrain,
         Factory3D factory3D,
         EntityConfig entityConfig,
-        WorldMapColorScheme colorScheme,
-        AnimationRegistry animations)
+        WorldMapColorScheme colorScheme)
     {
         requireNonNull(terrain);
         requireNonNull(factory3D);
         requireNonNull(entityConfig);
-        requireNonNull(animations);
 
         materials = factory3D.createMazeMaterials(colorScheme, wallOpacity, floorColor);
 
         createAndAddFloor3D(entityConfig.floor(), terrain);
         createAndAddObstacles3D(entityConfig.maze(), terrain);
+    }
 
-        house3D = terrain.optHouse()
-            .filter(ArcadeHouse.class::isInstance)
-            .map(ArcadeHouse.class::cast)
-            .map(arcadeHouse -> new MazeHouse3D(colorScheme, entityConfig.house(), animations, arcadeHouse))
-            .orElseThrow(IllegalStateException::new);
+    public void setHouse3D(MazeHouse3D house3D) {
+        this.house3D = requireNonNull(house3D);
     }
 
     @Override

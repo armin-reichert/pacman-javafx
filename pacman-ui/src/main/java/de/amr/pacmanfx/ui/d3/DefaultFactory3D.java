@@ -6,12 +6,14 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
+import de.amr.pacmanfx.ui.d3.entities.MazeHouse3D;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.UfxColors;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -80,9 +82,19 @@ public class DefaultFactory3D implements Factory3D {
         TerrainLayer terrain,
         EntityConfig config,
         WorldMapColorScheme colorScheme,
-        AnimationRegistry animations)
+        AnimationRegistry animationRegistry)
     {
-        return new Maze3D(terrain, this, config, colorScheme, animations);
+        final var maze3D = new Maze3D(terrain, this, config, colorScheme);
+
+        // Currently, only Arcade house is supported
+        terrain.optHouse()
+            .filter(ArcadeHouse.class::isInstance)
+            .map(ArcadeHouse.class::cast)
+            .ifPresent(house -> {
+                maze3D.setHouse3D(new MazeHouse3D(colorScheme, config.house(), animationRegistry, house));
+        });
+
+        return maze3D;
     }
 
     @Override
