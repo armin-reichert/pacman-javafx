@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
+import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -14,9 +15,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
-import org.kordamp.ikonli.Ikon;
-import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
-import org.kordamp.ikonli.javafx.FontIcon;
+//import org.kordamp.ikonli.Ikon;
+//import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+//import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.util.stream.Stream;
 
@@ -30,18 +31,18 @@ public class StatusIconBox extends HBox implements Disposable {
 
     private static final Font TOOLTIP_FONT = Font.font("Sans", 16);
 
-    private final FontIcon iconMuted;
-    private final FontIcon icon3D;
-    private final FontIcon iconAutopilot;
-    private final FontIcon iconImmune;
-    private final FontIcon iconCheated;
+    private final FontAwesomeIcon iconMuted;
+    private final FontAwesomeIcon icon3D;
+    private final FontAwesomeIcon iconAutopilot;
+    private final FontAwesomeIcon iconImmune;
+    private final FontAwesomeIcon iconCheated;
 
     public StatusIconBox() {
-        iconMuted     = createIcon(FontAwesomeSolid.DEAF, STATUS_ICON_COLOR, "Muted");
-        icon3D        = createIcon(FontAwesomeSolid.CUBES, STATUS_ICON_COLOR, "3D Mode");
-        iconAutopilot = createIcon(FontAwesomeSolid.TAXI, STATUS_ICON_COLOR, "Autopilot");
-        iconImmune    = createIcon(FontAwesomeSolid.USER_SECRET, STATUS_ICON_COLOR, "Immunity");
-        iconCheated   = createIcon(FontAwesomeSolid.FLAG, Color.RED, "Cheater");
+        iconMuted     = createIcon(FontAwesomeIcon.Symbol.DEAF, STATUS_ICON_COLOR, "Muted");
+        icon3D        = createIcon(FontAwesomeIcon.Symbol.CUBES, STATUS_ICON_COLOR, "3D Mode");
+        iconAutopilot = createIcon(FontAwesomeIcon.Symbol.TAXI, STATUS_ICON_COLOR, "Autopilot");
+        iconImmune    = createIcon(FontAwesomeIcon.Symbol.USER_SECRET, STATUS_ICON_COLOR, "Immunity");
+        iconCheated   = createIcon(FontAwesomeIcon.Symbol.FLAG, Color.RED, "Cheater");
 
         getChildren().setAll(icons().toList());
 
@@ -56,23 +57,23 @@ public class StatusIconBox extends HBox implements Disposable {
         icon3D   .visibleProperty().bind(GameUIConstants.PROPERTY_3D_ENABLED);
     }
 
-    public FontIcon iconAutopilot() {
+    public FontAwesomeIcon iconAutopilot() {
         return iconAutopilot;
     }
 
-    public FontIcon iconCheated() {
+    public FontAwesomeIcon iconCheated() {
         return iconCheated;
     }
 
-    public FontIcon iconImmune() {
+    public FontAwesomeIcon iconImmune() {
         return iconImmune;
     }
 
-    public FontIcon iconMuted() {
+    public FontAwesomeIcon iconMuted() {
         return iconMuted;
     }
 
-    public FontIcon icon3D() {
+    public FontAwesomeIcon icon3D() {
         return icon3D;
     }
 
@@ -85,8 +86,8 @@ public class StatusIconBox extends HBox implements Disposable {
         });
     }
 
-    private FontIcon createIcon(Ikon iconType, Color color, String tooltipText) {
-        FontIcon icon = FontIcon.of(iconType, ICON_SIZE, color);
+    private FontAwesomeIcon createIcon(FontAwesomeIcon.Symbol symbol, Color color, String tooltipText) {
+        FontAwesomeIcon icon = FontAwesomeIcon.of(symbol, ICON_SIZE, color);
         icon.setVisible(false);
         icon.visibleProperty().addListener(this::handleVisibilityChange);
         Tooltip tooltip = new Tooltip(tooltipText);
@@ -101,7 +102,7 @@ public class StatusIconBox extends HBox implements Disposable {
         getChildren().setAll(icons().filter(Node::isVisible).toList());
     }
 
-    public Stream<FontIcon> icons() {
+    public Stream<FontAwesomeIcon> icons() {
         return Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated);
     }
 }

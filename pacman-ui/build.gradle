@@ -12,8 +12,8 @@ dependencies {
         project(":pacman-core"),
         project(":pacman-ui-lib"),
         project(":pacman-app-mapeditor"),
-        libs.bundles.iconli,
-        libs.bundles.tinylog)
+        libs.bundles.tinylog
+    )
 
     testImplementation(libs.junit.jupiter.api)
     testRuntimeOnly(libs.junit.jupiter.engine)

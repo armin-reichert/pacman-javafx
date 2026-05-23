@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
+import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -22,8 +23,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
-import org.kordamp.ikonli.javafx.FontIcon;
+//import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+//import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -102,9 +103,9 @@ public class StartPagesCarousel extends Carousel implements View {
     protected Node createNavigationButton(Direction dir) {
         final int iconSize = 48;
         final Color iconColor = Color.gray(0.69);
-        final FontIcon icon = switch (dir) {
-            case LEFT  -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_LEFT, iconSize, iconColor);
-            case RIGHT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_RIGHT, iconSize, iconColor);
+        final FontAwesomeIcon icon = switch (dir) {
+            case LEFT  -> FontAwesomeIcon.of(FontAwesomeIcon.Symbol.CHEVRON_CIRCLE_LEFT, iconSize, iconColor);
+            case RIGHT -> FontAwesomeIcon.of(FontAwesomeIcon.Symbol.CHEVRON_CIRCLE_RIGHT, iconSize, iconColor);
             default -> throw new IllegalArgumentException("Illegal navigation direction: %s".formatted(dir));
         };
         icon.setOpacity(0.2);

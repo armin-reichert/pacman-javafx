@@ -1,0 +1,52 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.uilib.widgets;
+
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+
+import static java.util.Objects.requireNonNull;
+
+/**
+ * Minimal implementation for using FontAwesome icons.
+ */
+public class FontAwesomeIcon extends Text {
+
+    //TODO generate full enum from FontAwesome catalog
+    public enum Symbol {
+        CHEVRON_CIRCLE_LEFT('\uf137'),
+        CHEVRON_CIRCLE_RIGHT('\uf138'),
+        CUBES('\uf1b3'),
+        DEAF('\uf2a4'),
+        FLAG('\uf024'),
+        PAUSE('\uf04c'),
+        TAXI('\uf1ba'),
+        USER_SECRET('\uf21b');
+
+        Symbol(char unicode) {
+            this.unicode = unicode;
+        }
+
+        private final char unicode;
+    }
+
+    static final Font FONT;
+
+    static {
+        final var url = FontAwesomeIcon.class.getResource("/de/amr/pacmanfx/uilib/fonts/Font Awesome 7 Free-Solid-900.otf");
+        FONT = url != null ? Font.loadFont(url.toExternalForm(), 20) : Font.font(20);
+    }
+
+    public static FontAwesomeIcon of(Symbol symbol, double size, Color color) {
+        requireNonNull(symbol);
+        requireNonNull(color);
+        final FontAwesomeIcon icon = new FontAwesomeIcon();
+        icon.setFill(color);
+        icon.setFont(Font.font(FONT.getFamily(), size));
+        icon.setText(String.valueOf(symbol.unicode));
+        return icon;
+    }
+}
