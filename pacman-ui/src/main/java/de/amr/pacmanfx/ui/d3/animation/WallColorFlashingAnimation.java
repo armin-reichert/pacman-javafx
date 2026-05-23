@@ -67,6 +67,6 @@ public class WallColorFlashingAnimation extends ManagedAnimation {
     }
 
     private PhongMaterial wallTopMaterial() {
-        return level3D.maze3D().materials().wallTop();
+        return level3D.maze3D().materials().get("wallTopMaterial");
     }
 }

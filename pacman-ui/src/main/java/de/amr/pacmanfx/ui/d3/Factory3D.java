@@ -26,6 +26,8 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 
+import java.util.Map;
+
 public interface Factory3D extends Disposable {
 
     Maze3D createMaze3D(
@@ -68,5 +70,5 @@ public interface Factory3D extends Disposable {
 
     Energizer3D createEnergizer3D(EnergizerConfig3D config, AnimationRegistry animations, PhongMaterial material);
 
-    MazeMaterials3D createMazeMaterials(WorldMapColorScheme colorScheme, DoubleProperty wallOpacity, ObjectProperty<Color> floorColor);
+    Map<String, PhongMaterial> createMazeMaterials(WorldMapColorScheme colorScheme, DoubleProperty wallOpacity, ObjectProperty<Color> floorColor);
 }

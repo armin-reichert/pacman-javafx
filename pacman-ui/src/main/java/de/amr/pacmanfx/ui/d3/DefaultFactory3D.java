@@ -53,17 +53,26 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public MazeMaterials3D createMazeMaterials(WorldMapColorScheme colorScheme, DoubleProperty wallOpacity, ObjectProperty<Color> floorColor) {
-        final PhongMaterial floorMaterial = colorBoundPhongMaterial(floorColor);
-        floorMaterial.setSpecularPower(FLOOR_SPECULAR_POWER);
+    public Map<String, PhongMaterial> createMazeMaterials(WorldMapColorScheme colorScheme, DoubleProperty wallOpacity, ObjectProperty<Color> floorColor) {
 
-        final PhongMaterial wallBaseMaterial = colorBoundPhongMaterial(wallOpacity.map(
-            opacity -> UfxColors.colorWithOpacity(Color.valueOf(colorScheme.wallStroke()), opacity.doubleValue())));
+        final PhongMaterial floorMaterial = new PhongMaterial();
+        floorMaterial.diffuseColorProperty().bind(floorColor);
+        floorMaterial.setSpecularPower(FLOOR_SPECULAR_POWER);
+        floorMaterial.setSpecularColor(Color.rgb(220, 220, 220));
+
+        final PhongMaterial wallBaseMaterial = colorBoundPhongMaterial(
+            wallOpacity.map(opacity ->
+                UfxColors.colorWithOpacity(
+                    Color.valueOf(colorScheme.wallStroke()), opacity.doubleValue())));
         wallBaseMaterial.setSpecularPower(WALL_BASE_SPECULAR_POWER);
 
         final PhongMaterial wallTopMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.wallFill()));
 
-        return new MazeMaterials3D(floorMaterial, wallBaseMaterial, wallTopMaterial);
+        return Map.of(
+            "floorMaterial", floorMaterial,
+            "wallBaseMaterial", wallBaseMaterial,
+            "wallTopMaterial", wallTopMaterial
+        );
     }
 
     @Override

@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.d3.entities;
 
-import de.amr.basics.Disposable;
 import de.amr.basics.StopWatch;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
@@ -15,7 +14,6 @@ import de.amr.pacmanfx.ui.config.EntityConfig;
 import de.amr.pacmanfx.ui.config.FloorConfig3D;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.d3.Factory3D;
-import de.amr.pacmanfx.ui.d3.MazeMaterials3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.world.TerrainRenderer3D;
@@ -26,9 +24,11 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import org.tinylog.Logger;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -36,38 +36,23 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Renders the complete 3D representation of a Pac-Man maze for a single level.
- * <p>
- * {@code Maze3D} is the top-level container that assembles and manages all visual 3D elements:
- * <ul>
- *   <li>{@link MazeMaterials3D} – shared materials and property bindings</li>
- *   <li>{@link MazeHouse3D} – the ghost house (if the map contains one)</li>
- * </ul>
- * <p>
- * It also exposes a dedicated {@link #particlesGroup()} for dynamic effects such as energizer explosions.
- * <p>
- * This class extends {@link Group} so it can be added directly to a JavaFX scene graph.
- * It implements {@link Disposable} to ensure all 3D resources are released when a level ends.
- * <p>
- * <strong>Note:</strong> {@code floor3D}, {@code food3D} and {@code particlesGroup} are created
- * but <em>not</em> added as children by this class; the caller is responsible for adding them.
- *
- * @see MazeHouse3D
- * @see MazeMaterials3D
  */
 public class Maze3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
     private static void addObstacles(
         Group group,
         TerrainLayer terrain,
-        float wallThickness, float cornerRadius, MazeMaterials3D materials, DoubleProperty wallBaseHeight)
+        float wallThickness, float cornerRadius,
+        Map<String, PhongMaterial> materials,
+        DoubleProperty wallBaseHeight)
     {
         final TerrainRenderer3D renderer3D = new TerrainRenderer3D();
         final House house = terrain.optHouse().orElse(null);
         final var wall3DCount = new AtomicInteger(0);
         renderer3D.setOnWallCreated(wall3D -> {
             wall3DCount.incrementAndGet();
-            wall3D.setBaseMaterial(materials.wallBase());
-            wall3D.setTopMaterial(materials.wallTop());
+            wall3D.setBaseMaterial(materials.get("wallBaseMaterial"));
+            wall3D.setTopMaterial(materials.get("wallTopMaterial"));
             wall3D.bindBaseHeight(wallBaseHeight);
             wall3D.base().drawModeProperty().bind(GameUIConstants.PROPERTY_3D_DRAW_MODE);
             wall3D.top().drawModeProperty().bind(GameUIConstants.PROPERTY_3D_DRAW_MODE);
@@ -104,7 +89,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
 
     private final ObjectProperty<Color> floorColor = new SimpleObjectProperty<>(Color.GRAY);
 
-    private MazeMaterials3D materials3D;
+    private final Map<String, PhongMaterial> materials;
     private Box floor3D;
     private MazeHouse3D house3D;
 
@@ -133,7 +118,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         requireNonNull(entityConfig);
         requireNonNull(animations);
 
-        materials3D = factory3D.createMazeMaterials(colorScheme, wallOpacity, floorColor);
+        materials = factory3D.createMazeMaterials(colorScheme, wallOpacity, floorColor);
 
         createAndAddFloor3D(entityConfig.floor(), terrain);
         createAndAddObstacles3D(entityConfig.maze(), terrain);
@@ -165,8 +150,8 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
     }
 
     /** @return the shared materials used by all maze components */
-    public MazeMaterials3D materials() {
-        return materials3D;
+    public Map<String, PhongMaterial> materials() {
+        return materials;
     }
 
     /** @return the floor component */
@@ -199,7 +184,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         wallBaseHeight.unbind();
         wallOpacity.unbind();
 
-        materials3D = null;
+        materials.clear();
 
         if (house3D != null) {
             house3D.dispose();
@@ -217,7 +202,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
     private void createAndAddObstacles3D(MazeConfig3D mazeConfig, TerrainLayer terrain) {
         final float wallThickness = mazeConfig.obstacleWallThickness();
         final float cornerRadius  = mazeConfig.obstacleCornerRadius();
-        addObstacles(this, terrain, wallThickness, cornerRadius, materials3D, wallBaseHeight);
+        addObstacles(this, terrain, wallThickness, cornerRadius, materials, wallBaseHeight);
     }
 
     private void createAndAddFloor3D(FloorConfig3D floorConfig, TerrainLayer terrain) {
@@ -228,7 +213,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
 
         floor3D = new Box(width, height, thickness);
         floor3D.drawModeProperty().bind(GameUIConstants.PROPERTY_3D_DRAW_MODE);
-        floor3D.setMaterial(materials3D.floor());
+        floor3D.setMaterial(materials.get("floorMaterial"));
 
         floor3D.setTranslateX(0.5 * width - floorConfig.padding());
         floor3D.setTranslateY(0.5 * height);
