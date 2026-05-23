@@ -8,7 +8,6 @@ import de.amr.meshbuilder.MeshBuilder;
 import de.amr.objparser.ObjFileParser;
 import de.amr.objparser.ObjModel;
 import javafx.scene.shape.Mesh;
-import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
 
@@ -62,26 +61,19 @@ public class PacManWorld3D {
     private static final String ID_PAC_EYES       = "PacManEyes.PacManEyes_grey_wall";
     private static final String ID_PAC_PALATE     = "PacManPalate.PacManPalate_grey_wall";
 
-    private static final String ID_PELLET          = "Object.Pellet";
-
     private static final Set<String> MESH_IDs = Set.of(
         ID_GHOST_DRESS,
         ID_GHOST_EYEBALLS,
         ID_GHOST_PUPILS,
         ID_PAC_HEAD,
         ID_PAC_EYES,
-        ID_PAC_PALATE,
-        ID_PELLET
+        ID_PAC_PALATE
     );
-
-    // Pellet 3D model
-    private static final String PELLET_OBJ_FILE = "/de/amr/pacmanfx/uilib/model3D/pellet.obj";
 
     private Map<String, Mesh> meshes;
 
     private PacManWorld3D() throws IOException {
         loadPacManWorldModel();
-        loadPelletModel();
         MESH_IDs.forEach(meshID -> requireNonNull(meshes.get(meshID)));
     }
 
@@ -95,18 +87,6 @@ public class PacManWorld3D {
         meshes = meshBuilder.buildMeshViewsByGroup(MESH_IDs::contains)
             .entrySet().stream()
             .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getMesh()));
-    }
-
-    private void loadPelletModel() throws IOException {
-        final URL url = getClass().getResource(PELLET_OBJ_FILE);
-        if (url == null) {
-            throw new ExceptionInInitializerError("Unable to create 3D model from .obj file " + PELLET_OBJ_FILE);
-        }
-        final ObjModel objModel = new ObjFileParser(url, StandardCharsets.UTF_8).parse();
-        final MeshBuilder builder = new MeshBuilder(objModel);
-        final MeshView pelletMeshView = builder.buildMeshViewsByObject(ID_PELLET::equals).get(ID_PELLET);
-        requireNonNull(pelletMeshView);
-        meshes.put(ID_PELLET, pelletMeshView.getMesh());
     }
 
     public Mesh ghostDressMesh() {
@@ -132,6 +112,4 @@ public class PacManWorld3D {
     public Mesh pacEyesMesh() {
         return meshes.get(ID_PAC_EYES);
     }
-
-    public Mesh pelletMesh() { return meshes.get(ID_PELLET); }
 }
