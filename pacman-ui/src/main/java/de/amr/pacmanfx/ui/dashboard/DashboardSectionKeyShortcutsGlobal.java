@@ -34,7 +34,7 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
                 .sorted(Comparator.comparing(KeyCombination::getDisplayText))
                 .forEach(key -> {
                     final GameAction action = bindingMap.get(key);
-                    final String actionText = ui.translate(action.name());
+                    final String actionText = ui.translator().translate(action.name());
                     final Label label = createLabel(actionText, action.isEnabled(ui));
                     addRow(key.getDisplayText(), label);
                 });

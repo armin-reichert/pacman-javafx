@@ -6,8 +6,8 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.CanonicalGameState;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
@@ -78,7 +78,8 @@ public final class CommonGameActions {
         public void execute(GameUI ui) {
             PerspectiveID id = GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.get().next();
             GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(id);
-            String msgKey = ui.translate("camera_perspective", ui.translate("perspective_id_" + id.name()));
+            String msgKey = ui.translator().translate("camera_perspective",
+                ui.translator().translate("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
     };
@@ -88,7 +89,8 @@ public final class CommonGameActions {
         public void execute(GameUI ui) {
             PerspectiveID id = GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.get().prev();
             GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(id);
-            String msgKey = ui.translate("camera_perspective", ui.translate("perspective_id_" + id.name()));
+            String msgKey = ui.translator().translate("camera_perspective",
+                ui.translator().translate("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
     };
@@ -274,7 +276,8 @@ public final class CommonGameActions {
         public void execute(GameUI ui) {
             toggleBoolean(GameUIConstants.PROPERTY_MINI_VIEW_ON);
             if (!ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D)) {
-                ui.showFlashMessage(ui.translate(GameUIConstants.PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
+                ui.showFlashMessage(ui.translator().translate(GameUIConstants.PROPERTY_MINI_VIEW_ON.get()
+                    ? "pip_on" : "pip_off"));
             }
         }
     };
@@ -311,7 +314,7 @@ public final class CommonGameActions {
             toggleBoolean(GameUIConstants.PROPERTY_3D_ENABLED);
             if (!isPlaySceneActive(ui)) {
                 final boolean usePlayScene3D = GameUIConstants.PROPERTY_3D_ENABLED.get();
-                ui.showFlashMessage(ui.translate(usePlayScene3D ? "use_3D_scene" : "use_2D_scene"));
+                ui.showFlashMessage(ui.translator().translate(usePlayScene3D ? "use_3D_scene" : "use_2D_scene"));
             }
             if (canSwitchSceneNow(game)) {
                 final PlayView playView = ui.views().getView(ViewID.PLAY_VIEW, PlayView.class);

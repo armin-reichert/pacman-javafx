@@ -151,6 +151,6 @@ public class StartPagesCarousel extends Carousel implements View {
 
     private String composeTitle() {
         final String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
-        return ui != null ? ui.translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
+        return ui != null ? ui.translator().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
     }
 }

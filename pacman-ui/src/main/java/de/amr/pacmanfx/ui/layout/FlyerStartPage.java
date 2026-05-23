@@ -32,7 +32,7 @@ public class FlyerStartPage extends StackPane implements StartPage {
 
     public static Node createStartButton(GameUI ui) {
         final var startButton = new FancyButton(
-            ui.translate("play_button"),
+            ui.translator().translate("play_button"),
             DEFAULT_START_BUTTON_FONT, DEFAULT_START_BUTTON_BGCOLOR, DEFAULT_START_BUTTON_FILLCOLOR);
         startButton.setAction(() -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
         startButton.setTranslateY(-50);

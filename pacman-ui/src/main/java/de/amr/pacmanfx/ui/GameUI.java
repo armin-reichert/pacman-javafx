@@ -46,48 +46,55 @@ import java.util.Optional;
  * <h2>Translation</h2>
  * Extends {@link Translator} so all UI text can be localized.
  */
-public interface GameUI extends Translator {
+public interface GameUI {
 
     // ---------------------------------------------------------------------------------------------
     // Accessors
     // ---------------------------------------------------------------------------------------------
 
     /**
-     * Returns the watchdog monitoring the directory where user-defined maps are stored.
+     * @return  the watchdog monitoring the directory where user-defined maps are stored.
      * <p>
      * Implementations typically start this watcher during initialization.
      */
     DirectoryWatchdog customDirWatchdog();
 
     /**
-     * Returns the non-UI game context (model, variants, rules, etc.).
+     * @return the non-UI game context (model, variants, rules, etc.).
      * <p>
      * This is the primary entry point for interacting with the game engine.
      */
     GameContext gameContext();
 
     /**
-     * Returns the primary JavaFX stage.
+     * @return  the primary JavaFX stage.
      * <p>
      * Implementations own and configure this stage.
      */
     Stage stage();
 
     /**
-     * Returns the sound manager responsible for playing sound effects.
+     * @return the sound manager responsible for playing sound effects.
      */
     SoundManager soundManager();
 
+    /**
+     * @return the set of all sprite animations
+     */
     SpriteAnimationSet spriteAnimationSet();
 
     /**
-     * Returns the preferences manager storing UI-related settings.
+     * @return the preferences manager storing UI-related settings.
      */
     PreferencesManager prefs();
 
     /**
-     * Returns the voice player used for sequential voice playback.
-     * <p>
+     * @return translation service for localized UI messages
+     */
+    Translator translator();
+
+    /**
+     * @return the voice player used for sequential voice playback.
      * Only one voice clip plays at a time.
      */
     VoiceManager voicePlayer();
@@ -120,7 +127,7 @@ public interface GameUI extends Translator {
     // ---------------------------------------------------------------------------------------------
 
     /**
-     * Returns the configuration of the currently active game scene.
+     * @return the configuration of the currently active game scene.
      * <p>
      * This includes scene type, camera mode, and other scene-specific settings.
      */
@@ -137,7 +144,7 @@ public interface GameUI extends Translator {
     void forceGameSceneUpdate();
 
     /**
-     * Returns the current game scene if existing.
+     * @return the current game scene if existing.
      * @return (optional) game scene
      */
     Optional<GameScene> optGameScene();
@@ -147,7 +154,7 @@ public interface GameUI extends Translator {
     // ---------------------------------------------------------------------------------------------
 
     /**
-     * Returns the manager responsible for all UI views (start pages, play view, editor, etc.).
+     * @return the manager responsible for all UI views (start pages, play view, editor, etc.).
      */
     ViewManager views();
 
@@ -172,19 +179,19 @@ public interface GameUI extends Translator {
     // ---------------------------------------------------------------------------------------------
 
     /**
-     * Returns the manager for UI configurations per game variant.
+     * @return the manager for UI configurations per game variant.
      */
     UIConfigManager uiConfigManager();
 
     /**
-     * Returns the UI configuration for the specified game variant.
+     * @return the UI configuration for the specified game variant.
      *
      * @param gameVariantName name of the variant
      */
     UIConfig config(String gameVariantName);
 
     /**
-     * Returns the current UI configuration, cast to the expected type.
+     * @return the current UI configuration, cast to the expected type.
      *
      * @param <T> expected configuration type
      */

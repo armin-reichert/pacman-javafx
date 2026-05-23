@@ -73,7 +73,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
      */
     public PlayScene3D(GameUI ui) {
         super(ui);
-        gameOverMessagePicker = new RandomTextPicker(ui.translator(), "game.over");
+        gameOverMessagePicker = new RandomTextPicker(ui.translator().resources(), "game.over");
         createSubScene();
         createBindings();
         bindActions();
@@ -107,7 +107,8 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         } else {
-            scores3D.showTextForScore(ui.translate("score.game_over"), ui.currentConfig().assets().color("color.game_over_message"));
+            scores3D.showTextForScore(ui.translator().translate("score.game_over"),
+                ui.currentConfig().assets().color("color.game_over_message"));
         }
 
         // High score is always visible
@@ -274,7 +275,11 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     private void replaceScores3D() {
         final Scores3D oldScores3D = scores3D;
 
-        scores3D = new Scores3D(ui.translate("score.score"), ui.translate("score.high_score"), GameUIConstants.FONT_ARCADE_8);
+        scores3D = new Scores3D(
+            ui.translator().translate("score.score"),
+            ui.translator().translate("score.high_score"),
+            GameUIConstants.FONT_ARCADE_8);
+
         scores3D.textOpacity.bind(scoreOpacity);
 
         // Scores are always displayed towards viewer, independent of camera perspective

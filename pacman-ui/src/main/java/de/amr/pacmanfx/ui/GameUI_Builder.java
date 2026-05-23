@@ -168,7 +168,7 @@ public class GameUI_Builder {
             }
         }
 
-        ui.dashboard().addCommonSections(ui, dashboardIDs);
+        ui.dashboard().addCommonSections(ui.translator(), dashboardIDs);
 
         return ui;
     }

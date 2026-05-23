@@ -25,6 +25,7 @@ import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
+import de.amr.pacmanfx.uilib.assets.Translator;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
@@ -52,7 +53,6 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.ui.layout.ViewManager.ViewID.*;
@@ -88,6 +88,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private final VoiceManager voiceManager = new VoiceManager();
     private final GameContext gameContext;
     private final ViewManager viewManager;
+    private final Translator translator;
 
     private final Stage stage;
     private final StackPane sceneLayout = new StackPane();
@@ -115,6 +116,9 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         viewManager.setPlayView(new PlayView(this, scene, DEFAULT_DASHBOARD_CONFIG));
         viewManager.setEditorViewFactory(this::createEditorView);
 
+        translator = () -> GameUIConstants.LOCALIZED_TEXTS;
+        spriteAnimationTimer.setSpriteAnimationSet(spriteAnimationSet);
+
         BaseRenderer.setArcadeFont(GameUIConstants.FONT_ARCADE_8);
 
         initLayout(mainSceneWidth,mainSceneHeight);
@@ -126,8 +130,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
         // preload to make 3D scene creation faster
         load3DModels();
-
-        spriteAnimationTimer.setSpriteAnimationSet(spriteAnimationSet);
     }
 
     private void initGameClock() {
@@ -363,8 +365,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
-    public ResourceBundle translator() {
-        return GameUIConstants.LOCALIZED_TEXTS;
+    public Translator translator() {
+        return translator;
     }
 
     @Override
@@ -526,13 +528,13 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         boolean debug, boolean is3D, boolean paused)
     {
         if (view == null) {
-            return translate("view.missing"); // Should never happen
+            return translator.translate("view.missing"); // Should never happen
         }
         if (view.titleSupplier().isPresent()) {
             return view.titleSupplier().get().get();
         }
         final String appTitle = paused ? "app.title.paused" : "app.title";
-        final String viewMode = translate(is3D ? "threeD" : "twoD");
+        final String viewMode = translator.translate(is3D ? "threeD" : "twoD");
         final AssetMap assets = gameContext.gameVariantName() != null ? currentConfig().assets() : null;
         final String normalTitle = assets == null ? "" : assets.translate(appTitle, viewMode);
         return gameScene == null || !debug

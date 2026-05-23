@@ -89,6 +89,6 @@ public class ArcadePacMan_App extends Application {
         startPagesCarousel.addStartPage(startPage);
         startPagesCarousel.setSelectedIndex(0);
 
-        ui.dashboard().addCommonSections(ui, DASHBOARD_IDs);
+        ui.dashboard().addCommonSections(ui.translator(), DASHBOARD_IDs);
     }
 }

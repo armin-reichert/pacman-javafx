@@ -27,7 +27,7 @@ public final class CheatActions {
             realLevel(game).ifPresent(_ -> {
                 game.addLives(3);
                 game.cheats().raiseFlag();
-                ui.showFlashMessage(ui.translate("cheat_add_lives", game.lifeCount()));
+                ui.showFlashMessage(ui.translator().translate("cheat_add_lives", game.lifeCount()));
             });
         }
 
@@ -128,7 +128,7 @@ public final class CheatActions {
         }
         game.cheats().usingAutopilotProperty().set(on);
         ui.voicePlayer().playVoice(on ? GameUIConstants.VOICE_AUTOPILOT_ON : GameUIConstants.VOICE_AUTOPILOT_OFF);
-        ui.showFlashMessage(ui.translate(on ? "autopilot_on" : "autopilot_off"));
+        ui.showFlashMessage(ui.translator().translate(on ? "autopilot_on" : "autopilot_off"));
 
     }
 
@@ -158,7 +158,7 @@ public final class CheatActions {
         final Game game = ui.gameContext().game();
         game.cheats().immuneProperty().set(on);
         ui.voicePlayer().playVoice(on ? GameUIConstants.VOICE_IMMUNITY_ON : GameUIConstants.VOICE_IMMUNITY_OFF);
-        ui.showFlashMessage(ui.translate(on ? "player_immunity_on" : "player_immunity_off"));
+        ui.showFlashMessage(ui.translator().translate(on ? "player_immunity_on" : "player_immunity_off"));
     }
 
     private static Optional<GameLevel> realLevel(Game game) {
