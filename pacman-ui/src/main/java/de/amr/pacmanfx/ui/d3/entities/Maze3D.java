@@ -181,8 +181,6 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         wallBaseHeight.unbind();
         wallOpacity.unbind();
 
-        materials.clear();
-
         if (house3D != null) {
             house3D.dispose();
             house3D = null;
