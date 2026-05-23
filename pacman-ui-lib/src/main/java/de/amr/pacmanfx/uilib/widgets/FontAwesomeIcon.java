@@ -7,6 +7,9 @@ package de.amr.pacmanfx.uilib.widgets;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.tinylog.Logger;
+
+import java.net.URL;
 
 import static java.util.Objects.requireNonNull;
 
@@ -33,11 +36,16 @@ public class FontAwesomeIcon extends Text {
         private final char unicode;
     }
 
-    static final Font FONT;
+    private static final Font FONT;
 
     static {
-        final var url = FontAwesomeIcon.class.getResource("/de/amr/pacmanfx/uilib/fonts/fa7/Font Awesome 7 Free-Solid-900.otf");
-        FONT = url != null ? Font.loadFont(url.toExternalForm(), 20) : Font.font(20);
+        final URL url = FontAwesomeIcon.class.getResource("/de/amr/pacmanfx/uilib/fonts/fa7/Font Awesome 7 Free-Solid-900.otf");
+        if (url != null) {
+            FONT = Font.loadFont(url.toExternalForm(), 20);
+        } else {
+            Logger.error("Could not load Font Awesome fonts");
+            FONT = Font.font(20);
+        }
     }
 
     public static FontAwesomeIcon of(Symbol symbol, double size, Color color) {
