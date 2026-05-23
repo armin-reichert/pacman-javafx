@@ -11,7 +11,7 @@ import javafx.scene.text.Text;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Minimal implementation for using FontAwesome icons.
+ * A text control displaying a FontAwesome icon.
  */
 public class FontAwesomeIcon extends Text {
 
@@ -36,7 +36,7 @@ public class FontAwesomeIcon extends Text {
     static final Font FONT;
 
     static {
-        final var url = FontAwesomeIcon.class.getResource("/de/amr/pacmanfx/uilib/fonts/Font Awesome 7 Free-Solid-900.otf");
+        final var url = FontAwesomeIcon.class.getResource("/de/amr/pacmanfx/uilib/fonts/fa7/Font Awesome 7 Free-Solid-900.otf");
         FONT = url != null ? Font.loadFont(url.toExternalForm(), 20) : Font.font(20);
     }
 
