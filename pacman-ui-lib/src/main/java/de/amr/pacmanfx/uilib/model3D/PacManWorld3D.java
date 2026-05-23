@@ -90,8 +90,8 @@ public class PacManWorld3D {
         if (url == null) {
             throw new ExceptionInInitializerError("Unable to create 3D model from .obj file " + PAC_MAN_WORLD_OBJ_FILE);
         }
-        final ObjModel onj = new ObjFileParser(url, StandardCharsets.UTF_8).parse();
-        final MeshBuilder meshBuilder = new MeshBuilder(onj);
+        final ObjModel objModel = new ObjFileParser(url, StandardCharsets.UTF_8).parse();
+        final MeshBuilder meshBuilder = new MeshBuilder(objModel);
         meshes = meshBuilder.buildMeshViewsByGroup(MESH_IDs::contains)
             .entrySet().stream()
             .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getMesh()));

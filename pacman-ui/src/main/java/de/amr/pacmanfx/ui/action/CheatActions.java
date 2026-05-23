@@ -20,14 +20,14 @@ import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 
 public final class CheatActions {
 
-    public static final GameAction ACTION_ADD_LIVES = new GameAction("CHEAT_ADD_LIVES") {
+    public static final GameAction ACTION_ADD_LIVES = new GameAction("cheat_add_lives") {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
             realLevel(game).ifPresent(_ -> {
                 game.addLives(3);
                 game.cheats().raiseFlag();
-                ui.showFlashMessage(ui.translator().translate("cheat_add_lives", game.lifeCount()));
+                ui.showFlashMessage(ui.translator().translate(resourceBundleKey(), game.lifeCount()));
             });
         }
 
@@ -35,7 +35,7 @@ public final class CheatActions {
         public boolean isEnabled(GameUI ui) { return realLevel(ui.gameContext().game()).isPresent(); }
     };
 
-    public static final GameAction ACTION_EAT_ALL_PELLETS = new GameAction("CHEAT_EAT_ALL_PELLETS") {
+    public static final GameAction ACTION_EAT_ALL_PELLETS = new GameAction("cheat_eat_all_pellets") {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
@@ -54,7 +54,7 @@ public final class CheatActions {
         }
     };
 
-    public static final GameAction ACTION_KILL_GHOSTS = new GameAction("CHEAT_KILL_GHOSTS") {
+    public static final GameAction ACTION_KILL_GHOSTS = new GameAction("cheat_kill_ghosts") {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
@@ -77,7 +77,7 @@ public final class CheatActions {
         }
     };
 
-    public static final GameAction ACTION_ENTER_NEXT_LEVEL = new GameAction("CHEAT_ENTER_NEXT_LEVEL") {
+    public static final GameAction ACTION_ENTER_NEXT_LEVEL = new GameAction("cheat_enter_next_level") {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
@@ -97,7 +97,7 @@ public final class CheatActions {
         }
     };
 
-    public static final GameAction ACTION_TOGGLE_AUTOPILOT = new GameAction("TOGGLE_AUTOPILOT") {
+    public static final GameAction ACTION_TOGGLE_AUTOPILOT = new GameAction("toggle_autopilot") {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
@@ -105,14 +105,14 @@ public final class CheatActions {
         }
     };
 
-    public static final GameAction ACTION_ACTIVATE_AUTOPILOT = new GameAction("ACTIVATE_AUTOPILOT") {
+    public static final GameAction ACTION_ACTIVATE_AUTOPILOT = new GameAction("activate_autopilot") {
         @Override
         public void execute(GameUI ui) {
             setAutopilot(ui, true);
         }
     };
 
-    public static final GameAction ACTION_DEACTIVATE_AUTOPILOT = new GameAction("DEACTIVATE_AUTOPILOT") {
+    public static final GameAction ACTION_DEACTIVATE_AUTOPILOT = new GameAction("deactivate_autopilot") {
         @Override
         public void execute(GameUI ui) {
             setAutopilot(ui, false);
@@ -132,21 +132,21 @@ public final class CheatActions {
 
     }
 
-    public static final GameAction ACTION_ACTIVATE_IMMUNITY = new GameAction("ACTIVATE_IMMUNITY") {
+    public static final GameAction ACTION_ACTIVATE_IMMUNITY = new GameAction("activate_immunity") {
         @Override
         public void execute(GameUI ui) {
             setImmunity(ui, true);
         }
     };
 
-    public static final GameAction ACTION_DEACTIVATE_IMMUNITY = new GameAction("DEACTIVATE_IMMUNITY") {
+    public static final GameAction ACTION_DEACTIVATE_IMMUNITY = new GameAction("deactivate_immunity") {
         @Override
         public void execute(GameUI ui) {
             setImmunity(ui, false);
         }
     };
 
-    public static final GameAction ACTION_TOGGLE_IMMUNITY = new GameAction("TOGGLE_IMMUNITY") {
+    public static final GameAction ACTION_TOGGLE_IMMUNITY = new GameAction("toggle_immunity") {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();

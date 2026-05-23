@@ -94,6 +94,6 @@ public class GameActionBindingsManager implements ActionBindingsManager {
         // Sort output by key combination display text
         actionByKeyCombination.entrySet().stream()
             .sorted(Comparator.comparing(e -> e.getKey().toString()))
-            .forEach(e -> Logger.debug("%-20s: %s".formatted(e.getKey(), e.getValue().name())));
+            .forEach(e -> Logger.debug("%-20s: %s".formatted(e.getKey(), e.getValue().resourceBundleKey())));
     }
 }

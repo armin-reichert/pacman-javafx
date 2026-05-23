@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.ui.d3.camera;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.GameAction;
@@ -67,9 +66,9 @@ public class PerspectiveManager implements Disposable {
         perspectivesByID.put(PerspectiveID.NEAR_PLAYER,   new StalkingPlayerPerspective(camera));
 
         // Initialize drone control actions
-        actionDroneClimb   = createDroneAction("DRONE_CLIMB",   DronePerspective::moveUp);
-        actionDroneDescent = createDroneAction("DRONE_DESCENT", DronePerspective::moveDown);
-        actionDroneReset   = createDroneAction("DRONE_RESET",   DronePerspective::moveDefaultHeight);
+        actionDroneClimb   = createDroneAction("drone_climb",   DronePerspective::moveUp);
+        actionDroneDescent = createDroneAction("drone_descent", DronePerspective::moveDown);
+        actionDroneReset   = createDroneAction("drone_reset",   DronePerspective::moveDefaultHeight);
 
         // Automatically (de)activate control when perspective changes
         activeID.addListener((_, oldID, newID) -> {
@@ -135,8 +134,6 @@ public class PerspectiveManager implements Disposable {
 
     /**
      * Updates the currently active perspective with the latest game level state.
-     * <p>
-     * Called once per frame from {@link PlayScene3D#update(Game)}.
      *
      * @param level the current game level
      */
@@ -152,12 +149,12 @@ public class PerspectiveManager implements Disposable {
      * <p>
      * The returned action is only enabled when the drone perspective is active.
      *
-     * @param name             the action name (for debugging/identification)
+     * @param id             the action ID
      * @param perspectiveAction the function to invoke on the drone perspective
      * @return a new {@link GameAction} instance
      */
-    private GameAction createDroneAction(String name, Consumer<DronePerspective> perspectiveAction) {
-        return new GameAction(name) {
+    private GameAction createDroneAction(String id, Consumer<DronePerspective> perspectiveAction) {
+        return new GameAction(id) {
             @Override
             public void execute(GameUI ui) {
                 currentPerspective()

@@ -12,10 +12,10 @@ import org.tinylog.Logger;
  */
 public abstract class GameAction {
 
-    private final String name;
+    private final String id;
 
-    protected GameAction(String name) {
-        this.name = Validations.requireValidIdentifier(name);
+    protected GameAction(String id) {
+        this.id = Validations.requireValidIdentifier(id);
     }
 
     public abstract void execute(GameUI ui);
@@ -23,15 +23,19 @@ public abstract class GameAction {
     public final boolean executeIfEnabled(GameUI ui) {
         if (isEnabled(ui)) {
             execute(ui);
-            Logger.trace("Action '{}' executed", name);
+            Logger.trace("Action '{}' executed", id);
             return true;
         } else {
-            Logger.warn("Action '{}' not executed (disabled)", name);
+            Logger.warn("Action '{}' not executed (disabled)", id);
             return false;
         }
     }
 
+    public String id() {
+        return id;
+    }
+
     public boolean isEnabled(GameUI ui) { return true; }
 
-    public String name() { return name; }
+    public String resourceBundleKey() { return "action." + id; }
 }

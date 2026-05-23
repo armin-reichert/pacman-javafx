@@ -114,7 +114,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     /**
      * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
      */
-    public static final GameAction ACTION_INSERT_COIN = new GameAction("INSERT_COIN") {
+    public static final GameAction ACTION_INSERT_COIN = new GameAction("insert_coin") {
         @Override
         public void execute(GameUI ui) {
             final CoinMechanism slot = ui.gameContext().coinMechanism();
@@ -142,7 +142,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         }
     };
 
-    public static final GameAction ACTION_START_GAME = new GameAction("START_GAME") {
+    public static final GameAction ACTION_START_GAME = new GameAction("start_game") {
         @Override
         public void execute(GameUI ui) {
             ui.voicePlayer().stopVoice();

@@ -11,7 +11,7 @@ import javafx.util.Duration;
 
 public class TestActions {
 
-    public static final GameAction ACTION_CUT_SCENES_TEST = new GameAction("TEST_CUT_SCENES") {
+    public static final GameAction ACTION_CUT_SCENES_TEST = new GameAction("test_cut_scenes") {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().game().flow().enterStateWithName(CutScenesTestState.class.getSimpleName());
@@ -24,7 +24,7 @@ public class TestActions {
         }
     };
 
-    public static final GameAction ACTION_SHORT_LEVEL_TEST = new GameAction("SHORT_LEVEL_TEST") {
+    public static final GameAction ACTION_SHORT_LEVEL_TEST = new GameAction("short_level_test") {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().game().flow().restartStateWithName(LevelShortTestState.class.getSimpleName());
@@ -37,7 +37,7 @@ public class TestActions {
         }
     };
 
-    public static final GameAction ACTION_MEDIUM_LEVEL_TEST = new GameAction("MEDIUM_LEVEL_TEST") {
+    public static final GameAction ACTION_MEDIUM_LEVEL_TEST = new GameAction("medium_level_test") {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().game().flow().restartStateWithName(LevelMediumTestState.class.getSimpleName());

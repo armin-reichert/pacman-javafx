@@ -44,14 +44,14 @@ public class StartPagesCarousel extends Carousel implements View {
     //TODO start pages should define their preferred duration
     public static final int PAGE_CHANGE_SECONDS = 90;
 
-    private final GameAction actionShowPrevPage = new GameAction("SHOW_PREV_PAGE") {
+    private final GameAction actionShowPrevPage = new GameAction("show_prev_page") {
         @Override
         public void execute(GameUI ui) {
             showPreviousItem();
         }
     };
 
-    private final GameAction actionShowNextPage = new GameAction("SHOW_NEXT_PAGE") {
+    private final GameAction actionShowNextPage = new GameAction("show_next_page") {
         @Override
         public void execute(GameUI ui) {
             showNextItem();

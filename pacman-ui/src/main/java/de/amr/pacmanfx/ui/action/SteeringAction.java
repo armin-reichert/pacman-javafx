@@ -11,10 +11,15 @@ import de.amr.pacmanfx.ui.GameUI;
 import static java.util.Objects.requireNonNull;
 
 public class SteeringAction extends GameAction {
+
+    private static String makeID(Direction dir) {
+        return "steer_pac_%s".formatted(dir.name().toLowerCase());
+    }
+
     private final Direction dir;
 
     public SteeringAction(Direction dir) {
-        super("STEER_PAC_" + dir);
+        super(makeID(requireNonNull(dir)));
         this.dir = requireNonNull(dir);
     }
 

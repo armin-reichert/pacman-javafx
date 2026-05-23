@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.uilib.Ufx.toggleBoolean;
 
 public interface TengenMsPacMan_Actions {
 
-    GameAction ACTION_ENTER_START_SCREEN = new GameAction("ENTER_START_SCREEN") {
+    GameAction ACTION_ENTER_START_SCREEN = new GameAction("enter_start_screen") {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
@@ -26,7 +26,7 @@ public interface TengenMsPacMan_Actions {
         }
     };
 
-    GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction("QUIT_DEMO_LEVEL") {
+    GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction("quit_demo_level") {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
@@ -40,7 +40,7 @@ public interface TengenMsPacMan_Actions {
         }
     };
 
-    GameAction ACTION_START_PLAYING = new GameAction("START_PLAYING") {
+    GameAction ACTION_START_PLAYING = new GameAction("start_playing") {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
@@ -48,7 +48,7 @@ public interface TengenMsPacMan_Actions {
         }
     };
 
-    GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction("TOGGLE_PLAY_SCENE_DISPLAY_MODE") {
+    GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction("toggle_play_scene_display_mode") {
         @Override
         public void execute(GameUI ui) {
             SceneDisplayMode mode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
@@ -63,14 +63,14 @@ public interface TengenMsPacMan_Actions {
         }
     };
 
-    GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY = new GameAction("TOGGLE_JOYPAD_BINDINGS_DISPLAYED") {
+    GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY = new GameAction("toggle_joypad_bindings_displayed") {
         @Override
         public void execute(GameUI ui) {
             toggleBoolean(PROPERTY_JOYPAD_BINDINGS_DISPLAYED);
         }
     };
 
-    GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction("TOGGLE_PAC_BOOSTER") {
+    GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction("toggle_pac_booster") {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
