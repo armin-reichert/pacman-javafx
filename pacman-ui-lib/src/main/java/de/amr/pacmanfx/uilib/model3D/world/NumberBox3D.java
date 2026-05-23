@@ -4,13 +4,12 @@
 
 package de.amr.pacmanfx.uilib.model3D.world;
 
-import de.amr.pacmanfx.model.GameLevelEntity;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
-public class NumberBox3D extends Group implements GameLevelEntity {
+public class NumberBox3D extends Group {
 
     public static final int DEFAULT_SIZE_X = 14;
     public static final int DEFAULT_SIZE_Y = 8;

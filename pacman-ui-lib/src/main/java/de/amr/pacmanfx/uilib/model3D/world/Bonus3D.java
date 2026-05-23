@@ -94,6 +94,9 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
     }
 
     @Override
+    public void init(GameLevel level) {}
+
+    @Override
     public void update(GameLevel level) {
         switch (bonus.state()) {
             case INACTIVE, EATEN -> {}

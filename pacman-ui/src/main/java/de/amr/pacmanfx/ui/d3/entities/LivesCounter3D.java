@@ -150,6 +150,9 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
         return plateColor;
     }
 
+    @Override
+    public void init(GameLevel level) {}
+
     /**
      * Updates the lives counter visibility and count based on game state.
      */

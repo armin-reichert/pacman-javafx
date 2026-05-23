@@ -82,6 +82,9 @@ public class LevelCounter3D extends Group implements GameLevelEntity, Disposable
     }
 
     @Override
+    public void update(GameLevel level) {}
+
+    @Override
     public void dispose() {
         animations.optAnimation(AnimationID.LEVEL_COUNTER_SPINNING).ifPresent(ManagedAnimation::dispose);
         cleanupGroup(this, true);

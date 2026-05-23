@@ -266,15 +266,11 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
             final int killIndex = level3D.level().energizerVictims().indexOf(ghost);
             final Image pointsImage = level3D.uiConfig().killedGhostPointsImage(killIndex);
             final NumberBox3D numberBox3D = createGhostPointsNumberBox3D(ghost3D, pointsImage);
-            level3D.entities().add(numberBox3D);
             level3D.getChildren().add(numberBox3D);
 
             final double risingHeight = (killIndex + 1) * 12;
             final var animation = new HideGhostShowPointsAnimation3D(ghost3D, numberBox3D, risingHeight);
-            animation.animationFX().setOnFinished(_ -> {
-                level3D.entities().remove(numberBox3D);
-                level3D.getChildren().remove(numberBox3D);
-            });
+            animation.animationFX().setOnFinished(_ -> level3D.getChildren().remove(numberBox3D));
             animation.playFromStart();
         });
     }

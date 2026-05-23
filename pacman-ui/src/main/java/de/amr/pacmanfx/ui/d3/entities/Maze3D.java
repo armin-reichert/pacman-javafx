@@ -38,70 +38,32 @@ import static java.util.Objects.requireNonNull;
  */
 public class Maze3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
-    private static void addObstacles(
-        Group group,
-        TerrainLayer terrain,
-        float wallThickness, float cornerRadius,
-        Map<String, PhongMaterial> materials,
-        DoubleProperty wallBaseHeight)
-    {
-        final TerrainRenderer3D renderer3D = new TerrainRenderer3D();
-        final House house = terrain.optHouse().orElse(null);
-        final var wall3DCount = new AtomicInteger(0);
-        renderer3D.setOnWallCreated(wall3D -> {
-            wall3DCount.incrementAndGet();
-            wall3D.setBaseMaterial(materials.get("wallBaseMaterial"));
-            wall3D.setTopMaterial(materials.get("wallTopMaterial"));
-            wall3D.bindBaseHeight(wallBaseHeight);
-            wall3D.base().drawModeProperty().bind(GameUIConstants.PROPERTY_3D_DRAW_MODE);
-            wall3D.top().drawModeProperty().bind(GameUIConstants.PROPERTY_3D_DRAW_MODE);
-            group.getChildren().addAll(wall3D.base(), wall3D.top());
-            return wall3D;
-        });
-
-        final var stopWatch = new StopWatch();
-        // render all obstacles found in map except the house placeholder obstacle
-        for (Obstacle obstacle : terrain.obstacles()) {
-            final Vector2f startPoint = obstacle.startPoint().toVector2f();
-            if (house == null || !house.contains(computeTileAt(startPoint))) {
-                renderer3D.renderObstacle3D(obstacle, isWorldBorder(terrain, obstacle), wallThickness, cornerRadius);
-            }
-        }
-        final var passedTimeMillis = stopWatch.passedTime().toMillis();
-        Logger.info("Built {} composite walls in {} milliseconds", wall3DCount, passedTimeMillis);
-    }
-
-    private static boolean isWorldBorder(TerrainLayer terrain, Obstacle obstacle) {
-        final Vector2i start = obstacle.startPoint();
-        if (obstacle.isClosed()) {
-            return start.x() == TS || start.y() == terrain.emptyRowsOverMaze() * TS + HTS;
-        } else {
-            return start.x() == 0 || start.x() == terrain.numCols() * TS;
-        }
-    }
-
-    /** Base height of walls in world units. Can be externally bound. */
     private final DoubleProperty wallBaseHeight = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
-
-    /** Opacity applied to all wall materials. Can be externally bound. */
     private final DoubleProperty wallOpacity = new SimpleDoubleProperty(1);
+    private final ObjectProperty<Color> floorColor = new SimpleObjectProperty<>(Color.valueOf("#1a1a1a"));
 
-    private final ObjectProperty<Color> floorColor = new SimpleObjectProperty<>(Color.GRAY);
-
-    private Box floor3D;
-
-    private MazeHouse3D house3D;
-
+    private final TerrainLayer terrain;
     private final Group particlesGroup = new Group();
-
+    private Box floor3D;
+    private MazeHouse3D house3D;
     private Map<String, PhongMaterial> materials;
 
-    public Maze3D() {}
+    public Maze3D(TerrainLayer terrain) {
+        this.terrain = requireNonNull(terrain);
+    }
 
-    public void build(Map<String, PhongMaterial> materials, MazeConfig3D mazeConfig, FloorConfig3D floorConfig3D, TerrainLayer terrain) {
+    @Override
+    public void init(GameLevel level) {}
+
+    @Override
+    public void update(GameLevel level) {
+        house3D.update(level);
+    }
+
+    public void build(Map<String, PhongMaterial> materials, MazeConfig3D mazeConfig, FloorConfig3D floorConfig3D) {
         this.materials = materials;
-        buildFloor(materials, floorConfig3D, terrain);
-        buildObstacles(materials, mazeConfig, terrain);
+        buildFloor(floorConfig3D);
+        addObstacles(mazeConfig.obstacleWallThickness(), mazeConfig.obstacleCornerRadius());
     }
 
     public Map<String, PhongMaterial> materials() {
@@ -110,11 +72,6 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
 
     public void setHouse3D(MazeHouse3D house3D) {
         this.house3D = requireNonNull(house3D);
-    }
-
-    @Override
-    public void update(GameLevel level) {
-        house3D.update(level);
     }
 
     public DoubleProperty wallBaseHeightProperty() {
@@ -133,6 +90,10 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         return floor3D;
     }
 
+    public double floorTop() {
+        return floor().getTranslateZ() - 0.5 * floor().getDepth();
+    }
+
     public MazeHouse3D house() {
         return house3D;
     }
@@ -141,16 +102,6 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         return particlesGroup;
     }
 
-    public double floorTop() {
-        return floor().getTranslateZ() - 0.5 * floor().getDepth();
-    }
-
-    /**
-     * Disposes all 3D resources created by this maze.
-     * <p>
-     * Unbinds properties, disposes all subcomponents, disposes every {@link Wall3D} among the direct children,
-     * and clears the scene-graph children. After calling {@code dispose()}, this instance must not be used again.
-     */
     @Override
     public void dispose() {
         wallBaseHeight.unbind();
@@ -163,17 +114,45 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
 
         cleanupGroup(particlesGroup, true);
         cleanupGroup(this, true);
-
-        Logger.info("Disposed 3D maze");
     }
 
-    private void buildObstacles(Map<String, PhongMaterial> materials, MazeConfig3D mazeConfig, TerrainLayer terrain) {
-        final float wallThickness = mazeConfig.obstacleWallThickness();
-        final float cornerRadius  = mazeConfig.obstacleCornerRadius();
-        addObstacles(this, terrain, wallThickness, cornerRadius, materials, wallBaseHeight);
+    private void addObstacles(float wallThickness, float cornerRadius) {
+        final TerrainRenderer3D renderer3D = new TerrainRenderer3D();
+        final House house = terrain.optHouse().orElse(null);
+        final var wallCount = new AtomicInteger(0);
+        renderer3D.setOnWallCreated(wall3D -> {
+            wallCount.incrementAndGet();
+            wall3D.setBaseMaterial(materials.get("wallBaseMaterial"));
+            wall3D.setTopMaterial(materials.get("wallTopMaterial"));
+            wall3D.bindBaseHeight(wallBaseHeight);
+            wall3D.base().drawModeProperty().bind(GameUIConstants.PROPERTY_3D_DRAW_MODE);
+            wall3D.top().drawModeProperty().bind(GameUIConstants.PROPERTY_3D_DRAW_MODE);
+            getChildren().addAll(wall3D.base(), wall3D.top());
+            return wall3D;
+        });
+
+        final var stopWatch = new StopWatch();
+        // render all obstacles found in map except the house placeholder obstacle
+        for (Obstacle obstacle : terrain.obstacles()) {
+            final Vector2f startPoint = obstacle.startPoint().toVector2f();
+            if (house == null || !house.contains(computeTileAt(startPoint))) {
+                renderer3D.renderObstacle3D(obstacle, isWorldBorder(obstacle), wallThickness, cornerRadius);
+            }
+        }
+        final var passedTimeMillis = stopWatch.passedTime().toMillis();
+        Logger.info("Building {} composite walls took {} milliseconds", wallCount, passedTimeMillis);
     }
 
-    private void buildFloor(Map<String, PhongMaterial> materials, FloorConfig3D floorConfig, TerrainLayer terrain) {
+    private boolean isWorldBorder(Obstacle obstacle) {
+        final Vector2i start = obstacle.startPoint();
+        if (obstacle.isClosed()) {
+            return start.x() == TS || start.y() == terrain.emptyRowsOverMaze() * TS + HTS;
+        } else {
+            return start.x() == 0 || start.x() == terrain.numCols() * TS;
+        }
+    }
+
+    private void buildFloor(FloorConfig3D floorConfig) {
         final Vector2i terrainSize = terrain.sizeInPixel();
         final float width = terrainSize.x() + 2 * floorConfig.padding();
         final float height = terrainSize.y();

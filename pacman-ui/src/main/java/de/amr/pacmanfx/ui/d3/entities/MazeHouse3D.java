@@ -90,6 +90,9 @@ public class MazeHouse3D implements GameLevelEntity, Disposable {
         return arcadeHouse3D.doors();
     }
 
+    @Override
+    public void init(GameLevel level) {}
+
     /**
      * Updates the 3D house model based on the current game level state.
      *

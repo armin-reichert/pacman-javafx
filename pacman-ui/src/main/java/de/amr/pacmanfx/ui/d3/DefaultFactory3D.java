@@ -24,8 +24,6 @@ import de.amr.pacmanfx.uilib.model3D.pac.Pac3DFactory;
 import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -37,7 +35,6 @@ import javafx.scene.shape.TriangleMesh;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.uilib.Ufx.colorBoundPhongMaterial;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.lang.Math.max;
 import static java.util.Objects.requireNonNull;
@@ -46,6 +43,7 @@ public class DefaultFactory3D implements Factory3D {
 
     public static final int FLOOR_SPECULAR_POWER = 128;
     public static final int WALL_BASE_SPECULAR_POWER = 64;
+    public static final int WALL_TOP_SPECULAR_POWER = 128;
 
     protected final Map<GhostStateColors, GhostMaterialSet> ghostMaterialsCache = new HashMap<>();
     protected final Map<Float, TriangleMesh> pelletMeshesCache = new HashMap<>();
@@ -63,10 +61,13 @@ public class DefaultFactory3D implements Factory3D {
         requireNonNull(colorScheme);
         requireNonNull(animationRegistry);
 
-        final var maze3D = new Maze3D();
-        //TODO this cyclic dependency is dubious
-        final Map<String, PhongMaterial> materials = createMazeMaterials(colorScheme, maze3D.wallOpacityProperty(), maze3D.floorColorProperty());
-        maze3D.build(materials, config.maze(), config.floor(), terrain);
+        final Map<String, PhongMaterial> materials = createMazeMaterialMap(config, colorScheme);
+
+        final var maze3D = new Maze3D(terrain);
+        maze3D.build(materials, config.maze(), config.floor());
+
+        bindFloorMaterialColor(maze3D, materials.get("floorMaterial"));
+        bindWallBaseMaterialColor(maze3D, materials.get("wallBaseMaterial"), Color.valueOf(colorScheme.wallStroke()));
 
         // Currently, only Arcade house is supported
         terrain.optHouse()
@@ -78,24 +79,31 @@ public class DefaultFactory3D implements Factory3D {
         return maze3D;
     }
 
-    private Map<String, PhongMaterial> createMazeMaterials(WorldMapColorScheme colorScheme, DoubleProperty wallOpacity, ObjectProperty<Color> floorColor) {
+    private Map<String, PhongMaterial> createMazeMaterialMap(WorldConfig config, WorldMapColorScheme colorScheme) {
         final PhongMaterial floorMaterial = new PhongMaterial();
-        floorMaterial.diffuseColorProperty().bind(floorColor);
-        floorMaterial.specularColorProperty().bind(floorColor.map(Color::brighter));
         floorMaterial.setSpecularPower(FLOOR_SPECULAR_POWER);
 
-        final PhongMaterial wallBaseMaterial = colorBoundPhongMaterial(
-            wallOpacity.map(opacity ->
-                UfxColors.colorWithOpacity(
-                    Color.valueOf(colorScheme.wallStroke()), opacity.doubleValue())));
+        final PhongMaterial wallBaseMaterial = new PhongMaterial();
         wallBaseMaterial.setSpecularPower(WALL_BASE_SPECULAR_POWER);
 
         final PhongMaterial wallTopMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.wallFill()));
+        wallTopMaterial.setSpecularPower(WALL_TOP_SPECULAR_POWER);
 
         return Map.of(
             "floorMaterial", floorMaterial,
             "wallBaseMaterial", wallBaseMaterial,
             "wallTopMaterial", wallTopMaterial
+        );
+    }
+
+    private void bindFloorMaterialColor(Maze3D maze3D, PhongMaterial floorMaterial) {
+        floorMaterial.diffuseColorProperty().bind(maze3D.floorColorProperty());
+        floorMaterial.specularColorProperty().bind(maze3D.floorColorProperty().map(Color::brighter));
+    }
+
+    private void bindWallBaseMaterialColor(Maze3D maze3D, PhongMaterial wallBaseMaterial, Color wallStrokeColor) {
+        wallBaseMaterial.diffuseColorProperty().bind(maze3D.wallOpacityProperty()
+            .map(opacity -> UfxColors.colorWithOpacity(wallStrokeColor, opacity.doubleValue()))
         );
     }
 
