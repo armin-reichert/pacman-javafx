@@ -72,7 +72,7 @@ public class PlayView extends StackPane implements View {
 
     private final GameUI ui;
     private final Scene parentScene;
-    private final GameSceneDecorationPane canvasDecorationPane = new GameSceneDecorationPane();
+    private final GameSceneDecorationPane decorationPane = new GameSceneDecorationPane();
     private final MiniGameView miniView = new MiniGameView();
     private final BorderPane canvasLayer = new BorderPane();
     private final BorderPane widgetLayer = new BorderPane();
@@ -99,10 +99,10 @@ public class PlayView extends StackPane implements View {
         this.ui = ui;
         this.parentScene = parentScene;
         this.contextMenu = new ContextMenu();
-        this.helpLayer = new HelpLayer(canvasDecorationPane);
+        this.helpLayer = new HelpLayer(decorationPane);
 
         createDashboard(dashboardConfig);
-        configureCanvasDecorationPane();
+        configureGameSceneDecorationPane();
         composeLayout();
         configureActionBindings();
         configurePropertyBindings();
@@ -138,7 +138,7 @@ public class PlayView extends StackPane implements View {
     }
 
     public void showHelp(GameUI ui) {
-        final double scaling = canvasDecorationPane.scalingProperty().get();
+        final double scaling = decorationPane.scalingProperty().get();
         helpLayer.showHelpPopup(ui, scaling, ui.gameContext().gameVariantName());
     }
 
@@ -151,7 +151,7 @@ public class PlayView extends StackPane implements View {
     }
 
     public void resizeGameScene(GameScene2D gameScene2D) {
-        canvasDecorationPane.setUnscaledCanvasSize(gameScene2D.getUnscaledWidth(), gameScene2D.getUnscaledHeight());
+        decorationPane.setUnscaledCanvasSize(gameScene2D.getUnscaledWidth(), gameScene2D.getUnscaledHeight());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -175,7 +175,7 @@ public class PlayView extends StackPane implements View {
     public void onEnter() {
         requestFocus();
         addListeners();
-        canvasDecorationPane.updateLayout();
+        decorationPane.updateLayout();
     }
 
     @Override
@@ -265,10 +265,10 @@ public class PlayView extends StackPane implements View {
         };
         gameSceneProperty().addListener(gameSceneChangeListener);
 
-        parentSceneWidthListener = (_, _, w) -> canvasDecorationPane.resizeTo(w.doubleValue(), parentScene.getHeight());
+        parentSceneWidthListener = (_, _, w) -> decorationPane.resizeTo(w.doubleValue(), parentScene.getHeight());
         parentScene.widthProperty() .addListener(parentSceneWidthListener);
 
-        parentSceneHeightListener = (_, _, h) -> canvasDecorationPane.resizeTo(parentScene.getWidth(), h.doubleValue());
+        parentSceneHeightListener = (_, _, h) -> decorationPane.resizeTo(parentScene.getWidth(), h.doubleValue());
         parentScene.heightProperty().addListener(parentSceneHeightListener);
     }
 
@@ -319,17 +319,17 @@ public class PlayView extends StackPane implements View {
         dashboard.setVisible(false);
     }
 
-    private void configureCanvasDecorationPane() {
-        canvasDecorationPane.setMinScaling(0.5);
-        canvasDecorationPane.setUnscaledCanvasSize(ARCADE_MAP_SIZE_IN_PIXELS.x(), ARCADE_MAP_SIZE_IN_PIXELS.y());
-        canvasDecorationPane.setBorderColor(ArcadePalette.ARCADE_WHITE);
+    private void configureGameSceneDecorationPane() {
+        decorationPane.setMinScaling(0.5);
+        decorationPane.setUnscaledCanvasSize(ARCADE_MAP_SIZE_IN_PIXELS.x(), ARCADE_MAP_SIZE_IN_PIXELS.y());
+        decorationPane.setBorderColor(ArcadePalette.ARCADE_WHITE);
     }
 
     private void composeLayout() {
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
         widgetLayer.setLeft(dashboard);
         widgetLayer.setRight(miniView.container());
-        canvasLayer.setCenter(canvasDecorationPane);
+        canvasLayer.setCenter(decorationPane);
         getChildren().addAll(canvasLayer, widgetLayer, helpLayer, pausedIcon);
     }
 
@@ -340,7 +340,7 @@ public class PlayView extends StackPane implements View {
         );
 
         GameUIConstants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smooth) ->
-            canvasDecorationPane.canvas().getGraphicsContext2D().setFontSmoothingType(
+            decorationPane.canvas().getGraphicsContext2D().setFontSmoothingType(
                 smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
 
         GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.addListener((_, _, debug) -> {
@@ -409,7 +409,7 @@ public class PlayView extends StackPane implements View {
 
     private void useDecoratedCanvas(GameScene2D gameScene2D) {
         final Canvas canvas = new Canvas();
-        canvasDecorationPane.setCanvas(canvas);
+        decorationPane.setCanvas(canvas);
 
         gameScene2D.setCanvas(canvas);
         gameScene2D.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
@@ -438,21 +438,21 @@ public class PlayView extends StackPane implements View {
             double aspect = gameScene2D.getAspectRatio();
             if (ui.currentGameSceneConfig().sceneDecorationRequested(gameScene)) {
                 // Decorated game scene scaled-down to give space for the decoration
-                gameScene2D.scalingProperty().bind(canvasDecorationPane.scalingProperty().map(
+                gameScene2D.scalingProperty().bind(decorationPane.scalingProperty().map(
                         scaling -> Math.min(scaling.doubleValue(), MAX_GAME_SCENE_SCALING)));
 
-                canvasDecorationPane.setUnscaledCanvasSize(gameScene2D.getUnscaledWidth(), gameScene2D.getUnscaledHeight());
-                canvasDecorationPane.resizeTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
-                canvasDecorationPane.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR.map(UfxBackgrounds::paintBackground));
+                decorationPane.setUnscaledCanvasSize(gameScene2D.getUnscaledWidth(), gameScene2D.getUnscaledHeight());
+                decorationPane.resizeTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
+                decorationPane.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR.map(UfxBackgrounds::paintBackground));
 
-                canvasLayer.setCenter(canvasDecorationPane);
+                canvasLayer.setCenter(decorationPane);
             }
             else {
                 // Undecorated game scene taking complete height
-                canvasDecorationPane.canvas().heightProperty().bind(parentSceneFX.heightProperty());
-                canvasDecorationPane.canvas().widthProperty().bind(parentSceneFX.heightProperty().map(h -> h.doubleValue() * aspect));
+                decorationPane.canvas().heightProperty().bind(parentSceneFX.heightProperty());
+                decorationPane.canvas().widthProperty().bind(parentSceneFX.heightProperty().map(h -> h.doubleValue() * aspect));
                 gameScene2D.scalingProperty().bind(parentSceneFX.heightProperty().divide(gameScene2D.getUnscaledHeight()));
-                canvasLayer.setCenter(canvasDecorationPane.canvas());
+                canvasLayer.setCenter(decorationPane.canvas());
             }
             getChildren().set(0, canvasLayer);
         }
