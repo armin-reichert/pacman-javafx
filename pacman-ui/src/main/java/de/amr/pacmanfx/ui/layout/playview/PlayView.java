@@ -418,43 +418,46 @@ public class PlayView extends StackPane implements View {
         hudRenderer   = ui.currentConfig().createHUDRenderer(gameScene2D, canvas); // may return null!
     }
 
-    //TODO simplify
+    private void embedGameSceneWithSubscene(Scene parentSceneFX, GameScene gameScene, SubScene subSceneFX) {
+        subSceneFX.widthProperty().bind(parentSceneFX.widthProperty());
+        subSceneFX.heightProperty().bind(parentSceneFX.heightProperty());
+        if (gameScene instanceof GameScene2D gameScene2D) {
+            useDecoratedCanvas(gameScene2D);
+        }
+        getChildren().set(0, subSceneFX);
+    }
+
+    private void embedGameScene2D(Scene parentSceneFX, GameScene2D gameScene2D) {
+        useDecoratedCanvas(gameScene2D);
+        double aspect = gameScene2D.getAspectRatio();
+        if (ui.currentGameSceneConfig().sceneDecorationRequested(gameScene2D)) {
+            // Decorated game scene scaled-down to give space for the decoration
+            gameScene2D.scalingProperty().bind(decorationPane.scalingProperty().map(
+                scaling -> Math.min(scaling.doubleValue(), MAX_GAME_SCENE_SCALING)));
+
+            decorationPane.setUnscaledSize(gameScene2D.getUnscaledWidth(), gameScene2D.getUnscaledHeight());
+            decorationPane.resizeTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
+            decorationPane.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR.map(UfxBackgrounds::paintBackground));
+
+            canvasLayer.setCenter(decorationPane);
+        }
+        else {
+            // Undecorated game scene taking complete height
+            decorationPane.canvas().heightProperty().bind(parentSceneFX.heightProperty());
+            decorationPane.canvas().widthProperty().bind(parentSceneFX.heightProperty().map(h -> h.doubleValue() * aspect));
+            gameScene2D.scalingProperty().bind(parentSceneFX.heightProperty().divide(gameScene2D.getUnscaledHeight()));
+            canvasLayer.setCenter(decorationPane.canvas());
+        }
+        getChildren().set(0, canvasLayer);
+    }
+
     public void embedGameScene(Scene parentSceneFX, GameScene gameScene) {
         hudRenderer = null;
         if (gameScene.optSubScene().isPresent()) {
-            // 1. Play scene with integrated sub-scene: 3D scene or 2D scene with camera as in Tengen Ms. Pac-Man:
-            final SubScene subScene = gameScene.optSubScene().get();
-            // Let sub-scene take full size of parent scene
-            subScene.widthProperty().bind(parentSceneFX.widthProperty());
-            subScene.heightProperty().bind(parentSceneFX.heightProperty());
-            // Is it a 2D scene with canvas inside sub-scene with camera?
-            if (gameScene instanceof GameScene2D gameScene2D) {
-                useDecoratedCanvas(gameScene2D);
-            }
-            getChildren().set(0, subScene);
+            embedGameSceneWithSubscene(parentSceneFX, gameScene, gameScene.optSubScene().get());
         }
         else if (gameScene instanceof GameScene2D gameScene2D) {
-            useDecoratedCanvas(gameScene2D);
-            double aspect = gameScene2D.getAspectRatio();
-            if (ui.currentGameSceneConfig().sceneDecorationRequested(gameScene)) {
-                // Decorated game scene scaled-down to give space for the decoration
-                gameScene2D.scalingProperty().bind(decorationPane.scalingProperty().map(
-                        scaling -> Math.min(scaling.doubleValue(), MAX_GAME_SCENE_SCALING)));
-
-                decorationPane.setUnscaledSize(gameScene2D.getUnscaledWidth(), gameScene2D.getUnscaledHeight());
-                decorationPane.resizeTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
-                decorationPane.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR.map(UfxBackgrounds::paintBackground));
-
-                canvasLayer.setCenter(decorationPane);
-            }
-            else {
-                // Undecorated game scene taking complete height
-                decorationPane.canvas().heightProperty().bind(parentSceneFX.heightProperty());
-                decorationPane.canvas().widthProperty().bind(parentSceneFX.heightProperty().map(h -> h.doubleValue() * aspect));
-                gameScene2D.scalingProperty().bind(parentSceneFX.heightProperty().divide(gameScene2D.getUnscaledHeight()));
-                canvasLayer.setCenter(decorationPane.canvas());
-            }
-            getChildren().set(0, canvasLayer);
+            embedGameScene2D(parentSceneFX, gameScene2D);
         }
         else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
