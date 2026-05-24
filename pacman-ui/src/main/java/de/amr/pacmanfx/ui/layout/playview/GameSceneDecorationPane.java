@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.widgets;
+package de.amr.pacmanfx.ui.layout.playview;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -18,15 +18,7 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-/**
- * A canvas container that
- * <ul>
- *     <li>centers the contained canvas</li>
- *     <li>adds an oval border decoration </li>
- * </ul>
- * <p>
- */
-public class CanvasDecorationPane extends StackPane {
+public class GameSceneDecorationPane extends StackPane {
 
     private static final float SCALING_X = 0.85f;
     private static final float SCALING_Y = 0.93f;
@@ -62,7 +54,7 @@ public class CanvasDecorationPane extends StackPane {
     private Canvas canvas;
     private double minScaling = 1.0;
 
-    public CanvasDecorationPane() {
+    public GameSceneDecorationPane() {
         unscaledCanvasSize.addListener((_, _, _) -> updateLayout());
 
         clipProperty().bind(Bindings.createObjectBinding(() -> {

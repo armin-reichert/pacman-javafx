@@ -26,7 +26,6 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
-import de.amr.pacmanfx.uilib.widgets.CanvasDecorationPane;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -73,7 +72,7 @@ public class PlayView extends StackPane implements View {
 
     private final GameUI ui;
     private final Scene parentScene;
-    private final CanvasDecorationPane canvasDecorationPane = new CanvasDecorationPane();
+    private final GameSceneDecorationPane canvasDecorationPane = new GameSceneDecorationPane();
     private final MiniGameView miniView = new MiniGameView();
     private final BorderPane canvasLayer = new BorderPane();
     private final BorderPane widgetLayer = new BorderPane();
