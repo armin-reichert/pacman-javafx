@@ -68,6 +68,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class PlayView extends StackPane implements View {
 
+    public static final float MAX_GAME_SCENE_SCALING = 5;
+
     private class GameEventHandler extends DefaultGameEventListener {
 
         public GameEventHandler() {}
@@ -467,10 +469,9 @@ public class PlayView extends StackPane implements View {
             Vector2i gameSceneSizePx = gameScene2D.unscaledSceneSize();
             double aspect = (double) gameSceneSizePx.x() / gameSceneSizePx.y();
             if (ui.currentGameSceneConfig().sceneDecorationRequested(gameScene)) {
-                final float maxScaling = GameScene2D.MAX_SCALING;
                 // Decorated game scene scaled-down to give space for the decoration
                 gameScene2D.scalingProperty().bind(canvasDecorationPane.scalingProperty().map(
-                        scaling -> Math.min(scaling.doubleValue(), maxScaling)));
+                        scaling -> Math.min(scaling.doubleValue(), MAX_GAME_SCENE_SCALING)));
                 canvasDecorationPane.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
                 canvasDecorationPane.resizeTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
                 canvasDecorationPane.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR.map(UfxBackgrounds::paintBackground));
