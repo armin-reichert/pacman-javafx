@@ -5,6 +5,7 @@ package de.amr.pacmanfx.ui.layout.playview;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
@@ -47,16 +48,17 @@ public class GameSceneDecorationPane extends StackPane {
     };
 
     private final IntegerProperty unscaledWidth = new SimpleIntegerProperty(500);
-    private final IntegerProperty unscaledHeight = new SimpleIntegerProperty(400);
 
-//    private final ObjectProperty<Dimension2D> unscaledCanvasSize = new SimpleObjectProperty<>(new Dimension2D(500, 400));
+    private final IntegerProperty unscaledHeight = new SimpleIntegerProperty(400);
 
     private Canvas canvas;
     private double minScaling = 1.0;
 
     public GameSceneDecorationPane() {
-        unscaledWidth.addListener((_, _, _) -> updateLayout());
-        unscaledHeight.addListener((_, _, _) -> updateLayout());
+
+        final ChangeListener<? super Number> resizeHandler = (_, _, _) -> updateLayout();
+        unscaledWidth.addListener(resizeHandler);
+        unscaledHeight.addListener(resizeHandler);
 
         clipProperty().bind(Bindings.createObjectBinding(() -> {
                 final double arcDiameter = FRAME_ARC_DIAMETER * scaling();
@@ -134,6 +136,11 @@ public class GameSceneDecorationPane extends StackPane {
         return canvas;
     }
 
+    public void setUnscaledSize(int width, int height) {
+        unscaledWidth.set(width);
+        unscaledHeight.set(height);
+    }
+
     public DoubleProperty scalingProperty() { return scaling; }
 
     public double scaling() {
@@ -142,11 +149,6 @@ public class GameSceneDecorationPane extends StackPane {
 
     public void setMinScaling(double value) {
         minScaling = value;
-    }
-
-    public void setUnscaledCanvasSize(int width, int height) {
-        unscaledWidth.set(width);
-        unscaledHeight.set(height);
     }
 
     public void setBorderColor(Color color) {

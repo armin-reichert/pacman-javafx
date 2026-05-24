@@ -151,7 +151,7 @@ public class PlayView extends StackPane implements View {
     }
 
     public void resizeGameScene(GameScene2D gameScene2D) {
-        decorationPane.setUnscaledCanvasSize(gameScene2D.getUnscaledWidth(), gameScene2D.getUnscaledHeight());
+        decorationPane.setUnscaledSize(gameScene2D.getUnscaledWidth(), gameScene2D.getUnscaledHeight());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -321,7 +321,7 @@ public class PlayView extends StackPane implements View {
 
     private void configureGameSceneDecorationPane() {
         decorationPane.setMinScaling(0.5);
-        decorationPane.setUnscaledCanvasSize(ARCADE_MAP_SIZE_IN_PIXELS.x(), ARCADE_MAP_SIZE_IN_PIXELS.y());
+        decorationPane.setUnscaledSize(ARCADE_MAP_SIZE_IN_PIXELS.x(), ARCADE_MAP_SIZE_IN_PIXELS.y());
         decorationPane.setBorderColor(ArcadePalette.ARCADE_WHITE);
     }
 
@@ -441,7 +441,7 @@ public class PlayView extends StackPane implements View {
                 gameScene2D.scalingProperty().bind(decorationPane.scalingProperty().map(
                         scaling -> Math.min(scaling.doubleValue(), MAX_GAME_SCENE_SCALING)));
 
-                decorationPane.setUnscaledCanvasSize(gameScene2D.getUnscaledWidth(), gameScene2D.getUnscaledHeight());
+                decorationPane.setUnscaledSize(gameScene2D.getUnscaledWidth(), gameScene2D.getUnscaledHeight());
                 decorationPane.resizeTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
                 decorationPane.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR.map(UfxBackgrounds::paintBackground));
 
