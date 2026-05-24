@@ -20,13 +20,14 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
  */
 public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
-    public static final Vector2i SIZE = new Vector2i(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
     public static final float DISPLAY_SECONDS = 16;
 
     public float fadeProgress = 0;
 
     public TengenMsPacMan_CreditsScene(GameUI ui) {
         super(ui);
+        unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     @Override
@@ -48,7 +49,4 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
             fadeProgress = Math.min(fadeProgress + 0.005f, 1f); // Clamp to 1.0
         }
     }
-
-    @Override
-    public Vector2i unscaledSceneSize() { return SIZE; }
 }

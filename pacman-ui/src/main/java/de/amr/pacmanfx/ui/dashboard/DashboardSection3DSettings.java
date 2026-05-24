@@ -3,8 +3,6 @@
  */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.basics.math.Vector2f;
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameScene;
@@ -141,9 +139,9 @@ public class DashboardSection3DSettings extends DashboardSection {
         if (gameScene == null) return NO_INFO;
 
         if (gameScene instanceof GameScene2D gameScene2D) {
-            final Vector2i size = gameScene2D.unscaledSceneSize();
-            final Vector2f scaledSize = size.scaled(gameScene2D.scaling());
-            return "%dx%d (scaled: %.0fx%.0f)".formatted(size.x(), size.y(), scaledSize.x(), scaledSize.y());
+            return "%dx%d (scaled: %.0fx%.0f)".formatted(
+                gameScene2D.getUnscaledWidth(), gameScene2D.getUnscaledHeight(),
+                gameScene2D.getWidth(), gameScene2D.getHeight());
         }
 
         if (game.optGameLevel().isPresent()) {

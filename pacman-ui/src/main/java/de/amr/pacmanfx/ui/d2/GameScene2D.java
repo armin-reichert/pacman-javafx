@@ -3,16 +3,12 @@
  */
 package de.amr.pacmanfx.ui.d2;
 
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -32,14 +28,17 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameScene2D extends GameScene {
 
-    private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
-
+    private final IntegerProperty unscaledWidth = new SimpleIntegerProperty();
+    private final IntegerProperty unscaledHeight = new SimpleIntegerProperty();
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
+    private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
 
     protected Canvas canvas;
 
     public GameScene2D(GameUI ui) {
         super(ui);
+        unscaledWidth.set(Globals.ARCADE_MAP_SIZE_IN_PIXELS.x());
+        unscaledHeight.set(Globals.ARCADE_MAP_SIZE_IN_PIXELS.y());
     }
 
     /**
@@ -108,6 +107,22 @@ public class GameScene2D extends GameScene {
         backgroundColor.set(color);
     }
 
+    public IntegerProperty unscaledWidthProperty() {
+        return unscaledWidth;
+    }
+
+    public int getUnscaledWidth() {
+        return unscaledWidth.get();
+    }
+
+    public IntegerProperty unscaledHeightProperty() {
+        return unscaledHeight;
+    }
+
+    public int getUnscaledHeight() {
+        return unscaledHeight.get();
+    }
+
     /**
      * @return the scaling factor property
      */
@@ -131,13 +146,15 @@ public class GameScene2D extends GameScene {
         return scaling.get();
     }
 
-    /**
-     * Returns the unscaled logical size of the scene in pixels.
-     * For arcade-style scenes, this is typically {@code 224×288}.
-     *
-     * @return the unscaled scene size in pixels
-     */
-    public Vector2i unscaledSceneSize() {
-        return Globals.ARCADE_MAP_SIZE_IN_PIXELS;
+    public double getWidth() {
+        return scaling() * getUnscaledWidth();
+    }
+
+    public double getHeight() {
+        return scaling() * getUnscaledHeight();
+    }
+
+    public double getAspectRatio() {
+        return getWidth() / getHeight();
     }
 }

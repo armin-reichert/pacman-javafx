@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.HeadsUpDisplay;
 import de.amr.pacmanfx.model.Score;
@@ -45,8 +44,6 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
         requireNonNull(game);
         requireNonNull(scene);
 
-        final Vector2i sceneSize = scene.unscaledSceneSize();
-
         if (!hud.isVisible()) return;
 
         if (hud.isScoreVisible()) {
@@ -62,8 +59,8 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
 
         if (hud.isLevelCounterVisible()) {
             final RectShort[] bonusSymbolSprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
-            final float y = sceneSize.y() - TS(2) + 2;
-            float x = sceneSize.x() - TS(4);
+            final float y = scene.getUnscaledHeight() - TS(2) + 2;
+            float x = scene.getUnscaledWidth() - TS(4);
             for (byte symbol : game.levelCounter().symbols()) {
                 drawSprite(bonusSymbolSprites[symbol], x, y, true);
                 x -= TS(2); // symbols are drawn from right to left
@@ -73,7 +70,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
         if (hud.isLivesCounterVisible()) {
             final RectShort livesCounterSprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             final float x = TS(2);
-            final float y = sceneSize.y() - TS(2);
+            final float y = scene.getUnscaledHeight() - TS(2);
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(livesCounterSprite, x + i * TS(2), y, true);
             }
@@ -86,7 +83,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
         }
 
         if (hud.isCreditVisible()) {
-            fillText(CREDIT_TEXT_PATTERN.formatted(hud.numCoins()), ARCADE_WHITE, arcadeFont8(), TS(2), sceneSize.y());
+            fillText(CREDIT_TEXT_PATTERN.formatted(hud.numCoins()), ARCADE_WHITE, arcadeFont8(), TS(2), scene.getUnscaledHeight());
         }
     }
 

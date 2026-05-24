@@ -8,24 +8,23 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
+import de.amr.pacmanfx.event.GenericChangeEvent;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
-import de.amr.pacmanfx.model.world.TerrainLayer;
-import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.layout.PlayView;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.layout.ContextMenuSupport.*;
 
 /**
@@ -54,20 +53,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
                 sfx.playLevelRunningSound(level);
             });
         });
-    }
-
-    /**
-     * Note: Scene is also used in Pac-Man XXL game variant where world map can have non-Arcade size!
-     *
-     * @return Unscaled scene size in pixels as (width, height)
-     */
-    @Override
-    public Vector2i unscaledSceneSize() {
-        return gameContext().game().optGameLevel()
-            .map(GameLevel::worldMap)
-            .map(WorldMap::terrainLayer)
-            .map(TerrainLayer::sizeInPixel)
-            .orElse(ARCADE_MAP_SIZE_IN_PIXELS);
     }
 
     @Override
@@ -125,7 +110,20 @@ public class Arcade_PlayScene2D extends GameScene2D {
         ui.soundManager().setEnabled(!level.isDemoLevel()); //TODO is this needed?
         levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameContext().game().flow().state().expire());
 
+        final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
+        unscaledWidthProperty().set(terrainSize.x());
+        unscaledHeightProperty().set(terrainSize.y());
+
+        //TODO remove this hack
+        notifySizeChanged();
+
         Logger.info("Game scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
+    }
+
+    private void notifySizeChanged() {
+        if (ui.views().currentView() instanceof PlayView playView) {
+            playView.resizeGameScene(this);
+        }
     }
 
     // Private

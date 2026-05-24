@@ -54,8 +54,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
-    public static final Vector2i DEFAULT_SIZE = new Vector2i(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
-
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SCREEN_HEIGHT);
 
     private final StackPane rootPane;
@@ -68,6 +66,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     public TengenMsPacMan_PlayScene2D(GameUI ui) {
         super(ui);
+
+        unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
 
         setGameEventHandler(new TengenMsPacMan_PlayScene2DGameEventHandler(this));
 
@@ -189,13 +190,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         return Optional.of(subScene);
     }
 
-    @Override
-    public Vector2i unscaledSceneSize() {
-        return gameContext().game().optGameLevel()
-            .map(level -> level.worldMap().terrainLayer().sizeInPixel())
-            .orElse(DEFAULT_SIZE);
-    }
-
     // private
 
     protected void acceptGameLevel(GameLevel level) {
@@ -216,6 +210,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         }
         Input.instance().joypad.setBindings(actionBindings);
         actionBindings.assignToKeyboard();
+
+        final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
+        unscaledWidthProperty().set(terrainSize.x());
+        unscaledHeightProperty().set(terrainSize.y());
 
         Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
@@ -247,7 +245,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     protected void startGameOverMessageAnimation(GameLevelMessage message) {
         if (message instanceof MovingGameLevelMessage movingMessage) {
             double messageWidth = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, Font.font(BaseRenderer.arcadeFont().getFamily(), TS));
-            movingMessage.startMovement(unscaledSceneSize().x(), messageWidth);
+            movingMessage.startMovement(getUnscaledWidth(), messageWidth);
         }
     }
 

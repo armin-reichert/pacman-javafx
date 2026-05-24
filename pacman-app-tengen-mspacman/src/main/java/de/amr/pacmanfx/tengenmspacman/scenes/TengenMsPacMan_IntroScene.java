@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
-import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
@@ -32,8 +31,6 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 
 public class TengenMsPacMan_IntroScene extends GameScene2D {
 
-    public static final Vector2i SIZE = new Vector2i(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
-
     // Anchor point for everything
     public static final int MARQUEE_X = 60, MARQUEE_Y = 64;
     public static final int ACTOR_Y = MARQUEE_Y + 72;
@@ -57,6 +54,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     public TengenMsPacMan_IntroScene(GameUI ui) {
         super(ui);
+        unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
         sceneFlow = new StateMachine<>(this, List.of(SceneState.values()));
     }
 
@@ -89,9 +88,6 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     public void onTick(long tick) {
         sceneFlow.update();
     }
-
-    @Override
-    public Vector2i unscaledSceneSize() { return SIZE; }
 
     public enum SceneState implements State<TengenMsPacMan_IntroScene> {
 

@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
@@ -57,22 +56,19 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
             case BLANK -> clearCanvas();
             case HEX_CODES -> {
                 if (tick % 4 == 0) {
-                    final Vector2i size = scene.unscaledSceneSize();
                     clearCanvas();
-                    drawRandomHexDigits(size.x(), size.y());
+                    drawRandomHexDigits(scene.getUnscaledWidth(), scene.getUnscaledHeight());
                 }
             }
             case RANDOM_SPRITE_FRAGMENTS -> {
                 if (tick % 4 == 0) {
-                    final Vector2i size = scene.unscaledSceneSize();
                     clearCanvas();
-                    drawRandomSpriteFragments(size.x(), size.y());
+                    drawRandomSpriteFragments(scene.getUnscaledWidth(), scene.getUnscaledHeight());
                 }
             }
             case GRID -> {
-                final Vector2i size = scene.unscaledSceneSize();
                 clearCanvas();
-                drawGrid(size.x(), size.y());
+                drawGrid(scene.getUnscaledWidth(), scene.getUnscaledHeight());
             }
         }
         if (GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {

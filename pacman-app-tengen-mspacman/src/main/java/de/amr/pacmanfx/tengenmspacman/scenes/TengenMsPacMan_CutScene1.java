@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -35,8 +34,6 @@ import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_LET_GAME_STATE_
  */
 public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
-    public static final Vector2i SIZE = new Vector2i(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
-
     public static final int TICK_EXPIRES = 775;
 
     private static final int UPPER_LANE   = TS * 8;
@@ -60,6 +57,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     public TengenMsPacMan_CutScene1(GameUI ui) {
         super(ui);
+        unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     public Clapperboard clapperboard() {
@@ -241,7 +240,4 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             }
         }
     }
-
-    @Override
-    public Vector2i unscaledSceneSize() { return SIZE; }
 }

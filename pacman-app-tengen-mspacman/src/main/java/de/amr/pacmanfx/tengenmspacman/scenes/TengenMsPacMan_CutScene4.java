@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -33,8 +32,6 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.*;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
-    public static final Vector2i SIZE = new Vector2i(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
-
     public static final int TICK_EXPIRES = 1512;
 
     private static final int LEFT_BORDER = TS;
@@ -50,6 +47,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     public TengenMsPacMan_CutScene4(GameUI ui) {
         super(ui);
+        unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     public Pac pacMan() {
@@ -174,7 +173,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     private void spawnJunior(long tick) {
         var junior = TengenMsPacMan_ActorFactory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
-        junior.setPosition((float) randomX, unscaledSceneSize().y() - 4 * TS);
+        junior.setPosition((float) randomX, getUnscaledHeight() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
         junior.setAnimationManager(ui.currentConfig().createPacAnimations(ui.spriteAnimationSet()));
@@ -201,11 +200,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             computeNewMoveDir(junior);
         }
         junior.move();
-        if (junior.x() > unscaledSceneSize().x()) {
+        if (junior.x() > getUnscaledWidth()) {
             junior.setX(0);
         }
         if (junior.x() < 0) {
-            junior.setX(unscaledSceneSize().x());
+            junior.setX(getUnscaledWidth());
         }
     }
 
@@ -224,10 +223,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     private int compareBySmallestDistToSceneCenter(Pac junior, Direction dir1, Direction dir2) {
         Vector2f pos1 = junior.computeTile().plus(dir1.vector()).scaled(TS).toVector2f();
         Vector2f pos2 = junior.computeTile().plus(dir2.vector()).scaled(TS).toVector2f();
-        Vector2f center = unscaledSceneSize().scaled(0.5);
+        Vector2f center = new Vector2f(0.5f * getUnscaledWidth(), 0.5f * getUnscaledHeight());
         return Double.compare(pos1.euclideanDist(center), pos2.euclideanDist(center));
     }
-
-    @Override
-    public Vector2i unscaledSceneSize() { return SIZE; }
 }

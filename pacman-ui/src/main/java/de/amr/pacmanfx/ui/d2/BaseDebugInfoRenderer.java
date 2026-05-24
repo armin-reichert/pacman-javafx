@@ -5,7 +5,6 @@ package de.amr.pacmanfx.ui.d2;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Vector2f;
-import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -46,8 +45,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         ctx.setFont(debugTextFont);
         ctx.fillText(stateText, 0, scaled(3 * TS));
 
-        final Vector2i size = scene.unscaledSceneSize();
-        drawTileGrid(size.x(), size.y(), Color.LIGHTGRAY);
+        drawTileGrid(scene.getUnscaledWidth(), scene.getUnscaledHeight(), Color.LIGHTGRAY);
     }
 
     public void drawMovingActorInfo(MovingActor movingActor) {

@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.HeadsUpDisplay;
 import de.amr.pacmanfx.model.Score;
@@ -44,8 +43,6 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
         requireNonNull(game);
         requireNonNull(scene);
 
-        final Vector2i sceneSize = scene.unscaledSceneSize();
-
         if (!hud.isVisible()) return;
 
         if (hud.isScoreVisible()) {
@@ -61,8 +58,8 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
 
         if (hud.isLevelCounterVisible()) {
             final RectShort[] bonusSymbols = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
-            float x = sceneSize.x() - TS(4);
-            final float y = sceneSize.y() - TS(2) + 2;
+            float x = scene.getUnscaledWidth() - TS(4);
+            final float y = scene.getUnscaledHeight() - TS(2) + 2;
             for (byte symbol : game.levelCounter().symbols()) {
                 drawSprite(bonusSymbols[symbol], x, y, true);
                 x -= TS(2); // symbols are drawn from right to left
@@ -72,7 +69,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
         if (hud.isLivesCounterVisible()) {
             final RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             final float x = TS(2);
-            final float y = sceneSize.y() - TS(2);
+            final float y = scene.getUnscaledHeight() - TS(2);
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(sprite, x + i * TS(2), y, true);
             }
@@ -85,7 +82,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
         }
 
         if (hud.isCreditVisible()) {
-            fillText("CREDIT %2d".formatted(hud.numCoins()), ARCADE_WHITE, arcadeFont8(), TS(2), sceneSize.y());
+            fillText("CREDIT %2d".formatted(hud.numCoins()), ARCADE_WHITE, arcadeFont8(), TS(2), scene.getUnscaledHeight());
         }
     }
 

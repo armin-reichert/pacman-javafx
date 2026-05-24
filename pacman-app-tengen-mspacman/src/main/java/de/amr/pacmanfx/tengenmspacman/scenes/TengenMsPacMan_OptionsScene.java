@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.model.*;
 import de.amr.pacmanfx.ui.GameUI;
@@ -35,8 +34,6 @@ import static de.amr.pacmanfx.ui.input.Keyboard.alt;
  * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/MsPacManTENGENDis.asm:9545">Disassembly</a>.
  */
 public class TengenMsPacMan_OptionsScene extends GameScene2D {
-
-    public static final Vector2i SIZE = new Vector2i(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
 
     public static final byte OPTION_PLAYERS = 0;
     public static final byte OPTION_PAC_BOOSTER = 1;
@@ -72,6 +69,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     public TengenMsPacMan_OptionsScene(GameUI ui) {
         super(ui);
+        unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     @Override
@@ -110,9 +109,6 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             gameContext().game().flow().enterState(TengenMsPacMan_GameState.INTRO);
         }
     }
-
-    @Override
-    public Vector2i unscaledSceneSize() { return SIZE; }
 
     private TengenMsPacMan_GameModel tengenGame() { return gameContext().game(); }
     

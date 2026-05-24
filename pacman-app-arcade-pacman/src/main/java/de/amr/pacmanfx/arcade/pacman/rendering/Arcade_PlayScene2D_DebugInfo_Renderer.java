@@ -5,7 +5,6 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
@@ -41,9 +40,8 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
         final Arcade_PlayScene2D playScene = (Arcade_PlayScene2D) scene;
         final GameContext gameContext = playScene.gameContext();
         final Game game = gameContext.game();
-        final Vector2i sceneSize = playScene.unscaledSceneSize();
 
-        drawTileGrid(sceneSize.x(), sceneSize.y(), Color.LIGHTGRAY);
+        drawTileGrid(playScene.getUnscaledWidth(), playScene.getUnscaledHeight(), Color.LIGHTGRAY);
 
         game.optGameLevel().ifPresent(level -> {
             // We assume all ghosts have the same set of special terrain tiles

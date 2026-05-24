@@ -22,8 +22,6 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.*;
  */
 public class TengenMsPacMan_BootScene extends GameScene2D {
 
-    public static final Vector2i SIZE = new Vector2i(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
-
     private static final float GHOST_Y = TS(21.5f);
 
     public boolean gray;
@@ -33,12 +31,14 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     public TengenMsPacMan_BootScene(GameUI ui) {
         super(ui);
+        unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     @Override
     public void onSceneStart() {
         movingText = new Actor();
-        movingText.setPosition(TS(9), unscaledSceneSize().y()); // lower border of screen
+        movingText.setPosition(TS(9), getUnscaledHeight()); // lower border of screen
         final UIConfig uiConfig = ui.currentConfig();
         ghost = uiConfig.createGhostWithAnimations(ui.spriteAnimationSet(), RED_GHOST_SHADOW);
     }
@@ -60,7 +60,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
                 movingText.setVelocity(0, 0);
             }
             case 113 -> {
-                ghost.setPosition(unscaledSceneSize().x() - TS, GHOST_Y);
+                ghost.setPosition(getUnscaledWidth() - TS, GHOST_Y);
                 ghost.setMoveDir(Direction.LEFT);
                 ghost.setWishDir(Direction.LEFT);
                 ghost.setSpeed(TS);
@@ -81,11 +81,6 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         shadeOfBlue = shadeOfBlue(t);
         ghost.move();
         movingText.move();
-    }
-
-    @Override
-    public Vector2i unscaledSceneSize() {
-        return SIZE;
     }
 
     private void gray(boolean b)  { gray = b; }
