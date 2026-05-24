@@ -30,4 +30,5 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.input;
     exports de.amr.pacmanfx.ui.layout;
     exports de.amr.pacmanfx.ui.sound;
+    exports de.amr.pacmanfx.ui.layout.playview;
 }

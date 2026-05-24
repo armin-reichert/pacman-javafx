@@ -1,13 +1,9 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.event.DefaultGameEventListener;
-import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.event.GameStateChangeEvent;
-import de.amr.pacmanfx.event.LevelCreatedEvent;
-import de.amr.pacmanfx.model.CanonicalGameState;
+package de.amr.pacmanfx.ui.layout.playview;
+
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameScene;
@@ -24,6 +20,8 @@ import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.ui.layout.HelpLayer;
+import de.amr.pacmanfx.ui.layout.View;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
@@ -69,46 +67,7 @@ public class PlayView extends StackPane implements View {
 
     public static final float MAX_GAME_SCENE_SCALING = 5;
 
-    private class GameEventHandler extends DefaultGameEventListener {
-
-        public GameEventHandler() {}
-
-        @Override
-        public void onGameEvent(GameEvent gameEvent) {
-            switch (gameEvent) {
-
-                case LevelCreatedEvent levelCreatedEvent -> {
-                    final GameLevel level = levelCreatedEvent.level();
-                    final UIConfig uiConfig = ui.currentConfig();
-
-                    //TODO this should be done elsewhere
-                    level.pac().setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
-                    level.ghosts().forEach(ghost ->
-                        ghost.setAnimationManager(uiConfig.createGhostAnimations(ui.spriteAnimationSet(), ghost.personality())));
-
-                    miniView.setGameLevel(level);
-                    miniView.slideIn();
-                    // size of game scene might have changed, so re-embed
-                    optCurrentGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
-                }
-
-                case GameStateChangeEvent stateChangeEvent -> {
-                    if (stateChangeEvent.newState().matchesByName(CanonicalGameState.LEVEL_COMPLETE.name())) {
-                        miniView.slideOut();
-                    }
-                }
-
-                default -> {}
-            }
-
-            updateGameScene();
-
-            // Call game event handler for current game scene
-            optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
-        }
-    }
-
-    private final GameEventHandler gameEventHandler = new GameEventHandler();
+    private final PlayViewGameEventHandler gameEventHandler = new PlayViewGameEventHandler(this);
 
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
 
@@ -153,6 +112,14 @@ public class PlayView extends StackPane implements View {
         miniView.setUI(ui);
         ui.gameContext().gameVariantNameProperty().addListener(
             (_, oldVariantName, newVariantName) -> handleGameVariantNameChange(oldVariantName, newVariantName));
+    }
+
+    public GameUI ui() {
+        return ui;
+    }
+
+    public Scene parentScene() {
+        return parentScene;
     }
 
     public ObjectProperty<GameScene> gameSceneProperty() {
@@ -453,7 +420,7 @@ public class PlayView extends StackPane implements View {
     }
 
     //TODO simplify
-    private void embedGameScene(Scene parentSceneFX, GameScene gameScene) {
+    public void embedGameScene(Scene parentSceneFX, GameScene gameScene) {
         hudRenderer = null;
         if (gameScene.optSubScene().isPresent()) {
             // 1. Play scene with integrated sub-scene: 3D scene or 2D scene with camera as in Tengen Ms. Pac-Man:

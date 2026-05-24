@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
-import de.amr.pacmanfx.ui.layout.PlayView;
+import de.amr.pacmanfx.ui.layout.playview.PlayView;
 import de.amr.pacmanfx.ui.layout.ViewManager.ViewID;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.shape.DrawMode;
