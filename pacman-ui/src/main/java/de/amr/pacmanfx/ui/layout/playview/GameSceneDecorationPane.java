@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.layout.playview;
 
+import de.amr.pacmanfx.Globals;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
@@ -40,16 +41,11 @@ public class GameSceneDecorationPane extends StackPane {
 
     private final ObjectProperty<Color> borderColor = new SimpleObjectProperty<>(FRAME_DEFAULT_BORDER_COLOR);
 
-    private final DoubleProperty scaling = new SimpleDoubleProperty(1.0) {
-        @Override
-        protected void invalidated() {
-            updateLayout();
-        }
-    };
+    private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
 
-    private final IntegerProperty unscaledWidth = new SimpleIntegerProperty(500);
+    private final DoubleProperty unscaledWidth = new SimpleDoubleProperty(Globals.ARCADE_MAP_SIZE_IN_PIXELS.x());
 
-    private final IntegerProperty unscaledHeight = new SimpleIntegerProperty(400);
+    private final DoubleProperty unscaledHeight = new SimpleDoubleProperty(Globals.ARCADE_MAP_SIZE_IN_PIXELS.y());
 
     private Canvas canvas;
     private double minScaling = 1.0;
@@ -59,10 +55,11 @@ public class GameSceneDecorationPane extends StackPane {
         final ChangeListener<? super Number> resizeHandler = (_, _, _) -> updateLayout();
         unscaledWidth.addListener(resizeHandler);
         unscaledHeight.addListener(resizeHandler);
+        scaling.addListener(resizeHandler);
 
         clipProperty().bind(Bindings.createObjectBinding(() -> {
                 final double arcDiameter = FRAME_ARC_DIAMETER * scaling();
-                final Dimension2D scaledSize = computeScaledCanvasSize();
+                final Dimension2D scaledSize = computeScaledSize();
                 final var rect = new Rectangle(scaledSize.getWidth(), scaledSize.getHeight());
                 rect.setArcHeight(arcDiameter);
                 rect.setArcWidth(arcDiameter);
@@ -71,7 +68,7 @@ public class GameSceneDecorationPane extends StackPane {
         );
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
-                final Dimension2D scaledSize = computeScaledCanvasSize();
+                final Dimension2D scaledSize = computeScaledSize();
                 final double proposedBorderWidth = Math.ceil(scaledSize.getHeight() / FRAME_BORDER_WIDTH_RATIO);
                 final double borderWidth = Math.max(FRAME_MIN_BORDER_WIDTH, proposedBorderWidth);
                 final double cornerRadius = Math.ceil(FRAME_CORNER_RADIUS * scaling());
@@ -80,45 +77,21 @@ public class GameSceneDecorationPane extends StackPane {
         );
     }
 
-    private Dimension2D computeScaledCanvasSize() {
-        final double s = scaling();
-        return new Dimension2D(s * (unscaledWidth.get() + PADDING_X), s * (unscaledHeight.get() + PADDING_Y));
-    }
-
     public void setCanvas(Canvas canvas) {
         this.canvas = requireNonNull(canvas);
         getChildren().setAll(canvas);
 
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> scaling() * unscaledWidth.get(),
-            scaling, unscaledWidth, unscaledHeight)
+            () -> scaling() * unscaledWidth.get(), scaling, unscaledWidth, unscaledHeight)
         );
 
         canvas.heightProperty().bind(Bindings.createDoubleBinding(
-                () -> scaling() * unscaledHeight.get(),
-                scaling, unscaledWidth, unscaledHeight)
+            () -> scaling() * unscaledHeight.get(), scaling, unscaledWidth, unscaledHeight)
         );
     }
 
     public void updateLayout() {
         doLayout(scaling(), true);
-    }
-
-    private void doLayout(double newScaling, boolean forced) {
-        if (newScaling < minScaling) {
-            Logger.warn("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
-            return;
-        }
-        if (!forced && Math.abs(scaling.get() - newScaling) < 1e-2) { // ignore tiny scaling changes
-            Logger.debug("No scaling needed, difference too small");
-            return;
-        }
-        scaling.set(newScaling);
-
-        final Dimension2D scaledSize = computeScaledCanvasSize();
-        setMinSize(scaledSize.getWidth(),  scaledSize.getHeight());
-        setMaxSize(scaledSize.getWidth(),  scaledSize.getHeight());
-        setPrefSize(scaledSize.getWidth(), scaledSize.getHeight());
     }
 
     public void resizeTo(double width, double height) {
@@ -154,4 +127,29 @@ public class GameSceneDecorationPane extends StackPane {
     public void setBorderColor(Color color) {
         borderColor.set(color);
     }
+
+    // Private
+
+    private void doLayout(double newScaling, boolean forced) {
+        if (newScaling < minScaling) {
+            Logger.warn("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
+            return;
+        }
+        if (!forced && Math.abs(scaling.get() - newScaling) < 1e-2) { // ignore tiny scaling changes
+            Logger.debug("No scaling needed, difference too small");
+            return;
+        }
+        scaling.set(newScaling);
+
+        final Dimension2D size = computeScaledSize();
+        setMinSize(size.getWidth(),  size.getHeight());
+        setMaxSize(size.getWidth(),  size.getHeight());
+        setPrefSize(size.getWidth(), size.getHeight());
+    }
+
+    private Dimension2D computeScaledSize() {
+        final double s = scaling();
+        return new Dimension2D(s * (unscaledWidth.get() + PADDING_X), s * (unscaledHeight.get() + PADDING_Y));
+    }
+
 }
