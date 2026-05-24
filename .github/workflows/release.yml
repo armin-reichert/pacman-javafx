@@ -31,15 +31,6 @@ jobs:
           path: pacman-javafx
 
       # ------------------------------------------------------------
-      # 2. Checkout javafx-objimporter
-      # ------------------------------------------------------------
-      - name: Checkout javafx-objimporter
-        uses: actions/checkout@v4
-        with:
-          repository: armin-reichert/javafx-objimporter
-          path: javafx-objimporter
-
-      # ------------------------------------------------------------
       # 3. Set up JDK
       # ------------------------------------------------------------
       - name: Set up JDK
@@ -60,7 +51,7 @@ jobs:
         working-directory: ${{ github.workspace }}/pacman-javafx
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew --info --stacktrace jpackage
+        run: ./gradlew jpackage
 
       # ------------------------------------------------------------
       # 5. Upload installers
