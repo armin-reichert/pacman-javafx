@@ -4,10 +4,7 @@
 package de.amr.pacmanfx.ui.layout.playview;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
@@ -49,13 +46,17 @@ public class GameSceneDecorationPane extends StackPane {
         }
     };
 
-    private final ObjectProperty<Dimension2D> unscaledCanvasSize = new SimpleObjectProperty<>(new Dimension2D(500, 400));
+    private final IntegerProperty unscaledWidth = new SimpleIntegerProperty(500);
+    private final IntegerProperty unscaledHeight = new SimpleIntegerProperty(400);
+
+//    private final ObjectProperty<Dimension2D> unscaledCanvasSize = new SimpleObjectProperty<>(new Dimension2D(500, 400));
 
     private Canvas canvas;
     private double minScaling = 1.0;
 
     public GameSceneDecorationPane() {
-        unscaledCanvasSize.addListener((_, _, _) -> updateLayout());
+        unscaledWidth.addListener((_, _, _) -> updateLayout());
+        unscaledHeight.addListener((_, _, _) -> updateLayout());
 
         clipProperty().bind(Bindings.createObjectBinding(() -> {
                 final double arcDiameter = FRAME_ARC_DIAMETER * scaling();
@@ -64,7 +65,7 @@ public class GameSceneDecorationPane extends StackPane {
                 rect.setArcHeight(arcDiameter);
                 rect.setArcWidth(arcDiameter);
                 return rect;
-            }, scaling, unscaledCanvasSize)
+            }, scaling, unscaledWidth, unscaledHeight)
         );
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
@@ -73,14 +74,13 @@ public class GameSceneDecorationPane extends StackPane {
                 final double borderWidth = Math.max(FRAME_MIN_BORDER_WIDTH, proposedBorderWidth);
                 final double cornerRadius = Math.ceil(FRAME_CORNER_RADIUS * scaling());
                 return createRoundedBorder(borderColor.get(), borderWidth, cornerRadius);
-            }, borderColor, scaling, unscaledCanvasSize)
+            }, borderColor, scaling, unscaledWidth, unscaledHeight)
         );
     }
 
     private Dimension2D computeScaledCanvasSize() {
         final double s = scaling();
-        final Dimension2D size = unscaledCanvasSize.getValue();
-        return new Dimension2D(s * (size.getWidth() + PADDING_X), s * (size.getHeight() + PADDING_Y));
+        return new Dimension2D(s * (unscaledWidth.get() + PADDING_X), s * (unscaledHeight.get() + PADDING_Y));
     }
 
     public void setCanvas(Canvas canvas) {
@@ -88,12 +88,13 @@ public class GameSceneDecorationPane extends StackPane {
         getChildren().setAll(canvas);
 
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
-                () -> scaling() * unscaledCanvasSize.get().getWidth(),
-                scaling, unscaledCanvasSize)
+            () -> scaling() * unscaledWidth.get(),
+            scaling, unscaledWidth, unscaledHeight)
         );
+
         canvas.heightProperty().bind(Bindings.createDoubleBinding(
-                () -> scaling() * unscaledCanvasSize.get().getHeight(),
-                scaling, unscaledCanvasSize)
+                () -> scaling() * unscaledHeight.get(),
+                scaling, unscaledWidth, unscaledHeight)
         );
     }
 
@@ -121,9 +122,9 @@ public class GameSceneDecorationPane extends StackPane {
     public void resizeTo(double width, double height) {
         final double realWidth  = SCALING_X * width;
         final double realHeight = SCALING_Y * height;
-        double newScaling = realHeight / unscaledCanvasSize.get().getHeight();
-        if (newScaling * unscaledCanvasSize.get().getWidth() > realWidth) {
-            newScaling = realWidth / unscaledCanvasSize.get().getWidth();
+        double newScaling = realHeight / unscaledHeight.get();
+        if (newScaling * unscaledWidth.get() > realWidth) {
+            newScaling = realWidth / unscaledWidth.get();
         }
         doLayout(newScaling, false);
         Logger.debug("Canvas container resized to width={} height={}", getWidth(), getHeight());
@@ -143,8 +144,9 @@ public class GameSceneDecorationPane extends StackPane {
         minScaling = value;
     }
 
-    public void setUnscaledCanvasSize(double width, double height) {
-        unscaledCanvasSize.set(new Dimension2D(width, height));
+    public void setUnscaledCanvasSize(int width, int height) {
+        unscaledWidth.set(width);
+        unscaledHeight.set(height);
     }
 
     public void setBorderColor(Color color) {
