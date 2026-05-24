@@ -48,14 +48,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
-//import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
-//import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.ui.AbstractGameSceneConfig.identifySceneSwitchType;
 import static de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
@@ -71,7 +68,44 @@ import static java.util.Objects.requireNonNull;
  */
 public class PlayView extends StackPane implements View {
 
-    private static final FontAwesomeIcon PAUSED_ICON = FontAwesomeIcon.of(FontAwesomeIcon.Symbol.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
+    private class GameEventHandler extends DefaultGameEventListener {
+
+        public GameEventHandler() {}
+
+        @Override
+        public void onGameEvent(GameEvent gameEvent) {
+            switch (gameEvent) {
+
+                case LevelCreatedEvent levelCreatedEvent -> {
+                    final GameLevel level = levelCreatedEvent.level();
+                    final UIConfig uiConfig = ui.currentConfig();
+
+                    //TODO this should be done elsewhere
+                    level.pac().setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
+                    level.ghosts().forEach(ghost ->
+                        ghost.setAnimationManager(uiConfig.createGhostAnimations(ui.spriteAnimationSet(), ghost.personality())));
+
+                    miniView.setGameLevel(level);
+                    miniView.slideIn();
+                    // size of game scene might have changed, so re-embed
+                    optCurrentGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
+                }
+
+                case GameStateChangeEvent stateChangeEvent -> {
+                    if (stateChangeEvent.newState().matchesByName(CanonicalGameState.LEVEL_COMPLETE.name())) {
+                        miniView.slideOut();
+                    }
+                }
+
+                default -> {}
+            }
+
+            updateGameScene();
+
+            // Call game event handler for current game scene
+            optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
+        }
+    }
 
     private final GameEventHandler gameEventHandler = new GameEventHandler();
 
@@ -85,6 +119,7 @@ public class PlayView extends StackPane implements View {
     private final BorderPane widgetLayer = new BorderPane();
     private final HelpLayer helpLayer;
     private final ContextMenu contextMenu;
+    private final FontAwesomeIcon pausedIcon = FontAwesomeIcon.of(FontAwesomeIcon.Symbol.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
 
     private final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
 
@@ -200,47 +235,6 @@ public class PlayView extends StackPane implements View {
         }
     }
 
-    // GameEvent handling
-
-    private class GameEventHandler extends DefaultGameEventListener {
-
-        public GameEventHandler() {}
-
-        @Override
-        public void onGameEvent(GameEvent gameEvent) {
-            switch (gameEvent) {
-
-                case LevelCreatedEvent levelCreatedEvent -> {
-                    final GameLevel level = levelCreatedEvent.level();
-                    final UIConfig uiConfig = ui.currentConfig();
-
-                    //TODO this should be done elsewhere
-                    level.pac().setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
-                    level.ghosts().forEach(ghost ->
-                        ghost.setAnimationManager(uiConfig.createGhostAnimations(ui.spriteAnimationSet(), ghost.personality())));
-
-                    miniView.setGameLevel(level);
-                    miniView.slideIn();
-                    // size of game scene might have changed, so re-embed
-                    optCurrentGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
-                }
-
-                case GameStateChangeEvent stateChangeEvent -> {
-                    if (stateChangeEvent.newState().matchesByName(CanonicalGameState.LEVEL_COMPLETE.name())) {
-                        miniView.slideOut();
-                    }
-                }
-
-                default -> {}
-            }
-
-            updateGameScene();
-
-            // Call game event handler for current game scene
-            optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
-        }
-    }
-
     // ---
 
     private void updateGameScene(boolean forcedReload) {
@@ -277,6 +271,17 @@ public class PlayView extends StackPane implements View {
     }
 
     // Others
+
+    private byte identifySceneSwitchType(GameScene sceneBefore, GameScene sceneAfter) {
+        if (sceneBefore == null && sceneAfter == null) {
+            throw new IllegalStateException("WTF is going on here, switch between NULL scenes?");
+        }
+        return switch (sceneBefore) {
+            case GameScene2D ignored when sceneAfter instanceof PlayScene3D -> 23;
+            case PlayScene3D ignored when sceneAfter instanceof GameScene2D -> 32;
+            case null, default -> 0; // may happen, it's ok
+        };
+    }
 
     private void addListeners() {
         removeListeners();
@@ -350,15 +355,15 @@ public class PlayView extends StackPane implements View {
     }
 
     private void composeLayout() {
-        StackPane.setAlignment(PAUSED_ICON, Pos.CENTER);
+        StackPane.setAlignment(pausedIcon, Pos.CENTER);
         widgetLayer.setLeft(dashboard);
         widgetLayer.setRight(miniView.container());
         canvasLayer.setCenter(canvasDecorationPane);
-        getChildren().addAll(canvasLayer, widgetLayer, helpLayer, PAUSED_ICON);
+        getChildren().addAll(canvasLayer, widgetLayer, helpLayer, pausedIcon);
     }
 
     private void configurePropertyBindings() {
-        PAUSED_ICON.visibleProperty().bind(Bindings.createBooleanBinding(
+        pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> ui.gameContext().clock().getUpdatesDisabled(),
             ui.gameContext().clock().updatesDisabledProperty())
         );
