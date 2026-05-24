@@ -151,5 +151,4 @@ public class GameSceneDecorationPane extends StackPane {
         final double s = scaling();
         return new Dimension2D(s * (unscaledWidth.get() + PADDING_X), s * (unscaledHeight.get() + PADDING_Y));
     }
-
 }

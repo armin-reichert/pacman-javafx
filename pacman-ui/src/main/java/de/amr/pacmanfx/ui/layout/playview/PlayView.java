@@ -72,13 +72,13 @@ public class PlayView extends StackPane implements View {
 
     private final GameUI ui;
     private final Scene parentScene;
-    private final GameSceneDecorationPane decorationPane = new GameSceneDecorationPane();
-    private final MiniGameView miniView = new MiniGameView();
-    private final BorderPane canvasLayer = new BorderPane();
-    private final BorderPane widgetLayer = new BorderPane();
-    private final HelpLayer helpLayer;
-    private final ContextMenu contextMenu;
-    private final FontAwesomeIcon pausedIcon = FontAwesomeIcon.of(FontAwesomeIcon.Symbol.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
+    private GameSceneDecorationPane decorationPane;
+    private MiniGameView miniView;
+    private BorderPane canvasLayer;
+    private BorderPane widgetLayer;
+    private HelpLayer helpLayer;
+    private ContextMenu contextMenu;
+    private FontAwesomeIcon pausedIcon;
 
     private final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
 
@@ -91,6 +91,25 @@ public class PlayView extends StackPane implements View {
 
     private Dashboard dashboard;
 
+    private void create(DashboardConfig dashboardConfig) {
+        decorationPane = new GameSceneDecorationPane();
+        miniView = new MiniGameView();
+        canvasLayer = new BorderPane();
+        helpLayer = new HelpLayer(decorationPane);
+        widgetLayer = new BorderPane();
+        pausedIcon  = FontAwesomeIcon.of(FontAwesomeIcon.Symbol.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
+        contextMenu = new ContextMenu();
+
+        dashboard = new Dashboard(dashboardConfig);
+        dashboard.setVisible(false);
+
+        StackPane.setAlignment(pausedIcon, Pos.CENTER);
+        widgetLayer.setLeft(dashboard);
+        widgetLayer.setRight(miniView.container());
+        canvasLayer.setCenter(decorationPane);
+        getChildren().addAll(canvasLayer, widgetLayer, helpLayer, pausedIcon);
+    }
+
     public PlayView(GameUI ui, Scene parentScene, DashboardConfig dashboardConfig) {
         requireNonNull(ui);
         requireNonNull(parentScene);
@@ -98,12 +117,9 @@ public class PlayView extends StackPane implements View {
 
         this.ui = ui;
         this.parentScene = parentScene;
-        this.contextMenu = new ContextMenu();
-        this.helpLayer = new HelpLayer(decorationPane);
 
-        createDashboard(dashboardConfig);
+        create(dashboardConfig);
         configureGameSceneDecorationPane();
-        composeLayout();
         configureActionBindings();
         configurePropertyBindings();
         configureContextMenu();
@@ -314,23 +330,10 @@ public class PlayView extends StackPane implements View {
         }
     }
 
-    private void createDashboard(DashboardConfig dashboardConfig) {
-        dashboard = new Dashboard(dashboardConfig);
-        dashboard.setVisible(false);
-    }
-
     private void configureGameSceneDecorationPane() {
         decorationPane.setMinScaling(0.5);
         decorationPane.setUnscaledSize(ARCADE_MAP_SIZE_IN_PIXELS.x(), ARCADE_MAP_SIZE_IN_PIXELS.y());
         decorationPane.setBorderColor(ArcadePalette.ARCADE_WHITE);
-    }
-
-    private void composeLayout() {
-        StackPane.setAlignment(pausedIcon, Pos.CENTER);
-        widgetLayer.setLeft(dashboard);
-        widgetLayer.setRight(miniView.container());
-        canvasLayer.setCenter(decorationPane);
-        getChildren().addAll(canvasLayer, widgetLayer, helpLayer, pausedIcon);
     }
 
     private void configurePropertyBindings() {
