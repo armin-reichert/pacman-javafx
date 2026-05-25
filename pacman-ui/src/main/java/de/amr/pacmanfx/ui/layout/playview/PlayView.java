@@ -214,7 +214,11 @@ public class PlayView implements View {
                 hudRenderer.draw(game.hud(), game, gameScene2D);
             }
         });
-        miniView.draw();
+
+        if (miniView().canDraw()) {
+            miniView.draw();
+        }
+
         // Dashboard must also be updated if simulation is stopped
         if (widgetLayer.isVisible()) {
             dashboard.update(ui);
@@ -225,16 +229,23 @@ public class PlayView implements View {
 
     private void createLayout(DashboardConfig dashboardConfig) {
         rootPane = new StackPane();
+
         decorationPane = new DecorationPane(
             DECORATION_CONFIG,
             Globals.ARCADE_MAP_SIZE_IN_PIXELS.x(),
             Globals.ARCADE_MAP_SIZE_IN_PIXELS.y()
         );
+
         miniView = new MiniGameView();
+
         gameSceneContentLayer = new BorderPane();
+
         helpLayer = new HelpLayer(gameSceneContentLayer);
+
         widgetLayer = new BorderPane();
+
         pausedIcon  = FontAwesomeIcon.of(FontAwesomeIcon.Symbol.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
+        pausedIcon.setFocusTraversable(false);
 
         dashboard = new Dashboard(dashboardConfig);
         dashboard.setVisible(false);
@@ -269,11 +280,11 @@ public class PlayView implements View {
 
         // Handle switching between 2D and 3D play scene view
         game.optGameLevel().ifPresent(level -> {
-            final byte sceneSwitchType = identifySceneSwitchType(prevGameScene, nextGameScene);
+            final GameSceneSwitchType sceneSwitchType = identifySceneSwitchType(prevGameScene, nextGameScene);
             switch (sceneSwitchType) {
-                case 23 -> sceneSwitcher.switchPlaySceneTo3D(ui, level, prevGameScene, nextGameScene);
-                case 32 -> sceneSwitcher.switchPlaySceneTo2D(prevGameScene, nextGameScene);
-                case  0 -> {}
+                case FROM_2D_TO_3D -> sceneSwitcher.switchPlaySceneTo3D(ui, level, prevGameScene, nextGameScene);
+                case FROM_3D_TO_2D -> sceneSwitcher.switchPlaySceneTo2D(prevGameScene, nextGameScene);
+                case NONE -> {}
                 default -> throw new IllegalArgumentException("Illegal scene switch type: " + sceneSwitchType);
             }
         });
@@ -283,14 +294,14 @@ public class PlayView implements View {
 
     // Others
 
-    private byte identifySceneSwitchType(GameScene sceneBefore, GameScene sceneAfter) {
+    private GameSceneSwitchType identifySceneSwitchType(GameScene sceneBefore, GameScene sceneAfter) {
         if (sceneBefore == null && sceneAfter == null) {
             throw new IllegalStateException("WTF is going on here, switch between NULL scenes?");
         }
         return switch (sceneBefore) {
-            case GameScene2D ignored when sceneAfter instanceof PlayScene3D -> 23;
-            case PlayScene3D ignored when sceneAfter instanceof GameScene2D -> 32;
-            case null, default -> 0; // may happen, it's ok
+            case GameScene2D ignored when sceneAfter instanceof PlayScene3D -> GameSceneSwitchType.FROM_2D_TO_3D;
+            case PlayScene3D ignored when sceneAfter instanceof GameScene2D -> GameSceneSwitchType.FROM_3D_TO_2D;
+            case null, default -> GameSceneSwitchType.NONE; // may happen, it's ok
         };
     }
 

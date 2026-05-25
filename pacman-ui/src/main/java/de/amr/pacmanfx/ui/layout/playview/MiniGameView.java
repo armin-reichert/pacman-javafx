@@ -133,12 +133,11 @@ public class MiniGameView {
             || slideOutAnimation != null && slideOutAnimation.getStatus() == Animation.Status.RUNNING;
     }
 
-    public void draw() {
-        drawCallCount += 1;
+    public boolean canDraw() {
+        return levelRenderer != null && actorRenderer != null;
+    }
 
-        if (!container.isVisible() || levelRenderer == null) {
-            return;
-        }
+    public void draw() {
         canvasRenderer.clearCanvas();
 
         final Game game = ui.gameContext().game();
@@ -170,6 +169,8 @@ public class MiniGameView {
                 0.5 * worldSize.get().x(), 16
             );
         }
+
+        drawCallCount += 1;
     }
 
     // Private area
