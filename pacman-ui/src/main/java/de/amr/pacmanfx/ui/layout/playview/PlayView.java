@@ -351,18 +351,18 @@ public class PlayView implements View {
 
         gameScene2D.setCanvas(decorationPane.canvas());
         gameScene2D.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
-        updateGameScene2DRenderer(gameScene2D);
+
+        updateRenderers(gameScene2D);
     }
 
-    private void updateGameScene2DRenderer(GameScene2D gameScene2D) {
+    private void updateRenderers(GameScene2D gameScene2D) {
         sceneRenderer = ui.currentConfig().createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
         hudRenderer   = ui.currentConfig().createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
     }
 
     public void embedGameScene(GameScene gameScene) {
-        hudRenderer = null;
         if (gameScene.optSubScene().isPresent()) {
-            embedGameSceneWithSubSceneFX(gameScene, gameScene.optSubScene().get());
+            embedGameSceneInSubSceneFX(gameScene, gameScene.optSubScene().get());
         }
         else if (gameScene instanceof GameScene2D gameScene2D) {
             embedGameScene2D(gameScene2D);
@@ -372,42 +372,45 @@ public class PlayView implements View {
         }
     }
 
-    private void embedGameSceneWithSubSceneFX(GameScene gameScene, SubScene subSceneFX) {
+    private void embedGameSceneInSubSceneFX(GameScene gameScene, SubScene subSceneFX) {
         subSceneFX.widthProperty().bind(parentSceneFX.widthProperty());
         subSceneFX.heightProperty().bind(parentSceneFX.heightProperty());
         if (gameScene instanceof GameScene2D gameScene2D) {
-            useDecoratedCanvas(gameScene2D);
+            gameScene2D.setCanvas(decorationPane.canvas());
+            updateRenderers(gameScene2D);
         }
         rootPane.getChildren().set(0, subSceneFX);
     }
 
     private void embedGameScene2D(GameScene2D gameScene2D) {
         double aspect = gameScene2D.getAspectRatio();
-        if (ui.currentGameSceneConfig().sceneDecorationRequested(gameScene2D)) {
 
+        if (ui.currentGameSceneConfig().sceneDecorationRequested(gameScene2D)) {
             decorationPane.unscaledWidthProperty().bind(gameScene2D.unscaledWidthProperty());
             decorationPane.unscaledHeightProperty().bind(gameScene2D.unscaledHeightProperty());
             decorationPane.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
             decorationPane.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR.map(UfxBackgrounds::paintBackground));
-            canvasLayer.setCenter(decorationPane);
 
             // Decorated game scene scaled-down to give space for the decoration
             gameScene2D.scalingProperty().bind(decorationPane.scalingProperty().map(
                 scaling -> Math.min(scaling.doubleValue(), MAX_GAME_SCENE_SCALING)));
 
             useDecoratedCanvas(gameScene2D);
+
+            canvasLayer.setCenter(decorationPane);
         }
         else {
             // Undecorated game scene taking complete height
             decorationPane.canvas().heightProperty().bind(parentSceneFX.heightProperty());
             decorationPane.canvas().widthProperty().bind(parentSceneFX.heightProperty().map(h -> h.doubleValue() * aspect));
-            canvasLayer.setCenter(decorationPane.canvas());
 
             gameScene2D.scalingProperty().bind(parentSceneFX.heightProperty().divide(gameScene2D.getUnscaledHeight()));
 
             //TODO this is just to ensure the game scene renderer can be created
             gameScene2D.setCanvas(decorationPane.canvas());
-            updateGameScene2DRenderer(gameScene2D);
+            updateRenderers(gameScene2D);
+
+            canvasLayer.setCenter(decorationPane.canvas());
         }
         rootPane.getChildren().set(0, canvasLayer);
     }
