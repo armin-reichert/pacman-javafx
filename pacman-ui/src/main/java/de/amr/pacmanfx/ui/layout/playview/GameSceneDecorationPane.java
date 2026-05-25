@@ -73,6 +73,7 @@ public class GameSceneDecorationPane extends StackPane {
 
     public GameSceneDecorationPane(Config config, double unscaledWidth, double unscaledHeight) {
         this.config = requireNonNull(config);
+
         unscaledWidthProperty().set(unscaledWidth);
         unscaledHeightProperty().set(unscaledHeight);
 
@@ -108,20 +109,22 @@ public class GameSceneDecorationPane extends StackPane {
         getChildren().setAll(canvas);
 
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> scaling() * unscaledWidth.get(), scaling, unscaledWidth, unscaledHeight)
+            () -> scaling() * unscaledWidthProperty().get(),
+            scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
         );
 
         canvas.heightProperty().bind(Bindings.createDoubleBinding(
-            () -> scaling() * unscaledHeight.get(), scaling, unscaledWidth, unscaledHeight)
+            () -> scaling() * unscaledHeightProperty().get(),
+            scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
         );
     }
 
     public void stretchTo(double width, double height) {
         final double realWidth  = config.scalingX() * width;
         final double realHeight = config.scalingY() * height;
-        double targetScaling = realHeight / unscaledHeight.get();
-        if (targetScaling * unscaledWidth.get() > realWidth) {
-            targetScaling = realWidth / unscaledWidth.get();
+        double targetScaling = realHeight / unscaledHeightProperty().get();
+        if (targetScaling * unscaledWidthProperty().get() > realWidth) {
+            targetScaling = realWidth / unscaledWidthProperty().get();
         }
         doLayout(targetScaling, false);
     }
@@ -138,7 +141,9 @@ public class GameSceneDecorationPane extends StackPane {
         return unscaledHeight;
     }
 
-    public DoubleProperty scalingProperty() { return scaling; }
+    public DoubleProperty scalingProperty() {
+        return scaling;
+    }
 
     public double scaling() {
         return scalingProperty().get();
