@@ -428,9 +428,6 @@ public class PlayView implements View {
                 .formatted(nextScene.getClass().getSimpleName()));
         }
 
-        // Pause simulation while switching
-        ui.gameContext().clock().setUpdatesDisabled(true);
-
         playScene3D.replaceGameLevel3D(level);
         playScene3D.updateHUD3D(level);
         playScene3D.replaceActionBindings(level);
@@ -445,7 +442,6 @@ public class PlayView implements View {
             ui.currentConfig().optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
 
-        ui.gameContext().clock().setUpdatesDisabled(false);
         Logger.info("3D scene {} entered from 3D scene {}", playScene3D.getClass().getSimpleName(), currentScene.getClass().getSimpleName());
 
         playScene3D.fadeInAnimation().playFromStart();
@@ -456,10 +452,7 @@ public class PlayView implements View {
             throw new IllegalArgumentException("Expected GameScene2D, but scene has class %s"
                 .formatted(nextScene.getClass().getSimpleName()));
         }
-        // Pause simulation during scene switching
-        ui.gameContext().clock().setUpdatesDisabled(true);
         playScene2D.onEnteredFrom3DScene();
-        ui.gameContext().clock().setUpdatesDisabled(false);
         Logger.info("2D scene {} entered from 3D scene {}", playScene2D.getClass().getSimpleName(), currentScene.getClass().getSimpleName());
     }
 }
