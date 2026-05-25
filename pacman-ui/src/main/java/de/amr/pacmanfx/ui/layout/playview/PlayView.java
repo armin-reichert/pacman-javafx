@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.layout.playview;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameScene;
@@ -122,10 +123,6 @@ public class PlayView implements View {
         return contextMenu;
     }
 
-    public Scene parentScene() {
-        return parentSceneFX;
-    }
-
     public ObjectProperty<GameScene> gameSceneProperty() {
         return gameScene;
     }
@@ -210,7 +207,7 @@ public class PlayView implements View {
 
     private void createLayout(DashboardConfig dashboardConfig) {
         rootPane = new StackPane();
-        decorationPane = new GameSceneDecorationPane();
+        decorationPane = new GameSceneDecorationPane(Globals.ARCADE_MAP_SIZE_IN_PIXELS.x(), Globals.ARCADE_MAP_SIZE_IN_PIXELS.y());
         miniView = new MiniGameView();
         canvasLayer = new BorderPane();
         helpLayer = new HelpLayer(canvasLayer);

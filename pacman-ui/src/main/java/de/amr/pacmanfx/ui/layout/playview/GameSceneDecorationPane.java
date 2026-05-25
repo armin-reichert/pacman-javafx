@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.layout.playview;
 
-import de.amr.pacmanfx.Globals;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -62,9 +61,9 @@ public class GameSceneDecorationPane extends StackPane {
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
 
-    private final DoubleProperty unscaledWidth = new SimpleDoubleProperty(Globals.ARCADE_MAP_SIZE_IN_PIXELS.x());
+    private final DoubleProperty unscaledWidth = new SimpleDoubleProperty(400);
 
-    private final DoubleProperty unscaledHeight = new SimpleDoubleProperty(Globals.ARCADE_MAP_SIZE_IN_PIXELS.y());
+    private final DoubleProperty unscaledHeight = new SimpleDoubleProperty(600);
 
     private Canvas canvas = new Canvas();
 
@@ -72,20 +71,22 @@ public class GameSceneDecorationPane extends StackPane {
 
     private final Config config;
 
-    public GameSceneDecorationPane() {
-        this(DEFAULT_CONFIG);
+    public GameSceneDecorationPane(double unscaledWidth, double unscaledHeight) {
+        this(DEFAULT_CONFIG, unscaledWidth, unscaledHeight);
     }
 
-    public GameSceneDecorationPane(Config config) {
+    public GameSceneDecorationPane(Config config, double unscaledWidth, double unscaledHeight) {
         this.config = requireNonNull(config);
+        unscaledWidthProperty().set(unscaledWidth);
+        unscaledHeightProperty().set(unscaledHeight);
 
         borderColor.set(config.frameConfig().defaultBorderColor());
 
         newCanvas();
 
         final ChangeListener<? super Number> resizeHandler = (_, _, _) -> doLayout(scaling(), true);
-        unscaledWidth.addListener(resizeHandler);
-        unscaledHeight.addListener(resizeHandler);
+        unscaledWidthProperty().addListener(resizeHandler);
+        unscaledHeightProperty().addListener(resizeHandler);
         scaling.addListener(resizeHandler);
 
         clipProperty().bind(Bindings.createObjectBinding(() -> {
@@ -95,7 +96,7 @@ public class GameSceneDecorationPane extends StackPane {
                 rect.setArcHeight(arcDiameter);
                 rect.setArcWidth(arcDiameter);
                 return rect;
-            }, scaling, unscaledWidth, unscaledHeight)
+            }, scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
         );
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
@@ -104,7 +105,7 @@ public class GameSceneDecorationPane extends StackPane {
                 final double borderWidth = Math.max(config.frameConfig().minBorderWidth(), proposedBorderWidth);
                 final double cornerRadius = Math.ceil(config.frameConfig().cornerRadius() * scaling());
                 return createRoundedBorder(borderColor.get(), borderWidth, cornerRadius);
-            }, borderColor, scaling, unscaledWidth, unscaledHeight)
+            }, borderColorProperty(), scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
         );
     }
 
@@ -133,6 +134,10 @@ public class GameSceneDecorationPane extends StackPane {
 
     public Canvas canvas() {
         return canvas;
+    }
+
+    public ObjectProperty<Color> borderColorProperty() {
+        return borderColor;
     }
 
     public DoubleProperty unscaledWidthProperty() {
