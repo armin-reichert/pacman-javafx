@@ -20,7 +20,6 @@ import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.layout.HelpLayer;
 import de.amr.pacmanfx.ui.layout.View;
-import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
 import javafx.beans.binding.Bindings;
@@ -30,8 +29,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.SubScene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -90,6 +87,7 @@ public class PlayView implements View {
     private final ChangeListener<GameScene> gameSceneChangeHandler;
     private final ChangeListener<? super Number> parentSceneSizeChangeHandler;
 
+    private final PlayViewGameSceneEmbedder embedder = new PlayViewGameSceneEmbedder();
     private final SceneSwitcher sceneSwitcher = new SceneSwitcher();
 
     public PlayView(GameUI ui, Scene parentSceneFX, DashboardConfig dashboardConfig) {
@@ -113,7 +111,7 @@ public class PlayView implements View {
         gameSceneChangeHandler = (_, _, gameScene) -> {
             contextMenu.hide();
             if (gameScene != null) {
-                embedGameScene(gameScene);
+                embedder.embedGameScene(ui, this, gameScene);
             }
         };
         parentSceneSizeChangeHandler = (_, _, _) -> decorationPane.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
@@ -121,6 +119,10 @@ public class PlayView implements View {
 
     public PlayViewGameEventHandler gameEventHandler() {
         return gameEventHandler;
+    }
+
+    public PlayViewGameSceneEmbedder embedder() {
+        return embedder;
     }
 
     public GameUI ui() {
@@ -133,6 +135,18 @@ public class PlayView implements View {
 
     public ObjectProperty<GameScene> gameSceneProperty() {
         return gameScene;
+    }
+
+    public Scene parentSceneFX() {
+        return parentSceneFX;
+    }
+
+    public BorderPane canvasLayer() {
+        return canvasLayer;
+    }
+
+    public GameSceneDecorationPane decorationPane() {
+        return decorationPane;
     }
 
     public Optional<GameScene> optCurrentGameScene() {
@@ -249,7 +263,7 @@ public class PlayView implements View {
         }
 
         nextGameScene.onEmbeddedIntoUI(); // Must be called *before* embedding
-        embedGameScene(nextGameScene);
+        embedder.embedGameScene(ui, this, nextGameScene);
         nextGameScene.init();
         Logger.info("Game scene initialized: {}", nextGameScene.getClass().getSimpleName());
 
@@ -318,86 +332,11 @@ public class PlayView implements View {
         ));
     }
 
-    public void embedGameScene(GameScene gameScene) {
-        if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameSceneWithSubSceneFX(gameScene, gameScene.optSubSceneFX().get());
-        }
-        else if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2D(gameScene2D);
-        }
-        else {
-            Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
-        }
-    }
-
-    private void setContent(Node content) {
+    public void setContent(Node content) {
         rootPane.getChildren().set(0, content);
     }
 
-    // 3D scenes or 2D scenes with camera
-    private void embedGameSceneWithSubSceneFX(GameScene gameScene, SubScene subSceneFX) {
-
-        // stretch sub scene to available space
-        subSceneFX.widthProperty().bind(parentSceneFX.widthProperty());
-        subSceneFX.heightProperty().bind(parentSceneFX.heightProperty());
-
-        if (gameScene instanceof GameScene2D gameScene2D) {
-            // use the canvas of the decorated pane for 2D scene even though the decoration is not used
-            gameScene2D.setCanvas(decorationPane.canvas());
-            updateRenderers(gameScene2D);
-        }
-        setContent(subSceneFX);
-    }
-
-    // 2D scenes without camera which are shown at full size
-    private void embedGameScene2D(GameScene2D gameScene2D) {
-        final boolean decorated = ui.currentGameSceneConfig().sceneDecorationRequested(gameScene2D);
-
-        if (decorated) {
-
-            // set unscaled decoration pane size to game scene (=world map) size
-            decorationPane.unscaledWidthProperty().bind(gameScene2D.unscaledWidthProperty());
-            decorationPane.unscaledHeightProperty().bind(gameScene2D.unscaledHeightProperty());
-
-            // scale decoration pane to available scene space
-            decorationPane.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
-
-            // bind background color for canvas and decoration pane
-            gameScene2D.backgroundColorProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
-            decorationPane.backgroundProperty().bind(gameScene2D.backgroundColorProperty().map(UfxBackgrounds::paintBackground));
-
-            // Limit scaling
-            gameScene2D.scalingProperty().bind(decorationPane.scalingProperty().map(
-                scaling -> Math.min(scaling.doubleValue(), MAX_GAME_SCENE_SCALING)));
-
-            decorationPane.newCanvas(); //TODO check why creating a new canvas is needed
-            gameScene2D.setCanvas(decorationPane.canvas());
-            updateRenderers(gameScene2D);
-
-            canvasLayer.setCenter(decorationPane);
-        }
-        else {
-            // Undecorated game scene taking complete height
-
-            final Canvas canvas = decorationPane.canvas();
-            final double aspect = gameScene2D.getAspectRatio();
-
-            canvas.heightProperty().bind(parentSceneFX.heightProperty());
-            canvas.widthProperty().bind(parentSceneFX.heightProperty().map(h -> h.doubleValue() * aspect));
-
-            gameScene2D.scalingProperty().bind(parentSceneFX.heightProperty().divide(gameScene2D.getUnscaledHeight()));
-
-            // Game scene renderer can only be created if canvas is available
-            gameScene2D.setCanvas(canvas);
-            updateRenderers(gameScene2D);
-
-            canvasLayer.setCenter(canvas);
-        }
-
-        setContent(canvasLayer);
-    }
-
-    private void updateRenderers(GameScene2D gameScene2D) {
+    public void updateRenderers(GameScene2D gameScene2D) {
         sceneRenderer = ui.currentConfig().createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
         hudRenderer   = ui.currentConfig().createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
     }
