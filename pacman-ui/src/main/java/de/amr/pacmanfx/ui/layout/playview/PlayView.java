@@ -33,7 +33,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -220,7 +219,7 @@ public class PlayView implements View {
         decorationPane = new GameSceneDecorationPane();
         miniView = new MiniGameView();
         canvasLayer = new BorderPane();
-        helpLayer = new HelpLayer(decorationPane);
+        helpLayer = new HelpLayer(canvasLayer);
         widgetLayer = new BorderPane();
         pausedIcon  = FontAwesomeIcon.of(FontAwesomeIcon.Symbol.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
 
@@ -230,6 +229,7 @@ public class PlayView implements View {
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
         widgetLayer.setLeft(dashboard);
         widgetLayer.setRight(miniView.container());
+
         canvasLayer.setCenter(decorationPane);
 
         rootPane.getChildren().addAll(canvasLayer, widgetLayer, helpLayer, pausedIcon);
@@ -349,10 +349,9 @@ public class PlayView implements View {
     }
 
     private void useDecoratedCanvas(GameScene2D gameScene2D) {
-        final Canvas canvas = new Canvas();
-        decorationPane.setCanvas(canvas);
+        decorationPane.newCanvas();
 
-        gameScene2D.setCanvas(canvas);
+        gameScene2D.setCanvas(decorationPane.canvas());
         gameScene2D.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
 
         updateGameScene2DRenderer(gameScene2D);

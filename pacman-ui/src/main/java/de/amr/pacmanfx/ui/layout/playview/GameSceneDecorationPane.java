@@ -47,10 +47,13 @@ public class GameSceneDecorationPane extends StackPane {
 
     private final DoubleProperty unscaledHeight = new SimpleDoubleProperty(Globals.ARCADE_MAP_SIZE_IN_PIXELS.y());
 
-    private Canvas canvas;
+    private Canvas canvas = new Canvas();
+
     private double minScaling = 1.0;
 
     public GameSceneDecorationPane() {
+
+        newCanvas();
 
         final ChangeListener<? super Number> resizeHandler = (_, _, _) -> updateLayout();
         unscaledWidth.addListener(resizeHandler);
@@ -77,8 +80,8 @@ public class GameSceneDecorationPane extends StackPane {
         );
     }
 
-    public void setCanvas(Canvas canvas) {
-        this.canvas = requireNonNull(canvas);
+    public void newCanvas() {
+        canvas = new Canvas();
         getChildren().setAll(canvas);
 
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
