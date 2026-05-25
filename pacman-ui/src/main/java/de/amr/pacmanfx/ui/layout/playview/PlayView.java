@@ -58,6 +58,20 @@ public class PlayView implements View {
 
     public static final float MAX_GAME_SCENE_SCALING = 5;
 
+    public static final GameSceneDecorationPane.Config DECORATION_CONFIG = new GameSceneDecorationPane.Config(
+        0.85f,
+        0.93f,
+        1.0f,
+        20,
+        20,
+        new GameSceneDecorationPane.FrameConfig(
+            26,
+            10,
+            5,
+            55.0,
+            ArcadePalette.ARCADE_WHITE)
+    );
+
     private final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
 
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
@@ -90,8 +104,6 @@ public class PlayView implements View {
         this.parentSceneFX = parentSceneFX;
 
         createLayout(dashboardConfig);
-
-        configureGameSceneDecorationPane();
         configureActionBindings();
         configurePropertyBindings();
 
@@ -207,7 +219,11 @@ public class PlayView implements View {
 
     private void createLayout(DashboardConfig dashboardConfig) {
         rootPane = new StackPane();
-        decorationPane = new GameSceneDecorationPane(Globals.ARCADE_MAP_SIZE_IN_PIXELS.x(), Globals.ARCADE_MAP_SIZE_IN_PIXELS.y());
+        decorationPane = new GameSceneDecorationPane(
+            DECORATION_CONFIG,
+            Globals.ARCADE_MAP_SIZE_IN_PIXELS.x(),
+            Globals.ARCADE_MAP_SIZE_IN_PIXELS.y()
+        );
         miniView = new MiniGameView();
         canvasLayer = new BorderPane();
         helpLayer = new HelpLayer(canvasLayer);
@@ -282,11 +298,6 @@ public class PlayView implements View {
         gameScene.removeListener(gameSceneChangeHandler);
         parentSceneFX.widthProperty().removeListener(parentSceneSizeChangeHandler);
         parentSceneFX.heightProperty().removeListener(parentSceneSizeChangeHandler);
-    }
-
-    private void configureGameSceneDecorationPane() {
-        decorationPane.setMinScaling(0.5);
-        decorationPane.setBorderColor(ArcadePalette.ARCADE_WHITE);
     }
 
     private void configurePropertyBindings() {

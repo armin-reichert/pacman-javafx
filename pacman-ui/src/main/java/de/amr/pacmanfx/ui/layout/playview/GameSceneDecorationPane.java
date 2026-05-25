@@ -6,9 +6,7 @@ package de.amr.pacmanfx.ui.layout.playview;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.Canvas;
@@ -28,11 +26,12 @@ public class GameSceneDecorationPane extends StackPane {
         int    cornerRadius,
         int    minBorderWidth,
         double borderWidthRatio,
-        Color  defaultBorderColor) {}
+        Color borderColor) {}
 
     public record Config(
         float scalingX,
         float scalingY,
+        float minScaling,
         float paddingX,
         float paddingY,
         FrameConfig frameConfig) {}
@@ -40,6 +39,7 @@ public class GameSceneDecorationPane extends StackPane {
     public static final Config DEFAULT_CONFIG = new Config(
         0.85f,
         0.93f,
+        1.0f,
         20,
         20,
         new FrameConfig(
@@ -57,8 +57,6 @@ public class GameSceneDecorationPane extends StackPane {
         return new Border(stroke);
     }
 
-    private final ObjectProperty<Color> borderColor = new SimpleObjectProperty<>();
-
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
 
     private final DoubleProperty unscaledWidth = new SimpleDoubleProperty(400);
@@ -66,8 +64,6 @@ public class GameSceneDecorationPane extends StackPane {
     private final DoubleProperty unscaledHeight = new SimpleDoubleProperty(600);
 
     private Canvas canvas = new Canvas();
-
-    private double minScaling = 1.0;
 
     private final Config config;
 
@@ -79,8 +75,6 @@ public class GameSceneDecorationPane extends StackPane {
         this.config = requireNonNull(config);
         unscaledWidthProperty().set(unscaledWidth);
         unscaledHeightProperty().set(unscaledHeight);
-
-        borderColor.set(config.frameConfig().defaultBorderColor());
 
         newCanvas();
 
@@ -104,8 +98,8 @@ public class GameSceneDecorationPane extends StackPane {
                 final double proposedBorderWidth = Math.ceil(scaledSize.getHeight() / config.frameConfig().borderWidthRatio());
                 final double borderWidth = Math.max(config.frameConfig().minBorderWidth(), proposedBorderWidth);
                 final double cornerRadius = Math.ceil(config.frameConfig().cornerRadius() * scaling());
-                return createRoundedBorder(borderColor.get(), borderWidth, cornerRadius);
-            }, borderColorProperty(), scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
+                return createRoundedBorder(config.frameConfig().borderColor(), borderWidth, cornerRadius);
+            }, scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
         );
     }
 
@@ -136,10 +130,6 @@ public class GameSceneDecorationPane extends StackPane {
         return canvas;
     }
 
-    public ObjectProperty<Color> borderColorProperty() {
-        return borderColor;
-    }
-
     public DoubleProperty unscaledWidthProperty() {
         return unscaledWidth;
     }
@@ -154,19 +144,11 @@ public class GameSceneDecorationPane extends StackPane {
         return scalingProperty().get();
     }
 
-    public void setMinScaling(double value) {
-        minScaling = value;
-    }
-
-    public void setBorderColor(Color color) {
-        borderColor.set(color);
-    }
-
     // Private
 
     private void doLayout(double targetScaling, boolean forced) {
-        if (targetScaling < minScaling) {
-            Logger.warn("Cannot scale to {}, minimum scaling is {}", targetScaling, minScaling);
+        if (targetScaling < config.minScaling()) {
+            Logger.warn("Cannot scale to {}, minimum scaling is {}", targetScaling, config.minScaling());
             return;
         }
         if (!forced && Math.abs(scaling.get() - targetScaling) < 1e-2) { // ignore tiny scaling changes
