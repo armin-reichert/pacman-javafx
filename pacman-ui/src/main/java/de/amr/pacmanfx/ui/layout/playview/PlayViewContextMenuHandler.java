@@ -49,7 +49,7 @@ public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent
         });
 
         if (!menu.getItems().isEmpty()) {
-            menu.show(playView, event.getScreenX(), event.getScreenY());
+            menu.show(playView.root(), event.getScreenX(), event.getScreenY());
             menu.requestFocus();
         }
     }

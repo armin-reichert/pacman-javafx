@@ -57,7 +57,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
-public class PlayView extends StackPane implements View {
+public class PlayView implements View {
 
     public static final float MAX_GAME_SCENE_SCALING = 5;
 
@@ -68,6 +68,7 @@ public class PlayView extends StackPane implements View {
     private final GameUI ui;
     private final ContextMenu contextMenu;
     private final Scene parentScene;
+    private StackPane rootPane;
     private GameSceneDecorationPane decorationPane;
     private MiniGameView miniView;
     private BorderPane canvasLayer;
@@ -85,24 +86,6 @@ public class PlayView extends StackPane implements View {
     private HeadsUpDisplay_Renderer hudRenderer;
 
     private Dashboard dashboard;
-
-    private void createLayout(DashboardConfig dashboardConfig) {
-        decorationPane = new GameSceneDecorationPane();
-        miniView = new MiniGameView();
-        canvasLayer = new BorderPane();
-        helpLayer = new HelpLayer(decorationPane);
-        widgetLayer = new BorderPane();
-        pausedIcon  = FontAwesomeIcon.of(FontAwesomeIcon.Symbol.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
-
-        dashboard = new Dashboard(dashboardConfig);
-        dashboard.setVisible(false);
-
-        StackPane.setAlignment(pausedIcon, Pos.CENTER);
-        widgetLayer.setLeft(dashboard);
-        widgetLayer.setRight(miniView.container());
-        canvasLayer.setCenter(decorationPane);
-        getChildren().addAll(canvasLayer, widgetLayer, helpLayer, pausedIcon);
-    }
 
     public PlayView(GameUI ui, Scene parentScene, DashboardConfig dashboardConfig) {
         requireNonNull(ui);
@@ -124,7 +107,7 @@ public class PlayView extends StackPane implements View {
         ui.gameContext().gameVariantNameProperty().addListener(
             (_, oldVariantName, newVariantName) -> handleGameVariantNameChange(oldVariantName, newVariantName));
 
-        setOnContextMenuRequested(contextMenuHandler);
+        rootPane.setOnContextMenuRequested(contextMenuHandler);
     }
 
     public GameUI ui() {
@@ -191,7 +174,7 @@ public class PlayView extends StackPane implements View {
 
     @Override
     public void onEnter() {
-        requestFocus();
+        rootPane.requestFocus();
         addListeners();
         decorationPane.updateLayout();
     }
@@ -203,7 +186,7 @@ public class PlayView extends StackPane implements View {
 
     @Override
     public StackPane root() {
-        return this;
+        return rootPane;
     }
 
     @Override
@@ -225,6 +208,26 @@ public class PlayView extends StackPane implements View {
     }
 
     // ---
+
+    private void createLayout(DashboardConfig dashboardConfig) {
+        rootPane = new StackPane();
+        decorationPane = new GameSceneDecorationPane();
+        miniView = new MiniGameView();
+        canvasLayer = new BorderPane();
+        helpLayer = new HelpLayer(decorationPane);
+        widgetLayer = new BorderPane();
+        pausedIcon  = FontAwesomeIcon.of(FontAwesomeIcon.Symbol.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
+
+        dashboard = new Dashboard(dashboardConfig);
+        dashboard.setVisible(false);
+
+        StackPane.setAlignment(pausedIcon, Pos.CENTER);
+        widgetLayer.setLeft(dashboard);
+        widgetLayer.setRight(miniView.container());
+        canvasLayer.setCenter(decorationPane);
+
+        rootPane.getChildren().addAll(canvasLayer, widgetLayer, helpLayer, pausedIcon);
+    }
 
     private void updateGameScene(boolean forcedReload) {
         final Game game = ui.gameContext().game();
@@ -408,7 +411,7 @@ public class PlayView extends StackPane implements View {
         if (gameScene instanceof GameScene2D gameScene2D) {
             useDecoratedCanvas(gameScene2D);
         }
-        getChildren().set(0, subSceneFX);
+        rootPane.getChildren().set(0, subSceneFX);
     }
 
     private void embedGameScene2D(Scene parentSceneFX, GameScene2D gameScene2D) {
@@ -432,7 +435,7 @@ public class PlayView extends StackPane implements View {
             gameScene2D.scalingProperty().bind(parentSceneFX.heightProperty().divide(gameScene2D.getUnscaledHeight()));
             canvasLayer.setCenter(decorationPane.canvas());
         }
-        getChildren().set(0, canvasLayer);
+        rootPane.getChildren().set(0, canvasLayer);
     }
 
     public void embedGameScene(Scene parentSceneFX, GameScene gameScene) {
