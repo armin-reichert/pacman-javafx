@@ -265,7 +265,6 @@ public class PlayView implements View {
     private void createLayout(DashboardConfig dashboardConfig) {
 
         // Layer 1: Game scene with or without decoration
-
         gameSceneDecorationPane = new DecorationPane(
             DECORATION_CONFIG,
             Globals.ARCADE_MAP_SIZE_IN_PIXELS.x(),
@@ -274,8 +273,7 @@ public class PlayView implements View {
         gameSceneLayer = new BorderPane();
         gameSceneLayer.setCenter(gameSceneDecorationPane);
 
-        // Layer 2: Overlay layer with dashboard and miniview for 3D scene
-
+        // Layer 2: Overlay layer with dashboard and mini-view for 3D scene
         miniView = new MiniGameView();
 
         dashboard = new Dashboard(dashboardConfig);
