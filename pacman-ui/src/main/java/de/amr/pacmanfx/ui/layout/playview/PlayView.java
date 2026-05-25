@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.layout.playview;
 
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
@@ -15,16 +14,13 @@ import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.layout.HelpLayer;
 import de.amr.pacmanfx.ui.layout.View;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
-import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
 import javafx.beans.binding.Bindings;
@@ -92,6 +88,8 @@ public class PlayView implements View {
     private final PlayViewGameEventHandler gameEventHandler = new PlayViewGameEventHandler(this);
     private final ChangeListener<GameScene> gameSceneChangeHandler;
     private final ChangeListener<? super Number> parentSceneSizeChangeHandler;
+
+    private final SceneSwitcher sceneSwitcher = new SceneSwitcher();
 
     public PlayView(GameUI ui, Scene parentSceneFX, DashboardConfig dashboardConfig) {
         requireNonNull(ui);
@@ -258,8 +256,8 @@ public class PlayView implements View {
         game.optGameLevel().ifPresent(level -> {
             final byte sceneSwitchType = identifySceneSwitchType(prevGameScene, nextGameScene);
             switch (sceneSwitchType) {
-                case 23 -> switchPlaySceneTo3D(level, prevGameScene, nextGameScene);
-                case 32 -> switchPlaySceneTo2D(prevGameScene, nextGameScene);
+                case 23 -> sceneSwitcher.switchPlaySceneTo3D(ui, level, prevGameScene, nextGameScene);
+                case 32 -> sceneSwitcher.switchPlaySceneTo2D(prevGameScene, nextGameScene);
                 case  0 -> {}
                 default -> throw new IllegalArgumentException("Illegal scene switch type: " + sceneSwitchType);
             }
@@ -397,41 +395,5 @@ public class PlayView implements View {
     private void updateRenderers(GameScene2D gameScene2D) {
         sceneRenderer = ui.currentConfig().createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
         hudRenderer   = ui.currentConfig().createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
-    }
-
-    // 2D-3D switch Gedöns
-
-    private void switchPlaySceneTo3D(GameLevel level, GameScene currentScene, GameScene nextScene) {
-        if (!(nextScene instanceof PlayScene3D playScene3D)) {
-            throw new IllegalArgumentException("Expected PlayScene3D, but scene has class %s"
-                .formatted(nextScene.getClass().getSimpleName()));
-        }
-
-        playScene3D.replaceGameLevel3D(level);
-        playScene3D.updateHUD3D(level);
-        playScene3D.replaceActionBindings(level);
-        playScene3D.initFood3D(level.worldMap().foodLayer(), true);
-
-        final GameLevel3D level3D = playScene3D.optGameLevel3D().orElseThrow();
-        final Pac3D pac3D = level3D.pac3D();
-        playScene3D.initPac3D(pac3D, level);
-        level3D.startLivesCounterTrackingPac();
-
-        if (level.pac().powerTimer().isRunning()) {
-            ui.currentConfig().optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
-        }
-
-        Logger.info("3D scene {} entered from 3D scene {}", playScene3D.getClass().getSimpleName(), currentScene.getClass().getSimpleName());
-
-        playScene3D.fadeInAnimation().playFromStart();
-    }
-
-    private void switchPlaySceneTo2D(GameScene currentScene, GameScene nextScene) {
-        if (!(nextScene instanceof GameScene2D playScene2D)) {
-            throw new IllegalArgumentException("Expected GameScene2D, but scene has class %s"
-                .formatted(nextScene.getClass().getSimpleName()));
-        }
-        playScene2D.onEnteredFrom3DScene();
-        Logger.info("2D scene {} entered from 3D scene {}", playScene2D.getClass().getSimpleName(), currentScene.getClass().getSimpleName());
     }
 }
