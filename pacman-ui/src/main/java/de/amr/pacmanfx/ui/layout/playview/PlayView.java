@@ -28,6 +28,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -329,6 +330,10 @@ public class PlayView implements View {
         }
     }
 
+    private void setContent(Node content) {
+        rootPane.getChildren().set(0, content);
+    }
+
     // 3D scenes or 2D scenes with camera
     private void embedGameSceneWithSubSceneFX(GameScene gameScene, SubScene subSceneFX) {
 
@@ -341,7 +346,7 @@ public class PlayView implements View {
             gameScene2D.setCanvas(decorationPane.canvas());
             updateRenderers(gameScene2D);
         }
-        rootPane.getChildren().set(0, subSceneFX);
+        setContent(subSceneFX);
     }
 
     // 2D scenes without camera which are shown at full size
@@ -389,7 +394,7 @@ public class PlayView implements View {
             canvasLayer.setCenter(canvas);
         }
 
-        rootPane.getChildren().set(0, canvasLayer);
+        setContent(canvasLayer);
     }
 
     private void updateRenderers(GameScene2D gameScene2D) {
