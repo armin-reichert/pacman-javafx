@@ -39,7 +39,7 @@ public class DecorationPane extends StackPane {
     public static final Config DEFAULT_CONFIG = new Config(
         0.85f,
         0.93f,
-        1.0f,
+        0.5f,
         20,
         20,
         new FrameConfig(

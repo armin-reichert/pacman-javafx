@@ -53,7 +53,7 @@ public class PlayView implements View {
     public static final DecorationPane.Config DECORATION_CONFIG = new DecorationPane.Config(
         0.85f,
         0.93f,
-        1.0f,
+        0.5f,
         20,
         20,
         new DecorationPane.FrameConfig(
