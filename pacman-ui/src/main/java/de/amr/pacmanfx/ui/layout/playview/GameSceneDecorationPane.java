@@ -79,13 +79,13 @@ public class GameSceneDecorationPane extends StackPane {
 
         newCanvas();
 
-        final ChangeListener<? super Number> resizeHandler = (_, _, _) -> doLayout(scaling(), true);
+        final ChangeListener<? super Number> resizeHandler = (_, _, _) -> doLayout(getScaling(), true);
         unscaledWidthProperty().addListener(resizeHandler);
         unscaledHeightProperty().addListener(resizeHandler);
         scaling.addListener(resizeHandler);
 
         clipProperty().bind(Bindings.createObjectBinding(() -> {
-                final double arcDiameter = config.frameConfig().arcDiameter() * scaling();
+                final double arcDiameter = config.frameConfig().arcDiameter() * getScaling();
                 final Dimension2D scaledSize = computePaneSize();
                 final var rect = new Rectangle(scaledSize.getWidth(), scaledSize.getHeight());
                 rect.setArcHeight(arcDiameter);
@@ -98,7 +98,7 @@ public class GameSceneDecorationPane extends StackPane {
                 final Dimension2D scaledSize = computePaneSize();
                 final double proposedBorderWidth = Math.ceil(scaledSize.getHeight() / config.frameConfig().borderWidthRatio());
                 final double borderWidth = Math.max(config.frameConfig().minBorderWidth(), proposedBorderWidth);
-                final double cornerRadius = Math.ceil(config.frameConfig().cornerRadius() * scaling());
+                final double cornerRadius = Math.ceil(config.frameConfig().cornerRadius() * getScaling());
                 return createRoundedBorder(config.frameConfig().borderColor(), borderWidth, cornerRadius);
             }, scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
         );
@@ -109,12 +109,12 @@ public class GameSceneDecorationPane extends StackPane {
         getChildren().setAll(canvas);
 
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> scaling() * unscaledWidthProperty().get(),
+            () -> getScaling() * getUnscaledWidth(),
             scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
         );
 
         canvas.heightProperty().bind(Bindings.createDoubleBinding(
-            () -> scaling() * unscaledHeightProperty().get(),
+            () -> getScaling() * getUnscaledHeight(),
             scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
         );
     }
@@ -122,15 +122,19 @@ public class GameSceneDecorationPane extends StackPane {
     public void stretchTo(double width, double height) {
         final double realWidth  = config.scalingX() * width;
         final double realHeight = config.scalingY() * height;
-        double targetScaling = realHeight / unscaledHeightProperty().get();
-        if (targetScaling * unscaledWidthProperty().get() > realWidth) {
-            targetScaling = realWidth / unscaledWidthProperty().get();
+        double targetScaling = realHeight / getUnscaledHeight();
+        if (targetScaling * getUnscaledWidth() > realWidth) {
+            targetScaling = realWidth / getUnscaledWidth();
         }
         doLayout(targetScaling, false);
     }
 
     public Canvas canvas() {
         return canvas;
+    }
+
+    public double getUnscaledWidth() {
+        return unscaledWidth.get();
     }
 
     public DoubleProperty unscaledWidthProperty() {
@@ -141,11 +145,15 @@ public class GameSceneDecorationPane extends StackPane {
         return unscaledHeight;
     }
 
+    public double getUnscaledHeight() {
+        return unscaledHeight.get();
+    }
+
     public DoubleProperty scalingProperty() {
         return scaling;
     }
 
-    public double scaling() {
+    public double getScaling() {
         return scalingProperty().get();
     }
 
@@ -170,8 +178,8 @@ public class GameSceneDecorationPane extends StackPane {
 
     private Dimension2D computePaneSize() {
         return new Dimension2D(
-            scaling() * (unscaledWidth.get() + config.paddingX()),
-            scaling() * (unscaledHeight.get() + config.paddingY())
+            getScaling() * (unscaledWidth.get() + config.paddingX()),
+            getScaling() * (unscaledHeight.get() + config.paddingY())
         );
     }
 }
