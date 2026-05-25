@@ -8,8 +8,8 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
-import de.amr.pacmanfx.ui.layout.playview.MiniGameView;
 import de.amr.pacmanfx.ui.layout.ViewManager;
+import de.amr.pacmanfx.ui.layout.playview.MiniGameView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
@@ -141,10 +141,7 @@ public interface GameUI {
      */
     boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID);
 
-    void forceGameSceneUpdate();
-
     /**
-     * @return the current game scene if existing.
      * @return (optional) game scene
      */
     Optional<GameScene> optGameScene();

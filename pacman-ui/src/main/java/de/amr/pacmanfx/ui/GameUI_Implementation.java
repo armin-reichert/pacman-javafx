@@ -357,11 +357,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
-    public void forceGameSceneUpdate() {
-        playView().forceGameSceneUpdate();
-    }
-
-    @Override
     public GameContext gameContext() {
         return gameContext;
     }

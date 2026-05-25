@@ -156,6 +156,9 @@ public class PlayView implements View {
         helpLayer.showHelpPopup(ui, scaling, ui.gameContext().gameVariantName());
     }
 
+
+
+
     public void forceGameSceneUpdate() {
         updateGameScene(true);
     }

@@ -4,10 +4,7 @@
 
 package de.amr.pacmanfx.ui.layout.playview;
 
-import de.amr.pacmanfx.event.DefaultGameEventListener;
-import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.event.GameStateChangeEvent;
-import de.amr.pacmanfx.event.LevelCreatedEvent;
+import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
@@ -47,6 +44,10 @@ public class PlayViewGameEventHandler extends DefaultGameEventListener {
                 if (stateChangeEvent.newState().matchesByName(CanonicalGameState.LEVEL_COMPLETE.name())) {
                     playView.miniView().slideOut();
                 }
+            }
+
+            case GenericChangeEvent genericChangeEvent -> {
+                playView.forceGameSceneUpdate();
             }
 
             default -> {

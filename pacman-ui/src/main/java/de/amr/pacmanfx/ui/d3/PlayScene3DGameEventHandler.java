@@ -50,12 +50,6 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         return (PlayScene3D) super.gameScene();
     }
 
-    // TODO: remove (only used by GameState.TESTING_CUT_SCENES)
-    @Override
-    public void onGenericChange(GenericChangeEvent event) {
-        ui().forceGameSceneUpdate();
-    }
-
     @Override
     public void onGameStateChange(GameStateChangeEvent event) {
         final State<Game> gameState = event.newState();
