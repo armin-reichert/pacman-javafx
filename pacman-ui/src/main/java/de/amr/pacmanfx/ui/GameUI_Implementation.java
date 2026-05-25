@@ -60,7 +60,6 @@ import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
 import static de.amr.pacmanfx.ui.layout.ViewManager.ViewID.*;
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
@@ -171,7 +170,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         final GameClock clock = requireNonNull(gameContext.clock(), "Game clock has not been set in game context?");
         clock.setUpdateAction(() -> {
             simulate(gameContext.game());
-            optGameScene().ifPresent(GameScene::update);
+            optGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });
         clock.setPermanentAction(() -> viewManager.currentView().render());
         clock.setErrorHandler(this::ka_tas_tro_phe);

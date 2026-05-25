@@ -75,7 +75,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public void onStart() {
+    public void onActivate() {
         final TengenMsPacMan_GameModel game = gameContext().game();
         game.hud().hide();
 
@@ -94,7 +94,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public void onEnd() {
+    public void onDeactivate() {
         Input.instance().joypad.removeBindings(actionBindings);
     }
 

@@ -69,7 +69,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     @Override
-    public void onStart() {
+    public void onActivate() {
         final UIConfig uiConfig = ui.currentConfig();
 
         clapperboard = new Clapperboard(4, "THE END");
@@ -90,7 +90,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     @Override
-    public void onEnd() {
+    public void onDeactivate() {
         ui.soundManager().stop(PacManGameSoundID.INTERMISSION_4);
     }
 

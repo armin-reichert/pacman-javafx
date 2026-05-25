@@ -27,39 +27,6 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Abstract base class for all game scenes (2D and 3D).
- * <p>
- * A {@code GameScene} provides:
- * <ul>
- *   <li>Access to the global {@link GameContext}</li>
- *   <li>Scene lifecycle hooks ({@link #onStart()}, {@link #onTick(GameClock)}, {@link #onEnd()})</li>
- *   <li>Keyboard action binding via {@link ActionBindingsManager}</li>
- *   <li>Optional sound effects</li>
- *   <li>Optional JavaFX {@link SubScene} for 3D scenes</li>
- *   <li>Optional context menu contribution</li>
- *   <li>A pluggable {@link GameEventListener}</li>
- * </ul>
- *
- * <h2>Lifecycle</h2>
- * <ul>
- *   <li>{@link #init()} — activates the scene and assigns input bindings</li>
- *   <li>{@link #update()} — called once per game tick</li>
- *   <li>{@link #end()} — deactivates the scene, removes bindings, stops sounds</li>
- * </ul>
- *
- * <h2>Input</h2>
- * Keyboard input is resolved through {@link ActionBindingsManager}.
- * {@link #onInput()} executes the first matching action.
- *
- * <h2>Event Handling</h2>
- * A scene owns a {@link GameEventListener}.
- * The default handler processes generic UI updates and sound‑stop events.
- *
- * <h2>Subscenes</h2>
- * 3D scenes override {@link #optSubSceneFX()}.
- * 2D scenes typically return {@code Optional.empty()}.
- *
- * <h2>Context Menu</h2>
- * Scenes may contribute menu items via {@link #supplyContextMenu()}.
  */
 public abstract class GameScene implements Disposable {
 
@@ -161,7 +128,7 @@ public abstract class GameScene implements Disposable {
      * Activates the scene and assigns keyboard bindings.
      */
     public final void init() {
-        onStart();
+        onActivate();
         actionBindings.assignToKeyboard();
         Logger.trace("Game scene {} initialized", getClass().getSimpleName());
     }
@@ -170,28 +137,21 @@ public abstract class GameScene implements Disposable {
      * Deactivates the scene, removes bindings, stops sounds.
      */
     public final void end() {
-        onEnd();
+        onDeactivate();
         actionBindings.removeFromKeyboard();
         actionBindings.dispose();
         soundEffects().ifPresent(GameSoundEffects::stopAll);
         Logger.trace("Game scene {} ends", getClass().getSimpleName());
     }
 
-    /**
-     * Called once per game tick.
-     */
-    public final void update() {
-        onTick(gameContext().clock());
-    }
-
     /** Called when the scene becomes active. */
-    public void onStart() {}
+    public void onActivate() {}
+
+    /** Called when the scene is deactivated. */
+    public void onDeactivate() {}
 
     /** Called every game tick. */
     public void onTick(GameClock clock) {}
-
-    /** Called when the scene is deactivated. */
-    public void onEnd() {}
 
     /** Called when the scene is embedded into the UI. */
     public void onEmbedded() {}

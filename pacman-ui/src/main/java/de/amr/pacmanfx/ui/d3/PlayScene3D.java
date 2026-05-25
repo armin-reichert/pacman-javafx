@@ -177,14 +177,14 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     @Override
-    public void onStart() {
+    public void onActivate() {
         perspectives.activeIDProperty().bind(GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID);
         PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
     }
 
     @Override
-    public void onEnd() {
+    public void onDeactivate() {
         perspectives.activeIDProperty().unbind();
         PROPERTY_3D_DRAW_MODE.removeListener(drawModeChangeListener);
         disposeContextMenu();

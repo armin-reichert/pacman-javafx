@@ -26,12 +26,12 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     }
 
     @Override
-    public void onStart() {
+    public void onActivate() {
         actionBindings.addAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS); // Insert coin + start game action
     }
 
     @Override
-    public void onEnd() {
+    public void onDeactivate() {
         ui.voicePlayer().stopVoice();
     }
 }

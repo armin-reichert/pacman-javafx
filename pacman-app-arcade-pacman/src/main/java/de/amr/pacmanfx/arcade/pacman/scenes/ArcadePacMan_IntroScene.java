@@ -99,7 +99,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void onStart() {
+    public void onActivate() {
         final UIConfig uiConfig = ui.currentConfig();
 
         ui.voicePlayer().playVoice(GameUIConstants.VOICE_EXPLAIN_GAME_START);
@@ -130,7 +130,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void onEnd() {
+    public void onDeactivate() {
         blinking.stop();
         ui.voicePlayer().stopVoice();
     }

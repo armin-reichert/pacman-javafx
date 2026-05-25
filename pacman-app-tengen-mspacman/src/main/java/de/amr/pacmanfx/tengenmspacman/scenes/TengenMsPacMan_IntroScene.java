@@ -61,7 +61,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void onStart() {
+    public void onActivate() {
         gameContext().game().hud().hide();
 
         final UIConfig uiConfig = ui.currentConfig();
