@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
  * {@link Canvas}, and coordinates lifecycle events (initialization, shutdown)
  * with the {@link Game} and {@link GameUI}.
  * <p>
- * Subclasses implement {@link #onSceneStart()} and {@link #onSceneEnd()} to define
+ * Subclasses implement {@link #onStart()} and {@link #onEnd()} to define
  * scene-specific behavior.
  */
 public class GameScene2D extends GameScene {

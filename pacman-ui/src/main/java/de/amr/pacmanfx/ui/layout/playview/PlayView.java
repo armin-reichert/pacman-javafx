@@ -182,7 +182,7 @@ public class PlayView implements View {
     public void onKeyboardInput(GameUI ui) {
         actionBindings.matchingAction().ifPresentOrElse(
             action -> action.execute(ui),
-            () -> optCurrentGameScene().ifPresent(GameScene::onUserInput)
+            () -> optCurrentGameScene().ifPresent(GameScene::onInput)
         );
     }
 
@@ -272,7 +272,7 @@ public class PlayView implements View {
             Logger.info("Game scene ended: {}", prevGameScene.getClass().getSimpleName());
         }
 
-        nextGameScene.onEmbeddedIntoUI(); // Must be called *before* embedding
+        nextGameScene.onEmbedded(); // Must be called *before* embedding
         gameSceneEmbedder.embedGameScene(ui, this, nextGameScene);
         nextGameScene.init();
         Logger.info("Game scene initialized: {}", nextGameScene.getClass().getSimpleName());

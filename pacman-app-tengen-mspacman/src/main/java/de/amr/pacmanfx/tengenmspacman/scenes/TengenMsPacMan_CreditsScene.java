@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.GameUI;
@@ -31,14 +32,14 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     }
 
     @Override
-    public void onSceneStart() {
+    public void onStart() {
         gameContext().game().hud().hide();
         actionBindings.addAny(ACTION_ENTER_START_SCREEN, TENGEN_SPECIFIC_BINDINGS);
         fadeProgress = 0;
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameClock clock) {
         final TengenMsPacMan_GameModel game = gameContext().game();
         final State<Game> gameState = game.flow().state();
         if (gameState.timer().atSecond(DISPLAY_SECONDS)) {

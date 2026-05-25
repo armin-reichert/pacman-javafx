@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.model.*;
 import de.amr.pacmanfx.ui.GameUI;
@@ -74,7 +75,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public void onSceneStart() {
+    public void onStart() {
         final TengenMsPacMan_GameModel game = gameContext().game();
         game.hud().hide();
 
@@ -93,12 +94,12 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public void onSceneEnd() {
+    public void onEnd() {
         Input.instance().joypad.removeBindings(actionBindings);
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameClock clock) {
         if (initialDelay > 0) {
             --initialDelay;
             return;
@@ -122,7 +123,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public void onUserInput() {
+    public void onInput() {
         if (Input.instance().joypad.isButtonPressed(JoypadButton.DOWN)) {
             selectedOption.set(selectedOption() + 1 < NUM_OPTIONS ? selectedOption() + 1 : 0);
         }

@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
@@ -51,7 +52,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
-    public void onSceneStart() {
+    public void onStart() {
         final UIConfig uiConfig = ui.currentConfig();
         pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
@@ -64,7 +65,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameClock clock) {
         switch (state) {
             case SceneState.CLAPPERBOARD -> updateStateClapperboard();
             case SceneState.CHASING -> updateStateChasing();

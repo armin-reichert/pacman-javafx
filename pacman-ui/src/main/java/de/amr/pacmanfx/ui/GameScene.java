@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.Disposable;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.DefaultGameEventListener;
 import de.amr.pacmanfx.event.GameEventListener;
@@ -30,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  * A {@code GameScene} provides:
  * <ul>
  *   <li>Access to the global {@link GameContext}</li>
- *   <li>Scene lifecycle hooks ({@link #onSceneStart()}, {@link #onTick(long)}, {@link #onSceneEnd()})</li>
+ *   <li>Scene lifecycle hooks ({@link #onStart()}, {@link #onTick(GameClock)}, {@link #onEnd()})</li>
  *   <li>Keyboard action binding via {@link ActionBindingsManager}</li>
  *   <li>Optional sound effects</li>
  *   <li>Optional JavaFX {@link SubScene} for 3D scenes</li>
@@ -47,7 +48,7 @@ import static java.util.Objects.requireNonNull;
  *
  * <h2>Input</h2>
  * Keyboard input is resolved through {@link ActionBindingsManager}.
- * {@link #onUserInput()} executes the first matching action.
+ * {@link #onInput()} executes the first matching action.
  *
  * <h2>Event Handling</h2>
  * A scene owns a {@link GameEventListener}.
@@ -160,7 +161,7 @@ public abstract class GameScene implements Disposable {
      * Activates the scene and assigns keyboard bindings.
      */
     public final void init() {
-        onSceneStart();
+        onStart();
         actionBindings.assignToKeyboard();
         Logger.trace("Game scene {} initialized", getClass().getSimpleName());
     }
@@ -169,7 +170,7 @@ public abstract class GameScene implements Disposable {
      * Deactivates the scene, removes bindings, stops sounds.
      */
     public final void end() {
-        onSceneEnd();
+        onEnd();
         actionBindings.removeFromKeyboard();
         actionBindings.dispose();
         soundEffects().ifPresent(GameSoundEffects::stopAll);
@@ -180,27 +181,26 @@ public abstract class GameScene implements Disposable {
      * Called once per game tick.
      */
     public final void update() {
-        final long tick = gameContext().clock().tickCount();
-        onTick(tick);
+        onTick(gameContext().clock());
     }
 
     /** Called when the scene becomes active. */
-    public void onSceneStart() {}
+    public void onStart() {}
 
     /** Called every game tick. */
-    public void onTick(long tick) {}
+    public void onTick(GameClock clock) {}
 
     /** Called when the scene is deactivated. */
-    public void onSceneEnd() {}
+    public void onEnd() {}
 
     /** Called when the scene is embedded into the UI. */
-    public void onEmbeddedIntoUI() {}
+    public void onEmbedded() {}
 
     /**
      * Called when a key combination is pressed inside this scene.
      * Executes the first matching action.
      */
-    public void onUserInput() {
+    public void onInput() {
         actionBindings().matchingAction().ifPresent(action -> action.executeIfEnabled(ui()));
     }
 

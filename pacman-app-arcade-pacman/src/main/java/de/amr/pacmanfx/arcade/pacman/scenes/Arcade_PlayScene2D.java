@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
@@ -42,7 +43,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameClock clock) {
         final Arcade_GameModel game = gameContext().game();
         game.optGameLevel().ifPresent(level -> {
             updateLivesCounter(level);

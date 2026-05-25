@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -36,7 +37,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     }
 
     @Override
-    public void onSceneStart() {
+    public void onStart() {
         movingText = new Actor();
         movingText.setPosition(TS(9), getUnscaledHeight()); // lower border of screen
         final UIConfig uiConfig = ui.currentConfig();
@@ -44,7 +45,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameClock clock) {
         final State<Game> gameState = gameContext().game().flow().state();
         final int t = (int) gameState.timer().tickCount();
         switch (t) {

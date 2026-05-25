@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
@@ -77,7 +78,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    public void onSceneStart() {
+    public void onStart() {
         final UIConfig uiConfig = ui.currentConfig();
 
         actionBindings.add(
@@ -105,12 +106,12 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    public void onSceneEnd() {
+    public void onEnd() {
         ui.soundManager().stop(PacManGameSoundID.INTERMISSION_3);
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameClock clock) {
         final State<Game> gameState = gameContext().game().flow().state();
         final long gameStateTick = gameState.timer().tickCount();
         if (gameStateTick <= TICK_EXPIRES) {

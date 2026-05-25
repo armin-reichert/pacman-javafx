@@ -7,6 +7,7 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
@@ -60,7 +61,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void onSceneStart() {
+    public void onStart() {
         gameContext().game().hud().hide();
 
         final UIConfig uiConfig = ui.currentConfig();
@@ -85,7 +86,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameClock clock) {
         sceneFlow.update();
     }
 

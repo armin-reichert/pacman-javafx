@@ -7,6 +7,7 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
@@ -68,7 +69,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void onSceneStart() {
+    public void onStart() {
         ui.voicePlayer().playVoice(GameUIConstants.VOICE_EXPLAIN_GAME_START);
 
         actionBindings.addAll(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
@@ -98,12 +99,12 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void onSceneEnd() {
+    public void onEnd() {
         ui.voicePlayer().stopVoice();
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameClock clock) {
         sceneController.update();
     }
 

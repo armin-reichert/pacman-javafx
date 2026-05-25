@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -86,7 +87,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void onSceneStart() {
+    public void onStart() {
         final UIConfig uiConfig = ui.currentConfig();
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
@@ -132,12 +133,12 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void onSceneEnd() {
+    public void onEnd() {
         ui.soundManager().stop(PacManGameSoundID.INTERMISSION_1);
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameClock clock) {
         clapperboard.tick();
 
         pacMan.move();

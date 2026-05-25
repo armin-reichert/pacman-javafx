@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.d3;
 
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.world.FoodLayer;
@@ -170,35 +171,35 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     // ────────────────────────────────────────────────────────────────────────────
 
     @Override
-    public void onEmbeddedIntoUI() {
+    public void onEmbedded() {
         // TODO: reconsider whether scores need recreation here (variant/font change?)
         replaceScores3D();
     }
 
     @Override
-    public void onSceneStart() {
+    public void onStart() {
         perspectives.activeIDProperty().bind(GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID);
         PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
     }
 
     @Override
-    public void onSceneEnd() {
+    public void onEnd() {
         perspectives.activeIDProperty().unbind();
         PROPERTY_3D_DRAW_MODE.removeListener(drawModeChangeListener);
         disposeContextMenu();
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameClock clock) {
         final GameLevel level = gameContext().game().optGameLevel().orElse(null);
         if (level == null) {
-            Logger.info("Tick {}: Game level not yet created, update ignored", tick);
+            Logger.info("Tick {}: Game level not yet created, update ignored", clock.tickCount());
             return;
         }
 
         if (level3D == null) {
-            Logger.info("Tick {}: Game level 3D not yet created, update ignored", tick);
+            Logger.info("Tick {}: Game level 3D not yet created, update ignored", clock.tickCount());
             return;
         }
 

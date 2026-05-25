@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.fsm.State;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -28,12 +29,12 @@ public class Arcade_BootScene2D extends GameScene2D {
     }
 
     @Override
-    public void onSceneStart() {
+    public void onStart() {
         sceneState = SceneState.BLANK;
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameClock clock) {
         final State<Game> bootState = gameContext().game().flow().state();
         switch ((int) bootState.timer().tickCount()) {
             case  60 -> sceneState = SceneState.HEX_CODES;

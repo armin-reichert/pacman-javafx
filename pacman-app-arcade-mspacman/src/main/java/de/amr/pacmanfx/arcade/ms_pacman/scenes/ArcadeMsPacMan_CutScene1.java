@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
@@ -72,7 +73,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void onSceneStart() {
+    public void onStart() {
         final UIConfig uiConfig = ui.currentConfig();
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
@@ -97,7 +98,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameClock clock) {
         switch (sceneState) {
             case CLAPPERBOARD -> updateStateClapperboard();
             case CHASED_BY_GHOSTS -> updateStateChasedByGhosts();

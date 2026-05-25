@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
@@ -119,7 +120,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onSceneStart() {
+    public void onStart() {
         final TengenMsPacMan_GameModel game = gameContext().game();
         game.hud().score(true).levelCounter(true).livesCounter(true).show();
         game.hud().gameOptions(!game.allOptionsDefault());
@@ -129,12 +130,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onSceneEnd() {
+    public void onEnd() {
         dynamicCamera.enterManualMode();
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameClock clock) {
         final TengenMsPacMan_GameModel game = gameContext().game();
         game.optGameLevel().ifPresent(level -> {
             final int numRows = level.worldMap().terrainLayer().numRows();

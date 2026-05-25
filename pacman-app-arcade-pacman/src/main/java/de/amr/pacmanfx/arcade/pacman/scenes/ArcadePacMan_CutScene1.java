@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacAnimations;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
@@ -34,7 +35,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     }
     
     @Override
-    public void onSceneStart() {
+    public void onStart() {
         final UIConfig uiConfig = ui.currentConfig();
         pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
@@ -43,7 +44,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameClock clock) {
         if (++sceneTick < ANIMATION_START_TICK) {
             return;
         }
