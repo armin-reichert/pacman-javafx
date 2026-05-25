@@ -91,14 +91,13 @@ public class PlayView extends StackPane implements View {
 
     private Dashboard dashboard;
 
-    private void create(DashboardConfig dashboardConfig) {
+    private void createLayout(DashboardConfig dashboardConfig) {
         decorationPane = new GameSceneDecorationPane();
         miniView = new MiniGameView();
         canvasLayer = new BorderPane();
         helpLayer = new HelpLayer(decorationPane);
         widgetLayer = new BorderPane();
         pausedIcon  = FontAwesomeIcon.of(FontAwesomeIcon.Symbol.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
-        contextMenu = new ContextMenu();
 
         dashboard = new Dashboard(dashboardConfig);
         dashboard.setVisible(false);
@@ -118,11 +117,11 @@ public class PlayView extends StackPane implements View {
         this.ui = ui;
         this.parentScene = parentScene;
 
-        create(dashboardConfig);
+        createLayout(dashboardConfig);
+        createContextMenu();
         configureGameSceneDecorationPane();
         configureActionBindings();
         configurePropertyBindings();
-        configureContextMenu();
 
         miniView.setUI(ui);
         ui.gameContext().gameVariantNameProperty().addListener(
@@ -362,7 +361,8 @@ public class PlayView extends StackPane implements View {
         ));
     }
 
-    private void configureContextMenu() {
+    private void createContextMenu() {
+        contextMenu = new ContextMenu();
         setOnContextMenuRequested(this::handleContextMenuRequest);
         //TODO is there a better way to hide the context menu?
         parentScene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
