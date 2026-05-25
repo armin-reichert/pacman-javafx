@@ -156,15 +156,8 @@ public class PlayView implements View {
         helpLayer.showHelpPopup(ui, scaling, ui.gameContext().gameVariantName());
     }
 
-
-
-
     public void forceGameSceneUpdate() {
         updateGameScene(true);
-    }
-
-    public void updateGameScene() {
-        updateGameScene(false);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -245,12 +238,12 @@ public class PlayView implements View {
         rootPane.getChildren().addAll(canvasLayer, widgetLayer, helpLayer, pausedIcon);
     }
 
-    private void updateGameScene(boolean forcedReload) {
+    public void updateGameScene(boolean forceReload) {
         final Game game = ui.gameContext().game();
         final GameScene prevGameScene = optCurrentGameScene().orElse(null);
         final GameScene nextGameScene = ui.currentGameSceneConfig().selectGameScene(ui, game).orElseThrow();
 
-        if (nextGameScene == prevGameScene && !forcedReload) {
+        if (nextGameScene == prevGameScene && !forceReload) {
             return;
         }
 

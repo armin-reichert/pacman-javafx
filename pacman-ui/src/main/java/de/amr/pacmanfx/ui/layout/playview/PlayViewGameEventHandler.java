@@ -46,15 +46,12 @@ public class PlayViewGameEventHandler extends DefaultGameEventListener {
                 }
             }
 
-            case GenericChangeEvent genericChangeEvent -> {
-                playView.forceGameSceneUpdate();
-            }
+            case GenericChangeEvent _ -> playView.forceGameSceneUpdate();
 
-            default -> {
-            }
+            default -> {}
         }
 
-        playView.updateGameScene();
+        playView.updateGameScene(false);
 
         // Call game event handler for current game scene
         playView.optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
