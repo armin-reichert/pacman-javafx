@@ -42,7 +42,6 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
@@ -154,10 +153,6 @@ public class PlayView implements View {
 
     public void updateGameScene() {
         updateGameScene(false);
-    }
-
-    public void resizeGameScene(GameScene2D gameScene2D) {
-        decorationPane.setUnscaledSize(gameScene2D.getUnscaledWidth(), gameScene2D.getUnscaledHeight());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -295,7 +290,6 @@ public class PlayView implements View {
 
     private void configureGameSceneDecorationPane() {
         decorationPane.setMinScaling(0.5);
-        decorationPane.setUnscaledSize(ARCADE_MAP_SIZE_IN_PIXELS.x(), ARCADE_MAP_SIZE_IN_PIXELS.y());
         decorationPane.setBorderColor(ArcadePalette.ARCADE_WHITE);
     }
 
@@ -393,7 +387,8 @@ public class PlayView implements View {
             gameScene2D.scalingProperty().bind(decorationPane.scalingProperty().map(
                 scaling -> Math.min(scaling.doubleValue(), MAX_GAME_SCENE_SCALING)));
 
-            decorationPane.setUnscaledSize(gameScene2D.getUnscaledWidth(), gameScene2D.getUnscaledHeight());
+            decorationPane.unscaledWidthProperty().bind(gameScene2D.unscaledWidthProperty());
+            decorationPane.unscaledHeightProperty().bind(gameScene2D.unscaledHeightProperty());
             decorationPane.resizeTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
             decorationPane.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR.map(UfxBackgrounds::paintBackground));
 

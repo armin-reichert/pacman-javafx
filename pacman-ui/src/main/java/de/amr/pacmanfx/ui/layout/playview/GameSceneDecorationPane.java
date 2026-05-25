@@ -113,9 +113,12 @@ public class GameSceneDecorationPane extends StackPane {
         return canvas;
     }
 
-    public void setUnscaledSize(int width, int height) {
-        unscaledWidth.set(width);
-        unscaledHeight.set(height);
+    public DoubleProperty unscaledWidthProperty() {
+        return unscaledWidth;
+    }
+
+    public DoubleProperty unscaledHeightProperty() {
+        return unscaledHeight;
     }
 
     public DoubleProperty scalingProperty() { return scaling; }

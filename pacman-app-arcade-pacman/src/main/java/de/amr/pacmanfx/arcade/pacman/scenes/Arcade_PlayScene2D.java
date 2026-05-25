@@ -17,7 +17,6 @@ import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui.layout.playview.PlayView;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import org.tinylog.Logger;
@@ -113,16 +112,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         unscaledWidthProperty().set(terrainSize.x());
         unscaledHeightProperty().set(terrainSize.y());
 
-        //TODO remove this hack
-        notifySizeChanged();
-
         Logger.info("Game scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
-    }
-
-    private void notifySizeChanged() {
-        if (ui.views().currentView() instanceof PlayView playView) {
-            playView.resizeGameScene(this);
-        }
     }
 
     // Private
