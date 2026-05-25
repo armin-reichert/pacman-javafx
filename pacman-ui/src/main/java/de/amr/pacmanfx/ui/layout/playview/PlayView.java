@@ -14,7 +14,6 @@ import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.input.Input;
@@ -87,8 +86,8 @@ public class PlayView implements View {
     private final ChangeListener<GameScene> gameSceneChangeHandler;
     private final ChangeListener<? super Number> parentSceneSizeChangeHandler;
 
-    private final PlayViewGameSceneEmbedder embedder = new PlayViewGameSceneEmbedder();
-    private final SceneSwitcher sceneSwitcher = new SceneSwitcher();
+    private final PlayViewGameSceneEmbedder gameSceneEmbedder = new PlayViewGameSceneEmbedder();
+    private final GameSceneSwitchHandler gameSceneSwitchHandler = new GameSceneSwitchHandler();
 
     public PlayView(GameUI ui, Scene parentSceneFX, DashboardConfig dashboardConfig) {
         requireNonNull(ui);
@@ -111,7 +110,7 @@ public class PlayView implements View {
         gameSceneChangeHandler = (_, _, gameScene) -> {
             contextMenu.hide();
             if (gameScene != null) {
-                embedder.embedGameScene(ui, this, gameScene);
+                gameSceneEmbedder.embedGameScene(ui, this, gameScene);
             }
         };
         parentSceneSizeChangeHandler = (_, _, _) -> decorationPane.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
@@ -122,7 +121,7 @@ public class PlayView implements View {
     }
 
     public PlayViewGameSceneEmbedder embedder() {
-        return embedder;
+        return gameSceneEmbedder;
     }
 
     public GameUI ui() {
@@ -274,36 +273,17 @@ public class PlayView implements View {
         }
 
         nextGameScene.onEmbeddedIntoUI(); // Must be called *before* embedding
-        embedder.embedGameScene(ui, this, nextGameScene);
+        gameSceneEmbedder.embedGameScene(ui, this, nextGameScene);
         nextGameScene.init();
         Logger.info("Game scene initialized: {}", nextGameScene.getClass().getSimpleName());
 
-        // Handle switching between 2D and 3D play scene view
         game.optGameLevel().ifPresent(level -> {
-            final GameSceneSwitchType sceneSwitchType = identifySceneSwitchType(prevGameScene, nextGameScene);
-            switch (sceneSwitchType) {
-                case FROM_2D_TO_3D -> sceneSwitcher.switchPlaySceneTo3D(ui, level, prevGameScene, nextGameScene);
-                case FROM_3D_TO_2D -> sceneSwitcher.switchPlaySceneTo2D(prevGameScene, nextGameScene);
-                case NONE -> {}
-                default -> throw new IllegalArgumentException("Illegal scene switch type: " + sceneSwitchType);
-            }
+            gameSceneSwitchHandler.handleGameSceneSwitch(ui.currentConfig(), level, prevGameScene, nextGameScene);
         });
-
         gameSceneProperty().set(nextGameScene);
     }
 
     // Others
-
-    private GameSceneSwitchType identifySceneSwitchType(GameScene sceneBefore, GameScene sceneAfter) {
-        if (sceneBefore == null && sceneAfter == null) {
-            throw new IllegalStateException("WTF is going on here, switch between NULL scenes?");
-        }
-        return switch (sceneBefore) {
-            case GameScene2D ignored when sceneAfter instanceof PlayScene3D -> GameSceneSwitchType.FROM_2D_TO_3D;
-            case PlayScene3D ignored when sceneAfter instanceof GameScene2D -> GameSceneSwitchType.FROM_3D_TO_2D;
-            case null, default -> GameSceneSwitchType.NONE; // may happen, it's ok
-        };
-    }
 
     private void addListeners() {
         gameScene.addListener(gameSceneChangeHandler);
