@@ -60,7 +60,7 @@ public class GameScene2D extends GameScene {
      * @return the same renderer instance for fluent usage
      */
     public <T extends Renderer> T configureRenderer(T renderer) {
-        renderer.backgroundColorProperty().bind(backgroundProperty());
+        renderer.backgroundColorProperty().bind(backgroundColorProperty());
         renderer.scalingProperty().bind(scalingProperty());
         return renderer;
     }
@@ -87,14 +87,14 @@ public class GameScene2D extends GameScene {
     /**
      * @return the background color property
      */
-    public ObjectProperty<Color> backgroundProperty() {
+    public ObjectProperty<Color> backgroundColorProperty() {
         return backgroundColor;
     }
 
     /**
      * @return the current background color
      */
-    public Color backgroundColor() {
+    public Color getBackgroundColor() {
         return backgroundColor.get();
     }
 
