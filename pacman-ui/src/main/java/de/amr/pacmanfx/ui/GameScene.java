@@ -54,7 +54,7 @@ import static java.util.Objects.requireNonNull;
  * The default handler processes generic UI updates and sound‑stop events.
  *
  * <h2>Subscenes</h2>
- * 3D scenes override {@link #optSubScene()}.
+ * 3D scenes override {@link #optSubSceneFX()}.
  * 2D scenes typically return {@code Optional.empty()}.
  *
  * <h2>Context Menu</h2>
@@ -131,7 +131,7 @@ public abstract class GameScene implements Disposable {
     /**
      * @return optional JavaFX subscene for this scene (3D scenes override)
      */
-    public Optional<SubScene> optSubScene() {
+    public Optional<SubScene> optSubSceneFX() {
         return Optional.empty();
     }
 

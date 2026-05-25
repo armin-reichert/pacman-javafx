@@ -361,8 +361,8 @@ public class PlayView implements View {
     }
 
     public void embedGameScene(GameScene gameScene) {
-        if (gameScene.optSubScene().isPresent()) {
-            embedGameSceneInSubSceneFX(gameScene, gameScene.optSubScene().get());
+        if (gameScene.optSubSceneFX().isPresent()) {
+            embedGameSceneInSubSceneFX(gameScene, gameScene.optSubSceneFX().get());
         }
         else if (gameScene instanceof GameScene2D gameScene2D) {
             embedGameScene2D(gameScene2D);

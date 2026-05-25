@@ -116,7 +116,7 @@ public class DashboardSection3DSettings extends DashboardSection {
 
     private String subSceneSizeInfo(GameUI ui) {
         return ui.optGameScene()
-            .flatMap(GameScene::optSubScene)
+            .flatMap(GameScene::optSubSceneFX)
             .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
             .orElse(NO_INFO);
     }
@@ -124,7 +124,7 @@ public class DashboardSection3DSettings extends DashboardSection {
     private String subSceneCameraInfo(GameUI ui) {
         final GameScene gameScene = ui.optGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
-        return gameScene.optSubScene().map(SubScene::getCamera)
+        return gameScene.optSubSceneFX().map(SubScene::getCamera)
             .map(camera -> "rot=%.0f x=%.0f y=%.0f z=%.0f".formatted(
                 camera.getRotate(),
                 camera.getTranslateX(),

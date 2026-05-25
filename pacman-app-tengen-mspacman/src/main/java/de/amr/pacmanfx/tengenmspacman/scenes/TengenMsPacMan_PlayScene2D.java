@@ -186,7 +186,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public Optional<SubScene> optSubScene() {
+    public Optional<SubScene> optSubSceneFX() {
         return Optional.of(subScene);
     }
 
