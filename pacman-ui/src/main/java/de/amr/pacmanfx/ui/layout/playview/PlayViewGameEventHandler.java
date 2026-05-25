@@ -40,7 +40,7 @@ public class PlayViewGameEventHandler extends DefaultGameEventListener {
                 playView.miniView().setGameLevel(level);
                 playView.miniView().slideIn();
                 // size of game scene might have changed, so re-embed
-                playView.optCurrentGameScene().ifPresent(gameScene -> playView.embedGameScene(playView.parentScene(), gameScene));
+                playView.optCurrentGameScene().ifPresent(playView::embedGameScene);
             }
 
             case GameStateChangeEvent stateChangeEvent -> {

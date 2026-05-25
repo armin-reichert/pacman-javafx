@@ -105,7 +105,7 @@ public class PlayView implements View {
         gameSceneChangeHandler = (_, _, gameScene) -> {
             contextMenu.hide();
             if (gameScene != null) {
-                embedGameScene(parentSceneFX, gameScene);
+                embedGameScene(gameScene);
             }
         };
         parentSceneSizeChangeHandler = (_, _, _) -> decorationPane.resizeTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
@@ -250,7 +250,7 @@ public class PlayView implements View {
         }
 
         nextGameScene.onEmbeddedIntoUI(); // Must be called *before* embedding
-        embedGameScene(parentSceneFX, nextGameScene);
+        embedGameScene(nextGameScene);
         nextGameScene.init();
         Logger.info("Game scene initialized: {}", nextGameScene.getClass().getSimpleName());
 
@@ -349,6 +349,7 @@ public class PlayView implements View {
     }
 
     private void useDecoratedCanvas(GameScene2D gameScene2D) {
+        //TODO if I use the same canvas, the rendering fails after changing game variants.
         decorationPane.newCanvas();
 
         gameScene2D.setCanvas(decorationPane.canvas());
@@ -362,7 +363,20 @@ public class PlayView implements View {
         hudRenderer   = ui.currentConfig().createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
     }
 
-    private void embedGameSceneWithSubscene(Scene parentSceneFX, GameScene gameScene, SubScene subSceneFX) {
+    public void embedGameScene(GameScene gameScene) {
+        hudRenderer = null;
+        if (gameScene.optSubScene().isPresent()) {
+            embedGameSceneWithSubSceneFX(gameScene, gameScene.optSubScene().get());
+        }
+        else if (gameScene instanceof GameScene2D gameScene2D) {
+            embedGameScene2D(gameScene2D);
+        }
+        else {
+            Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
+        }
+    }
+
+    private void embedGameSceneWithSubSceneFX(GameScene gameScene, SubScene subSceneFX) {
         subSceneFX.widthProperty().bind(parentSceneFX.widthProperty());
         subSceneFX.heightProperty().bind(parentSceneFX.heightProperty());
         if (gameScene instanceof GameScene2D gameScene2D) {
@@ -371,7 +385,7 @@ public class PlayView implements View {
         rootPane.getChildren().set(0, subSceneFX);
     }
 
-    private void embedGameScene2D(Scene parentSceneFX, GameScene2D gameScene2D) {
+    private void embedGameScene2D(GameScene2D gameScene2D) {
         useDecoratedCanvas(gameScene2D);
         double aspect = gameScene2D.getAspectRatio();
         if (ui.currentGameSceneConfig().sceneDecorationRequested(gameScene2D)) {
@@ -393,19 +407,6 @@ public class PlayView implements View {
             canvasLayer.setCenter(decorationPane.canvas());
         }
         rootPane.getChildren().set(0, canvasLayer);
-    }
-
-    public void embedGameScene(Scene parentSceneFX, GameScene gameScene) {
-        hudRenderer = null;
-        if (gameScene.optSubScene().isPresent()) {
-            embedGameSceneWithSubscene(parentSceneFX, gameScene, gameScene.optSubScene().get());
-        }
-        else if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2D(parentSceneFX, gameScene2D);
-        }
-        else {
-            Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
-        }
     }
 
     private void switchPlaySceneTo3D(GameLevel level, GameScene currentScene, GameScene nextScene) {

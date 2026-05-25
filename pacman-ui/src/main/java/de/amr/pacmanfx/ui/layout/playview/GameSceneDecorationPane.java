@@ -5,7 +5,10 @@ package de.amr.pacmanfx.ui.layout.playview;
 
 import de.amr.pacmanfx.Globals;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.Canvas;
@@ -14,8 +17,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
-
-import static java.util.Objects.requireNonNull;
 
 public class GameSceneDecorationPane extends StackPane {
 
