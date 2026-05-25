@@ -289,12 +289,14 @@ public class PlayView implements View {
         gameScene.addListener(gameSceneChangeHandler);
         parentSceneFX.widthProperty() .addListener(parentSceneSizeChangeHandler);
         parentSceneFX.heightProperty().addListener(parentSceneSizeChangeHandler);
+        decorationPane.installBindings();
     }
 
     private void removeListeners() {
         gameScene.removeListener(gameSceneChangeHandler);
         parentSceneFX.widthProperty().removeListener(parentSceneSizeChangeHandler);
         parentSceneFX.heightProperty().removeListener(parentSceneSizeChangeHandler);
+        decorationPane.uninstallBindings();
     }
 
     private void configurePropertyBindings() {
@@ -323,7 +325,7 @@ public class PlayView implements View {
         ));
     }
 
-    public void updateRenderers(GameScene2D gameScene2D) {
+    public void updateGameSceneRenderers(GameScene2D gameScene2D) {
         if (gameScene2D.canvas() != null) {
             sceneRenderer = ui.currentConfig().createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
             hudRenderer = ui.currentConfig().createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!

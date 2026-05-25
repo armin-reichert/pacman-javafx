@@ -35,7 +35,7 @@ public class PlayViewGameSceneEmbedder {
         if (gameScene instanceof GameScene2D gameScene2D) {
             // use the canvas of the decorated pane for 2D scene even though the decoration is not used
             gameScene2D.setCanvas(playView.decorationPane().canvas());
-            playView.updateRenderers(gameScene2D);
+            playView.updateGameSceneRenderers(gameScene2D);
         }
         playView.setGameSceneContent(subSceneFX);
     }
@@ -63,7 +63,7 @@ public class PlayViewGameSceneEmbedder {
 
             decorationPane.newCanvas(); //TODO check why creating a new canvas is needed
             gameScene2D.setCanvas(decorationPane.canvas());
-            playView.updateRenderers(gameScene2D);
+            playView.updateGameSceneRenderers(gameScene2D);
 
             playView.setGameSceneContent(decorationPane);
 
@@ -80,7 +80,7 @@ public class PlayViewGameSceneEmbedder {
 
             // Game scene renderer can only be created if canvas is available
             gameScene2D.setCanvas(canvas);
-            playView.updateRenderers(gameScene2D);
+            playView.updateGameSceneRenderers(gameScene2D);
 
             playView.setGameSceneContent(canvas);
         }

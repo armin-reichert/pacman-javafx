@@ -67,6 +67,8 @@ public class DecorationPane extends StackPane {
 
     private final Config config;
 
+    private final ChangeListener<? super Number> resizeHandler = (_, _, _) -> doLayout(getScaling(), true);
+
     public DecorationPane(double unscaledWidth, double unscaledHeight) {
         this(DEFAULT_CONFIG, unscaledWidth, unscaledHeight);
     }
@@ -76,13 +78,14 @@ public class DecorationPane extends StackPane {
 
         unscaledWidthProperty().set(unscaledWidth);
         unscaledHeightProperty().set(unscaledHeight);
-
         newCanvas();
+        installBindings();
+    }
 
-        final ChangeListener<? super Number> resizeHandler = (_, _, _) -> doLayout(getScaling(), true);
+    public void installBindings() {
         unscaledWidthProperty().addListener(resizeHandler);
         unscaledHeightProperty().addListener(resizeHandler);
-        scaling.addListener(resizeHandler);
+        scalingProperty().addListener(resizeHandler);
 
         clipProperty().bind(Bindings.createObjectBinding(
             () -> {
@@ -106,6 +109,14 @@ public class DecorationPane extends StackPane {
             },
             scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
         );
+    }
+
+    public void uninstallBindings() {
+        unscaledWidthProperty().removeListener(resizeHandler);
+        unscaledHeightProperty().removeListener(resizeHandler);
+        scalingProperty().removeListener(resizeHandler);
+        clipProperty().unbind();
+        borderProperty().unbind();
     }
 
     public Canvas canvas() {
