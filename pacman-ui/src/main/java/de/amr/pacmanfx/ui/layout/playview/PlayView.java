@@ -324,7 +324,11 @@ public class PlayView implements View {
     }
 
     public void updateRenderers(GameScene2D gameScene2D) {
-        sceneRenderer = ui.currentConfig().createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
-        hudRenderer   = ui.currentConfig().createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
+        if (gameScene2D.canvas() != null) {
+            sceneRenderer = ui.currentConfig().createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
+            hudRenderer = ui.currentConfig().createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
+        } else {
+            Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
+        }
     }
 }
