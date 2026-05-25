@@ -34,27 +34,27 @@ In each [release](https://github.com/armin-reichert/pacman-javafx/releases) you 
 
 ## How to build
 
-Prerequisites: You need to have a Java 25+ compiler and [Git](https://github.com/git-guides/install-git) installed on your computer.
+You need [Git](https://github.com/git-guides/install-git) installed on your machine. 
 
-First clone the repository `javafx-objimporter` from GitHub, build and publish to your local Maven repository:
+Gradle should install JDK 25 automatically (I did not test that). If not,
+get JDK 25 and install it manually.
 
-```
-cd <your local Git folder>
-git clone https://github.com/armin-reichert/javafx-objimporter.git
-cd javafx-objimporter
-gradlew publishToMavenLocal
-```
-
-Then clone this repository and call the build script:
+Clone this repository:
 
 ```
-cd <your local Git folder>
 git clone https://github.com/armin-reichert/pacman-javafx.git
 cd pacman-javafx
-make clean (or ./make.sh clean on Linux)
 ```
 
-On Linux (Ubuntu 24), I first had to install also
+Windows:
+
+`make clean` 
+
+Linux:
+
+`./make.sh clean`
+
+On Ubuntu 24, I also had to install
 - binutils: `sudo apt-get install binutils`
 - fakeroot: `sudo apt-get install fakeroot`
   

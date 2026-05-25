@@ -7,29 +7,26 @@ plugins {
 allprojects {
     repositories {
         mavenCentral()
-        mavenLocal()  // for javafx-objimporter
+        mavenLocal()
     }
 }
 
 subprojects {
-    // 1. Apply plugins
+
     apply(plugin: "java")
     pluginManager.apply(libs.plugins.javafx.get().pluginId)
     pluginManager.apply(libs.plugins.osdetector.get().pluginId)
 
-    // 2. Java toolchain
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
         }
     }
 
-    // 3. JavaFX configuration
     javafx {
         version = libs.versions.javafx.get()
     }
 
-    // 4. Compiler settings
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
         options.compilerArgs.addAll(["-Xlint:deprecation", "-Xlint:unchecked"])
