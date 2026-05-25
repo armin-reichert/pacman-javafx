@@ -268,13 +268,13 @@ public class PlayView implements View {
         }
 
         if (prevGameScene != null) {
-            prevGameScene.end();
+            prevGameScene.deactivate();
             Logger.info("Game scene ended: {}", prevGameScene.getClass().getSimpleName());
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
         gameSceneEmbedder.embedGameScene(ui, this, nextGameScene);
-        nextGameScene.init();
+        nextGameScene.activate();
         Logger.info("Game scene initialized: {}", nextGameScene.getClass().getSimpleName());
 
         game.optGameLevel().ifPresent(level -> {

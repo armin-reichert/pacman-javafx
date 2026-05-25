@@ -127,21 +127,26 @@ public abstract class GameScene implements Disposable {
     /**
      * Activates the scene and assigns keyboard bindings.
      */
-    public final void init() {
+    public final void activate() {
         onActivate();
         actionBindings.assignToKeyboard();
-        Logger.trace("Game scene {} initialized", getClass().getSimpleName());
+        Logger.trace("Game scene {} activated", getClass().getSimpleName());
     }
 
     /**
-     * Deactivates the scene, removes bindings, stops sounds.
+     * Called when the scene is deactivated.
+     * Subclasses must:<br/>
+     * - unbind all properties<br/>
+     * - remove all listeners<br/>
+     * - stop all timers<br/>
+     * - release all UI references (canvas, subscene, etc.)
      */
-    public final void end() {
+    public final void deactivate() {
         onDeactivate();
         actionBindings.removeFromKeyboard();
         actionBindings.dispose();
         soundEffects().ifPresent(GameSoundEffects::stopAll);
-        Logger.trace("Game scene {} ends", getClass().getSimpleName());
+        Logger.trace("Game scene {} deactivated", getClass().getSimpleName());
     }
 
     /** Called when the scene becomes active. */

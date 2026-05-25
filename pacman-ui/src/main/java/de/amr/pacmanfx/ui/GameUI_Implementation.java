@@ -518,7 +518,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     public void stopGame() {
         soundManager.stopAll();
         optGameScene().ifPresent(gameScene -> {
-            gameScene.end();
+            gameScene.deactivate();
             gameScene.soundEffects().ifPresent(GameSoundEffects::stopAll);
         });
         gameContext.clock().stop();
