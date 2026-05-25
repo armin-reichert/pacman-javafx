@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.UIConfig;
 
 import static java.util.Objects.requireNonNull;
 
-class PlayViewGameEventHandler extends DefaultGameEventListener {
+public class PlayViewGameEventHandler extends DefaultGameEventListener {
 
     private final PlayView playView;
 

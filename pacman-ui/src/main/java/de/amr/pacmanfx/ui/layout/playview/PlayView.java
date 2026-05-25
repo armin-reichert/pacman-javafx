@@ -9,7 +9,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
-import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -36,7 +35,6 @@ import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -95,19 +93,22 @@ public class PlayView implements View {
         this.ui = ui;
         this.parentScene = parentScene;
 
-        contextMenu = new ContextMenu();
-        final var contextMenuHandler = new PlayViewContextMenuHandler(this, parentScene);
-
         createLayout(dashboardConfig);
+
         configureGameSceneDecorationPane();
         configureActionBindings();
         configurePropertyBindings();
 
         miniView.setUI(ui);
-        ui.gameContext().gameVariantNameProperty().addListener(
-            (_, oldVariantName, newVariantName) -> handleGameVariantNameChange(oldVariantName, newVariantName));
 
-        rootPane.setOnContextMenuRequested(contextMenuHandler);
+        contextMenu = new ContextMenu();
+        rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(this, parentScene));
+
+        ui.gameContext().gameVariantNameProperty().addListener(new PlayViewGameVariantChangeHandler(this));
+    }
+
+    public PlayViewGameEventHandler gameEventHandler() {
+        return gameEventHandler;
     }
 
     public GameUI ui() {
@@ -302,36 +303,6 @@ public class PlayView implements View {
         }
         if (parentSceneHeightListener != null) {
             parentScene.heightProperty().removeListener(parentSceneHeightListener);
-        }
-    }
-
-    private void handleGameVariantNameChange(String oldGameVariantName, String newGameVariantName) {
-        if (oldGameVariantName != null) {
-            Logger.info("Cleanup game variant {}...", oldGameVariantName);
-            final Game game = ui.gameContext().gameByVariantName(oldGameVariantName);
-            game.flow().removeGameEventListener(gameEventHandler);
-            ui.uiConfigManager().dispose(oldGameVariantName);
-            ui.soundManager().dispose();
-            ui.stage().getIcons().removeAll();
-            Logger.info("Cleanup of game variant {} complete.", oldGameVariantName);
-        }
-        if (newGameVariantName != null) {
-            Logger.info("Initialize game variant {}...", newGameVariantName);
-            final Game game = ui.gameContext().gameByVariantName(newGameVariantName);
-            game.flow().addGameEventListener(gameEventHandler);
-
-            final UIConfig uiConfig = ui.config(newGameVariantName);
-            uiConfig.init(ui);
-
-            final Image icon = uiConfig.assets().image("app_icon");
-            if (icon != null) {
-                ui.stage().getIcons().setAll(icon);
-            } else {
-                Logger.error("Could not find application icon for game variant {}", newGameVariantName);
-            }
-            Logger.info("Initialization of game variant {} complete.", newGameVariantName);
-        } else {
-            Logger.error("No game selected");
         }
     }
 
