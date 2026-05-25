@@ -59,39 +59,36 @@ public class PlayView implements View {
 
     public static final float MAX_GAME_SCENE_SCALING = 5;
 
-    private final PlayViewGameEventHandler gameEventHandler = new PlayViewGameEventHandler(this);
+    private final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
 
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
 
     private final GameUI ui;
     private final ContextMenu contextMenu;
-    private final Scene parentScene;
+    private final Scene parentSceneFX;
     private StackPane rootPane;
     private GameSceneDecorationPane decorationPane;
     private MiniGameView miniView;
     private BorderPane canvasLayer;
     private BorderPane widgetLayer;
     private HelpLayer helpLayer;
+    private Dashboard dashboard;
     private FontAwesomeIcon pausedIcon;
-
-    private final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
-
-    private ChangeListener<GameScene> gameSceneChangeListener;
-    private ChangeListener<? super Number> parentSceneWidthListener;
-    private ChangeListener<? super Number> parentSceneHeightListener;
 
     private GameScene2D_Renderer sceneRenderer;
     private HeadsUpDisplay_Renderer hudRenderer;
 
-    private Dashboard dashboard;
+    private final PlayViewGameEventHandler gameEventHandler = new PlayViewGameEventHandler(this);
+    private final ChangeListener<GameScene> gameSceneChangeHandler;
+    private final ChangeListener<? super Number> parentSceneSizeChangeHandler;
 
-    public PlayView(GameUI ui, Scene parentScene, DashboardConfig dashboardConfig) {
+    public PlayView(GameUI ui, Scene parentSceneFX, DashboardConfig dashboardConfig) {
         requireNonNull(ui);
-        requireNonNull(parentScene);
+        requireNonNull(parentSceneFX);
         requireNonNull(dashboardConfig);
 
         this.ui = ui;
-        this.parentScene = parentScene;
+        this.parentSceneFX = parentSceneFX;
 
         createLayout(dashboardConfig);
 
@@ -102,9 +99,17 @@ public class PlayView implements View {
         miniView.setUI(ui);
 
         contextMenu = new ContextMenu();
-        rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(this, parentScene));
+        rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(this, parentSceneFX));
 
         ui.gameContext().gameVariantNameProperty().addListener(new PlayViewGameVariantChangeHandler(this));
+
+        gameSceneChangeHandler = (_, _, gameScene) -> {
+            contextMenu.hide();
+            if (gameScene != null) {
+                embedGameScene(parentSceneFX, gameScene);
+            }
+        };
+        parentSceneSizeChangeHandler = (_, _, _) -> decorationPane.resizeTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
     }
 
     public PlayViewGameEventHandler gameEventHandler() {
@@ -120,7 +125,7 @@ public class PlayView implements View {
     }
 
     public Scene parentScene() {
-        return parentScene;
+        return parentSceneFX;
     }
 
     public ObjectProperty<GameScene> gameSceneProperty() {
@@ -157,7 +162,7 @@ public class PlayView implements View {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    // GameUI_View interface implementation
+    // View interface implementation
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
@@ -245,7 +250,7 @@ public class PlayView implements View {
         }
 
         nextGameScene.onEmbeddedIntoUI(); // Must be called *before* embedding
-        embedGameScene(parentScene, nextGameScene);
+        embedGameScene(parentSceneFX, nextGameScene);
         nextGameScene.init();
         Logger.info("Game scene initialized: {}", nextGameScene.getClass().getSimpleName());
 
@@ -277,33 +282,15 @@ public class PlayView implements View {
     }
 
     private void addListeners() {
-        removeListeners();
-
-        gameSceneChangeListener = (_, _, gameScene) -> {
-            contextMenu.hide();
-            if (gameScene != null) {
-                embedGameScene(parentScene, gameScene);
-            }
-        };
-        gameSceneProperty().addListener(gameSceneChangeListener);
-
-        parentSceneWidthListener = (_, _, w) -> decorationPane.resizeTo(w.doubleValue(), parentScene.getHeight());
-        parentScene.widthProperty() .addListener(parentSceneWidthListener);
-
-        parentSceneHeightListener = (_, _, h) -> decorationPane.resizeTo(parentScene.getWidth(), h.doubleValue());
-        parentScene.heightProperty().addListener(parentSceneHeightListener);
+        gameScene.addListener(gameSceneChangeHandler);
+        parentSceneFX.widthProperty() .addListener(parentSceneSizeChangeHandler);
+        parentSceneFX.heightProperty().addListener(parentSceneSizeChangeHandler);
     }
 
     private void removeListeners() {
-        if (gameSceneChangeListener != null) {
-            gameSceneProperty().removeListener(gameSceneChangeListener);
-        }
-        if (parentSceneWidthListener != null) {
-            parentScene.widthProperty().removeListener(parentSceneWidthListener);
-        }
-        if (parentSceneHeightListener != null) {
-            parentScene.heightProperty().removeListener(parentSceneHeightListener);
-        }
+        gameScene.removeListener(gameSceneChangeHandler);
+        parentSceneFX.widthProperty().removeListener(parentSceneSizeChangeHandler);
+        parentSceneFX.heightProperty().removeListener(parentSceneSizeChangeHandler);
     }
 
     private void configureGameSceneDecorationPane() {
