@@ -50,13 +50,13 @@ public class PlayView implements View {
 
     public static final float MAX_GAME_SCENE_SCALING = 5;
 
-    public static final GameSceneDecorationPane.Config DECORATION_CONFIG = new GameSceneDecorationPane.Config(
+    public static final DecorationPane.Config DECORATION_CONFIG = new DecorationPane.Config(
         0.85f,
         0.93f,
         1.0f,
         20,
         20,
-        new GameSceneDecorationPane.FrameConfig(
+        new DecorationPane.FrameConfig(
             26,
             10,
             5,
@@ -72,9 +72,9 @@ public class PlayView implements View {
     private final ContextMenu contextMenu;
     private final Scene parentSceneFX;
     private StackPane rootPane;
-    private GameSceneDecorationPane decorationPane;
+    private DecorationPane decorationPane;
     private MiniGameView miniView;
-    private BorderPane canvasLayer;
+    private BorderPane gameSceneContentLayer;
     private BorderPane widgetLayer;
     private HelpLayer helpLayer;
     private Dashboard dashboard;
@@ -141,11 +141,7 @@ public class PlayView implements View {
         return parentSceneFX;
     }
 
-    public BorderPane canvasLayer() {
-        return canvasLayer;
-    }
-
-    public GameSceneDecorationPane decorationPane() {
+    public DecorationPane decorationPane() {
         return decorationPane;
     }
 
@@ -168,6 +164,10 @@ public class PlayView implements View {
 
     public void forceGameSceneUpdate() {
         updateGameScene(true);
+    }
+
+    public void setGameSceneContent(Node gameSceneContent) {
+        gameSceneContentLayer.setCenter(gameSceneContent);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -225,14 +225,14 @@ public class PlayView implements View {
 
     private void createLayout(DashboardConfig dashboardConfig) {
         rootPane = new StackPane();
-        decorationPane = new GameSceneDecorationPane(
+        decorationPane = new DecorationPane(
             DECORATION_CONFIG,
             Globals.ARCADE_MAP_SIZE_IN_PIXELS.x(),
             Globals.ARCADE_MAP_SIZE_IN_PIXELS.y()
         );
         miniView = new MiniGameView();
-        canvasLayer = new BorderPane();
-        helpLayer = new HelpLayer(canvasLayer);
+        gameSceneContentLayer = new BorderPane();
+        helpLayer = new HelpLayer(gameSceneContentLayer);
         widgetLayer = new BorderPane();
         pausedIcon  = FontAwesomeIcon.of(FontAwesomeIcon.Symbol.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
 
@@ -243,9 +243,9 @@ public class PlayView implements View {
         widgetLayer.setLeft(dashboard);
         widgetLayer.setRight(miniView.container());
 
-        canvasLayer.setCenter(decorationPane);
+        gameSceneContentLayer.setCenter(decorationPane);
 
-        rootPane.getChildren().addAll(canvasLayer, widgetLayer, helpLayer, pausedIcon);
+        rootPane.getChildren().addAll(gameSceneContentLayer, widgetLayer, helpLayer, pausedIcon);
     }
 
     public void updateGameScene(boolean forceReload) {
@@ -317,8 +317,8 @@ public class PlayView implements View {
                 smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
 
         GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.addListener((_, _, debug) -> {
-            canvasLayer.setBackground(debug ? paintBackground(Color.TEAL) : null);
-            canvasLayer.setBorder(debug ? border(Color.LIGHTGREEN, 1) : null);
+            gameSceneContentLayer.setBackground(debug ? paintBackground(Color.TEAL) : null);
+            gameSceneContentLayer.setBorder(debug ? border(Color.LIGHTGREEN, 1) : null);
         });
 
         widgetLayer.visibleProperty().bind(Bindings.createObjectBinding(
@@ -330,10 +330,6 @@ public class PlayView implements View {
             () -> GameUIConstants.PROPERTY_MINI_VIEW_ON.get() && ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D),
             GameUIConstants.PROPERTY_MINI_VIEW_ON, gameScene
         ));
-    }
-
-    public void setContent(Node content) {
-        rootPane.getChildren().set(0, content);
     }
 
     public void updateRenderers(GameScene2D gameScene2D) {

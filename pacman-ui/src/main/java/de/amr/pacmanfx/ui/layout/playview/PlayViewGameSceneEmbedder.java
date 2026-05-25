@@ -37,13 +37,13 @@ public class PlayViewGameSceneEmbedder {
             gameScene2D.setCanvas(playView.decorationPane().canvas());
             playView.updateRenderers(gameScene2D);
         }
-        playView.setContent(subSceneFX);
+        playView.setGameSceneContent(subSceneFX);
     }
 
     // 2D scenes without camera which are shown at full size
     private void embedGameScene2D(GameUI ui, PlayView playView, GameScene2D gameScene2D) {
+        final DecorationPane decorationPane = playView.decorationPane();
         final boolean decorated = ui.currentGameSceneConfig().sceneDecorationRequested(gameScene2D);
-        final GameSceneDecorationPane decorationPane = playView.decorationPane();
 
         if (decorated) {
             // set unscaled decoration pane size to game scene (=world map) size
@@ -65,9 +65,10 @@ public class PlayViewGameSceneEmbedder {
             gameScene2D.setCanvas(decorationPane.canvas());
             playView.updateRenderers(gameScene2D);
 
-            playView.canvasLayer().setCenter(decorationPane);
-        } else {
-            // Undecorated game scene taking complete height
+            playView.setGameSceneContent(decorationPane);
+
+        }
+        else { // Undecorated game scene taking complete height
 
             final Canvas canvas = decorationPane.canvas();
             final double aspect = gameScene2D.getAspectRatio();
@@ -81,9 +82,7 @@ public class PlayViewGameSceneEmbedder {
             gameScene2D.setCanvas(canvas);
             playView.updateRenderers(gameScene2D);
 
-            playView.canvasLayer().setCenter(canvas);
+            playView.setGameSceneContent(canvas);
         }
-
-        playView.setContent(playView.canvasLayer());
     }
 }

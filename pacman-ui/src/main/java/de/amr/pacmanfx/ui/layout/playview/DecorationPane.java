@@ -19,7 +19,7 @@ import org.tinylog.Logger;
 import static java.util.Objects.requireNonNull;
 
 //TODO: Still too complicated for what it does
-public class GameSceneDecorationPane extends StackPane {
+public class DecorationPane extends StackPane {
 
     public record FrameConfig(
         int    arcDiameter,
@@ -67,11 +67,11 @@ public class GameSceneDecorationPane extends StackPane {
 
     private final Config config;
 
-    public GameSceneDecorationPane(double unscaledWidth, double unscaledHeight) {
+    public DecorationPane(double unscaledWidth, double unscaledHeight) {
         this(DEFAULT_CONFIG, unscaledWidth, unscaledHeight);
     }
 
-    public GameSceneDecorationPane(Config config, double unscaledWidth, double unscaledHeight) {
+    public DecorationPane(Config config, double unscaledWidth, double unscaledHeight) {
         this.config = requireNonNull(config);
 
         unscaledWidthProperty().set(unscaledWidth);
