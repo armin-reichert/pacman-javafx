@@ -73,8 +73,8 @@ public class PlayView implements View {
     private StackPane rootPane;
     private DecorationPane decorationPane;
     private MiniGameView miniView;
-    private BorderPane gameSceneContentLayer;
-    private BorderPane widgetLayer;
+    private BorderPane gameSceneLayer;
+    private BorderPane overlayLayer;
     private HelpLayer helpLayer;
     private Dashboard dashboard;
     private FontAwesomeIcon pausedIcon;
@@ -166,7 +166,7 @@ public class PlayView implements View {
     }
 
     public void setGameSceneContent(Node gameSceneContent) {
-        gameSceneContentLayer.setCenter(gameSceneContent);
+        gameSceneLayer.setCenter(gameSceneContent);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -204,58 +204,28 @@ public class PlayView implements View {
 
     @Override
     public void render() {
-        final Game game = ui.gameContext().game();
-        optCurrentGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(gameScene2D -> {
+
+        // Render current 2D game scene
+        final GameScene gameScene = optCurrentGameScene().orElse(null);
+        if (gameScene instanceof GameScene2D gameScene2D) {
+            final Game game = ui.gameContext().game();
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D);
             }
             if (hudRenderer != null) {
                 hudRenderer.draw(game.hud(), game, gameScene2D);
             }
-        });
+        }
 
+        // Render mini view content
         if (miniView().canDraw()) {
             miniView.draw();
         }
 
-        // Dashboard must also be updated if simulation is stopped
-        if (widgetLayer.isVisible()) {
+        // Dashboard must always be updated even if simulation is stopped!
+        if (overlayLayer.isVisible()) {
             dashboard.update(ui);
         }
-    }
-
-    // ---
-
-    private void createLayout(DashboardConfig dashboardConfig) {
-        rootPane = new StackPane();
-
-        decorationPane = new DecorationPane(
-            DECORATION_CONFIG,
-            Globals.ARCADE_MAP_SIZE_IN_PIXELS.x(),
-            Globals.ARCADE_MAP_SIZE_IN_PIXELS.y()
-        );
-
-        miniView = new MiniGameView();
-
-        gameSceneContentLayer = new BorderPane();
-
-        helpLayer = new HelpLayer(gameSceneContentLayer);
-
-        widgetLayer = new BorderPane();
-
-        pausedIcon  = FontAwesomeIcon.of(FontAwesomeIcon.Symbol.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
-        pausedIcon.setFocusTraversable(false);
-
-        dashboard = new Dashboard(dashboardConfig);
-        dashboard.setVisible(false);
-
-        StackPane.setAlignment(pausedIcon, Pos.CENTER);
-        widgetLayer.setLeft(dashboard);
-        widgetLayer.setRight(miniView.container());
-
-        gameSceneContentLayer.setCenter(decorationPane);
-
-        rootPane.getChildren().addAll(gameSceneContentLayer, widgetLayer, helpLayer, pausedIcon);
     }
 
     public void updateGameScene(boolean forceReload) {
@@ -269,21 +239,59 @@ public class PlayView implements View {
 
         if (prevGameScene != null) {
             prevGameScene.deactivate();
-            Logger.info("Game scene ended: {}", prevGameScene.getClass().getSimpleName());
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
         gameSceneEmbedder.embedGameScene(ui, this, nextGameScene);
         nextGameScene.activate();
-        Logger.info("Game scene initialized: {}", nextGameScene.getClass().getSimpleName());
 
-        game.optGameLevel().ifPresent(level -> {
-            gameSceneSwitchHandler.handleGameSceneSwitch(ui.currentConfig(), level, prevGameScene, nextGameScene);
-        });
+        game.optGameLevel().ifPresent(level -> gameSceneSwitchHandler.handleGameSceneSwitch(
+            ui.currentConfig(), level, prevGameScene, nextGameScene));
+
         gameSceneProperty().set(nextGameScene);
     }
 
-    // Others
+    public void updateGameSceneRenderers(GameScene2D gameScene2D) {
+        if (gameScene2D.canvas() != null) {
+            sceneRenderer = ui.currentConfig().createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
+            hudRenderer = ui.currentConfig().createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
+        } else {
+            Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
+        }
+    }
+
+    // Private
+
+    private void createLayout(DashboardConfig dashboardConfig) {
+        rootPane = new StackPane();
+
+        decorationPane = new DecorationPane(
+            DECORATION_CONFIG,
+            Globals.ARCADE_MAP_SIZE_IN_PIXELS.x(),
+            Globals.ARCADE_MAP_SIZE_IN_PIXELS.y()
+        );
+
+        miniView = new MiniGameView();
+
+        gameSceneLayer = new BorderPane();
+
+        helpLayer = new HelpLayer(gameSceneLayer);
+
+        pausedIcon  = FontAwesomeIcon.of(FontAwesomeIcon.Symbol.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
+        pausedIcon.setFocusTraversable(false);
+        StackPane.setAlignment(pausedIcon, Pos.CENTER);
+
+        dashboard = new Dashboard(dashboardConfig);
+        dashboard.setVisible(false);
+
+        overlayLayer = new BorderPane();
+        overlayLayer.setLeft(dashboard);
+        overlayLayer.setRight(miniView.container());
+
+        gameSceneLayer.setCenter(decorationPane);
+
+        rootPane.getChildren().addAll(gameSceneLayer, overlayLayer, helpLayer, pausedIcon);
+    }
 
     private void addListeners() {
         gameScene.addListener(gameSceneChangeHandler);
@@ -310,11 +318,11 @@ public class PlayView implements View {
                 smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
 
         GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.addListener((_, _, debug) -> {
-            gameSceneContentLayer.setBackground(debug ? paintBackground(Color.TEAL) : null);
-            gameSceneContentLayer.setBorder(debug ? border(Color.LIGHTGREEN, 1) : null);
+            gameSceneLayer.setBackground(debug ? paintBackground(Color.TEAL) : null);
+            gameSceneLayer.setBorder(debug ? border(Color.LIGHTGREEN, 1) : null);
         });
 
-        widgetLayer.visibleProperty().bind(Bindings.createObjectBinding(
+        overlayLayer.visibleProperty().bind(Bindings.createObjectBinding(
             () -> dashboard.isVisible() || GameUIConstants.PROPERTY_MINI_VIEW_ON.get(),
             dashboard.visibleProperty(), GameUIConstants.PROPERTY_MINI_VIEW_ON
         ));
@@ -323,14 +331,5 @@ public class PlayView implements View {
             () -> GameUIConstants.PROPERTY_MINI_VIEW_ON.get() && ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D),
             GameUIConstants.PROPERTY_MINI_VIEW_ON, gameScene
         ));
-    }
-
-    public void updateGameSceneRenderers(GameScene2D gameScene2D) {
-        if (gameScene2D.canvas() != null) {
-            sceneRenderer = ui.currentConfig().createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
-            hudRenderer = ui.currentConfig().createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
-        } else {
-            Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
-        }
     }
 }
