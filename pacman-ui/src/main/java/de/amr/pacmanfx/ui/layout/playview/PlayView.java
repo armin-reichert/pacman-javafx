@@ -107,7 +107,7 @@ public class PlayView implements View {
                 embedGameScene(gameScene);
             }
         };
-        parentSceneSizeChangeHandler = (_, _, _) -> decorationPane.resizeTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
+        parentSceneSizeChangeHandler = (_, _, _) -> decorationPane.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
     }
 
     public PlayViewGameEventHandler gameEventHandler() {
@@ -176,7 +176,6 @@ public class PlayView implements View {
     public void onEnter() {
         rootPane.requestFocus();
         addListeners();
-        decorationPane.updateLayout();
     }
 
     @Override
@@ -389,7 +388,7 @@ public class PlayView implements View {
 
             decorationPane.unscaledWidthProperty().bind(gameScene2D.unscaledWidthProperty());
             decorationPane.unscaledHeightProperty().bind(gameScene2D.unscaledHeightProperty());
-            decorationPane.resizeTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
+            decorationPane.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
             decorationPane.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR.map(UfxBackgrounds::paintBackground));
 
             canvasLayer.setCenter(decorationPane);

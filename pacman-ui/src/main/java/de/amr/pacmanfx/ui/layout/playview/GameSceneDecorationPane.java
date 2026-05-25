@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.layout.playview;
 
 import de.amr.pacmanfx.Globals;
@@ -18,20 +19,35 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
+//TODO: Still too complicated for what it does
 public class GameSceneDecorationPane extends StackPane {
 
-    private static final float SCALING_X = 0.85f;
-    private static final float SCALING_Y = 0.93f;
+    record FrameConfig(
+        int    arcDiameter,
+        int    cornerRadius,
+        int    minBorderWidth,
+        double borderWidthRatio,
+        Color  defaultBorderColor) {}
 
-    // Padding between canvas and rounded frame
-    private static final int PADDING_X = 20;
-    private static final int PADDING_Y = 20;
+    record Config(
+        float scalingX,
+        float scalingY,
+        float paddingX,
+        float paddingY,
+        FrameConfig frameConfig) {}
 
-    private static final int    FRAME_ARC_DIAMETER = 26;
-    private static final int    FRAME_CORNER_RADIUS = 10;
-    private static final int    FRAME_MIN_BORDER_WIDTH = 5;
-    private static final double FRAME_BORDER_WIDTH_RATIO = 55.0;
-    private static final Color  FRAME_DEFAULT_BORDER_COLOR = Color.WHITE;
+    private static final Config CONFIG = new Config(
+        0.85f,
+        0.93f,
+        20,
+        20,
+        new FrameConfig(
+            26,
+            10,
+            5,
+            55.0,
+            Color.WHITE)
+    );
 
     private static Border createRoundedBorder(Paint strokeColor, double borderWidth, double cornerRadius) {
         final var stroke = new BorderStroke(strokeColor, BorderStrokeStyle.SOLID,
@@ -40,7 +56,7 @@ public class GameSceneDecorationPane extends StackPane {
         return new Border(stroke);
     }
 
-    private final ObjectProperty<Color> borderColor = new SimpleObjectProperty<>(FRAME_DEFAULT_BORDER_COLOR);
+    private final ObjectProperty<Color> borderColor = new SimpleObjectProperty<>(CONFIG.frameConfig().defaultBorderColor());
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
 
@@ -56,14 +72,14 @@ public class GameSceneDecorationPane extends StackPane {
 
         newCanvas();
 
-        final ChangeListener<? super Number> resizeHandler = (_, _, _) -> updateLayout();
+        final ChangeListener<? super Number> resizeHandler = (_, _, _) -> doLayout(scaling(), true);
         unscaledWidth.addListener(resizeHandler);
         unscaledHeight.addListener(resizeHandler);
         scaling.addListener(resizeHandler);
 
         clipProperty().bind(Bindings.createObjectBinding(() -> {
-                final double arcDiameter = FRAME_ARC_DIAMETER * scaling();
-                final Dimension2D scaledSize = computeScaledSize();
+                final double arcDiameter = CONFIG.frameConfig().arcDiameter() * scaling();
+                final Dimension2D scaledSize = computePaneSize();
                 final var rect = new Rectangle(scaledSize.getWidth(), scaledSize.getHeight());
                 rect.setArcHeight(arcDiameter);
                 rect.setArcWidth(arcDiameter);
@@ -72,10 +88,10 @@ public class GameSceneDecorationPane extends StackPane {
         );
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
-                final Dimension2D scaledSize = computeScaledSize();
-                final double proposedBorderWidth = Math.ceil(scaledSize.getHeight() / FRAME_BORDER_WIDTH_RATIO);
-                final double borderWidth = Math.max(FRAME_MIN_BORDER_WIDTH, proposedBorderWidth);
-                final double cornerRadius = Math.ceil(FRAME_CORNER_RADIUS * scaling());
+                final Dimension2D scaledSize = computePaneSize();
+                final double proposedBorderWidth = Math.ceil(scaledSize.getHeight() / CONFIG.frameConfig().borderWidthRatio());
+                final double borderWidth = Math.max(CONFIG.frameConfig().minBorderWidth(), proposedBorderWidth);
+                final double cornerRadius = Math.ceil(CONFIG.frameConfig().cornerRadius() * scaling());
                 return createRoundedBorder(borderColor.get(), borderWidth, cornerRadius);
             }, borderColor, scaling, unscaledWidth, unscaledHeight)
         );
@@ -94,19 +110,14 @@ public class GameSceneDecorationPane extends StackPane {
         );
     }
 
-    public void updateLayout() {
-        doLayout(scaling(), true);
-    }
-
-    public void resizeTo(double width, double height) {
-        final double realWidth  = SCALING_X * width;
-        final double realHeight = SCALING_Y * height;
-        double newScaling = realHeight / unscaledHeight.get();
-        if (newScaling * unscaledWidth.get() > realWidth) {
-            newScaling = realWidth / unscaledWidth.get();
+    public void stretchTo(double width, double height) {
+        final double realWidth  = CONFIG.scalingX() * width;
+        final double realHeight = CONFIG.scalingY() * height;
+        double targetScaling = realHeight / unscaledHeight.get();
+        if (targetScaling * unscaledWidth.get() > realWidth) {
+            targetScaling = realWidth / unscaledWidth.get();
         }
-        doLayout(newScaling, false);
-        Logger.debug("Canvas container resized to width={} height={}", getWidth(), getHeight());
+        doLayout(targetScaling, false);
     }
 
     public Canvas canvas() {
@@ -137,25 +148,27 @@ public class GameSceneDecorationPane extends StackPane {
 
     // Private
 
-    private void doLayout(double newScaling, boolean forced) {
-        if (newScaling < minScaling) {
-            Logger.warn("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
+    private void doLayout(double targetScaling, boolean forced) {
+        if (targetScaling < minScaling) {
+            Logger.warn("Cannot scale to {}, minimum scaling is {}", targetScaling, minScaling);
             return;
         }
-        if (!forced && Math.abs(scaling.get() - newScaling) < 1e-2) { // ignore tiny scaling changes
+        if (!forced && Math.abs(scaling.get() - targetScaling) < 1e-2) { // ignore tiny scaling changes
             Logger.debug("No scaling needed, difference too small");
             return;
         }
-        scaling.set(newScaling);
+        scaling.set(targetScaling);
 
-        final Dimension2D size = computeScaledSize();
-        setMinSize(size.getWidth(),  size.getHeight());
-        setMaxSize(size.getWidth(),  size.getHeight());
-        setPrefSize(size.getWidth(), size.getHeight());
+        final Dimension2D paneSize = computePaneSize();
+        setMinSize(paneSize.getWidth(),  paneSize.getHeight());
+        setMaxSize(paneSize.getWidth(),  paneSize.getHeight());
+        setPrefSize(paneSize.getWidth(), paneSize.getHeight());
     }
 
-    private Dimension2D computeScaledSize() {
-        final double s = scaling();
-        return new Dimension2D(s * (unscaledWidth.get() + PADDING_X), s * (unscaledHeight.get() + PADDING_Y));
+    private Dimension2D computePaneSize() {
+        return new Dimension2D(
+            scaling() * (unscaledWidth.get() + CONFIG.paddingX()),
+            scaling() * (unscaledHeight.get() + CONFIG.paddingY())
+        );
     }
 }
