@@ -37,9 +37,6 @@ import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.image.Image;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -53,8 +50,6 @@ import static de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
-import static de.amr.pacmanfx.ui.layout.ContextMenuSupport.addLocalizedActionItem;
-import static de.amr.pacmanfx.ui.layout.ContextMenuSupport.addLocalizedTitleItem;
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.border;
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.paintBackground;
 import static java.util.Objects.requireNonNull;
@@ -71,13 +66,13 @@ public class PlayView extends StackPane implements View {
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
 
     private final GameUI ui;
+    private final ContextMenu contextMenu;
     private final Scene parentScene;
     private GameSceneDecorationPane decorationPane;
     private MiniGameView miniView;
     private BorderPane canvasLayer;
     private BorderPane widgetLayer;
     private HelpLayer helpLayer;
-    private ContextMenu contextMenu;
     private FontAwesomeIcon pausedIcon;
 
     private final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
@@ -117,8 +112,10 @@ public class PlayView extends StackPane implements View {
         this.ui = ui;
         this.parentScene = parentScene;
 
+        contextMenu = new ContextMenu();
+        final var contextMenuHandler = new PlayViewContextMenuHandler(this, parentScene);
+
         createLayout(dashboardConfig);
-        createContextMenu();
         configureGameSceneDecorationPane();
         configureActionBindings();
         configurePropertyBindings();
@@ -126,10 +123,16 @@ public class PlayView extends StackPane implements View {
         miniView.setUI(ui);
         ui.gameContext().gameVariantNameProperty().addListener(
             (_, oldVariantName, newVariantName) -> handleGameVariantNameChange(oldVariantName, newVariantName));
+
+        setOnContextMenuRequested(contextMenuHandler);
     }
 
     public GameUI ui() {
         return ui;
+    }
+
+    public ContextMenu contextMenu() {
+        return contextMenu;
     }
 
     public Scene parentScene() {
@@ -361,17 +364,6 @@ public class PlayView extends StackPane implements View {
         ));
     }
 
-    private void createContextMenu() {
-        contextMenu = new ContextMenu();
-        setOnContextMenuRequested(this::handleContextMenuRequest);
-        //TODO is there a better way to hide the context menu?
-        parentScene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
-            if (e.getButton() != MouseButton.SECONDARY) {
-                contextMenu.hide();
-            }
-        });
-    }
-
     private void configureActionBindings() {
         actionBindings.addAny(ACTION_BOOT_SHOW_PLAY_VIEW, GameUIConstants.COMMON_BINDINGS);
         actionBindings.addAny(ACTION_ENTER_FULLSCREEN, GameUIConstants.COMMON_BINDINGS);
@@ -393,21 +385,6 @@ public class PlayView extends StackPane implements View {
         actionBindings.addAny(ACTION_TOGGLE_IMMUNITY, GameUIConstants.COMMON_BINDINGS);
         actionBindings.addAny(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, GameUIConstants.COMMON_BINDINGS);
         actionBindings.addAny(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GameUIConstants.COMMON_BINDINGS);
-    }
-
-    private void handleContextMenuRequest(ContextMenuEvent event) {
-        contextMenu.getItems().clear();
-        optCurrentGameScene().ifPresent(gameScene -> {
-            if (ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D)) {
-                addLocalizedTitleItem(contextMenu, ui,"scene_display");
-                addLocalizedActionItem(contextMenu, ui,ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
-            }
-            gameScene.supplyContextMenu().ifPresent(sceneMenu -> contextMenu.getItems().addAll(sceneMenu.getItems()));
-        });
-        if (!contextMenu.getItems().isEmpty()) {
-            contextMenu.requestFocus();
-            contextMenu.show(this, event.getScreenX(), event.getScreenY());
-        }
     }
 
     private void useDecoratedCanvas(GameScene2D gameScene2D) {
