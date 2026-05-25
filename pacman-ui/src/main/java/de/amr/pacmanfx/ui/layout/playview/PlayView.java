@@ -71,7 +71,7 @@ public class PlayView implements View {
     private final ContextMenu contextMenu;
     private final Scene parentSceneFX;
     private StackPane rootPane;
-    private DecorationPane decorationPane;
+    private DecorationPane gameSceneDecorationPane;
     private MiniGameView miniView;
     private BorderPane gameSceneLayer;
     private BorderPane overlayLayer;
@@ -113,7 +113,7 @@ public class PlayView implements View {
                 gameSceneEmbedder.embedGameScene(ui, this, gameScene);
             }
         };
-        parentSceneSizeChangeHandler = (_, _, _) -> decorationPane.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
+        parentSceneSizeChangeHandler = (_, _, _) -> gameSceneDecorationPane.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
     }
 
     public PlayViewGameEventHandler gameEventHandler() {
@@ -141,7 +141,7 @@ public class PlayView implements View {
     }
 
     public DecorationPane decorationPane() {
-        return decorationPane;
+        return gameSceneDecorationPane;
     }
 
     public Optional<GameScene> optCurrentGameScene() {
@@ -157,7 +157,7 @@ public class PlayView implements View {
     }
 
     public void showHelp(GameUI ui) {
-        final double scaling = decorationPane.scalingProperty().get();
+        final double scaling = gameSceneDecorationPane.scalingProperty().get();
         helpLayer.showHelpPopup(ui, scaling, ui.gameContext().gameVariantName());
     }
 
@@ -263,23 +263,20 @@ public class PlayView implements View {
     // Private
 
     private void createLayout(DashboardConfig dashboardConfig) {
-        rootPane = new StackPane();
 
-        decorationPane = new DecorationPane(
+        // Layer 1: Game scene with or without decoration
+
+        gameSceneDecorationPane = new DecorationPane(
             DECORATION_CONFIG,
             Globals.ARCADE_MAP_SIZE_IN_PIXELS.x(),
             Globals.ARCADE_MAP_SIZE_IN_PIXELS.y()
         );
+        gameSceneLayer = new BorderPane();
+        gameSceneLayer.setCenter(gameSceneDecorationPane);
+
+        // Layer 2: Overlay layer with dashboard and miniview for 3D scene
 
         miniView = new MiniGameView();
-
-        gameSceneLayer = new BorderPane();
-
-        helpLayer = new HelpLayer(gameSceneLayer);
-
-        pausedIcon  = FontAwesomeIcon.of(FontAwesomeIcon.Symbol.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
-        pausedIcon.setFocusTraversable(false);
-        StackPane.setAlignment(pausedIcon, Pos.CENTER);
 
         dashboard = new Dashboard(dashboardConfig);
         dashboard.setVisible(false);
@@ -288,8 +285,15 @@ public class PlayView implements View {
         overlayLayer.setLeft(dashboard);
         overlayLayer.setRight(miniView.container());
 
-        gameSceneLayer.setCenter(decorationPane);
+        // Layer 3: Help info
+        helpLayer = new HelpLayer(gameSceneLayer);
 
+        // Layer 4: "Paused" icon
+        pausedIcon  = FontAwesomeIcon.of(FontAwesomeIcon.Symbol.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
+        pausedIcon.setFocusTraversable(false);
+        StackPane.setAlignment(pausedIcon, Pos.CENTER);
+
+        rootPane = new StackPane();
         rootPane.getChildren().addAll(gameSceneLayer, overlayLayer, helpLayer, pausedIcon);
     }
 
@@ -297,14 +301,14 @@ public class PlayView implements View {
         gameScene.addListener(gameSceneChangeHandler);
         parentSceneFX.widthProperty() .addListener(parentSceneSizeChangeHandler);
         parentSceneFX.heightProperty().addListener(parentSceneSizeChangeHandler);
-        decorationPane.installBindings();
+        gameSceneDecorationPane.installBindings();
     }
 
     private void removeListeners() {
         gameScene.removeListener(gameSceneChangeHandler);
         parentSceneFX.widthProperty().removeListener(parentSceneSizeChangeHandler);
         parentSceneFX.heightProperty().removeListener(parentSceneSizeChangeHandler);
-        decorationPane.uninstallBindings();
+        gameSceneDecorationPane.uninstallBindings();
     }
 
     private void configurePropertyBindings() {
@@ -314,7 +318,7 @@ public class PlayView implements View {
         );
 
         GameUIConstants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smooth) ->
-            decorationPane.canvas().getGraphicsContext2D().setFontSmoothingType(
+            gameSceneDecorationPane.canvas().getGraphicsContext2D().setFontSmoothingType(
                 smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
 
         GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.addListener((_, _, debug) -> {
