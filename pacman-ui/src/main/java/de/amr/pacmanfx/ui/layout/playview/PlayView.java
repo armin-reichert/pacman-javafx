@@ -351,7 +351,6 @@ public class PlayView implements View {
 
         gameScene2D.setCanvas(decorationPane.canvas());
         gameScene2D.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
-
         updateGameScene2DRenderer(gameScene2D);
     }
 
@@ -383,26 +382,32 @@ public class PlayView implements View {
     }
 
     private void embedGameScene2D(GameScene2D gameScene2D) {
-        useDecoratedCanvas(gameScene2D);
         double aspect = gameScene2D.getAspectRatio();
         if (ui.currentGameSceneConfig().sceneDecorationRequested(gameScene2D)) {
-            // Decorated game scene scaled-down to give space for the decoration
-            gameScene2D.scalingProperty().bind(decorationPane.scalingProperty().map(
-                scaling -> Math.min(scaling.doubleValue(), MAX_GAME_SCENE_SCALING)));
 
             decorationPane.unscaledWidthProperty().bind(gameScene2D.unscaledWidthProperty());
             decorationPane.unscaledHeightProperty().bind(gameScene2D.unscaledHeightProperty());
             decorationPane.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
             decorationPane.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR.map(UfxBackgrounds::paintBackground));
-
             canvasLayer.setCenter(decorationPane);
+
+            // Decorated game scene scaled-down to give space for the decoration
+            gameScene2D.scalingProperty().bind(decorationPane.scalingProperty().map(
+                scaling -> Math.min(scaling.doubleValue(), MAX_GAME_SCENE_SCALING)));
+
+            useDecoratedCanvas(gameScene2D);
         }
         else {
             // Undecorated game scene taking complete height
             decorationPane.canvas().heightProperty().bind(parentSceneFX.heightProperty());
             decorationPane.canvas().widthProperty().bind(parentSceneFX.heightProperty().map(h -> h.doubleValue() * aspect));
-            gameScene2D.scalingProperty().bind(parentSceneFX.heightProperty().divide(gameScene2D.getUnscaledHeight()));
             canvasLayer.setCenter(decorationPane.canvas());
+
+            gameScene2D.scalingProperty().bind(parentSceneFX.heightProperty().divide(gameScene2D.getUnscaledHeight()));
+
+            //TODO this is just to ensure the game scene renderer can be created
+            gameScene2D.setCanvas(decorationPane.canvas());
+            updateGameScene2DRenderer(gameScene2D);
         }
         rootPane.getChildren().set(0, canvasLayer);
     }
