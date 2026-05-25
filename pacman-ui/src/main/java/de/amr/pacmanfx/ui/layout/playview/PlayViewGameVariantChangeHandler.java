@@ -20,40 +20,48 @@ public class PlayViewGameVariantChangeHandler implements ChangeListener<String> 
 
     @Override
     public void changed(ObservableValue<? extends String> py, String oldGameVariantName, String newGameVariantName) {
-        final GameUI ui = playView.ui();
-
         if (oldGameVariantName != null) {
-            final Game oldGame = ui.gameContext().gameByVariantName(oldGameVariantName);
-
-            oldGame.flow().removeGameEventListener(playView.gameEventHandler());
-
-            Logger.info("Cleanup old game variant {}...", oldGameVariantName);
-
-            ui.stage().getIcons().removeAll();
-            ui.uiConfigManager().dispose(oldGameVariantName);
-            ui.soundManager().dispose();
-
-            Logger.info("Cleanup of old game variant {} complete.", oldGameVariantName);
+            cleanupOldGameVariant(oldGameVariantName);
         }
-
         if (newGameVariantName != null) {
-            final Game newGame = ui.gameContext().gameByVariantName(newGameVariantName);
-
-            newGame.flow().addGameEventListener(playView.gameEventHandler());
-
-            Logger.info("Initialize new game variant {}...", newGameVariantName);
-
-            final UIConfig newUiConfig = ui.config(newGameVariantName);
-            newUiConfig.init(ui);
-
-            final Image icon = newUiConfig.assets().image("app_icon");
-            if (icon != null) {
-                ui.stage().getIcons().setAll(icon);
-            } else {
-                Logger.error("Could not find application icon for game variant {}", newGameVariantName);
-            }
-
-            Logger.info("Initialization of game variant {} complete.", newGameVariantName);
+            initNewGameVariant(newGameVariantName);
         }
     }
+
+    private void cleanupOldGameVariant(String variantName) {
+        final GameUI ui = playView.ui();
+        final Game oldGame = ui.gameContext().gameByVariantName(variantName);
+
+        oldGame.flow().removeGameEventListener(playView.gameEventHandler());
+
+        Logger.info("Cleanup old game variant {}...", variantName);
+
+        ui.stage().getIcons().removeAll();
+        ui.uiConfigManager().dispose(variantName);
+        ui.soundManager().dispose();
+
+        Logger.info("Cleanup of old game variant {} complete.", variantName);
+    }
+
+    private void initNewGameVariant(String variantName) {
+        final GameUI ui = playView.ui();
+        final Game newGame = ui.gameContext().gameByVariantName(variantName);
+
+        newGame.flow().addGameEventListener(playView.gameEventHandler());
+
+        Logger.info("Initialize new game variant {}...", variantName);
+
+        final UIConfig newUiConfig = ui.config(variantName);
+        newUiConfig.init(ui);
+
+        final Image icon = newUiConfig.assets().image("app_icon");
+        if (icon != null) {
+            ui.stage().getIcons().setAll(icon);
+        } else {
+            Logger.error("Could not find application icon for game variant {}", variantName);
+        }
+
+        Logger.info("Initialization of game variant {} complete.", variantName);
+    }
+
 }
