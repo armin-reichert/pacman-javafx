@@ -84,49 +84,28 @@ public class GameSceneDecorationPane extends StackPane {
         unscaledHeightProperty().addListener(resizeHandler);
         scaling.addListener(resizeHandler);
 
-        clipProperty().bind(Bindings.createObjectBinding(() -> {
+        clipProperty().bind(Bindings.createObjectBinding(
+            () -> {
+                final Dimension2D paneSize = computePaneSize();
                 final double arcDiameter = config.frameConfig().arcDiameter() * getScaling();
-                final Dimension2D scaledSize = computePaneSize();
-                final var rect = new Rectangle(scaledSize.getWidth(), scaledSize.getHeight());
+                final var rect = new Rectangle(paneSize.getWidth(), paneSize.getHeight());
                 rect.setArcHeight(arcDiameter);
                 rect.setArcWidth(arcDiameter);
                 return rect;
-            }, scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
+            },
+            scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
         );
 
-        borderProperty().bind(Bindings.createObjectBinding(() -> {
-                final Dimension2D scaledSize = computePaneSize();
-                final double proposedBorderWidth = Math.ceil(scaledSize.getHeight() / config.frameConfig().borderWidthRatio());
+        borderProperty().bind(Bindings.createObjectBinding(
+            () -> {
+                final Dimension2D paneSize = computePaneSize();
+                final double proposedBorderWidth = Math.ceil(paneSize.getHeight() / config.frameConfig().borderWidthRatio());
                 final double borderWidth = Math.max(config.frameConfig().minBorderWidth(), proposedBorderWidth);
                 final double cornerRadius = Math.ceil(config.frameConfig().cornerRadius() * getScaling());
                 return createRoundedBorder(config.frameConfig().borderColor(), borderWidth, cornerRadius);
-            }, scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
-        );
-    }
-
-    public void newCanvas() {
-        canvas = new Canvas();
-        getChildren().setAll(canvas);
-
-        canvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> getScaling() * getUnscaledWidth(),
+            },
             scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
         );
-
-        canvas.heightProperty().bind(Bindings.createDoubleBinding(
-            () -> getScaling() * getUnscaledHeight(),
-            scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
-        );
-    }
-
-    public void stretchTo(double width, double height) {
-        final double realWidth  = config.scalingX() * width;
-        final double realHeight = config.scalingY() * height;
-        double targetScaling = realHeight / getUnscaledHeight();
-        if (targetScaling * getUnscaledWidth() > realWidth) {
-            targetScaling = realWidth / getUnscaledWidth();
-        }
-        doLayout(targetScaling, false);
     }
 
     public Canvas canvas() {
@@ -155,6 +134,33 @@ public class GameSceneDecorationPane extends StackPane {
 
     public double getScaling() {
         return scalingProperty().get();
+    }
+
+    // TODO: Find out why new canvas creation is currently necessary
+    //       If I reuse the canvas, after switching games, rendering stops working correctly
+    public void newCanvas() {
+        canvas = new Canvas();
+        getChildren().setAll(canvas);
+
+        canvas.widthProperty().bind(Bindings.createDoubleBinding(
+            () -> getScaling() * getUnscaledWidth(),
+            scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
+        );
+
+        canvas.heightProperty().bind(Bindings.createDoubleBinding(
+            () -> getScaling() * getUnscaledHeight(),
+            scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
+        );
+    }
+
+    public void stretchTo(double width, double height) {
+        final double realWidth  = config.scalingX() * width;
+        final double realHeight = config.scalingY() * height;
+        double targetScaling = realHeight / getUnscaledHeight();
+        if (targetScaling * getUnscaledWidth() > realWidth) {
+            targetScaling = realWidth / getUnscaledWidth();
+        }
+        doLayout(targetScaling, false);
     }
 
     // Private
