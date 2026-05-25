@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.ui.d2;
 
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
@@ -17,14 +16,13 @@ import static java.util.Objects.requireNonNull;
 /**
  * Base class for all 2D game scenes.
  * <p>
- * A {@code GameScene2D} encapsulates the visual representation and interaction
- * logic of a 2D scene in the Pac-Man FX UI layer. It manages rendering-related
- * properties such as background color and scaling, provides access to the
- * {@link Canvas}, and coordinates lifecycle events (initialization, shutdown)
- * with the {@link Game} and {@link GameUI}.
+ * A {@code GameScene2D} manages the rendering surface ({@link Canvas}),
+ * unscaled scene dimensions, scaling, and background color. Subclasses
+ * implement scene-specific activation, deactivation, and rendering logic.
  * <p>
- * Subclasses implement {@link #onActivate()} and {@link #onDeactivate()} to define
- * scene-specific behavior.
+ * The scene is reusable: {@link #onActivate()} and {@link #onDeactivate()}
+ * must establish and release all bindings, listeners, and resources created
+ * by the subclass.
  */
 public class GameScene2D extends GameScene {
 
@@ -43,7 +41,8 @@ public class GameScene2D extends GameScene {
 
     /**
      * Releases bindings and resources held by this scene.
-     * Called when the scene is permanently discarded.
+     * Called when the scene is permanently discarded and will not be reused.
+     * Subclasses overriding this method must call {@code super.dispose()}.
      */
     @Override
     public void dispose() {
@@ -56,7 +55,7 @@ public class GameScene2D extends GameScene {
      * corresponding properties.
      *
      * @param <T>      renderer type
-     * @param renderer the renderer to adapt
+     * @param renderer the renderer to configure
      * @return the same renderer instance for fluent usage
      */
     public <T extends Renderer> T configureRenderer(T renderer) {
@@ -65,11 +64,14 @@ public class GameScene2D extends GameScene {
         return renderer;
     }
 
-    // TODO: rethink
+    /**
+     * Hook called when entering this 2D scene from a 3D scene.
+     * Subclasses may override to adjust state or transitions.
+     */
     public void onEnteredFrom3DScene() {}
 
     /**
-     * Sets the canvas used for rendering this scene.
+     * Assigns the canvas used for rendering this scene.
      *
      * @param canvas the JavaFX canvas, must not be {@code null}
      */
@@ -84,16 +86,12 @@ public class GameScene2D extends GameScene {
         return canvas;
     }
 
-    /**
-     * @return the background color property
-     */
+    /** @return the background color property */
     public ObjectProperty<Color> backgroundColorProperty() {
         return backgroundColor;
     }
 
-    /**
-     * @return the current background color
-     */
+    /** @return the current background color */
     public Color getBackgroundColor() {
         return backgroundColor.get();
     }
@@ -107,25 +105,27 @@ public class GameScene2D extends GameScene {
         backgroundColor.set(color);
     }
 
+    /** @return the unscaled scene width property */
     public IntegerProperty unscaledWidthProperty() {
         return unscaledWidth;
     }
 
+    /** @return the unscaled scene width in pixels */
     public int getUnscaledWidth() {
         return unscaledWidth.get();
     }
 
+    /** @return the unscaled scene height property */
     public IntegerProperty unscaledHeightProperty() {
         return unscaledHeight;
     }
 
+    /** @return the unscaled scene height in pixels */
     public int getUnscaledHeight() {
         return unscaledHeight.get();
     }
 
-    /**
-     * @return the scaling factor property
-     */
+    /** @return the scaling factor property */
     public DoubleProperty scalingProperty() {
         return scaling;
     }
@@ -139,21 +139,22 @@ public class GameScene2D extends GameScene {
         scaling.set(value);
     }
 
-    /**
-     * @return the current scaling factor
-     */
+    /** @return the current scaling factor */
     public double scaling() {
         return scaling.get();
     }
 
+    /** @return the scaled scene width in pixels */
     public double getWidth() {
         return scaling() * getUnscaledWidth();
     }
 
+    /** @return the scaled scene height in pixels */
     public double getHeight() {
         return scaling() * getUnscaledHeight();
     }
 
+    /** @return the aspect ratio (width / height) */
     public double getAspectRatio() {
         return getWidth() / getHeight();
     }
