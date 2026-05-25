@@ -19,24 +19,26 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
+import static java.util.Objects.requireNonNull;
+
 //TODO: Still too complicated for what it does
 public class GameSceneDecorationPane extends StackPane {
 
-    record FrameConfig(
+    public record FrameConfig(
         int    arcDiameter,
         int    cornerRadius,
         int    minBorderWidth,
         double borderWidthRatio,
         Color  defaultBorderColor) {}
 
-    record Config(
+    public record Config(
         float scalingX,
         float scalingY,
         float paddingX,
         float paddingY,
         FrameConfig frameConfig) {}
 
-    private static final Config CONFIG = new Config(
+    public static final Config DEFAULT_CONFIG = new Config(
         0.85f,
         0.93f,
         20,
@@ -56,7 +58,7 @@ public class GameSceneDecorationPane extends StackPane {
         return new Border(stroke);
     }
 
-    private final ObjectProperty<Color> borderColor = new SimpleObjectProperty<>(CONFIG.frameConfig().defaultBorderColor());
+    private final ObjectProperty<Color> borderColor = new SimpleObjectProperty<>();
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
 
@@ -68,7 +70,16 @@ public class GameSceneDecorationPane extends StackPane {
 
     private double minScaling = 1.0;
 
+    private final Config config;
+
     public GameSceneDecorationPane() {
+        this(DEFAULT_CONFIG);
+    }
+
+    public GameSceneDecorationPane(Config config) {
+        this.config = requireNonNull(config);
+
+        borderColor.set(config.frameConfig().defaultBorderColor());
 
         newCanvas();
 
@@ -78,7 +89,7 @@ public class GameSceneDecorationPane extends StackPane {
         scaling.addListener(resizeHandler);
 
         clipProperty().bind(Bindings.createObjectBinding(() -> {
-                final double arcDiameter = CONFIG.frameConfig().arcDiameter() * scaling();
+                final double arcDiameter = config.frameConfig().arcDiameter() * scaling();
                 final Dimension2D scaledSize = computePaneSize();
                 final var rect = new Rectangle(scaledSize.getWidth(), scaledSize.getHeight());
                 rect.setArcHeight(arcDiameter);
@@ -89,9 +100,9 @@ public class GameSceneDecorationPane extends StackPane {
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
                 final Dimension2D scaledSize = computePaneSize();
-                final double proposedBorderWidth = Math.ceil(scaledSize.getHeight() / CONFIG.frameConfig().borderWidthRatio());
-                final double borderWidth = Math.max(CONFIG.frameConfig().minBorderWidth(), proposedBorderWidth);
-                final double cornerRadius = Math.ceil(CONFIG.frameConfig().cornerRadius() * scaling());
+                final double proposedBorderWidth = Math.ceil(scaledSize.getHeight() / config.frameConfig().borderWidthRatio());
+                final double borderWidth = Math.max(config.frameConfig().minBorderWidth(), proposedBorderWidth);
+                final double cornerRadius = Math.ceil(config.frameConfig().cornerRadius() * scaling());
                 return createRoundedBorder(borderColor.get(), borderWidth, cornerRadius);
             }, borderColor, scaling, unscaledWidth, unscaledHeight)
         );
@@ -111,8 +122,8 @@ public class GameSceneDecorationPane extends StackPane {
     }
 
     public void stretchTo(double width, double height) {
-        final double realWidth  = CONFIG.scalingX() * width;
-        final double realHeight = CONFIG.scalingY() * height;
+        final double realWidth  = config.scalingX() * width;
+        final double realHeight = config.scalingY() * height;
         double targetScaling = realHeight / unscaledHeight.get();
         if (targetScaling * unscaledWidth.get() > realWidth) {
             targetScaling = realWidth / unscaledWidth.get();
@@ -167,8 +178,8 @@ public class GameSceneDecorationPane extends StackPane {
 
     private Dimension2D computePaneSize() {
         return new Dimension2D(
-            scaling() * (unscaledWidth.get() + CONFIG.paddingX()),
-            scaling() * (unscaledHeight.get() + CONFIG.paddingY())
+            scaling() * (unscaledWidth.get() + config.paddingX()),
+            scaling() * (unscaledHeight.get() + config.paddingY())
         );
     }
 }
