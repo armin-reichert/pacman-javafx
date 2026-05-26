@@ -22,7 +22,6 @@ import de.amr.pacmanfx.ui.layout.View;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -87,8 +86,6 @@ public class PlayView implements View {
 
     private final PlayViewGameEventHandler gameEventHandler;
 
-    private final ChangeListener<? super Number> parentSceneSizeChangeHandler;
-
     public PlayView(GameUI ui, Scene parentSceneFX, DashboardConfig dashboardConfig) {
         requireNonNull(ui);
         requireNonNull(parentSceneFX);
@@ -106,9 +103,11 @@ public class PlayView implements View {
 
         ui.gameContext().gameVariantNameProperty().addListener(new PlayViewGameVariantChangeHandler(this));
 
-        parentSceneSizeChangeHandler = (_, _, _) -> gameSceneDecorationPane.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
-
         gameEventHandler = new PlayViewGameEventHandler(this);
+    }
+
+    public void resizeToFit(Scene parentSceneFX) {
+        gameSceneDecorationPane.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
     }
 
     public PlayViewGameEventHandler gameEventHandler() {
@@ -252,16 +251,10 @@ public class PlayView implements View {
     }
 
     private void addListeners() {
-        //gameScene.addListener(gameSceneChangeHandler);
-        parentSceneFX.widthProperty() .addListener(parentSceneSizeChangeHandler);
-        parentSceneFX.heightProperty().addListener(parentSceneSizeChangeHandler);
         gameSceneDecorationPane.installBindings();
     }
 
     private void removeListeners() {
-        //gameScene.removeListener(gameSceneChangeHandler);
-        parentSceneFX.widthProperty().removeListener(parentSceneSizeChangeHandler);
-        parentSceneFX.heightProperty().removeListener(parentSceneSizeChangeHandler);
         gameSceneDecorationPane.uninstallBindings();
     }
 

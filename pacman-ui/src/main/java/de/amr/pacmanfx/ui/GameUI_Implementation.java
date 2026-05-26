@@ -132,6 +132,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         //TODO refactor and untangle
         final PlayView playView = createPlayView();
         playView.configurePropertyBindings();
+        scene.widthProperty().addListener((_,_,_) -> playView.resizeToFit(scene));
+        scene.heightProperty().addListener((_,_,_) -> playView.resizeToFit(scene));
         viewManager.setPlayView(playView);
 
         translator = () -> GameUIConstants.LOCALIZED_TEXTS;
