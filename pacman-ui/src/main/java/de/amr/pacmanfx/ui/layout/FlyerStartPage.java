@@ -25,20 +25,10 @@ import static java.util.Objects.requireNonNull;
 public class FlyerStartPage extends StackPane implements StartPage {
 
     public static final Font  DEFAULT_START_BUTTON_FONT = Ufx.deriveFont(GameUIConstants.FONT_ARCADE_8, 32);
-    public static final Color DEFAULT_START_BUTTON_BGCOLOR = Color.rgb(0, 155, 252, 0.7);
-    public static final Color DEFAULT_START_BUTTON_FILLCOLOR = Color.rgb(255, 255, 255);
+    public static final Color DEFAULT_START_BUTTON_BGCOLOR = Color.rgb(0, 155, 252, 0.6);
+    public static final Color DEFAULT_START_BUTTON_FILLCOLOR = Color.WHITE;
 
     public static final KeyCode SHUT_UP_KEYCODE = KeyCode.S;
-
-    public static Node createStartButton(GameUI ui) {
-        final var startButton = new FancyButton(
-            ui.translator().translate("play_button"),
-            DEFAULT_START_BUTTON_FONT, DEFAULT_START_BUTTON_BGCOLOR, DEFAULT_START_BUTTON_FILLCOLOR);
-        startButton.setAction(() -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
-        startButton.setTranslateY(-50);
-        StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
-        return startButton;
-    }
 
     protected final Flyer flyer = new Flyer();
     protected final String title;
@@ -95,5 +85,16 @@ public class FlyerStartPage extends StackPane implements StartPage {
     @Override
     public void onExitStartPage(GameUI ui) {
         ui.voicePlayer().stopVoice();
+    }
+
+    public Node createStartButton(GameUI ui) {
+        final var startButton = new FancyButton(ui.translator().translate("play_button"),
+            DEFAULT_START_BUTTON_FONT, DEFAULT_START_BUTTON_BGCOLOR, DEFAULT_START_BUTTON_FILLCOLOR);
+        startButton.setAction(() -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
+        startButton.translateYProperty().bind(heightProperty().multiply(-0.1));
+        startButton.fontProperty().bind(heightProperty()
+            .map(h -> Font.font(DEFAULT_START_BUTTON_FONT.getFamily(), Math.min(h.doubleValue() / 25, 48))));
+        StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
+        return startButton;
     }
 }
