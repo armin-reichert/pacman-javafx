@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.uilib.assets.Translationmanager;
+import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -127,7 +127,7 @@ public class Dashboard {
      * @param translator translator for localized text keys
      * @param id common dashboard section ID
      */
-    public void addCommonSection(Translationmanager translator, CommonDashboardID id) {
+    public void addCommonSection(TranslationManager translator, CommonDashboardID id) {
         requireNonNull(translator);
         requireNonNull(id);
         final DashboardSection section = createCommonSection(this, id);
@@ -148,7 +148,7 @@ public class Dashboard {
      * @param translator translator for localized text keys
      * @param ids list of dashboard section IDs
      */
-    public void addCommonSections(Translationmanager translator, List<CommonDashboardID> ids) {
+    public void addCommonSections(TranslationManager translator, List<CommonDashboardID> ids) {
         requireNonNull(translator);
         requireNonNull(ids);
         addCommonSection(translator, CommonDashboardID.README);

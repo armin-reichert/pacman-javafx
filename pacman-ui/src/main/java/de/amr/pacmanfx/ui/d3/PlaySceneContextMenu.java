@@ -8,7 +8,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
-import de.amr.pacmanfx.uilib.assets.Translationmanager;
+import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.RadioMenuItem;
@@ -70,7 +70,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
      */
     public PlaySceneContextMenu(GameUI ui) {
         final Game game = ui.gameContext().game();
-        final Translationmanager translator = ui.translator();
+        final TranslationManager translator = ui.translator();
 
         addLocalizedTitleItem(this, translator, "scene_display");
         addLocalizedActionItem(this, ui, translator, ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");

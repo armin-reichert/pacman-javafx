@@ -41,7 +41,7 @@ public interface View {
      *
      * @return the root node of this view
      */
-    Node root();
+    Node rootPane();
 
     /**
      * Provides an optional dynamic title supplier for this view.

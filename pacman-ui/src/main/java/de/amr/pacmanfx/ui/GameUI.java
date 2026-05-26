@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.layout.playview.MiniGameView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
-import de.amr.pacmanfx.uilib.assets.Translationmanager;
+import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -45,7 +45,7 @@ import java.util.Optional;
  * Implementations may internally schedule work via {@code Platform.runLater}.
  *
  * <h2>Translation</h2>
- * Extends {@link Translationmanager} so all UI text can be localized.
+ * Extends {@link TranslationManager} so all UI text can be localized.
  */
 public interface GameUI {
 
@@ -94,7 +94,7 @@ public interface GameUI {
     /**
      * @return translation service for localized UI messages
      */
-    Translationmanager translator();
+    TranslationManager translator();
 
     /**
      * @return the voice player used for sequential voice playback.
@@ -168,7 +168,9 @@ public interface GameUI {
     Dashboard dashboard();
 
     MiniGameView miniView();
-    
+
+    File initialEditorDir();
+
     // ---------------------------------------------------------------------------------------------
     // Config
     // ---------------------------------------------------------------------------------------------

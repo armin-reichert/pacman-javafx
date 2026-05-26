@@ -8,7 +8,6 @@ import de.amr.pacmanfx.ui.GameSceneConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
@@ -20,12 +19,15 @@ import static java.util.Objects.requireNonNull;
 
 public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent> {
 
+    private final GameUI ui;
     private final PlayView playView;
 
-    public PlayViewContextMenuHandler(PlayView playView, Scene sceneFX) {
+    public PlayViewContextMenuHandler(GameUI ui, PlayView playView) {
+        this.ui = requireNonNull(ui);
         this.playView = requireNonNull(playView);
+
         //TODO is there a better way to hide the context menu?
-        sceneFX.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+        ui.scene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (e.getButton() != MouseButton.SECONDARY) {
                 playView.contextMenu().hide();
             }
@@ -34,7 +36,6 @@ public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent
 
     @Override
     public void handle(ContextMenuEvent event) {
-        final GameUI ui = playView.ui();
         final ContextMenu menu = playView.contextMenu();
         menu.getItems().clear();
 
@@ -49,7 +50,7 @@ public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent
         });
 
         if (!menu.getItems().isEmpty()) {
-            menu.show(playView.root(), event.getScreenX(), event.getScreenY());
+            menu.show(playView.rootPane(), event.getScreenX(), event.getScreenY());
             menu.requestFocus();
         }
     }

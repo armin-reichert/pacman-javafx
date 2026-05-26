@@ -10,7 +10,7 @@ import java.util.ResourceBundle;
 
 import static java.util.Objects.requireNonNull;
 
-public interface Translationmanager {
+public interface TranslationManager {
 
     ResourceBundle resources();
 

@@ -126,7 +126,7 @@ public class StartPagesCarousel extends Carousel implements View {
     }
 
     @Override
-    public Region root() { return this; }
+    public Region rootPane() { return this; }
 
     @Override
     public Optional<Supplier<String>> titleSupplier() {

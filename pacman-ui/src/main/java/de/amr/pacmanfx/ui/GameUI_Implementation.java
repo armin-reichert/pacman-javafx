@@ -19,14 +19,16 @@ import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.layout.*;
-import de.amr.pacmanfx.ui.layout.playview.*;
+import de.amr.pacmanfx.ui.layout.playview.MiniGameView;
+import de.amr.pacmanfx.ui.layout.playview.PlayView;
+import de.amr.pacmanfx.ui.layout.playview.PlayViewContextMenuHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
-import de.amr.pacmanfx.uilib.assets.Translationmanager;
+import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
@@ -95,10 +97,9 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private final ActionBindingsManager actionBindingsManager = new GameActionBindingsManager(Input.instance().keyboard);
     private final SoundManager soundManager = new SoundManager();
     private final VoiceManager voiceManager = new VoiceManager();
-    private final Translationmanager translator;
+    private final TranslationManager translator;
 
     private final GameSceneEmbedder gameSceneEmbedder = new GameSceneEmbedder();
-    private final GameVariantChangeHandler gameVariantChangeHandler = new GameVariantChangeHandler(this);
 
     // UI components
     private final Stage stage;
@@ -109,6 +110,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     private StringBinding titleBinding;
 
+    private File initialEditorDir;
+
     public GameUI_Implementation(GameBox gameBox, Stage stage, int mainSceneWidth, int mainSceneHeight) {
         super(GameUI_Implementation.class);
 
@@ -117,22 +120,15 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
         this.gameContext = requireNonNull(gameBox);
         this.customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
+        this.initialEditorDir = gameBox.customMapDir();
 
         this.stage = requireNonNull(stage);
 
-        gameContext.gameVariantNameProperty().addListener(gameVariantChangeHandler);
+        gameContext.gameVariantNameProperty().addListener(new GameVariantChangeHandler(this));
 
         gameSceneManager.setEmbedder(this, gameSceneEmbedder);
 
-        viewManager = new ViewManager(this, scene, gameBox.customMapDir(), flashMessageView);
-
-        viewManager.setEditorCanOpen(() -> {
-            //TODO think about all cases where opening editor should be allowed
-           if (viewManager.isStartViewSelected()) return true;
-           if (viewManager.isEditorViewSelected()) return false;
-           return false;
-        });
-
+        viewManager = createViewManager(gameBox);
         viewManager.setStartView(new StartPagesCarousel(this));
         viewManager.setEditorViewFactory(this::createEditorView);
         viewManager.setPlayView(createPlayView());
@@ -153,8 +149,22 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         load3DModels();
     }
 
+    private ViewManager createViewManager(GameBox gameBox) {
+        final var viewManager = new ViewManager(rootPane, flashMessageView);
+
+        viewManager.setEditorCanOpen(() -> {
+            //TODO think about all cases where opening editor should be allowed
+            if (viewManager.isStartViewSelected()) return true;
+            if (viewManager.isEditorViewSelected()) return false;
+            return false;
+        });
+        return viewManager;
+    }
+
     private PlayView createPlayView() {
         final var playView = new PlayView(this, DEFAULT_DASHBOARD_CONFIG);
+
+        playView.rootPane().setOnContextMenuRequested(new PlayViewContextMenuHandler(this, playView));
 
         playView.configurePropertyBindings();
 
@@ -301,7 +311,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         final var editorView = new EditorView(stage, this);
         editorView.editor().setOnQuit(_ -> {
             stage.titleProperty().bind(titleBinding);
-            viewManager.selectStartView();
+            viewManager.selectStartView(this);
         });
         return editorView;
     }
@@ -429,8 +439,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
-    public Translationmanager translator() {
-        return translator;
+    public File initialEditorDir() {
+        return initialEditorDir;
     }
 
     @Override
@@ -440,12 +450,13 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public void openWorldMapFileInEditor(File worldMapFile) {
-        requireNonNull(worldMapFile);
-        viewManager.selectEditorView(); // this ensures the editor view is created!
+        viewManager.createEditorIfNotExisting(initialEditorDir);
         viewManager.optEditorView().map(EditorView::editor).ifPresent(editor -> {
             try {
-                editor.editFile(worldMapFile);
-                viewManager.selectEditorView();
+                if (worldMapFile != null) {
+                    editor.editFile(worldMapFile);
+                }
+                viewManager.selectEditorView(this);
             } catch (IOException x) {
                 Logger.error(x, "Could not open map file {}", worldMapFile);
                 showFlashMessage("Cannot open world map file");
@@ -482,7 +493,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
         stopGame();
         game.flow().restartStateWithName(CanonicalGameState.BOOT.name());
-        viewManager.selectStartView();
+        viewManager.selectStartView(this);
     }
 
     @Override
@@ -500,7 +511,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
         logPreferences();
         dashboard().init(this);
-        viewManager.selectStartView();
+        viewManager.selectStartView(this);
         stage.centerOnScreen();
         stage.show();
         flashMessageView.start();
@@ -549,6 +560,11 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         spriteAnimationSet.clear();
         flashMessageView.stop();
         customDirWatchdog.dispose();
+    }
+
+    @Override
+    public TranslationManager translator() {
+        return translator;
     }
 
     @Override

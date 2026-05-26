@@ -53,7 +53,7 @@ public class EditorView implements View {
     }
 
     @Override
-    public Region root() {
+    public Region rootPane() {
         return editor.ui().layoutPane();
     }
 

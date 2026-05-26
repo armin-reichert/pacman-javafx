@@ -8,7 +8,6 @@ import de.amr.pacmanfx.ui.layout.playview.PlayView;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import org.tinylog.Logger;
 import org.tinylog.Supplier;
@@ -21,7 +20,7 @@ import static java.util.Objects.requireNonNull;
 
 public class ViewManager {
 
-    /** Index in the layout pane's child list where the active view is embedded. */
+    /** Index in the root pane's child list where the active view is embedded. */
     private static final int RESERVED_VIEW_INDEX_IN_LAYOUT = 0;
 
     private final ObjectProperty<View> currentView = new SimpleObjectProperty<>();
@@ -29,20 +28,12 @@ public class ViewManager {
     private Supplier<EditorView> editorViewFactory;
     private BooleanSupplier editorCanOpen = () -> false;
 
-    private final File editorWorkDir;
-
     private StartPagesCarousel startView;
     private PlayView playView;
     private EditorView editorView;
 
-    private final GameUI ui;
-
-    public ViewManager(GameUI ui, Scene scene, File editorWorkDir, FlashMessageView flashMessageView) {
-        this.ui = requireNonNull(ui);
-        requireNonNull(scene);
+    public ViewManager(Pane rootPane, FlashMessageView flashMessageView) {
         requireNonNull(flashMessageView);
-
-        this.editorWorkDir = requireNonNull(editorWorkDir);
 
         currentViewProperty().addListener((_, oldView, newView) -> {
             if (oldView != null) {
@@ -50,18 +41,15 @@ public class ViewManager {
                 oldView.actionBindings().removeFromKeyboard();
             }
 
-            if (!(scene.getRoot() instanceof Pane rootPane)) {
-                throw new IllegalStateException(
-                    "Cannot replace view: Scene root must be a Pane but is " + scene.getRoot());
-            }
             if (rootPane.getChildren().isEmpty()) {
-                throw new IllegalStateException(
-                    "Layout pane has no placeholder for embedding view");
+                throw new IllegalStateException("Root pane has no placeholder for embedding view");
             }
 
-            rootPane.getChildren().set(RESERVED_VIEW_INDEX_IN_LAYOUT, newView.root());
+            rootPane.getChildren().set(RESERVED_VIEW_INDEX_IN_LAYOUT, newView.rootPane());
+
             newView.actionBindings().assignToKeyboard();
             newView.onEnter();
+
             flashMessageView.clear();
         });
     }
@@ -94,7 +82,7 @@ public class ViewManager {
         return Optional.ofNullable(editorView);
     }
 
-    public void selectStartView() {
+    public void selectStartView(GameUI ui) {
         ui.stopGame();
         currentViewProperty().set(startView);
     }
@@ -103,13 +91,20 @@ public class ViewManager {
         currentViewProperty().set(playView);
     }
 
-    public void selectEditorView() {
+    public void createEditorIfNotExisting(File workDir) {
+        if (editorView == null) {
+            editorView = editorViewFactory.get();
+            editorView.editor().init(workDir);
+        }
+    }
+
+    public void selectEditorView(GameUI ui) {
+        if (editorView == null) {
+            Logger.warn("Editor view has not been created yet");
+            return;
+        }
         if (editorCanOpen.getAsBoolean()) {
             ui.stopGame();
-            if (editorView == null) {
-                editorView = editorViewFactory.get();
-            }
-            editorView.editor().init(editorWorkDir);
             editorView.editor().start();
             currentViewProperty().set(editorView);
         } else {

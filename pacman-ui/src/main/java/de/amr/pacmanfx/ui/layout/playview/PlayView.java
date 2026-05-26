@@ -92,7 +92,6 @@ public class PlayView implements View {
         this.ui = requireNonNull(ui);
         createLayout(requireNonNull(dashboardConfig));
         miniView.setUI(ui);
-        rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(this, ui.scene()));
     }
 
     public void resizeToFit(Scene parentSceneFX) {
@@ -157,7 +156,7 @@ public class PlayView implements View {
     }
 
     @Override
-    public StackPane root() {
+    public StackPane rootPane() {
         return rootPane;
     }
 

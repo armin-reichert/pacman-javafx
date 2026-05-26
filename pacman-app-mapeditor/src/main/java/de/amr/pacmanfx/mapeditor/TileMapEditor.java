@@ -52,6 +52,7 @@ public class TileMapEditor {
     }
 
     public void init(File workDir) {
+        requireNonNull(workDir);
         setCurrentDirectory(workDir);
         WorldMap worldMap = new Action_CreateEmptyMap(this, 28, 36).execute();
         setCurrentWorldMap(worldMap);
@@ -191,6 +192,15 @@ public class TileMapEditor {
     }
 
     public void setCurrentDirectory(File dir) {
+        requireNonNull(dir);
+        if (!dir.exists()) {
+            Logger.error("Directory '" +  dir + "' does not exist");
+            return;
+        }
+        if (!dir.isDirectory()) {
+            Logger.error("Path '" +  dir + "' does not point to a directory");
+            return;
+        }
         currentDirectory.set(dir);
     }
 
