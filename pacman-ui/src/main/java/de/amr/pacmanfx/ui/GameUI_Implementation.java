@@ -153,9 +153,11 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         final var viewManager = new ViewManager(rootPane, flashMessageView);
 
         viewManager.setEditorCanOpen(() -> {
-            //TODO think about all cases where opening editor should be allowed
             if (viewManager.isStartViewSelected()) return true;
             if (viewManager.isEditorViewSelected()) return false;
+            if (viewManager.isPlayViewSelected()) {
+                return !gameContext.game().isPlayingLevel();
+            }
             return false;
         });
         return viewManager;

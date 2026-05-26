@@ -64,11 +64,6 @@ public final class CommonActions {
         public void execute(GameUI ui) {
             ui.openWorldMapFileInEditor(null);
         }
-
-        @Override
-        public boolean isEnabled(GameUI ui) {
-            return ui.viewManager().isStartViewSelected();
-        }
     };
 
     public static final GameAction ACTION_PERSPECTIVE_NEXT = new GameAction("perspective_next") {
