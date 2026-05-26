@@ -41,6 +41,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class StartPagesCarousel extends Carousel implements View {
 
+    public static final int NAV_BUTTON_SIZE = 48;
+
     //TODO start pages should define their preferred duration
     public static final int PAGE_CHANGE_SECONDS = 90;
 
@@ -101,11 +103,10 @@ public class StartPagesCarousel extends Carousel implements View {
 
     @Override
     protected Node createNavigationButton(Direction dir) {
-        final int iconSize = 48;
         final Color iconColor = Color.gray(0.69);
         final FontAwesomeIcon icon = switch (dir) {
-            case LEFT  -> FontAwesomeIcon.of(FontAwesomeIcon.Symbol.CHEVRON_CIRCLE_LEFT, iconSize, iconColor);
-            case RIGHT -> FontAwesomeIcon.of(FontAwesomeIcon.Symbol.CHEVRON_CIRCLE_RIGHT, iconSize, iconColor);
+            case LEFT  -> FontAwesomeIcon.of(FontAwesomeIcon.Symbol.CHEVRON_CIRCLE_LEFT, NAV_BUTTON_SIZE, iconColor);
+            case RIGHT -> FontAwesomeIcon.of(FontAwesomeIcon.Symbol.CHEVRON_CIRCLE_RIGHT, NAV_BUTTON_SIZE, iconColor);
             default -> throw new IllegalArgumentException("Illegal navigation direction: %s".formatted(dir));
         };
         icon.setOpacity(0.2);
@@ -113,8 +114,8 @@ public class StartPagesCarousel extends Carousel implements View {
         icon.setOnMouseExited(_ -> icon.setOpacity(0.2));
 
         final var button = new HBox(icon);
-        button.setMaxHeight(iconSize);
-        button.setMaxWidth(iconSize);
+        button.setMaxHeight(NAV_BUTTON_SIZE);
+        button.setMaxWidth(NAV_BUTTON_SIZE);
         button.setPadding(new Insets(5));
         StackPane.setAlignment(button, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
         return button;

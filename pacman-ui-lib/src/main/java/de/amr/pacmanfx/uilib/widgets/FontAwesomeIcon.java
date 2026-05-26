@@ -4,6 +4,8 @@
 
 package de.amr.pacmanfx.uilib.widgets;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -48,12 +50,19 @@ public class FontAwesomeIcon extends Text {
         }
     }
 
-    public static FontAwesomeIcon of(Symbol symbol, double size, Color color) {
+    private final DoubleProperty fontSize = new SimpleDoubleProperty(16);
+
+    public DoubleProperty fontSizeProperty() {
+        return fontSize;
+    }
+
+    public static FontAwesomeIcon of(Symbol symbol, double fontSize, Color color) {
         requireNonNull(symbol);
         requireNonNull(color);
         final FontAwesomeIcon icon = new FontAwesomeIcon();
         icon.setFill(color);
-        icon.setFont(Font.font(FONT.getFamily(), size));
+        icon.fontSizeProperty().set(fontSize);
+        icon.fontProperty().bind(icon.fontSizeProperty().map(s -> Font.font(FONT.getFamily(), s.doubleValue())));
         icon.setText(String.valueOf(symbol.unicode));
         return icon;
     }
