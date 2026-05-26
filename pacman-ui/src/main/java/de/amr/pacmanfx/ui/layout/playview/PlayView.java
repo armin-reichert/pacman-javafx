@@ -29,6 +29,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -48,6 +50,10 @@ import static java.util.Objects.requireNonNull;
 public class PlayView implements View {
 
     public static final float MAX_GAME_SCENE_SCALING = 5;
+
+    public static final Background DEBUG_BACKGROUND = paintBackground(Color.TEAL);
+    public static final Border DEBUG_BORDER = border(Color.LIGHTGREEN, 1);
+
 
     public static final DecorationPane.Config DECORATION_CONFIG = new DecorationPane.Config(
         0.85f,
@@ -258,6 +264,7 @@ public class PlayView implements View {
     public void updateGameSceneRenderers(GameScene2D gameScene2D) {
         if (gameScene2D.canvas() != null) {
             sceneRenderer = ui.currentConfig().createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
+            setFontSmoothing(GameUIConstants.PROPERTY_CANVAS_FONT_SMOOTHING.get());
             hudRenderer = ui.currentConfig().createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
         } else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
@@ -316,13 +323,11 @@ public class PlayView implements View {
     private void configurePropertyBindings() {
         pausedIcon.visibleProperty().bind(ui.gameContext().clock().updatesDisabledProperty());
 
-        GameUIConstants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smooth) ->
-            gameSceneDecorationPane.canvas().getGraphicsContext2D().setFontSmoothingType(
-                smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
+        GameUIConstants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 
         GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.addListener((_, _, debug) -> {
-            gameSceneLayer.setBackground(debug ? paintBackground(Color.TEAL) : null);
-            gameSceneLayer.setBorder(debug ? border(Color.LIGHTGREEN, 1) : null);
+            gameSceneLayer.setBackground(debug ? DEBUG_BACKGROUND : null);
+            gameSceneLayer.setBorder(debug ? DEBUG_BORDER : null);
         });
 
         overlayLayer.visibleProperty().bind(Bindings.createObjectBinding(
@@ -334,5 +339,11 @@ public class PlayView implements View {
             () -> GameUIConstants.PROPERTY_MINI_VIEW_ON.get() && ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D),
             GameUIConstants.PROPERTY_MINI_VIEW_ON, gameScene
         ));
+    }
+
+    private void setFontSmoothing(boolean smoothing) {
+        if (sceneRenderer != null) {
+            sceneRenderer.ctx().setFontSmoothingType(smoothing ? FontSmoothingType.LCD : FontSmoothingType.GRAY);
+        }
     }
 }
