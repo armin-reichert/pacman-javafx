@@ -63,11 +63,13 @@ public class TileMapEditor {
         Platform.runLater(() -> {
             ui.start();
             updateTimer.start();
+            Logger.info("Editor STARTED!");
         });
     }
 
     public void stop() {
         updateTimer.stop();
+        Logger.info("Editor STOPPED!");
     }
 
     public void editFile(File worldMapFile) throws WorldMapParseException, IOException {

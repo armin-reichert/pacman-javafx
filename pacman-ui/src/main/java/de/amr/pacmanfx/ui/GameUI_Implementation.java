@@ -59,7 +59,6 @@ import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonActions.*;
-import static de.amr.pacmanfx.ui.layout.ViewManager.ViewID.*;
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
 
@@ -119,13 +118,20 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         this.customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
 
         this.stage = requireNonNull(stage);
-        this.viewManager = new ViewManager(this, scene, gameBox.customMapDir(), flashMessageView);
-
-        viewManager.setStartView(new StartPagesCarousel(this));
-        viewManager.setEditorViewFactory(this::createEditorView);
 
         gameSceneManager.setEmbedder(this, gameSceneEmbedder);
 
+        viewManager = new ViewManager(this, scene, gameBox.customMapDir(), flashMessageView);
+
+        viewManager.setEditorCanOpen(() -> {
+            //TODO think about all cases where opening editor should be allowed
+           if (viewManager.isStartViewSelected()) return true;
+           if (viewManager.isEditorViewSelected()) return false;
+           return false;
+        });
+
+        viewManager.setStartView(new StartPagesCarousel(this));
+        viewManager.setEditorViewFactory(this::createEditorView);
         viewManager.setPlayView(createPlayView());
 
         translator = () -> GameUIConstants.LOCALIZED_TEXTS;
@@ -251,8 +257,9 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private void initPropertyBindings() {
         soundManager.muteProperty().bind(GameUIConstants.PROPERTY_MUTED);
 
-        statusIconBox.visibleProperty().bind(
-            viewManager.selectedIDProperty().map(viewID -> viewID == PLAY_VIEW || viewID == START_VIEW));
+        statusIconBox.visibleProperty().bind(Bindings.createBooleanBinding(
+            () -> viewManager.isPlayViewSelected() || viewManager.isStartViewSelected(),
+            viewManager.currentViewProperty()));
 
         titleBinding = createStringBinding(
             () -> {
@@ -288,15 +295,11 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         });
     }
 
-    private PlayView playView() {
-        return views().getView(ViewManager.ViewID.PLAY_VIEW, PlayView.class);
-    }
-
     private EditorView createEditorView() {
         final var editorView = new EditorView(stage, this);
         editorView.editor().setOnQuit(_ -> {
             stage.titleProperty().bind(titleBinding);
-            showStartView();
+            viewManager.selectStartView();
         });
         return editorView;
     }
@@ -383,8 +386,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public void embedGameSceneIntoPlayView(GameScene gameScene) {
-        gameSceneEmbedder.embedGameSceneIntoPlayView(scene, playView(), currentGameSceneConfig(), gameScene);
-        playView().contextMenu().hide();
+        gameSceneEmbedder.embedGameSceneIntoPlayView(scene, viewManager.playView(), currentGameSceneConfig(), gameScene);
+        viewManager.playView().contextMenu().hide();
     }
 
     @Override
@@ -415,7 +418,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public Dashboard dashboard() {
-        return playView().dashboard();
+        return viewManager.playView().dashboard();
     }
 
     @Override
@@ -430,17 +433,17 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public MiniGameView miniView() {
-        return playView().miniView();
+        return viewManager.playView().miniView();
     }
 
     @Override
     public void openWorldMapFileInEditor(File worldMapFile) {
         requireNonNull(worldMapFile);
-        viewManager.selectView(EDITOR_VIEW); // this ensures the editor view is created!
+        viewManager.selectEditorView(); // this ensures the editor view is created!
         viewManager.optEditorView().map(EditorView::editor).ifPresent(editor -> {
             try {
                 editor.editFile(worldMapFile);
-                showEditorView();
+                viewManager.selectEditorView();
             } catch (IOException x) {
                 Logger.error(x, "Could not open map file {}", worldMapFile);
                 showFlashMessage("Cannot open world map file");
@@ -477,7 +480,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
         stopGame();
         game.flow().restartStateWithName(CanonicalGameState.BOOT.name());
-        showStartView();
+        viewManager.selectStartView();
     }
 
     @Override
@@ -495,7 +498,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
         logPreferences();
         dashboard().init(this);
-        viewManager.selectView(START_VIEW);
+        viewManager.selectStartView();
         stage.centerOnScreen();
         stage.show();
         flashMessageView.start();
@@ -503,30 +506,10 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         Platform.runLater(customDirWatchdog::startWatching);
     }
 
-    @Override
-    public void showEditorView() {
-        if (!gameContext.game().isPlayingLevel() || gameContext.clock().getUpdatesDisabled()) {
-            stopGame();
-            viewManager.selectView(EDITOR_VIEW);
-            return;
-        }
-        Logger.info("Editor cannot be opened while game is playing");
-    }
 
     @Override
     public void showFlashMessage(Duration duration, String message, Object... args) {
         flashMessageView.showMessage(String.format(message, args), duration.toSeconds());
-    }
-
-    @Override
-    public void showPlayView() {
-        viewManager.selectView(PLAY_VIEW);
-    }
-
-    @Override
-    public void showStartView() {
-        stopGame();
-        viewManager.selectView(START_VIEW);
     }
 
     @Override
@@ -553,6 +536,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         });
         gameContext.clock().stop();
         gameContext.clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        Logger.info("Game STOPPED!");
     }
 
     @Override
@@ -571,7 +555,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
-    public ViewManager views() {
+    public ViewManager viewManager() {
         return viewManager;
     }
 

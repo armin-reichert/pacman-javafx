@@ -21,7 +21,7 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
     @Override
     public void update(GameUI ui) {
         clearGrid();
-        addRows(ui, ui.views().currentView());
+        addRows(ui, ui.viewManager().currentView());
     }
 
     private void addRows(GameUI ui, View view) {

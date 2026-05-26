@@ -4,209 +4,136 @@
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.layout.playview.PlayView;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import org.tinylog.Logger;
 import org.tinylog.Supplier;
 
 import java.io.File;
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 import static java.util.Objects.requireNonNull;
 
-/**
- * Manages switching between different {@link View} instances in the application.
- * <p>
- * A {@code ViewManager} maintains a mapping from {@link ViewID} to concrete {@link View}
- * implementations and handles the full lifecycle when switching:
- * <ul>
- *   <li>calling {@code onExit()} on the old view</li>
- *   <li>releasing and activating keyboard bindings</li>
- *   <li>replacing the view node inside a designated placeholder of the layout pane</li>
- *   <li>calling {@code onEnter()} on the new view</li>
- *   <li>clearing flash messages</li>
- * </ul>
- *
- * The layout pane is expected to contain a placeholder node at index
- * {@link #RESERVED_VIEW_INDEX_IN_LAYOUT}, which will be replaced whenever the
- * selected view changes.
- */
 public class ViewManager {
 
     /** Index in the layout pane's child list where the active view is embedded. */
     private static final int RESERVED_VIEW_INDEX_IN_LAYOUT = 0;
 
-    /**
-     * Identifiers for the views managed by this class.
-     */
-    public enum ViewID { START_VIEW, PLAY_VIEW, EDITOR_VIEW }
-
-    private final Map<ViewID, View> viewMap = new EnumMap<>(ViewID.class);
-    private final ObjectProperty<ViewID> selectedID = new SimpleObjectProperty<>();
     private final ObjectProperty<View> currentView = new SimpleObjectProperty<>();
 
     private Supplier<EditorView> editorViewFactory;
+    private BooleanSupplier editorCanOpen = () -> false;
+
     private final File editorWorkDir;
 
-    /**
-     * Creates a new {@code ViewManager}.
-     *
-     * @param ui                the game UI
-     * @param scene             the JavaFX scene whose root must be a {@link Pane}
-     * @param editorWorkDir     editor work directory
-     * @param flashMessageView  view used for displaying transient messages
-     */
-    public ViewManager(
-        GameUI ui,
-        Scene scene,
-        File editorWorkDir,
-        FlashMessageView flashMessageView)
-    {
-        requireNonNull(ui);
+    private StartPagesCarousel startView;
+    private PlayView playView;
+    private EditorView editorView;
+
+    private final GameUI ui;
+
+    public ViewManager(GameUI ui, Scene scene, File editorWorkDir, FlashMessageView flashMessageView) {
+        this.ui = requireNonNull(ui);
         requireNonNull(scene);
         requireNonNull(flashMessageView);
+
         this.editorWorkDir = requireNonNull(editorWorkDir);
 
-        selectedID.addListener((_, oldID, newID) ->
-            changeView(scene, flashMessageView, oldID, newID));
+        currentViewProperty().addListener((_, oldView, newView) -> {
+            if (oldView != null) {
+                oldView.onExit();
+                oldView.actionBindings().removeFromKeyboard();
+            }
+
+            if (!(scene.getRoot() instanceof Pane rootPane)) {
+                throw new IllegalStateException(
+                    "Cannot replace view: Scene root must be a Pane but is " + scene.getRoot());
+            }
+            if (rootPane.getChildren().isEmpty()) {
+                throw new IllegalStateException(
+                    "Layout pane has no placeholder for embedding view");
+            }
+
+            rootPane.getChildren().set(RESERVED_VIEW_INDEX_IN_LAYOUT, newView.root());
+            newView.actionBindings().assignToKeyboard();
+            newView.onEnter();
+            flashMessageView.clear();
+        });
     }
 
-    public void setPlayView(View playView) {
-        viewMap.put(ViewID.PLAY_VIEW, requireNonNull(playView));
+    public void setPlayView(PlayView playView) {
+        this.playView = requireNonNull(playView);
     }
 
-    public void setStartView(View startView) {
-        viewMap.put(ViewID.START_VIEW, requireNonNull(startView));
+    public void setStartView(StartPagesCarousel startView) {
+        this.startView = requireNonNull(startView);
     }
 
     public void setEditorViewFactory(Supplier<EditorView> factory) {
         this.editorViewFactory = requireNonNull(factory);
     }
 
-    /**
-     * Switches from the old view to the new view, performing all required lifecycle steps.
-     */
-    private void changeView(Scene scene, FlashMessageView flashMessageView, ViewID oldID, ViewID newID) {
-        requireNonNull(newID);
+    public void setEditorCanOpen(BooleanSupplier editorCanOpen) {
+        this.editorCanOpen = requireNonNull(editorCanOpen);
+    }
 
-        if (oldID != null) {
-            final View oldView = viewMap.get(oldID);
-            if (oldView != null) {
-                oldView.onExit();
-                oldView.actionBindings().removeFromKeyboard();
+    public StartPagesCarousel startView() {
+        return startView;
+    }
+
+    public PlayView playView() {
+        return playView;
+    }
+
+    public Optional<EditorView> optEditorView() {
+        return Optional.ofNullable(editorView);
+    }
+
+    public void selectStartView() {
+        ui.stopGame();
+        currentViewProperty().set(startView);
+    }
+
+    public void selectPlayView() {
+        currentViewProperty().set(playView);
+    }
+
+    public void selectEditorView() {
+        if (editorCanOpen.getAsBoolean()) {
+            ui.stopGame();
+            if (editorView == null) {
+                editorView = editorViewFactory.get();
             }
-        }
-
-        final View newView = viewMap.get(newID);
-
-        if (!(scene.getRoot() instanceof Pane layoutPane)) {
-            throw new IllegalStateException(
-                "Cannot replace view: Scene root must be a Pane but is " + scene.getRoot());
-        }
-        if (layoutPane.getChildren().isEmpty()) {
-            throw new IllegalStateException(
-                "Layout pane has no placeholder for embedding view");
-        }
-
-        layoutPane.getChildren().set(RESERVED_VIEW_INDEX_IN_LAYOUT, newView.root());
-        newView.actionBindings().assignToKeyboard();
-        newView.onEnter();
-        flashMessageView.clear();
-
-        currentView.set(newView);
-    }
-
-    /**
-     * Selects the view with the given ID. If the editor view is selected for the first time,
-     * it is created lazily and initialized.
-     *
-     * @param id the identifier of the view to select
-     */
-    public void selectView(ViewID id) {
-        requireNonNull(id);
-        if (id == ViewID.EDITOR_VIEW) {
-            final EditorView editorView = (EditorView) viewMap.computeIfAbsent(id, _ -> createEditorView());
+            editorView.editor().init(editorWorkDir);
             editorView.editor().start();
+            currentViewProperty().set(editorView);
+        } else {
+            Logger.warn("Editor cannot open!");
         }
-        selectedID.set(id);
     }
 
-    private EditorView createEditorView() {
-        final var editorView = editorViewFactory.get();
-        editorView.editor().init(editorWorkDir);
-        return editorView;
+    public boolean isStartViewSelected() {
+        return currentView() == startView;
     }
 
-
-    /**
-     * @return the property representing the currently selected view ID
-     */
-    public ObjectProperty<ViewID> selectedIDProperty() {
-        return selectedID;
+    public boolean isPlayViewSelected() {
+        return currentView() == playView;
     }
 
-    /**
-     * Checks whether the given view ID is currently selected.
-     *
-     * @param id the view ID to check
-     * @return {@code true} if the view is selected
-     */
-    public boolean isSelected(ViewID id) {
-        requireNonNull(id);
-        return id == selectedID.get();
+    public boolean isEditorViewSelected() {
+        return currentView() == editorView;
     }
 
-    /**
-     * @return a read-only property representing the currently active view
-     */
-    public ReadOnlyObjectProperty<View> currentViewProperty() {
+    public ObjectProperty<View> currentViewProperty() {
         return currentView;
     }
 
-    /**
-     * @return the currently active view, or {@code null} if none is active yet
-     */
     public View currentView() {
         return currentView.get();
-    }
-
-    /**
-     * Retrieves a view by ID and type.
-     *
-     * @param id        the view ID
-     * @param viewClass the expected view type
-     * @param <V>       the view type
-     * @return the view instance
-     * @throws IllegalArgumentException if no view is registered or the type does not match
-     */
-    @SuppressWarnings("unchecked")
-    public  <V extends View> V getView(ViewID id, Class<V> viewClass) {
-        requireNonNull(id);
-        requireNonNull(viewClass);
-
-        final View view = viewMap.get(id);
-        if (view == null) {
-            throw new IllegalArgumentException(
-                "No view with ID '%s' is registered".formatted(id));
-        }
-        if (viewClass.isInstance(view)) {
-            return (V) view;
-        }
-
-        throw new IllegalArgumentException(
-            "View with ID '%s' has type %s (expected: %s)"
-                .formatted(id, view.getClass(), viewClass));
-    }
-
-    /**
-     * @return an {@link Optional} containing the editor view if it has been created
-     */
-    public Optional<EditorView> optEditorView() {
-        return Optional.ofNullable((EditorView) viewMap.get(ViewID.EDITOR_VIEW));
     }
 }

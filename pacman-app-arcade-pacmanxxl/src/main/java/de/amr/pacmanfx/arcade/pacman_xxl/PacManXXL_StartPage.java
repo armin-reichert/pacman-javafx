@@ -8,7 +8,6 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
-import de.amr.pacmanfx.ui.layout.ViewManager;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -77,14 +76,14 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         });
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            final StartPagesCarousel startPagesCarousel = ui.views().getView(ViewManager.ViewID.START_VIEW, StartPagesCarousel.class);
+            final StartPagesCarousel startPagesCarousel = ui.viewManager().startView();
             switch (e.getCode()) {
                 case E -> {
                     e.consume();
                     if (ui != null) {
                         ui.voicePlayer().stopVoice();
                         startPagesCarousel.pauseProgressTimer();
-                        ui.showEditorView();
+                        ui.viewManager().selectEditorView();
                     }
                 }
                 case ENTER -> {

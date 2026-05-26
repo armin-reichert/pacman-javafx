@@ -16,8 +16,6 @@ import de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
-import de.amr.pacmanfx.ui.layout.ViewManager.ViewID;
-import de.amr.pacmanfx.ui.layout.playview.PlayView;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
@@ -42,7 +40,7 @@ public final class CommonActions {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().coinMechanism().setNumCoins(0);
-            ui.showPlayView();
+            ui.viewManager().selectPlayView();
             ui.restart();
         }
     };
@@ -64,12 +62,12 @@ public final class CommonActions {
     public static final GameAction ACTION_OPEN_EDITOR = new GameAction("open_editor") {
         @Override
         public void execute(GameUI ui) {
-            ui.showEditorView();
+            ui.viewManager().selectEditorView();
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.views().isSelected(ViewID.PLAY_VIEW) || ui.views().isSelected(ViewID.START_VIEW);
+            return ui.viewManager().isStartViewSelected();
         }
     };
 
@@ -121,8 +119,7 @@ public final class CommonActions {
     public static final GameAction ACTION_SHOW_HELP = new GameAction("show_help") {
         @Override
         public void execute(GameUI ui) {
-            final PlayView playView = ui.views().getView(ViewID.PLAY_VIEW, PlayView.class);
-            playView.showHelp(ui);
+            ui.viewManager().playView().showHelp(ui);
         }
 
         @Override
@@ -233,13 +230,12 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_DASHBOARD = new GameAction("toggle_dashboard") {
         @Override
         public void execute(GameUI ui) {
-            final PlayView playView = ui.views().getView(ViewID.PLAY_VIEW, PlayView.class);
-            playView.dashboard().toggleVisibility();
+            ui.viewManager().playView().dashboard().toggleVisibility();
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.views().isSelected(ViewID.PLAY_VIEW);
+            return ui.viewManager().isPlayViewSelected();
         }
     };
 
@@ -296,7 +292,7 @@ public final class CommonActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.views().isSelected(ViewID.PLAY_VIEW);
+            return ui.viewManager().isPlayViewSelected();
         }
     };
 
@@ -316,7 +312,7 @@ public final class CommonActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            if (!ui.views().isSelected(ViewID.PLAY_VIEW)) return false;
+            if (!ui.viewManager().isPlayViewSelected()) return false;
             if (isTestModeRunning(ui.gameContext().game())) return true;
             return isPlaySceneActive(ui);
         }

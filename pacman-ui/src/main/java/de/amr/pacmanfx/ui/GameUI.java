@@ -161,16 +161,7 @@ public interface GameUI {
     /**
      * @return the manager responsible for all UI views (start pages, play view, editor, etc.).
      */
-    ViewManager views();
-
-    /** Switches to the editor view, if allowed by the current game state. */
-    void showEditorView();
-
-    /** Switches to the play view. */
-    void showPlayView();
-
-    /** Switches to the start pages view. */
-    void showStartView();
+    ViewManager viewManager();
 
     /**
      * Convenience accessor for the dashboard inside the play view.
