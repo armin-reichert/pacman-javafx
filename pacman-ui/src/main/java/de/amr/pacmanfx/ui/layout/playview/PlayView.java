@@ -87,8 +87,6 @@ public class PlayView implements View {
 
     private final PlayViewGameEventHandler gameEventHandler;
 
-    private PlayViewGameSceneEmbedder gameSceneEmbedder;
-
     private final ChangeListener<? super Number> parentSceneSizeChangeHandler;
 
     public PlayView(GameUI ui, Scene parentSceneFX, DashboardConfig dashboardConfig) {
@@ -113,16 +111,8 @@ public class PlayView implements View {
         gameEventHandler = new PlayViewGameEventHandler(this);
     }
 
-    public void setGameSceneEmbedder(PlayViewGameSceneEmbedder gameSceneEmbedder) {
-        this.gameSceneEmbedder = gameSceneEmbedder;
-    }
-
     public PlayViewGameEventHandler gameEventHandler() {
         return gameEventHandler;
-    }
-
-    public PlayViewGameSceneEmbedder embedder() {
-        return gameSceneEmbedder;
     }
 
     public GameUI ui() {
@@ -132,7 +122,6 @@ public class PlayView implements View {
     public ContextMenu contextMenu() {
         return contextMenu;
     }
-
 
     public Scene parentSceneFX() {
         return parentSceneFX;

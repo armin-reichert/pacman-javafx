@@ -13,27 +13,20 @@ import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
-public class PlayViewGameSceneEmbedder {
+public class GameSceneEmbedder {
 
-    private final PlayView playView;
-
-    public PlayViewGameSceneEmbedder(PlayView playView) {
-        this.playView = playView;
-    }
-
-    public void embedGameScene(GameSceneConfig gameSceneConfig, GameScene gameScene) {
+    public void embedGameSceneIntoPlayView(PlayView playView, GameSceneConfig gameSceneConfig, GameScene gameScene) {
         if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameSceneWithSubSceneFX(gameScene, gameScene.optSubSceneFX().get());
+            embedGameSceneWithSubSceneFX(playView, gameScene, gameScene.optSubSceneFX().get());
         } else if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2D(gameSceneConfig, gameScene2D);
+            embedGameScene2D(playView, gameSceneConfig, gameScene2D);
         } else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }
     }
 
-
     // 3D scenes or 2D scenes with camera
-    private void embedGameSceneWithSubSceneFX(GameScene gameScene, SubScene subSceneFX) {
+    private void embedGameSceneWithSubSceneFX(PlayView playView, GameScene gameScene, SubScene subSceneFX) {
         // stretch sub scene to available space
         subSceneFX.widthProperty().bind(playView.parentSceneFX().widthProperty());
         subSceneFX.heightProperty().bind(playView.parentSceneFX().heightProperty());
@@ -47,7 +40,7 @@ public class PlayViewGameSceneEmbedder {
     }
 
     // 2D scenes without camera which are shown at full size
-    private void embedGameScene2D(GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
+    private void embedGameScene2D(PlayView playView, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
         final DecorationPane decorationPane = playView.decorationPane();
         final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene2D);
 

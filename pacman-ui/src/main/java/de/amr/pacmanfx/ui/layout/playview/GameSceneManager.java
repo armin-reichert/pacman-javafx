@@ -3,7 +3,6 @@ package de.amr.pacmanfx.ui.layout.playview;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.GameSceneConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -22,16 +21,15 @@ public class GameSceneManager {
 
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
 
-    private PlayViewGameSceneEmbedder embedder;
+    private GameSceneEmbedder embedder;
 
     public GameSceneManager() {}
 
-    public void setEmbedder(GameUI ui, PlayViewGameSceneEmbedder embedder) {
+    public void setEmbedder(GameUI ui, GameSceneEmbedder embedder) {
         this.embedder = Objects.requireNonNull(embedder);
         gameScene.addListener((_, _, gameScene) -> {
-//            contextMenu.hide();
             if (gameScene != null) {
-                embedder.embedGameScene(ui.currentGameSceneConfig(), gameScene);
+                ui.embedGameSceneIntoPlayView(gameScene);
             }
         });
     }
@@ -62,12 +60,10 @@ public class GameSceneManager {
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
-        embedder.embedGameScene(ui.currentGameSceneConfig(), nextGameScene);
+        ui.embedGameSceneIntoPlayView(nextGameScene);
 
         nextGameScene.activate();
-
         game.optGameLevel().ifPresent(level -> handleGameSceneSwitch(ui.currentConfig(), level, prevGameScene, nextGameScene));
-
         gameSceneProperty().set(nextGameScene);
     }
 

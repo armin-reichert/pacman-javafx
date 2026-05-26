@@ -149,6 +149,8 @@ public interface GameUI {
      */
     Optional<GameScene> optGameScene();
 
+    void embedGameSceneIntoPlayView(GameScene gameScene);
+
     // ---------------------------------------------------------------------------------------------
     // View Access
     // ---------------------------------------------------------------------------------------------

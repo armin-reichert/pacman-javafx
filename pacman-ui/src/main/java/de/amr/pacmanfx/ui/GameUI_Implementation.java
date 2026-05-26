@@ -22,7 +22,7 @@ import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.layout.playview.GameSceneManager;
 import de.amr.pacmanfx.ui.layout.playview.MiniGameView;
 import de.amr.pacmanfx.ui.layout.playview.PlayView;
-import de.amr.pacmanfx.ui.layout.playview.PlayViewGameSceneEmbedder;
+import de.amr.pacmanfx.ui.layout.playview.GameSceneEmbedder;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
@@ -101,6 +101,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private final VoiceManager voiceManager = new VoiceManager();
     private final Translationmanager translator;
 
+    private final GameSceneEmbedder gameSceneEmbedder = new GameSceneEmbedder();
+
     // UI components
     private final Stage stage;
     private final StackPane rootPane = new StackPane();
@@ -125,16 +127,12 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         viewManager.setStartView(new StartPagesCarousel(this));
         viewManager.setEditorViewFactory(this::createEditorView);
 
-        //TODO refactor and untangle
-        final PlayView playView = createPlayView();
-        viewManager.setPlayView(playView);
-
-        final var gameSceneEmbedder = new PlayViewGameSceneEmbedder(playView);
-
         gameSceneManager.setEmbedder(this, gameSceneEmbedder);
 
-        playView.setGameSceneEmbedder(gameSceneEmbedder);
+        //TODO refactor and untangle
+        final PlayView playView = createPlayView();
         playView.configurePropertyBindings();
+        viewManager.setPlayView(playView);
 
         translator = () -> GameUIConstants.LOCALIZED_TEXTS;
         spriteAnimationTimer.setSpriteAnimationSet(spriteAnimationSet);
@@ -375,6 +373,12 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     @Override
     public GameSceneManager gameSceneManager() {
         return gameSceneManager;
+    }
+
+    @Override
+    public void embedGameSceneIntoPlayView(GameScene gameScene) {
+        gameSceneEmbedder.embedGameSceneIntoPlayView(playView(), currentGameSceneConfig(), gameScene);
+        playView().contextMenu().hide();
     }
 
     @Override
