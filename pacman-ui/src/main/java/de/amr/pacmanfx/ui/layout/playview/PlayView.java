@@ -330,10 +330,7 @@ public class PlayView implements View {
             gameSceneLayer.setBorder(debug ? DEBUG_BORDER : null);
         });
 
-        overlayLayer.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> dashboard.isVisible() || GameUIConstants.PROPERTY_MINI_VIEW_ON.get(),
-            dashboard.visibleProperty(), GameUIConstants.PROPERTY_MINI_VIEW_ON
-        ));
+        overlayLayer.visibleProperty().bind(Bindings.or(dashboard.visibleProperty(), GameUIConstants.PROPERTY_MINI_VIEW_ON));
 
         miniView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> GameUIConstants.PROPERTY_MINI_VIEW_ON.get() && ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D),
