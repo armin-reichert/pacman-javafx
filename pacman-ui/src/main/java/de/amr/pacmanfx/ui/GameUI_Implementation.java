@@ -110,7 +110,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     private StringBinding titleBinding;
 
-    private File initialEditorDir;
+    private final File initialEditorDir;
 
     public GameUI_Implementation(GameBox gameBox, Stage stage, int mainSceneWidth, int mainSceneHeight) {
         super(GameUI_Implementation.class);
@@ -128,7 +128,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
         gameSceneManager.setEmbedder(this, gameSceneEmbedder);
 
-        viewManager = createViewManager(gameBox);
+        viewManager = createViewManager();
         viewManager.setStartView(new StartPagesCarousel(this));
         viewManager.setEditorViewFactory(this::createEditorView);
         viewManager.setPlayView(createPlayView());
@@ -149,7 +149,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         load3DModels();
     }
 
-    private ViewManager createViewManager(GameBox gameBox) {
+    private ViewManager createViewManager() {
         final var viewManager = new ViewManager(rootPane, flashMessageView);
 
         viewManager.setEditorCanOpen(() -> {
