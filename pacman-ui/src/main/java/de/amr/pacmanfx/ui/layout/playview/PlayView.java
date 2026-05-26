@@ -160,12 +160,12 @@ public class PlayView implements View {
     @Override
     public void onEnter() {
         rootPane.requestFocus();
-        addListeners();
+        gameSceneDecorationPane.installBindings();
     }
 
     @Override
     public void onExit() {
-        removeListeners();
+        gameSceneDecorationPane.uninstallBindings();
     }
 
     @Override
@@ -241,14 +241,6 @@ public class PlayView implements View {
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
 
         rootPane = new StackPane(gameSceneLayer, overlayLayer, helpLayer, pausedIcon);
-    }
-
-    private void addListeners() {
-        gameSceneDecorationPane.installBindings();
-    }
-
-    private void removeListeners() {
-        gameSceneDecorationPane.uninstallBindings();
     }
 
     public void configurePropertyBindings() {
