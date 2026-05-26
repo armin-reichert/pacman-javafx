@@ -387,7 +387,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public void embedGameSceneIntoPlayView(GameScene gameScene) {
-        gameSceneEmbedder.embedGameSceneIntoPlayView(playView(), currentGameSceneConfig(), gameScene);
+        gameSceneEmbedder.embedGameSceneIntoPlayView(scene, playView(), currentGameSceneConfig(), gameScene);
         playView().contextMenu().hide();
     }
 
