@@ -21,9 +21,12 @@ import java.util.Optional;
 public class GameSceneManager {
 
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
-    private final PlayViewGameSceneEmbedder embedder;
 
-    public GameSceneManager(GameUI ui, PlayViewGameSceneEmbedder embedder) {
+    private PlayViewGameSceneEmbedder embedder;
+
+    public GameSceneManager() {}
+
+    public void setEmbedder(GameUI ui, PlayViewGameSceneEmbedder embedder) {
         this.embedder = Objects.requireNonNull(embedder);
         gameScene.addListener((_, _, gameScene) -> {
 //            contextMenu.hide();

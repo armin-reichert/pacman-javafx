@@ -19,15 +19,17 @@ import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.layout.*;
+import de.amr.pacmanfx.ui.layout.playview.GameSceneManager;
 import de.amr.pacmanfx.ui.layout.playview.MiniGameView;
 import de.amr.pacmanfx.ui.layout.playview.PlayView;
+import de.amr.pacmanfx.ui.layout.playview.PlayViewGameSceneEmbedder;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
-import de.amr.pacmanfx.uilib.assets.Translator;
+import de.amr.pacmanfx.uilib.assets.Translationmanager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
@@ -78,29 +80,32 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         Font.font("Sans", 12) // content font
     );
 
-    // Oh no, my program!
-    private static final String SOMEONE_CALL_AN_AMBULANCE = "KA-TA-STRO-PHE!\nSOMEONE CALL AN AMBULANCE!";
+    private static final String OH_NO_MY_PROGRAM = "Oh no my program!\nSomeone call an ambulance!";
 
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
 
     private final DirectoryWatchdog customDirWatchdog;
-    private final UIConfigManager uiConfigManager = new UIConfigManager();
-    private final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
+
     private final SpriteAnimationTimer spriteAnimationTimer = new SpriteAnimationTimer();
     private final SpriteAnimationSet spriteAnimationSet = new SpriteAnimationSet();
+
+    private final GameContext gameContext;
+
+    // So many managers? I think I should fire some!
+    private final UIConfigManager uiConfigManager = new UIConfigManager();
+    private final ViewManager viewManager;
+    private final GameSceneManager gameSceneManager = new GameSceneManager();
+    private final ActionBindingsManager actionBindingsManager = new GameActionBindingsManager(Input.instance().keyboard);
     private final SoundManager soundManager = new SoundManager();
     private final VoiceManager voiceManager = new VoiceManager();
-    private final GameContext gameContext;
-    private final ViewManager viewManager;
-    private final Translator translator;
+    private final Translationmanager translator;
 
+    // UI components
     private final Stage stage;
-    private final StackPane sceneLayout = new StackPane();
-    private final Scene scene = new Scene(sceneLayout);
-
+    private final StackPane rootPane = new StackPane();
+    private final Scene scene = new Scene(rootPane);
     private final FlashMessageView flashMessageView = new FlashMessageView();
-
     private final StatusIconBox statusIconBox = new StatusIconBox();
 
     private StringBinding titleBinding;
@@ -118,8 +123,18 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         this.viewManager = new ViewManager(this, scene, gameBox.customMapDir(), flashMessageView);
 
         viewManager.setStartView(new StartPagesCarousel(this));
-        viewManager.setPlayView(createPlayView());
         viewManager.setEditorViewFactory(this::createEditorView);
+
+        //TODO refactor and untangle
+        final PlayView playView = createPlayView();
+        viewManager.setPlayView(playView);
+
+        final var gameSceneEmbedder = new PlayViewGameSceneEmbedder(playView);
+
+        gameSceneManager.setEmbedder(this, gameSceneEmbedder);
+
+        playView.setGameSceneEmbedder(gameSceneEmbedder);
+        playView.configurePropertyBindings();
 
         translator = () -> GameUIConstants.LOCALIZED_TEXTS;
         spriteAnimationTimer.setSpriteAnimationSet(spriteAnimationSet);
@@ -177,9 +192,9 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     private void initLayout(int mainSceneWidth, int mainSceneHeight) {
-        sceneLayout.setPrefSize(mainSceneWidth, mainSceneHeight);
+        rootPane.setPrefSize(mainSceneWidth, mainSceneHeight);
         // First child is placeholder for current view (start view, play view, ...)
-        sceneLayout.getChildren().setAll(new Region(), statusIconBox, flashMessageView, createKeyboardMonitor());
+        rootPane.getChildren().setAll(new Region(), statusIconBox, flashMessageView, createKeyboardMonitor());
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
     }
 
@@ -251,20 +266,20 @@ public final class GameUI_Implementation extends PreferencesManager implements G
             },
             gameContext.gameVariantNameProperty(),
             viewManager.currentViewProperty(),
-            playView().gameSceneManager().gameSceneProperty(),
+            gameSceneManager().gameSceneProperty(),
             GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE,
             GameUIConstants.PROPERTY_3D_ENABLED,
             gameContext.clock().updatesDisabledProperty()
         );
         stage.titleProperty().bind(titleBinding);
 
-        sceneLayout.backgroundProperty().bind(Bindings.createObjectBinding(
+        rootPane.backgroundProperty().bind(Bindings.createObjectBinding(
             () -> currentGameSceneHasID(GameSceneConfig.CommonSceneID.PLAY_SCENE_3D)
                 ? Background.fill(Gradients.Samples.random())
                 : GameUIConstants.BACKGROUND_PAC_MAN_WALLPAPER,
             // depends on:
             viewManager.currentViewProperty(),
-            playView().gameSceneManager().gameSceneProperty()
+            gameSceneManager().gameSceneProperty()
         ));
 
         gameContext.gameVariantNameProperty().addListener((_, _, _) -> {
@@ -289,11 +304,11 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     private void initGlobalActionBindings() {
-        actionBindings.addAny(CommonActions.ACTION_ENTER_FULLSCREEN,        GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(CommonActions.ACTION_OPEN_EDITOR,             GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(CommonActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
-        actionBindings.assignToKeyboard();
+        actionBindingsManager.addAny(CommonActions.ACTION_ENTER_FULLSCREEN,        GameUIConstants.COMMON_BINDINGS);
+        actionBindingsManager.addAny(CommonActions.ACTION_OPEN_EDITOR,             GameUIConstants.COMMON_BINDINGS);
+        actionBindingsManager.addAny(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
+        actionBindingsManager.addAny(CommonActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
+        actionBindingsManager.assignToKeyboard();
     }
 
     private void initScene() {
@@ -303,7 +318,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         scene.addEventFilter(KeyEvent.KEY_RELEASED, Input.instance().keyboard::onKeyReleased);
 
         // If a global action is bound to the key press, execute it; otherwise let the current view handle it.
-        scene.setOnKeyPressed(e -> actionBindings.matchingAction()
+        scene.setOnKeyPressed(e -> actionBindingsManager.matchingAction()
             .ifPresentOrElse(action -> {
                 if (action.executeIfEnabled(this)) e.consume();
             }, () -> viewManager.currentView().onKeyboardInput(this)
@@ -332,7 +347,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private void ka_tas_tro_phe(Throwable reason) {
         Logger.error(reason);
         Logger.error("SOMETHING VERY BAD HAPPENED!");
-        showFlashMessage(Duration.seconds(60), "%s\n%s".formatted(SOMEONE_CALL_AN_AMBULANCE, reason.getMessage()));
+        showFlashMessage(Duration.seconds(60), "%s\n%s".formatted(OH_NO_MY_PROGRAM, reason.getMessage()));
         stopGame();
     }
 
@@ -355,6 +370,11 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     @Override
     public UIConfig config(String gameVariantName) {
         return uiConfigManager.getOrCreateUIConfig(gameVariantName);
+    }
+
+    @Override
+    public GameSceneManager gameSceneManager() {
+        return gameSceneManager;
     }
 
     @Override
@@ -394,7 +414,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
-    public Translator translator() {
+    public Translationmanager translator() {
         return translator;
     }
 
@@ -424,7 +444,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public Optional<GameScene> optGameScene() {
-        return playView().gameSceneManager().optCurrentGameScene();
+        return gameSceneManager().optCurrentGameScene();
     }
 
     @Override

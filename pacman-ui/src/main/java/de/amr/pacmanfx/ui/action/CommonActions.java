@@ -310,8 +310,7 @@ public final class CommonActions {
                 ui.showFlashMessage(ui.translator().translate(usePlayScene3D ? "use_3D_scene" : "use_2D_scene"));
             }
             if (canSwitchSceneNow(game)) {
-                final PlayView playView = ui.views().getView(ViewID.PLAY_VIEW, PlayView.class);
-                playView.gameSceneManager().forceGameSceneUpdate(ui);
+                ui.gameSceneManager().forceGameSceneUpdate(ui);
             }
         }
 

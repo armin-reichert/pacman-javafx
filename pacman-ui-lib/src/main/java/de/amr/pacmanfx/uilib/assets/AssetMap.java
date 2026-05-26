@@ -20,7 +20,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Data structure and API for game assets.
  */
-public class AssetMap implements Translator, Disposable {
+public class AssetMap implements Translationmanager, Disposable {
 
     private final Map<String, Object> assetsByID = new HashMap<>();
     private ResourceBundle localizedTexts;
