@@ -7,7 +7,7 @@ import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -37,9 +37,11 @@ public class FancyButton extends BorderPane {
         setMaxSize(200, 60);
         setPadding(new Insets(5, 5, 5, 5));
         setBackground(UfxBackgrounds.roundedBackground(bgColor, 20));
-        addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            if (action != null) action.run();
-            e.consume();
+        setOnMouseClicked(e -> {
+            if (e.getButton() == MouseButton.PRIMARY && action != null) {
+                action.run();
+                e.consume();
+            }
         });
     }
 
