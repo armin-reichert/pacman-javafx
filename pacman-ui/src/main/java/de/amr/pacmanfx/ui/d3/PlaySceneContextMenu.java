@@ -17,8 +17,8 @@ import javafx.scene.control.ToggleGroup;
 
 import java.util.Objects;
 
-import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
+import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_QUIT_GAME_SCENE;
+import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
 import static de.amr.pacmanfx.ui.layout.ContextMenuSupport.*;
 
 /**

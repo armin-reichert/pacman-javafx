@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.pacmanfx.ui.action.ActionBinding;
-import de.amr.pacmanfx.ui.action.CommonGameActions;
+import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import javafx.scene.input.KeyCode;
@@ -17,16 +17,16 @@ import static de.amr.pacmanfx.ui.input.Keyboard.*;
 public interface TengenMsPacMan_ActionBindings {
 
     Set<ActionBinding> STEERING_BINDINGS = Set.of(
-        new ActionBinding(CommonGameActions.ACTION_STEER_UP,
+        new ActionBinding(CommonActions.ACTION_STEER_UP,
             Input.instance().joypad.keyForButton(JoypadButton.UP), control(KeyCode.UP)),
 
-        new ActionBinding(CommonGameActions.ACTION_STEER_DOWN,
+        new ActionBinding(CommonActions.ACTION_STEER_DOWN,
             Input.instance().joypad.keyForButton(JoypadButton.DOWN), control(KeyCode.DOWN)),
 
-        new ActionBinding(CommonGameActions.ACTION_STEER_LEFT,
+        new ActionBinding(CommonActions.ACTION_STEER_LEFT,
             Input.instance().joypad.keyForButton(JoypadButton.LEFT), control(KeyCode.LEFT)),
 
-        new ActionBinding(CommonGameActions.ACTION_STEER_RIGHT,
+        new ActionBinding(CommonActions.ACTION_STEER_RIGHT,
             Input.instance().joypad.keyForButton(JoypadButton.RIGHT), control(KeyCode.RIGHT))
     );
 

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.layout.playview;
 
 import de.amr.pacmanfx.ui.GameSceneConfig;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.CommonGameActions;
+import de.amr.pacmanfx.ui.action.CommonActions;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
@@ -42,7 +42,7 @@ public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent
             // Add 2D play scene-specific entries
             if (ui.currentGameSceneHasID(GameSceneConfig.CommonSceneID.PLAY_SCENE_2D)) {
                 addLocalizedTitleItem(menu, ui.translator(), "scene_display");
-                addLocalizedActionItem(menu, ui, ui.translator(), CommonGameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
+                addLocalizedActionItem(menu, ui, ui.translator(), CommonActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
             }
             // Add scene-specific entries
             gameScene.supplyContextMenu().ifPresent(sceneMenu -> menu.getItems().addAll(sceneMenu.getItems()));

@@ -38,7 +38,7 @@ import java.util.Set;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUIConstants.PROPERTY_3D_DRAW_MODE;
 import static de.amr.pacmanfx.ui.GameUIConstants.PROPERTY_3D_LIGHT_COLOR;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
+import static de.amr.pacmanfx.ui.action.CommonActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
 import static java.util.Objects.requireNonNull;

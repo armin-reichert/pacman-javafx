@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.dashboard;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
-import de.amr.pacmanfx.ui.action.CommonGameActions;
+import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
@@ -47,7 +47,7 @@ public class DashboardSectionGeneral extends DashboardSection {
         btnPlayPause.setStyle("-fx-background-color: transparent");
         btnPlayPause.graphicProperty().bind(ui.gameContext().clock().updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
         btnPlayPause.tooltipProperty().bind(ui.gameContext().clock().updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
-        setAction(ui, btnPlayPause, CommonGameActions.ACTION_TOGGLE_PAUSED);
+        setAction(ui, btnPlayPause, CommonActions.ACTION_TOGGLE_PAUSED);
 
         Button btnStep = buttonsSimulationControl[1];
         btnStep.setGraphic(iconStep);

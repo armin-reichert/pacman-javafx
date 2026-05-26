@@ -24,7 +24,7 @@ import static de.amr.basics.spriteanim.AnimationFacade.singletonAnimationFacade;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_LET_GAME_STATE_EXPIRE;
+import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_LET_GAME_STATE_EXPIRE;
 
 /**
  * Intermission scene 1: "They meet".

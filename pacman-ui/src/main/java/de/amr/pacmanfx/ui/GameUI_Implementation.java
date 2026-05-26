@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
-import de.amr.pacmanfx.ui.action.CommonGameActions;
+import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
@@ -59,7 +59,7 @@ import java.util.Optional;
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
+import static de.amr.pacmanfx.ui.action.CommonActions.*;
 import static de.amr.pacmanfx.ui.layout.ViewManager.ViewID.*;
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
@@ -289,10 +289,10 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     private void initGlobalActionBindings() {
-        actionBindings.addAny(CommonGameActions.ACTION_ENTER_FULLSCREEN,        GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(CommonGameActions.ACTION_OPEN_EDITOR,             GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(CommonGameActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(CommonGameActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
+        actionBindings.addAny(CommonActions.ACTION_ENTER_FULLSCREEN,        GameUIConstants.COMMON_BINDINGS);
+        actionBindings.addAny(CommonActions.ACTION_OPEN_EDITOR,             GameUIConstants.COMMON_BINDINGS);
+        actionBindings.addAny(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.addAny(CommonActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
         actionBindings.assignToKeyboard();
     }
 

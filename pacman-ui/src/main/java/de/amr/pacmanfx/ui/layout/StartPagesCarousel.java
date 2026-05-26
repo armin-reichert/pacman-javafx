@@ -8,7 +8,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.StartPage;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
-import de.amr.pacmanfx.ui.action.CommonGameActions;
+import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
 import de.amr.pacmanfx.ui.input.Input;
@@ -85,8 +85,8 @@ public class StartPagesCarousel extends Carousel implements View {
     public void onEnter() {
         actionBindings.add(actionShowPrevPage, bare(KeyCode.LEFT));
         actionBindings.add(actionShowNextPage, bare(KeyCode.RIGHT));
-        actionBindings.add(CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
-        actionBindings.add(CommonGameActions.ACTION_TOGGLE_PAUSED, bare(KeyCode.P));
+        actionBindings.add(CommonActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
+        actionBindings.add(CommonActions.ACTION_TOGGLE_PAUSED, bare(KeyCode.P));
         actionBindings.assignToKeyboard();
         restartProgressTimer();
         currentStartPage().ifPresent(page -> page.layoutRoot().requestFocus());

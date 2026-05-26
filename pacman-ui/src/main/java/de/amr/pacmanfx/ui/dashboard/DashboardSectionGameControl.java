@@ -19,7 +19,7 @@ import javafx.scene.control.Spinner;
 import java.util.List;
 
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_ENTER_NEXT_LEVEL;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_RESTART_INTRO;
+import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_RESTART_INTRO;
 
 public class DashboardSectionGameControl extends DashboardSection {
 

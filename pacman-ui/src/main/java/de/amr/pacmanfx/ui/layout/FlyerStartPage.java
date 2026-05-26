@@ -19,7 +19,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW;
+import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_BOOT_SHOW_PLAY_VIEW;
 import static java.util.Objects.requireNonNull;
 
 public class FlyerStartPage extends StackPane implements StartPage {

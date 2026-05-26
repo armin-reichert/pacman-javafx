@@ -29,7 +29,7 @@ import java.util.Set;
 
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
+import static de.amr.pacmanfx.ui.action.CommonActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.createImageBackground;
 
