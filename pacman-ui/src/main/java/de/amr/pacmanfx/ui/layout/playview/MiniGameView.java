@@ -41,7 +41,7 @@ public class MiniGameView {
     private final ObjectProperty<Vector2i> worldSize = new SimpleObjectProperty<>(ARCADE_MAP_SIZE_IN_PIXELS);
 
     private final Canvas canvas = new Canvas();
-    private final VBox container = new VBox();
+    private final VBox rootPane = new VBox();
     private final HBox contentPane;
 
     private GameUI ui;
@@ -69,9 +69,9 @@ public class MiniGameView {
         contentPane.setPadding(new Insets(0, 10, 0, 10));
         VBox.setVgrow(contentPane, Priority.NEVER);
 
-        container.getChildren().add(contentPane);
+        rootPane.getChildren().add(contentPane);
 
-        container.opacityProperty().bind(GameUIConstants.PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
+        rootPane.opacityProperty().bind(GameUIConstants.PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
 
         scaling.bind(Bindings.createDoubleBinding(
             () -> canvas.getHeight() / worldSize.get().y(),
@@ -79,8 +79,8 @@ public class MiniGameView {
         ));
     }
 
-    public Pane container() {
-        return container;
+    public Pane rootPane() {
+        return rootPane;
     }
 
     public void setUI(GameUI ui) {
@@ -104,7 +104,7 @@ public class MiniGameView {
         if (slideInAnimation != null) {
             slideInAnimation.stop();
         }
-        slideInAnimation = new TranslateTransition(SLIDE_IN_DURATION, container);
+        slideInAnimation = new TranslateTransition(SLIDE_IN_DURATION, rootPane);
         slideInAnimation.setToY(0);
         slideInAnimation.setByY(10);
         slideInAnimation.setDelay(Duration.seconds(1));
@@ -118,7 +118,7 @@ public class MiniGameView {
         if (slideOutAnimation != null) {
             slideOutAnimation.stop();
         }
-        slideOutAnimation = new TranslateTransition(SLIDE_OUT_DURATION, container);
+        slideOutAnimation = new TranslateTransition(SLIDE_OUT_DURATION, rootPane);
         slideOutAnimation.setToY(-contentPane.getHeight());
         slideOutAnimation.setByY(10);
         slideOutAnimation.setDelay(Duration.seconds(2));
@@ -190,6 +190,4 @@ public class MiniGameView {
         canvas.heightProperty().unbind();
         canvas.widthProperty().unbind();
     }
-
-
 }

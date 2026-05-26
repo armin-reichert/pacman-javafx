@@ -281,7 +281,7 @@ public class PlayView implements View {
 
         overlayLayer = new BorderPane();
         overlayLayer.setLeft(dashboard);
-        overlayLayer.setRight(miniView.container());
+        overlayLayer.setRight(miniView.rootPane());
 
         // Layer 3: Help info
         helpLayer = new HelpLayer(gameSceneLayer);
@@ -329,7 +329,7 @@ public class PlayView implements View {
             dashboard.visibleProperty(), GameUIConstants.PROPERTY_MINI_VIEW_ON
         ));
 
-        miniView.container().visibleProperty().bind(Bindings.createObjectBinding(
+        miniView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> GameUIConstants.PROPERTY_MINI_VIEW_ON.get() && ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D),
             GameUIConstants.PROPERTY_MINI_VIEW_ON, gameScene
         ));
