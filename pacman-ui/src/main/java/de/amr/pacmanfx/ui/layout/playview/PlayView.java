@@ -88,27 +88,15 @@ public class PlayView implements View {
     private GameScene2D_Renderer sceneRenderer;
     private HeadsUpDisplay_Renderer hudRenderer;
 
-    private final PlayViewGameEventHandler gameEventHandler;
-
     public PlayView(GameUI ui, DashboardConfig dashboardConfig) {
         this.ui = requireNonNull(ui);
-
         createLayout(requireNonNull(dashboardConfig));
-
         miniView.setUI(ui);
-
         rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(this, ui.scene()));
-
-
-        gameEventHandler = new PlayViewGameEventHandler(this);
     }
 
     public void resizeToFit(Scene parentSceneFX) {
         gameSceneDecorationPane.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
-    }
-
-    public PlayViewGameEventHandler gameEventHandler() {
-        return gameEventHandler;
     }
 
     public GameUI ui() {

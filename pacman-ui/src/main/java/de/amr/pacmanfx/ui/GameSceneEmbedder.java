@@ -2,12 +2,11 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.layout.playview;
+package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.GameSceneConfig;
-import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
+import de.amr.pacmanfx.ui.layout.playview.DecorationPane;
+import de.amr.pacmanfx.ui.layout.playview.PlayView;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;

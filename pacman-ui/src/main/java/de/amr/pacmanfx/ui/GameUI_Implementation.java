@@ -98,6 +98,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private final Translationmanager translator;
 
     private final GameSceneEmbedder gameSceneEmbedder = new GameSceneEmbedder();
+    private final GameVariantChangeHandler gameVariantChangeHandler = new GameVariantChangeHandler(this);
 
     // UI components
     private final Stage stage;
@@ -118,6 +119,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         this.customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
 
         this.stage = requireNonNull(stage);
+
+        gameContext.gameVariantNameProperty().addListener(gameVariantChangeHandler);
 
         gameSceneManager.setEmbedder(this, gameSceneEmbedder);
 
@@ -154,7 +157,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         final var playView = new PlayView(this, DEFAULT_DASHBOARD_CONFIG);
 
         playView.configurePropertyBindings();
-        gameContext.gameVariantNameProperty().addListener(new PlayViewGameVariantChangeHandler(playView));
 
         scene.widthProperty().addListener((_,_,_) -> playView.resizeToFit(scene));
         scene.heightProperty().addListener((_,_,_) -> playView.resizeToFit(scene));

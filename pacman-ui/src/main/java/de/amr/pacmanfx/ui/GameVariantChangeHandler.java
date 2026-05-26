@@ -1,8 +1,7 @@
-package de.amr.pacmanfx.ui.layout.playview;
+package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.UIConfig;
+import de.amr.pacmanfx.ui.layout.playview.GameEventHandler;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
@@ -10,29 +9,30 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public class PlayViewGameVariantChangeHandler implements ChangeListener<String> {
+public class GameVariantChangeHandler implements ChangeListener<String> {
 
-    private final PlayView playView;
+    private final GameUI ui;
+    private final GameEventHandler gameEventHandler;
 
-    public PlayViewGameVariantChangeHandler(PlayView playView) {
-        this.playView = requireNonNull(playView);
+    public GameVariantChangeHandler(GameUI ui) {
+        this.ui = requireNonNull(ui);
+        gameEventHandler = new GameEventHandler(ui);
     }
 
     @Override
     public void changed(ObservableValue<? extends String> py, String oldGameVariantName, String newGameVariantName) {
         if (oldGameVariantName != null) {
-            cleanupOldGameVariant(oldGameVariantName);
+            exitGameVariant(oldGameVariantName);
         }
         if (newGameVariantName != null) {
-            initNewGameVariant(newGameVariantName);
+            enterGameVariant(newGameVariantName);
         }
     }
 
-    private void cleanupOldGameVariant(String variantName) {
-        final GameUI ui = playView.ui();
+    private void exitGameVariant(String variantName) {
         final Game oldGame = ui.gameContext().gameByVariantName(variantName);
 
-        oldGame.flow().removeGameEventListener(playView.gameEventHandler());
+        oldGame.flow().removeGameEventListener(gameEventHandler);
 
         Logger.info("Cleanup old game variant {}...", variantName);
 
@@ -43,11 +43,10 @@ public class PlayViewGameVariantChangeHandler implements ChangeListener<String> 
         Logger.info("Cleanup of old game variant {} complete.", variantName);
     }
 
-    private void initNewGameVariant(String variantName) {
-        final GameUI ui = playView.ui();
+    private void enterGameVariant(String variantName) {
         final Game newGame = ui.gameContext().gameByVariantName(variantName);
 
-        newGame.flow().addGameEventListener(playView.gameEventHandler());
+        newGame.flow().addGameEventListener(gameEventHandler);
 
         Logger.info("Initialize new game variant {}...", variantName);
 

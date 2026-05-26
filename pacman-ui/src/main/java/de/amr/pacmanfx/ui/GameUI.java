@@ -9,7 +9,6 @@ import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.layout.ViewManager;
-import de.amr.pacmanfx.ui.layout.playview.GameSceneManager;
 import de.amr.pacmanfx.ui.layout.playview.MiniGameView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;

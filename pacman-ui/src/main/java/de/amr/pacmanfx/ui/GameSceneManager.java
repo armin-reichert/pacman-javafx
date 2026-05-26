@@ -1,10 +1,7 @@
-package de.amr.pacmanfx.ui.layout.playview;
+package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
