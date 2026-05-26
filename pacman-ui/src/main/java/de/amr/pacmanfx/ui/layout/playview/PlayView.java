@@ -54,7 +54,6 @@ public class PlayView implements View {
     public static final Background DEBUG_BACKGROUND = paintBackground(Color.TEAL);
     public static final Border DEBUG_BORDER = border(Color.LIGHTGREEN, 1);
 
-
     public static final DecorationPane.Config DECORATION_CONFIG = new DecorationPane.Config(
         0.85f,
         0.93f,
@@ -302,8 +301,7 @@ public class PlayView implements View {
         pausedIcon.setFocusTraversable(false);
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
 
-        rootPane = new StackPane();
-        rootPane.getChildren().addAll(gameSceneLayer, overlayLayer, helpLayer, pausedIcon);
+        rootPane = new StackPane(gameSceneLayer, overlayLayer, helpLayer, pausedIcon);
     }
 
     private void addListeners() {
