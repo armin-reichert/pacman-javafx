@@ -19,10 +19,7 @@ import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.layout.*;
-import de.amr.pacmanfx.ui.layout.playview.GameSceneManager;
-import de.amr.pacmanfx.ui.layout.playview.MiniGameView;
-import de.amr.pacmanfx.ui.layout.playview.PlayView;
-import de.amr.pacmanfx.ui.layout.playview.GameSceneEmbedder;
+import de.amr.pacmanfx.ui.layout.playview.*;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
@@ -129,9 +126,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
         gameSceneManager.setEmbedder(this, gameSceneEmbedder);
 
-        //TODO refactor and untangle
-        final PlayView playView = createPlayView();
-        viewManager.setPlayView(playView);
+        viewManager.setPlayView(createPlayView());
 
         translator = () -> GameUIConstants.LOCALIZED_TEXTS;
         spriteAnimationTimer.setSpriteAnimationSet(spriteAnimationSet);
@@ -153,6 +148,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         final var playView = new PlayView(this, DEFAULT_DASHBOARD_CONFIG);
 
         playView.configurePropertyBindings();
+        gameContext.gameVariantNameProperty().addListener(new PlayViewGameVariantChangeHandler(playView));
 
         scene.widthProperty().addListener((_,_,_) -> playView.resizeToFit(scene));
         scene.heightProperty().addListener((_,_,_) -> playView.resizeToFit(scene));

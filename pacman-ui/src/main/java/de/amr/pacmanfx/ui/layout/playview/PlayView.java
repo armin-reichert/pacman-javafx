@@ -66,18 +66,23 @@ public class PlayView implements View {
     private final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
 
     private final GameUI ui;
-    private final ContextMenu contextMenu;
+    private final ContextMenu contextMenu = new ContextMenu();
+
     private StackPane rootPane;
 
+    // Game scene layer
     private BorderPane gameSceneLayer;
     private DecorationPane gameSceneDecorationPane;
 
+    // Overlay layer
     private BorderPane overlayLayer;
     private Dashboard dashboard;
     private MiniGameView miniView;
 
+    // Help layer
     private HelpLayer helpLayer;
 
+    // Icon layer
     private FontAwesomeIcon pausedIcon;
 
     private GameScene2D_Renderer sceneRenderer;
@@ -86,19 +91,14 @@ public class PlayView implements View {
     private final PlayViewGameEventHandler gameEventHandler;
 
     public PlayView(GameUI ui, DashboardConfig dashboardConfig) {
-        requireNonNull(ui);
-        requireNonNull(dashboardConfig);
+        this.ui = requireNonNull(ui);
 
-        this.ui = ui;
-
-        createLayout(dashboardConfig);
+        createLayout(requireNonNull(dashboardConfig));
 
         miniView.setUI(ui);
 
-        contextMenu = new ContextMenu();
         rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(this, ui.scene()));
 
-        ui.gameContext().gameVariantNameProperty().addListener(new PlayViewGameVariantChangeHandler(this));
 
         gameEventHandler = new PlayViewGameEventHandler(this);
     }
