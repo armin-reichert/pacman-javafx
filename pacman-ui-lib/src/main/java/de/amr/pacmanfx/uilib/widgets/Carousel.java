@@ -17,6 +17,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -63,11 +64,19 @@ public class Carousel extends StackPane {
         requireNonNull(itemChangeDuration);
 
         btnBack = createNavigationButton(Direction.LEFT);
-        btnBack.setOnMousePressed(_ -> showPreviousItem());
+        btnBack.setOnMousePressed(e -> {
+            if (e.getButton() == MouseButton.PRIMARY) {
+                showPreviousItem();
+            }
+        });
         btnBack.disableProperty().bind(navigationLocked);
 
         btnForward = createNavigationButton(Direction.RIGHT);
-        btnForward.setOnMousePressed(_ -> showNextItem());
+        btnForward.setOnMousePressed(e -> {
+            if (e.getButton() == MouseButton.PRIMARY) {
+                showNextItem();
+            }
+        });
         btnForward.disableProperty().bind(navigationLocked);
 
         navigationLockTimer.setOnFinished(_ -> unlockNavigation());
