@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.Game;
@@ -33,9 +34,9 @@ import static de.amr.pacmanfx.uilib.Ufx.toggleBoolean;
  */
 public final class CommonActions {
 
-    public static final int SIMULATION_SPEED_DELTA = 2;
-    public static final int SIMULATION_SPEED_MIN   = 5;
-    public static final int SIMULATION_SPEED_MAX   = 300;
+    public static final int SIM_SPEED_DELTA = 2;
+    public static final int SIM_SPEED_MIN = 5;
+    public static final int SIM_SPEED_MAX = 300;
 
     public static final GameAction ACTION_BOOT_SHOW_PLAY_VIEW = new GameAction("boot_show_play_view") {
         @Override
@@ -135,37 +136,40 @@ public final class CommonActions {
     public static final GameAction ACTION_SIMULATION_FASTER = new GameAction("simulation_faster") {
         @Override
         public void execute(GameUI ui) {
-            int newRate = ui.gameContext().clock().targetFrameRate() + SIMULATION_SPEED_DELTA;
-            newRate = Math.clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
-            ui.gameContext().clock().setTargetFrameRate(newRate);
-            String prefix = newRate == SIMULATION_SPEED_MAX ? "At maximum speed: " : "";
-            ui.showFlashMessage(Duration.seconds(0.75), prefix + newRate + "Hz");
+            final GameClock clock = ui.gameContext().clock();
+            final int newRate = Math.clamp(clock.targetFrameRate() + SIM_SPEED_DELTA, SIM_SPEED_MIN, SIM_SPEED_MAX);
+            clock.setTargetFrameRate(newRate);
+
+            final String message = newRate == SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
+            ui.showFlashMessage(Duration.seconds(0.75), message.formatted(newRate));
         }
     };
 
     public static final GameAction ACTION_SIMULATION_FASTEST = new GameAction("simulation_fastest") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().clock().setTargetFrameRate(SIMULATION_SPEED_MAX);
-            ui.showFlashMessage(Duration.seconds(0.75), "At maximum speed: %d Hz", SIMULATION_SPEED_MAX);
+            ui.gameContext().clock().setTargetFrameRate(SIM_SPEED_MAX);
+            ui.showFlashMessage(Duration.seconds(0.75), "At maximum speed: %d Hz", SIM_SPEED_MAX);
         }
     };
 
     public static final GameAction ACTION_SIMULATION_SLOWER = new GameAction("simulation_slower") {
         @Override
         public void execute(GameUI ui) {
-            int newRate = ui.gameContext().clock().targetFrameRate() - SIMULATION_SPEED_DELTA;
-            newRate = Math.clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
-            ui.gameContext().clock().setTargetFrameRate(newRate);
-            String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";
-            ui.showFlashMessage(Duration.seconds(0.75), prefix + newRate + "Hz");
+            final GameClock clock = ui.gameContext().clock();
+            final int newRate = Math.clamp(clock.targetFrameRate() - SIM_SPEED_DELTA, SIM_SPEED_MIN, SIM_SPEED_MAX);
+            clock.setTargetFrameRate(newRate);
+
+            final String message = newRate == SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
+            ui.showFlashMessage(Duration.seconds(0.75), message.formatted(newRate));
         }
     };
+
     public static final GameAction ACTION_SIMULATION_SLOWEST = new GameAction("simulation_slowest") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().clock().setTargetFrameRate(SIMULATION_SPEED_MIN);
-            ui.showFlashMessage(Duration.seconds(0.75), "At minimum speed: %d Hz", SIMULATION_SPEED_MIN);
+            ui.gameContext().clock().setTargetFrameRate(SIM_SPEED_MIN);
+            ui.showFlashMessage(Duration.seconds(0.75), "At minimum speed: %d Hz", SIM_SPEED_MIN);
         }
     };
 
