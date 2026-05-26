@@ -57,6 +57,7 @@ public class GameSceneManager {
 
         if (prevGameScene != null) {
             prevGameScene.deactivate();
+            embedder.removeFromPlayView(ui.viewManager().playView(), prevGameScene);
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding

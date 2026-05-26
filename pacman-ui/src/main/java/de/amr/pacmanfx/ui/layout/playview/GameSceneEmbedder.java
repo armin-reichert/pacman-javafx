@@ -11,10 +11,33 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
-import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
+import static java.util.Objects.requireNonNull;
+
 public class GameSceneEmbedder {
+
+    public void removeFromPlayView(PlayView playView, GameScene gameScene) {
+        requireNonNull(playView);
+        requireNonNull(gameScene);
+
+        gameScene.optSubSceneFX().ifPresent(subSceneFX -> {
+            subSceneFX.widthProperty().unbind();
+            subSceneFX.heightProperty().unbind();
+        });
+        if (gameScene instanceof GameScene2D gameScene2D) {
+            final DecorationPane decorationPane = playView.decorationPane();
+            decorationPane.canvas().widthProperty().unbind();
+            decorationPane.canvas().heightProperty().unbind();
+            decorationPane.unscaledWidthProperty().unbind();
+            decorationPane.unscaledHeightProperty().unbind();
+            decorationPane.backgroundProperty().unbind();
+            gameScene2D.backgroundColorProperty().unbind();
+            gameScene2D.scalingProperty().unbind();
+        }
+
+        Logger.info("Game scene {} REMOVED from play scene!", gameScene.getClass().getSimpleName());
+    }
 
     public void embedGameSceneIntoPlayView(Scene scene, PlayView playView, GameSceneConfig gameSceneConfig, GameScene gameScene) {
         if (gameScene.optSubSceneFX().isPresent()) {
@@ -43,46 +66,37 @@ public class GameSceneEmbedder {
     // 2D scenes without camera which are shown at full size
     private void embedGameScene2D(Scene scene, PlayView playView, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
         final DecorationPane decorationPane = playView.decorationPane();
-        final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene2D);
 
+        gameScene2D.backgroundColorProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
+
+        final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene2D);
         if (decorated) {
+            decorationPane.newCanvas(); //TODO check why creating a new canvas is needed
+
+            decorationPane.backgroundProperty().bind(gameScene2D.backgroundColorProperty().map(UfxBackgrounds::paintBackground));
+
             // set unscaled decoration pane size to game scene (=world map) size
             decorationPane.unscaledWidthProperty().bind(gameScene2D.unscaledWidthProperty());
             decorationPane.unscaledHeightProperty().bind(gameScene2D.unscaledHeightProperty());
-
-            // scale decoration pane to available scene space
-            decorationPane.stretchTo(scene.getWidth(), scene.getHeight());
-
-            // bind background color for canvas and decoration pane
-            gameScene2D.backgroundColorProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
-            decorationPane.backgroundProperty().bind(gameScene2D.backgroundColorProperty().map(UfxBackgrounds::paintBackground));
 
             // Limit scaling
             gameScene2D.scalingProperty().bind(decorationPane.scalingProperty().map(
                 scaling -> Math.min(scaling.doubleValue(), PlayView.MAX_GAME_SCENE_SCALING)));
 
-            decorationPane.newCanvas(); //TODO check why creating a new canvas is needed
-            gameScene2D.setCanvas(decorationPane.canvas());
-            playView.updateGameSceneRenderers(gameScene2D);
+            decorationPane.stretchTo(scene.getWidth(), scene.getHeight());
 
             playView.setGameSceneContent(decorationPane);
-
         }
-        else { // Undecorated game scene taking complete height
-
-            final Canvas canvas = decorationPane.canvas();
-            final double aspect = gameScene2D.getAspectRatio();
-
-            canvas.heightProperty().bind(scene.heightProperty());
-            canvas.widthProperty().bind(scene.heightProperty().map(h -> h.doubleValue() * aspect));
-
+        else {
+            // Undecorated game scene taking complete height
+            decorationPane.canvas().heightProperty().bind(scene.heightProperty());
+            decorationPane.canvas().widthProperty().bind(scene.heightProperty().map(h -> h.doubleValue() * gameScene2D.getAspectRatio()));
             gameScene2D.scalingProperty().bind(scene.heightProperty().divide(gameScene2D.getUnscaledHeight()));
 
-            // Game scene renderer can only be created if canvas is available
-            gameScene2D.setCanvas(canvas);
-            playView.updateGameSceneRenderers(gameScene2D);
-
-            playView.setGameSceneContent(canvas);
+            playView.setGameSceneContent(decorationPane.canvas());
         }
+
+        gameScene2D.setCanvas(decorationPane.canvas());
+        playView.updateGameSceneRenderers(gameScene2D);
     }
 }
