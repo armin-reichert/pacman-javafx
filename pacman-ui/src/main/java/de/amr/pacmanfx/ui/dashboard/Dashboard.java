@@ -7,6 +7,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.assets.Translator;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.util.*;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-public class Dashboard extends VBox {
+public class Dashboard {
 
     private static DashboardSection createCommonSection(Dashboard dashboard, DashboardID id) {
         requireNonNull(dashboard);
@@ -78,18 +79,23 @@ public class Dashboard extends VBox {
         return section;
     }
 
+    private final VBox rootPane = new VBox();
 
     private final Map<DashboardID, DashboardSection> sectionsByID = new LinkedHashMap<>();
     private final DashboardConfig dashboardConfig;
 
     public Dashboard(DashboardConfig dashboardConfig) {
         this.dashboardConfig = requireNonNull(dashboardConfig);
-        visibleProperty().addListener((_, ignored, visible) -> {
+        rootPane.visibleProperty().addListener((_, ignored, visible) -> {
             if (visible) {
                 updateLayout();
             }
         });
-        setPadding(new Insets(10));
+        rootPane.setPadding(new Insets(10));
+    }
+
+    public Pane rootPane() {
+        return rootPane;
     }
 
     public DashboardConfig style() {
@@ -105,7 +111,7 @@ public class Dashboard extends VBox {
     }
 
     public void toggleVisibility() {
-        setVisible(!isVisible());
+        rootPane.setVisible(!rootPane.isVisible());
     }
 
     public Stream<DashboardSection> sections() { return sectionsByID.values().stream(); }
@@ -168,16 +174,15 @@ public class Dashboard extends VBox {
         if (sectionsByID.containsKey(CommonDashboardID.ABOUT)) {
             sectionList.addLast(sectionsByID.get(CommonDashboardID.ABOUT));
         }
-        getChildren().setAll(sectionList.toArray(DashboardSection[]::new));
+        rootPane.getChildren().setAll(sectionList.toArray(DashboardSection[]::new));
     }
 
     public void setCompactMode(boolean compactMode) {
-        getChildren().clear();
+        rootPane.getChildren().clear();
         if (compactMode) {
-            sections().filter(Node::isVisible).forEach(getChildren()::add);
+            sections().filter(Node::isVisible).forEach(rootPane.getChildren()::add);
         } else {
-            sections().forEach(getChildren()::add);
+            sections().forEach(rootPane.getChildren()::add);
         }
     }
-
 }
