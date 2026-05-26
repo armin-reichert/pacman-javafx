@@ -8,6 +8,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
+import de.amr.pacmanfx.uilib.assets.Translator;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.RadioMenuItem;
@@ -69,14 +70,15 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
      */
     public PlaySceneContextMenu(GameUI ui) {
         final Game game = ui.gameContext().game();
+        final Translator translator = ui.translator();
 
-        addLocalizedTitleItem(this, ui, "scene_display");
-        addLocalizedActionItem(this, ui, ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
-        addLocalizedCheckBox(this, ui, GameUIConstants.PROPERTY_MINI_VIEW_ON, "pip");
+        addLocalizedTitleItem(this, translator, "scene_display");
+        addLocalizedActionItem(this, ui, translator, ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
+        addLocalizedCheckBox(this, translator, GameUIConstants.PROPERTY_MINI_VIEW_ON, "pip");
 
-        addLocalizedTitleItem(this, ui, "select_perspective");
+        addLocalizedTitleItem(this, translator, "select_perspective");
         for (PerspectiveID id : PerspectiveID.values()) {
-            final RadioMenuItem item = addLocalizedRadioButton(this, ui, "perspective_id_" + id.name());
+            final RadioMenuItem item = addLocalizedRadioButton(this, translator, "perspective_id_" + id.name());
             item.setUserData(id);
             item.setToggleGroup(perspectivesGroup);
 
@@ -87,13 +89,13 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
             item.setOnAction(_ -> GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(id));
         }
 
-        addLocalizedTitleItem(this, ui, "pacman");
-        addLocalizedCheckBox(this, ui, game.cheats().usingAutopilotProperty(), "autopilot");
-        addLocalizedCheckBox(this, ui, game.cheats().immuneProperty(), "immunity");
+        addLocalizedTitleItem(this, translator, "pacman");
+        addLocalizedCheckBox(this, translator, game.cheats().usingAutopilotProperty(), "autopilot");
+        addLocalizedCheckBox(this, translator, game.cheats().immuneProperty(), "immunity");
 
         addSeparator(this);
-        addLocalizedCheckBox(this, ui, GameUIConstants.PROPERTY_MUTED, "muted");
-        addLocalizedActionItem(this, ui, ACTION_QUIT_GAME_SCENE, "quit");
+        addLocalizedCheckBox(this, translator, GameUIConstants.PROPERTY_MUTED, "muted");
+        addLocalizedActionItem(this, ui, translator, ACTION_QUIT_GAME_SCENE, "quit");
 
         GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.addListener(perspectiveListener);
     }

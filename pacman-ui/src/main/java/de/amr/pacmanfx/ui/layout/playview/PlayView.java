@@ -71,12 +71,16 @@ public class PlayView implements View {
     private final ContextMenu contextMenu;
     private final Scene parentSceneFX;
     private StackPane rootPane;
-    private DecorationPane gameSceneDecorationPane;
-    private MiniGameView miniView;
+
     private BorderPane gameSceneLayer;
+    private DecorationPane gameSceneDecorationPane;
+
     private BorderPane overlayLayer;
-    private HelpLayer helpLayer;
     private Dashboard dashboard;
+    private MiniGameView miniView;
+
+    private HelpLayer helpLayer;
+
     private FontAwesomeIcon pausedIcon;
 
     private GameScene2D_Renderer sceneRenderer;

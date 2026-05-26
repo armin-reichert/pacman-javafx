@@ -164,11 +164,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
         final var menu = new ContextMenu();
 
-        final RadioMenuItem miScaledToFit = addLocalizedRadioButton(menu, ui, "scaled_to_fit");
+        final RadioMenuItem miScaledToFit = addLocalizedRadioButton(menu, ui.translator(), "scaled_to_fit");
         miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
         miScaledToFit.setOnAction(_ -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCALED_TO_FIT));
 
-        final RadioMenuItem miScrolling = addLocalizedRadioButton(menu, ui, "scrolling");
+        final RadioMenuItem miScrolling = addLocalizedRadioButton(menu, ui.translator(), "scrolling");
         miScrolling.setSelected(displayMode == SCROLLING);
         miScrolling.setOnAction(_ -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SCROLLING));
 
@@ -176,12 +176,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         miScaledToFit.setToggleGroup(toggleGroup);
         miScrolling.setToggleGroup(toggleGroup);
 
-        addLocalizedTitleItem(menu, ui, "pacman");
-        addLocalizedCheckBox(menu, ui, game.cheats().usingAutopilotProperty(), "autopilot");
-        addLocalizedCheckBox(menu, ui, game.cheats().immuneProperty(), "immunity");
+        addLocalizedTitleItem(menu, ui.translator(), "pacman");
+        addLocalizedCheckBox(menu, ui.translator(), game.cheats().usingAutopilotProperty(), "autopilot");
+        addLocalizedCheckBox(menu, ui.translator(), game.cheats().immuneProperty(), "immunity");
         addSeparator(menu);
-        addLocalizedCheckBox(menu, ui, GameUIConstants.PROPERTY_MUTED, "muted");
-        addLocalizedActionItem(menu, ui, ACTION_QUIT_GAME_SCENE, "quit");
+        addLocalizedCheckBox(menu, ui.translator(), GameUIConstants.PROPERTY_MUTED, "muted");
+        addLocalizedActionItem(menu, ui, ui.translator(), ACTION_QUIT_GAME_SCENE, "quit");
 
         return Optional.of(menu);
     }
