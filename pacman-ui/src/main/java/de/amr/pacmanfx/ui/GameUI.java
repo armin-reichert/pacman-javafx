@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.Translationmanager;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -73,6 +74,8 @@ public interface GameUI {
      * Implementations own and configure this stage.
      */
     Stage stage();
+
+    Scene scene();
 
     /**
      * @return the sound manager responsible for playing sound effects.

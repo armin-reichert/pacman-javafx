@@ -150,7 +150,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     private PlayView createPlayView() {
-        final var playView = new PlayView(this, scene, DEFAULT_DASHBOARD_CONFIG);
+        final var playView = new PlayView(this, DEFAULT_DASHBOARD_CONFIG);
 
         playView.configurePropertyBindings();
 
@@ -368,6 +368,12 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     // GameUI interface
+
+
+    @Override
+    public Scene scene() {
+        return scene;
+    }
 
     @Override
     public UIConfig config(String gameVariantName) {

@@ -67,7 +67,6 @@ public class PlayView implements View {
 
     private final GameUI ui;
     private final ContextMenu contextMenu;
-    private final Scene parentSceneFX;
     private StackPane rootPane;
 
     private BorderPane gameSceneLayer;
@@ -86,20 +85,18 @@ public class PlayView implements View {
 
     private final PlayViewGameEventHandler gameEventHandler;
 
-    public PlayView(GameUI ui, Scene parentSceneFX, DashboardConfig dashboardConfig) {
+    public PlayView(GameUI ui, DashboardConfig dashboardConfig) {
         requireNonNull(ui);
-        requireNonNull(parentSceneFX);
         requireNonNull(dashboardConfig);
 
         this.ui = ui;
-        this.parentSceneFX = parentSceneFX;
 
         createLayout(dashboardConfig);
 
         miniView.setUI(ui);
 
         contextMenu = new ContextMenu();
-        rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(this, parentSceneFX));
+        rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(this, ui.scene()));
 
         ui.gameContext().gameVariantNameProperty().addListener(new PlayViewGameVariantChangeHandler(this));
 
@@ -120,10 +117,6 @@ public class PlayView implements View {
 
     public ContextMenu contextMenu() {
         return contextMenu;
-    }
-
-    public Scene parentSceneFX() {
-        return parentSceneFX;
     }
 
     public DecorationPane decorationPane() {
