@@ -15,11 +15,9 @@ import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
-import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.layout.*;
-import de.amr.pacmanfx.ui.layout.playview.MiniGameView;
 import de.amr.pacmanfx.ui.layout.playview.PlayView;
 import de.amr.pacmanfx.ui.layout.playview.PlayViewContextMenuHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -431,23 +429,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
-    public Dashboard dashboard() {
-        return viewManager.playView().dashboard();
-    }
-
-    @Override
     public GameContext gameContext() {
         return gameContext;
-    }
-
-    @Override
-    public File initialEditorDir() {
-        return initialEditorDir;
-    }
-
-    @Override
-    public MiniGameView miniView() {
-        return viewManager.playView().miniView();
     }
 
     @Override
@@ -512,7 +495,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         GameUIConstants.PROPERTY_3D_WALL_OPACITY.set(currentConfig().worldConfig().maze().obstacleOpacity());
 
         logPreferences();
-        dashboard().init(this);
+        viewManager.playView().dashboard().init(this);
         viewManager.selectStartView(this);
         stage.centerOnScreen();
         stage.show();

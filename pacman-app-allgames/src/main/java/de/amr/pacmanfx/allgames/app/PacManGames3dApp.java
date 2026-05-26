@@ -134,7 +134,7 @@ public class PacManGames3dApp extends Application {
                 startPagesCarousel.startPages().forEach(startPage -> startPage.init(ui));
                 startPagesCarousel.setSelectedIndex(0);
 
-                ui.dashboard().addCommonSections(ui.translator(), DASHBOARD_IDs);
+                ui.viewManager().playView().dashboard().addCommonSections(ui.translator(), DASHBOARD_IDs);
             }
             configureDashboard();
             Logger.info("UI created {} builder", useBuilder ? "using" : "without");
@@ -172,7 +172,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void configureDashboard() {
-        final Dashboard dashboard = ui.dashboard();
+        final Dashboard dashboard = ui.viewManager().playView().dashboard();
 
         // Add Joypad controller section
         dashboard.addSection(

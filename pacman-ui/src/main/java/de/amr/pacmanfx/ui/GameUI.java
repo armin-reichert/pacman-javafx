@@ -7,9 +7,7 @@ package de.amr.pacmanfx.ui;
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.layout.ViewManager;
-import de.amr.pacmanfx.ui.layout.playview.MiniGameView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
@@ -161,15 +159,6 @@ public interface GameUI {
      * @return the manager responsible for all UI views (start pages, play view, editor, etc.).
      */
     ViewManager viewManager();
-
-    /**
-     * Convenience accessor for the dashboard inside the play view.
-     */
-    Dashboard dashboard();
-
-    MiniGameView miniView();
-
-    File initialEditorDir();
 
     // ---------------------------------------------------------------------------------------------
     // Config
