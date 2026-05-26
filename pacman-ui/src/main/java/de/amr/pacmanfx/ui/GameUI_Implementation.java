@@ -251,7 +251,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
             },
             gameContext.gameVariantNameProperty(),
             viewManager.currentViewProperty(),
-            playView().gameSceneProperty(),
+            playView().gameSceneManager().gameSceneProperty(),
             GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE,
             GameUIConstants.PROPERTY_3D_ENABLED,
             gameContext.clock().updatesDisabledProperty()
@@ -264,7 +264,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
                 : GameUIConstants.BACKGROUND_PAC_MAN_WALLPAPER,
             // depends on:
             viewManager.currentViewProperty(),
-            playView().gameSceneProperty()
+            playView().gameSceneManager().gameSceneProperty()
         ));
 
         gameContext.gameVariantNameProperty().addListener((_, _, _) -> {
@@ -424,7 +424,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public Optional<GameScene> optGameScene() {
-        return playView().optCurrentGameScene();
+        return playView().gameSceneManager().optCurrentGameScene();
     }
 
     @Override

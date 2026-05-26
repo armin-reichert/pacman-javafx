@@ -22,8 +22,6 @@ import de.amr.pacmanfx.ui.layout.View;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -36,8 +34,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
-
-import java.util.Optional;
 
 import static de.amr.pacmanfx.ui.GameSceneConfig.CommonSceneID;
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.border;
@@ -70,8 +66,6 @@ public class PlayView implements View {
 
     private final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
 
-    private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
-
     private final GameUI ui;
     private final ContextMenu contextMenu;
     private final Scene parentSceneFX;
@@ -91,12 +85,11 @@ public class PlayView implements View {
     private GameScene2D_Renderer sceneRenderer;
     private HeadsUpDisplay_Renderer hudRenderer;
 
-    private final PlayViewGameEventHandler gameEventHandler = new PlayViewGameEventHandler(this);
-    private final ChangeListener<GameScene> gameSceneChangeHandler;
-    private final ChangeListener<? super Number> parentSceneSizeChangeHandler;
+    private final PlayViewGameEventHandler gameEventHandler;
+    private final PlayViewGameSceneEmbedder gameSceneEmbedder;
+    private final GameSceneManager gameSceneManager;
 
-    private final PlayViewGameSceneEmbedder gameSceneEmbedder = new PlayViewGameSceneEmbedder();
-    private final GameSceneSwitchHandler gameSceneSwitchHandler = new GameSceneSwitchHandler();
+    private final ChangeListener<? super Number> parentSceneSizeChangeHandler;
 
     public PlayView(GameUI ui, Scene parentSceneFX, DashboardConfig dashboardConfig) {
         requireNonNull(ui);
@@ -107,7 +100,6 @@ public class PlayView implements View {
         this.parentSceneFX = parentSceneFX;
 
         createLayout(dashboardConfig);
-        configurePropertyBindings();
 
         miniView.setUI(ui);
 
@@ -116,17 +108,22 @@ public class PlayView implements View {
 
         ui.gameContext().gameVariantNameProperty().addListener(new PlayViewGameVariantChangeHandler(this));
 
-        gameSceneChangeHandler = (_, _, gameScene) -> {
-            contextMenu.hide();
-            if (gameScene != null) {
-                gameSceneEmbedder.embedGameScene(ui, this, gameScene);
-            }
-        };
         parentSceneSizeChangeHandler = (_, _, _) -> gameSceneDecorationPane.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
+
+        gameEventHandler = new PlayViewGameEventHandler(this);
+        gameSceneEmbedder = new PlayViewGameSceneEmbedder(this);
+        gameSceneManager = new GameSceneManager(ui, gameSceneEmbedder);
+
+        // must be done after the managers/handlers etc. have been created
+        configurePropertyBindings();
     }
 
     public PlayViewGameEventHandler gameEventHandler() {
         return gameEventHandler;
+    }
+
+    public GameSceneManager gameSceneManager() {
+        return gameSceneManager;
     }
 
     public PlayViewGameSceneEmbedder embedder() {
@@ -141,9 +138,6 @@ public class PlayView implements View {
         return contextMenu;
     }
 
-    public ObjectProperty<GameScene> gameSceneProperty() {
-        return gameScene;
-    }
 
     public Scene parentSceneFX() {
         return parentSceneFX;
@@ -151,10 +145,6 @@ public class PlayView implements View {
 
     public DecorationPane decorationPane() {
         return gameSceneDecorationPane;
-    }
-
-    public Optional<GameScene> optCurrentGameScene() {
-        return Optional.ofNullable(gameScene.get());
     }
 
     public MiniGameView miniView() {
@@ -168,10 +158,6 @@ public class PlayView implements View {
     public void showHelp(GameUI ui) {
         final double scaling = gameSceneDecorationPane.scalingProperty().get();
         helpLayer.showHelpPopup(ui, scaling, ui.gameContext().gameVariantName());
-    }
-
-    public void forceGameSceneUpdate() {
-        updateGameScene(true);
     }
 
     public void setGameSceneContent(Node gameSceneContent) {
@@ -191,7 +177,7 @@ public class PlayView implements View {
     public void onKeyboardInput(GameUI ui) {
         actionBindings.matchingAction().ifPresentOrElse(
             action -> action.execute(ui),
-            () -> optCurrentGameScene().ifPresent(GameScene::onInput)
+            () -> gameSceneManager.optCurrentGameScene().ifPresent(GameScene::onInput)
         );
     }
 
@@ -215,7 +201,7 @@ public class PlayView implements View {
     public void render() {
 
         // Render current 2D game scene
-        final GameScene gameScene = optCurrentGameScene().orElse(null);
+        final GameScene gameScene = gameSceneManager.optCurrentGameScene().orElse(null);
         if (gameScene instanceof GameScene2D gameScene2D) {
             final Game game = ui.gameContext().game();
             if (sceneRenderer != null) {
@@ -235,29 +221,6 @@ public class PlayView implements View {
         if (overlayLayer.isVisible()) {
             dashboard.update(ui);
         }
-    }
-
-    public void updateGameScene(boolean forceReload) {
-        final Game game = ui.gameContext().game();
-        final GameScene prevGameScene = optCurrentGameScene().orElse(null);
-        final GameScene nextGameScene = ui.currentGameSceneConfig().selectGameScene(ui, game).orElseThrow();
-
-        if (nextGameScene == prevGameScene && !forceReload) {
-            return;
-        }
-
-        if (prevGameScene != null) {
-            prevGameScene.deactivate();
-        }
-
-        nextGameScene.onEmbedded(); // Must be called *before* embedding
-        gameSceneEmbedder.embedGameScene(ui, this, nextGameScene);
-        nextGameScene.activate();
-
-        game.optGameLevel().ifPresent(level -> gameSceneSwitchHandler.handleGameSceneSwitch(
-            ui.currentConfig(), level, prevGameScene, nextGameScene));
-
-        gameSceneProperty().set(nextGameScene);
     }
 
     public void updateGameSceneRenderers(GameScene2D gameScene2D) {
@@ -305,14 +268,14 @@ public class PlayView implements View {
     }
 
     private void addListeners() {
-        gameScene.addListener(gameSceneChangeHandler);
+        //gameScene.addListener(gameSceneChangeHandler);
         parentSceneFX.widthProperty() .addListener(parentSceneSizeChangeHandler);
         parentSceneFX.heightProperty().addListener(parentSceneSizeChangeHandler);
         gameSceneDecorationPane.installBindings();
     }
 
     private void removeListeners() {
-        gameScene.removeListener(gameSceneChangeHandler);
+        //gameScene.removeListener(gameSceneChangeHandler);
         parentSceneFX.widthProperty().removeListener(parentSceneSizeChangeHandler);
         parentSceneFX.heightProperty().removeListener(parentSceneSizeChangeHandler);
         gameSceneDecorationPane.uninstallBindings();
@@ -332,7 +295,7 @@ public class PlayView implements View {
 
         miniView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> GameUIConstants.PROPERTY_MINI_VIEW_ON.get() && ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D),
-            GameUIConstants.PROPERTY_MINI_VIEW_ON, gameScene
+            GameUIConstants.PROPERTY_MINI_VIEW_ON, gameSceneManager.gameSceneProperty()
         ));
     }
 

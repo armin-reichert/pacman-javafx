@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.layout.playview;
 
 import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameSceneConfig;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
@@ -15,11 +15,17 @@ import org.tinylog.Logger;
 
 public class PlayViewGameSceneEmbedder {
 
-    public void embedGameScene(GameUI ui, PlayView playView, GameScene gameScene) {
+    private final PlayView playView;
+
+    public PlayViewGameSceneEmbedder(PlayView playView) {
+        this.playView = playView;
+    }
+
+    public void embedGameScene(GameSceneConfig gameSceneConfig, GameScene gameScene) {
         if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameSceneWithSubSceneFX(playView, gameScene, gameScene.optSubSceneFX().get());
+            embedGameSceneWithSubSceneFX(gameScene, gameScene.optSubSceneFX().get());
         } else if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2D(ui, playView, gameScene2D);
+            embedGameScene2D(gameSceneConfig, gameScene2D);
         } else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }
@@ -27,7 +33,7 @@ public class PlayViewGameSceneEmbedder {
 
 
     // 3D scenes or 2D scenes with camera
-    private void embedGameSceneWithSubSceneFX(PlayView playView, GameScene gameScene, SubScene subSceneFX) {
+    private void embedGameSceneWithSubSceneFX(GameScene gameScene, SubScene subSceneFX) {
         // stretch sub scene to available space
         subSceneFX.widthProperty().bind(playView.parentSceneFX().widthProperty());
         subSceneFX.heightProperty().bind(playView.parentSceneFX().heightProperty());
@@ -41,9 +47,9 @@ public class PlayViewGameSceneEmbedder {
     }
 
     // 2D scenes without camera which are shown at full size
-    private void embedGameScene2D(GameUI ui, PlayView playView, GameScene2D gameScene2D) {
+    private void embedGameScene2D(GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
         final DecorationPane decorationPane = playView.decorationPane();
-        final boolean decorated = ui.currentGameSceneConfig().sceneDecorationRequested(gameScene2D);
+        final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene2D);
 
         if (decorated) {
             // set unscaled decoration pane size to game scene (=world map) size

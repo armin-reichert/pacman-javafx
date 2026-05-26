@@ -37,8 +37,8 @@ public class PlayViewGameEventHandler extends DefaultGameEventListener {
                 playView.miniView().setGameLevel(level);
                 playView.miniView().slideIn();
                 // size of game scene might have changed, so re-embed
-                playView.optCurrentGameScene().ifPresent(gameScene ->
-                    playView.embedder().embedGameScene(ui, playView, gameScene));
+                playView.gameSceneManager().optCurrentGameScene().ifPresent(gameScene ->
+                    playView.embedder().embedGameScene(ui.currentGameSceneConfig(), gameScene));
             }
 
             case GameStateChangeEvent stateChangeEvent -> {
@@ -47,14 +47,15 @@ public class PlayViewGameEventHandler extends DefaultGameEventListener {
                 }
             }
 
-            case GenericChangeEvent _ -> playView.forceGameSceneUpdate();
+            case GenericChangeEvent _ -> playView.gameSceneManager().forceGameSceneUpdate(ui);
 
             default -> {}
         }
 
-        playView.updateGameScene(false);
+        playView.gameSceneManager().updateGameScene(ui, false);
 
         // Call game event handler for current game scene
-        playView.optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
+        playView.gameSceneManager().optCurrentGameScene().ifPresent(
+            gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
     }
 }

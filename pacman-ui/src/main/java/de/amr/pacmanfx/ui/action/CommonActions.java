@@ -311,7 +311,7 @@ public final class CommonActions {
             }
             if (canSwitchSceneNow(game)) {
                 final PlayView playView = ui.views().getView(ViewID.PLAY_VIEW, PlayView.class);
-                playView.forceGameSceneUpdate();
+                playView.gameSceneManager().forceGameSceneUpdate(ui);
             }
         }
 

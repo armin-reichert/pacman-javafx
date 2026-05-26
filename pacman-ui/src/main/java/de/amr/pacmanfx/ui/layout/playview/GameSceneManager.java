@@ -1,18 +1,74 @@
 package de.amr.pacmanfx.ui.layout.playview;
 
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.GameSceneConfig;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
-public class GameSceneSwitchHandler {
+import java.util.Objects;
+import java.util.Optional;
 
-    public void handleGameSceneSwitch(UIConfig uiConfig, GameLevel level, GameScene prevGameScene, GameScene nextGameScene) {
+public class GameSceneManager {
+
+    private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
+    private final PlayViewGameSceneEmbedder embedder;
+
+    public GameSceneManager(GameUI ui, PlayViewGameSceneEmbedder embedder) {
+        this.embedder = Objects.requireNonNull(embedder);
+        gameScene.addListener((_, _, gameScene) -> {
+//            contextMenu.hide();
+            if (gameScene != null) {
+                embedder.embedGameScene(ui.currentGameSceneConfig(), gameScene);
+            }
+        });
+    }
+
+    public Optional<GameScene> optCurrentGameScene() {
+        return Optional.ofNullable(gameScene.get());
+    }
+
+    public ObjectProperty<GameScene> gameSceneProperty() {
+        return gameScene;
+    }
+
+    public void forceGameSceneUpdate(GameUI ui) {
+        updateGameScene(ui, true);
+    }
+
+    public void updateGameScene(GameUI ui, boolean forceReload) {
+        final Game game = ui.gameContext().game();
+        final GameScene prevGameScene = optCurrentGameScene().orElse(null);
+        final GameScene nextGameScene = ui.currentGameSceneConfig().selectGameScene(ui, game).orElseThrow();
+
+        if (nextGameScene == prevGameScene && !forceReload) {
+            return;
+        }
+
+        if (prevGameScene != null) {
+            prevGameScene.deactivate();
+        }
+
+        nextGameScene.onEmbedded(); // Must be called *before* embedding
+        embedder.embedGameScene(ui.currentGameSceneConfig(), nextGameScene);
+
+        nextGameScene.activate();
+
+        game.optGameLevel().ifPresent(level -> handleGameSceneSwitch(ui.currentConfig(), level, prevGameScene, nextGameScene));
+
+        gameSceneProperty().set(nextGameScene);
+    }
+
+    private void handleGameSceneSwitch(UIConfig uiConfig, GameLevel level, GameScene prevGameScene, GameScene nextGameScene) {
         // Handle switching between 2D and 3D play scene view
         final GameSceneSwitchType sceneSwitchType = identifySceneSwitchType(prevGameScene, nextGameScene);
         switch (sceneSwitchType) {
