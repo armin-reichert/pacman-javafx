@@ -314,10 +314,7 @@ public class PlayView implements View {
     }
 
     private void configurePropertyBindings() {
-        pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> ui.gameContext().clock().getUpdatesDisabled(),
-            ui.gameContext().clock().updatesDisabledProperty())
-        );
+        pausedIcon.visibleProperty().bind(ui.gameContext().clock().updatesDisabledProperty());
 
         GameUIConstants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smooth) ->
             gameSceneDecorationPane.canvas().getGraphicsContext2D().setFontSmoothingType(
