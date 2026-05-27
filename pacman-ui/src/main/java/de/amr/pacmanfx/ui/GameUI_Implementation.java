@@ -249,7 +249,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         scene.setOnKeyPressed(e -> actionBindings.matchingAction(keyboard)
             .ifPresentOrElse(action -> {
                 if (action.executeIfEnabled(this)) e.consume();
-            }, () -> viewManager.currentView().onKeyboardInput(this)
+            }, () -> viewManager.currentView().onInput(this)
         ));
         scene.setOnScroll(e -> optGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
     }

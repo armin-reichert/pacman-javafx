@@ -30,7 +30,7 @@ public interface View {
      *
      * @param ui the global game UI façade
      */
-    default void onKeyboardInput(GameUI ui) {
+    default void onInput(GameUI ui) {
         actionBindings().matchingAction(Input.instance().keyboard).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
     }
 
