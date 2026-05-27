@@ -26,7 +26,7 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
     }
 
     private void addRows(GameUI ui, View view) {
-        final Map<KeyCodeCombination, GameAction> bindingMap = view.actionBindings().keyCombinationToActionMap();
+        final Map<KeyCodeCombination, GameAction> bindingMap = view.actionBindings().actionForKeyCombination();
         if (bindingMap.isEmpty()) {
             addRow(createLabel(NO_INFO, false));
         }

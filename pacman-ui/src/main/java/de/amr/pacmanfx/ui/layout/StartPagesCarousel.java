@@ -89,7 +89,7 @@ public class StartPagesCarousel extends Carousel implements View {
         actionBindings.add(actionShowNextPage, bare(KeyCode.RIGHT));
         actionBindings.add(CommonActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
         actionBindings.add(CommonActions.ACTION_TOGGLE_PAUSED, bare(KeyCode.P));
-        actionBindings.assignToKeyboard();
+        actionBindings.register();
         restartProgressTimer();
         currentStartPage().ifPresent(page -> page.layoutRoot().requestFocus());
     }
@@ -97,7 +97,7 @@ public class StartPagesCarousel extends Carousel implements View {
     @Override
     public void onExit() {
         pauseProgressTimer();
-        actionBindings.removeFromKeyboard();
+        actionBindings.unregister();
         currentStartPage().ifPresent(startPage -> startPage.onExitStartPage(ui));
     }
 

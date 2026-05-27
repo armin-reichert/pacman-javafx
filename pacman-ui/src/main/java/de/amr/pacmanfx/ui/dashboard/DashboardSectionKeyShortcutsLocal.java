@@ -32,7 +32,7 @@ public class DashboardSectionKeyShortcutsLocal extends DashboardSection {
             addRow(createLabel(NO_INFO, false));
         }
         else {
-            actionBindings.keyCombinationToActionMap().entrySet().stream()
+            actionBindings.actionForKeyCombination().entrySet().stream()
                 .sorted(Comparator.comparing(e -> e.getKey().getDisplayText()))
                 .forEach(entry -> {
                     final KeyCombination keyCombination = entry.getKey();

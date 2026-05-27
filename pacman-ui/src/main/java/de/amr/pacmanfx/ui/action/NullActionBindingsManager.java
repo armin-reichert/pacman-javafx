@@ -23,7 +23,7 @@ public class NullActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public Map<KeyCodeCombination, GameAction> keyCombinationToActionMap() {
+    public Map<KeyCodeCombination, GameAction> actionForKeyCombination() {
         return Map.of();
     }
 
@@ -33,10 +33,10 @@ public class NullActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void assignToKeyboard() {}
+    public void register() {}
 
     @Override
-    public void removeFromKeyboard() {}
+    public void unregister() {}
 
     @Override
     public void addAny(GameAction action, Set<ActionBinding> bindings) {

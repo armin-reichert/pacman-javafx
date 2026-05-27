@@ -269,7 +269,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         actionBindingsManager.addAny(CommonActions.ACTION_OPEN_EDITOR,             GameUIConstants.COMMON_BINDINGS);
         actionBindingsManager.addAny(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
         actionBindingsManager.addAny(CommonActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
-        actionBindingsManager.assignToKeyboard();
+        actionBindingsManager.register();
     }
 
     private void initScene() {

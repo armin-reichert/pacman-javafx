@@ -29,8 +29,8 @@ import java.util.Set;
  *
  * <h2>Lifecycle</h2>
  * <ul>
- *   <li>{@link #assignToKeyboard()} registers all known bindings with the keyboard.</li>
- *   <li>{@link #removeFromKeyboard()} unregisters them again.</li>
+ *   <li>{@link #register()} registers all known bindings with the keyboard.</li>
+ *   <li>{@link #unregister()} unregisters them again.</li>
  *   <li>{@link #dispose()} frees any internal resources (if needed).</li>
  * </ul>
  *
@@ -50,7 +50,7 @@ public interface ActionBindingsManager extends Disposable {
      *
      * @return a map from {@link KeyCombination} to {@link GameAction}
      */
-    Map<KeyCodeCombination, GameAction> keyCombinationToActionMap();
+    Map<KeyCodeCombination, GameAction> actionForKeyCombination();
 
     /**
      * Determines whether the current keyboard state matches any registered action.
@@ -75,14 +75,14 @@ public interface ActionBindingsManager extends Disposable {
      * This typically means registering listeners or updating internal keyboard state
      * so that {@link #matchingAction()} can resolve actions.
      */
-    void assignToKeyboard();
+    void register();
 
     /**
      * Removes all bindings previously activated on the given keyboard.
      * <p>
      * After calling this method, no key combinations should trigger actions.
      */
-    void removeFromKeyboard();
+    void unregister();
 
     /**
      * Assigns a new key combination to the given action, replacing any previous binding.

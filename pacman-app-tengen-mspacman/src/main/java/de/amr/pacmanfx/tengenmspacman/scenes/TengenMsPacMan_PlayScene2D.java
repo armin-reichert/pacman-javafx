@@ -210,7 +210,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             actionBindings.addAny(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
         }
         Input.instance().joypad.setBindings(actionBindings);
-        actionBindings.assignToKeyboard();
+        actionBindings.register();
 
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         unscaledWidthProperty().set(terrainSize.x());
