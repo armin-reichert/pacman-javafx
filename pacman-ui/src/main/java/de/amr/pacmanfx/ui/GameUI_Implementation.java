@@ -166,26 +166,26 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
         final ActionBindingsManager actionBindings = playView.actionBindings();
 
-        actionBindings.addAny(ACTION_BOOT_SHOW_PLAY_VIEW, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_ENTER_FULLSCREEN, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_QUIT_GAME_SCENE, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_SHOW_HELP, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_SIMULATION_SLOWER, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_SIMULATION_SLOWEST, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_SIMULATION_FASTER, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_SIMULATION_FASTEST, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_SIMULATION_RESET, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_SIMULATION_ONE_STEP, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_SIMULATION_TEN_STEPS, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_TOGGLE_AUTOPILOT, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_TOGGLE_DEBUG_INFO, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_TOGGLE_MUTED, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_TOGGLE_PAUSED, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_TOGGLE_COLLISION_STRATEGY, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_TOGGLE_DASHBOARD, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_TOGGLE_IMMUNITY, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.addAny(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_BOOT_SHOW_PLAY_VIEW, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_ENTER_FULLSCREEN, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_QUIT_GAME_SCENE, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_SHOW_HELP, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_SIMULATION_SLOWER, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_SIMULATION_SLOWEST, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_SIMULATION_FASTER, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_SIMULATION_FASTEST, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_SIMULATION_RESET, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_SIMULATION_ONE_STEP, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_SIMULATION_TEN_STEPS, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_AUTOPILOT, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_DEBUG_INFO, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_MUTED, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_PAUSED, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_COLLISION_STRATEGY, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_DASHBOARD, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_IMMUNITY, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GameUIConstants.COMMON_BINDINGS);
 
         return playView;
     }
@@ -265,10 +265,10 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     private void initGlobalActionBindings() {
-        actionBindingsManager.addAny(CommonActions.ACTION_ENTER_FULLSCREEN,        GameUIConstants.COMMON_BINDINGS);
-        actionBindingsManager.addAny(CommonActions.ACTION_OPEN_EDITOR,             GameUIConstants.COMMON_BINDINGS);
-        actionBindingsManager.addAny(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
-        actionBindingsManager.addAny(CommonActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyBindingFromSet(CommonActions.ACTION_ENTER_FULLSCREEN,        GameUIConstants.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyBindingFromSet(CommonActions.ACTION_OPEN_EDITOR,             GameUIConstants.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyBindingFromSet(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
+        actionBindingsManager.registerAnyBindingFromSet(CommonActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
         actionBindingsManager.register();
     }
 

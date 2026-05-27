@@ -90,7 +90,7 @@ public interface ActionBindingsManager extends Disposable {
      * @param action      the action to rebind
      * @param combination the new key combination
      */
-    void add(GameAction action, KeyCodeCombination combination);
+    void setKeyCombinationFor(GameAction action, KeyCodeCombination combination);
 
     /**
      * Registers exactly one binding for the given action from the provided set.
@@ -101,7 +101,7 @@ public interface ActionBindingsManager extends Disposable {
      * @param action         the action to bind
      * @param bindings the candidate bindings
      */
-    void addAny(GameAction action, Set<ActionBinding> bindings);
+    void registerAnyBindingFromSet(GameAction action, Set<ActionBinding> bindings);
 
     /**
      * Registers all provided bindings.
@@ -111,5 +111,5 @@ public interface ActionBindingsManager extends Disposable {
      *
      * @param bindings the bindings to register
      */
-    void addAll(Set<ActionBinding> bindings);
+    void registerAllBindings(Set<ActionBinding> bindings);
 }

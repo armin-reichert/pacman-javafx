@@ -39,15 +39,15 @@ public class NullActionBindingsManager implements ActionBindingsManager {
     public void unregister() {}
 
     @Override
-    public void addAny(GameAction action, Set<ActionBinding> bindings) {
+    public void registerAnyBindingFromSet(GameAction action, Set<ActionBinding> bindings) {
     }
 
     @Override
-    public void add(GameAction action, KeyCodeCombination combination) {
+    public void setKeyCombinationFor(GameAction action, KeyCodeCombination combination) {
     }
 
     @Override
-    public void addAll(Set<ActionBinding> bindings) {
+    public void registerAllBindings(Set<ActionBinding> bindings) {
     }
 
     @Override

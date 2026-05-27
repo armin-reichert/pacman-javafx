@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -79,12 +80,14 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         final TengenMsPacMan_GameModel game = gameContext().game();
         game.hud().hide();
 
-        actionBindings.addAny(ACTION_START_PLAYING, TENGEN_SPECIFIC_BINDINGS);
-        actionBindings.addAny(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TENGEN_SPECIFIC_BINDINGS);
-        actionBindings.add(actionSelectNextJoypadBinding, alt(KeyCode.J));
-        actionBindings.addAll(GameUIConstants.SCENE_TESTS_BINDINGS);
+        final Joypad joypad = Input.instance().joypad;
 
-        Input.instance().joypad.setBindings(actionBindings);
+        actionBindings.registerAnyBindingFromSet(ACTION_START_PLAYING, TENGEN_SPECIFIC_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TENGEN_SPECIFIC_BINDINGS);
+        actionBindings.setKeyCombinationFor(actionSelectNextJoypadBinding, alt(KeyCode.J));
+        actionBindings.registerAllBindings(GameUIConstants.SCENE_TESTS_BINDINGS);
+
+        joypad.setBindings(actionBindings);
 
         selectedOption.set(OPTION_PAC_BOOSTER);
         game.setCanStartNewGame(true);

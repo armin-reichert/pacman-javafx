@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -65,10 +66,9 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     public void onActivate() {
         final UIConfig uiConfig = ui.currentConfig();
 
-        actionBindings.add(
-            ACTION_LET_GAME_STATE_EXPIRE,
-            Input.instance().joypad.keyForButton(JoypadButton.START)
-        );
+        // Quit cut scene when "START" button on "joypad" is pressed
+        final Joypad joypad = Input.instance().joypad;
+        actionBindings.setKeyCombinationFor(ACTION_LET_GAME_STATE_EXPIRE, joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(2, "THE CHASE");
         clapperboard.setPosition(3 * TS, 10 * TS);

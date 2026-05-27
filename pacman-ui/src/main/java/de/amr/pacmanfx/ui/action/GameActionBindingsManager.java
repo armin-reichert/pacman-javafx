@@ -73,14 +73,14 @@ public class GameActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void add(GameAction action, KeyCodeCombination combination) {
+    public void setKeyCombinationFor(GameAction action, KeyCodeCombination combination) {
         requireNonNull(action);
         requireNonNull(combination);
         actionForKeyCombination.put(combination, action);
     }
 
     @Override
-    public void addAny(GameAction gameAction, Set<ActionBinding> bindings) {
+    public void registerAnyBindingFromSet(GameAction gameAction, Set<ActionBinding> bindings) {
         requireNonNull(gameAction);
         requireNonNull(bindings);
         bindings.stream()
@@ -90,7 +90,8 @@ public class GameActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void addAll(Set<ActionBinding> bindings) {
+    public void registerAllBindings(Set<ActionBinding> bindings) {
+        requireNonNull(bindings);
         for (ActionBinding binding : bindings) {
             registerBinding(binding);
         }
@@ -105,6 +106,7 @@ public class GameActionBindingsManager implements ActionBindingsManager {
     }
 
     private void registerBinding(ActionBinding binding) {
+        requireNonNull(binding);
         for (KeyCodeCombination combination : binding.keyCombinations()) {
             actionForKeyCombination.put(combination, binding.gameAction());
         }
@@ -116,5 +118,4 @@ public class GameActionBindingsManager implements ActionBindingsManager {
             .sorted(Comparator.comparing(e -> e.getKey().toString()))
             .forEach(e -> Logger.info("%-20s: %s".formatted(e.getKey(), e.getValue().resourceBundleKey())));
     }
-
 }

@@ -200,14 +200,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         ui.soundManager().setEnabled(!level.isDemoLevel()); //TODO is this needed?
 
         if (level.isDemoLevel()) {
-            actionBindings.addAny(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
-            actionBindings.addAny(ACTION_QUIT_DEMO_LEVEL, TENGEN_SPECIFIC_BINDINGS);
+            actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
+            actionBindings.registerAnyBindingFromSet(ACTION_QUIT_DEMO_LEVEL, TENGEN_SPECIFIC_BINDINGS);
         } else {
             // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
-            actionBindings.addAll(STEERING_BINDINGS);
-            actionBindings.addAll(GameUIConstants.CHEAT_ACTION_BINDINGS);
-            actionBindings.addAny(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
-            actionBindings.addAny(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
+            actionBindings.registerAllBindings(STEERING_BINDINGS);
+            actionBindings.registerAllBindings(GameUIConstants.CHEAT_ACTION_BINDINGS);
+            actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
+            actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
         }
         Input.instance().joypad.setBindings(actionBindings);
         actionBindings.register();
