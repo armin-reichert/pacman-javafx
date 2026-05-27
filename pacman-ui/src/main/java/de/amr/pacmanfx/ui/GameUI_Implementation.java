@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.layout.playview.PlayView;
 import de.amr.pacmanfx.ui.layout.playview.PlayViewContextMenuHandler;
@@ -34,19 +35,14 @@ import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -207,61 +203,18 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         clock.setErrorHandler(this::ka_tas_tro_phe);
     }
 
+    // First child is placeholder for the current view (start view, play view, editor view)
     private void initRootPane(int width, int height) {
         rootPane.setPrefSize(width, height);
-        // First child is placeholder for the current view (start view, play view, editor view)
-        rootPane.getChildren().addAll(new Region(), statusIconBox, flashMessageView, createKeyboardMonitor());
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
-    }
-
-    private Node createKeyboardMonitor() {
-        final VBox box = new VBox();
-        box.setAlignment(Pos.TOP_CENTER);
-        box.setBackground(Background.fill(Color.TRANSPARENT));
-        box.setPrefSize(300, 50);
-        box.setMaxSize(300, 200);
-        box.setSpacing(3);
-        box.setStyle("""
-    -fx-border-color: #ccc;
-    -fx-border-width: 2;
-    -fx-border-radius: 12;
-    -fx-background-radius: 12;
-""");
-        StackPane.setMargin(box, new Insets(10));
-        StackPane.setAlignment(box, Pos.TOP_RIGHT);
-        box.visibleProperty().bind(GameUIConstants.PROPERTY_KEYBOARD_MONITOR_VISIBLE);
-
-        Input.instance().keyboard.addListener(keyboard -> {
-            box.getChildren().clear();
-
-            final Font titleFont = Font.font("Sans", FontWeight.BLACK, 16);
-            final Text title = new Text("Keyboard State");
-            title.setFill(Color.WHITE);
-            title.setFont(titleFont);
-            VBox.setMargin(title, new Insets(4));
-            box.getChildren().add(title);
-
-            final Text closeHint = new Text("Press Alt+K to close");
-            closeHint.setFill(Color.WHITE);
-            closeHint.setFont(titleFont);
-            VBox.setMargin(closeHint, new Insets(4));
-            box.getChildren().add(closeHint);
-
-            final Font labelFont = Font.font("Monospace", FontWeight.BOLD, 16);
-            keyboard.pressedKeys().stream().sorted().forEach(keyCode -> {
-                final Text stateLabel = new Text();
-                stateLabel.setFill(Color.LIGHTGRAY);
-                stateLabel.setFont(labelFont);
-                String modText = "";
-                if (keyboard.altDown()) modText += "Alt ";
-                if (keyboard.shiftDown()) modText += "Shift ";
-                if (keyboard.controlDown()) modText += "Control ";
-                if (keyboard.metaDown()) modText += "Meta ";
-                stateLabel.setText(modText + keyCode.getName());
-                box.getChildren().add(stateLabel);
-            });
-        });
-        return box;
+        final Region viewPlaceholder = new Region();
+        final KeyboardInfo keyboardInfo = new KeyboardInfo();
+        keyboardInfo.rootPane().setAlignment(Pos.TOP_CENTER);
+        rootPane.getChildren().addAll(
+            viewPlaceholder,
+            statusIconBox,
+            flashMessageView,
+            keyboardInfo.rootPane());
     }
 
     private void initPropertyBindings() {
