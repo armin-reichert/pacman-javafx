@@ -17,6 +17,21 @@ import static java.util.Objects.requireNonNull;
 
 public class Dashboard {
 
+    private static final EnumMap<CommonDashboardID, Boolean> MAXIMIZED = new EnumMap<>(CommonDashboardID.class);
+    static {
+        MAXIMIZED.put(CommonDashboardID.ABOUT, true);
+        MAXIMIZED.put(CommonDashboardID.ACTOR_INFO, true);
+        MAXIMIZED.put(CommonDashboardID.ANIMATION_INFO, true);
+        MAXIMIZED.put(CommonDashboardID.CUSTOM_MAPS, true);
+        MAXIMIZED.put(CommonDashboardID.GENERAL, false);
+        MAXIMIZED.put(CommonDashboardID.GAME_CONTROL, false);
+        MAXIMIZED.put(CommonDashboardID.GAME_INFO, true);
+        MAXIMIZED.put(CommonDashboardID.KEYS_GLOBAL, true);
+        MAXIMIZED.put(CommonDashboardID.KEYS_LOCAL, false);
+        MAXIMIZED.put(CommonDashboardID.README, false);
+        MAXIMIZED.put(CommonDashboardID.SETTINGS_3D, true);
+    }
+
     private static DashboardSection createCommonSection(Dashboard dashboard, DashboardID id) {
         requireNonNull(dashboard);
         requireNonNull(id);
@@ -55,22 +70,12 @@ public class Dashboard {
         };
     }
 
-    private static boolean isCommonSectionMaximizedByDefault(DashboardID id) {
+    private static boolean isSectionMaximizedByDefault(DashboardID id) {
         requireNonNull(id);
-        return switch (id) {
-            case CommonDashboardID.ABOUT          -> true;
-            case CommonDashboardID.ACTOR_INFO     -> true;
-            case CommonDashboardID.ANIMATION_INFO -> true;
-            case CommonDashboardID.CUSTOM_MAPS    -> true;
-            case CommonDashboardID.GENERAL        -> false;
-            case CommonDashboardID.GAME_CONTROL   -> false;
-            case CommonDashboardID.GAME_INFO      -> true;
-            case CommonDashboardID.KEYS_GLOBAL    -> true;
-            case CommonDashboardID.KEYS_LOCAL     -> false;
-            case CommonDashboardID.README         -> false;
-            case CommonDashboardID.SETTINGS_3D    -> true;
-            default -> throw new IllegalArgumentException("Illegal dashboard ID: " + id);
-        };
+        if (id instanceof CommonDashboardID commonID) {
+            return MAXIMIZED.getOrDefault(commonID, false);
+        }
+        return false;
     }
 
     private static DashboardSection configure(DashboardSection section, String title, boolean maximized) {
@@ -81,12 +86,12 @@ public class Dashboard {
 
     private final VBox rootPane = new VBox();
 
-    private final Map<DashboardID, DashboardSection> sectionsByID = new LinkedHashMap<>();
-    private final DashboardConfig dashboardConfig;
+    private final Map<DashboardID, DashboardSection> sections = new LinkedHashMap<>();
+    private final DashboardConfig config;
 
-    public Dashboard(DashboardConfig dashboardConfig) {
-        this.dashboardConfig = requireNonNull(dashboardConfig);
-        rootPane.visibleProperty().addListener((_, ignored, visible) -> {
+    public Dashboard(DashboardConfig config) {
+        this.config = requireNonNull(config);
+        rootPane.visibleProperty().addListener((_, _, visible) -> {
             if (visible) {
                 updateLayout();
             }
@@ -98,15 +103,17 @@ public class Dashboard {
         return rootPane;
     }
 
-    public DashboardConfig style() {
-        return dashboardConfig;
+    public DashboardConfig config() {
+        return config;
     }
 
     public void init(GameUI ui) {
+        requireNonNull(ui);
         sections().forEach(infoBox -> infoBox.init(ui));
     }
 
     public void update(GameUI ui) {
+        requireNonNull(ui);
         sections().filter(DashboardSection::isExpanded).forEach(section -> section.update(ui));
     }
 
@@ -114,10 +121,11 @@ public class Dashboard {
         rootPane.setVisible(!rootPane.isVisible());
     }
 
-    public Stream<DashboardSection> sections() { return sectionsByID.values().stream(); }
+    public Stream<DashboardSection> sections() { return sections.values().stream(); }
 
     public void removeSection(DashboardID id) {
-        sectionsByID.remove(id);
+        requireNonNull(id);
+        sections.remove(id);
         updateLayout();
     }
 
@@ -131,15 +139,15 @@ public class Dashboard {
         requireNonNull(translator);
         requireNonNull(id);
         final DashboardSection section = createCommonSection(this, id);
-        final boolean maximized = isCommonSectionMaximizedByDefault(id);
-        sectionsByID.put(id, configure(section, translator.translate(titleKey(id)), maximized));
+        final boolean maximized = isSectionMaximizedByDefault(id);
+        sections.put(id, configure(section, translator.translate(titleKey(id)), maximized));
     }
 
     public void addSection(DashboardID id, DashboardSection section, String title, boolean maximized) {
         requireNonNull(id);
-        requireNonNull(title);
         requireNonNull(section);
-        sectionsByID.put(id, configure(section, title, maximized));
+        requireNonNull(title);
+        sections.put(id, configure(section, title, maximized));
     }
 
     /**
@@ -159,22 +167,25 @@ public class Dashboard {
 
     public Optional<DashboardSection> findSection(DashboardID id) {
         requireNonNull(id);
-        return Optional.ofNullable(sectionsByID.get(id));
+        return Optional.ofNullable(sections.get(id));
     }
 
     private void updateLayout() {
-        final List<DashboardSection> sectionList = new ArrayList<>(sectionsByID.entrySet().stream()
+        final List<DashboardSection> reorderedSections = new ArrayList<>(sections.entrySet().stream()
             .filter(e -> e.getKey() != CommonDashboardID.README)
             .filter(e -> e.getKey() != CommonDashboardID.ABOUT)
             .map(Map.Entry::getValue)
             .toList());
-        if (sectionsByID.containsKey(CommonDashboardID.README)) {
-            sectionList.addFirst(sectionsByID.get(CommonDashboardID.README));
+
+        if (sections.containsKey(CommonDashboardID.README)) {
+            reorderedSections.addFirst(sections.get(CommonDashboardID.README));
         }
-        if (sectionsByID.containsKey(CommonDashboardID.ABOUT)) {
-            sectionList.addLast(sectionsByID.get(CommonDashboardID.ABOUT));
+        if (sections.containsKey(CommonDashboardID.ABOUT)) {
+            reorderedSections.addLast(sections.get(CommonDashboardID.ABOUT));
         }
-        rootPane.getChildren().setAll(sectionList.toArray(DashboardSection[]::new));
+
+        rootPane.getChildren().clear();
+        rootPane.getChildren().addAll(reorderedSections);
     }
 
     public void setCompactMode(boolean compactMode) {

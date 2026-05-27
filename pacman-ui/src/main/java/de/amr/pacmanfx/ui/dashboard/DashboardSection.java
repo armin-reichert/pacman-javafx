@@ -56,12 +56,12 @@ public abstract class DashboardSection extends TitledPane {
         setContent(grid);
         setExpanded(false);
         setFocusTraversable(false);
-        setPrefWidth(dashboard.style().width());
-        setMinWidth(dashboard.style().width());
-        setMaxWidth(dashboard.style().width());
+        setPrefWidth(dashboard.config().width());
+        setMinWidth(dashboard.config().width());
+        setMaxWidth(dashboard.config().width());
         setOpacity(OPACITY);
 
-        setContentBackground(Background.fill(dashboard.style().contentBackground()));
+        setContentBackground(Background.fill(dashboard.config().contentBackground()));
         setDisplayedMaximized(false);
 
         expandedProperty().addListener((_, _, expanded) -> {
@@ -127,24 +127,24 @@ public abstract class DashboardSection extends TitledPane {
 
     protected void addDynamicLabeledValue(String label, Supplier<?> infoSupplier) {
         var dynamicInfoText = new DynamicInfoText(infoSupplier);
-        dynamicInfoText.setFill(dashboard.style().textColor());
-        dynamicInfoText.setFont(dashboard.style().contentFont());
+        dynamicInfoText.setFill(dashboard.config().textColor());
+        dynamicInfoText.setFont(dashboard.config().contentFont());
         infoTexts.add(dynamicInfoText);
         addRow(label, dynamicInfoText);
     }
 
     protected void addStaticLabeledValue(String label, String value) {
         var staticText = new Text(value);
-        staticText.setFill(dashboard.style().textColor());
-        staticText.setFont(dashboard.style().contentFont());
+        staticText.setFill(dashboard.config().textColor());
+        staticText.setFont(dashboard.config().contentFont());
         addRow(label, staticText);
     }
 
     protected Label createLabel(String text, boolean enabled) {
         Label label = new Label(text);
-        label.setMinWidth(dashboard.style().labelWidth());
-        label.setTextFill(enabled ? dashboard.style().textColor() : Color.DIMGRAY);
-        label.setFont(dashboard.style().labelFont());
+        label.setMinWidth(dashboard.config().labelWidth());
+        label.setTextFill(enabled ? dashboard.config().textColor() : Color.DIMGRAY);
+        label.setFont(dashboard.config().labelFont());
         return label;
     }
 
@@ -157,7 +157,7 @@ public abstract class DashboardSection extends TitledPane {
         var buttons = new Button[buttonTexts.size()];
         for (int i = 0; i < buttonTexts.size(); ++i) {
             buttons[i] = new Button(buttonTexts.get(i));
-            buttons[i].setFont(dashboard.style().contentFont());
+            buttons[i].setFont(dashboard.config().contentFont());
             hbox.getChildren().add(buttons[i]);
         }
         addRow(labelText, hbox);
@@ -166,8 +166,8 @@ public abstract class DashboardSection extends TitledPane {
 
     protected CheckBox createCheckBox(String text) {
         var cb = new CheckBox(text);
-        cb.setTextFill(dashboard.style().textColor());
-        cb.setFont(dashboard.style().contentFont());
+        cb.setTextFill(dashboard.config().textColor());
+        cb.setFont(dashboard.config().contentFont());
         return cb;
     }
 
@@ -185,7 +185,7 @@ public abstract class DashboardSection extends TitledPane {
 
     protected <T> ChoiceBox<T> addChoiceBox(String labelText, T[] items) {
         var selector = new ChoiceBox<>(FXCollections.observableArrayList(items));
-        selector.setStyle(fontCSS(dashboard.style().contentFont()));
+        selector.setStyle(fontCSS(dashboard.config().contentFont()));
         addRow(labelText, selector);
         return selector;
     }
@@ -209,7 +209,7 @@ public abstract class DashboardSection extends TitledPane {
         var slider = new Slider(min, max, initialValue);
         slider.setShowTickMarks(tickMarks);
         slider.setShowTickLabels(tickLabels);
-        slider.setPrefWidth(0.5 * dashboard.style().width());
+        slider.setPrefWidth(0.5 * dashboard.config().width());
         slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (e.getClickCount() == 2) {
                 slider.setValue(initialValue);
@@ -221,7 +221,7 @@ public abstract class DashboardSection extends TitledPane {
 
     protected Spinner<Integer> addIntSpinner(String labelText, int min, int max, IntegerProperty valuePy) {
         var spinner = new Spinner<Integer>(min, max, valuePy.getValue());
-        spinner.setStyle(fontCSS(dashboard.style().contentFont()));
+        spinner.setStyle(fontCSS(dashboard.config().contentFont()));
         //TODO bidirectional binding does not work for me. Why? Is it me or is it a bug?
         spinner.getValueFactory().valueProperty().addListener((_, _, nv) -> valuePy.set(nv));
         valuePy.addListener((_, _, nv) -> spinner.getValueFactory().setValue(nv.intValue()));

@@ -55,7 +55,7 @@ public class DashboardSectionCustomMaps extends DashboardSection {
             column.setReorderable(false);
         });
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-        tableView.setPrefWidth(dashboard.style().width() - 20);
+        tableView.setPrefWidth(dashboard.config().width() - 20);
         tableView.setPrefHeight(500);
         tableView.setItems(customMaps);
 
@@ -101,7 +101,7 @@ public class DashboardSectionCustomMaps extends DashboardSection {
 
     private TableColumn<WorldMap, String> createMapURLTableColumn() {
         final var column = new TableColumn<WorldMap, String>("Map");
-        column.setPrefWidth(dashboard.style().width() - 80);
+        column.setPrefWidth(dashboard.config().width() - 80);
         column.setCellValueFactory(data -> new SimpleStringProperty(trimURL(data.getValue().url())));
 
         // Show link with map filename that edits the map when clicked

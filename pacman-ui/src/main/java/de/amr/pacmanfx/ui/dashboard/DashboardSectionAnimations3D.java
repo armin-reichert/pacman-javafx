@@ -62,13 +62,13 @@ public class DashboardSectionAnimations3D extends DashboardSection {
         tableView.setItems(tableRows);
         tableView.setPlaceholder(new Text(NO_3_D_ANIMATIONS));
         tableView.setFocusTraversable(false);
-        tableView.setPrefWidth(dashboard.style().width());
+        tableView.setPrefWidth(dashboard.config().width());
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
         final var labelColumn = new TableColumn<TableRow, String>(ANIMATION_NAME);
         labelColumn.setCellValueFactory(data -> data.getValue().labelProperty());
         labelColumn.setSortable(false);
-        labelColumn.setMinWidth(0.66 * dashboard.style().width());
+        labelColumn.setMinWidth(0.66 * dashboard.config().width());
         tableView.getColumns().add(labelColumn);
 
         final var statusColumn = new TableColumn<TableRow, String>(STATUS);
