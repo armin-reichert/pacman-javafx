@@ -438,6 +438,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public void show() {
+        logPreferences();
+
         // preload to make 3D scene creation faster
         load3DModels();
 
@@ -445,16 +447,18 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         GameUIConstants.PROPERTY_3D_WALL_HEIGHT .set(currentConfig().worldConfig().maze().obstacleBaseHeight());
         GameUIConstants.PROPERTY_3D_WALL_OPACITY.set(currentConfig().worldConfig().maze().obstacleOpacity());
 
-        logPreferences();
         viewManager.playView().dashboard().init(this);
         viewManager.selectStartView(this);
+
         stage.centerOnScreen();
         stage.show();
-        flashMessageView.start();
-        spriteAnimationTimer.start();
-        Platform.runLater(customDirWatchdog::startWatching);
-    }
 
+        Platform.runLater(() -> {
+            customDirWatchdog.startWatching();
+            flashMessageView.start();
+            spriteAnimationTimer.start();
+        });
+    }
 
     @Override
     public void showFlashMessage(Duration duration, String message, Object... args) {
