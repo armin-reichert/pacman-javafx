@@ -5,7 +5,8 @@
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.ActionBindingsManager;
+import de.amr.pacmanfx.ui.action.ActionBindingsSet;
+import de.amr.pacmanfx.ui.input.Input;
 import javafx.scene.Node;
 
 import java.util.Optional;
@@ -19,18 +20,18 @@ public interface View {
      *
      * @return the action bindings manager associated with this view
      */
-    ActionBindingsManager actionBindings();
+    ActionBindingsSet actionBindings();
 
     /**
      * Processes the current keyboard state and executes the matching action, if any.
      * <p>
-     * This method delegates to the view's {@link ActionBindingsManager} and executes
+     * This method delegates to the view's {@link ActionBindingsSet} and executes
      * the resolved action via {@link de.amr.pacmanfx.ui.action.GameAction#executeIfEnabled(GameUI)}.
      *
      * @param ui the global game UI façade
      */
     default void onKeyboardInput(GameUI ui) {
-        actionBindings().matchingAction().ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
+        actionBindings().matchingAction(Input.instance().keyboard).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
     }
 
     /**

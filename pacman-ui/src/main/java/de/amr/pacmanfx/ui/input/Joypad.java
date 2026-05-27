@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.ui.input;
 
-import de.amr.pacmanfx.ui.action.ActionBindingsManager;
-import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
+import de.amr.pacmanfx.ui.action.ActionBindingsSet;
+import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import org.tinylog.Logger;
@@ -66,21 +66,21 @@ public class Joypad {
         return currentKeyBinding().key(buttonID);
     }
 
-    public void setBindings(ActionBindingsManager actionBindingsManager) {
-        currentKeys().forEach(combination -> GameActionBindingsManager.registerActionBindingsManager(combination, actionBindingsManager));
+    public void setBindings(ActionBindingsSet actionBindingsManager) {
+        currentKeys().forEach(combination -> GameActionBindingsSet.registerActionBindingsManager(combination, actionBindingsManager));
     }
 
-    public void removeBindings(ActionBindingsManager actionBindingsManager) {
-        currentKeys().forEach(combination -> GameActionBindingsManager.unregisterActionBindingsManager(combination, actionBindingsManager));
+    public void removeBindings(ActionBindingsSet actionBindingsManager) {
+        currentKeys().forEach(combination -> GameActionBindingsSet.unregisterActionBindingsManager(combination, actionBindingsManager));
     }
 
-    public void selectNextBinding(ActionBindingsManager actionBindingsManager) {
+    public void selectNextBinding(ActionBindingsSet actionBindingsManager) {
         selectedIndex = (selectedIndex + 1) % bindings.length;
         setBinding(selectedIndex, actionBindingsManager);
         Logger.info("Joypad keys: {}", currentKeyBinding());
     }
 
-    private void setBinding(int index, ActionBindingsManager actionBindingsManager) {
+    private void setBinding(int index, ActionBindingsSet actionBindingsManager) {
         removeBindings(actionBindingsManager);
         selectedIndex = index;
         setBindings(actionBindingsManager);

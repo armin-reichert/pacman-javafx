@@ -99,12 +99,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
      * scene is not called, so we have to accept the game level again when switching from the 3D scene to this one.
      */
     protected void acceptGameLevel(GameLevel level) {
-        actionBindings.registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
+        actionBindings.registerAllBindingsFromSet(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         if (!level.isDemoLevel()) {
-            actionBindings.registerAllBindings(GameUIConstants.STEERING_ACTION_BINDINGS);
-            actionBindings.registerAllBindings(GameUIConstants.CHEAT_ACTION_BINDINGS);
+            actionBindings.registerAllBindingsFromSet(GameUIConstants.STEERING_ACTION_BINDINGS);
+            actionBindings.registerAllBindingsFromSet(GameUIConstants.CHEAT_ACTION_BINDINGS);
         }
-        actionBindings.register();
+        actionBindings.activate();
 
         ui.soundManager().setEnabled(!level.isDemoLevel()); //TODO is this needed?
         levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameContext().game().flow().state().expire());

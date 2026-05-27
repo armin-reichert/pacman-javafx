@@ -11,36 +11,33 @@ import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameActionBindingsManager implements ActionBindingsManager {
+public class GameActionBindingsSet implements ActionBindingsSet {
 
-    private static final Map<KeyCodeCombination, ActionBindingsManager> actionBindingsManagerRegistry = new HashMap<>();
+    private static final Map<KeyCodeCombination, ActionBindingsSet> actionBindingsSetRegistry = new HashMap<>();
 
-    public static void registerActionBindingsManager(KeyCodeCombination combination, ActionBindingsManager bindingsManager) {
+    public static void registerActionBindingsManager(KeyCodeCombination combination, ActionBindingsSet bindings) {
         requireNonNull(combination);
-        requireNonNull(bindingsManager);
-        if (actionBindingsManagerRegistry.get(combination) == bindingsManager) {
-            Logger.debug("Key combination '{}' already bound to {}", combination, bindingsManager);
+        requireNonNull(bindings);
+        if (actionBindingsSetRegistry.get(combination) == bindings) {
+            Logger.debug("Key combination '{}' already bound to {}", combination, bindings);
         } else {
-            actionBindingsManagerRegistry.put(combination, bindingsManager);
-            Logger.debug("Key combination '{}' bound to {}", combination, bindingsManager);
+            actionBindingsSetRegistry.put(combination, bindings);
+            Logger.debug("Key combination '{}' bound to {}", combination, bindings);
         }
     }
 
-    public static void unregisterActionBindingsManager(KeyCodeCombination combination, ActionBindingsManager bindingsManager) {
+    public static void unregisterActionBindingsManager(KeyCodeCombination combination, ActionBindingsSet bindings) {
         requireNonNull(combination);
-        requireNonNull(bindingsManager);
-        boolean removed = actionBindingsManagerRegistry.remove(combination, bindingsManager);
+        requireNonNull(bindings);
+        boolean removed = actionBindingsSetRegistry.remove(combination, bindings);
         if (removed) {
-            Logger.debug("Key code combination '{}' unbound from {}", combination, bindingsManager);
+            Logger.debug("Key code combination '{}' unbound from {}", combination, bindings);
         }
     }
 
-    private final Keyboard keyboard;
     private final Map<KeyCodeCombination, GameAction> actionForKeyCombination = new HashMap<>();
 
-    public GameActionBindingsManager(Keyboard keyboard) {
-        this.keyboard = requireNonNull(keyboard);
-    }
+    public GameActionBindingsSet() {}
 
     @Override
     public void dispose() {
@@ -53,12 +50,12 @@ public class GameActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public boolean noBindings() {
+    public boolean isEmpty() {
         return actionForKeyCombination.isEmpty();
     }
 
     @Override
-    public void register() {
+    public void activate() {
         for (KeyCodeCombination combination : actionForKeyCombination.keySet()) {
             registerActionBindingsManager(combination, this);
         }
@@ -66,7 +63,7 @@ public class GameActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void unregister() {
+    public void deactivate() {
         for (KeyCodeCombination combination : actionForKeyCombination.keySet()) {
             unregisterActionBindingsManager(combination, this);
         }
@@ -90,7 +87,7 @@ public class GameActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void registerAllBindings(Set<ActionBinding> bindings) {
+    public void registerAllBindingsFromSet(Set<ActionBinding> bindings) {
         requireNonNull(bindings);
         for (ActionBinding binding : bindings) {
             registerBinding(binding);
@@ -98,7 +95,7 @@ public class GameActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public Optional<GameAction> matchingAction() {
+    public Optional<GameAction> matchingAction(Keyboard keyboard) {
         return actionForKeyCombination.keySet().stream()
             .filter(keyboard::stateMatches)
             .map(actionForKeyCombination::get)

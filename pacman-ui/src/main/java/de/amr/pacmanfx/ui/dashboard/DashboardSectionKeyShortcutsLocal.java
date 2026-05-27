@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.ActionBindingsManager;
+import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.GameAction;
 import javafx.scene.input.KeyCombination;
 
@@ -27,8 +27,8 @@ public class DashboardSectionKeyShortcutsLocal extends DashboardSection {
     }
 
     private void addEntries(GameUI ui, GameScene gameScene) {
-        final ActionBindingsManager actionBindings = gameScene.actionBindings();
-        if (actionBindings.noBindings()) {
+        final ActionBindingsSet actionBindings = gameScene.actionBindings();
+        if (actionBindings.isEmpty()) {
             addRow(createLabel(NO_INFO, false));
         }
         else {

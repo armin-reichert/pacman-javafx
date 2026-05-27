@@ -85,13 +85,13 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             // In demo level, allow going back to options screen
             actionBindings.registerAnyBindingFromSet(ACTION_QUIT_DEMO_LEVEL, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
         } else {
-            actionBindings.registerAllBindings(TengenMsPacMan_ActionBindings.STEERING_BINDINGS);
+            actionBindings.registerAllBindingsFromSet(TengenMsPacMan_ActionBindings.STEERING_BINDINGS);
             actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
-            actionBindings.registerAllBindings(GameUIConstants.CHEAT_ACTION_BINDINGS);
+            actionBindings.registerAllBindingsFromSet(GameUIConstants.CHEAT_ACTION_BINDINGS);
         }
         bindActions();
 
-        actionBindings.register();
+        actionBindings.activate();
     }
 
     @Override

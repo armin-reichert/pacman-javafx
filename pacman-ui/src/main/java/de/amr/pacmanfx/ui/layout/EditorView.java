@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.ActionBindingsManager;
+import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.Region;
@@ -41,7 +41,7 @@ public class EditorView implements View {
     }
 
     @Override
-    public ActionBindingsManager actionBindings() { return ActionBindingsManager.NO_BINDINGS; }
+    public ActionBindingsSet actionBindings() { return ActionBindingsSet.NO_BINDINGS; }
 
     @Override
     public void onEnter() {

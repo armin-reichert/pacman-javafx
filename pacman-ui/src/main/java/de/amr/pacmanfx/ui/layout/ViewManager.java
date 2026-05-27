@@ -38,7 +38,7 @@ public class ViewManager {
         currentViewProperty().addListener((_, oldView, newView) -> {
             if (oldView != null) {
                 oldView.onExit();
-                oldView.actionBindings().unregister();
+                oldView.actionBindings().deactivate();
             }
 
             if (rootPane.getChildren().isEmpty()) {
@@ -47,7 +47,7 @@ public class ViewManager {
 
             rootPane.getChildren().set(RESERVED_VIEW_INDEX_IN_LAYOUT, newView.rootPane());
 
-            newView.actionBindings().register();
+            newView.actionBindings().activate();
             newView.onEnter();
 
             flashMessageView.clear();

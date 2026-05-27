@@ -7,10 +7,10 @@ import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.StartPage;
-import de.amr.pacmanfx.ui.action.ActionBindingsManager;
+import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
+import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
@@ -61,7 +61,7 @@ public class StartPagesCarousel extends Carousel implements View {
     };
 
     private final List<StartPage> pages = new ArrayList<>();
-    private final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
+    private final ActionBindingsSet actionBindings = new GameActionBindingsSet();
 
     private final GameUI ui;
 
@@ -89,7 +89,7 @@ public class StartPagesCarousel extends Carousel implements View {
         actionBindings.setKeyCombinationFor(actionShowNextPage, bare(KeyCode.RIGHT));
         actionBindings.setKeyCombinationFor(CommonActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
         actionBindings.setKeyCombinationFor(CommonActions.ACTION_TOGGLE_PAUSED, bare(KeyCode.P));
-        actionBindings.register();
+        actionBindings.activate();
         restartProgressTimer();
         currentStartPage().ifPresent(page -> page.layoutRoot().requestFocus());
     }
@@ -97,7 +97,7 @@ public class StartPagesCarousel extends Carousel implements View {
     @Override
     public void onExit() {
         pauseProgressTimer();
-        actionBindings.unregister();
+        actionBindings.deactivate();
         currentStartPage().ifPresent(startPage -> startPage.onExitStartPage(ui));
     }
 
@@ -122,7 +122,7 @@ public class StartPagesCarousel extends Carousel implements View {
     }
 
     @Override
-    public ActionBindingsManager actionBindings() {
+    public ActionBindingsSet actionBindings() {
         return actionBindings;
     }
 

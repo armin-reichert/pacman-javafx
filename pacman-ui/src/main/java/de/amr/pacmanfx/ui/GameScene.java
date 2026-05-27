@@ -12,8 +12,8 @@ import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.action.ActionBindingsManager;
-import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
+import de.amr.pacmanfx.ui.action.ActionBindingsSet;
+import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.SubScene;
@@ -72,7 +72,7 @@ public abstract class GameScene implements Disposable {
         }
     }
 
-    protected final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
+    protected final ActionBindingsSet actionBindings = new GameActionBindingsSet();
 
     protected final GameUI ui;
 
@@ -120,7 +120,7 @@ public abstract class GameScene implements Disposable {
     /**
      * @return action bindings for this scene
      */
-    public ActionBindingsManager actionBindings() {
+    public ActionBindingsSet actionBindings() {
         return actionBindings;
     }
 
@@ -129,7 +129,7 @@ public abstract class GameScene implements Disposable {
      */
     public final void activate() {
         onActivate();
-        actionBindings.register();
+        actionBindings.activate();
         Logger.trace("Game scene {} activated", getClass().getSimpleName());
     }
 
@@ -143,7 +143,7 @@ public abstract class GameScene implements Disposable {
      */
     public final void deactivate() {
         onDeactivate();
-        actionBindings.unregister();
+        actionBindings.deactivate();
         actionBindings.dispose();
         soundEffects().ifPresent(GameSoundEffects::stopAll);
         Logger.trace("Game scene {} deactivated", getClass().getSimpleName());
@@ -166,7 +166,7 @@ public abstract class GameScene implements Disposable {
      * Executes the first matching action.
      */
     public void onInput() {
-        actionBindings().matchingAction().ifPresent(action -> action.executeIfEnabled(ui()));
+        actionBindings().matchingAction(Input.instance().keyboard).ifPresent(action -> action.executeIfEnabled(ui()));
     }
 
     /**

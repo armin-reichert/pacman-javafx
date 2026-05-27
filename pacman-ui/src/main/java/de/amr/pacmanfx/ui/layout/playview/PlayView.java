@@ -9,8 +9,8 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
-import de.amr.pacmanfx.ui.action.ActionBindingsManager;
-import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
+import de.amr.pacmanfx.ui.action.ActionBindingsSet;
+import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
@@ -50,20 +50,12 @@ public class PlayView implements View {
     public static final Border DEBUG_BORDER = border(Color.LIGHTGREEN, 1);
 
     public static final DecorationPane.Config DECORATION_CONFIG = new DecorationPane.Config(
-        0.85f,
-        0.93f,
-        0.5f,
-        20,
-        20,
-        new DecorationPane.FrameConfig(
-            26,
-            10,
-            5,
-            55.0,
-            ArcadePalette.ARCADE_WHITE)
+        0.85f, 0.93f, 0.5f, // scaling x,y, min
+        20, 20, // padding x,y
+        new DecorationPane.FrameConfig(26, 10, 5, 55.0, ArcadePalette.ARCADE_WHITE)
     );
 
-    private final ActionBindingsManager actionBindings = new GameActionBindingsManager(Input.instance().keyboard);
+    private final ActionBindingsSet actionBindings = new GameActionBindingsSet();
 
     private final GameUI ui;
     private final ContextMenu contextMenu = new ContextMenu();
@@ -132,13 +124,13 @@ public class PlayView implements View {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public ActionBindingsManager actionBindings() {
+    public ActionBindingsSet actionBindings() {
         return actionBindings;
     }
 
     @Override
     public void onKeyboardInput(GameUI ui) {
-        actionBindings.matchingAction().ifPresentOrElse(
+        actionBindings.matchingAction(Input.instance().keyboard).ifPresentOrElse(
             action -> action.execute(ui),
             () -> ui.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput)
         );

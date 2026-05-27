@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.action;
 
+import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.input.KeyCodeCombination;
 
 import java.util.Map;
@@ -10,13 +11,13 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Null-object implementation of {@link ActionBindingsManager}.
+ * Null-object implementation of {@link ActionBindingsSet}.
  * <p>
  * This implementation performs no action, holds no bindings, and never matches input.
  * It is useful when a subsystem expects a bindings manager but no actual bindings
  * should be active.
  */
-public class NullActionBindingsManager implements ActionBindingsManager {
+public class NullActionBindingsManager implements ActionBindingsSet {
 
     @Override
     public void dispose() {
@@ -28,15 +29,15 @@ public class NullActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public boolean noBindings() {
+    public boolean isEmpty() {
         return true;
     }
 
     @Override
-    public void register() {}
+    public void activate() {}
 
     @Override
-    public void unregister() {}
+    public void deactivate() {}
 
     @Override
     public void registerAnyBindingFromSet(GameAction action, Set<ActionBinding> bindings) {
@@ -47,11 +48,11 @@ public class NullActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void registerAllBindings(Set<ActionBinding> bindings) {
+    public void registerAllBindingsFromSet(Set<ActionBinding> bindings) {
     }
 
     @Override
-    public Optional<GameAction> matchingAction() {
+    public Optional<GameAction> matchingAction(Keyboard keyboard) {
         return Optional.empty();
     }
 }

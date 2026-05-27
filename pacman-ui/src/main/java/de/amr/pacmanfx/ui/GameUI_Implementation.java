@@ -12,10 +12,11 @@ import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
-import de.amr.pacmanfx.ui.action.ActionBindingsManager;
+import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
+import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
 import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.layout.playview.PlayView;
@@ -73,7 +74,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private final UIConfigManager uiConfigManager = new UIConfigManager();
     private final ViewManager viewManager;
     private final GameSceneManager gameSceneManager = new GameSceneManager();
-    private final ActionBindingsManager actionBindingsManager = new GameActionBindingsManager(Input.instance().keyboard);
+    private final ActionBindingsSet actionBindings = new GameActionBindingsSet();
     private final SoundManager soundManager = new SoundManager();
     private final VoiceManager voiceManager = new VoiceManager();
     private final TranslationManager translator;
@@ -149,8 +150,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         scene.widthProperty().addListener((_,_,_) -> playView.resizeToFit(scene));
         scene.heightProperty().addListener((_,_,_) -> playView.resizeToFit(scene));
 
-        final ActionBindingsManager actionBindings = playView.actionBindings();
-        actionBindings.registerAllBindings(GameUIConstants.COMMON_BINDINGS);
+        final ActionBindingsSet actionBindings = playView.actionBindings();
+        actionBindings.registerAllBindingsFromSet(GameUIConstants.COMMON_BINDINGS);
 
         return playView;
     }
@@ -230,21 +231,22 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     private void initGlobalActionBindings() {
-        actionBindingsManager.registerAnyBindingFromSet(CommonActions.ACTION_ENTER_FULLSCREEN,        GameUIConstants.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFromSet(CommonActions.ACTION_OPEN_EDITOR,             GameUIConstants.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFromSet(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
-        actionBindingsManager.registerAnyBindingFromSet(CommonActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
-        actionBindingsManager.register();
+        actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_ENTER_FULLSCREEN,        GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_OPEN_EDITOR,             GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
+        actionBindings.activate();
     }
 
     private void initScene() {
         scene.getStylesheets().add(GameUIConstants.STYLE_SHEET_PATH);
 
-        scene.addEventFilter(KeyEvent.KEY_PRESSED,  Input.instance().keyboard::onKeyPressed);
-        scene.addEventFilter(KeyEvent.KEY_RELEASED, Input.instance().keyboard::onKeyReleased);
+        final Keyboard keyboard = Input.instance().keyboard;
+        scene.addEventFilter(KeyEvent.KEY_PRESSED,  keyboard::onKeyPressed);
+        scene.addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 
         // If a global action is bound to the key press, execute it; otherwise let the current view handle it.
-        scene.setOnKeyPressed(e -> actionBindingsManager.matchingAction()
+        scene.setOnKeyPressed(e -> actionBindings.matchingAction(keyboard)
             .ifPresentOrElse(action -> {
                 if (action.executeIfEnabled(this)) e.consume();
             }, () -> viewManager.currentView().onKeyboardInput(this)
