@@ -15,7 +15,6 @@ import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
-import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.layout.*;
@@ -41,8 +40,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -52,9 +49,6 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
-import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
-import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
-import static de.amr.pacmanfx.ui.action.CommonActions.*;
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
 
@@ -62,15 +56,6 @@ import static javafx.beans.binding.Bindings.createStringBinding;
  * User interface for the Pac-Man game suite. Shows a carousel with a start page for each game variant.
  */
 public final class GameUI_Implementation extends PreferencesManager implements GameUI {
-
-    private static final DashboardConfig DEFAULT_DASHBOARD_CONFIG = new DashboardConfig(
-        110, // label width
-        320, // width
-        Color.rgb(0, 0, 50, 1.0), // background
-        Color.WHITE, // text
-        Font.font("Sans", 12), // label font
-        Font.font("Sans", 12) // content font
-    );
 
     private static final String OH_NO_MY_PROGRAM = "Oh no my program!\nSomeone call an ambulance!";
 
@@ -155,7 +140,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     private PlayView createPlayView() {
-        final var playView = new PlayView(this, DEFAULT_DASHBOARD_CONFIG);
+        final var playView = new PlayView(this, GameUIConstants.DEFAULT_DASHBOARD_CONFIG);
 
         playView.rootPane().setOnContextMenuRequested(new PlayViewContextMenuHandler(this, playView));
 
@@ -165,27 +150,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         scene.heightProperty().addListener((_,_,_) -> playView.resizeToFit(scene));
 
         final ActionBindingsManager actionBindings = playView.actionBindings();
-
-        actionBindings.registerAnyBindingFromSet(ACTION_BOOT_SHOW_PLAY_VIEW, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_ENTER_FULLSCREEN, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_QUIT_GAME_SCENE, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_SHOW_HELP, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_SIMULATION_SLOWER, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_SIMULATION_SLOWEST, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_SIMULATION_FASTER, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_SIMULATION_FASTEST, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_SIMULATION_RESET, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_SIMULATION_ONE_STEP, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_SIMULATION_TEN_STEPS, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_AUTOPILOT, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_DEBUG_INFO, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_MUTED, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_PAUSED, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_COLLISION_STRATEGY, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_DASHBOARD, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_IMMUNITY, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAllBindings(GameUIConstants.COMMON_BINDINGS);
 
         return playView;
     }

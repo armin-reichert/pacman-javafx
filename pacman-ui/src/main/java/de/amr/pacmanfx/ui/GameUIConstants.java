@@ -8,12 +8,13 @@ import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.TestActions;
-import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
-import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.ui.d3.animation.energizer.AttractionConfig;
 import de.amr.pacmanfx.ui.d3.animation.energizer.ExplosionConfig;
 import de.amr.pacmanfx.ui.d3.animation.energizer.ParticlesAnimationConfig;
 import de.amr.pacmanfx.ui.d3.animation.energizer.SwirlConfig;
+import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
+import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
+import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
@@ -120,6 +121,15 @@ public class GameUIConstants {
     public static final Color CONTEXT_MENU_DEFAULT_TITLE_COLOR = Color.CORNFLOWERBLUE;
 
     public static final Font CONTEXT_MENU_DEFAULT_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14.0f);
+
+    public static final DashboardConfig DEFAULT_DASHBOARD_CONFIG = new DashboardConfig(
+        110, // label width
+        320, // width
+        Color.rgb(0, 0, 50, 1.0), // background
+        Color.WHITE, // text
+        Font.font("Sans", 12), // label font
+        Font.font("Sans", 12) // content font
+    );
 
     /** Cheat key bindings (Alt + key). */
     public static final Set<ActionBinding> CHEAT_ACTION_BINDINGS = Set.of(
