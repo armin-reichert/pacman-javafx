@@ -312,14 +312,14 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public void embedGameSceneIntoPlayView(GameScene gameScene) {
-        gameSceneEmbedder.embedGameSceneIntoPlayView(scene, viewManager.playView(), currentGameSceneConfig(), gameScene);
+        gameSceneEmbedder.embedGameSceneIntoPlayView(scene, viewManager.playView(), currentConfig().gameSceneConfig(), gameScene);
         viewManager.playView().contextMenu().hide();
     }
 
     @Override
     public boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID) {
         final GameScene currentGameScene = gameSceneManager.optCurrentGameScene().orElse(null);
-        return currentGameScene != null && currentGameSceneConfig().gameSceneHasID(currentGameScene, sceneID);
+        return currentGameScene != null && currentConfig().gameSceneConfig().gameSceneHasID(currentGameScene, sceneID);
     }
 
     @Override
@@ -330,11 +330,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
             throw new IllegalStateException("Cannot access UI configuration: no game variant is selected");
         }
         return (T) config(gameContext.gameVariantName());
-    }
-
-    @Override
-    public GameSceneConfig currentGameSceneConfig() {
-        return currentConfig().gameSceneConfig();
     }
 
     @Override

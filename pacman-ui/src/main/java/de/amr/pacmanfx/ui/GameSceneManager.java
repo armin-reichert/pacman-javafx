@@ -46,7 +46,7 @@ public class GameSceneManager {
     public void updateGameScene(GameUI ui, boolean forceReload) {
         final Game game = ui.gameContext().game();
         final GameScene prevGameScene = optCurrentGameScene().orElse(null);
-        final GameScene nextGameScene = ui.currentGameSceneConfig().selectGameScene(ui, game).orElseThrow();
+        final GameScene nextGameScene = ui.currentConfig().gameSceneConfig().selectGameScene(ui, game).orElseThrow();
 
         if (nextGameScene == prevGameScene && !forceReload) {
             return;

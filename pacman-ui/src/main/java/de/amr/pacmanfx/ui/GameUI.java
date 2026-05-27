@@ -130,13 +130,6 @@ public interface GameUI {
     GameSceneManager gameSceneManager();
 
     /**
-     * @return the configuration of the currently active game scene.
-     * <p>
-     * This includes scene type, camera mode, and other scene-specific settings.
-     */
-    GameSceneConfig currentGameSceneConfig();
-
-    /**
      * Checks whether the current game scene matches the given ID.
      *
      * @param sceneID scene identifier
