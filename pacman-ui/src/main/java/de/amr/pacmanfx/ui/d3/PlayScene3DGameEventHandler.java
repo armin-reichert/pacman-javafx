@@ -175,7 +175,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         final GameLevel3D level3D = assertLevel3D();
         soundEffects().ifPresent(GameSoundEffects::stopSiren);
         if (!game().isLevelCompleted()) {
-            level3D.pac3D().setPowerMode(true);
+            level3D.entities().pac3D().setPowerMode(true);
             level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING)
                 .ifPresent(ManagedAnimation::playFromStart);
             soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
@@ -185,7 +185,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     @Override
     public void onPacLostPower(PacLostPowerEvent ignoredEvent) {
         final GameLevel3D level3D = assertLevel3D();
-        level3D.pac3D().setPowerMode(false);
+        level3D.entities().pac3D().setPowerMode(false);
         soundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING)
             .ifPresent(ManagedAnimation::stop);
@@ -205,8 +205,8 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     private void onHuntingStart() {
         final GameLevel3D level3D = assertLevel3D();
-        level3D.pac3D().init(level3D.level());
-        level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level3D.level()));
+        level3D.entities().pac3D().init(level3D.level());
+        level3D.entities().ghosts3D().forEach(ghost3D -> ghost3D.init(level3D.level()));
         level3D.energizers3D().forEach(Energizer3D::startPumping);
 
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.PARTICLES)
@@ -218,7 +218,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     private void onPacManDying(State<Game> gameState) {
         final GameLevel3D level3D = assertLevel3D();
-        final Pac3D pac3D = level3D.pac3D();
+        final Pac3D pac3D = level3D.entities().pac3D();
 
         soundEffects().ifPresent(GameSoundEffects::stopAll);
 
@@ -226,7 +226,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
 
-        level3D.ghosts3D().forEach(Ghost3D::stopAllAnimations);
+        level3D.entities().ghosts3D().forEach(Ghost3D::stopAllAnimations);
         level3D.entities().selectAllOfType(Bonus3D.class).forEach(Bonus3D::lookExpired);
 
         gameState.lock();
@@ -283,7 +283,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
         gameScene().scoreOpacity.set(0);
 
-        level3D.maze3D().house().hideDoors();
+        level3D.entities().maze3D().house().hideDoors();
 
         soundEffects().ifPresent(GameSoundEffects::stopAll);
         level3D.animationRegistry().stopAllAnimations();
@@ -291,7 +291,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         level3D.entities().anyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         level3D.messageManager().hideMessage();
 
-        playLevelEndAnimation(level3D.animationRegistry(), level3D.maze3D(), gameState, level3D.level().cutSceneNumber() != 0);
+        playLevelEndAnimation(level3D.animationRegistry(), level3D.entities().maze3D(), gameState, level3D.level().cutSceneNumber() != 0);
     }
 
     private void playLevelEndAnimation(AnimationRegistry animationRegistry, Maze3D maze3D, State<Game> gameState, boolean cutSceneAfter) {
