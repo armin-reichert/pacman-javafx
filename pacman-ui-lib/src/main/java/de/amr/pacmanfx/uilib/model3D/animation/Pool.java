@@ -9,49 +9,58 @@ import de.amr.pacmanfx.Validations;
 import org.tinylog.Logger;
 
 import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.Queue;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static java.util.Objects.requireNonNull;
+
 public class Pool<T> implements Disposable {
 
-    private final int newEntryCount;
-    private final Queue<T> entrySet = new ArrayDeque<>();
-    private final Supplier<T> entryFactory;
-    private final Consumer<T> onEntryRecycle;
+    private final int itemIncrease;
+    private final Queue<T> items = new ArrayDeque<>();
+    private final Supplier<T> itemFactory;
+    private final Consumer<T> onItemRecycled;
 
-    public Pool(int initialSize, int newEntryCount, Supplier<T> entryFactory, Consumer<T> onEntryRecycle) {
-        this.newEntryCount = Validations.requireNonNegativeInt(newEntryCount);
-        this.entryFactory = entryFactory;
-        this.onEntryRecycle = onEntryRecycle;
-        addNewEntries(initialSize);
+    public Pool(int initialSize, int itemIncrease, Supplier<T> itemFactory, Consumer<T> onItemRecycled) {
+        this.itemIncrease = Validations.requireNonNegativeInt(itemIncrease);
+        this.itemFactory = itemFactory;
+        this.onItemRecycled = onItemRecycled;
+        growBy(initialSize);
     }
 
-    public T requestEntry() {
-        if (entrySet.isEmpty()) {
-            addNewEntries(newEntryCount);
+    public T provideItem() {
+        if (items.isEmpty()) {
+            growBy(itemIncrease);
         }
-        return entrySet.poll();
+        return items.poll();
     }
 
-    public void recycleEntry(T entry) {
-        onEntryRecycle.accept(entry);
-        entrySet.offer(entry);
+    public void recycle(T item) {
+        requireNonNull(item);
+        onItemRecycled.accept(item);
+        items.offer(item);
+    }
+
+    public void recycle(Collection<T> itemsToRecycle) {
+        requireNonNull(itemsToRecycle);
+        for (T item : itemsToRecycle) recycle(item);
     }
 
     public void dispose() {
-        for (T entry : entrySet) {
-            if (entry instanceof Disposable disposable) {
+        for (T item : items) {
+            if (item instanceof Disposable disposable) {
                 disposable.dispose();
             }
         }
-        entrySet.clear();
+        items.clear();
     }
 
-    private void addNewEntries(int count) {
+    private void growBy(int count) {
         for (int i = 0; i < count; ++i) {
-            entrySet.add(entryFactory.get());
+            items.add(itemFactory.get());
         }
-        Logger.info("Pool increased by {}! New size={}", count, entrySet.size());
+        Logger.info("Pool grown by {} items! New size: {}", count, items.size());
     }
 }

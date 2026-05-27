@@ -108,8 +108,11 @@ public class ParticlesAnimation3D extends ManagedAnimation implements Disposable
     public void triggerExplosion(Point3D explosionCenter) {
         requireNonNull(explosionCenter);
         final var position = new Vector3f(explosionCenter.getX(), explosionCenter.getY(), explosionCenter.getZ());
+        particlePool.recycle(particles);
+        particles.clear();
+        particlesGroup.getChildren().clear();
         for (int i = 0; i < config.explosion().particleCount(); ++i) {
-            final EnergizerParticle3D particle = particlePool.requestEntry();
+            final EnergizerParticle3D particle = particlePool.provideItem();
             particle.setPosition(position);
             particle.setVelocity(randomParticleVelocity(config.explosion()));
             particle.setState(ParticleState.FLYING_THROUGH_AIR);
@@ -117,12 +120,14 @@ public class ParticlesAnimation3D extends ManagedAnimation implements Disposable
             particles.add(particle);
             particlesGroup.getChildren().add(particle.shape());
         }
+        // ensure wrapped JavaFX animation is created and plays
+        playOrContinue();
     }
 
     private void releaseParticle(EnergizerParticle3D particle) {
         particles.remove(particle);
         particlesGroup.getChildren().remove(particle.shape());
-        particlePool.recycleEntry(particle);
+        particlePool.recycle(particle);
     }
 
     private Vector3f randomParticleVelocity(ExplosionConfig config) {
