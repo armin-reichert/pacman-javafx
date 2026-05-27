@@ -144,11 +144,6 @@ public interface GameUI {
      */
     boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID);
 
-    /**
-     * @return (optional) game scene
-     */
-    Optional<GameScene> optGameScene();
-
     void embedGameSceneIntoPlayView(GameScene gameScene);
 
     // ---------------------------------------------------------------------------------------------

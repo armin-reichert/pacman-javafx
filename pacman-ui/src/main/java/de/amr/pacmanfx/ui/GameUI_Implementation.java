@@ -47,7 +47,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
@@ -169,7 +168,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         final GameClock clock = requireNonNull(gameContext.clock(), "Game clock has not been set in game context?");
         clock.setUpdateAction(() -> {
             simulate(gameContext.game());
-            optGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
+            gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });
         clock.setPermanentAction(() -> viewManager.currentView().render());
         clock.setErrorHandler(this::ka_tas_tro_phe);
@@ -201,7 +200,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
                 final boolean debug  = GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get();
                 final boolean is3D   = GameUIConstants.PROPERTY_3D_ENABLED.get();
                 final boolean paused = gameContext.clock().getUpdatesDisabled();
-                final GameScene gameScene = optGameScene().orElse(null);
+                final GameScene gameScene = gameSceneManager.optCurrentGameScene().orElse(null);
                 return computeStageTitle(viewManager.currentView(), gameScene, debug, is3D, paused);
             },
             gameContext.clock().updatesDisabledProperty(),
@@ -251,7 +250,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
                 if (action.executeIfEnabled(this)) e.consume();
             }, () -> viewManager.currentView().onInput(this)
         ));
-        scene.setOnScroll(e -> optGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+        scene.setOnScroll(e -> gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
     }
 
     private void initStage() {
@@ -319,7 +318,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID) {
-        final GameScene currentGameScene = optGameScene().orElse(null);
+        final GameScene currentGameScene = gameSceneManager.optCurrentGameScene().orElse(null);
         return currentGameScene != null && currentGameSceneConfig().gameSceneHasID(currentGameScene, sceneID);
     }
 
@@ -369,11 +368,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
-    public Optional<GameScene> optGameScene() {
-        return gameSceneManager().optCurrentGameScene();
-    }
-
-    @Override
     public PreferencesManager prefs() {
         return this;
     }
@@ -382,7 +376,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     public void quitCurrentGameScene() {
         final Game game = gameContext.game();
         //TODO this is game-specific and should not be here
-        optGameScene().ifPresent(gameScene -> {
+        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> {
             boolean shouldConsumeCoin = game.flow().state().name().equals("STARTING_GAME_OR_LEVEL")
                 || game.isPlayingLevel();
             if (shouldConsumeCoin && !gameContext.coinMechanism().isEmpty()) {
@@ -450,7 +444,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     @Override
     public void stopGame() {
         soundManager.stopAll();
-        optGameScene().ifPresent(gameScene -> {
+        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> {
             gameScene.deactivate();
             gameScene.soundEffects().ifPresent(GameSoundEffects::stopAll);
         });

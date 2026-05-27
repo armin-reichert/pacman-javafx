@@ -23,7 +23,7 @@ public class DashboardSectionKeyShortcutsLocal extends DashboardSection {
     @Override
     public void update(GameUI ui) {
         clearGrid();
-        ui.optGameScene().ifPresent(gameScene -> addEntries(ui,gameScene));
+        ui.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> addEntries(ui,gameScene));
     }
 
     private void addEntries(GameUI ui, GameScene gameScene) {
