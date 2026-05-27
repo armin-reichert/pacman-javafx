@@ -13,6 +13,30 @@ import static java.util.Objects.requireNonNull;
 
 public class GameActionBindingsManager implements ActionBindingsManager {
 
+    private static final Map<KeyCodeCombination, ActionBindingsManager> actionBindingsManagerRegistry = new HashMap<>();
+
+    public static void registerActionBinding(
+        KeyCodeCombination combination, ActionBindingsManager bindingsManager)
+    {
+        requireNonNull(combination);
+        requireNonNull(bindingsManager);
+        if (actionBindingsManagerRegistry.get(combination) == bindingsManager) {
+            Logger.debug("Key combination '{}' already bound to {}", combination, bindingsManager);
+        } else {
+            actionBindingsManagerRegistry.put(combination, bindingsManager);
+            Logger.debug("Key combination '{}' bound to {}", combination, bindingsManager);
+        }
+    }
+
+    public static void unregisterActionBinding(
+        KeyCodeCombination combination, ActionBindingsManager bindingsManager)
+    {
+        boolean removed = actionBindingsManagerRegistry.remove(combination, bindingsManager);
+        if (removed) {
+            Logger.debug("Key code combination '{}' unbound from {}", combination, bindingsManager);
+        }
+    }
+
     private final Keyboard keyboard;
     private final Map<KeyCodeCombination, GameAction> actionByKeyCombination = new HashMap<>();
 
@@ -38,7 +62,7 @@ public class GameActionBindingsManager implements ActionBindingsManager {
     @Override
     public void assignToKeyboard() {
         for (KeyCodeCombination combination : actionByKeyCombination.keySet()) {
-            keyboard.registerActionBinding(combination, this);
+            registerActionBinding(combination, this);
         }
         logBindings();
         Logger.info("Key bindings assigned");
@@ -47,7 +71,7 @@ public class GameActionBindingsManager implements ActionBindingsManager {
     @Override
     public void removeFromKeyboard() {
         for (KeyCodeCombination combination : actionByKeyCombination.keySet()) {
-            keyboard.unregisterActionBinding(combination, this);
+            unregisterActionBinding(combination, this);
         }
         Logger.info("Key bindings removed");
     }
@@ -79,7 +103,7 @@ public class GameActionBindingsManager implements ActionBindingsManager {
     @Override
     public Optional<GameAction> matchingAction() {
         return actionByKeyCombination.keySet().stream()
-            .filter(keyboard::isMatching)
+            .filter(keyboard::stateMatches)
             .map(actionByKeyCombination::get)
             .findFirst();
     }
@@ -96,4 +120,5 @@ public class GameActionBindingsManager implements ActionBindingsManager {
             .sorted(Comparator.comparing(e -> e.getKey().toString()))
             .forEach(e -> Logger.debug("%-20s: %s".formatted(e.getKey(), e.getValue().resourceBundleKey())));
     }
+
 }

@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.input;
 
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
+import de.amr.pacmanfx.ui.action.GameActionBindingsManager;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import org.tinylog.Logger;
@@ -58,7 +59,7 @@ public class Joypad {
     }
 
     public boolean isButtonPressed(JoypadButton buttonID) {
-        return keyboard.isMatching(keyForButton(buttonID));
+        return keyboard.stateMatches(keyForButton(buttonID));
     }
 
     public KeyCodeCombination keyForButton(JoypadButton buttonID) {
@@ -66,11 +67,11 @@ public class Joypad {
     }
 
     public void setBindings(ActionBindingsManager actionBindingsManager) {
-        currentKeys().forEach(combination -> keyboard.registerActionBinding(combination, actionBindingsManager));
+        currentKeys().forEach(combination -> GameActionBindingsManager.registerActionBinding(combination, actionBindingsManager));
     }
 
     public void removeBindings(ActionBindingsManager actionBindingsManager) {
-        currentKeys().forEach(combination -> keyboard.unregisterActionBinding(combination, actionBindingsManager));
+        currentKeys().forEach(combination -> GameActionBindingsManager.unregisterActionBinding(combination, actionBindingsManager));
     }
 
     public void selectNextBinding(ActionBindingsManager actionBindingsManager) {
