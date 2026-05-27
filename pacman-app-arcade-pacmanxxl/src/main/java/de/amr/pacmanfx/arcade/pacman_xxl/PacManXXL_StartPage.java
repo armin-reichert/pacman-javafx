@@ -18,7 +18,6 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -82,7 +81,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                 case E -> {
                     e.consume();
                     if (ui != null) {
-                        ui.voicePlayer().stopVoice();
+                        ui.voiceManager().stopVoice();
                         startPagesCarousel.pauseProgressTimer();
                         ui.openWorldMapFileInEditor(null);
                     }
@@ -90,7 +89,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                 case ENTER -> {
                     e.consume();
                     if (ui != null) {
-                        ui.voicePlayer().stopVoice();
+                        ui.voiceManager().stopVoice();
                         startPagesCarousel.pauseProgressTimer();
                         menu.startSelectedGame();
                     }
@@ -118,12 +117,12 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariant);
         }
         menu.init(ui);
-        ui.voicePlayer().playVoice(VOICE);
+        ui.voiceManager().playVoice(VOICE);
     }
 
     @Override
     public void onExitStartPage(GameUI ui) {
-        ui.voicePlayer().stopVoice();
+        ui.voiceManager().stopVoice();
         menu.stopDrawLoop();
         removeMenuBinding();
     }

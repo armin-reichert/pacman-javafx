@@ -31,7 +31,7 @@ public class EditorView implements View {
     }
 
     private MenuItem createQuitEditorMenuItem() {
-        var miQuitEditor = new MenuItem(ui.translator().translate("back_to_game"));
+        var miQuitEditor = new MenuItem(ui.translationManager().translate("back_to_game"));
         miQuitEditor.setOnAction(_ -> editor.quit());
         return miQuitEditor;
     }

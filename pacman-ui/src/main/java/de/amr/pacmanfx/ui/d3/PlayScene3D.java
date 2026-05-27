@@ -74,7 +74,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
      */
     public PlayScene3D(GameUI ui) {
         super(ui);
-        gameOverMessagePicker = new RandomTextPicker(ui.translator().resources(), "game.over");
+        gameOverMessagePicker = new RandomTextPicker(ui.translationManager().resources(), "game.over");
         createSubScene();
         createBindings();
         bindActions();
@@ -108,7 +108,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         } else {
-            scores3D.showTextForScore(ui.translator().translate("score.game_over"),
+            scores3D.showTextForScore(ui.translationManager().translate("score.game_over"),
                 ui.currentConfig().assets().color("color.game_over_message"));
         }
 
@@ -277,8 +277,8 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         final Scores3D oldScores3D = scores3D;
 
         scores3D = new Scores3D(
-            ui.translator().translate("score.score"),
-            ui.translator().translate("score.high_score"),
+            ui.translationManager().translate("score.score"),
+            ui.translationManager().translate("score.high_score"),
             GameUIConstants.FONT_ARCADE_8);
 
         scores3D.textOpacity.bind(scoreOpacity);

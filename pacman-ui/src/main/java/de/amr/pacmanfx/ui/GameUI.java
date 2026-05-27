@@ -17,33 +17,9 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
-import java.util.Optional;
 
 /**
  * Central interface for the Pac-Man FX user interface layer.
- * <p>
- * A {@code GameUI} implementation owns and orchestrates all JavaFX-facing
- * components: the primary stage, view management, sound, preferences,
- * configuration, and global UI state. It also exposes lifecycle hooks used by
- * the game engine to start, stop, and transition between scenes.
- * <p>
- * The interface is intentionally broad: it acts as the façade through which
- * the non-UI game logic interacts with the presentation layer.
- *
- * <h2>Responsibilities</h2>
- * <ul>
- *   <li>Manage the JavaFX stage and all active views</li>
- *   <li>Coordinate sound, voice playback, and preferences</li>
- *   <li>Expose lifecycle operations (show, restart, terminate)</li>
- *   <li>Provide access to the current game scene and its configuration</li>
- * </ul>
- *
- * <h2>Threading</h2>
- * All UI-modifying methods must be invoked on the JavaFX Application Thread.
- * Implementations may internally schedule work via {@code Platform.runLater}.
- *
- * <h2>Translation</h2>
- * Extends {@link TranslationManager} so all UI text can be localized.
  */
 public interface GameUI {
 
@@ -92,13 +68,13 @@ public interface GameUI {
     /**
      * @return translation service for localized UI messages
      */
-    TranslationManager translator();
+    TranslationManager translationManager();
 
     /**
      * @return the voice player used for sequential voice playback.
      * Only one voice clip plays at a time.
      */
-    VoiceManager voicePlayer();
+    VoiceManager voiceManager();
 
     // ---------------------------------------------------------------------------------------------
     // Messages

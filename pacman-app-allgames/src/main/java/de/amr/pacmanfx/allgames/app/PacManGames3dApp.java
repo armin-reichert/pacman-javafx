@@ -134,7 +134,7 @@ public class PacManGames3dApp extends Application {
                 startPagesCarousel.startPages().forEach(startPage -> startPage.init(ui));
                 startPagesCarousel.setSelectedIndex(0);
 
-                ui.viewManager().playView().dashboard().addCommonSections(ui.translator(), DASHBOARD_IDs);
+                ui.viewManager().playView().dashboard().addCommonSections(ui.translationManager(), DASHBOARD_IDs);
             }
             configureDashboard();
             Logger.info("UI created {} builder", useBuilder ? "using" : "without");

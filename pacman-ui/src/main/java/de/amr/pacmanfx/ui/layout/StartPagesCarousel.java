@@ -11,7 +11,6 @@ import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
 import javafx.geometry.Insets;
@@ -153,6 +152,6 @@ public class StartPagesCarousel extends Carousel implements View {
 
     private String composeTitle() {
         final String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
-        return ui != null ? ui.translator().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
+        return ui != null ? ui.translationManager().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
     }
 }

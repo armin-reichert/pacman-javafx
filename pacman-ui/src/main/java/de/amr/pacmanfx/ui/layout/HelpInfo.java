@@ -79,13 +79,13 @@ public class HelpInfo {
 
         // add default entries:
         if (ui.gameContext().game().cheats().isUsingAutopilot()) {
-            var autoPilotEntry = text(ui.translator().translate("help.autopilot_on"), Color.ORANGE);
+            var autoPilotEntry = text(ui.translationManager().translate("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
         if (ui.gameContext().game().cheats().isImmune()) {
-            var immunityEntry = text(ui.translator().translate("help.immunity_on"), Color.ORANGE);
+            var immunityEntry = text(ui.translationManager().translate("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);
             grid.add(immunityEntry, 0, grid.getRowCount() + 1);
@@ -111,7 +111,7 @@ public class HelpInfo {
     }
 
     private void addRow(String lhsKey, String keyboardKey) {
-        addRow(label(ui.translator().translate(lhsKey), Color.gray(0.9)),
+        addRow(label(ui.translationManager().translate(lhsKey), Color.gray(0.9)),
             text("[" + keyboardKey + "]", Color.YELLOW));
     }
 
@@ -136,10 +136,10 @@ public class HelpInfo {
     }
 
     private void addInfoForPlayScene() {
-        addRow("help.move_left", ui.translator().translate("help.cursor_left"));
-        addRow("help.move_right", ui.translator().translate("help.cursor_right"));
-        addRow("help.move_up", ui.translator().translate("help.cursor_up"));
-        addRow("help.move_down", ui.translator().translate("help.cursor_down"));
+        addRow("help.move_left", ui.translationManager().translate("help.cursor_left"));
+        addRow("help.move_right", ui.translationManager().translate("help.cursor_right"));
+        addRow("help.move_up", ui.translationManager().translate("help.cursor_up"));
+        addRow("help.move_down", ui.translationManager().translate("help.cursor_down"));
         addQuitEntry();
     }
 

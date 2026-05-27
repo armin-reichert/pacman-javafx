@@ -37,7 +37,7 @@ public class DashboardSectionKeyShortcutsLocal extends DashboardSection {
                 .forEach(entry -> {
                     final KeyCombination keyCombination = entry.getKey();
                     final GameAction action = entry.getValue();
-                    final String localizedActionText = ui.translator().translate(action.resourceBundleKey());
+                    final String localizedActionText = ui.translationManager().translate(action.resourceBundleKey());
                     addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(ui)));
                 });
         }

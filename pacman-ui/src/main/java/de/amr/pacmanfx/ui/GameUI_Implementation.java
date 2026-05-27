@@ -76,7 +76,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private final ActionBindingsSet actionBindings = new GameActionBindingsSet();
     private final SoundManager soundManager = new SoundManager();
     private final VoiceManager voiceManager = new VoiceManager();
-    private final TranslationManager translator;
+    private final TranslationManager translationManager;
 
     private final GameSceneEmbedder gameSceneEmbedder = new GameSceneEmbedder();
 
@@ -112,12 +112,12 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         viewManager.setEditorViewFactory(this::createEditorView);
         viewManager.setPlayView(createPlayView());
 
-        translator = () -> GameUIConstants.LOCALIZED_TEXTS;
+        translationManager = () -> GameUIConstants.LOCALIZED_TEXTS;
         spriteAnimationTimer.setSpriteAnimationSet(spriteAnimationSet);
 
         BaseRenderer.setArcadeFont(GameUIConstants.FONT_ARCADE_8);
 
-        initRootPane(mainSceneWidth,mainSceneHeight);
+        initRootPane(mainSceneWidth, mainSceneHeight);
         initGlobalActionBindings();
         initPropertyBindings();
         initScene();
@@ -294,10 +294,14 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     // GameUI interface
 
+    @Override
+    public DirectoryWatchdog customDirWatchdog() {
+        return customDirWatchdog;
+    }
 
     @Override
-    public Scene scene() {
-        return scene;
+    public GameContext gameContext() {
+        return gameContext;
     }
 
     @Override
@@ -330,16 +334,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
             throw new IllegalStateException("Cannot access UI configuration: no game variant is selected");
         }
         return (T) config(gameContext.gameVariantName());
-    }
-
-    @Override
-    public DirectoryWatchdog customDirWatchdog() {
-        return customDirWatchdog;
-    }
-
-    @Override
-    public GameContext gameContext() {
-        return gameContext;
     }
 
     @Override
@@ -390,6 +384,11 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         stopGame();
         gameContext.game().flow().restartStateWithName(CanonicalGameState.BOOT.name());
         Platform.runLater(gameContext.clock()::start);
+    }
+
+    @Override
+    public Scene scene() {
+        return scene;
     }
 
     @Override
@@ -459,8 +458,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
-    public TranslationManager translator() {
-        return translator;
+    public TranslationManager translationManager() {
+        return translationManager;
     }
 
     @Override
@@ -474,7 +473,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
-    public VoiceManager voicePlayer() {
+    public VoiceManager voiceManager() {
         return voiceManager;
     }
 
@@ -485,13 +484,13 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         boolean debug, boolean is3D, boolean paused)
     {
         if (view == null) {
-            return translator.translate("view.missing"); // Should never happen
+            return translationManager.translate("view.missing"); // Should never happen
         }
         if (view.titleSupplier().isPresent()) {
             return view.titleSupplier().get().get();
         }
         final String appTitle = paused ? "app.title.paused" : "app.title";
-        final String viewMode = translator.translate(is3D ? "threeD" : "twoD");
+        final String viewMode = translationManager.translate(is3D ? "threeD" : "twoD");
         final AssetMap assets = gameContext.gameVariantName() != null ? currentConfig().assets() : null;
         final String normalTitle = assets == null ? "" : assets.translate(appTitle, viewMode);
         return gameScene == null || !debug

@@ -71,8 +71,8 @@ public final class CommonActions {
         public void execute(GameUI ui) {
             PerspectiveID id = GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.get().next();
             GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(id);
-            String msgKey = ui.translator().translate("camera_perspective",
-                ui.translator().translate("perspective_id_" + id.name()));
+            String msgKey = ui.translationManager().translate("camera_perspective",
+                ui.translationManager().translate("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
     };
@@ -82,8 +82,8 @@ public final class CommonActions {
         public void execute(GameUI ui) {
             PerspectiveID id = GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.get().prev();
             GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.set(id);
-            String msgKey = ui.translator().translate("camera_perspective",
-                ui.translator().translate("perspective_id_" + id.name()));
+            String msgKey = ui.translationManager().translate("camera_perspective",
+                ui.translationManager().translate("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
     };
@@ -260,7 +260,7 @@ public final class CommonActions {
         public void execute(GameUI ui) {
             toggleBoolean(GameUIConstants.PROPERTY_MINI_VIEW_ON);
             if (!ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D)) {
-                ui.showFlashMessage(ui.translator().translate(GameUIConstants.PROPERTY_MINI_VIEW_ON.get()
+                ui.showFlashMessage(ui.translationManager().translate(GameUIConstants.PROPERTY_MINI_VIEW_ON.get()
                     ? "pip_on" : "pip_off"));
             }
         }
@@ -298,7 +298,7 @@ public final class CommonActions {
             toggleBoolean(GameUIConstants.PROPERTY_3D_ENABLED);
             if (!isPlaySceneActive(ui)) {
                 final boolean usePlayScene3D = GameUIConstants.PROPERTY_3D_ENABLED.get();
-                ui.showFlashMessage(ui.translator().translate(usePlayScene3D ? "use_3D_scene" : "use_2D_scene"));
+                ui.showFlashMessage(ui.translationManager().translate(usePlayScene3D ? "use_3D_scene" : "use_2D_scene"));
             }
             if (canSwitchSceneNow(game)) {
                 ui.gameSceneManager().forceGameSceneUpdate(ui);
