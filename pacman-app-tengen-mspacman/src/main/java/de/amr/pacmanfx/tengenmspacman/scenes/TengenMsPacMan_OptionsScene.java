@@ -132,7 +132,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
         // Button "A" on the joypad is located right of "B": select next value
         else if (Input.instance().joypad.isButtonPressed(JoypadButton.A)
-              || Input.instance().keyboard.isPressed(KeyCode.RIGHT))
+              || Input.instance().keyboard.isKeyPressed(KeyCode.RIGHT))
         {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
@@ -143,7 +143,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
         // Button "B" is left of "A": select previous value
         else if (Input.instance().joypad.isButtonPressed(JoypadButton.B)
-              || Input.instance().keyboard.isPressed(KeyCode.LEFT)) {
+              || Input.instance().keyboard.isKeyPressed(KeyCode.LEFT)) {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue();

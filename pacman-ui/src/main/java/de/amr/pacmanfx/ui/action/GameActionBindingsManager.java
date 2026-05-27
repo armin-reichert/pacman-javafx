@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.ui.input.Keyboard;
-import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyCodeCombination;
 import org.tinylog.Logger;
 
 import java.util.*;
@@ -14,7 +14,7 @@ import static java.util.Objects.requireNonNull;
 public class GameActionBindingsManager implements ActionBindingsManager {
 
     private final Keyboard keyboard;
-    private final Map<KeyCombination, GameAction> actionByKeyCombination = new HashMap<>();
+    private final Map<KeyCodeCombination, GameAction> actionByKeyCombination = new HashMap<>();
 
     public GameActionBindingsManager(Keyboard keyboard) {
         this.keyboard = requireNonNull(keyboard);
@@ -26,7 +26,7 @@ public class GameActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public Map<KeyCombination, GameAction> keyCombinationToActionMap() {
+    public Map<KeyCodeCombination, GameAction> keyCombinationToActionMap() {
         return actionByKeyCombination;
     }
 
@@ -37,8 +37,8 @@ public class GameActionBindingsManager implements ActionBindingsManager {
 
     @Override
     public void assignToKeyboard() {
-        for (KeyCombination combination : actionByKeyCombination.keySet()) {
-            keyboard.setBinding(combination, this);
+        for (KeyCodeCombination combination : actionByKeyCombination.keySet()) {
+            keyboard.registerActionBinding(combination, this);
         }
         logBindings();
         Logger.info("Key bindings assigned");
@@ -46,14 +46,14 @@ public class GameActionBindingsManager implements ActionBindingsManager {
 
     @Override
     public void removeFromKeyboard() {
-        for (KeyCombination combination : actionByKeyCombination.keySet()) {
-            keyboard.removeBinding(combination, this);
+        for (KeyCodeCombination combination : actionByKeyCombination.keySet()) {
+            keyboard.unregisterActionBinding(combination, this);
         }
         Logger.info("Key bindings removed");
     }
 
     @Override
-    public void add(GameAction action, KeyCombination combination) {
+    public void add(GameAction action, KeyCodeCombination combination) {
         requireNonNull(action);
         requireNonNull(combination);
         actionByKeyCombination.put(combination, action);
@@ -85,7 +85,7 @@ public class GameActionBindingsManager implements ActionBindingsManager {
     }
 
     private void registerBinding(ActionBinding binding) {
-        for (KeyCombination combination : binding.keyCombinations()) {
+        for (KeyCodeCombination combination : binding.keyCombinations()) {
             actionByKeyCombination.put(combination, binding.gameAction());
         }
     }

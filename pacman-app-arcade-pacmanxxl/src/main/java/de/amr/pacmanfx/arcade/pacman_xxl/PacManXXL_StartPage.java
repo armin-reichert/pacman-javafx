@@ -18,6 +18,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -94,7 +95,11 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                         menu.startSelectedGame();
                     }
                 }
-                default -> Logger.info("Key '{}': No start page action assigned.", e.getCode());
+                default -> {
+                    if (!e.getCode().isModifierKey()) {
+                        Logger.info("'{}': No start page action assigned.", e.getCode());
+                    }
+                }
             }
         });
     }

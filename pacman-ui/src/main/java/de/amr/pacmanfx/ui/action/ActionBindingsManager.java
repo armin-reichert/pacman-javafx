@@ -5,6 +5,7 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.ui.input.Keyboard;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 
 import java.util.Map;
@@ -49,7 +50,7 @@ public interface ActionBindingsManager extends Disposable {
      *
      * @return a map from {@link KeyCombination} to {@link GameAction}
      */
-    Map<KeyCombination, GameAction> keyCombinationToActionMap();
+    Map<KeyCodeCombination, GameAction> keyCombinationToActionMap();
 
     /**
      * Determines whether the current keyboard state matches any registered action.
@@ -89,7 +90,7 @@ public interface ActionBindingsManager extends Disposable {
      * @param action      the action to rebind
      * @param combination the new key combination
      */
-    void add(GameAction action, KeyCombination combination);
+    void add(GameAction action, KeyCodeCombination combination);
 
     /**
      * Registers exactly one binding for the given action from the provided set.

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.action;
 
-import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyCodeCombination;
 
 import java.util.Map;
 import java.util.Optional;
@@ -23,7 +23,7 @@ public class NullActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public Map<KeyCombination, GameAction> keyCombinationToActionMap() {
+    public Map<KeyCodeCombination, GameAction> keyCombinationToActionMap() {
         return Map.of();
     }
 
@@ -43,7 +43,7 @@ public class NullActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void add(GameAction action, KeyCombination combination) {
+    public void add(GameAction action, KeyCodeCombination combination) {
     }
 
     @Override

@@ -3,6 +3,6 @@
  */
 package de.amr.pacmanfx.ui.action;
 
-import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyCodeCombination;
 
-public record ActionBinding(GameAction gameAction, KeyCombination... keyCombinations) {}
+public record ActionBinding(GameAction gameAction, KeyCodeCombination... keyCombinations) {}

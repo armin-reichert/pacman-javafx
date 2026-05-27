@@ -6,57 +6,54 @@ package de.amr.pacmanfx.ui.input;
 import de.amr.pacmanfx.ui.action.ActionBindingsManager;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
 import java.util.*;
 
+import static java.util.Objects.requireNonNull;
 import static javafx.scene.input.KeyCombination.*;
 
-/**
- * Handles keyboard input and matching of key combinations against registered action.
- */
 public final class Keyboard {
 
-    // Notification mechanism
-    public interface KeyboardListener {
-        void keyboardStateChanged(Keyboard keyboard);
+    public interface KeyboardStateListener {
+        void onKeyboardStateChange(Keyboard keyboard);
     }
 
-    private final Set<KeyboardListener> listeners = new HashSet<>();
-
-    public void addListener(KeyboardListener l) {
-        listeners.add(l);
-    }
-
-    public void removeListener(KeyboardListener l) {
-        listeners.remove(l);
-    }
-
-    // Provide an API for the most common cases
-    public static KeyCombination bare(KeyCode code) { return new KeyCodeCombination(code); }
-    public static KeyCombination alt(KeyCode code) {
+    // API for the most common cases
+    public static KeyCodeCombination bare(KeyCode code) { return new KeyCodeCombination(code); }
+    public static KeyCodeCombination alt(KeyCode code) {
         return new KeyCodeCombination(code, ALT_DOWN);
     }
-    public static KeyCombination control(KeyCode code) {
+    public static KeyCodeCombination control(KeyCode code) {
         return new KeyCodeCombination(code, CONTROL_DOWN);
     }
-    public static KeyCombination shift(KeyCode code) {
+    public static KeyCodeCombination shift(KeyCode code) {
         return new KeyCodeCombination(code, SHIFT_DOWN);
     }
-    public static KeyCombination alt_shift(KeyCode code) { return new KeyCodeCombination(code, SHIFT_DOWN, ALT_DOWN); }
+    public static KeyCodeCombination alt_shift(KeyCode code) { return new KeyCodeCombination(code, SHIFT_DOWN, ALT_DOWN); }
 
-    private final Set<KeyCode> pressedKeys = new HashSet<>();
+    private final Set<KeyboardStateListener> listeners = new HashSet<>();
+    private final Map<KeyCodeCombination, ActionBindingsManager> actionBindingsMap = new HashMap<>();
 
+    // Current state
+    private final Set<KeyCode> pressedKeys = new HashSet<>(4);
     private boolean shiftDown;
     private boolean controlDown;
     private boolean altDown;
     private boolean metaDown;
 
-    private final Map<KeyCombination, ActionBindingsManager> actionBindings = new HashMap<>();
-
     Keyboard() {}
+
+    public void addListener(KeyboardStateListener stateListener) {
+        requireNonNull(stateListener);
+        listeners.add(stateListener);
+    }
+
+    public void removeListener(KeyboardStateListener stateListener) {
+        requireNonNull(stateListener);
+        listeners.remove(stateListener);
+    }
 
     public Set<KeyCode> pressedKeys() {
         return Collections.unmodifiableSet(pressedKeys);
@@ -80,24 +77,26 @@ public final class Keyboard {
 
     public void onKeyPressed(KeyEvent event) {
         if (Logger.isTraceEnabled()) Logger.trace("Key pressed: {}", event);
+
         if (!event.getCode().isModifierKey()) {
             pressedKeys.add(event.getCode());
         }
-        // Always update modifier state because e.g. SHIFT + S is a single event
+
         updateModifierState(event);
 
-        listeners.forEach(listener -> listener.keyboardStateChanged(this));
+        listeners.forEach(listener -> listener.onKeyboardStateChange(this));
     }
 
     public void onKeyReleased(KeyEvent event) {
         if (Logger.isTraceEnabled()) Logger.trace("Key released: {}", event);
+
         if (!event.getCode().isModifierKey()) {
             pressedKeys.remove(event.getCode());
         }
-        // Always update modifier state because e.g. SHIFT + S is a single event
+
         updateModifierState(event);
 
-        listeners.forEach(listener -> listener.keyboardStateChanged(this));
+        listeners.forEach(listener -> listener.onKeyboardStateChange(this));
     }
 
     private void updateModifierState(KeyEvent event) {
@@ -107,46 +106,36 @@ public final class Keyboard {
         metaDown = event.isMetaDown();
     }
 
-    public boolean isPressed(KeyCode keyCode) {
+    public boolean isKeyPressed(KeyCode keyCode) {
+        requireNonNull(keyCode);
         return pressedKeys.contains(keyCode);
     }
 
-    public void setBinding(KeyCombination combination, ActionBindingsManager bindingsManager) {
-        if (actionBindings.get(combination) == bindingsManager) {
-            Logger.debug("Key combination '{}' already bound to action {}", combination, bindingsManager);
+    public void registerActionBinding(KeyCodeCombination combination, ActionBindingsManager bindingsManager) {
+        requireNonNull(combination);
+        requireNonNull(bindingsManager);
+        if (actionBindingsMap.get(combination) == bindingsManager) {
+            Logger.debug("Key combination '{}' already bound to {}", combination, bindingsManager);
         } else {
-            actionBindings.put(combination, bindingsManager);
-            Logger.debug("Key combination '{}' is bound to action {}", combination, bindingsManager);
+            actionBindingsMap.put(combination, bindingsManager);
+            Logger.debug("Key combination '{}' bound to {}", combination, bindingsManager);
         }
     }
 
-    public Map<KeyCombination, ActionBindingsManager> actionBindings() {
-        return actionBindings;
-    }
-
-    public void removeBinding(KeyCombination combination, ActionBindingsManager client) {
-        boolean removed = actionBindings.remove(combination, client);
+    public void unregisterActionBinding(KeyCodeCombination combination, ActionBindingsManager bindingsManager) {
+        boolean removed = actionBindingsMap.remove(combination, bindingsManager);
         if (removed) {
-            Logger.debug("Key code combination '{}' bound to {}", combination, client);
+            Logger.debug("Key code combination '{}' unbound from {}", combination, bindingsManager);
         }
     }
 
-    public boolean isMatching(KeyCombination combination) {
-        KeyCode key = extractKeyCode(combination);
-
+    public boolean isMatching(KeyCodeCombination combination) {
+        final KeyCode key = combination.getCode();
         // If the key for this combination is not currently pressed, it cannot match
         if (!pressedKeys.contains(key)) {
             return false;
         }
-
         return combination.match(syntheticKeyEvent(key));
-    }
-
-    private KeyCode extractKeyCode(KeyCombination combination) {
-        if (combination instanceof KeyCodeCombination kc) {
-            return kc.getCode();
-        }
-        throw new IllegalArgumentException("Only KeyCodeCombination is supported");
     }
 
     private KeyEvent syntheticKeyEvent(KeyCode keyCode) {
