@@ -53,7 +53,7 @@ public interface Game {
      *
      * @return the current {@link SimulationStep}
      */
-    SimulationStep simulationStep();
+    SimulationStep doSimulationStep();
 
     /** @return the data used to render the heads‑up display (HUD) */
     HeadsUpDisplay hud();

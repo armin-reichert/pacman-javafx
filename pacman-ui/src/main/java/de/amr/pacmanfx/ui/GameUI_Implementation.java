@@ -76,7 +76,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private final ActionBindingsSet actionBindings = new GameActionBindingsSet();
     private final SoundManager soundManager = new SoundManager();
     private final VoiceManager voiceManager = new VoiceManager();
-    private final TranslationManager translationManager;
+    private final TranslationManager translationManager = () -> GameUIConstants.LOCALIZED_TEXTS;
 
     private final GameSceneEmbedder gameSceneEmbedder = new GameSceneEmbedder();
 
@@ -108,11 +108,11 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         gameSceneManager.setEmbedder(this, gameSceneEmbedder);
 
         viewManager = createViewManager();
+
         viewManager.setStartView(new StartPagesCarousel(this));
         viewManager.setEditorViewFactory(this::createEditorView);
         viewManager.setPlayView(createPlayView());
 
-        translationManager = () -> GameUIConstants.LOCALIZED_TEXTS;
         spriteAnimationTimer.setSpriteAnimationSet(spriteAnimationSet);
 
         BaseRenderer.setArcadeFont(GameUIConstants.FONT_ARCADE_8);
@@ -122,7 +122,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         initPropertyBindings();
         initScene();
         initStage();
-        initGameClock();
+        initGameClock(gameContext.clock());
     }
 
     private ViewManager createViewManager() {
@@ -164,10 +164,12 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         return editorView;
     }
 
-    private void initGameClock() {
-        final GameClock clock = requireNonNull(gameContext.clock(), "Game clock has not been set in game context?");
+    private void initGameClock(GameClock clock) {
         clock.setUpdateAction(() -> {
-            simulate(gameContext.game());
+            final SimulationStep step = gameContext.game().doSimulationStep();
+            step.clearInfo(clock.tickCount());
+            gameContext.game().flow().update();
+            step.printLog();
             gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });
         clock.setPermanentAction(() -> viewManager.currentView().render());
@@ -257,13 +259,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         stage.setScene(scene);
         stage.setMinWidth(MIN_STAGE_WIDTH);
         stage.setMinHeight(MIN_STAGE_HEIGHT);
-    }
-
-    private void simulate(Game game) {
-        final SimulationStep simulationStep = game.simulationStep();
-        simulationStep.init(gameContext.clock().tickCount());
-        game.flow().update();
-        simulationStep.printLog();
     }
 
     /**

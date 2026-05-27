@@ -33,7 +33,7 @@ public class SimulationStep {
     public final List<Ghost> ghostsKilled = new ArrayList<>();
     public final Set<Ghost>  ghostsCollidingWithPac = new HashSet<>(4);
 
-    public void init(long tick) {
+    public void clearInfo(long tick) {
         this.tick = tick;
         foodTile = null;
         energizerFound = false;

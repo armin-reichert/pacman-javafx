@@ -199,7 +199,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
      * ---------------------------------------------------------------------- */
 
     @Override
-    public SimulationStep simulationStep() {
+    public SimulationStep doSimulationStep() {
         return simStep;
     }
 
