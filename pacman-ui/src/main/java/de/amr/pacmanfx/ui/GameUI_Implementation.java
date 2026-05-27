@@ -138,9 +138,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         initScene();
         initStage();
         initGameClock();
-
-        // preload to make 3D scene creation faster
-        load3DModels();
     }
 
     private ViewManager createViewManager() {
@@ -193,6 +190,15 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         return playView;
     }
 
+    private EditorView createEditorView() {
+        final var editorView = new EditorView(stage, this);
+        editorView.editor().setOnQuit(_ -> {
+            stage.titleProperty().bind(titleBinding);
+            viewManager.selectStartView(this);
+        });
+        return editorView;
+    }
+
     private void initGameClock() {
         final GameClock clock = requireNonNull(gameContext.clock(), "Game clock has not been set in game context?");
         clock.setUpdateAction(() -> {
@@ -232,12 +238,12 @@ public final class GameUI_Implementation extends PreferencesManager implements G
                 final GameScene gameScene = optGameScene().orElse(null);
                 return computeStageTitle(viewManager.currentView(), gameScene, debug, is3D, paused);
             },
+            gameContext.clock().updatesDisabledProperty(),
             gameContext.gameVariantNameProperty(),
             viewManager.currentViewProperty(),
-            gameSceneManager().gameSceneProperty(),
+            gameSceneManager.gameSceneProperty(),
             GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE,
-            GameUIConstants.PROPERTY_3D_ENABLED,
-            gameContext.clock().updatesDisabledProperty()
+            GameUIConstants.PROPERTY_3D_ENABLED
         );
         stage.titleProperty().bind(titleBinding);
 
@@ -256,15 +262,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
             statusIconBox.iconCheated()  .visibleProperty().bind(game.cheats().cheatUsedProperty());
             statusIconBox.iconImmune()   .visibleProperty().bind(game.cheats().immuneProperty());
         });
-    }
-
-    private EditorView createEditorView() {
-        final var editorView = new EditorView(stage, this);
-        editorView.editor().setOnQuit(_ -> {
-            stage.titleProperty().bind(titleBinding);
-            viewManager.selectStartView(this);
-        });
-        return editorView;
     }
 
     private void initGlobalActionBindings() {
@@ -441,6 +438,9 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public void show() {
+        // preload to make 3D scene creation faster
+        load3DModels();
+
         // These need the current UI config to be initialized
         GameUIConstants.PROPERTY_3D_WALL_HEIGHT .set(currentConfig().worldConfig().maze().obstacleBaseHeight());
         GameUIConstants.PROPERTY_3D_WALL_OPACITY.set(currentConfig().worldConfig().maze().obstacleOpacity());
