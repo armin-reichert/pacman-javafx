@@ -136,7 +136,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
         BaseRenderer.setArcadeFont(GameUIConstants.FONT_ARCADE_8);
 
-        initLayout(mainSceneWidth,mainSceneHeight);
+        initRootPane(mainSceneWidth,mainSceneHeight);
         initGlobalActionBindings();
         initPropertyBindings();
         initScene();
@@ -207,10 +207,10 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         clock.setErrorHandler(this::ka_tas_tro_phe);
     }
 
-    private void initLayout(int mainSceneWidth, int mainSceneHeight) {
-        rootPane.setPrefSize(mainSceneWidth, mainSceneHeight);
-        // First child is placeholder for current view (start view, play view, ...)
-        rootPane.getChildren().setAll(new Region(), statusIconBox, flashMessageView, createKeyboardMonitor());
+    private void initRootPane(int width, int height) {
+        rootPane.setPrefSize(width, height);
+        // First child is placeholder for the current view (start view, play view, editor view)
+        rootPane.getChildren().addAll(new Region(), statusIconBox, flashMessageView, createKeyboardMonitor());
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
     }
 
@@ -241,6 +241,12 @@ public final class GameUI_Implementation extends PreferencesManager implements G
             VBox.setMargin(title, new Insets(4));
             box.getChildren().add(title);
 
+            final Text closeHint = new Text("Press Alt+K to close");
+            closeHint.setFill(Color.WHITE);
+            closeHint.setFont(titleFont);
+            VBox.setMargin(closeHint, new Insets(4));
+            box.getChildren().add(closeHint);
+
             final Font labelFont = Font.font("Monospace", FontWeight.BOLD, 16);
             keyboard.pressedKeys().stream().sorted().forEach(keyCode -> {
                 final Text stateLabel = new Text();
@@ -254,15 +260,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
                 stateLabel.setText(modText + keyCode.getName());
                 box.getChildren().add(stateLabel);
             });
-
-            final Text footer = new Text("Press Alt+K to close");
-            footer.setFill(Color.WHITE);
-            footer.setFont(titleFont);
-            VBox.setMargin(footer, new Insets(4));
-            box.getChildren().add(footer);
-
         });
-
         return box;
     }
 
