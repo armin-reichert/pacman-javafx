@@ -93,7 +93,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
     private void updateActorZOrder(GameLevel gameLevel) {
         actorsInZOrder.clear();
         gameLevel.optBonus().ifPresent(actorsInZOrder::add);
-        actorsInZOrder.add(gameLevel.pac());
+        actorsInZOrder.add(gameLevel.entities().pac());
         GHOST_Z_ORDER.stream().map(gameLevel::ghost).forEach(actorsInZOrder::add);
     }
 }

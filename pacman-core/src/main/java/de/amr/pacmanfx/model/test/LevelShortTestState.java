@@ -27,7 +27,7 @@ public class LevelShortTestState<GAME extends Game> extends TestState<GAME> {
         game.buildNormalLevel(1);
         game.startLevel();
         final GameLevel level = game.optGameLevel().orElseThrow();
-        level.pac().show();
+        level.entities().pac().show();
         level.ghosts().forEach(Ghost::show);
     }
 
@@ -81,7 +81,7 @@ public class LevelShortTestState<GAME extends Game> extends TestState<GAME> {
                 level.setMessage(message);
             }
         } else {
-            game.optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> bonus.tick(game));
+            game.optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> bonus.update(level));
         }
     }
 

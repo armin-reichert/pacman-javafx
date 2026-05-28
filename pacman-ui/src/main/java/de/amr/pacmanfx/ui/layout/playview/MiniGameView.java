@@ -156,7 +156,7 @@ public class MiniGameView {
             levelRenderer.drawLevel(level, info);
 
             level.optBonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
-            actorRenderer.drawActor(level.pac());
+            actorRenderer.drawActor(level.entities().pac());
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
                 .map(level::ghost)
                 .forEach(ghost -> actorRenderer.drawActor(ghost));

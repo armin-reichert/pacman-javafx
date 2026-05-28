@@ -26,7 +26,7 @@ public class GhostFactory {
             ghost.tryMovingTowardsTargetTile(level, targetTile);
         });
 
-        ghost.setChasingTargetTileStrategy(level -> level.pac().computeTile());
+        ghost.setChasingTargetTileStrategy(level -> level.entities().pac().computeTile());
 
         ghost.reset();
         return ghost;
@@ -35,7 +35,7 @@ public class GhostFactory {
     public static Ghost createPinkGhostAmbusher(String name) {
         final Ghost ghost = new Ghost(Globals.PINK_GHOST_SPEEDY, name);
 
-        ghost.setChasingTargetTileStrategy(level -> level.pac().tilesAheadWithOverflowBug(4));
+        ghost.setChasingTargetTileStrategy(level -> level.entities().pac().tilesAheadWithOverflowBug(4));
 
         ghost.reset();
         return ghost;
@@ -45,7 +45,7 @@ public class GhostFactory {
         final Ghost ghost = new Ghost(Globals.CYAN_GHOST_BASHFUL, name);
 
         ghost.setChasingTargetTileStrategy(level ->
-            level.pac().tilesAheadWithOverflowBug(2)
+            level.entities().pac().tilesAheadWithOverflowBug(2)
                 .scaled(2)
                 .minus(level.ghost(RED_GHOST_SHADOW).computeTile()));
 
@@ -57,9 +57,9 @@ public class GhostFactory {
         final Ghost ghost = new Ghost(Globals.ORANGE_GHOST_POKEY, name);
 
         ghost.setChasingTargetTileStrategy(level ->
-            ghost.computeTile().euclideanDist(level.pac().computeTile()) < 8
+            ghost.computeTile().euclideanDist(level.entities().pac().computeTile()) < 8
             ? level.worldMap().terrainLayer().ghostScatterTile(ghost.personality())
-            : level.pac().computeTile()
+            : level.entities().pac().computeTile()
         );
 
         ghost.reset();

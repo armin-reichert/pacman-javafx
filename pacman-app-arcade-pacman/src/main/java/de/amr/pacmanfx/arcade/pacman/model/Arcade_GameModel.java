@@ -122,7 +122,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         scorePoints(level, pelletPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
-        level.pac().setRestingTicks(restingTicksPellet);
+        level.entities().pac().setRestingTicks(restingTicksPellet);
         checkRedGhostCruiseElroyActivation(level);
     }
 
@@ -131,7 +131,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
-        final Pac pac = level.pac();
+        final Pac pac = level.entities().pac();
 
         scorePoints(level, energizerPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
@@ -224,7 +224,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
         else if (tick == Arcade_GameState.TICK_NEW_GAME_SHOW_GUYS) {
             final GameLevel level = optGameLevel().orElseThrow();
-            level.pac().show();
+            level.entities().pac().show();
             level.ghosts().forEach(Ghost::show);
         }
         else if (tick == Arcade_GameState.TICK_NEW_GAME_START_HUNTING) {
@@ -238,7 +238,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         final GameLevel level = optGameLevel().orElseThrow();
         if (tick == 1) {
             makeReadyForPlaying(level);
-            level.pac().show();
+            level.entities().pac().show();
             level.ghosts().forEach(Ghost::show);
             showLevelMessage(level, GameLevelMessageType.READY);
         }
@@ -259,7 +259,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void doLevelPlaying() {
         final GameLevel level = optGameLevel().orElseThrow();
-        level.pac().show();
+        level.entities().pac().show();
         level.ghosts().forEach(Ghost::show);
         doHuntingStep(level);
         if (gateKeeper != null) {
@@ -301,7 +301,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
         else {
             level.blinking().doTick();
-            pac.tick(this);
+            pac.update(level);
         }
     }
 
@@ -318,8 +318,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         ghost.animationManager().selectAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, alreadyKilled);
 
         level.energizerVictims().add(ghost);
-        level.incrementGhostKillCount();
-        level.pac().hide();
+        level.entities().pac().hide();
         level.ghosts().forEach(g -> g.animationManager().stopSelected());
         flow().publishGameEvent(new GhostEatenEvent(this, ghost));
     }
@@ -329,11 +328,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         final GameLevel level = optGameLevel().orElseThrow();
         if (tick < Arcade_GameState.TICK_EATING_GHOST_DURATION) {
             level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
-                .forEach(ghost -> ghost.tick(this));
+                .forEach(ghost -> ghost.update(level));
             level.blinking().doTick();
         }
         else if (tick == Arcade_GameState.TICK_EATING_GHOST_DURATION) {
-            level.pac().show();
+            level.entities().pac().show();
             level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
             level.ghosts().forEach(ghost -> ghost.animationManager().playSelected());
         }
@@ -385,15 +384,19 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         int levelNumber = 1;
         final GameLevel level = createLevel(levelNumber, true);
         level.setCutSceneNumber(0);
-        level.pac().setImmune(false);
-        level.pac().setUsingAutopilot(true);
-        level.pac().setAutomaticSteering(demoLevelSteering);
+
+        final Pac pac = level.entities().pac();
+        pac.setImmune(false);
+        pac.setUsingAutopilot(true);
+        pac.setAutomaticSteering(demoLevelSteering);
+
+        gateKeeper.setLevelNumber(levelNumber);
         demoLevelSteering.init();
         levelCounter().setEnabled(true);
         score().setLevelNumber(levelNumber);
-        gateKeeper.setLevelNumber(levelNumber);
 
         levelProperty().set(level);
+
         flow().publishGameEvent(new LevelCreatedEvent(this, level));
     }
 
@@ -408,7 +411,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         else if (tick == 3) {
             // Now, actor animations are available, show them
             final GameLevel level = optGameLevel().orElseThrow();
-            level.pac().show();
+            level.entities().pac().show();
             level.ghosts().forEach(Ghost::show);
         }
         else if (tick == Arcade_GameState.TICK_RESUME_HUNTING) {

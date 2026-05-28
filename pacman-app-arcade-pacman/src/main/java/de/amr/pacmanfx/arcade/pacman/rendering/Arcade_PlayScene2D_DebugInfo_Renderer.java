@@ -92,12 +92,12 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
         });
     }
 
-    private void updateActorDrawingOrder(GameLevel gameLevel) {
+    private void updateActorDrawingOrder(GameLevel level) {
         actorsInZOrder.clear();
-        gameLevel.optBonus().ifPresent(actorsInZOrder::add);
-        actorsInZOrder.add(gameLevel.pac());
+        level.optBonus().ifPresent(actorsInZOrder::add);
+        actorsInZOrder.add(level.entities().pac());
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
-            .map(gameLevel::ghost)
+            .map(level::ghost)
             .forEach(actorsInZOrder::add);
     }
 }

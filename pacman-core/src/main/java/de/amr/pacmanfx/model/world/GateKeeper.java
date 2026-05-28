@@ -166,7 +166,7 @@ public class GateKeeper {
             return Optional.of(String.format("Global dot counter reached limit (%d)", GLOBAL_LIMITS[personality]));
         }
         // check Pac-Man starving ticks
-        final Pac pac = level.pac();
+        final Pac pac = level.entities().pac();
         if (pac.starvingTicks() >= pacStarvingLimit) {
             pac.endStarving();
             return Optional.of(String.format("%s reached starving limit (%d ticks)", pac.name(), pacStarvingLimit));

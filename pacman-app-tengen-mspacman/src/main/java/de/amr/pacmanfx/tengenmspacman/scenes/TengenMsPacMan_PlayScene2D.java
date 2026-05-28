@@ -9,6 +9,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
@@ -148,7 +149,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
                     .ifPresent(MovingGameLevelMessage::updateMovement);
             }
             if (subScene.getCamera() == dynamicCamera) {
-                dynamicCamera.update(TS(level.worldMap().numRows()), level.pac());
+                dynamicCamera.update(TS(level.worldMap().numRows()), level.entities().pac());
             }
             updateHUD(level);
             soundEffects().ifPresent(soundEffects -> {
@@ -232,7 +233,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private void updateHUD(GameLevel level) {
         final TengenMsPacMan_GameModel game = gameContext().game();
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
-        final boolean oneExtra = game.flow().state() == TengenMsPacMan_GameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
+        final boolean oneExtra = game.flow().state() == TengenMsPacMan_GameState.STARTING_GAME_OR_LEVEL
+            && !level.entities().pac().isVisible();
         final int displayedLifeCount = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
         game.hud().setVisibleLifeCount(Math.clamp(displayedLifeCount, 0, game.hud().maxLivesDisplayed()));
         game.hud().levelNumber(game.mapCategory() != MapCategory.ARCADE);
@@ -252,10 +254,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     protected void resetAnimations(GameLevel level) {
         final TengenMsPacMan_GameModel game = gameContext().game();
-        level.pac().animationManager().select(game.isBoosterActive()
+
+        final Pac pac = level.entities().pac();
+        pac.animationManager().select(game.isBoosterActive()
             ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER
             : ArcadePacMan_AnimationID.PAC_MUNCHING);
-        level.pac().animationManager().resetSelected();
+        pac.animationManager().resetSelected();
+
         level.ghosts().forEach(ghost -> {
             ghost.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
             ghost.animationManager().resetSelected();

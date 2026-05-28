@@ -6,6 +6,9 @@ package de.amr.pacmanfx.model.test;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.Pac;
+
+import java.util.List;
 
 public class LevelMediumTestState<GAME extends Game> extends TestState<GAME> {
 
@@ -15,16 +18,23 @@ public class LevelMediumTestState<GAME extends Game> extends TestState<GAME> {
 
     private void configureLevelForTest(GAME game) {
         final GameLevel level = game.optGameLevel().orElseThrow();
-        level.pac().usingAutopilotProperty().unbind();
-        level.pac().setUsingAutopilot(true);
-        level.pac().animationManager().playSelected();
-        level.ghosts().forEach(ghost -> ghost.animationManager().playSelected());
-        level.pac().show();
-        level.ghosts().forEach(Ghost::show);
-        GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
+
+        final Pac pac = level.entities().pac();
+        pac.usingAutopilotProperty().unbind();
+        pac.setUsingAutopilot(true);
+        pac.animationManager().playSelected();
+        pac.show();
+
+        final List<Ghost> ghosts = level.entities().ghosts();
+        ghosts.forEach(ghost -> ghost.animationManager().playSelected());
+        ghosts.forEach(Ghost::show);
+
+        final var message = new GameLevelMessage(GameLevelMessageType.TEST);
         message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
         level.setMessage(message);
+
         game.hud().show();
+
         game.flow().publishGameEvent(new StopAllSoundsEvent(game));
     }
 
@@ -41,9 +51,13 @@ public class LevelMediumTestState<GAME extends Game> extends TestState<GAME> {
     @Override
     public void onUpdate(GAME game) {
         final GameLevel level = game.optGameLevel().orElseThrow();
-        level.pac().tick(game);
-        level.ghosts().forEach(ghost -> ghost.tick(game));
-        level.optBonus().ifPresent(bonus -> bonus.tick(game));
+
+        level.entities().pac().update(level);
+
+        level.ghosts().forEach(ghost -> ghost.update(level));
+
+        level.optBonus().ifPresent(bonus -> bonus.update(level));
+
         game.doLevelPlaying();
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {

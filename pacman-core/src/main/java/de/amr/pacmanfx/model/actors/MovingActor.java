@@ -6,8 +6,8 @@ package de.amr.pacmanfx.model.actors;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -24,7 +24,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Base class for all actors which know how to move through a level's world.
  */
-public class MovingActor extends Actor {
+public abstract class MovingActor extends Actor implements GameLevelEntity {
 
     public static final Direction DEFAULT_MOVE_DIR = RIGHT;
     public static final Direction DEFAULT_WISH_DIR = RIGHT;
@@ -54,13 +54,6 @@ public class MovingActor extends Actor {
     protected MovingActor(String name) {
         this.name = requireNonNull(name);
     }
-
-    /**
-     * Called on every tick of the game clock.
-     *
-     * @param game the game
-     */
-    public void tick(Game game) {}
 
     /**
      * @return readable name, used in UI and logging

@@ -12,6 +12,7 @@ import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.action.CheatActions;
@@ -122,14 +123,15 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private void updateLivesCounter(GameLevel level) {
         final Game game = level.game();
         final int additionalLives = level.game().flow().state() == Arcade_GameState.STARTING_GAME_OR_LEVEL
-            && !level.pac().isVisible() ? 1 : 0;
+            && !level.entities().pac().isVisible() ? 1 : 0;
         final int count = Math.clamp(game.lifeCount() - 1 + additionalLives, 0, game.hud().maxLivesDisplayed());
         game.hud().setVisibleLifeCount(count);
     }
 
     protected void resetActorAnimations(GameLevel level) {
-        level.pac().animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
-        level.pac().animationManager().resetSelected();
+        final Pac pac = level.entities().pac();
+        pac.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pac.animationManager().resetSelected();
         level.ghosts().forEach(ghost -> {
             ghost.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
             ghost.animationManager().resetSelected();

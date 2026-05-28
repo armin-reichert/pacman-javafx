@@ -29,8 +29,8 @@ public class GameEventHandler extends DefaultGameEventListener {
                 final UIConfig uiConfig = ui.currentConfig();
 
                 //TODO this should be done elsewhere
-                level.pac().setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
-                level.ghosts().forEach(ghost ->
+                level.entities().pac().setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
+                level.entities().ghosts().forEach(ghost ->
                     ghost.setAnimationManager(uiConfig.createGhostAnimations(ui.spriteAnimationSet(), ghost.personality())));
 
                 final MiniGameView miniGameView = ui.viewManager().playView().miniView();

@@ -341,7 +341,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createPac3D() {
         final PacConfig config = uiConfig.worldConfig().pacConfig();
-        entitySet.pac3D = uiConfig.factory3D().createPac3D(level.pac(), config, animationRegistry);
+        entitySet.pac3D = uiConfig.factory3D().createPac3D(level.entities().pac(), config, animationRegistry);
         entitySet.add(entitySet.pac3D);
     }
 

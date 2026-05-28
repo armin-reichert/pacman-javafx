@@ -56,9 +56,9 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             ctx.setFill(debugTextFill);
             ctx.setFont(debugTextFont);
             ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * TS));
-            game.optGameLevel().ifPresent(gameLevel -> {
-                drawMovingActorInfo(gameLevel.pac());
-                gameLevel.ghosts().forEach(this::drawMovingActorInfo);
+            game.optGameLevel().ifPresent(level -> {
+                drawMovingActorInfo(level.entities().pac());
+                level.ghosts().forEach(this::drawMovingActorInfo);
             });
             ctx.fillText("Camera y=%.2f".formatted(playScene.dynamicCamera().getTranslateY()), scaled(11*TS), scaled(15*TS));
             ctx.restore();
@@ -140,7 +140,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     private void configureActorZOrder(GameLevel level) {
         actorsInZOrder.clear();
         level.optBonus().ifPresent(actorsInZOrder::add);
-        actorsInZOrder.add(level.pac());
+        actorsInZOrder.add(level.entities().pac());
         GHOSTS_Z_ORDER.stream().map(level::ghost).forEach(actorsInZOrder::add);
     }
 }

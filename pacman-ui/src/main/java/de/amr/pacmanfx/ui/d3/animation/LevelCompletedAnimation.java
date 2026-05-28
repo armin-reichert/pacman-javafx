@@ -72,7 +72,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
         return new SequentialTransition(
             pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),
             createMazeWallsSwingingAnimation(maze3D, level.numFlashes()),
-            pauseSecThen(0.5, () -> level.pac().hide()),
+            pauseSecThen(0.5, () -> level.entities().pac().hide()),
             pauseSec(0.5),
             levelRotation(rotationAxis),
             pauseSecThen(0.5, () -> level3D.optSoundEffects().ifPresent(GameSoundEffects::playLevelCompleteSound)),

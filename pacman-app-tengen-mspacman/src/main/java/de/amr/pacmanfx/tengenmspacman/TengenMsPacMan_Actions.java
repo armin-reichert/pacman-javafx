@@ -76,7 +76,7 @@ public interface TengenMsPacMan_Actions {
             final Game game = ui.gameContext().game();
             game.optGameLevel().ifPresent(gameLevel -> {
                 final var tengenGame = (TengenMsPacMan_GameModel) game;
-                tengenGame.activatePacBooster(gameLevel.pac(), !tengenGame.isBoosterActive());
+                tengenGame.activatePacBooster(gameLevel.entities().pac(), !tengenGame.isBoosterActive());
                 if (tengenGame.isBoosterActive()) {
                     ui.showFlashMessage("Booster!"); //TODO localize
                 }

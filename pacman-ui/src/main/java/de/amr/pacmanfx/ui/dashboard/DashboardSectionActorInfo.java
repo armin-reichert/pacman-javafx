@@ -34,7 +34,7 @@ public class DashboardSectionActorInfo extends DashboardSection {
         addDynamicLabeledValue("Movement", supplyPacInfo(gameSupplier, this::actorMovementInfo));
         addDynamicLabeledValue("Tile",     supplyPacInfo(gameSupplier, this::actorLocationInfo));
         addDynamicLabeledValue("Power",    ifGameLevel(gameSupplier, gameLevel -> {
-            TickTimer powerTimer = gameLevel.pac().powerTimer();
+            TickTimer powerTimer = gameLevel.entities().pac().powerTimer();
             return powerTimer.isRunning()
                 ? "Remaining: %s".formatted(ticksToString(powerTimer.remainingTicks()))
                 : "No Power";
@@ -76,7 +76,7 @@ public class DashboardSectionActorInfo extends DashboardSection {
         Supplier<Game> gameSupplier,
         BiFunction<GameLevel, Pac, String> detailInfoSupplier)
     {
-        return ifGameLevel(gameSupplier, level -> detailInfoSupplier.apply(level, level.pac()));
+        return ifGameLevel(gameSupplier, level -> detailInfoSupplier.apply(level, level.entities().pac()));
     }
 
     private void addGhostInfo(Supplier<Game> gameSupplier, byte personality) {

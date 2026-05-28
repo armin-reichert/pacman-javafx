@@ -9,7 +9,6 @@ import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.event.BonusExpiredEvent;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
@@ -119,7 +118,12 @@ public class Bonus extends MovingActor {
     }
 
     @Override
-    public void tick(Game game) {
+    public void init(GameLevel level) {
+
+    }
+
+    @Override
+    public void update(GameLevel level) {
         timer.doTick();
         switch (state) {
             case EDIBLE -> {
@@ -128,19 +132,18 @@ public class Bonus extends MovingActor {
                     edibleStateOver = timer.hasExpired();
                 }
                 else {
-                    final GameLevel level = game.optGameLevel().orElseThrow();
                     boolean mazeExitReached = wanderMaze(level);
                     edibleStateOver = mazeExitReached || timer.hasExpired();
                 }
                 if (edibleStateOver) {
                     setInactive();
-                    game.flow().publishGameEvent(new BonusExpiredEvent(game, this));
+                    level.game().flow().publishGameEvent(new BonusExpiredEvent(level.game(), this));
                 }
             }
             case EATEN -> {
                 if (timer.hasExpired()) {
                     setInactive();
-                    game.flow().publishGameEvent(new BonusExpiredEvent(game, this));
+                    level.game().flow().publishGameEvent(new BonusExpiredEvent(level.game(), this));
                 }
             }
             case INACTIVE -> {}

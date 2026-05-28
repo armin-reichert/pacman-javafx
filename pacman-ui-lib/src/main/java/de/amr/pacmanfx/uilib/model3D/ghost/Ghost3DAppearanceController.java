@@ -19,7 +19,7 @@ public class Ghost3DAppearanceController {
     }
 
     public void update(Ghost3D ghost3D, GameLevel level) {
-        final Pac pac = level.pac();
+        final Pac pac = level.entities().pac();
         final Ghost ghost = ghost3D.ghost();
 
         final GhostAppearance appearance = switch (ghost.state()) {

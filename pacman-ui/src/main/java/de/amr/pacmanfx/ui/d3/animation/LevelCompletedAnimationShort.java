@@ -43,7 +43,7 @@ public class LevelCompletedAnimationShort extends ManagedAnimation {
             pauseSecThen(0.5, () -> level.ghosts().forEach(Ghost::hide)),
             pauseSec(0.5),
             createMazeWallsSwingingAnimation(maze3D, level.numFlashes()),
-            pauseSecThen(0.5, () -> level.pac().hide())
+            pauseSecThen(0.5, () -> level.entities().pac().hide())
         );
     }
 }

@@ -7,6 +7,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 
@@ -29,14 +30,18 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         int[] levelNumbers = { 1, 3, 6, 10, 14, 18 };
         int levelNumber = levelNumbers[new Random().nextInt(levelNumbers.length)];
         mapSelector().setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
+
         final GameLevel level = createLevel(levelNumber, true);
-        level.pac().setImmune(false);
-        level.pac().setUsingAutopilot(true);
-        level.pac().setAutomaticSteering(demoLevelSteering);
+
+        final Pac pac = level.entities().pac();
+        pac.setImmune(false);
+        pac.setUsingAutopilot(true);
+        pac.setAutomaticSteering(demoLevelSteering);
+
+        gateKeeper.setLevelNumber(levelNumber);
         demoLevelSteering.init();
         levelCounter().setEnabled(false);
         score().setLevelNumber(levelNumber);
-        gateKeeper.setLevelNumber(levelNumber);
 
         levelProperty().set(level);
         flow().publishGameEvent(new LevelCreatedEvent(this, level));

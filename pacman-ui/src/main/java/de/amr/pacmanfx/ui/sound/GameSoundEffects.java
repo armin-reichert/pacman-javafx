@@ -174,7 +174,7 @@ public class GameSoundEffects {
         }
         if (level.game().flow().state().matchesByName(LEVEL_PLAYING.name())) {
             playSiren(level);
-            playGhostSounds(level.pac(), level.ghosts());
+            playGhostSounds(level.entities().pac(), level.ghosts());
         }
     }
 
@@ -283,7 +283,7 @@ public class GameSoundEffects {
 
     // siren numbers are 1..4, hunting phase index = 0..7
     private int computeSirenNumber(GameLevel level) {
-        final boolean pacPowerless = !level.pac().powerTimer().isRunning();
+        final boolean pacPowerless = !level.entities().pac().powerTimer().isRunning();
         if (pacPowerless) {
             return 1 + level.huntingTimer().phaseIndex() / 2;
         }

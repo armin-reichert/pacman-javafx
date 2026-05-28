@@ -16,10 +16,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static de.amr.pacmanfx.Globals.*;
 import static java.util.Objects.requireNonNull;
@@ -292,16 +289,21 @@ public abstract class AbstractGameModel implements Game, GameCheats {
     @Override
     public void onStartLevelPlaying() {
         final GameLevel level = optGameLevel().orElseThrow();
+
         // Clear "READY!" message. "GAME_OVER" (demo level) and  "TEST LEVEL XX" messages are not cleared!
         level.optMessage()
             .filter(message -> message.type() == GameLevelMessageType.READY)
             .ifPresent(_ -> level.clearMessage());
-        level.huntingTimer().startFirstPhase(level.number());
+
         level.blinking().setStartState(Pulse.State.ON);
         level.blinking().restart();
-        level.pac().animationManager().playSelected();
+
+        level.entities().pac().animationManager().playSelected();
         level.ghosts().forEach(ghost -> ghost.animationManager().playSelected());
-        flow().publishGameEvent(new HuntingPhaseStartedEvent(this, level.huntingTimer().phaseIndex(), level.huntingTimer().phase()));
+
+        final AbstractHuntingTimer huntingTimer = level.huntingTimer();
+        huntingTimer.startFirstPhase(level.number());
+        flow().publishGameEvent(new HuntingPhaseStartedEvent(this, huntingTimer.phaseIndex(), huntingTimer.phase()));
     }
 
     /**
@@ -320,13 +322,13 @@ public abstract class AbstractGameModel implements Game, GameCheats {
         // If level was ended by cheat, there might still be food remaining, so eat it:
         level.worldMap().foodLayer().eatAll();
 
-        final Pac pac = level.pac();
+        final Pac pac = level.entities().pac();
+        pac.animationManager().stopSelected();
+        pac.animationManager().select(ArcadePacMan_AnimationID.PAC_FULL);
+        pac.setSpeed(0);
         pac.powerTimer().stop();
         pac.powerTimer().reset(0);
         Logger.info("Power timer stopped and reset to zero.");
-        pac.setSpeed(0);
-        pac.animationManager().stopSelected();
-        pac.animationManager().select(ArcadePacMan_AnimationID.PAC_FULL);
 
         level.ghosts().forEach(ghost -> ghost.animationManager().stopSelected());
         level.optBonus().ifPresent(Bonus::setInactive);
@@ -341,9 +343,10 @@ public abstract class AbstractGameModel implements Game, GameCheats {
      * wants to move to the left.
      */
     protected void makeReadyForPlaying(GameLevel level) {
-        final Pac pac = level.pac();
-        pac.reset(); // initially invisible!
         final Vector2f startPosition = level.worldMap().terrainLayer().pacStartPosition();
+
+        final Pac pac = level.entities().pac();
+        pac.reset(); // initially invisible!
         pac.setPosition(startPosition);
         pac.setMoveDir(Direction.LEFT);
         pac.setWishDir(Direction.LEFT);
@@ -434,26 +437,26 @@ public abstract class AbstractGameModel implements Game, GameCheats {
      * @param level the current game level
      */
     protected void doHuntingStep(GameLevel level) {
-        final Pac pac = level.pac();
         boolean quitHunting = false;
 
-        pac.tick(this);
-        detectCollisions(level);
+        final Pac pac = level.entities().pac();
+        final List<Ghost> ghosts = level.entities().ghosts();
+        final Bonus bonus = level.entities().optBonus().orElse(null);
 
-        level.ghosts().forEach(ghost -> ghost.tick(this));
+        detectCollisions(level, pac, ghosts, bonus);
 
-        if (isCollisionDoubleChecked()) {
-            // call collision detection 2nd time, this should minimize collision missing
-            detectCollisions(level);
-        }
-
-        level.optBonus().ifPresent(bonus -> bonus.tick(this));
         level.blinking().doTick();
+        level.entities().selectAll().forEach(e -> e.update(level));
+
+        // double-check should minimize collision missing
+        if (isCollisionDoubleChecked()) {
+            detectCollisions(level, pac, ghosts, bonus);
+        }
 
         if (!simStep.ghostsCollidingWithPac.isEmpty()) {
             // Is Pac getting killed after the collision with a ghost?
             // He might stay alive if immune or in level's safe phase!
-            checkPacKilled(level);
+            checkPacKilled(level, pac);
             if (hasPacManBeenKilled()) {
                 quitHunting = true;
             }
@@ -535,28 +538,22 @@ public abstract class AbstractGameModel implements Game, GameCheats {
         }
     }
 
-    /**
-     * Computes and records collisions between Pac-Man, ghosts, food tiles, and bonus items.
-     *
-     * @param level the current level
-     */
-    private void detectCollisions(GameLevel level) {
-        requireNonNull(level);
+    // Collision behavior is controlled by the current collision strategy.
+    // The original Arcade games use tile-based collision which can lead to missed collisions
+    // by passing through!
+    private void detectCollisions(GameLevel level, Pac pac, List<Ghost> ghosts, Bonus bonus) {
 
         // Ghosts colliding with Pac?
-        // Collision behavior is controlled by the current collision strategy. The original Arcade games use
-        // tile-based collision which can lead to missed collisions by passing through.
-        level.ghosts()
-            //.filter(ghost -> !level.worldMap().terrainLayer().isTileInPortalSpace(ghost.tile()))
-            .filter(ghost -> collisionStrategy().collide(level.pac(), ghost))
+        simStep.ghostsCollidingWithPac.clear();
+        ghosts.stream().filter(ghost -> collisionStrategy().collide(pac, ghost))
             .forEach(simStep.ghostsCollidingWithPac::add);
 
-        simStep.edibleBonus = level.optBonus()
-            .filter(bonus -> bonus.state() == BonusState.EDIBLE)
-            .filter(bonus -> collisionStrategy().collide(level.pac(), bonus))
-            .orElse(null);
+        simStep.edibleBonus = null;
+        if (bonus != null && bonus.state() == BonusState.EDIBLE && collisionStrategy().collide(pac, bonus)) {
+            simStep.edibleBonus = bonus;
+        }
 
-        final Vector2i pacTile = level.pac().computeTile();
+        final Vector2i pacTile = pac.computeTile();
         if (level.worldMap().foodLayer().hasFoodAtTile(pacTile)) {
             simStep.foodTile = pacTile;
             simStep.energizerFound = level.worldMap().foodLayer().isEnergizerTile(pacTile);
@@ -575,10 +572,11 @@ public abstract class AbstractGameModel implements Game, GameCheats {
      * In this case, Pac-Man is safe against ghost attacks too.</p>
      *
      * @param level the game level
+     * @param pac   the Pac
      */
-    protected void checkPacKilled(GameLevel level) {
+    protected void checkPacKilled(GameLevel level, Pac pac) {
         final boolean demoLevel = level.isDemoLevel();
-        if (demoLevel && isPacSafeInDemoLevel(level) || !demoLevel && level.pac().isImmune()) {
+        if (demoLevel && isPacSafeInDemoLevel(level) || !demoLevel && pac.isImmune()) {
             return;
         }
         simStep.pacKiller = simStep.ghostsCollidingWithPac.stream()
@@ -628,8 +626,9 @@ public abstract class AbstractGameModel implements Game, GameCheats {
      * @param level the current game level
      */
     protected void updateCheatingProperties(GameLevel level) {
-        level.pac().immuneProperty().bind(immuneProperty());
-        level.pac().usingAutopilotProperty().bind(usingAutopilotProperty());
+        final Pac pac = level.entities().pac();
+        pac.immuneProperty().bind(immuneProperty());
+        pac.usingAutopilotProperty().bind(usingAutopilotProperty());
         if (cheats().isImmune() || cheats().isUsingAutopilot()) {
             cheats().raiseFlag();
         }

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -32,14 +33,27 @@ public class GameLevel {
     private final byte[] bonusSymbols = new byte[2];
     private final int numFlashes;
 
-    private Pac pac;
-    private Ghost[] ghosts;
-    private Bonus bonus;
+    public static class EntitySet extends GameLevelEntitySet {
+
+        public Pac pac() {
+            return uniqueOfType(Pac.class);
+        }
+
+        public List<Ghost> ghosts() {
+            return selectAllOfType(Ghost.class).sorted(Comparator.comparing(Ghost::personality)).toList();
+        }
+
+        public Optional<Bonus> optBonus() {
+            return anyOfType(Bonus.class);
+        }
+    }
+
+    private final EntitySet entities = new EntitySet();
+
     private byte currentBonusIndex; // -1=no bonus, 0=first, 1=second
     private GameLevelMessage message;
 
     private boolean demoLevel;
-    private int ghostKillCount;
     private int gameOverStateTicks;
     private long startTimeMillis;
     private float pacPowerSeconds;
@@ -148,8 +162,8 @@ public class GameLevel {
      * Makes Pac-Man and the ghosts invisible.
      */
     public void hidePacAndGhosts() {
-        pac.hide();
-        ghosts().forEach(Ghost::hide);
+        entities.pac().hide();
+        entities.ghosts().forEach(Ghost::hide);
     }
 
     /**
@@ -212,39 +226,39 @@ public class GameLevel {
         return Optional.ofNullable(message);
     }
 
+    public EntitySet entities() {
+        return entities;
+    }
+
     /**
      * Sets the Pac-Man used in this level.
      * @param pac Pac-Man or Ms. Pac-Man
      */
-    public void setPac(Pac pac) { this.pac = pac; }
-
-    /**
-     * @return  the Pac-Man used in this level.
-     */
-    public Pac pac() { return pac; }
+    public void setPac(Pac pac) {
+        requireNonNull(pac);
+        entities.add(pac);
+    }
 
     /**
      * Sets the ghosts used in this level.
      * @param redGhost Blinky, the red ghost
      * @param pinkGhost Pinky, the pink ghost
-     * @param cyanGhost Inky, the cayn ghost
+     * @param cyanGhost Inky, the cyan ghost
      * @param orangeGhost Clyde/Sue, the orange ghost
      */
     public void setGhosts(Ghost redGhost, Ghost pinkGhost, Ghost cyanGhost, Ghost orangeGhost) {
-        ghosts = new Ghost[] {
-            requireNonNull(redGhost),
-            requireNonNull(pinkGhost),
-            requireNonNull(cyanGhost),
-            requireNonNull(orangeGhost)
-        };
+        entities.add(requireNonNull(redGhost));
+        entities.add(requireNonNull(pinkGhost));
+        entities.add(requireNonNull(cyanGhost));
+        entities.add(requireNonNull(orangeGhost));
     }
 
     /**
-     * @param id a valid ghost ID (e.g. {@link de.amr.pacmanfx.Globals#ORANGE_GHOST_POKEY})
+     * @param personality a valid ghost ID (e.g. {@link de.amr.pacmanfx.Globals#ORANGE_GHOST_POKEY})
      * @return the ghost with this ID
      */
-    public Ghost ghost(byte id) {
-        return ghosts[requireValidGhostPersonality(id)];
+    public Ghost ghost(byte personality) {
+        return entities.ghosts().get(requireValidGhostPersonality(personality));
     }
 
     /**
@@ -254,19 +268,10 @@ public class GameLevel {
      */
     public Stream<Ghost> ghosts(GhostState... states) {
         requireNonNull(states);
-        requireNonNull(ghosts);
-        return states.length == 0 ? Stream.of(ghosts) : Stream.of(ghosts).filter(ghost -> ghost.inAnyOfStates(states));
+        return states.length == 0
+            ? entities.ghosts().stream()
+            : entities.ghosts().stream().filter(ghost -> ghost.inAnyOfStates(states));
     }
-
-    /**
-     * Increases the number of ghosts killed during this level.
-     */
-    public void incrementGhostKillCount() { ghostKillCount++; }
-
-    /**
-     * @return the number of ghosts killed during this level
-     */
-    public int ghostKillCount() { return ghostKillCount; }
 
     // Bonus
 
@@ -274,7 +279,7 @@ public class GameLevel {
      * @return (Optional) bonus actor used in this level
      */
     public Optional<Bonus> optBonus() {
-        return Optional.ofNullable(bonus);
+        return entities.optBonus();
     }
 
     /**
@@ -282,7 +287,8 @@ public class GameLevel {
      * @param bonus the bonus
      */
     public void setBonus(Bonus bonus) {
-        this.bonus = bonus;
+        entities.optBonus().ifPresent(entities::remove);
+        entities.add(requireNonNull(bonus));
     }
 
     /**

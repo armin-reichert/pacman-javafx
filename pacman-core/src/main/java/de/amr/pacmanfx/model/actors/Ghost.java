@@ -8,7 +8,6 @@ import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.Validations;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.world.House;
@@ -67,13 +66,27 @@ public class Ghost extends MovingActor {
     }
 
     @Override
+    public void init(GameLevel level) {
+    }
+
+    @Override
+    public void update(GameLevel level) {
+        final float speed = level.game().actorSpeedControl().ghostSpeed(level, this);
+        switch (state()) {
+            case LOCKED         -> updateStateLocked(level, speed);
+            case LEAVING_HOUSE  -> updateStateLeavingHouse(level, speed);
+            case HUNTING_PAC    -> updateStateHuntingPac(level, speed);
+            case FRIGHTENED     -> updateStateFrightened(level, speed);
+            case EATEN          -> updateStateEaten();
+            case RETURNING_HOME -> updateStateReturningToHouse(level, speed);
+            case ENTERING_HOUSE -> updateStateEnteringHouse(level, speed);
+        }
+    }
+
+    @Override
     public void reset() {
         super.reset();
         elroyState().reset();
-    }
-
-    public BiConsumer<GameLevel, Float> huntingStrategy() {
-        return huntingStrategy;
     }
 
     public void setHuntingStrategy(BiConsumer<GameLevel, Float> huntingStrategy) {
@@ -276,24 +289,6 @@ public class Ghost extends MovingActor {
         }
     }
 
-    /**
-     * Updates the state of this ghost in the current game context.
-     */
-    @Override
-    public void tick(Game game) {
-        game.optGameLevel().ifPresent(level -> {
-            final float speed = game.actorSpeedControl().ghostSpeed(level, this);
-            switch (state()) {
-                case LOCKED         -> updateStateLocked(level, speed);
-                case LEAVING_HOUSE  -> updateStateLeavingHouse(level, speed);
-                case HUNTING_PAC    -> updateStateHuntingPac(level, speed);
-                case FRIGHTENED     -> updateStateFrightened(level, speed);
-                case EATEN          -> updateStateEaten();
-                case RETURNING_HOME -> updateStateReturningToHouse(level, speed);
-                case ENTERING_HOUSE -> updateStateEnteringHouse(level, speed);
-            }});
-    }
-
     // --- LOCKED ---
 
     /**
@@ -318,7 +313,7 @@ public class Ghost extends MovingActor {
             setSpeed(0);
         }
         if (isInDanger(level)) {
-            playFrightenedAnimation(level, level.pac());
+            playFrightenedAnimation(level, level.entities().pac());
         } else {
             animationManager.select(ArcadePacMan_AnimationID.GHOST_NORMAL);
         }
@@ -360,7 +355,7 @@ public class Ghost extends MovingActor {
             setSpeed(speed);
             move();
             if (isInDanger(level)) {
-                playFrightenedAnimation(level, level.pac());
+                playFrightenedAnimation(level, level.entities().pac());
             } else {
                 animationManager.select(ArcadePacMan_AnimationID.GHOST_NORMAL);
             }
@@ -368,7 +363,7 @@ public class Ghost extends MovingActor {
     }
 
     private boolean isInDanger(GameLevel level) {
-        return level.pac().powerTimer().isRunning() && !level.energizerVictims().contains(this);
+        return level.entities().pac().powerTimer().isRunning() && !level.energizerVictims().contains(this);
     }
 
     // --- HUNTING_PAC ---
@@ -404,7 +399,7 @@ public class Ghost extends MovingActor {
     private void updateStateFrightened(GameLevel level, float speed) {
         setSpeed(speed);
         roam(level);
-        playFrightenedAnimation(level, level.pac());
+        playFrightenedAnimation(level, level.entities().pac());
     }
 
     private void playFrightenedAnimation(GameLevel level, Pac pac) {

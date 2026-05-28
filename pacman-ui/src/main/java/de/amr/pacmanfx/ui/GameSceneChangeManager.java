@@ -106,7 +106,7 @@ public class GameSceneChangeManager implements ChangeListener<GameScene> {
         playScene3D.initPac3D(pac3D, level);
         level3D.startLivesCounterTrackingPac();
 
-        if (level.pac().powerTimer().isRunning()) {
+        if (level.entities().pac().powerTimer().isRunning()) {
             uiConfig.optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
 

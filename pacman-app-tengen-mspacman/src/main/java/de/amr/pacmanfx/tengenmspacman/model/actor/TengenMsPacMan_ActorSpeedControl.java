@@ -56,7 +56,7 @@ public class TengenMsPacMan_ActorSpeedControl implements ActorSpeedControl {
     @Override
     public float pacSpeedWhenHasPower(GameLevel level) {
         //TODO correct?
-        return level.pac() != null ? 1.1f * pacSpeed(level) : 0;
+        return level.entities().pac() != null ? 1.1f * pacSpeed(level) : 0;
     }
 
     @Override
