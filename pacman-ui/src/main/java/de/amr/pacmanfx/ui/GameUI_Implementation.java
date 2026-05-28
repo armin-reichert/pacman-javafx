@@ -17,8 +17,6 @@ import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
-import de.amr.pacmanfx.ui.input.Input;
-import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.layout.playview.PlayView;
@@ -35,7 +33,6 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -77,8 +74,7 @@ public final class GameUI_Implementation implements GameUI {
 
     // UI components
     private final Stage stage;
-    private final StackPane rootPane = new StackPane();
-    private final Scene scene = new Scene(rootPane);
+    private final GameUI_MainScene scene;
     private final FlashMessageView flashMessageView = new FlashMessageView();
     private final StatusIconBox statusIconBox = new StatusIconBox();
 
@@ -87,6 +83,7 @@ public final class GameUI_Implementation implements GameUI {
     public GameUI_Implementation(GameBox gameBox, Stage stage, int mainSceneWidth, int mainSceneHeight) {
         this.gameBox = requireNonNull(gameBox);
         this.stage = requireNonNull(stage);
+        this.scene = new GameUI_MainScene(mainSceneWidth, mainSceneHeight);
         requireNonNegative(mainSceneWidth);
         requireNonNegative(mainSceneHeight);
 
@@ -100,10 +97,9 @@ public final class GameUI_Implementation implements GameUI {
 
         spriteAnimationTimer.setSpriteAnimationSet(spriteAnimationSet);
 
-        initRootPane(mainSceneWidth, mainSceneHeight);
+        initMainScene();
         initGlobalActionBindings();
         initPropertyBindings();
-        initScene();
         initGameClock(gameContext().clock());
 
         gameContext().gameVariantNameProperty().addListener(new GameVariantChangeHandler(this));
@@ -117,7 +113,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private ViewManager createViewManager() {
-        final var viewManager = new ViewManager(rootPane, flashMessageView);
+        final var viewManager = new ViewManager(scene.rootPane(), flashMessageView);
 
         viewManager.setEditorCanOpen(() -> {
             if (viewManager.isStartViewSelected()) return true;
@@ -161,18 +157,16 @@ public final class GameUI_Implementation implements GameUI {
         clock.setErrorHandler(this::ka_tas_tro_phe);
     }
 
-    // First child is placeholder for the current view (start view, play view, editor view)
-    private void initRootPane(int width, int height) {
-        rootPane.setPrefSize(width, height);
-        StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
-        final Region viewPlaceholder = new Region();
+    private void initMainScene() {
         final KeyboardInfo keyboardInfo = new KeyboardInfo();
-        keyboardInfo.rootPane().setAlignment(Pos.TOP_CENTER);
-        rootPane.getChildren().addAll(
-            viewPlaceholder,
+        scene.rootPane().getChildren().addAll(
+            new Region(), // placeholder, will be replaced by current view (start, play, edit)
             statusIconBox,
             flashMessageView,
             keyboardInfo.rootPane());
+
+        StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
+        keyboardInfo.rootPane().setAlignment(Pos.TOP_CENTER);
     }
 
     private void initPropertyBindings() {
@@ -192,7 +186,7 @@ public final class GameUI_Implementation implements GameUI {
             GameUIConstants.PROPERTY_3D_ENABLED
         );
 
-        rootPane.backgroundProperty().bind(Bindings.createObjectBinding(
+        scene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> currentGameSceneHasID(GameSceneConfig.CommonSceneID.PLAY_SCENE_3D)
                 ? GameUIConstants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUIConstants.WALLPAPERS.length)]
                 : GameUIConstants.BACKGROUND_PAC_MAN_WALLPAPER,
@@ -220,22 +214,6 @@ public final class GameUI_Implementation implements GameUI {
         actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
         actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
         actionBindings.activate();
-    }
-
-    private void initScene() {
-        scene.getStylesheets().add(GameUIConstants.STYLE_SHEET_PATH);
-
-        final Keyboard keyboard = Input.instance().keyboard;
-        scene.addEventFilter(KeyEvent.KEY_PRESSED,  keyboard::onKeyPressed);
-        scene.addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
-
-        // If a global action is bound to the key press, execute it; otherwise let the current view handle it.
-        scene.setOnKeyPressed(e -> actionBindings.matchingAction(keyboard)
-            .ifPresentOrElse(action -> {
-                if (action.executeIfEnabled(this)) e.consume();
-            }, () -> viewManager.currentView().onInput(this)
-        ));
-        scene.setOnScroll(e -> gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
     }
 
     /**
@@ -341,6 +319,8 @@ public final class GameUI_Implementation implements GameUI {
 
         viewManager.playView().dashboard().init(this);
         viewManager.selectStartView();
+
+        scene.init(this, actionBindings);
 
         stage.setMinWidth(GameUIConstants.MIN_STAGE_WIDTH);
         stage.setMinHeight(GameUIConstants.MIN_STAGE_HEIGHT);

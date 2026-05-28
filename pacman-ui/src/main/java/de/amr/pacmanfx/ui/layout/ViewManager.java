@@ -8,6 +8,7 @@ import de.amr.pacmanfx.ui.layout.playview.PlayView;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 import org.tinylog.Logger;
 import org.tinylog.Supplier;
