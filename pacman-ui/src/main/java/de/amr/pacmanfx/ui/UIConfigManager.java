@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNull;
 public class UIConfigManager {
 
     private final Map<String, Supplier<? extends UIConfig>> factories = new HashMap<>();
-    private final Map<String, UIConfig> uiConfigCache = new HashMap<>();
+    private final Map<String, UIConfig> configs = new HashMap<>();
 
     public UIConfigManager() {}
 
@@ -24,7 +24,7 @@ public class UIConfigManager {
 
     public UIConfig getOrCreateUIConfig(String variantName) {
         requireNonNull(variantName);
-        return uiConfigCache.computeIfAbsent(variantName, this::createConfig);
+        return configs.computeIfAbsent(variantName, this::createConfig);
     }
 
     private UIConfig createConfig(String variantName) {
@@ -37,7 +37,7 @@ public class UIConfigManager {
 
     public void dispose(String variantName) {
         requireNonNull(variantName);
-        final UIConfig config = uiConfigCache.remove(variantName);
+        final UIConfig config = configs.remove(variantName);
         if (config != null) {
             config.dispose();
         }
