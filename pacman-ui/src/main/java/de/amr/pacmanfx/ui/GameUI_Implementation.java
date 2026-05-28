@@ -24,7 +24,6 @@ import de.amr.pacmanfx.ui.layout.playview.PlayView;
 import de.amr.pacmanfx.ui.layout.playview.PlayViewContextMenuHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -73,7 +72,6 @@ public final class GameUI_Implementation implements GameUI {
     private final TranslationManager translationManager = () -> GameUIConstants.LOCALIZED_TEXTS;
     private final UIConfigManager uiConfigManager = new UIConfigManager();
     private final ViewManager viewManager;
-    private final VoiceManager voiceManager = new VoiceManager();
 
     // Sprite animation support
     private final SpriteAnimationTimer spriteAnimationTimer = new SpriteAnimationTimer();
@@ -446,11 +444,6 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public ViewManager viewManager() {
         return viewManager;
-    }
-
-    @Override
-    public VoiceManager voiceManager() {
-        return voiceManager;
     }
 
     // private stuff

@@ -9,7 +9,6 @@ import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.ui.layout.ViewManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.Scene;
@@ -69,12 +68,6 @@ public interface GameUI {
      * @return translation service for localized UI messages
      */
     TranslationManager translationManager();
-
-    /**
-     * @return the voice player used for sequential voice playback.
-     * Only one voice clip plays at a time.
-     */
-    VoiceManager voiceManager();
 
     // ---------------------------------------------------------------------------------------------
     // Messages

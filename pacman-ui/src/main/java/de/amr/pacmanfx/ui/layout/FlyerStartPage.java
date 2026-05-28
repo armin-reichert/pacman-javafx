@@ -70,7 +70,7 @@ public class FlyerStartPage extends StackPane implements StartPage {
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             if (e.getCode() == SHUT_UP_KEYCODE) {
-                ui.voiceManager().stopVoice();
+                ui.soundManager().stopVoice();
             }
         });
     }
@@ -84,7 +84,7 @@ public class FlyerStartPage extends StackPane implements StartPage {
 
     @Override
     public void onExitStartPage(GameUI ui) {
-        ui.voiceManager().stopVoice();
+        ui.soundManager().stopVoice();
     }
 
     public Node createStartButton(GameUI ui) {

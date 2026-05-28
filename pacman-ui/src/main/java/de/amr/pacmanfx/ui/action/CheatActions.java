@@ -127,7 +127,7 @@ public final class CheatActions {
             }
         }
         game.cheats().usingAutopilotProperty().set(on);
-        ui.voiceManager().playVoice(on ? GameUIConstants.VOICE_AUTOPILOT_ON : GameUIConstants.VOICE_AUTOPILOT_OFF);
+        ui.soundManager().playVoice(on ? GameUIConstants.VOICE_AUTOPILOT_ON : GameUIConstants.VOICE_AUTOPILOT_OFF);
         ui.showFlashMessage(ui.translationManager().translate(on ? "autopilot_on" : "autopilot_off"));
 
     }
@@ -157,7 +157,7 @@ public final class CheatActions {
     public static void setImmunity(GameUI ui, boolean on) {
         final Game game = ui.gameContext().game();
         game.cheats().immuneProperty().set(on);
-        ui.voiceManager().playVoice(on ? GameUIConstants.VOICE_IMMUNITY_ON : GameUIConstants.VOICE_IMMUNITY_OFF);
+        ui.soundManager().playVoice(on ? GameUIConstants.VOICE_IMMUNITY_ON : GameUIConstants.VOICE_IMMUNITY_OFF);
         ui.showFlashMessage(ui.translationManager().translate(on ? "player_immunity_on" : "player_immunity_off"));
     }
 
