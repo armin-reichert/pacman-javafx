@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -22,13 +23,11 @@ import static java.util.Objects.requireNonNull;
 
 public class BaseRenderer implements Renderer {
 
-    private static final ObjectProperty<Font> ARCADE_FONT = new SimpleObjectProperty<>(Font.font("Monospaced", 8));
+    public static final Font ARCADE_FONT;
 
-    public static void setArcadeFont(Font font) {
-        ARCADE_FONT.set(requireNonNull(font));
-    }
-    public static Font arcadeFont() {
-        return ARCADE_FONT.get();
+    static {
+        final ResourceManager rm = () -> BaseRenderer.class;
+        ARCADE_FONT = rm.loadFont("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf", 8);
     }
 
     public static RectShort spriteOrDefault(RectShort[] sprites, int index) {
@@ -49,8 +48,8 @@ public class BaseRenderer implements Renderer {
 
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        arcadeFont8.bind(scaling.map(_ -> Ufx.deriveFont(ARCADE_FONT.get(), scaled(8))));
-        arcadeFont6.bind(scaling.map(_ -> Ufx.deriveFont(ARCADE_FONT.get(), scaled(6))));
+        arcadeFont8.bind(scaling.map(_ -> Ufx.deriveFont(ARCADE_FONT, scaled(8))));
+        arcadeFont6.bind(scaling.map(_ -> Ufx.deriveFont(ARCADE_FONT, scaled(6))));
     }
 
     public void clearCanvas() {

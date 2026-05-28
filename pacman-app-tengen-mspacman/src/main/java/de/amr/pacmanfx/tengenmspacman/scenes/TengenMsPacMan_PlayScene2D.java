@@ -245,7 +245,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     protected void startGameOverMessageAnimation(GameLevelMessage message) {
         if (message instanceof MovingGameLevelMessage movingMessage) {
-            double messageWidth = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, Font.font(BaseRenderer.arcadeFont().getFamily(), TS));
+            double messageWidth = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, Font.font(BaseRenderer.ARCADE_FONT.getFamily(), TS));
             movingMessage.startMovement(getUnscaledWidth(), messageWidth);
         }
     }

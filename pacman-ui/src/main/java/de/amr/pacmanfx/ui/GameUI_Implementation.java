@@ -30,7 +30,6 @@ import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.application.Platform;
@@ -96,21 +95,14 @@ public final class GameUI_Implementation implements GameUI {
         requireNonNegative(mainSceneHeight);
 
         customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
-        //initialEditorDir = gameBox.customMapDir();
-
         preferencesManager = createPreferencesManager();
 
-        gameSceneChangeManager.setEmbedder(gameSceneEmbeddingManager);
-
         viewManager = createViewManager();
-
         viewManager.setStartView(new StartPagesCarousel(this));
         viewManager.setEditorViewFactory(this::createEditorView);
         viewManager.setPlayView(createPlayView());
 
         spriteAnimationTimer.setSpriteAnimationSet(spriteAnimationSet);
-
-        BaseRenderer.setArcadeFont(GameUIConstants.FONT_ARCADE_8);
 
         initRootPane(mainSceneWidth, mainSceneHeight);
         initGlobalActionBindings();
@@ -119,6 +111,7 @@ public final class GameUI_Implementation implements GameUI {
         initStage();
         initGameClock(gameContext().clock());
 
+        gameSceneChangeManager.setEmbedder(gameSceneEmbeddingManager);
         gameContext().gameVariantNameProperty().addListener(new GameVariantChangeHandler(this));
     }
 
