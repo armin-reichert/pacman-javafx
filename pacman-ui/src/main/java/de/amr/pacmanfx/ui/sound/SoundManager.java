@@ -38,7 +38,7 @@ public class SoundManager implements Disposable {
             Logger.warn("Voice {} already playing", voiceMedia);
             return;
         }
-        stopVoice();
+        stopAndDisposeVoice();
         voicePlayer = new MediaPlayer(voiceMedia);
         voicePlayer.muteProperty().bind(GameUIConstants.PROPERTY_MUTED);
         voicePlayer.setOnError(() ->
@@ -47,7 +47,7 @@ public class SoundManager implements Disposable {
         voicePlayer.play();
     }
 
-    public void stopVoice() {
+    public void stopAndDisposeVoice() {
         if (voicePlayer != null) {
             voicePlayer.stop();
             voicePlayer.muteProperty().unbind();
@@ -63,6 +63,9 @@ public class SoundManager implements Disposable {
         stopAll();
         enabledProperty.unbind();
         soundMap.clear();
+        if (voicePlayer != null) {
+            stopAndDisposeVoice();
+        }
         Logger.info("{} sound objects removed", numEntries);
     }
 

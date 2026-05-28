@@ -81,7 +81,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                 case E -> {
                     e.consume();
                     if (ui != null) {
-                        ui.soundManager().stopVoice();
+                        ui.soundManager().stopAndDisposeVoice();
                         startPagesCarousel.pauseProgressTimer();
                         ui.openWorldMapFileInEditor(null);
                     }
@@ -89,7 +89,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                 case ENTER -> {
                     e.consume();
                     if (ui != null) {
-                        ui.soundManager().stopVoice();
+                        ui.soundManager().stopAndDisposeVoice();
                         startPagesCarousel.pauseProgressTimer();
                         menu.startSelectedGame();
                     }
@@ -122,7 +122,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
 
     @Override
     public void onExitStartPage(GameUI ui) {
-        ui.soundManager().stopVoice();
+        ui.soundManager().stopAndDisposeVoice();
         menu.stopDrawLoop();
         removeMenuBinding();
     }

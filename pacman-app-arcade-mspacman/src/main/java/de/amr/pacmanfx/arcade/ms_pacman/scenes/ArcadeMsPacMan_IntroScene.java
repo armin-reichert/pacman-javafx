@@ -100,7 +100,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onDeactivate() {
-        ui.soundManager().stopVoice();
+        ui.soundManager().stopAndDisposeVoice();
     }
 
     @Override
