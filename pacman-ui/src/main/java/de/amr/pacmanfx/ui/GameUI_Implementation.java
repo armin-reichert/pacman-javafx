@@ -57,8 +57,6 @@ import static javafx.beans.binding.Bindings.createStringBinding;
  */
 public final class GameUI_Implementation extends PreferencesManager implements GameUI {
 
-    private static final String OH_NO_MY_PROGRAM = "Oh no my program!\nSomeone call an ambulance!";
-
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
 
@@ -267,10 +265,11 @@ public final class GameUI_Implementation extends PreferencesManager implements G
      * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>
      */
     private void ka_tas_tro_phe(Throwable reason) {
-        Logger.error(reason);
-        Logger.error("SOMETHING VERY BAD HAPPENED!");
-        showFlashMessage(Duration.seconds(60), "%s\n%s".formatted(OH_NO_MY_PROGRAM, reason.getMessage()));
+        final String errorMessage = translationManager.translate("error.oh_no_my_program");
+        showFlashMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
         stopGame();
+        Logger.error("*** SOMETHING VERY BAD HAPPENED:");
+        Logger.error(reason);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

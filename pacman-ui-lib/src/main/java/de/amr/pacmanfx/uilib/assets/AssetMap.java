@@ -26,7 +26,7 @@ public class AssetMap implements TranslationManager, Disposable {
     private ResourceBundle localizedTexts;
 
     @Override
-    public ResourceBundle resources() {
+    public ResourceBundle bundle() {
         return localizedTexts;
     }
 

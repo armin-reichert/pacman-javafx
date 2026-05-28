@@ -12,19 +12,20 @@ import static java.util.Objects.requireNonNull;
 
 public interface TranslationManager {
 
-    ResourceBundle resources();
+    ResourceBundle bundle();
 
-    default String translate(String keyOrPattern, Object... args) {
-        requireNonNull(keyOrPattern);
-        requireNonNull(args);
-        if (resources() == null) {
-            Logger.error("No localized text resources available");
-            return "???";
+    default String translate(String key, Object... args) {
+        requireNonNull(key);
+        final ResourceBundle bundle = bundle();
+        requireNonNull(bundle);
+        if (bundle.containsKey(key)) {
+            return replaceEscapeSequences(MessageFormat.format(bundle().getString(key), args));
         }
-        if (resources().containsKey(keyOrPattern)) {
-            return MessageFormat.format(resources().getString(keyOrPattern), args);
-        }
-        Logger.error("Missing localized text for key {}", keyOrPattern);
-        return "[" + keyOrPattern + "]";
+        Logger.error("Missing localized text for key {}", key);
+        return "[" + key + "]";
+    }
+
+    private static String replaceEscapeSequences(String s) {
+        return s.replace("\\n", "\n");
     }
 }
