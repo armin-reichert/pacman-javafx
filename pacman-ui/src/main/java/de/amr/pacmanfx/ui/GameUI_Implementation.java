@@ -63,7 +63,7 @@ public final class GameUI_Implementation implements GameUI {
 
     // So many managers? I think I should fire some!
     private final GameSceneManager gameSceneManager = new GameSceneManager(this);
-    private final PreferencesManager preferencesManager;
+    private final PreferencesManager prefsManager;
     private final SoundManager soundManager = new SoundManager();
     private final TranslationManager translationManager = () -> GameUIConstants.LOCALIZED_TEXTS;
     private final UIConfigManager uiConfigManager = new UIConfigManager();
@@ -84,12 +84,9 @@ public final class GameUI_Implementation implements GameUI {
     public GameUI_Implementation(GameBox gameBox, Stage stage, int mainSceneWidth, int mainSceneHeight) {
         this.gameBox = requireNonNull(gameBox);
         this.stage = requireNonNull(stage);
-        this.scene = new GameUI_MainScene(mainSceneWidth, mainSceneHeight);
-        requireNonNegative(mainSceneWidth);
-        requireNonNegative(mainSceneHeight);
-
-        customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
-        preferencesManager = createPreferencesManager();
+        this.scene = new GameUI_MainScene(requireNonNegative(mainSceneWidth), requireNonNegative(mainSceneHeight));
+        this.customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
+        this.prefsManager = createPrefsManager();
 
         viewManager = createViewManager();
         viewManager.setStartView(new StartPagesCarousel(this));
@@ -99,7 +96,7 @@ public final class GameUI_Implementation implements GameUI {
         spriteAnimationTimer.setSpriteAnimationSet(spriteAnimationSet);
     }
 
-    private PreferencesManager createPreferencesManager() {
+    private PreferencesManager createPrefsManager() {
         return new PreferencesManager(GameUI_Implementation.this.getClass()) {
             @Override
             protected void storeDefaultPrefValues() {}
@@ -287,7 +284,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public PreferencesManager preferencesManager() {
-        return preferencesManager;
+        return prefsManager;
     }
 
     @Override
@@ -304,7 +301,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void show() {
-        preferencesManager.logPreferences();
+        prefsManager.logPreferences();
 
         // Load 3D assets
         final var _ = PacManWorld3D.instance();
