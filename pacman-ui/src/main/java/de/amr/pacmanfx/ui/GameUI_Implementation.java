@@ -65,8 +65,7 @@ public final class GameUI_Implementation implements GameUI {
     private final ActionBindingsSet actionBindings = new GameActionBindingsSet();
 
     // So many managers? I think I should fire some!
-    private final GameSceneChangeManager gameSceneChangeManager = new GameSceneChangeManager(this);
-    private final GameSceneEmbeddingManager gameSceneEmbeddingManager = new GameSceneEmbeddingManager(this);
+    private final GameSceneManager gameSceneChangeManager = new GameSceneManager(this);
     private final PreferencesManager preferencesManager;
     private final SoundManager soundManager = new SoundManager();
     private final TranslationManager translationManager = () -> GameUIConstants.LOCALIZED_TEXTS;
@@ -108,7 +107,6 @@ public final class GameUI_Implementation implements GameUI {
         initScene();
         initGameClock(gameContext().clock());
 
-        gameSceneChangeManager.setEmbedder(gameSceneEmbeddingManager);
         gameContext().gameVariantNameProperty().addListener(new GameVariantChangeHandler(this));
     }
 
@@ -281,13 +279,8 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public GameSceneChangeManager gameSceneManager() {
+    public GameSceneManager gameSceneManager() {
         return gameSceneChangeManager;
-    }
-
-    @Override
-    public GameSceneEmbeddingManager gameSceneEmbeddingManager() {
-        return gameSceneEmbeddingManager;
     }
 
     @Override

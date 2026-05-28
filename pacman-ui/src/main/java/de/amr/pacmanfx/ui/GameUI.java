@@ -96,9 +96,7 @@ public interface GameUI {
     // Scene Access
     // ---------------------------------------------------------------------------------------------
 
-    GameSceneChangeManager gameSceneManager();
-
-    GameSceneEmbeddingManager gameSceneEmbeddingManager();
+    GameSceneManager gameSceneManager();
 
     /**
      * Checks whether the current game scene matches the given ID.

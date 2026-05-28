@@ -5,26 +5,30 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
+import de.amr.pacmanfx.ui.layout.playview.DecorationPane;
+import de.amr.pacmanfx.ui.layout.playview.PlayView;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import org.tinylog.Logger;
 
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameSceneChangeManager implements ChangeListener<GameScene> {
+public class GameSceneManager implements ChangeListener<GameScene> {
 
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
 
     private final GameUI ui;
-    private GameSceneEmbeddingManager embeddingManager;
 
-    public GameSceneChangeManager(GameUI ui) {
+    public GameSceneManager(GameUI ui) {
         this.ui = requireNonNull(ui);
         gameScene.addListener(this);
     }
@@ -32,16 +36,8 @@ public class GameSceneChangeManager implements ChangeListener<GameScene> {
     @Override
     public void changed(ObservableValue<? extends GameScene> py, GameScene oldGameScene, GameScene newGameScene) {
         if (newGameScene != null) {
-            if (embeddingManager != null) {
-                embeddingManager.embedGameSceneIntoPlayView(newGameScene);
-            } else {
-                Logger.error("No game scene embedding manager has been set");
-            }
+            embedGameSceneIntoPlayView(newGameScene);
         }
-    }
-
-    public void setEmbedder(GameSceneEmbeddingManager embeddingManager) {
-        this.embeddingManager = requireNonNull(embeddingManager);
     }
 
     public Optional<GameScene> optCurrentGameScene() {
@@ -67,11 +63,11 @@ public class GameSceneChangeManager implements ChangeListener<GameScene> {
 
         if (prevGameScene != null) {
             prevGameScene.deactivate();
-            embeddingManager.removeFromPlayView(prevGameScene);
+            removeFromPlayView(prevGameScene);
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
-        embeddingManager.embedGameSceneIntoPlayView(nextGameScene);
+        embedGameSceneIntoPlayView(nextGameScene);
 
         nextGameScene.activate();
 
@@ -133,5 +129,93 @@ public class GameSceneChangeManager implements ChangeListener<GameScene> {
             case PlayScene3D ignored when sceneAfter instanceof GameScene2D -> GameSceneSwitchType.FROM_3D_TO_2D;
             case null, default -> GameSceneSwitchType.NONE; // may happen, it's ok
         };
+    }
+
+    // Scene embedding
+
+    public void removeFromPlayView(GameScene gameScene) {
+        requireNonNull(gameScene);
+
+        ui.viewManager().playView().contextMenu().hide();
+
+        gameScene.optSubSceneFX().ifPresent(subSceneFX -> {
+            subSceneFX.widthProperty().unbind();
+            subSceneFX.heightProperty().unbind();
+        });
+        if (gameScene instanceof GameScene2D gameScene2D) {
+            final DecorationPane decorationPane = ui.viewManager().playView().decorationPane();
+            decorationPane.canvas().widthProperty().unbind();
+            decorationPane.canvas().heightProperty().unbind();
+            decorationPane.unscaledWidthProperty().unbind();
+            decorationPane.unscaledHeightProperty().unbind();
+            decorationPane.backgroundProperty().unbind();
+            gameScene2D.backgroundColorProperty().unbind();
+            gameScene2D.scalingProperty().unbind();
+        }
+
+        Logger.info("Game scene {} REMOVED from play scene!", gameScene.getClass().getSimpleName());
+    }
+
+    public void embedGameSceneIntoPlayView(GameScene gameScene) {
+        ui.viewManager().playView().contextMenu().hide();
+
+        if (gameScene.optSubSceneFX().isPresent()) {
+            embedGameSceneWithSubSceneFX(ui.scene(), ui.viewManager().playView(), gameScene, gameScene.optSubSceneFX().get());
+        } else if (gameScene instanceof GameScene2D gameScene2D) {
+            embedGameScene2D(ui.scene(), ui.viewManager().playView(), ui.currentConfig().gameSceneConfig(), gameScene2D);
+        } else {
+            Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
+        }
+    }
+
+    // 3D scenes or 2D scenes with camera
+    private void embedGameSceneWithSubSceneFX(Scene scene, PlayView playView, GameScene gameScene, SubScene subSceneFX) {
+        // stretch sub scene to available space
+        subSceneFX.widthProperty().bind(scene.widthProperty());
+        subSceneFX.heightProperty().bind(scene.heightProperty());
+
+        if (gameScene instanceof GameScene2D gameScene2D) {
+            // use the canvas of the decorated pane for 2D scene even though the decoration is not used
+            gameScene2D.setCanvas(playView.decorationPane().canvas());
+            playView.updateGameSceneRenderers(gameScene2D);
+        }
+        playView.setGameSceneContent(subSceneFX);
+    }
+
+    // 2D scenes without camera which are shown at full size
+    private void embedGameScene2D(Scene scene, PlayView playView, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
+        final DecorationPane decorationPane = playView.decorationPane();
+
+        gameScene2D.backgroundColorProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
+
+        final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene2D);
+        if (decorated) {
+            decorationPane.newCanvas(); //TODO check why creating a new canvas is needed
+
+            decorationPane.backgroundProperty().bind(gameScene2D.backgroundColorProperty().map(UfxBackgrounds::paintBackground));
+
+            // set unscaled decoration pane size to game scene (=world map) size
+            decorationPane.unscaledWidthProperty().bind(gameScene2D.unscaledWidthProperty());
+            decorationPane.unscaledHeightProperty().bind(gameScene2D.unscaledHeightProperty());
+
+            // Limit scaling
+            gameScene2D.scalingProperty().bind(decorationPane.scalingProperty().map(
+                scaling -> Math.min(scaling.doubleValue(), PlayView.MAX_GAME_SCENE_SCALING)));
+
+            decorationPane.stretchTo(scene.getWidth(), scene.getHeight());
+
+            playView.setGameSceneContent(decorationPane);
+        }
+        else {
+            // Undecorated game scene taking complete height
+            decorationPane.canvas().heightProperty().bind(scene.heightProperty());
+            decorationPane.canvas().widthProperty().bind(scene.heightProperty().map(h -> h.doubleValue() * gameScene2D.getAspectRatio()));
+            gameScene2D.scalingProperty().bind(scene.heightProperty().divide(gameScene2D.getUnscaledHeight()));
+
+            playView.setGameSceneContent(decorationPane.canvas());
+        }
+
+        gameScene2D.setCanvas(decorationPane.canvas());
+        playView.updateGameSceneRenderers(gameScene2D);
     }
 }
