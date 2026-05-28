@@ -83,6 +83,9 @@ public class PlayView implements View {
     public PlayView(GameUI ui, DashboardConfig dashboardConfig) {
         this.ui = requireNonNull(ui);
         createLayout(requireNonNull(dashboardConfig));
+        configurePropertyBindings();
+        actionBindings.registerAllBindingsFromSet(GameUIConstants.COMMON_BINDINGS);
+        rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(ui, this));
         miniView.setUI(ui);
     }
 
@@ -223,7 +226,7 @@ public class PlayView implements View {
         rootPane = new StackPane(gameSceneLayer, overlayLayer, helpLayer, pausedIcon);
     }
 
-    public void configurePropertyBindings() {
+    private void configurePropertyBindings() {
         pausedIcon.visibleProperty().bind(ui.gameContext().clock().updatesDisabledProperty());
 
         GameUIConstants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));

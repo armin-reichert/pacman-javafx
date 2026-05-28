@@ -22,7 +22,6 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.layout.playview.PlayView;
-import de.amr.pacmanfx.ui.layout.playview.PlayViewContextMenuHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
@@ -33,6 +32,7 @@ import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
@@ -132,17 +132,9 @@ public final class GameUI_Implementation implements GameUI {
 
     private PlayView createPlayView() {
         final var playView = new PlayView(this, GameUIConstants.DEFAULT_DASHBOARD_CONFIG);
-
-        playView.rootPane().setOnContextMenuRequested(new PlayViewContextMenuHandler(this, playView));
-
-        playView.configurePropertyBindings();
-
-        scene.widthProperty().addListener((_,_,_) -> playView.resizeToFit(scene));
-        scene.heightProperty().addListener((_,_,_) -> playView.resizeToFit(scene));
-
-        final ActionBindingsSet actionBindings = playView.actionBindings();
-        actionBindings.registerAllBindingsFromSet(GameUIConstants.COMMON_BINDINGS);
-
+        final ChangeListener<? super Number> playViewResizer = (_,_,_) -> playView.resizeToFit(scene);
+        scene.widthProperty().addListener(playViewResizer);
+        scene.heightProperty().addListener(playViewResizer);
         return playView;
     }
 
