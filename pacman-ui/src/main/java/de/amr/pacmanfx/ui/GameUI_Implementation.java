@@ -177,12 +177,10 @@ public final class GameUI_Implementation implements GameUI {
         );
 
         scene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> gameSceneManager.currentGameSceneHasID(GameSceneConfig.CommonSceneID.PLAY_SCENE_3D)
+            () -> gameSceneManager.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D)
                 ? GameUIConstants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUIConstants.WALLPAPERS.length)]
-                : GameUIConstants.BACKGROUND_PAC_MAN_WALLPAPER,
-            // depends on:
-            viewManager.currentViewProperty(),
-            gameSceneManager().gameSceneProperty()
+                : GameUIConstants.BACKGROUND_PAC_MAN_WALLPAPER
+            , viewManager.currentViewProperty(), gameSceneManager().gameSceneProperty()
         ));
 
         gameContext().gameVariantNameProperty().addListener((_, _, _) -> {
