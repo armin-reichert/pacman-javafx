@@ -66,7 +66,7 @@ public final class Ufx {
         try {
             code.run();
             final Duration duration = Duration.between(start, Instant.now());
-            Logger.info("Runtime: {} ms: '{}'", duration.toMillis(), description);
+            Logger.info("Task '{}' took {} milliseconds", description, duration.toMillis());
             return Optional.of(duration);
         } catch (Exception x) {
             Logger.error("Error running code in measurement", x);

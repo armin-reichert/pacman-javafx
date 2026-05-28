@@ -261,13 +261,6 @@ public final class GameUI_Implementation implements GameUI {
         });
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void load3DModels() {
-        Logger.info("Preloading 3D models...");
-        PacManWorld3D.instance();
-        Logger.info("Pac-Man scene 3D model loaded");
-    }
-
     // GameUI interface
 
     @Override
@@ -347,8 +340,8 @@ public final class GameUI_Implementation implements GameUI {
     public void show() {
         preferencesManager.logPreferences();
 
-        // preload to make 3D scene creation faster
-        load3DModels();
+        // Load 3D assets
+        PacManWorld3D.instance();
 
         // These need the current UI config to be initialized
         GameUIConstants.PROPERTY_3D_WALL_HEIGHT .set(currentConfig().worldConfig().maze().obstacleBaseHeight());

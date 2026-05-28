@@ -7,6 +7,7 @@ package de.amr.pacmanfx.uilib.model3D;
 import de.amr.meshbuilder.MeshBuilder;
 import de.amr.objparser.ObjFileParser;
 import de.amr.objparser.ObjModel;
+import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.shape.Mesh;
 import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
@@ -73,20 +74,24 @@ public class PacManWorld3D {
     private Map<String, Mesh> meshes;
 
     private PacManWorld3D() throws IOException {
-        loadPacManWorldModel();
+        Ufx.measureDuration("3D model loading", this::loadPacManWorldModel);
         MESH_IDs.forEach(meshID -> requireNonNull(meshes.get(meshID)));
     }
 
-    private void loadPacManWorldModel() throws IOException {
+    private void loadPacManWorldModel() {
         final URL url = getClass().getResource(PAC_MAN_WORLD_OBJ_FILE);
         if (url == null) {
             throw new ExceptionInInitializerError("Unable to create 3D model from .obj file " + PAC_MAN_WORLD_OBJ_FILE);
         }
-        final ObjModel objModel = new ObjFileParser(url, StandardCharsets.UTF_8).parse();
-        final MeshBuilder meshBuilder = new MeshBuilder(objModel);
-        meshes = meshBuilder.buildMeshViewsByGroup(MESH_IDs::contains)
-            .entrySet().stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getMesh()));
+        try {
+            final ObjModel objModel = new ObjFileParser(url, StandardCharsets.UTF_8).parse();
+            final MeshBuilder meshBuilder = new MeshBuilder(objModel);
+            meshes = meshBuilder.buildMeshViewsByGroup(MESH_IDs::contains)
+                .entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getMesh()));
+        } catch (IOException x) {
+            Logger.error(x, "3D model loading failed.");
+        }
     }
 
     public Mesh ghostDressMesh() {
