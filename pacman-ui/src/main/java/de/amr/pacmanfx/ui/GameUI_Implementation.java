@@ -341,7 +341,7 @@ public final class GameUI_Implementation implements GameUI {
         preferencesManager.logPreferences();
 
         // Load 3D assets
-        PacManWorld3D.instance();
+        final var _ = PacManWorld3D.instance();
 
         // These need the current UI config to be initialized
         GameUIConstants.PROPERTY_3D_WALL_HEIGHT .set(currentConfig().worldConfig().maze().obstacleBaseHeight());
