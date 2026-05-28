@@ -108,7 +108,6 @@ public final class GameUI_Implementation implements GameUI {
         initGlobalActionBindings();
         initPropertyBindings();
         initScene();
-        initStage();
         initGameClock(gameContext().clock());
 
         gameSceneChangeManager.setEmbedder(gameSceneEmbeddingManager);
@@ -252,12 +251,6 @@ public final class GameUI_Implementation implements GameUI {
         scene.setOnScroll(e -> gameSceneChangeManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
     }
 
-    private void initStage() {
-        stage.setScene(scene);
-        stage.setMinWidth(GameUIConstants.MIN_STAGE_WIDTH);
-        stage.setMinHeight(GameUIConstants.MIN_STAGE_HEIGHT);
-    }
-
     /**
      * @param reason what caused this catastrophe
      *
@@ -390,6 +383,9 @@ public final class GameUI_Implementation implements GameUI {
         viewManager.playView().dashboard().init(this);
         viewManager.selectStartView(this);
 
+        stage.setMinWidth(GameUIConstants.MIN_STAGE_WIDTH);
+        stage.setMinHeight(GameUIConstants.MIN_STAGE_HEIGHT);
+        stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();
 
