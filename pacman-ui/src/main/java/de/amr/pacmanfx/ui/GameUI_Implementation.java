@@ -70,8 +70,7 @@ public final class GameUI_Implementation implements GameUI {
     private final ViewManager viewManager;
 
     // Sprite animation support
-    private final SpriteAnimationTimer spriteAnimationTimer = new SpriteAnimationTimer();
-    private final SpriteAnimationSet spriteAnimationSet = new SpriteAnimationSet();
+    private final SpriteAnimationTimer spriteAnimationTimer = new SpriteAnimationTimer(new SpriteAnimationSet());
 
     // UI components
     private final Stage stage;
@@ -92,8 +91,6 @@ public final class GameUI_Implementation implements GameUI {
         viewManager.setStartView(new StartPagesCarousel(this));
         viewManager.setEditorViewFactory(this::createEditorView);
         viewManager.setPlayView(createPlayView());
-
-        spriteAnimationTimer.setSpriteAnimationSet(spriteAnimationSet);
     }
 
     private PreferencesManager createPrefsManager() {
@@ -354,7 +351,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public SpriteAnimationSet spriteAnimationSet() {
-        return spriteAnimationSet;
+        return spriteAnimationTimer.spriteAnimationSet();
     }
 
     @Override
@@ -384,7 +381,7 @@ public final class GameUI_Implementation implements GameUI {
         Logger.info("Application is terminated now. There is no way back!");
         stopGame();
         spriteAnimationTimer.stop();
-        spriteAnimationSet.clear();
+        spriteAnimationTimer.spriteAnimationSet().clear();
         flashMessageView.stop();
         customDirWatchdog.dispose();
     }
