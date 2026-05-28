@@ -232,7 +232,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public UIConfig config(String gameVariantName) {
+    public UIConfig configForGameVariant(String gameVariantName) {
         return uiConfigManager.getOrCreateUIConfig(gameVariantName);
     }
 
@@ -248,7 +248,7 @@ public final class GameUI_Implementation implements GameUI {
         if (gameVariantName == null) {
             throw new IllegalStateException("Cannot access UI configuration: no game variant is selected");
         }
-        return (T) config(gameContext().gameVariantName());
+        return (T) configForGameVariant(gameContext().gameVariantName());
     }
 
     @Override

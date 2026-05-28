@@ -110,7 +110,7 @@ public interface GameUI {
      *
      * @param gameVariantName name of the variant
      */
-    UIConfig config(String gameVariantName);
+    UIConfig configForGameVariant(String gameVariantName);
 
     /**
      * @return the current UI configuration, cast to the expected type.

@@ -43,7 +43,7 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
 
     private void enterGameVariant(String variantName) {
         final Game newGame = ui.gameContext().gameByVariantName(variantName);
-        final UIConfig config = ui.config(variantName);
+        final UIConfig config = ui.configForGameVariant(variantName);
         config.init(ui);
         final Image icon = config.assets().image("app_icon");
         if (icon != null) {
