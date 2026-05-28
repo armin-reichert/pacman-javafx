@@ -86,7 +86,7 @@ public final class GameUI_Implementation implements GameUI {
     private final FlashMessageView flashMessageView = new FlashMessageView();
     private final StatusIconBox statusIconBox = new StatusIconBox();
 
-    private StringBinding titleBinding;
+    private StringBinding stageTitleBinding;
 
     public GameUI_Implementation(GameBox gameBox, Stage stage, int mainSceneWidth, int mainSceneHeight) {
         this.gameBox = requireNonNull(gameBox);
@@ -154,7 +154,8 @@ public final class GameUI_Implementation implements GameUI {
     private EditorView createEditorView() {
         final var editorView = new EditorView(stage, this);
         editorView.editor().setOnQuit(_ -> {
-            stage.titleProperty().bind(titleBinding);
+            // restore title (editor changed it)
+            stage.titleProperty().bind(stageTitleBinding);
             viewManager.selectStartView(this);
         });
         return editorView;
@@ -193,7 +194,7 @@ public final class GameUI_Implementation implements GameUI {
             () -> viewManager.isPlayViewSelected() || viewManager.isStartViewSelected(),
             viewManager.currentViewProperty()));
 
-        titleBinding = createStringBinding(
+        stageTitleBinding = createStringBinding(
             () -> {
                 final boolean debug  = GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get();
                 final boolean is3D   = GameUIConstants.PROPERTY_3D_ENABLED.get();
@@ -208,7 +209,6 @@ public final class GameUI_Implementation implements GameUI {
             GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE,
             GameUIConstants.PROPERTY_3D_ENABLED
         );
-        stage.titleProperty().bind(titleBinding);
 
         rootPane.backgroundProperty().bind(Bindings.createObjectBinding(
             () -> currentGameSceneHasID(GameSceneConfig.CommonSceneID.PLAY_SCENE_3D)
@@ -386,6 +386,7 @@ public final class GameUI_Implementation implements GameUI {
         stage.setMinWidth(GameUIConstants.MIN_STAGE_WIDTH);
         stage.setMinHeight(GameUIConstants.MIN_STAGE_HEIGHT);
         stage.setScene(scene);
+        stage.titleProperty().bind(stageTitleBinding);
         stage.centerOnScreen();
         stage.show();
 
