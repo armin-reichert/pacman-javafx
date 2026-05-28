@@ -103,7 +103,9 @@ public interface GameUI {
     // Scene Access
     // ---------------------------------------------------------------------------------------------
 
-    GameSceneManager gameSceneManager();
+    GameSceneChangeManager gameSceneManager();
+
+    GameSceneEmbeddingManager gameSceneEmbeddingManager();
 
     /**
      * Checks whether the current game scene matches the given ID.
@@ -112,8 +114,6 @@ public interface GameUI {
      * @return {@code true} if the active scene has the given ID
      */
     boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID);
-
-    void embedGameSceneIntoPlayView(GameScene gameScene);
 
     // ---------------------------------------------------------------------------------------------
     // View Access

@@ -9,26 +9,30 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import org.tinylog.Logger;
 
-import java.util.Objects;
 import java.util.Optional;
 
-public class GameSceneManager {
+import static java.util.Objects.requireNonNull;
+
+public class GameSceneChangeManager implements ChangeListener<GameScene> {
 
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
 
-    private GameSceneEmbedder embedder;
+    private GameSceneEmbeddingManager embeddingManager;
 
-    public GameSceneManager() {}
+    public void setEmbedder(GameSceneEmbeddingManager embeddingManager) {
+        this.embeddingManager = requireNonNull(embeddingManager);
+        gameScene.addListener(this);
+    }
 
-    public void setEmbedder(GameUI ui, GameSceneEmbedder embedder) {
-        this.embedder = Objects.requireNonNull(embedder);
-        gameScene.addListener((_, _, gameScene) -> {
-            if (gameScene != null) {
-                ui.embedGameSceneIntoPlayView(gameScene);
-            }
-        });
+    @Override
+    public void changed(ObservableValue<? extends GameScene> py, GameScene oldGameScene, GameScene newGameScene) {
+        if (newGameScene != null) {
+            embeddingManager.embedGameSceneIntoPlayView(newGameScene);
+        }
     }
 
     public Optional<GameScene> optCurrentGameScene() {
@@ -54,19 +58,20 @@ public class GameSceneManager {
 
         if (prevGameScene != null) {
             prevGameScene.deactivate();
-            embedder.removeFromPlayView(ui.viewManager().playView(), prevGameScene);
+            embeddingManager.removeFromPlayView(prevGameScene);
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
-        ui.embedGameSceneIntoPlayView(nextGameScene);
+        embeddingManager.embedGameSceneIntoPlayView(nextGameScene);
 
         nextGameScene.activate();
-        game.optGameLevel().ifPresent(level -> handleGameSceneSwitch(ui.currentConfig(), level, prevGameScene, nextGameScene));
+
+        game.optGameLevel().ifPresent(level -> handle2D3DSwitch(ui.currentConfig(), level, prevGameScene, nextGameScene));
+
         gameSceneProperty().set(nextGameScene);
     }
 
-    private void handleGameSceneSwitch(UIConfig uiConfig, GameLevel level, GameScene prevGameScene, GameScene nextGameScene) {
-        // Handle switching between 2D and 3D play scene view
+    private void handle2D3DSwitch(UIConfig uiConfig, GameLevel level, GameScene prevGameScene, GameScene nextGameScene) {
         final GameSceneSwitchType sceneSwitchType = identifySceneSwitchType(prevGameScene, nextGameScene);
         switch (sceneSwitchType) {
             case FROM_2D_TO_3D -> switchPlaySceneTo3D(uiConfig, level, prevGameScene, nextGameScene);

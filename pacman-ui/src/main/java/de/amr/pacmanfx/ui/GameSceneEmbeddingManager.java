@@ -12,20 +12,29 @@ import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import org.tinylog.Logger;
 
+import java.util.Objects;
+
 import static java.util.Objects.requireNonNull;
 
-public class GameSceneEmbedder {
+public class GameSceneEmbeddingManager {
 
-    public void removeFromPlayView(PlayView playView, GameScene gameScene) {
-        requireNonNull(playView);
+    private final GameUI ui;
+
+    public GameSceneEmbeddingManager(GameUI ui) {
+        this.ui = Objects.requireNonNull(ui);
+    }
+
+    public void removeFromPlayView(GameScene gameScene) {
         requireNonNull(gameScene);
+
+        ui.viewManager().playView().contextMenu().hide();
 
         gameScene.optSubSceneFX().ifPresent(subSceneFX -> {
             subSceneFX.widthProperty().unbind();
             subSceneFX.heightProperty().unbind();
         });
         if (gameScene instanceof GameScene2D gameScene2D) {
-            final DecorationPane decorationPane = playView.decorationPane();
+            final DecorationPane decorationPane = ui.viewManager().playView().decorationPane();
             decorationPane.canvas().widthProperty().unbind();
             decorationPane.canvas().heightProperty().unbind();
             decorationPane.unscaledWidthProperty().unbind();
@@ -38,11 +47,13 @@ public class GameSceneEmbedder {
         Logger.info("Game scene {} REMOVED from play scene!", gameScene.getClass().getSimpleName());
     }
 
-    public void embedGameSceneIntoPlayView(Scene scene, PlayView playView, GameSceneConfig gameSceneConfig, GameScene gameScene) {
+    public void embedGameSceneIntoPlayView(GameScene gameScene) {
+        ui.viewManager().playView().contextMenu().hide();
+
         if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameSceneWithSubSceneFX(scene, playView, gameScene, gameScene.optSubSceneFX().get());
+            embedGameSceneWithSubSceneFX(ui.scene(), ui.viewManager().playView(), gameScene, gameScene.optSubSceneFX().get());
         } else if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2D(scene, playView, gameSceneConfig, gameScene2D);
+            embedGameScene2D(ui.scene(), ui.viewManager().playView(), ui.currentConfig().gameSceneConfig(), gameScene2D);
         } else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }

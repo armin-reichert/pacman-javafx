@@ -57,23 +57,26 @@ import static javafx.beans.binding.Bindings.createStringBinding;
  */
 public final class GameUI_Implementation extends PreferencesManager implements GameUI {
 
-    private final DirectoryWatchdog customDirWatchdog;
-
-    private final SpriteAnimationTimer spriteAnimationTimer = new SpriteAnimationTimer();
-    private final SpriteAnimationSet spriteAnimationSet = new SpriteAnimationSet();
-
+    // Game model access
     private final GameContext gameContext;
 
+    // Observes changes in custom map directory
+    private final DirectoryWatchdog customDirWatchdog;
+
+    private final ActionBindingsSet actionBindings = new GameActionBindingsSet();
+
     // So many managers? I think I should fire some!
+    private final GameSceneEmbeddingManager gameSceneEmbeddingManager = new GameSceneEmbeddingManager(this);
+    private final GameSceneChangeManager gameSceneChangeManager = new GameSceneChangeManager();
+    private final VoiceManager voiceManager = new VoiceManager();
+    private final SoundManager soundManager = new SoundManager();
+    private final TranslationManager translationManager = () -> GameUIConstants.LOCALIZED_TEXTS;
     private final UIConfigManager uiConfigManager = new UIConfigManager();
     private final ViewManager viewManager;
-    private final GameSceneManager gameSceneManager = new GameSceneManager();
-    private final ActionBindingsSet actionBindings = new GameActionBindingsSet();
-    private final SoundManager soundManager = new SoundManager();
-    private final VoiceManager voiceManager = new VoiceManager();
-    private final TranslationManager translationManager = () -> GameUIConstants.LOCALIZED_TEXTS;
 
-    private final GameSceneEmbedder gameSceneEmbedder = new GameSceneEmbedder();
+    // Sprite animation support
+    private final SpriteAnimationTimer spriteAnimationTimer = new SpriteAnimationTimer();
+    private final SpriteAnimationSet spriteAnimationSet = new SpriteAnimationSet();
 
     // UI components
     private final Stage stage;
@@ -100,7 +103,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
         gameContext.gameVariantNameProperty().addListener(new GameVariantChangeHandler(this));
 
-        gameSceneManager.setEmbedder(this, gameSceneEmbedder);
+        gameSceneChangeManager.setEmbedder(gameSceneEmbeddingManager);
 
         viewManager = createViewManager();
 
@@ -165,7 +168,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
             step.clearInfo(clock.tickCount());
             gameContext.game().flow().update();
             step.printLog();
-            gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
+            gameSceneChangeManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });
         clock.setPermanentAction(() -> viewManager.currentView().render());
         clock.setErrorHandler(this::ka_tas_tro_phe);
@@ -197,13 +200,13 @@ public final class GameUI_Implementation extends PreferencesManager implements G
                 final boolean debug  = GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get();
                 final boolean is3D   = GameUIConstants.PROPERTY_3D_ENABLED.get();
                 final boolean paused = gameContext.clock().getUpdatesDisabled();
-                final GameScene gameScene = gameSceneManager.optCurrentGameScene().orElse(null);
+                final GameScene gameScene = gameSceneChangeManager.optCurrentGameScene().orElse(null);
                 return computeStageTitle(viewManager.currentView(), gameScene, debug, is3D, paused);
             },
             gameContext.clock().updatesDisabledProperty(),
             gameContext.gameVariantNameProperty(),
             viewManager.currentViewProperty(),
-            gameSceneManager.gameSceneProperty(),
+            gameSceneChangeManager.gameSceneProperty(),
             GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE,
             GameUIConstants.PROPERTY_3D_ENABLED
         );
@@ -247,7 +250,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
                 if (action.executeIfEnabled(this)) e.consume();
             }, () -> viewManager.currentView().onInput(this)
         ));
-        scene.setOnScroll(e -> gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+        scene.setOnScroll(e -> gameSceneChangeManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
     }
 
     private void initStage() {
@@ -301,19 +304,18 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
-    public GameSceneManager gameSceneManager() {
-        return gameSceneManager;
+    public GameSceneChangeManager gameSceneManager() {
+        return gameSceneChangeManager;
     }
 
     @Override
-    public void embedGameSceneIntoPlayView(GameScene gameScene) {
-        gameSceneEmbedder.embedGameSceneIntoPlayView(scene, viewManager.playView(), currentConfig().gameSceneConfig(), gameScene);
-        viewManager.playView().contextMenu().hide();
+    public GameSceneEmbeddingManager gameSceneEmbeddingManager() {
+        return gameSceneEmbeddingManager;
     }
 
     @Override
     public boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID) {
-        final GameScene currentGameScene = gameSceneManager.optCurrentGameScene().orElse(null);
+        final GameScene currentGameScene = gameSceneChangeManager.optCurrentGameScene().orElse(null);
         return currentGameScene != null && currentConfig().gameSceneConfig().gameSceneHasID(currentGameScene, sceneID);
     }
 
@@ -356,7 +358,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     public void quitCurrentGameScene() {
         final Game game = gameContext.game();
         //TODO this is game-specific and should not be here
-        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> {
+        gameSceneChangeManager.optCurrentGameScene().ifPresent(gameScene -> {
             boolean shouldConsumeCoin = game.flow().state().name().equals("STARTING_GAME_OR_LEVEL")
                 || game.isPlayingLevel();
             if (shouldConsumeCoin && !gameContext.coinMechanism().isEmpty()) {
@@ -429,7 +431,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     @Override
     public void stopGame() {
         soundManager.stopAll();
-        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> {
+        gameSceneChangeManager.optCurrentGameScene().ifPresent(gameScene -> {
             gameScene.deactivate();
             gameScene.soundEffects().ifPresent(GameSoundEffects::stopAll);
         });

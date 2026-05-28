@@ -38,7 +38,7 @@ public class GameEventHandler extends DefaultGameEventListener {
                 miniGameView.slideIn();
 
                 // size of game scene might have changed, so re-embed
-                ui.gameSceneManager().optCurrentGameScene().ifPresent(ui::embedGameSceneIntoPlayView);
+                ui.gameSceneManager().optCurrentGameScene().ifPresent(ui.gameSceneEmbeddingManager()::embedGameSceneIntoPlayView);
             }
 
             case GameStateChangeEvent stateChangeEvent -> {
