@@ -52,7 +52,7 @@ public interface View {
      *
      * @return an optional supplier for the view's title text
      */
-    default Optional<Supplier<String>> titleSupplier() {
+    default Optional<Supplier<String>> optTitleSupplier() {
         return Optional.empty();
     }
 

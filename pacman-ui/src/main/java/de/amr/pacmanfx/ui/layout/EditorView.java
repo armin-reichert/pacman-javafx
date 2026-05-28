@@ -58,7 +58,7 @@ public class EditorView implements View {
     }
 
     @Override
-    public Optional<Supplier<String>> titleSupplier() {
+    public Optional<Supplier<String>> optTitleSupplier() {
         return Optional.of(editor.ui().titleProperty()::get);
     }
 }

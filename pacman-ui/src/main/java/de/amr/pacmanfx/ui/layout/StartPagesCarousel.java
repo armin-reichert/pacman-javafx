@@ -129,7 +129,7 @@ public class StartPagesCarousel extends Carousel implements View {
     public Region rootPane() { return this; }
 
     @Override
-    public Optional<Supplier<String>> titleSupplier() {
+    public Optional<Supplier<String>> optTitleSupplier() {
         return Optional.of(this::composeTitle);
     }
 

@@ -26,7 +26,6 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.sound.VoiceManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
-import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
@@ -47,6 +46,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
@@ -195,13 +195,7 @@ public final class GameUI_Implementation implements GameUI {
             viewManager.currentViewProperty()));
 
         stageTitleBinding = createStringBinding(
-            () -> {
-                final boolean debug  = GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get();
-                final boolean is3D   = GameUIConstants.PROPERTY_3D_ENABLED.get();
-                final boolean paused = gameContext().clock().getUpdatesDisabled();
-                final GameScene gameScene = gameSceneChangeManager.optCurrentGameScene().orElse(null);
-                return computeStageTitle(viewManager.currentView(), gameScene, debug, is3D, paused);
-            },
+            this::computeStageTitle,
             gameContext().clock().updatesDisabledProperty(),
             gameContext().gameVariantNameProperty(),
             viewManager.currentViewProperty(),
@@ -461,22 +455,45 @@ public final class GameUI_Implementation implements GameUI {
 
     // private stuff
 
-    private String computeStageTitle(
-        View view, GameScene gameScene,
-        boolean debug, boolean is3D, boolean paused)
-    {
-        if (view == null) {
-            return translationManager.translate("view.missing"); // Should never happen
-        }
-        if (view.titleSupplier().isPresent()) {
-            return view.titleSupplier().get().get();
-        }
-        final String appTitle = paused ? "app.title.paused" : "app.title";
-        final String viewMode = translationManager.translate(is3D ? "threeD" : "twoD");
-        final AssetMap assets = gameContext().gameVariantName() != null ? currentConfig().assets() : null;
-        final String normalTitle = assets == null ? "" : assets.translate(appTitle, viewMode);
-        return gameScene == null || !debug
+    private String computeStageTitle() {
+        final View view = viewManager.currentView();
+        return view == null
+            ? translationManager.translate("view.missing") // Should never happen
+            : view.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene());
+    }
+
+    private String titleForCurrentGameScene() {
+        final GameScene gameScene = gameSceneChangeManager.optCurrentGameScene().orElse(null);
+
+        final boolean debug = GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get();
+        final boolean is3D = GameUIConstants.PROPERTY_3D_ENABLED.get();
+        final boolean paused = gameContext().clock().getUpdatesDisabled();
+
+        final String normalTitle = appTitle(paused, is3D);
+        return (gameScene == null || !debug)
             ? normalTitle
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
+    }
+
+    private String appTitle(boolean paused, boolean is3D) {
+        final String gameVariantName = gameContext().gameVariantName();
+        if (gameVariantName == null) {
+            return "";
+        }
+
+        final String viewMode = translationManager.translate(is3D ? "threeD" : "twoD");
+
+        // In game-variant specific resource bundles, there should be two entries with placeholder
+        // app.title = Game Variant Name {0}
+        // app.title = Game Variant Name {0} (paused)
+
+        final TranslationManager appSpecificTranslator = currentConfig().assets();
+        final String appTitleKey = paused ? "app.title.paused" : "app.title";
+        if (appSpecificTranslator.bundle() != null
+            && appSpecificTranslator.bundle().containsKey(appTitleKey)) {
+            return appSpecificTranslator.translate(appTitleKey, viewMode);
+        } else {
+            return "Unspecified Game";
+        }
     }
 }
