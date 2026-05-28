@@ -98,6 +98,17 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         ui.viewManager().selectStartView();
     }
 
+    /**
+     * Checks whether the current game scene matches the given ID.
+     *
+     * @param sceneID scene identifier
+     * @return {@code true} if the active scene has the given ID
+     */
+    public boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID) {
+        final GameScene currentGameScene = optCurrentGameScene().orElse(null);
+        return currentGameScene != null && ui.currentConfig().gameSceneConfig().gameSceneHasID(currentGameScene, sceneID);
+    }
+
     // 2D-3D scene switch
 
     private void handle2D3DSwitch(UIConfig uiConfig, GameLevel level, GameScene prevGameScene, GameScene nextGameScene) {

@@ -239,7 +239,7 @@ public class PlayView implements View {
         overlayLayer.visibleProperty().bind(Bindings.or(dashboard.rootPane().visibleProperty(), GameUIConstants.PROPERTY_MINI_VIEW_ON));
 
         miniView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
-            () -> GameUIConstants.PROPERTY_MINI_VIEW_ON.get() && ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D),
+            () -> GameUIConstants.PROPERTY_MINI_VIEW_ON.get() && ui.gameSceneManager().currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D),
             GameUIConstants.PROPERTY_MINI_VIEW_ON, ui.gameSceneManager().gameSceneProperty()
         ));
     }

@@ -120,7 +120,7 @@ public final class CommonActions {
         @Override
         public boolean isEnabled(GameUI ui) {
             boolean isArcadeGame = GameVariant.isArcadeGameName(ui.gameContext().gameVariantName());
-            boolean isPlayScene2D = ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D);
+            boolean isPlayScene2D = ui.gameSceneManager().currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D);
             return isArcadeGame && isPlayScene2D;
         }
     };
@@ -259,7 +259,7 @@ public final class CommonActions {
         @Override
         public void execute(GameUI ui) {
             toggleBoolean(GameUIConstants.PROPERTY_MINI_VIEW_ON);
-            if (!ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D)) {
+            if (!ui.gameSceneManager().currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D)) {
                 ui.showFlashMessage(ui.translationManager().translate(GameUIConstants.PROPERTY_MINI_VIEW_ON.get()
                     ? "pip_on" : "pip_off"));
             }
@@ -313,8 +313,8 @@ public final class CommonActions {
         }
 
         private boolean isPlaySceneActive(GameUI ui) {
-            return ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D)
-                || ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D);
+            return ui.gameSceneManager().currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D)
+                || ui.gameSceneManager().currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D);
         }
 
         private boolean isTestModeRunning(Game game) {

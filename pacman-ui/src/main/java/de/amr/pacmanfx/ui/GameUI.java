@@ -22,31 +22,29 @@ import java.io.File;
  */
 public interface GameUI {
 
-    // ---------------------------------------------------------------------------------------------
-    // Accessors
-    // ---------------------------------------------------------------------------------------------
-
     /**
      * @return  the watchdog monitoring the directory where user-defined maps are stored.
-     * <p>
-     * Implementations typically start this watcher during initialization.
      */
     DirectoryWatchdog customDirWatchdog();
 
     /**
      * @return the non-UI game context (model, variants, rules, etc.).
-     * <p>
-     * This is the primary entry point for interacting with the game engine.
      */
     GameContext gameContext();
 
     /**
+     * @return the game scene change and embedding manager
+     */
+    GameSceneManager gameSceneManager();
+
+    /**
      * @return  the primary JavaFX stage.
-     * <p>
-     * Implementations own and configure this stage.
      */
     Stage stage();
 
+    /**
+     * @return the mains scene of the game UI
+     */
     Scene scene();
 
     /**
@@ -68,6 +66,11 @@ public interface GameUI {
      * @return translation service for localized UI messages
      */
     TranslationManager translationManager();
+
+    /**
+     * @return the manager responsible for all UI views (start pages, play view, editor, etc.).
+     */
+    ViewManager viewManager();
 
     // ---------------------------------------------------------------------------------------------
     // Messages
@@ -92,31 +95,9 @@ public interface GameUI {
         showFlashMessage(GameUIConstants.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
 
-    // ---------------------------------------------------------------------------------------------
-    // Scene Access
-    // ---------------------------------------------------------------------------------------------
-
-    GameSceneManager gameSceneManager();
-
-    /**
-     * Checks whether the current game scene matches the given ID.
-     *
-     * @param sceneID scene identifier
-     * @return {@code true} if the active scene has the given ID
-     */
-    boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID);
 
     // ---------------------------------------------------------------------------------------------
-    // View Access
-    // ---------------------------------------------------------------------------------------------
-
-    /**
-     * @return the manager responsible for all UI views (start pages, play view, editor, etc.).
-     */
-    ViewManager viewManager();
-
-    // ---------------------------------------------------------------------------------------------
-    // Config
+    // Configuration
     // ---------------------------------------------------------------------------------------------
 
     /**

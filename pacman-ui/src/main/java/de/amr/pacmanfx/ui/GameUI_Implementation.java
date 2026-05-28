@@ -177,7 +177,7 @@ public final class GameUI_Implementation implements GameUI {
         );
 
         scene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> currentGameSceneHasID(GameSceneConfig.CommonSceneID.PLAY_SCENE_3D)
+            () -> gameSceneManager.currentGameSceneHasID(GameSceneConfig.CommonSceneID.PLAY_SCENE_3D)
                 ? GameUIConstants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUIConstants.WALLPAPERS.length)]
                 : GameUIConstants.BACKGROUND_PAC_MAN_WALLPAPER,
             // depends on:
@@ -241,12 +241,6 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public GameSceneManager gameSceneManager() {
         return gameSceneManager;
-    }
-
-    @Override
-    public boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID) {
-        final GameScene currentGameScene = gameSceneManager.optCurrentGameScene().orElse(null);
-        return currentGameScene != null && currentConfig().gameSceneConfig().gameSceneHasID(currentGameScene, sceneID);
     }
 
     @Override
