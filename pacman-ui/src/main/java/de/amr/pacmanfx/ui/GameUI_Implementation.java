@@ -55,7 +55,7 @@ import static javafx.beans.binding.Bindings.createStringBinding;
 /**
  * User interface for the Pac-Man game suite. Shows a carousel with a start page for each game variant.
  */
-public final class GameUI_Implementation extends PreferencesManager implements GameUI {
+public final class GameUI_Implementation implements GameUI {
 
     // Game model access
     private final GameContext gameContext;
@@ -69,6 +69,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private final GameSceneEmbeddingManager gameSceneEmbeddingManager = new GameSceneEmbeddingManager(this);
     private final GameSceneChangeManager gameSceneChangeManager = new GameSceneChangeManager(this);
     private final VoiceManager voiceManager = new VoiceManager();
+    private final PreferencesManager preferencesManager;
     private final SoundManager soundManager = new SoundManager();
     private final TranslationManager translationManager = () -> GameUIConstants.LOCALIZED_TEXTS;
     private final UIConfigManager uiConfigManager = new UIConfigManager();
@@ -90,18 +91,15 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     private final File initialEditorDir;
 
     public GameUI_Implementation(GameBox gameBox, Stage stage, int mainSceneWidth, int mainSceneHeight) {
-        super(GameUI_Implementation.class);
-
+        this.gameContext = requireNonNull(gameBox);
+        this.stage = requireNonNull(stage);
         requireNonNegative(mainSceneWidth);
         requireNonNegative(mainSceneHeight);
 
-        this.gameContext = requireNonNull(gameBox);
-        this.customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
-        this.initialEditorDir = gameBox.customMapDir();
+        customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
+        initialEditorDir = gameBox.customMapDir();
 
-        this.stage = requireNonNull(stage);
-
-        gameContext.gameVariantNameProperty().addListener(new GameVariantChangeHandler(this));
+        preferencesManager = createPreferencesManager();
 
         gameSceneChangeManager.setEmbedder(gameSceneEmbeddingManager);
 
@@ -121,6 +119,15 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         initScene();
         initStage();
         initGameClock(gameContext.clock());
+
+        gameContext.gameVariantNameProperty().addListener(new GameVariantChangeHandler(this));
+    }
+
+    private PreferencesManager createPreferencesManager() {
+        return new PreferencesManager(GameUI_Implementation.this.getClass()) {
+            @Override
+            protected void storeDefaultPrefValues() {}
+        };
     }
 
     private ViewManager createViewManager() {
@@ -279,13 +286,6 @@ public final class GameUI_Implementation extends PreferencesManager implements G
         Logger.info("Pac-Man scene 3D model loaded");
     }
 
-    // PreferencesManager interface
-
-    @Override
-    protected void storeDefaultPrefValues() {
-        // store user preference default values here
-    }
-
     // GameUI interface
 
     @Override
@@ -350,8 +350,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
     }
 
     @Override
-    public PreferencesManager prefs() {
-        return this;
+    public PreferencesManager preferencesManager() {
+        return preferencesManager;
     }
 
     @Override
@@ -386,7 +386,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     @Override
     public void show() {
-        logPreferences();
+        preferencesManager.logPreferences();
 
         // preload to make 3D scene creation faster
         load3DModels();

@@ -63,7 +63,7 @@ public interface GameUI {
     /**
      * @return the preferences manager storing UI-related settings.
      */
-    PreferencesManager prefs();
+    PreferencesManager preferencesManager();
 
     /**
      * @return translation service for localized UI messages
