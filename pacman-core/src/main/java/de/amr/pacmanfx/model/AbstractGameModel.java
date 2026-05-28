@@ -446,7 +446,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
         detectCollisions(level, pac, ghosts, bonus);
 
         level.blinking().doTick();
-        level.entities().selectAll().forEach(e -> e.update(level));
+        level.entities().forEach(e -> e.update(level));
 
         // double-check should minimize collision missing
         if (isCollisionDoubleChecked()) {

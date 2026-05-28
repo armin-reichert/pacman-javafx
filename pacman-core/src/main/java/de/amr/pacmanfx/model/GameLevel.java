@@ -10,10 +10,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Validations.*;
@@ -33,18 +30,33 @@ public class GameLevel {
     private final byte[] bonusSymbols = new byte[2];
     private final int numFlashes;
 
-    public static class EntitySet extends GameLevelEntitySet {
+    public static class EntitySet implements Iterable<GameLevelEntity> {
+
+        private final GameLevelEntitySet entitySet = new GameLevelEntitySet();
+
+        public void add(GameLevelEntity entity) {
+            entitySet.add(entity);
+        }
+
+        public void remove(GameLevelEntity entity) {
+            entitySet.remove(entity);
+        }
 
         public Pac pac() {
-            return uniqueOfType(Pac.class);
+            return entitySet.uniqueOfType(Pac.class);
         }
 
         public List<Ghost> ghosts() {
-            return selectAllOfType(Ghost.class).sorted(Comparator.comparing(Ghost::personality)).toList();
+            return entitySet.selectAllOfType(Ghost.class).sorted(Comparator.comparing(Ghost::personality)).toList();
         }
 
         public Optional<Bonus> optBonus() {
-            return anyOfType(Bonus.class);
+            return entitySet.anyOfType(Bonus.class);
+        }
+
+        @Override
+        public Iterator<GameLevelEntity> iterator() {
+            return entitySet.iterator();
         }
     }
 

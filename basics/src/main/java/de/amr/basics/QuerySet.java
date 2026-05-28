@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-public class QuerySet<E> implements Disposable {
+public class QuerySet<E> implements Iterable<E>, Disposable {
 
     private final Set<E> entries = new HashSet<>();
 
@@ -20,6 +20,11 @@ public class QuerySet<E> implements Disposable {
 
     public boolean contains(E entity) {
         return entries.contains(entity);
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return entries.iterator();
     }
 
     @Override
