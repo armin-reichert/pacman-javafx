@@ -82,8 +82,7 @@ public class ViewManager {
         return Optional.ofNullable(editorView);
     }
 
-    public void selectStartView(GameUI ui) {
-        ui.stopGame();
+    public void selectStartView() {
         currentViewProperty().set(startView);
     }
 

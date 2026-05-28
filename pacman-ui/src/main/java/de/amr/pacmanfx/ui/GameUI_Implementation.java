@@ -11,7 +11,6 @@ import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.model.CanonicalGameState;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
@@ -153,7 +152,7 @@ public final class GameUI_Implementation implements GameUI {
             // restore title (editor changed it)
             stage.titleProperty().unbind();
             stage.titleProperty().bind(stageTitleBinding);
-            viewManager.selectStartView(this);
+            viewManager.selectStartView();
         });
         return editorView;
     }
@@ -333,24 +332,6 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public void quitCurrentGameScene() {
-        final Game game = gameContext().game();
-        //TODO this is game-specific and should not be here
-        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> {
-            boolean shouldConsumeCoin = game.flow().state().name().equals("STARTING_GAME_OR_LEVEL")
-                || game.isPlayingLevel();
-            if (shouldConsumeCoin && !gameContext().coinMechanism().isEmpty()) {
-                gameContext().coinMechanism().consumeCoin();
-            }
-            Logger.info("Quit game scene ({}), returning to start view", gameScene.getClass().getSimpleName());
-        });
-
-        stopGame();
-        game.flow().restartStateWithName(CanonicalGameState.BOOT.name());
-        viewManager.selectStartView(this);
-    }
-
-    @Override
     public void restart() {
         stopGame();
         gameContext().game().flow().restartStateWithName(CanonicalGameState.BOOT.name());
@@ -374,7 +355,7 @@ public final class GameUI_Implementation implements GameUI {
         GameUIConstants.PROPERTY_3D_WALL_OPACITY.set(currentConfig().worldConfig().maze().obstacleOpacity());
 
         viewManager.playView().dashboard().init(this);
-        viewManager.selectStartView(this);
+        viewManager.selectStartView();
 
         stage.setMinWidth(GameUIConstants.MIN_STAGE_WIDTH);
         stage.setMinHeight(GameUIConstants.MIN_STAGE_HEIGHT);

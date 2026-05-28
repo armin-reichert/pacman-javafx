@@ -150,11 +150,6 @@ public interface GameUI {
     void stopGame();
 
     /**
-     * Quits the current game scene (if any) and returns to the start page.
-     */
-    void quitCurrentGameScene();
-
-    /**
      * Resets clock speed and shows the boot screen for the selected game.
      * <p>
      * Typically used when switching variants or restarting gameplay.

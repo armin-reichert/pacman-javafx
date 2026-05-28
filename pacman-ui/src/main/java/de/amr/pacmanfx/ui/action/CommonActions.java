@@ -93,7 +93,7 @@ public final class CommonActions {
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
             game.cheats().clearCheatUsedFlag(); //TODO needed?
-            ui.quitCurrentGameScene();
+            ui.gameSceneManager().quitCurrentGameScene();
         }
     };
 
