@@ -33,6 +33,7 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -96,13 +97,6 @@ public final class GameUI_Implementation implements GameUI {
         viewManager.setPlayView(createPlayView());
 
         spriteAnimationTimer.setSpriteAnimationSet(spriteAnimationSet);
-
-        initMainScene();
-        initGlobalActionBindings();
-        initPropertyBindings();
-        initGameClock(gameContext().clock());
-
-        gameContext().gameVariantNameProperty().addListener(new GameVariantChangeHandler(this));
     }
 
     private PreferencesManager createPreferencesManager() {
@@ -167,6 +161,8 @@ public final class GameUI_Implementation implements GameUI {
 
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
         keyboardInfo.rootPane().setAlignment(Pos.TOP_CENTER);
+
+        scene.init(this, actionBindings);
     }
 
     private void initPropertyBindings() {
@@ -318,16 +314,29 @@ public final class GameUI_Implementation implements GameUI {
         GameUIConstants.PROPERTY_3D_WALL_OPACITY.set(currentConfig().worldConfig().maze().obstacleOpacity());
 
         viewManager.playView().dashboard().init(this);
-        viewManager.selectStartView();
+        initMainScene();
+        initGlobalActionBindings();
+        initPropertyBindings();
+        initGameClock(gameContext().clock());
 
-        scene.init(this, actionBindings);
+        // load assets for current UI config
+        currentConfig().init(this);
+        final Image icon = currentConfig().assets().image("app_icon");
 
+        stage.setScene(scene);
         stage.setMinWidth(GameUIConstants.MIN_STAGE_WIDTH);
         stage.setMinHeight(GameUIConstants.MIN_STAGE_HEIGHT);
-        stage.setScene(scene);
         stage.titleProperty().bind(stageTitleBinding);
+        if (icon != null) {
+            stage.getIcons().setAll(icon);
+        }
         stage.centerOnScreen();
         stage.show();
+
+        final GameVariantChangeHandler gameVariantChangeHandler = new GameVariantChangeHandler(this);
+        gameContext().gameVariantNameProperty().addListener(gameVariantChangeHandler);
+
+        viewManager.selectStartView();
 
         Platform.runLater(() -> {
             customDirWatchdog.startWatching();

@@ -35,36 +35,22 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
 
     private void exitGameVariant(String variantName) {
         final Game oldGame = ui.gameContext().gameByVariantName(variantName);
-
-        oldGame.flow().removeGameEventListener(gameEventHandler);
-
-        Logger.info("Cleanup old game variant {}...", variantName);
-
         ui.stage().getIcons().removeAll();
         ui.uiConfigManager().dispose(variantName);
         ui.soundManager().dispose();
-
-        Logger.info("Cleanup of old game variant {} complete.", variantName);
+        oldGame.flow().removeGameEventListener(gameEventHandler);
     }
 
     private void enterGameVariant(String variantName) {
         final Game newGame = ui.gameContext().gameByVariantName(variantName);
-
-        newGame.flow().addGameEventListener(gameEventHandler);
-
-        Logger.info("Initialize new game variant {}...", variantName);
-
-        final UIConfig newUiConfig = ui.config(variantName);
-        newUiConfig.init(ui);
-
-        final Image icon = newUiConfig.assets().image("app_icon");
+        final UIConfig config = ui.config(variantName);
+        config.init(ui);
+        final Image icon = config.assets().image("app_icon");
         if (icon != null) {
             ui.stage().getIcons().setAll(icon);
         } else {
             Logger.error("Could not find application icon for game variant {}", variantName);
         }
-
-        Logger.info("Initialization of game variant {} complete.", variantName);
+        newGame.flow().addGameEventListener(gameEventHandler);
     }
-
 }
