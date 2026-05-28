@@ -301,7 +301,7 @@ public final class CommonActions {
                 ui.showFlashMessage(ui.translationManager().translate(usePlayScene3D ? "use_3D_scene" : "use_2D_scene"));
             }
             if (canSwitchSceneNow(game)) {
-                ui.gameSceneManager().forceGameSceneUpdate(ui);
+                ui.gameSceneManager().forceGameSceneUpdate();
             }
         }
 

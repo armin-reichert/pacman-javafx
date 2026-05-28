@@ -21,18 +21,27 @@ public class GameSceneChangeManager implements ChangeListener<GameScene> {
 
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
 
+    private final GameUI ui;
     private GameSceneEmbeddingManager embeddingManager;
 
-    public void setEmbedder(GameSceneEmbeddingManager embeddingManager) {
-        this.embeddingManager = requireNonNull(embeddingManager);
+    public GameSceneChangeManager(GameUI ui) {
+        this.ui = requireNonNull(ui);
         gameScene.addListener(this);
     }
 
     @Override
     public void changed(ObservableValue<? extends GameScene> py, GameScene oldGameScene, GameScene newGameScene) {
         if (newGameScene != null) {
-            embeddingManager.embedGameSceneIntoPlayView(newGameScene);
+            if (embeddingManager != null) {
+                embeddingManager.embedGameSceneIntoPlayView(newGameScene);
+            } else {
+                Logger.error("No game scene embedding manager has been set");
+            }
         }
+    }
+
+    public void setEmbedder(GameSceneEmbeddingManager embeddingManager) {
+        this.embeddingManager = requireNonNull(embeddingManager);
     }
 
     public Optional<GameScene> optCurrentGameScene() {
@@ -43,11 +52,11 @@ public class GameSceneChangeManager implements ChangeListener<GameScene> {
         return gameScene;
     }
 
-    public void forceGameSceneUpdate(GameUI ui) {
-        updateGameScene(ui, true);
+    public void forceGameSceneUpdate() {
+        updateGameSceneAndForceReload(true);
     }
 
-    public void updateGameScene(GameUI ui, boolean forceReload) {
+    public void updateGameSceneAndForceReload(boolean forceReload) {
         final Game game = ui.gameContext().game();
         final GameScene prevGameScene = optCurrentGameScene().orElse(null);
         final GameScene nextGameScene = ui.currentConfig().gameSceneConfig().selectGameScene(ui, game).orElseThrow();

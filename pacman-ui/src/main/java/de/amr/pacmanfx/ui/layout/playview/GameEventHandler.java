@@ -48,12 +48,12 @@ public class GameEventHandler extends DefaultGameEventListener {
                 }
             }
 
-            case GenericChangeEvent _ -> ui.gameSceneManager().forceGameSceneUpdate(ui);
+            case GenericChangeEvent _ -> ui.gameSceneManager().forceGameSceneUpdate();
 
             default -> {}
         }
 
-        ui.gameSceneManager().updateGameScene(ui, false);
+        ui.gameSceneManager().updateGameSceneAndForceReload(false);
 
         // Call game event handler for current game scene
         ui.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));

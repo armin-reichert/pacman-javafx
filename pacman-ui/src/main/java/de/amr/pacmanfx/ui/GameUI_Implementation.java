@@ -67,7 +67,7 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     // So many managers? I think I should fire some!
     private final GameSceneEmbeddingManager gameSceneEmbeddingManager = new GameSceneEmbeddingManager(this);
-    private final GameSceneChangeManager gameSceneChangeManager = new GameSceneChangeManager();
+    private final GameSceneChangeManager gameSceneChangeManager = new GameSceneChangeManager(this);
     private final VoiceManager voiceManager = new VoiceManager();
     private final SoundManager soundManager = new SoundManager();
     private final TranslationManager translationManager = () -> GameUIConstants.LOCALIZED_TEXTS;
