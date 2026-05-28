@@ -41,7 +41,7 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
         oldGame.flow().removeGameEventListener(gameEventHandler);
     }
 
-    private void enterGameVariant(String variantName) {
+    public void enterGameVariant(String variantName) {
         final Game newGame = ui.gameContext().gameByVariantName(variantName);
         final UIConfig config = ui.configForGameVariant(variantName);
         config.init(ui);

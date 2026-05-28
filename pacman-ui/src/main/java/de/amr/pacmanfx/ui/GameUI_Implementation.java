@@ -305,20 +305,19 @@ public final class GameUI_Implementation implements GameUI {
         initPropertyBindings();
         initGameClock(gameContext().clock());
 
-        // load assets for current UI config
-        currentConfig().init(this);
-        final Image icon = currentConfig().assets().image("app_icon");
+        final GameVariantChangeHandler gameVariantChangeHandler = new GameVariantChangeHandler(this);
+        gameContext().gameVariantNameProperty().addListener(gameVariantChangeHandler);
+        gameVariantChangeHandler.enterGameVariant(gameContext().gameVariantName());
 
         stage.setScene(scene);
         stage.setMinWidth(GameUIConstants.MIN_STAGE_WIDTH);
         stage.setMinHeight(GameUIConstants.MIN_STAGE_HEIGHT);
         stage.titleProperty().bind(stageTitleBinding);
+
+        final Image icon = currentConfig().assets().image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         }
-
-        final GameVariantChangeHandler gameVariantChangeHandler = new GameVariantChangeHandler(this);
-        gameContext().gameVariantNameProperty().addListener(gameVariantChangeHandler);
 
         viewManager.selectStartView();
 
