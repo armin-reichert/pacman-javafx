@@ -22,28 +22,51 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel {
 
-    public static class EntitySet implements Iterable<GameLevelEntity> {
+    // This is just an experimental class for a general entity set with cache
+    public static class EntitySetWithCache implements Iterable<GameLevelEntity> {
 
         private final GameLevelEntitySet entitySet = new GameLevelEntitySet();
 
+        private Pac cachedPac;
+        private List<Ghost> cachedGhosts;
+        private Bonus cachedBonus;
+
+        private void maybeInvalidateCache(GameLevelEntity entity) {
+            if (entity instanceof Pac) cachedPac = null;
+            if (entity instanceof Ghost) cachedGhosts = null;
+            if (entity instanceof Bonus) cachedBonus = null;
+        }
+
         public void add(GameLevelEntity entity) {
             entitySet.add(entity);
+            maybeInvalidateCache(entity);
         }
 
         public void remove(GameLevelEntity entity) {
             entitySet.remove(entity);
+            maybeInvalidateCache(entity);
         }
 
         public Pac pac() {
-            return entitySet.uniqueOfType(Pac.class);
+            if (cachedPac == null) {
+                cachedPac = entitySet.uniqueOfType(Pac.class);
+            }
+            return cachedPac;
         }
 
         public List<Ghost> ghosts() {
-            return entitySet.selectAllOfType(Ghost.class).sorted(Comparator.comparing(Ghost::personality)).toList();
+            if  (cachedGhosts == null) {
+                cachedGhosts = List.copyOf(entitySet.selectAllOfType(Ghost.class)
+                    .sorted(Comparator.comparing(Ghost::personality)).toList());
+            }
+            return cachedGhosts;
         }
 
         public Optional<Bonus> optBonus() {
-            return entitySet.anyOfType(Bonus.class);
+            if (cachedBonus == null) {
+                 cachedBonus = entitySet.anyOfType(Bonus.class);
+            }
+            return Optional.ofNullable(cachedBonus);
         }
 
         @Override
@@ -55,7 +78,7 @@ public class GameLevel {
     private final Game game;
     private final int number; // 1=first level
     private final WorldMap worldMap;
-    private final EntitySet entities = new EntitySet();
+    private final EntitySetWithCache entities = new EntitySetWithCache();
     private final AbstractHuntingTimer huntingTimer;
     private final Pulse blinking;
     private final List<Ghost> victims = new ArrayList<>();
@@ -239,7 +262,7 @@ public class GameLevel {
         return Optional.ofNullable(message);
     }
 
-    public EntitySet entities() {
+    public EntitySetWithCache entities() {
         return entities;
     }
 

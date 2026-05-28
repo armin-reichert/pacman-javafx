@@ -58,14 +58,18 @@ public class QuerySet<E> implements Iterable<E>, Disposable {
         entries.removeIf(e -> type.isInstance(e) && condition.test(type.cast(e)));
     }
 
-    public <T> Optional<T> anyOfType(Class<T> type) {
+    public <T> Optional<T> optAnyOfType(Class<T> type) {
+        return Optional.ofNullable(anyOfType(type));
+    }
+
+    public <T> T anyOfType(Class<T> type) {
         requireNonNull(type);
         for (var e : entries) {
             if (type.isInstance(e)) {
-                return Optional.of(type.cast(e));
+                return type.cast(e);
             }
         }
-        return Optional.empty();
+        return null;
     }
 
     /**

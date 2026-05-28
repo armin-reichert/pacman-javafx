@@ -86,13 +86,13 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     @Override
     public void onBonusEaten(BonusEatenEvent ignored) {
-        assertLevel3D().entities().anyOfType(Bonus3D.class).ifPresent(Bonus3D::lookEaten);
+        assertLevel3D().entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookEaten);
         soundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent ignoredEvent) {
-        assertLevel3D().entities().anyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
+        assertLevel3D().entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         soundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
@@ -288,7 +288,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         soundEffects().ifPresent(GameSoundEffects::stopAll);
         level3D.animationRegistry().stopAllAnimations();
         level3D.cleanupFoodAndParticles();
-        level3D.entities().anyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
+        level3D.entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         level3D.messageManager().hideMessage();
 
         playLevelEndAnimation(level3D.animationRegistry(), level3D.entities().maze3D(), gameState, level3D.level().cutSceneNumber() != 0);
@@ -337,7 +337,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         }
         level3D.animationRegistry().animation(GameLevel3D.AnimationID.GHOST_LIGHT).stop();
         level3D.cleanupFoodAndParticles();
-        level3D.entities().anyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
+        level3D.entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 
