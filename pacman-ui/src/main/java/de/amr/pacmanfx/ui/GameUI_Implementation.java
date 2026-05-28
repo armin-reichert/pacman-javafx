@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
@@ -58,7 +59,7 @@ import static javafx.beans.binding.Bindings.createStringBinding;
 public final class GameUI_Implementation implements GameUI {
 
     // Game model access
-    private final GameContext gameContext;
+    private final GameBox gameBox;
 
     // Observes changes in custom map directory
     private final DirectoryWatchdog customDirWatchdog;
@@ -66,14 +67,14 @@ public final class GameUI_Implementation implements GameUI {
     private final ActionBindingsSet actionBindings = new GameActionBindingsSet();
 
     // So many managers? I think I should fire some!
-    private final GameSceneEmbeddingManager gameSceneEmbeddingManager = new GameSceneEmbeddingManager(this);
     private final GameSceneChangeManager gameSceneChangeManager = new GameSceneChangeManager(this);
-    private final VoiceManager voiceManager = new VoiceManager();
+    private final GameSceneEmbeddingManager gameSceneEmbeddingManager = new GameSceneEmbeddingManager(this);
     private final PreferencesManager preferencesManager;
     private final SoundManager soundManager = new SoundManager();
     private final TranslationManager translationManager = () -> GameUIConstants.LOCALIZED_TEXTS;
     private final UIConfigManager uiConfigManager = new UIConfigManager();
     private final ViewManager viewManager;
+    private final VoiceManager voiceManager = new VoiceManager();
 
     // Sprite animation support
     private final SpriteAnimationTimer spriteAnimationTimer = new SpriteAnimationTimer();
@@ -88,16 +89,14 @@ public final class GameUI_Implementation implements GameUI {
 
     private StringBinding titleBinding;
 
-    private final File initialEditorDir;
-
     public GameUI_Implementation(GameBox gameBox, Stage stage, int mainSceneWidth, int mainSceneHeight) {
-        this.gameContext = requireNonNull(gameBox);
+        this.gameBox = requireNonNull(gameBox);
         this.stage = requireNonNull(stage);
         requireNonNegative(mainSceneWidth);
         requireNonNegative(mainSceneHeight);
 
         customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
-        initialEditorDir = gameBox.customMapDir();
+        //initialEditorDir = gameBox.customMapDir();
 
         preferencesManager = createPreferencesManager();
 
@@ -118,9 +117,9 @@ public final class GameUI_Implementation implements GameUI {
         initPropertyBindings();
         initScene();
         initStage();
-        initGameClock(gameContext.clock());
+        initGameClock(gameContext().clock());
 
-        gameContext.gameVariantNameProperty().addListener(new GameVariantChangeHandler(this));
+        gameContext().gameVariantNameProperty().addListener(new GameVariantChangeHandler(this));
     }
 
     private PreferencesManager createPreferencesManager() {
@@ -137,7 +136,7 @@ public final class GameUI_Implementation implements GameUI {
             if (viewManager.isStartViewSelected()) return true;
             if (viewManager.isEditorViewSelected()) return false;
             if (viewManager.isPlayViewSelected()) {
-                return !gameContext.game().isPlayingLevel();
+                return !gameContext().game().isPlayingLevel();
             }
             return false;
         });
@@ -171,9 +170,9 @@ public final class GameUI_Implementation implements GameUI {
 
     private void initGameClock(GameClock clock) {
         clock.setUpdateAction(() -> {
-            final SimulationStep step = gameContext.game().doSimulationStep();
+            final SimulationStep step = gameContext().game().doSimulationStep();
             step.clearInfo(clock.tickCount());
-            gameContext.game().flow().update();
+            gameContext().game().flow().update();
             step.printLog();
             gameSceneChangeManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });
@@ -206,12 +205,12 @@ public final class GameUI_Implementation implements GameUI {
             () -> {
                 final boolean debug  = GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get();
                 final boolean is3D   = GameUIConstants.PROPERTY_3D_ENABLED.get();
-                final boolean paused = gameContext.clock().getUpdatesDisabled();
+                final boolean paused = gameContext().clock().getUpdatesDisabled();
                 final GameScene gameScene = gameSceneChangeManager.optCurrentGameScene().orElse(null);
                 return computeStageTitle(viewManager.currentView(), gameScene, debug, is3D, paused);
             },
-            gameContext.clock().updatesDisabledProperty(),
-            gameContext.gameVariantNameProperty(),
+            gameContext().clock().updatesDisabledProperty(),
+            gameContext().gameVariantNameProperty(),
             viewManager.currentViewProperty(),
             gameSceneChangeManager.gameSceneProperty(),
             GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE,
@@ -228,8 +227,8 @@ public final class GameUI_Implementation implements GameUI {
             gameSceneManager().gameSceneProperty()
         ));
 
-        gameContext.gameVariantNameProperty().addListener((_, _, _) -> {
-            final Game game = gameContext.game();
+        gameContext().gameVariantNameProperty().addListener((_, _, _) -> {
+            final Game game = gameContext().game();
             statusIconBox.iconAutopilot().visibleProperty().bind(game.cheats().usingAutopilotProperty());
             statusIconBox.iconCheated()  .visibleProperty().bind(game.cheats().cheatUsedProperty());
             statusIconBox.iconImmune()   .visibleProperty().bind(game.cheats().immuneProperty());
@@ -295,7 +294,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public GameContext gameContext() {
-        return gameContext;
+        return gameBox;
     }
 
     @Override
@@ -322,16 +321,16 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends UIConfig> T currentConfig() {
-        final String gameVariantName = gameContext.gameVariantName();
+        final String gameVariantName = gameContext().gameVariantName();
         if (gameVariantName == null) {
             throw new IllegalStateException("Cannot access UI configuration: no game variant is selected");
         }
-        return (T) config(gameContext.gameVariantName());
+        return (T) config(gameContext().gameVariantName());
     }
 
     @Override
     public void openWorldMapFileInEditor(File worldMapFile) {
-        viewManager.createEditorIfNotExisting(initialEditorDir);
+        viewManager.createEditorIfNotExisting(gameBox.customMapDir());
         viewManager.optEditorView().map(EditorView::editor).ifPresent(editor -> {
             try {
                 if (worldMapFile != null) {
@@ -356,13 +355,13 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void quitCurrentGameScene() {
-        final Game game = gameContext.game();
+        final Game game = gameContext().game();
         //TODO this is game-specific and should not be here
         gameSceneChangeManager.optCurrentGameScene().ifPresent(gameScene -> {
             boolean shouldConsumeCoin = game.flow().state().name().equals("STARTING_GAME_OR_LEVEL")
                 || game.isPlayingLevel();
-            if (shouldConsumeCoin && !gameContext.coinMechanism().isEmpty()) {
-                gameContext.coinMechanism().consumeCoin();
+            if (shouldConsumeCoin && !gameContext().coinMechanism().isEmpty()) {
+                gameContext().coinMechanism().consumeCoin();
             }
             Logger.info("Quit game scene ({}), returning to start view", gameScene.getClass().getSimpleName());
         });
@@ -375,8 +374,8 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void restart() {
         stopGame();
-        gameContext.game().flow().restartStateWithName(CanonicalGameState.BOOT.name());
-        Platform.runLater(gameContext.clock()::start);
+        gameContext().game().flow().restartStateWithName(CanonicalGameState.BOOT.name());
+        Platform.runLater(gameContext().clock()::start);
     }
 
     @Override
@@ -435,8 +434,8 @@ public final class GameUI_Implementation implements GameUI {
             gameScene.deactivate();
             gameScene.soundEffects().ifPresent(GameSoundEffects::stopAll);
         });
-        gameContext.clock().stop();
-        gameContext.clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        gameContext().clock().stop();
+        gameContext().clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         Logger.info("Game STOPPED!");
     }
 
@@ -484,7 +483,7 @@ public final class GameUI_Implementation implements GameUI {
         }
         final String appTitle = paused ? "app.title.paused" : "app.title";
         final String viewMode = translationManager.translate(is3D ? "threeD" : "twoD");
-        final AssetMap assets = gameContext.gameVariantName() != null ? currentConfig().assets() : null;
+        final AssetMap assets = gameContext().gameVariantName() != null ? currentConfig().assets() : null;
         final String normalTitle = assets == null ? "" : assets.translate(appTitle, viewMode);
         return gameScene == null || !debug
             ? normalTitle
