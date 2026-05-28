@@ -57,9 +57,6 @@ import static javafx.beans.binding.Bindings.createStringBinding;
  */
 public final class GameUI_Implementation extends PreferencesManager implements GameUI {
 
-    private static final int MIN_STAGE_WIDTH  = 280;
-    private static final int MIN_STAGE_HEIGHT = 360;
-
     private final DirectoryWatchdog customDirWatchdog;
 
     private final SpriteAnimationTimer spriteAnimationTimer = new SpriteAnimationTimer();
@@ -255,8 +252,8 @@ public final class GameUI_Implementation extends PreferencesManager implements G
 
     private void initStage() {
         stage.setScene(scene);
-        stage.setMinWidth(MIN_STAGE_WIDTH);
-        stage.setMinHeight(MIN_STAGE_HEIGHT);
+        stage.setMinWidth(GameUIConstants.MIN_STAGE_WIDTH);
+        stage.setMinHeight(GameUIConstants.MIN_STAGE_HEIGHT);
     }
 
     /**

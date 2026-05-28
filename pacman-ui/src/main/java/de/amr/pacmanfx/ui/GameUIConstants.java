@@ -38,6 +38,10 @@ public class GameUIConstants {
 
     private GameUIConstants() {}
 
+    public static final int MIN_STAGE_WIDTH  = 280;
+
+    public static final int MIN_STAGE_HEIGHT = 360;
+
     /**
      * Resource manager for UI assets (fonts, images, sounds).
      */
