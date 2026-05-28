@@ -4,9 +4,9 @@
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.math.RectShort;
+import de.amr.basics.spriteanim.AnimationFacade;
 import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.basics.spriteanim.SpriteAnimation;
-import de.amr.basics.spriteanim.AnimationFacade;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import org.tinylog.Logger;
 

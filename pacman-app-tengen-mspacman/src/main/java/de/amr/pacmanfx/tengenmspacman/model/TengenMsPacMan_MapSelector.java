@@ -7,8 +7,8 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
-import de.amr.pacmanfx.tengenmspacman.rendering.NES_MapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengenmspacman.rendering.NES_MapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.rendering.NonArcadeMapsSpriteSheet;
 import org.tinylog.Logger;
 
@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
-import static de.amr.pacmanfx.tengenmspacman.rendering.NES_MapColorScheme.*;
 import static de.amr.pacmanfx.tengenmspacman.model.MapCategory.*;
+import static de.amr.pacmanfx.tengenmspacman.rendering.NES_MapColorScheme.*;
 
 /**
  * Selects and configures the correct maze for each level in the Tengen NES Ms. Pac-Man port.

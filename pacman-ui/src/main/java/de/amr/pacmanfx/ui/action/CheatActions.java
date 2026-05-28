@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.event.PacEatsFoodEvent;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.CanonicalGameState;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.GameUI;

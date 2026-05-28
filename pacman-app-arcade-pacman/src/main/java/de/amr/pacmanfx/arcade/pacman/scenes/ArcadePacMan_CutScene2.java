@@ -4,9 +4,9 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;

@@ -47,7 +47,6 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.INTRO;
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.PREPARING_GAME_START;
 import static de.amr.pacmanfx.ui.input.Keyboard.bare;

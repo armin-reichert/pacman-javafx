@@ -2,8 +2,8 @@ package de.amr.pacmanfx.uilib.model3D.pac;
 
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.scene.PointLight;
 import org.tinylog.Logger;
 

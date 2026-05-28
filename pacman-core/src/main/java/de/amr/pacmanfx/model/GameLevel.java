@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.model;
 
 import de.amr.basics.timer.Pulse;
@@ -70,7 +71,7 @@ public class GameLevel {
     private float pacPowerSeconds;
     private float pacPowerFadingSeconds;
 
-    private byte cutSceneNumber;
+    private int cutSceneNumber;
 
     public GameLevel(Game game, int number, WorldMap worldMap, AbstractHuntingTimer huntingTimer, int numFlashes) {
         this.game = requireNonNull(game);
@@ -129,7 +130,7 @@ public class GameLevel {
     /**
      * @return number of cut scene played after this level (0=no cut scene).
      */
-    public byte cutSceneNumber() {
+    public int cutSceneNumber() {
         return cutSceneNumber;
     }
 

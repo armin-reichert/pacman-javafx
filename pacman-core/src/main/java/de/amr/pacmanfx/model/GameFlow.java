@@ -10,8 +10,6 @@ import de.amr.pacmanfx.event.GameEventListener;
 
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
-
 public interface GameFlow {
 
     Optional<State<Game>> optState(String stateName);

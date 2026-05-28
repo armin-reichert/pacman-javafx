@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;

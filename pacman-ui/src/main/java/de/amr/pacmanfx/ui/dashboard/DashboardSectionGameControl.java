@@ -5,9 +5,9 @@ package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.model.AbstractGameModel;
+import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.TestActions;

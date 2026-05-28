@@ -67,6 +67,7 @@ public abstract class AbstractHuntingTimer {
     public long durationTicks() {
         return tickTimer.durationTicks();
     }
+
     /**
      * Stops and resets the hunting timer and the phase index to zero.
      */

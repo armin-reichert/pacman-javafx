@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.basics.fsm.State;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.CanonicalGameState;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import javafx.geometry.Insets;

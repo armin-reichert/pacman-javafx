@@ -6,8 +6,6 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.d2.GameScene2D;
-import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
