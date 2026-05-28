@@ -21,15 +21,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel {
 
-    private final Game game;
-    private final int number; // 1=first level
-    private final WorldMap worldMap;
-    private final AbstractHuntingTimer huntingTimer;
-    private final Pulse blinking;
-    private final List<Ghost> victims = new ArrayList<>();
-    private final byte[] bonusSymbols = new byte[2];
-    private final int numFlashes;
-
     public static class EntitySet implements Iterable<GameLevelEntity> {
 
         private final GameLevelEntitySet entitySet = new GameLevelEntitySet();
@@ -60,7 +51,15 @@ public class GameLevel {
         }
     }
 
+    private final Game game;
+    private final int number; // 1=first level
+    private final WorldMap worldMap;
     private final EntitySet entities = new EntitySet();
+    private final AbstractHuntingTimer huntingTimer;
+    private final Pulse blinking;
+    private final List<Ghost> victims = new ArrayList<>();
+    private final byte[] bonusSymbols = new byte[2];
+    private final int numFlashes;
 
     private byte currentBonusIndex; // -1=no bonus, 0=first, 1=second
     private GameLevelMessage message;
@@ -79,6 +78,7 @@ public class GameLevel {
         this.worldMap = requireNonNull(worldMap);
         this.huntingTimer = requireNonNull(huntingTimer);
         this.numFlashes = requireNonNegativeInt(numFlashes);
+
         blinking = new Pulse(10, Pulse.State.OFF);
         currentBonusIndex = -1;
         huntingTimer.reset();
