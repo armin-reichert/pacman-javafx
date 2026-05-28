@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui.d3.animation.energizer.SwirlConfig;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.pacmanfx.uilib.rendering.Gradients;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
@@ -25,6 +26,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -134,6 +136,11 @@ public class GameUIConstants {
         Font.font("Sans", 12), // label font
         Font.font("Sans", 12) // content font
     );
+
+    public static final Background[] WALLPAPERS = Arrays.stream(Gradients.Samples.values())
+        .map(Gradients.Samples::gradient)
+        .map(Background::fill)
+        .toArray(Background[]::new);
 
     /** Cheat key bindings (Alt + key). */
     public static final Set<ActionBinding> CHEAT_ACTION_BINDINGS = Set.of(

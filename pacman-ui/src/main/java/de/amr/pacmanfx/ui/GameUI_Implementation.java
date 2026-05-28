@@ -5,12 +5,14 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
+import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
@@ -28,7 +30,6 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
-import de.amr.pacmanfx.uilib.rendering.Gradients;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -36,7 +37,6 @@ import javafx.beans.binding.StringBinding;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -65,7 +65,7 @@ public final class GameUI_Implementation implements GameUI {
     private final ActionBindingsSet actionBindings = new GameActionBindingsSet();
 
     // So many managers? I think I should fire some!
-    private final GameSceneManager gameSceneChangeManager = new GameSceneManager(this);
+    private final GameSceneManager gameSceneManager = new GameSceneManager(this);
     private final PreferencesManager preferencesManager;
     private final SoundManager soundManager = new SoundManager();
     private final TranslationManager translationManager = () -> GameUIConstants.LOCALIZED_TEXTS;
@@ -151,6 +151,7 @@ public final class GameUI_Implementation implements GameUI {
         final var editorView = new EditorView(stage, this);
         editorView.editor().setOnQuit(_ -> {
             // restore title (editor changed it)
+            stage.titleProperty().unbind();
             stage.titleProperty().bind(stageTitleBinding);
             viewManager.selectStartView(this);
         });
@@ -163,7 +164,7 @@ public final class GameUI_Implementation implements GameUI {
             step.clearInfo(clock.tickCount());
             gameContext().game().flow().update();
             step.printLog();
-            gameSceneChangeManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
+            gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });
         clock.setPermanentAction(() -> viewManager.currentView().render());
         clock.setErrorHandler(this::ka_tas_tro_phe);
@@ -195,14 +196,14 @@ public final class GameUI_Implementation implements GameUI {
             gameContext().clock().updatesDisabledProperty(),
             gameContext().gameVariantNameProperty(),
             viewManager.currentViewProperty(),
-            gameSceneChangeManager.gameSceneProperty(),
+            gameSceneManager.gameSceneProperty(),
             GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE,
             GameUIConstants.PROPERTY_3D_ENABLED
         );
 
         rootPane.backgroundProperty().bind(Bindings.createObjectBinding(
             () -> currentGameSceneHasID(GameSceneConfig.CommonSceneID.PLAY_SCENE_3D)
-                ? Background.fill(Gradients.Samples.random())
+                ? GameUIConstants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUIConstants.WALLPAPERS.length)]
                 : GameUIConstants.BACKGROUND_PAC_MAN_WALLPAPER,
             // depends on:
             viewManager.currentViewProperty(),
@@ -210,10 +211,15 @@ public final class GameUI_Implementation implements GameUI {
         ));
 
         gameContext().gameVariantNameProperty().addListener((_, _, _) -> {
-            final Game game = gameContext().game();
-            statusIconBox.iconAutopilot().visibleProperty().bind(game.cheats().usingAutopilotProperty());
-            statusIconBox.iconCheated()  .visibleProperty().bind(game.cheats().cheatUsedProperty());
-            statusIconBox.iconImmune()   .visibleProperty().bind(game.cheats().immuneProperty());
+            final GameCheats cheats = gameContext().game().cheats();
+
+            statusIconBox.iconAutopilot().visibleProperty().unbind();
+            statusIconBox.iconCheated()  .visibleProperty().unbind();
+            statusIconBox.iconImmune()   .visibleProperty().unbind();
+
+            statusIconBox.iconAutopilot().visibleProperty().bind(cheats.usingAutopilotProperty());
+            statusIconBox.iconCheated()  .visibleProperty().bind(cheats.cheatUsedProperty());
+            statusIconBox.iconImmune()   .visibleProperty().bind(cheats.immuneProperty());
         });
     }
 
@@ -238,7 +244,7 @@ public final class GameUI_Implementation implements GameUI {
                 if (action.executeIfEnabled(this)) e.consume();
             }, () -> viewManager.currentView().onInput(this)
         ));
-        scene.setOnScroll(e -> gameSceneChangeManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+        scene.setOnScroll(e -> gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
     }
 
     /**
@@ -247,11 +253,13 @@ public final class GameUI_Implementation implements GameUI {
      * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>
      */
     private void ka_tas_tro_phe(Throwable reason) {
-        final String errorMessage = translationManager.translate("error.oh_no_my_program");
-        showFlashMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
-        stopGame();
-        Logger.error("*** SOMETHING VERY BAD HAPPENED:");
-        Logger.error(reason);
+        Platform.runLater(() -> {
+            final String errorMessage = translationManager.translate("error.oh_no_my_program");
+            showFlashMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
+            stopGame();
+            Logger.error("*** SOMETHING VERY BAD HAPPENED:");
+            Logger.error(reason);
+        });
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -280,12 +288,12 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public GameSceneManager gameSceneManager() {
-        return gameSceneChangeManager;
+        return gameSceneManager;
     }
 
     @Override
     public boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID) {
-        final GameScene currentGameScene = gameSceneChangeManager.optCurrentGameScene().orElse(null);
+        final GameScene currentGameScene = gameSceneManager.optCurrentGameScene().orElse(null);
         return currentGameScene != null && currentConfig().gameSceneConfig().gameSceneHasID(currentGameScene, sceneID);
     }
 
@@ -328,7 +336,7 @@ public final class GameUI_Implementation implements GameUI {
     public void quitCurrentGameScene() {
         final Game game = gameContext().game();
         //TODO this is game-specific and should not be here
-        gameSceneChangeManager.optCurrentGameScene().ifPresent(gameScene -> {
+        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> {
             boolean shouldConsumeCoin = game.flow().state().name().equals("STARTING_GAME_OR_LEVEL")
                 || game.isPlayingLevel();
             if (shouldConsumeCoin && !gameContext().coinMechanism().isEmpty()) {
@@ -404,13 +412,18 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void stopGame() {
-        soundManager.stopAll();
-        gameSceneChangeManager.optCurrentGameScene().ifPresent(gameScene -> {
-            gameScene.deactivate();
-            gameScene.soundEffects().ifPresent(GameSoundEffects::stopAll);
-        });
         gameContext().clock().stop();
         gameContext().clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+
+        soundManager.stopAll();
+
+        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> {
+            gameScene.soundEffects().ifPresent(GameSoundEffects::stopAll);
+            gameScene.deactivate();
+            gameSceneManager.removeFromPlayView(gameScene);
+            gameSceneManager.gameSceneProperty().set(null);
+        });
+
         Logger.info("Game STOPPED!");
     }
 
@@ -449,7 +462,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private String titleForCurrentGameScene() {
-        final GameScene gameScene = gameSceneChangeManager.optCurrentGameScene().orElse(null);
+        final GameScene gameScene = gameSceneManager.optCurrentGameScene().orElse(null);
 
         final boolean debug = GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get();
         final boolean is3D = GameUIConstants.PROPERTY_3D_ENABLED.get();
