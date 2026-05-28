@@ -316,13 +316,14 @@ public final class GameUI_Implementation implements GameUI {
         if (icon != null) {
             stage.getIcons().setAll(icon);
         }
-        stage.centerOnScreen();
-        stage.show();
 
         final GameVariantChangeHandler gameVariantChangeHandler = new GameVariantChangeHandler(this);
         gameContext().gameVariantNameProperty().addListener(gameVariantChangeHandler);
 
         viewManager.selectStartView();
+
+        stage.centerOnScreen();
+        stage.show();
 
         Platform.runLater(() -> {
             customDirWatchdog.startWatching();
