@@ -194,7 +194,7 @@ public class GameUIConstants {
     public static final ParticlesAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticlesAnimationConfig(
         new ExplosionConfig(
             new Vector3f(0, 0, 0.1f), // gravity
-            300,        // num particles by explosion
+            500,        // num particles by explosion
             0.25f,      // mean particle radius
             0.1f, 0.4f, // min/max particle speed horizontally (xy-plane)
             1.5f, 6     // min/max particle speed horizontally (z-direction)
