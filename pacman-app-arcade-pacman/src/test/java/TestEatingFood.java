@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.ElroyState;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.FoodLayer;
-import de.amr.pacmanfx.ui.GameBox;
+import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.uilib.GameClockFX;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

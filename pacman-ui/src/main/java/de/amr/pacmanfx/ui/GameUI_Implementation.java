@@ -51,7 +51,7 @@ import static javafx.beans.binding.Bindings.createStringBinding;
 public final class GameUI_Implementation implements GameUI {
 
     // Game model access
-    private final GameBox gameBox;
+    private final de.amr.pacmanfx.core.GameBox gameBox;
 
     // Observes changes in custom map directory
     private final DirectoryWatchdog customDirWatchdog;
@@ -75,7 +75,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private StringBinding stageTitleBinding;
 
-    public GameUI_Implementation(GameBox gameBox, Stage stage, int mainSceneWidth, int mainSceneHeight) {
+    public GameUI_Implementation(de.amr.pacmanfx.core.GameBox gameBox, Stage stage, int mainSceneWidth, int mainSceneHeight) {
         this.gameBox = requireNonNull(gameBox);
         this.stage = requireNonNull(stage);
         this.scene = new GameUI_MainScene(requireNonNegative(mainSceneWidth), requireNonNegative(mainSceneHeight));

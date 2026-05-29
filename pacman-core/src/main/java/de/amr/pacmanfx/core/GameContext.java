@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.core;
 
-import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import javafx.beans.property.StringProperty;
 

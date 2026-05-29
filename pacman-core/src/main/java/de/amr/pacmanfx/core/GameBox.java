@@ -2,16 +2,10 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.core;
 
-import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
-import de.amr.pacmanfx.uilib.GameClockFX;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.tinylog.Logger;
@@ -53,7 +47,7 @@ public class GameBox implements GameContext {
     private final File homeDir = DEFAULT_HOME_DIR;
     private final File customMapDir = DEFAULT_CUSTOM_MAP_DIR;
 
-    private final CoinMechanism coinMechanism = new SimpleCoinMechanism();
+    private final CoinMechanism coinMechanism = new CoinMechanism();
 
     public GameBox(GameClock clock) {
         this.clock = requireNonNull(clock);
@@ -96,47 +90,6 @@ public class GameBox implements GameContext {
     }
 
     // CoinMechanism implementation
-
-    private static class SimpleCoinMechanism implements CoinMechanism {
-
-        private final IntegerProperty numCoins = new SimpleIntegerProperty(0);
-
-        @Override
-        public IntegerProperty numCoinsProperty() { return numCoins; }
-
-        public int numCoins() {
-            return numCoinsProperty().get();
-        }
-
-        @Override
-        public int maxCoins() {
-            return 99;
-        }
-
-        public boolean isEmpty() {
-            return numCoins() == 0;
-        }
-
-        public void setNumCoins(int n) {
-            if (n >= 0 && n <= maxCoins()) {
-                numCoinsProperty().set(n);
-            } else {
-                Logger.error("Cannot set number of coins to {}", n);
-            }
-        }
-
-        public void insertCoin() {
-            if (numCoins() +1 <= maxCoins()) {
-                setNumCoins(numCoins() + 1);
-            }
-        }
-
-        public void consumeCoin() {
-            if (numCoins() > 0) {
-                setNumCoins(numCoins() - 1);
-            }
-        }
-    }
 
     // GameContext implementation
 

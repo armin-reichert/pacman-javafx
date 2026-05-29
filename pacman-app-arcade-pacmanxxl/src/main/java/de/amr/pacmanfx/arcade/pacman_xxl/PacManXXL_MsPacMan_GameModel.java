@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
-import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;

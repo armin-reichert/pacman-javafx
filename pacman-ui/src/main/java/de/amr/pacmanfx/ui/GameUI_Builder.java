@@ -58,7 +58,7 @@ import static java.util.Objects.requireNonNull;
  * ready for use.</p>
  *
  * <p>Instances of this builder are created via
- * {@link #newUI(Stage, int, int, GameBox)}, after which clients may
+ * {@link #newUI(Stage, int, int, de.amr.pacmanfx.core.GameBox)}, after which clients may
  * chain configuration calls before invoking {@link #build()} to obtain the
  * final UI.</p>
  */
@@ -71,18 +71,18 @@ public class GameUI_Builder {
         Supplier<? extends UIConfig> uiConfigFactory,
         WorldMapSelector mapSelector) {}
 
-    public static GameUI_Builder newUI(Stage stage, int mainSceneWidth, int mainSceneHeight, GameBox gameBox) {
+    public static GameUI_Builder newUI(Stage stage, int mainSceneWidth, int mainSceneHeight, de.amr.pacmanfx.core.GameBox gameBox) {
         return new GameUI_Builder(stage, mainSceneWidth, mainSceneHeight, requireNonNull(gameBox));
     }
 
-    private final GameBox gameBox;
+    private final de.amr.pacmanfx.core.GameBox gameBox;
     private final WindowConfig windowConfig;
     private final Map<String, GameConfig> gameConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
     private final List<CommonDashboardID> dashboardIDs = new ArrayList<>();
     private boolean includeInteractiveTests;
 
-    private GameUI_Builder(Stage stage, int mainSceneWidth, int mainSceneHeight, GameBox gameBox) {
+    private GameUI_Builder(Stage stage, int mainSceneWidth, int mainSceneHeight, de.amr.pacmanfx.core.GameBox gameBox) {
         windowConfig = new WindowConfig(stage, mainSceneWidth, mainSceneHeight);
         this.gameBox = gameBox;
     }
@@ -191,8 +191,8 @@ public class GameUI_Builder {
         if (name.isBlank()) {
             error("Game variant name must not be blank");
         }
-        if (!GameBox.GAME_VARIANT_NAME_PATTERN.matcher(name).matches()) {
-            error("Game variant name '%s' does not match pattern '%s'".formatted(name, GameBox.GAME_VARIANT_NAME_PATTERN));
+        if (!de.amr.pacmanfx.core.GameBox.GAME_VARIANT_NAME_PATTERN.matcher(name).matches()) {
+            error("Game variant name '%s' does not match pattern '%s'".formatted(name, de.amr.pacmanfx.core.GameBox.GAME_VARIANT_NAME_PATTERN));
         }
     }
 

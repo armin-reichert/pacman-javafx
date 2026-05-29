@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.Globals;
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;

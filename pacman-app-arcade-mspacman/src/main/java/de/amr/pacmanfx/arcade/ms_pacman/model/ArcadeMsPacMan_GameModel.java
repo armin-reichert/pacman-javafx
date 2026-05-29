@@ -7,6 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;

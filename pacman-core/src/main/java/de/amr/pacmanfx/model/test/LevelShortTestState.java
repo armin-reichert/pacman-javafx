@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.model.test;
 
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.event.BonusEatenEvent;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Ghost;

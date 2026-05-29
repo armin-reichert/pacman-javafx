@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.app;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.model.GameVariant;
-import de.amr.pacmanfx.ui.GameBox;
+import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;

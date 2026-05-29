@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.model;
 
-import de.amr.pacmanfx.model.CoinMechanism;
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.model.HeadsUpDisplay;
 
 public class TengenMsPacMan_HeadsUpDisplay extends HeadsUpDisplay {
