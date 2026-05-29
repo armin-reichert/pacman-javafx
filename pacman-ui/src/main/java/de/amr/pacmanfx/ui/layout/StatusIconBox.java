@@ -13,6 +13,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -22,7 +23,7 @@ import javafx.util.Duration;
 
 import java.util.stream.Stream;
 
-public class StatusIconBox extends HBox implements Disposable {
+public class StatusIconBox implements Disposable {
 
     public record Config(
         Color defaultIconColor,
@@ -39,7 +40,8 @@ public class StatusIconBox extends HBox implements Disposable {
         10,
         Font.font("Sans", 16)
     );
-    
+
+    private HBox rootPane = new HBox();
     private final FontAwesomeIcon iconMuted;
     private final FontAwesomeIcon icon3D;
     private final FontAwesomeIcon iconAutopilot;
@@ -66,24 +68,25 @@ public class StatusIconBox extends HBox implements Disposable {
         iconCheated = createIcon(config, FontAwesomeIcon.Symbol.FLAG, Color.RED,
             translator.translate("status_icon.cheated"));
 
-        getChildren().setAll(iconsInOrder().toList());
 
         final int count = (int) iconsInOrder().count();
         final int padding = config.iconPadding();
         final int spacing = config.iconSpacing();
         final int size = config.iconSize();
 
-        setMaxHeight(size + 2 * padding);
-        setMaxWidth(size + (count - 1) * spacing + 2 * padding);
-
-        setPadding(new Insets(padding));
-        setSpacing(spacing);
-
-        //setBorder(Border.stroke(Color.RED));
+        rootPane.getChildren().setAll(iconsInOrder().toList());
+        rootPane.setMaxHeight(size + 2 * padding);
+        rootPane.setMaxWidth(size + (count - 1) * spacing + 2 * padding);
+        rootPane.setPadding(new Insets(padding));
+        rootPane.setSpacing(spacing);
 
         // "autopilot", "cheated" and "immune" icon visibilities are bound to properties of current game model!
         iconMuted.visibleProperty().bind(GameUIConstants.PROPERTY_MUTED);
         icon3D   .visibleProperty().bind(GameUIConstants.PROPERTY_3D_ENABLED);
+    }
+
+    public Pane rootPane() {
+        return rootPane;
     }
 
     public FontAwesomeIcon iconAutopilot() {
@@ -112,7 +115,7 @@ public class StatusIconBox extends HBox implements Disposable {
 
     @Override
     public void dispose() {
-        visibleProperty().unbind();
+        rootPane.visibleProperty().unbind();
         iconsInOrder().forEach(icon -> {
             icon.visibleProperty().unbind();
             icon.visibleProperty().removeListener(this::rearrangeIcons);
@@ -134,6 +137,6 @@ public class StatusIconBox extends HBox implements Disposable {
 
     // keep box compact, show visible items only
     private void rearrangeIcons(ObservableValue<? extends Boolean> property, boolean wasVisible, boolean isVisible) {
-        getChildren().setAll(iconsInOrder().filter(Node::isVisible).toList());
+        rootPane.getChildren().setAll(iconsInOrder().filter(Node::isVisible).toList());
     }
 }

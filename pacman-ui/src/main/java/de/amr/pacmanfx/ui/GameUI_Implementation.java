@@ -323,11 +323,11 @@ public final class GameUI_Implementation implements GameUI {
         final KeyboardInfo keyboardInfo = new KeyboardInfo(Input.instance().keyboard);
         scene.rootPane().getChildren().addAll(
             new Region(), // placeholder, will be replaced by current view (start, play, edit)
-            statusIconBox,
+            statusIconBox.rootPane(),
             flashMessageView,
             keyboardInfo.rootPane());
 
-        StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
+        StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
         keyboardInfo.rootPane().setAlignment(Pos.TOP_CENTER);
 
         scene.init(this);
@@ -336,7 +336,7 @@ public final class GameUI_Implementation implements GameUI {
     private void initPropertyBindings(Game game) {
         soundManager.muteProperty().bind(GameUIConstants.PROPERTY_MUTED);
 
-        statusIconBox.visibleProperty().bind(Bindings.createBooleanBinding(
+        statusIconBox.rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
             () -> viewManager.isPlayViewSelected() || viewManager.isStartViewSelected(),
             viewManager.currentViewProperty()));
 
