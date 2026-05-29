@@ -83,25 +83,21 @@ public final class Keyboard {
     public void onKeyPressed(KeyEvent event) {
         if (Logger.isTraceEnabled()) Logger.trace("Key pressed: {}", event);
 
+        updateModifierState(event);
         if (!event.getCode().isModifierKey()) {
             pressedKeys.add(event.getCode());
+            listeners.forEach(listener -> listener.onKeyboardStateChange(this));
         }
-
-        updateModifierState(event);
-
-        listeners.forEach(listener -> listener.onKeyboardStateChange(this));
     }
 
     public void onKeyReleased(KeyEvent event) {
         if (Logger.isTraceEnabled()) Logger.trace("Key released: {}", event);
 
+        updateModifierState(event);
         if (!event.getCode().isModifierKey()) {
             pressedKeys.remove(event.getCode());
+            listeners.forEach(listener -> listener.onKeyboardStateChange(this));
         }
-
-        updateModifierState(event);
-
-        listeners.forEach(listener -> listener.onKeyboardStateChange(this));
     }
 
     private void updateModifierState(KeyEvent event) {
