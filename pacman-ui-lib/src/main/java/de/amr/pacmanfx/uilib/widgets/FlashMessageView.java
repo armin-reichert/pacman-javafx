@@ -49,6 +49,7 @@ public class FlashMessageView {
         return new FlashMessageView.TemporaryMessage(text, now, now + duration);
     }
 
+    private static final double HALF_PI = Math.PI / 2;
     private static final Font MESSAGE_FONT = Font.font("Sans", FontWeight.BOLD, 30);
     private static final Color TEXT_COLOR_PLAIN = Color.WHEAT;
 
@@ -85,7 +86,7 @@ public class FlashMessageView {
                     }
                     else {
                         final double t = (double) msg.passed() / msg.duration();
-                        final double newAlpha = Math.cos(0.5 * Math.PI * t);
+                        final double newAlpha = Math.cos(HALF_PI * t);
                         final Color newColor = Color.rgb(0, 0, 0, 0.2 + 0.5 * newAlpha);
                         final Color newFill = TEXT_COLOR_PLAIN.deriveColor(0, 1, 1, newAlpha);
                         alpha.set(newAlpha);
