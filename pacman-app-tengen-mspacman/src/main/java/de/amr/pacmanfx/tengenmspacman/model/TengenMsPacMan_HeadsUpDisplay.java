@@ -12,7 +12,7 @@ public class TengenMsPacMan_HeadsUpDisplay extends HeadsUpDisplay {
     private boolean gameOptionsVisible;
 
     public TengenMsPacMan_HeadsUpDisplay() {
-        super(CoinMechanism.MISSING);
+        super(CoinMechanism.OUT_OF_SERVICE);
     }
 
     public TengenMsPacMan_HeadsUpDisplay gameOptions(boolean visible) {

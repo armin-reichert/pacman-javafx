@@ -10,47 +10,28 @@ import org.tinylog.Logger;
 
 public class CoinMechanism {
 
-    public static final CoinMechanism MISSING = new CoinMechanism() {
-
-        private final IntegerProperty numCoins = new SimpleIntegerProperty(0);
+    public static final CoinMechanism OUT_OF_SERVICE = new CoinMechanism(0) {
 
         @Override
-        public IntegerProperty numCoinsProperty() {
-            return numCoins;
-        }
+        public void setNumCoins(int n) {}
 
         @Override
-        public int numCoins() {
-            return 0;
-        }
+        public void insertCoin() {}
 
         @Override
-        public int maxCoins() {
-            return 0;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return true;
-        }
-
-        @Override
-        public void setNumCoins(int n) {
-            // no-op
-        }
-
-        @Override
-        public void insertCoin() {
-            // no-op
-        }
-
-        @Override
-        public void consumeCoin() {
-            // no-op
-        }
+        public void consumeCoin() {}
     };
 
     private final IntegerProperty numCoins = new SimpleIntegerProperty(0);
+
+    private final int maxCoins;
+
+    public CoinMechanism(int maxCoins) {
+        if (maxCoins < 0) {
+            throw new IllegalArgumentException("maxCoins < 0");
+        }
+        this.maxCoins = maxCoins;
+    }
 
     public IntegerProperty numCoinsProperty() {
         return numCoins;
@@ -61,18 +42,19 @@ public class CoinMechanism {
     }
 
     public int maxCoins() {
-        return 99;
+        return maxCoins;
     }
 
     public boolean isFull() {
-        return numCoins() == maxCoins();
+        return numCoins() == maxCoins;
     }
+
     public boolean isEmpty() {
         return numCoins() == 0;
     }
 
     public void setNumCoins(int n) {
-        if (n >= 0 && n <= maxCoins()) {
+        if (n >= 0 && n <= maxCoins) {
             numCoinsProperty().set(n);
         } else {
             Logger.error("Cannot set number of coins to {}", n);
@@ -80,7 +62,7 @@ public class CoinMechanism {
     }
 
     public void insertCoin() {
-        if (numCoins() + 1 <= maxCoins()) {
+        if (numCoins() + 1 <= maxCoins) {
             setNumCoins(numCoins() + 1);
         }
     }
