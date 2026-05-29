@@ -23,14 +23,22 @@ import java.util.stream.Stream;
 
 public class StatusIconBox extends HBox implements Disposable {
 
-    private static final Color STATUS_ICON_COLOR = ArcadePalette.ARCADE_WHITE;
-
-    private static final int ICON_SIZE = 24;
-    private static final int ICON_SPACING = 5;
-    private static final int PADDING = 10;
-
-    private static final Font TOOLTIP_FONT = Font.font("Sans", 16);
-
+    public record Config(
+        Color defaultIconColor,
+        int iconSize,
+        int iconSpacing,
+        int iconPadding,
+        Font tooltipFont
+    ) {}
+    
+    public static final Config DEFAULT_CONFIG = new Config(
+        ArcadePalette.ARCADE_WHITE,
+        24,
+        5,
+        10,
+        Font.font("Sans", 16)
+    );
+    
     private final FontAwesomeIcon iconMuted;
     private final FontAwesomeIcon icon3D;
     private final FontAwesomeIcon iconAutopilot;
@@ -38,20 +46,28 @@ public class StatusIconBox extends HBox implements Disposable {
     private final FontAwesomeIcon iconCheated;
 
     public StatusIconBox() {
-        iconMuted     = createIcon(FontAwesomeIcon.Symbol.DEAF, STATUS_ICON_COLOR, "Muted");
-        icon3D        = createIcon(FontAwesomeIcon.Symbol.CUBES, STATUS_ICON_COLOR, "3D Mode");
-        iconAutopilot = createIcon(FontAwesomeIcon.Symbol.TAXI, STATUS_ICON_COLOR, "Autopilot");
-        iconImmune    = createIcon(FontAwesomeIcon.Symbol.USER_SECRET, STATUS_ICON_COLOR, "Immunity");
-        iconCheated   = createIcon(FontAwesomeIcon.Symbol.FLAG, Color.RED, "Cheater");
+        this(DEFAULT_CONFIG);
+    }
+    
+    public StatusIconBox(Config config) {
+        iconMuted     = createIcon(config, FontAwesomeIcon.Symbol.DEAF, config.defaultIconColor(), "Muted");
+        icon3D        = createIcon(config, FontAwesomeIcon.Symbol.CUBES, config.defaultIconColor(), "3D Mode");
+        iconAutopilot = createIcon(config, FontAwesomeIcon.Symbol.TAXI, config.defaultIconColor(), "Autopilot");
+        iconImmune    = createIcon(config, FontAwesomeIcon.Symbol.USER_SECRET, config.defaultIconColor(), "Immunity");
+        iconCheated   = createIcon(config, FontAwesomeIcon.Symbol.FLAG, Color.RED, "Cheater");
 
         getChildren().setAll(iconsInOrder().toList());
 
-        long count = iconsInOrder().count();
-        setMaxHeight(ICON_SIZE + 2 * PADDING);
-        setMaxWidth((ICON_SIZE + ICON_SPACING) * count - ICON_SPACING + 2 * PADDING);
+        final int count = (int) iconsInOrder().count();
+        final int padding = config.iconPadding();
+        final int spacing = config.iconSpacing();
+        final int size = config.iconSize();
 
-        setPadding(new Insets(PADDING));
-        setSpacing(ICON_SPACING);
+        setMaxHeight(size + 2 * padding);
+        setMaxWidth(size + (count - 1) * spacing + 2 * padding);
+
+        setPadding(new Insets(padding));
+        setSpacing(spacing);
 
         //setBorder(Border.stroke(Color.RED));
 
@@ -93,13 +109,13 @@ public class StatusIconBox extends HBox implements Disposable {
         });
     }
 
-    private FontAwesomeIcon createIcon(FontAwesomeIcon.Symbol symbol, Color color, String tooltipText) {
-        final FontAwesomeIcon icon = FontAwesomeIcon.of(symbol, ICON_SIZE, color);
+    private FontAwesomeIcon createIcon(Config config, FontAwesomeIcon.Symbol symbol, Color color, String tooltipText) {
+        final FontAwesomeIcon icon = FontAwesomeIcon.of(symbol, config.iconSize(), color);
         icon.setVisible(false);
         icon.visibleProperty().addListener(this::rearrangeIcons);
 
         final Tooltip tooltip = new Tooltip(tooltipText);
-        tooltip.setFont(TOOLTIP_FONT);
+        tooltip.setFont(config.tooltipFont);
         tooltip.setShowDelay(Duration.millis(250));
         Tooltip.install(icon, tooltip);
 
