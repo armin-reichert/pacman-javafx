@@ -29,31 +29,30 @@ import static java.util.Objects.requireNonNull;
  */
 public class FlashMessageView {
 
-    private static class TemporaryMessage {
-        private final String text;
-        private final double durationSeconds;
-        private Instant activationBegin;
-        private Instant activationEnd;
-
-        TemporaryMessage(String text, double seconds) {
-            this.text = text;
-            this.durationSeconds = seconds;
+    record TemporaryMessage(
+        String text,
+        double durationSec,
+        Instant start,
+        Instant end)
+    {
+        public boolean hasExpired() {
+            return Instant.now().isAfter(end);
         }
 
-        void activate() {
-            activationBegin = Instant.now();
-            activationEnd = activationBegin.plusMillis(activationTimeMillis());
+        public Duration activeSince() {
+            return Duration.between(start, Instant.now());
         }
 
-        long activationTimeMillis() {
-            return Math.round(durationSeconds * 1000);
-        }
-
-        boolean hasExpired() {
-            return Instant.now().isAfter(activationEnd);
+        public long durationMillis() {
+            return Duration.between(start, end).toMillis();
         }
     }
 
+    private static FlashMessageView.TemporaryMessage createAndActivateMessage(String text, double activationSec) {
+        Instant activationBegin = Instant.now();
+        Instant activationEnd = activationBegin.plusMillis(Math.round(activationSec * 1000));
+        return new FlashMessageView.TemporaryMessage(text, activationSec, activationBegin, activationEnd);
+    }
 
     private static final Font MESSAGE_FONT = Font.font("Sans", FontWeight.BOLD, 30);
     private static final Color TEXT_COLOR_PLAIN = Color.WHEAT;
@@ -65,7 +64,7 @@ public class FlashMessageView {
     private final ObjectProperty<Color> textFill = new SimpleObjectProperty<>();
     private final ObjectProperty<TemporaryMessage> message = new SimpleObjectProperty<>();
 
-    private final AnimationTimer fadeTimer;
+    private final AnimationTimer timer;
 
     public FlashMessageView() {
         rootPane.setAlignment(Pos.CENTER);
@@ -81,10 +80,24 @@ public class FlashMessageView {
         rootPane.getChildren().add(messageView);
         rootPane.backgroundProperty().bind(backgroundColor.map(Background::fill));
 
-        fadeTimer = new AnimationTimer() {
+        timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                fade();
+                final TemporaryMessage msg = message.get();
+                if (msg != null) {
+                    if (msg.hasExpired()) {
+                        clearMessage();
+                    }
+                    else {
+                        final double passed = (double) msg.activeSince().toMillis() / msg.durationMillis();
+                        final double newAlpha = Math.cos(passed * 0.5 * Math.PI);
+                        final Color newColor = Color.rgb(0, 0, 0, 0.2 + 0.5 * newAlpha);
+                        final Color newFill = TEXT_COLOR_PLAIN.deriveColor(0, 1, 1, newAlpha);
+                        alpha.set(newAlpha);
+                        backgroundColor.set(newColor);
+                        textFill.set(newFill);
+                    }
+                }
             }
         };
     }
@@ -93,45 +106,25 @@ public class FlashMessageView {
         return rootPane;
     }
 
-    public void start() {
-        fadeTimer.start();
+    public void startTimer() {
+        timer.start();
     }
 
-    public void stop() {
-        fadeTimer.stop();
+    public void stopTimer() {
+        timer.stop();
     }
 
-    public void clear() {
+    public void clearMessage() {
         message.set(null);
         backgroundColor.set(Color.TRANSPARENT);
     }
 
     public void showMessage(String messageText, double seconds) {
         requireNonNull(messageText);
-
         TemporaryMessage tmpMessage = message.get();
         if (tmpMessage!= null && tmpMessage.text.equals(messageText)) {
             return; // already showing
         }
-
-        tmpMessage = new TemporaryMessage(messageText, seconds);
-        tmpMessage.activate();
-
-        message.set(tmpMessage);
-    }
-
-    private void fade() {
-        final TemporaryMessage tmpMessage = message.get();
-        if (tmpMessage != null) {
-            if (tmpMessage.hasExpired()) {
-                clear();
-            } else {
-                double activeMillis = Duration.between(message.get().activationBegin, Instant.now()).toMillis();
-                alpha.set(Math.cos(0.5 * Math.PI * activeMillis / message.get().activationTimeMillis()));
-                Color bgColor = Color.rgb(0, 0, 0, 0.2 + 0.5 * alpha.get());
-                backgroundColor.set(bgColor);
-                textFill.set(TEXT_COLOR_PLAIN.deriveColor(0, 1, 1, alpha.get()));
-            }
-        }
+        message.set(createAndActivateMessage(messageText, seconds));
     }
 }

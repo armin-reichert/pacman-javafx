@@ -196,7 +196,7 @@ public final class GameUI_Implementation implements GameUI {
 
         Platform.runLater(() -> {
             customDirWatchdog.startWatching();
-            flashMessageView.start();
+            flashMessageView.startTimer();
             spriteAnimationTimer.start();
         });
     }
@@ -246,7 +246,7 @@ public final class GameUI_Implementation implements GameUI {
         stopGame();
         spriteAnimationTimer.stop();
         spriteAnimationTimer.spriteAnimationSet().clear();
-        flashMessageView.stop();
+        flashMessageView.stopTimer();
         customDirWatchdog.dispose();
     }
 
