@@ -159,44 +159,14 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void show() {
-        prefsManager.logPreferences();
-
-        // Load 3D assets
-        final var _ = PacManWorld3D.instance();
-
-        // These need the current UI config to be initialized
-        GameUIConstants.PROPERTY_3D_WALL_HEIGHT .set(currentConfig().worldConfig().maze().obstacleBaseHeight());
-        GameUIConstants.PROPERTY_3D_WALL_OPACITY.set(currentConfig().worldConfig().maze().obstacleOpacity());
-
+        initGameVariantAndRegisterChangeHandler();
+        load3DAssets();
         viewManager.playView().dashboard().init(this);
         initMainScene();
-        initPropertyBindings();
-        initGameClock(gameContext().clock());
-
-        final GameVariantChangeHandler gameVariantChangeHandler = new GameVariantChangeHandler(this);
-        gameContext().gameVariantNameProperty().addListener(gameVariantChangeHandler);
-        gameVariantChangeHandler.enterGameVariant(gameContext().gameVariantName());
-
-        stage.setScene(scene);
-        stage.setMinWidth(GameUIConstants.MIN_STAGE_WIDTH);
-        stage.setMinHeight(GameUIConstants.MIN_STAGE_HEIGHT);
-        stage.titleProperty().bind(stageTitleBinding);
-
-        final Image icon = currentConfig().assets().image("app_icon");
-        if (icon != null) {
-            stage.getIcons().setAll(icon);
-        }
-
-        viewManager.selectStartView();
-
-        stage.centerOnScreen();
-        stage.show();
-
-        Platform.runLater(() -> {
-            customDirWatchdog.startWatching();
-            flashMessageView.startTimer();
-            spriteAnimationTimer.start();
-        });
+        initProperties();
+        initGameClock();
+        displayStage();
+        startServices();
     }
 
     @Override
@@ -270,6 +240,11 @@ public final class GameUI_Implementation implements GameUI {
 
     // private stuff
 
+    private static void load3DAssets() {
+        //noinspection ResultOfMethodCallIgnored
+        PacManWorld3D.instance(); // loads 3D assets as side effect of accessing singleton
+    }
+
     private PreferencesManager createPrefsManager() {
         return new PreferencesManager(GameUI_Implementation.this.getClass()) {
             @Override
@@ -310,7 +285,8 @@ public final class GameUI_Implementation implements GameUI {
         return editorView;
     }
 
-    private void initGameClock(GameClock clock) {
+    private void initGameClock() {
+        final GameClock clock = gameContext().clock();
         clock.setUpdateAction(() -> {
             final SimulationStep step = gameContext().game().doSimulationStep();
             step.clearInfo(clock.tickCount());
@@ -339,7 +315,12 @@ public final class GameUI_Implementation implements GameUI {
         statusIconBox.bind(gameContext().game());
     }
 
-    private void initPropertyBindings() {
+    private void initProperties() {
+
+        // These need the current UI config to be initialized
+        GameUIConstants.PROPERTY_3D_WALL_HEIGHT .set(currentConfig().worldConfig().maze().obstacleBaseHeight());
+        GameUIConstants.PROPERTY_3D_WALL_OPACITY.set(currentConfig().worldConfig().maze().obstacleOpacity());
+
         soundManager.muteProperty().bind(GameUIConstants.PROPERTY_MUTED);
 
         statusIconBox.rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
@@ -362,6 +343,34 @@ public final class GameUI_Implementation implements GameUI {
                 : GameUIConstants.BACKGROUND_PAC_MAN_WALLPAPER
             , viewManager.currentViewProperty(), gameSceneManager().gameSceneProperty()
         ));
+    }
+
+    private void startServices() {
+        Platform.runLater(() -> {
+            customDirWatchdog.startWatching();
+            flashMessageView.startTimer();
+            spriteAnimationTimer.start();
+        });
+    }
+
+    private void initGameVariantAndRegisterChangeHandler() {
+        final GameVariantChangeHandler gameVariantChangeHandler = new GameVariantChangeHandler(this);
+        gameContext().gameVariantNameProperty().addListener(gameVariantChangeHandler);
+        gameVariantChangeHandler.enterGameVariant(gameContext().gameVariantName());
+    }
+
+    private void displayStage() {
+        stage.setScene(scene);
+        stage.setMinWidth(GameUIConstants.MIN_STAGE_WIDTH);
+        stage.setMinHeight(GameUIConstants.MIN_STAGE_HEIGHT);
+        stage.titleProperty().bind(stageTitleBinding);
+        final Image icon = currentConfig().assets().image("app_icon");
+        if (icon != null) {
+            stage.getIcons().setAll(icon);
+        }
+        stage.centerOnScreen();
+        stage.show();
+        viewManager.selectStartView();
     }
 
     /**
