@@ -8,6 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.core.GameBox;
@@ -47,7 +48,7 @@ public class ArcadePacMan_App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final var gameBox = new GameBox(new GameClockFX());
+        final var gameBox = new GameBox(new GameClockFX(), new CoinMechanism(99));
         final File highScoreFile = gameBox.highScoreFile(GameVariant.ARCADE_PACMAN);
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         try {

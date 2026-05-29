@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.ui.GameUI;
@@ -22,7 +23,7 @@ public class PacManXXL_App extends Application {
     private static final double ASPECT_RATIO    = 1.6;
     private static final double HEIGHT_FRACTION = 0.8;
 
-    private final GameBox gameBox = new GameBox(new GameClockFX());
+    private final GameBox gameBox = new GameBox(new GameClockFX(), new CoinMechanism(99));
     private GameUI ui;
 
     @Override

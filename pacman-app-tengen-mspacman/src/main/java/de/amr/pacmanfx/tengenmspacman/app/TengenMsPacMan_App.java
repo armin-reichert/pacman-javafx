@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
@@ -27,7 +28,7 @@ public class TengenMsPacMan_App extends Application {
     private static final float ASPECT_RATIO    = NES_SCREEN_ASPECT_RATIO; // 32:30
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
 
-    private final GameBox gameBox = new GameBox(new GameClockFX());
+    private final GameBox gameBox = new GameBox(new GameClockFX(), CoinMechanism.OUT_OF_SERVICE);
     private GameUI ui;
 
     @Override
