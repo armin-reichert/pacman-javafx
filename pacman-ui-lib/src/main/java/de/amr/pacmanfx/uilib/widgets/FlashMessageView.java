@@ -18,8 +18,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
@@ -29,29 +27,26 @@ import static java.util.Objects.requireNonNull;
  */
 public class FlashMessageView {
 
-    record TemporaryMessage(
-        String text,
-        double durationSec,
-        Instant start,
-        Instant end)
+    // Everything in nanoseconds
+    record TemporaryMessage(String text, long start, long end)
     {
         public boolean hasExpired() {
-            return Instant.now().isAfter(end);
+            return System.nanoTime() > end;
         }
 
-        public Duration activeSince() {
-            return Duration.between(start, Instant.now());
+        public long passed() {
+            return System.nanoTime() - start;
         }
 
-        public long durationMillis() {
-            return Duration.between(start, end).toMillis();
+        public long duration() {
+            return end - start;
         }
     }
 
-    private static FlashMessageView.TemporaryMessage createAndActivateMessage(String text, double activationSec) {
-        Instant activationBegin = Instant.now();
-        Instant activationEnd = activationBegin.plusMillis(Math.round(activationSec * 1000));
-        return new FlashMessageView.TemporaryMessage(text, activationSec, activationBegin, activationEnd);
+    private static FlashMessageView.TemporaryMessage createAndActivateMessage(String text, double durationSec) {
+        long now = System.nanoTime();
+        long duration = (long) (durationSec * 1_000_000_000);
+        return new FlashMessageView.TemporaryMessage(text, now, now + duration);
     }
 
     private static final Font MESSAGE_FONT = Font.font("Sans", FontWeight.BOLD, 30);
@@ -89,8 +84,8 @@ public class FlashMessageView {
                         clearMessage();
                     }
                     else {
-                        final double passed = (double) msg.activeSince().toMillis() / msg.durationMillis();
-                        final double newAlpha = Math.cos(passed * 0.5 * Math.PI);
+                        final double t = (double) msg.passed() / msg.duration();
+                        final double newAlpha = Math.cos(0.5 * Math.PI * t);
                         final Color newColor = Color.rgb(0, 0, 0, 0.2 + 0.5 * newAlpha);
                         final Color newFill = TEXT_COLOR_PLAIN.deriveColor(0, 1, 1, newAlpha);
                         alpha.set(newAlpha);
