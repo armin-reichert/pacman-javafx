@@ -5,6 +5,7 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.ui.GameUIConstants;
+import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
 import javafx.beans.value.ObservableValue;
@@ -45,16 +46,25 @@ public class StatusIconBox extends HBox implements Disposable {
     private final FontAwesomeIcon iconImmune;
     private final FontAwesomeIcon iconCheated;
 
-    public StatusIconBox() {
-        this(DEFAULT_CONFIG);
+    public StatusIconBox(TranslationManager translator) {
+        this(translator, DEFAULT_CONFIG);
     }
     
-    public StatusIconBox(Config config) {
-        iconMuted     = createIcon(config, FontAwesomeIcon.Symbol.DEAF, config.defaultIconColor(), "Muted");
-        icon3D        = createIcon(config, FontAwesomeIcon.Symbol.CUBES, config.defaultIconColor(), "3D Mode");
-        iconAutopilot = createIcon(config, FontAwesomeIcon.Symbol.TAXI, config.defaultIconColor(), "Autopilot");
-        iconImmune    = createIcon(config, FontAwesomeIcon.Symbol.USER_SECRET, config.defaultIconColor(), "Immunity");
-        iconCheated   = createIcon(config, FontAwesomeIcon.Symbol.FLAG, Color.RED, "Cheater");
+    public StatusIconBox(TranslationManager translator, Config config) {
+        iconMuted = createIcon(config, FontAwesomeIcon.Symbol.DEAF, config.defaultIconColor(),
+            translator.translate("status_icon.muted"));
+
+        icon3D = createIcon(config, FontAwesomeIcon.Symbol.CUBES, config.defaultIconColor(),
+            translator.translate("status_icon.3d"));
+
+        iconAutopilot = createIcon(config, FontAwesomeIcon.Symbol.TAXI, config.defaultIconColor(),
+            translator.translate("status_icon.autopilot"));
+
+        iconImmune = createIcon(config, FontAwesomeIcon.Symbol.USER_SECRET, config.defaultIconColor(),
+            translator.translate("status_icon.immune"));
+
+        iconCheated = createIcon(config, FontAwesomeIcon.Symbol.FLAG, Color.RED,
+            translator.translate("status_icon.cheated"));
 
         getChildren().setAll(iconsInOrder().toList());
 

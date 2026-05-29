@@ -73,7 +73,7 @@ public final class GameUI_Implementation implements GameUI {
     private final Stage stage;
     private final GameUI_MainScene scene;
     private final FlashMessageView flashMessageView = new FlashMessageView();
-    private final StatusIconBox statusIconBox = new StatusIconBox();
+    private final StatusIconBox statusIconBox = new StatusIconBox(translationManager);
 
     private StringBinding stageTitleBinding;
 
