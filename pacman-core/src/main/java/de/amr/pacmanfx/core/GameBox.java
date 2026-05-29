@@ -31,23 +31,19 @@ public class GameBox implements GameContext {
      * Directory under which the user specific files are stored.
      * <p>Default: <code>$HOME/.pacmanfx</code> (Unix) or <code>%USERPROFILE%\.pacmanfx</code> (MS Windows)</p>
      */
-    private static final File DEFAULT_HOME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
+    public static final File DEFAULT_HOME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
 
     /**
      * Directory where custom maps are stored (default: <code>&lt;home_dir&gt;/maps</code>).
      */
-    private static final File DEFAULT_CUSTOM_MAP_DIR = new File(DEFAULT_HOME_DIR, "maps");
-
-    private final Map<String, Game> gamesByVariantName = new HashMap<>();
+    public static final File DEFAULT_CUSTOM_MAP_DIR = new File(DEFAULT_HOME_DIR, "maps");
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
-
     private final GameClock clock;
-
     private final File homeDir = DEFAULT_HOME_DIR;
     private final File customMapDir = DEFAULT_CUSTOM_MAP_DIR;
-
     private final CoinMechanism coinMechanism;
+    private final Map<String, Game> gameByVariantName = new HashMap<>();
 
     public GameBox(GameClock clock, CoinMechanism coinMechanism) {
         this.clock = requireNonNull(clock);
@@ -81,17 +77,14 @@ public class GameBox implements GameContext {
         requireNonNull(variantName);
         requireNonNull(game);
         if (!GAME_VARIANT_NAME_PATTERN.matcher(variantName).matches()) {
-            throw new IllegalArgumentException(
-                    "Game variant name '%s' does not match required syntax '%s'"
-                            .formatted(variantName, GAME_VARIANT_NAME_PATTERN));
+            throw new IllegalArgumentException("Game variant name '%s' does not match required syntax '%s'"
+                .formatted(variantName, GAME_VARIANT_NAME_PATTERN));
         }
-        final Game previousGame = gamesByVariantName.putIfAbsent(variantName, game);
+        final Game previousGame = gameByVariantName.putIfAbsent(variantName, game);
         if (previousGame != null) {
-            Logger.warn("Game ({}) was already registered for variant {}", previousGame.getClass().getName(), variantName);
+            Logger.warn("Game ({}) is already registered for variant {}", previousGame.getClass().getName(), variantName);
         }
     }
-
-    // CoinMechanism implementation
 
     // GameContext implementation
 
@@ -101,9 +94,9 @@ public class GameBox implements GameContext {
     }
 
     @Override
-    public boolean isGameRegistered(String name) {
+    public boolean hasGameForVariantName(String name) {
         requireNonNull(name);
-        return gamesByVariantName.containsKey(name);
+        return gameByVariantName.containsKey(name);
     }
 
     @Override
@@ -115,8 +108,8 @@ public class GameBox implements GameContext {
     @SuppressWarnings("unchecked")
     public <T extends Game> T gameByVariantName(String variantName) {
         requireNonNull(variantName);
-        if (gamesByVariantName.containsKey(variantName)) {
-            return (T) gamesByVariantName.get(variantName);
+        if (gameByVariantName.containsKey(variantName)) {
+            return (T) gameByVariantName.get(variantName);
         }
         final String errorMessage = "Game variant named '%s' has not been registered!".formatted(variantName);
         Logger.error(errorMessage);

@@ -30,16 +30,16 @@ public interface GameContext {
      * <p>
      * If no game with the specified name exists, an {@link IllegalArgumentException} is thrown.
      *
-     * @param name the name of the game variant to select (must not be {@code null})
+     * @param variantName the name of the game variant to select (must not be {@code null})
      * @throws IllegalArgumentException if no game with the given name is registered
      */
-    default void setGameVariantName(String name) {
-        requireNonNull(name);
-        if (isGameRegistered(name)) {
-            gameVariantNameProperty().set(name);
+    default void setGameVariantName(String variantName) {
+        requireNonNull(variantName);
+        if (hasGameForVariantName(variantName)) {
+            gameVariantNameProperty().set(variantName);
         }
         else {
-            throw new IllegalArgumentException("Game with name '" + name + "' not found");
+            throw new IllegalArgumentException("Game with name '" + variantName + "' not found");
         }
     }
 
@@ -58,7 +58,7 @@ public interface GameContext {
      * @param name the game variant name to check
      * @return {@code true} if a game with that name exists, {@code false} otherwise
      */
-    boolean isGameRegistered(String name);
+    boolean hasGameForVariantName(String name);
 
     /**
      * Returns the game model associated with the specified variant name.
