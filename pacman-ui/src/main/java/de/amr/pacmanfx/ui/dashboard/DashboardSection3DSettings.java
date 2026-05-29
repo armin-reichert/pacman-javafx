@@ -16,7 +16,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_TOGGLE_DRAW_MODE;
 import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
 

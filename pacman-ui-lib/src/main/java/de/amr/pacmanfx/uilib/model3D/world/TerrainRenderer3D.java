@@ -12,8 +12,8 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.HTS;
+import static de.amr.pacmanfx.core.Globals.TS;
 
 /**
  * Renders 3D terrain. To add the created walls to some group, use the callback function.

@@ -16,7 +16,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 public class Preview3D {

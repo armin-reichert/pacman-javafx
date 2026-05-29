@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.model;
 
 import de.amr.basics.timer.Pulse;
+import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -14,7 +15,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Validations.*;
+import static de.amr.pacmanfx.core.Validations.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -290,7 +291,7 @@ public class GameLevel {
     }
 
     /**
-     * @param personality a valid ghost ID (e.g. {@link de.amr.pacmanfx.Globals#ORANGE_GHOST_POKEY})
+     * @param personality a valid ghost ID (e.g. {@link Globals#ORANGE_GHOST_POKEY})
      * @return the ghost with this ID
      */
     public Ghost ghost(byte personality) {

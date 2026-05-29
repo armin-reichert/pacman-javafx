@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
-import de.amr.pacmanfx.GameClock;
+import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.model.*;
 import de.amr.pacmanfx.ui.GameUI;

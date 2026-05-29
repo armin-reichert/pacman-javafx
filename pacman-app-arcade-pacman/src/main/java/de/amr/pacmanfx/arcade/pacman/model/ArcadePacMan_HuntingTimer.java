@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.pacman.model;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.model.AbstractHuntingTimer;
 
-import static de.amr.pacmanfx.Validations.inClosedRange;
-import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
+import static de.amr.pacmanfx.core.Validations.inClosedRange;
+import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 
 /**
  * Values are taken from the Pac-Man dossier.

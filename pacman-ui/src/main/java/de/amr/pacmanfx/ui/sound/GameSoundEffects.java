@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.sound;
 
 import de.amr.basics.math.RandomNumberSupport;
-import de.amr.pacmanfx.Validations;
+import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;

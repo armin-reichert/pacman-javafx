@@ -12,7 +12,7 @@ import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ORANGE;
 
 public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRendererMixin {

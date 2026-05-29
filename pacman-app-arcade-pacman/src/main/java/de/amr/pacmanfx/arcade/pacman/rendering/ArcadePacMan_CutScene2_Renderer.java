@@ -8,7 +8,7 @@ import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import javafx.scene.canvas.Canvas;
 
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.TS;
 
 public class ArcadePacMan_CutScene2_Renderer extends ArcadePacMan_CutScene_Renderer {
 

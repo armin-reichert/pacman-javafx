@@ -10,8 +10,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.HTS;
+import static de.amr.pacmanfx.core.Globals.TS;
 
 public class ArcadeHouseRenderer extends BaseRenderer {
 

@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.model.world.TerrainTile.*;
 
 public class TileMatcher {

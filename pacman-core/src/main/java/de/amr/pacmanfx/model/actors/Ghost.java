@@ -7,7 +7,8 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.Validations;
+import de.amr.pacmanfx.core.Validations;
+import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.world.House;
@@ -22,9 +23,9 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import static de.amr.basics.math.Direction.*;
-import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.Validations.differsAtMost;
-import static de.amr.pacmanfx.Validations.stateIsOneOf;
+import static de.amr.pacmanfx.core.Globals.*;
+import static de.amr.pacmanfx.core.Validations.differsAtMost;
+import static de.amr.pacmanfx.core.Validations.stateIsOneOf;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -106,9 +107,9 @@ public class Ghost extends MovingActor {
     }
 
     /**
-     * @return this ghost's personality, see {@link de.amr.pacmanfx.Globals#RED_GHOST_SHADOW},
-     * {@link de.amr.pacmanfx.Globals#PINK_GHOST_SPEEDY}, {@link de.amr.pacmanfx.Globals#CYAN_GHOST_BASHFUL} and
-     * {@link de.amr.pacmanfx.Globals#ORANGE_GHOST_POKEY}.
+     * @return this ghost's personality, see {@link Globals#RED_GHOST_SHADOW},
+     * {@link Globals#PINK_GHOST_SPEEDY}, {@link Globals#CYAN_GHOST_BASHFUL} and
+     * {@link Globals#ORANGE_GHOST_POKEY}.
      */
     public byte personality() {
         return personality;

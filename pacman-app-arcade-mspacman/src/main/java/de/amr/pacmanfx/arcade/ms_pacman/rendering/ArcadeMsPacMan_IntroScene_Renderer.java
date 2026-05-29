@@ -15,8 +15,8 @@ import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.RED_GHOST_SHADOW;
+import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene.*;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 

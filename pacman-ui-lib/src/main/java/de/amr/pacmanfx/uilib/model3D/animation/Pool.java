@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.Validations;
+import de.amr.pacmanfx.core.Validations;
 import org.tinylog.Logger;
 
 import java.util.ArrayDeque;

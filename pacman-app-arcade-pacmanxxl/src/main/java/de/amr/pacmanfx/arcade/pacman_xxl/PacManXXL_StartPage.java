@@ -25,7 +25,7 @@ import javafx.scene.media.Media;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 /**

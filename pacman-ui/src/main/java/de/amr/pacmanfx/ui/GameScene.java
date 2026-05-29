@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.GameClock;
-import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.core.GameClock;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.DefaultGameEventListener;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;

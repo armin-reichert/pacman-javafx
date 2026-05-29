@@ -18,7 +18,7 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import static de.amr.basics.timer.TickTimer.ticksToString;
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.core.Globals.*;
 
 public class DashboardSectionActorInfo extends DashboardSection {
 

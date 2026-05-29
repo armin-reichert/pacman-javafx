@@ -5,7 +5,7 @@ package de.amr.pacmanfx.steering;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.Globals;
+import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.FoodLayer;

@@ -17,7 +17,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
+import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.tengenmspacman.model.MapCategory.*;
 import static de.amr.pacmanfx.tengenmspacman.rendering.NES_MapColorScheme.*;
 

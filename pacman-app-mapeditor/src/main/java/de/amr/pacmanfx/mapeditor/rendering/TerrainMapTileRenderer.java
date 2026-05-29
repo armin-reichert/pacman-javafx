@@ -30,8 +30,8 @@ import java.util.Set;
 import java.util.function.BiPredicate;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.HTS;
+import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.model.world.TerrainTile.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;

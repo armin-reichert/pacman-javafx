@@ -11,7 +11,7 @@ import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentMaterialSet;
 import javafx.animation.*;
 import javafx.util.Duration;
 
-import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
+import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
 
 public class GhostFlashingAnimation3D extends ManagedAnimation {
 

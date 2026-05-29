@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
+import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
 
 public class WorldMap {

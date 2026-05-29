@@ -6,8 +6,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
-import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.ui.layout.ViewManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;

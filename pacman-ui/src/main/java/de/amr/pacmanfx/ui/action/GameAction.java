@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.Validations;
+import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.ui.GameUI;
 import org.tinylog.Logger;
 

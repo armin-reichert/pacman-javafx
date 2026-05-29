@@ -20,7 +20,7 @@ import javafx.scene.canvas.Canvas;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.core.Globals.*;
 import static java.util.Objects.requireNonNull;
 
 /**

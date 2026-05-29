@@ -26,7 +26,7 @@ import javafx.util.Duration;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.core.Globals.HTS;
 import static java.util.Objects.requireNonNull;
 
 public class LevelCounter3D extends Group implements GameLevelEntity, DisposableGraphicsObject {

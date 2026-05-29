@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.GameClock;
-import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.core.GameClock;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
@@ -21,7 +21,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
+import static de.amr.pacmanfx.core.Globals.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.uilib.Ufx.toggleBoolean;
 
 /**

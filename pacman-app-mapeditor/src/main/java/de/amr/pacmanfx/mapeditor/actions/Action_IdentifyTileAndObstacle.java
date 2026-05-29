@@ -13,8 +13,8 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.computeTileAt;
+import static de.amr.pacmanfx.core.Globals.HTS;
+import static de.amr.pacmanfx.core.Globals.computeTileAt;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 

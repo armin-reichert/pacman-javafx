@@ -21,8 +21,8 @@ import javafx.util.Duration;
 
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.HTS;
+import static de.amr.pacmanfx.core.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 public class Energizer3D implements DisposableGraphicsObject {

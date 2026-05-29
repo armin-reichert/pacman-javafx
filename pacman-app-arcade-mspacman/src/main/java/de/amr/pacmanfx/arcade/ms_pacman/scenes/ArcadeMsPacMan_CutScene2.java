@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.GameClock;
+import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.TS;
 
 /**
  * Intermission scene 2: "The chase".

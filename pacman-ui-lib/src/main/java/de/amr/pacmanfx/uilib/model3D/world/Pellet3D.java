@@ -8,8 +8,8 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.scene.shape.Shape3D;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.HTS;
+import static de.amr.pacmanfx.core.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 public class Pellet3D implements DisposableGraphicsObject {

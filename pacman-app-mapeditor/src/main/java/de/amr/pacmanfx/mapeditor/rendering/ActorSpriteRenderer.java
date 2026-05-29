@@ -7,8 +7,8 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.HTS;
+import static de.amr.pacmanfx.core.Globals.TS;
 
 public interface ActorSpriteRenderer extends Renderer {
 

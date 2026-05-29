@@ -4,17 +4,17 @@
 package de.amr.pacmanfx.model;
 
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.Globals;
+import de.amr.pacmanfx.core.Globals;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.isEven;
-import static de.amr.pacmanfx.Globals.isOdd;
-import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
-import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
+import static de.amr.pacmanfx.core.Globals.isEven;
+import static de.amr.pacmanfx.core.Globals.isOdd;
+import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
+import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 
 /**
  * Controls the timing of the hunting phases (alternating scattering and chasing).

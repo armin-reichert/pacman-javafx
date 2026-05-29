@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.core.Globals.*;
 
 public interface TengenMsPacMan_ActorFactory {
 

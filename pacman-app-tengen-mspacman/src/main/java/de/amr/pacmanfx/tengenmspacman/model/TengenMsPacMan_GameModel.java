@@ -26,7 +26,7 @@ import java.util.Map;
 import static de.amr.basics.math.RandomNumberSupport.randomBoolean;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.basics.math.Vector2i.vec2_int;
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.core.Globals.*;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState.LEVEL_PLAYING;
 import static java.util.Objects.requireNonNull;

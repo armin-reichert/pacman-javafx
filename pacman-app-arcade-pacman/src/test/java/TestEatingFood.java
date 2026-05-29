@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
+import static de.amr.pacmanfx.core.Globals.RED_GHOST_SHADOW;
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.*;
 

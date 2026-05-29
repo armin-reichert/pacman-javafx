@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.GameClock;
+import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -28,7 +28,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.*;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {

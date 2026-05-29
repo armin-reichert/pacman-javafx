@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.GameClock;
+import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
@@ -37,7 +37,7 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.STEERING_BINDINGS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.*;

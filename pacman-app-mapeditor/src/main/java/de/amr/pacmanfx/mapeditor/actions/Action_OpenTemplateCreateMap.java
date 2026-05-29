@@ -15,7 +15,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
 
 public class Action_OpenTemplateCreateMap extends EditorUIAction<Void> {

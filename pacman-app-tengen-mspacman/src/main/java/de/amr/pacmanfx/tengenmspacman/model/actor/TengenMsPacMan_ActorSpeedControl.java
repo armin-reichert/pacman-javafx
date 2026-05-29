@@ -16,8 +16,8 @@ import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.Validations.inClosedRange;
+import static de.amr.pacmanfx.core.Globals.*;
+import static de.amr.pacmanfx.core.Validations.inClosedRange;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_ActorSpeedControl implements ActorSpeedControl {

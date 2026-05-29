@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.Validations;
+import de.amr.pacmanfx.core.Validations;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.Transition;

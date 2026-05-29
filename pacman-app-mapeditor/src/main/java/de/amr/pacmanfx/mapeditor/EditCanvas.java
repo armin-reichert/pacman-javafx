@@ -36,7 +36,7 @@ import org.tinylog.Logger;
 
 import java.util.function.Predicate;
 
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.ACTOR_SPRITES;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.translated;
 import static de.amr.pacmanfx.mapeditor.UfxMapEditor.getColorFromMapLayer;

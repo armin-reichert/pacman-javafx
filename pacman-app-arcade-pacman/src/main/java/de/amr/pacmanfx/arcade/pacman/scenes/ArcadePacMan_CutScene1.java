@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.GameClock;
+import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacAnimations;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
-import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
+import static de.amr.pacmanfx.core.Globals.RED_GHOST_SHADOW;
 
 /**
  * First cut scene in Arcade Pac-Man game:<br>

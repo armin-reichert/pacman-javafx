@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx;
+package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.model.GameException;
 

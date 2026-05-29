@@ -7,7 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.Validations;
+import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.event.BonusExpiredEvent;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.TerrainLayer;

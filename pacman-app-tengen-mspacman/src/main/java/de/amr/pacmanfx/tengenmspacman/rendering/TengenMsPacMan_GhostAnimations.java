@@ -11,7 +11,7 @@ import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
 
-import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
+import static de.amr.pacmanfx.core.Validations.requireValidGhostPersonality;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GhostAnimations extends SpriteAnimationContainer<SpriteID> {

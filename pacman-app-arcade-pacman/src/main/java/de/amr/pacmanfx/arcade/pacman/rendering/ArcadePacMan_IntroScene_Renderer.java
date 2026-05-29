@@ -17,7 +17,7 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.core.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene.SceneState.*;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;

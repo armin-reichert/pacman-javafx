@@ -35,7 +35,7 @@ import org.tinylog.Logger;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.core.Globals.*;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
 public class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManager {

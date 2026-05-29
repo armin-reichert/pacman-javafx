@@ -30,7 +30,7 @@ import org.tinylog.Logger;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.core.Globals.*;
 import static java.util.Objects.requireNonNull;
 
 /**

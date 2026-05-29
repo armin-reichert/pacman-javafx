@@ -30,8 +30,8 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.basics.math.Vector2f.vec2_float;
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.HTS;
+import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static de.amr.pacmanfx.uilib.UfxColors.colorWithOpacity;
 import static java.util.Objects.requireNonNull;

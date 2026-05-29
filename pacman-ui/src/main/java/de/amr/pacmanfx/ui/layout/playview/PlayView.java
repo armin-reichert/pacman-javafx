@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.layout.playview;
 
-import de.amr.pacmanfx.Globals;
+import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;

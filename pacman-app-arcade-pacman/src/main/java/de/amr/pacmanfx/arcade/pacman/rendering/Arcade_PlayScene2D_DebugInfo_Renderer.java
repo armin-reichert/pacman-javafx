@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.model.AbstractHuntingTimer;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.core.Globals.*;
 
 public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer {
 

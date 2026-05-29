@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.d2;
 
-import de.amr.pacmanfx.Globals;
+import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.rendering.Renderer;

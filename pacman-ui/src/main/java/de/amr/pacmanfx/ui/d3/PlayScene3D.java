@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.d3;
 
-import de.amr.pacmanfx.GameClock;
+import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.world.FoodLayer;
@@ -35,7 +35,7 @@ import org.tinylog.Logger;
 import java.util.Optional;
 import java.util.Set;
 
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUIConstants.PROPERTY_3D_DRAW_MODE;
 import static de.amr.pacmanfx.ui.GameUIConstants.PROPERTY_3D_LIGHT_COLOR;
 import static de.amr.pacmanfx.ui.action.CommonActions.*;

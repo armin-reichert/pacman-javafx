@@ -16,7 +16,7 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.model.GameVariant.ARCADE_MS_PACMAN_XXL;
 import static de.amr.pacmanfx.model.GameVariant.ARCADE_PACMAN_XXL;
 import static de.amr.pacmanfx.model.world.WorldMapSelectionMode.*;

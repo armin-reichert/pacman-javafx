@@ -9,7 +9,7 @@ import de.amr.basics.spriteanim.AnimationFacade;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.core.Globals.*;
 import static java.util.Objects.requireNonNull;
 
 /**

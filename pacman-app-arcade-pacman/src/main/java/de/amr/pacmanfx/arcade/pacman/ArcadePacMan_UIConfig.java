@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman;
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
-import de.amr.pacmanfx.Validations;
+import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
@@ -46,7 +46,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.core.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.INTRO;
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.PREPARING_GAME_START;
 import static de.amr.pacmanfx.ui.input.Keyboard.bare;

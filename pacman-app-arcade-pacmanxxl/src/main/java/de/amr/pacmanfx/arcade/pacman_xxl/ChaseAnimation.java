@@ -23,7 +23,7 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.core.Globals.*;
 import static java.util.Objects.requireNonNull;
 
 /**

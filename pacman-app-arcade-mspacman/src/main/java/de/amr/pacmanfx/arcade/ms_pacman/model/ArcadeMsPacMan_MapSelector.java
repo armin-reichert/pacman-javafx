@@ -9,7 +9,7 @@ import org.tinylog.Logger;
 import java.io.IOException;
 import java.util.List;
 
-import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
+import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 
 // Though there are 6 maps in Ms. Pac-Man, we only use world maps 1-4 (maps 5 and 6 are the same as 3 and 4 using a
 // different color scheme.) and store the color map index (0-5) in the map configuration instead.

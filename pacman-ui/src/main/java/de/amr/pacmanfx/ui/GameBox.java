@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.GameClock;
-import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.core.GameClock;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;

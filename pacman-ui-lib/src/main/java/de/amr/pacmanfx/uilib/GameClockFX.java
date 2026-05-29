@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.uilib;
 
-import de.amr.pacmanfx.GameClock;
-import de.amr.pacmanfx.Validations;
+import de.amr.pacmanfx.core.GameClock;
+import de.amr.pacmanfx.core.Validations;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;

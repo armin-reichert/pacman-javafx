@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.core.Globals.*;
 import static java.util.Objects.requireNonNull;
 
 /**
