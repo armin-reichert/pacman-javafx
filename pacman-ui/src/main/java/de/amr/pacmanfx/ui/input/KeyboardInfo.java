@@ -18,11 +18,13 @@ import java.util.List;
 
 public class KeyboardInfo {
 
-    private static final Font LABEL_FONT = Font.font("Monospace", FontWeight.NORMAL, 16);
+    public static final Font LABEL_FONT = Font.font("Monospace", FontWeight.NORMAL, 16);
+    public static final Font TITLE_FONT = Font.font("Sans", FontWeight.BOLD, 16);
+    public static final Font CLOSE_HINT_FONT = Font.font("Sans", FontWeight.NORMAL, 16);
 
     private final VBox rootPane = new VBox();
 
-    public KeyboardInfo() {
+    public KeyboardInfo(Keyboard keyboard) {
         rootPane.setBackground(Background.fill(Color.TRANSPARENT));
         rootPane.setPrefSize(280, 50);
         rootPane.setMaxSize(280, 200);
@@ -39,12 +41,12 @@ public class KeyboardInfo {
 
         final Text title = new Text("Keyboard State");
         title.setFill(Color.WHITE);
-        title.setFont(Font.font("Sans", FontWeight.BOLD, 16));
+        title.setFont(TITLE_FONT);
         rootPane.getChildren().add(title);
 
         final Text closeHint = new Text("(Alt+K to close)");
         closeHint.setFill(Color.WHITE);
-        closeHint.setFont(Font.font("Sans", FontWeight.NORMAL, 16));
+        closeHint.setFont(CLOSE_HINT_FONT);
         rootPane.getChildren().add(closeHint);
 
         final VBox vBox = new VBox();
@@ -52,7 +54,7 @@ public class KeyboardInfo {
         vBox.setPadding(new Insets(10));
         rootPane.getChildren().add(vBox);
 
-        Input.instance().keyboard.addStateListener(keyboardState -> {
+        keyboard.addStateListener(keyboardState -> {
             vBox.getChildren().clear();
             String modifiers = createModifierString(keyboardState);
             vBox.getChildren().add(createInfoText("[" + modifiers + "]"));
@@ -60,6 +62,10 @@ public class KeyboardInfo {
                 vBox.getChildren().add(createInfoText(modifiers + " " + key));
             }
         });
+    }
+
+    public VBox rootPane() {
+        return rootPane;
     }
 
     private static String createModifierString(Keyboard keyboard) {
@@ -77,9 +83,5 @@ public class KeyboardInfo {
         infoText.setFill(Color.LIGHTGRAY);
         infoText.setFont(LABEL_FONT);
         return infoText;
-    }
-
-    public VBox rootPane() {
-        return rootPane;
     }
 }

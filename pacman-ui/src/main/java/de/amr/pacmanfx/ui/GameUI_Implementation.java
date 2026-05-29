@@ -17,6 +17,7 @@ import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
+import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.layout.playview.PlayView;
@@ -146,7 +147,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void initMainScene() {
-        final KeyboardInfo keyboardInfo = new KeyboardInfo();
+        final KeyboardInfo keyboardInfo = new KeyboardInfo(Input.instance().keyboard);
         scene.rootPane().getChildren().addAll(
             new Region(), // placeholder, will be replaced by current view (start, play, edit)
             statusIconBox,
