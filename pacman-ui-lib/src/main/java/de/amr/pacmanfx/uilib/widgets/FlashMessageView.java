@@ -26,13 +26,13 @@ import java.time.Instant;
  */
 public class FlashMessageView {
 
-    private static class Message {
+    private static class TemporaryMessage {
         private final String text;
         private final double durationSeconds;
         private Instant activationBegin;
         private Instant activationEnd;
 
-        Message(String text, double seconds) {
+        TemporaryMessage(String text, double seconds) {
             this.text = text;
             this.durationSeconds = seconds;
         }
@@ -57,22 +57,24 @@ public class FlashMessageView {
     private static final Color TEXT_COLOR_PLAIN = Color.WHEAT;
 
     private final VBox rootPane = new VBox();
-    private final Text textView = new Text();
-    private Message message;
 
     private final DoubleProperty alpha = new SimpleDoubleProperty(1);
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>();
     private final ObjectProperty<Color> textFill = new SimpleObjectProperty<>();
+    private final ObjectProperty<TemporaryMessage> message = new SimpleObjectProperty<>();
 
     public FlashMessageView() {
         rootPane.setAlignment(Pos.CENTER);
         rootPane.setMouseTransparent(true);
-        rootPane.getChildren().add(textView);
-        rootPane.backgroundProperty().bind(backgroundColor.map(Background::fill));
 
+        final Text textView = new Text();
         textView.setFont(MESSAGE_FONT);
         textView.setTextAlignment(TextAlignment.CENTER);
         textView.fillProperty().bind(textFill);
+        textView.textProperty().bind(message.map(msg -> msg != null ? msg.text : ""));
+
+        rootPane.getChildren().add(textView);
+        rootPane.backgroundProperty().bind(backgroundColor.map(Background::fill));
 
         drawTimer = new AnimationTimer() {
             @Override
@@ -95,34 +97,33 @@ public class FlashMessageView {
     }
 
     public void clear() {
-        textView.setText(null);
-        message = null;
+        message.set(null);
         backgroundColor.set(Color.TRANSPARENT);
     }
 
     public void showMessage(String messageText, double seconds) {
-        if (message != null && message.text.equals(messageText)) {
+        if (message.get() != null && message.get().text.equals(messageText)) {
             return;
         }
-        message = new Message(messageText, seconds);
-        message.activate();
+        message.set(new TemporaryMessage(messageText, seconds));
+        message.get().activate();
+
         rootPane.setVisible(true);
     }
 
     private void update() {
-        if (message == null) {
+        if (message.get() == null) {
             rootPane.setVisible(false);
             return;
         }
-        if (message.hasExpired()) {
+        if (message.get().hasExpired()) {
             clear();
         } else {
-            double activeMillis = Duration.between(message.activationBegin, Instant.now()).toMillis();
-            alpha.set(Math.cos(0.5 * Math.PI * activeMillis / message.activationTimeMillis()));
-            Color color = Color.rgb(0, 0, 0, 0.2 + 0.5 * alpha.get());
-            backgroundColor.set(color);
+            double activeMillis = Duration.between(message.get().activationBegin, Instant.now()).toMillis();
+            alpha.set(Math.cos(0.5 * Math.PI * activeMillis / message.get().activationTimeMillis()));
+            Color bgColor = Color.rgb(0, 0, 0, 0.2 + 0.5 * alpha.get());
+            backgroundColor.set(bgColor);
             textFill.set(TEXT_COLOR_PLAIN.deriveColor(0, 1, 1, alpha.get()));
-            textView.setText(message.text);
         }
     }
 }
