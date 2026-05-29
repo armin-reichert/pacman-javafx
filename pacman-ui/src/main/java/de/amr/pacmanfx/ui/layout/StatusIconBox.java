@@ -44,15 +44,18 @@ public class StatusIconBox extends HBox implements Disposable {
         iconImmune    = createIcon(FontAwesomeIcon.Symbol.USER_SECRET, STATUS_ICON_COLOR, "Immunity");
         iconCheated   = createIcon(FontAwesomeIcon.Symbol.FLAG, Color.RED, "Cheater");
 
-        getChildren().setAll(icons().toList());
+        getChildren().setAll(iconsInOrder().toList());
 
-        long count = icons().count();
+        long count = iconsInOrder().count();
         setMaxHeight(ICON_SIZE + 2 * PADDING);
         setMaxWidth((ICON_SIZE + ICON_SPACING) * count - ICON_SPACING + 2 * PADDING);
 
         setPadding(new Insets(PADDING));
         setSpacing(ICON_SPACING);
 
+        //setBorder(Border.stroke(Color.RED));
+
+        // "autopilot", "cheated" and "immune" icon visibilities are bound to properties of current game model!
         iconMuted.visibleProperty().bind(GameUIConstants.PROPERTY_MUTED);
         icon3D   .visibleProperty().bind(GameUIConstants.PROPERTY_3D_ENABLED);
     }
@@ -77,32 +80,34 @@ public class StatusIconBox extends HBox implements Disposable {
         return icon3D;
     }
 
+    public Stream<FontAwesomeIcon> iconsInOrder() {
+        return Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated);
+    }
+
     @Override
     public void dispose() {
         visibleProperty().unbind();
-        icons().forEach(icon -> {
+        iconsInOrder().forEach(icon -> {
             icon.visibleProperty().unbind();
-            icon.visibleProperty().removeListener(this::handleVisibilityChange);
+            icon.visibleProperty().removeListener(this::rearrangeIcons);
         });
     }
 
     private FontAwesomeIcon createIcon(FontAwesomeIcon.Symbol symbol, Color color, String tooltipText) {
-        FontAwesomeIcon icon = FontAwesomeIcon.of(symbol, ICON_SIZE, color);
+        final FontAwesomeIcon icon = FontAwesomeIcon.of(symbol, ICON_SIZE, color);
         icon.setVisible(false);
-        icon.visibleProperty().addListener(this::handleVisibilityChange);
-        Tooltip tooltip = new Tooltip(tooltipText);
+        icon.visibleProperty().addListener(this::rearrangeIcons);
+
+        final Tooltip tooltip = new Tooltip(tooltipText);
         tooltip.setFont(TOOLTIP_FONT);
         tooltip.setShowDelay(Duration.millis(250));
         Tooltip.install(icon, tooltip);
+
         return icon;
     }
 
-    private void handleVisibilityChange(ObservableValue<? extends Boolean> property, boolean wasVisible, boolean isVisible) {
-        // keep box compact, show visible items only
-        getChildren().setAll(icons().filter(Node::isVisible).toList());
-    }
-
-    public Stream<FontAwesomeIcon> icons() {
-        return Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated);
+    // keep box compact, show visible items only
+    private void rearrangeIcons(ObservableValue<? extends Boolean> property, boolean wasVisible, boolean isVisible) {
+        getChildren().setAll(iconsInOrder().filter(Node::isVisible).toList());
     }
 }

@@ -87,7 +87,6 @@ public class StartPagesCarousel extends Carousel implements View {
         actionBindings.setKeyCombinationFor(actionShowPrevPage, bare(KeyCode.LEFT));
         actionBindings.setKeyCombinationFor(actionShowNextPage, bare(KeyCode.RIGHT));
         actionBindings.setKeyCombinationFor(CommonActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
-        actionBindings.setKeyCombinationFor(CommonActions.ACTION_TOGGLE_PAUSED, bare(KeyCode.P));
         actionBindings.activate();
         restartProgressTimer();
         currentStartPage().ifPresent(page -> page.layoutRoot().requestFocus());

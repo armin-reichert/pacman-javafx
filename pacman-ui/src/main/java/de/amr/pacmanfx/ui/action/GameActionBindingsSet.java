@@ -59,6 +59,7 @@ public class GameActionBindingsSet implements ActionBindingsSet {
         for (KeyCodeCombination combination : actionForKeyCombination.keySet()) {
             registerActionBindingsManager(combination, this);
         }
+        Logger.info("Action binding set activated: {}", this);
         logBindings();
     }
 

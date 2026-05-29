@@ -11,12 +11,10 @@ import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.model.CanonicalGameState;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
-import de.amr.pacmanfx.ui.action.ActionBindingsSet;
-import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.layout.*;
@@ -60,8 +58,6 @@ public final class GameUI_Implementation implements GameUI {
     // Observes changes in custom map directory
     private final DirectoryWatchdog customDirWatchdog;
 
-    private final ActionBindingsSet actionBindings = new GameActionBindingsSet();
-
     // So many managers? I think I should fire some!
     private final GameSceneManager gameSceneManager = new GameSceneManager(this);
     private final PreferencesManager prefsManager;
@@ -92,132 +88,6 @@ public final class GameUI_Implementation implements GameUI {
         viewManager.setStartView(new StartPagesCarousel(this));
         viewManager.setEditorViewFactory(this::createEditorView);
         viewManager.setPlayView(createPlayView());
-    }
-
-    private PreferencesManager createPrefsManager() {
-        return new PreferencesManager(GameUI_Implementation.this.getClass()) {
-            @Override
-            protected void storeDefaultPrefValues() {}
-        };
-    }
-
-    private ViewManager createViewManager() {
-        final var viewManager = new ViewManager(scene.rootPane(), flashMessageView);
-
-        viewManager.setEditorCanOpen(() -> {
-            if (viewManager.isStartViewSelected()) return true;
-            if (viewManager.isEditorViewSelected()) return false;
-            if (viewManager.isPlayViewSelected()) {
-                return !gameContext().game().isPlayingLevel();
-            }
-            return false;
-        });
-        return viewManager;
-    }
-
-    private PlayView createPlayView() {
-        final var playView = new PlayView(this, GameUIConstants.DEFAULT_DASHBOARD_CONFIG);
-        final ChangeListener<? super Number> playViewResizer = (_,_,_) -> playView.resizeToFit(scene);
-        scene.widthProperty().addListener(playViewResizer);
-        scene.heightProperty().addListener(playViewResizer);
-        return playView;
-    }
-
-    private EditorView createEditorView() {
-        final var editorView = new EditorView(stage, this);
-        editorView.editor().setOnQuit(_ -> {
-            // restore title (editor changed it)
-            stage.titleProperty().unbind();
-            stage.titleProperty().bind(stageTitleBinding);
-            viewManager.selectStartView();
-        });
-        return editorView;
-    }
-
-    private void initGameClock(GameClock clock) {
-        clock.setUpdateAction(() -> {
-            final SimulationStep step = gameContext().game().doSimulationStep();
-            step.clearInfo(clock.tickCount());
-            gameContext().game().flow().update();
-            step.printLog();
-            gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
-        });
-        clock.setPermanentAction(() -> viewManager.currentView().render());
-        clock.setErrorHandler(this::ka_tas_tro_phe);
-    }
-
-    private void initMainScene() {
-        final KeyboardInfo keyboardInfo = new KeyboardInfo(Input.instance().keyboard);
-        scene.rootPane().getChildren().addAll(
-            new Region(), // placeholder, will be replaced by current view (start, play, edit)
-            statusIconBox,
-            flashMessageView,
-            keyboardInfo.rootPane());
-
-        StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
-        keyboardInfo.rootPane().setAlignment(Pos.TOP_CENTER);
-
-        scene.init(this, actionBindings);
-    }
-
-    private void initPropertyBindings() {
-        soundManager.muteProperty().bind(GameUIConstants.PROPERTY_MUTED);
-
-        statusIconBox.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> viewManager.isPlayViewSelected() || viewManager.isStartViewSelected(),
-            viewManager.currentViewProperty()));
-
-        stageTitleBinding = createStringBinding(
-            this::computeStageTitle,
-            gameContext().clock().updatesDisabledProperty(),
-            gameContext().gameVariantNameProperty(),
-            viewManager.currentViewProperty(),
-            gameSceneManager.gameSceneProperty(),
-            GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE,
-            GameUIConstants.PROPERTY_3D_ENABLED
-        );
-
-        scene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> gameSceneManager.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D)
-                ? GameUIConstants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUIConstants.WALLPAPERS.length)]
-                : GameUIConstants.BACKGROUND_PAC_MAN_WALLPAPER
-            , viewManager.currentViewProperty(), gameSceneManager().gameSceneProperty()
-        ));
-
-        gameContext().gameVariantNameProperty().addListener((_, _, _) -> {
-            final GameCheats cheats = gameContext().game().cheats();
-
-            statusIconBox.iconAutopilot().visibleProperty().unbind();
-            statusIconBox.iconCheated()  .visibleProperty().unbind();
-            statusIconBox.iconImmune()   .visibleProperty().unbind();
-
-            statusIconBox.iconAutopilot().visibleProperty().bind(cheats.usingAutopilotProperty());
-            statusIconBox.iconCheated()  .visibleProperty().bind(cheats.cheatUsedProperty());
-            statusIconBox.iconImmune()   .visibleProperty().bind(cheats.immuneProperty());
-        });
-    }
-
-    private void initGlobalActionBindings() {
-        actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_ENTER_FULLSCREEN,        GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_OPEN_EDITOR,             GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
-        actionBindings.activate();
-    }
-
-    /**
-     * @param reason what caused this catastrophe
-     *
-     * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>
-     */
-    private void ka_tas_tro_phe(Throwable reason) {
-        Platform.runLater(() -> {
-            final String errorMessage = translationManager.translate("error.oh_no_my_program");
-            showFlashMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
-            stopGame();
-            Logger.error("*** SOMETHING VERY BAD HAPPENED:");
-            Logger.error(reason);
-        });
     }
 
     // GameUI interface
@@ -302,8 +172,7 @@ public final class GameUI_Implementation implements GameUI {
 
         viewManager.playView().dashboard().init(this);
         initMainScene();
-        initGlobalActionBindings();
-        initPropertyBindings();
+        initPropertyBindings(gameContext().game());
         initGameClock(gameContext().clock());
 
         final GameVariantChangeHandler gameVariantChangeHandler = new GameVariantChangeHandler(this);
@@ -354,6 +223,8 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void stopGame() {
+        gameContext().game().prepareNewGame();
+
         gameContext().clock().stop();
         gameContext().clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
 
@@ -395,6 +266,132 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     // private stuff
+
+    private PreferencesManager createPrefsManager() {
+        return new PreferencesManager(GameUI_Implementation.this.getClass()) {
+            @Override
+            protected void storeDefaultPrefValues() {}
+        };
+    }
+
+    private ViewManager createViewManager() {
+        final var viewManager = new ViewManager(scene.rootPane(), flashMessageView);
+
+        viewManager.setEditorCanOpen(() -> {
+            if (viewManager.isStartViewSelected()) return true;
+            if (viewManager.isEditorViewSelected()) return false;
+            if (viewManager.isPlayViewSelected()) {
+                return !gameContext().game().isPlayingLevel();
+            }
+            return false;
+        });
+        return viewManager;
+    }
+
+    private PlayView createPlayView() {
+        final var playView = new PlayView(this, GameUIConstants.DEFAULT_DASHBOARD_CONFIG);
+        final ChangeListener<? super Number> playViewResizer = (_,_,_) -> playView.resizeToFit(scene);
+        scene.widthProperty().addListener(playViewResizer);
+        scene.heightProperty().addListener(playViewResizer);
+        return playView;
+    }
+
+    private EditorView createEditorView() {
+        final var editorView = new EditorView(stage, this);
+        editorView.editor().setOnQuit(_ -> {
+            // restore title (editor changed it)
+            stage.titleProperty().unbind();
+            stage.titleProperty().bind(stageTitleBinding);
+            viewManager.selectStartView();
+        });
+        return editorView;
+    }
+
+    private void initGameClock(GameClock clock) {
+        clock.setUpdateAction(() -> {
+            final SimulationStep step = gameContext().game().doSimulationStep();
+            step.clearInfo(clock.tickCount());
+            gameContext().game().flow().update();
+            step.printLog();
+            gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
+        });
+        clock.setPermanentAction(() -> viewManager.currentView().render());
+        clock.setErrorHandler(this::ka_tas_tro_phe);
+    }
+
+    private void initMainScene() {
+        final KeyboardInfo keyboardInfo = new KeyboardInfo(Input.instance().keyboard);
+        scene.rootPane().getChildren().addAll(
+            new Region(), // placeholder, will be replaced by current view (start, play, edit)
+            statusIconBox,
+            flashMessageView,
+            keyboardInfo.rootPane());
+
+        StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
+        keyboardInfo.rootPane().setAlignment(Pos.TOP_CENTER);
+
+        scene.init(this);
+    }
+
+    private void initPropertyBindings(Game game) {
+        soundManager.muteProperty().bind(GameUIConstants.PROPERTY_MUTED);
+
+        statusIconBox.visibleProperty().bind(Bindings.createBooleanBinding(
+            () -> viewManager.isPlayViewSelected() || viewManager.isStartViewSelected(),
+            viewManager.currentViewProperty()));
+
+        bindStatusBoxIcons(game);
+
+        stageTitleBinding = createStringBinding(
+            this::computeStageTitle,
+            gameContext().clock().updatesDisabledProperty(),
+            gameContext().gameVariantNameProperty(),
+            viewManager.currentViewProperty(),
+            gameSceneManager.gameSceneProperty(),
+            GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE,
+            GameUIConstants.PROPERTY_3D_ENABLED
+        );
+
+        scene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
+            () -> gameSceneManager.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D)
+                ? GameUIConstants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUIConstants.WALLPAPERS.length)]
+                : GameUIConstants.BACKGROUND_PAC_MAN_WALLPAPER
+            , viewManager.currentViewProperty(), gameSceneManager().gameSceneProperty()
+        ));
+
+        gameContext().gameVariantNameProperty().addListener((_, _, gameVariantName)
+            -> bindStatusBoxIcons(gameBox.gameByVariantName(gameVariantName)));
+    }
+
+    private void bindStatusBoxIcons(Game game) {
+        final GameCheats cheats = gameContext().game().cheats();
+
+        statusIconBox.iconAutopilot().visibleProperty().unbind();
+        statusIconBox.iconAutopilot().visibleProperty().bind(cheats.usingAutopilotProperty());
+
+        statusIconBox.iconCheated()  .visibleProperty().unbind();
+        statusIconBox.iconCheated()  .visibleProperty().bind(cheats.cheatUsedProperty());
+
+        statusIconBox.iconImmune()   .visibleProperty().unbind();
+        statusIconBox.iconImmune()   .visibleProperty().bind(cheats.immuneProperty());
+
+        Logger.info("Icons autopilot, cheated and immune visibility bound to game model {}", game);
+    }
+
+    /**
+     * @param reason what caused this catastrophe
+     *
+     * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>
+     */
+    private void ka_tas_tro_phe(Throwable reason) {
+        Platform.runLater(() -> {
+            final String errorMessage = translationManager.translate("error.oh_no_my_program");
+            showFlashMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
+            stopGame();
+            Logger.error("*** SOMETHING VERY BAD HAPPENED:");
+            Logger.error(reason);
+        });
+    }
 
     private String computeStageTitle() {
         final View view = viewManager.currentView();

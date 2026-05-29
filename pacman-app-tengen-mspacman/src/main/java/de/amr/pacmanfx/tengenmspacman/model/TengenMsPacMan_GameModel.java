@@ -280,6 +280,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         lifeCountProperty().set(initialLifeCount());
         levelProperty().set(null);
         levelCounter.clear();
+        cheats().clear();
         setPlayingLevel(false);
         boosterActive = false;
         gateKeeper.reset();

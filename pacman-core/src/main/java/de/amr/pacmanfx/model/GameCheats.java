@@ -17,6 +17,12 @@ public interface GameCheats {
     /** @return property indicating whether autopilot mode is active */
     BooleanProperty usingAutopilotProperty();
 
+    default void clear() {
+        clearCheatUsedFlag();
+        immuneProperty().set(false);
+        usingAutopilotProperty().set(false);
+    }
+
     /** Marks that a cheat has been used in this game session. */
     default void raiseFlag() {
         cheatUsedProperty().set(true);

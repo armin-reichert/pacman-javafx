@@ -209,6 +209,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         levelProperty().set(null);
         lifeCountProperty().set(initialLifeCount());
         levelCounter().clear();
+        cheats().clear();
         setPlayingLevel(false);
     }
 
