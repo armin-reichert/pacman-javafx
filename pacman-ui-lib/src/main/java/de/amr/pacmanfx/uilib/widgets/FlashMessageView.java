@@ -4,9 +4,8 @@
 package de.amr.pacmanfx.uilib.widgets;
 
 import javafx.animation.AnimationTimer;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Background;
@@ -18,8 +17,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-import java.util.Objects;
-
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -30,12 +27,12 @@ public class FlashMessageView {
     // Everything in nanoseconds
     record TemporaryMessage(String text, long start, long end)
     {
-        public boolean hasExpired() {
-            return System.nanoTime() > end;
+        public boolean hasExpired(long now) {
+            return now > end;
         }
 
-        public long passed() {
-            return System.nanoTime() - start;
+        public long passed(long now) {
+            return now - start;
         }
 
         public long duration() {
@@ -70,21 +67,30 @@ public class FlashMessageView {
         messageView.setFont(MESSAGE_FONT);
         messageView.setTextAlignment(TextAlignment.CENTER);
         messageView.fillProperty().bind(textFill);
-        messageView.textProperty().bind(message.map(msg -> msg != null ? msg.text : ""));
+        messageView.textProperty().bind(Bindings.createStringBinding(
+            () -> {
+                var msg = message.get();
+                return msg != null ? msg.text() : "";
+            },
+            message
+        ));
 
         rootPane.getChildren().add(messageView);
-        rootPane.backgroundProperty().bind(backgroundColor.map(Background::fill));
+        rootPane.backgroundProperty().bind(Bindings.createObjectBinding(
+            () -> Background.fill(backgroundColor.get()),
+            backgroundColor
+        ));
 
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 final TemporaryMessage msg = message.get();
                 if (msg != null) {
-                    if (msg.hasExpired()) {
+                    if (msg.hasExpired(now)) {
                         clearMessage();
                     }
                     else {
-                        final double t = (double) msg.passed() / msg.duration();
+                        final double t = (double) msg.passed(now) / msg.duration();
                         final double a = Math.cos(HALF_PI * t);
                         backgroundColor.set(Color.rgb(0, 0, 0, 0.2 + 0.5 * a));
                         textFill.set(TEXT_COLOR_PLAIN.deriveColor(0, 1, 1, a));
@@ -104,6 +110,7 @@ public class FlashMessageView {
 
     public void stopTimer() {
         timer.stop();
+        clearMessage();
     }
 
     public void clearMessage() {
@@ -114,9 +121,11 @@ public class FlashMessageView {
     public void showMessage(String messageText, double seconds) {
         requireNonNull(messageText);
         TemporaryMessage tmpMessage = message.get();
-        if (tmpMessage!= null && tmpMessage.text.equals(messageText)) {
+        if (tmpMessage!= null && tmpMessage.text().equals(messageText)) {
             return; // already showing
         }
+        backgroundColor.set(Color.rgb(0, 0, 0, 0.7));
+        textFill.set(TEXT_COLOR_PLAIN);
         message.set(createAndActivateMessage(messageText, seconds));
     }
 }
