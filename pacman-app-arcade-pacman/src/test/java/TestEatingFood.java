@@ -4,6 +4,7 @@
 
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.ElroyState;
@@ -30,7 +31,7 @@ public class TestEatingFood {
     static void setup() {
         final String variantName = GameVariant.ARCADE_PACMAN.name();
         final File highScoreFile = new File("");
-        gameBox = new GameBox(new GameClockFX());
+        gameBox = new GameBox(new GameClockFX(), CoinMechanism.OUT_OF_SERVICE);
         gameBox.registerGame(variantName, new ArcadePacMan_GameModel(gameBox.coinMechanism(), highScoreFile));
         gameBox.gameVariantNameProperty().set(variantName);
     }
