@@ -4,42 +4,58 @@
 
 package de.amr.pacmanfx.model;
 
+import de.amr.pacmanfx.model.actors.Pac;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
-public interface GameCheats {
+public class GameCheats {
+
+    private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
+    private final BooleanProperty immune = new SimpleBooleanProperty(false);
+    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
+
+    public GameCheats() {}
 
     /** @return property indicating whether a cheat has been used */
-    BooleanProperty cheatUsedProperty();
+    public BooleanProperty cheatUsedProperty() {
+        return cheatUsed;
+    }
 
     /** @return property indicating whether Pac‑Man is immune to death */
-    BooleanProperty immuneProperty();
-
-    /** @return property indicating whether autopilot mode is active */
-    BooleanProperty usingAutopilotProperty();
-
-    default void clear() {
-        clearCheatUsedFlag();
-        immuneProperty().set(false);
-        usingAutopilotProperty().set(false);
-    }
-
-    /** Marks that a cheat has been used in this game session. */
-    default void raiseFlag() {
-        cheatUsedProperty().set(true);
-    }
-
-    /** Clears the cheat‑used flag. */
-    default void clearCheatUsedFlag() {
-        cheatUsedProperty().set(false);
+    public BooleanProperty immuneProperty() {
+        return immune;
     }
 
     /** @return {@code true} if Pac‑Man is currently immune */
-    default boolean isImmune() {
+    public boolean isImmune() {
         return immuneProperty().get();
     }
 
     /** @return {@code true} if autopilot is currently active */
-    default boolean isUsingAutopilot() {
+    public boolean isUsingAutopilot() {
         return usingAutopilotProperty().get();
+    }
+
+    /** @return property indicating whether autopilot mode is active */
+    public BooleanProperty usingAutopilotProperty() {
+        return usingAutopilot;
+    }
+
+    public void clear() {
+        cheatUsed.set(false);
+        immune.set(false);
+        usingAutopilot.set(false);
+    }
+
+    public void update(GameLevel level) {
+        if (level.isDemoLevel() || !level.game().isPlayingLevel()) {
+            return;
+        }
+        final Pac pac = level.entities().pac();
+        pac.immuneProperty().set(isImmune());
+        pac.usingAutopilotProperty().set(isUsingAutopilot());
+        if (isImmune() || isUsingAutopilot()) {
+            cheatUsed.set(true);
+        }
     }
 }

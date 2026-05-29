@@ -41,15 +41,13 @@ import static java.util.Objects.requireNonNull;
  * <p>The model is deterministic and tick-driven: each call to {@link #doHuntingStep(GameLevel)} advances the
  * simulation by one frame.</p>
  */
-public abstract class AbstractGameModel implements Game, GameCheats {
+public abstract class AbstractGameModel implements Game {
 
     /** Default collision strategy used by the original arcade games. */
     public static final CollisionStrategy DEFAULT_COLLISION_STRATEGY = CollisionStrategy.SAME_TILE;
 
     // Cheating
-    private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
-    private final BooleanProperty immune = new SimpleBooleanProperty(false);
-    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
+    private final GameCheats cheats = new GameCheats();
 
     private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
     private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
@@ -94,8 +92,8 @@ public abstract class AbstractGameModel implements Game, GameCheats {
         score.pointsProperty().addListener((_, oldScore, newScore)
             -> handleScoreChange(oldScore.intValue(), newScore.intValue()));
 
-        cheatUsedProperty().addListener((_, _, cheatDetected) -> {
-            if (cheatDetected) {
+        cheats.cheatUsedProperty().addListener((_, _, cheated) -> {
+            if (cheated) {
                 handleCheatDetected();
             }
         });
@@ -173,22 +171,7 @@ public abstract class AbstractGameModel implements Game, GameCheats {
 
     @Override
     public GameCheats cheats() {
-        return this;
-    }
-
-    @Override
-    public BooleanProperty cheatUsedProperty() {
-        return cheatUsed;
-    }
-
-    @Override
-    public BooleanProperty immuneProperty() {
-        return immune;
-    }
-
-    @Override
-    public BooleanProperty usingAutopilotProperty() {
-        return usingAutopilot;
+        return cheats;
     }
 
     /* -------------------------------------------------------------------------
@@ -610,30 +593,6 @@ public abstract class AbstractGameModel implements Game, GameCheats {
         }
     }
 
-    /**
-     * Clears all cheating-related properties.
-     */
-    protected void clearCheatingProperties() {
-        immuneProperty().set(false);
-        usingAutopilotProperty().set(false);
-        cheats().clearCheatUsedFlag();
-    }
-
-    /**
-     * Updates cheating properties in the current level by binding Pac-Man's properties
-     * to the global cheat flags and raising the cheat flag if any cheat is active.
-     *
-     * @param level the current game level
-     */
-    protected void updateCheatingProperties(GameLevel level) {
-        final Pac pac = level.entities().pac();
-        pac.immuneProperty().bind(immuneProperty());
-        pac.usingAutopilotProperty().bind(usingAutopilotProperty());
-        if (cheats().isImmune() || cheats().isUsingAutopilot()) {
-            cheats().raiseFlag();
-        }
-    }
-
     /* -------------------------------------------------------------------------
      * Score management
      * ---------------------------------------------------------------------- */
@@ -669,16 +628,5 @@ public abstract class AbstractGameModel implements Game, GameCheats {
         if (highScore.points() > savedHighScore.points()) {
             highScore.save();
         }
-    }
-
-    protected void detectCheats() {
-        optGameLevel().filter(gameLevel -> !gameLevel.isDemoLevel()).ifPresent(_ -> {
-            if (cheats().isUsingAutopilot()) {
-                cheats().raiseFlag();
-            }
-            if (cheats().isImmune()) {
-                cheats().raiseFlag();
-            }
-        });
     }
 }

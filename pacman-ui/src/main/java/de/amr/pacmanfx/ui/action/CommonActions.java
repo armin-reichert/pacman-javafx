@@ -92,7 +92,7 @@ public final class CommonActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
-            game.cheats().clearCheatUsedFlag(); //TODO needed?
+            game.cheats().clear(); //TODO needed?
             ui.gameSceneManager().quitCurrentGameScene();
         }
     };

@@ -191,9 +191,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void init() {
         setInitialLifeCount(3);
-        clearCheatingProperties();
         prepareNewGame();
-        levelCounter().clear();
     }
 
     @Override
@@ -209,7 +207,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         levelProperty().set(null);
         lifeCountProperty().set(initialLifeCount());
         levelCounter().clear();
-        cheats().clear();
         setPlayingLevel(false);
     }
 
@@ -266,7 +263,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
-        detectCheats();
+        cheats().update(level);
     }
 
     @Override
@@ -434,7 +431,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             showLevelMessage(level, GameLevelMessageType.READY);
             levelCounter().update(level.number(), level.bonusSymbol(0));
             score().setEnabled(true);
-            updateCheatingProperties(level);
+            cheats().update(level);
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!

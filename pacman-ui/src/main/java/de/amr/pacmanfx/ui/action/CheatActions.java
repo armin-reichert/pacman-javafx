@@ -26,7 +26,7 @@ public final class CheatActions {
             final Game game = ui.gameContext().game();
             realLevel(game).ifPresent(_ -> {
                 game.addLives(3);
-                game.cheats().raiseFlag();
+                game.cheats().cheatUsedProperty().set(true);
                 ui.showFlashMessage(ui.translationManager().translate(resourceBundleKey(), game.lifeCount()));
             });
         }
@@ -41,7 +41,7 @@ public final class CheatActions {
             final Game game = ui.gameContext().game();
             realLevel(game).ifPresent(level -> {
                 level.worldMap().foodLayer().eatPellets();
-                game.cheats().raiseFlag();
+                game.cheats().cheatUsedProperty().set(true);
                 game.flow().publishGameEvent(new PacEatsFoodEvent(game, level.entities().pac(), false, true));
             });
         }
@@ -65,7 +65,7 @@ public final class CheatActions {
                     killableGhosts.forEach(game::onEatGhost);
                     game.flow().enterStateWithName(CanonicalGameState.EATING_GHOST.name());
                 }
-                game.cheats().raiseFlag();
+                game.cheats().cheatUsedProperty().set(true);
             });
         }
 
@@ -82,7 +82,7 @@ public final class CheatActions {
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
             realLevel(game).ifPresent(_ -> {
-                game.cheats().raiseFlag();
+                game.cheats().cheatUsedProperty().set(true);
                 game.flow().enterStateWithName(CanonicalGameState.LEVEL_COMPLETE.name());
             });
         }
@@ -119,30 +119,24 @@ public final class CheatActions {
         }
     };
 
-    private static void setAutopilot(GameUI ui, boolean on) {
+    private static void setAutopilot(GameUI ui, boolean auto) {
         final Game game = ui.gameContext().game();
-        if (on) {
-            if (game.isPlayingLevel() && !game.isDemoLevelRunning()) {
-                game.cheats().raiseFlag();
-            }
-        }
-        game.cheats().usingAutopilotProperty().set(on);
-        ui.soundManager().playVoice(on ? GameUIConstants.VOICE_AUTOPILOT_ON : GameUIConstants.VOICE_AUTOPILOT_OFF);
-        ui.showFlashMessage(ui.translationManager().translate(on ? "autopilot_on" : "autopilot_off"));
-
+        game.cheats().usingAutopilotProperty().set(auto);
+        ui.soundManager().playVoice(auto ? GameUIConstants.VOICE_AUTOPILOT_ON : GameUIConstants.VOICE_AUTOPILOT_OFF);
+        ui.showFlashMessage(ui.translationManager().translate(auto ? "autopilot_on" : "autopilot_off"));
     }
 
     public static final GameAction ACTION_ACTIVATE_IMMUNITY = new GameAction("activate_immunity") {
         @Override
         public void execute(GameUI ui) {
-            setImmunity(ui, true);
+            setPacImmune(ui, true);
         }
     };
 
     public static final GameAction ACTION_DEACTIVATE_IMMUNITY = new GameAction("deactivate_immunity") {
         @Override
         public void execute(GameUI ui) {
-            setImmunity(ui, false);
+            setPacImmune(ui, false);
         }
     };
 
@@ -150,15 +144,15 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
-            setImmunity(ui, !game.cheats().isImmune());
+            setPacImmune(ui, !game.cheats().isImmune());
         }
     };
 
-    public static void setImmunity(GameUI ui, boolean on) {
+    public static void setPacImmune(GameUI ui, boolean immune) {
         final Game game = ui.gameContext().game();
-        game.cheats().immuneProperty().set(on);
-        ui.soundManager().playVoice(on ? GameUIConstants.VOICE_IMMUNITY_ON : GameUIConstants.VOICE_IMMUNITY_OFF);
-        ui.showFlashMessage(ui.translationManager().translate(on ? "player_immunity_on" : "player_immunity_off"));
+        game.cheats().immuneProperty().set(immune);
+        ui.soundManager().playVoice(immune ? GameUIConstants.VOICE_IMMUNITY_ON : GameUIConstants.VOICE_IMMUNITY_OFF);
+        ui.showFlashMessage(ui.translationManager().translate(immune ? "player_immunity_on" : "player_immunity_off"));
     }
 
     private static Optional<GameLevel> realLevel(Game game) {

@@ -226,7 +226,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
                     game.flow().enterState(SHOWING_HALL_OF_FAME);
                 } else {
                     level.clearMessage();
-                    game.cheats().clearCheatUsedFlag();
+                    game.cheats().clear();
                     game.flow().enterState(game.canContinueOnGameOver() ? PREPARING_GAME_START : INTRO);
                 }
             }

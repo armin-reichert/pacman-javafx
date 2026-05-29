@@ -259,11 +259,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void init() {
         mapSelector.loadMapPrototypes();
         setInitialLifeCount(3);
-
-        clearCheatUsedFlag();
-        immuneProperty().set(false);
-        usingAutopilotProperty().set(false);
-
         hud.all(false);
 
         setPacBoosterMode(DEFAULT_PAC_BOOSTER);
@@ -280,7 +275,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         lifeCountProperty().set(initialLifeCount());
         levelProperty().set(null);
         levelCounter.clear();
-        cheats().clear();
         setPlayingLevel(false);
         boosterActive = false;
         gateKeeper.reset();
@@ -380,7 +374,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             showMessage(level, GameLevelMessageType.READY);
             levelCounter.update(level.number(), level.bonusSymbol(0));
             score().setEnabled(true);
-            updateCheatingProperties(level);
+            cheats().update(level);
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
@@ -516,7 +510,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         level.ghosts().forEach(Ghost::show);
         doHuntingStep(level);
         gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
-        detectCheats();
+        cheats().update(level);
     }
 
     @Override
