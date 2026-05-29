@@ -11,8 +11,6 @@ import de.amr.pacmanfx.GameClock;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.model.CanonicalGameState;
-import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.input.Input;
@@ -172,7 +170,7 @@ public final class GameUI_Implementation implements GameUI {
 
         viewManager.playView().dashboard().init(this);
         initMainScene();
-        initPropertyBindings(gameContext().game());
+        initPropertyBindings();
         initGameClock(gameContext().clock());
 
         final GameVariantChangeHandler gameVariantChangeHandler = new GameVariantChangeHandler(this);
@@ -219,6 +217,11 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public Stage stage() {
         return stage;
+    }
+
+    @Override
+    public StatusIconBox statusIconBox() {
+        return statusIconBox;
     }
 
     @Override
@@ -321,6 +324,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private void initMainScene() {
         final KeyboardInfo keyboardInfo = new KeyboardInfo(Input.instance().keyboard);
+
         scene.rootPane().getChildren().addAll(
             new Region(), // placeholder, will be replaced by current view (start, play, edit)
             statusIconBox.rootPane(),
@@ -331,16 +335,16 @@ public final class GameUI_Implementation implements GameUI {
         keyboardInfo.rootPane().setAlignment(Pos.TOP_CENTER);
 
         scene.init(this);
+
+        statusIconBox.bind(gameContext().game());
     }
 
-    private void initPropertyBindings(Game game) {
+    private void initPropertyBindings() {
         soundManager.muteProperty().bind(GameUIConstants.PROPERTY_MUTED);
 
         statusIconBox.rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
             () -> viewManager.isPlayViewSelected() || viewManager.isStartViewSelected(),
             viewManager.currentViewProperty()));
-
-        bindStatusBoxIcons(game);
 
         stageTitleBinding = createStringBinding(
             this::computeStageTitle,
@@ -358,24 +362,6 @@ public final class GameUI_Implementation implements GameUI {
                 : GameUIConstants.BACKGROUND_PAC_MAN_WALLPAPER
             , viewManager.currentViewProperty(), gameSceneManager().gameSceneProperty()
         ));
-
-        gameContext().gameVariantNameProperty().addListener((_, _, gameVariantName)
-            -> bindStatusBoxIcons(gameBox.gameByVariantName(gameVariantName)));
-    }
-
-    private void bindStatusBoxIcons(Game game) {
-        final GameCheats cheats = gameContext().game().cheats();
-
-        statusIconBox.iconAutopilot().visibleProperty().unbind();
-        statusIconBox.iconAutopilot().visibleProperty().bind(cheats.usingAutopilotProperty());
-
-        statusIconBox.iconCheated()  .visibleProperty().unbind();
-        statusIconBox.iconCheated()  .visibleProperty().bind(cheats.cheatUsedProperty());
-
-        statusIconBox.iconImmune()   .visibleProperty().unbind();
-        statusIconBox.iconImmune()   .visibleProperty().bind(cheats.immuneProperty());
-
-        Logger.info("Icons autopilot, cheated and immune visibility bound to game model {}", game);
     }
 
     /**

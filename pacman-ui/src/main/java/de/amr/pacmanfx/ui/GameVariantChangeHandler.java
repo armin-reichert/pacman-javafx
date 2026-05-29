@@ -31,6 +31,7 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
         if (newGameVariantName != null) {
             enterGameVariant(newGameVariantName);
         }
+        ui.statusIconBox().bind(ui.gameContext().gameByVariantName(newGameVariantName));
     }
 
     private void exitGameVariant(String variantName) {
