@@ -55,7 +55,6 @@ public class FlashMessageView {
 
     private final VBox rootPane = new VBox();
 
-    private final DoubleProperty alpha = new SimpleDoubleProperty(1);
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>();
     private final ObjectProperty<Color> textFill = new SimpleObjectProperty<>();
     private final ObjectProperty<TemporaryMessage> message = new SimpleObjectProperty<>();
@@ -65,7 +64,7 @@ public class FlashMessageView {
     public FlashMessageView() {
         rootPane.setAlignment(Pos.CENTER);
         rootPane.setMouseTransparent(true);
-        rootPane.visibleProperty().bind(message.map(Objects::nonNull));
+        rootPane.visibleProperty().bind(message.isNotNull());
 
         final Text messageView = new Text();
         messageView.setFont(MESSAGE_FONT);
@@ -86,12 +85,9 @@ public class FlashMessageView {
                     }
                     else {
                         final double t = (double) msg.passed() / msg.duration();
-                        final double newAlpha = Math.cos(HALF_PI * t);
-                        final Color newColor = Color.rgb(0, 0, 0, 0.2 + 0.5 * newAlpha);
-                        final Color newFill = TEXT_COLOR_PLAIN.deriveColor(0, 1, 1, newAlpha);
-                        alpha.set(newAlpha);
-                        backgroundColor.set(newColor);
-                        textFill.set(newFill);
+                        final double a = Math.cos(HALF_PI * t);
+                        backgroundColor.set(Color.rgb(0, 0, 0, 0.2 + 0.5 * a));
+                        textFill.set(TEXT_COLOR_PLAIN.deriveColor(0, 1, 1, a));
                     }
                 }
             }
