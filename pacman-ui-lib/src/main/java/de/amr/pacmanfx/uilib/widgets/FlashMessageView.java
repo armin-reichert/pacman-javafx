@@ -20,9 +20,12 @@ import javafx.scene.text.TextAlignment;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Objects;
+
+import static java.util.Objects.requireNonNull;
 
 /**
- * Relict from Swing UI implementation, but works fine.
+ * Shows flash messages with varying duration. Message fades out and gets removed after this time.
  */
 public class FlashMessageView {
 
@@ -51,7 +54,6 @@ public class FlashMessageView {
         }
     }
 
-    private final AnimationTimer drawTimer;
 
     private static final Font MESSAGE_FONT = Font.font("Sans", FontWeight.BOLD, 30);
     private static final Color TEXT_COLOR_PLAIN = Color.WHEAT;
@@ -63,23 +65,26 @@ public class FlashMessageView {
     private final ObjectProperty<Color> textFill = new SimpleObjectProperty<>();
     private final ObjectProperty<TemporaryMessage> message = new SimpleObjectProperty<>();
 
+    private final AnimationTimer fadeTimer;
+
     public FlashMessageView() {
         rootPane.setAlignment(Pos.CENTER);
         rootPane.setMouseTransparent(true);
+        rootPane.visibleProperty().bind(message.map(Objects::nonNull));
 
-        final Text textView = new Text();
-        textView.setFont(MESSAGE_FONT);
-        textView.setTextAlignment(TextAlignment.CENTER);
-        textView.fillProperty().bind(textFill);
-        textView.textProperty().bind(message.map(msg -> msg != null ? msg.text : ""));
+        final Text messageView = new Text();
+        messageView.setFont(MESSAGE_FONT);
+        messageView.setTextAlignment(TextAlignment.CENTER);
+        messageView.fillProperty().bind(textFill);
+        messageView.textProperty().bind(message.map(msg -> msg != null ? msg.text : ""));
 
-        rootPane.getChildren().add(textView);
+        rootPane.getChildren().add(messageView);
         rootPane.backgroundProperty().bind(backgroundColor.map(Background::fill));
 
-        drawTimer = new AnimationTimer() {
+        fadeTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                update();
+                fade();
             }
         };
     }
@@ -89,11 +94,11 @@ public class FlashMessageView {
     }
 
     public void start() {
-        drawTimer.start();
+        fadeTimer.start();
     }
 
     public void stop() {
-        drawTimer.stop();
+        fadeTimer.stop();
     }
 
     public void clear() {
@@ -102,28 +107,31 @@ public class FlashMessageView {
     }
 
     public void showMessage(String messageText, double seconds) {
-        if (message.get() != null && message.get().text.equals(messageText)) {
-            return;
-        }
-        message.set(new TemporaryMessage(messageText, seconds));
-        message.get().activate();
+        requireNonNull(messageText);
 
-        rootPane.setVisible(true);
+        TemporaryMessage tmpMessage = message.get();
+        if (tmpMessage!= null && tmpMessage.text.equals(messageText)) {
+            return; // already showing
+        }
+
+        tmpMessage = new TemporaryMessage(messageText, seconds);
+        tmpMessage.activate();
+
+        message.set(tmpMessage);
     }
 
-    private void update() {
-        if (message.get() == null) {
-            rootPane.setVisible(false);
-            return;
-        }
-        if (message.get().hasExpired()) {
-            clear();
-        } else {
-            double activeMillis = Duration.between(message.get().activationBegin, Instant.now()).toMillis();
-            alpha.set(Math.cos(0.5 * Math.PI * activeMillis / message.get().activationTimeMillis()));
-            Color bgColor = Color.rgb(0, 0, 0, 0.2 + 0.5 * alpha.get());
-            backgroundColor.set(bgColor);
-            textFill.set(TEXT_COLOR_PLAIN.deriveColor(0, 1, 1, alpha.get()));
+    private void fade() {
+        final TemporaryMessage tmpMessage = message.get();
+        if (tmpMessage != null) {
+            if (tmpMessage.hasExpired()) {
+                clear();
+            } else {
+                double activeMillis = Duration.between(message.get().activationBegin, Instant.now()).toMillis();
+                alpha.set(Math.cos(0.5 * Math.PI * activeMillis / message.get().activationTimeMillis()));
+                Color bgColor = Color.rgb(0, 0, 0, 0.2 + 0.5 * alpha.get());
+                backgroundColor.set(bgColor);
+                textFill.set(TEXT_COLOR_PLAIN.deriveColor(0, 1, 1, alpha.get()));
+            }
         }
     }
 }
