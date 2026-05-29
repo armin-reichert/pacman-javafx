@@ -7,9 +7,10 @@ import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.ElroyState;
-import de.amr.pacmanfx.model.actors.RedGhostShadow;
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.ui.GameBox;
+import de.amr.pacmanfx.uilib.GameClockFX;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,8 +30,8 @@ public class TestEatingFood {
     static void setup() {
         final String variantName = GameVariant.ARCADE_PACMAN.name();
         final File highScoreFile = new File("");
-        gameBox = new GameBox();
-        gameBox.registerGame(variantName, new ArcadePacMan_GameModel(gameBox, highScoreFile));
+        gameBox = new GameBox(new GameClockFX());
+        gameBox.registerGame(variantName, new ArcadePacMan_GameModel(gameBox.coinMechanism(), highScoreFile));
         gameBox.gameVariantNameProperty().set(variantName);
     }
 
@@ -99,9 +100,9 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Cruise Elroy Mode")
     public void testCruiseElroyMode() {
-        final RedGhostShadow blinky = (RedGhostShadow) theGameLevel().ghost(RED_GHOST_SHADOW);
+        final Ghost blinky = theGameLevel().ghost(RED_GHOST_SHADOW);
         final FoodLayer foodLayer = theGameLevel().worldMap().foodLayer();
-        final LevelData data = theGame().levelData(theGameLevel().number());
+        final LevelData data = ArcadePacMan_GameModel.levelData(theGameLevel().number());
         while (foodLayer.remainingFoodCount() > data.numDotsLeftElroy1()) {
             assertEquals(ElroyState.Mode.ZERO, blinky.elroyState().mode());
             eatNextPellet();
@@ -128,8 +129,8 @@ public class TestEatingFood {
     @DisplayName("Test Resting")
     public void testResting() {
         eatNextPellet();
-        assertEquals(1, theGameLevel().pac().restingTicks());
+        assertEquals(1, theGameLevel().entities().pac().restingTicks());
         eatNextEnergizer(theGameLevel());
-        assertEquals(3, theGameLevel().pac().restingTicks());
+        assertEquals(3, theGameLevel().entities().pac().restingTicks());
     }
 }

@@ -16,6 +16,7 @@ import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
+import de.amr.pacmanfx.uilib.GameClockFX;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -46,7 +47,7 @@ public class ArcadePacMan_App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final var gameBox = new GameBox();
+        final var gameBox = new GameBox(new GameClockFX());
         final File highScoreFile = gameBox.highScoreFile(GameVariant.ARCADE_PACMAN);
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         try {

@@ -48,14 +48,15 @@ public class GameBox implements GameContext {
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
-    private final GameClock clock = new GameClockFX();
+    private final GameClock clock;
 
     private final File homeDir = DEFAULT_HOME_DIR;
     private final File customMapDir = DEFAULT_CUSTOM_MAP_DIR;
 
     private final CoinMechanism coinMechanism = new SimpleCoinMechanism();
 
-    public GameBox() {
+    public GameBox(GameClock clock) {
+        this.clock = requireNonNull(clock);
         final boolean ok = validateUserDirs();
         if (!ok) {
             throw new IllegalStateException("GameBox: User directory validation failed");

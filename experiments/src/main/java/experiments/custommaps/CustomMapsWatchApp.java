@@ -6,6 +6,7 @@ package experiments.custommaps;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.ui.GameBox;
+import de.amr.pacmanfx.uilib.GameClockFX;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -36,7 +37,7 @@ public class CustomMapsWatchApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        final GameBox gameBox = new GameBox();
+        final GameBox gameBox = new GameBox(new GameClockFX());
         watchedDirectory = gameBox.customMapDir();
 
         final var root = new BorderPane();
