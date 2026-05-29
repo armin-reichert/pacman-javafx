@@ -4,6 +4,10 @@
 package de.amr.pacmanfx.uilib.widgets;
 
 import javafx.animation.AnimationTimer;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
@@ -49,20 +53,26 @@ public class FlashMessageView {
 
     private final AnimationTimer drawTimer;
 
-    private  static final Font MESSAGE_FONT = Font.font("Sans", FontWeight.BOLD, 30);
+    private static final Font MESSAGE_FONT = Font.font("Sans", FontWeight.BOLD, 30);
+    private static final Color TEXT_COLOR_PLAIN = Color.WHEAT;
 
     private final VBox rootPane = new VBox();
     private final Text textView = new Text();
-    private final Color textColor = Color.WHEAT;
     private Message message;
+
+    private final DoubleProperty alpha = new SimpleDoubleProperty(1);
+    private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>();
+    private final ObjectProperty<Color> textFill = new SimpleObjectProperty<>();
 
     public FlashMessageView() {
         rootPane.setAlignment(Pos.CENTER);
         rootPane.setMouseTransparent(true);
         rootPane.getChildren().add(textView);
+        rootPane.backgroundProperty().bind(backgroundColor.map(Background::fill));
 
         textView.setFont(MESSAGE_FONT);
         textView.setTextAlignment(TextAlignment.CENTER);
+        textView.fillProperty().bind(textFill);
 
         drawTimer = new AnimationTimer() {
             @Override
@@ -87,7 +97,7 @@ public class FlashMessageView {
     public void clear() {
         textView.setText(null);
         message = null;
-        rootPane.setBackground(Background.fill(Color.TRANSPARENT));
+        backgroundColor.set(Color.TRANSPARENT);
     }
 
     public void showMessage(String messageText, double seconds) {
@@ -108,10 +118,10 @@ public class FlashMessageView {
             clear();
         } else {
             double activeMillis = Duration.between(message.activationBegin, Instant.now()).toMillis();
-            double alpha = Math.cos(0.5 * Math.PI * activeMillis / message.activationTimeMillis());
-            Color backgroundColor = Color.rgb(0, 0, 0, 0.2 + 0.5 * alpha);
-            rootPane.setBackground(Background.fill(backgroundColor));
-            textView.setFill(textColor.deriveColor(0, 1, 1, alpha));
+            alpha.set(Math.cos(0.5 * Math.PI * activeMillis / message.activationTimeMillis()));
+            Color color = Color.rgb(0, 0, 0, 0.2 + 0.5 * alpha.get());
+            backgroundColor.set(color);
+            textFill.set(TEXT_COLOR_PLAIN.deriveColor(0, 1, 1, alpha.get()));
             textView.setText(message.text);
         }
     }
