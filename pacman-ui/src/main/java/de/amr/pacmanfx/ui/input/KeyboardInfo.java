@@ -3,6 +3,7 @@ package de.amr.pacmanfx.ui.input;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -12,7 +13,13 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class KeyboardInfo {
+
+    private static final Font LABEL_FONT = Font.font("Monospace", FontWeight.NORMAL, 16);
+
     private final VBox rootPane = new VBox();
 
     public KeyboardInfo() {
@@ -30,39 +37,46 @@ public class KeyboardInfo {
         StackPane.setAlignment(rootPane, Pos.TOP_RIGHT);
         rootPane.visibleProperty().bind(GameUIConstants.PROPERTY_KEYBOARD_MONITOR_VISIBLE);
 
-        Input.instance().keyboard.addListener(keyboard -> {
-            rootPane.getChildren().clear();
+        final Text title = new Text("Keyboard State");
+        title.setFill(Color.WHITE);
+        title.setFont(Font.font("Sans", FontWeight.BOLD, 16));
+        rootPane.getChildren().add(title);
 
-            final Text title = new Text("Keyboard State");
-            title.setFill(Color.WHITE);
-            title.setFont(Font.font("Sans", FontWeight.BOLD, 16));
-            rootPane.getChildren().add(title);
+        final Text closeHint = new Text("(Alt+K to close)");
+        closeHint.setFill(Color.WHITE);
+        closeHint.setFont(Font.font("Sans", FontWeight.NORMAL, 16));
+        rootPane.getChildren().add(closeHint);
 
-            final Text closeHint = new Text("(Alt+K to close)");
-            closeHint.setFill(Color.WHITE);
-            closeHint.setFont(Font.font("Sans", FontWeight.NORMAL, 16));
-            rootPane.getChildren().add(closeHint);
+        final VBox vBox = new VBox();
+        vBox.setAlignment(Pos.CENTER);
+        vBox.setPadding(new Insets(10));
+        rootPane.getChildren().add(vBox);
 
-            final VBox vBox = new VBox();
-            vBox.setAlignment(Pos.CENTER);
-            vBox.setPadding(new Insets(10));
-            rootPane.getChildren().add(vBox);
-
-            final Font labelFont = Font.font("Monospace", FontWeight.NORMAL, 16);
-            keyboard.pressedKeys().stream().sorted().forEach(keyCode -> {
-                final Text stateLabel = new Text();
-                stateLabel.setTextAlignment(TextAlignment.CENTER);
-                stateLabel.setFill(Color.LIGHTGRAY);
-                stateLabel.setFont(labelFont);
-                String modText = "";
-                if (keyboard.altDown()) modText += "Alt ";
-                if (keyboard.shiftDown()) modText += "Shift ";
-                if (keyboard.controlDown()) modText += "Control ";
-                if (keyboard.metaDown()) modText += "Meta ";
-                stateLabel.setText(modText + keyCode.getName());
-                vBox.getChildren().add(stateLabel);
-            });
+        Input.instance().keyboard.addStateListener(keyboardState -> {
+            vBox.getChildren().clear();
+            String modifiers = createModifierString(keyboardState);
+            vBox.getChildren().add(createInfoText("[" + modifiers + "]"));
+            for (KeyCode key : keyboardState.pressedKeys()) {
+                vBox.getChildren().add(createInfoText(modifiers + " " + key));
+            }
         });
+    }
+
+    private static String createModifierString(Keyboard keyboard) {
+        final List<String> modifiers = new ArrayList<>();
+        if (keyboard.altDown()) modifiers.add("Alt");
+        if (keyboard.shiftDown()) modifiers.add("Shift");
+        if (keyboard.controlDown()) modifiers.add("Control");
+        if (keyboard.metaDown()) modifiers.add("Meta");
+        return String.join("+", modifiers);
+    }
+
+    private static Text createInfoText(String text) {
+        final Text infoText = new Text(text);
+        infoText.setTextAlignment(TextAlignment.CENTER);
+        infoText.setFill(Color.LIGHTGRAY);
+        infoText.setFont(LABEL_FONT);
+        return infoText;
     }
 
     public VBox rootPane() {

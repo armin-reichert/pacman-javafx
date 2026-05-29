@@ -8,16 +8,14 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 import static javafx.scene.input.KeyCombination.*;
 
 public final class Keyboard {
 
-    public interface KeyboardStateListener {
+    public interface StateListener {
         void onKeyboardStateChange(Keyboard keyboard);
     }
 
@@ -39,10 +37,10 @@ public final class Keyboard {
 
     public static KeyCodeCombination alt_shift(KeyCode code) { return new KeyCodeCombination(code, SHIFT_DOWN, ALT_DOWN); }
 
-    private final Set<KeyboardStateListener> listeners = new HashSet<>();
+    private final Set<StateListener> listeners = new HashSet<>();
 
     // Current state
-    private final Set<KeyCode> pressedKeys = new HashSet<>(4);
+    private final Collection<KeyCode> pressedKeys = new LinkedHashSet<>();
     private boolean shiftDown;
     private boolean controlDown;
     private boolean altDown;
@@ -50,18 +48,18 @@ public final class Keyboard {
 
     Keyboard() {}
 
-    public void addListener(KeyboardStateListener stateListener) {
+    public void addStateListener(StateListener stateListener) {
         requireNonNull(stateListener);
         listeners.add(stateListener);
     }
 
-    public void removeListener(KeyboardStateListener stateListener) {
+    public void removeStateListener(StateListener stateListener) {
         requireNonNull(stateListener);
         listeners.remove(stateListener);
     }
 
-    public Set<KeyCode> pressedKeys() {
-        return Collections.unmodifiableSet(pressedKeys);
+    public Collection<KeyCode> pressedKeys() {
+        return Collections.unmodifiableCollection(pressedKeys);
     }
 
     public boolean shiftDown() {
@@ -81,30 +79,40 @@ public final class Keyboard {
     }
 
     public void onKeyPressed(KeyEvent event) {
-        if (Logger.isTraceEnabled()) Logger.trace("Key pressed: {}", event);
-
-        updateModifierState(event);
+        boolean changed = updateModifierState(event);
         if (!event.getCode().isModifierKey()) {
-            pressedKeys.add(event.getCode());
-            listeners.forEach(listener -> listener.onKeyboardStateChange(this));
+            changed = pressedKeys.add(event.getCode());
         }
+        if (changed) listeners.forEach(listener -> listener.onKeyboardStateChange(this));
     }
 
     public void onKeyReleased(KeyEvent event) {
-        if (Logger.isTraceEnabled()) Logger.trace("Key released: {}", event);
-
-        updateModifierState(event);
+        boolean changed = updateModifierState(event);
         if (!event.getCode().isModifierKey()) {
-            pressedKeys.remove(event.getCode());
-            listeners.forEach(listener -> listener.onKeyboardStateChange(this));
+            changed = pressedKeys.remove(event.getCode());
         }
+        if (changed) listeners.forEach(listener -> listener.onKeyboardStateChange(this));
     }
 
-    private void updateModifierState(KeyEvent event) {
-        shiftDown = event.isShiftDown();
-        controlDown = event.isControlDown();
-        altDown = event.isAltDown();
-        metaDown = event.isMetaDown();
+    private boolean updateModifierState(KeyEvent event) {
+        boolean changed = false;
+        if (shiftDown != event.isShiftDown()) {
+            shiftDown = event.isShiftDown();
+            changed = true;
+        }
+        if (controlDown != event.isControlDown()) {
+            controlDown = event.isControlDown();
+            changed = true;
+        }
+        if (altDown != event.isAltDown()) {
+            altDown = event.isAltDown();
+            changed = true;
+        }
+        if (metaDown != event.isMetaDown()) {
+            metaDown = event.isMetaDown();
+            changed = true;
+        }
+        return changed;
     }
 
     public boolean isKeyPressed(KeyCode keyCode) {
