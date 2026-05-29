@@ -43,7 +43,7 @@ public class GameBox implements GameContext {
     private final File homeDir = DEFAULT_HOME_DIR;
     private final File customMapDir = DEFAULT_CUSTOM_MAP_DIR;
     private final CoinMechanism coinMechanism;
-    private final Map<String, Game> gameByVariantName = new HashMap<>();
+    private final Map<String, Game> gamesByVariantName = new HashMap<>();
 
     public GameBox(GameClock clock, CoinMechanism coinMechanism) {
         this.clock = requireNonNull(clock);
@@ -80,7 +80,7 @@ public class GameBox implements GameContext {
             throw new IllegalArgumentException("Game variant name '%s' does not match required syntax '%s'"
                 .formatted(variantName, GAME_VARIANT_NAME_PATTERN));
         }
-        final Game previousGame = gameByVariantName.putIfAbsent(variantName, game);
+        final Game previousGame = gamesByVariantName.putIfAbsent(variantName, game);
         if (previousGame != null) {
             Logger.warn("Game ({}) is already registered for variant {}", previousGame.getClass().getName(), variantName);
         }
@@ -94,9 +94,8 @@ public class GameBox implements GameContext {
     }
 
     @Override
-    public boolean hasGameForVariantName(String name) {
-        requireNonNull(name);
-        return gameByVariantName.containsKey(name);
+    public CoinMechanism coinMechanism() {
+        return coinMechanism;
     }
 
     @Override
@@ -106,10 +105,10 @@ public class GameBox implements GameContext {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Game> T gameByVariantName(String variantName) {
+    public <T extends Game> T gameForVariant(String variantName) {
         requireNonNull(variantName);
-        if (gameByVariantName.containsKey(variantName)) {
-            return (T) gameByVariantName.get(variantName);
+        if (gamesByVariantName.containsKey(variantName)) {
+            return (T) gamesByVariantName.get(variantName);
         }
         final String errorMessage = "Game variant named '%s' has not been registered!".formatted(variantName);
         Logger.error(errorMessage);
@@ -119,25 +118,23 @@ public class GameBox implements GameContext {
     @Override
     public <G extends Game> G game() {
         final String variantName = gameVariantName();
-        return variantName == null ? null : gameByVariantName(variantName);
+        return variantName == null ? null : gameForVariant(variantName);
     }
 
     @Override
-    public CoinMechanism coinMechanism() {
-        return coinMechanism;
+    public boolean hasGameForVariantName(String variantName) {
+        requireNonNull(variantName);
+        return gamesByVariantName.containsKey(variantName);
     }
 
     // other stuff
 
     private boolean validateUserDirs() {
-        final boolean ok = ensureExistsAndWritable(DEFAULT_HOME_DIR, "Home directory");
-        if (ok) {
-            return ensureExistsAndWritable(DEFAULT_CUSTOM_MAP_DIR, "Custom map directory");
-        }
-        return false;
+        return dirExistsAndIsWritable(DEFAULT_HOME_DIR, "Home directory")
+            && dirExistsAndIsWritable(DEFAULT_CUSTOM_MAP_DIR, "Custom map directory");
     }
 
-    private static boolean ensureExistsAndWritable(File dir, String description) {
+    private static boolean dirExistsAndIsWritable(File dir, String description) {
         if (!dir.exists() && !dir.mkdirs()) {
             Logger.error("{} could not be created", description);
             return false;

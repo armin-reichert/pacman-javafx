@@ -68,7 +68,7 @@ public interface GameContext {
      * @return the game model for the given variant name
      * @throws ClassCastException if the registered game model cannot be cast to the expected type
      */
-    <T extends Game> T gameByVariantName(String variantName);
+    <T extends Game> T gameForVariant(String variantName);
 
     /**
      * Returns the game model of the currently selected game variant.
