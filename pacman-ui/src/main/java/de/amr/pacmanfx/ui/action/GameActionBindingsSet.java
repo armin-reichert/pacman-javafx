@@ -30,14 +30,14 @@ public class GameActionBindingsSet implements ActionBindingsSet {
     }
 
     @Override
-    public void setKeyCombinationFor(GameAction action, KeyCodeCombination combination) {
+    public void setKeyCombination(GameAction action, KeyCodeCombination combination) {
         requireNonNull(action);
         requireNonNull(combination);
         bindingMap.put(combination, action);
     }
 
     @Override
-    public void registerBindingFromSet(GameAction gameAction, Set<ActionBinding> bindings) {
+    public void registerFirstBinding(GameAction gameAction, Set<ActionBinding> bindings) {
         requireNonNull(gameAction);
         requireNonNull(bindings);
 
@@ -56,7 +56,7 @@ public class GameActionBindingsSet implements ActionBindingsSet {
     }
 
     @Override
-    public void registerAllBindingsFromSet(Set<ActionBinding> bindings) {
+    public void registerAllBindings(Set<ActionBinding> bindings) {
         requireNonNull(bindings);
         for (ActionBinding binding : bindings) {
             registerBinding(binding);
@@ -64,7 +64,7 @@ public class GameActionBindingsSet implements ActionBindingsSet {
     }
 
     @Override
-    public Optional<GameAction> matchingAction(Keyboard keyboard) {
+    public Optional<GameAction> actionMatchingKeyboardState(Keyboard keyboard) {
         return bindingMap.keySet().stream()
             .filter(keyboard::stateMatches)
             .map(bindingMap::get)

@@ -33,7 +33,7 @@ public class GameUI_MainScene extends Scene {
 
         // If a global action can be executed, do it; otherwise let the current view handle it.
         userInput.keyboard.addStateListener(_ -> {
-            actionBindings.matchingAction(userInput.keyboard).ifPresentOrElse(
+            actionBindings.actionMatchingKeyboardState(userInput.keyboard).ifPresentOrElse(
                 action -> action.executeIfEnabled(ui),
                 () -> ui.viewManager().currentView().onInput(ui, userInput));
         });
@@ -42,10 +42,10 @@ public class GameUI_MainScene extends Scene {
         setOnScroll(e -> ui.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         // Global action bindings
-        actionBindings.registerBindingFromSet(CommonActions.ACTION_ENTER_FULLSCREEN,        GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerBindingFromSet(CommonActions.ACTION_OPEN_EDITOR,             GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerBindingFromSet(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerBindingFromSet(CommonActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerFirstBinding(CommonActions.ACTION_ENTER_FULLSCREEN,        GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerFirstBinding(CommonActions.ACTION_OPEN_EDITOR,             GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
         actionBindings.logBindings();
     }
 

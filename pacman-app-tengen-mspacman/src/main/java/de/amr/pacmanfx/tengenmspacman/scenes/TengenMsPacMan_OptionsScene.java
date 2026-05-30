@@ -79,10 +79,10 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         final TengenMsPacMan_GameModel game = gameContext().game();
         game.hud().hide();
 
-        actionBindings.registerBindingFromSet(ACTION_START_PLAYING, TENGEN_SPECIFIC_BINDINGS);
-        actionBindings.registerBindingFromSet(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TENGEN_SPECIFIC_BINDINGS);
-        actionBindings.setKeyCombinationFor(actionSelectNextJoypadBinding, alt(KeyCode.J));
-        actionBindings.registerAllBindingsFromSet(GameUIConstants.SCENE_TESTS_BINDINGS);
+        actionBindings.registerFirstBinding(ACTION_START_PLAYING, TENGEN_SPECIFIC_BINDINGS);
+        actionBindings.registerFirstBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TENGEN_SPECIFIC_BINDINGS);
+        actionBindings.setKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J));
+        actionBindings.registerAllBindings(GameUIConstants.SCENE_TESTS_BINDINGS);
 
         selectedOption.set(OPTION_PAC_BOOSTER);
         game.setCanStartNewGame(true);
@@ -144,7 +144,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
                 case OPTION_STARTING_LEVEL -> setPrevStartLevelValue();
             }
         }
-        else actionBindings().matchingAction(Input.instance().keyboard).ifPresent(action -> action.executeIfEnabled(ui()));
+        else actionBindings().actionMatchingKeyboardState(Input.instance().keyboard).ifPresent(action -> action.executeIfEnabled(ui()));
     }
 
     private void setPrevStartLevelValue() {

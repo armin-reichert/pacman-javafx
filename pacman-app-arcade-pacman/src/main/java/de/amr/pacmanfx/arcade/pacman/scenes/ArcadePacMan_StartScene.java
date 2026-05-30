@@ -29,7 +29,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void onActivate() {
-        actionBindings.registerAllBindingsFromSet(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
+        actionBindings.registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
     }
 
     @Override

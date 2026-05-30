@@ -32,7 +32,7 @@ public interface View {
      * @param input the user input
      */
     default void onInput(GameUI ui, Input input) {
-        actionBindings().matchingAction(input.keyboard).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
+        actionBindings().actionMatchingKeyboardState(input.keyboard).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
     }
 
     /**

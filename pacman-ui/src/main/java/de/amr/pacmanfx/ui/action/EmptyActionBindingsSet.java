@@ -28,16 +28,16 @@ public class EmptyActionBindingsSet implements ActionBindingsSet {
     }
 
     @Override
-    public void registerBindingFromSet(GameAction action, Set<ActionBinding> bindings) {}
+    public void registerFirstBinding(GameAction action, Set<ActionBinding> bindings) {}
 
     @Override
-    public void setKeyCombinationFor(GameAction action, KeyCodeCombination combination) {}
+    public void setKeyCombination(GameAction action, KeyCodeCombination combination) {}
 
     @Override
-    public void registerAllBindingsFromSet(Set<ActionBinding> bindings) {}
+    public void registerAllBindings(Set<ActionBinding> bindings) {}
 
     @Override
-    public Optional<GameAction> matchingAction(Keyboard keyboard) {
+    public Optional<GameAction> actionMatchingKeyboardState(Keyboard keyboard) {
         return Optional.empty();
     }
 

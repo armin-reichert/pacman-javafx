@@ -165,7 +165,7 @@ public abstract class GameScene implements Disposable {
      * Executes the first matching action.
      */
     public void onInput() {
-        actionBindings().matchingAction(Input.instance().keyboard).ifPresent(action -> action.executeIfEnabled(ui()));
+        actionBindings().actionMatchingKeyboardState(Input.instance().keyboard).ifPresent(action -> action.executeIfEnabled(ui()));
     }
 
     /**

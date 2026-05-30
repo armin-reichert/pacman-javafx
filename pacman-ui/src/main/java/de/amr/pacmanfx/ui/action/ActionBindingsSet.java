@@ -17,13 +17,13 @@ public interface ActionBindingsSet extends Disposable {
 
     Map<KeyCodeCombination, GameAction> bindingMap();
 
-    Optional<GameAction> matchingAction(Keyboard keyboard);
-
-    void setKeyCombinationFor(GameAction action, KeyCodeCombination combination);
-
-    void registerBindingFromSet(GameAction action, Set<ActionBinding> bindings);
-
-    void registerAllBindingsFromSet(Set<ActionBinding> bindings);
-
     void logBindings();
+
+    Optional<GameAction> actionMatchingKeyboardState(Keyboard keyboard);
+
+    void setKeyCombination(GameAction action, KeyCodeCombination combination);
+
+    void registerFirstBinding(GameAction action, Set<ActionBinding> bindings);
+
+    void registerAllBindings(Set<ActionBinding> bindings);
 }

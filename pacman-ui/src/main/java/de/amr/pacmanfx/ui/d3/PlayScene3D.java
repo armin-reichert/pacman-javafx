@@ -270,7 +270,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     protected void decorate(GameLevel3D level3D) {}
 
     protected void bindActions() {
-        actionBindings.registerAllBindingsFromSet(bindings);
+        actionBindings.registerAllBindings(bindings);
     }
 
     private void replaceScores3D() {
