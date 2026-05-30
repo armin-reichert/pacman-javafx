@@ -24,7 +24,7 @@ public class SteeringAction extends GameAction {
     }
 
     @Override
-    public void execute(GameUI ui) {
+    public void doAction(GameUI ui) {
         ui.gameContext().game().optGameLevel().ifPresent(level -> level.entities().pac().setWishDir(dir));
     }
 

@@ -18,24 +18,30 @@ public abstract class GameAction {
         this.id = Validations.requireValidIdentifier(id);
     }
 
-    public abstract void execute(GameUI ui);
+    protected abstract void doAction(GameUI ui);
+
+    public boolean isEnabled(GameUI ui) { return true; }
 
     public final boolean executeIfEnabled(GameUI ui) {
         if (isEnabled(ui)) {
-            execute(ui);
-            Logger.trace("Action '{}' executed", id);
-            return true;
+            try {
+                doAction(ui);
+                Logger.trace("Action '{}' executed", id);
+                return true;
+            }
+            catch (Exception x) {
+                Logger.error(x, "An error occurred executing action '{}'", id);
+                return false;
+            }
         } else {
             Logger.warn("Action '{}' not executed (disabled)", id);
             return false;
         }
     }
 
-    public String id() {
+    public final String id() {
         return id;
     }
 
-    public boolean isEnabled(GameUI ui) { return true; }
-
-    public String resourceBundleKey() { return "action." + id; }
+    public final String resourceBundleKey() { return "action." + id; }
 }

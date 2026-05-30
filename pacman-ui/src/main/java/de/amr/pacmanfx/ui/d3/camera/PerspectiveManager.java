@@ -156,7 +156,7 @@ public class PerspectiveManager implements Disposable {
     private GameAction createDroneAction(String id, Consumer<DronePerspective> perspectiveAction) {
         return new GameAction(id) {
             @Override
-            public void execute(GameUI ui) {
+            public void doAction(GameUI ui) {
                 currentPerspective()
                     .filter(DronePerspective.class::isInstance)
                     .map(DronePerspective.class::cast)

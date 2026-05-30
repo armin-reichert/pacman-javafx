@@ -47,14 +47,14 @@ public class StartPagesCarousel extends Carousel implements View {
 
     private final GameAction actionShowPrevPage = new GameAction("show_prev_page") {
         @Override
-        public void execute(GameUI ui) {
+        public void doAction(GameUI ui) {
             showPreviousItem();
         }
     };
 
     private final GameAction actionShowNextPage = new GameAction("show_next_page") {
         @Override
-        public void execute(GameUI ui) {
+        public void doAction(GameUI ui) {
             showNextItem();
         }
     };

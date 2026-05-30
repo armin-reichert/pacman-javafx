@@ -135,7 +135,7 @@ public class PlayView implements View {
     public void onInput(GameUI ui) {
         // The play view first looks for an action binding in its set and then delegates to the current game scene
         actionBindings.matchingAction(Input.instance().keyboard).ifPresentOrElse(
-            action -> action.execute(ui),
+            action -> action.executeIfEnabled(ui),
             () -> ui.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput)
         );
     }

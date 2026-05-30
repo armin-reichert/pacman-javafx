@@ -80,7 +80,7 @@ public final class Ufx {
      *
      * @param booleanProperty the property to toggle
      */
-    public static void toggleBoolean(BooleanProperty booleanProperty) {
+    public static void toggleBooleanProperty(BooleanProperty booleanProperty) {
         booleanProperty.set(!booleanProperty.get());
     }
 
