@@ -107,11 +107,6 @@ public class Dashboard {
         return config;
     }
 
-    public void init(GameUI ui) {
-        requireNonNull(ui);
-        sections().forEach(infoBox -> infoBox.init(ui));
-    }
-
     public void update(GameUI ui) {
         requireNonNull(ui);
         sections().filter(DashboardSection::isExpanded).forEach(section -> section.update(ui));

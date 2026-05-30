@@ -32,7 +32,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -157,7 +156,7 @@ public final class GameUI_Implementation implements GameUI {
         initMainScene();
         initProperties();
         initGameClock();
-        initViewManager(services.views(), scene.rootPane(), flashMessageView, gameBox);
+        initViewManager();
         displayStage();
         startServices();
     }
@@ -230,17 +229,19 @@ public final class GameUI_Implementation implements GameUI {
         viewManager.setEditorViewFactory(this::createEditorView);
     }
 
-    private void initViewManager(ViewManager viewManager, Pane rootPane, FlashMessageView flashMessageView, GameContext gameContext) {
-        viewManager.init(rootPane, flashMessageView);
+    private void initViewManager() {
+        final ViewManager views = services.views();
 
-        viewManager.playView().configurePropertyBindings(this);
-        viewManager.playView().dashboard().init(this);
+        views.init(scene.rootPane(), flashMessageView);
 
-        viewManager.setEditorCanOpen(() -> {
-            if (viewManager.isStartViewSelected()) return true;
-            if (viewManager.isEditorViewSelected()) return false;
-            if (viewManager.isPlayViewSelected()) {
-                return !gameContext.game().isPlayingLevel();
+        views.playView().configurePropertyBindings(this);
+        views.playView().dashboard().sections().forEach(section -> section.init(this));
+
+        views.setEditorCanOpen(() -> {
+            if (views.isStartViewSelected()) return true;
+            if (views.isEditorViewSelected()) return false;
+            if (views.isPlayViewSelected()) {
+                return !gameContext().game().isPlayingLevel();
             }
             return false;
         });
