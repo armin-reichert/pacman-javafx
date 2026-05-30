@@ -72,7 +72,7 @@ public abstract class GameScene implements Disposable {
         }
     }
 
-    protected final ActionBindingsSet actionBindings = new GameActionBindingsSet();
+    protected final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for " + getClass().getSimpleName());
 
     protected final GameUI ui;
 
@@ -129,7 +129,7 @@ public abstract class GameScene implements Disposable {
      */
     public final void activate() {
         onActivate();
-        actionBindings.logBindings();
+        Logger.info(actionBindings);
         Logger.trace("Game scene {} activated", getClass().getSimpleName());
     }
 

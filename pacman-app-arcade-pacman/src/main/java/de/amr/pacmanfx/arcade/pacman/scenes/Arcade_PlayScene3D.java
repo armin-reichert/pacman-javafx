@@ -8,6 +8,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
+import org.tinylog.Logger;
 
 public class Arcade_PlayScene3D extends PlayScene3D {
 
@@ -25,6 +26,6 @@ public class Arcade_PlayScene3D extends PlayScene3D {
             actionBindings.registerAllBindings(GameUIConstants.CHEAT_ACTION_BINDINGS);
         }
         bindActions();
-        actionBindings.logBindings();
+        Logger.info(actionBindings);
     }
 }

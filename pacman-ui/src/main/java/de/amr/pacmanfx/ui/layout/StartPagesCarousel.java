@@ -60,7 +60,7 @@ public class StartPagesCarousel extends Carousel implements View {
     };
 
     private final List<StartPage> pages = new ArrayList<>();
-    private final ActionBindingsSet actionBindings = new GameActionBindingsSet();
+    private final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for Start View");
 
     private final GameUI ui;
 
@@ -87,7 +87,7 @@ public class StartPagesCarousel extends Carousel implements View {
         actionBindings.setKeyCombination(actionShowPrevPage, bare(KeyCode.LEFT));
         actionBindings.setKeyCombination(actionShowNextPage, bare(KeyCode.RIGHT));
         actionBindings.setKeyCombination(CommonActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
-        actionBindings.logBindings();
+        Logger.info(actionBindings);
         restartProgressTimer();
         currentStartPage().ifPresent(page -> page.layoutRoot().requestFocus());
     }

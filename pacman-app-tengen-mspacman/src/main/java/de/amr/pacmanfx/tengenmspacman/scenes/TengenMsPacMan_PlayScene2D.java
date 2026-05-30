@@ -209,7 +209,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             actionBindings.registerFirstBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
             actionBindings.registerFirstBinding(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
         }
-        actionBindings.logBindings();
+        Logger.info(actionBindings);
 
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         unscaledWidthProperty().set(terrainSize.x());

@@ -9,14 +9,36 @@ import javafx.scene.input.KeyCodeCombination;
 import org.tinylog.Logger;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
 public class GameActionBindingsSet implements ActionBindingsSet {
 
+    private final String name;
     private final Map<KeyCodeCombination, GameAction> bindingMap = new HashMap<>();
 
-    public GameActionBindingsSet() {}
+    public GameActionBindingsSet(String name) {
+        this.name = requireNonNull(name);
+    }
+
+    @Override
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        String entries = bindingMap.entrySet().stream()
+            .sorted(Comparator.comparing(e -> e.getKey().toString()))
+            .map(this::formatEntry)
+            .collect(Collectors.joining("\n"));
+        return name + "\n" + entries;
+    }
+
+    private String formatEntry(Map.Entry<KeyCodeCombination, GameAction> e) {
+        return "%-20s: %s".formatted(e.getKey(), e.getValue().resourceBundleKey());
+    }
 
     @Override
     public void dispose() {
@@ -69,14 +91,6 @@ public class GameActionBindingsSet implements ActionBindingsSet {
             .filter(keyboard::stateMatches)
             .map(bindingMap::get)
             .findFirst();
-    }
-
-    @Override
-    public void logBindings() {
-        // Sort output by key combination display text
-        bindingMap.entrySet().stream()
-            .sorted(Comparator.comparing(e -> e.getKey().toString()))
-            .forEach(e -> Logger.info("%-20s: %s".formatted(e.getKey(), e.getValue().resourceBundleKey())));
     }
 
     private void registerBinding(ActionBinding binding) {

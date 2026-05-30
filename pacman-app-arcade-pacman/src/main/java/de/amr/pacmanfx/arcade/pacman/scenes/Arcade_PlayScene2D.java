@@ -105,7 +105,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
             actionBindings.registerAllBindings(GameUIConstants.STEERING_ACTION_BINDINGS);
             actionBindings.registerAllBindings(GameUIConstants.CHEAT_ACTION_BINDINGS);
         }
-        actionBindings.logBindings();
+        Logger.info(actionBindings);
 
         ui.soundManager().setEnabled(!level.isDemoLevel()); //TODO is this needed?
         levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameContext().game().flow().state().expire());

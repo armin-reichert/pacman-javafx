@@ -13,10 +13,11 @@ import de.amr.pacmanfx.ui.input.Input;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import org.tinylog.Logger;
 
 public class GameUI_MainScene extends Scene {
 
-    private final ActionBindingsSet actionBindings = new GameActionBindingsSet();
+    private final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for Main Scene");
 
     public GameUI_MainScene(double width, double height) {
         super(new StackPane(), width, height);
@@ -46,7 +47,7 @@ public class GameUI_MainScene extends Scene {
         actionBindings.registerFirstBinding(CommonActions.ACTION_OPEN_EDITOR,             GameUIConstants.COMMON_BINDINGS);
         actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
         actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
-        actionBindings.logBindings();
+        Logger.info(actionBindings);
     }
 
     public StackPane rootPane() {

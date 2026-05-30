@@ -19,6 +19,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_QUIT_DEMO_LEVEL;
@@ -91,7 +92,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         }
         bindActions();
 
-        actionBindings.logBindings();
+        Logger.info(actionBindings);
     }
 
     @Override

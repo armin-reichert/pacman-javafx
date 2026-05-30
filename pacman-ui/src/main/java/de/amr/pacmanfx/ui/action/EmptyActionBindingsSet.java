@@ -20,6 +20,11 @@ import java.util.Set;
 public class EmptyActionBindingsSet implements ActionBindingsSet {
 
     @Override
+    public String name() {
+        return "Empty Action Bindings Set";
+    }
+
+    @Override
     public void dispose() {}
 
     @Override
@@ -40,7 +45,4 @@ public class EmptyActionBindingsSet implements ActionBindingsSet {
     public Optional<GameAction> actionMatchingKeyboardState(Keyboard keyboard) {
         return Optional.empty();
     }
-
-    @Override
-    public void logBindings() {}
 }

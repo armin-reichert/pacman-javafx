@@ -55,7 +55,7 @@ public class PlayView implements View {
         new DecorationPane.FrameConfig(26, 10, 5, 55.0, ArcadePalette.ARCADE_WHITE)
     );
 
-    private final ActionBindingsSet actionBindings = new GameActionBindingsSet();
+    private final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for Play View");
 
     private final GameUI ui;
     private final ContextMenu contextMenu = new ContextMenu();
@@ -145,6 +145,7 @@ public class PlayView implements View {
     public void onEnter() {
         rootPane.requestFocus();
         actionBindings.registerAllBindings(GameUIConstants.COMMON_BINDINGS);
+        Logger.info(actionBindings);
         gameSceneFrame.installBindings();
     }
 

@@ -15,9 +15,9 @@ public interface ActionBindingsSet extends Disposable {
 
     ActionBindingsSet NO_BINDINGS = new EmptyActionBindingsSet();
 
-    Map<KeyCodeCombination, GameAction> bindingMap();
+    String name();
 
-    void logBindings();
+    Map<KeyCodeCombination, GameAction> bindingMap();
 
     Optional<GameAction> actionMatchingKeyboardState(Keyboard keyboard);
 
