@@ -82,6 +82,7 @@ public class PacManGames3dApp extends Application {
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         try {
+            // command-line: --use_builder=false or --use_builder=true
             final boolean useBuilder = Boolean.parseBoolean(getParameters().getNamed().getOrDefault("use_builder", "true"));
             // Shared map selector used by Pac-Man XXL and Ms. Pac-Man XXL
             final var xxlMapSelector = new PacManXXL_MapSelector(gameBox.customMapDir());
@@ -113,7 +114,6 @@ public class PacManGames3dApp extends Application {
                     .startPage(ArcadeMsPacMan_StartPage::new)
                     .startPage(TengenMsPacMan_StartPage::new)
                     .startPage(PacManXXL_StartPage::new)
-                    .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
                     .includeInteractiveTests(INTERACTIVE_TESTS_ENABLED)
                     .build();
             }
@@ -137,8 +137,6 @@ public class PacManGames3dApp extends Application {
                 startPagesCarousel.addStartPage(new PacManXXL_StartPage());
                 startPagesCarousel.startPages().forEach(startPage -> startPage.init(ui));
                 startPagesCarousel.setSelectedIndex(0);
-
-                ui.services().views().playView().dashboard().addCommonSections(ui.services().translations(), DASHBOARD_IDs);
             }
             configureDashboard();
             Logger.info("UI created {} builder", useBuilder ? "using" : "without");
@@ -177,6 +175,7 @@ public class PacManGames3dApp extends Application {
 
     private void configureDashboard() {
         final Dashboard dashboard = ui.services().views().playView().dashboard();
+        dashboard.addCommonSections(ui.services().translations(), DASHBOARD_IDs);
 
         // Add Joypad controller section
         dashboard.addSection(

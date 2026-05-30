@@ -59,10 +59,12 @@ public class ArcadePacMan_App extends Application {
                     .game(GameVariant.ARCADE_PACMAN,
                         () -> new ArcadePacMan_GameModel(gameBox.coinMechanism(), highScoreFile), ArcadePacMan_UIConfig::new)
                     .startPage(ArcadePacMan_StartPage::new)
-                    .dashboard(DASHBOARD_IDs.toArray(CommonDashboardID[]::new))
                     .build();
             }
-            else createUI(primaryStage, gameBox, highScoreFile, sceneSize);
+            else {
+                createUI(primaryStage, gameBox, highScoreFile, sceneSize);
+            }
+            ui.services().views().playView().dashboard().addCommonSections(ui.services().translations(), DASHBOARD_IDs);
             ui.show();
         }
         catch (RuntimeException x) {

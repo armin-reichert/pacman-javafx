@@ -20,6 +20,8 @@ import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 import static de.amr.pacmanfx.model.GameVariant.TENGEN_MS_PACMAN;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_ASPECT_RATIO;
 
@@ -39,18 +41,20 @@ public class TengenMsPacMan_App extends Application {
             .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
             .game(TENGEN_MS_PACMAN, () -> new TengenMsPacMan_GameModel(gameBox.highScoreFile(TENGEN_MS_PACMAN)), TengenMsPacMan_UIConfig::new)
             .startPage(TengenMsPacMan_StartPage::new)
-            .dashboard(
-                CommonDashboardID.GENERAL,
-                CommonDashboardID.GAME_CONTROL,
-                CommonDashboardID.SETTINGS_3D,
-                CommonDashboardID.GAME_INFO,
-                CommonDashboardID.ACTOR_INFO,
-                CommonDashboardID.KEYS_GLOBAL,
-                CommonDashboardID.KEYS_LOCAL,
-                CommonDashboardID.ABOUT)
             .build();
 
         final Dashboard dashboard = ui.services().views().playView().dashboard();
+        dashboard.addCommonSections(ui.services().translations(), List.of(
+            CommonDashboardID.GENERAL,
+            CommonDashboardID.GAME_CONTROL,
+            CommonDashboardID.SETTINGS_3D,
+            CommonDashboardID.GAME_INFO,
+            CommonDashboardID.ACTOR_INFO,
+            CommonDashboardID.KEYS_GLOBAL,
+            CommonDashboardID.KEYS_LOCAL,
+            CommonDashboardID.ABOUT
+        ));
+
         dashboard.addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
             new DashboardSectionJoypad(dashboard),

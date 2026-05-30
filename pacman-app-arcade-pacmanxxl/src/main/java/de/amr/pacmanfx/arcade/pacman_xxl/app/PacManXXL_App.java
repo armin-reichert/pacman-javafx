@@ -18,6 +18,8 @@ import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 public class PacManXXL_App extends Application {
 
     private static final double ASPECT_RATIO    = 1.6;
@@ -30,6 +32,7 @@ public class PacManXXL_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         final var mapSelector = new PacManXXL_MapSelector(gameBox.customMapDir());
+
         ui = GameUI_Builder
             .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
             .game(GameVariant.ARCADE_PACMAN_XXL,
@@ -38,21 +41,23 @@ public class PacManXXL_App extends Application {
             .game(GameVariant.ARCADE_MS_PACMAN_XXL,
                 () -> new PacManXXL_MsPacMan_GameModel(gameBox.coinMechanism(), mapSelector, gameBox.highScoreFile(GameVariant.ARCADE_MS_PACMAN_XXL)),
                 PacManXXL_MsPacMan_UIConfig::new)
-            .dashboard(
-                CommonDashboardID.README,
-                CommonDashboardID.GENERAL,
-                CommonDashboardID.GAME_CONTROL,
-                CommonDashboardID.SETTINGS_3D,
-                CommonDashboardID.GAME_INFO,
-                CommonDashboardID.ACTOR_INFO,
-                CommonDashboardID.CUSTOM_MAPS,
-                CommonDashboardID.KEYS_GLOBAL,
-                CommonDashboardID.KEYS_LOCAL,
-                CommonDashboardID.ABOUT)
             .startPage(PacManXXL_StartPage::new)
             .build();
 
         final Dashboard dashboard = ui.services().views().playView().dashboard();
+        dashboard.addCommonSections(ui.services().translations(), List.of(
+            CommonDashboardID.README,
+            CommonDashboardID.GENERAL,
+            CommonDashboardID.GAME_CONTROL,
+            CommonDashboardID.SETTINGS_3D,
+            CommonDashboardID.GAME_INFO,
+            CommonDashboardID.ACTOR_INFO,
+            CommonDashboardID.CUSTOM_MAPS,
+            CommonDashboardID.KEYS_GLOBAL,
+            CommonDashboardID.KEYS_LOCAL,
+            CommonDashboardID.ABOUT
+        ));
+
         dashboard.findSection(CommonDashboardID.CUSTOM_MAPS)
             .filter(DashboardSectionCustomMaps.class::isInstance)
             .map(DashboardSectionCustomMaps.class::cast)

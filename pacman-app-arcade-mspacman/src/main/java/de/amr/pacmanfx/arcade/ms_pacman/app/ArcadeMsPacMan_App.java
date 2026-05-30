@@ -18,6 +18,8 @@ import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 public class ArcadeMsPacMan_App extends Application {
 
     private static final float ASPECT_RATIO    = 1.2f; // 12:10
@@ -35,16 +37,18 @@ public class ArcadeMsPacMan_App extends Application {
                 () -> new ArcadeMsPacMan_GameModel(gameBox.coinMechanism(), gameBox.highScoreFile(GameVariant.ARCADE_MS_PACMAN)),
                 ArcadeMsPacMan_UIConfig::new)
             .startPage(ArcadeMsPacMan_StartPage::new)
-            .dashboard(
-                CommonDashboardID.GENERAL,
-                CommonDashboardID.GAME_CONTROL,
-                CommonDashboardID.SETTINGS_3D,
-                CommonDashboardID.GAME_INFO,
-                CommonDashboardID.ACTOR_INFO,
-                CommonDashboardID.KEYS_GLOBAL,
-                CommonDashboardID.KEYS_LOCAL,
-                CommonDashboardID.ABOUT)
             .build();
+
+        ui.services().views().playView().dashboard().addCommonSections(ui.services().translations(), List.of(
+            CommonDashboardID.GENERAL,
+            CommonDashboardID.GAME_CONTROL,
+            CommonDashboardID.SETTINGS_3D,
+            CommonDashboardID.GAME_INFO,
+            CommonDashboardID.ACTOR_INFO,
+            CommonDashboardID.KEYS_GLOBAL,
+            CommonDashboardID.KEYS_LOCAL,
+            CommonDashboardID.ABOUT)
+        );
         ui.show();
     }
 

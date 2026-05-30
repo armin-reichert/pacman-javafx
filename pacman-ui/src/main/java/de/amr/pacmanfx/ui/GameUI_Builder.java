@@ -9,7 +9,6 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
-import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import javafx.stage.Stage;
 
@@ -79,7 +78,6 @@ public class GameUI_Builder {
     private final WindowConfig windowConfig;
     private final Map<String, GameConfig> gameConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
-    private final List<CommonDashboardID> dashboardIDs = new ArrayList<>();
     private boolean includeInteractiveTests;
 
     private GameUI_Builder(Stage stage, int mainSceneWidth, int mainSceneHeight, de.amr.pacmanfx.core.GameBox gameBox) {
@@ -126,11 +124,6 @@ public class GameUI_Builder {
             error("Start page factory is null");
         }
         startPageFactories.add(startPageFactory);
-        return this;
-    }
-
-    public GameUI_Builder dashboard(CommonDashboardID... ids) {
-        this.dashboardIDs.addAll(List.of(ids));
         return this;
     }
 

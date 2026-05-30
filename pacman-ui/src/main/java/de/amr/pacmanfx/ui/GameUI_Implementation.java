@@ -235,7 +235,6 @@ public final class GameUI_Implementation implements GameUI {
 
         viewManager.playView().configurePropertyBindings(this);
         viewManager.playView().dashboard().init(this);
-//        viewManager.playView().dashboard().addCommonSections(services.translations(), dashboardIDs);
 
         viewManager.setEditorCanOpen(() -> {
             if (viewManager.isStartViewSelected()) return true;
