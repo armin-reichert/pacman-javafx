@@ -36,16 +36,18 @@ public class GameUI_MainScene extends Scene {
         actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
         actionBindings.activate();
 
-        final Keyboard keyboard = Input.instance().keyboard;
-        addEventFilter(KeyEvent.KEY_PRESSED,  keyboard::onKeyPressed);
-        addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
+
+        final Input userInput = Input.instance();
+
+        addEventFilter(KeyEvent.KEY_PRESSED,  userInput.keyboard::onKeyPressed);
+        addEventFilter(KeyEvent.KEY_RELEASED, userInput.keyboard::onKeyReleased);
 
         // If a global action is bound to the key press, execute it; otherwise let the current view handle it.
-        setOnKeyPressed(e -> actionBindings.matchingAction(keyboard)
+        setOnKeyPressed(e -> actionBindings.matchingAction(userInput.keyboard)
             .ifPresentOrElse(action -> {
                 if (action.executeIfEnabled(ui)) e.consume();
             },
-            () -> ui.viewManager().currentView().onInput(ui, Input.instance()))
+            () -> ui.viewManager().currentView().onInput(ui, userInput))
         );
 
         // Delegate mouse scroll events to scene
