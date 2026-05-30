@@ -33,7 +33,7 @@ public class EmptyActionBindingsSet implements ActionBindingsSet {
     }
 
     @Override
-    public void registerAnyBindingFromSet(GameAction action, Set<ActionBinding> bindings) {}
+    public void registerBindingFromSet(GameAction action, Set<ActionBinding> bindings) {}
 
     @Override
     public void setKeyCombinationFor(GameAction action, KeyCodeCombination combination) {}

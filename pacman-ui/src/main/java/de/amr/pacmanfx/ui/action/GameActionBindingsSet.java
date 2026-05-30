@@ -40,13 +40,22 @@ public class GameActionBindingsSet implements ActionBindingsSet {
     }
 
     @Override
-    public void registerAnyBindingFromSet(GameAction gameAction, Set<ActionBinding> bindings) {
+    public void registerBindingFromSet(GameAction gameAction, Set<ActionBinding> bindings) {
         requireNonNull(gameAction);
         requireNonNull(bindings);
-        bindings.stream()
+
+        final List<ActionBinding> matchingBindings = bindings.stream()
             .filter(actionBinding -> actionBinding.gameAction() == gameAction)
-            .findAny()
-            .ifPresent(this::registerBinding);
+            .toList();
+
+        final int count = matchingBindings.size();
+        if (count == 0) {
+            return;
+        }
+        if (count > 1) {
+            Logger.warn("Found {} bindings for action {}, selecting first one", count, gameAction);
+        }
+        registerBinding(matchingBindings.getFirst());
     }
 
     @Override

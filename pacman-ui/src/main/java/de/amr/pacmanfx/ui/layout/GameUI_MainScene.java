@@ -42,10 +42,10 @@ public class GameUI_MainScene extends Scene {
         setOnScroll(e -> ui.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         // Global action bindings
-        actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_ENTER_FULLSCREEN,        GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_OPEN_EDITOR,             GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
-        actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerBindingFromSet(CommonActions.ACTION_ENTER_FULLSCREEN,        GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerBindingFromSet(CommonActions.ACTION_OPEN_EDITOR,             GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerBindingFromSet(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerBindingFromSet(CommonActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
         actionBindings.logBindings();
     }
 

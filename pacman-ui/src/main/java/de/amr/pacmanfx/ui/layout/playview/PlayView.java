@@ -84,7 +84,6 @@ public class PlayView implements View {
         this.ui = requireNonNull(ui);
         createLayout(requireNonNull(dashboardConfig));
         configurePropertyBindings();
-        actionBindings.registerAllBindingsFromSet(GameUIConstants.COMMON_BINDINGS);
         rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(ui, this));
         miniPlaySceneView.setUI(ui);
     }
@@ -143,11 +142,13 @@ public class PlayView implements View {
     @Override
     public void onEnter() {
         rootPane.requestFocus();
+        actionBindings.registerAllBindingsFromSet(GameUIConstants.COMMON_BINDINGS);
         gameSceneFrame.installBindings();
     }
 
     @Override
     public void onExit() {
+        actionBindings.dispose();
         gameSceneFrame.uninstallBindings();
     }
 

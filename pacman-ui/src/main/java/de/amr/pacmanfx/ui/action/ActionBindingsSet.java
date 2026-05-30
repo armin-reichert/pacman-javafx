@@ -23,7 +23,7 @@ public interface ActionBindingsSet extends Disposable {
 
     void setKeyCombinationFor(GameAction action, KeyCodeCombination combination);
 
-    void registerAnyBindingFromSet(GameAction action, Set<ActionBinding> bindings);
+    void registerBindingFromSet(GameAction action, Set<ActionBinding> bindings);
 
     void registerAllBindingsFromSet(Set<ActionBinding> bindings);
 
