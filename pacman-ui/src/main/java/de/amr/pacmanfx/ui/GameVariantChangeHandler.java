@@ -37,14 +37,14 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
     private void exitGameVariant(String variantName) {
         final Game oldGame = ui.gameContext().gameForVariant(variantName);
         ui.stage().getIcons().removeAll();
-        ui.uiConfigManager().dispose(variantName);
+        ui.configManager().dispose(variantName);
         ui.soundManager().dispose();
         oldGame.flow().removeGameEventListener(gameEventHandler);
     }
 
     public void enterGameVariant(String variantName) {
         final Game newGame = ui.gameContext().gameForVariant(variantName);
-        final UIConfig config = ui.configForGameVariant(variantName);
+        final UIConfig config = ui.configManager().getOrCreateUIConfig(variantName);
         config.init(ui);
         final Image icon = config.assets().image("app_icon");
         if (icon != null) {

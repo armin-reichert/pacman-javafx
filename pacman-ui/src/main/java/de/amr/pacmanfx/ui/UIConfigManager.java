@@ -3,6 +3,8 @@
  */
 package de.amr.pacmanfx.ui;
 
+import org.tinylog.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -11,28 +13,33 @@ import static java.util.Objects.requireNonNull;
 
 public class UIConfigManager {
 
-    private final Map<String, Supplier<? extends UIConfig>> factories = new HashMap<>();
+    private final Map<String, Supplier<? extends UIConfig>> configFactoriesByVariant = new HashMap<>();
     private final Map<String, UIConfig> configs = new HashMap<>();
 
     public UIConfigManager() {}
 
-    public void addFactory(String gameVariantName, Supplier<? extends UIConfig> factory) {
+    public void addConfigFactory(String gameVariantName, Supplier<? extends UIConfig> configFactory) {
         requireNonNull(gameVariantName);
-        requireNonNull(factory);
-        factories.put(gameVariantName, factory);
+        requireNonNull(configFactory);
+        configFactoriesByVariant.put(gameVariantName, configFactory);
     }
 
     public UIConfig getOrCreateUIConfig(String variantName) {
         requireNonNull(variantName);
-        return configs.computeIfAbsent(variantName, this::createConfig);
-    }
-
-    private UIConfig createConfig(String variantName) {
-        try {
-            return factories.get(variantName).get();
-        } catch (Exception x) {
-            throw new RuntimeException("Failed to create config for game variant " + variantName, x);
+        if (!configs.containsKey(variantName)) {
+            final var factory = configFactoriesByVariant.get(variantName);
+            if (factory == null) {
+                throw new IllegalArgumentException("No UIConfig for " + variantName);
+            }
+            try {
+                final var config = factory.get();
+                Logger.info("******* Created UIConfig for " + variantName);
+                configs.put(variantName, config);
+            } catch (Exception x) {
+                throw new IllegalArgumentException("Could not create UIConfig for variant " + variantName, x);
+            }
         }
+        return configs.get(variantName);
     }
 
     public void dispose(String variantName) {

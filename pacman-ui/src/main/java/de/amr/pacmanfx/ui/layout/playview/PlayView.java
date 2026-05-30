@@ -85,7 +85,6 @@ public class PlayView implements View {
     public PlayView(GameUI ui, DashboardConfig dashboardConfig) {
         this.ui = requireNonNull(ui);
         createLayout(requireNonNull(dashboardConfig));
-        configurePropertyBindings();
         rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(ui, this));
         miniPlaySceneView.setUI(ui);
     }
@@ -229,7 +228,7 @@ public class PlayView implements View {
         rootPane = new StackPane(gameSceneLayer, miniPlaySceneView.rootPane(), overlayLayer, helpLayer, pausedIcon);
     }
 
-    private void configurePropertyBindings() {
+    public void configurePropertyBindings(GameUI ui) {
         pausedIcon.visibleProperty().bind(ui.gameContext().clock().updatesDisabledProperty());
 
         GameUIConstants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
@@ -243,7 +242,7 @@ public class PlayView implements View {
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> GameUIConstants.PROPERTY_MINI_VIEW_ON.get()
-                && ui.gameSceneManager().currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D),
+                && ui.gameSceneManager().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D),
             GameUIConstants.PROPERTY_MINI_VIEW_ON, ui.gameSceneManager().gameSceneProperty()
         ));
     }

@@ -31,17 +31,14 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
 
-    private final GameUI ui;
-
     public GameSceneManager(GameUI ui) {
-        this.ui = requireNonNull(ui);
         gameScene.addListener(this);
     }
 
     @Override
     public void changed(ObservableValue<? extends GameScene> py, GameScene oldGameScene, GameScene newGameScene) {
         if (newGameScene != null) {
-            embedGameSceneIntoPlayView(newGameScene);
+            embedGameSceneIntoPlayView(newGameScene.ui(), newGameScene);
         }
     }
 
@@ -53,11 +50,11 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         return gameScene;
     }
 
-    public void forceGameSceneUpdate() {
-        updateGameSceneAndForceReload(true);
+    public void forceGameSceneUpdate(GameUI ui) {
+        updateGameSceneAndForceReload(ui, true);
     }
 
-    public void updateGameSceneAndForceReload(boolean forceReload) {
+    public void updateGameSceneAndForceReload(GameUI ui, boolean forceReload) {
         final Game game = ui.gameContext().game();
         final GameScene prevGameScene = optCurrentGameScene().orElse(null);
         final GameScene nextGameScene = ui.currentConfig().gameSceneConfig().selectGameScene(ui, game).orElseThrow();
@@ -68,11 +65,11 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
         if (prevGameScene != null) {
             prevGameScene.deactivate();
-            removeFromPlayView(prevGameScene);
+            removeFromPlayView(ui.viewManager().playView(), prevGameScene);
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
-        embedGameSceneIntoPlayView(nextGameScene);
+        embedGameSceneIntoPlayView(ui, nextGameScene);
 
         nextGameScene.activate();
 
@@ -81,7 +78,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         gameSceneProperty().set(nextGameScene);
     }
 
-    public void quitCurrentGameScene() {
+    public void quitCurrentGameScene(GameUI ui) {
         final Game game = ui.gameContext().game();
         optCurrentGameScene().ifPresent(_ -> {
             final CoinMechanism coinMechanism = ui.gameContext().coinMechanism();
@@ -105,7 +102,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
      * @param sceneID scene identifier
      * @return {@code true} if the active scene has the given ID
      */
-    public boolean hasGameSceneID(GameScene gameScene, GameSceneConfig.SceneID sceneID) {
+    public boolean hasGameSceneID(GameUI ui, GameScene gameScene, GameSceneConfig.SceneID sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
         return ui.currentConfig().gameSceneConfig().gameSceneHasID(gameScene, sceneID);
@@ -117,9 +114,9 @@ public class GameSceneManager implements ChangeListener<GameScene> {
      * @param sceneID scene identifier
      * @return {@code true} if the active scene has the given ID
      */
-    public boolean currentGameSceneHasID(GameSceneConfig.SceneID sceneID) {
+    public boolean currentGameSceneHasID(GameUI ui, GameSceneConfig.SceneID sceneID) {
         final GameScene current = gameSceneProperty().get();
-        return current != null && hasGameSceneID(current, sceneID);
+        return current != null && hasGameSceneID(ui, current, sceneID);
     }
 
     // 2D-3D scene switch
@@ -181,22 +178,22 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     // Scene embedding
 
-    public void removeFromPlayView(GameScene gameScene) {
+    public void removeFromPlayView(PlayView playView, GameScene gameScene) {
         requireNonNull(gameScene);
 
-        ui.viewManager().playView().contextMenu().hide();
+        playView.contextMenu().hide();
 
         gameScene.optSubSceneFX().ifPresent(subSceneFX -> {
             subSceneFX.widthProperty().unbind();
             subSceneFX.heightProperty().unbind();
         });
         if (gameScene instanceof GameScene2D gameScene2D) {
-            final DecorationPane decorationPane = ui.viewManager().playView().gameSceneFrame();
-            decorationPane.canvas().widthProperty().unbind();
-            decorationPane.canvas().heightProperty().unbind();
-            decorationPane.unscaledWidthProperty().unbind();
-            decorationPane.unscaledHeightProperty().unbind();
-            decorationPane.backgroundProperty().unbind();
+            final DecorationPane frame = playView.gameSceneFrame();
+            frame.canvas().widthProperty().unbind();
+            frame.canvas().heightProperty().unbind();
+            frame.unscaledWidthProperty().unbind();
+            frame.unscaledHeightProperty().unbind();
+            frame.backgroundProperty().unbind();
             gameScene2D.backgroundColorProperty().unbind();
             gameScene2D.scalingProperty().unbind();
         }
@@ -204,7 +201,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         Logger.info("Game scene {} REMOVED from play scene!", gameScene.getClass().getSimpleName());
     }
 
-    public void embedGameSceneIntoPlayView(GameScene gameScene) {
+    public void embedGameSceneIntoPlayView(GameUI ui, GameScene gameScene) {
         ui.viewManager().playView().contextMenu().hide();
 
         if (gameScene.optSubSceneFX().isPresent()) {

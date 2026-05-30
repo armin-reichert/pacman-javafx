@@ -39,7 +39,8 @@ public class GameEventHandler extends DefaultGameEventListener {
                 miniPlayView.slideIn();
 
                 // size of game scene might have changed, so re-embed
-                ui.gameSceneManager().optCurrentGameScene().ifPresent(ui.gameSceneManager()::embedGameSceneIntoPlayView);
+                ui.gameSceneManager().optCurrentGameScene().ifPresent(
+                    gameScene -> ui.gameSceneManager().embedGameSceneIntoPlayView(ui, gameScene));
             }
 
             case GameStateChangeEvent stateChangeEvent -> {
@@ -49,12 +50,12 @@ public class GameEventHandler extends DefaultGameEventListener {
                 }
             }
 
-            case GenericChangeEvent _ -> ui.gameSceneManager().forceGameSceneUpdate();
+            case GenericChangeEvent _ -> ui.gameSceneManager().forceGameSceneUpdate(ui);
 
             default -> {}
         }
 
-        ui.gameSceneManager().updateGameSceneAndForceReload(false);
+        ui.gameSceneManager().updateGameSceneAndForceReload(ui, false);
 
         // Call game event handler for current game scene
         ui.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));

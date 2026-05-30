@@ -92,7 +92,7 @@ public final class CommonActions {
         protected void doAction(GameUI ui) {
             final Game game = ui.gameContext().game();
             game.cheats().clear(); //TODO needed?
-            ui.gameSceneManager().quitCurrentGameScene();
+            ui.gameSceneManager().quitCurrentGameScene(ui);
         }
     };
 
@@ -119,7 +119,7 @@ public final class CommonActions {
         @Override
         public boolean isEnabled(GameUI ui) {
             boolean isArcadeGame = GameVariant.isArcadeGameName(ui.gameContext().gameVariantName());
-            boolean isPlayScene2D = ui.gameSceneManager().currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D);
+            boolean isPlayScene2D = ui.gameSceneManager().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_2D);
             return isArcadeGame && isPlayScene2D;
         }
     };
@@ -258,7 +258,7 @@ public final class CommonActions {
         @Override
         protected void doAction(GameUI ui) {
             toggleBooleanProperty(GameUIConstants.PROPERTY_MINI_VIEW_ON);
-            if (!ui.gameSceneManager().currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D)) {
+            if (!ui.gameSceneManager().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D)) {
                 ui.showFlashMessage(ui.translationManager().translate(GameUIConstants.PROPERTY_MINI_VIEW_ON.get()
                     ? "pip_on" : "pip_off"));
             }
@@ -300,7 +300,7 @@ public final class CommonActions {
                 ui.showFlashMessage(ui.translationManager().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
             }
             if (isLevelPlaying(game)) {
-                ui.gameSceneManager().forceGameSceneUpdate();
+                ui.gameSceneManager().forceGameSceneUpdate(ui);
             }
         }
 
@@ -310,8 +310,8 @@ public final class CommonActions {
         }
 
         private boolean inPlayScene(GameUI ui) {
-            return ui.gameSceneManager().currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D)
-                || ui.gameSceneManager().currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D);
+            return ui.gameSceneManager().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_2D)
+                || ui.gameSceneManager().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D);
         }
 
         private boolean isLevelPlaying(Game game) {

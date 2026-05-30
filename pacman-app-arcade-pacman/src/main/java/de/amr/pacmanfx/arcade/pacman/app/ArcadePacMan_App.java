@@ -81,7 +81,7 @@ public class ArcadePacMan_App extends Application {
         gameBox.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
 
         ui = new GameUI_Implementation(gameBox, stage, size.x(), size.y());
-        ui.uiConfigManager().addFactory(GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
+        ui.configManager().addConfigFactory(GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
         final ArcadePacMan_StartPage startPage = new ArcadePacMan_StartPage();
         startPage.init(ui);

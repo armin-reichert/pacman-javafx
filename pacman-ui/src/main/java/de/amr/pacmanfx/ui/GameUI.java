@@ -104,14 +104,7 @@ public interface GameUI {
     /**
      * @return the manager for UI configurations per game variant.
      */
-    UIConfigManager uiConfigManager();
-
-    /**
-     * @return the UI configuration for the specified game variant.
-     *
-     * @param gameVariantName name of the variant
-     */
-    UIConfig configForGameVariant(String gameVariantName);
+    UIConfigManager configManager();
 
     /**
      * @return the current UI configuration, cast to the expected type.

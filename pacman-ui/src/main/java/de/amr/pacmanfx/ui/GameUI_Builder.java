@@ -147,7 +147,7 @@ public class GameUI_Builder {
         gameConfigMap.forEach((gameVariant, config) -> {
             final AbstractGameModel game = config.gameModelFactory.get();
             gameBox.registerGame(gameVariant, game);
-            ui.uiConfigManager().addFactory(gameVariant, config.uiConfigFactory);
+            ui.configManager().addConfigFactory(gameVariant, config.uiConfigFactory);
             if (includeInteractiveTests) {
                 game.flow().addState(new LevelShortTestState<>(gameBox.coinMechanism()));
                 game.flow().addState(new LevelMediumTestState<>());

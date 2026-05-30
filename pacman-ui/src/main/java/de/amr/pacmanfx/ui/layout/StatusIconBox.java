@@ -44,7 +44,7 @@ public class StatusIconBox implements Disposable {
         Font.font("Sans", 16)
     );
 
-    private HBox rootPane = new HBox();
+    private final HBox rootPane = new HBox();
     private final FontAwesomeIcon iconMuted;
     private final FontAwesomeIcon icon3D;
     private final FontAwesomeIcon iconAutopilot;
