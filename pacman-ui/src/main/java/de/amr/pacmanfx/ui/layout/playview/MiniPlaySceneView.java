@@ -34,22 +34,23 @@ import static java.util.Objects.requireNonNull;
 
 public class MiniPlaySceneView {
 
+    public static final int PADDING_LR = 10;
+
     public static final Duration SLIDE_IN_DURATION  = Duration.seconds(1);
     public static final Duration SLIDE_OUT_DURATION = Duration.seconds(2);
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
     private final ObjectProperty<Vector2i> worldSize = new SimpleObjectProperty<>(ARCADE_MAP_SIZE_IN_PIXELS);
 
-    private final Canvas canvas = new Canvas();
-    private final VBox rootPane = new VBox();
-    private final HBox contentPane;
+    private final HBox rootPane;
 
     private GameUI ui;
 
-    private final BaseRenderer canvasRenderer;
+    private final Canvas canvas = new Canvas();
 
     // Note: The renderers cannot be created in the constructor, because the game controller has not yet
     //       selected a game variant when the constructor is called, so no UI configuration is available!
+    private BaseRenderer canvasRenderer;
     private GameLevelRenderer levelRenderer;
     private ActorRenderer actorRenderer;
 
@@ -60,18 +61,14 @@ public class MiniPlaySceneView {
     private long drawCallCount;
 
     public MiniPlaySceneView() {
-        canvasRenderer = new BaseRenderer(canvas);
-
-        // The container fills the complete parent container height (why?), so we put the canvas
-        // into an HBox that does not grow in height and provides some padding around the canvas.
-        contentPane = new HBox(canvas);
-        contentPane.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
-        contentPane.setPadding(new Insets(0, 10, 0, 10));
-        VBox.setVgrow(contentPane, Priority.NEVER);
-
-        rootPane.getChildren().add(contentPane);
-
+        rootPane = new HBox(canvas);
+        rootPane.setBorder(Border.stroke(Color.grayRgb(66)));
+        rootPane.setPadding(new Insets(0, PADDING_LR, 0, PADDING_LR));
+        rootPane.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
+        rootPane.maxWidthProperty().bind(canvas.widthProperty().add(PADDING_LR));
+        rootPane.maxHeightProperty().bind(canvas.heightProperty());
         rootPane.opacityProperty().bind(GameUIConstants.PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
+
 
         scaling.bind(Bindings.createDoubleBinding(
             () -> canvas.getHeight() / worldSize.get().y(),
@@ -90,6 +87,8 @@ public class MiniPlaySceneView {
 
     public void setGameLevel(GameLevel level) {
         worldSize.set(level.worldMap().terrainLayer().sizeInPixel());
+
+        canvasRenderer = new BaseRenderer(canvas);
 
         levelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
         levelRenderer.scalingProperty().bind(scaling);
@@ -119,7 +118,7 @@ public class MiniPlaySceneView {
             slideOutAnimation.stop();
         }
         slideOutAnimation = new TranslateTransition(SLIDE_OUT_DURATION, rootPane);
-        slideOutAnimation.setToY(-contentPane.getHeight());
+        slideOutAnimation.setToY(-rootPane.getHeight());
         slideOutAnimation.setByY(10);
         slideOutAnimation.setDelay(Duration.seconds(2));
         slideOutAnimation.setInterpolator(Interpolator.EASE_IN);

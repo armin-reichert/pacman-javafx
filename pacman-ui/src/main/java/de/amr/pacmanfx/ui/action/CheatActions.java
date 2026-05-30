@@ -33,7 +33,7 @@ public final class CheatActions {
         }
 
         @Override
-        public boolean isEnabled(GameUI ui) { return realLevel(ui.gameContext().game()).isPresent(); }
+        public boolean isEnabled(GameUI ui) { return realLevel(ui).isPresent(); }
     };
 
     public static final GameAction ACTION_EAT_ALL_PELLETS = new GameAction("cheat_eat_all_pellets") {

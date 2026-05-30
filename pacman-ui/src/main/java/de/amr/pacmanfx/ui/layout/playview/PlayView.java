@@ -26,10 +26,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
@@ -66,10 +63,12 @@ public class PlayView implements View {
     private BorderPane gameSceneLayer;
     private DecorationPane gameSceneFrame;
 
+    // Mini view layer
+    private MiniPlaySceneView miniPlaySceneView;
+
     // Overlay layer
     private BorderPane overlayLayer;
     private Dashboard dashboard;
-    private MiniPlaySceneView miniPlaySceneView;
 
     // Help layer
     private HelpLayer helpLayer;
@@ -206,17 +205,18 @@ public class PlayView implements View {
         gameSceneLayer = new BorderPane();
         gameSceneLayer.setCenter(gameSceneFrame);
 
-        // Layer 2: Overlay layer with dashboard and mini-view for 3D scene
+        // Layer 2: Mini view layer
         miniPlaySceneView = new MiniPlaySceneView();
+        StackPane.setAlignment(miniPlaySceneView.rootPane(), Pos.TOP_RIGHT);
 
+        // Layer 3: Overlay layer with dashboard
         dashboard = new Dashboard(dashboardConfig);
         dashboard.rootPane().setVisible(false);
 
         overlayLayer = new BorderPane();
         overlayLayer.setLeft(dashboard.rootPane());
-        overlayLayer.setRight(miniPlaySceneView.rootPane());
 
-        // Layer 3: Help info
+        // Layer 4: Help info
         helpLayer = new HelpLayer(gameSceneLayer);
 
         // Layer 4: "Paused" icon
@@ -224,7 +224,7 @@ public class PlayView implements View {
         pausedIcon.setFocusTraversable(false);
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
 
-        rootPane = new StackPane(gameSceneLayer, overlayLayer, helpLayer, pausedIcon);
+        rootPane = new StackPane(gameSceneLayer, miniPlaySceneView.rootPane(), overlayLayer, helpLayer, pausedIcon);
     }
 
     private void configurePropertyBindings() {
@@ -237,7 +237,7 @@ public class PlayView implements View {
             gameSceneLayer.setBorder(debug ? DEBUG_BORDER : null);
         });
 
-        overlayLayer.visibleProperty().bind(Bindings.or(dashboard.rootPane().visibleProperty(), GameUIConstants.PROPERTY_MINI_VIEW_ON));
+        overlayLayer.visibleProperty().bind(dashboard.rootPane().visibleProperty());
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> GameUIConstants.PROPERTY_MINI_VIEW_ON.get()
