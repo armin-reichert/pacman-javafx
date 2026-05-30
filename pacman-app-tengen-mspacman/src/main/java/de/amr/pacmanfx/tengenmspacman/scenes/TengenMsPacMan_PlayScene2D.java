@@ -20,6 +20,7 @@ import de.amr.pacmanfx.ui.GameUIConstants;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -160,15 +161,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
+        final TranslationManager translationManager = ui.management().translationManager();
         final Game game = gameContext().game();
         final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
         final var menu = new ContextMenu();
 
-        final RadioMenuItem miScaledToFit = addLocalizedRadioButton(menu, ui.translationManager(), "scaled_to_fit");
+        final RadioMenuItem miScaledToFit = addLocalizedRadioButton(menu, translationManager, "scaled_to_fit");
         miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
         miScaledToFit.setOnAction(_ -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCALED_TO_FIT));
 
-        final RadioMenuItem miScrolling = addLocalizedRadioButton(menu, ui.translationManager(), "scrolling");
+        final RadioMenuItem miScrolling = addLocalizedRadioButton(menu, translationManager, "scrolling");
         miScrolling.setSelected(displayMode == SCROLLING);
         miScrolling.setOnAction(_ -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SCROLLING));
 
@@ -176,12 +178,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         miScaledToFit.setToggleGroup(toggleGroup);
         miScrolling.setToggleGroup(toggleGroup);
 
-        addLocalizedTitleItem(menu, ui.translationManager(), "pacman");
-        addLocalizedCheckBox(menu, ui.translationManager(), game.cheats().usingAutopilotProperty(), "autopilot");
-        addLocalizedCheckBox(menu, ui.translationManager(), game.cheats().immuneProperty(), "immunity");
+        addLocalizedTitleItem(menu, translationManager, "pacman");
+        addLocalizedCheckBox(menu, translationManager, game.cheats().usingAutopilotProperty(), "autopilot");
+        addLocalizedCheckBox(menu, translationManager, game.cheats().immuneProperty(), "immunity");
         addSeparator(menu);
-        addLocalizedCheckBox(menu, ui.translationManager(), GameUIConstants.PROPERTY_MUTED, "muted");
-        addLocalizedActionItem(menu, ui, ui.translationManager(), ACTION_QUIT_GAME_SCENE, "quit");
+        addLocalizedCheckBox(menu, translationManager, GameUIConstants.PROPERTY_MUTED, "muted");
+        addLocalizedActionItem(menu, ui, translationManager, ACTION_QUIT_GAME_SCENE, "quit");
 
         return Optional.of(menu);
     }
@@ -197,7 +199,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         dynamicCamera.enterTrackingMode();
         dynamicCamera.updateRange(level.worldMap());
 
-        ui.soundManager().setEnabled(!level.isDemoLevel()); //TODO is this needed?
+        ui.management().soundManager().setEnabled(!level.isDemoLevel()); //TODO is this needed?
 
         if (level.isDemoLevel()) {
             actionBindings.registerFirstBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);

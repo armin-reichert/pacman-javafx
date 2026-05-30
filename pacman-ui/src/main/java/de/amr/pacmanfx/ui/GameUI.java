@@ -8,10 +8,6 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
-import de.amr.pacmanfx.ui.layout.ViewManager;
-import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
-import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -34,11 +30,6 @@ public interface GameUI {
     GameContext gameContext();
 
     /**
-     * @return the game scene change and embedding manager
-     */
-    GameSceneManager gameSceneManager();
-
-    /**
      * @return  the primary JavaFX stage.
      */
     Stage stage();
@@ -49,29 +40,9 @@ public interface GameUI {
     Scene scene();
 
     /**
-     * @return the sound manager responsible for playing sound effects.
-     */
-    SoundManager soundManager();
-
-    /**
      * @return the set of all sprite animations
      */
     SpriteAnimationSet spriteAnimationSet();
-
-    /**
-     * @return the preferences manager storing UI-related settings.
-     */
-    PreferencesManager preferencesManager();
-
-    /**
-     * @return translation service for localized UI messages
-     */
-    TranslationManager translationManager();
-
-    /**
-     * @return the manager responsible for all UI views (start pages, play view, editor, etc.).
-     */
-    ViewManager viewManager();
 
     // ---------------------------------------------------------------------------------------------
     // Messages
@@ -98,13 +69,10 @@ public interface GameUI {
 
 
     // ---------------------------------------------------------------------------------------------
-    // Configuration
+    // Management board
     // ---------------------------------------------------------------------------------------------
 
-    /**
-     * @return the manager for UI configurations per game variant.
-     */
-    UIConfigManager configManager();
+    ManagementBoard management();
 
     /**
      * @return the current UI configuration, cast to the expected type.

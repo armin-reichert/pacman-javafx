@@ -51,16 +51,6 @@ import static javafx.beans.binding.Bindings.createStringBinding;
  */
 public final class GameUI_Implementation implements GameUI {
 
-    // So many managers? I think I should fire some!
-    public record ManagementBoard(
-        UIConfigManager configManager,
-        GameSceneManager gameSceneManager,
-        PreferencesManager prefsManager,
-        SoundManager soundManager,
-        TranslationManager translationManager,
-        ViewManager viewManager)
-    {}
-
     // Game model access
     private final GameBox gameBox;
 
@@ -91,9 +81,10 @@ public final class GameUI_Implementation implements GameUI {
         viewManager.setPlayView(createPlayView());
         viewManager.setEditorViewFactory(this::createEditorView);
 
+        //TODO should not depend on UI components being initialized etc.
         management = new ManagementBoard(
             new UIConfigManager(),
-            new GameSceneManager(this),
+            new GameSceneManager(),
             createPrefsManager(),
             new SoundManager(),
             () -> GameUIConstants.LOCALIZED_TEXTS,
@@ -106,6 +97,12 @@ public final class GameUI_Implementation implements GameUI {
 
 
     // GameUI interface
+
+
+    @Override
+    public ManagementBoard management() {
+        return management;
+    }
 
     @Override
     public DirectoryWatchdog customDirWatchdog() {
@@ -203,7 +200,7 @@ public final class GameUI_Implementation implements GameUI {
         management.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> {
             gameScene.soundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene.deactivate();
-            management.gameSceneManager().removeFromPlayView(management.viewManager.playView(), gameScene);
+            management.gameSceneManager().removeFromPlayView(management.viewManager().playView(), gameScene);
             management.gameSceneManager().gameSceneProperty().set(null);
         });
 
@@ -218,39 +215,6 @@ public final class GameUI_Implementation implements GameUI {
         spriteAnimationTimer.spriteAnimationSet().clear();
         flashMessageView.stopTimer();
         customDirWatchdog.dispose();
-    }
-
-
-    // Management board (totally overpaid)
-
-    @Override
-    public UIConfigManager configManager() {
-        return management.configManager();
-    }
-
-    @Override
-    public GameSceneManager gameSceneManager() {
-        return management.gameSceneManager();
-    }
-
-    @Override
-    public PreferencesManager preferencesManager() {
-        return management.prefsManager();
-    }
-
-    @Override
-    public SoundManager soundManager() {
-        return management.soundManager();
-    }
-
-    @Override
-    public TranslationManager translationManager() {
-        return management.translationManager();
-    }
-
-    @Override
-    public ViewManager viewManager() {
-        return management.viewManager();
     }
 
     // private stuff
@@ -356,7 +320,7 @@ public final class GameUI_Implementation implements GameUI {
             () -> management.gameSceneManager().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
                 ? GameUIConstants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUIConstants.WALLPAPERS.length)]
                 : GameUIConstants.BACKGROUND_PAC_MAN_WALLPAPER
-            , management.viewManager().currentViewProperty(), gameSceneManager().gameSceneProperty()
+            , management.viewManager().currentViewProperty(), management.gameSceneManager().gameSceneProperty()
         ));
     }
 

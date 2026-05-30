@@ -8,6 +8,7 @@ import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
+import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -44,7 +45,7 @@ public class HelpInfo {
             if (demoLevel) {
                 helpInfo.addInfoForDemoLevelPlayScene();
             } else {
-                helpInfo.addInfoForPlayScene();
+                helpInfo.addInfoForPlayScene(ui.management().translationManager());
             }
         }
         else {
@@ -79,13 +80,13 @@ public class HelpInfo {
 
         // add default entries:
         if (ui.gameContext().game().cheats().isUsingAutopilot()) {
-            var autoPilotEntry = text(ui.translationManager().translate("help.autopilot_on"), Color.ORANGE);
+            var autoPilotEntry = text(ui.management().translationManager().translate("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
         if (ui.gameContext().game().cheats().isImmune()) {
-            var immunityEntry = text(ui.translationManager().translate("help.immunity_on"), Color.ORANGE);
+            var immunityEntry = text(ui.management().translationManager().translate("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);
             grid.add(immunityEntry, 0, grid.getRowCount() + 1);
@@ -111,7 +112,7 @@ public class HelpInfo {
     }
 
     private void addRow(String lhsKey, String keyboardKey) {
-        addRow(label(ui.translationManager().translate(lhsKey), Color.gray(0.9)),
+        addRow(label(ui.management().translationManager().translate(lhsKey), Color.gray(0.9)),
             text("[" + keyboardKey + "]", Color.YELLOW));
     }
 
@@ -135,11 +136,11 @@ public class HelpInfo {
         addQuitEntry();
     }
 
-    private void addInfoForPlayScene() {
-        addRow("help.move_left", ui.translationManager().translate("help.cursor_left"));
-        addRow("help.move_right", ui.translationManager().translate("help.cursor_right"));
-        addRow("help.move_up", ui.translationManager().translate("help.cursor_up"));
-        addRow("help.move_down", ui.translationManager().translate("help.cursor_down"));
+    private void addInfoForPlayScene(TranslationManager translationManager) {
+        addRow("help.move_left", translationManager.translate("help.cursor_left"));
+        addRow("help.move_right", translationManager.translate("help.cursor_right"));
+        addRow("help.move_up",    translationManager.translate("help.cursor_up"));
+        addRow("help.move_down",  translationManager.translate("help.cursor_down"));
         addQuitEntry();
     }
 

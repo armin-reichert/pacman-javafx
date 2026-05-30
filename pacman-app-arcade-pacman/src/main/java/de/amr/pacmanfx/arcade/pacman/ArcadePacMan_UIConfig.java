@@ -118,8 +118,8 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         public void doAction(GameUI ui) {
             final CoinMechanism slot = ui.gameContext().coinMechanism();
             final Game game = ui.gameContext().game();
-            ui.soundManager().stopAndDisposeVoice();
-            ui.soundManager().setEnabled(true);
+            ui.management().soundManager().stopAndDisposeVoice();
+            ui.management().soundManager().setEnabled(true);
             slot.insertCoin();
             game.flow().enterState(PREPARING_GAME_START);
             game.flow().publishGameEvent(new CreditAddedEvent(game, 1));
@@ -144,7 +144,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     public static final GameAction ACTION_START_GAME = new GameAction("start_game") {
         @Override
         public void doAction(GameUI ui) {
-            ui.soundManager().stopAndDisposeVoice();
+            ui.management().soundManager().stopAndDisposeVoice();
             ui.gameContext().game().flow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
         }
 
@@ -191,7 +191,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     public void init(GameUI ui) {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
-        initSound(ui.soundManager());
+        initSound(ui.management().soundManager());
     }
 
     @Override

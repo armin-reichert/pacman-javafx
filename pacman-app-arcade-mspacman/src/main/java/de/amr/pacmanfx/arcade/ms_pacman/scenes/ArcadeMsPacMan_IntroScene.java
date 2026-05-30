@@ -70,7 +70,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onActivate() {
-        ui.soundManager().playVoice(GameUIConstants.VOICE_EXPLAIN_GAME_START);
+        ui.management().soundManager().playVoice(GameUIConstants.VOICE_EXPLAIN_GAME_START);
 
         actionBindings.registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         actionBindings.registerAllBindings(GameUIConstants.SCENE_TESTS_BINDINGS);
@@ -100,7 +100,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onDeactivate() {
-        ui.soundManager().stopAndDisposeVoice();
+        ui.management().soundManager().stopAndDisposeVoice();
     }
 
     @Override

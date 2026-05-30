@@ -81,15 +81,15 @@ public class ArcadePacMan_App extends Application {
         gameBox.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
 
         ui = new GameUI_Implementation(gameBox, stage, size.x(), size.y());
-        ui.configManager().addConfigFactory(GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
+        ui.management().configManager().addConfigFactory(GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
         final ArcadePacMan_StartPage startPage = new ArcadePacMan_StartPage();
         startPage.init(ui);
 
-        final StartPagesCarousel startPagesCarousel = ui.viewManager().startView();
+        final StartPagesCarousel startPagesCarousel = ui.management().viewManager().startView();
         startPagesCarousel.addStartPage(startPage);
         startPagesCarousel.setSelectedIndex(0);
 
-        ui.viewManager().playView().dashboard().addCommonSections(ui.translationManager(), DASHBOARD_IDs);
+        ui.management().viewManager().playView().dashboard().addCommonSections(ui.management().translationManager(), DASHBOARD_IDs);
     }
 }

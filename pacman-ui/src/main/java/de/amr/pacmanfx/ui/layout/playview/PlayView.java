@@ -105,12 +105,12 @@ public class PlayView implements View {
         return gameSceneFrame;
     }
 
-    public MiniPlaySceneView miniPlaySceneView() {
-        return miniPlaySceneView;
-    }
-
     public Dashboard dashboard() {
         return dashboard;
+    }
+
+    public MiniPlaySceneView miniPlaySceneView() {
+        return miniPlaySceneView;
     }
 
     public void showHelp(GameUI ui) {
@@ -136,7 +136,7 @@ public class PlayView implements View {
         // First lLook for an action binding in my bindings, if nothing found, delegate to the current game scene if any
         actionBindings.actionMatchingKeyboardState(input.keyboard).ifPresentOrElse(
             action -> action.executeIfEnabled(ui),
-            () -> ui.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput)
+            () -> ui.management().gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput)
         );
     }
 
@@ -163,7 +163,7 @@ public class PlayView implements View {
     public void render() {
 
         // Render current 2D game scene
-        final GameScene gameScene = ui.gameSceneManager().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = ui.management().gameSceneManager().optCurrentGameScene().orElse(null);
         if (gameScene instanceof GameScene2D gameScene2D) {
             final Game game = ui.gameContext().game();
             if (sceneRenderer != null) {
@@ -242,8 +242,9 @@ public class PlayView implements View {
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> GameUIConstants.PROPERTY_MINI_VIEW_ON.get()
-                && ui.gameSceneManager().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D),
-            GameUIConstants.PROPERTY_MINI_VIEW_ON, ui.gameSceneManager().gameSceneProperty()
+                && ui.management().gameSceneManager().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D),
+            GameUIConstants.PROPERTY_MINI_VIEW_ON,
+            ui.management().gameSceneManager().gameSceneProperty()
         ));
     }
 

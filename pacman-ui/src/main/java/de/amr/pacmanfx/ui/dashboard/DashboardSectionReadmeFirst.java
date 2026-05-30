@@ -25,7 +25,7 @@ public class DashboardSectionReadmeFirst extends DashboardSection {
     @Override
     public void init(GameUI ui) {
         final var readmeText = new Text();
-        readmeText.setText(ui.translationManager().translate("infobox.readme.content"));
+        readmeText.setText(ui.management().translationManager().translate("infobox.readme.content"));
         readmeText.setFont(TEXT_FONT);
         readmeText.setFill(Color.WHITE);
 
@@ -36,7 +36,7 @@ public class DashboardSectionReadmeFirst extends DashboardSection {
         buttonPane.setAlignment(Pos.CENTER);
         buttonPane.setPadding(new Insets(10, 0, 0, 0));
 
-        final var btnGotIt = new Button(ui.translationManager().translate("infobox.readme.got_it"));
+        final var btnGotIt = new Button(ui.management().translationManager().translate("infobox.readme.got_it"));
         buttonPane.getChildren().add(btnGotIt);
         btnGotIt.setOnAction(_ -> dashboard.removeSection(CommonDashboardID.README));
 

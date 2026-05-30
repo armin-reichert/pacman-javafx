@@ -31,7 +31,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
 
-    public GameSceneManager(GameUI ui) {
+    public GameSceneManager() {
         gameScene.addListener(this);
     }
 
@@ -65,7 +65,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
         if (prevGameScene != null) {
             prevGameScene.deactivate();
-            removeFromPlayView(ui.viewManager().playView(), prevGameScene);
+            removeFromPlayView(ui.management().viewManager().playView(), prevGameScene);
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
@@ -92,7 +92,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
         });
         ui.stopGame();
-        ui.viewManager().selectStartView();
+        ui.management().viewManager().selectStartView();
     }
 
     /**
@@ -202,12 +202,12 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     public void embedGameSceneIntoPlayView(GameUI ui, GameScene gameScene) {
-        ui.viewManager().playView().contextMenu().hide();
+        ui.management().viewManager().playView().contextMenu().hide();
 
         if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameSceneWithSubSceneFX(ui.scene(), ui.viewManager().playView(), gameScene, gameScene.optSubSceneFX().get());
+            embedGameSceneWithSubSceneFX(ui.scene(), ui.management().viewManager().playView(), gameScene, gameScene.optSubSceneFX().get());
         } else if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2D(ui.scene(), ui.viewManager().playView(), ui.currentConfig().gameSceneConfig(), gameScene2D);
+            embedGameScene2D(ui.scene(), ui.management().viewManager().playView(), ui.currentConfig().gameSceneConfig(), gameScene2D);
         } else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }

@@ -28,7 +28,7 @@ public final class CheatActions {
                 final Game game = level.game();
                 game.addLives(3);
                 game.cheats().cheatUsedProperty().set(true);
-                ui.showFlashMessage(ui.translationManager().translate(resourceBundleKey(), game.lifeCount()));
+                ui.showFlashMessage(ui.management().translationManager().translate(resourceBundleKey(), game.lifeCount()));
             });
         }
 
@@ -138,8 +138,8 @@ public final class CheatActions {
     private static void setAutopilot(GameUI ui, boolean auto) {
         final Game game = ui.gameContext().game();
         game.cheats().usingAutopilotProperty().set(auto);
-        ui.soundManager().playVoice(auto ? GameUIConstants.VOICE_AUTOPILOT_ON : GameUIConstants.VOICE_AUTOPILOT_OFF);
-        ui.showFlashMessage(ui.translationManager().translate(auto ? "autopilot_on" : "autopilot_off"));
+        ui.management().soundManager().playVoice(auto ? GameUIConstants.VOICE_AUTOPILOT_ON : GameUIConstants.VOICE_AUTOPILOT_OFF);
+        ui.showFlashMessage(ui.management().translationManager().translate(auto ? "autopilot_on" : "autopilot_off"));
     }
 
     public static final GameAction ACTION_ACTIVATE_IMMUNITY = new GameAction("activate_immunity") {
@@ -182,8 +182,8 @@ public final class CheatActions {
     public static void setPacImmune(GameUI ui, boolean immune) {
         final Game game = ui.gameContext().game();
         game.cheats().immuneProperty().set(immune);
-        ui.soundManager().playVoice(immune ? GameUIConstants.VOICE_IMMUNITY_ON : GameUIConstants.VOICE_IMMUNITY_OFF);
-        ui.showFlashMessage(ui.translationManager().translate(immune ? "player_immunity_on" : "player_immunity_off"));
+        ui.management().soundManager().playVoice(immune ? GameUIConstants.VOICE_IMMUNITY_ON : GameUIConstants.VOICE_IMMUNITY_OFF);
+        ui.showFlashMessage(ui.management().translationManager().translate(immune ? "player_immunity_on" : "player_immunity_off"));
     }
 
     private static Optional<GameLevel> realLevel(GameUI ui) {

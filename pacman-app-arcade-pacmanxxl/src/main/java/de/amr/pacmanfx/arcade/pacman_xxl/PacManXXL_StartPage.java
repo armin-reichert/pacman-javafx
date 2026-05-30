@@ -76,12 +76,12 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         });
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            final StartPagesCarousel startPagesCarousel = ui.viewManager().startView();
+            final StartPagesCarousel startPagesCarousel = ui.management().viewManager().startView();
             switch (e.getCode()) {
                 case E -> {
                     e.consume();
                     if (ui != null) {
-                        ui.soundManager().stopAndDisposeVoice();
+                        ui.management().soundManager().stopAndDisposeVoice();
                         startPagesCarousel.pauseProgressTimer();
                         ui.openWorldMapFileInEditor(null);
                     }
@@ -89,7 +89,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                 case ENTER -> {
                     e.consume();
                     if (ui != null) {
-                        ui.soundManager().stopAndDisposeVoice();
+                        ui.management().soundManager().stopAndDisposeVoice();
                         startPagesCarousel.pauseProgressTimer();
                         menu.startSelectedGame();
                     }
@@ -117,12 +117,12 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariant);
         }
         menu.init(ui);
-        ui.soundManager().playVoice(VOICE);
+        ui.management().soundManager().playVoice(VOICE);
     }
 
     @Override
     public void onExitStartPage(GameUI ui) {
-        ui.soundManager().stopAndDisposeVoice();
+        ui.management().soundManager().stopAndDisposeVoice();
         menu.stopDrawLoop();
         removeMenuBinding();
     }
@@ -180,7 +180,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
             final double menuHeight = Math.clamp(
                 stageHeight.doubleValue() * RELATIVE_MENU_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
             final double scaling = menuHeight / TS(menu.numTilesY());
-            return Math.round(scaling * 100.0) / 100.0; // rounded to 2 decimal digits to avoid to much resizing
+            return Math.round(scaling * 100.0) / 100.0; // rounded to 2 decimal digits to avoid too much resizing
         });
     }
 }

@@ -27,6 +27,7 @@ import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
+import de.amr.pacmanfx.ui.UIConfigManager;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardSectionCustomMaps;
@@ -122,13 +123,14 @@ public class PacManGames3dApp extends Application {
                 }
                 ui = new GameUI_Implementation(gameBox, primaryStage, sceneSize.x(), sceneSize.y());
 
-                ui.configManager().addConfigFactory(ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new);
-                ui.configManager().addConfigFactory(ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig::new);
-                ui.configManager().addConfigFactory(TENGEN_MS_PACMAN.name(),     TengenMsPacMan_UIConfig::new);
-                ui.configManager().addConfigFactory(ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_UIConfig::new);
-                ui.configManager().addConfigFactory(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_UIConfig::new);
+                final UIConfigManager configManager = ui.management().configManager();
+                configManager.addConfigFactory(ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new);
+                configManager.addConfigFactory(ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig::new);
+                configManager.addConfigFactory(TENGEN_MS_PACMAN.name(),     TengenMsPacMan_UIConfig::new);
+                configManager.addConfigFactory(ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_UIConfig::new);
+                configManager.addConfigFactory(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_UIConfig::new);
 
-                final StartPagesCarousel startPagesCarousel = ui.viewManager().startView();
+                final StartPagesCarousel startPagesCarousel = ui.management().viewManager().startView();
                 startPagesCarousel.addStartPage(new ArcadePacMan_StartPage());
                 startPagesCarousel.addStartPage(new ArcadeMsPacMan_StartPage());
                 startPagesCarousel.addStartPage(new TengenMsPacMan_StartPage());
@@ -136,7 +138,7 @@ public class PacManGames3dApp extends Application {
                 startPagesCarousel.startPages().forEach(startPage -> startPage.init(ui));
                 startPagesCarousel.setSelectedIndex(0);
 
-                ui.viewManager().playView().dashboard().addCommonSections(ui.translationManager(), DASHBOARD_IDs);
+                ui.management().viewManager().playView().dashboard().addCommonSections(ui.management().translationManager(), DASHBOARD_IDs);
             }
             configureDashboard();
             Logger.info("UI created {} builder", useBuilder ? "using" : "without");
@@ -174,7 +176,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void configureDashboard() {
-        final Dashboard dashboard = ui.viewManager().playView().dashboard();
+        final Dashboard dashboard = ui.management().viewManager().playView().dashboard();
 
         // Add Joypad controller section
         dashboard.addSection(

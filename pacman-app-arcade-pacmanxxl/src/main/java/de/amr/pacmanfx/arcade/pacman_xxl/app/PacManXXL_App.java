@@ -52,7 +52,7 @@ public class PacManXXL_App extends Application {
             .startPage(PacManXXL_StartPage::new)
             .build();
 
-        final Dashboard dashboard = ui.viewManager().playView().dashboard();
+        final Dashboard dashboard = ui.management().viewManager().playView().dashboard();
         dashboard.findSection(CommonDashboardID.CUSTOM_MAPS)
             .filter(DashboardSectionCustomMaps.class::isInstance)
             .map(DashboardSectionCustomMaps.class::cast)

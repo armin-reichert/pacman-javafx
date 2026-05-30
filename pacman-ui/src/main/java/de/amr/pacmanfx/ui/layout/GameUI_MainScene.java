@@ -33,14 +33,12 @@ public class GameUI_MainScene extends Scene {
         addEventFilter(KeyEvent.KEY_RELEASED, userInput.keyboard::onKeyReleased);
 
         // If a global action can be executed, do it; otherwise let the current view handle it.
-        userInput.keyboard.addStateListener(_ -> {
-            actionBindings.actionMatchingKeyboardState(userInput.keyboard).ifPresentOrElse(
-                action -> action.executeIfEnabled(ui),
-                () -> ui.viewManager().currentView().onInput(ui, userInput));
-        });
+        userInput.keyboard.addStateListener(_ -> actionBindings.actionMatchingKeyboardState(userInput.keyboard).ifPresentOrElse(
+            action -> action.executeIfEnabled(ui),
+            () -> ui.management().viewManager().currentView().onInput(ui, userInput)));
 
         // Delegate mouse scroll events to scene
-        setOnScroll(e -> ui.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+        setOnScroll(e -> ui.management().gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         // Global action bindings
         actionBindings.registerFirstBinding(CommonActions.ACTION_ENTER_FULLSCREEN,        GameUIConstants.COMMON_BINDINGS);

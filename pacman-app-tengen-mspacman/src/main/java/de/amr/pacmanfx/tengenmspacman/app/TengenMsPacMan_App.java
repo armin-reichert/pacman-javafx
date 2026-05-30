@@ -50,7 +50,7 @@ public class TengenMsPacMan_App extends Application {
                 CommonDashboardID.ABOUT)
             .build();
 
-        final Dashboard dashboard = ui.viewManager().playView().dashboard();
+        final Dashboard dashboard = ui.management().viewManager().playView().dashboard();
         dashboard.addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
             new DashboardSectionJoypad(dashboard),

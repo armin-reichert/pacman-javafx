@@ -51,7 +51,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
             return;
         }
         if (sceneTick == TICK_ANIMATION_START) {
-            ui.soundManager().play(PacManGameSoundID.INTERMISSION_3, 2);
+            ui.management().soundManager().play(PacManGameSoundID.INTERMISSION_3, 2);
             startBlinkyChasingPacMan();
         }
         else if (sceneTick == TICK_BLINKY_RUNNING_NAKED){

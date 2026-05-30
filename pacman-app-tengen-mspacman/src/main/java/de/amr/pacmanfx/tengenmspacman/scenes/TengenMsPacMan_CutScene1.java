@@ -130,12 +130,12 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
         collided = false;
 
-        ui.soundManager().play(PacManGameSoundID.INTERMISSION_1);
+        ui.management().soundManager().play(PacManGameSoundID.INTERMISSION_1);
     }
 
     @Override
     public void onDeactivate() {
-        ui.soundManager().stop(PacManGameSoundID.INTERMISSION_1);
+        ui.management().soundManager().stop(PacManGameSoundID.INTERMISSION_1);
     }
 
     @Override
