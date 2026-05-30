@@ -23,13 +23,8 @@ public class EmptyActionBindingsSet implements ActionBindingsSet {
     public void dispose() {}
 
     @Override
-    public Map<KeyCodeCombination, GameAction> actionForKeyCombination() {
+    public Map<KeyCodeCombination, GameAction> bindingMap() {
         return Map.of();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return true;
     }
 
     @Override
