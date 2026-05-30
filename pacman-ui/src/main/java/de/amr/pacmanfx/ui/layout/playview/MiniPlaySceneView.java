@@ -21,7 +21,10 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -62,6 +65,14 @@ public class MiniPlaySceneView {
 
     public MiniPlaySceneView() {
         canvas = new Canvas();
+        canvas.heightProperty().bind(GameUIConstants.PROPERTY_MINI_VIEW_HEIGHT);
+        canvas.widthProperty().bind(Bindings.createDoubleBinding(
+            () -> {
+                final double aspect = (double) worldSize.get().x() / worldSize.get().y();
+                return aspect * canvas.getHeight();
+            },
+            worldSize, canvas.heightProperty()
+        ));
 
         rootPane = new HBox(canvas);
         rootPane.setBorder(Border.stroke(Color.grayRgb(66)));
@@ -86,7 +97,6 @@ public class MiniPlaySceneView {
 
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
-        bindCanvasSize();
     }
 
     public void setGameLevel(UIConfig uiConfig, GameLevel level) {
@@ -112,8 +122,6 @@ public class MiniPlaySceneView {
         slideInAnimation.setByY(10);
         slideInAnimation.setDelay(Duration.seconds(1));
         slideInAnimation.setInterpolator(Interpolator.EASE_OUT);
-        slideInAnimation.setOnFinished(_ -> bindCanvasSize());
-        unbindCanvasSize();
         slideInAnimation.play();
     }
 
@@ -126,8 +134,6 @@ public class MiniPlaySceneView {
         slideOutAnimation.setByY(10);
         slideOutAnimation.setDelay(Duration.seconds(2));
         slideOutAnimation.setInterpolator(Interpolator.EASE_IN);
-        slideOutAnimation.setOnFinished(_ -> bindCanvasSize());
-        unbindCanvasSize();
         slideOutAnimation.play();
     }
 
@@ -174,23 +180,5 @@ public class MiniPlaySceneView {
         }
 
         drawCallCount += 1;
-    }
-
-    // Private area
-
-    private void bindCanvasSize() {
-        canvas.heightProperty().bind(GameUIConstants.PROPERTY_MINI_VIEW_HEIGHT);
-        canvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> {
-                final double aspect = (double) worldSize.get().x() / worldSize.get().y();
-                return aspect * canvas.getHeight();
-            },
-            worldSize, canvas.heightProperty()
-        ));
-    }
-
-    private void unbindCanvasSize() {
-        canvas.heightProperty().unbind();
-        canvas.widthProperty().unbind();
     }
 }
