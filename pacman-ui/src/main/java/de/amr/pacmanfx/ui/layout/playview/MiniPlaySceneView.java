@@ -143,9 +143,12 @@ public class MiniPlaySceneView {
     }
 
     public void draw() {
-        if (canvasRenderer == null) {
-            return;
+        if (canvasRenderer != null) {
+            drawCanvas();
         }
+    }
+    
+    private void drawCanvas() {
         canvasRenderer.clearCanvas();
 
         if (levelRenderer != null && actorRenderer != null) {
