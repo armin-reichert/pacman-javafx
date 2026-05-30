@@ -45,7 +45,7 @@ public class GameUI_MainScene extends Scene {
             .ifPresentOrElse(action -> {
                 if (action.executeIfEnabled(ui)) e.consume();
             },
-            () -> ui.viewManager().currentView().onInput(ui))
+            () -> ui.viewManager().currentView().onInput(ui, Input.instance()))
         );
 
         // Delegate mouse scroll events to scene

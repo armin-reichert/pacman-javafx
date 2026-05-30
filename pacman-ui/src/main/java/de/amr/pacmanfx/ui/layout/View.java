@@ -29,9 +29,10 @@ public interface View {
      * the resolved action via {@link de.amr.pacmanfx.ui.action.GameAction#executeIfEnabled(GameUI)}.
      *
      * @param ui the global game UI façade
+     * @param input the user input
      */
-    default void onInput(GameUI ui) {
-        actionBindings().matchingAction(Input.instance().keyboard).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
+    default void onInput(GameUI ui, Input input) {
+        actionBindings().matchingAction(input.keyboard).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
     }
 
     /**

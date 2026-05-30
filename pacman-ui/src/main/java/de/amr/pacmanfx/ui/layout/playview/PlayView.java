@@ -132,9 +132,9 @@ public class PlayView implements View {
     }
 
     @Override
-    public void onInput(GameUI ui) {
+    public void onInput(GameUI ui, Input input) {
         // First lLook for an action binding in my bindings, if nothing found, delegate to the current game scene if any
-        actionBindings.matchingAction(Input.instance().keyboard).ifPresentOrElse(
+        actionBindings.matchingAction(input.keyboard).ifPresentOrElse(
             action -> action.executeIfEnabled(ui),
             () -> ui.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput)
         );
