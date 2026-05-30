@@ -6,11 +6,11 @@ import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 
 // So many managers? I think I should fire some!
-public record ManagementBoard(
-    UIConfigManager configManager,
-    GameSceneManager gameSceneManager,
-    PreferencesManager prefsManager,
-    SoundManager soundManager,
-    TranslationManager translationManager,
-    ViewManager viewManager) {
+public record UIServices(
+    UIConfigManager configurations,
+    GameSceneManager gameScenes,
+    PreferencesManager prefs,
+    SoundManager sounds,
+    TranslationManager translations,
+    ViewManager views) {
 }

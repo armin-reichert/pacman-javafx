@@ -123,14 +123,14 @@ public class PacManGames3dApp extends Application {
                 }
                 ui = new GameUI_Implementation(gameBox, primaryStage, sceneSize.x(), sceneSize.y());
 
-                final UIConfigManager configManager = ui.management().configManager();
+                final UIConfigManager configManager = ui.services().configurations();
                 configManager.addConfigFactory(ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new);
                 configManager.addConfigFactory(ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig::new);
                 configManager.addConfigFactory(TENGEN_MS_PACMAN.name(),     TengenMsPacMan_UIConfig::new);
                 configManager.addConfigFactory(ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_UIConfig::new);
                 configManager.addConfigFactory(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_UIConfig::new);
 
-                final StartPagesCarousel startPagesCarousel = ui.management().viewManager().startView();
+                final StartPagesCarousel startPagesCarousel = ui.services().views().startView();
                 startPagesCarousel.addStartPage(new ArcadePacMan_StartPage());
                 startPagesCarousel.addStartPage(new ArcadeMsPacMan_StartPage());
                 startPagesCarousel.addStartPage(new TengenMsPacMan_StartPage());
@@ -138,7 +138,7 @@ public class PacManGames3dApp extends Application {
                 startPagesCarousel.startPages().forEach(startPage -> startPage.init(ui));
                 startPagesCarousel.setSelectedIndex(0);
 
-                ui.management().viewManager().playView().dashboard().addCommonSections(ui.management().translationManager(), DASHBOARD_IDs);
+                ui.services().views().playView().dashboard().addCommonSections(ui.services().translations(), DASHBOARD_IDs);
             }
             configureDashboard();
             Logger.info("UI created {} builder", useBuilder ? "using" : "without");
@@ -176,7 +176,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void configureDashboard() {
-        final Dashboard dashboard = ui.management().viewManager().playView().dashboard();
+        final Dashboard dashboard = ui.services().views().playView().dashboard();
 
         // Add Joypad controller section
         dashboard.addSection(

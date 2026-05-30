@@ -103,7 +103,7 @@ public class DashboardSection3DSettings extends DashboardSection {
 
         comboPerspectives.setValue(GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.get());
         sliderMiniViewSceneHeight.setValue(GameUIConstants.PROPERTY_MINI_VIEW_HEIGHT.get());
-        sliderMiniViewSceneHeight.setDisable(ui.management().viewManager().playView().miniPlaySceneView().isMoving());
+        sliderMiniViewSceneHeight.setDisable(ui.services().views().playView().miniPlaySceneView().isMoving());
         sliderMiniViewOpacityPercentage.setValue(GameUIConstants.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
         sliderWallHeight.setValue(GameUIConstants.PROPERTY_3D_WALL_HEIGHT.get());
         sliderWallOpacity.setValue(GameUIConstants.PROPERTY_3D_WALL_OPACITY.get());
@@ -115,14 +115,14 @@ public class DashboardSection3DSettings extends DashboardSection {
     }
 
     private String subSceneSizeInfo(GameUI ui) {
-        return ui.management().gameSceneManager().optCurrentGameScene()
+        return ui.services().gameScenes().optCurrentGameScene()
             .flatMap(GameScene::optSubSceneFX)
             .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
             .orElse(NO_INFO);
     }
 
     private String subSceneCameraInfo(GameUI ui) {
-        final GameScene gameScene = ui.management().gameSceneManager().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = ui.services().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
         return gameScene.optSubSceneFX().map(SubScene::getCamera)
             .map(camera -> "rot=%.0f x=%.0f y=%.0f z=%.0f".formatted(
@@ -135,7 +135,7 @@ public class DashboardSection3DSettings extends DashboardSection {
 
     private String sceneSizeInfo(GameUI ui) {
         final Game game = ui.gameContext().game();
-        final GameScene gameScene = ui.management().gameSceneManager().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = ui.services().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
 
         if (gameScene instanceof GameScene2D gameScene2D) {

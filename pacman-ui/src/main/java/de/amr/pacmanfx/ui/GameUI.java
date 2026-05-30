@@ -67,12 +67,11 @@ public interface GameUI {
         showFlashMessage(GameUIConstants.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
 
-
     // ---------------------------------------------------------------------------------------------
-    // Management board
+    // Services and configuration
     // ---------------------------------------------------------------------------------------------
 
-    ManagementBoard management();
+    UIServices services();
 
     /**
      * @return the current UI configuration, cast to the expected type.

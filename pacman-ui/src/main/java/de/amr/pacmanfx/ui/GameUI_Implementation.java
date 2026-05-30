@@ -57,7 +57,7 @@ public final class GameUI_Implementation implements GameUI {
     // Observes changes in custom map directory
     private final DirectoryWatchdog customDirWatchdog;
 
-    private final ManagementBoard management;
+    private final UIServices services;
 
     // Sprite animation support
     private final SpriteAnimationTimer spriteAnimationTimer = new SpriteAnimationTimer(new SpriteAnimationSet());
@@ -82,7 +82,7 @@ public final class GameUI_Implementation implements GameUI {
         viewManager.setEditorViewFactory(this::createEditorView);
 
         //TODO should not depend on UI components being initialized etc.
-        management = new ManagementBoard(
+        services = new UIServices(
             new UIConfigManager(),
             new GameSceneManager(),
             createPrefsManager(),
@@ -92,7 +92,7 @@ public final class GameUI_Implementation implements GameUI {
         );
 
         viewManager.playView().configurePropertyBindings(this);
-        statusIconBox = new StatusIconBox(management.translationManager());
+        statusIconBox = new StatusIconBox(services.translations());
     }
 
 
@@ -100,8 +100,8 @@ public final class GameUI_Implementation implements GameUI {
 
 
     @Override
-    public ManagementBoard management() {
-        return management;
+    public UIServices services() {
+        return services;
     }
 
     @Override
@@ -116,7 +116,7 @@ public final class GameUI_Implementation implements GameUI {
         if (gameVariantName == null) {
             throw new IllegalStateException("Cannot access UI configuration: no game variant is selected");
         }
-        return (T) management.configManager().getOrCreateUIConfig(gameVariantName);
+        return (T) services.configurations().getOrCreateUIConfig(gameVariantName);
     }
 
     @Override
@@ -126,13 +126,13 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void openWorldMapFileInEditor(File worldMapFile) {
-        management.viewManager().createEditorIfNotExisting(gameBox.customMapDir());
-        management.viewManager().optEditorView().map(EditorView::editor).ifPresent(editor -> {
+        services.views().createEditorIfNotExisting(gameBox.customMapDir());
+        services.views().optEditorView().map(EditorView::editor).ifPresent(editor -> {
             try {
                 if (worldMapFile != null) {
                     editor.editFile(worldMapFile);
                 }
-                management.viewManager().selectEditorView(this);
+                services.views().selectEditorView(this);
             } catch (IOException x) {
                 Logger.error(x, "Could not open map file {}", worldMapFile);
                 showFlashMessage("Cannot open world map file");
@@ -160,7 +160,7 @@ public final class GameUI_Implementation implements GameUI {
     public void show() {
         initGameVariantAndRegisterChangeHandler();
         load3DAssets();
-        management.viewManager().playView().dashboard().init(this);
+        services.views().playView().dashboard().init(this);
         initMainScene();
         initProperties();
         initGameClock();
@@ -195,13 +195,13 @@ public final class GameUI_Implementation implements GameUI {
         gameContext().clock().stop();
         gameContext().clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
 
-        management.soundManager().stopAll();
+        services.sounds().stopAll();
 
-        management.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> {
+        services.gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             gameScene.soundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene.deactivate();
-            management.gameSceneManager().removeFromPlayView(management.viewManager().playView(), gameScene);
-            management.gameSceneManager().gameSceneProperty().set(null);
+            services.gameScenes().removeFromPlayView(services.views().playView(), gameScene);
+            services.gameScenes().gameSceneProperty().set(null);
         });
 
         Logger.info("Game STOPPED!");
@@ -259,7 +259,7 @@ public final class GameUI_Implementation implements GameUI {
             // restore title (editor changed it)
             stage.titleProperty().unbind();
             stage.titleProperty().bind(stageTitleBinding);
-            management.viewManager().selectStartView();
+            services.views().selectStartView();
         });
         return editorView;
     }
@@ -271,9 +271,9 @@ public final class GameUI_Implementation implements GameUI {
             step.clearInfo(clock.tickCount());
             gameContext().game().flow().update();
             step.printLog();
-            management.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
+            services.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });
-        clock.setPermanentAction(() -> management.viewManager().currentView().render());
+        clock.setPermanentAction(() -> services.views().currentView().render());
         clock.setErrorHandler(this::ka_tas_tro_phe);
     }
 
@@ -300,27 +300,27 @@ public final class GameUI_Implementation implements GameUI {
         GameUIConstants.PROPERTY_3D_WALL_HEIGHT .set(currentConfig().worldConfig().maze().obstacleBaseHeight());
         GameUIConstants.PROPERTY_3D_WALL_OPACITY.set(currentConfig().worldConfig().maze().obstacleOpacity());
 
-        management.soundManager().muteProperty().bind(GameUIConstants.PROPERTY_MUTED);
+        services.sounds().muteProperty().bind(GameUIConstants.PROPERTY_MUTED);
 
         statusIconBox.rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> management.viewManager().isPlayViewSelected() || management.viewManager().isStartViewSelected(),
-            management.viewManager().currentViewProperty()));
+            () -> services.views().isPlayViewSelected() || services.views().isStartViewSelected(),
+            services.views().currentViewProperty()));
 
         stageTitleBinding = createStringBinding(
             this::computeStageTitle,
             gameContext().clock().updatesDisabledProperty(),
             gameContext().gameVariantNameProperty(),
-            management.viewManager().currentViewProperty(),
-            management.gameSceneManager().gameSceneProperty(),
+            services.views().currentViewProperty(),
+            services.gameScenes().gameSceneProperty(),
             GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE,
             GameUIConstants.PROPERTY_3D_ENABLED
         );
 
         scene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> management.gameSceneManager().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
+            () -> services.gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
                 ? GameUIConstants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUIConstants.WALLPAPERS.length)]
                 : GameUIConstants.BACKGROUND_PAC_MAN_WALLPAPER
-            , management.viewManager().currentViewProperty(), management.gameSceneManager().gameSceneProperty()
+            , services.views().currentViewProperty(), services.gameScenes().gameSceneProperty()
         ));
     }
 
@@ -349,7 +349,7 @@ public final class GameUI_Implementation implements GameUI {
         }
         stage.centerOnScreen();
         stage.show();
-        management.viewManager().selectStartView();
+        services.views().selectStartView();
     }
 
     /**
@@ -359,7 +359,7 @@ public final class GameUI_Implementation implements GameUI {
      */
     private void ka_tas_tro_phe(Throwable reason) {
         Platform.runLater(() -> {
-            final String errorMessage = management.translationManager().translate("error.oh_no_my_program");
+            final String errorMessage = services.translations().translate("error.oh_no_my_program");
             showFlashMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
             stopGame();
             Logger.error("*** SOMETHING VERY BAD HAPPENED:");
@@ -368,14 +368,14 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private String computeStageTitle() {
-        final View view = management.viewManager().currentView();
+        final View view = services.views().currentView();
         return view == null
-            ? management.translationManager().translate("view.missing") // Should never happen
+            ? services.translations().translate("view.missing") // Should never happen
             : view.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene());
     }
 
     private String titleForCurrentGameScene() {
-        final GameScene gameScene = management.gameSceneManager().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = services.gameScenes().optCurrentGameScene().orElse(null);
 
         final boolean debug = GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get();
         final boolean is3D = GameUIConstants.PROPERTY_3D_ENABLED.get();
@@ -393,7 +393,7 @@ public final class GameUI_Implementation implements GameUI {
             return "";
         }
 
-        final String viewMode = management.translationManager().translate(is3D ? "threeD" : "twoD");
+        final String viewMode = services.translations().translate(is3D ? "threeD" : "twoD");
 
         // In game-variant specific resource bundles, there should be two entries with placeholder
         // app.title = Game Variant Name {0}

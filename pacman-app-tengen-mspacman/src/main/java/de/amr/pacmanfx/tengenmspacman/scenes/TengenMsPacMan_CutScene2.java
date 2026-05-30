@@ -81,12 +81,12 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
 
-        ui.management().soundManager().play(PacManGameSoundID.INTERMISSION_2);
+        ui.services().sounds().play(PacManGameSoundID.INTERMISSION_2);
     }
 
     @Override
     public void onDeactivate() {
-        ui.management().soundManager().stop(PacManGameSoundID.INTERMISSION_2);
+        ui.services().sounds().stop(PacManGameSoundID.INTERMISSION_2);
     }
 
     @Override

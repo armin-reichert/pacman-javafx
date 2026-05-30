@@ -45,7 +45,7 @@ public class HelpInfo {
             if (demoLevel) {
                 helpInfo.addInfoForDemoLevelPlayScene();
             } else {
-                helpInfo.addInfoForPlayScene(ui.management().translationManager());
+                helpInfo.addInfoForPlayScene(ui.services().translations());
             }
         }
         else {
@@ -80,13 +80,13 @@ public class HelpInfo {
 
         // add default entries:
         if (ui.gameContext().game().cheats().isUsingAutopilot()) {
-            var autoPilotEntry = text(ui.management().translationManager().translate("help.autopilot_on"), Color.ORANGE);
+            var autoPilotEntry = text(ui.services().translations().translate("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
         if (ui.gameContext().game().cheats().isImmune()) {
-            var immunityEntry = text(ui.management().translationManager().translate("help.immunity_on"), Color.ORANGE);
+            var immunityEntry = text(ui.services().translations().translate("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);
             grid.add(immunityEntry, 0, grid.getRowCount() + 1);
@@ -112,7 +112,7 @@ public class HelpInfo {
     }
 
     private void addRow(String lhsKey, String keyboardKey) {
-        addRow(label(ui.management().translationManager().translate(lhsKey), Color.gray(0.9)),
+        addRow(label(ui.services().translations().translate(lhsKey), Color.gray(0.9)),
             text("[" + keyboardKey + "]", Color.YELLOW));
     }
 

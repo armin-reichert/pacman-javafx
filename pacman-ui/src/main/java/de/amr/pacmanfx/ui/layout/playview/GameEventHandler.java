@@ -33,31 +33,31 @@ public class GameEventHandler extends DefaultGameEventListener {
                 level.entities().ghosts().forEach(ghost ->
                     ghost.setAnimationManager(uiConfig.createGhostAnimations(ui.spriteAnimationSet(), ghost.personality())));
 
-                final MiniPlaySceneView miniPlayView = ui.management().viewManager().playView().miniPlaySceneView();
+                final MiniPlaySceneView miniPlayView = ui.services().views().playView().miniPlaySceneView();
                 miniPlayView.setUIConfig(ui.currentConfig());
                 miniPlayView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
                 miniPlayView.slideIn();
 
                 // size of game scene might have changed, so re-embed
-                ui.management().gameSceneManager().optCurrentGameScene().ifPresent(
-                    gameScene -> ui.management().gameSceneManager().embedGameSceneIntoPlayView(ui, gameScene));
+                ui.services().gameScenes().optCurrentGameScene().ifPresent(
+                    gameScene -> ui.services().gameScenes().embedGameSceneIntoPlayView(ui, gameScene));
             }
 
             case GameStateChangeEvent stateChangeEvent -> {
                 if (stateChangeEvent.newState().matchesByName(CanonicalGameState.LEVEL_COMPLETE.name())) {
-                    final MiniPlaySceneView miniPlayView = ui.management().viewManager().playView().miniPlaySceneView();
+                    final MiniPlaySceneView miniPlayView = ui.services().views().playView().miniPlaySceneView();
                     miniPlayView.slideOut();
                 }
             }
 
-            case GenericChangeEvent _ -> ui.management().gameSceneManager().forceGameSceneUpdate(ui);
+            case GenericChangeEvent _ -> ui.services().gameScenes().forceGameSceneUpdate(ui);
 
             default -> {}
         }
 
-        ui.management().gameSceneManager().updateGameSceneAndForceReload(ui, false);
+        ui.services().gameScenes().updateGameSceneAndForceReload(ui, false);
 
         // Call game event handler for current game scene
-        ui.management().gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
+        ui.services().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
     }
 }

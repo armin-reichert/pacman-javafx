@@ -59,8 +59,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public Optional<ContextMenu> supplyContextMenu() {
         final Game game = gameContext().game();
         final var menu = new ContextMenu();
-        addLocalizedTitleItem(menu, ui.management().translationManager(), "pacman");
-        addLocalizedCheckBox(menu, ui.management().translationManager(), game.cheats().usingAutopilotProperty(), "autopilot").setOnAction(e -> {
+        addLocalizedTitleItem(menu, ui.services().translations(), "pacman");
+        addLocalizedCheckBox(menu, ui.services().translations(), game.cheats().usingAutopilotProperty(), "autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
                 CheatActions.ACTION_ACTIVATE_AUTOPILOT.executeIfEnabled(ui);
@@ -68,7 +68,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
                 CheatActions.ACTION_DEACTIVATE_AUTOPILOT.executeIfEnabled(ui);
             }
         });
-        addLocalizedCheckBox(menu, ui.management().translationManager(), game.cheats().immuneProperty(), "immunity").setOnAction(e -> {
+        addLocalizedCheckBox(menu, ui.services().translations(), game.cheats().immuneProperty(), "immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
                 CheatActions.ACTION_ACTIVATE_IMMUNITY.executeIfEnabled(ui);
@@ -77,8 +77,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
             }
         });
         addSeparator(menu);
-        addLocalizedCheckBox(menu, ui.management().translationManager(), GameUIConstants.PROPERTY_MUTED, "muted");
-        addLocalizedActionItem(menu, ui, ui.management().translationManager(), CommonActions.ACTION_QUIT_GAME_SCENE, "quit");
+        addLocalizedCheckBox(menu, ui.services().translations(), GameUIConstants.PROPERTY_MUTED, "muted");
+        addLocalizedActionItem(menu, ui, ui.services().translations(), CommonActions.ACTION_QUIT_GAME_SCENE, "quit");
 
         return Optional.of(menu);
     }
@@ -107,7 +107,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         }
         Logger.info(actionBindings);
 
-        ui.management().soundManager().setEnabled(!level.isDemoLevel()); //TODO is this needed?
+        ui.services().sounds().setEnabled(!level.isDemoLevel()); //TODO is this needed?
         levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameContext().game().flow().state().expire());
 
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();

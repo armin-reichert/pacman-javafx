@@ -86,7 +86,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         }
         switch (sceneTick) {
             case TICK_ANIMATION_START -> {
-                ui.management().soundManager().play(PacManGameSoundID.INTERMISSION_2);
+                ui.services().sounds().play(PacManGameSoundID.INTERMISSION_2);
                 setNailDressAnimationState(NailDressState.NAIL);
             }
             case TICK_PAC_MAN_STARTS_RUNNING -> pacManStartsRunning();

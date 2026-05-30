@@ -59,7 +59,7 @@ public interface TengenMsPacMan_Actions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.management().gameSceneManager().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_2D);
+            return ui.services().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_2D);
         }
     };
 

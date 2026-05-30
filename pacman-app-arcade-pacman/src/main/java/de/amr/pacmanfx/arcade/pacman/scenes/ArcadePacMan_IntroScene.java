@@ -102,7 +102,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void onActivate() {
         final UIConfig uiConfig = ui.currentConfig();
 
-        ui.management().soundManager().playVoice(GameUIConstants.VOICE_EXPLAIN_GAME_START);
+        ui.services().sounds().playVoice(GameUIConstants.VOICE_EXPLAIN_GAME_START);
 
         actionBindings.registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS); // insert coin + start game actions
         actionBindings.registerAllBindings(GameUIConstants.SCENE_TESTS_BINDINGS); // actions for starting tests
@@ -132,7 +132,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     public void onDeactivate() {
         blinking.stop();
-        ui.management().soundManager().stopAndDisposeVoice();
+        ui.services().sounds().stopAndDisposeVoice();
     }
 
     @Override

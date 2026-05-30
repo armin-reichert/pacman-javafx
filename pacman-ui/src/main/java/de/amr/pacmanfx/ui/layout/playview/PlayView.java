@@ -136,7 +136,7 @@ public class PlayView implements View {
         // First lLook for an action binding in my bindings, if nothing found, delegate to the current game scene if any
         actionBindings.actionMatchingKeyboardState(input.keyboard).ifPresentOrElse(
             action -> action.executeIfEnabled(ui),
-            () -> ui.management().gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput)
+            () -> ui.services().gameScenes().optCurrentGameScene().ifPresent(GameScene::onInput)
         );
     }
 
@@ -163,7 +163,7 @@ public class PlayView implements View {
     public void render() {
 
         // Render current 2D game scene
-        final GameScene gameScene = ui.management().gameSceneManager().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = ui.services().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene instanceof GameScene2D gameScene2D) {
             final Game game = ui.gameContext().game();
             if (sceneRenderer != null) {
@@ -242,9 +242,9 @@ public class PlayView implements View {
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> GameUIConstants.PROPERTY_MINI_VIEW_ON.get()
-                && ui.management().gameSceneManager().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D),
+                && ui.services().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D),
             GameUIConstants.PROPERTY_MINI_VIEW_ON,
-            ui.management().gameSceneManager().gameSceneProperty()
+            ui.services().gameScenes().gameSceneProperty()
         ));
     }
 
