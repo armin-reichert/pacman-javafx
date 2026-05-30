@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.ui.GameUIConstants;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
@@ -20,10 +21,9 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
     private final CopyrightRenderer copyrightRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
 
-    public ArcadeMsPacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas) {
+    public ArcadeMsPacMan_StartScene_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
-        copyrightRenderer = scene.configureRenderer(new CopyrightRenderer(canvas,
-            scene.ui().currentConfig().assets().image("logo.midway")));
+        copyrightRenderer = scene.configureRenderer(new CopyrightRenderer(canvas, uiConfig.assets().image("logo.midway")));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 

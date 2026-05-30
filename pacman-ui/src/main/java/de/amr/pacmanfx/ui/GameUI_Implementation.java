@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
+import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.layout.*;
@@ -70,13 +71,12 @@ public final class GameUI_Implementation implements GameUI {
 
     private StringBinding stageTitleBinding;
 
-    public GameUI_Implementation(GameBox gameBox, Stage stage, int mainSceneWidth, int mainSceneHeight) {
+    public GameUI_Implementation(GameBox gameBox, Stage stage, int width, int height) {
         this.gameBox = requireNonNull(gameBox);
         this.stage = requireNonNull(stage);
-        this.scene = new GameUI_MainScene(requireNonNegative(mainSceneWidth), requireNonNegative(mainSceneHeight));
+        this.scene = new GameUI_MainScene(requireNonNegative(width), requireNonNegative(height));
         this.customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
-
-        services = new UIServices(
+        this.services = new UIServices(
             new UIConfigManager(),
             new GameSceneManager(),
             new PreferencesManager(GameUI_Implementation.class),
@@ -91,25 +91,9 @@ public final class GameUI_Implementation implements GameUI {
 
     // GameUI interface
 
-
-    @Override
-    public UIServices services() {
-        return services;
-    }
-
     @Override
     public DirectoryWatchdog customDirWatchdog() {
         return customDirWatchdog;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends UIConfig> T currentConfig() {
-        final String gameVariantName = gameContext().gameVariantName();
-        if (gameVariantName == null) {
-            throw new IllegalStateException("Cannot access UI configuration: no game variant is selected");
-        }
-        return (T) services.configurations().getOrCreateUIConfig(gameVariantName);
     }
 
     @Override
@@ -147,6 +131,11 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public Scene scene() {
         return scene;
+    }
+
+    @Override
+    public UIServices services() {
+        return services;
     }
 
     @Override
@@ -297,10 +286,12 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void initProperties() {
+        final String currentVariantName = gameContext().gameVariantName();
+        final UIConfig currentConfig = services.configurations().getOrCreateUIConfig(currentVariantName);
 
-        // These need the current UI config to be initialized
-        GameUIConstants.PROPERTY_3D_WALL_HEIGHT .set(currentConfig().worldConfig().maze().obstacleBaseHeight());
-        GameUIConstants.PROPERTY_3D_WALL_OPACITY.set(currentConfig().worldConfig().maze().obstacleOpacity());
+        final MazeConfig3D mazeConfig3D = currentConfig.worldConfig().maze();
+        GameUIConstants.PROPERTY_3D_WALL_HEIGHT .set(mazeConfig3D.obstacleBaseHeight());
+        GameUIConstants.PROPERTY_3D_WALL_OPACITY.set(mazeConfig3D.obstacleOpacity());
 
         services.sounds().muteProperty().bind(GameUIConstants.PROPERTY_MUTED);
 
@@ -321,8 +312,9 @@ public final class GameUI_Implementation implements GameUI {
         scene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> services.gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
                 ? GameUIConstants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUIConstants.WALLPAPERS.length)]
-                : GameUIConstants.BACKGROUND_PAC_MAN_WALLPAPER
-            , services.views().currentViewProperty(), services.gameScenes().gameSceneProperty()
+                : GameUIConstants.BACKGROUND_PAC_MAN_WALLPAPER,
+            services.views().currentViewProperty(),
+            services.gameScenes().gameSceneProperty()
         ));
     }
 
@@ -341,11 +333,12 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void displayStage() {
+        final UIConfig currentConfig = services.configurations().getOrCreateUIConfig(gameContext().gameVariantName());
+        final Image icon = currentConfig.assets().image("app_icon");
         stage.setScene(scene);
         stage.setMinWidth(GameUIConstants.MIN_STAGE_WIDTH);
         stage.setMinHeight(GameUIConstants.MIN_STAGE_HEIGHT);
         stage.titleProperty().bind(stageTitleBinding);
-        final Image icon = currentConfig().assets().image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         }
@@ -401,7 +394,8 @@ public final class GameUI_Implementation implements GameUI {
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final TranslationManager appSpecificTranslator = currentConfig().assets();
+        final UIConfig currentConfig = services.configurations().getOrCreateUIConfig(gameContext().gameVariantName());
+        final TranslationManager appSpecificTranslator = currentConfig.assets();
         final String appTitleKey = paused ? "app.title.paused" : "app.title";
         if (appSpecificTranslator.bundle() != null
             && appSpecificTranslator.bundle().containsKey(appTitleKey)) {

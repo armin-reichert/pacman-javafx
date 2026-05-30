@@ -69,7 +69,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void onActivate() {
+    public void onActivate(UIConfig uiConfig) {
         ui.services().sounds().playVoice(GameUIConstants.VOICE_EXPLAIN_GAME_START);
 
         actionBindings.registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
@@ -78,8 +78,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);
         marquee.setBulbOnColor(ARCADE_WHITE);
-
-        final UIConfig uiConfig = ui.currentConfig();
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
         msPacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));

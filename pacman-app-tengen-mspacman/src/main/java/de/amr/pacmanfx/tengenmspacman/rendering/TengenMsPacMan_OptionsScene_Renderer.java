@@ -6,7 +6,9 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_OptionsScene;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
@@ -53,6 +55,9 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     }
 
     public void draw(GameScene2D scene) {
+        final GameUI ui = scene.ui();
+        final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
+
         clearCanvas();
 
         final TengenMsPacMan_OptionsScene optionsScene = (TengenMsPacMan_OptionsScene) scene;
@@ -112,7 +117,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         fillText(String.valueOf(game.startLevelNumber()), NES_WHITE, COL_VALUE, y);
         final int numContinues = game.numContinues();
         if (numContinues < 4) {
-            var spriteSheet = (TengenMsPacMan_SpriteSheet) optionsScene.ui().currentConfig().spriteSheet();
+            var spriteSheet = (TengenMsPacMan_SpriteSheet) currentConfig.spriteSheet();
             RectShort continuesSprite = spriteSheet.sprite(switch (numContinues) {
                 case 0 -> SpriteID.CONTINUES_0;
                 case 1 -> SpriteID.CONTINUES_1;

@@ -34,8 +34,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
     public ArcadeMsPacMan_IntroScene_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
         marqueeRenderer = scene.configureRenderer(new MarqueeRenderer(canvas));
-        copyrightRenderer = scene.configureRenderer(new CopyrightRenderer(canvas,
-            scene.ui().currentConfig().assets().image("logo.midway")));
+        copyrightRenderer = scene.configureRenderer(new CopyrightRenderer(canvas, uiConfig.assets().image("logo.midway")));
         actorRenderer = scene.configureRenderer(uiConfig.createActorRenderer(canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }

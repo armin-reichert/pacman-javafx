@@ -69,9 +69,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     @Override
-    public void onActivate() {
-        final UIConfig uiConfig = ui.currentConfig();
-
+    public void onActivate(UIConfig uiConfig) {
         clapperboard = new Clapperboard(4, "THE END");
         clapperboard.setPosition(TS(3), TS(10));
         clapperboard.setVisible(true);
@@ -96,6 +94,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     public void onTick(GameClock clock) {
+        final UIConfig uiConfig = ui.services().configurations().getOrCreateUIConfig(gameContext().gameVariantName());
         final TengenMsPacMan_GameModel game = gameContext().game();
         final State<Game> gameState = game.flow().state();
         final long gameStateTick = gameState.timer().tickCount();
@@ -164,20 +163,20 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                     pacMan.hide();
                     msPacMan.hide();
                 }
-                case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(gameStateTick);
+                case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(uiConfig, gameStateTick);
                 case 1500 -> soundEffects().ifPresent(GameSoundEffects::stopAll);
                 case TICK_EXPIRES -> game.flow().enterState(TengenMsPacMan_GameState.PREPARING_GAME_START);
             }
         }
     }
 
-    private void spawnJunior(long tick) {
+    private void spawnJunior(UIConfig uiConfig, long tick) {
         var junior = TengenMsPacMan_ActorFactory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         junior.setPosition((float) randomX, getUnscaledHeight() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimationManager(ui.currentConfig().createPacAnimations(ui.spriteAnimationSet()));
+        junior.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
         junior.animationManager().select(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);

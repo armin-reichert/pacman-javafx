@@ -61,10 +61,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void onActivate() {
+    public void onActivate(UIConfig uiConfig) {
         gameContext().game().hud().hide();
 
-        final UIConfig uiConfig = ui.currentConfig();
         spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         actionBindings.registerFirstBinding(ACTION_ENTER_START_SCREEN,             TENGEN_SPECIFIC_BINDINGS);
@@ -115,12 +114,12 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
                 final GameUI ui = scene.ui;
-                final UIConfig uiConfig = ui.currentConfig();
+                final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 
                 scene.msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-                scene.msPacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
+                scene.msPacMan.setAnimationManager(currentConfig.createPacAnimations(ui.spriteAnimationSet()));
                 scene.msPacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
                 scene.msPacMan.animationManager().playSelected();
                 scene.msPacMan.setPosition(TS * 33, ACTOR_Y);
@@ -129,10 +128,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.setVisible(true);
 
                 scene.ghosts = List.of(
-                    uiConfig.createGhostWithAnimations(ui.spriteAnimationSet(), RED_GHOST_SHADOW),
-                    uiConfig.createGhostWithAnimations(ui.spriteAnimationSet(), CYAN_GHOST_BASHFUL),
-                    uiConfig.createGhostWithAnimations(ui.spriteAnimationSet(), PINK_GHOST_SPEEDY),
-                    uiConfig.createGhostWithAnimations(ui.spriteAnimationSet(), ORANGE_GHOST_POKEY)
+                    currentConfig.createGhostWithAnimations(ui.spriteAnimationSet(), RED_GHOST_SHADOW),
+                    currentConfig.createGhostWithAnimations(ui.spriteAnimationSet(), CYAN_GHOST_BASHFUL),
+                    currentConfig.createGhostWithAnimations(ui.spriteAnimationSet(), PINK_GHOST_SPEEDY),
+                    currentConfig.createGhostWithAnimations(ui.spriteAnimationSet(), ORANGE_GHOST_POKEY)
                 );
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33, ACTOR_Y);

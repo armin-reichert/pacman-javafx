@@ -68,17 +68,10 @@ public interface GameUI {
     }
 
     // ---------------------------------------------------------------------------------------------
-    // Services and configuration
+    // Services (view manager, game scene manager, sound manager etc.)
     // ---------------------------------------------------------------------------------------------
 
     UIServices services();
-
-    /**
-     * @return the current UI configuration, cast to the expected type.
-     *
-     * @param <T> expected configuration type
-     */
-    <T extends UIConfig> T currentConfig();
 
     // ---------------------------------------------------------------------------------------------
     // Lifecycle

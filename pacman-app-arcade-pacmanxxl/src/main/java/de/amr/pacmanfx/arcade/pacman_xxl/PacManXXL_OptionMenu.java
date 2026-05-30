@@ -108,6 +108,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     public void init(GameUI ui) {
         this.ui = requireNonNull(ui);
+        final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
 
         final Game game = ui.gameContext().game();
         final GameVariant gameVariant = GameVariant.valueOf(ui.gameContext().gameVariantName());
@@ -127,7 +128,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         logMenuState();
 
         soundEnabledProperty().bind(ui.services().sounds().muteProperty().not());
-        chaseAnimation.init(ui.currentConfig(), canvas, ui.spriteAnimationSet());
+        chaseAnimation.init(currentConfig, canvas, ui.spriteAnimationSet());
 
         requestFocus();
     }

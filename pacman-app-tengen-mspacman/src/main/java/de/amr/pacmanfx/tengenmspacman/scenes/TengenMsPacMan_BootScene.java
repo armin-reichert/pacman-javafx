@@ -36,10 +36,9 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     }
 
     @Override
-    public void onActivate() {
+    public void onActivate(UIConfig uiConfig) {
         movingText = new Actor();
         movingText.setPosition(TS(9), getUnscaledHeight()); // lower border of screen
-        final UIConfig uiConfig = ui.currentConfig();
         ghost = uiConfig.createGhostWithAnimations(ui.spriteAnimationSet(), RED_GHOST_SHADOW);
     }
 

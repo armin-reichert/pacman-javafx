@@ -107,7 +107,8 @@ public abstract class GameScene implements Disposable {
      * @return optional sound effects for this scene
      */
     public Optional<GameSoundEffects> soundEffects() {
-        return ui().currentConfig().optSoundEffects();
+        final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(gameContext().gameVariantName());
+        return currentConfig.optSoundEffects();
     }
 
     /**
@@ -128,7 +129,8 @@ public abstract class GameScene implements Disposable {
      * Activates the scene and assigns keyboard bindings.
      */
     public final void activate() {
-        onActivate();
+        final String gameVariantName = gameContext().gameVariantName();
+        onActivate(ui.services().configurations().getOrCreateUIConfig(gameVariantName));
         Logger.info(actionBindings);
         Logger.trace("Game scene {} activated", getClass().getSimpleName());
     }
@@ -149,7 +151,7 @@ public abstract class GameScene implements Disposable {
     }
 
     /** Called when the scene becomes active. */
-    public void onActivate() {}
+    public void onActivate(UIConfig uiConfig) {}
 
     /** Called when the scene is deactivated. */
     public void onDeactivate() {}

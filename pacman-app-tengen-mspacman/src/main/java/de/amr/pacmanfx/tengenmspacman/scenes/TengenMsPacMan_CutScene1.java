@@ -88,8 +88,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void onActivate() {
-        final UIConfig uiConfig = ui.currentConfig();
+    public void onActivate(UIConfig uiConfig) {
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
         // Quit cut scene when "START" button on "joypad" is pressed

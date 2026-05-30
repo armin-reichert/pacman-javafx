@@ -55,9 +55,11 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     public void updateGameSceneAndForceReload(GameUI ui, boolean forceReload) {
+        final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
+
         final Game game = ui.gameContext().game();
         final GameScene prevGameScene = optCurrentGameScene().orElse(null);
-        final GameScene nextGameScene = ui.currentConfig().gameSceneConfig().selectGameScene(ui, game).orElseThrow();
+        final GameScene nextGameScene = currentConfig.gameSceneConfig().selectGameScene(ui, game).orElseThrow();
 
         if (nextGameScene == prevGameScene && !forceReload) {
             return;
@@ -73,7 +75,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
         nextGameScene.activate();
 
-        game.optGameLevel().ifPresent(level -> handle2D3DSwitch(ui.currentConfig(), level, prevGameScene, nextGameScene));
+        game.optGameLevel().ifPresent(level -> handle2D3DSwitch(currentConfig, level, prevGameScene, nextGameScene));
 
         gameSceneProperty().set(nextGameScene);
     }
@@ -105,7 +107,8 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     public boolean hasGameSceneID(GameUI ui, GameScene gameScene, GameSceneConfig.SceneID sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
-        return ui.currentConfig().gameSceneConfig().gameSceneHasID(gameScene, sceneID);
+        final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
+        return currentConfig.gameSceneConfig().gameSceneHasID(gameScene, sceneID);
     }
 
     /**
@@ -202,12 +205,13 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     public void embedGameSceneIntoPlayView(GameUI ui, GameScene gameScene) {
+        final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
         ui.services().views().playView().contextMenu().hide();
 
         if (gameScene.optSubSceneFX().isPresent()) {
             embedGameSceneWithSubSceneFX(ui.scene(), ui.services().views().playView(), gameScene, gameScene.optSubSceneFX().get());
         } else if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2D(ui.scene(), ui.services().views().playView(), ui.currentConfig().gameSceneConfig(), gameScene2D);
+            embedGameScene2D(ui.scene(), ui.services().views().playView(), currentConfig.gameSceneConfig(), gameScene2D);
         } else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }

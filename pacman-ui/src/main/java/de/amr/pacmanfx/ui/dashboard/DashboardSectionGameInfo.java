@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.world.MapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.UIConfig;
 import javafx.scene.paint.Color;
 
 import java.net.URLDecoder;
@@ -56,7 +57,8 @@ public class DashboardSectionGameInfo extends DashboardSection {
                 colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
             }
             else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX)) {
-                colorScheme = ui.currentConfig().colorScheme(worldMap);
+                final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
+                colorScheme = currentConfig.colorScheme(worldMap);
             }
             if (colorScheme != null) {
                 final Color fillColor = Color.valueOf(colorScheme.wallFill());

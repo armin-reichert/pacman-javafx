@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.CommonSceneID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.shape.DrawMode;
@@ -278,8 +279,9 @@ public final class CommonActions {
             final GameContext gameContext = ui.gameContext();
             toggleBooleanProperty(gameContext.clock().updatesDisabledProperty());
             if (gameContext.clock().getUpdatesDisabled()) {
+                final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
                 ui.services().sounds().stopAll();
-                ui.currentConfig().optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+                currentConfig.optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             }
             Logger.info("Game ({}) {}", ui.gameContext().gameVariantName(), ui.gameContext().clock().getUpdatesDisabled() ? "paused" : "resumed");
         }
