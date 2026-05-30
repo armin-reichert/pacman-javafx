@@ -32,6 +32,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -70,31 +71,24 @@ public final class GameUI_Implementation implements GameUI {
 
     private StringBinding stageTitleBinding;
 
-    public GameUI_Implementation(de.amr.pacmanfx.core.GameBox gameBox, Stage stage, int mainSceneWidth, int mainSceneHeight) {
+    public GameUI_Implementation(GameBox gameBox, Stage stage, int mainSceneWidth, int mainSceneHeight) {
         this.gameBox = requireNonNull(gameBox);
         this.stage = requireNonNull(stage);
         this.scene = new GameUI_MainScene(requireNonNegative(mainSceneWidth), requireNonNegative(mainSceneHeight));
         this.customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
 
-        final ViewManager viewManager = createViewManager(scene, flashMessageView, gameBox);
-        viewManager.setStartView(new StartPagesCarousel(this));
-        viewManager.setPlayView(createPlayView());
-        viewManager.setEditorViewFactory(this::createEditorView);
-
-        //TODO should not depend on UI components being initialized etc.
         services = new UIServices(
             new UIConfigManager(),
             new GameSceneManager(),
-            createPrefsManager(),
+            new PreferencesManager(GameUI_Implementation.class),
             new SoundManager(),
             () -> GameUIConstants.LOCALIZED_TEXTS,
-            viewManager
+            new ViewManager()
         );
 
-        viewManager.playView().configurePropertyBindings(this);
+        createViews();
         statusIconBox = new StatusIconBox(services.translations());
     }
-
 
     // GameUI interface
 
@@ -160,10 +154,10 @@ public final class GameUI_Implementation implements GameUI {
     public void show() {
         initGameVariantAndRegisterChangeHandler();
         load3DAssets();
-        services.views().playView().dashboard().init(this);
         initMainScene();
         initProperties();
         initGameClock();
+        initViewManager(services.views(), scene.rootPane(), flashMessageView, gameBox);
         displayStage();
         startServices();
     }
@@ -224,15 +218,24 @@ public final class GameUI_Implementation implements GameUI {
         PacManWorld3D.instance(); // loads 3D assets as side effect of accessing singleton
     }
 
-    private static PreferencesManager createPrefsManager() {
-        return new PreferencesManager(GameUI_Implementation.class) {
-            @Override
-            protected void storeDefaultPrefValues() {}
-        };
+    private void createViews() {
+        final ViewManager viewManager = services.views();
+
+        final StartPagesCarousel startView = new StartPagesCarousel(this);
+        viewManager.setStartView(startView);
+
+        final PlayView playView = createPlayView();
+        viewManager.setPlayView(playView);
+
+        viewManager.setEditorViewFactory(this::createEditorView);
     }
 
-    private static ViewManager createViewManager(GameUI_MainScene scene, FlashMessageView flashMessageView, GameContext gameContext) {
-        final var viewManager = new ViewManager(scene.rootPane(), flashMessageView);
+    private void initViewManager(ViewManager viewManager, Pane rootPane, FlashMessageView flashMessageView, GameContext gameContext) {
+        viewManager.init(rootPane, flashMessageView);
+
+        viewManager.playView().configurePropertyBindings(this);
+        viewManager.playView().dashboard().init(this);
+//        viewManager.playView().dashboard().addCommonSections(services.translations(), dashboardIDs);
 
         viewManager.setEditorCanOpen(() -> {
             if (viewManager.isStartViewSelected()) return true;
@@ -242,7 +245,6 @@ public final class GameUI_Implementation implements GameUI {
             }
             return false;
         });
-        return viewManager;
     }
 
     private PlayView createPlayView() {

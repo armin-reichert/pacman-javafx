@@ -14,7 +14,7 @@ import java.util.prefs.Preferences;
 
 import static de.amr.pacmanfx.uilib.UfxColors.formatColorHex;
 
-public abstract class PreferencesManager {
+public class PreferencesManager {
 
     private final Map<String, Object> defaultsMap = new HashMap<>();
     private final Preferences userPrefs;
@@ -43,7 +43,7 @@ public abstract class PreferencesManager {
         }
     }
 
-    protected abstract void storeDefaultPrefValues();
+    protected void storeDefaultPrefValues() {}
 
     public boolean isBackingStoreAccessible() {
         try {

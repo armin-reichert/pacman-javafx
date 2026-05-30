@@ -32,7 +32,9 @@ public class ViewManager {
     private PlayView playView;
     private EditorView editorView;
 
-    public ViewManager(Pane rootPane, FlashMessageView flashMessageView) {
+    public ViewManager() {}
+
+    public void init(Pane rootPane, FlashMessageView flashMessageView) {
         requireNonNull(flashMessageView);
 
         currentViewProperty().addListener((_, oldView, newView) -> {

@@ -166,9 +166,6 @@ public class GameUI_Builder {
                 error("Start page could not be created");
             }
         }
-
-        ui.services().views().playView().dashboard().addCommonSections(ui.services().translations(), dashboardIDs);
-
         return ui;
     }
 
