@@ -25,7 +25,7 @@ public class ElroyState {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        Logger.info("Cruise Elroy speed increase is: {}, active: {}", this.mode, this.enabled);
+        Logger.debug("Cruise Elroy speed increase is: {}, active: {}", this.mode, this.enabled);
     }
 
     public Mode mode() {
@@ -34,6 +34,6 @@ public class ElroyState {
 
     public void setMode(Mode mode) {
         this.mode = requireNonNull(mode);
-        Logger.info("Cruise Elroy is: {}, active: {}", this.mode, this.enabled);
+        Logger.debug("Cruise Elroy is: {}, active: {}", this.mode, this.enabled);
     }
 }
