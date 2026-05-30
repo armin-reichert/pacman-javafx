@@ -99,9 +99,11 @@ public class MiniPlaySceneView {
         this.ui = requireNonNull(ui);
     }
 
-    public void setGameLevel(UIConfig uiConfig, GameLevel level) {
-        worldSize.set(level.worldMap().terrainLayer().sizeInPixel());
+    public void setWorldSizeInPixel(Vector2i size) {
+        worldSize.set(size);
+    }
 
+    public void setUIConfig(UIConfig uiConfig) {
         canvasRenderer = new BaseRenderer(canvas);
 
         levelRenderer = uiConfig.createGameLevelRenderer(canvas);

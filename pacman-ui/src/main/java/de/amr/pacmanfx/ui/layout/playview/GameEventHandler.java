@@ -34,7 +34,8 @@ public class GameEventHandler extends DefaultGameEventListener {
                     ghost.setAnimationManager(uiConfig.createGhostAnimations(ui.spriteAnimationSet(), ghost.personality())));
 
                 final MiniPlaySceneView miniPlayView = ui.viewManager().playView().miniPlaySceneView();
-                miniPlayView.setGameLevel(ui.currentConfig(), level);
+                miniPlayView.setUIConfig(ui.currentConfig());
+                miniPlayView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
                 miniPlayView.slideIn();
 
                 // size of game scene might have changed, so re-embed
