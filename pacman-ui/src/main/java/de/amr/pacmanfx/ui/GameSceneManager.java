@@ -191,7 +191,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
             subSceneFX.heightProperty().unbind();
         });
         if (gameScene instanceof GameScene2D gameScene2D) {
-            final DecorationPane decorationPane = ui.viewManager().playView().decorationPane();
+            final DecorationPane decorationPane = ui.viewManager().playView().gameSceneFrame();
             decorationPane.canvas().widthProperty().unbind();
             decorationPane.canvas().heightProperty().unbind();
             decorationPane.unscaledWidthProperty().unbind();
@@ -224,7 +224,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
         if (gameScene instanceof GameScene2D gameScene2D) {
             // use the canvas of the decorated pane for 2D scene even though the decoration is not used
-            gameScene2D.setCanvas(playView.decorationPane().canvas());
+            gameScene2D.setCanvas(playView.gameSceneFrame().canvas());
             playView.updateGameSceneRenderers(gameScene2D);
         }
         playView.setGameSceneContent(subSceneFX);
@@ -232,7 +232,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     // 2D scenes without camera which are shown at full size
     private void embedGameScene2D(Scene scene, PlayView playView, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
-        final DecorationPane decorationPane = playView.decorationPane();
+        final DecorationPane decorationPane = playView.gameSceneFrame();
 
         gameScene2D.backgroundColorProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
 

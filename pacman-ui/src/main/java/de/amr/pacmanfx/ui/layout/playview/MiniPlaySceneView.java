@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.core.Globals.*;
 import static java.util.Objects.requireNonNull;
 
-public class MiniGameView {
+public class MiniPlaySceneView {
 
     public static final Duration SLIDE_IN_DURATION  = Duration.seconds(1);
     public static final Duration SLIDE_OUT_DURATION = Duration.seconds(2);
@@ -59,7 +59,7 @@ public class MiniGameView {
     // Used in debug draw mode
     private long drawCallCount;
 
-    public MiniGameView() {
+    public MiniPlaySceneView() {
         canvasRenderer = new BaseRenderer(canvas);
 
         // The container fills the complete parent container height (why?), so we put the canvas

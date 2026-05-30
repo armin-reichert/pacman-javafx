@@ -64,12 +64,12 @@ public class PlayView implements View {
 
     // Game scene layer
     private BorderPane gameSceneLayer;
-    private DecorationPane gameSceneDecorationPane;
+    private DecorationPane gameSceneFrame;
 
     // Overlay layer
     private BorderPane overlayLayer;
     private Dashboard dashboard;
-    private MiniGameView miniView;
+    private MiniPlaySceneView miniPlaySceneView;
 
     // Help layer
     private HelpLayer helpLayer;
@@ -86,11 +86,11 @@ public class PlayView implements View {
         configurePropertyBindings();
         actionBindings.registerAllBindingsFromSet(GameUIConstants.COMMON_BINDINGS);
         rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(ui, this));
-        miniView.setUI(ui);
+        miniPlaySceneView.setUI(ui);
     }
 
     public void resizeToFit(Scene parentSceneFX) {
-        gameSceneDecorationPane.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
+        gameSceneFrame.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
     }
 
     public GameUI ui() {
@@ -101,12 +101,12 @@ public class PlayView implements View {
         return contextMenu;
     }
 
-    public DecorationPane decorationPane() {
-        return gameSceneDecorationPane;
+    public DecorationPane gameSceneFrame() {
+        return gameSceneFrame;
     }
 
-    public MiniGameView miniView() {
-        return miniView;
+    public MiniPlaySceneView miniPlaySceneView() {
+        return miniPlaySceneView;
     }
 
     public Dashboard dashboard() {
@@ -114,7 +114,7 @@ public class PlayView implements View {
     }
 
     public void showHelp(GameUI ui) {
-        final double scaling = gameSceneDecorationPane.scalingProperty().get();
+        final double scaling = gameSceneFrame.scalingProperty().get();
         helpLayer.showHelpPopup(ui, scaling, ui.gameContext().gameVariantName());
     }
 
@@ -133,7 +133,7 @@ public class PlayView implements View {
 
     @Override
     public void onInput(GameUI ui) {
-        // The play view first looks for an action binding in its set and then delegates to the current game scene
+        // First lLook for an action binding in my bindings, if nothing found, delegate to the current game scene if any
         actionBindings.matchingAction(Input.instance().keyboard).ifPresentOrElse(
             action -> action.executeIfEnabled(ui),
             () -> ui.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput)
@@ -143,12 +143,12 @@ public class PlayView implements View {
     @Override
     public void onEnter() {
         rootPane.requestFocus();
-        gameSceneDecorationPane.installBindings();
+        gameSceneFrame.installBindings();
     }
 
     @Override
     public void onExit() {
-        gameSceneDecorationPane.uninstallBindings();
+        gameSceneFrame.uninstallBindings();
     }
 
     @Override
@@ -172,8 +172,8 @@ public class PlayView implements View {
         }
 
         // Render mini view content
-        if (miniView().canDraw()) {
-            miniView.draw();
+        if (miniPlaySceneView.canDraw()) {
+            miniPlaySceneView.draw();
         }
 
         // Dashboard must always be updated even if simulation is stopped!
@@ -197,23 +197,23 @@ public class PlayView implements View {
     private void createLayout(DashboardConfig dashboardConfig) {
 
         // Layer 1: Game scene with or without decoration
-        gameSceneDecorationPane = new DecorationPane(
+        gameSceneFrame = new DecorationPane(
             DECORATION_CONFIG,
             Globals.ARCADE_MAP_SIZE_IN_PIXELS.x(),
             Globals.ARCADE_MAP_SIZE_IN_PIXELS.y()
         );
         gameSceneLayer = new BorderPane();
-        gameSceneLayer.setCenter(gameSceneDecorationPane);
+        gameSceneLayer.setCenter(gameSceneFrame);
 
         // Layer 2: Overlay layer with dashboard and mini-view for 3D scene
-        miniView = new MiniGameView();
+        miniPlaySceneView = new MiniPlaySceneView();
 
         dashboard = new Dashboard(dashboardConfig);
         dashboard.rootPane().setVisible(false);
 
         overlayLayer = new BorderPane();
         overlayLayer.setLeft(dashboard.rootPane());
-        overlayLayer.setRight(miniView.rootPane());
+        overlayLayer.setRight(miniPlaySceneView.rootPane());
 
         // Layer 3: Help info
         helpLayer = new HelpLayer(gameSceneLayer);
@@ -238,7 +238,7 @@ public class PlayView implements View {
 
         overlayLayer.visibleProperty().bind(Bindings.or(dashboard.rootPane().visibleProperty(), GameUIConstants.PROPERTY_MINI_VIEW_ON));
 
-        miniView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
+        miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> GameUIConstants.PROPERTY_MINI_VIEW_ON.get()
                 && ui.gameSceneManager().currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D),
             GameUIConstants.PROPERTY_MINI_VIEW_ON, ui.gameSceneManager().gameSceneProperty()

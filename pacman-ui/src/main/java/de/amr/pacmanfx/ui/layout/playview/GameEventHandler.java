@@ -33,9 +33,9 @@ public class GameEventHandler extends DefaultGameEventListener {
                 level.entities().ghosts().forEach(ghost ->
                     ghost.setAnimationManager(uiConfig.createGhostAnimations(ui.spriteAnimationSet(), ghost.personality())));
 
-                final MiniGameView miniGameView = ui.viewManager().playView().miniView();
-                miniGameView.setGameLevel(level);
-                miniGameView.slideIn();
+                final MiniPlaySceneView miniPlayView = ui.viewManager().playView().miniPlaySceneView();
+                miniPlayView.setGameLevel(level);
+                miniPlayView.slideIn();
 
                 // size of game scene might have changed, so re-embed
                 ui.gameSceneManager().optCurrentGameScene().ifPresent(ui.gameSceneManager()::embedGameSceneIntoPlayView);
@@ -43,8 +43,8 @@ public class GameEventHandler extends DefaultGameEventListener {
 
             case GameStateChangeEvent stateChangeEvent -> {
                 if (stateChangeEvent.newState().matchesByName(CanonicalGameState.LEVEL_COMPLETE.name())) {
-                    final MiniGameView miniGameView = ui.viewManager().playView().miniView();
-                    miniGameView.slideOut();
+                    final MiniPlaySceneView miniPlayView = ui.viewManager().playView().miniPlaySceneView();
+                    miniPlayView.slideOut();
                 }
             }
 
