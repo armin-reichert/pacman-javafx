@@ -21,13 +21,11 @@ public interface ActionBindingsSet extends Disposable {
 
     boolean isEmpty();
 
-    void activate();
-
-    void deactivate();
-
     void setKeyCombinationFor(GameAction action, KeyCodeCombination combination);
 
     void registerAnyBindingFromSet(GameAction action, Set<ActionBinding> bindings);
 
     void registerAllBindingsFromSet(Set<ActionBinding> bindings);
+
+    void logBindings();
 }

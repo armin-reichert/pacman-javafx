@@ -46,7 +46,7 @@ public class GameUI_MainScene extends Scene {
         actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_OPEN_EDITOR,             GameUIConstants.COMMON_BINDINGS);
         actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUIConstants.COMMON_BINDINGS);
         actionBindings.registerAnyBindingFromSet(CommonActions.ACTION_TOGGLE_MUTED,            GameUIConstants.COMMON_BINDINGS);
-        actionBindings.activate();
+        actionBindings.logBindings();
     }
 
     public StackPane rootPane() {

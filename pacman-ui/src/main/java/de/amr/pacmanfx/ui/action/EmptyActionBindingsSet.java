@@ -33,12 +33,6 @@ public class EmptyActionBindingsSet implements ActionBindingsSet {
     }
 
     @Override
-    public void activate() {}
-
-    @Override
-    public void deactivate() {}
-
-    @Override
     public void registerAnyBindingFromSet(GameAction action, Set<ActionBinding> bindings) {}
 
     @Override
@@ -51,4 +45,7 @@ public class EmptyActionBindingsSet implements ActionBindingsSet {
     public Optional<GameAction> matchingAction(Keyboard keyboard) {
         return Optional.empty();
     }
+
+    @Override
+    public void logBindings() {}
 }

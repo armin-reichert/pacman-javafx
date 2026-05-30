@@ -91,7 +91,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         }
         bindActions();
 
-        actionBindings.activate();
+        actionBindings.logBindings();
     }
 
     @Override

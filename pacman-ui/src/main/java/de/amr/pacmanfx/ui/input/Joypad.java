@@ -3,13 +3,9 @@
  */
 package de.amr.pacmanfx.ui.input;
 
-import de.amr.pacmanfx.ui.action.ActionBindingsSet;
-import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import org.tinylog.Logger;
-
-import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -54,10 +50,6 @@ public class Joypad {
         return bindings[selectedIndex];
     }
 
-    public Stream<KeyCodeCombination> currentKeys() {
-        return Stream.of(JoypadButton.values()).map(currentKeyBinding()::key);
-    }
-
     public boolean isButtonPressed(JoypadButton buttonID) {
         return keyboard.stateMatches(keyForButton(buttonID));
     }
@@ -66,23 +58,8 @@ public class Joypad {
         return currentKeyBinding().key(buttonID);
     }
 
-    public void setBindings(ActionBindingsSet actionBindingsManager) {
-        currentKeys().forEach(combination -> GameActionBindingsSet.registerActionBindingsManager(combination, actionBindingsManager));
-    }
-
-    public void removeBindings(ActionBindingsSet actionBindingsManager) {
-        currentKeys().forEach(combination -> GameActionBindingsSet.unregisterActionBindingsManager(combination, actionBindingsManager));
-    }
-
-    public void selectNextBinding(ActionBindingsSet actionBindingsManager) {
+    public void selectNextBinding() {
         selectedIndex = (selectedIndex + 1) % bindings.length;
-        setBinding(selectedIndex, actionBindingsManager);
         Logger.info("Joypad keys: {}", currentKeyBinding());
-    }
-
-    private void setBinding(int index, ActionBindingsSet actionBindingsManager) {
-        removeBindings(actionBindingsManager);
-        selectedIndex = index;
-        setBindings(actionBindingsManager);
     }
 }

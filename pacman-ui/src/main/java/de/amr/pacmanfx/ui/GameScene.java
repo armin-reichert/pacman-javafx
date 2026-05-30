@@ -129,7 +129,7 @@ public abstract class GameScene implements Disposable {
      */
     public final void activate() {
         onActivate();
-        actionBindings.activate();
+        actionBindings.logBindings();
         Logger.trace("Game scene {} activated", getClass().getSimpleName());
     }
 
@@ -143,7 +143,6 @@ public abstract class GameScene implements Disposable {
      */
     public final void deactivate() {
         onDeactivate();
-        actionBindings.deactivate();
         actionBindings.dispose();
         soundEffects().ifPresent(GameSoundEffects::stopAll);
         Logger.trace("Game scene {} deactivated", getClass().getSimpleName());
