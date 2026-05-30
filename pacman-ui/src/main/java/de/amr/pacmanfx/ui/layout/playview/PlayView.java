@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.layout.playview;
 
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.ui.CommonSceneID;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
@@ -26,12 +27,14 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
 
-import de.amr.pacmanfx.ui.CommonSceneID;
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.border;
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.paintBackground;
 import static java.util.Objects.requireNonNull;
@@ -172,9 +175,7 @@ public class PlayView implements View {
         }
 
         // Render mini view content
-        if (miniPlaySceneView.canDraw()) {
-            miniPlaySceneView.draw();
-        }
+        miniPlaySceneView.draw();
 
         // Dashboard must always be updated even if simulation is stopped!
         if (overlayLayer.isVisible()) {

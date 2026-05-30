@@ -5,7 +5,6 @@ package de.amr.pacmanfx.ui.layout.playview;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUIConstants;
@@ -30,7 +29,6 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.Globals.*;
@@ -144,43 +142,42 @@ public class MiniPlaySceneView {
             || slideOutAnimation != null && slideOutAnimation.getStatus() == Animation.Status.RUNNING;
     }
 
-    public boolean canDraw() {
-        return levelRenderer != null && actorRenderer != null;
-    }
-
     public void draw() {
+        if (canvasRenderer == null) {
+            return;
+        }
         canvasRenderer.clearCanvas();
 
-        final Game game = ui.gameContext().game();
-        final Optional<GameLevel> optGameLevel = game.optGameLevel();
-        if (optGameLevel.isPresent()) {
-            final GameLevel level = optGameLevel.get();
-            final var info = new RenderInfo();
-            info.putAll(Map.of(
-                CommonRenderInfoKey.ENERGIZER_VISIBLE, level.blinking().state() == Pulse.State.ON,
-                CommonRenderInfoKey.MAP_BRIGHT, false,
-                CommonRenderInfoKey.MAP_EMPTY, level.worldMap().foodLayer().remainingFoodCount() == 0,
-                CommonRenderInfoKey.MAP_FLASHING, false,
-                CommonRenderInfoKey.TICK, ui.gameContext().clock().tickCount()
-            ));
-            levelRenderer.applyLevelSettings(level, info);
-            levelRenderer.drawLevel(level, info);
-
-            level.optBonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
-            actorRenderer.drawActor(level.entities().pac());
-            Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
-                .map(level::ghost)
-                .forEach(ghost -> actorRenderer.drawActor(ghost));
+        if (levelRenderer != null && actorRenderer != null) {
+            ui.gameContext().game().optGameLevel().ifPresent(this::drawGameLevel);
         }
 
         if (GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             canvasRenderer.fillTextCentered(
                 "scaling: %.2f, draw calls: %d".formatted(scaling.doubleValue(), drawCallCount),
-                Color.WHITE, Font.font(14 * scaling.get()),
-                0.5 * worldSize.get().x(), 16
+                Color.WHITE, Font.font(12 * scaling.get()),
+                0.5 * canvas.getWidth(), scaling.doubleValue() * 16
             );
         }
 
         drawCallCount += 1;
+    }
+
+    private void drawGameLevel(GameLevel level) {
+        final var info = new RenderInfo();
+        info.putAll(Map.of(
+            CommonRenderInfoKey.ENERGIZER_VISIBLE, level.blinking().state() == Pulse.State.ON,
+            CommonRenderInfoKey.MAP_BRIGHT, false,
+            CommonRenderInfoKey.MAP_EMPTY, level.worldMap().foodLayer().remainingFoodCount() == 0,
+            CommonRenderInfoKey.MAP_FLASHING, false,
+            CommonRenderInfoKey.TICK, ui.gameContext().clock().tickCount()
+        ));
+        levelRenderer.applyLevelSettings(level, info);
+        levelRenderer.drawLevel(level, info);
+
+        level.optBonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
+        actorRenderer.drawActor(level.entities().pac());
+        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(level::ghost)
+            .forEach(ghost -> actorRenderer.drawActor(ghost));
     }
 }
