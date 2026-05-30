@@ -17,11 +17,10 @@ import java.util.Set;
  * It is useful when a subsystem expects a bindings manager but no actual bindings
  * should be active.
  */
-public class NullActionBindingsManager implements ActionBindingsSet {
+public class EmptyActionBindingsSet implements ActionBindingsSet {
 
     @Override
-    public void dispose() {
-    }
+    public void dispose() {}
 
     @Override
     public Map<KeyCodeCombination, GameAction> actionForKeyCombination() {
@@ -40,16 +39,13 @@ public class NullActionBindingsManager implements ActionBindingsSet {
     public void deactivate() {}
 
     @Override
-    public void registerAnyBindingFromSet(GameAction action, Set<ActionBinding> bindings) {
-    }
+    public void registerAnyBindingFromSet(GameAction action, Set<ActionBinding> bindings) {}
 
     @Override
-    public void setKeyCombinationFor(GameAction action, KeyCodeCombination combination) {
-    }
+    public void setKeyCombinationFor(GameAction action, KeyCodeCombination combination) {}
 
     @Override
-    public void registerAllBindingsFromSet(Set<ActionBinding> bindings) {
-    }
+    public void registerAllBindingsFromSet(Set<ActionBinding> bindings) {}
 
     @Override
     public Optional<GameAction> matchingAction(Keyboard keyboard) {

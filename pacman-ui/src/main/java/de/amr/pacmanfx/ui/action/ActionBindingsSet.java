@@ -13,7 +13,7 @@ import java.util.Set;
 
 public interface ActionBindingsSet extends Disposable {
 
-    ActionBindingsSet NO_BINDINGS = new NullActionBindingsManager();
+    ActionBindingsSet NO_BINDINGS = new EmptyActionBindingsSet();
 
     Map<KeyCodeCombination, GameAction> actionForKeyCombination();
 
