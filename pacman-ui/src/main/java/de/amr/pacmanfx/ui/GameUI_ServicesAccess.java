@@ -52,10 +52,10 @@ public record GameUI_ServicesAccess(
     }
 
     public Optional<GameSoundEffects> currentSoundEffects() {
-        return configurations.getOrCreateUIConfig(gameContext.gameVariantName()).optSoundEffects();
+        return currentUIConfig().optSoundEffects();
     }
 
-    public UIConfig uiConfig(String gameVariantName) {
+    public UIConfig configForGameVariant(String gameVariantName) {
         return configurations.getOrCreateUIConfig(gameVariantName);
     }
 
