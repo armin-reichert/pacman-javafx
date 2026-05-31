@@ -17,13 +17,11 @@ import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
-import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.editor.Editor_SubView;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
@@ -32,11 +30,9 @@ import de.amr.pacmanfx.ui.view.GameUI_View;
 import de.amr.pacmanfx.ui.view.GameUI_View_Implementation;
 import de.amr.pacmanfx.uilib.GameClockFX;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
-import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
@@ -48,32 +44,24 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
-import static javafx.beans.binding.Bindings.createStringBinding;
 
 /**
  * User interface for the Pac-Man game suite. Shows a carousel with a start page for each game variant.
  */
 public final class GameUI_Implementation implements GameUI {
 
-    // Game model access
+    // Game models in a box (only 1,99 €!)
     private final GameBox gameBox;
 
     private final GameUI_ServiceFacade services;
 
-    // UI components
-
     private final GameUI_View_Implementation viewImpl;
-
-    private StringBinding stageTitleBinding;
 
     public GameUI_Implementation(GameBox gameBox, GameUI_View_Implementation viewImpl) {
         this.gameBox = requireNonNull(gameBox);
         this.viewImpl = requireNonNull(viewImpl);
-
-        final TranslationManager translationManager = () -> GameUI_Constants.LOCALIZED_TEXTS;
 
         this.services = new GameUI_ServiceFacade(
             gameBox,
@@ -85,11 +73,11 @@ public final class GameUI_Implementation implements GameUI {
             new PreferencesManager(GameUI_Implementation.class),
             new SoundManager(),
             new SpriteAnimationManager(),
-            translationManager,
+            () -> GameUI_Constants.LOCALIZED_TEXTS,
             new SubViewManager()
         );
 
-        createViews();
+        createSubViews();
     }
 
     // GameUI interface
@@ -138,13 +126,13 @@ public final class GameUI_Implementation implements GameUI {
         initGameVariantAndRegisterChangeHandler();
         load3DAssets();
         initMainScene();
+        view().attachServices(services);
         initProperties();
         initGameClock();
-        initViewManager();
+        initSubViewManager();
         displayStage(view().stage());
         startServices();
     }
-
 
     @Override
     public void stopGame() {
@@ -182,19 +170,19 @@ public final class GameUI_Implementation implements GameUI {
         PacManWorld3D.instance(); // loads 3D assets as side effect of accessing singleton
     }
 
-    private void createViews() {
+    private void createSubViews() {
         final SubViewManager subViewManager = services.subViews();
 
         final StartPages_SubView startView = new StartPages_SubView(this);
         subViewManager.setStartView(startView);
 
-        final GamePlay_SubView playView = createPlayView();
+        final GamePlay_SubView playView = createGamePlaySubView();
         subViewManager.setPlayView(playView);
 
-        subViewManager.setEditorViewFactory(() -> createEditorView(view().stage()));
+        subViewManager.setEditorViewFactory(() -> createEditorSubView(view().stage()));
     }
 
-    private void initViewManager() {
+    private void initSubViewManager() {
         final SubViewManager subViewManager = services.subViews();
 
         subViewManager.init(view().mainScene().rootPane(), services.flashMessages());
@@ -212,7 +200,7 @@ public final class GameUI_Implementation implements GameUI {
         });
     }
 
-    private GamePlay_SubView createPlayView() {
+    private GamePlay_SubView createGamePlaySubView() {
         final var playView = new GamePlay_SubView(this, GameUI_Constants.DEFAULT_DASHBOARD_CONFIG);
         final ChangeListener<? super Number> playViewResizer = (_,_,_) -> playView.resizeToFit(view().mainScene());
         view().mainScene().widthProperty().addListener(playViewResizer);
@@ -220,12 +208,12 @@ public final class GameUI_Implementation implements GameUI {
         return playView;
     }
 
-    private Editor_SubView createEditorView(Stage stage) {
+    private Editor_SubView createEditorSubView(Stage stage) {
         final var editorView = new Editor_SubView(stage, this);
         editorView.editor().setOnQuit(_ -> {
             // restore title (editor changed it)
             stage.titleProperty().unbind();
-            stage.titleProperty().bind(stageTitleBinding);
+            stage.titleProperty().bind(viewImpl.stageTitleBindingProperty());
             services.subViews().selectStartView();
         });
         return editorView;
@@ -275,16 +263,6 @@ public final class GameUI_Implementation implements GameUI {
             () -> services.subViews().isPlayViewSelected() || services.subViews().isStartViewSelected(),
             services.subViews().currentViewProperty()));
 
-        stageTitleBinding = createStringBinding(
-            this::computeStageTitle,
-            services().gameClock().updatesDisabledProperty(),
-            services().gameContext().gameVariantNameProperty(),
-            services.subViews().currentViewProperty(),
-            services.gameScenes().gameSceneProperty(),
-            GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE,
-            GameUI_Constants.PROPERTY_3D_ENABLED
-        );
-
         view().mainScene().rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> services.gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
                 ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
@@ -314,7 +292,6 @@ public final class GameUI_Implementation implements GameUI {
         stage.setScene(view().mainScene());
         stage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);
         stage.setMinHeight(GameUI_Constants.MIN_STAGE_HEIGHT);
-        stage.titleProperty().bind(stageTitleBinding);
         if (icon != null) {
             stage.getIcons().setAll(icon);
         }
@@ -338,46 +315,4 @@ public final class GameUI_Implementation implements GameUI {
         });
     }
 
-    private String computeStageTitle() {
-        final GameUI_SubView view = services.subViews().currentView();
-        return view == null
-            ? services.translations().translate("view.missing") // Should never happen
-            : view.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene());
-    }
-
-    private String titleForCurrentGameScene() {
-        final GameScene gameScene = services.gameScenes().optCurrentGameScene().orElse(null);
-
-        final boolean debug = GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE.get();
-        final boolean is3D = GameUI_Constants.PROPERTY_3D_ENABLED.get();
-        final boolean paused = services().gameClock().getUpdatesDisabled();
-
-        final String normalTitle = appTitle(paused, is3D);
-        return (gameScene == null || !debug)
-            ? normalTitle
-            : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
-    }
-
-    private String appTitle(boolean paused, boolean is3D) {
-        final String gameVariantName = services().gameContext().gameVariantName();
-        if (gameVariantName == null) {
-            return "";
-        }
-
-        final String viewMode = services.translations().translate(is3D ? "threeD" : "twoD");
-
-        // In game-variant specific resource bundles, there should be two entries with placeholder
-        // app.title = Game Variant Name {0}
-        // app.title = Game Variant Name {0} (paused)
-
-        final UIConfig currentConfig = services.currentUIConfig();
-        final TranslationManager appSpecificTranslator = currentConfig.assets();
-        final String appTitleKey = paused ? "app.title.paused" : "app.title";
-        if (appSpecificTranslator.bundle() != null
-            && appSpecificTranslator.bundle().containsKey(appTitleKey)) {
-            return appSpecificTranslator.translate(appTitleKey, viewMode);
-        } else {
-            return "Unspecified Game";
-        }
-    }
 }
