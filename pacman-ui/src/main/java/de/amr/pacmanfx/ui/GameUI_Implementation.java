@@ -24,7 +24,6 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
-import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -62,7 +61,6 @@ public final class GameUI_Implementation implements GameUI {
     // UI components
     private final Stage stage;
     private final GameUI_MainScene scene;
-    private final FlashMessageView flashMessageView = new FlashMessageView();
     private final StatusIconBox statusIconBox;
 
     private StringBinding stageTitleBinding;
@@ -73,7 +71,8 @@ public final class GameUI_Implementation implements GameUI {
         this.scene = new GameUI_MainScene(requireNonNegative(width), requireNonNegative(height));
         this.customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
         this.services = new GameUI_Services(
-            new UIConfigManager(),
+            new ConfigurationsManager(),
+            new FlashMessageManager(),
             new GameSceneManager(),
             new PreferencesManager(GameUI_Implementation.class),
             new SoundManager(),
@@ -109,11 +108,11 @@ public final class GameUI_Implementation implements GameUI {
                 services.views().selectEditorView(this);
             } catch (IOException x) {
                 Logger.error(x, "Could not open map file {}", worldMapFile);
-                showFlashMessage("Cannot open world map file");
+                services().showFlashMessage("Cannot open world map file");
             }
             catch (WorldMapParseException x) {
                 Logger.error(x, "Error reading map file data from {}", worldMapFile);
-                showFlashMessage("Cannot read world map file data");
+                services().showFlashMessage("Cannot read world map file data");
             }
         });
     }
@@ -145,11 +144,6 @@ public final class GameUI_Implementation implements GameUI {
         initViewManager();
         displayStage();
         startServices();
-    }
-
-    @Override
-    public void showFlashMessage(Duration duration, String message, Object... args) {
-        flashMessageView.showMessage(String.format(message, args), duration.toSeconds());
     }
 
     @Override
@@ -187,7 +181,7 @@ public final class GameUI_Implementation implements GameUI {
         stopGame();
         services.sprites().stopAnimationTimer();
         services.sprites().animationSet().clear();
-        flashMessageView.stopTimer();
+        services.flashMessages().stopTimer();
         customDirWatchdog.dispose();
     }
 
@@ -213,7 +207,7 @@ public final class GameUI_Implementation implements GameUI {
     private void initViewManager() {
         final ViewManager views = services.views();
 
-        views.init(scene.rootPane(), flashMessageView);
+        views.init(scene.rootPane(), services.flashMessages());
 
         views.playView().configurePropertyBindings(this);
         views.playView().dashboard().sections().forEach(section -> section.init(this));
@@ -266,7 +260,7 @@ public final class GameUI_Implementation implements GameUI {
         scene.rootPane().getChildren().addAll(
             new Region(), // placeholder, will be replaced by current view (start, play, edit)
             statusIconBox.rootPane(),
-            flashMessageView.rootPane(),
+            services.flashMessages().rootPane(),
             keyboardInfo.rootPane());
 
         StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
@@ -313,7 +307,7 @@ public final class GameUI_Implementation implements GameUI {
     private void startServices() {
         Platform.runLater(() -> {
             customDirWatchdog.startWatching();
-            flashMessageView.startTimer();
+            services.flashMessages().startTimer();
             services.sprites().startAnimationTimer();
         });
     }
@@ -347,7 +341,7 @@ public final class GameUI_Implementation implements GameUI {
     private void ka_tas_tro_phe(Throwable reason) {
         Platform.runLater(() -> {
             final String errorMessage = services.translations().translate("error.oh_no_my_program");
-            showFlashMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
+            services().showFlashMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
             stopGame();
             Logger.error("*** SOMETHING VERY BAD HAPPENED:");
             Logger.error(reason);

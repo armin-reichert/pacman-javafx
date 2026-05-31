@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.layout.playview.PlayView;
-import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
+import de.amr.pacmanfx.ui.FlashMessageManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.layout.Pane;
@@ -34,8 +34,8 @@ public class ViewManager {
 
     public ViewManager() {}
 
-    public void init(Pane rootPane, FlashMessageView flashMessageView) {
-        requireNonNull(flashMessageView);
+    public void init(Pane rootPane, FlashMessageManager flashMessageManager) {
+        requireNonNull(flashMessageManager);
 
         currentViewProperty().addListener((_, oldView, newView) -> {
             if (oldView != null) {
@@ -51,7 +51,7 @@ public class ViewManager {
 
             newView.onEnter();
 
-            flashMessageView.clearMessage();
+            flashMessageManager.clearMessage();
         });
     }
 

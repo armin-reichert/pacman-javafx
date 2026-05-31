@@ -39,29 +39,6 @@ public interface GameUI {
     Scene scene();
 
     // ---------------------------------------------------------------------------------------------
-    // Messages
-    // ---------------------------------------------------------------------------------------------
-
-    /**
-     * Displays a fading flash message on screen.
-     *
-     * @param duration how long the message remains visible before fading
-     * @param message  message text (supports {@link String#format})
-     * @param args     formatting arguments
-     */
-    void showFlashMessage(Duration duration, String message, Object... args);
-
-    /**
-     * Displays a fading flash message using the default duration.
-     *
-     * @param message message text
-     * @param args    formatting arguments
-     */
-    default void showFlashMessage(String message, Object... args) {
-        showFlashMessage(GameUI_Constants.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
-    }
-
-    // ---------------------------------------------------------------------------------------------
     // Services (view manager, game scene manager, sound manager etc.)
     // ---------------------------------------------------------------------------------------------
 

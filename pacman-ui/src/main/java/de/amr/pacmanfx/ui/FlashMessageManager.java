@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.widgets;
+
+package de.amr.pacmanfx.ui;
 
 import javafx.animation.AnimationTimer;
 import javafx.beans.binding.Bindings;
@@ -22,7 +23,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Shows flash messages with varying duration. Message fades out and gets removed after this time.
  */
-public class FlashMessageView {
+public class FlashMessageManager {
 
     // Everything in nanoseconds
     record TemporaryMessage(String text, long start, long end)
@@ -40,10 +41,10 @@ public class FlashMessageView {
         }
     }
 
-    private static FlashMessageView.TemporaryMessage createAndActivateMessage(String text, double durationSec) {
+    private static FlashMessageManager.TemporaryMessage createAndActivateMessage(String text, double durationSec) {
         long now = System.nanoTime();
         long duration = (long) (durationSec * 1_000_000_000);
-        return new FlashMessageView.TemporaryMessage(text, now, now + duration);
+        return new FlashMessageManager.TemporaryMessage(text, now, now + duration);
     }
 
     private static final double HALF_PI = Math.PI / 2;
@@ -58,7 +59,7 @@ public class FlashMessageView {
 
     private final AnimationTimer timer;
 
-    public FlashMessageView() {
+    public FlashMessageManager() {
         rootPane.setAlignment(Pos.CENTER);
         rootPane.setMouseTransparent(true);
         rootPane.visibleProperty().bind(message.isNotNull());

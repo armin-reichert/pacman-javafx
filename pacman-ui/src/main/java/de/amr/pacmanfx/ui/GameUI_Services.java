@@ -11,12 +11,14 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import javafx.util.Duration;
 
 import java.util.List;
 import java.util.Optional;
 
 public record GameUI_Services(
-    UIConfigManager configurations,
+    ConfigurationsManager configurations,
+    FlashMessageManager flashMessages,
     GameSceneManager gameScenes,
     PreferencesManager prefs,
     SoundManager sounds,
@@ -34,5 +36,26 @@ public record GameUI_Services(
 
     public Optional<GameSoundEffects> optSoundEffects(String gameVariantName) {
         return configurations().getOrCreateUIConfig(gameVariantName).optSoundEffects();
+    }
+
+    /**
+     * Displays a fading flash message on screen.
+     *
+     * @param duration how long the message remains visible before fading
+     * @param message  message text (supports {@link String#format})
+     * @param args     formatting arguments
+     */
+    public void showFlashMessage(Duration duration, String message, Object... args) {
+        flashMessages().showMessage(String.format(message, args), duration.toSeconds());
+    }
+
+    /**
+     * Displays a fading flash message using the default duration.
+     *
+     * @param message message text
+     * @param args    formatting arguments
+     */
+    public void showFlashMessage(String message, Object... args) {
+        showFlashMessage(GameUI_Constants.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
 }
