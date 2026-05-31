@@ -7,7 +7,6 @@ import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
-import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -76,13 +75,12 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         });
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            final StartPages_SubView startPagesCarousel = ui.services().subViews().startView();
             switch (e.getCode()) {
                 case E -> {
                     e.consume();
                     if (ui != null) {
                         ui.services().sounds().stopAndDisposeVoice();
-                        startPagesCarousel.pauseProgressTimer();
+                        ui.services().startView().pauseProgressTimer();
                         ui.openWorldMapFileInEditor(null);
                     }
                 }
@@ -90,7 +88,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                     e.consume();
                     if (ui != null) {
                         ui.services().sounds().stopAndDisposeVoice();
-                        startPagesCarousel.pauseProgressTimer();
+                        ui.services().startView().pauseProgressTimer();
                         menu.startSelectedGame();
                     }
                 }

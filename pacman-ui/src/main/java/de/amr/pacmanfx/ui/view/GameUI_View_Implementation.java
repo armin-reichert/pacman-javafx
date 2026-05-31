@@ -36,7 +36,7 @@ public class GameUI_View_Implementation implements GameUI_View {
             () -> computeStageTitle(services),
             services.gameClock().updatesDisabledProperty(),
             services.gameContext().gameVariantNameProperty(),
-            services.subViews().currentViewProperty(),
+            services.subViews().currentSubViewProperty(),
             services.gameScenes().gameSceneProperty(),
             GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE,
             GameUI_Constants.PROPERTY_3D_ENABLED

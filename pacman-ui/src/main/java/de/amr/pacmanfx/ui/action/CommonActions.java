@@ -39,7 +39,7 @@ public final class CommonActions {
         @Override
         protected void doAction(GameUI ui) {
             ui.services().gameContext().coinMechanism().setNumCoins(0);
-            ui.services().subViews().selectGamePlayView();
+            ui.services().selectGamePlayView();
             ui.restart();
         }
     };
@@ -113,7 +113,7 @@ public final class CommonActions {
     public static final GameAction ACTION_SHOW_HELP = new GameAction("show_help") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.services().gamePlaySubView().showHelp(ui);
+            ui.services().gamePlayView().showHelp(ui);
         }
 
         @Override

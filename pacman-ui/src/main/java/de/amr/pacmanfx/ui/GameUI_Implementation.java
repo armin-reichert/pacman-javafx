@@ -187,7 +187,7 @@ public final class GameUI_Implementation implements GameUI {
 
         subViewManager.init(view().mainScene().rootPane(), services.flashMessages());
 
-        services.gamePlaySubView().configurePropertyBindings(this);
+        services.gamePlayView().configurePropertyBindings(this);
         services.dashboard().sections().forEach(section -> section.init(this));
 
         subViewManager.setEditorCanOpen(() -> {
@@ -214,7 +214,7 @@ public final class GameUI_Implementation implements GameUI {
             // restore title (editor changed it)
             stage.titleProperty().unbind();
             stage.titleProperty().bind(viewImpl.stageTitleBindingProperty());
-            services.subViews().selectStartView();
+            services.selectStartView();
         });
         return editorView;
     }
@@ -261,13 +261,13 @@ public final class GameUI_Implementation implements GameUI {
 
         view().statusIconBox().rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
             () -> services.subViews().isPlayViewSelected() || services.subViews().isStartViewSelected(),
-            services.subViews().currentViewProperty()));
+            services.subViews().currentSubViewProperty()));
 
         view().mainScene().rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> services.gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
                 ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
                 : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER,
-            services.subViews().currentViewProperty(),
+            services.subViews().currentSubViewProperty(),
             services.gameScenes().gameSceneProperty()
         ));
     }
@@ -297,7 +297,7 @@ public final class GameUI_Implementation implements GameUI {
         }
         stage.centerOnScreen();
         stage.show();
-        services.subViews().selectStartView();
+        services.selectStartView();
     }
 
     /**

@@ -19,6 +19,7 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
+import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.util.Duration;
@@ -56,19 +57,31 @@ public record GameUI_ServiceFacade(
     }
 
     public Optional<GameSoundEffects> currentSoundEffects() {
-        return configurations().getOrCreateUIConfig(gameContext.gameVariantName()).optSoundEffects();
+        return configurations.getOrCreateUIConfig(gameContext.gameVariantName()).optSoundEffects();
     }
 
     public UIConfig getUIConfig(String gameVariantName) {
-        return configurations().getOrCreateUIConfig(gameVariantName);
+        return configurations.getOrCreateUIConfig(gameVariantName);
     }
 
-    public GamePlay_SubView gamePlaySubView() {
-        return subViews().gamePlayView();
+    public GamePlay_SubView gamePlayView() {
+        return subViews.gamePlayView();
+    }
+
+    public void selectGamePlayView() {
+        subViews.selectGamePlayView();
+    }
+
+    public StartPages_SubView startView() {
+        return subViews.startView();
+    }
+
+    public void selectStartView() {
+        subViews.selectStartView();
     }
 
     public Dashboard dashboard() {
-        return subViews().gamePlayView().dashboard();
+        return subViews.gamePlayView().dashboard();
     }
 
     public void configureDashboard(List<CommonDashboardID> dashboardIDList) {
@@ -83,7 +96,7 @@ public record GameUI_ServiceFacade(
      * @param args     formatting arguments
      */
     public void showFlashMessage(Duration duration, String message, Object... args) {
-        flashMessages().showMessage(String.format(message, args), duration.toSeconds());
+        flashMessages.showMessage(String.format(message, args), duration.toSeconds());
     }
 
     /**

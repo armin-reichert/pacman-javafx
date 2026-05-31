@@ -25,7 +25,7 @@ public class SubViewManager {
     /** Index in the root pane's child list where the active view is embedded. */
     private static final int RESERVED_VIEW_INDEX_IN_LAYOUT = 0;
 
-    private final ObjectProperty<GameUI_SubView> currentView = new SimpleObjectProperty<>();
+    private final ObjectProperty<GameUI_SubView> currentSubView = new SimpleObjectProperty<>();
 
     private Supplier<Editor_SubView> editorViewFactory;
     private BooleanSupplier editorCanOpen = () -> false;
@@ -39,7 +39,7 @@ public class SubViewManager {
     public void init(Pane rootPane, FlashMessageManager flashMessageManager) {
         requireNonNull(flashMessageManager);
 
-        currentViewProperty().addListener((_, oldView, newView) -> {
+        currentSubViewProperty().addListener((_, oldView, newView) -> {
             if (oldView != null) {
                 oldView.onExit();
                 oldView.actionBindings().dispose();
@@ -57,12 +57,14 @@ public class SubViewManager {
         });
     }
 
-    public void setGamePlayView(GamePlay_SubView gamePlayView) {
-        this.gamePlayView = requireNonNull(gamePlayView);
+    public void setGamePlayView(GamePlay_SubView newGamePlayView) {
+        requireNonNull(newGamePlayView);
+        gamePlayView = newGamePlayView;
     }
 
-    public void setStartView(StartPages_SubView startView) {
-        this.startView = requireNonNull(startView);
+    public void setStartView(StartPages_SubView newStartView) {
+        requireNonNull(newStartView);
+        startView = newStartView;
     }
 
     public void setEditorViewFactory(Supplier<Editor_SubView> factory) {
@@ -86,11 +88,11 @@ public class SubViewManager {
     }
 
     public void selectStartView() {
-        currentViewProperty().set(startView);
+        currentSubViewProperty().set(startView);
     }
 
     public void selectGamePlayView() {
-        currentViewProperty().set(gamePlayView);
+        currentSubViewProperty().set(gamePlayView);
     }
 
     public void createEditorIfNotExisting(File workDir) {
@@ -108,7 +110,7 @@ public class SubViewManager {
         if (editorCanOpen.getAsBoolean()) {
             ui.stopGame();
             editorView.editor().start();
-            currentViewProperty().set(editorView);
+            currentSubViewProperty().set(editorView);
         } else {
             Logger.warn("Editor cannot open!");
         }
@@ -126,11 +128,11 @@ public class SubViewManager {
         return currentView() == editorView;
     }
 
-    public ObjectProperty<GameUI_SubView> currentViewProperty() {
-        return currentView;
+    public ObjectProperty<GameUI_SubView> currentSubViewProperty() {
+        return currentSubView;
     }
 
     public GameUI_SubView currentView() {
-        return currentView.get();
+        return currentSubView.get();
     }
 }
