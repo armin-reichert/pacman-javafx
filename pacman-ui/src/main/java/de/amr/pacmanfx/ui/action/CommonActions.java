@@ -54,7 +54,7 @@ public final class CommonActions {
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("let_game_state_expire") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.access().gameContext().game().flow().state().expire();
+            ui.access().currentGame().flow().state().expire();
         }
     };
 
@@ -72,7 +72,7 @@ public final class CommonActions {
             GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.set(id);
             String msgKey = ui.access().translations().translate("camera_perspective",
                 ui.access().translations().translate("perspective_id_" + id.name()));
-            ui.access().showFlashMessage(msgKey);
+            ui.access().flashMessage(msgKey);
         }
     };
 
@@ -83,7 +83,7 @@ public final class CommonActions {
             GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.set(id);
             String msgKey = ui.access().translations().translate("camera_perspective",
                 ui.access().translations().translate("perspective_id_" + id.name()));
-            ui.access().showFlashMessage(msgKey);
+            ui.access().flashMessage(msgKey);
         }
     };
 
@@ -133,7 +133,7 @@ public final class CommonActions {
             clock.setTargetFrameRate(newRate);
 
             final String message = newRate == SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
-            ui.access().showFlashMessage(Duration.seconds(0.75), message.formatted(newRate));
+            ui.access().flashMessage(Duration.seconds(0.75), message.formatted(newRate));
         }
     };
 
@@ -141,7 +141,7 @@ public final class CommonActions {
         @Override
         protected void doAction(GameUI ui) {
             ui.access().gameClock().setTargetFrameRate(SIM_SPEED_MAX);
-            ui.access().showFlashMessage(Duration.seconds(0.75), "At maximum speed: %d Hz", SIM_SPEED_MAX);
+            ui.access().flashMessage(Duration.seconds(0.75), "At maximum speed: %d Hz", SIM_SPEED_MAX);
         }
     };
 
@@ -153,7 +153,7 @@ public final class CommonActions {
             clock.setTargetFrameRate(newRate);
 
             final String message = newRate == SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
-            ui.access().showFlashMessage(Duration.seconds(0.75), message.formatted(newRate));
+            ui.access().flashMessage(Duration.seconds(0.75), message.formatted(newRate));
         }
     };
 
@@ -161,7 +161,7 @@ public final class CommonActions {
         @Override
         protected void doAction(GameUI ui) {
             ui.access().gameClock().setTargetFrameRate(SIM_SPEED_MIN);
-            ui.access().showFlashMessage(Duration.seconds(0.75), "At minimum speed: %d Hz", SIM_SPEED_MIN);
+            ui.access().flashMessage(Duration.seconds(0.75), "At minimum speed: %d Hz", SIM_SPEED_MIN);
         }
     };
 
@@ -170,7 +170,7 @@ public final class CommonActions {
         protected void doAction(GameUI ui) {
             boolean success = ui.access().gameClock().makeOneStep(true);
             if (!success) {
-                ui.access().showFlashMessage("Simulation step error, clock stopped!");
+                ui.access().flashMessage("Simulation step error, clock stopped!");
             }
         }
 
@@ -183,7 +183,7 @@ public final class CommonActions {
         protected void doAction(GameUI ui) {
             boolean success = ui.access().gameClock().makeSteps(10, true);
             if (!success) {
-                ui.access().showFlashMessage("Simulation step error, clock stopped!");
+                ui.access().flashMessage("Simulation step error, clock stopped!");
             }
         }
 
@@ -195,7 +195,7 @@ public final class CommonActions {
         @Override
         protected void doAction(GameUI ui) {
             ui.access().gameClock().setTargetFrameRate(NUM_TICKS_PER_SEC);
-            ui.access().showFlashMessage(Duration.seconds(0.75), ui.access().gameClock().targetFrameRate() + "Hz");
+            ui.access().flashMessage(Duration.seconds(0.75), ui.access().gameClock().targetFrameRate() + "Hz");
         }
     };
 
@@ -207,7 +207,7 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_COLLISION_STRATEGY = new GameAction("toggle_collision_strategy") {
         @Override
         protected void doAction(GameUI ui) {
-            final Game game = ui.access().gameContext().game();
+            final Game game = ui.access().currentGame();
             CollisionStrategy collisionStrategy = game.collisionStrategy();
             if (collisionStrategy == CollisionStrategy.CENTER_DISTANCE) {
                 game.setCollisionStrategy(CollisionStrategy.SAME_TILE);
@@ -215,9 +215,9 @@ public final class CommonActions {
                 game.setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
             }
             if (game.collisionStrategy() == CollisionStrategy.SAME_TILE) {
-                ui.access().showFlashMessage("Using original Arcade collision strategy"); //TODO localize
+                ui.access().flashMessage("Using original Arcade collision strategy"); //TODO localize
             } else {
-                ui.access().showFlashMessage("Using improved collision strategy"); //TODO localize
+                ui.access().flashMessage("Using improved collision strategy"); //TODO localize
             }
         }
     };
@@ -260,7 +260,7 @@ public final class CommonActions {
         protected void doAction(GameUI ui) {
             toggleBooleanProperty(GameUI_Constants.PROPERTY_MINI_VIEW_ON);
             if (!ui.access().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D)) {
-                ui.access().showFlashMessage(ui.access().translations().translate(GameUI_Constants.PROPERTY_MINI_VIEW_ON.get()
+                ui.access().flashMessage(ui.access().translations().translate(GameUI_Constants.PROPERTY_MINI_VIEW_ON.get()
                     ? "pip_on" : "pip_off"));
             }
         }
@@ -294,11 +294,11 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction("toggle_play_scene_2d_3d") {
         @Override
         protected void doAction(GameUI ui) {
-            final Game game = ui.access().gameContext().game();
+            final Game game = ui.access().currentGame();
             toggleBooleanProperty(GameUI_Constants.PROPERTY_3D_ENABLED);
             final boolean is3DEnabled = GameUI_Constants.PROPERTY_3D_ENABLED.get();
             if (!inPlayScene(ui)) {
-                ui.access().showFlashMessage(ui.access().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
+                ui.access().flashMessage(ui.access().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
             }
             if (isLevelPlaying(game)) {
                 ui.access().gameScenes().forceGameSceneUpdate(ui);

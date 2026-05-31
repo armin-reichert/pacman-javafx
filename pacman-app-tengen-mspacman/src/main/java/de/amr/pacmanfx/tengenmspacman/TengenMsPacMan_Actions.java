@@ -78,7 +78,7 @@ public interface TengenMsPacMan_Actions {
                 final var tengenGame = (TengenMsPacMan_GameModel) game;
                 tengenGame.activatePacBooster(gameLevel.entities().pac(), !tengenGame.isBoosterActive());
                 if (tengenGame.isBoosterActive()) {
-                    ui.access().showFlashMessage("Booster!"); //TODO localize
+                    ui.access().flashMessage("Booster!"); //TODO localize
                 }
             });
         }

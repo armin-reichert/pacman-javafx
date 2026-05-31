@@ -108,11 +108,11 @@ public final class GameUI_Implementation implements GameUI {
                 }
             } catch (IOException x) {
                 Logger.error(x, "Could not open map file {}", worldMapFile);
-                access().showFlashMessage("Cannot open world map file");
+                access().flashMessage("Cannot open world map file");
             }
             catch (WorldMapParseException x) {
                 Logger.error(x, "Error reading map file data from {}", worldMapFile);
-                access().showFlashMessage("Cannot read world map file data");
+                access().flashMessage("Cannot read world map file data");
             }
         });
     }
@@ -315,7 +315,7 @@ public final class GameUI_Implementation implements GameUI {
     private void ka_tas_tro_phe(Throwable reason) {
         Platform.runLater(() -> {
             final String errorMessage = access().translations().translate("error.oh_no_my_program");
-            access().showFlashMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
+            access().flashMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
             stopGame();
             Logger.error("*** SOMETHING VERY BAD HAPPENED:");
             Logger.error(reason);

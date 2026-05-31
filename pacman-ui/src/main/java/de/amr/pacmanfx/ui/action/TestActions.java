@@ -15,7 +15,7 @@ public class TestActions {
         @Override
         public void doAction(GameUI ui) {
             ui.access().currentGame().flow().enterStateWithName(CutScenesTestState.class.getSimpleName());
-            ui.access().showFlashMessage("Cut scenes test"); //TODO localize
+            ui.access().flashMessage("Cut scenes test"); //TODO localize
         }
 
         @Override
@@ -28,7 +28,7 @@ public class TestActions {
         @Override
         public void doAction(GameUI ui) {
             ui.access().currentGame().flow().restartStateWithName(LevelShortTestState.class.getSimpleName());
-            ui.access().showFlashMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
+            ui.access().flashMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
         }
 
         @Override
@@ -41,7 +41,7 @@ public class TestActions {
         @Override
         public void doAction(GameUI ui) {
             ui.access().currentGame().flow().restartStateWithName(LevelMediumTestState.class.getSimpleName());
-            ui.access().showFlashMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
+            ui.access().flashMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
         }
 
         @Override

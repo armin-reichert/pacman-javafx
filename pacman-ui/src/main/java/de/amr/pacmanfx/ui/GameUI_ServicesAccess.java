@@ -13,10 +13,10 @@ import de.amr.pacmanfx.ui.config.ConfigurationsManager;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
-import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
-import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.ui.subviews.SubViewManager;
+import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
@@ -95,7 +95,7 @@ public record GameUI_ServicesAccess(
      * @param message  message text (supports {@link String#format})
      * @param args     formatting arguments
      */
-    public void showFlashMessage(Duration duration, String message, Object... args) {
+    public void flashMessage(Duration duration, String message, Object... args) {
         flashMessages.showMessage(String.format(message, args), duration.toSeconds());
     }
 
@@ -105,7 +105,7 @@ public record GameUI_ServicesAccess(
      * @param message message text
      * @param args    formatting arguments
      */
-    public void showFlashMessage(String message, Object... args) {
-        showFlashMessage(GameUI_Constants.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
+    public void flashMessage(String message, Object... args) {
+        flashMessage(GameUI_Constants.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
 }
