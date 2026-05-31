@@ -13,6 +13,9 @@ import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
+import de.amr.pacmanfx.ui.view.GameUI_MainScene;
+import de.amr.pacmanfx.ui.view.GameUI_View_Implementation;
+import de.amr.pacmanfx.ui.view.StatusIconBox;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -21,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static de.amr.pacmanfx.core.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -116,10 +120,21 @@ public class GameUI_Builder {
         return this;
     }
 
+    private GameUI_View_Implementation createViewImplementation(Stage stage, int width, int height) {
+        return new GameUI_View_Implementation(
+            stage,
+            new GameUI_MainScene(requireNonNegative(width), requireNonNegative(height)),
+            new StatusIconBox(() -> GameUI_Constants.LOCALIZED_TEXTS)
+        );
+    }
+
     public GameUI build() {
         validateConfigurationData();
 
-        final var ui = new GameUI_Implementation(gameBox, windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight());
+        final var ui = new GameUI_Implementation(
+            gameBox,
+            createViewImplementation(windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight())
+        );
 
         gameConfigMap.forEach((gameVariant, config) -> {
             final AbstractGameModel game = config.gameModelFactory.get();

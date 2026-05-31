@@ -28,10 +28,8 @@ import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.editor.Editor_SubView;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
-import de.amr.pacmanfx.ui.view.GameUI_MainScene;
 import de.amr.pacmanfx.ui.view.GameUI_View;
 import de.amr.pacmanfx.ui.view.GameUI_View_Implementation;
-import de.amr.pacmanfx.ui.view.StatusIconBox;
 import de.amr.pacmanfx.uilib.GameClockFX;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -52,7 +50,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.core.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
 
@@ -72,16 +69,11 @@ public final class GameUI_Implementation implements GameUI {
 
     private StringBinding stageTitleBinding;
 
-    public GameUI_Implementation(GameBox gameBox, Stage stage, int width, int height) {
+    public GameUI_Implementation(GameBox gameBox, GameUI_View_Implementation viewImpl) {
         this.gameBox = requireNonNull(gameBox);
+        this.viewImpl = requireNonNull(viewImpl);
 
         final TranslationManager translationManager = () -> GameUI_Constants.LOCALIZED_TEXTS;
-
-        this.viewImpl = new GameUI_View_Implementation(
-            stage,
-            new GameUI_MainScene(requireNonNegative(width), requireNonNegative(height)),
-            new StatusIconBox(translationManager)
-        );
 
         this.services = new GameUI_ServiceFacade(
             gameBox,
@@ -89,7 +81,7 @@ public final class GameUI_Implementation implements GameUI {
             new DirectoryWatchdog(gameBox.customMapDir()),
             new ConfigurationsManager(),
             new FlashMessageManager(),
-            new GameSceneManager(viewImpl.mainScene()),
+            new GameSceneManager(this.viewImpl.mainScene()),
             new PreferencesManager(GameUI_Implementation.class),
             new SoundManager(),
             new SpriteAnimationManager(),
@@ -191,29 +183,29 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void createViews() {
-        final SubViewManager viewManager = services.subViews();
+        final SubViewManager subViewManager = services.subViews();
 
         final StartPages_SubView startView = new StartPages_SubView(this);
-        viewManager.setStartView(startView);
+        subViewManager.setStartView(startView);
 
         final GamePlay_SubView playView = createPlayView();
-        viewManager.setPlayView(playView);
+        subViewManager.setPlayView(playView);
 
-        viewManager.setEditorViewFactory(() -> createEditorView(view().stage()));
+        subViewManager.setEditorViewFactory(() -> createEditorView(view().stage()));
     }
 
     private void initViewManager() {
-        final SubViewManager views = services.subViews();
+        final SubViewManager subViewManager = services.subViews();
 
-        views.init(view().mainScene().rootPane(), services.flashMessages());
+        subViewManager.init(view().mainScene().rootPane(), services.flashMessages());
 
-        views.playView().configurePropertyBindings(this);
-        views.playView().dashboard().sections().forEach(section -> section.init(this));
+        subViewManager.playView().configurePropertyBindings(this);
+        subViewManager.playView().dashboard().sections().forEach(section -> section.init(this));
 
-        views.setEditorCanOpen(() -> {
-            if (views.isStartViewSelected()) return true;
-            if (views.isEditorViewSelected()) return false;
-            if (views.isPlayViewSelected()) {
+        subViewManager.setEditorCanOpen(() -> {
+            if (subViewManager.isStartViewSelected()) return true;
+            if (subViewManager.isEditorViewSelected()) return false;
+            if (subViewManager.isPlayViewSelected()) {
                 return !services().gameContext().game().isPlayingLevel();
             }
             return false;

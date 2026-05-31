@@ -25,6 +25,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.config.ConfigurationsManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
@@ -33,7 +34,11 @@ import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
+import de.amr.pacmanfx.ui.view.GameUI_MainScene;
+import de.amr.pacmanfx.ui.view.GameUI_View_Implementation;
+import de.amr.pacmanfx.ui.view.StatusIconBox;
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -41,6 +46,7 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
+import static de.amr.pacmanfx.core.Validations.requireNonNegative;
 import static de.amr.pacmanfx.model.GameVariant.*;
 
 /**
@@ -96,13 +102,13 @@ public class PacManGames3dApp extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage stage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         final CoinMechanism coinMechanism = gameBox.coinMechanism();
         try {
             if (useBuilder) {
                 ui = GameUI_Builder
-                    .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
+                    .newUI(stage, sceneSize.x(), sceneSize.y(), gameBox)
 
                     .game(ARCADE_PACMAN,
                         () -> new ArcadePacMan_GameModel(coinMechanism),
@@ -135,7 +141,9 @@ public class PacManGames3dApp extends Application {
             }
             else {
                 registerGames();
-                ui = new GameUI_Implementation(gameBox, primaryStage, sceneSize.x(), sceneSize.y());
+                ui = new GameUI_Implementation(gameBox,
+                    createViewImplementation(stage, sceneSize.x(), sceneSize.y())
+                );
                 addConfigFactories();
                 addStartPages();
             }
@@ -160,6 +168,14 @@ public class PacManGames3dApp extends Application {
     }
 
     // Private area
+
+    private GameUI_View_Implementation createViewImplementation(Stage stage, int width, int height) {
+        return new GameUI_View_Implementation(
+            stage,
+            new GameUI_MainScene(requireNonNegative(width), requireNonNegative(height)),
+            new StatusIconBox(() -> GameUI_Constants.LOCALIZED_TEXTS)
+        );
+    }
 
     private void registerGames() {
         for (GameVariant variant : GameVariant.values()) {

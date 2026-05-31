@@ -13,14 +13,19 @@ import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
+import de.amr.pacmanfx.ui.view.GameUI_MainScene;
+import de.amr.pacmanfx.ui.view.GameUI_View_Implementation;
+import de.amr.pacmanfx.ui.view.StatusIconBox;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.util.List;
 
+import static de.amr.pacmanfx.core.Validations.requireNonNegative;
 import static de.amr.pacmanfx.uilib.Ufx.computeScreenSectionSize;
 
 public class ArcadePacMan_App extends Application {
@@ -76,12 +81,14 @@ public class ArcadePacMan_App extends Application {
 
     // Private area
 
-    private void createUI(Stage stage, GameBox gameBox, Vector2i size) {
+    private void createUI(Stage stage, GameBox gameBox, Vector2i sceneSize) {
         final var game = new ArcadePacMan_GameModel(gameBox.coinMechanism());
 
         gameBox.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
 
-        ui = new GameUI_Implementation(gameBox, stage, size.x(), size.y());
+        ui = new GameUI_Implementation(gameBox,
+            createViewImplementation(stage, sceneSize.x(), sceneSize.y())
+        );
         ui.services().configurations().addConfigFactory(
             GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
@@ -93,4 +100,13 @@ public class ArcadePacMan_App extends Application {
         startView.addStartPage(arcadePacManStartPage);
         startView.setSelectedIndex(0);
     }
+
+    private GameUI_View_Implementation createViewImplementation(Stage stage, int width, int height) {
+        return new GameUI_View_Implementation(
+            stage,
+            new GameUI_MainScene(requireNonNegative(width), requireNonNegative(height)),
+            new StatusIconBox(() -> GameUI_Constants.LOCALIZED_TEXTS)
+        );
+    }
+
 }
