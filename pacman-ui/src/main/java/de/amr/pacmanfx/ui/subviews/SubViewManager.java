@@ -3,11 +3,10 @@
  */
 package de.amr.pacmanfx.ui.subviews;
 
-import de.amr.pacmanfx.ui.GameUI_ServicesAccess;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.subviews.editor.Editor_SubView;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
-import de.amr.pacmanfx.ui.view.GameUI_View;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
@@ -31,21 +30,17 @@ public class SubViewManager {
 
     public SubViewManager() {}
 
-    public void attachUI(GameUI_View view, GameUI_ServicesAccess services) {
-        requireNonNull(view);
-        requireNonNull(services);
+    public void setUI(GameUI ui) {
+        requireNonNull(ui);
 
         currentSubViewProperty().addListener((_, oldView, newView) -> {
             if (oldView != null) {
                 oldView.onExit();
                 oldView.actionBindings().dispose();
             }
-
-            view.replaceSubView(newView);
-
             newView.onEnter();
-
-            services.flashMessages().clearMessage();
+            ui.view().replaceSubView(newView);
+            ui.access().flashMessages().clearMessage();
         });
     }
 
