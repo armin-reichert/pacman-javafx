@@ -38,7 +38,6 @@ import de.amr.pacmanfx.ui.view.GameUI_MainScene;
 import de.amr.pacmanfx.ui.view.GameUI_View_Implementation;
 import de.amr.pacmanfx.ui.view.StatusIconBox;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -221,7 +220,7 @@ public class PacManGames3dApp extends Application {
 
 
     private void configureDashboard() {
-        final Dashboard dashboard = ui.services().subViews().playView().dashboard();
+        final Dashboard dashboard = ui.services().subViews().gamePlayView().dashboard();
 
         ui.services().configureDashboard(DASHBOARD_IDs);
 

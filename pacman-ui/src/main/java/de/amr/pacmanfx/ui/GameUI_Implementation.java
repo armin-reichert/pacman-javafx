@@ -52,7 +52,7 @@ import static java.util.Objects.requireNonNull;
  */
 public final class GameUI_Implementation implements GameUI {
 
-    // Game models in a box (only 1,99 €!)
+    // All games in a box (only 1,99 €!)
     private final GameBox gameBox;
 
     private final GameUI_ServiceFacade services;
@@ -69,7 +69,7 @@ public final class GameUI_Implementation implements GameUI {
             new DirectoryWatchdog(gameBox.customMapDir()),
             new ConfigurationsManager(),
             new FlashMessageManager(),
-            new GameSceneManager(this.viewImpl.mainScene()),
+            new GameSceneManager(viewImpl),
             new PreferencesManager(GameUI_Implementation.class),
             new SoundManager(),
             new SpriteAnimationManager(),
@@ -146,7 +146,7 @@ public final class GameUI_Implementation implements GameUI {
         services.gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             services.currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene.deactivate();
-            services.gameScenes().removeFromPlayView(services.subViews().playView(), gameScene);
+            services.gameScenes().removeFromPlayView(services, gameScene);
             services.gameScenes().gameSceneProperty().set(null);
         });
 
@@ -177,7 +177,7 @@ public final class GameUI_Implementation implements GameUI {
         subViewManager.setStartView(startView);
 
         final GamePlay_SubView playView = createGamePlaySubView();
-        subViewManager.setPlayView(playView);
+        subViewManager.setGamePlayView(playView);
 
         subViewManager.setEditorViewFactory(() -> createEditorSubView(view().stage()));
     }
@@ -187,8 +187,8 @@ public final class GameUI_Implementation implements GameUI {
 
         subViewManager.init(view().mainScene().rootPane(), services.flashMessages());
 
-        subViewManager.playView().configurePropertyBindings(this);
-        subViewManager.playView().dashboard().sections().forEach(section -> section.init(this));
+        subViewManager.gamePlayView().configurePropertyBindings(this);
+        subViewManager.gamePlayView().dashboard().sections().forEach(section -> section.init(this));
 
         subViewManager.setEditorCanOpen(() -> {
             if (subViewManager.isStartViewSelected()) return true;

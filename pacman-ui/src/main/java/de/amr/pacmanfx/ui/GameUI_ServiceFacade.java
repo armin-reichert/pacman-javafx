@@ -62,7 +62,7 @@ public record GameUI_ServiceFacade(
     }
 
     public void configureDashboard(List<CommonDashboardID> dashboardIDList) {
-        subViews().playView().dashboard().addCommonSections(translations(), dashboardIDList);
+        subViews().gamePlayView().dashboard().addCommonSections(translations(), dashboardIDList);
     }
 
     /**

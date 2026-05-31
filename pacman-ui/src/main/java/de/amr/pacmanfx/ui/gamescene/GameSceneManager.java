@@ -14,16 +14,16 @@ import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.subviews.playview.DecorationPane;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.view.GameUI_View;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import org.tinylog.Logger;
 
@@ -33,23 +33,19 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSceneManager implements ChangeListener<GameScene> {
 
-    private final Scene scene;
+    private final GameUI_View gameUIView;
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
 
-    public GameSceneManager(Scene scene) {
-        this.scene = requireNonNull(scene);
+    public GameSceneManager(GameUI_View gameUIView) {
+        this.gameUIView = requireNonNull(gameUIView);
         gameScene.addListener(this);
     }
 
     @Override
     public void changed(ObservableValue<? extends GameScene> py, GameScene oldGameScene, GameScene newGameScene) {
         if (newGameScene != null) {
-            embedGameSceneIntoPlayView(newGameScene.services(), scene, newGameScene);
+            embedGameSceneIntoPlayView(newGameScene.services(), gameUIView, newGameScene);
         }
-    }
-
-    public Scene scene() {
-        return scene;
     }
 
     public Optional<GameScene> optCurrentGameScene() {
@@ -66,7 +62,8 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     public void updateGameSceneAndForceReload(GameUI ui, boolean forceReload) {
         final UIConfig currentConfig = ui.services().currentUIConfig();
-        final Game game = ui.services().gameContext().game();
+        final Game game = ui.services().currentGame();
+
         final GameScene prevGameScene = optCurrentGameScene().orElse(null);
         final GameScene nextGameScene = currentConfig.gameSceneConfig().selectGameScene(ui, game).orElseThrow();
 
@@ -76,11 +73,11 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
         if (prevGameScene != null) {
             prevGameScene.deactivate();
-            removeFromPlayView(ui.services().subViews().playView(), prevGameScene);
+            removeFromPlayView(ui.services(), prevGameScene);
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
-        embedGameSceneIntoPlayView(ui.services(), scene, nextGameScene);
+        embedGameSceneIntoPlayView(ui.services(), ui.view(), nextGameScene);
 
         nextGameScene.activate();
 
@@ -190,17 +187,18 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     // Scene embedding
 
-    public void removeFromPlayView(GamePlay_SubView playView, GameScene gameScene) {
+    public void removeFromPlayView(GameUI_ServiceFacade services, GameScene gameScene) {
+        requireNonNull(services);
         requireNonNull(gameScene);
 
-        playView.contextMenu().hide();
+        services.subViews().gamePlayView().contextMenu().hide();
 
         gameScene.optSubSceneFX().ifPresent(subSceneFX -> {
             subSceneFX.widthProperty().unbind();
             subSceneFX.heightProperty().unbind();
         });
         if (gameScene instanceof GameScene2D gameScene2D) {
-            final DecorationPane frame = playView.gameSceneFrame();
+            final DecorationPane frame = services.subViews().gamePlayView().gameSceneFrame();
             frame.canvas().widthProperty().unbind();
             frame.canvas().heightProperty().unbind();
             frame.unscaledWidthProperty().unbind();
@@ -213,24 +211,25 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         Logger.info("Game scene {} REMOVED from play scene!", gameScene.getClass().getSimpleName());
     }
 
-    public void embedGameSceneIntoPlayView(GameUI_ServiceFacade services, Scene scene, GameScene gameScene) {
+    public void embedGameSceneIntoPlayView(GameUI_ServiceFacade services, GameUI_View gameUIView, GameScene gameScene) {
         final UIConfig currentConfig = services.currentUIConfig();
-        services.subViews().playView().contextMenu().hide();
+
+        services.subViews().gamePlayView().contextMenu().hide();
 
         if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameSceneWithSubSceneFX(scene, services.subViews().playView(), gameScene, gameScene.optSubSceneFX().get());
+            embedGameSceneWithSubSceneFX(gameUIView, services.subViews().gamePlayView(), gameScene, gameScene.optSubSceneFX().get());
         } else if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2D(scene, services.subViews().playView(), currentConfig.gameSceneConfig(), gameScene2D);
+            embedGameScene2D(gameUIView, services.subViews().gamePlayView(), currentConfig.gameSceneConfig(), gameScene2D);
         } else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }
     }
 
     // 3D scenes or 2D scenes with camera
-    private void embedGameSceneWithSubSceneFX(Scene scene, GamePlay_SubView playView, GameScene gameScene, SubScene subSceneFX) {
+    private void embedGameSceneWithSubSceneFX(GameUI_View gameUIView, GamePlay_SubView playView, GameScene gameScene, SubScene subSceneFX) {
         // stretch sub scene to available space
-        subSceneFX.widthProperty().bind(scene.widthProperty());
-        subSceneFX.heightProperty().bind(scene.heightProperty());
+        subSceneFX.widthProperty().bind(gameUIView.mainScene().widthProperty());
+        subSceneFX.heightProperty().bind(gameUIView.mainScene().heightProperty());
 
         if (gameScene instanceof GameScene2D gameScene2D) {
             // use the canvas of the decorated pane for 2D scene even though the decoration is not used
@@ -241,7 +240,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     // 2D scenes without camera which are shown at full size
-    private void embedGameScene2D(Scene scene, GamePlay_SubView playView, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
+    private void embedGameScene2D(GameUI_View gameUIView, GamePlay_SubView playView, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
         final DecorationPane decorationPane = playView.gameSceneFrame();
 
         gameScene2D.backgroundColorProperty().bind(GameUI_Constants.PROPERTY_CANVAS_BACKGROUND_COLOR);
@@ -260,15 +259,15 @@ public class GameSceneManager implements ChangeListener<GameScene> {
             gameScene2D.scalingProperty().bind(decorationPane.scalingProperty().map(
                 scaling -> Math.min(scaling.doubleValue(), GamePlay_SubView.MAX_GAME_SCENE_SCALING)));
 
-            decorationPane.stretchTo(scene.getWidth(), scene.getHeight());
+            decorationPane.stretchTo(gameUIView.mainScene().getWidth(), gameUIView.mainScene().getHeight());
 
             playView.setGameSceneContent(decorationPane);
         }
         else {
             // Undecorated game scene taking complete height
-            decorationPane.canvas().heightProperty().bind(scene.heightProperty());
-            decorationPane.canvas().widthProperty().bind(scene.heightProperty().map(h -> h.doubleValue() * gameScene2D.getAspectRatio()));
-            gameScene2D.scalingProperty().bind(scene.heightProperty().divide(gameScene2D.getUnscaledHeight()));
+            decorationPane.canvas().heightProperty().bind(gameUIView.mainScene().heightProperty());
+            decorationPane.canvas().widthProperty().bind(gameUIView.mainScene().heightProperty().map(h -> h.doubleValue() * gameScene2D.getAspectRatio()));
+            gameScene2D.scalingProperty().bind(gameUIView.mainScene().heightProperty().divide(gameScene2D.getUnscaledHeight()));
 
             playView.setGameSceneContent(decorationPane.canvas());
         }

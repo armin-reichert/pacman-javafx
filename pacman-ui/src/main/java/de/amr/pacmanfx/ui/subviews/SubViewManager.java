@@ -31,7 +31,7 @@ public class SubViewManager {
     private BooleanSupplier editorCanOpen = () -> false;
 
     private StartPages_SubView startView;
-    private GamePlay_SubView playView;
+    private GamePlay_SubView gamePlayView;
     private Editor_SubView editorView;
 
     public SubViewManager() {}
@@ -57,8 +57,8 @@ public class SubViewManager {
         });
     }
 
-    public void setPlayView(GamePlay_SubView playView) {
-        this.playView = requireNonNull(playView);
+    public void setGamePlayView(GamePlay_SubView gamePlayView) {
+        this.gamePlayView = requireNonNull(gamePlayView);
     }
 
     public void setStartView(StartPages_SubView startView) {
@@ -77,8 +77,8 @@ public class SubViewManager {
         return startView;
     }
 
-    public GamePlay_SubView playView() {
-        return playView;
+    public GamePlay_SubView gamePlayView() {
+        return gamePlayView;
     }
 
     public Optional<Editor_SubView> optEditorView() {
@@ -89,8 +89,8 @@ public class SubViewManager {
         currentViewProperty().set(startView);
     }
 
-    public void selectPlayView() {
-        currentViewProperty().set(playView);
+    public void selectGamePlayView() {
+        currentViewProperty().set(gamePlayView);
     }
 
     public void createEditorIfNotExisting(File workDir) {
@@ -119,7 +119,7 @@ public class SubViewManager {
     }
 
     public boolean isPlayViewSelected() {
-        return currentView() == playView;
+        return currentView() == gamePlayView;
     }
 
     public boolean isEditorViewSelected() {

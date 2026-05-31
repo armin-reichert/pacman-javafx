@@ -38,7 +38,7 @@ public class ArcadeMsPacMan_App extends Application {
             .startPage(ArcadeMsPacMan_StartPage::new)
             .build();
 
-        ui.services().subViews().playView().dashboard().addCommonSections(ui.services().translations(), List.of(
+        ui.services().subViews().gamePlayView().dashboard().addCommonSections(ui.services().translations(), List.of(
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,
             CommonDashboardID.SETTINGS_3D,
