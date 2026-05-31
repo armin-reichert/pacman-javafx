@@ -113,7 +113,7 @@ public final class CommonActions {
     public static final GameAction ACTION_SHOW_HELP = new GameAction("show_help") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.services().subViews().gamePlayView().showHelp(ui);
+            ui.services().gamePlaySubView().showHelp(ui);
         }
 
         @Override
@@ -224,7 +224,7 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_DASHBOARD = new GameAction("toggle_dashboard") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.services().subViews().gamePlayView().dashboard().toggleVisibility();
+            ui.services().dashboard().toggleVisibility();
         }
 
         @Override

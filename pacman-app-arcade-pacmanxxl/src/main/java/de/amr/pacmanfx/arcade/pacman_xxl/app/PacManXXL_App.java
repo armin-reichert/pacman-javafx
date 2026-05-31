@@ -43,7 +43,7 @@ public class PacManXXL_App extends Application {
             .startPage(PacManXXL_StartPage::new)
             .build();
 
-        final Dashboard dashboard = ui.services().subViews().gamePlayView().dashboard();
+        final Dashboard dashboard = ui.services().dashboard();
         dashboard.addCommonSections(ui.services().translations(), List.of(
             CommonDashboardID.README,
             CommonDashboardID.GENERAL,

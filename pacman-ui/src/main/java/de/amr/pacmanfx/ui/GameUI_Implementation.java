@@ -129,7 +129,7 @@ public final class GameUI_Implementation implements GameUI {
         view().attachServices(services);
         initProperties();
         initGameClock();
-        initSubViewManager();
+        initSubViews();
         displayStage(view().stage());
         startServices();
     }
@@ -182,19 +182,19 @@ public final class GameUI_Implementation implements GameUI {
         subViewManager.setEditorViewFactory(() -> createEditorSubView(view().stage()));
     }
 
-    private void initSubViewManager() {
+    private void initSubViews() {
         final SubViewManager subViewManager = services.subViews();
 
         subViewManager.init(view().mainScene().rootPane(), services.flashMessages());
 
-        subViewManager.gamePlayView().configurePropertyBindings(this);
-        subViewManager.gamePlayView().dashboard().sections().forEach(section -> section.init(this));
+        services.gamePlaySubView().configurePropertyBindings(this);
+        services.dashboard().sections().forEach(section -> section.init(this));
 
         subViewManager.setEditorCanOpen(() -> {
             if (subViewManager.isStartViewSelected()) return true;
             if (subViewManager.isEditorViewSelected()) return false;
             if (subViewManager.isPlayViewSelected()) {
-                return !services().gameContext().game().isPlayingLevel();
+                return !services().currentGame().isPlayingLevel();
             }
             return false;
         });

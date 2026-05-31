@@ -220,7 +220,7 @@ public class PacManGames3dApp extends Application {
 
 
     private void configureDashboard() {
-        final Dashboard dashboard = ui.services().subViews().gamePlayView().dashboard();
+        final Dashboard dashboard = ui.services().gamePlaySubView().dashboard();
 
         ui.services().configureDashboard(DASHBOARD_IDs);
 
