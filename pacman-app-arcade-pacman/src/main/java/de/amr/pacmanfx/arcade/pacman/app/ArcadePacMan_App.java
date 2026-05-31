@@ -70,7 +70,7 @@ public class ArcadePacMan_App extends Application {
         else {
             createUI(primaryStage, gameBox, size);
         }
-        ui.access().configureDashboard(DASHBOARD_IDs);
+        ui.access().subViews().configureDashboard(DASHBOARD_IDs, ui.access().translations());
         ui.show();
     }
 

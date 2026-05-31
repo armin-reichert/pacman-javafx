@@ -41,7 +41,7 @@ public class TengenMsPacMan_App extends Application {
             .startPage(TengenMsPacMan_StartPage::new)
             .build();
 
-        ui.access().configureDashboard(List.of(
+        ui.access().subViews().configureDashboard(List.of(
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,
             CommonDashboardID.SETTINGS_3D,
@@ -50,7 +50,7 @@ public class TengenMsPacMan_App extends Application {
             CommonDashboardID.KEYS_GLOBAL,
             CommonDashboardID.KEYS_LOCAL,
             CommonDashboardID.ABOUT
-        ));
+        ), ui.access().translations());
 
         ui.access().subViews().gamePlayView().dashboard().addSection(
             TengenMsPacMan_DashboardID.JOYPAD,

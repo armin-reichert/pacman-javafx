@@ -4,14 +4,17 @@
 package de.amr.pacmanfx.ui.subviews;
 
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.editor.Editor_SubView;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
+import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 import org.tinylog.Supplier;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
@@ -42,6 +45,10 @@ public class SubViewManager {
             ui.view().replaceSubView(newView);
             ui.access().flashMessages().clearMessage();
         });
+    }
+
+    public void configureDashboard(List<CommonDashboardID> dashboardIDList, TranslationManager translations) {
+        gamePlayView().dashboard().addCommonSections(translations, dashboardIDList);
     }
 
     public void setGamePlayView(GamePlay_SubView newGamePlayView) {

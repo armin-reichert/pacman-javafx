@@ -61,10 +61,6 @@ public record GameUI_ServicesAccess(
         return configurations.getOrCreateUIConfig(gameVariantName);
     }
 
-    public void configureDashboard(List<CommonDashboardID> dashboardIDList) {
-        subViews.gamePlayView().dashboard().addCommonSections(translations(), dashboardIDList);
-    }
-
     /**
      * Displays a fading flash message on screen.
      *
