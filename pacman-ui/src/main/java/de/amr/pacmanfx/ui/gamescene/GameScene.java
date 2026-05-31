@@ -102,8 +102,7 @@ public abstract class GameScene implements Disposable {
      * Activates the scene and assigns keyboard bindings.
      */
     public final void activate() {
-        final String gameVariantName = services().gameContext().gameVariantName();
-        onActivate(services().configurations().getOrCreateUIConfig(gameVariantName));
+        onActivate(services().currentUIConfig());
         Logger.info(actionBindings);
         Logger.trace("Game scene {} activated", getClass().getSimpleName());
     }

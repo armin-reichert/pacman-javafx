@@ -278,7 +278,7 @@ public final class CommonActions {
         protected void doAction(GameUI ui) {
             toggleBooleanProperty(ui.access().gameClock().updatesDisabledProperty());
             if (ui.access().gameClock().getUpdatesDisabled()) {
-                final UIConfig currentConfig = ui.access().configurations().getOrCreateUIConfig(ui.access().gameContext().gameVariantName());
+                final UIConfig currentConfig = ui.access().currentUIConfig();
                 ui.access().sounds().stopAll();
                 currentConfig.optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             }

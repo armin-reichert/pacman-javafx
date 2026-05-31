@@ -256,8 +256,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void initProperties() {
-        final String currentVariantName = access().gameContext().gameVariantName();
-        final UIConfig currentConfig = access().configurations().getOrCreateUIConfig(currentVariantName);
+        final UIConfig currentConfig = access().currentUIConfig();
 
         final MazeConfig3D mazeConfig3D = currentConfig.worldConfig().maze();
         GameUI_Constants.PROPERTY_3D_WALL_HEIGHT .set(mazeConfig3D.obstacleBaseHeight());
@@ -294,7 +293,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void displayStage(Stage stage) {
-        final UIConfig currentConfig = access().configurations().getOrCreateUIConfig(access().gameContext().gameVariantName());
+        final UIConfig currentConfig = access().currentUIConfig();
         final Image icon = currentConfig.assets().image("app_icon");
         stage.setScene(view().mainScene());
         stage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);

@@ -55,10 +55,6 @@ public record GameUI_ServicesAccess(
         return currentUIConfig().optSoundEffects();
     }
 
-    public UIConfig configForGameVariant(String gameVariantName) {
-        return configurations.getOrCreateUIConfig(gameVariantName);
-    }
-
     /**
      * Displays a fading flash message on screen.
      *
