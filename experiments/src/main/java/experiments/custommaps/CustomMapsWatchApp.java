@@ -38,7 +38,7 @@ public class CustomMapsWatchApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        final GameBox gameBox = new GameBox(new GameClockFX(), CoinMechanism.OUT_OF_SERVICE);
+        final GameBox gameBox = new GameBox(CoinMechanism.OUT_OF_SERVICE);
         watchedDirectory = gameBox.customMapDir();
 
         final var root = new BorderPane();

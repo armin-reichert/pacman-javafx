@@ -11,13 +11,10 @@ import de.amr.pacmanfx.model.actors.ElroyState;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.core.GameBox;
-import de.amr.pacmanfx.uilib.GameClockFX;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.io.File;
 
 import static de.amr.pacmanfx.core.Globals.RED_GHOST_SHADOW;
 import static java.util.function.Predicate.not;
@@ -30,9 +27,8 @@ public class TestEatingFood {
     @BeforeAll
     static void setup() {
         final String variantName = GameVariant.ARCADE_PACMAN.name();
-        final File highScoreFile = new File("");
-        gameBox = new GameBox(new GameClockFX(), CoinMechanism.OUT_OF_SERVICE);
-        gameBox.registerGame(variantName, new ArcadePacMan_GameModel(gameBox.coinMechanism(), highScoreFile));
+        gameBox = new GameBox(CoinMechanism.OUT_OF_SERVICE);
+        gameBox.registerGame(variantName, new ArcadePacMan_GameModel(gameBox.coinMechanism()));
         gameBox.gameVariantNameProperty().set(variantName);
     }
 
