@@ -82,7 +82,7 @@ public final class GameUI_Implementation implements GameUI_Life, GameUI {
             new SoundManager(),
             new SpriteAnimationManager(),
             translationManager,
-            new ViewManager()
+            new SubViewManager()
         );
 
         createViews();
@@ -109,13 +109,13 @@ public final class GameUI_Implementation implements GameUI_Life, GameUI {
 
     @Override
     public void openWorldMapFileInEditor(File worldMapFile) {
-        services.views().createEditorIfNotExisting(gameBox.customMapDir());
-        services.views().optEditorView().map(Editor_SubView::editor).ifPresent(editor -> {
+        services.subViews().createEditorIfNotExisting(gameBox.customMapDir());
+        services.subViews().optEditorView().map(Editor_SubView::editor).ifPresent(editor -> {
             try {
                 if (worldMapFile != null) {
                     editor.editFile(worldMapFile);
                 }
-                services.views().selectEditorView(this);
+                services.subViews().selectEditorView(this);
             } catch (IOException x) {
                 Logger.error(x, "Could not open map file {}", worldMapFile);
                 services().showFlashMessage("Cannot open world map file");
@@ -159,7 +159,7 @@ public final class GameUI_Implementation implements GameUI_Life, GameUI {
         services.gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             services.currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene.deactivate();
-            services.gameScenes().removeFromPlayView(services.views().playView(), gameScene);
+            services.gameScenes().removeFromPlayView(services.subViews().playView(), gameScene);
             services.gameScenes().gameSceneProperty().set(null);
         });
 
@@ -184,7 +184,7 @@ public final class GameUI_Implementation implements GameUI_Life, GameUI {
     }
 
     private void createViews() {
-        final ViewManager viewManager = services.views();
+        final SubViewManager viewManager = services.subViews();
 
         final StartPages_SubView startView = new StartPages_SubView(this);
         viewManager.setStartView(startView);
@@ -196,7 +196,7 @@ public final class GameUI_Implementation implements GameUI_Life, GameUI {
     }
 
     private void initViewManager() {
-        final ViewManager views = services.views();
+        final SubViewManager views = services.subViews();
 
         views.init(view().mainScene().rootPane(), services.flashMessages());
 
@@ -227,7 +227,7 @@ public final class GameUI_Implementation implements GameUI_Life, GameUI {
             // restore title (editor changed it)
             stage.titleProperty().unbind();
             stage.titleProperty().bind(stageTitleBinding);
-            services.views().selectStartView();
+            services.subViews().selectStartView();
         });
         return editorView;
     }
@@ -241,7 +241,7 @@ public final class GameUI_Implementation implements GameUI_Life, GameUI {
             step.printLog();
             services.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });
-        clock.setPermanentAction(() -> services.views().currentView().render());
+        clock.setPermanentAction(() -> services.subViews().currentView().render());
         clock.setErrorHandler(this::ka_tas_tro_phe);
     }
 
@@ -273,14 +273,14 @@ public final class GameUI_Implementation implements GameUI_Life, GameUI {
         services.sounds().muteProperty().bind(GameUI_Constants.PROPERTY_MUTED);
 
         view().statusIconBox().rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> services.views().isPlayViewSelected() || services.views().isStartViewSelected(),
-            services.views().currentViewProperty()));
+            () -> services.subViews().isPlayViewSelected() || services.subViews().isStartViewSelected(),
+            services.subViews().currentViewProperty()));
 
         stageTitleBinding = createStringBinding(
             this::computeStageTitle,
             services().gameClock().updatesDisabledProperty(),
             services().gameContext().gameVariantNameProperty(),
-            services.views().currentViewProperty(),
+            services.subViews().currentViewProperty(),
             services.gameScenes().gameSceneProperty(),
             GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE,
             GameUI_Constants.PROPERTY_3D_ENABLED
@@ -290,7 +290,7 @@ public final class GameUI_Implementation implements GameUI_Life, GameUI {
             () -> services.gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
                 ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
                 : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER,
-            services.views().currentViewProperty(),
+            services.subViews().currentViewProperty(),
             services.gameScenes().gameSceneProperty()
         ));
     }
@@ -321,7 +321,7 @@ public final class GameUI_Implementation implements GameUI_Life, GameUI {
         }
         stage.centerOnScreen();
         stage.show();
-        services.views().selectStartView();
+        services.subViews().selectStartView();
     }
 
     /**
@@ -340,7 +340,7 @@ public final class GameUI_Implementation implements GameUI_Life, GameUI {
     }
 
     private String computeStageTitle() {
-        final GameUI_SubView view = services.views().currentView();
+        final GameUI_SubView view = services.subViews().currentView();
         return view == null
             ? services.translations().translate("view.missing") // Should never happen
             : view.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene());

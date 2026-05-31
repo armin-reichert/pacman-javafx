@@ -18,7 +18,7 @@ import java.util.function.BooleanSupplier;
 
 import static java.util.Objects.requireNonNull;
 
-public class ViewManager {
+public class SubViewManager {
 
     /** Index in the root pane's child list where the active view is embedded. */
     private static final int RESERVED_VIEW_INDEX_IN_LAYOUT = 0;
@@ -32,7 +32,7 @@ public class ViewManager {
     private GamePlay_SubView playView;
     private Editor_SubView editorView;
 
-    public ViewManager() {}
+    public SubViewManager() {}
 
     public void init(Pane rootPane, FlashMessageManager flashMessageManager) {
         requireNonNull(flashMessageManager);

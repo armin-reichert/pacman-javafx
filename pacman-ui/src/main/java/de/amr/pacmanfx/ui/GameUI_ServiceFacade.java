@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
-import de.amr.pacmanfx.ui.layout.ViewManager;
+import de.amr.pacmanfx.ui.layout.SubViewManager;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
@@ -32,7 +32,7 @@ public record GameUI_ServiceFacade(
     SoundManager sounds,
     SpriteAnimationManager sprites,
     TranslationManager translations,
-    ViewManager views)
+    SubViewManager subViews)
 {
     // Model facade
 
@@ -59,7 +59,7 @@ public record GameUI_ServiceFacade(
     }
 
     public void configureDashboard(List<CommonDashboardID> dashboardIDList) {
-        views().playView().dashboard().addCommonSections(translations(), dashboardIDList);
+        subViews().playView().dashboard().addCommonSections(translations(), dashboardIDList);
     }
 
     /**

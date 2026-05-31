@@ -72,7 +72,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
         if (prevGameScene != null) {
             prevGameScene.deactivate();
-            removeFromPlayView(ui.services().views().playView(), prevGameScene);
+            removeFromPlayView(ui.services().subViews().playView(), prevGameScene);
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
@@ -99,7 +99,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
         });
         ui.life().stopGame();
-        ui.services().views().selectStartView();
+        ui.services().subViews().selectStartView();
     }
 
     /**
@@ -211,12 +211,12 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     public void embedGameSceneIntoPlayView(GameUI_ServiceFacade services, Scene scene, GameScene gameScene) {
         final UIConfig currentConfig = services.currentUIConfig();
-        services.views().playView().contextMenu().hide();
+        services.subViews().playView().contextMenu().hide();
 
         if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameSceneWithSubSceneFX(scene, services.views().playView(), gameScene, gameScene.optSubSceneFX().get());
+            embedGameSceneWithSubSceneFX(scene, services.subViews().playView(), gameScene, gameScene.optSubSceneFX().get());
         } else if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2D(scene, services.views().playView(), currentConfig.gameSceneConfig(), gameScene2D);
+            embedGameScene2D(scene, services.subViews().playView(), currentConfig.gameSceneConfig(), gameScene2D);
         } else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }

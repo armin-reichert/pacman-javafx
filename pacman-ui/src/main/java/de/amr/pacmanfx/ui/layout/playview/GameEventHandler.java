@@ -35,7 +35,7 @@ public class GameEventHandler extends DefaultGameEventListener {
                 level.entities().ghosts().forEach(ghost ->
                     ghost.setAnimations(currentConfig.createGhostAnimations(spriteAnimationSet, ghost.personality())));
 
-                final MiniPlaySceneView miniPlayView = ui.services().views().playView().miniPlaySceneView();
+                final MiniPlaySceneView miniPlayView = ui.services().subViews().playView().miniPlaySceneView();
                 miniPlayView.setUIConfig(currentConfig);
                 miniPlayView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
                 miniPlayView.slideIn();
@@ -47,7 +47,7 @@ public class GameEventHandler extends DefaultGameEventListener {
 
             case GameStateChangeEvent stateChangeEvent -> {
                 if (stateChangeEvent.newState().matchesByName(CanonicalGameState.LEVEL_COMPLETE.name())) {
-                    final MiniPlaySceneView miniPlayView = ui.services().views().playView().miniPlaySceneView();
+                    final MiniPlaySceneView miniPlayView = ui.services().subViews().playView().miniPlaySceneView();
                     miniPlayView.slideOut();
                 }
             }

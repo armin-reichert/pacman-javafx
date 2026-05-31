@@ -76,7 +76,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         });
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            final StartPages_SubView startPagesCarousel = ui.services().views().startView();
+            final StartPages_SubView startPagesCarousel = ui.services().subViews().startView();
             switch (e.getCode()) {
                 case E -> {
                     e.consume();

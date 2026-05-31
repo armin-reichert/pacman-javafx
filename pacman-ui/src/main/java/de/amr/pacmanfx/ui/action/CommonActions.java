@@ -39,7 +39,7 @@ public final class CommonActions {
         @Override
         protected void doAction(GameUI ui) {
             ui.services().gameContext().coinMechanism().setNumCoins(0);
-            ui.services().views().selectPlayView();
+            ui.services().subViews().selectPlayView();
             ui.life().restart();
         }
     };
@@ -113,7 +113,7 @@ public final class CommonActions {
     public static final GameAction ACTION_SHOW_HELP = new GameAction("show_help") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.services().views().playView().showHelp(ui);
+            ui.services().subViews().playView().showHelp(ui);
         }
 
         @Override
@@ -224,12 +224,12 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_DASHBOARD = new GameAction("toggle_dashboard") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.services().views().playView().dashboard().toggleVisibility();
+            ui.services().subViews().playView().dashboard().toggleVisibility();
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.services().views().isPlayViewSelected();
+            return ui.services().subViews().isPlayViewSelected();
         }
     };
 
@@ -286,7 +286,7 @@ public final class CommonActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.services().views().isPlayViewSelected();
+            return ui.services().subViews().isPlayViewSelected();
         }
     };
 
@@ -306,7 +306,7 @@ public final class CommonActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.services().views().isPlayViewSelected();
+            return ui.services().subViews().isPlayViewSelected();
         }
 
         private boolean inPlayScene(GameUI ui) {

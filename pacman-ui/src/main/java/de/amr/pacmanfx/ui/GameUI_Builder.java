@@ -130,7 +130,7 @@ public class GameUI_Builder {
             }
         });
 
-        final StartPages_SubView startPagesCarousel = ui.services().views().startView();
+        final StartPages_SubView startPagesCarousel = ui.services().subViews().startView();
         for (var startPageFactory : startPageFactories) {
             final StartPage startPage = startPageFactory.get();
             if (startPage != null) {
