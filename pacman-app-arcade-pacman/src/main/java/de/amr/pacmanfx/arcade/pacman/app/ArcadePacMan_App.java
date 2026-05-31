@@ -92,7 +92,7 @@ public class ArcadePacMan_App extends Application {
         ui.access().configurations().addConfigFactory(
             GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
-        final StartPages_SubView startView = ui.access().startView();
+        final StartPages_SubView startView = ui.access().subViews().startView();
 
         final var arcadePacManStartPage = new ArcadePacMan_StartPage();
         arcadePacManStartPage.init(ui);

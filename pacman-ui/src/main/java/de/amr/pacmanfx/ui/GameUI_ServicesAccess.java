@@ -17,9 +17,6 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
-import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
-import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
-import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.util.Duration;
@@ -64,28 +61,8 @@ public record GameUI_ServicesAccess(
         return configurations.getOrCreateUIConfig(gameVariantName);
     }
 
-    public GamePlay_SubView gamePlayView() {
-        return subViews.gamePlayView();
-    }
-
-    public void selectGamePlayView() {
-        subViews.selectGamePlayView();
-    }
-
-    public StartPages_SubView startView() {
-        return subViews.startView();
-    }
-
-    public void selectStartView() {
-        subViews.selectStartView();
-    }
-
-    public Dashboard dashboard() {
-        return subViews.gamePlayView().dashboard();
-    }
-
     public void configureDashboard(List<CommonDashboardID> dashboardIDList) {
-        dashboard().addCommonSections(translations(), dashboardIDList);
+        subViews.gamePlayView().dashboard().addCommonSections(translations(), dashboardIDList);
     }
 
     /**

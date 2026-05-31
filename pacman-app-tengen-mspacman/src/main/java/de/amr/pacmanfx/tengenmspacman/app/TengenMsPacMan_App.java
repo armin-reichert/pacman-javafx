@@ -14,7 +14,6 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
-import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -42,8 +41,7 @@ public class TengenMsPacMan_App extends Application {
             .startPage(TengenMsPacMan_StartPage::new)
             .build();
 
-        final Dashboard dashboard = ui.access().dashboard();
-        dashboard.addCommonSections(ui.access().translations(), List.of(
+        ui.access().configureDashboard(List.of(
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,
             CommonDashboardID.SETTINGS_3D,
@@ -54,9 +52,9 @@ public class TengenMsPacMan_App extends Application {
             CommonDashboardID.ABOUT
         ));
 
-        dashboard.addSection(
+        ui.access().subViews().gamePlayView().dashboard().addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
-            new DashboardSectionJoypad(dashboard),
+            new DashboardSectionJoypad(ui.access().subViews().gamePlayView().dashboard()),
             TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
             false);
 

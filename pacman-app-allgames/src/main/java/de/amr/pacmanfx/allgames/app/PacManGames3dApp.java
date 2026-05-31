@@ -209,7 +209,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void addStartPages() {
-        final StartPages_SubView startView = ui.access().startView();
+        final StartPages_SubView startView = ui.access().subViews().startView();
         startView.addStartPage(new ArcadePacMan_StartPage());
         startView.addStartPage(new ArcadeMsPacMan_StartPage());
         startView.addStartPage(new TengenMsPacMan_StartPage());
@@ -220,7 +220,7 @@ public class PacManGames3dApp extends Application {
 
 
     private void configureDashboard() {
-        final Dashboard dashboard = ui.access().gamePlayView().dashboard();
+        final Dashboard dashboard = ui.access().subViews().gamePlayView().dashboard();
 
         ui.access().configureDashboard(DASHBOARD_IDs);
 

@@ -39,7 +39,7 @@ public final class CommonActions {
         @Override
         protected void doAction(GameUI ui) {
             ui.access().gameContext().coinMechanism().setNumCoins(0);
-            ui.access().selectGamePlayView();
+            ui.access().subViews().selectGamePlayView();
             ui.restart();
         }
     };
@@ -114,7 +114,7 @@ public final class CommonActions {
     public static final GameAction ACTION_SHOW_HELP = new GameAction("show_help") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.access().gamePlayView().showHelp(ui);
+            ui.access().subViews().gamePlayView().showHelp(ui);
         }
 
         @Override
@@ -225,7 +225,7 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_DASHBOARD = new GameAction("toggle_dashboard") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.access().dashboard().toggleVisibility();
+            ui.access().subViews().gamePlayView().dashboard().toggleVisibility();
         }
 
         @Override

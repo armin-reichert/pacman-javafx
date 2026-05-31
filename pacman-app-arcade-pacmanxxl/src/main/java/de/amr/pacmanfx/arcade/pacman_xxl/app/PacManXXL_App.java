@@ -11,7 +11,6 @@ import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
-import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
@@ -43,8 +42,7 @@ public class PacManXXL_App extends Application {
             .startPage(PacManXXL_StartPage::new)
             .build();
 
-        final Dashboard dashboard = ui.access().dashboard();
-        dashboard.addCommonSections(ui.access().translations(), List.of(
+        ui.access().configureDashboard(List.of(
             CommonDashboardID.README,
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,
@@ -57,7 +55,7 @@ public class PacManXXL_App extends Application {
             CommonDashboardID.ABOUT
         ));
 
-        dashboard.findSection(CommonDashboardID.CUSTOM_MAPS)
+        ui.access().subViews().gamePlayView().dashboard().findSection(CommonDashboardID.CUSTOM_MAPS)
             .filter(DashboardSectionCustomMaps.class::isInstance)
             .map(DashboardSectionCustomMaps.class::cast)
             .ifPresent(section -> {

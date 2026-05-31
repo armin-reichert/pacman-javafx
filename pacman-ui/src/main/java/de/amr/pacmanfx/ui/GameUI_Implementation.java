@@ -189,8 +189,8 @@ public final class GameUI_Implementation implements GameUI {
 
         subViewManager.setUI(this);
 
-        access().gamePlayView().configurePropertyBindings(this);
-        access().dashboard().sections().forEach(section -> section.init(this));
+        access().subViews().gamePlayView().configurePropertyBindings(this);
+        access().subViews().gamePlayView().dashboard().sections().forEach(section -> section.init(this));
 
         subViewManager.setEditorCanOpen(() -> {
             // No editor view exists or editor already selected: cannot open
@@ -220,7 +220,7 @@ public final class GameUI_Implementation implements GameUI {
             // restore title (editor changed it)
             stage.titleProperty().unbind();
             stage.titleProperty().bind(view.stageTitleBindingProperty());
-            access().selectStartView();
+            access().subViews().selectStartView();
         });
         return editorView;
     }
@@ -304,7 +304,7 @@ public final class GameUI_Implementation implements GameUI {
         }
         stage.centerOnScreen();
         stage.show();
-        access().selectStartView();
+        access().subViews().selectStartView();
     }
 
     /**

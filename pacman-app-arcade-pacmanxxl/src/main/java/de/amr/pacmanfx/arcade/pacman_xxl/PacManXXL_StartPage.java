@@ -80,7 +80,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                     e.consume();
                     if (ui != null) {
                         ui.access().sounds().stopAndDisposeVoice();
-                        ui.access().startView().pauseProgressTimer();
+                        ui.access().subViews().startView().pauseProgressTimer();
                         ui.openWorldMapFileInEditor(null);
                     }
                 }
@@ -88,7 +88,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                     e.consume();
                     if (ui != null) {
                         ui.access().sounds().stopAndDisposeVoice();
-                        ui.access().startView().pauseProgressTimer();
+                        ui.access().subViews().startView().pauseProgressTimer();
                         menu.startSelectedGame();
                     }
                 }
