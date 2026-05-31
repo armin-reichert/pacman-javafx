@@ -187,13 +187,13 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void initSubViews() {
-        access.subViews().connect(this);
-        access.subViews().gamePlayView().configurePropertyBindings(this);
-        access.subViews().gamePlayView().dashboard().sections().forEach(section -> section.init(this));
+        access().subViews().connect(this);
+        access().subViews().gamePlayView().configurePropertyBindings(this);
+        access().subViews().gamePlayView().dashboard().sections().forEach(section -> section.init(this));
     }
 
     private void initView() {
-        view.setIcon(access.currentUIConfig().assets().image("app_icon"));
+        view.setIcon(access().currentUIConfig().assets().image("app_icon"));
     }
 
     private GamePlay_SubView createGamePlaySubView() {
