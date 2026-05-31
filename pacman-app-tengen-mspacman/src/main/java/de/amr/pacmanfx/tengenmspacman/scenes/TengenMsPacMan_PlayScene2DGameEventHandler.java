@@ -20,7 +20,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
     }
 
     public TengenMsPacMan_GameModel game() {
-        return facade().currentGame();
+        return services().currentGame();
     }
 
     @Override
@@ -108,7 +108,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = facade().gameClock().tickCount();
+        final long tick = services().gameClock().tickCount();
         gameScene().facade().currentSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 

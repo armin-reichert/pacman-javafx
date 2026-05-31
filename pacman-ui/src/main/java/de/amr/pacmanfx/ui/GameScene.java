@@ -40,12 +40,8 @@ public abstract class GameScene implements Disposable {
             this.gameScene = requireNonNull(gameScene);
         }
 
-        public GameUI_ServiceFacade facade() {
+        public GameUI_ServiceFacade services() {
             return gameScene.ui().services();
-        }
-
-        public GameUI ui() {
-            return gameScene.ui();
         }
 
         public GameScene gameScene() {
@@ -53,7 +49,7 @@ public abstract class GameScene implements Disposable {
         }
 
         public Optional<GameLevel> optGameLevel() {
-            return facade().currentGame().optGameLevel();
+            return services().currentGame().optGameLevel();
         }
 
         @Override
