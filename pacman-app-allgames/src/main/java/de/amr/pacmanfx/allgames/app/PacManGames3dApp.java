@@ -51,7 +51,7 @@ import static de.amr.pacmanfx.model.GameVariant.*;
  * Command-line arguments:
  * <ul>
  *     <li>{@code --use_builder=value}:<br/>
- *     Any value where "true" != toLower(value) is evaluated to false!</li>
+ *     <li>{@code --include-tests=value}</li>
  * </ul>
  * </p>
  */
@@ -60,7 +60,13 @@ public class PacManGames3dApp extends Application {
     private static final float ASPECT_RATIO    = 1.6f; // 16:10
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
-    private static final boolean INTERACTIVE_TESTS_ENABLED = true;
+    private static String including(boolean b) {
+        return b ? "including" : "not including";
+    }
+
+    private static String using(boolean b) {
+        return b ? "using" : "without using";
+    }
 
     private static final List<CommonDashboardID> DASHBOARD_IDs = List.of(
         CommonDashboardID.GENERAL,
@@ -79,8 +85,13 @@ public class PacManGames3dApp extends Application {
     private GameUI ui;
     private PacManXXL_MapSelector xxlMapSelector;
 
+    private boolean useBuilder;
+    private boolean includeTests;
+
     @Override
     public void init() {
+        useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
+        includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
         gameBox = new GameBox(new GameClockFX(), new CoinMechanism(99));
         xxlMapSelector = new PacManXXL_MapSelector(gameBox.customMapDir());
         registerGames();
@@ -90,9 +101,6 @@ public class PacManGames3dApp extends Application {
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         try {
-            // command-line: --use_builder=false or --use_builder=true
-            final boolean useBuilder = Boolean.parseBoolean(getParameters().getNamed().getOrDefault("use_builder", "true"));
-            // Shared map selector used by Pac-Man XXL and Ms. Pac-Man XXL
             if (useBuilder) {
                 ui = GameUI_Builder
                     .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
@@ -121,7 +129,7 @@ public class PacManGames3dApp extends Application {
                     .startPage(ArcadeMsPacMan_StartPage::new)
                     .startPage(TengenMsPacMan_StartPage::new)
                     .startPage(PacManXXL_StartPage::new)
-                    .includeInteractiveTests(INTERACTIVE_TESTS_ENABLED)
+                    .includeInteractiveTests(includeTests)
                     .build();
             }
             else {
@@ -131,7 +139,7 @@ public class PacManGames3dApp extends Application {
             }
 
             configureDashboard();
-            Logger.info("UI created {} builder", useBuilder ? "using" : "without");
+            Logger.info("UI created {} builder {} tests", using(useBuilder), including(includeTests));
 
             ui.customDirWatchdog().addEventListener(xxlMapSelector);
             ui.show();
@@ -160,7 +168,7 @@ public class PacManGames3dApp extends Application {
                 case ARCADE_PACMAN_XXL    -> new PacManXXL_PacMan_GameModel(gameBox.coinMechanism(), xxlMapSelector);
                 case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(gameBox.coinMechanism(), xxlMapSelector);
             };
-            if (INTERACTIVE_TESTS_ENABLED) {
+            if (includeTests) {
                 addTestStates(game);
             }
             gameBox.registerGame(variant.name(), game);
