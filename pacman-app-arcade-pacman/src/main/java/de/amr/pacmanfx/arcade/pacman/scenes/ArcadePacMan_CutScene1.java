@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacAnimations;
@@ -36,9 +37,10 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     
     @Override
     public void onActivate(UIConfig uiConfig) {
+        final SpriteAnimationSet spriteAnimationSet = ui.services().sprites().animationSet();
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
-        blinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationSet(), RED_GHOST_SHADOW);
+        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
+        blinky = uiConfig.createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW);
         sceneTick = -1;
     }
 
@@ -69,8 +71,8 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     private void startBigPacManChasingBlinky() {
         pacMan.placeAtTile(-3, 18, 0, 6.5f);
         pacMan.setMoveDir(Direction.RIGHT);
-        pacMan.animationManager().select(ArcadePacMan_PacAnimations.AnimationID.ANIM_BIG_PAC_MAN);
-        pacMan.animationManager().playSelected();
+        pacMan.animations().select(ArcadePacMan_PacAnimations.AnimationID.ANIM_BIG_PAC_MAN);
+        pacMan.animations().playSelected();
     }
 
     private void startBlinkyEscapingPacMan() {
@@ -78,24 +80,24 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         blinky.setMoveDir(Direction.RIGHT);
         blinky.setWishDir(Direction.RIGHT);
         blinky.setSpeed(0.75f);
-        blinky.animationManager().select(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
-        blinky.animationManager().playSelected();
+        blinky.animations().select(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
+        blinky.animations().playSelected();
     }
 
     private void startBlinkyChasingPacMan() {
         pacMan.placeAtTile(29, 20);
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(1.25f);
-        pacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
-        pacMan.animationManager().playSelected();
+        pacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pacMan.animations().playSelected();
         pacMan.show();
 
         blinky.placeAtTile(32, 20);
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
         blinky.setSpeed(1.3f);
-        blinky.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-        blinky.animationManager().playSelected();
+        blinky.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        blinky.animations().playSelected();
         blinky.show();
     }
 }

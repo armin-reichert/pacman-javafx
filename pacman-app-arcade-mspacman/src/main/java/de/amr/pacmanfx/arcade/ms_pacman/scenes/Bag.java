@@ -50,12 +50,12 @@ public class Bag extends Actor {
     private boolean open;
 
     public Bag(SpriteAnimationSet animationSet) {
-        setAnimationManager(new BagAnimations(animationSet));
+        setAnimations(new BagAnimations(animationSet));
     }
 
     public void setOpen(boolean open) {
         this.open = open;
-        animationManager.select(open ? ArcadeMsPacMan_AnimationID.JUNIOR : ArcadeMsPacMan_AnimationID.BAG);
+        animations.select(open ? ArcadeMsPacMan_AnimationID.JUNIOR : ArcadeMsPacMan_AnimationID.BAG);
     }
 
     public boolean isOpen() {

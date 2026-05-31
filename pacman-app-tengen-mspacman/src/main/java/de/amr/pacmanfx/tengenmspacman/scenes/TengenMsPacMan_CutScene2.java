@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
@@ -64,6 +65,8 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
+        final SpriteAnimationSet spriteAnimationSet = ui.services().sprites().animationSet();
+
         // Quit cut scene when "START" button on "joypad" is pressed
         final Joypad joypad = Input.instance().joypad;
         actionBindings.setKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, joypad.keyForButton(JoypadButton.START));
@@ -74,10 +77,10 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
+        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
 
         ui.services().sounds().play(PacManGameSoundID.INTERMISSION_2);
     }
@@ -96,15 +99,15 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
                 case 270 -> {
                     msPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
                     msPacMan.setMoveDir(Direction.RIGHT);
-                    msPacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
-                    msPacMan.animationManager().playSelected();
+                    msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+                    msPacMan.animations().playSelected();
                     msPacMan.setSpeed(2.0f);
                     msPacMan.show();
                 }
                 case 320 -> {
                     pacMan.setMoveDir(Direction.RIGHT);
-                    pacMan.animationManager().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.animationManager().playSelected();
+                    pacMan.animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    pacMan.animations().playSelected();
                     pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.setSpeed(2.0f);

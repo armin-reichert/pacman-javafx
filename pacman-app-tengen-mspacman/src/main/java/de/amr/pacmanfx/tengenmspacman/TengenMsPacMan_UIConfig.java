@@ -44,7 +44,7 @@ import org.tinylog.Logger;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR;
+import static de.amr.pacmanfx.ui.GameUI_Constants.PROPERTY_CANVAS_BACKGROUND_COLOR;
 
 public class TengenMsPacMan_UIConfig implements UIConfig {
 
@@ -309,8 +309,8 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     @Override
     public Ghost createGhostWithAnimations(SpriteAnimationSet animationSet, byte personality) {
         final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(personality);
-        ghost.setAnimationManager(createGhostAnimations(animationSet, personality));
-        ghost.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        ghost.setAnimations(createGhostAnimations(animationSet, personality));
+        ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;
     }
 

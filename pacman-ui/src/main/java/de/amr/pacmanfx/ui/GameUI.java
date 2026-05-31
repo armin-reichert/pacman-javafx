@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import javafx.scene.Scene;
@@ -39,11 +38,6 @@ public interface GameUI {
      */
     Scene scene();
 
-    /**
-     * @return the set of all sprite animations
-     */
-    SpriteAnimationSet spriteAnimationSet();
-
     // ---------------------------------------------------------------------------------------------
     // Messages
     // ---------------------------------------------------------------------------------------------
@@ -64,7 +58,7 @@ public interface GameUI {
      * @param args    formatting arguments
      */
     default void showFlashMessage(String message, Object... args) {
-        showFlashMessage(GameUIConstants.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
+        showFlashMessage(GameUI_Constants.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
 
     // ---------------------------------------------------------------------------------------------

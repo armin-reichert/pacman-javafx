@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUIConstants;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -77,7 +77,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
             }
         });
         addSeparator(menu);
-        addLocalizedCheckBox(menu, ui.services().translations(), GameUIConstants.PROPERTY_MUTED, "muted");
+        addLocalizedCheckBox(menu, ui.services().translations(), GameUI_Constants.PROPERTY_MUTED, "muted");
         addLocalizedActionItem(menu, ui, ui.services().translations(), CommonActions.ACTION_QUIT_GAME_SCENE, "quit");
 
         return Optional.of(menu);
@@ -102,8 +102,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
     protected void acceptGameLevel(GameLevel level) {
         actionBindings.registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         if (!level.isDemoLevel()) {
-            actionBindings.registerAllBindings(GameUIConstants.STEERING_ACTION_BINDINGS);
-            actionBindings.registerAllBindings(GameUIConstants.CHEAT_ACTION_BINDINGS);
+            actionBindings.registerAllBindings(GameUI_Constants.STEERING_ACTION_BINDINGS);
+            actionBindings.registerAllBindings(GameUI_Constants.CHEAT_ACTION_BINDINGS);
         }
         Logger.info(actionBindings);
 
@@ -130,11 +130,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     protected void resetActorAnimations(GameLevel level) {
         final Pac pac = level.entities().pac();
-        pac.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
-        pac.animationManager().resetSelected();
+        pac.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pac.animations().resetSelected();
         level.ghosts().forEach(ghost -> {
-            ghost.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-            ghost.animationManager().resetSelected();
+            ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            ghost.animations().resetSelected();
         });
     }
 }

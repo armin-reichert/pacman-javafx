@@ -12,7 +12,7 @@ import de.amr.pacmanfx.ui.CommonSceneID;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 
-import static de.amr.pacmanfx.ui.GameUIConstants.PROPERTY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.GameUI_Constants.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 class PacManXXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {

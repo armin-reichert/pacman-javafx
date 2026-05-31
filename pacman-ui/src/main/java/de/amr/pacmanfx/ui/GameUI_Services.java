@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.layout.ViewManager;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -19,9 +20,14 @@ public record GameUI_Services(
     GameSceneManager gameScenes,
     PreferencesManager prefs,
     SoundManager sounds,
+    SpriteAnimationManager sprites,
     TranslationManager translations,
     ViewManager views)
 {
+    public UIConfig getUIConfig(String gameVariantName) {
+        return configurations().getOrCreateUIConfig(gameVariantName);
+    }
+
     public void configureDashboard(List<CommonDashboardID> dashboardIDList) {
         views().playView().dashboard().addCommonSections(translations(), dashboardIDList);
     }

@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
@@ -89,6 +90,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
+        final SpriteAnimationSet spriteAnimationSet = ui.services().sprites().animationSet();
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
         // Quit cut scene when "START" button on "joypad" is pressed
@@ -101,31 +103,31 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
         msPacMan.setSpeed(0);
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
+        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
         pacMan.setSpeed(0);
 
-        inky = uiConfig.createGhostWithAnimations(ui.spriteAnimationSet(), CYAN_GHOST_BASHFUL);
+        inky = uiConfig.createGhostWithAnimations(spriteAnimationSet, CYAN_GHOST_BASHFUL);
         inky.setMoveDir(Direction.RIGHT);
         inky.setWishDir(Direction.RIGHT);
         inky.setPosition(LEFT_BORDER, UPPER_LANE);
         inky.setSpeed(0);
 
-        pinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationSet(), PINK_GHOST_SPEEDY);
+        pinky = uiConfig.createGhostWithAnimations(spriteAnimationSet, PINK_GHOST_SPEEDY);
         pinky.setMoveDir(Direction.LEFT);
         pinky.setWishDir(Direction.LEFT);
         pinky.setPosition(RIGHT_BORDER, LOWER_LANE);
         pinky.setSpeed(0);
 
         heart = new Actor();
-        heart.setAnimationManager(singletonAnimationFacade(spriteSheet.sprite(SpriteID.HEART)));
+        heart.setAnimations(singletonAnimationFacade(spriteSheet.sprite(SpriteID.HEART)));
 
         collided = false;
 
@@ -160,24 +162,24 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             switch ((int) gameStateTick) {
                 case 130 -> {
                     pacMan.setSpeed(SPEED_CHASING);
-                    pacMan.animationManager().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.animationManager().playSelected();
+                    pacMan.animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    pacMan.animations().playSelected();
                     pacMan.show();
 
                     msPacMan.setSpeed(SPEED_CHASING);
-                    msPacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
-                    msPacMan.animationManager().playSelected();
+                    msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+                    msPacMan.animations().playSelected();
                     msPacMan.show();
                 }
                 case 160 -> {
                     inky.setSpeed(SPEED_CHASING);
-                    inky.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-                    inky.animationManager().playSelected();
+                    inky.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+                    inky.animations().playSelected();
                     inky.show();
 
                     pinky.setSpeed(SPEED_CHASING);
-                    pinky.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-                    pinky.animationManager().playSelected();
+                    pinky.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+                    pinky.animations().playSelected();
                     pinky.show();
                 }
                 case 400 -> {
@@ -225,8 +227,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                     msPacMan.setMoveDir(Direction.RIGHT);
                 }
                 case 545 -> {
-                    pacMan.animationManager().resetSelected();
-                    msPacMan.animationManager().resetSelected();
+                    pacMan.animations().resetSelected();
+                    msPacMan.animations().resetSelected();
                 }
                 case 560 -> {
                     heart.setPosition(0.5f * (pacMan.x() + msPacMan.x()), pacMan.y() - TS(2));

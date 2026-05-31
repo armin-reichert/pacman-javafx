@@ -60,7 +60,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
             ctx.setFont(debugTextFont);
             ctx.fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
         }
-        if (movingActor.animationManager() instanceof SpriteAnimationContainer<?> spriteAnimations) {
+        if (movingActor.animations() instanceof SpriteAnimationContainer<?> spriteAnimations) {
             Object animationID = spriteAnimations.selectedAnimationID();
             if (animationID != null) {
                 ctx.setFont(debugTextFont);

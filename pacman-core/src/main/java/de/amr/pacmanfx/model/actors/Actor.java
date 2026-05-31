@@ -193,13 +193,13 @@ public class Actor {
         return y - tile.y() * TS;
     }
 
-    protected AnimationFacade animationManager = AnimationFacade.emptyAnimationFacade();
+    protected AnimationFacade animations = AnimationFacade.emptyAnimationFacade();
 
-    public void setAnimationManager(AnimationFacade animationManager) {
-        this.animationManager = animationManager;
+    public void setAnimations(AnimationFacade animationManager) {
+        this.animations = animationManager;
     }
 
-    public AnimationFacade animationManager() {
-        return animationManager;
+    public AnimationFacade animations() {
+        return animations;
     }
 }

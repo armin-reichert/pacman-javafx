@@ -280,11 +280,11 @@ public class Ghost extends MovingActor {
 
         // "onEntry" action:
         switch (newState) {
-            case LOCKED, HUNTING_PAC -> animationManager.select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-            case ENTERING_HOUSE, RETURNING_HOME -> animationManager.select(ArcadePacMan_AnimationID.GHOST_EYES);
+            case LOCKED, HUNTING_PAC -> animations.select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            case ENTERING_HOUSE, RETURNING_HOME -> animations.select(ArcadePacMan_AnimationID.GHOST_EYES);
             case FRIGHTENED -> {
-                animationManager.select(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
-                animationManager.playSelected();
+                animations.select(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
+                animations.playSelected();
             }
             case EATEN -> {}
         }
@@ -316,7 +316,7 @@ public class Ghost extends MovingActor {
         if (isInDanger(level)) {
             playFrightenedAnimation(level, level.entities().pac());
         } else {
-            animationManager.select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            animations.select(ArcadePacMan_AnimationID.GHOST_NORMAL);
         }
     }
 
@@ -358,7 +358,7 @@ public class Ghost extends MovingActor {
             if (isInDanger(level)) {
                 playFrightenedAnimation(level, level.entities().pac());
             } else {
-                animationManager.select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+                animations.select(ArcadePacMan_AnimationID.GHOST_NORMAL);
             }
         }
     }
@@ -405,9 +405,9 @@ public class Ghost extends MovingActor {
 
     private void playFrightenedAnimation(GameLevel level, Pac pac) {
         if (pac.isPowerFadingStarting(level)) {
-            animationManager.select(ArcadePacMan_AnimationID.GHOST_FLASHING);
+            animations.select(ArcadePacMan_AnimationID.GHOST_FLASHING);
         } else if (!pac.isPowerFading(level)) {
-            animationManager.select(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
+            animations.select(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
         }
     }
 

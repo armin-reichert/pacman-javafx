@@ -7,7 +7,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUIConstants;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
@@ -58,7 +58,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             public void onValueChanged(GameVariant oldVariant, GameVariant newVariant) {
                 if (ui != null) {
                     final UIConfig uiConfig = ui.services().configurations().getOrCreateUIConfig(newVariant.name());
-                    chaseAnimation.init(uiConfig, canvas, ui.spriteAnimationSet());
+                    chaseAnimation.init(uiConfig, canvas, ui.services().sprites().animationSet());
                 }
             }
         };
@@ -121,14 +121,14 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         // init entries
         entryGameVariant.setValue(gameVariant);
-        entryPlay3D.setValue(GameUIConstants.PROPERTY_3D_ENABLED.get());
+        entryPlay3D.setValue(GameUI_Constants.PROPERTY_3D_ENABLED.get());
         entryCutScenesEnabled.setValue(game.flow().cutScenesEnabled());
         entryMapOrder.setValue(mapSelector.selectionMode());
         entryMapOrder.setEnabled(!mapSelector.customMaps().isEmpty());
         logMenuState();
 
         soundEnabledProperty().bind(ui.services().sounds().muteProperty().not());
-        chaseAnimation.init(currentConfig, canvas, ui.spriteAnimationSet());
+        chaseAnimation.init(currentConfig, canvas, ui.services().sprites().animationSet());
 
         requestFocus();
     }

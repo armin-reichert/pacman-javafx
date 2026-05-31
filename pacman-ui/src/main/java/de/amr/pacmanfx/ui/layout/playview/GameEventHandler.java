@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.layout.playview;
 
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.GameLevel;
@@ -26,12 +27,13 @@ public class GameEventHandler extends DefaultGameEventListener {
 
             case LevelCreatedEvent levelCreatedEvent -> {
                 final GameLevel level = levelCreatedEvent.level();
-                final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
+                final UIConfig currentConfig = ui.services().getUIConfig(ui.gameContext().gameVariantName());
+                final SpriteAnimationSet spriteAnimationSet = ui.services().sprites().animationSet();
 
                 //TODO this should be done elsewhere
-                level.entities().pac().setAnimationManager(currentConfig.createPacAnimations(ui.spriteAnimationSet()));
+                level.entities().pac().setAnimations(currentConfig.createPacAnimations(spriteAnimationSet));
                 level.entities().ghosts().forEach(ghost ->
-                    ghost.setAnimationManager(currentConfig.createGhostAnimations(ui.spriteAnimationSet(), ghost.personality())));
+                    ghost.setAnimations(currentConfig.createGhostAnimations(spriteAnimationSet, ghost.personality())));
 
                 final MiniPlaySceneView miniPlayView = ui.services().views().playView().miniPlaySceneView();
                 miniPlayView.setUIConfig(currentConfig);

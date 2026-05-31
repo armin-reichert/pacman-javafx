@@ -42,7 +42,7 @@ public class Stork extends Actor {
     private boolean bagReleasedFromBeak;
 
     public Stork(SpriteAnimationSet animationSet) {
-        setAnimationManager(new StorkAnimations(animationSet));
+        setAnimations(new StorkAnimations(animationSet));
     }
 
     public void setBagReleasedFromBeak(boolean released) {

@@ -7,7 +7,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUIConstants;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import javafx.scene.SubScene;
@@ -46,39 +46,39 @@ public class DashboardSection3DSettings extends DashboardSection {
     public void init(GameUI ui) {
         cbUsePlayScene3D = addCheckBox("3D Play Scene");
         comboPerspectives = addChoiceBox("Perspective", PerspectiveID.values());
-        addColorPicker("Light Color", GameUIConstants.PROPERTY_3D_LIGHT_COLOR);
-        addColorPicker("Floor Color", GameUIConstants.PROPERTY_3D_FLOOR_COLOR);
+        addColorPicker("Light Color", GameUI_Constants.PROPERTY_3D_LIGHT_COLOR);
+        addColorPicker("Floor Color", GameUI_Constants.PROPERTY_3D_FLOOR_COLOR);
         addDynamicLabeledValue("Camera",         () -> subSceneCameraInfo(ui));
         addDynamicLabeledValue("Sub-scene Size", () -> subSceneSizeInfo(ui));
         addDynamicLabeledValue("Scene Size",     () -> sceneSizeInfo(ui));
 
-        cbMiniViewVisible = addCheckBox("Mini View", GameUIConstants.PROPERTY_MINI_VIEW_ON);
+        cbMiniViewVisible = addCheckBox("Mini View", GameUI_Constants.PROPERTY_MINI_VIEW_ON);
 
         sliderMiniViewSceneHeight = addSlider(
             " - Height",
             MINI_VIEW_MIN_HEIGHT, MINI_VIEW_MAX_HEIGHT,
-            GameUIConstants.PROPERTY_MINI_VIEW_HEIGHT.get(),
+            GameUI_Constants.PROPERTY_MINI_VIEW_HEIGHT.get(),
             false, false);
 
         sliderMiniViewOpacityPercentage = addSlider(
             " - Opacity",
             0, 100,
-            GameUIConstants.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get(),
+            GameUI_Constants.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get(),
             false, false);
 
         sliderWallHeight = addSlider(
             "Wall Height",
             0, 16,
-            GameUIConstants.PROPERTY_3D_WALL_HEIGHT.get(),
+            GameUI_Constants.PROPERTY_3D_WALL_HEIGHT.get(),
             false, false);
 
         sliderWallOpacity = addSlider(
             "Wall Opacity",
             0, 1,
-            GameUIConstants.PROPERTY_3D_WALL_OPACITY.get(),
+            GameUI_Constants.PROPERTY_3D_WALL_OPACITY.get(),
             false, false);
 
-        cbAxesVisible = addCheckBox("Show Axes", GameUIConstants.PROPERTY_3D_AXES_VISIBLE);
+        cbAxesVisible = addCheckBox("Show Axes", GameUI_Constants.PROPERTY_3D_AXES_VISIBLE);
         cbWireframeMode = addCheckBox("Wireframe Mode");
 
         setTooltip(sliderMiniViewSceneHeight, sliderMiniViewSceneHeight.valueProperty(), "%.0f px");
@@ -87,11 +87,11 @@ public class DashboardSection3DSettings extends DashboardSection {
         setTooltip(sliderWallHeight, sliderWallHeight.valueProperty(), "%.0f px");
         setTooltip(sliderWallOpacity, sliderWallOpacity.valueProperty().multiply(100), "%.0f %%");
 
-        setEditor(sliderMiniViewSceneHeight, GameUIConstants.PROPERTY_MINI_VIEW_HEIGHT);
-        setEditor(sliderMiniViewOpacityPercentage, GameUIConstants.PROPERTY_MINI_VIEW_OPACITY_PERCENT);
-        setEditor(sliderWallHeight, GameUIConstants.PROPERTY_3D_WALL_HEIGHT);
-        setEditor(sliderWallOpacity, GameUIConstants.PROPERTY_3D_WALL_OPACITY);
-        setEditor(comboPerspectives, GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID);
+        setEditor(sliderMiniViewSceneHeight, GameUI_Constants.PROPERTY_MINI_VIEW_HEIGHT);
+        setEditor(sliderMiniViewOpacityPercentage, GameUI_Constants.PROPERTY_MINI_VIEW_OPACITY_PERCENT);
+        setEditor(sliderWallHeight, GameUI_Constants.PROPERTY_3D_WALL_HEIGHT);
+        setEditor(sliderWallOpacity, GameUI_Constants.PROPERTY_3D_WALL_OPACITY);
+        setEditor(comboPerspectives, GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID);
 
         cbUsePlayScene3D.setOnAction(_ -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
         cbWireframeMode.setOnAction(_ -> ACTION_TOGGLE_DRAW_MODE.executeIfEnabled(ui));
@@ -101,17 +101,17 @@ public class DashboardSection3DSettings extends DashboardSection {
     public void update(GameUI ui) {
         super.update(ui);
 
-        comboPerspectives.setValue(GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.get());
-        sliderMiniViewSceneHeight.setValue(GameUIConstants.PROPERTY_MINI_VIEW_HEIGHT.get());
+        comboPerspectives.setValue(GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.get());
+        sliderMiniViewSceneHeight.setValue(GameUI_Constants.PROPERTY_MINI_VIEW_HEIGHT.get());
         sliderMiniViewSceneHeight.setDisable(ui.services().views().playView().miniPlaySceneView().isMoving());
-        sliderMiniViewOpacityPercentage.setValue(GameUIConstants.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
-        sliderWallHeight.setValue(GameUIConstants.PROPERTY_3D_WALL_HEIGHT.get());
-        sliderWallOpacity.setValue(GameUIConstants.PROPERTY_3D_WALL_OPACITY.get());
-        cbUsePlayScene3D.setSelected(GameUIConstants.PROPERTY_3D_ENABLED.get());
-        cbMiniViewVisible.setSelected(GameUIConstants.PROPERTY_MINI_VIEW_ON.getValue());
-        comboPerspectives.setValue(GameUIConstants.PROPERTY_3D_PERSPECTIVE_ID.get());
-        cbAxesVisible.setSelected(GameUIConstants.PROPERTY_3D_AXES_VISIBLE.get());
-        cbWireframeMode.setSelected(GameUIConstants.PROPERTY_3D_DRAW_MODE.get() == DrawMode.LINE);
+        sliderMiniViewOpacityPercentage.setValue(GameUI_Constants.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
+        sliderWallHeight.setValue(GameUI_Constants.PROPERTY_3D_WALL_HEIGHT.get());
+        sliderWallOpacity.setValue(GameUI_Constants.PROPERTY_3D_WALL_OPACITY.get());
+        cbUsePlayScene3D.setSelected(GameUI_Constants.PROPERTY_3D_ENABLED.get());
+        cbMiniViewVisible.setSelected(GameUI_Constants.PROPERTY_MINI_VIEW_ON.getValue());
+        comboPerspectives.setValue(GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.get());
+        cbAxesVisible.setSelected(GameUI_Constants.PROPERTY_3D_AXES_VISIBLE.get());
+        cbWireframeMode.setSelected(GameUI_Constants.PROPERTY_3D_DRAW_MODE.get() == DrawMode.LINE);
     }
 
     private String subSceneSizeInfo(GameUI ui) {

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.Obstacle;
 import de.amr.pacmanfx.model.world.TerrainLayer;
-import de.amr.pacmanfx.ui.GameUIConstants;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.config.FloorConfig3D;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -125,8 +125,8 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
             wall3D.setBaseMaterial(materials.get("wallBaseMaterial"));
             wall3D.setTopMaterial(materials.get("wallTopMaterial"));
             wall3D.bindBaseHeight(wallBaseHeight);
-            wall3D.base().drawModeProperty().bind(GameUIConstants.PROPERTY_3D_DRAW_MODE);
-            wall3D.top().drawModeProperty().bind(GameUIConstants.PROPERTY_3D_DRAW_MODE);
+            wall3D.base().drawModeProperty().bind(GameUI_Constants.PROPERTY_3D_DRAW_MODE);
+            wall3D.top().drawModeProperty().bind(GameUI_Constants.PROPERTY_3D_DRAW_MODE);
             getChildren().addAll(wall3D.base(), wall3D.top());
             return wall3D;
         });
@@ -159,7 +159,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         final float thickness = floorConfig.thickness();
 
         floor3D = new Box(width, height, thickness);
-        floor3D.drawModeProperty().bind(GameUIConstants.PROPERTY_3D_DRAW_MODE);
+        floor3D.drawModeProperty().bind(GameUI_Constants.PROPERTY_3D_DRAW_MODE);
         floor3D.setMaterial(materials.get("floorMaterial"));
 
         floor3D.setTranslateX(0.5 * width - floorConfig.padding());

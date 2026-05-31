@@ -38,12 +38,12 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case Ghost ghost               -> drawSpriteCentered(computeGhostSprite(ghost), ghost.computeCenter());
             case Bonus bonus               -> drawSpriteCentered(computeBonusSprite(bonus), bonus.computeCenter());
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            default                        -> drawSpriteCentered(actor.animationManager().currentSprite(), actor.computeCenter());
+            default                        -> drawSpriteCentered(actor.animations().currentSprite(), actor.computeCenter());
         }
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
-        final AnimationFacade animationManager = ghost.animationManager();
+        final AnimationFacade animationManager = ghost.animations();
         if (animationManager.isSelected(ArcadePacMan_AnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.wishDir());
             return spriteOrDefault(sprites, animationManager.currentFrame());
@@ -57,7 +57,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private RectShort computePacSprite(Pac pac) {
-        final AnimationFacade animations = pac.animationManager();
+        final AnimationFacade animations = pac.animations();
         if (animations.isSelected(ArcadePacMan_AnimationID.PAC_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.moveDir());
             return spriteOrDefault(sprites, animations.currentFrame());

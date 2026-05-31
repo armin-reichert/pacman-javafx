@@ -273,8 +273,8 @@ public abstract class AbstractGameModel implements Game {
         level.blinking().setStartState(Pulse.State.ON);
         level.blinking().restart();
 
-        level.entities().pac().animationManager().playSelected();
-        level.ghosts().forEach(ghost -> ghost.animationManager().playSelected());
+        level.entities().pac().animations().playSelected();
+        level.ghosts().forEach(ghost -> ghost.animations().playSelected());
 
         final AbstractHuntingTimer huntingTimer = level.huntingTimer();
         huntingTimer.startFirstPhase(level.number());
@@ -298,14 +298,14 @@ public abstract class AbstractGameModel implements Game {
         level.worldMap().foodLayer().eatAll();
 
         final Pac pac = level.entities().pac();
-        pac.animationManager().stopSelected();
-        pac.animationManager().select(ArcadePacMan_AnimationID.PAC_FULL);
+        pac.animations().stopSelected();
+        pac.animations().select(ArcadePacMan_AnimationID.PAC_FULL);
         pac.setSpeed(0);
         pac.powerTimer().stop();
         pac.powerTimer().reset(0);
         Logger.info("Power timer stopped and reset to zero.");
 
-        level.ghosts().forEach(ghost -> ghost.animationManager().stopSelected());
+        level.ghosts().forEach(ghost -> ghost.animations().stopSelected());
         level.optBonus().ifPresent(Bonus::setInactive);
     }
 
@@ -326,7 +326,7 @@ public abstract class AbstractGameModel implements Game {
         pac.setMoveDir(Direction.LEFT);
         pac.setWishDir(Direction.LEFT);
         pac.powerTimer().resetToIndefiniteDuration();
-        pac.animationManager().resetSelected();
+        pac.animations().resetSelected();
 
         level.ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
@@ -335,7 +335,7 @@ public abstract class AbstractGameModel implements Game {
             ghost.setMoveDir(startDir);
             ghost.setWishDir(startDir);
             ghost.setState(GhostState.LOCKED);
-            ghost.animationManager().resetSelected();
+            ghost.animations().resetSelected();
         });
 
         level.blinking().setStartState(Pulse.State.ON); // Energizers are visible when ON

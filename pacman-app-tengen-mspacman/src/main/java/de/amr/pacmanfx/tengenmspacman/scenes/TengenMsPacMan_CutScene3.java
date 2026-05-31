@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
@@ -80,6 +81,8 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
+        final SpriteAnimationSet spriteAnimationSet = ui.services().sprites().animationSet();
+
         // Quit cut scene when "START" button on "joypad" is pressed
         final Joypad joypad = Input.instance().joypad;
         actionBindings.setKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, joypad.keyForButton(JoypadButton.START));
@@ -90,13 +93,13 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
+        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
 
-        stork = new Stork(ui.spriteAnimationSet());
-        flyingBag = new Bag(ui.spriteAnimationSet());
+        stork = new Stork(spriteAnimationSet);
+        flyingBag = new Bag(spriteAnimationSet);
 
         darkness = false;
 
@@ -118,22 +121,22 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.setPosition(TS * 3, GROUND_Y - 4);
                     pacMan.setSpeed(0);
-                    pacMan.animationManager().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.animationManager().stopSelected();
+                    pacMan.animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    pacMan.animations().stopSelected();
                     pacMan.show();
 
                     msPacMan.setMoveDir(Direction.RIGHT);
                     msPacMan.setPosition(TS * 5, GROUND_Y - 4);
                     msPacMan.setSpeed(0);
-                    msPacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
-                    msPacMan.animationManager().stopSelected();
+                    msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+                    msPacMan.animations().stopSelected();
                     msPacMan.show();
 
                     stork.setPosition(RIGHT_BORDER, TS * 7);
                     stork.setVelocity(-0.8f, 0);
                     stork.setBagReleasedFromBeak(false);
-                    stork.animationManager().select(ArcadeMsPacMan_AnimationID.STORK_FLYING);
-                    stork.animationManager().playSelected();
+                    stork.animations().select(ArcadeMsPacMan_AnimationID.STORK_FLYING);
+                    stork.animations().playSelected();
                     stork.show();
                 }
                 case 240 -> {

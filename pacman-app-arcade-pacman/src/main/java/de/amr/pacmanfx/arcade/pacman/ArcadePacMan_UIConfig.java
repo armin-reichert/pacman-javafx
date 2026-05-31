@@ -318,8 +318,8 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             case ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
             default -> throw new IllegalArgumentException("Unknown personality: " + personality);
         };
-        ghost.setAnimationManager(createGhostAnimations(animationSet, personality));
-        ghost.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        ghost.setAnimations(createGhostAnimations(animationSet, personality));
+        ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;
     }
 

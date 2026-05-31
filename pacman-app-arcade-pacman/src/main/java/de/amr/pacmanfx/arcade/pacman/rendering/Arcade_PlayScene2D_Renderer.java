@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUIConstants;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -44,7 +44,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         this.spriteSheet = requireNonNull(spriteSheet);
 
         final GameUI ui = scene.ui();
-        final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
+        final UIConfig currentConfig = ui.services().getUIConfig(ui.gameContext().gameVariantName());
         levelRenderer = scene.configureRenderer(currentConfig.createGameLevelRenderer(canvas));
         actorRenderer = scene.configureRenderer(currentConfig.createActorRenderer(canvas));
         debugRenderer = scene.configureRenderer(new Arcade_PlayScene2D_DebugInfo_Renderer(canvas));
@@ -70,7 +70,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
             levelRenderer.drawLevel(level, info);
             updateActorZOrder(level);
             actorsInZOrder.forEach(actorRenderer::drawActor);
-            if (GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+            if (GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
                 debugRenderer.draw(scene);
             }
         });

@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene;
-import de.amr.pacmanfx.ui.GameUIConstants;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -71,7 +71,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
         }
         copyrightRenderer.drawCopyright(TS(6), TS(28));
 
-        if (GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }

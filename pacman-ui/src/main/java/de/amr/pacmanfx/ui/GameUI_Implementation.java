@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.math.RandomNumberSupport;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
@@ -15,13 +14,13 @@ import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
+import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.layout.playview.PlayView;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
@@ -60,9 +59,6 @@ public final class GameUI_Implementation implements GameUI {
 
     private final GameUI_Services services;
 
-    // Sprite animation support
-    private final SpriteAnimationTimer spriteAnimationTimer = new SpriteAnimationTimer(new SpriteAnimationSet());
-
     // UI components
     private final Stage stage;
     private final GameUI_MainScene scene;
@@ -81,7 +77,8 @@ public final class GameUI_Implementation implements GameUI {
             new GameSceneManager(),
             new PreferencesManager(GameUI_Implementation.class),
             new SoundManager(),
-            () -> GameUIConstants.LOCALIZED_TEXTS,
+            new SpriteAnimationManager(),
+            () -> GameUI_Constants.LOCALIZED_TEXTS,
             new ViewManager()
         );
 
@@ -156,11 +153,6 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public SpriteAnimationSet spriteAnimationSet() {
-        return spriteAnimationTimer.spriteAnimationSet();
-    }
-
-    @Override
     public Stage stage() {
         return stage;
     }
@@ -193,8 +185,8 @@ public final class GameUI_Implementation implements GameUI {
     public void terminate() {
         Logger.info("Application is terminated now. There is no way back!");
         stopGame();
-        spriteAnimationTimer.stop();
-        spriteAnimationTimer.spriteAnimationSet().clear();
+        services.sprites().stopAnimationTimer();
+        services.sprites().animationSet().clear();
         flashMessageView.stopTimer();
         customDirWatchdog.dispose();
     }
@@ -237,7 +229,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private PlayView createPlayView() {
-        final var playView = new PlayView(this, GameUIConstants.DEFAULT_DASHBOARD_CONFIG);
+        final var playView = new PlayView(this, GameUI_Constants.DEFAULT_DASHBOARD_CONFIG);
         final ChangeListener<? super Number> playViewResizer = (_,_,_) -> playView.resizeToFit(scene);
         scene.widthProperty().addListener(playViewResizer);
         scene.heightProperty().addListener(playViewResizer);
@@ -290,10 +282,10 @@ public final class GameUI_Implementation implements GameUI {
         final UIConfig currentConfig = services.configurations().getOrCreateUIConfig(currentVariantName);
 
         final MazeConfig3D mazeConfig3D = currentConfig.worldConfig().maze();
-        GameUIConstants.PROPERTY_3D_WALL_HEIGHT .set(mazeConfig3D.obstacleBaseHeight());
-        GameUIConstants.PROPERTY_3D_WALL_OPACITY.set(mazeConfig3D.obstacleOpacity());
+        GameUI_Constants.PROPERTY_3D_WALL_HEIGHT .set(mazeConfig3D.obstacleBaseHeight());
+        GameUI_Constants.PROPERTY_3D_WALL_OPACITY.set(mazeConfig3D.obstacleOpacity());
 
-        services.sounds().muteProperty().bind(GameUIConstants.PROPERTY_MUTED);
+        services.sounds().muteProperty().bind(GameUI_Constants.PROPERTY_MUTED);
 
         statusIconBox.rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
             () -> services.views().isPlayViewSelected() || services.views().isStartViewSelected(),
@@ -305,14 +297,14 @@ public final class GameUI_Implementation implements GameUI {
             gameContext().gameVariantNameProperty(),
             services.views().currentViewProperty(),
             services.gameScenes().gameSceneProperty(),
-            GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE,
-            GameUIConstants.PROPERTY_3D_ENABLED
+            GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE,
+            GameUI_Constants.PROPERTY_3D_ENABLED
         );
 
         scene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> services.gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
-                ? GameUIConstants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUIConstants.WALLPAPERS.length)]
-                : GameUIConstants.BACKGROUND_PAC_MAN_WALLPAPER,
+                ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
+                : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER,
             services.views().currentViewProperty(),
             services.gameScenes().gameSceneProperty()
         ));
@@ -322,7 +314,7 @@ public final class GameUI_Implementation implements GameUI {
         Platform.runLater(() -> {
             customDirWatchdog.startWatching();
             flashMessageView.startTimer();
-            spriteAnimationTimer.start();
+            services.sprites().startAnimationTimer();
         });
     }
 
@@ -336,8 +328,8 @@ public final class GameUI_Implementation implements GameUI {
         final UIConfig currentConfig = services.configurations().getOrCreateUIConfig(gameContext().gameVariantName());
         final Image icon = currentConfig.assets().image("app_icon");
         stage.setScene(scene);
-        stage.setMinWidth(GameUIConstants.MIN_STAGE_WIDTH);
-        stage.setMinHeight(GameUIConstants.MIN_STAGE_HEIGHT);
+        stage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);
+        stage.setMinHeight(GameUI_Constants.MIN_STAGE_HEIGHT);
         stage.titleProperty().bind(stageTitleBinding);
         if (icon != null) {
             stage.getIcons().setAll(icon);
@@ -372,8 +364,8 @@ public final class GameUI_Implementation implements GameUI {
     private String titleForCurrentGameScene() {
         final GameScene gameScene = services.gameScenes().optCurrentGameScene().orElse(null);
 
-        final boolean debug = GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get();
-        final boolean is3D = GameUIConstants.PROPERTY_3D_ENABLED.get();
+        final boolean debug = GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE.get();
+        final boolean is3D = GameUI_Constants.PROPERTY_3D_ENABLED.get();
         final boolean paused = gameContext().clock().getUpdatesDisabled();
 
         final String normalTitle = appTitle(paused, is3D);

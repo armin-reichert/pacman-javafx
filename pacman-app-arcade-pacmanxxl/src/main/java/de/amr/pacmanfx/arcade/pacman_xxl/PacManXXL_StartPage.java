@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUIConstants;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -42,9 +42,9 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     private static final double RELATIVE_MENU_HEIGHT = 0.66;
 
     private static final OptionMenuStyle MENU_STYLE = OptionMenuStyle.builder()
-        .titleFont(Ufx.deriveFont(GameUIConstants.FONT_PAC_FONT_GOOD, 4 * TS))
+        .titleFont(Ufx.deriveFont(GameUI_Constants.FONT_PAC_FONT_GOOD, 4 * TS))
         .titleTextFill(ArcadePalette.ARCADE_RED)
-        .textFont(Ufx.deriveFont(GameUIConstants.FONT_ARCADE_8, TS))
+        .textFont(Ufx.deriveFont(GameUI_Constants.FONT_ARCADE_8, TS))
         .entryTextFill(ArcadePalette.ARCADE_YELLOW)
         .entryValueFill(ArcadePalette.ARCADE_WHITE)
         .usageTextFill(ArcadePalette.ARCADE_YELLOW)
@@ -143,7 +143,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         gameVariantNameListener = (_, _, newVariant) -> ui.gameContext().setGameVariantName(newVariant.name());
         menu.entryGameVariant().valueProperty().addListener(gameVariantNameListener);
 
-        play3DListener = (_, _, play3D) -> GameUIConstants.PROPERTY_3D_ENABLED.set(play3D);
+        play3DListener = (_, _, play3D) -> GameUI_Constants.PROPERTY_3D_ENABLED.set(play3D);
         menu.entryPlay3D().valueProperty().addListener(play3DListener);
 
         cutScenesEnabledListener = (_,_,enabled) -> ui.gameContext().game().flow().setCutScenesEnabled(enabled);

@@ -7,7 +7,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUIConstants;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.animation.Animation;
@@ -63,7 +63,7 @@ public class MiniPlaySceneView {
 
     public MiniPlaySceneView() {
         canvas = new Canvas();
-        canvas.heightProperty().bind(GameUIConstants.PROPERTY_MINI_VIEW_HEIGHT);
+        canvas.heightProperty().bind(GameUI_Constants.PROPERTY_MINI_VIEW_HEIGHT);
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> {
                 final double aspect = (double) worldSize.get().x() / worldSize.get().y();
@@ -76,8 +76,8 @@ public class MiniPlaySceneView {
         rootPane.setBorder(Border.stroke(Color.grayRgb(66)));
         rootPane.setPadding(PADDING);
 
-        rootPane.backgroundProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
-        rootPane.opacityProperty().bind(GameUIConstants.PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
+        rootPane.backgroundProperty().bind(GameUI_Constants.PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
+        rootPane.opacityProperty().bind(GameUI_Constants.PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
 
         // Canvas size determines mini view size
         rootPane.maxWidthProperty().bind(canvas.widthProperty().add(PADDING.getLeft() + PADDING.getRight()));
@@ -106,11 +106,11 @@ public class MiniPlaySceneView {
 
         levelRenderer = uiConfig.createGameLevelRenderer(canvas);
         levelRenderer.scalingProperty().bind(scaling);
-        levelRenderer.backgroundColorProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
+        levelRenderer.backgroundColorProperty().bind(GameUI_Constants.PROPERTY_CANVAS_BACKGROUND_COLOR);
 
         actorRenderer = uiConfig.createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scaling);
-        actorRenderer.backgroundColorProperty().bind(GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
+        actorRenderer.backgroundColorProperty().bind(GameUI_Constants.PROPERTY_CANVAS_BACKGROUND_COLOR);
     }
 
     public void slideIn() {
@@ -155,7 +155,7 @@ public class MiniPlaySceneView {
             ui.gameContext().game().optGameLevel().ifPresent(this::drawGameLevel);
         }
 
-        if (GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             canvasRenderer.fillTextCentered(
                 "scaling: %.2f, draw calls: %d".formatted(scaling.doubleValue(), drawCallCount),
                 Color.WHITE, Font.font(12 * scaling.get()),

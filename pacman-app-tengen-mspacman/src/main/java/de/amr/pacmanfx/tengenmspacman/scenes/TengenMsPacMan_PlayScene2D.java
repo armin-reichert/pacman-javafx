@@ -16,7 +16,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUIConstants;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
@@ -47,7 +47,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
 import static de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplayMode.SCROLLING;
-import static de.amr.pacmanfx.ui.GameUIConstants.PROPERTY_CANVAS_BACKGROUND_COLOR;
+import static de.amr.pacmanfx.ui.GameUI_Constants.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.layout.ContextMenuSupport.*;
 import static java.util.Objects.requireNonNull;
@@ -183,7 +183,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         addLocalizedCheckBox(menu, translationManager, game.cheats().usingAutopilotProperty(), "autopilot");
         addLocalizedCheckBox(menu, translationManager, game.cheats().immuneProperty(), "immunity");
         addSeparator(menu);
-        addLocalizedCheckBox(menu, translationManager, GameUIConstants.PROPERTY_MUTED, "muted");
+        addLocalizedCheckBox(menu, translationManager, GameUI_Constants.PROPERTY_MUTED, "muted");
         addLocalizedActionItem(menu, ui, translationManager, ACTION_QUIT_GAME_SCENE, "quit");
 
         return Optional.of(menu);
@@ -208,7 +208,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         } else {
             // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
             actionBindings.registerAllBindings(STEERING_BINDINGS);
-            actionBindings.registerAllBindings(GameUIConstants.CHEAT_ACTION_BINDINGS);
+            actionBindings.registerAllBindings(GameUI_Constants.CHEAT_ACTION_BINDINGS);
             actionBindings.registerFirstBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
             actionBindings.registerFirstBinding(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
         }
@@ -257,14 +257,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         final TengenMsPacMan_GameModel game = gameContext().game();
 
         final Pac pac = level.entities().pac();
-        pac.animationManager().select(game.isBoosterActive()
+        pac.animations().select(game.isBoosterActive()
             ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER
             : ArcadePacMan_AnimationID.PAC_MUNCHING);
-        pac.animationManager().resetSelected();
+        pac.animations().resetSelected();
 
         level.ghosts().forEach(ghost -> {
-            ghost.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-            ghost.animationManager().resetSelected();
+            ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            ghost.animations().resetSelected();
         });
     }
 }

@@ -140,7 +140,7 @@ public class PlayView implements View {
     @Override
     public void onEnter() {
         rootPane.requestFocus();
-        actionBindings.registerAllBindings(GameUIConstants.COMMON_BINDINGS);
+        actionBindings.registerAllBindings(GameUI_Constants.COMMON_BINDINGS);
         Logger.info(actionBindings);
         gameSceneFrame.installBindings();
     }
@@ -184,7 +184,7 @@ public class PlayView implements View {
         final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
         if (gameScene2D.canvas() != null) {
             sceneRenderer = currentConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
-            setFontSmoothing(GameUIConstants.PROPERTY_CANVAS_FONT_SMOOTHING.get());
+            setFontSmoothing(GameUI_Constants.PROPERTY_CANVAS_FONT_SMOOTHING.get());
             hudRenderer = currentConfig.createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
         } else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
@@ -229,9 +229,9 @@ public class PlayView implements View {
     public void configurePropertyBindings(GameUI ui) {
         pausedIcon.visibleProperty().bind(ui.gameContext().clock().updatesDisabledProperty());
 
-        GameUIConstants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
+        GameUI_Constants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 
-        GameUIConstants.PROPERTY_DEBUG_INFO_VISIBLE.addListener((_, _, debug) -> {
+        GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE.addListener((_, _, debug) -> {
             gameSceneLayer.setBackground(debug ? DEBUG_BACKGROUND : null);
             gameSceneLayer.setBorder(debug ? DEBUG_BORDER : null);
         });
@@ -239,9 +239,9 @@ public class PlayView implements View {
         overlayLayer.visibleProperty().bind(dashboard.rootPane().visibleProperty());
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
-            () -> GameUIConstants.PROPERTY_MINI_VIEW_ON.get()
+            () -> GameUI_Constants.PROPERTY_MINI_VIEW_ON.get()
                 && ui.services().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D),
-            GameUIConstants.PROPERTY_MINI_VIEW_ON,
+            GameUI_Constants.PROPERTY_MINI_VIEW_ON,
             ui.services().gameScenes().gameSceneProperty()
         ));
     }

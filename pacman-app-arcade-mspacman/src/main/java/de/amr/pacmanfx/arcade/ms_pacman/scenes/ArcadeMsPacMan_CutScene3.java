@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.Globals;
@@ -65,15 +66,17 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
+        final SpriteAnimationSet spriteAnimationSet = ui.services().sprites().animationSet();
+
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
+        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
 
-        stork = new Stork(ui.spriteAnimationSet());
+        stork = new Stork(spriteAnimationSet);
 
-        bag = new Bag(ui.spriteAnimationSet());
+        bag = new Bag(spriteAnimationSet);
         bag.setOpen(false);
 
         clapperboard = new Clapperboard("3", "JUNIOR");
@@ -119,21 +122,21 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private void enterStateDeliverJunior() {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(TS * 3, LANE_Y - 4);
-        pacMan.animationManager().select(ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-        pacMan.animationManager().stopSelected();
+        pacMan.animations().select(ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+        pacMan.animations().stopSelected();
         pacMan.show();
 
         msPacMan.setMoveDir(Direction.RIGHT);
         msPacMan.setPosition(TS * 5, LANE_Y - 4);
-        msPacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
-        msPacMan.animationManager().stopSelected();
+        msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        msPacMan.animations().stopSelected();
         msPacMan.show();
 
         stork.setPosition(TS * 30, TS * 12);
         stork.setVelocity(-0.8f, 0);
         stork.show();
-        stork.animationManager().select(ArcadeMsPacMan_AnimationID.STORK_FLYING);
-        stork.animationManager().playSelected();
+        stork.animations().select(ArcadeMsPacMan_AnimationID.STORK_FLYING);
+        stork.animations().playSelected();
 
         bag.setPosition(stork.x() - 14, stork.y() + 3);
         bag.setVelX(stork.velX());

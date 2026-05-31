@@ -37,12 +37,12 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
             case Pac pac -> computePacSprite(pac);
             case Ghost ghost -> computeGhostSprite(ghost);
             case Bonus bonus -> computeBonusSprite(bonus);
-            default -> actor.animationManager().currentSprite();
+            default -> actor.animations().currentSprite();
         };
     }
 
     private RectShort computePacSprite(Pac pac) {
-        final AnimationFacade animationManager = pac.animationManager();
+        final AnimationFacade animationManager = pac.animations();
         if (animationManager.isSelected(ArcadePacMan_AnimationID.PAC_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().pacMunchingSprites(pac.moveDir());
             return spriteOrDefault(sprites, animationManager.currentFrame());
@@ -53,7 +53,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
-        final AnimationFacade animationManager = ghost.animationManager();
+        final AnimationFacade animationManager = ghost.animations();
         if (animationManager.isSelected(ArcadePacMan_AnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.wishDir());
             return spriteOrDefault(sprites, animationManager.currentFrame());

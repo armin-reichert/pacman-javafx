@@ -12,7 +12,7 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState.*;
-import static de.amr.pacmanfx.ui.GameUIConstants.PROPERTY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.GameUI_Constants.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {

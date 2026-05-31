@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
@@ -53,10 +54,11 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
+        final SpriteAnimationSet spriteAnimationSet = ui.services().sprites().animationSet();
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
+        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.setPosition(TS(3), TS(10));
         clapperboard.startAnimation();
@@ -96,12 +98,12 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     private void enterStateChasing() {
         pacMan.setMoveDir(Direction.RIGHT);
-        pacMan.animationManager().select(ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-        pacMan.animationManager().playSelected();
+        pacMan.animations().select(ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+        pacMan.animations().playSelected();
 
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
-        msPacMan.animationManager().playSelected();
+        msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        msPacMan.animations().playSelected();
 
         setSceneState(SceneState.CHASING, TickTimer.INDEFINITE);
     }

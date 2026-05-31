@@ -7,6 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
@@ -68,13 +69,14 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
+        final SpriteAnimationSet spriteAnimationSet = ui.services().sprites().animationSet();
         pacMan = createPacMan();
-        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
-        blinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationSet(), RED_GHOST_SHADOW);
+        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
+        blinky = uiConfig.createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW);
         nailDressAnimation = SpriteAnimationBuilder.builder()
             .sprites(ArcadePacMan_SpriteSheet.instance().sprites(SpriteID.RED_GHOST_STRETCHED))
             .initiallyStopped()
-            .build(ui.spriteAnimationSet());
+            .build(spriteAnimationSet);
         sceneTick = -1;
     }
 
@@ -115,12 +117,12 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private void dressRaptures() {
         setNailDressAnimationState(NailDressState.RAPTURED);
         blinky.setX(blinky.x() - 4);
-        blinky.animationManager().select(ArcadePacMan_AnimationID.BLINKY_DAMAGED);
+        blinky.animations().select(ArcadePacMan_AnimationID.BLINKY_DAMAGED);
     }
 
     private void blinkyStopsMoving() {
         blinky.setSpeed(0);
-        blinky.animationManager().stopSelected();
+        blinky.animations().stopSelected();
     }
 
     private void blinkyGetsCaughtOnNail() {
@@ -133,8 +135,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
         blinky.setSpeed(1.25f);
-        blinky.animationManager().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-        blinky.animationManager().playSelected();
+        blinky.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        blinky.animations().playSelected();
         blinky.show();
     }
 
@@ -142,8 +144,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         pacMan.placeAtTile(28, 20);
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(1.15f);
-        pacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
-        pacMan.animationManager().playSelected();
+        pacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pacMan.animations().playSelected();
         pacMan.show();
     }
 
@@ -152,6 +154,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     }
 
     private SpriteAnimation blinkyAnimation(AnimationIdentifier animationID) {
-        return (SpriteAnimation) blinky.animationManager().animation(animationID);
+        return (SpriteAnimation) blinky.animations().animation(animationID);
     }
 }

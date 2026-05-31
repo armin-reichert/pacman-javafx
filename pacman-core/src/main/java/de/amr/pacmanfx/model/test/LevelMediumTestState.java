@@ -22,11 +22,11 @@ public class LevelMediumTestState<GAME extends Game> extends TestState<GAME> {
         final Pac pac = level.entities().pac();
         pac.usingAutopilotProperty().unbind();
         pac.setUsingAutopilot(true);
-        pac.animationManager().playSelected();
+        pac.animations().playSelected();
         pac.show();
 
         final List<Ghost> ghosts = level.entities().ghosts();
-        ghosts.forEach(ghost -> ghost.animationManager().playSelected());
+        ghosts.forEach(ghost -> ghost.animations().playSelected());
         ghosts.forEach(Ghost::show);
 
         final var message = new GameLevelMessage(GameLevelMessageType.TEST);

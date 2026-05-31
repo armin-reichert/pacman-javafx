@@ -4,8 +4,9 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.core.GameClock;
+import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -37,9 +38,10 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
+        final SpriteAnimationSet spriteAnimationSet = ui.services().sprites().animationSet();
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimationManager(uiConfig.createPacAnimations(ui.spriteAnimationSet()));
-        blinky = uiConfig.createGhostWithAnimations(ui.spriteAnimationSet(), RED_GHOST_SHADOW);
+        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
+        blinky = uiConfig.createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW);
         sceneTick = -1;
     }
 
@@ -68,8 +70,8 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         blinky.placeAtTile(-1, 20);
         blinky.setMoveDir(Direction.RIGHT);
         blinky.setWishDir(Direction.RIGHT);
-        blinky.animationManager().select(ArcadePacMan_AnimationID.BLINKY_NAKED);
-        blinky.animationManager().playSelected();
+        blinky.animations().select(ArcadePacMan_AnimationID.BLINKY_NAKED);
+        blinky.animations().playSelected();
     }
 
     private void startBlinkyChasingPacMan() {
@@ -77,14 +79,14 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(1.25f);
         pacMan.show();
-        pacMan.animationManager().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
-        pacMan.animationManager().playSelected();
+        pacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pacMan.animations().playSelected();
         blinky.placeAtTile(35, 20);
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
         blinky.setSpeed(1.25f);
         blinky.show();
-        blinky.animationManager().select(ArcadePacMan_AnimationID.BLINKY_DRESS_PATCHED);
-        blinky.animationManager().playSelected();
+        blinky.animations().select(ArcadePacMan_AnimationID.BLINKY_DRESS_PATCHED);
+        blinky.animations().playSelected();
     }
 }
