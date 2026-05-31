@@ -11,7 +11,7 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.layout.playview.DecorationPane;
-import de.amr.pacmanfx.ui.layout.playview.PlayView;
+import de.amr.pacmanfx.ui.layout.playview.GamePlay_SubView;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
@@ -42,6 +42,10 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         if (newGameScene != null) {
             embedGameSceneIntoPlayView(newGameScene.services(), scene, newGameScene);
         }
+    }
+
+    public Scene scene() {
+        return scene;
     }
 
     public Optional<GameScene> optCurrentGameScene() {
@@ -182,7 +186,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     // Scene embedding
 
-    public void removeFromPlayView(PlayView playView, GameScene gameScene) {
+    public void removeFromPlayView(GamePlay_SubView playView, GameScene gameScene) {
         requireNonNull(gameScene);
 
         playView.contextMenu().hide();
@@ -219,7 +223,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     // 3D scenes or 2D scenes with camera
-    private void embedGameSceneWithSubSceneFX(Scene scene, PlayView playView, GameScene gameScene, SubScene subSceneFX) {
+    private void embedGameSceneWithSubSceneFX(Scene scene, GamePlay_SubView playView, GameScene gameScene, SubScene subSceneFX) {
         // stretch sub scene to available space
         subSceneFX.widthProperty().bind(scene.widthProperty());
         subSceneFX.heightProperty().bind(scene.heightProperty());
@@ -233,7 +237,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     // 2D scenes without camera which are shown at full size
-    private void embedGameScene2D(Scene scene, PlayView playView, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
+    private void embedGameScene2D(Scene scene, GamePlay_SubView playView, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
         final DecorationPane decorationPane = playView.gameSceneFrame();
 
         gameScene2D.backgroundColorProperty().bind(GameUI_Constants.PROPERTY_CANVAS_BACKGROUND_COLOR);
@@ -250,7 +254,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
             // Limit scaling
             gameScene2D.scalingProperty().bind(decorationPane.scalingProperty().map(
-                scaling -> Math.min(scaling.doubleValue(), PlayView.MAX_GAME_SCENE_SCALING)));
+                scaling -> Math.min(scaling.doubleValue(), GamePlay_SubView.MAX_GAME_SCENE_SCALING)));
 
             decorationPane.stretchTo(scene.getWidth(), scene.getHeight());
 

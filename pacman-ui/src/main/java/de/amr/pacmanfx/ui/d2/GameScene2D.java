@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.d2;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -20,7 +21,7 @@ import static java.util.Objects.requireNonNull;
  * unscaled scene dimensions, scaling, and background color. Subclasses
  * implement scene-specific activation, deactivation, and rendering logic.
  * <p>
- * The scene is reusable: {@link #onActivate()} and {@link #onDeactivate()}
+ * The scene is reusable: {@link #onActivate(UIConfig)} and {@link #onDeactivate()}
  * must establish and release all bindings, listeners, and resources created
  * by the subclass.
  */

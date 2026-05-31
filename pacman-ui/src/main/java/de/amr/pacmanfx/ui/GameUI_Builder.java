@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
-import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
+import de.amr.pacmanfx.ui.layout.StartPages_SubView;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -130,7 +130,7 @@ public class GameUI_Builder {
             }
         });
 
-        final StartPagesCarousel startPagesCarousel = ui.services().views().startView();
+        final StartPages_SubView startPagesCarousel = ui.services().views().startView();
         for (var startPageFactory : startPageFactories) {
             final StartPage startPage = startPageFactory.get();
             if (startPage != null) {

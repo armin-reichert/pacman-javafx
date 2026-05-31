@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.layout.HelpLayer;
-import de.amr.pacmanfx.ui.layout.View;
+import de.amr.pacmanfx.ui.layout.GameUI_SubView;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
 import javafx.beans.binding.Bindings;
@@ -39,7 +39,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
-public class PlayView implements View {
+public class GamePlay_SubView implements GameUI_SubView {
 
     public static final float MAX_GAME_SCENE_SCALING = 5;
 
@@ -79,7 +79,7 @@ public class PlayView implements View {
     private GameScene2D_Renderer sceneRenderer;
     private HeadsUpDisplay_Renderer hudRenderer;
 
-    public PlayView(GameUI ui, DashboardConfig dashboardConfig) {
+    public GamePlay_SubView(GameUI ui, DashboardConfig dashboardConfig) {
         this.ui = requireNonNull(ui);
         createLayout(requireNonNull(dashboardConfig));
         rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(ui, this));

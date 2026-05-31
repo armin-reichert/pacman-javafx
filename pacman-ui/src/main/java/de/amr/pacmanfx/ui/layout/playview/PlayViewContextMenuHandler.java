@@ -20,14 +20,14 @@ import static java.util.Objects.requireNonNull;
 public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent> {
 
     private final GameUI ui;
-    private final PlayView playView;
+    private final GamePlay_SubView playView;
 
-    public PlayViewContextMenuHandler(GameUI ui, PlayView playView) {
+    public PlayViewContextMenuHandler(GameUI ui, GamePlay_SubView playView) {
         this.ui = requireNonNull(ui);
         this.playView = requireNonNull(playView);
 
         //TODO is there a better way to hide the context menu?
-        ui.view().scene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+        ui.view().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (e.getButton() != MouseButton.SECONDARY) {
                 playView.contextMenu().hide();
             }

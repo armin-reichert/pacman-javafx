@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.layout.View;
+import de.amr.pacmanfx.ui.layout.GameUI_SubView;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -25,7 +25,7 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
         addRows(ui, ui.services().views().currentView());
     }
 
-    private void addRows(GameUI ui, View view) {
+    private void addRows(GameUI ui, GameUI_SubView view) {
         final Map<KeyCodeCombination, GameAction> bindingMap = view.actionBindings().bindingMap();
         if (bindingMap.isEmpty()) {
             addRow(createLabel(NO_INFO, false));

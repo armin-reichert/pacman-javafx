@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.layout.playview.PlayView;
+import de.amr.pacmanfx.ui.layout.playview.GamePlay_SubView;
 import de.amr.pacmanfx.ui.FlashMessageManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -23,14 +23,14 @@ public class ViewManager {
     /** Index in the root pane's child list where the active view is embedded. */
     private static final int RESERVED_VIEW_INDEX_IN_LAYOUT = 0;
 
-    private final ObjectProperty<View> currentView = new SimpleObjectProperty<>();
+    private final ObjectProperty<GameUI_SubView> currentView = new SimpleObjectProperty<>();
 
-    private Supplier<EditorView> editorViewFactory;
+    private Supplier<Editor_SubView> editorViewFactory;
     private BooleanSupplier editorCanOpen = () -> false;
 
-    private StartPagesCarousel startView;
-    private PlayView playView;
-    private EditorView editorView;
+    private StartPages_SubView startView;
+    private GamePlay_SubView playView;
+    private Editor_SubView editorView;
 
     public ViewManager() {}
 
@@ -55,15 +55,15 @@ public class ViewManager {
         });
     }
 
-    public void setPlayView(PlayView playView) {
+    public void setPlayView(GamePlay_SubView playView) {
         this.playView = requireNonNull(playView);
     }
 
-    public void setStartView(StartPagesCarousel startView) {
+    public void setStartView(StartPages_SubView startView) {
         this.startView = requireNonNull(startView);
     }
 
-    public void setEditorViewFactory(Supplier<EditorView> factory) {
+    public void setEditorViewFactory(Supplier<Editor_SubView> factory) {
         this.editorViewFactory = requireNonNull(factory);
     }
 
@@ -71,15 +71,15 @@ public class ViewManager {
         this.editorCanOpen = requireNonNull(editorCanOpen);
     }
 
-    public StartPagesCarousel startView() {
+    public StartPages_SubView startView() {
         return startView;
     }
 
-    public PlayView playView() {
+    public GamePlay_SubView playView() {
         return playView;
     }
 
-    public Optional<EditorView> optEditorView() {
+    public Optional<Editor_SubView> optEditorView() {
         return Optional.ofNullable(editorView);
     }
 
@@ -124,11 +124,11 @@ public class ViewManager {
         return currentView() == editorView;
     }
 
-    public ObjectProperty<View> currentViewProperty() {
+    public ObjectProperty<GameUI_SubView> currentViewProperty() {
         return currentView;
     }
 
-    public View currentView() {
+    public GameUI_SubView currentView() {
         return currentView.get();
     }
 }

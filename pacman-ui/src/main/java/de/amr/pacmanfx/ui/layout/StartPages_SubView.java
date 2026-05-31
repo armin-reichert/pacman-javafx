@@ -38,7 +38,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
-public class StartPagesCarousel extends Carousel implements View {
+public class StartPages_SubView extends Carousel implements GameUI_SubView {
 
     public static final int NAV_BUTTON_SIZE = 48;
 
@@ -64,7 +64,7 @@ public class StartPagesCarousel extends Carousel implements View {
 
     private final GameUI ui;
 
-    public StartPagesCarousel(GameUI ui) {
+    public StartPages_SubView(GameUI ui) {
         super(Duration.seconds(PAGE_CHANGE_SECONDS));
         this.ui = requireNonNull(ui);
         selectedIndexProperty().addListener((_, ov, nv) -> {

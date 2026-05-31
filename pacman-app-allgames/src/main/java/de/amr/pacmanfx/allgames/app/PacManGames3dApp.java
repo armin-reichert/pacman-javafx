@@ -32,7 +32,7 @@ import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardSectionCustomMaps;
-import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
+import de.amr.pacmanfx.ui.layout.StartPages_SubView;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -194,7 +194,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void addStartPages() {
-        final StartPagesCarousel startView = ui.services().views().startView();
+        final StartPages_SubView startView = ui.services().views().startView();
         startView.addStartPage(new ArcadePacMan_StartPage());
         startView.addStartPage(new ArcadeMsPacMan_StartPage());
         startView.addStartPage(new TengenMsPacMan_StartPage());

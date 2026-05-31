@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
-import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
+import de.amr.pacmanfx.ui.layout.StartPages_SubView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -85,7 +85,7 @@ public class ArcadePacMan_App extends Application {
         ui.services().configurations().addConfigFactory(
             GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
-        final StartPagesCarousel startView = ui.services().views().startView();
+        final StartPages_SubView startView = ui.services().views().startView();
 
         final var arcadePacManStartPage = new ArcadePacMan_StartPage();
         arcadePacManStartPage.init(ui);

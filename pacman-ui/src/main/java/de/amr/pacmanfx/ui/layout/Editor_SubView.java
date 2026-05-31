@@ -17,12 +17,12 @@ import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.paintBackground;
 
-public class EditorView implements View {
+public class Editor_SubView implements GameUI_SubView {
 
     private final GameUI ui;
     private final TileMapEditor editor;
 
-    public EditorView(Stage stage, GameUI ui) {
+    public Editor_SubView(Stage stage, GameUI ui) {
         this.ui = ui;
         editor = new TileMapEditor(stage);
         MenuItem miQuitEditor = createQuitEditorMenuItem();
