@@ -48,7 +48,7 @@ public class SubViewManager {
     }
 
     public void configureDashboard(List<CommonDashboardID> dashboardIDList, TranslationManager translations) {
-        gamePlayView().dashboard().addCommonSections(translations, dashboardIDList);
+        gamePlayView.dashboard().addCommonSections(translations, dashboardIDList);
     }
 
     public void setGamePlayView(GamePlay_SubView newGamePlayView) {
