@@ -56,7 +56,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
 
     public void draw(GameScene2D scene) {
         final GameUI ui = scene.ui();
-        final UIConfig currentConfig = ui.services().currentUIConfig();
+        final UIConfig currentConfig = ui.facade().currentUIConfig();
 
         clearCanvas();
 

@@ -76,12 +76,12 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         });
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            final StartPagesCarousel startPagesCarousel = ui.services().views().startView();
+            final StartPagesCarousel startPagesCarousel = ui.facade().views().startView();
             switch (e.getCode()) {
                 case E -> {
                     e.consume();
                     if (ui != null) {
-                        ui.services().sounds().stopAndDisposeVoice();
+                        ui.facade().sounds().stopAndDisposeVoice();
                         startPagesCarousel.pauseProgressTimer();
                         ui.openWorldMapFileInEditor(null);
                     }
@@ -89,7 +89,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                 case ENTER -> {
                     e.consume();
                     if (ui != null) {
-                        ui.services().sounds().stopAndDisposeVoice();
+                        ui.facade().sounds().stopAndDisposeVoice();
                         startPagesCarousel.pauseProgressTimer();
                         menu.startSelectedGame();
                     }
@@ -113,16 +113,16 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     public void onEnterStartPage(GameUI ui) {
         final GameVariant selectedGameVariant = menu.entryGameVariant().value();
         switch (selectedGameVariant) {
-            case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> ui.services().gameContext().setGameVariantName(selectedGameVariant.name());
+            case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> ui.facade().gameContext().setGameVariantName(selectedGameVariant.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariant);
         }
         menu.init(ui);
-        ui.services().sounds().playVoice(VOICE);
+        ui.facade().sounds().playVoice(VOICE);
     }
 
     @Override
     public void onExitStartPage(GameUI ui) {
-        ui.services().sounds().stopAndDisposeVoice();
+        ui.facade().sounds().stopAndDisposeVoice();
         menu.stopDrawLoop();
         removeMenuBinding();
     }
@@ -140,13 +140,13 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     private void updateMenuBinding(Stage stage) {
         removeMenuBinding();
 
-        gameVariantNameListener = (_, _, newVariant) -> ui.services().gameContext().setGameVariantName(newVariant.name());
+        gameVariantNameListener = (_, _, newVariant) -> ui.facade().gameContext().setGameVariantName(newVariant.name());
         menu.entryGameVariant().valueProperty().addListener(gameVariantNameListener);
 
         play3DListener = (_, _, play3D) -> GameUI_Constants.PROPERTY_3D_ENABLED.set(play3D);
         menu.entryPlay3D().valueProperty().addListener(play3DListener);
 
-        cutScenesEnabledListener = (_,_,enabled) -> ui.services().gameContext().game().flow().setCutScenesEnabled(enabled);
+        cutScenesEnabledListener = (_,_,enabled) -> ui.facade().gameContext().game().flow().setCutScenesEnabled(enabled);
         menu.entryCutScenesEnabled().valueProperty().addListener(cutScenesEnabledListener);
 
         menu.scalingProperty().bind(menuScaling(stage));

@@ -35,7 +35,7 @@ public interface GameUI {
     // Services (game context, views, game scenes, flash messages, sound etc.)
     // ---------------------------------------------------------------------------------------------
 
-    GameUI_Services services();
+    GameUI_ServiceFacade facade();
 
     // ---------------------------------------------------------------------------------------------
     // Lifecycle

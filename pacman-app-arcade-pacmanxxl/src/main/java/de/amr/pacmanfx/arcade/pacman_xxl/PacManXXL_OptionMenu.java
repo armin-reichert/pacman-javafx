@@ -57,8 +57,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             @Override
             public void onValueChanged(GameVariant oldVariant, GameVariant newVariant) {
                 if (ui != null) {
-                    final UIConfig uiConfig = ui.services().configurations().getOrCreateUIConfig(newVariant.name());
-                    chaseAnimation.init(uiConfig, canvas, ui.services().sprites().animationSet());
+                    final UIConfig uiConfig = ui.facade().configurations().getOrCreateUIConfig(newVariant.name());
+                    chaseAnimation.init(uiConfig, canvas, ui.facade().sprites().animationSet());
                 }
             }
         };
@@ -108,9 +108,9 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     public void init(GameUI ui) {
         this.ui = requireNonNull(ui);
-        final UIConfig currentConfig = ui.services().currentUIConfig();
-        final Game game = ui.services().currentGame();
-        final GameVariant gameVariant = GameVariant.valueOf(ui.services().gameContext().gameVariantName());
+        final UIConfig currentConfig = ui.facade().currentUIConfig();
+        final Game game = ui.facade().currentGame();
+        final GameVariant gameVariant = GameVariant.valueOf(ui.facade().gameContext().gameVariantName());
 
         if (!(game.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {
             Logger.error("Expected XXL map selector but found {}", game.mapSelector().getClass().getSimpleName());
@@ -126,8 +126,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         entryMapOrder.setEnabled(!mapSelector.customMaps().isEmpty());
         logMenuState();
 
-        soundEnabledProperty().bind(ui.services().sounds().muteProperty().not());
-        chaseAnimation.init(currentConfig, canvas, ui.services().sprites().animationSet());
+        soundEnabledProperty().bind(ui.facade().sounds().muteProperty().not());
+        chaseAnimation.init(currentConfig, canvas, ui.facade().sprites().animationSet());
 
         requestFocus();
     }
@@ -141,7 +141,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     }
 
     public void startSelectedGame() {
-        ui.services().views().selectPlayView();
+        ui.facade().views().selectPlayView();
         ui.restart();
     }
 

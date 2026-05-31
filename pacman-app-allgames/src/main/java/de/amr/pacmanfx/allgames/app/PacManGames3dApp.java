@@ -185,7 +185,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void addConfigFactories() {
-        final ConfigurationsManager configManager = ui.services().configurations();
+        final ConfigurationsManager configManager = ui.facade().configurations();
         configManager.addConfigFactory(ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new);
         configManager.addConfigFactory(ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig::new);
         configManager.addConfigFactory(TENGEN_MS_PACMAN.name(),     TengenMsPacMan_UIConfig::new);
@@ -195,7 +195,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void addStartPages() {
-        final StartPagesCarousel startView = ui.services().views().startView();
+        final StartPagesCarousel startView = ui.facade().views().startView();
         startView.addStartPage(new ArcadePacMan_StartPage());
         startView.addStartPage(new ArcadeMsPacMan_StartPage());
         startView.addStartPage(new TengenMsPacMan_StartPage());
@@ -206,9 +206,9 @@ public class PacManGames3dApp extends Application {
 
 
     private void configureDashboard() {
-        final Dashboard dashboard = ui.services().views().playView().dashboard();
+        final Dashboard dashboard = ui.facade().views().playView().dashboard();
 
-        ui.services().configureDashboard(DASHBOARD_IDs);
+        ui.facade().configureDashboard(DASHBOARD_IDs);
 
         // Add Joypad controller section
         dashboard.addSection(

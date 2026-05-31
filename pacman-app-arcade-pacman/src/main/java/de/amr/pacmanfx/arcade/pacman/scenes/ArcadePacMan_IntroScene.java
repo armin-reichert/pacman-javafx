@@ -101,14 +101,14 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
-        ui.services().sounds().playVoice(GameUI_Constants.VOICE_EXPLAIN_GAME_START);
+        ui.facade().sounds().playVoice(GameUI_Constants.VOICE_EXPLAIN_GAME_START);
 
         actionBindings.registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS); // insert coin + start game actions
         actionBindings.registerAllBindings(GameUI_Constants.SCENE_TESTS_BINDINGS); // actions for starting tests
 
         blinking = new Pulse(10, Pulse.State.ON);
 
-        final SpriteAnimationSet spriteAnimationSet = ui.services().sprites().animationSet();
+        final SpriteAnimationSet spriteAnimationSet = ui.facade().sprites().animationSet();
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
@@ -133,7 +133,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     public void onDeactivate() {
         blinking.stop();
-        ui.services().sounds().stopAndDisposeVoice();
+        ui.facade().sounds().stopAndDisposeVoice();
     }
 
     @Override
@@ -350,7 +350,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                final Game game = scene.ui().services().currentGame();
+                final Game game = scene.ui().facade().currentGame();
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
                     scene.ghosts[ORANGE_GHOST_POKEY].hide();
                     game.flow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);

@@ -18,7 +18,7 @@ import javafx.util.Duration;
 import java.util.List;
 import java.util.Optional;
 
-public record GameUI_Services(
+public record GameUI_ServiceFacade(
     GameContext gameContext,
     ConfigurationsManager configurations,
     FlashMessageManager flashMessages,

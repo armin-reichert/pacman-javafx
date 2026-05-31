@@ -99,8 +99,8 @@ public abstract class GameScene implements Disposable {
         return Optional.empty();
     }
 
-    public GameUI_Services services() {
-        return ui.services();
+    public GameUI_ServiceFacade services() {
+        return ui.facade();
     }
 
     /**

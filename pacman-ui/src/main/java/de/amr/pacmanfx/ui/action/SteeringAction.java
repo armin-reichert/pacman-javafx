@@ -25,13 +25,13 @@ public class SteeringAction extends GameAction {
 
     @Override
     public void doAction(GameUI ui) {
-        ui.services().gameContext().game().optGameLevel().ifPresent(
+        ui.facade().gameContext().game().optGameLevel().ifPresent(
             level -> level.entities().pac().setWishDir(dir));
     }
 
     @Override
     public boolean isEnabled(GameUI ui) {
-        final Game game = ui.services().gameContext().game();
+        final Game game = ui.facade().gameContext().game();
         final GameLevel level = game.optGameLevel().orElse(null);
         return level != null && !level.isDemoLevel() && !level.entities().pac().isUsingAutopilot();
     }
