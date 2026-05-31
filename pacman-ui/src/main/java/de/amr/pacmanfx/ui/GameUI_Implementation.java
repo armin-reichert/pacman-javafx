@@ -104,6 +104,7 @@ public final class GameUI_Implementation implements GameUI {
                 }
                 if (subViewManager.trySelectEditorView()) {
                     stopGame();
+                    editor.start();
                 }
             } catch (IOException x) {
                 Logger.error(x, "Could not open map file {}", worldMapFile);
@@ -186,7 +187,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void initSubViews() {
-        access.subViews().setUI(this);
+        access.subViews().attachUI(this);
         access.subViews().gamePlayView().configurePropertyBindings(this);
         access.subViews().gamePlayView().dashboard().sections().forEach(section -> section.init(this));
     }

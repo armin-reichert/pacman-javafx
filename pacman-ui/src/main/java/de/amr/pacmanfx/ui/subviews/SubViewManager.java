@@ -4,17 +4,14 @@
 package de.amr.pacmanfx.ui.subviews;
 
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.editor.Editor_SubView;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
-import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 import org.tinylog.Supplier;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
@@ -33,7 +30,7 @@ public class SubViewManager {
 
     public SubViewManager() {}
 
-    public void setUI(GameUI ui) {
+    public void attachUI(GameUI ui) {
         requireNonNull(ui);
 
         currentSubViewProperty().addListener((_, oldView, newView) -> {
@@ -117,7 +114,6 @@ public class SubViewManager {
             return false;
         }
         if (editorCanOpen.getAsBoolean()) {
-            editorView.editor().start();
             currentSubViewProperty().set(editorView);
             return true;
         }
