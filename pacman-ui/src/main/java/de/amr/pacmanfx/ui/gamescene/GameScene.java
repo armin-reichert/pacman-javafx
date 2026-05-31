@@ -11,7 +11,7 @@ import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_ServiceFacade;
+import de.amr.pacmanfx.ui.GameUI_ServicesAccess;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
@@ -43,7 +43,7 @@ public abstract class GameScene implements Disposable {
             this.gameScene = requireNonNull(gameScene);
         }
 
-        public GameUI_ServiceFacade services() {
+        public GameUI_ServicesAccess services() {
             return gameScene.services();
         }
 
@@ -87,7 +87,7 @@ public abstract class GameScene implements Disposable {
         return Optional.empty();
     }
 
-    public GameUI_ServiceFacade services() {
+    public GameUI_ServicesAccess services() {
         return ui.access();
     }
 

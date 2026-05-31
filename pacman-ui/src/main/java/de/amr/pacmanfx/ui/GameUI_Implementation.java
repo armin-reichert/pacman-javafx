@@ -54,7 +54,7 @@ public final class GameUI_Implementation implements GameUI {
     // All games in a box (only 1,99 €!)
     private final GameBox gameBox;
 
-    private final GameUI_ServiceFacade services;
+    private final GameUI_ServicesAccess facade;
 
     private final GameUI_View_Implementation viewImpl;
 
@@ -62,7 +62,7 @@ public final class GameUI_Implementation implements GameUI {
         this.gameBox = requireNonNull(gameBox);
         this.viewImpl = requireNonNull(viewImpl);
 
-        this.services = new GameUI_ServiceFacade(
+        this.facade = new GameUI_ServicesAccess(
             gameBox,
             new GameClockFX(),
             new DirectoryWatchdog(gameBox.customMapDir()),
@@ -87,15 +87,15 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public GameUI_ServiceFacade access() {
-        return services;
+    public GameUI_ServicesAccess access() {
+        return facade;
     }
 
     // GameUI_Life interface
 
     @Override
     public void openWorldMapFileInEditor(File worldMapFile) {
-        final SubViewManager subViewManager = services.subViews();
+        final SubViewManager subViewManager = access().subViews();
         subViewManager.ensureEditorViewCreated();
         subViewManager.optEditorView().map(Editor_SubView::editor).ifPresent(editor -> {
             editor.init(gameBox.customMapDir());
@@ -129,7 +129,7 @@ public final class GameUI_Implementation implements GameUI {
         initGameVariantAndRegisterChangeHandler();
         load3DAssets();
         initMainScene();
-        view().attachServices(services);
+        view().attachServices(facade);
         initProperties();
         initGameClock();
         initSubViews();
@@ -144,12 +144,12 @@ public final class GameUI_Implementation implements GameUI {
         access().gameClock().stop();
         access().gameClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
 
-        services.sounds().stopAll();
+        access().sounds().stopAll();
 
-        services.gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
+        access().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             gameScene.deactivate();
-            services.gameScenes().removeFromPlayView(services, gameScene);
-            services.gameScenes().gameSceneProperty().set(null);
+            access().gameScenes().removeFromPlayView(facade, gameScene);
+            access().gameScenes().gameSceneProperty().set(null);
         });
 
         Logger.info("Game STOPPED!");
@@ -159,10 +159,10 @@ public final class GameUI_Implementation implements GameUI {
     public void terminate() {
         Logger.info("Application is terminated now. There is no way back!");
         stopGame();
-        services.sprites().stopAnimationTimer();
-        services.sprites().animationSet().clear();
-        services.flashMessages().stopTimer();
-        services.customDirWatchdog().dispose();
+        access().sprites().stopAnimationTimer();
+        access().sprites().animationSet().clear();
+        access().flashMessages().stopTimer();
+        access().customDirWatchdog().dispose();
     }
 
     // private stuff
@@ -173,7 +173,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void createSubViews() {
-        final SubViewManager subViewManager = services.subViews();
+        final SubViewManager subViewManager = access().subViews();
 
         final StartPages_SubView startView = new StartPages_SubView(this);
         subViewManager.setStartView(startView);
@@ -185,12 +185,12 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void initSubViews() {
-        final SubViewManager subViewManager = services.subViews();
+        final SubViewManager subViewManager = access().subViews();
 
-        subViewManager.attachUI(view(), services);
+        subViewManager.attachUI(view(), facade);
 
-        services.gamePlayView().configurePropertyBindings(this);
-        services.dashboard().sections().forEach(section -> section.init(this));
+        access().gamePlayView().configurePropertyBindings(this);
+        access().dashboard().sections().forEach(section -> section.init(this));
 
         subViewManager.setEditorCanOpen(() -> {
             // No editor view exists or editor already selected: cannot open
@@ -220,7 +220,7 @@ public final class GameUI_Implementation implements GameUI {
             // restore title (editor changed it)
             stage.titleProperty().unbind();
             stage.titleProperty().bind(viewImpl.stageTitleBindingProperty());
-            services.selectStartView();
+            access().selectStartView();
         });
         return editorView;
     }
@@ -232,9 +232,9 @@ public final class GameUI_Implementation implements GameUI {
             step.clearInfo(clock.tickCount());
             access().gameContext().game().flow().update();
             step.printLog();
-            services.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
+            access().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });
-        clock.setPermanentAction(() -> services.subViews().currentView().render());
+        clock.setPermanentAction(() -> access().subViews().currentView().render());
         clock.setErrorHandler(this::ka_tas_tro_phe);
     }
 
@@ -244,7 +244,7 @@ public final class GameUI_Implementation implements GameUI {
         view().mainScene().rootPane().getChildren().addAll(
             new Region(), // placeholder, will be replaced by current view (start, play, edit)
             view().statusIconBox().rootPane(),
-            services.flashMessages().messageView().rootPane(),
+            access().flashMessages().messageView().rootPane(),
             keyboardInfo.rootPane());
 
         StackPane.setAlignment(view().statusIconBox().rootPane(), Pos.BOTTOM_LEFT);
@@ -257,33 +257,33 @@ public final class GameUI_Implementation implements GameUI {
 
     private void initProperties() {
         final String currentVariantName = access().gameContext().gameVariantName();
-        final UIConfig currentConfig = services.configurations().getOrCreateUIConfig(currentVariantName);
+        final UIConfig currentConfig = access().configurations().getOrCreateUIConfig(currentVariantName);
 
         final MazeConfig3D mazeConfig3D = currentConfig.worldConfig().maze();
         GameUI_Constants.PROPERTY_3D_WALL_HEIGHT .set(mazeConfig3D.obstacleBaseHeight());
         GameUI_Constants.PROPERTY_3D_WALL_OPACITY.set(mazeConfig3D.obstacleOpacity());
 
-        services.sounds().muteProperty().bind(GameUI_Constants.PROPERTY_MUTED);
+        access().sounds().muteProperty().bind(GameUI_Constants.PROPERTY_MUTED);
 
         view().statusIconBox().rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> services.subViews().isSelected(services.subViews().gamePlayView())
-                || services.subViews().isSelected(services.subViews().startView()),
-            services.subViews().currentSubViewProperty()));
+            () -> access().subViews().isSelected(access().subViews().gamePlayView())
+                || access().subViews().isSelected(access().subViews().startView()),
+            access().subViews().currentSubViewProperty()));
 
         view().mainScene().rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> services.gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
+            () -> access().gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
                 ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
                 : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER,
-            services.subViews().currentSubViewProperty(),
-            services.gameScenes().gameSceneProperty()
+            access().subViews().currentSubViewProperty(),
+            access().gameScenes().gameSceneProperty()
         ));
     }
 
     private void startServices() {
         Platform.runLater(() -> {
-            services.customDirWatchdog().startWatching();
-            services.flashMessages().startTimer();
-            services.sprites().startAnimationTimer();
+            access().customDirWatchdog().startWatching();
+            access().flashMessages().startTimer();
+            access().sprites().startAnimationTimer();
         });
     }
 
@@ -294,7 +294,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void displayStage(Stage stage) {
-        final UIConfig currentConfig = services.configurations().getOrCreateUIConfig(access().gameContext().gameVariantName());
+        final UIConfig currentConfig = access().configurations().getOrCreateUIConfig(access().gameContext().gameVariantName());
         final Image icon = currentConfig.assets().image("app_icon");
         stage.setScene(view().mainScene());
         stage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);
@@ -304,7 +304,7 @@ public final class GameUI_Implementation implements GameUI {
         }
         stage.centerOnScreen();
         stage.show();
-        services.selectStartView();
+        access().selectStartView();
     }
 
     /**
@@ -314,7 +314,7 @@ public final class GameUI_Implementation implements GameUI {
      */
     private void ka_tas_tro_phe(Throwable reason) {
         Platform.runLater(() -> {
-            final String errorMessage = services.translations().translate("error.oh_no_my_program");
+            final String errorMessage = access().translations().translate("error.oh_no_my_program");
             access().showFlashMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
             stopGame();
             Logger.error("*** SOMETHING VERY BAD HAPPENED:");

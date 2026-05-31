@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.view;
 
 import de.amr.pacmanfx.ui.GameUI_Constants;
-import de.amr.pacmanfx.ui.GameUI_ServiceFacade;
+import de.amr.pacmanfx.ui.GameUI_ServicesAccess;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
@@ -31,7 +31,7 @@ public class GameUI_View_Implementation implements GameUI_View {
     }
 
     @Override
-    public void attachServices(GameUI_ServiceFacade services) {
+    public void attachServices(GameUI_ServicesAccess services) {
         stageTitleBinding = createStringBinding(
             () -> computeStageTitle(services),
             services.gameClock().updatesDisabledProperty(),
@@ -68,14 +68,14 @@ public class GameUI_View_Implementation implements GameUI_View {
         return stageTitleBinding;
     }
 
-    private String computeStageTitle(GameUI_ServiceFacade services) {
+    private String computeStageTitle(GameUI_ServicesAccess services) {
         final GameUI_SubView view = services.subViews().currentView();
         return view == null
             ? services.translations().translate("view.missing") // Should never happen
             : view.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(services));
     }
 
-    private String titleForCurrentGameScene(GameUI_ServiceFacade services) {
+    private String titleForCurrentGameScene(GameUI_ServicesAccess services) {
         final GameScene gameScene = services.gameScenes().optCurrentGameScene().orElse(null);
 
         final boolean debug = GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE.get();
@@ -88,7 +88,7 @@ public class GameUI_View_Implementation implements GameUI_View {
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 
-    private String appTitle(GameUI_ServiceFacade services, boolean paused, boolean is3D) {
+    private String appTitle(GameUI_ServicesAccess services, boolean paused, boolean is3D) {
         final String gameVariantName = services.gameContext().gameVariantName();
         if (gameVariantName == null) {
             return "";

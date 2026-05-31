@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Constants;
-import de.amr.pacmanfx.ui.GameUI_ServiceFacade;
+import de.amr.pacmanfx.ui.GameUI_ServicesAccess;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
@@ -86,7 +86,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         gameSceneProperty().set(nextGameScene);
     }
 
-    public void quitCurrentGameScene(GameUI_ServiceFacade services) {
+    public void quitCurrentGameScene(GameUI_ServicesAccess services) {
         optCurrentGameScene().ifPresent(_ -> {
             final CoinMechanism coinMechanism = services.gameContext().coinMechanism();
 
@@ -188,7 +188,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     // Scene embedding
 
-    public void removeFromPlayView(GameUI_ServiceFacade services, GameScene gameScene) {
+    public void removeFromPlayView(GameUI_ServicesAccess services, GameScene gameScene) {
         requireNonNull(services);
         requireNonNull(gameScene);
 
@@ -212,7 +212,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         Logger.info("Game scene {} REMOVED from play scene!", gameScene.getClass().getSimpleName());
     }
 
-    public void embedGameSceneIntoPlayView(GameUI_ServiceFacade services, GameUI_View gameUIView, GameScene gameScene) {
+    public void embedGameSceneIntoPlayView(GameUI_ServicesAccess services, GameUI_View gameUIView, GameScene gameScene) {
         final UIConfig currentConfig = services.currentUIConfig();
 
         services.gamePlayView().contextMenu().hide();

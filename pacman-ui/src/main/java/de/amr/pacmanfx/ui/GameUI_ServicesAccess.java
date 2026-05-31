@@ -27,7 +27,7 @@ import javafx.util.Duration;
 import java.util.List;
 import java.util.Optional;
 
-public record GameUI_ServiceFacade(
+public record GameUI_ServicesAccess(
     GameContext gameContext,
     GameClock gameClock,
     DirectoryWatchdog customDirWatchdog,

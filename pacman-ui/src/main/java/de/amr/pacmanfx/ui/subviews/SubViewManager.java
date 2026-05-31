@@ -3,8 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews;
 
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_ServiceFacade;
+import de.amr.pacmanfx.ui.GameUI_ServicesAccess;
 import de.amr.pacmanfx.ui.subviews.editor.Editor_SubView;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
@@ -32,7 +31,7 @@ public class SubViewManager {
 
     public SubViewManager() {}
 
-    public void attachUI(GameUI_View view, GameUI_ServiceFacade services) {
+    public void attachUI(GameUI_View view, GameUI_ServicesAccess services) {
         requireNonNull(view);
         requireNonNull(services);
 
