@@ -16,12 +16,10 @@ import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
-import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.util.Duration;
 
-import java.util.List;
 import java.util.Optional;
 
 public record GameUI_ServicesAccess(
@@ -50,14 +48,14 @@ public record GameUI_ServicesAccess(
     // UI facade
 
     public UIConfig currentUIConfig() {
-        return getUIConfig(gameContext().gameVariantName());
+        return configurations.getOrCreateUIConfig(gameContext().gameVariantName());
     }
 
     public Optional<GameSoundEffects> currentSoundEffects() {
         return configurations.getOrCreateUIConfig(gameContext.gameVariantName()).optSoundEffects();
     }
 
-    public UIConfig getUIConfig(String gameVariantName) {
+    public UIConfig uiConfig(String gameVariantName) {
         return configurations.getOrCreateUIConfig(gameVariantName);
     }
 
