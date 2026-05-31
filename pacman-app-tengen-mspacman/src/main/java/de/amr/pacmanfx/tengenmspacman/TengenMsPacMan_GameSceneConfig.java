@@ -17,7 +17,11 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    public TengenMsPacMan_GameSceneConfig() {}
+    private final GameUI ui;
+
+    public TengenMsPacMan_GameSceneConfig(GameUI ui) {
+        this.ui = requireNonNull(ui);
+    }
 
     @Override
     public boolean sceneDecorationRequested(GameScene gameScene) {
@@ -26,8 +30,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected GameScene createGameScene(GameUI ui, SceneID sceneID) {
-        requireNonNull(ui);
+    protected GameScene createGameScene(SceneID sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
             case CommonSceneID.BOOT_SCENE -> new TengenMsPacMan_BootScene(ui);
@@ -52,7 +55,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
             case SHOWING_HALL_OF_FAME -> TengenMsPacMan_UIConfig.TengenSceneID.HALL_OF_FAME;
             case INTRO -> CommonSceneID.INTRO_SCENE;
             case INTERMISSION -> resolveCutSceneID(game);
-            case CutScenesTestState testState -> AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
+            case CutScenesTestState<?> testState -> AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
         };
     }

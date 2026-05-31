@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_OptionsScene;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
@@ -55,13 +54,12 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     }
 
     public void draw(GameScene2D scene) {
-        final GameUI ui = scene.ui();
-        final UIConfig currentConfig = ui.services().currentUIConfig();
+        final UIConfig currentConfig = scene.services().currentUIConfig();
 
         clearCanvas();
 
         final TengenMsPacMan_OptionsScene optionsScene = (TengenMsPacMan_OptionsScene) scene;
-        final TengenMsPacMan_GameModel game = optionsScene.facade().currentGame();
+        final TengenMsPacMan_GameModel game = optionsScene.services().currentGame();
 
         if (optionsScene.initialDelay > 0) return;
 

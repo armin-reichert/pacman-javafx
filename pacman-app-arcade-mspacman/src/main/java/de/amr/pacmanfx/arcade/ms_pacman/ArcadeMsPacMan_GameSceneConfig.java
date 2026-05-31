@@ -20,10 +20,14 @@ import static java.util.Objects.requireNonNull;
 
 class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    public ArcadeMsPacMan_GameSceneConfig() {}
+    private final GameUI ui;
+
+    public ArcadeMsPacMan_GameSceneConfig(GameUI ui) {
+        this.ui = requireNonNull(ui);
+    }
 
     @Override
-    protected GameScene createGameScene(GameUI ui, SceneID sceneID) {
+    protected GameScene createGameScene(SceneID sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
             case CommonSceneID.BOOT_SCENE -> new Arcade_BootScene2D(ui);
@@ -45,7 +49,7 @@ class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
             case PREPARING_GAME_START -> CommonSceneID.START_SCENE;
             case INTRO -> CommonSceneID.INTRO_SCENE;
             case INTERMISSION -> resolveCutSceneID(game);
-            case CutScenesTestState testState -> AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
+            case CutScenesTestState<?> testState -> AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
         };
     }

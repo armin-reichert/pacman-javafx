@@ -177,7 +177,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
 
     private final AssetMap assets = new AssetMap();
     private final ArcadePacMan_Factory3D factory3D = new ArcadePacMan_Factory3D();
-    private final GameSceneConfig gameSceneConfig = new ArcadePacMan_GameSceneConfig();
+    private GameSceneConfig gameSceneConfig;
     private GameSoundEffects soundEffects;
 
     public ArcadePacMan_UIConfig() {}
@@ -192,7 +192,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
         initSound(ui.services().sounds());
-    }
+        gameSceneConfig = new ArcadePacMan_GameSceneConfig(ui);    }
 
     @Override
     public void dispose() {

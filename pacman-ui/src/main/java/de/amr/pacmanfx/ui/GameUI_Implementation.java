@@ -73,7 +73,7 @@ public final class GameUI_Implementation implements GameUI_View, GameUI_Life, Ga
             new DirectoryWatchdog(gameBox.customMapDir()),
             new ConfigurationsManager(),
             new FlashMessageManager(),
-            new GameSceneManager(),
+            new GameSceneManager(scene),
             new PreferencesManager(GameUI_Implementation.class),
             new SoundManager(),
             new SpriteAnimationManager(),

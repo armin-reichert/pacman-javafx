@@ -20,10 +20,14 @@ import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    public PacManXXL_MsPacMan_GameSceneConfig() {}
+    private final GameUI ui;
+
+    public PacManXXL_MsPacMan_GameSceneConfig(GameUI ui) {
+        this.ui = requireNonNull(ui);
+    }
 
     @Override
-    protected GameScene createGameScene(GameUI ui, SceneID sceneID) {
+    protected GameScene createGameScene(SceneID sceneID) {
         requireNonNull(ui);
         requireNonNull(sceneID);
         return switch (sceneID) {

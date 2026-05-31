@@ -63,7 +63,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
-        facade().currentGame().hud().hide();
+        services().currentGame().hud().hide();
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
@@ -178,7 +178,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
                 Ghost ghost = scene.ghosts.get(scene.ghostIndex);
-                Logger.debug("Tick {}: {} marching in", scene.facade().gameClock().tickCount(), ghost.name());
+                Logger.debug("Tick {}: {} marching in", scene.services().gameClock().tickCount(), ghost.name());
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.x() <= GHOST_STOP_X) {
                         ghost.setX(GHOST_STOP_X);
@@ -219,7 +219,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
                 scene.marquee.update(timer.tickCount());
-                Logger.debug("Tick {}: {} marching in", scene.facade().gameClock().tickCount(), scene.msPacMan.name());
+                Logger.debug("Tick {}: {} marching in", scene.services().gameClock().tickCount(), scene.msPacMan.name());
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= MS_PAC_MAN_STOP_X) {
                     scene.msPacMan.setSpeed(0);
@@ -227,7 +227,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options
-                    TengenMsPacMan_GameModel game = scene.facade().currentGame();
+                    TengenMsPacMan_GameModel game = scene.services().currentGame();
                     if (game.allOptionsDefault()) {
                         game.setCanStartNewGame(false); // TODO check this
                         game.flow().restartState(TengenMsPacMan_GameState.STARTING_GAME_OR_LEVEL);

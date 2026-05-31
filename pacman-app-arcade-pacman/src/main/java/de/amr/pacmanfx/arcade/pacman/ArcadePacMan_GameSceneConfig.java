@@ -17,10 +17,14 @@ import static java.util.Objects.requireNonNull;
 
 class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    public ArcadePacMan_GameSceneConfig() {}
+    private final GameUI ui;
+
+    public ArcadePacMan_GameSceneConfig(GameUI ui) {
+        this.ui = requireNonNull(ui);
+    }
 
     @Override
-    protected GameScene createGameScene(GameUI ui, SceneID sceneID) {
+    protected GameScene createGameScene(SceneID sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
             case CommonSceneID.BOOT_SCENE -> new Arcade_BootScene2D(ui);

@@ -29,16 +29,18 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSceneManager implements ChangeListener<GameScene> {
 
+    private final Scene scene;
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
 
-    public GameSceneManager() {
+    public GameSceneManager(Scene scene) {
+        this.scene = requireNonNull(scene);
         gameScene.addListener(this);
     }
 
     @Override
     public void changed(ObservableValue<? extends GameScene> py, GameScene oldGameScene, GameScene newGameScene) {
         if (newGameScene != null) {
-            embedGameSceneIntoPlayView(newGameScene.ui(), newGameScene);
+            embedGameSceneIntoPlayView(newGameScene.services(), scene, newGameScene);
         }
     }
 
@@ -70,7 +72,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
-        embedGameSceneIntoPlayView(ui, nextGameScene);
+        embedGameSceneIntoPlayView(ui.services(), scene, nextGameScene);
 
         nextGameScene.activate();
 
@@ -203,14 +205,14 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         Logger.info("Game scene {} REMOVED from play scene!", gameScene.getClass().getSimpleName());
     }
 
-    public void embedGameSceneIntoPlayView(GameUI ui, GameScene gameScene) {
-        final UIConfig currentConfig = ui.services().currentUIConfig();
-        ui.services().views().playView().contextMenu().hide();
+    public void embedGameSceneIntoPlayView(GameUI_ServiceFacade services, Scene scene, GameScene gameScene) {
+        final UIConfig currentConfig = services.currentUIConfig();
+        services.views().playView().contextMenu().hide();
 
         if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameSceneWithSubSceneFX(ui.view().scene(), ui.services().views().playView(), gameScene, gameScene.optSubSceneFX().get());
+            embedGameSceneWithSubSceneFX(scene, services.views().playView(), gameScene, gameScene.optSubSceneFX().get());
         } else if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2D(ui.view().scene(), ui.services().views().playView(), currentConfig.gameSceneConfig(), gameScene2D);
+            embedGameScene2D(scene, services.views().playView(), currentConfig.gameSceneConfig(), gameScene2D);
         } else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }

@@ -106,7 +106,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
     }
 
-    private TengenMsPacMan_GameModel tengenGame() { return facade().gameContext().game(); }
+    private TengenMsPacMan_GameModel tengenGame() { return services().gameContext().game(); }
     
     private void optionValueChanged() {
         ui.services().sounds().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);
@@ -118,7 +118,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public void onInput() {
+    public void onInput(GameUI ui) {
         if (Input.instance().joypad.isButtonPressed(JoypadButton.DOWN)) {
             selectedOption.set(selectedOption() + 1 < NUM_OPTIONS ? selectedOption() + 1 : 0);
         }
@@ -146,7 +146,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
                 case OPTION_STARTING_LEVEL -> setPrevStartLevelValue();
             }
         }
-        else actionBindings().actionMatchingKeyboardState(Input.instance().keyboard).ifPresent(action -> action.executeIfEnabled(ui()));
+        else {
+            super.onInput(ui);
+        }
     }
 
     private void setPrevStartLevelValue() {

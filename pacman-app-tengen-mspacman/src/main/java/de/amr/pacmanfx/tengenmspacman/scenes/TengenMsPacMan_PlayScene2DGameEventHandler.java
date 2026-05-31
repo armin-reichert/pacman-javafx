@@ -30,17 +30,17 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
 
     @Override
     public void onBonusActivated(BonusActivatedEvent e) {
-        gameScene().facade().currentSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
+        gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
-        gameScene().facade().currentSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
+        gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent e) {
-        gameScene().facade().currentSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
+        gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
     public void onGameStarted(GameStartedEvent e) {
         final boolean silent = game().isDemoLevelRunning() || game().flow().state() instanceof TestState;
         if (!silent) {
-            gameScene().facade().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
+            gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
     }
 
@@ -65,12 +65,12 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
         switch (e.newState()) {
             case TengenMsPacMan_GameState.LEVEL_COMPLETE -> {
                 final GameLevel level = optGameLevel().orElseThrow();
-                gameScene().facade().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+                gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
                 gameScene().playLevelCompleteAnimation(level);
             }
             case TengenMsPacMan_GameState.GAME_OVER -> {
                 final GameLevel level = optGameLevel().orElseThrow();
-                gameScene().facade().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+                gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
                 gameScene().dynamicCamera().enterManualMode();
                 gameScene().dynamicCamera().setToTopPosition();
                 level.optMessage().ifPresent(message -> gameScene().startGameOverMessageAnimation(message));
@@ -81,7 +81,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
 
     @Override
     public void onGhostEaten(GhostEatenEvent e) {
-        gameScene().facade().currentSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
+        gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
     }
 
     @Override
@@ -103,27 +103,27 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
     @Override
     public void onPacDying(PacDyingEvent e) {
         gameScene().dynamicCamera().enterManualMode();
-        gameScene().facade().currentSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
+        gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
     }
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
         final long tick = services().gameClock().tickCount();
-        gameScene().facade().currentSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
+        gameScene().services().currentSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        gameScene().facade().currentSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+        gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
     }
 
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
-        gameScene().facade().currentSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
+        gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
 
     @Override
     public void onSpecialScore(SpecialScoreEvent e) {
-        gameScene().facade().currentSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
+        gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
 }

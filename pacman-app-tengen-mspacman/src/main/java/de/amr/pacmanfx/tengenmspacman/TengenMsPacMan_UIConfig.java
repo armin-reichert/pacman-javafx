@@ -194,7 +194,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
 
     private final AssetMap assets = new AssetMap();
     private final TengenMsPacMan_Factory3D factory3D = new TengenMsPacMan_Factory3D();
-    private final TengenMsPacMan_GameSceneConfig gameSceneConfig = new TengenMsPacMan_GameSceneConfig();
+    private TengenMsPacMan_GameSceneConfig gameSceneConfig;
     private GameSoundEffects soundEffects;
 
     public TengenMsPacMan_UIConfig() {
@@ -205,6 +205,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     public void init(GameUI ui) {
         loadAssets();
         registerSoundObjects(ui.services().sounds());
+        gameSceneConfig = new TengenMsPacMan_GameSceneConfig(ui);
         Logger.info("Initialized Tengen UI configuration {} (loaded assets and sounds)", getClass().getSimpleName());
     }
 
