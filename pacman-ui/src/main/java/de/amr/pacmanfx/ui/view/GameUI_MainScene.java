@@ -10,12 +10,20 @@ import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
 import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import org.tinylog.Logger;
 
+import java.util.Objects;
+
+import static java.util.Objects.requireNonNull;
+
 public class GameUI_MainScene extends Scene {
+
+    /** Index in the main scene's root pane child list where the active view is embedded. */
+    public static final int SUBVIEW_INDEX = 0;
 
     private final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for Main Scene");
 
@@ -50,5 +58,13 @@ public class GameUI_MainScene extends Scene {
 
     public StackPane rootPane() {
         return (StackPane) getRoot();
+    }
+
+    public void replaceSubView(GameUI_SubView subView) {
+        requireNonNull(subView);
+        if (rootPane().getChildren().isEmpty()) {
+            throw new IllegalStateException("Root pane has no placeholder for embedding view");
+        }
+        rootPane().getChildren().set(SUBVIEW_INDEX, subView.rootPane());
     }
 }

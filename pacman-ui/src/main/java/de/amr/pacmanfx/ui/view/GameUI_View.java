@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.view;
 
 import de.amr.pacmanfx.ui.GameUI_ServiceFacade;
+import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
 import javafx.stage.Stage;
 
 public interface GameUI_View {
@@ -16,4 +17,6 @@ public interface GameUI_View {
     GameUI_MainScene mainScene();
 
     StatusIconBox statusIconBox();
+
+    void replaceSubView(GameUI_SubView subView);
 }

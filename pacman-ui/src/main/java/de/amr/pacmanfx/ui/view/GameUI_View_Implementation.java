@@ -45,6 +45,11 @@ public class GameUI_View_Implementation implements GameUI_View {
     }
 
     @Override
+    public void replaceSubView(GameUI_SubView subView) {
+        mainScene.replaceSubView(subView);
+    }
+
+    @Override
     public Stage stage() {
         return stage;
     }

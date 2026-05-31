@@ -185,7 +185,7 @@ public final class GameUI_Implementation implements GameUI {
     private void initSubViews() {
         final SubViewManager subViewManager = services.subViews();
 
-        subViewManager.init(view().mainScene().rootPane(), services.flashMessages());
+        subViewManager.attachUI(view(), services);
 
         services.gamePlayView().configurePropertyBindings(this);
         services.dashboard().sections().forEach(section -> section.init(this));

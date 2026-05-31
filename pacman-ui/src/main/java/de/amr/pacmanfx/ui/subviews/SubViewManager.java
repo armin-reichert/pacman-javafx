@@ -4,13 +4,13 @@
 package de.amr.pacmanfx.ui.subviews;
 
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_ServiceFacade;
 import de.amr.pacmanfx.ui.subviews.editor.Editor_SubView;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
-import de.amr.pacmanfx.ui.FlashMessageManager;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
+import de.amr.pacmanfx.ui.view.GameUI_View;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.layout.Pane;
 import org.tinylog.Logger;
 import org.tinylog.Supplier;
 
@@ -21,9 +21,6 @@ import java.util.function.BooleanSupplier;
 import static java.util.Objects.requireNonNull;
 
 public class SubViewManager {
-
-    /** Index in the root pane's child list where the active view is embedded. */
-    private static final int RESERVED_VIEW_INDEX_IN_LAYOUT = 0;
 
     private final ObjectProperty<GameUI_SubView> currentSubView = new SimpleObjectProperty<>();
 
@@ -36,8 +33,9 @@ public class SubViewManager {
 
     public SubViewManager() {}
 
-    public void init(Pane rootPane, FlashMessageManager flashMessageManager) {
-        requireNonNull(flashMessageManager);
+    public void attachUI(GameUI_View view, GameUI_ServiceFacade services) {
+        requireNonNull(view);
+        requireNonNull(services);
 
         currentSubViewProperty().addListener((_, oldView, newView) -> {
             if (oldView != null) {
@@ -45,15 +43,11 @@ public class SubViewManager {
                 oldView.actionBindings().dispose();
             }
 
-            if (rootPane.getChildren().isEmpty()) {
-                throw new IllegalStateException("Root pane has no placeholder for embedding view");
-            }
-
-            rootPane.getChildren().set(RESERVED_VIEW_INDEX_IN_LAYOUT, newView.rootPane());
+            view.replaceSubView(newView);
 
             newView.onEnter();
 
-            flashMessageManager.clearMessage();
+            services.flashMessages().clearMessage();
         });
     }
 
