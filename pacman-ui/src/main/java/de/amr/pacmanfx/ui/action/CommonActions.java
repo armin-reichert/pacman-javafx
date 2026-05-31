@@ -39,7 +39,7 @@ public final class CommonActions {
     public static final GameAction ACTION_BOOT_SHOW_PLAY_VIEW = new GameAction("boot_show_play_view") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.gameContext().coinMechanism().setNumCoins(0);
+            ui.services().gameContext().coinMechanism().setNumCoins(0);
             ui.services().views().selectPlayView();
             ui.restart();
         }
@@ -55,7 +55,7 @@ public final class CommonActions {
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("let_game_state_expire") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.gameContext().game().flow().state().expire();
+            ui.services().gameContext().game().flow().state().expire();
         }
     };
 
@@ -91,7 +91,7 @@ public final class CommonActions {
     public static final GameAction ACTION_QUIT_GAME_SCENE = new GameAction("quit_game_scene") {
         @Override
         protected void doAction(GameUI ui) {
-            final Game game = ui.gameContext().game();
+            final Game game = ui.services().gameContext().game();
             game.cheats().clear(); //TODO needed?
             ui.services().gameScenes().quitCurrentGameScene(ui);
         }
@@ -101,13 +101,13 @@ public final class CommonActions {
         @Override
         protected void doAction(GameUI ui) {
             ui.stopGame();
-            final Game game = ui.gameContext().game();
+            final Game game = ui.services().gameContext().game();
             boolean isLevelShortTest = game.flow().state() instanceof LevelShortTestState;
             if (isLevelShortTest) {
                 game.flow().state().onExit(game); //TODO exit other states too?
             }
             game.flow().restartStateWithName(CanonicalGameState.INTRO.name());
-            ui.gameContext().clock().start();
+            ui.services().gameContext().clock().start();
         }
     };
 
@@ -119,7 +119,7 @@ public final class CommonActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            boolean isArcadeGame = GameVariant.isArcadeGameName(ui.gameContext().gameVariantName());
+            boolean isArcadeGame = GameVariant.isArcadeGameName(ui.services().gameContext().gameVariantName());
             boolean isPlayScene2D = ui.services().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_2D);
             return isArcadeGame && isPlayScene2D;
         }
@@ -128,7 +128,7 @@ public final class CommonActions {
     public static final GameAction ACTION_SIMULATION_FASTER = new GameAction("simulation_faster") {
         @Override
         protected void doAction(GameUI ui) {
-            final GameClock clock = ui.gameContext().clock();
+            final GameClock clock = ui.services().gameContext().clock();
             final int newRate = Math.clamp(clock.targetFrameRate() + SIM_SPEED_DELTA, SIM_SPEED_MIN, SIM_SPEED_MAX);
             clock.setTargetFrameRate(newRate);
 
@@ -140,7 +140,7 @@ public final class CommonActions {
     public static final GameAction ACTION_SIMULATION_FASTEST = new GameAction("simulation_fastest") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.gameContext().clock().setTargetFrameRate(SIM_SPEED_MAX);
+            ui.services().gameContext().clock().setTargetFrameRate(SIM_SPEED_MAX);
             ui.services().showFlashMessage(Duration.seconds(0.75), "At maximum speed: %d Hz", SIM_SPEED_MAX);
         }
     };
@@ -148,7 +148,7 @@ public final class CommonActions {
     public static final GameAction ACTION_SIMULATION_SLOWER = new GameAction("simulation_slower") {
         @Override
         protected void doAction(GameUI ui) {
-            final GameClock clock = ui.gameContext().clock();
+            final GameClock clock = ui.services().gameContext().clock();
             final int newRate = Math.clamp(clock.targetFrameRate() - SIM_SPEED_DELTA, SIM_SPEED_MIN, SIM_SPEED_MAX);
             clock.setTargetFrameRate(newRate);
 
@@ -160,7 +160,7 @@ public final class CommonActions {
     public static final GameAction ACTION_SIMULATION_SLOWEST = new GameAction("simulation_slowest") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.gameContext().clock().setTargetFrameRate(SIM_SPEED_MIN);
+            ui.services().gameContext().clock().setTargetFrameRate(SIM_SPEED_MIN);
             ui.services().showFlashMessage(Duration.seconds(0.75), "At minimum speed: %d Hz", SIM_SPEED_MIN);
         }
     };
@@ -168,34 +168,34 @@ public final class CommonActions {
     public static final GameAction ACTION_SIMULATION_ONE_STEP = new GameAction("simulation_one_step") {
         @Override
         protected void doAction(GameUI ui) {
-            boolean success = ui.gameContext().clock().makeOneStep(true);
+            boolean success = ui.services().gameContext().clock().makeOneStep(true);
             if (!success) {
                 ui.services().showFlashMessage("Simulation step error, clock stopped!");
             }
         }
 
         @Override
-        public boolean isEnabled(GameUI ui) { return ui.gameContext().clock().getUpdatesDisabled(); }
+        public boolean isEnabled(GameUI ui) { return ui.services().gameContext().clock().getUpdatesDisabled(); }
     };
 
     public static final GameAction ACTION_SIMULATION_TEN_STEPS = new GameAction("simulation_ten_steps") {
         @Override
         protected void doAction(GameUI ui) {
-            boolean success = ui.gameContext().clock().makeSteps(10, true);
+            boolean success = ui.services().gameContext().clock().makeSteps(10, true);
             if (!success) {
                 ui.services().showFlashMessage("Simulation step error, clock stopped!");
             }
         }
 
         @Override
-        public boolean isEnabled(GameUI ui) { return ui.gameContext().clock().getUpdatesDisabled(); }
+        public boolean isEnabled(GameUI ui) { return ui.services().gameContext().clock().getUpdatesDisabled(); }
      };
 
     public static final GameAction ACTION_SIMULATION_RESET = new GameAction("simulation_reset") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.gameContext().clock().setTargetFrameRate(NUM_TICKS_PER_SEC);
-            ui.services().showFlashMessage(Duration.seconds(0.75), ui.gameContext().clock().targetFrameRate() + "Hz");
+            ui.services().gameContext().clock().setTargetFrameRate(NUM_TICKS_PER_SEC);
+            ui.services().showFlashMessage(Duration.seconds(0.75), ui.services().gameContext().clock().targetFrameRate() + "Hz");
         }
     };
 
@@ -207,7 +207,7 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_COLLISION_STRATEGY = new GameAction("toggle_collision_strategy") {
         @Override
         protected void doAction(GameUI ui) {
-            final Game game = ui.gameContext().game();
+            final Game game = ui.services().gameContext().game();
             CollisionStrategy collisionStrategy = game.collisionStrategy();
             if (collisionStrategy == CollisionStrategy.CENTER_DISTANCE) {
                 game.setCollisionStrategy(CollisionStrategy.SAME_TILE);
@@ -276,14 +276,14 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_PAUSED = new GameAction("toggle_paused") {
         @Override
         protected void doAction(GameUI ui) {
-            final GameContext gameContext = ui.gameContext();
+            final GameContext gameContext = ui.services().gameContext();
             toggleBooleanProperty(gameContext.clock().updatesDisabledProperty());
             if (gameContext.clock().getUpdatesDisabled()) {
-                final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
+                final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.services().gameContext().gameVariantName());
                 ui.services().sounds().stopAll();
                 currentConfig.optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             }
-            Logger.info("Game ({}) {}", ui.gameContext().gameVariantName(), ui.gameContext().clock().getUpdatesDisabled() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", ui.services().gameContext().gameVariantName(), ui.services().gameContext().clock().getUpdatesDisabled() ? "paused" : "resumed");
         }
 
         @Override
@@ -295,7 +295,7 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction("toggle_play_scene_2d_3d") {
         @Override
         protected void doAction(GameUI ui) {
-            final Game game = ui.gameContext().game();
+            final Game game = ui.services().gameContext().game();
             toggleBooleanProperty(GameUI_Constants.PROPERTY_3D_ENABLED);
             final boolean is3DEnabled = GameUI_Constants.PROPERTY_3D_ENABLED.get();
             if (!inPlayScene(ui)) {

@@ -24,22 +24,22 @@ public class Arcade_PlayScene2DGameEventHandler extends GameScene.DefaultGameEve
     @Override
     public void onBonusActivated(BonusActivatedEvent e) {
         // This is the sound in Ms. Pac-Man when the bonus wanders the maze. In Pac-Man, this is a no-op.
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
+        gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
+        gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent e) {
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
+        gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
     @Override
     public void onCreditAdded(CreditAddedEvent e) {
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+        gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
     }
 
     @Override
@@ -51,24 +51,24 @@ public class Arcade_PlayScene2DGameEventHandler extends GameScene.DefaultGameEve
     public void onGameStarted(GameStartedEvent e) {
         final boolean silent = game().isDemoLevelRunning() || game().flow().state() instanceof TestState;
         if (!silent) {
-            gameScene().optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
+            gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
     }
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
         if (e.newState() == Arcade_GameState.LEVEL_COMPLETE) {
-            gameScene().optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+            gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene().levelCompletedAnimation().play();
         } else if (e.newState() == Arcade_GameState.GAME_OVER) {
-            gameScene().optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
+            gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
             game().hud().credit(true);
         }
     }
 
     @Override
     public void onGhostEaten(GhostEatenEvent e) {
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
+        gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
     }
 
     @Override
@@ -84,27 +84,27 @@ public class Arcade_PlayScene2DGameEventHandler extends GameScene.DefaultGameEve
 
     @Override
     public void onPacDying(PacDyingEvent e) {
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
+        gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
     }
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
         final long tick = gameContext().clock().tickCount();
-        gameScene().optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
+        gameScene().services().currentSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+        gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
     }
 
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
+        gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
 
     @Override
     public void onSpecialScore(SpecialScoreEvent e) {
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
+        gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
 }

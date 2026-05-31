@@ -81,19 +81,19 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     @Override
     public void onBonusActivated(BonusActivatedEvent e) {
         assertLevel3D().addOrReplaceBonus3D(e.bonus());
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
+        ui().services().currentSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent ignored) {
         assertLevel3D().entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookEaten);
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
+        ui().services().currentSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent ignoredEvent) {
         assertLevel3D().entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
+        ui().services().currentSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
     @Override
@@ -106,14 +106,14 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         final State<Game> state = game().flow().state();
         final boolean silent = game().isDemoLevelRunning() || state instanceof TestState;
         if (!silent) {
-            gameScene().optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
+            ui().services().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
         assertLevel3D().messageManager().showMessage(MessageManager3D.MessageType.READY);
     }
 
     @Override
     public void onGhostEaten(GhostEatenEvent ignoredEvent) {
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
+        ui().services().currentSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
     }
 
     @Override
@@ -150,12 +150,12 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
                     energizer3D.hide();
                     triggerEnergizerExplosion(level3D, energizer3D.shape().localToScene(Point3D.ZERO));
                 });
-                gameScene().optSoundEffects().ifPresent(GameSoundEffects::playEnergizerExplosion);
+                ui().services().currentSoundEffects().ifPresent(GameSoundEffects::playEnergizerExplosion);
             }
             else {
                 level3D.pellet3DAtTile(tile).ifPresent(pellet3D -> removePelletAfterDelay(level3D, pellet3D));
                 final long tick = gameContext().clock().tickCount();
-                gameScene().optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
+                ui().services().currentSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
             }
         }
     }
@@ -173,12 +173,12 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     @Override
     public void onPacGetsPower(PacGetsPowerEvent event) {
         final GameLevel3D level3D = assertLevel3D();
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::stopSiren);
+        ui().services().currentSoundEffects().ifPresent(GameSoundEffects::stopSiren);
         if (!game().isLevelCompleted()) {
             level3D.entities().pac3D().setPowerMode(true);
             level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING)
                 .ifPresent(ManagedAnimation::playFromStart);
-            gameScene().optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+            ui().services().currentSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
     }
 
@@ -186,14 +186,14 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     public void onPacLostPower(PacLostPowerEvent ignoredEvent) {
         final GameLevel3D level3D = assertLevel3D();
         level3D.entities().pac3D().setPowerMode(false);
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
+        ui().services().currentSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING)
             .ifPresent(ManagedAnimation::stop);
     }
 
     @Override
     public void onSpecialScore(SpecialScoreEvent ignoredEvent) {
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
+        ui().services().currentSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
 
     // Private state-specific handlers
@@ -220,7 +220,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         final GameLevel3D level3D = assertLevel3D();
         final Pac3D pac3D = level3D.entities().pac3D();
 
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+        ui().services().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
         // Do not stop all animations!
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
@@ -246,7 +246,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
         return new SequentialTransition(
             pacStopping,
-            Ufx.pauseSecThen(1.5, () -> gameScene().optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound)),
+            Ufx.pauseSecThen(1.5, () -> ui().services().currentSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound)),
             pacDying,
             Ufx.pauseSec(0.5)
         );
@@ -285,7 +285,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
         level3D.entities().maze3D().house().hideDoors();
 
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+        ui().services().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
         level3D.animationRegistry().stopAllAnimations();
         level3D.cleanupFoodAndParticles();
         level3D.entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);

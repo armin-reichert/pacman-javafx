@@ -5,11 +5,9 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.io.File;
 
@@ -24,11 +22,6 @@ public interface GameUI {
     DirectoryWatchdog customDirWatchdog();
 
     /**
-     * @return the non-UI game context (model, variants, rules, etc.).
-     */
-    GameContext gameContext();
-
-    /**
      * @return  the primary JavaFX stage.
      */
     Stage stage();
@@ -39,7 +32,7 @@ public interface GameUI {
     Scene scene();
 
     // ---------------------------------------------------------------------------------------------
-    // Services (view manager, game scene manager, sound manager etc.)
+    // Services (game context, views, game scenes, flash messages, sound etc.)
     // ---------------------------------------------------------------------------------------------
 
     GameUI_Services services();

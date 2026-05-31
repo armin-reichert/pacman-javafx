@@ -8,7 +8,6 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.SimulationStep;
@@ -71,6 +70,7 @@ public final class GameUI_Implementation implements GameUI {
         this.scene = new GameUI_MainScene(requireNonNegative(width), requireNonNegative(height));
         this.customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
         this.services = new GameUI_Services(
+            gameBox,
             new ConfigurationsManager(),
             new FlashMessageManager(),
             new GameSceneManager(),
@@ -90,11 +90,6 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public DirectoryWatchdog customDirWatchdog() {
         return customDirWatchdog;
-    }
-
-    @Override
-    public GameContext gameContext() {
-        return gameBox;
     }
 
     @Override
@@ -120,8 +115,8 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void restart() {
         stopGame();
-        gameContext().game().flow().restartStateWithName(CanonicalGameState.BOOT.name());
-        Platform.runLater(gameContext().clock()::start);
+        services().gameContext().game().flow().restartStateWithName(CanonicalGameState.BOOT.name());
+        Platform.runLater(services().gameContext().clock()::start);
     }
 
     @Override
@@ -158,15 +153,15 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void stopGame() {
-        gameContext().game().prepareNewGame();
+        services().gameContext().game().prepareNewGame();
 
-        gameContext().clock().stop();
-        gameContext().clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        services().gameContext().clock().stop();
+        services().gameContext().clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
 
         services.sounds().stopAll();
 
         services.gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
-            gameScene.optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+            services.currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene.deactivate();
             services.gameScenes().removeFromPlayView(services.views().playView(), gameScene);
             services.gameScenes().gameSceneProperty().set(null);
@@ -216,7 +211,7 @@ public final class GameUI_Implementation implements GameUI {
             if (views.isStartViewSelected()) return true;
             if (views.isEditorViewSelected()) return false;
             if (views.isPlayViewSelected()) {
-                return !gameContext().game().isPlayingLevel();
+                return !services().gameContext().game().isPlayingLevel();
             }
             return false;
         });
@@ -242,11 +237,11 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void initGameClock() {
-        final GameClock clock = gameContext().clock();
+        final GameClock clock = services().gameContext().clock();
         clock.setUpdateAction(() -> {
-            final SimulationStep step = gameContext().game().doSimulationStep();
+            final SimulationStep step = services().gameContext().game().doSimulationStep();
             step.clearInfo(clock.tickCount());
-            gameContext().game().flow().update();
+            services().gameContext().game().flow().update();
             step.printLog();
             services.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });
@@ -268,11 +263,11 @@ public final class GameUI_Implementation implements GameUI {
 
         scene.init(this);
 
-        statusIconBox.bind(gameContext().game());
+        statusIconBox.bind(services().gameContext().game());
     }
 
     private void initProperties() {
-        final String currentVariantName = gameContext().gameVariantName();
+        final String currentVariantName = services().gameContext().gameVariantName();
         final UIConfig currentConfig = services.configurations().getOrCreateUIConfig(currentVariantName);
 
         final MazeConfig3D mazeConfig3D = currentConfig.worldConfig().maze();
@@ -287,8 +282,8 @@ public final class GameUI_Implementation implements GameUI {
 
         stageTitleBinding = createStringBinding(
             this::computeStageTitle,
-            gameContext().clock().updatesDisabledProperty(),
-            gameContext().gameVariantNameProperty(),
+            services().gameContext().clock().updatesDisabledProperty(),
+            services().gameContext().gameVariantNameProperty(),
             services.views().currentViewProperty(),
             services.gameScenes().gameSceneProperty(),
             GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE,
@@ -314,12 +309,12 @@ public final class GameUI_Implementation implements GameUI {
 
     private void initGameVariantAndRegisterChangeHandler() {
         final GameVariantChangeHandler gameVariantChangeHandler = new GameVariantChangeHandler(this);
-        gameContext().gameVariantNameProperty().addListener(gameVariantChangeHandler);
-        gameVariantChangeHandler.enterGameVariant(gameContext().gameVariantName());
+        services().gameContext().gameVariantNameProperty().addListener(gameVariantChangeHandler);
+        gameVariantChangeHandler.enterGameVariant(services().gameContext().gameVariantName());
     }
 
     private void displayStage() {
-        final UIConfig currentConfig = services.configurations().getOrCreateUIConfig(gameContext().gameVariantName());
+        final UIConfig currentConfig = services.configurations().getOrCreateUIConfig(services().gameContext().gameVariantName());
         final Image icon = currentConfig.assets().image("app_icon");
         stage.setScene(scene);
         stage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);
@@ -360,7 +355,7 @@ public final class GameUI_Implementation implements GameUI {
 
         final boolean debug = GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE.get();
         final boolean is3D = GameUI_Constants.PROPERTY_3D_ENABLED.get();
-        final boolean paused = gameContext().clock().getUpdatesDisabled();
+        final boolean paused = services().gameContext().clock().getUpdatesDisabled();
 
         final String normalTitle = appTitle(paused, is3D);
         return (gameScene == null || !debug)
@@ -369,7 +364,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private String appTitle(boolean paused, boolean is3D) {
-        final String gameVariantName = gameContext().gameVariantName();
+        final String gameVariantName = services().gameContext().gameVariantName();
         if (gameVariantName == null) {
             return "";
         }
@@ -380,7 +375,7 @@ public final class GameUI_Implementation implements GameUI {
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final UIConfig currentConfig = services.configurations().getOrCreateUIConfig(gameContext().gameVariantName());
+        final UIConfig currentConfig = services.currentUIConfig();
         final TranslationManager appSpecificTranslator = currentConfig.assets();
         final String appTitleKey = paused ? "app.title.paused" : "app.title";
         if (appSpecificTranslator.bundle() != null

@@ -44,7 +44,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         this.spriteSheet = requireNonNull(spriteSheet);
 
         final GameUI ui = scene.ui();
-        final UIConfig currentConfig = ui.services().getUIConfig(ui.gameContext().gameVariantName());
+        final UIConfig currentConfig = ui.services().getUIConfig(ui.services().gameContext().gameVariantName());
         levelRenderer = scene.configureRenderer(currentConfig.createGameLevelRenderer(canvas));
         actorRenderer = scene.configureRenderer(currentConfig.createActorRenderer(canvas));
         debugRenderer = scene.configureRenderer(new Arcade_PlayScene2D_DebugInfo_Renderer(canvas));
@@ -61,7 +61,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         if (!(scene instanceof Arcade_PlayScene2D playScene)) {
             return;
         }
-        final Game game = scene.gameContext().game();
+        final Game game = scene.services().currentGame();
         // Level creation happens by handling a game event after the play scene has been activated. Therefore,
         // the game level is not yet existing for the first two ticks after this scene got active.
         game.optGameLevel().ifPresent(level -> {

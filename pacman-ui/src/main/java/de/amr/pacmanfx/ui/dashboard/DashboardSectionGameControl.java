@@ -42,14 +42,14 @@ public class DashboardSectionGameControl extends DashboardSection {
 
     @Override
     public void init(GameUI ui) {
-        final CoinMechanism coinMechanism = ui.gameContext().coinMechanism();
+        final CoinMechanism coinMechanism = ui.services().gameContext().coinMechanism();
         spinnerCredit            = addIntSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
         cbCollisionCheckedTwice  = addCheckBox("Collision Check 2x");
 
-        setAction(choiceBoxInitialLives, () -> ui.gameContext().game().setInitialLifeCount(choiceBoxInitialLives.getValue()));
+        setAction(choiceBoxInitialLives, () -> ui.services().currentGame().setInitialLifeCount(choiceBoxInitialLives.getValue()));
 
         //setAction(buttonGroupLevelActions[GAME_LEVEL_START], ArcadeActions.ACTION_START_GAME); //TODO FIXME!
         setAction(ui, buttonGroupLevelActions[GAME_LEVEL_QUIT], ACTION_RESTART_INTRO);
@@ -59,7 +59,7 @@ public class DashboardSectionGameControl extends DashboardSection {
         setAction(ui, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
 
         cbCollisionCheckedTwice.setOnAction(_ -> {
-            final AbstractGameModel game = ui.gameContext().game();
+            final AbstractGameModel game = ui.services().currentGame();
             game.setCollisionDoubleChecked(cbCollisionCheckedTwice.isSelected());
         });
     }
@@ -68,7 +68,7 @@ public class DashboardSectionGameControl extends DashboardSection {
     public void update(GameUI ui) {
         super.update(ui);
 
-        final AbstractGameModel game = ui.gameContext().game();
+        final AbstractGameModel game = ui.services().currentGame();
         final State<?> state = game.flow().state();
 
         //TODO use binding
@@ -80,7 +80,7 @@ public class DashboardSectionGameControl extends DashboardSection {
 
         boolean booting = isBooting(state);
         buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(game, state));
-        buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || ui.gameContext().game().optGameLevel().isEmpty());
+        buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || ui.services().currentGame().optGameLevel().isEmpty());
         buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(game, state));
 
         buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !state.matchesByName(CanonicalGameState.INTRO.name()));

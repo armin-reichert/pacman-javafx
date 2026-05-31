@@ -45,10 +45,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onTick(GameClock clock) {
-        final Arcade_GameModel game = gameContext().game();
+        final Arcade_GameModel game = services().currentGame();
         game.optGameLevel().ifPresent(level -> {
             updateLivesCounter(level);
-            optSoundEffects().ifPresent(sfx -> {
+            services().currentSoundEffects().ifPresent(sfx -> {
                 sfx.setEnabled(!level.isDemoLevel());
                 sfx.playLevelRunningSound(level);
             });
@@ -57,7 +57,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
-        final Game game = gameContext().game();
+        final Game game = services().currentGame();
         final var menu = new ContextMenu();
         addLocalizedTitleItem(menu, ui.services().translations(), "pacman");
         addLocalizedCheckBox(menu, ui.services().translations(), game.cheats().usingAutopilotProperty(), "autopilot").setOnAction(e -> {
@@ -85,7 +85,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onEnteredFrom3DScene() {
-        gameContext().game().optGameLevel().ifPresent(this::acceptGameLevel);
+        services().currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
     }
 
     // Others
@@ -108,7 +108,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         Logger.info(actionBindings);
 
         ui.services().sounds().setEnabled(!level.isDemoLevel()); //TODO is this needed?
-        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameContext().game().flow().state().expire());
+        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> services().currentGame().flow().state().expire());
 
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         unscaledWidthProperty().set(terrainSize.x());

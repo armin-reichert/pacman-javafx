@@ -109,7 +109,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         } else {
-            final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
+            final UIConfig currentConfig = ui.services().currentUIConfig();
             scores3D.showTextForScore(ui.services().translations().translate("score.game_over"),
                 currentConfig.assets().color("color.game_over_message"));
         }
@@ -143,7 +143,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
             Logger.info("Old 3D game level gets disposed...");
             level3D.dispose();
         }
-        final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
+        final UIConfig currentConfig = ui.services().currentUIConfig();
         level3D = new GameLevel3D(level, currentConfig);
         decorate(level3D);
         level3D.entities().selectAll().forEach(entity -> entity.init(level));
@@ -195,7 +195,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onTick(GameClock clock) {
-        final GameLevel level = gameContext().game().optGameLevel().orElse(null);
+        final GameLevel level = ui.services().currentGame().optGameLevel().orElse(null);
         if (level == null) {
             Logger.info("Tick {}: Game level not yet created, update ignored", clock.tickCount());
             return;
@@ -209,7 +209,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         level3D.entities().selectAll().forEach(entity -> entity.update(level));
         updateHUD3D(level);
         perspectives.updatePerspective(level);
-        optSoundEffects().ifPresent(soundEffects -> {
+        ui.services().currentSoundEffects().ifPresent(soundEffects -> {
             soundEffects.setEnabled(!level.isDemoLevel());
             soundEffects.playLevelRunningSound(level);
         });

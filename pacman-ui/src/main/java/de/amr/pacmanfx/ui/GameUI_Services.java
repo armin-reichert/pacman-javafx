@@ -4,6 +4,8 @@
 
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.layout.ViewManager;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 public record GameUI_Services(
+    GameContext gameContext,
     ConfigurationsManager configurations,
     FlashMessageManager flashMessages,
     GameSceneManager gameScenes,
@@ -26,16 +29,32 @@ public record GameUI_Services(
     TranslationManager translations,
     ViewManager views)
 {
+    // Model facade
+
+    public <T extends Game> T currentGame() {
+        return gameContext.game();
+    }
+
+    // UI facade
+
     public UIConfig getUIConfig(String gameVariantName) {
         return configurations().getOrCreateUIConfig(gameVariantName);
+    }
+
+    public UIConfig currentUIConfig() {
+        return getUIConfig(gameContext().gameVariantName());
     }
 
     public void configureDashboard(List<CommonDashboardID> dashboardIDList) {
         views().playView().dashboard().addCommonSections(translations(), dashboardIDList);
     }
 
-    public Optional<GameSoundEffects> optSoundEffects(String gameVariantName) {
+    public Optional<GameSoundEffects> _optSoundEffects(String gameVariantName) {
         return configurations().getOrCreateUIConfig(gameVariantName).optSoundEffects();
+    }
+
+    public Optional<GameSoundEffects> currentSoundEffects() {
+        return configurations().getOrCreateUIConfig(gameContext.gameVariantName()).optSoundEffects();
     }
 
     /**

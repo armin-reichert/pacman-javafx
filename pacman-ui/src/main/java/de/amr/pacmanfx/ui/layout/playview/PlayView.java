@@ -112,7 +112,7 @@ public class PlayView implements View {
 
     public void showHelp(GameUI ui) {
         final double scaling = gameSceneFrame.scalingProperty().get();
-        helpLayer.showHelpPopup(ui, scaling, ui.gameContext().gameVariantName());
+        helpLayer.showHelpPopup(ui, scaling, ui.services().gameContext().gameVariantName());
     }
 
     public void setGameSceneContent(Node gameSceneContent) {
@@ -162,7 +162,7 @@ public class PlayView implements View {
         // Render current 2D game scene
         final GameScene gameScene = ui.services().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene instanceof GameScene2D gameScene2D) {
-            final Game game = ui.gameContext().game();
+            final Game game = ui.services().gameContext().game();
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D);
             }
@@ -181,7 +181,7 @@ public class PlayView implements View {
     }
 
     public void updateGameSceneRenderers(GameScene2D gameScene2D) {
-        final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
+        final UIConfig currentConfig = ui.services().currentUIConfig();
         if (gameScene2D.canvas() != null) {
             sceneRenderer = currentConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
             setFontSmoothing(GameUI_Constants.PROPERTY_CANVAS_FONT_SMOOTHING.get());
@@ -227,7 +227,7 @@ public class PlayView implements View {
     }
 
     public void configurePropertyBindings(GameUI ui) {
-        pausedIcon.visibleProperty().bind(ui.gameContext().clock().updatesDisabledProperty());
+        pausedIcon.visibleProperty().bind(ui.services().gameContext().clock().updatesDisabledProperty());
 
         GameUI_Constants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 

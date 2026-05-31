@@ -27,7 +27,7 @@ public class GameEventHandler extends DefaultGameEventListener {
 
             case LevelCreatedEvent levelCreatedEvent -> {
                 final GameLevel level = levelCreatedEvent.level();
-                final UIConfig currentConfig = ui.services().getUIConfig(ui.gameContext().gameVariantName());
+                final UIConfig currentConfig = ui.services().currentUIConfig();
                 final SpriteAnimationSet spriteAnimationSet = ui.services().sprites().animationSet();
 
                 //TODO this should be done elsewhere

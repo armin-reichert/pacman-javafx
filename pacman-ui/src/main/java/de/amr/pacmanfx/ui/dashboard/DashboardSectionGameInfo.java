@@ -34,9 +34,9 @@ public class DashboardSectionGameInfo extends DashboardSection {
 
     @Override
     public void init(GameUI ui) {
-        final Supplier<Game> gameSupplier = ui.gameContext()::game;
+        final Supplier<Game> gameSupplier = ui.services().gameContext()::game;
 
-        addDynamicLabeledValue("Game State",  () -> "%s".formatted(ui.gameContext().game().flow().state().name()));
+        addDynamicLabeledValue("Game State",  () -> "%s".formatted(ui.services().currentGame().flow().state().name()));
         addDynamicLabeledValue("State Timer", () -> stateTimerInfo(gameSupplier.get()));
         addDynamicLabeledValue("Game Scene", ifGameScenePresent(ui, gameScene -> gameScene.getClass().getSimpleName()));
 
@@ -57,7 +57,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
                 colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
             }
             else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX)) {
-                final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
+                final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.services().gameContext().gameVariantName());
                 colorScheme = currentConfig.colorScheme(worldMap);
             }
             if (colorScheme != null) {

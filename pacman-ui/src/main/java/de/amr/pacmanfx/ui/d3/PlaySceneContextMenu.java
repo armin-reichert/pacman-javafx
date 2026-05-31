@@ -69,7 +69,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
      * @throws NullPointerException if {@code ui} is {@code null}
      */
     public PlaySceneContextMenu(GameUI ui) {
-        final Game game = ui.gameContext().game();
+        final Game game = ui.services().currentGame();
         final TranslationManager translator = ui.services().translations();
 
         addLocalizedTitleItem(this, translator, "scene_display");

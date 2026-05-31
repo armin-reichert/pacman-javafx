@@ -77,7 +77,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
-        final TengenMsPacMan_GameModel game = gameContext().game();
+        final TengenMsPacMan_GameModel game = tengenGame();
+
         game.hud().hide();
 
         actionBindings.registerFirstBinding(ACTION_START_PLAYING, TENGEN_SPECIFIC_BINDINGS);
@@ -101,11 +102,11 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            gameContext().game().flow().enterState(TengenMsPacMan_GameState.INTRO);
+            tengenGame().flow().enterState(TengenMsPacMan_GameState.INTRO);
         }
     }
 
-    private TengenMsPacMan_GameModel tengenGame() { return gameContext().game(); }
+    private TengenMsPacMan_GameModel tengenGame() { return services().gameContext().game(); }
     
     private void optionValueChanged() {
         ui.services().sounds().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);

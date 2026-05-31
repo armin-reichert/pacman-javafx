@@ -51,7 +51,7 @@ public abstract class GameScene implements Disposable {
         }
 
         public GameContext gameContext() {
-            return gameScene.gameContext();
+            return gameScene.services().gameContext();
         }
 
         public Game game() {
@@ -64,7 +64,7 @@ public abstract class GameScene implements Disposable {
 
         @Override
         public void onStopAllSounds(StopAllSoundsEvent event) {
-            gameScene.optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+            gameScene.services().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
         }
     }
 
@@ -93,23 +93,14 @@ public abstract class GameScene implements Disposable {
     }
 
     /**
-     * @return optional sound effects for this scene and the currently played game varaiant
-     */
-    public Optional<GameSoundEffects> optSoundEffects() {
-        return ui.services().optSoundEffects(gameContext().gameVariantName());
-    }
-    /**
      * @return optional JavaFX subscene for this scene (3D scenes override)
      */
     public Optional<SubScene> optSubSceneFX() {
         return Optional.empty();
     }
 
-    /**
-     * @return global game context
-     */
-    public GameContext gameContext() {
-        return ui().gameContext();
+    public GameUI_Services services() {
+        return ui.services();
     }
 
     /**
@@ -123,8 +114,8 @@ public abstract class GameScene implements Disposable {
      * Activates the scene and assigns keyboard bindings.
      */
     public final void activate() {
-        final String gameVariantName = gameContext().gameVariantName();
-        onActivate(ui.services().configurations().getOrCreateUIConfig(gameVariantName));
+        final String gameVariantName = services().gameContext().gameVariantName();
+        onActivate(services().configurations().getOrCreateUIConfig(gameVariantName));
         Logger.info(actionBindings);
         Logger.trace("Game scene {} activated", getClass().getSimpleName());
     }
@@ -140,7 +131,7 @@ public abstract class GameScene implements Disposable {
     public final void deactivate() {
         onDeactivate();
         actionBindings.dispose();
-        optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+        services().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
         Logger.trace("Game scene {} deactivated", getClass().getSimpleName());
     }
 

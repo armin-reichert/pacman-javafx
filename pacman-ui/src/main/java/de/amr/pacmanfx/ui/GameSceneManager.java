@@ -55,9 +55,8 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     public void updateGameSceneAndForceReload(GameUI ui, boolean forceReload) {
-        final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
-
-        final Game game = ui.gameContext().game();
+        final UIConfig currentConfig = ui.services().currentUIConfig();
+        final Game game = ui.services().gameContext().game();
         final GameScene prevGameScene = optCurrentGameScene().orElse(null);
         final GameScene nextGameScene = currentConfig.gameSceneConfig().selectGameScene(ui, game).orElseThrow();
 
@@ -81,9 +80,9 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     public void quitCurrentGameScene(GameUI ui) {
-        final Game game = ui.gameContext().game();
+        final Game game = ui.services().gameContext().game();
         optCurrentGameScene().ifPresent(_ -> {
-            final CoinMechanism coinMechanism = ui.gameContext().coinMechanism();
+            final CoinMechanism coinMechanism = ui.services().gameContext().coinMechanism();
             //TODO Rethink this
             boolean shouldConsumeCoin = game.flow().state().name().equals("STARTING_GAME_OR_LEVEL")
                 || game.isPlayingLevel();
@@ -107,7 +106,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     public boolean hasGameSceneID(GameUI ui, GameScene gameScene, GameSceneConfig.SceneID sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
-        final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
+        final UIConfig currentConfig = ui.services().currentUIConfig();
         return currentConfig.gameSceneConfig().gameSceneHasID(gameScene, sceneID);
     }
 
@@ -205,7 +204,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     public void embedGameSceneIntoPlayView(GameUI ui, GameScene gameScene) {
-        final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
+        final UIConfig currentConfig = ui.services().currentUIConfig();
         ui.services().views().playView().contextMenu().hide();
 
         if (gameScene.optSubSceneFX().isPresent()) {

@@ -22,7 +22,7 @@ public abstract class ArcadePacMan_CutScene_Renderer extends BaseRenderer implem
     public ArcadePacMan_CutScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
         final GameUI ui = scene.ui();
-        final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.gameContext().gameVariantName());
+        final UIConfig currentConfig = ui.services().currentUIConfig();
         actorRenderer = scene.configureRenderer(currentConfig.createActorRenderer(canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }

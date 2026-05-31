@@ -31,11 +31,11 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
         if (newGameVariantName != null) {
             enterGameVariant(newGameVariantName);
         }
-        ui.statusIconBox().bind(ui.gameContext().gameForVariant(newGameVariantName));
+        ui.statusIconBox().bind(ui.services().gameContext().gameForVariant(newGameVariantName));
     }
 
     private void exitGameVariant(String variantName) {
-        final Game oldGame = ui.gameContext().gameForVariant(variantName);
+        final Game oldGame = ui.services().gameContext().gameForVariant(variantName);
         ui.stage().getIcons().removeAll();
         ui.services().configurations().dispose(variantName);
         ui.services().sounds().dispose();
@@ -43,7 +43,7 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
     }
 
     public void enterGameVariant(String variantName) {
-        final Game newGame = ui.gameContext().gameForVariant(variantName);
+        final Game newGame = ui.services().gameContext().gameForVariant(variantName);
         final UIConfig config = ui.services().configurations().getOrCreateUIConfig(variantName);
         config.init(ui);
         final Image icon = config.assets().image("app_icon");

@@ -36,7 +36,7 @@ public class Arcade_BootScene2D extends GameScene2D {
 
     @Override
     public void onTick(GameClock clock) {
-        final State<Game> bootState = gameContext().game().flow().state();
+        final State<Game> bootState = services().currentGame().flow().state();
         switch ((int) bootState.timer().tickCount()) {
             case  60 -> sceneState = SceneState.HEX_CODES;
             case 120 -> sceneState = SceneState.RANDOM_SPRITE_FRAGMENTS;

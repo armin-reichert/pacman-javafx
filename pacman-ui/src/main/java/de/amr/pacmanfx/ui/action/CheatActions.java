@@ -49,7 +49,7 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final State<Game> gameState = ui.gameContext().game();
+            final State<Game> gameState = ui.services().gameContext().game();
             return realLevel(ui).isPresent()
                 && gameState.matchesByName(CanonicalGameState.LEVEL_PLAYING.name());
         }
@@ -72,7 +72,7 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final State<Game> gameState = ui.gameContext().game().flow().state();
+            final State<Game> gameState = ui.services().gameContext().game().flow().state();
             return realLevel(ui).isPresent()
                 && gameState.matchesByName(CanonicalGameState.LEVEL_PLAYING.name());
         }
@@ -82,7 +82,7 @@ public final class CheatActions {
         @Override
         public void doAction(GameUI ui) {
             realLevel(ui).ifPresent(_ -> {
-                final Game game = ui.gameContext().game();
+                final Game game = ui.services().gameContext().game();
                 game.cheats().cheatUsedProperty().set(true);
                 game.flow().enterStateWithName(CanonicalGameState.LEVEL_COMPLETE.name());
             });
@@ -90,7 +90,7 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final State<Game> gameState = ui.gameContext().game().flow().state();
+            final State<Game> gameState = ui.services().gameContext().game().flow().state();
             final GameLevel level = realLevel(ui).orElse(null);
             return level != null
                 && gameState.matchesByName(CanonicalGameState.LEVEL_PLAYING.name())
@@ -101,7 +101,7 @@ public final class CheatActions {
     public static final GameAction ACTION_TOGGLE_AUTOPILOT = new GameAction("toggle_autopilot") {
         @Override
         public void doAction(GameUI ui) {
-            final Game game = ui.gameContext().game();
+            final Game game = ui.services().gameContext().game();
             setAutopilot(ui, !game.cheats().isUsingAutopilot());
         }
 
@@ -136,7 +136,7 @@ public final class CheatActions {
     };
 
     private static void setAutopilot(GameUI ui, boolean auto) {
-        final Game game = ui.gameContext().game();
+        final Game game = ui.services().gameContext().game();
         game.cheats().usingAutopilotProperty().set(auto);
         ui.services().sounds().playVoice(auto ? GameUI_Constants.VOICE_AUTOPILOT_ON : GameUI_Constants.VOICE_AUTOPILOT_OFF);
         ui.services().showFlashMessage(ui.services().translations().translate(auto ? "autopilot_on" : "autopilot_off"));
@@ -169,7 +169,7 @@ public final class CheatActions {
     public static final GameAction ACTION_TOGGLE_IMMUNITY = new GameAction("toggle_immunity") {
         @Override
         public void doAction(GameUI ui) {
-            final Game game = ui.gameContext().game();
+            final Game game = ui.services().gameContext().game();
             setPacImmune(ui, !game.cheats().isImmune());
         }
 
@@ -180,13 +180,13 @@ public final class CheatActions {
     };
 
     public static void setPacImmune(GameUI ui, boolean immune) {
-        final Game game = ui.gameContext().game();
+        final Game game = ui.services().gameContext().game();
         game.cheats().immuneProperty().set(immune);
         ui.services().sounds().playVoice(immune ? GameUI_Constants.VOICE_IMMUNITY_ON : GameUI_Constants.VOICE_IMMUNITY_OFF);
         ui.services().showFlashMessage(ui.services().translations().translate(immune ? "player_immunity_on" : "player_immunity_off"));
     }
 
     private static Optional<GameLevel> realLevel(GameUI ui) {
-        return ui.gameContext().game().optGameLevel().filter(level -> !level.isDemoLevel());
+        return ui.services().gameContext().game().optGameLevel().filter(level -> !level.isDemoLevel());
     }
 }

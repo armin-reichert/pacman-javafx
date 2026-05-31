@@ -93,7 +93,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         final var gameEventHandler = new GameScene.DefaultGameEventHandler(this) {
             @Override
             public void onCreditAdded(CreditAddedEvent e) {
-                gameScene().optSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+                gameScene().services().currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
             }
         };
         setGameEventHandler(gameEventHandler);
@@ -350,7 +350,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                final Game game = scene.gameContext().game();
+                final Game game = scene.ui().services().currentGame();
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
                     scene.ghosts[ORANGE_GHOST_POKEY].hide();
                     game.flow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
