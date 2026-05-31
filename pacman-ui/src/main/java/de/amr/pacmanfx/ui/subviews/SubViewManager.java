@@ -17,9 +17,9 @@ import java.util.function.BooleanSupplier;
 
 import static java.util.Objects.requireNonNull;
 
-public class SubViewManager {
+public final class SubViewManager {
 
-    private final ObjectProperty<GameUI_SubView> currentSubView = new SimpleObjectProperty<>();
+    private final ObjectProperty<GameUI_SubView> selectedSubView = new SimpleObjectProperty<>();
 
     private Supplier<Editor_SubView> editorViewFactory;
     private BooleanSupplier editorCanOpen = () -> false;
@@ -30,10 +30,10 @@ public class SubViewManager {
 
     public SubViewManager() {}
 
-    public void attachUI(GameUI ui) {
+    public void connect(GameUI ui) {
         requireNonNull(ui);
 
-        currentSubViewProperty().addListener((_, oldView, newView) -> {
+        selectedSubViewProperty().addListener((_, oldView, newView) -> {
             if (oldView != null) {
                 oldView.onExit();
                 oldView.actionBindings().dispose();
@@ -69,6 +69,9 @@ public class SubViewManager {
     }
 
     public void setEditorViewFactory(Supplier<Editor_SubView> factory) {
+        if (editorViewFactory != null) {
+            throw new IllegalStateException("EditorViewFactory is already set");
+        }
         this.editorViewFactory = requireNonNull(factory);
     }
 
@@ -92,18 +95,21 @@ public class SubViewManager {
         if (startView == null) {
             throw new IllegalStateException("No start view has been set");
         }
-        currentSubViewProperty().set(startView);
+        selectedSubViewProperty().set(startView);
     }
 
     public void selectGamePlayView() {
         if (gamePlayView == null) {
             throw new IllegalStateException("No Game play view has been set");
         }
-        currentSubViewProperty().set(gamePlayView);
+        selectedSubViewProperty().set(gamePlayView);
     }
 
     public void ensureEditorViewCreated() {
         if (editorView == null) {
+            if (editorViewFactory == null) {
+                throw new IllegalStateException("No editor view factory has been set");
+            }
             editorView = editorViewFactory.get();
         }
     }
@@ -114,24 +120,24 @@ public class SubViewManager {
             return false;
         }
         if (editorCanOpen.getAsBoolean()) {
-            currentSubViewProperty().set(editorView);
+            selectedSubViewProperty().set(editorView);
             return true;
         }
         else {
-            Logger.info("Editor cannot open (maybe already opened?)");
+            Logger.info("Editor cannot open in current state");
             return false;
         }
     }
 
     public boolean isSelected(GameUI_SubView view) {
-        return currentView() == view;
+        return view != null && currentSelection() == view;
     }
 
-    public ObjectProperty<GameUI_SubView> currentSubViewProperty() {
-        return currentSubView;
+    public ObjectProperty<GameUI_SubView> selectedSubViewProperty() {
+        return selectedSubView;
     }
 
-    public GameUI_SubView currentView() {
-        return currentSubView.get();
+    public GameUI_SubView currentSelection() {
+        return selectedSubView.get();
     }
 }

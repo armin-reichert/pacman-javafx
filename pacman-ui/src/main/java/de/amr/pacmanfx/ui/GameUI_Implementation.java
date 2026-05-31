@@ -187,7 +187,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void initSubViews() {
-        access.subViews().attachUI(this);
+        access.subViews().connect(this);
         access.subViews().gamePlayView().configurePropertyBindings(this);
         access.subViews().gamePlayView().dashboard().sections().forEach(section -> section.init(this));
     }
@@ -224,7 +224,7 @@ public final class GameUI_Implementation implements GameUI {
             step.printLog();
             access().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });
-        clock.setPermanentAction(() -> access().subViews().currentView().render());
+        clock.setPermanentAction(() -> access().subViews().currentSelection().render());
         clock.setErrorHandler(this::ka_tas_tro_phe);
     }
 
@@ -257,13 +257,13 @@ public final class GameUI_Implementation implements GameUI {
         view().statusIconBox().rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
             () -> access().subViews().isSelected(access().subViews().gamePlayView())
                 || access().subViews().isSelected(access().subViews().startView()),
-            access().subViews().currentSubViewProperty()));
+            access().subViews().selectedSubViewProperty()));
 
         view().mainScene().rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> access().gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
                 ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
                 : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER,
-            access().subViews().currentSubViewProperty(),
+            access().subViews().selectedSubViewProperty(),
             access().gameScenes().gameSceneProperty()
         ));
     }

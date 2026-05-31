@@ -42,7 +42,7 @@ public class GameUI_View_Implementation implements GameUI_View {
             () -> computeStageTitle(services),
             services.gameClock().updatesDisabledProperty(),
             services.gameContext().gameVariantNameProperty(),
-            services.subViews().currentSubViewProperty(),
+            services.subViews().selectedSubViewProperty(),
             services.gameScenes().gameSceneProperty(),
             GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE,
             GameUI_Constants.PROPERTY_3D_ENABLED
@@ -87,7 +87,7 @@ public class GameUI_View_Implementation implements GameUI_View {
     }
 
     private String computeStageTitle(GameUI_ServicesAccess services) {
-        final GameUI_SubView view = services.subViews().currentView();
+        final GameUI_SubView view = services.subViews().currentSelection();
         return view == null
             ? services.translations().translate("view.missing") // Should never happen
             : view.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(services));
