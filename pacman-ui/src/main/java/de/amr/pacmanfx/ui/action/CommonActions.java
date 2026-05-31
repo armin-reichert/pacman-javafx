@@ -10,11 +10,11 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
-import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
+import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
@@ -229,7 +229,7 @@ public final class CommonActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.services().subViews().isPlayViewSelected();
+            return ui.services().subViews().isSelected(ui.services().subViews().gamePlayView());
         }
     };
 
@@ -286,7 +286,7 @@ public final class CommonActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.services().subViews().isPlayViewSelected();
+            return ui.services().subViews().isSelected(ui.services().subViews().gamePlayView());
         }
     };
 
@@ -306,7 +306,7 @@ public final class CommonActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.services().subViews().isPlayViewSelected();
+            return ui.services().subViews().isSelected(ui.services().subViews().gamePlayView());
         }
 
         private boolean inPlayScene(GameUI ui) {

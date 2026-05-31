@@ -191,9 +191,13 @@ public final class GameUI_Implementation implements GameUI {
         services.dashboard().sections().forEach(section -> section.init(this));
 
         subViewManager.setEditorCanOpen(() -> {
-            if (subViewManager.isStartViewSelected()) return true;
-            if (subViewManager.isEditorViewSelected()) return false;
-            if (subViewManager.isPlayViewSelected()) {
+            // No editor view exists or editor already selected: cannot open
+            if (subViewManager.optEditorView().isEmpty()) return false;
+            if (subViewManager.isSelected(subViewManager.optEditorView().get())) return false;
+
+            if (subViewManager.isSelected(subViewManager.startView())) return true;
+
+            if (subViewManager.isSelected(subViewManager.gamePlayView())) {
                 return !services().currentGame().isPlayingLevel();
             }
             return false;
@@ -260,7 +264,8 @@ public final class GameUI_Implementation implements GameUI {
         services.sounds().muteProperty().bind(GameUI_Constants.PROPERTY_MUTED);
 
         view().statusIconBox().rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> services.subViews().isPlayViewSelected() || services.subViews().isStartViewSelected(),
+            () -> services.subViews().isSelected(services.subViews().gamePlayView())
+                || services.subViews().isSelected(services.subViews().startView()),
             services.subViews().currentSubViewProperty()));
 
         view().mainScene().rootPane().backgroundProperty().bind(Bindings.createObjectBinding(

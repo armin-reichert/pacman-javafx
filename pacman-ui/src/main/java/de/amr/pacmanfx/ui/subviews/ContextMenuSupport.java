@@ -13,9 +13,11 @@ import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 
-public interface ContextMenuSupport {
+public final class ContextMenuSupport {
 
-    static <M extends MenuItem> M add(ContextMenu menu, M item) {
+    private ContextMenuSupport() {}
+    
+    public static <M extends MenuItem> M add(ContextMenu menu, M item) {
         if (item.getOnAction() != null) {
             item.setOnAction(wrapActionHandler(menu, item.getOnAction()));
         }
@@ -23,7 +25,7 @@ public interface ContextMenuSupport {
         return item;
     }
 
-    static MenuItem addTitleItem(ContextMenu menu, String itemText) {
+    public static MenuItem addTitleItem(ContextMenu menu, String itemText) {
         final var text = new Text(itemText);
         text.setFont(GameUI_Constants.CONTEXT_MENU_DEFAULT_TITLE_FONT);
         text.setFill(GameUI_Constants.CONTEXT_MENU_DEFAULT_TITLE_COLOR);
@@ -33,37 +35,37 @@ public interface ContextMenuSupport {
         return item;
     }
 
-    static MenuItem addLocalizedActionItem(ContextMenu menu, TranslationManager translator, Runnable action, String globalAssetsKey, Object... args) {
+    public static MenuItem addLocalizedActionItem(ContextMenu menu, TranslationManager translator, Runnable action, String globalAssetsKey, Object... args) {
         var actionItem = new MenuItem(translator.translate(globalAssetsKey, args));
         actionItem.setOnAction(_ -> action.run());
         return add(menu, actionItem);
     }
 
-    static MenuItem addLocalizedActionItem(ContextMenu menu, GameUI ui, TranslationManager translator, GameAction action, String globalAssetsKey, Object... args) {
+    public static MenuItem addLocalizedActionItem(ContextMenu menu, GameUI ui, TranslationManager translator, GameAction action, String globalAssetsKey, Object... args) {
         var actionItem = new MenuItem(translator.translate(globalAssetsKey, args));
         actionItem.setOnAction(_ -> action.executeIfEnabled(ui));
         return add(menu, actionItem);
     }
 
-    static MenuItem addLocalizedTitleItem(ContextMenu menu, TranslationManager translator, String globalAssetsKey, Object... args) {
+    public static MenuItem addLocalizedTitleItem(ContextMenu menu, TranslationManager translator, String globalAssetsKey, Object... args) {
         return addTitleItem(menu, translator.translate(globalAssetsKey, args));
     }
 
-    static CheckMenuItem addLocalizedCheckBox(ContextMenu menu, TranslationManager translator, BooleanProperty selectionProperty, String globalAssetsKey, Object... args) {
+    public static CheckMenuItem addLocalizedCheckBox(ContextMenu menu, TranslationManager translator, BooleanProperty selectionProperty, String globalAssetsKey, Object... args) {
         var checkMenuItem = new CheckMenuItem(translator.translate(globalAssetsKey, args));
         checkMenuItem.selectedProperty().bindBidirectional(selectionProperty);
         return add(menu, checkMenuItem);
     }
 
-    static RadioMenuItem addLocalizedRadioButton(ContextMenu menu, TranslationManager translator, String globalAssetsKey, Object... args) {
+    public static RadioMenuItem addLocalizedRadioButton(ContextMenu menu, TranslationManager translator, String globalAssetsKey, Object... args) {
         return add(menu, new RadioMenuItem(translator.translate(globalAssetsKey, args)));
     }
 
-    static void addSeparator(ContextMenu menu) {
+    public static void addSeparator(ContextMenu menu) {
         menu.getItems().add(new SeparatorMenuItem());
     }
 
-    static EventHandler<ActionEvent> wrapActionHandler(ContextMenu menu, EventHandler<ActionEvent> actionHandler) {
+    public static EventHandler<ActionEvent> wrapActionHandler(ContextMenu menu, EventHandler<ActionEvent> actionHandler) {
         return actionEvent -> {
             actionHandler.handle(actionEvent);
             menu.hide();

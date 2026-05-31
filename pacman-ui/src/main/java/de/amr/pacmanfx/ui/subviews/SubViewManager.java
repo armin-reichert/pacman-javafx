@@ -116,16 +116,8 @@ public class SubViewManager {
         }
     }
 
-    public boolean isStartViewSelected() {
-        return currentView() == startView;
-    }
-
-    public boolean isPlayViewSelected() {
-        return currentView() == gamePlayView;
-    }
-
-    public boolean isEditorViewSelected() {
-        return currentView() == editorView;
+    public boolean isSelected(GameUI_SubView view) {
+        return currentView() == view;
     }
 
     public ObjectProperty<GameUI_SubView> currentSubViewProperty() {
