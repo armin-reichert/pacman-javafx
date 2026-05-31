@@ -93,7 +93,6 @@ public class PacManGames3dApp extends Application {
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
         gameBox = new GameBox(new CoinMechanism(99));
         xxlMapSelector = new PacManXXL_MapSelector(gameBox.customMapDir());
-        registerGames();
     }
 
     @Override
@@ -135,6 +134,7 @@ public class PacManGames3dApp extends Application {
                     .build();
             }
             else {
+                registerGames();
                 ui = new GameUI_Implementation(gameBox, primaryStage, sceneSize.x(), sceneSize.y());
                 addConfigFactories();
                 addStartPages();
