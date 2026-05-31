@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.GameLevelMessageType;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
-import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.DefaultGameEventHandler {

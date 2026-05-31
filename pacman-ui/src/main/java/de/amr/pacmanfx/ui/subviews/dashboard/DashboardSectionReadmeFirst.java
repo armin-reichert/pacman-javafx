@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+package de.amr.pacmanfx.ui.subviews.dashboard;
+
+import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.uilib.UfxBackgrounds;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+
+public class DashboardSectionReadmeFirst extends DashboardSection {
+
+    private static final Font TEXT_FONT = Font.font("Sans", 14);
+
+    public DashboardSectionReadmeFirst(Dashboard dashboard) {
+        super(dashboard);
+    }
+
+    @Override
+    public void init(GameUI ui) {
+        final var readmeText = new Text();
+        readmeText.setText(ui.services().translations().translate("infobox.readme.content"));
+        readmeText.setFont(TEXT_FONT);
+        readmeText.setFill(Color.WHITE);
+
+        final var pane = new BorderPane();
+        pane.setBorder(UfxBackgrounds.border(Color.TRANSPARENT, 5));
+
+        final var buttonPane = new HBox();
+        buttonPane.setAlignment(Pos.CENTER);
+        buttonPane.setPadding(new Insets(10, 0, 0, 0));
+
+        final var btnGotIt = new Button(ui.services().translations().translate("infobox.readme.got_it"));
+        buttonPane.getChildren().add(btnGotIt);
+        btnGotIt.setOnAction(_ -> dashboard.removeSection(CommonDashboardID.README));
+
+        pane.setCenter(readmeText);
+        pane.setBottom(buttonPane);
+        addRow(pane);
+    }
+}

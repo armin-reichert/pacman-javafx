@@ -7,9 +7,9 @@ import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.ui.AbstractGameSceneConfig;
-import de.amr.pacmanfx.ui.CommonSceneID;
-import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.gamescene.AbstractGameSceneConfig;
+import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
+import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 
 import static de.amr.pacmanfx.ui.GameUI_Constants.PROPERTY_3D_ENABLED;

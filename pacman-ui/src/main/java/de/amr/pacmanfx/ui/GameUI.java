@@ -4,6 +4,8 @@
 
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.ui.view.GameUI_View;
+
 /**
  * Central interface for the Pac-Man FX user interface layer.
  */

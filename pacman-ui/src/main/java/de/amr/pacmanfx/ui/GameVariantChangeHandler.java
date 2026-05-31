@@ -5,7 +5,8 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.ui.layout.playview.GameEventHandler;
+import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.subviews.playview.GameEventHandler;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;

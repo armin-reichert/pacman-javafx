@@ -19,7 +19,7 @@ import java.util.Objects;
 
 import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
-import static de.amr.pacmanfx.ui.layout.ContextMenuSupport.*;
+import static de.amr.pacmanfx.ui.subviews.ContextMenuSupport.*;
 
 /**
  * Context menu for the play scene in 2D/3D mode.

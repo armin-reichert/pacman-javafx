@@ -25,7 +25,7 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.ui.layout.ContextMenuSupport.*;
+import static de.amr.pacmanfx.ui.subviews.ContextMenuSupport.*;
 
 /**
  * 2D play scene for Arcade game variants.

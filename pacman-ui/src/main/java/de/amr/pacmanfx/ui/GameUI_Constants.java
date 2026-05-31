@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.d3.animation.energizer.ExplosionConfig;
 import de.amr.pacmanfx.ui.d3.animation.energizer.ParticlesAnimationConfig;
 import de.amr.pacmanfx.ui.d3.animation.energizer.SwirlConfig;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
-import de.amr.pacmanfx.ui.dashboard.DashboardConfig;
+import de.amr.pacmanfx.ui.subviews.dashboard.DashboardConfig;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import javafx.beans.property.*;
