@@ -16,7 +16,6 @@ import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
-import de.amr.pacmanfx.ui.layout.playview.PlayView;
 import de.amr.pacmanfx.uilib.GameClockFX;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -44,20 +43,17 @@ public class ArcadePacMan_App extends Application {
 
     private GameBox gameBox;
     private GameUI ui;
+    private boolean useBuilder;
 
     @Override
     public void init() throws Exception {
         gameBox = new GameBox(new GameClockFX(), new CoinMechanism(99));
+        useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
     }
 
     @Override
     public void start(Stage primaryStage) {
         final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-
-        // command-line argument: --use_builder=true
-        final String argVal = getParameters().getNamed().get("use_builder");
-        final boolean useBuilder = Boolean.parseBoolean(argVal);
-
         if (useBuilder) {
             ui = GameUI_Builder.newUI(primaryStage, size.x(), size.y(), gameBox)
                 .game(

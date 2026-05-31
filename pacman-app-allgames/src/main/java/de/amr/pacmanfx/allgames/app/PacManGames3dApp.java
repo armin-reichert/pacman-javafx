@@ -100,17 +100,18 @@ public class PacManGames3dApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
+        final CoinMechanism coinMechanism = gameBox.coinMechanism();
         try {
             if (useBuilder) {
                 ui = GameUI_Builder
                     .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
 
                     .game(ARCADE_PACMAN,
-                        () -> new ArcadePacMan_GameModel(gameBox.coinMechanism()),
+                        () -> new ArcadePacMan_GameModel(coinMechanism),
                         ArcadePacMan_UIConfig::new)
 
                     .game(ARCADE_MS_PACMAN,
-                        () ->new ArcadeMsPacMan_GameModel(gameBox.coinMechanism()),
+                        () -> new ArcadeMsPacMan_GameModel(coinMechanism),
                         ArcadeMsPacMan_UIConfig::new)
 
                     .game(TENGEN_MS_PACMAN,
@@ -118,18 +119,20 @@ public class PacManGames3dApp extends Application {
                         TengenMsPacMan_UIConfig::new)
 
                     .game(ARCADE_PACMAN_XXL,
-                        () -> new PacManXXL_PacMan_GameModel(gameBox.coinMechanism(), xxlMapSelector),
+                        () -> new PacManXXL_PacMan_GameModel(coinMechanism, xxlMapSelector),
                         PacManXXL_PacMan_UIConfig::new)
 
                     .game(ARCADE_MS_PACMAN_XXL,
-                        () -> new PacManXXL_MsPacMan_GameModel(gameBox.coinMechanism(), xxlMapSelector),
+                        () -> new PacManXXL_MsPacMan_GameModel(coinMechanism, xxlMapSelector),
                         PacManXXL_MsPacMan_UIConfig::new)
 
                     .startPage(ArcadePacMan_StartPage::new)
                     .startPage(ArcadeMsPacMan_StartPage::new)
                     .startPage(TengenMsPacMan_StartPage::new)
                     .startPage(PacManXXL_StartPage::new)
+
                     .includeInteractiveTests(includeTests)
+
                     .build();
             }
             else {
