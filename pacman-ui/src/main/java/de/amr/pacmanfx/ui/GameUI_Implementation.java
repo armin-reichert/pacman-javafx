@@ -124,15 +124,16 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public void show() {
+    public void displayOnScreen() {
         initGameVariantAndRegisterChangeHandler();
         load3DAssets();
         initMainScene();
-        view.attachServices(access);
+        view().attachServices(access);
         initProperties();
         initGameClock();
         initSubViews();
-        view.display(access.currentUIConfig());
+        initView();
+        view().show();
         access().subViews().selectStartView();
         startServices();
     }
@@ -182,6 +183,10 @@ public final class GameUI_Implementation implements GameUI {
         subViewManager.setGamePlayView(playView);
 
         subViewManager.setEditorViewFactory(() -> createEditorSubView(view().stage()));
+    }
+
+    private void initView() {
+        view.setIcon(access.currentUIConfig().assets().image("app_icon"));
     }
 
     private void initSubViews() {

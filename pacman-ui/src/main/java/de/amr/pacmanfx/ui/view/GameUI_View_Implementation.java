@@ -24,11 +24,16 @@ public class GameUI_View_Implementation implements GameUI_View {
     private final GameUI_MainScene mainScene;
     private final StatusIconBox statusIconBox;
     private StringBinding stageTitleBinding;
+    private Image icon;
 
     public GameUI_View_Implementation(Stage stage, GameUI_MainScene mainScene, StatusIconBox statusIconBox) {
         this.stage = stage;
         this.mainScene = mainScene;
         this.statusIconBox = statusIconBox;
+    }
+
+    public void setIcon(Image icon) {
+        this.icon = icon;
     }
 
     @Override
@@ -46,8 +51,7 @@ public class GameUI_View_Implementation implements GameUI_View {
     }
 
     @Override
-    public void display(UIConfig config) {
-        final Image icon = config.assets().image("app_icon");
+    public void show() {
         if (icon != null) {
             stage.getIcons().setAll(icon);
         }

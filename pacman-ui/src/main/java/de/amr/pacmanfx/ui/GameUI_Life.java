@@ -28,7 +28,7 @@ public interface GameUI_Life {
      * <p>
      * Called once after application initialization.
      */
-    void show();
+    void displayOnScreen();
 
     /**
      * Terminates the UI, stops the clock, and releases resources.

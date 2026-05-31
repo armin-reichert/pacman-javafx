@@ -71,7 +71,7 @@ public class ArcadePacMan_App extends Application {
             createUI(primaryStage, gameBox, size);
         }
         ui.access().subViews().configureDashboard(DASHBOARD_IDs, ui.access().translations());
-        ui.show();
+        ui.displayOnScreen();
     }
 
     @Override

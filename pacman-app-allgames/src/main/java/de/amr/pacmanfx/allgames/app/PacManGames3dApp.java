@@ -151,7 +151,7 @@ public class PacManGames3dApp extends Application {
             Logger.info("UI created {} builder {} tests", using(useBuilder), including(includeTests));
 
             ui.access().customDirWatchdog().addEventListener(xxlMapSelector);
-            ui.show();
+            ui.displayOnScreen();
         }
         catch (RuntimeException x) {
             Logger.error(x, "An error occurred starting the game.");

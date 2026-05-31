@@ -64,7 +64,7 @@ public class PacManXXL_App extends Application {
             });
 
         ui.access().customDirWatchdog().addEventListener(mapSelector);
-        ui.show();
+        ui.displayOnScreen();
     }
 
     @Override

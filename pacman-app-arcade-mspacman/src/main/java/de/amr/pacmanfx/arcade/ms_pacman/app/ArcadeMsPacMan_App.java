@@ -48,7 +48,7 @@ public class ArcadeMsPacMan_App extends Application {
             CommonDashboardID.KEYS_LOCAL,
             CommonDashboardID.ABOUT)
         );
-        ui.show();
+        ui.displayOnScreen();
     }
 
     @Override
