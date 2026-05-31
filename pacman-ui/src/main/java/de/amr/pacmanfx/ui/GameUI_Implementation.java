@@ -34,7 +34,6 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -129,11 +128,12 @@ public final class GameUI_Implementation implements GameUI {
         initGameVariantAndRegisterChangeHandler();
         load3DAssets();
         initMainScene();
-        view().attachServices(access);
+        view.attachServices(access);
         initProperties();
         initGameClock();
         initSubViews();
-        displayStage(view().stage());
+        view.display(access.currentUIConfig());
+        access().subViews().selectStartView();
         startServices();
     }
 
@@ -290,20 +290,6 @@ public final class GameUI_Implementation implements GameUI {
         final GameVariantChangeHandler gameVariantChangeHandler = new GameVariantChangeHandler(this);
         access().gameContext().gameVariantNameProperty().addListener(gameVariantChangeHandler);
         gameVariantChangeHandler.enterGameVariant(access().gameContext().gameVariantName());
-    }
-
-    private void displayStage(Stage stage) {
-        final UIConfig currentConfig = access().currentUIConfig();
-        final Image icon = currentConfig.assets().image("app_icon");
-        stage.setScene(view().mainScene());
-        stage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);
-        stage.setMinHeight(GameUI_Constants.MIN_STAGE_HEIGHT);
-        if (icon != null) {
-            stage.getIcons().setAll(icon);
-        }
-        stage.centerOnScreen();
-        stage.show();
-        access().subViews().selectStartView();
     }
 
     /**

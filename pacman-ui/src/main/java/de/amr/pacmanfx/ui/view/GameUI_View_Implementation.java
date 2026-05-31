@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.binding.StringBinding;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.util.function.Supplier;
@@ -42,6 +43,19 @@ public class GameUI_View_Implementation implements GameUI_View {
             GameUI_Constants.PROPERTY_3D_ENABLED
         );
         stage.titleProperty().bind(stageTitleBindingProperty());
+    }
+
+    @Override
+    public void display(UIConfig config) {
+        final Image icon = config.assets().image("app_icon");
+        if (icon != null) {
+            stage.getIcons().setAll(icon);
+        }
+        stage.setScene(mainScene);
+        stage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);
+        stage.setMinHeight(GameUI_Constants.MIN_STAGE_HEIGHT);
+        stage.centerOnScreen();
+        stage.show();
     }
 
     @Override
