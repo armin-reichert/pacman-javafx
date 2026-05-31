@@ -54,7 +54,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
-        final SpriteAnimationSet spriteAnimationSet = ui.services().sprites().animationSet();
+        final SpriteAnimationSet spriteAnimationSet = ui.access().sprites().animationSet();
         pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
@@ -91,7 +91,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (timer.hasExpired()) {
-            ui.services().sounds().play(PacManGameSoundID.INTERMISSION_2);
+            ui.access().sounds().play(PacManGameSoundID.INTERMISSION_2);
             enterStateChasing();
         }
     }

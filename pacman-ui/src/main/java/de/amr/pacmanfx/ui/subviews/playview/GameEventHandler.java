@@ -27,39 +27,39 @@ public class GameEventHandler extends DefaultGameEventListener {
 
             case LevelCreatedEvent levelCreatedEvent -> {
                 final GameLevel level = levelCreatedEvent.level();
-                final UIConfig currentConfig = ui.services().currentUIConfig();
-                final SpriteAnimationSet spriteAnimationSet = ui.services().sprites().animationSet();
+                final UIConfig currentConfig = ui.access().currentUIConfig();
+                final SpriteAnimationSet spriteAnimationSet = ui.access().sprites().animationSet();
 
                 //TODO this should be done elsewhere
                 level.entities().pac().setAnimations(currentConfig.createPacAnimations(spriteAnimationSet));
                 level.entities().ghosts().forEach(ghost ->
                     ghost.setAnimations(currentConfig.createGhostAnimations(spriteAnimationSet, ghost.personality())));
 
-                final MiniPlaySceneView miniPlayView = ui.services().gamePlayView().miniPlaySceneView();
+                final MiniPlaySceneView miniPlayView = ui.access().gamePlayView().miniPlaySceneView();
                 miniPlayView.setUIConfig(currentConfig);
                 miniPlayView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
                 miniPlayView.slideIn();
 
                 // size of game scene might have changed, so re-embed
-                ui.services().gameScenes().optCurrentGameScene().ifPresent(
-                    gameScene -> ui.services().gameScenes().embedGameSceneIntoPlayView(ui.services(), ui.view(), gameScene));
+                ui.access().gameScenes().optCurrentGameScene().ifPresent(
+                    gameScene -> ui.access().gameScenes().embedGameSceneIntoPlayView(ui.access(), ui.view(), gameScene));
             }
 
             case GameStateChangeEvent stateChangeEvent -> {
                 if (stateChangeEvent.newState().matchesByName(CanonicalGameState.LEVEL_COMPLETE.name())) {
-                    final MiniPlaySceneView miniPlayView = ui.services().gamePlayView().miniPlaySceneView();
+                    final MiniPlaySceneView miniPlayView = ui.access().gamePlayView().miniPlaySceneView();
                     miniPlayView.slideOut();
                 }
             }
 
-            case GenericChangeEvent _ -> ui.services().gameScenes().forceGameSceneUpdate(ui);
+            case GenericChangeEvent _ -> ui.access().gameScenes().forceGameSceneUpdate(ui);
 
             default -> {}
         }
 
-        ui.services().gameScenes().updateGameSceneAndForceReload(ui, false);
+        ui.access().gameScenes().updateGameSceneAndForceReload(ui, false);
 
         // Call game event handler for current game scene
-        ui.services().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
+        ui.access().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
     }
 }

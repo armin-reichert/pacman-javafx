@@ -71,7 +71,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
-        final SpriteAnimationSet spriteAnimationSet = ui.services().sprites().animationSet();
+        final SpriteAnimationSet spriteAnimationSet = ui.access().sprites().animationSet();
 
         clapperboard = new Clapperboard(4, "THE END");
         clapperboard.setPosition(TS(3), TS(10));
@@ -87,17 +87,17 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniors = new ArrayList<>();
         juniorCreationTimes = new ArrayList<>();
 
-        ui.services().sounds().play(PacManGameSoundID.INTERMISSION_4);
+        ui.access().sounds().play(PacManGameSoundID.INTERMISSION_4);
     }
 
     @Override
     public void onDeactivate() {
-        ui.services().sounds().stop(PacManGameSoundID.INTERMISSION_4);
+        ui.access().sounds().stop(PacManGameSoundID.INTERMISSION_4);
     }
 
     @Override
     public void onTick(GameClock clock) {
-        final UIConfig uiConfig = ui.services().currentUIConfig();
+        final UIConfig uiConfig = ui.access().currentUIConfig();
         final TengenMsPacMan_GameModel game = services().currentGame();
         final State<Game> gameState = game.flow().state();
         final long gameStateTick = gameState.timer().tickCount();
@@ -179,7 +179,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         junior.setPosition((float) randomX, getUnscaledHeight() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimations(uiConfig.createPacAnimations(ui.services().sprites().animationSet()));
+        junior.setAnimations(uiConfig.createPacAnimations(ui.access().sprites().animationSet()));
         junior.animations().select(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);
@@ -190,7 +190,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             case 2 -> TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_2;
             default -> throw new IllegalArgumentException();
         };
-        ui.services().sounds().loop(soundID);
+        ui.access().sounds().loop(soundID);
 
         Logger.info("Junior spawned at tick {}", tick);
     }

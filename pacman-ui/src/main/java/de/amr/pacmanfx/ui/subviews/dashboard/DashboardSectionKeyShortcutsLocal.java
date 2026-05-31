@@ -23,7 +23,7 @@ public class DashboardSectionKeyShortcutsLocal extends DashboardSection {
     @Override
     public void update(GameUI ui) {
         clearGrid();
-        ui.services().gameScenes().optCurrentGameScene().ifPresent(gameScene -> addEntries(ui,gameScene));
+        ui.access().gameScenes().optCurrentGameScene().ifPresent(gameScene -> addEntries(ui,gameScene));
     }
 
     private void addEntries(GameUI ui, GameScene gameScene) {
@@ -37,7 +37,7 @@ public class DashboardSectionKeyShortcutsLocal extends DashboardSection {
                 .forEach(entry -> {
                     final KeyCombination keyCombination = entry.getKey();
                     final GameAction action = entry.getValue();
-                    final String localizedActionText = ui.services().translations().translate(action.resourceBundleKey());
+                    final String localizedActionText = ui.access().translations().translate(action.resourceBundleKey());
                     addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(ui)));
                 });
         }

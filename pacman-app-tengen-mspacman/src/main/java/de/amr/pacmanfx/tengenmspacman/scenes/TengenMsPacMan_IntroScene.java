@@ -115,8 +115,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
                 final GameUI ui = scene.ui;
-                final UIConfig currentConfig = ui.services().currentUIConfig();
-                final SpriteAnimationSet spriteAnimationSet = ui.services().sprites().animationSet();
+                final UIConfig currentConfig = ui.access().currentUIConfig();
+                final SpriteAnimationSet spriteAnimationSet = ui.access().sprites().animationSet();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 

@@ -42,8 +42,8 @@ public class TengenMsPacMan_App extends Application {
             .startPage(TengenMsPacMan_StartPage::new)
             .build();
 
-        final Dashboard dashboard = ui.services().dashboard();
-        dashboard.addCommonSections(ui.services().translations(), List.of(
+        final Dashboard dashboard = ui.access().dashboard();
+        dashboard.addCommonSections(ui.access().translations(), List.of(
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,
             CommonDashboardID.SETTINGS_3D,

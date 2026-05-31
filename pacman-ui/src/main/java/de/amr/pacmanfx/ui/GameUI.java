@@ -13,5 +13,5 @@ public interface GameUI extends GameUI_Life {
 
     GameUI_View view();
 
-    GameUI_ServiceFacade services();
+    GameUI_ServiceFacade access();
 }

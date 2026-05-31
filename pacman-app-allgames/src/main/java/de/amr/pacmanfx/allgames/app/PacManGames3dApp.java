@@ -150,7 +150,7 @@ public class PacManGames3dApp extends Application {
             configureDashboard();
             Logger.info("UI created {} builder {} tests", using(useBuilder), including(includeTests));
 
-            ui.services().customDirWatchdog().addEventListener(xxlMapSelector);
+            ui.access().customDirWatchdog().addEventListener(xxlMapSelector);
             ui.show();
         }
         catch (RuntimeException x) {
@@ -199,7 +199,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void addConfigFactories() {
-        final ConfigurationsManager configManager = ui.services().configurations();
+        final ConfigurationsManager configManager = ui.access().configurations();
         configManager.addConfigFactory(ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new);
         configManager.addConfigFactory(ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig::new);
         configManager.addConfigFactory(TENGEN_MS_PACMAN.name(),     TengenMsPacMan_UIConfig::new);
@@ -209,7 +209,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void addStartPages() {
-        final StartPages_SubView startView = ui.services().startView();
+        final StartPages_SubView startView = ui.access().startView();
         startView.addStartPage(new ArcadePacMan_StartPage());
         startView.addStartPage(new ArcadeMsPacMan_StartPage());
         startView.addStartPage(new TengenMsPacMan_StartPage());
@@ -220,9 +220,9 @@ public class PacManGames3dApp extends Application {
 
 
     private void configureDashboard() {
-        final Dashboard dashboard = ui.services().gamePlayView().dashboard();
+        final Dashboard dashboard = ui.access().gamePlayView().dashboard();
 
-        ui.services().configureDashboard(DASHBOARD_IDs);
+        ui.access().configureDashboard(DASHBOARD_IDs);
 
         // Add Joypad controller section
         dashboard.addSection(
@@ -236,7 +236,7 @@ public class PacManGames3dApp extends Application {
             .filter(DashboardSectionCustomMaps.class::isInstance)
             .map(DashboardSectionCustomMaps.class::cast)
             .ifPresent(section -> {
-                section.setCustomDirWatchDog(ui.services().customDirWatchdog());
+                section.setCustomDirWatchDog(ui.access().customDirWatchdog());
                 section.setMapEditFunction(mapFile -> ui.openWorldMapFileInEditor(mapFile));
             });
     }

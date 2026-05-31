@@ -69,7 +69,7 @@ public class FlyerStartPage extends StackPane implements StartPage {
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             if (e.getCode() == SHUT_UP_KEYCODE) {
-                ui.services().sounds().stopAndDisposeVoice();
+                ui.access().sounds().stopAndDisposeVoice();
             }
         });
     }
@@ -83,11 +83,11 @@ public class FlyerStartPage extends StackPane implements StartPage {
 
     @Override
     public void onExitStartPage(GameUI ui) {
-        ui.services().sounds().stopAndDisposeVoice();
+        ui.access().sounds().stopAndDisposeVoice();
     }
 
     public Node createStartButton(GameUI ui) {
-        final var startButton = new FancyButton(ui.services().translations().translate("play_button"),
+        final var startButton = new FancyButton(ui.access().translations().translate("play_button"),
             DEFAULT_START_BUTTON_FONT, DEFAULT_START_BUTTON_BGCOLOR, DEFAULT_START_BUTTON_FILLCOLOR);
         startButton.setAction(() -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
         startButton.translateYProperty().bind(heightProperty().multiply(-0.1));

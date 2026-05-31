@@ -29,7 +29,7 @@ public class TengenMsPacMan_StartPage extends FlyerStartPage implements Resource
     @Override
     public void onEnterStartPage(GameUI ui) {
         flyer.selectPage(0);
-        ui.services().sounds().playVoice(flyerTextSpeech);
-        ui.services().gameContext().gameVariantNameProperty().set(GameVariant.TENGEN_MS_PACMAN.name());
+        ui.access().sounds().playVoice(flyerTextSpeech);
+        ui.access().gameContext().gameVariantNameProperty().set(GameVariant.TENGEN_MS_PACMAN.name());
     }
 }

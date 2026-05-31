@@ -38,8 +38,8 @@ public final class CommonActions {
     public static final GameAction ACTION_BOOT_SHOW_PLAY_VIEW = new GameAction("boot_show_play_view") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.services().gameContext().coinMechanism().setNumCoins(0);
-            ui.services().selectGamePlayView();
+            ui.access().gameContext().coinMechanism().setNumCoins(0);
+            ui.access().selectGamePlayView();
             ui.restart();
         }
     };
@@ -54,7 +54,7 @@ public final class CommonActions {
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("let_game_state_expire") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.services().gameContext().game().flow().state().expire();
+            ui.access().gameContext().game().flow().state().expire();
         }
     };
 
@@ -70,9 +70,9 @@ public final class CommonActions {
         protected void doAction(GameUI ui) {
             PerspectiveID id = GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.get().next();
             GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.set(id);
-            String msgKey = ui.services().translations().translate("camera_perspective",
-                ui.services().translations().translate("perspective_id_" + id.name()));
-            ui.services().showFlashMessage(msgKey);
+            String msgKey = ui.access().translations().translate("camera_perspective",
+                ui.access().translations().translate("perspective_id_" + id.name()));
+            ui.access().showFlashMessage(msgKey);
         }
     };
 
@@ -81,18 +81,19 @@ public final class CommonActions {
         protected void doAction(GameUI ui) {
             PerspectiveID id = GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.get().prev();
             GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.set(id);
-            String msgKey = ui.services().translations().translate("camera_perspective",
-                ui.services().translations().translate("perspective_id_" + id.name()));
-            ui.services().showFlashMessage(msgKey);
+            String msgKey = ui.access().translations().translate("camera_perspective",
+                ui.access().translations().translate("perspective_id_" + id.name()));
+            ui.access().showFlashMessage(msgKey);
         }
     };
 
     public static final GameAction ACTION_QUIT_GAME_SCENE = new GameAction("quit_game_scene") {
         @Override
         protected void doAction(GameUI ui) {
-            final Game game = ui.services().gameContext().game();
+            final Game game = ui.access().currentGame();
             game.cheats().clear(); //TODO needed?
-            ui.services().gameScenes().quitCurrentGameScene(ui);
+            ui.access().gameScenes().quitCurrentGameScene(ui.access());
+            ui.stopGame();
         }
     };
 
@@ -100,26 +101,26 @@ public final class CommonActions {
         @Override
         protected void doAction(GameUI ui) {
             ui.stopGame();
-            final Game game = ui.services().gameContext().game();
+            final Game game = ui.access().currentGame();
             boolean isLevelShortTest = game.flow().state() instanceof LevelShortTestState;
             if (isLevelShortTest) {
                 game.flow().state().onExit(game); //TODO exit other states too?
             }
             game.flow().restartStateWithName(CanonicalGameState.INTRO.name());
-            ui.services().gameClock().start();
+            ui.access().gameClock().start();
         }
     };
 
     public static final GameAction ACTION_SHOW_HELP = new GameAction("show_help") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.services().gamePlayView().showHelp(ui);
+            ui.access().gamePlayView().showHelp(ui);
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            boolean isArcadeGame = GameVariant.isArcadeGameName(ui.services().gameContext().gameVariantName());
-            boolean isPlayScene2D = ui.services().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_2D);
+            boolean isArcadeGame = GameVariant.isArcadeGameName(ui.access().gameContext().gameVariantName());
+            boolean isPlayScene2D = ui.access().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_2D);
             return isArcadeGame && isPlayScene2D;
         }
     };
@@ -127,74 +128,74 @@ public final class CommonActions {
     public static final GameAction ACTION_SIMULATION_FASTER = new GameAction("simulation_faster") {
         @Override
         protected void doAction(GameUI ui) {
-            final GameClock clock = ui.services().gameClock();
+            final GameClock clock = ui.access().gameClock();
             final int newRate = Math.clamp(clock.targetFrameRate() + SIM_SPEED_DELTA, SIM_SPEED_MIN, SIM_SPEED_MAX);
             clock.setTargetFrameRate(newRate);
 
             final String message = newRate == SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
-            ui.services().showFlashMessage(Duration.seconds(0.75), message.formatted(newRate));
+            ui.access().showFlashMessage(Duration.seconds(0.75), message.formatted(newRate));
         }
     };
 
     public static final GameAction ACTION_SIMULATION_FASTEST = new GameAction("simulation_fastest") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.services().gameClock().setTargetFrameRate(SIM_SPEED_MAX);
-            ui.services().showFlashMessage(Duration.seconds(0.75), "At maximum speed: %d Hz", SIM_SPEED_MAX);
+            ui.access().gameClock().setTargetFrameRate(SIM_SPEED_MAX);
+            ui.access().showFlashMessage(Duration.seconds(0.75), "At maximum speed: %d Hz", SIM_SPEED_MAX);
         }
     };
 
     public static final GameAction ACTION_SIMULATION_SLOWER = new GameAction("simulation_slower") {
         @Override
         protected void doAction(GameUI ui) {
-            final GameClock clock = ui.services().gameClock();
+            final GameClock clock = ui.access().gameClock();
             final int newRate = Math.clamp(clock.targetFrameRate() - SIM_SPEED_DELTA, SIM_SPEED_MIN, SIM_SPEED_MAX);
             clock.setTargetFrameRate(newRate);
 
             final String message = newRate == SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
-            ui.services().showFlashMessage(Duration.seconds(0.75), message.formatted(newRate));
+            ui.access().showFlashMessage(Duration.seconds(0.75), message.formatted(newRate));
         }
     };
 
     public static final GameAction ACTION_SIMULATION_SLOWEST = new GameAction("simulation_slowest") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.services().gameClock().setTargetFrameRate(SIM_SPEED_MIN);
-            ui.services().showFlashMessage(Duration.seconds(0.75), "At minimum speed: %d Hz", SIM_SPEED_MIN);
+            ui.access().gameClock().setTargetFrameRate(SIM_SPEED_MIN);
+            ui.access().showFlashMessage(Duration.seconds(0.75), "At minimum speed: %d Hz", SIM_SPEED_MIN);
         }
     };
 
     public static final GameAction ACTION_SIMULATION_ONE_STEP = new GameAction("simulation_one_step") {
         @Override
         protected void doAction(GameUI ui) {
-            boolean success = ui.services().gameClock().makeOneStep(true);
+            boolean success = ui.access().gameClock().makeOneStep(true);
             if (!success) {
-                ui.services().showFlashMessage("Simulation step error, clock stopped!");
+                ui.access().showFlashMessage("Simulation step error, clock stopped!");
             }
         }
 
         @Override
-        public boolean isEnabled(GameUI ui) { return ui.services().gameClock().getUpdatesDisabled(); }
+        public boolean isEnabled(GameUI ui) { return ui.access().gameClock().getUpdatesDisabled(); }
     };
 
     public static final GameAction ACTION_SIMULATION_TEN_STEPS = new GameAction("simulation_ten_steps") {
         @Override
         protected void doAction(GameUI ui) {
-            boolean success = ui.services().gameClock().makeSteps(10, true);
+            boolean success = ui.access().gameClock().makeSteps(10, true);
             if (!success) {
-                ui.services().showFlashMessage("Simulation step error, clock stopped!");
+                ui.access().showFlashMessage("Simulation step error, clock stopped!");
             }
         }
 
         @Override
-        public boolean isEnabled(GameUI ui) { return ui.services().gameClock().getUpdatesDisabled(); }
+        public boolean isEnabled(GameUI ui) { return ui.access().gameClock().getUpdatesDisabled(); }
      };
 
     public static final GameAction ACTION_SIMULATION_RESET = new GameAction("simulation_reset") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.services().gameClock().setTargetFrameRate(NUM_TICKS_PER_SEC);
-            ui.services().showFlashMessage(Duration.seconds(0.75), ui.services().gameClock().targetFrameRate() + "Hz");
+            ui.access().gameClock().setTargetFrameRate(NUM_TICKS_PER_SEC);
+            ui.access().showFlashMessage(Duration.seconds(0.75), ui.access().gameClock().targetFrameRate() + "Hz");
         }
     };
 
@@ -206,7 +207,7 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_COLLISION_STRATEGY = new GameAction("toggle_collision_strategy") {
         @Override
         protected void doAction(GameUI ui) {
-            final Game game = ui.services().gameContext().game();
+            final Game game = ui.access().gameContext().game();
             CollisionStrategy collisionStrategy = game.collisionStrategy();
             if (collisionStrategy == CollisionStrategy.CENTER_DISTANCE) {
                 game.setCollisionStrategy(CollisionStrategy.SAME_TILE);
@@ -214,9 +215,9 @@ public final class CommonActions {
                 game.setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
             }
             if (game.collisionStrategy() == CollisionStrategy.SAME_TILE) {
-                ui.services().showFlashMessage("Using original Arcade collision strategy"); //TODO localize
+                ui.access().showFlashMessage("Using original Arcade collision strategy"); //TODO localize
             } else {
-                ui.services().showFlashMessage("Using improved collision strategy"); //TODO localize
+                ui.access().showFlashMessage("Using improved collision strategy"); //TODO localize
             }
         }
     };
@@ -224,12 +225,12 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_DASHBOARD = new GameAction("toggle_dashboard") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.services().dashboard().toggleVisibility();
+            ui.access().dashboard().toggleVisibility();
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.services().subViews().isSelected(ui.services().subViews().gamePlayView());
+            return ui.access().subViews().isSelected(ui.access().subViews().gamePlayView());
         }
     };
 
@@ -258,8 +259,8 @@ public final class CommonActions {
         @Override
         protected void doAction(GameUI ui) {
             toggleBooleanProperty(GameUI_Constants.PROPERTY_MINI_VIEW_ON);
-            if (!ui.services().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D)) {
-                ui.services().showFlashMessage(ui.services().translations().translate(GameUI_Constants.PROPERTY_MINI_VIEW_ON.get()
+            if (!ui.access().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D)) {
+                ui.access().showFlashMessage(ui.access().translations().translate(GameUI_Constants.PROPERTY_MINI_VIEW_ON.get()
                     ? "pip_on" : "pip_off"));
             }
         }
@@ -275,43 +276,43 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_PAUSED = new GameAction("toggle_paused") {
         @Override
         protected void doAction(GameUI ui) {
-            toggleBooleanProperty(ui.services().gameClock().updatesDisabledProperty());
-            if (ui.services().gameClock().getUpdatesDisabled()) {
-                final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(ui.services().gameContext().gameVariantName());
-                ui.services().sounds().stopAll();
+            toggleBooleanProperty(ui.access().gameClock().updatesDisabledProperty());
+            if (ui.access().gameClock().getUpdatesDisabled()) {
+                final UIConfig currentConfig = ui.access().configurations().getOrCreateUIConfig(ui.access().gameContext().gameVariantName());
+                ui.access().sounds().stopAll();
                 currentConfig.optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             }
-            Logger.info("Game ({}) {}", ui.services().gameContext().gameVariantName(), ui.services().gameClock().getUpdatesDisabled() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", ui.access().gameContext().gameVariantName(), ui.access().gameClock().getUpdatesDisabled() ? "paused" : "resumed");
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.services().subViews().isSelected(ui.services().subViews().gamePlayView());
+            return ui.access().subViews().isSelected(ui.access().subViews().gamePlayView());
         }
     };
 
     public static final GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction("toggle_play_scene_2d_3d") {
         @Override
         protected void doAction(GameUI ui) {
-            final Game game = ui.services().gameContext().game();
+            final Game game = ui.access().gameContext().game();
             toggleBooleanProperty(GameUI_Constants.PROPERTY_3D_ENABLED);
             final boolean is3DEnabled = GameUI_Constants.PROPERTY_3D_ENABLED.get();
             if (!inPlayScene(ui)) {
-                ui.services().showFlashMessage(ui.services().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
+                ui.access().showFlashMessage(ui.access().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
             }
             if (isLevelPlaying(game)) {
-                ui.services().gameScenes().forceGameSceneUpdate(ui);
+                ui.access().gameScenes().forceGameSceneUpdate(ui);
             }
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.services().subViews().isSelected(ui.services().subViews().gamePlayView());
+            return ui.access().subViews().isSelected(ui.access().subViews().gamePlayView());
         }
 
         private boolean inPlayScene(GameUI ui) {
-            return ui.services().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_2D)
-                || ui.services().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D);
+            return ui.access().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_2D)
+                || ui.access().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D);
         }
 
         private boolean isLevelPlaying(Game game) {

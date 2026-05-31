@@ -70,7 +70,7 @@ public class ArcadePacMan_App extends Application {
         else {
             createUI(primaryStage, gameBox, size);
         }
-        ui.services().configureDashboard(DASHBOARD_IDs);
+        ui.access().configureDashboard(DASHBOARD_IDs);
         ui.show();
     }
 
@@ -89,10 +89,10 @@ public class ArcadePacMan_App extends Application {
         ui = new GameUI_Implementation(gameBox,
             createViewImplementation(stage, sceneSize.x(), sceneSize.y())
         );
-        ui.services().configurations().addConfigFactory(
+        ui.access().configurations().addConfigFactory(
             GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
-        final StartPages_SubView startView = ui.services().startView();
+        final StartPages_SubView startView = ui.access().startView();
 
         final var arcadePacManStartPage = new ArcadePacMan_StartPage();
         arcadePacManStartPage.init(ui);

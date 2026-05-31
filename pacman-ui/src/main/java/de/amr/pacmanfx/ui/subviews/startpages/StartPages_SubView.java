@@ -151,6 +151,6 @@ public class StartPages_SubView extends Carousel implements GameUI_SubView {
 
     private String composeTitle() {
         final String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
-        return ui != null ? ui.services().translations().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
+        return ui != null ? ui.access().translations().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
     }
 }

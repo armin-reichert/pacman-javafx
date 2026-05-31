@@ -75,7 +75,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
      */
     public PlayScene3D(GameUI ui) {
         super(ui);
-        gameOverMessagePicker = new RandomTextPicker(ui.services().translations().bundle(), "game.over");
+        gameOverMessagePicker = new RandomTextPicker(ui.access().translations().bundle(), "game.over");
         createSubScene();
         createBindings();
         bindActions();
@@ -109,8 +109,8 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         } else {
-            final UIConfig currentConfig = ui.services().currentUIConfig();
-            scores3D.showTextForScore(ui.services().translations().translate("score.game_over"),
+            final UIConfig currentConfig = ui.access().currentUIConfig();
+            scores3D.showTextForScore(ui.access().translations().translate("score.game_over"),
                 currentConfig.assets().color("color.game_over_message"));
         }
 
@@ -143,7 +143,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
             Logger.info("Old 3D game level gets disposed...");
             level3D.dispose();
         }
-        final UIConfig currentConfig = ui.services().currentUIConfig();
+        final UIConfig currentConfig = ui.access().currentUIConfig();
         level3D = new GameLevel3D(level, currentConfig);
         decorate(level3D);
         level3D.entities().selectAll().forEach(entity -> entity.init(level));
@@ -156,7 +156,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     public void showRandomGameOverMessage() {
-        ui.services().showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
+        ui.access().showFlashMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
     }
 
     @Override
@@ -195,7 +195,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onTick(GameClock clock) {
-        final GameLevel level = ui.services().currentGame().optGameLevel().orElse(null);
+        final GameLevel level = ui.access().currentGame().optGameLevel().orElse(null);
         if (level == null) {
             Logger.info("Tick {}: Game level not yet created, update ignored", clock.tickCount());
             return;
@@ -209,7 +209,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         level3D.entities().selectAll().forEach(entity -> entity.update(level));
         updateHUD3D(level);
         perspectives.updatePerspective(level);
-        ui.services().currentSoundEffects().ifPresent(soundEffects -> {
+        ui.access().currentSoundEffects().ifPresent(soundEffects -> {
             soundEffects.setEnabled(!level.isDemoLevel());
             soundEffects.playLevelRunningSound(level);
         });
@@ -280,8 +280,8 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         final Scores3D oldScores3D = scores3D;
 
         scores3D = new Scores3D(
-            ui.services().translations().translate("score.score"),
-            ui.services().translations().translate("score.high_score"),
+            ui.access().translations().translate("score.score"),
+            ui.access().translations().translate("score.high_score"),
             GameUI_Constants.FONT_ARCADE_8);
 
         scores3D.textOpacity.bind(scoreOpacity);

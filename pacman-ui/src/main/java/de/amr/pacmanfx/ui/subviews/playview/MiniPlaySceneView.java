@@ -152,7 +152,7 @@ public class MiniPlaySceneView {
         canvasRenderer.clearCanvas();
 
         if (levelRenderer != null && actorRenderer != null) {
-            ui.services().gameContext().game().optGameLevel().ifPresent(this::drawGameLevel);
+            ui.access().gameContext().game().optGameLevel().ifPresent(this::drawGameLevel);
         }
 
         if (GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
@@ -173,7 +173,7 @@ public class MiniPlaySceneView {
             CommonRenderInfoKey.MAP_BRIGHT, false,
             CommonRenderInfoKey.MAP_EMPTY, level.worldMap().foodLayer().remainingFoodCount() == 0,
             CommonRenderInfoKey.MAP_FLASHING, false,
-            CommonRenderInfoKey.TICK, ui.services().gameClock().tickCount()
+            CommonRenderInfoKey.TICK, ui.access().gameClock().tickCount()
         ));
         levelRenderer.applyLevelSettings(level, info);
         levelRenderer.drawLevel(level, info);

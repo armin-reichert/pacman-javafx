@@ -58,7 +58,7 @@ public class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManager {
     public void init(GameUI ui) {
         Logger.info("Load assets of UI configuration {}", getClass().getSimpleName());
         loadAssets();
-        initSound(ui.services().sounds());
+        initSound(ui.access().sounds());
         gameSceneConfig = new PacManXXL_PacMan_GameSceneConfig(ui);
     }
 

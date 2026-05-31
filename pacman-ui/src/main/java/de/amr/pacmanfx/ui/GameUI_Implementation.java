@@ -20,7 +20,6 @@ import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.editor.Editor_SubView;
@@ -88,7 +87,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public GameUI_ServiceFacade services() {
+    public GameUI_ServiceFacade access() {
         return services;
     }
 
@@ -109,11 +108,11 @@ public final class GameUI_Implementation implements GameUI {
                 }
             } catch (IOException x) {
                 Logger.error(x, "Could not open map file {}", worldMapFile);
-                services().showFlashMessage("Cannot open world map file");
+                access().showFlashMessage("Cannot open world map file");
             }
             catch (WorldMapParseException x) {
                 Logger.error(x, "Error reading map file data from {}", worldMapFile);
-                services().showFlashMessage("Cannot read world map file data");
+                access().showFlashMessage("Cannot read world map file data");
             }
         });
     }
@@ -121,8 +120,8 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void restart() {
         stopGame();
-        services().gameContext().game().flow().restartStateWithName(CanonicalGameState.BOOT.name());
-        Platform.runLater(services().gameClock()::start);
+        access().gameContext().game().flow().restartStateWithName(CanonicalGameState.BOOT.name());
+        Platform.runLater(access().gameClock()::start);
     }
 
     @Override
@@ -140,15 +139,14 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void stopGame() {
-        services().gameContext().game().prepareNewGame();
+        access().currentGame().prepareNewGame();
 
-        services().gameClock().stop();
-        services().gameClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        access().gameClock().stop();
+        access().gameClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
 
         services.sounds().stopAll();
 
         services.gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
-            services.currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene.deactivate();
             services.gameScenes().removeFromPlayView(services, gameScene);
             services.gameScenes().gameSceneProperty().set(null);
@@ -202,7 +200,7 @@ public final class GameUI_Implementation implements GameUI {
             if (subViewManager.isSelected(subViewManager.startView())) return true;
 
             if (subViewManager.isSelected(subViewManager.gamePlayView())) {
-                return !services().currentGame().isPlayingLevel();
+                return !access().currentGame().isPlayingLevel();
             }
             return false;
         });
@@ -228,11 +226,11 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void initGameClock() {
-        final GameClock clock = services().gameClock();
+        final GameClock clock = access().gameClock();
         clock.setUpdateAction(() -> {
-            final SimulationStep step = services().gameContext().game().doSimulationStep();
+            final SimulationStep step = access().gameContext().game().doSimulationStep();
             step.clearInfo(clock.tickCount());
-            services().gameContext().game().flow().update();
+            access().gameContext().game().flow().update();
             step.printLog();
             services.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });
@@ -254,11 +252,11 @@ public final class GameUI_Implementation implements GameUI {
 
         view().mainScene().init(this);
 
-        view().statusIconBox().bind(services().gameContext().game());
+        view().statusIconBox().bind(access().gameContext().game());
     }
 
     private void initProperties() {
-        final String currentVariantName = services().gameContext().gameVariantName();
+        final String currentVariantName = access().gameContext().gameVariantName();
         final UIConfig currentConfig = services.configurations().getOrCreateUIConfig(currentVariantName);
 
         final MazeConfig3D mazeConfig3D = currentConfig.worldConfig().maze();
@@ -291,12 +289,12 @@ public final class GameUI_Implementation implements GameUI {
 
     private void initGameVariantAndRegisterChangeHandler() {
         final GameVariantChangeHandler gameVariantChangeHandler = new GameVariantChangeHandler(this);
-        services().gameContext().gameVariantNameProperty().addListener(gameVariantChangeHandler);
-        gameVariantChangeHandler.enterGameVariant(services().gameContext().gameVariantName());
+        access().gameContext().gameVariantNameProperty().addListener(gameVariantChangeHandler);
+        gameVariantChangeHandler.enterGameVariant(access().gameContext().gameVariantName());
     }
 
     private void displayStage(Stage stage) {
-        final UIConfig currentConfig = services.configurations().getOrCreateUIConfig(services().gameContext().gameVariantName());
+        final UIConfig currentConfig = services.configurations().getOrCreateUIConfig(access().gameContext().gameVariantName());
         final Image icon = currentConfig.assets().image("app_icon");
         stage.setScene(view().mainScene());
         stage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);
@@ -317,7 +315,7 @@ public final class GameUI_Implementation implements GameUI {
     private void ka_tas_tro_phe(Throwable reason) {
         Platform.runLater(() -> {
             final String errorMessage = services.translations().translate("error.oh_no_my_program");
-            services().showFlashMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
+            access().showFlashMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
             stopGame();
             Logger.error("*** SOMETHING VERY BAD HAPPENED:");
             Logger.error(reason);

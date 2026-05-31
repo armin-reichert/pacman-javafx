@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 public class HelpInfo {
 
     public static HelpInfo build(GameUI ui) {
-        final Game game = ui.services().currentGame();
+        final Game game = ui.access().currentGame();
         final State<Game> state = game.flow().state();
         final boolean demoLevel = game.isDemoLevelRunning();
 
@@ -45,7 +45,7 @@ public class HelpInfo {
             if (demoLevel) {
                 helpInfo.addInfoForDemoLevelPlayScene();
             } else {
-                helpInfo.addInfoForPlayScene(ui.services().translations());
+                helpInfo.addInfoForPlayScene(ui.access().translations());
             }
         }
         else {
@@ -79,14 +79,14 @@ public class HelpInfo {
         pane.setBackground(UfxBackgrounds.roundedBackground(backgroundColor, 10));
 
         // add default entries:
-        if (ui.services().currentGame().cheats().isUsingAutopilot()) {
-            var autoPilotEntry = text(ui.services().translations().translate("help.autopilot_on"), Color.ORANGE);
+        if (ui.access().currentGame().cheats().isUsingAutopilot()) {
+            var autoPilotEntry = text(ui.access().translations().translate("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
-        if (ui.services().currentGame().cheats().isImmune()) {
-            var immunityEntry = text(ui.services().translations().translate("help.immunity_on"), Color.ORANGE);
+        if (ui.access().currentGame().cheats().isImmune()) {
+            var immunityEntry = text(ui.access().translations().translate("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);
             grid.add(immunityEntry, 0, grid.getRowCount() + 1);
@@ -112,7 +112,7 @@ public class HelpInfo {
     }
 
     private void addRow(String lhsKey, String keyboardKey) {
-        addRow(label(ui.services().translations().translate(lhsKey), Color.gray(0.9)),
+        addRow(label(ui.access().translations().translate(lhsKey), Color.gray(0.9)),
             text("[" + keyboardKey + "]", Color.YELLOW));
     }
 

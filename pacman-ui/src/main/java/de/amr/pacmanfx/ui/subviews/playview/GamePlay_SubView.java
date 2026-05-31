@@ -115,7 +115,7 @@ public class GamePlay_SubView implements GameUI_SubView {
 
     public void showHelp(GameUI ui) {
         final double scaling = gameSceneFrame.scalingProperty().get();
-        helpLayer.showHelpPopup(ui, scaling, ui.services().gameContext().gameVariantName());
+        helpLayer.showHelpPopup(ui, scaling, ui.access().gameContext().gameVariantName());
     }
 
     public void setGameSceneContent(Node gameSceneContent) {
@@ -136,7 +136,7 @@ public class GamePlay_SubView implements GameUI_SubView {
         // First lLook for an action binding in my bindings, if nothing found, delegate to the current game scene if any
         actionBindings.actionMatchingKeyboardState(input.keyboard).ifPresentOrElse(
             action -> action.executeIfEnabled(ui),
-            () -> ui.services().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onInput(ui))
+            () -> ui.access().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onInput(ui))
         );
     }
 
@@ -163,9 +163,9 @@ public class GamePlay_SubView implements GameUI_SubView {
     public void render() {
 
         // Render current 2D game scene
-        final GameScene gameScene = ui.services().gameScenes().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = ui.access().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene instanceof GameScene2D gameScene2D) {
-            final Game game = ui.services().gameContext().game();
+            final Game game = ui.access().gameContext().game();
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D);
             }
@@ -184,7 +184,7 @@ public class GamePlay_SubView implements GameUI_SubView {
     }
 
     public void updateGameSceneRenderers(GameScene2D gameScene2D) {
-        final UIConfig currentConfig = ui.services().currentUIConfig();
+        final UIConfig currentConfig = ui.access().currentUIConfig();
         if (gameScene2D.canvas() != null) {
             sceneRenderer = currentConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
             setFontSmoothing(GameUI_Constants.PROPERTY_CANVAS_FONT_SMOOTHING.get());
@@ -230,7 +230,7 @@ public class GamePlay_SubView implements GameUI_SubView {
     }
 
     public void configurePropertyBindings(GameUI ui) {
-        pausedIcon.visibleProperty().bind(ui.services().gameClock().updatesDisabledProperty());
+        pausedIcon.visibleProperty().bind(ui.access().gameClock().updatesDisabledProperty());
 
         GameUI_Constants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 
@@ -243,9 +243,9 @@ public class GamePlay_SubView implements GameUI_SubView {
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> GameUI_Constants.PROPERTY_MINI_VIEW_ON.get()
-                && ui.services().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D),
+                && ui.access().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D),
             GameUI_Constants.PROPERTY_MINI_VIEW_ON,
-            ui.services().gameScenes().gameSceneProperty()
+            ui.access().gameScenes().gameSceneProperty()
         ));
     }
 

@@ -81,7 +81,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
-        final SpriteAnimationSet spriteAnimationSet = ui.services().sprites().animationSet();
+        final SpriteAnimationSet spriteAnimationSet = ui.access().sprites().animationSet();
 
         // Quit cut scene when "START" button on "joypad" is pressed
         final Joypad joypad = Input.instance().joypad;
@@ -103,12 +103,12 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
         darkness = false;
 
-        ui.services().sounds().play(PacManGameSoundID.INTERMISSION_3);
+        ui.access().sounds().play(PacManGameSoundID.INTERMISSION_3);
     }
 
     @Override
     public void onDeactivate() {
-        ui.services().sounds().stop(PacManGameSoundID.INTERMISSION_3);
+        ui.access().sounds().stop(PacManGameSoundID.INTERMISSION_3);
     }
 
     @Override

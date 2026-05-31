@@ -162,7 +162,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
-        final TranslationManager translationManager = ui.services().translations();
+        final TranslationManager translationManager = ui.access().translations();
         final Game game = services().currentGame();
         final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
         final var menu = new ContextMenu();
@@ -200,7 +200,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         dynamicCamera.enterTrackingMode();
         dynamicCamera.updateRange(level.worldMap());
 
-        ui.services().sounds().setEnabled(!level.isDemoLevel()); //TODO is this needed?
+        ui.access().sounds().setEnabled(!level.isDemoLevel()); //TODO is this needed?
 
         if (level.isDemoLevel()) {
             actionBindings.registerFirstBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);

@@ -32,7 +32,7 @@ public class Editor_SubView implements GameUI_SubView {
     }
 
     private MenuItem createQuitEditorMenuItem() {
-        var miQuitEditor = new MenuItem(ui.services().translations().translate("back_to_game"));
+        var miQuitEditor = new MenuItem(ui.access().translations().translate("back_to_game"));
         miQuitEditor.setOnAction(_ -> editor.quit());
         return miQuitEditor;
     }

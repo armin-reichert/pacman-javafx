@@ -204,7 +204,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     @Override
     public void init(GameUI ui) {
         loadAssets();
-        registerSoundObjects(ui.services().sounds());
+        registerSoundObjects(ui.access().sounds());
         gameSceneConfig = new TengenMsPacMan_GameSceneConfig(ui);
         Logger.info("Initialized Tengen UI configuration {} (loaded assets and sounds)", getClass().getSimpleName());
     }

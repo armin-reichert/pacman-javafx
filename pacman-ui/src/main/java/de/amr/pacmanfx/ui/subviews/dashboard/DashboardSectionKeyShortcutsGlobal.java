@@ -22,7 +22,7 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
     @Override
     public void update(GameUI ui) {
         clearGrid();
-        addRows(ui, ui.services().subViews().currentView());
+        addRows(ui, ui.access().subViews().currentView());
     }
 
     private void addRows(GameUI ui, GameUI_SubView view) {
@@ -35,7 +35,7 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
                 .sorted(Comparator.comparing(KeyCombination::getDisplayText))
                 .forEach(key -> {
                     final GameAction action = bindingMap.get(key);
-                    final String actionText = ui.services().translations().translate(action.resourceBundleKey());
+                    final String actionText = ui.access().translations().translate(action.resourceBundleKey());
                     final Label label = createLabel(actionText, action.isEnabled(ui));
                     addRow(key.getDisplayText(), label);
                 });
