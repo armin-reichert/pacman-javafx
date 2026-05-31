@@ -58,7 +58,7 @@ public final class GameUI_Implementation implements GameUI {
     // Observes changes in custom map directory
     private final DirectoryWatchdog customDirWatchdog;
 
-    private final UIServices services;
+    private final GameUI_Services services;
 
     // Sprite animation support
     private final SpriteAnimationTimer spriteAnimationTimer = new SpriteAnimationTimer(new SpriteAnimationSet());
@@ -76,7 +76,7 @@ public final class GameUI_Implementation implements GameUI {
         this.stage = requireNonNull(stage);
         this.scene = new GameUI_MainScene(requireNonNegative(width), requireNonNegative(height));
         this.customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
-        this.services = new UIServices(
+        this.services = new GameUI_Services(
             new UIConfigManager(),
             new GameSceneManager(),
             new PreferencesManager(GameUI_Implementation.class),
@@ -134,7 +134,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public UIServices services() {
+    public GameUI_Services services() {
         return services;
     }
 
@@ -180,7 +180,7 @@ public final class GameUI_Implementation implements GameUI {
         services.sounds().stopAll();
 
         services.gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
-            gameScene.soundEffects().ifPresent(GameSoundEffects::stopAll);
+            gameScene.optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene.deactivate();
             services.gameScenes().removeFromPlayView(services.views().playView(), gameScene);
             services.gameScenes().gameSceneProperty().set(null);

@@ -71,7 +71,7 @@ public interface GameUI {
     // Services (view manager, game scene manager, sound manager etc.)
     // ---------------------------------------------------------------------------------------------
 
-    UIServices services();
+    GameUI_Services services();
 
     // ---------------------------------------------------------------------------------------------
     // Lifecycle

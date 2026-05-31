@@ -62,13 +62,9 @@ public abstract class GameScene implements Disposable {
             return gameContext().game().optGameLevel();
         }
 
-        public Optional<GameSoundEffects> soundEffects() {
-            return gameScene.soundEffects();
-        }
-
         @Override
         public void onStopAllSounds(StopAllSoundsEvent event) {
-            soundEffects().ifPresent(GameSoundEffects::stopAll);
+            gameScene.optSoundEffects().ifPresent(GameSoundEffects::stopAll);
         }
     }
 
@@ -97,18 +93,16 @@ public abstract class GameScene implements Disposable {
     }
 
     /**
+     * @return optional sound effects for this scene and the currently played game varaiant
+     */
+    public Optional<GameSoundEffects> optSoundEffects() {
+        return ui.services().optSoundEffects(gameContext().gameVariantName());
+    }
+    /**
      * @return optional JavaFX subscene for this scene (3D scenes override)
      */
     public Optional<SubScene> optSubSceneFX() {
         return Optional.empty();
-    }
-
-    /**
-     * @return optional sound effects for this scene
-     */
-    public Optional<GameSoundEffects> soundEffects() {
-        final UIConfig currentConfig = ui.services().configurations().getOrCreateUIConfig(gameContext().gameVariantName());
-        return currentConfig.optSoundEffects();
     }
 
     /**
@@ -146,7 +140,7 @@ public abstract class GameScene implements Disposable {
     public final void deactivate() {
         onDeactivate();
         actionBindings.dispose();
-        soundEffects().ifPresent(GameSoundEffects::stopAll);
+        optSoundEffects().ifPresent(GameSoundEffects::stopAll);
         Logger.trace("Game scene {} deactivated", getClass().getSimpleName());
     }
 

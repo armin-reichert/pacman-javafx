@@ -20,7 +20,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         final GameEventListener gameEventHandler = new GameScene.DefaultGameEventHandler(this) {
             @Override
             public void onCreditAdded(CreditAddedEvent e) {
-                soundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+                optSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
             }
         };
         setGameEventHandler(gameEventHandler);

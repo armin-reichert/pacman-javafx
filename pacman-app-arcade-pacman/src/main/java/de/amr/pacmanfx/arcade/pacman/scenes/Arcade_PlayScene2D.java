@@ -48,7 +48,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final Arcade_GameModel game = gameContext().game();
         game.optGameLevel().ifPresent(level -> {
             updateLivesCounter(level);
-            soundEffects().ifPresent(sfx -> {
+            optSoundEffects().ifPresent(sfx -> {
                 sfx.setEnabled(!level.isDemoLevel());
                 sfx.playLevelRunningSound(level);
             });

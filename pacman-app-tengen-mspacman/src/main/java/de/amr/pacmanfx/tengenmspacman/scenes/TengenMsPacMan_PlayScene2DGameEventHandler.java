@@ -31,17 +31,17 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
 
     @Override
     public void onBonusActivated(BonusActivatedEvent e) {
-        soundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
+        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
-        soundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
+        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent e) {
-        soundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
+        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
     public void onGameStarted(GameStartedEvent e) {
         final boolean silent = game().isDemoLevelRunning() || game().flow().state() instanceof TestState;
         if (!silent) {
-            soundEffects().ifPresent(GameSoundEffects::playGameReadySound);
+            gameScene().optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
     }
 
@@ -66,12 +66,12 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
         switch (e.newState()) {
             case TengenMsPacMan_GameState.LEVEL_COMPLETE -> {
                 final GameLevel level = optGameLevel().orElseThrow();
-                soundEffects().ifPresent(GameSoundEffects::stopAll);
+                gameScene().optSoundEffects().ifPresent(GameSoundEffects::stopAll);
                 gameScene().playLevelCompleteAnimation(level);
             }
             case TengenMsPacMan_GameState.GAME_OVER -> {
                 final GameLevel level = optGameLevel().orElseThrow();
-                soundEffects().ifPresent(GameSoundEffects::stopAll);
+                gameScene().optSoundEffects().ifPresent(GameSoundEffects::stopAll);
                 gameScene().dynamicCamera().enterManualMode();
                 gameScene().dynamicCamera().setToTopPosition();
                 level.optMessage().ifPresent(message -> gameScene().startGameOverMessageAnimation(message));
@@ -82,7 +82,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
 
     @Override
     public void onGhostEaten(GhostEatenEvent e) {
-        soundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
+        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
     }
 
     @Override
@@ -104,27 +104,27 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
     @Override
     public void onPacDying(PacDyingEvent e) {
         gameScene().dynamicCamera().enterManualMode();
-        soundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
+        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
     }
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
         final long tick = gameContext().clock().tickCount();
-        soundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
+        gameScene().optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        soundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
     }
 
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
-        soundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
+        gameScene().optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
 
     @Override
     public void onSpecialScore(SpecialScoreEvent e) {
-        soundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
+        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
 }

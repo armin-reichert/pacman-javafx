@@ -153,7 +153,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
                 dynamicCamera.update(TS(level.worldMap().numRows()), level.entities().pac());
             }
             updateHUD(level);
-            soundEffects().ifPresent(soundEffects -> {
+            optSoundEffects().ifPresent(soundEffects -> {
                 soundEffects.setEnabled(!level.isDemoLevel());
                 soundEffects.playLevelRunningSound(level);
             });
