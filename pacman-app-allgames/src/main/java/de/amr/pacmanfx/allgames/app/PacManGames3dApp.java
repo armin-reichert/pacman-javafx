@@ -144,7 +144,7 @@ public class PacManGames3dApp extends Application {
             Logger.info("UI created {} builder {} tests", using(useBuilder), including(includeTests));
 
             ui.services().customDirWatchdog().addEventListener(xxlMapSelector);
-            ui.life().show();
+            ui.show();
         }
         catch (RuntimeException x) {
             Logger.error(x, "An error occurred starting the game.");
@@ -155,7 +155,7 @@ public class PacManGames3dApp extends Application {
     @Override
     public void stop() {
         if (ui != null) {
-            ui.life().terminate();
+            ui.terminate();
         }
     }
 
@@ -222,7 +222,7 @@ public class PacManGames3dApp extends Application {
             .map(DashboardSectionCustomMaps.class::cast)
             .ifPresent(section -> {
                 section.setCustomDirWatchDog(ui.services().customDirWatchdog());
-                section.setMapEditFunction(mapFile -> ui.life().openWorldMapFileInEditor(mapFile));
+                section.setMapEditFunction(mapFile -> ui.openWorldMapFileInEditor(mapFile));
             });
     }
 }

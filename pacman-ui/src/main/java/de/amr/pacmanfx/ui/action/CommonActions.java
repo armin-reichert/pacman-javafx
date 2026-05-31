@@ -40,7 +40,7 @@ public final class CommonActions {
         protected void doAction(GameUI ui) {
             ui.services().gameContext().coinMechanism().setNumCoins(0);
             ui.services().subViews().selectPlayView();
-            ui.life().restart();
+            ui.restart();
         }
     };
 
@@ -61,7 +61,7 @@ public final class CommonActions {
     public static final GameAction ACTION_OPEN_EDITOR = new GameAction("open_editor") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.life().openWorldMapFileInEditor(null);
+            ui.openWorldMapFileInEditor(null);
         }
     };
 
@@ -99,7 +99,7 @@ public final class CommonActions {
     public static final GameAction ACTION_RESTART_INTRO = new GameAction("restart_intro") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.life().stopGame();
+            ui.stopGame();
             final Game game = ui.services().gameContext().game();
             boolean isLevelShortTest = game.flow().state() instanceof LevelShortTestState;
             if (isLevelShortTest) {

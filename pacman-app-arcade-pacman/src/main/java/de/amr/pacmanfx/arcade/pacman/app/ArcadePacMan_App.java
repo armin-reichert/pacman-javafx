@@ -66,12 +66,12 @@ public class ArcadePacMan_App extends Application {
             createUI(primaryStage, gameBox, size);
         }
         ui.services().configureDashboard(DASHBOARD_IDs);
-        ui.life().show();
+        ui.show();
     }
 
     @Override
     public void stop() {
-        ui.life().terminate();
+        ui.terminate();
     }
 
     // Private area

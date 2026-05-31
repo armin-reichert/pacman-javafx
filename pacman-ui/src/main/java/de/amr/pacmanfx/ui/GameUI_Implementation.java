@@ -21,12 +21,13 @@ import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
-import de.amr.pacmanfx.ui.subviews.*;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
+import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.editor.Editor_SubView;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.view.GameUI_MainScene;
 import de.amr.pacmanfx.ui.view.GameUI_View;
 import de.amr.pacmanfx.ui.view.GameUI_View_Implementation;
@@ -58,7 +59,7 @@ import static javafx.beans.binding.Bindings.createStringBinding;
 /**
  * User interface for the Pac-Man game suite. Shows a carousel with a start page for each game variant.
  */
-public final class GameUI_Implementation implements GameUI_Life, GameUI {
+public final class GameUI_Implementation implements GameUI {
 
     // Game model access
     private final GameBox gameBox;
@@ -109,11 +110,6 @@ public final class GameUI_Implementation implements GameUI_Life, GameUI {
     @Override
     public GameUI_ServiceFacade services() {
         return services;
-    }
-
-    @Override
-    public GameUI_Life life() {
-        return this;
     }
 
     // GameUI_Life interface

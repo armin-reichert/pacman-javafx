@@ -60,13 +60,13 @@ public class TengenMsPacMan_App extends Application {
             TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
             false);
 
-        ui.life().show();
+        ui.show();
     }
 
     @Override
     public void stop() {
         if (ui != null) {
-            ui.life().terminate();
+            ui.terminate();
         }
     }
 }

@@ -102,7 +102,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
             Logger.info("Quit game scene ({}), returning to start view", gameScene.getClass().getSimpleName());
 
         });
-        ui.life().stopGame();
+        ui.stopGame();
         ui.services().subViews().selectStartView();
     }
 

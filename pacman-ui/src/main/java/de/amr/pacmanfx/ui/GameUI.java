@@ -9,11 +9,9 @@ import de.amr.pacmanfx.ui.view.GameUI_View;
 /**
  * Central interface for the Pac-Man FX user interface layer.
  */
-public interface GameUI {
+public interface GameUI extends GameUI_Life {
 
     GameUI_View view();
 
     GameUI_ServiceFacade services();
-
-    GameUI_Life life();
 }

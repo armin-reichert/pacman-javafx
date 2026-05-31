@@ -106,7 +106,7 @@ public class SubViewManager {
             return;
         }
         if (editorCanOpen.getAsBoolean()) {
-            ui.life().stopGame();
+            ui.stopGame();
             editorView.editor().start();
             currentViewProperty().set(editorView);
         } else {
