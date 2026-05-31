@@ -31,24 +31,24 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
         if (newGameVariantName != null) {
             enterGameVariant(newGameVariantName);
         }
-        ui.statusIconBox().bind(ui.facade().gameContext().gameForVariant(newGameVariantName));
+        ui.view().statusIconBox().bind(ui.services().gameContext().gameForVariant(newGameVariantName));
     }
 
     private void exitGameVariant(String variantName) {
-        final Game oldGame = ui.facade().gameContext().gameForVariant(variantName);
-        ui.stage().getIcons().removeAll();
-        ui.facade().configurations().dispose(variantName);
-        ui.facade().sounds().dispose();
+        final Game oldGame = ui.services().gameContext().gameForVariant(variantName);
+        ui.view().stage().getIcons().removeAll();
+        ui.services().configurations().dispose(variantName);
+        ui.services().sounds().dispose();
         oldGame.flow().removeGameEventListener(gameEventHandler);
     }
 
     public void enterGameVariant(String variantName) {
-        final Game newGame = ui.facade().gameContext().gameForVariant(variantName);
-        final UIConfig config = ui.facade().configurations().getOrCreateUIConfig(variantName);
+        final Game newGame = ui.services().gameContext().gameForVariant(variantName);
+        final UIConfig config = ui.services().configurations().getOrCreateUIConfig(variantName);
         config.init(ui);
         final Image icon = config.assets().image("app_icon");
         if (icon != null) {
-            ui.stage().getIcons().setAll(icon);
+            ui.view().stage().getIcons().setAll(icon);
         } else {
             Logger.error("Could not find application icon for game variant {}", variantName);
         }

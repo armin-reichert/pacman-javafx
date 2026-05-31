@@ -116,10 +116,10 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     public static final GameAction ACTION_INSERT_COIN = new GameAction("insert_coin") {
         @Override
         public void doAction(GameUI ui) {
-            final CoinMechanism slot = ui.facade().gameContext().coinMechanism();
-            final Game game = ui.facade().currentGame();
-            ui.facade().sounds().stopAndDisposeVoice();
-            ui.facade().sounds().setEnabled(true);
+            final CoinMechanism slot = ui.services().gameContext().coinMechanism();
+            final Game game = ui.services().currentGame();
+            ui.services().sounds().stopAndDisposeVoice();
+            ui.services().sounds().setEnabled(true);
             slot.insertCoin();
             game.flow().enterState(PREPARING_GAME_START);
             game.flow().publishGameEvent(new CreditAddedEvent(game, 1));
@@ -127,11 +127,11 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final CoinMechanism slot = ui.facade().gameContext().coinMechanism();
+            final CoinMechanism slot = ui.services().gameContext().coinMechanism();
             if (slot.isFull()) {
                 return false;
             }
-            final Game game = ui.facade().gameContext().game();
+            final Game game = ui.services().gameContext().game();
             // In demo level, coin can always be inserted
             if (game.isDemoLevelRunning()) {
                 return true;
@@ -144,17 +144,17 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     public static final GameAction ACTION_START_GAME = new GameAction("start_game") {
         @Override
         public void doAction(GameUI ui) {
-            ui.facade().sounds().stopAndDisposeVoice();
-            ui.facade().gameContext().game().flow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
+            ui.services().sounds().stopAndDisposeVoice();
+            ui.services().gameContext().game().flow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final CoinMechanism slot = ui.facade().gameContext().coinMechanism();
+            final CoinMechanism slot = ui.services().gameContext().coinMechanism();
             if (slot.isEmpty()) {
                 return false;
             }
-            final Game game = ui.facade().gameContext().game();
+            final Game game = ui.services().gameContext().game();
             final State<Game> gameState = game.flow().state();
             return (gameState == INTRO || gameState == PREPARING_GAME_START)
                 && game.canStartNewGame();
@@ -191,7 +191,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     public void init(GameUI ui) {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
-        initSound(ui.facade().sounds());
+        initSound(ui.services().sounds());
     }
 
     @Override

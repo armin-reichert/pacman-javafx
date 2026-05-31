@@ -65,13 +65,13 @@ public class ArcadePacMan_App extends Application {
         else {
             createUI(primaryStage, gameBox, size);
         }
-        ui.facade().configureDashboard(DASHBOARD_IDs);
-        ui.show();
+        ui.services().configureDashboard(DASHBOARD_IDs);
+        ui.life().show();
     }
 
     @Override
     public void stop() {
-        ui.terminate();
+        ui.life().terminate();
     }
 
     // Private area
@@ -82,10 +82,10 @@ public class ArcadePacMan_App extends Application {
         gameBox.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
 
         ui = new GameUI_Implementation(gameBox, stage, size.x(), size.y());
-        ui.facade().configurations().addConfigFactory(
+        ui.services().configurations().addConfigFactory(
             GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
-        final StartPagesCarousel startView = ui.facade().views().startView();
+        final StartPagesCarousel startView = ui.services().views().startView();
 
         final var arcadePacManStartPage = new ArcadePacMan_StartPage();
         arcadePacManStartPage.init(ui);

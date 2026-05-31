@@ -143,8 +143,8 @@ public class PacManGames3dApp extends Application {
             configureDashboard();
             Logger.info("UI created {} builder {} tests", using(useBuilder), including(includeTests));
 
-            ui.facade().customDirWatchdog().addEventListener(xxlMapSelector);
-            ui.show();
+            ui.services().customDirWatchdog().addEventListener(xxlMapSelector);
+            ui.life().show();
         }
         catch (RuntimeException x) {
             Logger.error(x, "An error occurred starting the game.");
@@ -155,7 +155,7 @@ public class PacManGames3dApp extends Application {
     @Override
     public void stop() {
         if (ui != null) {
-            ui.terminate();
+            ui.life().terminate();
         }
     }
 
@@ -184,7 +184,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void addConfigFactories() {
-        final ConfigurationsManager configManager = ui.facade().configurations();
+        final ConfigurationsManager configManager = ui.services().configurations();
         configManager.addConfigFactory(ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new);
         configManager.addConfigFactory(ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig::new);
         configManager.addConfigFactory(TENGEN_MS_PACMAN.name(),     TengenMsPacMan_UIConfig::new);
@@ -194,7 +194,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void addStartPages() {
-        final StartPagesCarousel startView = ui.facade().views().startView();
+        final StartPagesCarousel startView = ui.services().views().startView();
         startView.addStartPage(new ArcadePacMan_StartPage());
         startView.addStartPage(new ArcadeMsPacMan_StartPage());
         startView.addStartPage(new TengenMsPacMan_StartPage());
@@ -205,9 +205,9 @@ public class PacManGames3dApp extends Application {
 
 
     private void configureDashboard() {
-        final Dashboard dashboard = ui.facade().views().playView().dashboard();
+        final Dashboard dashboard = ui.services().views().playView().dashboard();
 
-        ui.facade().configureDashboard(DASHBOARD_IDs);
+        ui.services().configureDashboard(DASHBOARD_IDs);
 
         // Add Joypad controller section
         dashboard.addSection(
@@ -221,8 +221,8 @@ public class PacManGames3dApp extends Application {
             .filter(DashboardSectionCustomMaps.class::isInstance)
             .map(DashboardSectionCustomMaps.class::cast)
             .ifPresent(section -> {
-                section.setCustomDirWatchDog(ui.facade().customDirWatchdog());
-                section.setMapEditFunction(mapFile -> ui.openWorldMapFileInEditor(mapFile));
+                section.setCustomDirWatchDog(ui.services().customDirWatchdog());
+                section.setMapEditFunction(mapFile -> ui.life().openWorldMapFileInEditor(mapFile));
             });
     }
 }

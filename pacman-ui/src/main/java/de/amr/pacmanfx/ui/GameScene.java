@@ -41,7 +41,7 @@ public abstract class GameScene implements Disposable {
         }
 
         public GameUI_ServiceFacade facade() {
-            return gameScene.ui().facade();
+            return gameScene.ui().services();
         }
 
         public GameUI ui() {
@@ -94,7 +94,7 @@ public abstract class GameScene implements Disposable {
     }
 
     public GameUI_ServiceFacade facade() {
-        return ui.facade();
+        return ui.services();
     }
 
     /**

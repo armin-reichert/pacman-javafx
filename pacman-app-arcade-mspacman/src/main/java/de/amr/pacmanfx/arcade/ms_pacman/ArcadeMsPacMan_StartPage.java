@@ -29,7 +29,7 @@ public class ArcadeMsPacMan_StartPage extends FlyerStartPage implements Resource
     @Override
     public void onEnterStartPage(GameUI ui) {
         flyer.selectPage(0);
-        ui.facade().sounds().playVoice(flyerTextSpeech);
-        ui.facade().gameContext().gameVariantNameProperty().set(GameVariant.ARCADE_MS_PACMAN.name());
+        ui.services().sounds().playVoice(flyerTextSpeech);
+        ui.services().gameContext().gameVariantNameProperty().set(GameVariant.ARCADE_MS_PACMAN.name());
     }
 }

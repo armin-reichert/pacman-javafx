@@ -43,8 +43,8 @@ public class PacManXXL_App extends Application {
             .startPage(PacManXXL_StartPage::new)
             .build();
 
-        final Dashboard dashboard = ui.facade().views().playView().dashboard();
-        dashboard.addCommonSections(ui.facade().translations(), List.of(
+        final Dashboard dashboard = ui.services().views().playView().dashboard();
+        dashboard.addCommonSections(ui.services().translations(), List.of(
             CommonDashboardID.README,
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,
@@ -61,16 +61,16 @@ public class PacManXXL_App extends Application {
             .filter(DashboardSectionCustomMaps.class::isInstance)
             .map(DashboardSectionCustomMaps.class::cast)
             .ifPresent(section -> {
-                section.setCustomDirWatchDog(ui.facade().customDirWatchdog());
-                section.setMapEditFunction(mapFile -> ui.openWorldMapFileInEditor(mapFile));
+                section.setCustomDirWatchDog(ui.services().customDirWatchdog());
+                section.setMapEditFunction(mapFile -> ui.life().openWorldMapFileInEditor(mapFile));
             });
 
-        ui.facade().customDirWatchdog().addEventListener(mapSelector);
-        ui.show();
+        ui.services().customDirWatchdog().addEventListener(mapSelector);
+        ui.life().show();
     }
 
     @Override
     public void stop() {
-        ui.terminate();
+        ui.life().terminate();
     }
 }

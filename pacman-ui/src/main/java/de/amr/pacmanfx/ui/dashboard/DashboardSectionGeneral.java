@@ -45,8 +45,8 @@ public class DashboardSectionGeneral extends DashboardSection {
         Button btnPlayPause = buttonsSimulationControl[0];
         btnPlayPause.setText(null);
         btnPlayPause.setStyle("-fx-background-color: transparent");
-        btnPlayPause.graphicProperty().bind(ui.facade().gameClock().updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
-        btnPlayPause.tooltipProperty().bind(ui.facade().gameClock().updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
+        btnPlayPause.graphicProperty().bind(ui.services().gameClock().updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
+        btnPlayPause.tooltipProperty().bind(ui.services().gameClock().updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
         setAction(ui, btnPlayPause, CommonActions.ACTION_TOGGLE_PAUSED);
 
         Button btnStep = buttonsSimulationControl[1];
@@ -54,21 +54,21 @@ public class DashboardSectionGeneral extends DashboardSection {
         btnStep.setStyle("-fx-background-color: transparent");
         btnStep.setText(null);
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
-        btnStep.disableProperty().bind(ui.facade().gameClock().updatesDisabledProperty().not());
-        setAction(btnStep, () -> ui.facade().gameClock().makeSteps(GameUI_Constants.PROPERTY_SIMULATION_STEPS.get(), true));
+        btnStep.disableProperty().bind(ui.services().gameClock().updatesDisabledProperty().not());
+        setAction(btnStep, () -> ui.services().gameClock().makeSteps(GameUI_Constants.PROPERTY_SIMULATION_STEPS.get(), true));
 
         addIntSpinner("Num Steps", 1, 50, GameUI_Constants.PROPERTY_SIMULATION_STEPS);
         var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
-        setEditor(sliderTargetFPS, ui.facade().gameClock().targetFrameRateProperty());
+        setEditor(sliderTargetFPS, ui.services().gameClock().targetFrameRateProperty());
 
         addDynamicLabeledValue("", () -> "FPS: %.1f (Target: %d)".formatted(
-            ui.facade().gameClock().fps(),
-            ui.facade().gameClock().targetFrameRate()));
-        addDynamicLabeledValue("Total Updates",  ui.facade().gameClock()::pausableUpdatesCount);
+            ui.services().gameClock().fps(),
+            ui.services().gameClock().targetFrameRate()));
+        addDynamicLabeledValue("Total Updates",  ui.services().gameClock()::pausableUpdatesCount);
 
         addColorPicker("Canvas Color", GameUI_Constants.PROPERTY_CANVAS_BACKGROUND_COLOR);
         addCheckBox("Font Smoothing", GameUI_Constants.PROPERTY_CANVAS_FONT_SMOOTHING);
         addCheckBox("Show Debug Info", GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE);
-        addCheckBox("Time Measured", ui.facade().gameClock().timeMeasuredProperty());
+        addCheckBox("Time Measured", ui.services().gameClock().timeMeasuredProperty());
     }
 }

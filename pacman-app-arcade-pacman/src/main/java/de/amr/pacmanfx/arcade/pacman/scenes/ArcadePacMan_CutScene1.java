@@ -37,7 +37,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     
     @Override
     public void onActivate(UIConfig uiConfig) {
-        final SpriteAnimationSet spriteAnimationSet = ui.facade().sprites().animationSet();
+        final SpriteAnimationSet spriteAnimationSet = ui.services().sprites().animationSet();
         pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
         blinky = uiConfig.createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW);
@@ -50,7 +50,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             return;
         }
         if (sceneTick == ANIMATION_START_TICK) {
-            ui.facade().sounds().play(PacManGameSoundID.INTERMISSION_1, 2);
+            ui.services().sounds().play(PacManGameSoundID.INTERMISSION_1, 2);
             startBlinkyChasingPacMan();
         }
         else if (sceneTick == ANIMATION_START_TICK + 260) {

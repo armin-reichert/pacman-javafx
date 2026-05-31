@@ -38,7 +38,7 @@ public class ArcadeMsPacMan_App extends Application {
             .startPage(ArcadeMsPacMan_StartPage::new)
             .build();
 
-        ui.facade().views().playView().dashboard().addCommonSections(ui.facade().translations(), List.of(
+        ui.services().views().playView().dashboard().addCommonSections(ui.services().translations(), List.of(
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,
             CommonDashboardID.SETTINGS_3D,
@@ -48,13 +48,13 @@ public class ArcadeMsPacMan_App extends Application {
             CommonDashboardID.KEYS_LOCAL,
             CommonDashboardID.ABOUT)
         );
-        ui.show();
+        ui.life().show();
     }
 
     @Override
     public void stop() {
         if (ui != null) {
-            ui.terminate();
+            ui.life().terminate();
         }
     }
 }

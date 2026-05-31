@@ -92,7 +92,7 @@ public class DashboardSectionAnimations3D extends DashboardSection {
     public void init(GameUI ui) {
         super.init(ui);
         tableView.prefHeightProperty()
-            .bind(ui.stage().heightProperty().map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
+            .bind(ui.view().stage().heightProperty().map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
     }
 
     @Override
@@ -100,7 +100,7 @@ public class DashboardSectionAnimations3D extends DashboardSection {
         super.update(ui);
 
         //TODO use data binding
-        ui.facade().gameScenes().optCurrentGameScene().ifPresent(gameScene -> currentAnimations.set(observedAnimations(gameScene)));
+        ui.services().gameScenes().optCurrentGameScene().ifPresent(gameScene -> currentAnimations.set(observedAnimations(gameScene)));
         if (currentAnimations.get() == null) {
             tableRows.clear();
             refreshTimer.pause();

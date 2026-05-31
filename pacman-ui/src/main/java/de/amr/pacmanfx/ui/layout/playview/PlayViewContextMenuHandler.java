@@ -27,7 +27,7 @@ public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent
         this.playView = requireNonNull(playView);
 
         //TODO is there a better way to hide the context menu?
-        ui.scene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+        ui.view().scene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (e.getButton() != MouseButton.SECONDARY) {
                 playView.contextMenu().hide();
             }
@@ -39,11 +39,11 @@ public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent
         final ContextMenu menu = playView.contextMenu();
         menu.getItems().clear();
 
-        ui.facade().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
+        ui.services().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             // Add 2D play scene-specific entries
-            if (ui.facade().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_2D)) {
-                addLocalizedTitleItem(menu, ui.facade().translations(), "scene_display");
-                addLocalizedActionItem(menu, ui, ui.facade().translations(), CommonActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
+            if (ui.services().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_2D)) {
+                addLocalizedTitleItem(menu, ui.services().translations(), "scene_display");
+                addLocalizedActionItem(menu, ui, ui.services().translations(), CommonActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
             }
             // Add scene-specific entries
             gameScene.supplyContextMenu().ifPresent(sceneMenu -> menu.getItems().addAll(sceneMenu.getItems()));

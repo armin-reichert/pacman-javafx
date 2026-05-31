@@ -122,7 +122,7 @@ public class GameUI_Builder {
         gameConfigMap.forEach((gameVariant, config) -> {
             final AbstractGameModel game = config.gameModelFactory.get();
             gameBox.registerGame(gameVariant, game);
-            ui.facade().configurations().addConfigFactory(gameVariant, config.uiConfigFactory);
+            ui.services().configurations().addConfigFactory(gameVariant, config.uiConfigFactory);
             if (includeInteractiveTests) {
                 game.flow().addState(new LevelShortTestState<>(gameBox.coinMechanism()));
                 game.flow().addState(new LevelMediumTestState<>());
@@ -130,7 +130,7 @@ public class GameUI_Builder {
             }
         });
 
-        final StartPagesCarousel startPagesCarousel = ui.facade().views().startView();
+        final StartPagesCarousel startPagesCarousel = ui.services().views().startView();
         for (var startPageFactory : startPageFactories) {
             final StartPage startPage = startPageFactory.get();
             if (startPage != null) {

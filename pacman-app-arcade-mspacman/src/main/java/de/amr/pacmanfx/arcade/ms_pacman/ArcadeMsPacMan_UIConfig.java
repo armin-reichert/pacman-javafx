@@ -65,7 +65,7 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
     public void init(GameUI ui) {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
-        initSound(ui.facade().sounds());
+        initSound(ui.services().sounds());
     }
 
     @Override

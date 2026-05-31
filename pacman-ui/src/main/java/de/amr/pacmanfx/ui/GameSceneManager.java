@@ -55,8 +55,8 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     public void updateGameSceneAndForceReload(GameUI ui, boolean forceReload) {
-        final UIConfig currentConfig = ui.facade().currentUIConfig();
-        final Game game = ui.facade().gameContext().game();
+        final UIConfig currentConfig = ui.services().currentUIConfig();
+        final Game game = ui.services().gameContext().game();
         final GameScene prevGameScene = optCurrentGameScene().orElse(null);
         final GameScene nextGameScene = currentConfig.gameSceneConfig().selectGameScene(ui, game).orElseThrow();
 
@@ -66,7 +66,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
         if (prevGameScene != null) {
             prevGameScene.deactivate();
-            removeFromPlayView(ui.facade().views().playView(), prevGameScene);
+            removeFromPlayView(ui.services().views().playView(), prevGameScene);
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
@@ -80,9 +80,9 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     public void quitCurrentGameScene(GameUI ui) {
-        final Game game = ui.facade().gameContext().game();
+        final Game game = ui.services().gameContext().game();
         optCurrentGameScene().ifPresent(_ -> {
-            final CoinMechanism coinMechanism = ui.facade().gameContext().coinMechanism();
+            final CoinMechanism coinMechanism = ui.services().gameContext().coinMechanism();
             //TODO Rethink this
             boolean shouldConsumeCoin = game.flow().state().name().equals("STARTING_GAME_OR_LEVEL")
                 || game.isPlayingLevel();
@@ -92,8 +92,8 @@ public class GameSceneManager implements ChangeListener<GameScene> {
             Logger.info("Quit game scene ({}), returning to start view", gameScene.getClass().getSimpleName());
 
         });
-        ui.stopGame();
-        ui.facade().views().selectStartView();
+        ui.life().stopGame();
+        ui.services().views().selectStartView();
     }
 
     /**
@@ -106,7 +106,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     public boolean hasGameSceneID(GameUI ui, GameScene gameScene, GameSceneConfig.SceneID sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
-        final UIConfig currentConfig = ui.facade().currentUIConfig();
+        final UIConfig currentConfig = ui.services().currentUIConfig();
         return currentConfig.gameSceneConfig().gameSceneHasID(gameScene, sceneID);
     }
 
@@ -204,13 +204,13 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     public void embedGameSceneIntoPlayView(GameUI ui, GameScene gameScene) {
-        final UIConfig currentConfig = ui.facade().currentUIConfig();
-        ui.facade().views().playView().contextMenu().hide();
+        final UIConfig currentConfig = ui.services().currentUIConfig();
+        ui.services().views().playView().contextMenu().hide();
 
         if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameSceneWithSubSceneFX(ui.scene(), ui.facade().views().playView(), gameScene, gameScene.optSubSceneFX().get());
+            embedGameSceneWithSubSceneFX(ui.view().scene(), ui.services().views().playView(), gameScene, gameScene.optSubSceneFX().get());
         } else if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2D(ui.scene(), ui.facade().views().playView(), currentConfig.gameSceneConfig(), gameScene2D);
+            embedGameScene2D(ui.view().scene(), ui.services().views().playView(), currentConfig.gameSceneConfig(), gameScene2D);
         } else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }

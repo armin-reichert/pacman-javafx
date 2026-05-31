@@ -104,7 +104,7 @@ public class ViewManager {
             return;
         }
         if (editorCanOpen.getAsBoolean()) {
-            ui.stopGame();
+            ui.life().stopGame();
             editorView.editor().start();
             currentViewProperty().set(editorView);
         } else {
