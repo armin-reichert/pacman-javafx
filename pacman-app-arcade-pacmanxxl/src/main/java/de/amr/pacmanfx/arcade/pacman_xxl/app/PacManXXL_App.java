@@ -6,14 +6,13 @@ package de.amr.pacmanfx.arcade.pacman_xxl.app;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.core.GameBox;
+import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardSectionCustomMaps;
-import de.amr.pacmanfx.uilib.GameClockFX;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -25,7 +24,7 @@ public class PacManXXL_App extends Application {
     private static final double ASPECT_RATIO    = 1.6;
     private static final double HEIGHT_FRACTION = 0.8;
 
-    private final GameBox gameBox = new GameBox(new GameClockFX(), new CoinMechanism(99));
+    private final GameBox gameBox = new GameBox(new CoinMechanism(99));
     private GameUI ui;
 
     @Override

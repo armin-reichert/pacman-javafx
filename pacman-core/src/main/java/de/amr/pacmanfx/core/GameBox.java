@@ -6,7 +6,6 @@ package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameVariant;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.tinylog.Logger;
@@ -40,14 +39,12 @@ public class GameBox implements GameContext {
     public static final File DEFAULT_CUSTOM_MAP_DIR = new File(DEFAULT_HOME_DIR, "maps");
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
-    private final GameClock clock;
     private final File homeDir = DEFAULT_HOME_DIR;
     private final File customMapDir = DEFAULT_CUSTOM_MAP_DIR;
     private final CoinMechanism coinMechanism;
     private final Map<String, Game> gamesByVariantName = new HashMap<>();
 
-    public GameBox(GameClock clock, CoinMechanism coinMechanism) {
-        this.clock = requireNonNull(clock);
+    public GameBox(CoinMechanism coinMechanism) {
         this.coinMechanism = requireNonNull(coinMechanism);
 
         final boolean ok = validateUserDirs();
@@ -96,11 +93,6 @@ public class GameBox implements GameContext {
     }
 
     // GameContext implementation
-
-    @Override
-    public GameClock clock() {
-        return clock;
-    }
 
     @Override
     public CoinMechanism coinMechanism() {

@@ -90,7 +90,7 @@ public class Arcade_PlayScene2DGameEventHandler extends GameScene.DefaultGameEve
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = facade().gameContext().clock().tickCount();
+        final long tick = facade().gameClock().tickCount();
         facade().currentSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 

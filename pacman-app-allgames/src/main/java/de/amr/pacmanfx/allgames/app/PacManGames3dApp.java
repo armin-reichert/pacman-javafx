@@ -25,15 +25,14 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.ui.ConfigurationsManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
-import de.amr.pacmanfx.ui.ConfigurationsManager;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardSectionCustomMaps;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
-import de.amr.pacmanfx.uilib.GameClockFX;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -92,7 +91,7 @@ public class PacManGames3dApp extends Application {
     public void init() {
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
-        gameBox = new GameBox(new GameClockFX(), new CoinMechanism(99));
+        gameBox = new GameBox(new CoinMechanism(99));
         xxlMapSelector = new PacManXXL_MapSelector(gameBox.customMapDir());
         registerGames();
     }

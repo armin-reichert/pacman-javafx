@@ -227,7 +227,7 @@ public class PlayView implements View {
     }
 
     public void configurePropertyBindings(GameUI ui) {
-        pausedIcon.visibleProperty().bind(ui.facade().gameContext().clock().updatesDisabledProperty());
+        pausedIcon.visibleProperty().bind(ui.facade().gameClock().updatesDisabledProperty());
 
         GameUI_Constants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 

@@ -173,7 +173,7 @@ public class MiniPlaySceneView {
             CommonRenderInfoKey.MAP_BRIGHT, false,
             CommonRenderInfoKey.MAP_EMPTY, level.worldMap().foodLayer().remainingFoodCount() == 0,
             CommonRenderInfoKey.MAP_FLASHING, false,
-            CommonRenderInfoKey.TICK, ui.facade().gameContext().clock().tickCount()
+            CommonRenderInfoKey.TICK, ui.facade().gameClock().tickCount()
         ));
         levelRenderer.applyLevelSettings(level, info);
         levelRenderer.drawLevel(level, info);

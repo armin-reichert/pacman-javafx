@@ -5,7 +5,6 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
@@ -107,7 +106,7 @@ public final class CommonActions {
                 game.flow().state().onExit(game); //TODO exit other states too?
             }
             game.flow().restartStateWithName(CanonicalGameState.INTRO.name());
-            ui.facade().gameContext().clock().start();
+            ui.facade().gameClock().start();
         }
     };
 
@@ -128,7 +127,7 @@ public final class CommonActions {
     public static final GameAction ACTION_SIMULATION_FASTER = new GameAction("simulation_faster") {
         @Override
         protected void doAction(GameUI ui) {
-            final GameClock clock = ui.facade().gameContext().clock();
+            final GameClock clock = ui.facade().gameClock();
             final int newRate = Math.clamp(clock.targetFrameRate() + SIM_SPEED_DELTA, SIM_SPEED_MIN, SIM_SPEED_MAX);
             clock.setTargetFrameRate(newRate);
 
@@ -140,7 +139,7 @@ public final class CommonActions {
     public static final GameAction ACTION_SIMULATION_FASTEST = new GameAction("simulation_fastest") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.facade().gameContext().clock().setTargetFrameRate(SIM_SPEED_MAX);
+            ui.facade().gameClock().setTargetFrameRate(SIM_SPEED_MAX);
             ui.facade().showFlashMessage(Duration.seconds(0.75), "At maximum speed: %d Hz", SIM_SPEED_MAX);
         }
     };
@@ -148,7 +147,7 @@ public final class CommonActions {
     public static final GameAction ACTION_SIMULATION_SLOWER = new GameAction("simulation_slower") {
         @Override
         protected void doAction(GameUI ui) {
-            final GameClock clock = ui.facade().gameContext().clock();
+            final GameClock clock = ui.facade().gameClock();
             final int newRate = Math.clamp(clock.targetFrameRate() - SIM_SPEED_DELTA, SIM_SPEED_MIN, SIM_SPEED_MAX);
             clock.setTargetFrameRate(newRate);
 
@@ -160,7 +159,7 @@ public final class CommonActions {
     public static final GameAction ACTION_SIMULATION_SLOWEST = new GameAction("simulation_slowest") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.facade().gameContext().clock().setTargetFrameRate(SIM_SPEED_MIN);
+            ui.facade().gameClock().setTargetFrameRate(SIM_SPEED_MIN);
             ui.facade().showFlashMessage(Duration.seconds(0.75), "At minimum speed: %d Hz", SIM_SPEED_MIN);
         }
     };
@@ -168,34 +167,34 @@ public final class CommonActions {
     public static final GameAction ACTION_SIMULATION_ONE_STEP = new GameAction("simulation_one_step") {
         @Override
         protected void doAction(GameUI ui) {
-            boolean success = ui.facade().gameContext().clock().makeOneStep(true);
+            boolean success = ui.facade().gameClock().makeOneStep(true);
             if (!success) {
                 ui.facade().showFlashMessage("Simulation step error, clock stopped!");
             }
         }
 
         @Override
-        public boolean isEnabled(GameUI ui) { return ui.facade().gameContext().clock().getUpdatesDisabled(); }
+        public boolean isEnabled(GameUI ui) { return ui.facade().gameClock().getUpdatesDisabled(); }
     };
 
     public static final GameAction ACTION_SIMULATION_TEN_STEPS = new GameAction("simulation_ten_steps") {
         @Override
         protected void doAction(GameUI ui) {
-            boolean success = ui.facade().gameContext().clock().makeSteps(10, true);
+            boolean success = ui.facade().gameClock().makeSteps(10, true);
             if (!success) {
                 ui.facade().showFlashMessage("Simulation step error, clock stopped!");
             }
         }
 
         @Override
-        public boolean isEnabled(GameUI ui) { return ui.facade().gameContext().clock().getUpdatesDisabled(); }
+        public boolean isEnabled(GameUI ui) { return ui.facade().gameClock().getUpdatesDisabled(); }
      };
 
     public static final GameAction ACTION_SIMULATION_RESET = new GameAction("simulation_reset") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.facade().gameContext().clock().setTargetFrameRate(NUM_TICKS_PER_SEC);
-            ui.facade().showFlashMessage(Duration.seconds(0.75), ui.facade().gameContext().clock().targetFrameRate() + "Hz");
+            ui.facade().gameClock().setTargetFrameRate(NUM_TICKS_PER_SEC);
+            ui.facade().showFlashMessage(Duration.seconds(0.75), ui.facade().gameClock().targetFrameRate() + "Hz");
         }
     };
 
@@ -276,14 +275,13 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_PAUSED = new GameAction("toggle_paused") {
         @Override
         protected void doAction(GameUI ui) {
-            final GameContext gameContext = ui.facade().gameContext();
-            toggleBooleanProperty(gameContext.clock().updatesDisabledProperty());
-            if (gameContext.clock().getUpdatesDisabled()) {
+            toggleBooleanProperty(ui.facade().gameClock().updatesDisabledProperty());
+            if (ui.facade().gameClock().getUpdatesDisabled()) {
                 final UIConfig currentConfig = ui.facade().configurations().getOrCreateUIConfig(ui.facade().gameContext().gameVariantName());
                 ui.facade().sounds().stopAll();
                 currentConfig.optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             }
-            Logger.info("Game ({}) {}", ui.facade().gameContext().gameVariantName(), ui.facade().gameContext().clock().getUpdatesDisabled() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", ui.facade().gameContext().gameVariantName(), ui.facade().gameClock().getUpdatesDisabled() ? "paused" : "resumed");
         }
 
         @Override

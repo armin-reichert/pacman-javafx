@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.fsm.State;
+import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 public record GameUI_ServiceFacade(
     GameContext gameContext,
+    GameClock gameClock,
     ConfigurationsManager configurations,
     FlashMessageManager flashMessages,
     GameSceneManager gameScenes,

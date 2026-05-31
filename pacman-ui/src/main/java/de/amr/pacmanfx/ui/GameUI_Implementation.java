@@ -20,6 +20,7 @@ import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.layout.playview.PlayView;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.uilib.GameClockFX;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
@@ -71,6 +72,7 @@ public final class GameUI_Implementation implements GameUI {
         this.customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
         this.facade = new GameUI_ServiceFacade(
             gameBox,
+            new GameClockFX(),
             new ConfigurationsManager(),
             new FlashMessageManager(),
             new GameSceneManager(),
@@ -116,7 +118,7 @@ public final class GameUI_Implementation implements GameUI {
     public void restart() {
         stopGame();
         facade().gameContext().game().flow().restartStateWithName(CanonicalGameState.BOOT.name());
-        Platform.runLater(facade().gameContext().clock()::start);
+        Platform.runLater(facade().gameClock()::start);
     }
 
     @Override
@@ -155,8 +157,8 @@ public final class GameUI_Implementation implements GameUI {
     public void stopGame() {
         facade().gameContext().game().prepareNewGame();
 
-        facade().gameContext().clock().stop();
-        facade().gameContext().clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        facade().gameClock().stop();
+        facade().gameClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
 
         facade.sounds().stopAll();
 
@@ -237,7 +239,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void initGameClock() {
-        final GameClock clock = facade().gameContext().clock();
+        final GameClock clock = facade().gameClock();
         clock.setUpdateAction(() -> {
             final SimulationStep step = facade().gameContext().game().doSimulationStep();
             step.clearInfo(clock.tickCount());
@@ -282,7 +284,7 @@ public final class GameUI_Implementation implements GameUI {
 
         stageTitleBinding = createStringBinding(
             this::computeStageTitle,
-            facade().gameContext().clock().updatesDisabledProperty(),
+            facade().gameClock().updatesDisabledProperty(),
             facade().gameContext().gameVariantNameProperty(),
             facade.views().currentViewProperty(),
             facade.gameScenes().gameSceneProperty(),
@@ -355,7 +357,7 @@ public final class GameUI_Implementation implements GameUI {
 
         final boolean debug = GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE.get();
         final boolean is3D = GameUI_Constants.PROPERTY_3D_ENABLED.get();
-        final boolean paused = facade().gameContext().clock().getUpdatesDisabled();
+        final boolean paused = facade().gameClock().getUpdatesDisabled();
 
         final String normalTitle = appTitle(paused, is3D);
         return (gameScene == null || !debug)
