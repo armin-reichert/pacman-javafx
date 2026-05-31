@@ -45,10 +45,20 @@ public class SubViewManager {
             ui.view().replaceSubView(newView);
             ui.access().flashMessages().clearMessage();
         });
-    }
 
-    public void configureDashboard(List<CommonDashboardID> dashboardIDList, TranslationManager translations) {
-        gamePlayView.dashboard().addCommonSections(translations, dashboardIDList);
+        setEditorCanOpen(() -> {
+            // No editor view exists or editor already selected: cannot open
+            if (editorView == null || isSelected(editorView)) return false;
+
+            if (isSelected(startView)) return true;
+
+            if (isSelected(gamePlayView)) {
+                return !ui.access().currentGame().isPlayingLevel();
+            }
+
+            return false;
+        });
+
     }
 
     public void setGamePlayView(GamePlay_SubView newGamePlayView) {

@@ -222,7 +222,7 @@ public class PacManGames3dApp extends Application {
     private void configureDashboard() {
         final Dashboard dashboard = ui.access().subViews().gamePlayView().dashboard();
 
-        ui.access().subViews().configureDashboard(DASHBOARD_IDs, ui.access().translations());
+        ui.access().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, ui.access().translations());
 
         // Add Joypad controller section
         dashboard.addSection(

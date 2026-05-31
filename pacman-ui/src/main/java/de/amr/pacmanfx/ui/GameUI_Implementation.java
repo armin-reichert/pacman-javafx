@@ -185,30 +185,14 @@ public final class GameUI_Implementation implements GameUI {
         subViewManager.setEditorViewFactory(() -> createEditorSubView(view().stage()));
     }
 
-    private void initView() {
-        view.setIcon(access.currentUIConfig().assets().image("app_icon"));
+    private void initSubViews() {
+        access.subViews().setUI(this);
+        access.subViews().gamePlayView().configurePropertyBindings(this);
+        access.subViews().gamePlayView().dashboard().sections().forEach(section -> section.init(this));
     }
 
-    private void initSubViews() {
-        final SubViewManager subViewManager = access().subViews();
-
-        subViewManager.setUI(this);
-
-        access().subViews().gamePlayView().configurePropertyBindings(this);
-        access().subViews().gamePlayView().dashboard().sections().forEach(section -> section.init(this));
-
-        subViewManager.setEditorCanOpen(() -> {
-            // No editor view exists or editor already selected: cannot open
-            if (subViewManager.optEditorView().isEmpty()) return false;
-            if (subViewManager.isSelected(subViewManager.optEditorView().get())) return false;
-
-            if (subViewManager.isSelected(subViewManager.startView())) return true;
-
-            if (subViewManager.isSelected(subViewManager.gamePlayView())) {
-                return !access().currentGame().isPlayingLevel();
-            }
-            return false;
-        });
+    private void initView() {
+        view.setIcon(access.currentUIConfig().assets().image("app_icon"));
     }
 
     private GamePlay_SubView createGamePlaySubView() {

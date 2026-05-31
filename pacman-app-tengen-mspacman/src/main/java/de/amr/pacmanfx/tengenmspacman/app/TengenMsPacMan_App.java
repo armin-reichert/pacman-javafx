@@ -41,7 +41,7 @@ public class TengenMsPacMan_App extends Application {
             .startPage(TengenMsPacMan_StartPage::new)
             .build();
 
-        ui.access().subViews().configureDashboard(List.of(
+        ui.access().subViews().gamePlayView().configureDashboard(List.of(
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,
             CommonDashboardID.SETTINGS_3D,

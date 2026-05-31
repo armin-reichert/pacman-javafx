@@ -42,7 +42,7 @@ public class PacManXXL_App extends Application {
             .startPage(PacManXXL_StartPage::new)
             .build();
 
-        ui.access().subViews().configureDashboard(List.of(
+        ui.access().subViews().gamePlayView().configureDashboard(List.of(
             CommonDashboardID.README,
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,

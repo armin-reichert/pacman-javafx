@@ -14,12 +14,14 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
+import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.subviews.help.HelpLayer;
 import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
+import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
 import javafx.beans.binding.Bindings;
@@ -34,6 +36,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
+
+import java.util.List;
 
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.border;
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.paintBackground;
@@ -192,6 +196,10 @@ public class GamePlay_SubView implements GameUI_SubView {
         } else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
         }
+    }
+
+    public void configureDashboard(List<CommonDashboardID> dashboardIDList, TranslationManager translations) {
+        dashboard.addCommonSections(translations, dashboardIDList);
     }
 
     // Private
