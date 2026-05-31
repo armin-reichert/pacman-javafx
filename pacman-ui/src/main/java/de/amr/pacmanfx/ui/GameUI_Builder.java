@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
@@ -22,84 +23,65 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Builder for constructing and configuring a {@link GameUI} instance.
- *
- * <p>This class provides a fluent API for assembling all components required
- * to launch the Pac‑Man FX user interface. It allows clients to register
- * multiple game variants, associate each variant with its own game model and
- * UI configuration, define start pages, configure dashboard sections, and
- * optionally enable interactive test modes.</p>
- *
- * <p>The builder separates concerns cleanly:</p>
- * <ul>
- *   <li><strong>Game variant registration</strong> – each variant is mapped to
- *       a factory for creating its {@link AbstractGameModel}, a factory for
- *       creating its {@link UIConfig}, and an optional {@link WorldMapSelector}.</li>
- *
- *   <li><strong>UI composition</strong> – start pages and dashboard sections
- *       are collected and added to the resulting {@link GameUI} during
- *       {@link #build()}.</li>
- *
- *   <li><strong>Optional interactive test states</strong> – when enabled via
- *       {@link #includeInteractiveTests(boolean)}, additional developer‑oriented states
- *       (cutscene tests, mid‑level starts, etc.) are injected into the game’s
- *       state machine. These states do not interfere with normal gameplay and
- *       can only be entered through explicit developer key combinations.</li>
- *
- *   <li><strong>Window configuration</strong> – the builder stores the primary
- *       JavaFX {@link Stage} and initial scene dimensions, ensuring the
- *       resulting UI is initialized with the correct window context.</li>
- * </ul>
- *
- * <p>The builder performs validation before constructing the UI to ensure that
- * all required components are present and that configuration errors are
- * detected early. The resulting {@link GameUI} is fully initialized, with all
- * registered game variants, start pages, dashboards, and optional test modes
- * ready for use.</p>
- *
- * <p>Instances of this builder are created via
- * {@link #newUI(Stage, int, int, de.amr.pacmanfx.core.GameBox)}, after which clients may
- * chain configuration calls before invoking {@link #build()} to obtain the
- * final UI.</p>
  */
 public class GameUI_Builder {
 
-    private record WindowConfig(Stage stage, int sceneWidth, int sceneHeight) {}
+    record WindowConfig(Stage stage, int sceneWidth, int sceneHeight) {}
 
-    private record GameConfig(
+    record GameConfig(
         Supplier<? extends AbstractGameModel> gameModelFactory,
         Supplier<? extends UIConfig> uiConfigFactory,
         WorldMapSelector mapSelector) {}
 
-    public static GameUI_Builder newUI(Stage stage, int mainSceneWidth, int mainSceneHeight, de.amr.pacmanfx.core.GameBox gameBox) {
+    public static GameUI_Builder newUI(
+        Stage stage,
+        int mainSceneWidth,
+        int mainSceneHeight,
+        GameBox gameBox)
+    {
         return new GameUI_Builder(stage, mainSceneWidth, mainSceneHeight, requireNonNull(gameBox));
     }
 
-    private final de.amr.pacmanfx.core.GameBox gameBox;
     private final WindowConfig windowConfig;
+    private final GameBox gameBox;
     private final Map<String, GameConfig> gameConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
     private boolean includeInteractiveTests;
 
-    private GameUI_Builder(Stage stage, int mainSceneWidth, int mainSceneHeight, de.amr.pacmanfx.core.GameBox gameBox) {
+    private GameUI_Builder(
+        Stage stage,
+        int mainSceneWidth,
+        int mainSceneHeight,
+        GameBox gameBox)
+    {
         windowConfig = new WindowConfig(stage, mainSceneWidth, mainSceneHeight);
         this.gameBox = gameBox;
     }
 
+    /**
+     * Example:
+     * <pre>
+     *     game(
+     *      "ARCADE_PACMAN",
+     *      () -> new ArcadePacMan_GameModel(gameBox.coinMechanism(),
+     *
+     * </pre>
+     *
+     */
     public GameUI_Builder game(
-        String variantName,
+        String gameVariantName,
         Supplier<? extends AbstractGameModel> gameModelFactory,
         Supplier<? extends UIConfig> uiConfigFactory,
         WorldMapSelector mapSelector)
     {
-        validateGameVariantName(variantName);
+        validateGameVariantName(gameVariantName);
         if (gameModelFactory == null) {
-            error("Game model factory for game variant '%s' is null".formatted(variantName));
+            error("Game model factory for game variant '%s' is null".formatted(gameVariantName));
         }
         if (uiConfigFactory == null) {
-            error("UI configuration factory for game variant '%s' is null".formatted(variantName));
+            error("UI configuration factory for game variant '%s' is null".formatted(gameVariantName));
         }
-        final GameConfig gameConfig = new GameConfig(gameModelFactory, uiConfigFactory, mapSelector);
-        gameConfigMap.put(variantName, gameConfig);
+        gameConfigMap.put(gameVariantName, new GameConfig(gameModelFactory, uiConfigFactory, mapSelector));
         return this;
     }
 

@@ -5,8 +5,8 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.core.CoinMechanism;
+import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
@@ -14,7 +14,6 @@ import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -66,8 +65,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     private static final float BONUS_EATEN_SECONDS = 2;
 
-    protected final Arcade_GameFlow gameFlow;
-    protected final CoinMechanism coinMechanism;
+    protected Arcade_GameFlow gameFlow;
+    protected CoinMechanism coinMechanism;
 
     protected HeadsUpDisplay hud;
     protected GateKeeper gateKeeper;
@@ -83,9 +82,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     protected Map<Integer, Integer> cutSceneNumberAfterLevelNumber;
 
-    protected Arcade_GameModel(CoinMechanism coinMechanism, File highscoreFile) {
-        super(highscoreFile);
-
+    protected Arcade_GameModel(CoinMechanism coinMechanism) {
         this.coinMechanism = requireNonNull(coinMechanism);
         hud = new HeadsUpDisplay(coinMechanism);
         gameFlow = new Arcade_GameFlow(this);

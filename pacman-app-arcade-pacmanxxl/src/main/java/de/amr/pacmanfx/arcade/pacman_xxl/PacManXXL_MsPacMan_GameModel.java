@@ -11,14 +11,13 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 
-import java.io.File;
 import java.util.Random;
 
 public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
     // Warning: Constructor signature is used via reflection by GameUI_Builder, do not change!
-    public PacManXXL_MsPacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector, File highScoreFile) {
-        super(coinMechanism, mapSelector, highScoreFile);
+    public PacManXXL_MsPacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
+        super(coinMechanism, mapSelector);
     }
 
     @Override

@@ -6,14 +6,16 @@ package de.amr.pacmanfx.arcade.pacman.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.AbstractHuntingTimer;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.HeadsUpDisplay;
+import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -51,18 +53,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         return pacMan;
     }
 
-    /*
-    public static Ghost createGhost(byte personality) {
-        return switch (personality) {
-            case RED_GHOST_SHADOW ->  GhostFactory.createRedGhostShadow("Blinky");
-            case PINK_GHOST_SPEEDY -> GhostFactory.createPinkGhostAmbusher("Pinky");
-            case CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
-            case ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
-            default -> throw new IllegalArgumentException("Illegal ghost personality: %d".formatted(personality));
-        };
-    }
-     */
-
     protected static final List<Vector2i> DEMO_LEVEL_ROUTE = List.of(
         vec2_int(9, 26), vec2_int(9, 29), vec2_int(12,29), vec2_int(12, 32), vec2_int(26,32),
         vec2_int(26,29), vec2_int(24,29), vec2_int(24,26), vec2_int(26,26),  vec2_int(26,23),
@@ -88,19 +78,17 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     /**
      * @param coinMechanism the coin mechanism
-     * @param highScoreFile file where high score is stored
      */
-    public ArcadePacMan_GameModel(CoinMechanism coinMechanism, File highScoreFile) {
-        this(coinMechanism, new ArcadePacMan_MapSelector(), highScoreFile);
+    public ArcadePacMan_GameModel(CoinMechanism coinMechanism) {
+        this(coinMechanism, new ArcadePacMan_MapSelector());
     }
 
     /**
      * @param coinMechanism the coin mechanism
      * @param mapSelector e.g. selector that selects custom maps before standard maps
-     * @param highScoreFile file where high score is stored
      */
-    public ArcadePacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector, File highScoreFile) {
-        super(coinMechanism, highScoreFile);
+    public ArcadePacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
+        super(coinMechanism);
         this.mapSelector = requireNonNull(mapSelector);
         this.levelCounter = new ArcadePacMan_LevelCounter();
         this.demoLevelSteering = new RouteBasedSteering(DEMO_LEVEL_ROUTE);

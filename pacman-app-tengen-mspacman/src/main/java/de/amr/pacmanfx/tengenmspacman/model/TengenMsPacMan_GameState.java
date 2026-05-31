@@ -8,7 +8,6 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import org.tinylog.Logger;
 
 public enum TengenMsPacMan_GameState implements State<Game> {
 
@@ -274,7 +273,6 @@ public enum TengenMsPacMan_GameState implements State<Game> {
 
     TengenMsPacMan_GameState() {
         timer = new TickTimer("Timer-" + name());
-        Logger.info("Game state {} created", name());
     }
 
     TengenMsPacMan_GameModel tengenGame(Game game) {

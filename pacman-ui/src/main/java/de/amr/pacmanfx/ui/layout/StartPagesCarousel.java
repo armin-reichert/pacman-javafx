@@ -68,7 +68,7 @@ public class StartPagesCarousel extends Carousel implements View {
         super(Duration.seconds(PAGE_CHANGE_SECONDS));
         this.ui = requireNonNull(ui);
         selectedIndexProperty().addListener((_, ov, nv) -> {
-            Logger.info("Carousel selection changed from {} to {}", ov, nv);
+            Logger.debug("Carousel selection changed from {} to {}", ov, nv);
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
             if (oldIndex != -1) {
                 pages.get(oldIndex).onExitStartPage(ui);
@@ -146,7 +146,7 @@ public class StartPagesCarousel extends Carousel implements View {
         pages.add(startPage);
         addItem(startPage.layoutRoot());
         setNavigationButtonsVisible(numItems() >= 2);
-        Logger.info("Start page '{}' added", startPage.getClass().getSimpleName());
+        Logger.debug("Start page '{}' added", startPage.getClass().getSimpleName());
     }
 
     private String composeTitle() {

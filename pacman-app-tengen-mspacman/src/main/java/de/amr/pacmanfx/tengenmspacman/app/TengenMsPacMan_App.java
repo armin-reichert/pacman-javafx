@@ -5,12 +5,12 @@ package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.CoinMechanism;
+import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
@@ -39,7 +39,7 @@ public class TengenMsPacMan_App extends Application {
 
         ui = GameUI_Builder
             .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
-            .game(TENGEN_MS_PACMAN, () -> new TengenMsPacMan_GameModel(gameBox.highScoreFile(TENGEN_MS_PACMAN)), TengenMsPacMan_UIConfig::new)
+            .game(TENGEN_MS_PACMAN, TengenMsPacMan_GameModel::new, TengenMsPacMan_UIConfig::new)
             .startPage(TengenMsPacMan_StartPage::new)
             .build();
 

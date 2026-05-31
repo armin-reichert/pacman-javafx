@@ -54,7 +54,7 @@ public interface WorldMapSelector {
             }
             WorldMap.fromURL(url).ifPresentOrElse(worldMap -> {
                 maps.add(worldMap);
-                Logger.info("Map loaded, URL='{}'", url);
+                Logger.debug("Map loaded, URL='{}'", url);
             }, () -> Logger.error("Could not load map from URL {}", url));
         }
         return maps;

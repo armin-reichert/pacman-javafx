@@ -69,25 +69,12 @@ public abstract class AbstractGameModel implements Game {
     protected final Score score = new Score();
 
     /** Persistent high score. */
-    protected final PersistentScore highScore;
+    protected PersistentScore highScore;
 
     /** Score thresholds at which extra lives are awarded. */
     private Set<Integer> extraLifeScores = Set.of();
 
-    /**
-     * Creates a new game model with the given high score file.
-     *
-     * <p>The constructor installs listeners for:
-     * <ul>
-     *   <li>score changes (to detect extra-life thresholds)</li>
-     *   <li>cheat detection (to disable high-score saving)</li>
-     * </ul>
-     *
-     * @param highScoreFile file used for saving and loading the high score
-     */
-    protected AbstractGameModel(File highScoreFile) {
-        requireNonNull(highScoreFile);
-        this.highScore = new PersistentScore(highScoreFile);
+    protected AbstractGameModel() {
 
         score.pointsProperty().addListener((_, oldScore, newScore)
             -> handleScoreChange(oldScore.intValue(), newScore.intValue()));
@@ -97,6 +84,11 @@ public abstract class AbstractGameModel implements Game {
                 handleCheatDetected();
             }
         });
+    }
+
+    public void setHighScoreFile(File highScoreFile) {
+        requireNonNull(highScoreFile);
+        highScore = new PersistentScore(highScoreFile);
     }
 
     /**

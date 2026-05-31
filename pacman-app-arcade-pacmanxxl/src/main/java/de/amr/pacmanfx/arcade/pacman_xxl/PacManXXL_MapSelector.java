@@ -67,7 +67,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                 final Optional<WorldMap> worldMap = WorldMap.fromFile(file);
                 if (worldMap.isPresent()) {
                     customMaps.add(worldMap.get());
-                    Logger.info("Added new custom map from file '{}'", file);
+                    Logger.debug("Added new custom map from file '{}'", file);
                 }
             }
             else if (event.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
@@ -127,7 +127,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
         for (File file : worldMapFiles) {
             WorldMap.fromFile(file).ifPresent(worldMap -> {
                 customMaps.add(worldMap);
-                Logger.info("Custom map loaded from file '{}'", file);
+                Logger.debug("Custom map loaded from file '{}'", file);
             });
         }
     }

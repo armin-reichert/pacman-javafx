@@ -15,7 +15,6 @@ import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -141,19 +140,20 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      * Called via reflection by builder.
      *
      * @param coinMechanism the coin mechanism
-     * @param highScoreFile the high score file
      */
-    public ArcadeMsPacMan_GameModel(CoinMechanism coinMechanism, File highScoreFile) {
-        this(coinMechanism, new ArcadeMsPacMan_MapSelector(), highScoreFile);
+    public ArcadeMsPacMan_GameModel(CoinMechanism coinMechanism) {
+        this(coinMechanism, new ArcadeMsPacMan_MapSelector());
     }
 
-    public ArcadeMsPacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector, File highScoreFile) {
-        super(coinMechanism, highScoreFile);
+    public ArcadeMsPacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
+        super(coinMechanism);
+
         this.mapSelector = requireNonNull(mapSelector);
         this.levelCounter = new ArcadeMsPacMan_LevelCounter();
         this.demoLevelSteering = new RuleBasedPacSteering();
         this.automaticSteering = new RuleBasedPacSteering();
         this.actorSpeedControl = new ArcadeMsPacMan_ActorSpeedControl();
+
         createGateKeeper();
         mapSelector.loadMapPrototypes();
     }

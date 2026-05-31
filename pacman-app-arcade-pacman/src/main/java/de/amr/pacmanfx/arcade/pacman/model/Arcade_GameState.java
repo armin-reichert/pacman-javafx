@@ -7,7 +7,6 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import org.tinylog.Logger;
 
 public enum Arcade_GameState implements State<Game> {
 
@@ -245,7 +244,6 @@ public enum Arcade_GameState implements State<Game> {
 
     Arcade_GameState() {
         timer = new TickTimer("Timer-" + name());
-        Logger.info("Game state {} created", name());
     }
 
     @Override

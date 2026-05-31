@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core;
 
+import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
 import javafx.beans.property.SimpleStringProperty;
@@ -63,9 +64,9 @@ public class GameBox implements GameContext {
         return homeDir;
     }
 
-    public File highScoreFile(GameVariant gameVariant) {
-        requireNonNull(gameVariant);
-        final String fileName = "highscore-%s.xml".formatted(gameVariant.name()).toLowerCase();
+    public File highScoreFile(String gameVariantName) {
+        requireNonNull(gameVariantName);
+        final String fileName = "highscore-%s.xml".formatted(gameVariantName).toLowerCase();
         return new File(homeDir, fileName);
     }
 
@@ -73,17 +74,25 @@ public class GameBox implements GameContext {
      * @param variantName game variant name (e.g. "PACMAN", "MS_PACMAN", "MS_PACMAN_TENGEN", "PACMAN_XXL", "MS_PACMAN_XXL")
      * @param game the game model implementing the game variant
      */
-    public void registerGame(String variantName, Game game) {
+    public void registerGame(String variantName, AbstractGameModel game) {
         requireNonNull(variantName);
         requireNonNull(game);
+
         if (!GAME_VARIANT_NAME_PATTERN.matcher(variantName).matches()) {
             throw new IllegalArgumentException("Game variant name '%s' does not match required syntax '%s'"
                 .formatted(variantName, GAME_VARIANT_NAME_PATTERN));
         }
+
         final Game previousGame = gamesByVariantName.putIfAbsent(variantName, game);
         if (previousGame != null) {
             Logger.warn("Game ({}) is already registered for variant {}", previousGame.getClass().getName(), variantName);
         }
+
+        final File highScoreFile = highScoreFile(variantName);
+        game.setHighScoreFile(highScoreFile);
+
+        Logger.info("Game model {} registered as {}, high score file: {}",
+            game.getClass().getSimpleName(), variantName, highScoreFile);
     }
 
     // GameContext implementation

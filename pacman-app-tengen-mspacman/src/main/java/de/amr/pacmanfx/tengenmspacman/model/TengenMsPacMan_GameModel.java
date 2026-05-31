@@ -17,7 +17,6 @@ import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorSpeedContr
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.List;
@@ -128,9 +127,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private boolean canStartNewGame;
     private int numContinues;
 
-    public TengenMsPacMan_GameModel(File highScoreFile) {
-        super(highScoreFile);
-
+    public TengenMsPacMan_GameModel() {
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
         hud = new TengenMsPacMan_HeadsUpDisplay();
