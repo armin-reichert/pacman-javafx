@@ -106,7 +106,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
     }
 
-    private TengenMsPacMan_GameModel tengenGame() { return services().gameContext().game(); }
+    private TengenMsPacMan_GameModel tengenGame() { return facade().gameContext().game(); }
     
     private void optionValueChanged() {
         ui.facade().sounds().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);

@@ -98,7 +98,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     @Override
     public void onTick(GameClock clock) {
         final UIConfig uiConfig = ui.facade().currentUIConfig();
-        final TengenMsPacMan_GameModel game = services().currentGame();
+        final TengenMsPacMan_GameModel game = facade().currentGame();
         final State<Game> gameState = game.flow().state();
         final long gameStateTick = gameState.timer().tickCount();
 
@@ -167,7 +167,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                     msPacMan.hide();
                 }
                 case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(uiConfig, gameStateTick);
-                case 1500 -> services().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+                case 1500 -> facade().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
                 case TICK_EXPIRES -> game.flow().enterState(TengenMsPacMan_GameState.PREPARING_GAME_START);
             }
         }

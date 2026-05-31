@@ -6,11 +6,9 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.DefaultGameEventListener;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
@@ -42,29 +40,25 @@ public abstract class GameScene implements Disposable {
             this.gameScene = requireNonNull(gameScene);
         }
 
-        public GameScene gameScene() {
-            return gameScene;
+        public GameUI_ServiceFacade facade() {
+            return gameScene.ui().facade();
         }
 
         public GameUI ui() {
             return gameScene.ui();
         }
 
-        public GameContext gameContext() {
-            return gameScene.services().gameContext();
-        }
-
-        public Game game() {
-            return gameContext().game();
+        public GameScene gameScene() {
+            return gameScene;
         }
 
         public Optional<GameLevel> optGameLevel() {
-            return gameContext().game().optGameLevel();
+            return facade().currentGame().optGameLevel();
         }
 
         @Override
         public void onStopAllSounds(StopAllSoundsEvent event) {
-            gameScene.services().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+            gameScene.facade().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
         }
     }
 
@@ -99,7 +93,7 @@ public abstract class GameScene implements Disposable {
         return Optional.empty();
     }
 
-    public GameUI_ServiceFacade services() {
+    public GameUI_ServiceFacade facade() {
         return ui.facade();
     }
 
@@ -114,8 +108,8 @@ public abstract class GameScene implements Disposable {
      * Activates the scene and assigns keyboard bindings.
      */
     public final void activate() {
-        final String gameVariantName = services().gameContext().gameVariantName();
-        onActivate(services().configurations().getOrCreateUIConfig(gameVariantName));
+        final String gameVariantName = facade().gameContext().gameVariantName();
+        onActivate(facade().configurations().getOrCreateUIConfig(gameVariantName));
         Logger.info(actionBindings);
         Logger.trace("Game scene {} activated", getClass().getSimpleName());
     }
@@ -131,7 +125,7 @@ public abstract class GameScene implements Disposable {
     public final void deactivate() {
         onDeactivate();
         actionBindings.dispose();
-        services().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+        facade().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
         Logger.trace("Game scene {} deactivated", getClass().getSimpleName());
     }
 

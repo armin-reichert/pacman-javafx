@@ -45,10 +45,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onTick(GameClock clock) {
-        final Arcade_GameModel game = services().currentGame();
+        final Arcade_GameModel game = facade().currentGame();
         game.optGameLevel().ifPresent(level -> {
             updateLivesCounter(level);
-            services().currentSoundEffects().ifPresent(sfx -> {
+            facade().currentSoundEffects().ifPresent(sfx -> {
                 sfx.setEnabled(!level.isDemoLevel());
                 sfx.playLevelRunningSound(level);
             });
@@ -57,7 +57,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
-        final Game game = services().currentGame();
+        final Game game = facade().currentGame();
         final var menu = new ContextMenu();
         addLocalizedTitleItem(menu, ui.facade().translations(), "pacman");
         addLocalizedCheckBox(menu, ui.facade().translations(), game.cheats().usingAutopilotProperty(), "autopilot").setOnAction(e -> {
@@ -85,7 +85,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onEnteredFrom3DScene() {
-        services().currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
+        facade().currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
     }
 
     // Others
@@ -108,7 +108,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         Logger.info(actionBindings);
 
         ui.facade().sounds().setEnabled(!level.isDemoLevel()); //TODO is this needed?
-        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> services().currentGame().flow().state().expire());
+        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> facade().currentGameState().expire());
 
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         unscaledWidthProperty().set(terrainSize.x());
@@ -121,8 +121,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     // While Pac-Man is not yet visible on level start, one symbol more is shown in the lives counter
     private void updateLivesCounter(GameLevel level) {
-        final Game game = level.game();
-        final int additionalLives = level.game().flow().state() == Arcade_GameState.STARTING_GAME_OR_LEVEL
+        final Game game = facade().currentGame();
+        final int additionalLives = facade().currentGameState() == Arcade_GameState.STARTING_GAME_OR_LEVEL
             && !level.entities().pac().isVisible() ? 1 : 0;
         final int count = Math.clamp(game.lifeCount() - 1 + additionalLives, 0, game.hud().maxLivesDisplayed());
         game.hud().setVisibleLifeCount(count);

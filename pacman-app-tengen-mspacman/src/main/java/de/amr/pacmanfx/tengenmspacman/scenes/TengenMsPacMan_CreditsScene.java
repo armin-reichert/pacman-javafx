@@ -33,14 +33,14 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
-        services().currentGame().hud().hide();
+        facade().currentGame().hud().hide();
         actionBindings.registerFirstBinding(ACTION_ENTER_START_SCREEN, TENGEN_SPECIFIC_BINDINGS);
         fadeProgress = 0;
     }
 
     @Override
     public void onTick(GameClock clock) {
-        final TengenMsPacMan_GameModel game = services().currentGame();
+        final TengenMsPacMan_GameModel game = facade().currentGame();
         final State<Game> gameState = game.flow().state();
         if (gameState.timer().atSecond(DISPLAY_SECONDS)) {
             gameState.expire();

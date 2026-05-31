@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui;
 
+import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
@@ -35,26 +36,26 @@ public record GameUI_ServiceFacade(
         return gameContext.game();
     }
 
-    // UI facade
-
-    public UIConfig getUIConfig(String gameVariantName) {
-        return configurations().getOrCreateUIConfig(gameVariantName);
+    public State<Game> currentGameState() {
+        return gameContext.game().flow().state();
     }
+
+    // UI facade
 
     public UIConfig currentUIConfig() {
         return getUIConfig(gameContext().gameVariantName());
     }
 
-    public void configureDashboard(List<CommonDashboardID> dashboardIDList) {
-        views().playView().dashboard().addCommonSections(translations(), dashboardIDList);
-    }
-
-    public Optional<GameSoundEffects> _optSoundEffects(String gameVariantName) {
-        return configurations().getOrCreateUIConfig(gameVariantName).optSoundEffects();
-    }
-
     public Optional<GameSoundEffects> currentSoundEffects() {
         return configurations().getOrCreateUIConfig(gameContext.gameVariantName()).optSoundEffects();
+    }
+
+    public UIConfig getUIConfig(String gameVariantName) {
+        return configurations().getOrCreateUIConfig(gameVariantName);
+    }
+
+    public void configureDashboard(List<CommonDashboardID> dashboardIDList) {
+        views().playView().dashboard().addCommonSections(translations(), dashboardIDList);
     }
 
     /**
