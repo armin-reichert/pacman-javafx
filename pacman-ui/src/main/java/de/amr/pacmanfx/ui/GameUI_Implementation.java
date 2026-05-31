@@ -260,7 +260,7 @@ public final class GameUI_Implementation implements GameUI {
         scene.rootPane().getChildren().addAll(
             new Region(), // placeholder, will be replaced by current view (start, play, edit)
             statusIconBox.rootPane(),
-            services.flashMessages().rootPane(),
+            services.flashMessages().messageView().rootPane(),
             keyboardInfo.rootPane());
 
         StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
