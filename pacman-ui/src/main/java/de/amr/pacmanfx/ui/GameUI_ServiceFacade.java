@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui;
 
+import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
@@ -23,6 +24,7 @@ import java.util.Optional;
 public record GameUI_ServiceFacade(
     GameContext gameContext,
     GameClock gameClock,
+    DirectoryWatchdog customDirWatchdog,
     ConfigurationsManager configurations,
     FlashMessageManager flashMessages,
     GameSceneManager gameScenes,

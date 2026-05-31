@@ -143,7 +143,7 @@ public class PacManGames3dApp extends Application {
             configureDashboard();
             Logger.info("UI created {} builder {} tests", using(useBuilder), including(includeTests));
 
-            ui.customDirWatchdog().addEventListener(xxlMapSelector);
+            ui.facade().customDirWatchdog().addEventListener(xxlMapSelector);
             ui.show();
         }
         catch (RuntimeException x) {
@@ -221,7 +221,7 @@ public class PacManGames3dApp extends Application {
             .filter(DashboardSectionCustomMaps.class::isInstance)
             .map(DashboardSectionCustomMaps.class::cast)
             .ifPresent(section -> {
-                section.setCustomDirWatchDog(ui.customDirWatchdog());
+                section.setCustomDirWatchDog(ui.facade().customDirWatchdog());
                 section.setMapEditFunction(mapFile -> ui.openWorldMapFileInEditor(mapFile));
             });
     }

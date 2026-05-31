@@ -53,9 +53,6 @@ public final class GameUI_Implementation implements GameUI {
     // Game model access
     private final GameBox gameBox;
 
-    // Observes changes in custom map directory
-    private final DirectoryWatchdog customDirWatchdog;
-
     private final GameUI_ServiceFacade facade;
 
     // UI components
@@ -69,10 +66,11 @@ public final class GameUI_Implementation implements GameUI {
         this.gameBox = requireNonNull(gameBox);
         this.stage = requireNonNull(stage);
         this.scene = new GameUI_MainScene(requireNonNegative(width), requireNonNegative(height));
-        this.customDirWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
+
         this.facade = new GameUI_ServiceFacade(
             gameBox,
             new GameClockFX(),
+            new DirectoryWatchdog(gameBox.customMapDir()),
             new ConfigurationsManager(),
             new FlashMessageManager(),
             new GameSceneManager(),
@@ -88,11 +86,6 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     // GameUI interface
-
-    @Override
-    public DirectoryWatchdog customDirWatchdog() {
-        return customDirWatchdog;
-    }
 
     @Override
     public void openWorldMapFileInEditor(File worldMapFile) {
@@ -179,7 +172,7 @@ public final class GameUI_Implementation implements GameUI {
         facade.sprites().stopAnimationTimer();
         facade.sprites().animationSet().clear();
         facade.flashMessages().stopTimer();
-        customDirWatchdog.dispose();
+        facade.customDirWatchdog().dispose();
     }
 
     // private stuff
@@ -303,7 +296,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private void startServices() {
         Platform.runLater(() -> {
-            customDirWatchdog.startWatching();
+            facade.customDirWatchdog().startWatching();
             facade.flashMessages().startTimer();
             facade.sprites().startAnimationTimer();
         });

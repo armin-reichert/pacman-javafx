@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui;
 
-import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -17,11 +16,6 @@ import java.io.File;
 public interface GameUI {
 
     /**
-     * @return  the watchdog monitoring the directory where user-defined maps are stored.
-     */
-    DirectoryWatchdog customDirWatchdog();
-
-    /**
      * @return  the primary JavaFX stage.
      */
     Stage stage();
@@ -31,8 +25,10 @@ public interface GameUI {
      */
     Scene scene();
 
+    StatusIconBox statusIconBox();
+
     // ---------------------------------------------------------------------------------------------
-    // Services (game context, views, game scenes, flash messages, sound etc.)
+    // Service facade (game context, views, game scenes, flash messages, sound etc.)
     // ---------------------------------------------------------------------------------------------
 
     GameUI_ServiceFacade facade();
@@ -40,8 +36,6 @@ public interface GameUI {
     // ---------------------------------------------------------------------------------------------
     // Lifecycle
     // ---------------------------------------------------------------------------------------------
-
-    StatusIconBox statusIconBox();
 
     /**
      * Stops the current game, including clock, sounds, and active scene.
