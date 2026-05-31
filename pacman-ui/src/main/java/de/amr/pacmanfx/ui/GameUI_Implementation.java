@@ -54,21 +54,21 @@ public final class GameUI_Implementation implements GameUI {
     // All games in a box (only 1,99 €!)
     private final GameBox gameBox;
 
-    private final GameUI_ServicesAccess facade;
+    private final GameUI_ServicesAccess access;
 
-    private final GameUI_View_Implementation viewImpl;
+    private final GameUI_View_Implementation view;
 
-    public GameUI_Implementation(GameBox gameBox, GameUI_View_Implementation viewImpl) {
+    public GameUI_Implementation(GameBox gameBox, GameUI_View_Implementation view) {
         this.gameBox = requireNonNull(gameBox);
-        this.viewImpl = requireNonNull(viewImpl);
+        this.view = requireNonNull(view);
 
-        this.facade = new GameUI_ServicesAccess(
+        this.access = new GameUI_ServicesAccess(
             gameBox,
             new GameClockFX(),
             new DirectoryWatchdog(gameBox.customMapDir()),
             new ConfigurationsManager(),
             new FlashMessageManager(),
-            new GameSceneManager(viewImpl),
+            new GameSceneManager(view),
             new PreferencesManager(GameUI_Implementation.class),
             new SoundManager(),
             new SpriteAnimationManager(),
@@ -83,12 +83,12 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public GameUI_View view() {
-        return viewImpl;
+        return view;
     }
 
     @Override
     public GameUI_ServicesAccess access() {
-        return facade;
+        return access;
     }
 
     // GameUI_Life interface
@@ -129,7 +129,7 @@ public final class GameUI_Implementation implements GameUI {
         initGameVariantAndRegisterChangeHandler();
         load3DAssets();
         initMainScene();
-        view().attachServices(facade);
+        view().attachServices(access);
         initProperties();
         initGameClock();
         initSubViews();
@@ -148,7 +148,7 @@ public final class GameUI_Implementation implements GameUI {
 
         access().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             gameScene.deactivate();
-            access().gameScenes().removeFromPlayView(facade, gameScene);
+            access().gameScenes().removeFromPlayView(access, gameScene);
             access().gameScenes().gameSceneProperty().set(null);
         });
 
@@ -219,7 +219,7 @@ public final class GameUI_Implementation implements GameUI {
         editorView.editor().setOnQuit(_ -> {
             // restore title (editor changed it)
             stage.titleProperty().unbind();
-            stage.titleProperty().bind(viewImpl.stageTitleBindingProperty());
+            stage.titleProperty().bind(view.stageTitleBindingProperty());
             access().selectStartView();
         });
         return editorView;
@@ -321,5 +321,4 @@ public final class GameUI_Implementation implements GameUI {
             Logger.error(reason);
         });
     }
-
 }
