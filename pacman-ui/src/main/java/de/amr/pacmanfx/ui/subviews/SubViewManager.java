@@ -14,7 +14,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 import org.tinylog.Supplier;
 
-import java.io.File;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
@@ -82,31 +81,38 @@ public class SubViewManager {
     }
 
     public void selectStartView() {
+        if (startView == null) {
+            throw new IllegalStateException("No start view has been set");
+        }
         currentSubViewProperty().set(startView);
     }
 
     public void selectGamePlayView() {
+        if (gamePlayView == null) {
+            throw new IllegalStateException("No Game play view has been set");
+        }
         currentSubViewProperty().set(gamePlayView);
     }
 
-    public void createEditorIfNotExisting(File workDir) {
+    public void ensureEditorViewCreated() {
         if (editorView == null) {
             editorView = editorViewFactory.get();
-            editorView.editor().init(workDir);
         }
     }
 
-    public void selectEditorView(GameUI ui) {
+    public boolean trySelectEditorView() {
         if (editorView == null) {
-            Logger.warn("Editor view has not been created yet");
-            return;
+            Logger.info("Editor view has not been created yet");
+            return false;
         }
         if (editorCanOpen.getAsBoolean()) {
-            ui.stopGame();
             editorView.editor().start();
             currentSubViewProperty().set(editorView);
-        } else {
-            Logger.warn("Editor cannot open!");
+            return true;
+        }
+        else {
+            Logger.info("Editor cannot open (maybe already opened?)");
+            return false;
         }
     }
 

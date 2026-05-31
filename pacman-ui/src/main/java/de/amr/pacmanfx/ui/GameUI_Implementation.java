@@ -96,13 +96,17 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void openWorldMapFileInEditor(File worldMapFile) {
-        services.subViews().createEditorIfNotExisting(gameBox.customMapDir());
-        services.subViews().optEditorView().map(Editor_SubView::editor).ifPresent(editor -> {
+        final SubViewManager subViewManager = services.subViews();
+        subViewManager.ensureEditorViewCreated();
+        subViewManager.optEditorView().map(Editor_SubView::editor).ifPresent(editor -> {
+            editor.init(gameBox.customMapDir());
             try {
                 if (worldMapFile != null) {
                     editor.editFile(worldMapFile);
                 }
-                services.subViews().selectEditorView(this);
+                if (subViewManager.trySelectEditorView()) {
+                    stopGame();
+                }
             } catch (IOException x) {
                 Logger.error(x, "Could not open map file {}", worldMapFile);
                 services().showFlashMessage("Cannot open world map file");

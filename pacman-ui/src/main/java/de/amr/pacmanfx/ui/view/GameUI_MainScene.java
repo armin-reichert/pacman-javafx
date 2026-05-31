@@ -16,8 +16,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import org.tinylog.Logger;
 
-import java.util.Objects;
-
 import static java.util.Objects.requireNonNull;
 
 public class GameUI_MainScene extends Scene {
@@ -53,7 +51,8 @@ public class GameUI_MainScene extends Scene {
         actionBindings.registerFirstBinding(CommonActions.ACTION_OPEN_EDITOR,             GameUI_Constants.COMMON_BINDINGS);
         actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUI_Constants.COMMON_BINDINGS);
         actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_MUTED,            GameUI_Constants.COMMON_BINDINGS);
-        Logger.info(actionBindings);
+
+        Logger.info("\n" + actionBindings);
     }
 
     public StackPane rootPane() {
