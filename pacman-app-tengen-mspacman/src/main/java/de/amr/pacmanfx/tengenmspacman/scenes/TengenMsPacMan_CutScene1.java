@@ -15,7 +15,6 @@ import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Joypad;
@@ -89,7 +88,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void onActivate(UIConfig uiConfig) {
+    public void onActivate(AppContext context) {
         final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
@@ -103,24 +102,24 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
+        msPacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
         msPacMan.setSpeed(0);
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
+        pacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
         pacMan.setSpeed(0);
 
-        inky = uiConfig.createGhostWithAnimations(spriteAnimationSet, CYAN_GHOST_BASHFUL);
+        inky = context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, CYAN_GHOST_BASHFUL);
         inky.setMoveDir(Direction.RIGHT);
         inky.setWishDir(Direction.RIGHT);
         inky.setPosition(LEFT_BORDER, UPPER_LANE);
         inky.setSpeed(0);
 
-        pinky = uiConfig.createGhostWithAnimations(spriteAnimationSet, PINK_GHOST_SPEEDY);
+        pinky = context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, PINK_GHOST_SPEEDY);
         pinky.setMoveDir(Direction.LEFT);
         pinky.setWishDir(Direction.LEFT);
         pinky.setPosition(RIGHT_BORDER, LOWER_LANE);

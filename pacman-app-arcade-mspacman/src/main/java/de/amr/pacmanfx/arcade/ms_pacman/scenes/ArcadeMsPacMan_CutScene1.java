@@ -13,7 +13,6 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -74,19 +73,19 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void onActivate(UIConfig uiConfig) {
+    public void onActivate(AppContext context) {
         final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
-        final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
+        final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) context.currentUIConfig().spriteSheet();
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
+        pacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
+        msPacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
 
-        inky = uiConfig.createGhostWithAnimations(spriteAnimationSet, CYAN_GHOST_BASHFUL);
+        inky = context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, CYAN_GHOST_BASHFUL);
 
-        pinky = uiConfig.createGhostWithAnimations(spriteAnimationSet, PINK_GHOST_SPEEDY);
+        pinky = context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, PINK_GHOST_SPEEDY);
 
         heart = new Actor();
         heart.setAnimations(singletonAnimationFacade(spriteSheet.sprite(SpriteID.HEART)));

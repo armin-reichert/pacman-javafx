@@ -13,7 +13,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Joypad;
@@ -64,7 +63,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
-    public void onActivate(UIConfig uiConfig) {
+    public void onActivate(AppContext context) {
         final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
 
         // Quit cut scene when "START" button on "joypad" is pressed
@@ -77,10 +76,10 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
+        msPacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
+        pacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
 
         context.ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
     }

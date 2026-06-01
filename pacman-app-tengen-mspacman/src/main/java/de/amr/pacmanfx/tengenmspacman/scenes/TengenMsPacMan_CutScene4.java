@@ -70,7 +70,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     @Override
-    public void onActivate(UIConfig uiConfig) {
+    public void onActivate(AppContext context) {
         final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
 
         clapperboard = new Clapperboard(4, "THE END");
@@ -79,10 +79,10 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
+        msPacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
+        pacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
 
         juniors = new ArrayList<>();
         juniorCreationTimes = new ArrayList<>();

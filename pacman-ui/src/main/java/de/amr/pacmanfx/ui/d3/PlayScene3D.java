@@ -180,7 +180,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     @Override
-    public void onActivate(UIConfig uiConfig) {
+    public void onActivate(AppContext context) {
         perspectives.activeIDProperty().bind(AppConstants.PROPERTY_3D_PERSPECTIVE_ID);
         PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);

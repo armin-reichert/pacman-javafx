@@ -16,9 +16,8 @@ import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppConstants;
-import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -99,7 +98,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void onActivate(UIConfig uiConfig) {
+    public void onActivate(AppContext context) {
         context.ui().sounds().playVoice(AppConstants.VOICE_EXPLAIN_GAME_START);
 
         actionBindings.registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS); // insert coin + start game actions
@@ -110,12 +109,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
+        pacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
 
-        ghosts[0] = uiConfig.createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW);
-        ghosts[1] = uiConfig.createGhostWithAnimations(spriteAnimationSet, PINK_GHOST_SPEEDY);
-        ghosts[2] = uiConfig.createGhostWithAnimations(spriteAnimationSet, CYAN_GHOST_BASHFUL);
-        ghosts[3] = uiConfig.createGhostWithAnimations(spriteAnimationSet, ORANGE_GHOST_POKEY);
+        ghosts[0] = context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW);
+        ghosts[1] = context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, PINK_GHOST_SPEEDY);
+        ghosts[2] = context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, CYAN_GHOST_BASHFUL);
+        ghosts[3] = context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, ORANGE_GHOST_POKEY);
 
         Arrays.fill(ghostImageVisible, false);
         Arrays.fill(ghostNicknameVisible, false);

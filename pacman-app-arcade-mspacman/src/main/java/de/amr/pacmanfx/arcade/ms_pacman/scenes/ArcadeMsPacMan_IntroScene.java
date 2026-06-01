@@ -18,9 +18,8 @@ import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppConstants;
-import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -70,7 +69,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void onActivate(UIConfig uiConfig) {
+    public void onActivate(AppContext context) {
         final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
 
         context.ui().sounds().playVoice(AppConstants.VOICE_EXPLAIN_GAME_START);
@@ -83,14 +82,14 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         marquee.setBulbOnColor(ARCADE_WHITE);
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
+        msPacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
         msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
 
         ghosts = List.of(
-            uiConfig.createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW),
-            uiConfig.createGhostWithAnimations(spriteAnimationSet, PINK_GHOST_SPEEDY),
-            uiConfig.createGhostWithAnimations(spriteAnimationSet, CYAN_GHOST_BASHFUL),
-            uiConfig.createGhostWithAnimations(spriteAnimationSet, ORANGE_GHOST_POKEY)
+            context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW),
+            context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, PINK_GHOST_SPEEDY),
+            context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, CYAN_GHOST_BASHFUL),
+            context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, ORANGE_GHOST_POKEY)
         );
 
         presentedGhostPersonality = RED_GHOST_SHADOW;

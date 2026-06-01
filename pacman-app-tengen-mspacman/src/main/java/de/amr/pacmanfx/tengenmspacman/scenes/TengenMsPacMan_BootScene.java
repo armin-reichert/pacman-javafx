@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import javafx.scene.paint.Color;
 
@@ -36,10 +35,10 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     }
 
     @Override
-    public void onActivate(UIConfig uiConfig) {
+    public void onActivate(AppContext context) {
         movingText = new Actor();
         movingText.setPosition(TS(9), getUnscaledHeight()); // lower border of screen
-        ghost = uiConfig.createGhostWithAnimations(context.ui().sprites().animationSet(), RED_GHOST_SHADOW);
+        ghost = context.currentUIConfig().createGhostWithAnimations(context.ui().sprites().animationSet(), RED_GHOST_SHADOW);
     }
 
     @Override

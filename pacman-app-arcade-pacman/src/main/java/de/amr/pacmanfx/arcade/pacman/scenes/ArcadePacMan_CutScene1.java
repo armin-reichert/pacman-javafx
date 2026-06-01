@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -36,11 +35,11 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     }
     
     @Override
-    public void onActivate(UIConfig uiConfig) {
+    public void onActivate(AppContext context) {
         final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
-        blinky = uiConfig.createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW);
+        pacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
+        blinky = context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW);
         sceneTick = -1;
     }
 

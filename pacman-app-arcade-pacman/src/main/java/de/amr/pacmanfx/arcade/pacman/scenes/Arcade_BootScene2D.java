@@ -7,7 +7,6 @@ import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 
 /**
@@ -30,7 +29,7 @@ public class Arcade_BootScene2D extends GameScene2D {
     }
 
     @Override
-    public void onActivate(UIConfig uiConfig) {
+    public void onActivate(AppContext context) {
         sceneState = SceneState.BLANK;
     }
 

@@ -15,9 +15,8 @@ import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppConstants;
-import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -122,7 +121,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onActivate(UIConfig uiConfig) {
+    public void onActivate(AppContext context) {
         final TengenMsPacMan_GameModel game = context().currentGame();
         game.hud().score(true).levelCounter(true).livesCounter(true).show();
         game.hud().gameOptions(!game.allOptionsDefault());
