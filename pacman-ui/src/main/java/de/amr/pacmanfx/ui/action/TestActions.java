@@ -27,7 +27,7 @@ public class TestActions {
     public static final GameAction ACTION_SHORT_LEVEL_TEST = new GameAction("short_level_test") {
         @Override
         public void doAction(AppContext context) {
-            context.currentGameFlow().restartStateWithName(LevelShortTestState.class.getSimpleName());
+            context.currentGameFlow().restartState(LevelShortTestState.class.getSimpleName());
             context.shortMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
         }
 
@@ -40,7 +40,7 @@ public class TestActions {
     public static final GameAction ACTION_MEDIUM_LEVEL_TEST = new GameAction("medium_level_test") {
         @Override
         public void doAction(AppContext context) {
-            context.currentGameFlow().restartStateWithName(LevelMediumTestState.class.getSimpleName());
+            context.currentGameFlow().restartState(LevelMediumTestState.class.getSimpleName());
             context.shortMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
         }
 

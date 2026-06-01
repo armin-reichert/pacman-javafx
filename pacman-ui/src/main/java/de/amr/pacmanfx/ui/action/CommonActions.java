@@ -41,7 +41,7 @@ public final class CommonActions {
         protected void doAction(AppContext context) {
             context.gameContext().coinMechanism().setNumCoins(0);
             context.ui().subViews().selectGamePlayView();
-            context.restart();
+            context.restartGame();
         }
     };
 
@@ -109,7 +109,7 @@ public final class CommonActions {
             if (isLevelShortTest) {
                 gameState.onExit(game); //TODO exit other states too?
             }
-            game.flow().restartStateWithName(CanonicalGameState.INTRO.name());
+            game.flow().restartState(CanonicalGameState.INTRO.name());
             context.gameClock().start();
         }
     };

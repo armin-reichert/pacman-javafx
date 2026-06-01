@@ -26,7 +26,7 @@ public interface GameFlow {
 
     void restartState(State<Game> gameState);
 
-    void restartStateWithName(String stateName);
+    void restartState(String stateName);
 
     void update();
 

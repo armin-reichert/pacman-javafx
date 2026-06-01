@@ -157,7 +157,7 @@ public class StateMachine<C> {
         enterState(state);
     }
 
-    public void restartStateWithName(String stateName) {
+    public void restartState(String stateName) {
         optState(stateName).ifPresentOrElse(this::restartState,
             () -> Logger.error("No state named {} found", stateName));
     }

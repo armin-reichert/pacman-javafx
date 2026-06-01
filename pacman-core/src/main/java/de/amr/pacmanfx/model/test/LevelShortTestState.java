@@ -72,7 +72,7 @@ public class LevelShortTestState<GAME extends Game> extends TestState<GAME> {
         else if (timer.atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
                 coinMechanism.setNumCoins(0);
-                game.flow().restartStateWithName(CanonicalGameState.BOOT.name());
+                game.flow().restartState(CanonicalGameState.BOOT.name());
             } else {
                 lock();
                 game.startNextLevel();

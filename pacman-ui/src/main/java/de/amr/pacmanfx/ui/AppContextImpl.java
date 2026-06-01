@@ -132,9 +132,9 @@ public final class AppContextImpl implements AppContext {
     }
 
     @Override
-    public void restart() {
+    public void restartGame() {
         stopGame();
-        currentGameFlow().restartStateWithName(CanonicalGameState.BOOT.name());
+        currentGameFlow().restartState(CanonicalGameState.BOOT.name());
         Platform.runLater(clock::start);
     }
 
