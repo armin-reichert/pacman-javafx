@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.subviews;
 
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.property.BooleanProperty;
@@ -27,8 +27,8 @@ public final class ContextMenuSupport {
 
     public static MenuItem addTitleItem(ContextMenu menu, String itemText) {
         final var text = new Text(itemText);
-        text.setFont(GameUI_Constants.CONTEXT_MENU_DEFAULT_TITLE_FONT);
-        text.setFill(GameUI_Constants.CONTEXT_MENU_DEFAULT_TITLE_COLOR);
+        text.setFont(AppConstants.CONTEXT_MENU_DEFAULT_TITLE_FONT);
+        text.setFill(AppConstants.CONTEXT_MENU_DEFAULT_TITLE_COLOR);
         text.getStyleClass().add("custom-menu-title");
         final var item = new CustomMenuItem(text, false);
         menu.getItems().add(item);

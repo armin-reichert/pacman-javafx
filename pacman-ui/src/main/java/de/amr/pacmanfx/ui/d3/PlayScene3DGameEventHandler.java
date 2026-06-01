@@ -11,7 +11,7 @@ import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
@@ -308,16 +308,16 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
         gameState.lock();
 
-        final PerspectiveID perspectiveBeforeAnimation = GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.get();
+        final PerspectiveID perspectiveBeforeAnimation = AppConstants.PROPERTY_3D_PERSPECTIVE_ID.get();
 
         final Animation resetCameraPerspective = pauseSecThen(2, () -> {
-            GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
+            AppConstants.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
             maze3D.wallBaseHeightProperty().unbind();
         });
 
         final Animation restoreCameraPerspective = Ufx.pauseSecThen(0.25, () -> {
-            GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.set(perspectiveBeforeAnimation);
-            maze3D.wallBaseHeightProperty().bind(GameUI_Constants.PROPERTY_3D_WALL_HEIGHT);
+            AppConstants.PROPERTY_3D_PERSPECTIVE_ID.set(perspectiveBeforeAnimation);
+            maze3D.wallBaseHeightProperty().bind(AppConstants.PROPERTY_3D_WALL_HEIGHT);
         });
 
         final var seq = new SequentialTransition(
@@ -345,7 +345,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         gameScene().optGameLevel3D().ifPresent(level3D -> {
             gameScene().replaceGameLevel3D(level3D.level());
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level3D.level().number());
-            GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
+            AppConstants.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
         });
     }
 

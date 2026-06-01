@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.view;
 
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
@@ -31,7 +31,7 @@ public class GameViewMainScene extends Scene {
     }
 
     public void init(AppContext context) {
-        getStylesheets().add(GameUI_Constants.STYLE_SHEET_PATH);
+        getStylesheets().add(AppConstants.STYLE_SHEET_PATH);
 
         final Input userInput = Input.instance();
 
@@ -47,10 +47,10 @@ public class GameViewMainScene extends Scene {
         setOnScroll(e -> context.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         // Global action bindings
-        actionBindings.registerFirstBinding(CommonActions.ACTION_ENTER_FULLSCREEN,        GameUI_Constants.COMMON_BINDINGS);
-        actionBindings.registerFirstBinding(CommonActions.ACTION_OPEN_EDITOR,             GameUI_Constants.COMMON_BINDINGS);
-        actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameUI_Constants.COMMON_BINDINGS);
-        actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_MUTED,            GameUI_Constants.COMMON_BINDINGS);
+        actionBindings.registerFirstBinding(CommonActions.ACTION_ENTER_FULLSCREEN,        AppConstants.COMMON_BINDINGS);
+        actionBindings.registerFirstBinding(CommonActions.ACTION_OPEN_EDITOR,             AppConstants.COMMON_BINDINGS);
+        actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, AppConstants.COMMON_BINDINGS);
+        actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_MUTED,            AppConstants.COMMON_BINDINGS);
 
         Logger.info("\n" + actionBindings);
     }

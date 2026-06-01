@@ -73,7 +73,7 @@ public final class AppContext_Implementation implements AppContext {
             new GameSceneManager(this),
             new SoundManager(),
             new SpriteAnimationManager(),
-            () -> GameUI_Constants.LOCALIZED_TEXTS,
+            () -> AppConstants.LOCALIZED_TEXTS,
             view,
             new SubViewManager()
         );
@@ -213,7 +213,7 @@ public final class AppContext_Implementation implements AppContext {
     }
 
     private GamePlay_SubView createGamePlaySubView() {
-        final var playView = new GamePlay_SubView(this, GameUI_Constants.DEFAULT_DASHBOARD_CONFIG);
+        final var playView = new GamePlay_SubView(this, AppConstants.DEFAULT_DASHBOARD_CONFIG);
         final ChangeListener<? super Number> playViewResizer = (_,_,_) -> playView.resizeToFit(view.mainScene());
         view.mainScene().widthProperty().addListener(playViewResizer);
         view.mainScene().heightProperty().addListener(playViewResizer);
@@ -264,10 +264,10 @@ public final class AppContext_Implementation implements AppContext {
         final UIConfig currentConfig = currentUIConfig();
 
         final MazeConfig3D mazeConfig3D = currentConfig.worldConfig().maze();
-        GameUI_Constants.PROPERTY_3D_WALL_HEIGHT .set(mazeConfig3D.obstacleBaseHeight());
-        GameUI_Constants.PROPERTY_3D_WALL_OPACITY.set(mazeConfig3D.obstacleOpacity());
+        AppConstants.PROPERTY_3D_WALL_HEIGHT .set(mazeConfig3D.obstacleBaseHeight());
+        AppConstants.PROPERTY_3D_WALL_OPACITY.set(mazeConfig3D.obstacleOpacity());
 
-        ui.sounds().muteProperty().bind(GameUI_Constants.PROPERTY_MUTED);
+        ui.sounds().muteProperty().bind(AppConstants.PROPERTY_MUTED);
 
         view.statusIconBox().rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
             () -> ui.subViews().isSelected(ui.subViews().gamePlayView())
@@ -276,8 +276,8 @@ public final class AppContext_Implementation implements AppContext {
 
         view.mainScene().rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> ui.gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
-                ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
-                : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER,
+                ? AppConstants.WALLPAPERS[RandomNumberSupport.randomInt(0, AppConstants.WALLPAPERS.length)]
+                : AppConstants.BACKGROUND_PAC_MAN_WALLPAPER,
             ui.subViews().selectedSubViewProperty(),
             ui.gameScenes().gameSceneProperty()
         ));

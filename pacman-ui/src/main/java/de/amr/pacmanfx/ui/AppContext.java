@@ -81,6 +81,6 @@ public interface AppContext extends AppLifecycle {
      * @param args    formatting arguments
      */
     default void shortMessage(String message, Object... args) {
-        shortMessage(GameUI_Constants.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
+        shortMessage(AppConstants.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
 }

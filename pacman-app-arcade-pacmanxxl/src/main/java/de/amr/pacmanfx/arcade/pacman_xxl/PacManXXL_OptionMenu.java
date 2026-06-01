@@ -7,7 +7,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
@@ -122,7 +122,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         // Init menu items
         entryGameVariant.setValue(gameVariant);
-        entryPlay3D.setValue(GameUI_Constants.PROPERTY_3D_ENABLED.get());
+        entryPlay3D.setValue(AppConstants.PROPERTY_3D_ENABLED.get());
         entryCutScenesEnabled.setValue(game.flow().cutScenesEnabled());
         entryMapOrder.setValue(mapSelector.selectionMode());
         entryMapOrder.setEnabled(!mapSelector.customMaps().isEmpty());

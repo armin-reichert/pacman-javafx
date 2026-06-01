@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
@@ -37,8 +37,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import static de.amr.pacmanfx.core.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUI_Constants.PROPERTY_3D_DRAW_MODE;
-import static de.amr.pacmanfx.ui.GameUI_Constants.PROPERTY_3D_LIGHT_COLOR;
+import static de.amr.pacmanfx.ui.AppConstants.PROPERTY_3D_DRAW_MODE;
+import static de.amr.pacmanfx.ui.AppConstants.PROPERTY_3D_LIGHT_COLOR;
 import static de.amr.pacmanfx.ui.action.CommonActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
@@ -150,7 +150,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         level3D.startLivesCounterTrackingPac();
         level3DParent.getChildren().setAll(level3D);
 
-        level3D.createAnimations(GameUI_Constants.DEFAULT_PARTICLE_ANIMATION_CONFIG);
+        level3D.createAnimations(AppConstants.DEFAULT_PARTICLE_ANIMATION_CONFIG);
 
         Logger.info("Created and added new 3D game level to play scene");
     }
@@ -181,7 +181,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
-        perspectives.activeIDProperty().bind(GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID);
+        perspectives.activeIDProperty().bind(AppConstants.PROPERTY_3D_PERSPECTIVE_ID);
         PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
     }
@@ -247,7 +247,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         subScene.setCamera(camera);
 
         final var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(GameUI_Constants.PROPERTY_3D_AXES_VISIBLE);
+        coordinateSystem.visibleProperty().bind(AppConstants.PROPERTY_3D_AXES_VISIBLE);
 
         ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);
@@ -282,7 +282,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         scores3D = new Scores3D(
             context().ui().translations().translate("score.score"),
             context().ui().translations().translate("score.high_score"),
-            GameUI_Constants.FONT_ARCADE_8);
+            AppConstants.FONT_ARCADE_8);
 
         scores3D.textOpacity.bind(scoreOpacity);
 

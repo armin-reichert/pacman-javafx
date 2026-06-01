@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
@@ -69,8 +69,8 @@ public final class CommonActions {
     public static final GameAction ACTION_PERSPECTIVE_NEXT = new GameAction("perspective_next") {
         @Override
         protected void doAction(AppContext context) {
-            PerspectiveID id = GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.get().next();
-            GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.set(id);
+            PerspectiveID id = AppConstants.PROPERTY_3D_PERSPECTIVE_ID.get().next();
+            AppConstants.PROPERTY_3D_PERSPECTIVE_ID.set(id);
             String msgKey = context.ui().translations().translate("camera_perspective",
                 context.ui().translations().translate("perspective_id_" + id.name()));
             context.shortMessage(msgKey);
@@ -80,8 +80,8 @@ public final class CommonActions {
     public static final GameAction ACTION_PERSPECTIVE_PREVIOUS = new GameAction("perspective_previous") {
         @Override
         protected void doAction(AppContext context) {
-            PerspectiveID id = GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.get().prev();
-            GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.set(id);
+            PerspectiveID id = AppConstants.PROPERTY_3D_PERSPECTIVE_ID.get().prev();
+            AppConstants.PROPERTY_3D_PERSPECTIVE_ID.set(id);
             String msgKey = context.ui().translations().translate("camera_perspective",
                 context.ui().translations().translate("perspective_id_" + id.name()));
             context.shortMessage(msgKey);
@@ -240,30 +240,30 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_DEBUG_INFO = new GameAction("toggle_debug_info") {
         @Override
         protected void doAction(AppContext context) {
-            toggleBooleanProperty(GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE);
+            toggleBooleanProperty(AppConstants.PROPERTY_DEBUG_INFO_VISIBLE);
         }
     };
 
     public static final GameAction ACTION_TOGGLE_DRAW_MODE = new GameAction("toggle_draw_mode") {
         @Override
         protected void doAction(AppContext context) {
-            GameUI_Constants.PROPERTY_3D_DRAW_MODE.set(GameUI_Constants.PROPERTY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+            AppConstants.PROPERTY_3D_DRAW_MODE.set(AppConstants.PROPERTY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
         }
     };
 
     public static final GameAction ACTION_TOGGLE_KEYBOARD_MONITOR = new GameAction("toggle_keyboard_monitor") {
         @Override
         protected void doAction(AppContext context) {
-            toggleBooleanProperty(GameUI_Constants.PROPERTY_KEYBOARD_MONITOR_VISIBLE);
+            toggleBooleanProperty(AppConstants.PROPERTY_KEYBOARD_MONITOR_VISIBLE);
         }
     };
 
     public static final GameAction ACTION_TOGGLE_MINI_VIEW_VISIBILITY = new GameAction("toggle_mini_view_visibility") {
         @Override
         protected void doAction(AppContext context) {
-            toggleBooleanProperty(GameUI_Constants.PROPERTY_MINI_VIEW_ON);
+            toggleBooleanProperty(AppConstants.PROPERTY_MINI_VIEW_ON);
             if (!context.ui().gameScenes().currentGameSceneHasID(context, CommonSceneID.PLAY_SCENE_3D)) {
-                context.shortMessage(context.ui().translations().translate(GameUI_Constants.PROPERTY_MINI_VIEW_ON.get()
+                context.shortMessage(context.ui().translations().translate(AppConstants.PROPERTY_MINI_VIEW_ON.get()
                     ? "pip_on" : "pip_off"));
             }
         }
@@ -272,7 +272,7 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_MUTED = new GameAction("toggle_muted") {
         @Override
         protected void doAction(AppContext context) {
-            GameUI_Constants.PROPERTY_MUTED.set(!GameUI_Constants.PROPERTY_MUTED.get());
+            AppConstants.PROPERTY_MUTED.set(!AppConstants.PROPERTY_MUTED.get());
         }
     };
 
@@ -297,8 +297,8 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction("toggle_play_scene_2d_3d") {
         @Override
         protected void doAction(AppContext context) {
-            toggleBooleanProperty(GameUI_Constants.PROPERTY_3D_ENABLED);
-            final boolean is3DEnabled = GameUI_Constants.PROPERTY_3D_ENABLED.get();
+            toggleBooleanProperty(AppConstants.PROPERTY_3D_ENABLED);
+            final boolean is3DEnabled = AppConstants.PROPERTY_3D_ENABLED.get();
             if (!inPlayScene(context)) {
                 context.shortMessage(context.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
             }

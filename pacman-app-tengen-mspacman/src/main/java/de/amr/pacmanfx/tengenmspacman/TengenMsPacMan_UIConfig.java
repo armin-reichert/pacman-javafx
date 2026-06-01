@@ -43,7 +43,7 @@ import org.tinylog.Logger;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.GameUI_Constants.PROPERTY_CANVAS_BACKGROUND_COLOR;
+import static de.amr.pacmanfx.ui.AppConstants.PROPERTY_CANVAS_BACKGROUND_COLOR;
 
 public class TengenMsPacMan_UIConfig implements UIConfig {
 

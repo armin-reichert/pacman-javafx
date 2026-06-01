@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
@@ -246,7 +246,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     private void embedGameScene2D(GameView gameUIView, GamePlay_SubView playView, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
         final DecorationPane decorationPane = playView.gameSceneFrame();
 
-        gameScene2D.backgroundColorProperty().bind(GameUI_Constants.PROPERTY_CANVAS_BACKGROUND_COLOR);
+        gameScene2D.backgroundColorProperty().bind(AppConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
 
         final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene2D);
         if (decorated) {

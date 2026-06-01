@@ -36,9 +36,9 @@ import static de.amr.pacmanfx.ui.action.CommonActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.createImageBackground;
 
-public class GameUI_Constants {
+public class AppConstants {
 
-    private GameUI_Constants() {}
+    private AppConstants() {}
 
     public static final int MIN_STAGE_WIDTH  = 280;
 

@@ -16,7 +16,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
@@ -47,7 +47,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
 import static de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplayMode.SCROLLING;
-import static de.amr.pacmanfx.ui.GameUI_Constants.PROPERTY_CANVAS_BACKGROUND_COLOR;
+import static de.amr.pacmanfx.ui.AppConstants.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.subviews.ContextMenuSupport.*;
 import static java.util.Objects.requireNonNull;
@@ -183,7 +183,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         addLocalizedCheckBox(menu, translationManager, game.cheats().usingAutopilotProperty(), "autopilot");
         addLocalizedCheckBox(menu, translationManager, game.cheats().immuneProperty(), "immunity");
         addSeparator(menu);
-        addLocalizedCheckBox(menu, translationManager, GameUI_Constants.PROPERTY_MUTED, "muted");
+        addLocalizedCheckBox(menu, translationManager, AppConstants.PROPERTY_MUTED, "muted");
         addLocalizedActionItem(menu, context, translationManager, ACTION_QUIT_GAME_SCENE, "quit");
 
         return Optional.of(menu);
@@ -208,7 +208,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         } else {
             // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
             actionBindings.registerAllBindings(STEERING_BINDINGS);
-            actionBindings.registerAllBindings(GameUI_Constants.CHEAT_ACTION_BINDINGS);
+            actionBindings.registerAllBindings(AppConstants.CHEAT_ACTION_BINDINGS);
             actionBindings.registerFirstBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
             actionBindings.registerFirstBinding(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
         }

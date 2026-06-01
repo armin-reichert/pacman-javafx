@@ -125,7 +125,7 @@ public class GameUI_Builder {
         return new GameViewImplementation(
             stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
-            new StatusIconBox(() -> GameUI_Constants.LOCALIZED_TEXTS)
+            new StatusIconBox(() -> AppConstants.LOCALIZED_TEXTS)
         );
     }
 

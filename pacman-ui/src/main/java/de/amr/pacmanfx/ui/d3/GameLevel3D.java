@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.config.BonusConfig;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
@@ -288,9 +288,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         entitySet.maze3D = uiConfig.factory3D().createMaze3D(terrain, uiConfig.worldConfig(), colorScheme, animationRegistry);
-        entitySet.maze3D.wallOpacityProperty().bind(GameUI_Constants.PROPERTY_3D_WALL_OPACITY);
-        entitySet.maze3D.wallBaseHeightProperty().bind(GameUI_Constants.PROPERTY_3D_WALL_HEIGHT);
-        entitySet.maze3D.floorColorProperty().bind(GameUI_Constants.PROPERTY_3D_FLOOR_COLOR);
+        entitySet.maze3D.wallOpacityProperty().bind(AppConstants.PROPERTY_3D_WALL_OPACITY);
+        entitySet.maze3D.wallBaseHeightProperty().bind(AppConstants.PROPERTY_3D_WALL_HEIGHT);
+        entitySet.maze3D.floorColorProperty().bind(AppConstants.PROPERTY_3D_FLOOR_COLOR);
         entitySet.add(entitySet.maze3D);
     }
 

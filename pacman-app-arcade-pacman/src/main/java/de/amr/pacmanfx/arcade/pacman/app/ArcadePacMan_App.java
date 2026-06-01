@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppContext_Implementation;
 import de.amr.pacmanfx.ui.GameUI_Builder;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
 import de.amr.pacmanfx.ui.view.GameViewMainScene;
@@ -105,7 +105,7 @@ public class ArcadePacMan_App extends Application {
         return new GameViewImplementation(
             stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
-            new StatusIconBox(() -> GameUI_Constants.LOCALIZED_TEXTS)
+            new StatusIconBox(() -> AppConstants.LOCALIZED_TEXTS)
         );
     }
 

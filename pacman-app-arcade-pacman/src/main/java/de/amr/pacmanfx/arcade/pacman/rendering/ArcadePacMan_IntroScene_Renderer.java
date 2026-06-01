@@ -7,7 +7,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -77,7 +77,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
             }
             default -> {}
         }
-        if (GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (AppConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }

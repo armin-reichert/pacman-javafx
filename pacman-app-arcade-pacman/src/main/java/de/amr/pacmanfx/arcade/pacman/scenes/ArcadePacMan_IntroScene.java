@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
@@ -100,10 +100,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
-        context.ui().sounds().playVoice(GameUI_Constants.VOICE_EXPLAIN_GAME_START);
+        context.ui().sounds().playVoice(AppConstants.VOICE_EXPLAIN_GAME_START);
 
         actionBindings.registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS); // insert coin + start game actions
-        actionBindings.registerAllBindings(GameUI_Constants.SCENE_TESTS_BINDINGS); // actions for starting tests
+        actionBindings.registerAllBindings(AppConstants.SCENE_TESTS_BINDINGS); // actions for starting tests
 
         blinking = new Pulse(10, Pulse.State.ON);
 

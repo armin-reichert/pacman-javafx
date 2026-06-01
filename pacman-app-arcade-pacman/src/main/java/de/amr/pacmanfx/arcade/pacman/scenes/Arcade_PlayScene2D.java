@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -77,7 +77,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
             }
         });
         addSeparator(menu);
-        addLocalizedCheckBox(menu, context.ui().translations(), GameUI_Constants.PROPERTY_MUTED, "muted");
+        addLocalizedCheckBox(menu, context.ui().translations(), AppConstants.PROPERTY_MUTED, "muted");
         addLocalizedActionItem(menu, context, context.ui().translations(), CommonActions.ACTION_QUIT_GAME_SCENE, "quit");
 
         return Optional.of(menu);
@@ -102,8 +102,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
     protected void acceptGameLevel(GameLevel level) {
         actionBindings.registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         if (!level.isDemoLevel()) {
-            actionBindings.registerAllBindings(GameUI_Constants.STEERING_ACTION_BINDINGS);
-            actionBindings.registerAllBindings(GameUI_Constants.CHEAT_ACTION_BINDINGS);
+            actionBindings.registerAllBindings(AppConstants.STEERING_ACTION_BINDINGS);
+            actionBindings.registerAllBindings(AppConstants.CHEAT_ACTION_BINDINGS);
         }
         Logger.info(actionBindings);
 
