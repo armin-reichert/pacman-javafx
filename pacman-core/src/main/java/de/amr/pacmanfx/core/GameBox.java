@@ -117,7 +117,7 @@ public class GameBox implements GameContext {
     }
 
     @Override
-    public <G extends Game> G game() {
+    public <G extends AbstractGameModel> G gameModel() {
         final String variantName = gameVariantName();
         return variantName == null ? null : gameForVariant(variantName);
     }

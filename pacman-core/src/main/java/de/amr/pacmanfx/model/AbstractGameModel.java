@@ -131,7 +131,7 @@ public abstract class AbstractGameModel implements Game {
      * @param level the current level
      * @param tile  the tile containing the pellet
      */
-    protected abstract void eatPellet(GameLevel level, Vector2i tile);
+    public abstract void eatPellet(GameLevel level, Vector2i tile);
 
     /**
      * Called when Pac-Man eats an energizer.
@@ -139,7 +139,7 @@ public abstract class AbstractGameModel implements Game {
      * @param level the current level
      * @param tile  the tile containing the energizer
      */
-    protected abstract void eatEnergizer(GameLevel level, Vector2i tile);
+    public abstract void eatEnergizer(GameLevel level, Vector2i tile);
 
     /**
      * Called when Pac-Man eats a bonus item (fruit).
@@ -147,7 +147,7 @@ public abstract class AbstractGameModel implements Game {
      * @param level the current level
      * @param bonus the bonus actor
      */
-    protected abstract void eatBonus(GameLevel level, Bonus bonus);
+    public abstract void eatBonus(GameLevel level, Bonus bonus);
 
     /**
      * Determines whether Pac-Man is safe from being killed during demo mode.

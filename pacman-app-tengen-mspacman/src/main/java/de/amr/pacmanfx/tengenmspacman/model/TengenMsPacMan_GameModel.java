@@ -569,7 +569,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    protected void eatPellet(GameLevel level, Vector2i tile) {
+    public void eatPellet(GameLevel level, Vector2i tile) {
         requireNonNull(level);
         requireNonNull(tile);
 
@@ -605,7 +605,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    protected void eatBonus(GameLevel level, Bonus bonus) {
+    public void eatBonus(GameLevel level, Bonus bonus) {
         scorePoints(level, bonus.points());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
         bonus.showEatenForSeconds(BONUS_EATEN_SECONDS);

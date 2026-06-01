@@ -199,7 +199,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             highScore.load();
             highScore.setEnabled(true);
         } catch (IOException x) {
-            Logger.error(x, "Error loading highscore file {}", highScore.file().getAbsolutePath());
+            Logger.error(x, "Error loading high-score file {}", highScore.file().getAbsolutePath());
         }
         gateKeeper.reset();
         levelProperty().set(null);
@@ -351,7 +351,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    protected void eatBonus(GameLevel level, Bonus bonus) {
+    public void eatBonus(GameLevel level, Bonus bonus) {
         scorePoints(level, bonus.points());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
         bonus.showEatenForSeconds(BONUS_EATEN_SECONDS);

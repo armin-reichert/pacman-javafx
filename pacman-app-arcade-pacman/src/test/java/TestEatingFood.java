@@ -28,19 +28,17 @@ public class TestEatingFood {
     static void setup() {
         final String variantName = GameVariant.ARCADE_PACMAN.name();
         gameBox = new GameBox(CoinMechanism.OUT_OF_SERVICE);
-        gameBox.registerGame(variantName, new ArcadePacMan_GameModel(gameBox.coinMechanism()));
-        gameBox.gameVariantNameProperty().set(variantName);
+        gameBox.registerGame(variantName, new ArcadePacMan_GameModel(CoinMechanism.OUT_OF_SERVICE));
+        gameBox.select(variantName);
     }
 
     @BeforeEach
     public void createGameLevel() {
-        gameBox.game().buildNormalLevel(1);
+        gameBox.gameModel().buildNormalLevel(1);
     }
 
-    private ArcadePacMan_GameModel theGame() { return gameBox.game(); }
-
     private GameLevel theGameLevel() {
-        return theGame().optGameLevel().orElseThrow();
+        return gameBox.gameModel().optGameLevel().orElseThrow();
     }
 
     private void eatNextPellet() {
@@ -50,7 +48,7 @@ public class TestEatingFood {
             .filter(not(foodLayer::isEnergizerTile))
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                theGame().eatPellet(theGameLevel(), tile);
+                gameBox.gameModel().eatPellet(theGameLevel(), tile);
             });
     }
 
@@ -60,7 +58,7 @@ public class TestEatingFood {
             .filter(foodLayer::hasFoodAtTile)
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                theGame().eatEnergizer(level, tile);
+                gameBox.gameModel().eatEnergizer(level, tile);
             });
     }
 
@@ -87,11 +85,11 @@ public class TestEatingFood {
     public void testLevelCompletion() {
         final GameLevel level = theGameLevel();
         while (level.worldMap().foodLayer().remainingFoodCount() > 0) {
-            assertFalse(theGame().isLevelCompleted());
+            assertFalse(gameBox.gameModel().isLevelCompleted());
             eatNextPellet();
             eatNextEnergizer(level);
         }
-        assertTrue(theGame().isLevelCompleted());
+        assertTrue(gameBox.gameModel().isLevelCompleted());
     }
 
     @Test

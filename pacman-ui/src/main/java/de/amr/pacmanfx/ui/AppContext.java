@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameFlow;
 import de.amr.pacmanfx.model.GameLevel;
@@ -30,8 +31,8 @@ public interface AppContext extends GameUI_Life {
         return gameContext().gameVariantName();
     }
 
-    default <T extends Game> T currentGame() {
-        return gameContext().game();
+    default <T extends AbstractGameModel> T currentGame() {
+        return gameContext().gameModel();
     }
 
     default Optional<GameLevel> optCurrentGameLevel() {

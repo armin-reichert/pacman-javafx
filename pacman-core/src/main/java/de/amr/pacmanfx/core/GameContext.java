@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.core;
 
+import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.Game;
 import javafx.beans.property.StringProperty;
 
@@ -33,7 +34,7 @@ public interface GameContext {
      * @param variantName the name of the game variant to select (must not be {@code null})
      * @throws IllegalArgumentException if no game with the given name is registered
      */
-    default void setGameVariantName(String variantName) {
+    default void select(String variantName) {
         requireNonNull(variantName);
         if (hasGameForVariantName(variantName)) {
             gameVariantNameProperty().set(variantName);
@@ -77,7 +78,7 @@ public interface GameContext {
      * @return the game model of the active game variant
      * @throws ClassCastException if the registered game model type does not match the expected type
      */
-    <T extends Game> T game();
+    <T extends AbstractGameModel> T gameModel();
 
     /**
      * Returns the coin mechanism associated with the game box.
