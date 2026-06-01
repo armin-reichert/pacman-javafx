@@ -412,28 +412,46 @@ public abstract class AbstractGameModel implements Game {
      * @param level the current game level
      */
     protected void doHuntingStep(GameLevel level) {
-        boolean quitHunting = false;
+        level.blinking().doTick();
 
         final Pac pac = level.entities().pac();
         final List<Ghost> ghosts = level.entities().ghosts();
         final Bonus bonus = level.entities().optBonus().orElse(null);
 
-        detectCollisions(level, pac, ghosts, bonus);
-
-        level.blinking().doTick();
-        level.entities().forEach(e -> e.update(level));
-
-        // double-check should minimize collision missing
+        boolean quitHunting;
         if (isCollisionDoubleChecked()) {
-            detectCollisions(level, pac, ghosts, bonus);
+            quitHunting = evalCollisions(level, pac, ghosts, bonus);
+            if (!quitHunting) {
+                level.entities().forEach(e -> e.update(level));
+                quitHunting = evalCollisions(level, pac, ghosts, bonus);
+            }
+        } else {
+            level.entities().forEach(e -> e.update(level));
+            quitHunting = evalCollisions(level, pac, ghosts, bonus);
         }
 
+        if (quitHunting) {
+            Logger.info("Hunting has been stopped!");
+            return;
+        }
+
+        checkFoodFound(level, pac);
+        checkBonusFound(level);
+
+        if (!isLevelCompleted()) {
+            updatePacPower(level, pac);
+            level.huntingTimer().update(level.number());
+        }
+    }
+
+    private boolean evalCollisions(GameLevel level, Pac pac, List<Ghost> ghosts, Bonus bonus) {
+        detectCollisions(level, pac, ghosts, bonus);
         if (!simStep.ghostsCollidingWithPac.isEmpty()) {
             // Is Pac getting killed after the collision with a ghost?
             // He might stay alive if immune or in level's safe phase!
             checkPacKilled(level, pac);
             if (hasPacManBeenKilled()) {
-                quitHunting = true;
+                return true;
             }
             else {
                 // Frightened ghosts get killed when colliding with Pac
@@ -443,7 +461,7 @@ public abstract class AbstractGameModel implements Game {
                 // More than one ghost might have been killed in this step
                 simStep.ghostsKilled.forEach(this::onEatGhost);
                 if (hasGhostBeenKilled()) {
-                    quitHunting = true;
+                    return true;
                 }
             }
 
@@ -461,18 +479,7 @@ public abstract class AbstractGameModel implements Game {
             });
         }
 
-        if (quitHunting) {
-            Logger.info("Hunting has been stopped");
-            return;
-        }
-
-        checkFoodFound(level, pac);
-        checkBonusFound(level);
-
-        if (!isLevelCompleted()) {
-            updatePacPower(level, pac);
-            level.huntingTimer().update(level.number());
-        }
+        return false;
     }
 
     /**
