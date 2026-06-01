@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
-import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.ui.config.ConfigurationsManager;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;

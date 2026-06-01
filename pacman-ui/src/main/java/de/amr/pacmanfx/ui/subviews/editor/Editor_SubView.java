@@ -5,8 +5,8 @@ package de.amr.pacmanfx.ui.subviews.editor;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
+import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.Region;

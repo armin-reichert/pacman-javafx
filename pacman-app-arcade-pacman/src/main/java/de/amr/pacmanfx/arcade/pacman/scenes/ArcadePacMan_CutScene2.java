@@ -8,9 +8,9 @@ import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
-import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
+import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -19,9 +19,9 @@ import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
+import static de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.core.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.core.Globals.TS;
-import static de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel.createPacMan;
 
 /**
  * Second cut scene in Arcade Pac-Man game:<br>

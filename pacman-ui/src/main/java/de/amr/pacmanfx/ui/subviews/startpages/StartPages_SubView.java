@@ -6,11 +6,11 @@ package de.amr.pacmanfx.ui.subviews.startpages;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
-import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
+import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
 import javafx.geometry.Insets;
@@ -22,8 +22,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-//import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
-//import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -34,6 +32,9 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static java.util.Objects.requireNonNull;
+
+//import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+//import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).

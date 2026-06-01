@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.input;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
-import org.tinylog.Logger;
 
 import java.util.*;
 

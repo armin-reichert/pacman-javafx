@@ -4,9 +4,9 @@
 package de.amr.pacmanfx.ui.d2;
 
 import de.amr.pacmanfx.core.Globals;
-import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
