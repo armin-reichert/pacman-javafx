@@ -17,8 +17,8 @@ import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
-import de.amr.pacmanfx.ui.view.GameUI_MainScene;
-import de.amr.pacmanfx.ui.view.GameView_Implementation;
+import de.amr.pacmanfx.ui.view.GameViewMainScene;
+import de.amr.pacmanfx.ui.view.GameViewImplementation;
 import de.amr.pacmanfx.ui.view.StatusIconBox;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -101,10 +101,10 @@ public class ArcadePacMan_App extends Application {
         startView.setSelectedIndex(0);
     }
 
-    private GameView_Implementation createViewImplementation(Stage stage, int width, int height) {
-        return new GameView_Implementation(
+    private GameViewImplementation createViewImplementation(Stage stage, int width, int height) {
+        return new GameViewImplementation(
             stage,
-            new GameUI_MainScene(requireNonNegative(width), requireNonNegative(height)),
+            new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
             new StatusIconBox(() -> GameUI_Constants.LOCALIZED_TEXTS)
         );
     }

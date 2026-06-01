@@ -18,14 +18,14 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameUI_MainScene extends Scene {
+public class GameViewMainScene extends Scene {
 
     /** Index in the main scene's root pane child list where the active view is embedded. */
     public static final int SUBVIEW_INDEX = 0;
 
     private final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for Main Scene");
 
-    public GameUI_MainScene(double width, double height) {
+    public GameViewMainScene(double width, double height) {
         super(new StackPane(), width, height);
         rootPane().setPrefSize(width, height);
     }

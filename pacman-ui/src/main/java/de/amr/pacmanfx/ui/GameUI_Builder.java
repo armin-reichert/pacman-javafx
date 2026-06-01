@@ -14,8 +14,8 @@ import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
-import de.amr.pacmanfx.ui.view.GameUI_MainScene;
-import de.amr.pacmanfx.ui.view.GameView_Implementation;
+import de.amr.pacmanfx.ui.view.GameViewMainScene;
+import de.amr.pacmanfx.ui.view.GameViewImplementation;
 import de.amr.pacmanfx.ui.view.StatusIconBox;
 import javafx.stage.Stage;
 
@@ -121,10 +121,10 @@ public class GameUI_Builder {
         return this;
     }
 
-    private GameView_Implementation createViewImplementation(Stage stage, int width, int height) {
-        return new GameView_Implementation(
+    private GameViewImplementation createViewImplementation(Stage stage, int width, int height) {
+        return new GameViewImplementation(
             stage,
-            new GameUI_MainScene(requireNonNegative(width), requireNonNegative(height)),
+            new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
             new StatusIconBox(() -> GameUI_Constants.LOCALIZED_TEXTS)
         );
     }

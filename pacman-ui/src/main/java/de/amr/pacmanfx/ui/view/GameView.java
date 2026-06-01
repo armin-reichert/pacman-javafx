@@ -10,11 +10,11 @@ import javafx.stage.Stage;
 
 public interface GameView {
 
-    void connect(AppContext context);
+    void setAppContext(AppContext context);
 
     Stage stage();
 
-    GameUI_MainScene mainScene();
+    GameViewMainScene mainScene();
 
     StatusIconBox statusIconBox();
 

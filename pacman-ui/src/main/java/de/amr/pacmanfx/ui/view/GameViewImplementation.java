@@ -17,15 +17,15 @@ import java.util.function.Supplier;
 
 import static javafx.beans.binding.Bindings.createStringBinding;
 
-public class GameView_Implementation implements GameView {
+public class GameViewImplementation implements GameView {
 
     private final Stage stage;
-    private final GameUI_MainScene mainScene;
+    private final GameViewMainScene mainScene;
     private final StatusIconBox statusIconBox;
     private StringBinding stageTitleBinding;
     private Image icon;
 
-    public GameView_Implementation(Stage stage, GameUI_MainScene mainScene, StatusIconBox statusIconBox) {
+    public GameViewImplementation(Stage stage, GameViewMainScene mainScene, StatusIconBox statusIconBox) {
         this.stage = stage;
         this.mainScene = mainScene;
         this.statusIconBox = statusIconBox;
@@ -36,7 +36,7 @@ public class GameView_Implementation implements GameView {
     }
 
     @Override
-    public void connect(AppContext context) {
+    public void setAppContext(AppContext context) {
         stageTitleBinding = createStringBinding(
             () -> computeStageTitle(context),
             context.gameClock().updatesDisabledProperty(),
@@ -72,7 +72,7 @@ public class GameView_Implementation implements GameView {
     }
 
     @Override
-    public GameUI_MainScene mainScene() {
+    public GameViewMainScene mainScene() {
         return mainScene;
     }
 
