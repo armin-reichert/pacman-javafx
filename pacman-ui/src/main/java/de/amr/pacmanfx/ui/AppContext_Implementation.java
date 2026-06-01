@@ -50,6 +50,8 @@ public final class AppContext_Implementation implements AppContext {
     // All games in a box (only 1,99 €!)
     private final GameBox gameBox;
 
+    private final DirectoryWatchdog directoryWatchdog;
+
     private final GameClock gameClock = new GameClockFX();
 
     private final GameUI ui;
@@ -60,8 +62,9 @@ public final class AppContext_Implementation implements AppContext {
         this.gameBox = requireNonNull(gameBox);
         this.view = requireNonNull(view);
 
+        directoryWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
+
         this.ui = new GameUI(
-            new DirectoryWatchdog(gameBox.customMapDir()),
             new ConfigurationsManager(),
             new FlashMessageManager(),
             new GameSceneManager(this),
@@ -77,10 +80,16 @@ public final class AppContext_Implementation implements AppContext {
     }
 
     @Override
+    public DirectoryWatchdog customDirWatchdog() {
+        return directoryWatchdog;
+    }
+
+    @Override
     public GameContext gameContext() {
         return gameBox;
     }
 
+    @Override
     public GameClock gameClock() {
         return gameClock;
     }
@@ -164,7 +173,7 @@ public final class AppContext_Implementation implements AppContext {
         ui.sprites().stopAnimationTimer();
         ui.sprites().animationSet().clear();
         ui.flashMessages().stopTimer();
-        ui.customDirWatchdog().dispose();
+        customDirWatchdog().dispose();
     }
 
     // private stuff
@@ -269,7 +278,7 @@ public final class AppContext_Implementation implements AppContext {
 
     private void startServices() {
         Platform.runLater(() -> {
-            ui.customDirWatchdog().startWatching();
+            customDirWatchdog().startWatching();
             ui.flashMessages().startTimer();
             ui.sprites().startAnimationTimer();
         });

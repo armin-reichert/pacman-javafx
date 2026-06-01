@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui;
 
+import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
@@ -19,7 +20,7 @@ import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public interface AppContext extends App_Life {
+public interface AppContext extends AppLifecycle {
 
     GameUI ui();
 
@@ -54,6 +55,8 @@ public interface AppContext extends App_Life {
     default Optional<GameSoundEffects> currentSoundEffects() {
         return currentUIConfig().optSoundEffects();
     }
+
+    DirectoryWatchdog customDirWatchdog();
 
     /**
      * Displays a flash message.

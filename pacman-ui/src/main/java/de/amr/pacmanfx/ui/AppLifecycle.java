@@ -8,7 +8,7 @@ import java.io.File;
 /**
  * Lifecycle methods.
  */
-public interface App_Life {
+public interface AppLifecycle {
     /**
      * Stops the current game, including clock, sounds, and active scene.
      * <p>

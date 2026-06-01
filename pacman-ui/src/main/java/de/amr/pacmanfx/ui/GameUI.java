@@ -15,7 +15,6 @@ import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 
 public record GameUI(
-    DirectoryWatchdog customDirWatchdog,
     ConfigurationsManager configurations,
     FlashMessageManager flashMessages,
     GameSceneManager gameScenes,
