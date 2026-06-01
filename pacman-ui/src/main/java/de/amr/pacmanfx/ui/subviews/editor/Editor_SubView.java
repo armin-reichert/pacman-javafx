@@ -20,11 +20,11 @@ import static de.amr.pacmanfx.uilib.UfxBackgrounds.paintBackground;
 
 public class Editor_SubView implements GameUI_SubView {
 
-    private final AppContext ui;
+    private final AppContext context;
     private final TileMapEditor editor;
 
-    public Editor_SubView(Stage stage, AppContext ui) {
-        this.ui = ui;
+    public Editor_SubView(Stage stage, AppContext context) {
+        this.context = context;
         editor = new TileMapEditor(stage);
         MenuItem miQuitEditor = createQuitEditorMenuItem();
         editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
@@ -32,7 +32,7 @@ public class Editor_SubView implements GameUI_SubView {
     }
 
     private MenuItem createQuitEditorMenuItem() {
-        var miQuitEditor = new MenuItem(ui.ui().translations().translate("back_to_game"));
+        var miQuitEditor = new MenuItem(context.ui().translations().translate("back_to_game"));
         miQuitEditor.setOnAction(_ -> editor.quit());
         return miQuitEditor;
     }

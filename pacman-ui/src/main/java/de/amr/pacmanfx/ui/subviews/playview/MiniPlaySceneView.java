@@ -93,8 +93,8 @@ public class MiniPlaySceneView {
         return rootPane;
     }
 
-    public void setUI(AppContext ui) {
-        this.context = requireNonNull(ui);
+    public void setUI(AppContext context) {
+        this.context = requireNonNull(context);
     }
 
     public void setWorldSizeInPixel(Vector2i size) {

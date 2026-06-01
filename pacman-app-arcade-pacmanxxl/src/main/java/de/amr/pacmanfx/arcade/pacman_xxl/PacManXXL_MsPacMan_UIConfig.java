@@ -59,11 +59,11 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceManager {
     public PacManXXL_MsPacMan_UIConfig() {}
 
     @Override
-    public void init(AppContext ui) {
+    public void init(AppContext context) {
         Logger.info("Load assets of UI configuration {}", getClass().getSimpleName());
         loadAssets();
-        initSound(ui.ui().sounds());
-        gameSceneConfig = new PacManXXL_MsPacMan_GameSceneConfig(ui);
+        initSound(context.ui().sounds());
+        gameSceneConfig = new PacManXXL_MsPacMan_GameSceneConfig(context);
     }
 
     @Override

@@ -62,34 +62,34 @@ public class FlyerStartPage extends StackPane implements StartPage {
     }
 
     @Override
-    public void init(AppContext ui) {
-        requireNonNull(ui);
-        startButton = createStartButton(ui);
+    public void init(AppContext context) {
+        requireNonNull(context);
+        startButton = createStartButton(context);
         getChildren().add(startButton);
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             if (e.getCode() == SHUT_UP_KEYCODE) {
-                ui.ui().sounds().stopAndDisposeVoice();
+                context.ui().sounds().stopAndDisposeVoice();
             }
         });
     }
 
     @Override
-    public void onEnterStartPage(AppContext ui) {
+    public void onEnterStartPage(AppContext context) {
         if (startButton != null) {
             startButton.requestFocus();
         }
     }
 
     @Override
-    public void onExitStartPage(AppContext ui) {
-        ui.ui().sounds().stopAndDisposeVoice();
+    public void onExitStartPage(AppContext context) {
+        context.ui().sounds().stopAndDisposeVoice();
     }
 
-    public Node createStartButton(AppContext ui) {
-        final var startButton = new FancyButton(ui.ui().translations().translate("play_button"),
+    public Node createStartButton(AppContext context) {
+        final var startButton = new FancyButton(context.ui().translations().translate("play_button"),
             DEFAULT_START_BUTTON_FONT, DEFAULT_START_BUTTON_BGCOLOR, DEFAULT_START_BUTTON_FILLCOLOR);
-        startButton.setAction(() -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
+        startButton.setAction(() -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(context));
         startButton.translateYProperty().bind(heightProperty().multiply(-0.1));
         startButton.fontProperty().bind(heightProperty()
             .map(h -> Font.font(DEFAULT_START_BUTTON_FONT.getFamily(), Math.min(h.doubleValue() / 25, 48))));

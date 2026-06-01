@@ -98,7 +98,7 @@ public class GamePlay_SubView implements GameUI_SubView {
         gameSceneFrame.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
     }
 
-    public AppContext ui() {
+    public AppContext context() {
         return context;
     }
 
@@ -137,11 +137,11 @@ public class GamePlay_SubView implements GameUI_SubView {
     }
 
     @Override
-    public void onInput(AppContext ui, Input input) {
+    public void onInput(AppContext context, Input input) {
         // First lLook for an action binding in my bindings, if nothing found, delegate to the current game scene if any
         actionBindings.actionMatchingKeyboardState(input.keyboard).ifPresentOrElse(
-            action -> action.executeIfEnabled(ui),
-            () -> ui.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onInput(ui))
+            action -> action.executeIfEnabled(context),
+            () -> context.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onInput(context))
         );
     }
 
@@ -238,8 +238,8 @@ public class GamePlay_SubView implements GameUI_SubView {
         rootPane = new StackPane(gameSceneLayer, miniPlaySceneView.rootPane(), overlayLayer, helpLayer, pausedIcon);
     }
 
-    public void connect(AppContext ui) {
-        pausedIcon.visibleProperty().bind(ui.ui().gameClock().updatesDisabledProperty());
+    public void connect(AppContext context) {
+        pausedIcon.visibleProperty().bind(context.ui().gameClock().updatesDisabledProperty());
 
         GameUI_Constants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 
@@ -252,9 +252,9 @@ public class GamePlay_SubView implements GameUI_SubView {
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> GameUI_Constants.PROPERTY_MINI_VIEW_ON.get()
-                && ui.ui().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D),
+                && context.ui().gameScenes().currentGameSceneHasID(context, CommonSceneID.PLAY_SCENE_3D),
             GameUI_Constants.PROPERTY_MINI_VIEW_ON,
-            ui.ui().gameScenes().gameSceneProperty()
+            context.ui().gameScenes().gameSceneProperty()
         ));
     }
 

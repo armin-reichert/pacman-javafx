@@ -47,14 +47,14 @@ public class StartPages_SubView extends Carousel implements GameUI_SubView {
 
     private final GameAction actionShowPrevPage = new GameAction("show_prev_page") {
         @Override
-        public void doAction(AppContext ui) {
+        public void doAction(AppContext context) {
             showPreviousItem();
         }
     };
 
     private final GameAction actionShowNextPage = new GameAction("show_next_page") {
         @Override
-        public void doAction(AppContext ui) {
+        public void doAction(AppContext context) {
             showNextItem();
         }
     };
@@ -62,20 +62,20 @@ public class StartPages_SubView extends Carousel implements GameUI_SubView {
     private final List<StartPage> pages = new ArrayList<>();
     private final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for Start View");
 
-    private final AppContext ui;
+    private final AppContext context;
 
-    public StartPages_SubView(AppContext ui) {
+    public StartPages_SubView(AppContext context) {
         super(Duration.seconds(PAGE_CHANGE_SECONDS));
-        this.ui = requireNonNull(ui);
+        this.context = requireNonNull(context);
         selectedIndexProperty().addListener((_, ov, nv) -> {
             Logger.debug("Carousel selection changed from {} to {}", ov, nv);
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
             if (oldIndex != -1) {
-                pages.get(oldIndex).onExitStartPage(ui);
+                pages.get(oldIndex).onExitStartPage(context);
             }
             if (newIndex != -1) {
                 StartPage startPage = pages.get(newIndex);
-                startPage.onEnterStartPage(ui);
+                startPage.onEnterStartPage(context);
                 startPage.layoutRoot().requestFocus();
             }
         });
@@ -96,7 +96,7 @@ public class StartPages_SubView extends Carousel implements GameUI_SubView {
     public void onExit() {
         pauseProgressTimer();
         actionBindings.dispose();
-        currentStartPage().ifPresent(startPage -> startPage.onExitStartPage(ui));
+        currentStartPage().ifPresent(startPage -> startPage.onExitStartPage(context));
     }
 
     @Override
@@ -151,6 +151,6 @@ public class StartPages_SubView extends Carousel implements GameUI_SubView {
 
     private String composeTitle() {
         final String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
-        return ui != null ? ui.ui().translations().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
+        return context != null ? context.ui().translations().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
     }
 }

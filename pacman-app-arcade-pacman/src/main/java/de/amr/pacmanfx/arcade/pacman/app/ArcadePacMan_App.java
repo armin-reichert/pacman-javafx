@@ -46,7 +46,7 @@ public class ArcadePacMan_App extends Application {
     );
 
     private GameBox gameBox;
-    private AppContext ui;
+    private AppContext context;
     private boolean useBuilder;
 
     @Override
@@ -59,7 +59,7 @@ public class ArcadePacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         if (useBuilder) {
-            ui = GameUI_Builder.newUI(primaryStage, size.x(), size.y(), gameBox)
+            context = GameUI_Builder.newUI(primaryStage, size.x(), size.y(), gameBox)
                 .game(
                     GameVariant.ARCADE_PACMAN,
                     () -> new ArcadePacMan_GameModel(gameBox.coinMechanism()),
@@ -70,13 +70,13 @@ public class ArcadePacMan_App extends Application {
         else {
             createUI(primaryStage, gameBox, size);
         }
-        ui.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, ui.ui().translations());
-        ui.displayOnScreen();
+        context.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, context.ui().translations());
+        context.displayOnScreen();
     }
 
     @Override
     public void stop() {
-        ui.terminate();
+        context.terminate();
     }
 
     // Private area
@@ -86,16 +86,16 @@ public class ArcadePacMan_App extends Application {
 
         gameBox.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
 
-        ui = new AppContext_Implementation(gameBox,
+        context = new AppContext_Implementation(gameBox,
             createViewImplementation(stage, sceneSize.x(), sceneSize.y())
         );
-        ui.ui().configurations().addConfigFactory(
+        context.ui().configurations().addConfigFactory(
             GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
-        final StartPages_SubView startView = ui.ui().subViews().startView();
+        final StartPages_SubView startView = context.ui().subViews().startView();
 
         final var arcadePacManStartPage = new ArcadePacMan_StartPage();
-        arcadePacManStartPage.init(ui);
+        arcadePacManStartPage.init(context);
 
         startView.addStartPage(arcadePacManStartPage);
         startView.setSelectedIndex(0);

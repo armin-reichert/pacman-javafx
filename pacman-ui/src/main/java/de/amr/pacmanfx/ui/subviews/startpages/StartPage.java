@@ -53,9 +53,9 @@ public interface StartPage {
      *   <li>load resources needed by the page.</li>
      * </ul>
      *
-     * @param ui the global UI façade providing access to shared services
+     * @param context the global UI façade providing access to shared services
      */
-    void init(AppContext ui);
+    void init(AppContext context);
 
     /**
      * Called whenever this start page becomes the active page.
@@ -67,9 +67,9 @@ public interface StartPage {
      *   <li>resetting UI state specific to this page.</li>
      * </ul>
      *
-     * @param ui the global UI façade
+     * @param context the global UI façade
      */
-    void onEnterStartPage(AppContext ui);
+    void onEnterStartPage(AppContext context);
 
     /**
      * Called when the user navigates away from this start page.
@@ -77,9 +77,9 @@ public interface StartPage {
      * The default implementation logs the transition. Implementations may override
      * this method to stop animations, release temporary resources, or persist state.
      *
-     * @param ui the global UI façade
+     * @param context the global UI façade
      */
-    default void onExitStartPage(AppContext ui) {
+    default void onExitStartPage(AppContext context) {
         Logger.info("Exit start page {}", this);
     }
 

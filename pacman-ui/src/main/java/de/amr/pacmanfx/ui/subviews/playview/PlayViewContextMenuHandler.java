@@ -19,15 +19,15 @@ import static java.util.Objects.requireNonNull;
 
 public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent> {
 
-    private final AppContext ui;
+    private final AppContext context;
     private final GamePlay_SubView playView;
 
-    public PlayViewContextMenuHandler(AppContext ui, GamePlay_SubView playView) {
-        this.ui = requireNonNull(ui);
+    public PlayViewContextMenuHandler(AppContext context, GamePlay_SubView playView) {
+        this.context = requireNonNull(context);
         this.playView = requireNonNull(playView);
 
         //TODO is there a better way to hide the context menu?
-        ui.view().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+        context.view().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (e.getButton() != MouseButton.SECONDARY) {
                 playView.contextMenu().hide();
             }
@@ -39,11 +39,11 @@ public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent
         final ContextMenu menu = playView.contextMenu();
         menu.getItems().clear();
 
-        ui.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
+        context.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             // Add 2D play scene-specific entries
-            if (ui.ui().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_2D)) {
-                addLocalizedTitleItem(menu, ui.ui().translations(), "scene_display");
-                addLocalizedActionItem(menu, ui, ui.ui().translations(), CommonActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
+            if (context.ui().gameScenes().currentGameSceneHasID(context, CommonSceneID.PLAY_SCENE_2D)) {
+                addLocalizedTitleItem(menu, context.ui().translations(), "scene_display");
+                addLocalizedActionItem(menu, context, context.ui().translations(), CommonActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
             }
             // Add scene-specific entries
             gameScene.supplyContextMenu().ifPresent(sceneMenu -> menu.getItems().addAll(sceneMenu.getItems()));

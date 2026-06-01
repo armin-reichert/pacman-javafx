@@ -45,8 +45,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private Actor heart;
     private Clapperboard clapperboard;
 
-    public ArcadeMsPacMan_CutScene1(AppContext ui) {
-        super(ui);
+    public ArcadeMsPacMan_CutScene1(AppContext context) {
+        super(context);
     }
 
     public Pac pacMan() {

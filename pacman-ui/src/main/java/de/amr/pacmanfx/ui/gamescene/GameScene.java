@@ -137,8 +137,8 @@ public abstract class GameScene implements Disposable {
      * Called when a key combination is pressed inside this scene.
      * Executes the first matching action.
      */
-    public void onInput(AppContext ui) {
-        actionBindings().actionMatchingKeyboardState(Input.instance().keyboard).ifPresent(action -> action.executeIfEnabled(ui));
+    public void onInput(AppContext context) {
+        actionBindings().actionMatchingKeyboardState(Input.instance().keyboard).ifPresent(action -> action.executeIfEnabled(context));
     }
 
     /**

@@ -18,14 +18,14 @@ public abstract class GameAction {
         this.id = Validations.requireValidIdentifier(id);
     }
 
-    protected abstract void doAction(AppContext ui);
+    protected abstract void doAction(AppContext context);
 
-    public boolean isEnabled(AppContext ui) { return true; }
+    public boolean isEnabled(AppContext context) { return true; }
 
-    public final boolean executeIfEnabled(AppContext ui) {
-        if (isEnabled(ui)) {
+    public final boolean executeIfEnabled(AppContext context) {
+        if (isEnabled(context)) {
             try {
-                doAction(ui);
+                doAction(context);
                 Logger.trace("Action '{}' executed", id);
                 return true;
             }

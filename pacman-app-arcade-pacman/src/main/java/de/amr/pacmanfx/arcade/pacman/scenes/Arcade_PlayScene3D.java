@@ -12,8 +12,8 @@ import org.tinylog.Logger;
 
 public class Arcade_PlayScene3D extends PlayScene3D {
 
-    public Arcade_PlayScene3D(AppContext ui) {
-        super(ui);
+    public Arcade_PlayScene3D(AppContext context) {
+        super(context);
     }
 
     @Override

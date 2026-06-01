@@ -18,14 +18,14 @@ public class DashboardSectionJoypad extends DashboardSection {
     }
 
     @Override
-    public void connect(AppContext ui) {
+    public void connect(AppContext context) {
 
         // NES controller image is located in "pacman-ui" module, use a class from that module to load it
         final ResourceManager resourceManager = () -> AppContext.class;
 
-        final ImageView nesControllerimage = new ImageView(
+        final ImageView nesControllerImage = new ImageView(
             resourceManager.loadImage("/de/amr/pacmanfx/ui/graphics/nes-controller.jpg"));
-        addRow(nesControllerimage);
+        addRow(nesControllerImage);
 
         addDynamicLabeledValue("[SELECT]",
             () -> buttonKey(JoypadButton.SELECT));

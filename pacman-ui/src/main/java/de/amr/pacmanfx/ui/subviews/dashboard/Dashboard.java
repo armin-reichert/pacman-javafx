@@ -112,9 +112,9 @@ public class Dashboard {
         return context;
     }
 
-    public void connect(AppContext ui) {
-        this.context = requireNonNull(ui);
-        sections.values().forEach(section -> section.connect(ui));
+    public void connect(AppContext context) {
+        this.context = requireNonNull(context);
+        sections.values().forEach(section -> section.connect(context));
     }
 
     public void update() {

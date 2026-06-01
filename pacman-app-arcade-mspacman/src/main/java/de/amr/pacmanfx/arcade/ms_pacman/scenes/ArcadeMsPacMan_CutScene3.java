@@ -40,8 +40,8 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     private Clapperboard clapperboard;
 
-    public ArcadeMsPacMan_CutScene3(AppContext ui) {
-        super(ui);
+    public ArcadeMsPacMan_CutScene3(AppContext context) {
+        super(context);
     }
 
     public Pac pacMan() {

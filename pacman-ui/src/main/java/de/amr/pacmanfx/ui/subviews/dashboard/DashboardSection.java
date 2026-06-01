@@ -77,7 +77,7 @@ public abstract class DashboardSection extends TitledPane {
         });
     }
 
-    public abstract void connect(AppContext ui);
+    public abstract void connect(AppContext context);
 
     public void update() {
         infoTexts.forEach(DynamicInfoText::update);
@@ -91,8 +91,8 @@ public abstract class DashboardSection extends TitledPane {
         grid.setBackground(background);
     }
 
-    protected Supplier<String> ifGameScenePresent(AppContext ui, Function<GameScene, String> fnInfo) {
-        return () -> ui.ui().gameScenes().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
+    protected Supplier<String> ifGameScenePresent(AppContext context, Function<GameScene, String> fnInfo) {
+        return () -> context.ui().gameScenes().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
     protected Supplier<String> ifGameLevel(Supplier<Game> gameSupplier, Function<GameLevel, String> fnInfo) {
@@ -233,8 +233,8 @@ public abstract class DashboardSection extends TitledPane {
         button.setOnAction(_ -> action.run());
     }
 
-    protected void setAction(AppContext ui, Button button, GameAction gameAction) {
-        button.setOnAction(_ -> gameAction.executeIfEnabled(ui));
+    protected void setAction(AppContext context, Button button, GameAction gameAction) {
+        button.setOnAction(_ -> gameAction.executeIfEnabled(context));
         //TODO add boolean property for enabled-state to game action and bind against it
     }
 

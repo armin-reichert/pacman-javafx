@@ -64,7 +64,7 @@ public class DashboardSectionCustomMaps extends DashboardSection {
     }
 
     @Override
-    public void connect(AppContext ui) {
+    public void connect(AppContext context) {
     }
 
     public void setCustomDirWatchDog(DirectoryWatchdog watchdog) {

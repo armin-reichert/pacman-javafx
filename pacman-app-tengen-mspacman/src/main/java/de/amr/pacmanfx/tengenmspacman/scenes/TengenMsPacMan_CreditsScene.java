@@ -24,8 +24,8 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     public float fadeProgress = 0;
 
-    public TengenMsPacMan_CreditsScene(AppContext ui) {
-        super(ui);
+    public TengenMsPacMan_CreditsScene(AppContext context) {
+        super(context);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }

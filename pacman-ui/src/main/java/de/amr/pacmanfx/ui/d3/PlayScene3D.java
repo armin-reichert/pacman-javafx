@@ -73,9 +73,9 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
-    public PlayScene3D(AppContext ui) {
-        super(ui);
-        gameOverMessagePicker = new RandomTextPicker(ui.ui().translations().bundle(), "game.over");
+    public PlayScene3D(AppContext context) {
+        super(context);
+        gameOverMessagePicker = new RandomTextPicker(context.ui().translations().bundle(), "game.over");
         createSubScene();
         createBindings();
         bindActions();

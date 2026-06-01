@@ -100,8 +100,8 @@ public class DashboardSectionAnimations3D extends DashboardSection {
     }
 
     @Override
-    public void connect(AppContext ui) {
-        tableView.prefHeightProperty().bind(ui.view().stage().heightProperty()
+    public void connect(AppContext context) {
+        tableView.prefHeightProperty().bind(context.view().stage().heightProperty()
             .map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
     }
 

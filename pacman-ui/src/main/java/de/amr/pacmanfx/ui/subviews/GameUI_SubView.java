@@ -28,11 +28,11 @@ public interface GameUI_SubView {
      * This method delegates to the view's {@link ActionBindingsSet} and executes
      * the resolved action via {@link de.amr.pacmanfx.ui.action.GameAction#executeIfEnabled(AppContext)}.
      *
-     * @param ui the global game UI façade
+     * @param context the global game UI façade
      * @param input the user input
      */
-    default void onInput(AppContext ui, Input input) {
-        actionBindings().actionMatchingKeyboardState(input.keyboard).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
+    default void onInput(AppContext context, Input input) {
+        actionBindings().actionMatchingKeyboardState(input.keyboard).ifPresent(gameAction -> gameAction.executeIfEnabled(context));
     }
 
     /**

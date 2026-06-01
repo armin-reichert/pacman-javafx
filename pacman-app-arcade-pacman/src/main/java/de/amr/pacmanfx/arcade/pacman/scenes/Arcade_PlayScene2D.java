@@ -34,8 +34,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public Arcade_PlayScene2D(AppContext ui) {
-        super(ui);
+    public Arcade_PlayScene2D(AppContext context) {
+        super(context);
         setGameEventHandler(new Arcade_PlayScene2DGameEventHandler(this));
     }
 

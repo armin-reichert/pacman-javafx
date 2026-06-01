@@ -55,8 +55,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     private int numTicksBeforeRising;
 
-    public ArcadeMsPacMan_IntroScene(AppContext ui) {
-        super(ui);
+    public ArcadeMsPacMan_IntroScene(AppContext context) {
+        super(context);
 
         final var gameEventHandler = new GameScene.DefaultGameEventHandler(this) {
             @Override

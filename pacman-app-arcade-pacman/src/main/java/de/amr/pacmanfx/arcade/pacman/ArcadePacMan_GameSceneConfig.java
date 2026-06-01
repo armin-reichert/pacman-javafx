@@ -17,24 +17,24 @@ import static java.util.Objects.requireNonNull;
 
 class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    private final AppContext ui;
+    private final AppContext context;
 
-    public ArcadePacMan_GameSceneConfig(AppContext ui) {
-        this.ui = requireNonNull(ui);
+    public ArcadePacMan_GameSceneConfig(AppContext context) {
+        this.context = requireNonNull(context);
     }
 
     @Override
     protected GameScene createGameScene(SceneID sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
-            case CommonSceneID.BOOT_SCENE -> new Arcade_BootScene2D(ui);
-            case CommonSceneID.INTRO_SCENE -> new ArcadePacMan_IntroScene(ui);
-            case CommonSceneID.START_SCENE -> new ArcadePacMan_StartScene(ui);
-            case CommonSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D(ui);
-            case CommonSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D(ui);
-            case CommonSceneID.CUTSCENE_1 -> new ArcadePacMan_CutScene1(ui);
-            case CommonSceneID.CUTSCENE_2 -> new ArcadePacMan_CutScene2(ui);
-            case CommonSceneID.CUTSCENE_3 -> new ArcadePacMan_CutScene3(ui);
+            case CommonSceneID.BOOT_SCENE -> new Arcade_BootScene2D(context);
+            case CommonSceneID.INTRO_SCENE -> new ArcadePacMan_IntroScene(context);
+            case CommonSceneID.START_SCENE -> new ArcadePacMan_StartScene(context);
+            case CommonSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D(context);
+            case CommonSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D(context);
+            case CommonSceneID.CUTSCENE_1 -> new ArcadePacMan_CutScene1(context);
+            case CommonSceneID.CUTSCENE_2 -> new ArcadePacMan_CutScene2(context);
+            case CommonSceneID.CUTSCENE_3 -> new ArcadePacMan_CutScene3(context);
             default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
         };
     }

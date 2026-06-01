@@ -61,7 +61,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     private final GameAction actionSelectNextJoypadBinding = new GameAction("select_next_joypad_binding") {
         @Override
-        public void doAction(AppContext ui) {
+        public void doAction(AppContext context) {
             Input.instance().joypad.selectNextBinding();
         }
     };
@@ -69,8 +69,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private int idleTicks;
     public int initialDelay;
 
-    public TengenMsPacMan_OptionsScene(AppContext ui) {
-        super(ui);
+    public TengenMsPacMan_OptionsScene(AppContext context) {
+        super(context);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
@@ -118,7 +118,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public void onInput(AppContext ui) {
+    public void onInput(AppContext context) {
         if (Input.instance().joypad.isButtonPressed(JoypadButton.DOWN)) {
             selectedOption.set(selectedOption() + 1 < NUM_OPTIONS ? selectedOption() + 1 : 0);
         }
@@ -147,7 +147,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             }
         }
         else {
-            super.onInput(ui);
+            super.onInput(context);
         }
     }
 

@@ -34,8 +34,8 @@ public class GameScene2D extends GameScene {
 
     protected Canvas canvas;
 
-    public GameScene2D(AppContext ui) {
-        super(ui);
+    public GameScene2D(AppContext context) {
+        super(context);
         unscaledWidth.set(Globals.ARCADE_MAP_SIZE_IN_PIXELS.x());
         unscaledHeight.set(Globals.ARCADE_MAP_SIZE_IN_PIXELS.y());
     }

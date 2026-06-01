@@ -34,8 +34,8 @@ import static de.amr.pacmanfx.ui.GameUI_Constants.PROPERTY_3D_FLOOR_COLOR;
  */
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
-    public TengenMsPacMan_PlayScene3D(AppContext ui) {
-        super(ui);
+    public TengenMsPacMan_PlayScene3D(AppContext context) {
+        super(context);
     }
 
     @Override

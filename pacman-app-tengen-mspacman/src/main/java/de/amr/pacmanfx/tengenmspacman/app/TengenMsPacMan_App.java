@@ -29,19 +29,19 @@ public class TengenMsPacMan_App extends Application {
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
 
     private final GameBox gameBox = new GameBox(CoinMechanism.OUT_OF_SERVICE);
-    private AppContext ui;
+    private AppContext context;
 
     @Override
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
-        ui = GameUI_Builder
+        context = GameUI_Builder
             .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
             .game(TENGEN_MS_PACMAN, TengenMsPacMan_GameModel::new, TengenMsPacMan_UIConfig::new)
             .startPage(TengenMsPacMan_StartPage::new)
             .build();
 
-        ui.ui().subViews().gamePlayView().configureDashboard(List.of(
+        context.ui().subViews().gamePlayView().configureDashboard(List.of(
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,
             CommonDashboardID.SETTINGS_3D,
@@ -50,21 +50,21 @@ public class TengenMsPacMan_App extends Application {
             CommonDashboardID.KEYS_GLOBAL,
             CommonDashboardID.KEYS_LOCAL,
             CommonDashboardID.ABOUT
-        ), ui.ui().translations());
+        ), context.ui().translations());
 
-        ui.ui().subViews().gamePlayView().dashboard().addSection(
+        context.ui().subViews().gamePlayView().dashboard().addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
-            new DashboardSectionJoypad(ui.ui().subViews().gamePlayView().dashboard()),
+            new DashboardSectionJoypad(context.ui().subViews().gamePlayView().dashboard()),
             TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
             false);
 
-        ui.displayOnScreen();
+        context.displayOnScreen();
     }
 
     @Override
     public void stop() {
-        if (ui != null) {
-            ui.terminate();
+        if (context != null) {
+            context.terminate();
         }
     }
 }

@@ -41,9 +41,9 @@ public final class ContextMenuSupport {
         return add(menu, actionItem);
     }
 
-    public static MenuItem addLocalizedActionItem(ContextMenu menu, AppContext ui, TranslationManager translator, GameAction action, String globalAssetsKey, Object... args) {
+    public static MenuItem addLocalizedActionItem(ContextMenu menu, AppContext context, TranslationManager translator, GameAction action, String globalAssetsKey, Object... args) {
         var actionItem = new MenuItem(translator.translate(globalAssetsKey, args));
-        actionItem.setOnAction(_ -> action.executeIfEnabled(ui));
+        actionItem.setOnAction(_ -> action.executeIfEnabled(context));
         return add(menu, actionItem);
     }
 

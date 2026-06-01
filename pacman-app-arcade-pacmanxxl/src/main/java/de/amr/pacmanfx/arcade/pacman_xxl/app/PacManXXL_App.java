@@ -24,14 +24,14 @@ public class PacManXXL_App extends Application {
     private static final double HEIGHT_FRACTION = 0.8;
 
     private final GameBox gameBox = new GameBox(new CoinMechanism(99));
-    private AppContext ui;
+    private AppContext context;
 
     @Override
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         final var mapSelector = new PacManXXL_MapSelector(gameBox.customMapDir());
 
-        ui = GameUI_Builder
+        context = GameUI_Builder
             .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
             .game(GameVariant.ARCADE_PACMAN_XXL,
                 () -> new PacManXXL_PacMan_GameModel(gameBox.coinMechanism(), mapSelector),
@@ -42,7 +42,7 @@ public class PacManXXL_App extends Application {
             .startPage(PacManXXL_StartPage::new)
             .build();
 
-        ui.ui().subViews().gamePlayView().configureDashboard(List.of(
+        context.ui().subViews().gamePlayView().configureDashboard(List.of(
             CommonDashboardID.README,
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,
@@ -53,22 +53,22 @@ public class PacManXXL_App extends Application {
             CommonDashboardID.KEYS_GLOBAL,
             CommonDashboardID.KEYS_LOCAL,
             CommonDashboardID.ABOUT
-        ), ui.ui().translations());
+        ), context.ui().translations());
 
-        ui.ui().subViews().gamePlayView().dashboard().findSection(CommonDashboardID.CUSTOM_MAPS)
+        context.ui().subViews().gamePlayView().dashboard().findSection(CommonDashboardID.CUSTOM_MAPS)
             .filter(DashboardSectionCustomMaps.class::isInstance)
             .map(DashboardSectionCustomMaps.class::cast)
             .ifPresent(section -> {
-                section.setCustomDirWatchDog(ui.ui().customDirWatchdog());
-                section.setMapEditFunction(mapFile -> ui.openWorldMapFileInEditor(mapFile));
+                section.setCustomDirWatchDog(context.ui().customDirWatchdog());
+                section.setMapEditFunction(mapFile -> context.openWorldMapFileInEditor(mapFile));
             });
 
-        ui.ui().customDirWatchdog().addEventListener(mapSelector);
-        ui.displayOnScreen();
+        context.ui().customDirWatchdog().addEventListener(mapSelector);
+        context.displayOnScreen();
     }
 
     @Override
     public void stop() {
-        ui.terminate();
+        context.terminate();
     }
 }

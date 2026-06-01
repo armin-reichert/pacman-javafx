@@ -140,9 +140,9 @@ public interface UIConfig extends Disposable {
      *   <li>preparing any internal caches</li>
      * </ul>
      *
-     * @param ui the {@code GameUI} instance that owns this configuration
+     * @param context the {@code GameUI} instance that owns this configuration
      */
-    void init(AppContext ui);
+    void init(AppContext context);
 
     /**
      * Disposes all resources held by this configuration.

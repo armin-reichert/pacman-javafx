@@ -16,8 +16,8 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
  */
 public class ArcadePacMan_StartScene extends GameScene2D {
 
-    public ArcadePacMan_StartScene(AppContext ui) {
-        super(ui);
+    public ArcadePacMan_StartScene(AppContext context) {
+        super(context);
 
         final var gameEventHandler = new GameScene.DefaultGameEventHandler(this) {
             @Override

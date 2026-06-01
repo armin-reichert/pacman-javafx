@@ -33,12 +33,12 @@ public class HelpLayer extends Pane {
         prefHeightProperty().bind(master.prefHeightProperty());
     }
 
-    public void showHelpPopup(AppContext ui, double scaling, String variantName) {
+    public void showHelpPopup(AppContext context, double scaling, String variantName) {
         final boolean msPacMan = variantName.equals(GameVariant.ARCADE_MS_PACMAN.name())
                 || variantName.equals(GameVariant.ARCADE_MS_PACMAN_XXL.name());
         final Color bgColor = msPacMan ? ArcadePalette.ARCADE_RED : ArcadePalette.ARCADE_BLUE;
         final var font = Ufx.deriveFont(GameUI_Constants.FONT_MONOSPACED, Math.max(6, 14 * scaling));
-        final var infoPane = HelpInfo.build(ui).createPane(ui, colorWithOpacity(bgColor, 0.8), font);
+        final var infoPane = HelpInfo.build(context).createPane(context, colorWithOpacity(bgColor, 0.8), font);
         popup.setTranslateX(10 * scaling);
         popup.setTranslateY(30 * scaling);
         popup.setContent(infoPane);

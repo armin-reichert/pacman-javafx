@@ -22,7 +22,7 @@ public class DashboardSectionAbout extends DashboardSection {
     }
 
     @Override
-    public void connect(AppContext ui) {
+    public void connect(AppContext context) {
         final ResourceManager rm = () -> AppContext_Implementation.class;
         final Image armin1970 = rm.loadImage("graphics/armin1970.jpg");
         final Font handwriting = rm.loadFont("fonts/Molle-Italic.ttf", 20);

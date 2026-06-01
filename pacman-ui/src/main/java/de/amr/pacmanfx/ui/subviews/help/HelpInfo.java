@@ -54,12 +54,12 @@ public class HelpInfo {
         return helpInfo;
     }
 
-    private final AppContext ui;
+    private final AppContext context;
     private final List<Label> column0 = new ArrayList<>();
     private final List<Text> column1 = new ArrayList<>();
 
     public HelpInfo(AppContext context) {
-        this.ui = requireNonNull(context);
+        this.context = requireNonNull(context);
     }
 
     public Pane createPane(AppContext context, Color backgroundColor, Font font) {
@@ -112,7 +112,7 @@ public class HelpInfo {
     }
 
     private void addRow(String lhsKey, String keyboardKey) {
-        addRow(label(ui.ui().translations().translate(lhsKey), Color.gray(0.9)),
+        addRow(label(context.ui().translations().translate(lhsKey), Color.gray(0.9)),
             text("[" + keyboardKey + "]", Color.YELLOW));
     }
 

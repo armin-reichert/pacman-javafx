@@ -30,7 +30,7 @@ public class GameUI_MainScene extends Scene {
         rootPane().setPrefSize(width, height);
     }
 
-    public void init(AppContext ui) {
+    public void init(AppContext context) {
         getStylesheets().add(GameUI_Constants.STYLE_SHEET_PATH);
 
         final Input userInput = Input.instance();
@@ -40,11 +40,11 @@ public class GameUI_MainScene extends Scene {
 
         // If a global action can be executed, do it; otherwise let the current view handle it.
         userInput.keyboard.addStateListener(_ -> actionBindings.actionMatchingKeyboardState(userInput.keyboard).ifPresentOrElse(
-            action -> action.executeIfEnabled(ui),
-            () -> ui.ui().subViews().currentView().onInput(ui, userInput)));
+            action -> action.executeIfEnabled(context),
+            () -> context.ui().subViews().currentView().onInput(context, userInput)));
 
         // Delegate mouse scroll events to scene
-        setOnScroll(e -> ui.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+        setOnScroll(e -> context.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         // Global action bindings
         actionBindings.registerFirstBinding(CommonActions.ACTION_ENTER_FULLSCREEN,        GameUI_Constants.COMMON_BINDINGS);

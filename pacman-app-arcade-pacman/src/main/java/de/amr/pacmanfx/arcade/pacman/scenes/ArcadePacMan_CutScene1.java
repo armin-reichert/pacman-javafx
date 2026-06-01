@@ -31,8 +31,8 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     public Pac pacMan;
     public Ghost blinky;
 
-    public ArcadePacMan_CutScene1(AppContext ui) {
-        super(ui);
+    public ArcadePacMan_CutScene1(AppContext context) {
+        super(context);
     }
     
     @Override
