@@ -8,7 +8,7 @@ import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
 import javafx.stage.Stage;
 
-public interface GameUI_View {
+public interface GameView {
 
     void connect(AppContext context);
 

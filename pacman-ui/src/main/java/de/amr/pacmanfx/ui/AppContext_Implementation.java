@@ -26,7 +26,7 @@ import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.editor.Editor_SubView;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
-import de.amr.pacmanfx.ui.view.GameUI_View_Implementation;
+import de.amr.pacmanfx.ui.view.GameView_Implementation;
 import de.amr.pacmanfx.uilib.GameClockFX;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
@@ -58,9 +58,9 @@ public final class AppContext_Implementation implements AppContext {
 
     private final GameUI ui;
 
-    private final GameUI_View_Implementation view;
+    private final GameView_Implementation view;
 
-    public AppContext_Implementation(GameBox gameBox, GameUI_View_Implementation view) {
+    public AppContext_Implementation(GameBox gameBox, GameView_Implementation view) {
         this.gameBox = requireNonNull(gameBox);
         this.view = requireNonNull(view);
 

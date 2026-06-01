@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 import static javafx.beans.binding.Bindings.createStringBinding;
 
-public class GameUI_View_Implementation implements GameUI_View {
+public class GameView_Implementation implements GameView {
 
     private final Stage stage;
     private final GameUI_MainScene mainScene;
@@ -25,7 +25,7 @@ public class GameUI_View_Implementation implements GameUI_View {
     private StringBinding stageTitleBinding;
     private Image icon;
 
-    public GameUI_View_Implementation(Stage stage, GameUI_MainScene mainScene, StatusIconBox statusIconBox) {
+    public GameView_Implementation(Stage stage, GameUI_MainScene mainScene, StatusIconBox statusIconBox) {
         this.stage = stage;
         this.mainScene = mainScene;
         this.statusIconBox = statusIconBox;

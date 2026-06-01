@@ -18,7 +18,7 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.playview.DecorationPane;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
-import de.amr.pacmanfx.ui.view.GameUI_View;
+import de.amr.pacmanfx.ui.view.GameView;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import javafx.beans.property.ObjectProperty;
@@ -229,7 +229,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     // 3D scenes or 2D scenes with camera
-    private void embedGameSceneWithSubSceneFX(GameUI_View gameUIView, GamePlay_SubView playView, GameScene gameScene, SubScene subSceneFX) {
+    private void embedGameSceneWithSubSceneFX(GameView gameUIView, GamePlay_SubView playView, GameScene gameScene, SubScene subSceneFX) {
         // stretch sub scene to available space
         subSceneFX.widthProperty().bind(gameUIView.mainScene().widthProperty());
         subSceneFX.heightProperty().bind(gameUIView.mainScene().heightProperty());
@@ -243,7 +243,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     // 2D scenes without camera which are shown at full size
-    private void embedGameScene2D(GameUI_View gameUIView, GamePlay_SubView playView, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
+    private void embedGameScene2D(GameView gameUIView, GamePlay_SubView playView, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
         final DecorationPane decorationPane = playView.gameSceneFrame();
 
         gameScene2D.backgroundColorProperty().bind(GameUI_Constants.PROPERTY_CANVAS_BACKGROUND_COLOR);
