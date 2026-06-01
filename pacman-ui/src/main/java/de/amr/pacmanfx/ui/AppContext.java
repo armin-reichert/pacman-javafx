@@ -19,7 +19,7 @@ import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public interface AppContext extends GameUI_Life {
+public interface AppContext extends App_Life {
 
     GameUI ui();
 
@@ -77,5 +77,4 @@ public interface AppContext extends GameUI_Life {
     default void shortMessage(String message, Object... args) {
         shortMessage(GameUI_Constants.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
-
 }

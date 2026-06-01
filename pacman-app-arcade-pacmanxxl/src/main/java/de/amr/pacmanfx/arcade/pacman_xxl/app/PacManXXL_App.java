@@ -60,7 +60,7 @@ public class PacManXXL_App extends Application {
             .map(DashboardSectionCustomMaps.class::cast)
             .ifPresent(section -> {
                 section.setCustomDirWatchDog(context.ui().customDirWatchdog());
-                section.setMapEditFunction(mapFile -> context.openWorldMapFileInEditor(mapFile));
+                section.setMapEditFunction(mapFile -> context.editMap(mapFile));
             });
 
         context.ui().customDirWatchdog().addEventListener(mapSelector);

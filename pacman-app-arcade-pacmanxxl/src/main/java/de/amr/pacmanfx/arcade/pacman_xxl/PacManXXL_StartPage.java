@@ -81,7 +81,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                     if (context != null) {
                         context.ui().sounds().stopAndDisposeVoice();
                         context.ui().subViews().startView().pauseProgressTimer();
-                        context.openWorldMapFileInEditor(null);
+                        context.editMap(null);
                     }
                 }
                 case ENTER -> {

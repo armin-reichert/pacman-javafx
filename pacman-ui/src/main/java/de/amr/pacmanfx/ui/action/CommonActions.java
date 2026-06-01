@@ -62,7 +62,7 @@ public final class CommonActions {
     public static final GameAction ACTION_OPEN_EDITOR = new GameAction("open_editor") {
         @Override
         protected void doAction(AppContext context) {
-            context.openWorldMapFileInEditor(null);
+            context.editMap(null);
         }
     };
 

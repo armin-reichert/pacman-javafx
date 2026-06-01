@@ -6,9 +6,9 @@ package de.amr.pacmanfx.ui;
 import java.io.File;
 
 /**
- * Game UI lifecycle methods.
+ * Lifecycle methods.
  */
-public interface GameUI_Life {
+public interface App_Life {
     /**
      * Stops the current game, including clock, sounds, and active scene.
      * <p>
@@ -42,5 +42,5 @@ public interface GameUI_Life {
      *
      * @param worldMapFile world map file to edit
      */
-    void openWorldMapFileInEditor(File worldMapFile);
+    void editMap(File worldMapFile);
 }

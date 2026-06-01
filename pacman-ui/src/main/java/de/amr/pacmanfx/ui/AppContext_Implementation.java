@@ -93,7 +93,7 @@ public final class AppContext_Implementation implements AppContext {
     // GameUI_Life interface
 
     @Override
-    public void openWorldMapFileInEditor(File worldMapFile) {
+    public void editMap(File worldMapFile) {
         final SubViewManager subViewManager = ui.subViews();
         subViewManager.ensureEditorViewCreated();
         subViewManager.optEditorView().map(Editor_SubView::editor).ifPresent(editor -> {
