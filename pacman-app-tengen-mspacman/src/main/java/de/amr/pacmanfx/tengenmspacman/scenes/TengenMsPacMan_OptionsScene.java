@@ -102,7 +102,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            tengenGame().flow().enterState(TengenMsPacMan_GameState.INTRO);
+            services().currentGameFlow().enterState(TengenMsPacMan_GameState.INTRO);
         }
     }
 

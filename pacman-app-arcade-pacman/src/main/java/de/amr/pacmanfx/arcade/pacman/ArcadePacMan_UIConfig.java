@@ -145,7 +145,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         @Override
         public void doAction(GameUI ui) {
             ui.access().sounds().stopAndDisposeVoice();
-            ui.access().currentGame().flow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
+            ui.access().currentGameFlow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override
@@ -155,9 +155,8 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
                 return false;
             }
             final Game game = ui.access().currentGame();
-            final State<Game> gameState = game.flow().state();
-            return (gameState == INTRO || gameState == PREPARING_GAME_START)
-                && game.canStartNewGame();
+            final State<Game> gameState = ui.access().currentGameState();
+            return (gameState == INTRO || gameState == PREPARING_GAME_START) && game.canStartNewGame();
         }
     };
 

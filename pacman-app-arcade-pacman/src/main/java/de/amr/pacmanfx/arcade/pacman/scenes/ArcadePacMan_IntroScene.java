@@ -10,18 +10,17 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
+import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.event.CreditAddedEvent;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 import java.util.Arrays;
@@ -350,10 +349,9 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                final Game game = scene.services().currentGame();
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
                     scene.ghosts[ORANGE_GHOST_POKEY].hide();
-                    game.flow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
+                    scene.services().currentGameFlow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
                 }
             }
         };

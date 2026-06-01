@@ -9,6 +9,7 @@ import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameFlow;
 import de.amr.pacmanfx.ui.config.ConfigurationsManager;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
@@ -20,7 +21,6 @@ import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.util.Duration;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
@@ -40,12 +40,20 @@ public record GameUI_ServicesAccess(
 {
     // Model facade
 
+    public String currentGameVariant() {
+        return gameContext.gameVariantName();
+    }
+
     public <T extends Game> T currentGame() {
         return gameContext.game();
     }
 
+    public GameFlow currentGameFlow() {
+        return currentGame().flow();
+    }
+
     public State<Game> currentGameState() {
-        return currentGame().flow().state();
+        return currentGameFlow().state();
     }
 
     // UI facade

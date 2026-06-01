@@ -15,7 +15,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameFlow;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
@@ -25,11 +25,11 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.ui.GameUI_Constants;
-import de.amr.pacmanfx.ui.config.ConfigurationsManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
+import de.amr.pacmanfx.ui.config.ConfigurationsManager;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
@@ -186,16 +186,16 @@ public class PacManGames3dApp extends Application {
                 case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(gameBox.coinMechanism(), xxlMapSelector);
             };
             if (includeTests) {
-                addTestStates(game);
+                addTestStates(game.flow());
             }
             gameBox.registerGame(variant.name(), game);
         }
     }
 
-    private void addTestStates(Game game) {
-        game.flow().addState(new LevelShortTestState<>(gameBox.coinMechanism()));
-        game.flow().addState(new LevelMediumTestState<>());
-        game.flow().addState(new CutScenesTestState<>());
+    private void addTestStates(GameFlow gameFlow) {
+        gameFlow.addState(new LevelShortTestState<>(gameBox.coinMechanism()));
+        gameFlow.addState(new LevelMediumTestState<>());
+        gameFlow.addState(new CutScenesTestState<>());
     }
 
     private void addConfigFactories() {

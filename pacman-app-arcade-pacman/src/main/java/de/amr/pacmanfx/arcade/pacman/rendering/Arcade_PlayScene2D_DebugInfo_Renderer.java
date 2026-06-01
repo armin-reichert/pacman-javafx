@@ -5,9 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
-import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.model.AbstractHuntingTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
@@ -37,13 +35,10 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
 
     @Override
     public void draw(GameScene2D scene) {
-        final Arcade_PlayScene2D playScene = (Arcade_PlayScene2D) scene;
-        final GameContext gameContext = playScene.services().gameContext();
-        final Game game = gameContext.game();
+        drawTileGrid(scene.getUnscaledWidth(), scene.getUnscaledHeight(), Color.LIGHTGRAY);
 
-        drawTileGrid(playScene.getUnscaledWidth(), playScene.getUnscaledHeight(), Color.LIGHTGRAY);
+        scene.services().currentGame().optGameLevel().ifPresent(level -> {
 
-        game.optGameLevel().ifPresent(level -> {
             // We assume all ghosts have the same set of special terrain tiles
             level.ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
                 final double x = scaled(tile.x() * TS);
@@ -72,7 +67,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
                     }
             });
 
-            final State<Game> state = game.flow().state();
+            final State<Game> state = scene.services().currentGameState();
             final String gameStateText = state.name() + " (Tick %d)".formatted(state.timer().tickCount());
             String huntingPhaseText = "";
             if (state == Arcade_GameState.LEVEL_PLAYING) {

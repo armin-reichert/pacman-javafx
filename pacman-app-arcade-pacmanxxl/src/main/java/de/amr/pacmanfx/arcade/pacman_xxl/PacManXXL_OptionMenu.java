@@ -108,22 +108,25 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     public void init(GameUI ui) {
         this.ui = requireNonNull(ui);
+
         final UIConfig currentConfig = ui.access().currentUIConfig();
+        final GameVariant gameVariant = GameVariant.valueOf(ui.access().currentGameVariant());
         final Game game = ui.access().currentGame();
-        final GameVariant gameVariant = GameVariant.valueOf(ui.access().gameContext().gameVariantName());
 
         if (!(game.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {
-            Logger.error("Expected XXL map selector but found {}", game.mapSelector().getClass().getSimpleName());
-            throw new IllegalStateException();
+            final String errorMsg = "Expected XXL map selector but found %s".formatted(game.mapSelector().getClass().getSimpleName());
+            Logger.error(errorMsg);
+            throw new IllegalStateException(errorMsg);
         }
         mapSelector.loadMapPrototypes();
 
-        // init entries
+        // Init menu items
         entryGameVariant.setValue(gameVariant);
         entryPlay3D.setValue(GameUI_Constants.PROPERTY_3D_ENABLED.get());
         entryCutScenesEnabled.setValue(game.flow().cutScenesEnabled());
         entryMapOrder.setValue(mapSelector.selectionMode());
         entryMapOrder.setEnabled(!mapSelector.customMaps().isEmpty());
+
         logMenuState();
 
         soundEnabledProperty().bind(ui.access().sounds().muteProperty().not());

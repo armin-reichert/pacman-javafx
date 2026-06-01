@@ -99,7 +99,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     public void onTick(GameClock clock) {
         final UIConfig uiConfig = ui.access().currentUIConfig();
         final TengenMsPacMan_GameModel game = services().currentGame();
-        final State<Game> gameState = game.flow().state();
+        final State<Game> gameState = services().currentGameState();
         final long gameStateTick = gameState.timer().tickCount();
 
         clapperboard.tick();

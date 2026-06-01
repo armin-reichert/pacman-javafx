@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.action;
 
+import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.CanonicalGameState;
@@ -12,6 +13,7 @@ import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.GameUI_ServicesAccess;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
@@ -54,7 +56,7 @@ public final class CommonActions {
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("let_game_state_expire") {
         @Override
         protected void doAction(GameUI ui) {
-            ui.access().currentGame().flow().state().expire();
+            ui.access().currentGameState().expire();
         }
     };
 
@@ -100,11 +102,13 @@ public final class CommonActions {
     public static final GameAction ACTION_RESTART_INTRO = new GameAction("restart_intro") {
         @Override
         protected void doAction(GameUI ui) {
+            //TODO check this code
             ui.stopGame();
             final Game game = ui.access().currentGame();
-            boolean isLevelShortTest = game.flow().state() instanceof LevelShortTestState;
+            final State<Game> gameState = ui.access().currentGameState();
+            boolean isLevelShortTest = gameState instanceof LevelShortTestState;
             if (isLevelShortTest) {
-                game.flow().state().onExit(game); //TODO exit other states too?
+                gameState.onExit(game); //TODO exit other states too?
             }
             game.flow().restartStateWithName(CanonicalGameState.INTRO.name());
             ui.access().gameClock().start();
@@ -294,13 +298,12 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction("toggle_play_scene_2d_3d") {
         @Override
         protected void doAction(GameUI ui) {
-            final Game game = ui.access().currentGame();
             toggleBooleanProperty(GameUI_Constants.PROPERTY_3D_ENABLED);
             final boolean is3DEnabled = GameUI_Constants.PROPERTY_3D_ENABLED.get();
             if (!inPlayScene(ui)) {
                 ui.access().flashMessage(ui.access().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
             }
-            if (isLevelPlaying(game)) {
+            if (isLevelPlaying(ui.access())) {
                 ui.access().gameScenes().forceGameSceneUpdate(ui);
             }
         }
@@ -315,8 +318,8 @@ public final class CommonActions {
                 || ui.access().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D);
         }
 
-        private boolean isLevelPlaying(Game game) {
-            return game.flow().state().matchesByName(CanonicalGameState.LEVEL_PLAYING.name());
+        private boolean isLevelPlaying(GameUI_ServicesAccess access) {
+            return access.currentGameState().matchesByName(CanonicalGameState.LEVEL_PLAYING.name());
         }
     };
 }

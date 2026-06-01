@@ -69,7 +69,7 @@ public class DashboardSectionGameControl extends DashboardSection {
         super.update(ui);
 
         final AbstractGameModel game = ui.access().currentGame();
-        final State<?> state = game.flow().state();
+        final State<Game> state = ui.access().currentGameState();
 
         //TODO use binding
         choiceBoxInitialLives.setValue(game.initialLifeCount());
