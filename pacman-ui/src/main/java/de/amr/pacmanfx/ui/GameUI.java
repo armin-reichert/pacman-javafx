@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.ui.config.ConfigurationsManager;
+import de.amr.pacmanfx.ui.config.UIConfigurationsManager;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.view.GameUI_View;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 
 public record GameUI(
-    ConfigurationsManager configurations,
+    UIConfigurationsManager configurations,
     FlashMessageManager flashMessages,
     GameSceneManager gameScenes,
     SoundManager sounds,

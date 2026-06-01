@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
-import de.amr.pacmanfx.ui.config.ConfigurationsManager;
+import de.amr.pacmanfx.ui.config.UIConfigurationsManager;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
@@ -68,7 +68,7 @@ public final class AppContext_Implementation implements AppContext {
         directoryWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
 
         this.ui = new GameUI(
-            new ConfigurationsManager(),
+            new UIConfigurationsManager(),
             new FlashMessageManager(),
             new GameSceneManager(this),
             new SoundManager(),
