@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
+import de.amr.pacmanfx.ui.subviews.SubView;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -34,7 +34,7 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
 
     private void updateTableForCurrentSubView(AppContext context) {
         clearSection();
-        final GameUI_SubView currentSubView = context.ui().subViews().currentView();
+        final SubView currentSubView = context.ui().subViews().currentView();
         if (currentSubView == null) {
             return;
         }

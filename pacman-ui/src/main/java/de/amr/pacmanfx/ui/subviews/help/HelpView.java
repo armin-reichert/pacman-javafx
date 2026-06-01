@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.subviews.help;
 
 import de.amr.pacmanfx.model.GameVariant;
@@ -16,21 +17,21 @@ import javafx.util.Duration;
 
 import static de.amr.pacmanfx.uilib.UfxColors.colorWithOpacity;
 
-public class HelpLayer extends Pane {
+public class HelpView extends Pane {
 
     private final FadingPane popup = new FadingPane();
 
-    public HelpLayer(Region master) {
+    public HelpView(Region parent) {
         setMouseTransparent(true);
         getChildren().addAll(popup);
 
-        minWidthProperty().bind(master.minWidthProperty());
-        maxWidthProperty().bind(master.maxWidthProperty());
-        prefWidthProperty().bind(master.prefWidthProperty());
+        minWidthProperty().bind(parent.minWidthProperty());
+        maxWidthProperty().bind(parent.maxWidthProperty());
+        prefWidthProperty().bind(parent.prefWidthProperty());
 
-        minHeightProperty().bind(master.minHeightProperty());
-        maxHeightProperty().bind(master.maxHeightProperty());
-        prefHeightProperty().bind(master.prefHeightProperty());
+        minHeightProperty().bind(parent.minHeightProperty());
+        maxHeightProperty().bind(parent.maxHeightProperty());
+        prefHeightProperty().bind(parent.prefHeightProperty());
     }
 
     public void showHelpPopup(AppContext context, double scaling, String variantName) {

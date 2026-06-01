@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.AppContextImplementation;
+import de.amr.pacmanfx.ui.AppContextImpl;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
@@ -23,7 +23,7 @@ public class DashboardSectionAbout extends DashboardSection {
 
     @Override
     public void connect(AppContext context) {
-        final ResourceManager rm = () -> AppContextImplementation.class;
+        final ResourceManager rm = () -> AppContextImpl.class;
         final Image armin1970 = rm.loadImage("graphics/armin1970.jpg");
         final Font handwriting = rm.loadFont("fonts/Molle-Italic.ttf", 20);
 

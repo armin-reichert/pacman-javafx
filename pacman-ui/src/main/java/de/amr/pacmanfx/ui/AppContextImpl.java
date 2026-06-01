@@ -23,10 +23,10 @@ import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
-import de.amr.pacmanfx.ui.subviews.editor.Editor_SubView;
-import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
-import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
-import de.amr.pacmanfx.ui.view.GameViewImplementation;
+import de.amr.pacmanfx.ui.subviews.editor.EditorView;
+import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
+import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
+import de.amr.pacmanfx.ui.view.GameViewImpl;
 import de.amr.pacmanfx.uilib.GameClockFX;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
@@ -45,7 +45,7 @@ import java.io.IOException;
 
 import static java.util.Objects.requireNonNull;
 
-public final class AppContextImplementation implements AppContext {
+public final class AppContextImpl implements AppContext {
 
     // All games in a box (only 1,99 €!)
     private final GameBox gameBox;
@@ -58,9 +58,9 @@ public final class AppContextImplementation implements AppContext {
 
     private final GameUI ui;
 
-    private final GameViewImplementation view;
+    private final GameViewImpl view;
 
-    public AppContextImplementation(GameBox gameBox, GameViewImplementation view) {
+    public AppContextImpl(GameBox gameBox, GameViewImpl view) {
         this.gameBox = requireNonNull(gameBox);
         this.view = requireNonNull(view);
 
@@ -112,7 +112,7 @@ public final class AppContextImplementation implements AppContext {
     public void editMap(File worldMapFile) {
         final SubViewManager subViewManager = ui.subViews();
         subViewManager.ensureEditorViewCreated();
-        subViewManager.optEditorView().map(Editor_SubView::editor).ifPresent(editor -> {
+        subViewManager.optEditorView().map(EditorView::editor).ifPresent(editor -> {
             editor.init(gameBox.customMapDir());
             try {
                 if (worldMapFile != null) {
@@ -193,10 +193,10 @@ public final class AppContextImplementation implements AppContext {
     private void createSubViews() {
         final SubViewManager subViewManager = ui.subViews();
 
-        final StartPages_SubView startView = new StartPages_SubView(this);
+        final StartPagesView startView = new StartPagesView(this);
         subViewManager.setStartView(startView);
 
-        final GamePlay_SubView playView = createGamePlaySubView();
+        final GamePlayView playView = createGamePlaySubView();
         subViewManager.setGamePlayView(playView);
 
         subViewManager.setEditorViewFactory(() -> createEditorSubView(view.stage()));
@@ -212,16 +212,16 @@ public final class AppContextImplementation implements AppContext {
         view.setIcon(currentUIConfig().assets().image("app_icon"));
     }
 
-    private GamePlay_SubView createGamePlaySubView() {
-        final var playView = new GamePlay_SubView(this, AppConstants.DEFAULT_DASHBOARD_CONFIG);
+    private GamePlayView createGamePlaySubView() {
+        final var playView = new GamePlayView(this, AppConstants.DEFAULT_DASHBOARD_CONFIG);
         final ChangeListener<? super Number> playViewResizer = (_,_,_) -> playView.resizeToFit(view.mainScene());
         view.mainScene().widthProperty().addListener(playViewResizer);
         view.mainScene().heightProperty().addListener(playViewResizer);
         return playView;
     }
 
-    private Editor_SubView createEditorSubView(Stage stage) {
-        final var editorView = new Editor_SubView(stage, this);
+    private EditorView createEditorSubView(Stage stage) {
+        final var editorView = new EditorView(stage, this);
         editorView.editor().setOnQuit(_ -> {
             // restore title (editor changed it)
             stage.titleProperty().unbind();

@@ -20,9 +20,9 @@ import static java.util.Objects.requireNonNull;
 public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent> {
 
     private final AppContext context;
-    private final GamePlay_SubView playView;
+    private final GamePlayView playView;
 
-    public PlayViewContextMenuHandler(AppContext context, GamePlay_SubView playView) {
+    public PlayViewContextMenuHandler(AppContext context, GamePlayView playView) {
         this.context = requireNonNull(context);
         this.playView = requireNonNull(playView);
 

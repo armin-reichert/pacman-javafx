@@ -17,7 +17,7 @@ import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.playview.DecorationPane;
-import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
+import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.ui.view.GameView;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
@@ -229,7 +229,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     // 3D scenes or 2D scenes with camera
-    private void embedGameSceneWithSubSceneFX(GameView gameUIView, GamePlay_SubView playView, GameScene gameScene, SubScene subSceneFX) {
+    private void embedGameSceneWithSubSceneFX(GameView gameUIView, GamePlayView playView, GameScene gameScene, SubScene subSceneFX) {
         // stretch sub scene to available space
         subSceneFX.widthProperty().bind(gameUIView.mainScene().widthProperty());
         subSceneFX.heightProperty().bind(gameUIView.mainScene().heightProperty());
@@ -243,7 +243,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     // 2D scenes without camera which are shown at full size
-    private void embedGameScene2D(GameView gameUIView, GamePlay_SubView playView, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
+    private void embedGameScene2D(GameView gameUIView, GamePlayView playView, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
         final DecorationPane decorationPane = playView.gameSceneFrame();
 
         gameScene2D.backgroundColorProperty().bind(AppConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
@@ -260,7 +260,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
             // Limit scaling
             gameScene2D.scalingProperty().bind(decorationPane.scalingProperty().map(
-                scaling -> Math.min(scaling.doubleValue(), GamePlay_SubView.MAX_GAME_SCENE_SCALING)));
+                scaling -> Math.min(scaling.doubleValue(), GamePlayView.MAX_GAME_SCENE_SCALING)));
 
             decorationPane.stretchTo(gameUIView.mainScene().getWidth(), gameUIView.mainScene().getHeight());
 

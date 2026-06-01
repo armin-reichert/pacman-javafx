@@ -4,13 +4,13 @@
 package de.amr.pacmanfx.ui.subviews.startpages;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppConstants;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
-import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
+import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
 import javafx.geometry.Insets;
@@ -33,13 +33,10 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static java.util.Objects.requireNonNull;
 
-//import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
-//import org.kordamp.ikonli.javafx.FontIcon;
-
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
-public class StartPages_SubView extends Carousel implements GameUI_SubView {
+public class StartPagesView extends Carousel implements SubView {
 
     public static final int NAV_BUTTON_SIZE = 48;
 
@@ -65,7 +62,7 @@ public class StartPages_SubView extends Carousel implements GameUI_SubView {
 
     private final AppContext context;
 
-    public StartPages_SubView(AppContext context) {
+    public StartPagesView(AppContext context) {
         super(Duration.seconds(PAGE_CHANGE_SECONDS));
         this.context = requireNonNull(context);
         selectedIndexProperty().addListener((_, ov, nv) -> {

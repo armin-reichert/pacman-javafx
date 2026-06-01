@@ -26,16 +26,16 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.AppContextImplementation;
+import de.amr.pacmanfx.ui.AppContextImpl;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.config.UIConfigurationsManager;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
-import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
+import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewMainScene;
-import de.amr.pacmanfx.ui.view.GameViewImplementation;
+import de.amr.pacmanfx.ui.view.GameViewImpl;
 import de.amr.pacmanfx.ui.view.StatusIconBox;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
@@ -140,7 +140,7 @@ public class PacManGames3dApp extends Application {
             }
             else {
                 registerGames();
-                context = new AppContextImplementation(gameBox,
+                context = new AppContextImpl(gameBox,
                     createViewImplementation(stage, sceneSize.x(), sceneSize.y())
                 );
                 addConfigFactories();
@@ -168,8 +168,8 @@ public class PacManGames3dApp extends Application {
 
     // Private area
 
-    private GameViewImplementation createViewImplementation(Stage stage, int width, int height) {
-        return new GameViewImplementation(
+    private GameViewImpl createViewImplementation(Stage stage, int width, int height) {
+        return new GameViewImpl(
             stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
             new StatusIconBox(() -> AppConstants.LOCALIZED_TEXTS)
@@ -209,7 +209,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void addStartPages() {
-        final StartPages_SubView startView = context.ui().subViews().startView();
+        final StartPagesView startView = context.ui().subViews().startView();
         startView.addStartPage(new ArcadePacMan_StartPage());
         startView.addStartPage(new ArcadeMsPacMan_StartPage());
         startView.addStartPage(new TengenMsPacMan_StartPage());

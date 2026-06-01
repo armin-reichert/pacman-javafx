@@ -17,11 +17,11 @@ import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.input.Input;
-import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
+import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardConfig;
-import de.amr.pacmanfx.ui.subviews.help.HelpLayer;
+import de.amr.pacmanfx.ui.subviews.help.HelpView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
@@ -47,7 +47,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
-public class GamePlay_SubView implements GameUI_SubView {
+public class GamePlayView implements SubView {
 
     public static final float MAX_GAME_SCENE_SCALING = 5;
 
@@ -79,7 +79,7 @@ public class GamePlay_SubView implements GameUI_SubView {
     private Dashboard dashboard;
 
     // Help layer
-    private HelpLayer helpLayer;
+    private HelpView helpLayer;
 
     // Icon layer
     private FontAwesomeIcon pausedIcon;
@@ -87,7 +87,7 @@ public class GamePlay_SubView implements GameUI_SubView {
     private GameScene2D_Renderer sceneRenderer;
     private HeadsUpDisplay_Renderer hudRenderer;
 
-    public GamePlay_SubView(AppContext context, DashboardConfig dashboardConfig) {
+    public GamePlayView(AppContext context, DashboardConfig dashboardConfig) {
         this.context = requireNonNull(context);
         createLayout(requireNonNull(dashboardConfig));
         rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(context, this));
@@ -228,7 +228,7 @@ public class GamePlay_SubView implements GameUI_SubView {
         overlayLayer.setLeft(dashboard.rootPane());
 
         // Layer 4: Help info
-        helpLayer = new HelpLayer(gameSceneLayer);
+        helpLayer = new HelpView(gameSceneLayer);
 
         // Layer 4: "Paused" icon
         pausedIcon  = FontAwesomeIcon.of(FontAwesomeIcon.Symbol.PAUSE, 80, ArcadePalette.ARCADE_WHITE);

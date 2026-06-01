@@ -10,7 +10,7 @@ import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
 import de.amr.pacmanfx.ui.input.Input;
-import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
+import de.amr.pacmanfx.ui.subviews.SubView;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
@@ -59,7 +59,7 @@ public class GameViewMainScene extends Scene {
         return (StackPane) getRoot();
     }
 
-    public void replaceSubView(GameUI_SubView subView) {
+    public void replaceSubView(SubView subView) {
         requireNonNull(subView);
         if (rootPane().getChildren().isEmpty()) {
             throw new IllegalStateException("Root pane has no placeholder for embedding view");

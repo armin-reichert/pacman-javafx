@@ -12,13 +12,13 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.AppContextImplementation;
+import de.amr.pacmanfx.ui.AppContextImpl;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
-import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
+import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewMainScene;
-import de.amr.pacmanfx.ui.view.GameViewImplementation;
+import de.amr.pacmanfx.ui.view.GameViewImpl;
 import de.amr.pacmanfx.ui.view.StatusIconBox;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -86,13 +86,13 @@ public class ArcadePacMan_App extends Application {
 
         gameBox.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
 
-        context = new AppContextImplementation(gameBox,
+        context = new AppContextImpl(gameBox,
             createViewImplementation(stage, sceneSize.x(), sceneSize.y())
         );
         context.ui().configurations().addConfigFactory(
             GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
-        final StartPages_SubView startView = context.ui().subViews().startView();
+        final StartPagesView startView = context.ui().subViews().startView();
 
         final var arcadePacManStartPage = new ArcadePacMan_StartPage();
         arcadePacManStartPage.init(context);
@@ -101,8 +101,8 @@ public class ArcadePacMan_App extends Application {
         startView.setSelectedIndex(0);
     }
 
-    private GameViewImplementation createViewImplementation(Stage stage, int width, int height) {
-        return new GameViewImplementation(
+    private GameViewImpl createViewImplementation(Stage stage, int width, int height) {
+        return new GameViewImpl(
             stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
             new StatusIconBox(() -> AppConstants.LOCALIZED_TEXTS)

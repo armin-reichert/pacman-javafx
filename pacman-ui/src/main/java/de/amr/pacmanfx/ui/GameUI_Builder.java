@@ -13,9 +13,9 @@ import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
-import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
+import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewMainScene;
-import de.amr.pacmanfx.ui.view.GameViewImplementation;
+import de.amr.pacmanfx.ui.view.GameViewImpl;
 import de.amr.pacmanfx.ui.view.StatusIconBox;
 import javafx.stage.Stage;
 
@@ -121,8 +121,8 @@ public class GameUI_Builder {
         return this;
     }
 
-    private GameViewImplementation createViewImplementation(Stage stage, int width, int height) {
-        return new GameViewImplementation(
+    private GameViewImpl createViewImplementation(Stage stage, int width, int height) {
+        return new GameViewImpl(
             stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
             new StatusIconBox(() -> AppConstants.LOCALIZED_TEXTS)
@@ -132,7 +132,7 @@ public class GameUI_Builder {
     public AppContext build() {
         validateConfigurationData();
 
-        final var ui = new AppContextImplementation(
+        final var ui = new AppContextImpl(
             gameBox,
             createViewImplementation(windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight())
         );
@@ -149,7 +149,7 @@ public class GameUI_Builder {
             }
         });
 
-        final StartPages_SubView startPagesCarousel = ui.ui().subViews().startView();
+        final StartPagesView startPagesCarousel = ui.ui().subViews().startView();
         for (var startPageFactory : startPageFactories) {
             final StartPage startPage = startPageFactory.get();
             if (startPage != null) {

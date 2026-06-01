@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.subviews.editor;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
-import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
+import de.amr.pacmanfx.ui.subviews.SubView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.Region;
@@ -18,12 +19,12 @@ import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.paintBackground;
 
-public class Editor_SubView implements GameUI_SubView {
+public class EditorView implements SubView {
 
     private final AppContext context;
     private final TileMapEditor editor;
 
-    public Editor_SubView(Stage stage, AppContext context) {
+    public EditorView(Stage stage, AppContext context) {
         this.context = context;
         editor = new TileMapEditor(stage);
         MenuItem miQuitEditor = createQuitEditorMenuItem();

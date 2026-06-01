@@ -4,9 +4,9 @@
 package de.amr.pacmanfx.ui.subviews;
 
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.subviews.editor.Editor_SubView;
-import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
-import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
+import de.amr.pacmanfx.ui.subviews.editor.EditorView;
+import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
+import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
@@ -19,14 +19,14 @@ import static java.util.Objects.requireNonNull;
 
 public final class SubViewManager {
 
-    private final ObjectProperty<GameUI_SubView> selectedSubView = new SimpleObjectProperty<>();
+    private final ObjectProperty<SubView> selectedSubView = new SimpleObjectProperty<>();
 
-    private Supplier<Editor_SubView> editorViewFactory;
+    private Supplier<EditorView> editorViewFactory;
     private BooleanSupplier editorCanOpen = () -> false;
 
-    private StartPages_SubView startView;
-    private GamePlay_SubView gamePlayView;
-    private Editor_SubView editorView;
+    private StartPagesView startView;
+    private GamePlayView gamePlayView;
+    private EditorView editorView;
 
     public SubViewManager() {}
 
@@ -57,17 +57,17 @@ public final class SubViewManager {
         });
     }
 
-    public void setGamePlayView(GamePlay_SubView newGamePlayView) {
+    public void setGamePlayView(GamePlayView newGamePlayView) {
         requireNonNull(newGamePlayView);
         gamePlayView = newGamePlayView;
     }
 
-    public void setStartView(StartPages_SubView newStartView) {
+    public void setStartView(StartPagesView newStartView) {
         requireNonNull(newStartView);
         startView = newStartView;
     }
 
-    public void setEditorViewFactory(Supplier<Editor_SubView> factory) {
+    public void setEditorViewFactory(Supplier<EditorView> factory) {
         if (editorViewFactory != null) {
             throw new IllegalStateException("EditorViewFactory is already set");
         }
@@ -78,15 +78,15 @@ public final class SubViewManager {
         this.editorCanOpen = requireNonNull(editorCanOpen);
     }
 
-    public StartPages_SubView startView() {
+    public StartPagesView startView() {
         return startView;
     }
 
-    public GamePlay_SubView gamePlayView() {
+    public GamePlayView gamePlayView() {
         return gamePlayView;
     }
 
-    public Optional<Editor_SubView> optEditorView() {
+    public Optional<EditorView> optEditorView() {
         return Optional.ofNullable(editorView);
     }
 
@@ -128,15 +128,15 @@ public final class SubViewManager {
         }
     }
 
-    public boolean isSelected(GameUI_SubView view) {
+    public boolean isSelected(SubView view) {
         return view != null && currentView() == view;
     }
 
-    public ObjectProperty<GameUI_SubView> selectedSubViewProperty() {
+    public ObjectProperty<SubView> selectedSubViewProperty() {
         return selectedSubView;
     }
 
-    public GameUI_SubView currentView() {
+    public SubView currentView() {
         return selectedSubView.get();
     }
 }

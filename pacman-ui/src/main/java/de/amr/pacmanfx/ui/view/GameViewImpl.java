@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.view;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
-import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
+import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.binding.StringBinding;
 import javafx.scene.image.Image;
@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 import static javafx.beans.binding.Bindings.createStringBinding;
 
-public class GameViewImplementation implements GameView {
+public class GameViewImpl implements GameView {
 
     private final Stage stage;
     private final GameViewMainScene mainScene;
@@ -25,7 +25,7 @@ public class GameViewImplementation implements GameView {
     private StringBinding stageTitleBinding;
     private Image icon;
 
-    public GameViewImplementation(Stage stage, GameViewMainScene mainScene, StatusIconBox statusIconBox) {
+    public GameViewImpl(Stage stage, GameViewMainScene mainScene, StatusIconBox statusIconBox) {
         this.stage = stage;
         this.mainScene = mainScene;
         this.statusIconBox = statusIconBox;
@@ -62,7 +62,7 @@ public class GameViewImplementation implements GameView {
     }
 
     @Override
-    public void replaceSubView(GameUI_SubView subView) {
+    public void replaceSubView(SubView subView) {
         mainScene.replaceSubView(subView);
     }
 
@@ -86,7 +86,7 @@ public class GameViewImplementation implements GameView {
     }
 
     private String computeStageTitle(AppContext context) {
-        final GameUI_SubView view = context.ui().subViews().currentView();
+        final SubView view = context.ui().subViews().currentView();
         return view == null
             ? context.ui().translations().translate("view.missing") // Should never happen
             : view.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(context));

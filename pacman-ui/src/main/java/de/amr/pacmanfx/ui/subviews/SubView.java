@@ -12,7 +12,7 @@ import javafx.scene.Node;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public interface GameUI_SubView {
+public interface SubView {
 
     /**
      * Returns the action bindings manager responsible for resolving keyboard input
