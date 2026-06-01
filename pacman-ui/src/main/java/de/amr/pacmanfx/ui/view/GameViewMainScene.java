@@ -10,6 +10,7 @@ import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
 import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
@@ -32,16 +33,16 @@ public class GameViewMainScene extends Scene {
 
     public void init(AppContext context) {
         getStylesheets().add(AppConstants.STYLE_SHEET_PATH);
+        
+        final Keyboard keyboard = context.input().keyboard;
 
-        final Input userInput = Input.instance();
-
-        addEventFilter(KeyEvent.KEY_PRESSED,  userInput.keyboard::onKeyPressed);
-        addEventFilter(KeyEvent.KEY_RELEASED, userInput.keyboard::onKeyReleased);
+        addEventFilter(KeyEvent.KEY_PRESSED,  keyboard::onKeyPressed);
+        addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 
         // If a global action can be executed, do it; otherwise let the current view handle it.
-        userInput.keyboard.addStateListener(_ -> actionBindings.actionMatchingKeyboardState(userInput.keyboard).ifPresentOrElse(
+        keyboard.addStateListener(_ -> actionBindings.actionMatchingKeyboardState(keyboard).ifPresentOrElse(
             action -> action.executeIfEnabled(context),
-            () -> context.ui().subViews().currentView().onInput(context, userInput)));
+            () -> context.ui().subViews().currentView().onInput(context, context.input())));
 
         // Delegate mouse scroll events to scene
         setOnScroll(e -> context.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));

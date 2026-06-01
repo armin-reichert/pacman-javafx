@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSection;
@@ -19,6 +19,7 @@ public class DashboardSectionJoypad extends DashboardSection {
 
     @Override
     public void connect(AppContext context) {
+        final Joypad joypad = context.input().joypad;
 
         // NES controller image is located in "pacman-ui" module, use a class from that module to load it
         final ResourceManager resourceManager = () -> AppContext.class;
@@ -28,22 +29,25 @@ public class DashboardSectionJoypad extends DashboardSection {
         addRow(nesControllerImage);
 
         addDynamicLabeledValue("[SELECT]",
-            () -> buttonKey(JoypadButton.SELECT));
+            () -> buttonKey(joypad, JoypadButton.SELECT));
 
         addDynamicLabeledValue("[START]",
-            () -> buttonKey(JoypadButton.START));
+            () -> buttonKey(joypad, JoypadButton.START));
 
         addDynamicLabeledValue("[B]  [A]",
             () -> "%s   %s".formatted(
-                buttonKey(JoypadButton.B), buttonKey(JoypadButton.A)));
+                buttonKey(joypad, JoypadButton.B), buttonKey(joypad, JoypadButton.A)));
 
         addDynamicLabeledValue("UP/DOWN/LEFT/RIGHT",
             () -> "%s  %s  %s  %s".formatted(
-                buttonKey(JoypadButton.UP), buttonKey(JoypadButton.DOWN), buttonKey(JoypadButton.LEFT), buttonKey(JoypadButton.RIGHT))
+                buttonKey(joypad, JoypadButton.UP),
+                buttonKey(joypad, JoypadButton.DOWN),
+                buttonKey(joypad, JoypadButton.LEFT),
+                buttonKey(joypad, JoypadButton.RIGHT))
         );
     }
 
-    private static String buttonKey(JoypadButton button) {
-        return Input.instance().joypad.keyForButton(button).getDisplayText();
+    private static String buttonKey(Joypad joypad, JoypadButton button) {
+        return joypad.keyForButton(button).getDisplayText();
     }
 }

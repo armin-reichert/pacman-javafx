@@ -82,8 +82,8 @@ public final class AppContextImpl implements AppContext {
     }
 
     @Override
-    public DirectoryWatchdog watchdog() {
-        return watchdog;
+    public Input input() {
+        return Input.instance();
     }
 
     @Override
@@ -104,6 +104,11 @@ public final class AppContextImpl implements AppContext {
     @Override
     public GameUI ui() {
         return ui;
+    }
+
+    @Override
+    public DirectoryWatchdog watchdog() {
+        return watchdog;
     }
 
     @Override
@@ -232,7 +237,7 @@ public final class AppContextImpl implements AppContext {
     }
 
     private void initMainScene() {
-        final KeyboardInfo keyboardInfo = new KeyboardInfo(Input.instance().keyboard);
+        final KeyboardInfo keyboardInfo = new KeyboardInfo(input().keyboard);
 
         view.mainScene().rootPane().getChildren().addAll(
             new Region(), // placeholder, will be replaced by current view (start, play, edit)

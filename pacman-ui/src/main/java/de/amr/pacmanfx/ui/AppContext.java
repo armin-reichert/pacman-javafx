@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameFlow;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.util.Duration;
@@ -22,6 +23,8 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 
 public interface AppContext extends AppLifecycle {
+
+    Input input();
 
     GameUI ui();
 

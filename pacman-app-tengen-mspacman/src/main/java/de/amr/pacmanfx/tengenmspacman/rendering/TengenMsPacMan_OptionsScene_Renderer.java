@@ -65,7 +65,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
 
         ctx.setFont(arcadeFont8());
         if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            drawJoypadKeyBinding(Input.instance().joypad.currentKeyBinding());
+            drawJoypadKeyBinding(scene.context().input().joypad.currentKeyBinding());
         }
 
         drawHorizontalBar(nesColor(0x20), nesColor(0x21), optionsScene.getUnscaledWidth(), TS, 20);
