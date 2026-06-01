@@ -14,6 +14,8 @@ import de.amr.pacmanfx.model.GameFlow;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.util.Duration;
 
 import java.util.Optional;
@@ -57,6 +59,8 @@ public interface AppContext extends AppLifecycle {
     }
 
     DirectoryWatchdog customDirWatchdog();
+
+    PreferencesManager  preferences();
 
     /**
      * Displays a flash message.

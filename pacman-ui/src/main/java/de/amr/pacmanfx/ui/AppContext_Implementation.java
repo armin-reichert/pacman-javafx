@@ -50,6 +50,8 @@ public final class AppContext_Implementation implements AppContext {
     // All games in a box (only 1,99 €!)
     private final GameBox gameBox;
 
+    private final PreferencesManager preferences;
+
     private final DirectoryWatchdog directoryWatchdog;
 
     private final GameClock gameClock = new GameClockFX();
@@ -62,13 +64,13 @@ public final class AppContext_Implementation implements AppContext {
         this.gameBox = requireNonNull(gameBox);
         this.view = requireNonNull(view);
 
+        preferences = new PreferencesManager(getClass());
         directoryWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
 
         this.ui = new GameUI(
             new ConfigurationsManager(),
             new FlashMessageManager(),
             new GameSceneManager(this),
-            new PreferencesManager(getClass()),
             new SoundManager(),
             new SpriteAnimationManager(),
             () -> GameUI_Constants.LOCALIZED_TEXTS,
@@ -92,6 +94,11 @@ public final class AppContext_Implementation implements AppContext {
     @Override
     public GameClock gameClock() {
         return gameClock;
+    }
+
+    @Override
+    public PreferencesManager preferences() {
+        return preferences;
     }
 
     @Override
