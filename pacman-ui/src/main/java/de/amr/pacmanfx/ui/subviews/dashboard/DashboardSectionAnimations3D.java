@@ -126,13 +126,13 @@ public class DashboardSectionAnimations3D extends DashboardSection {
         tableRows.clear();
         if (currentAnimationSet.get() != null) {
             final Collection<ManagedAnimation> animations = currentAnimationSet.get().animations();
-            tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.RUNNING));
-            tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.PAUSED));
-            tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.STOPPED));
+            tableRows.addAll(sortedByLabelWithStatus(animations, Animation.Status.RUNNING));
+            tableRows.addAll(sortedByLabelWithStatus(animations, Animation.Status.PAUSED));
+            tableRows.addAll(sortedByLabelWithStatus(animations, Animation.Status.STOPPED));
         }
     }
 
-    private List<TableRow> animationDataSortedByLabel(Collection<ManagedAnimation> animations, Animation.Status status) {
+    private List<TableRow> sortedByLabelWithStatus(Collection<ManagedAnimation> animations, Animation.Status status) {
         return animations.stream()
             .filter(animation -> hasStatus(animation, status))
             .sorted(Comparator.comparing(ManagedAnimation::label))
