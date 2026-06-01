@@ -20,21 +20,34 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
     }
 
     @Override
-    public void update(GameUI ui) {
-        clearGrid();
-        addRows(ui, ui.access().subViews().currentSelection());
+    public void connect(GameUI ui) {
+        updateTableForCurrentSubView(ui);
     }
 
-    private void addRows(GameUI ui, GameUI_SubView view) {
-        final Map<KeyCodeCombination, GameAction> bindingMap = view.actionBindings().bindingMap();
-        if (bindingMap.isEmpty()) {
+    @Override
+    public void update() {
+        super.update();
+        if (dashboard.ui() != null) {
+            updateTableForCurrentSubView(dashboard.ui());
+        }
+    }
+
+    private void updateTableForCurrentSubView(GameUI ui) {
+        clearSection();
+        final GameUI_SubView currentSubView = ui.access().subViews().currentView();
+        if (currentSubView == null) {
+            return;
+        }
+
+        final Map<KeyCodeCombination, GameAction> currentBindingMap = currentSubView.actionBindings().bindingMap();
+        if (currentBindingMap.isEmpty()) {
             addRow(createLabel(NO_INFO, false));
         }
         else {
-            bindingMap.keySet().stream()
+            currentBindingMap.keySet().stream()
                 .sorted(Comparator.comparing(KeyCombination::getDisplayText))
                 .forEach(key -> {
-                    final GameAction action = bindingMap.get(key);
+                    final GameAction action = currentBindingMap.get(key);
                     final String actionText = ui.access().translations().translate(action.resourceBundleKey());
                     final Label label = createLabel(actionText, action.isEnabled(ui));
                     addRow(key.getDisplayText(), label);

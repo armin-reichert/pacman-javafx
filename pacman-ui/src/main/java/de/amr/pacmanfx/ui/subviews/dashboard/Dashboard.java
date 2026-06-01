@@ -45,7 +45,7 @@ public class Dashboard {
             case CommonDashboardID.GAME_CONTROL   -> new DashboardSectionGameControl(dashboard);
             case CommonDashboardID.GAME_INFO      -> new DashboardSectionGameInfo(dashboard);
             case CommonDashboardID.KEYS_GLOBAL    -> new DashboardSectionKeyShortcutsGlobal(dashboard);
-            case CommonDashboardID.KEYS_LOCAL     -> new DashboardSectionKeyShortcutsLocal(dashboard);
+            case CommonDashboardID.KEYS_LOCAL     -> new DashboardSectionKeyboardShortcutsCurrentGameScene(dashboard);
             case CommonDashboardID.README         -> new DashboardSectionReadmeFirst(dashboard);
             case CommonDashboardID.SETTINGS_3D    -> new DashboardSection3DSettings(dashboard);
             default -> throw new IllegalArgumentException("Illegal dashboard ID: " + id);
@@ -84,8 +84,9 @@ public class Dashboard {
         return section;
     }
 
-    private final VBox rootPane = new VBox();
+    private GameUI ui;
 
+    private final VBox rootPane = new VBox();
     private final Map<DashboardID, DashboardSection> sections = new LinkedHashMap<>();
     private final DashboardConfig config;
 
@@ -107,9 +108,17 @@ public class Dashboard {
         return config;
     }
 
-    public void update(GameUI ui) {
-        requireNonNull(ui);
-        sections().filter(DashboardSection::isExpanded).forEach(section -> section.update(ui));
+    public GameUI ui() {
+        return ui;
+    }
+
+    public void connect(GameUI ui) {
+        this.ui = requireNonNull(ui);
+        sections.values().forEach(section -> section.connect(ui));
+    }
+
+    public void update() {
+        sections().filter(DashboardSection::isExpanded).forEach(DashboardSection::update);
     }
 
     public void toggleVisibility() {

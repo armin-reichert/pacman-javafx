@@ -43,7 +43,7 @@ public class DashboardSection3DSettings extends DashboardSection {
     }
 
     @Override
-    public void init(GameUI ui) {
+    public void connect(GameUI ui) {
         cbUsePlayScene3D = addCheckBox("3D Play Scene");
         comboPerspectives = addChoiceBox("Perspective", PerspectiveID.values());
         addColorPicker("Light Color", GameUI_Constants.PROPERTY_3D_LIGHT_COLOR);
@@ -98,12 +98,14 @@ public class DashboardSection3DSettings extends DashboardSection {
     }
 
     @Override
-    public void update(GameUI ui) {
-        super.update(ui);
+    public void update() {
+        super.update();
 
         comboPerspectives.setValue(GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.get());
         sliderMiniViewSceneHeight.setValue(GameUI_Constants.PROPERTY_MINI_VIEW_HEIGHT.get());
-        sliderMiniViewSceneHeight.setDisable(ui.access().subViews().gamePlayView().miniPlaySceneView().isMoving());
+        if (dashboard.ui() != null) {
+            sliderMiniViewSceneHeight.setDisable(dashboard.ui().access().subViews().gamePlayView().miniPlaySceneView().isMoving());
+        }
         sliderMiniViewOpacityPercentage.setValue(GameUI_Constants.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
         sliderWallHeight.setValue(GameUI_Constants.PROPERTY_3D_WALL_HEIGHT.get());
         sliderWallOpacity.setValue(GameUI_Constants.PROPERTY_3D_WALL_OPACITY.get());

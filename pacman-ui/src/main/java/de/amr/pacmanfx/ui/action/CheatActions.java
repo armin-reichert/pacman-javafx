@@ -28,7 +28,8 @@ public final class CheatActions {
                 final Game game = level.game();
                 game.addLives(3);
                 game.cheats().cheatUsedProperty().set(true);
-                ui.access().flashMessage(ui.access().translations().translate(resourceBundleKey(), game.lifeCount()));
+                final String message = ui.access().translations().translate("message.cheat_add_lives", game.lifeCount());
+                ui.access().flashMessage(message);
             });
         }
 
@@ -49,7 +50,7 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            final State<Game> gameState = ui.access().currentGame();
+            final State<Game> gameState = ui.access().currentGameState();
             return realLevel(ui).isPresent()
                 && gameState.matchesByName(CanonicalGameState.LEVEL_PLAYING.name());
         }

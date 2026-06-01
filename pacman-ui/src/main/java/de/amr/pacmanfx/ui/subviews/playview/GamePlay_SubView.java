@@ -6,7 +6,8 @@ package de.amr.pacmanfx.ui.subviews.playview;
 
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -14,13 +15,13 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
+import de.amr.pacmanfx.ui.gamescene.GameScene;
+import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardConfig;
-import de.amr.pacmanfx.ui.gamescene.GameScene;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.subviews.help.HelpLayer;
-import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
@@ -183,7 +184,7 @@ public class GamePlay_SubView implements GameUI_SubView {
 
         // Dashboard must always be updated even if simulation is stopped!
         if (overlayLayer.isVisible()) {
-            dashboard.update(ui);
+            dashboard.update();
         }
     }
 
@@ -237,7 +238,7 @@ public class GamePlay_SubView implements GameUI_SubView {
         rootPane = new StackPane(gameSceneLayer, miniPlaySceneView.rootPane(), overlayLayer, helpLayer, pausedIcon);
     }
 
-    public void configurePropertyBindings(GameUI ui) {
+    public void connect(GameUI ui) {
         pausedIcon.visibleProperty().bind(ui.access().gameClock().updatesDisabledProperty());
 
         GameUI_Constants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));

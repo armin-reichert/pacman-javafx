@@ -23,7 +23,7 @@ public class DashboardSectionReadmeFirst extends DashboardSection {
     }
 
     @Override
-    public void init(GameUI ui) {
+    public void connect(GameUI ui) {
         final var readmeText = new Text();
         readmeText.setText(ui.access().translations().translate("infobox.readme.content"));
         readmeText.setFont(TEXT_FONT);

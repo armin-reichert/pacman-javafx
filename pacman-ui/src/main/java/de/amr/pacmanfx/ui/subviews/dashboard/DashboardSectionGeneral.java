@@ -3,9 +3,9 @@
  */
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
+import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Constants;
-import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.control.Button;
@@ -27,29 +27,31 @@ public class DashboardSectionGeneral extends DashboardSection {
     }
 
     @Override
-    public void init(GameUI ui) {
+    public void connect(GameUI ui) {
         addStaticLabeledValue("Java Version",   Runtime.version().toString());
         addStaticLabeledValue("JavaFX Version", System.getProperty("javafx.runtime.version"));
 
         // Simulation control
 
-        ResourceManager rm = () -> GameUI_Implementation.class;
-        var iconPlay = new ImageView(rm.loadImage("graphics/icons/play.png"));
-        var iconStop = new ImageView(rm.loadImage("graphics/icons/stop.png"));
-        var iconStep = new ImageView(rm.loadImage("graphics/icons/step.png"));
-        var tooltipPlay = new Tooltip("Play");
-        var tooltipStop = new Tooltip("Stop");
+        final ResourceManager rm = () -> DashboardSectionGeneral.class;
 
-        Button[] buttonsSimulationControl = addButtonList("Simulation", List.of("Play/Pause", "Step"));
+        final var iconPlay = new ImageView(rm.loadImage("/de/amr/pacmanfx/ui/graphics/icons/play.png"));
+        final var iconStop = new ImageView(rm.loadImage("/de/amr/pacmanfx/ui/graphics/icons/stop.png"));
+        final var iconStep = new ImageView(rm.loadImage("/de/amr/pacmanfx/ui/graphics/icons/step.png"));
 
-        Button btnPlayPause = buttonsSimulationControl[0];
+        final var tooltipPlay = new Tooltip("Play");
+        final var tooltipStop = new Tooltip("Stop");
+
+        final Button[] buttonsSimulationControl = addButtonList("Simulation", List.of("Play/Pause", "Step"));
+
+        final Button btnPlayPause = buttonsSimulationControl[0];
         btnPlayPause.setText(null);
         btnPlayPause.setStyle("-fx-background-color: transparent");
         btnPlayPause.graphicProperty().bind(ui.access().gameClock().updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
         btnPlayPause.tooltipProperty().bind(ui.access().gameClock().updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
         setAction(ui, btnPlayPause, CommonActions.ACTION_TOGGLE_PAUSED);
 
-        Button btnStep = buttonsSimulationControl[1];
+        final Button btnStep = buttonsSimulationControl[1];
         btnStep.setGraphic(iconStep);
         btnStep.setStyle("-fx-background-color: transparent");
         btnStep.setText(null);
@@ -58,17 +60,21 @@ public class DashboardSectionGeneral extends DashboardSection {
         setAction(btnStep, () -> ui.access().gameClock().makeSteps(GameUI_Constants.PROPERTY_SIMULATION_STEPS.get(), true));
 
         addIntSpinner("Num Steps", 1, 50, GameUI_Constants.PROPERTY_SIMULATION_STEPS);
-        var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
+
+        final var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
         setEditor(sliderTargetFPS, ui.access().gameClock().targetFrameRateProperty());
 
+        final GameClock gameClock = ui.access().gameClock();
         addDynamicLabeledValue("", () -> "FPS: %.1f (Target: %d)".formatted(
-            ui.access().gameClock().fps(),
-            ui.access().gameClock().targetFrameRate()));
-        addDynamicLabeledValue("Total Updates",  ui.access().gameClock()::pausableUpdatesCount);
+            gameClock.fps(),
+            gameClock.targetFrameRate()));
+
+        addDynamicLabeledValue("Total Updates",  gameClock::pausableUpdatesCount);
 
         addColorPicker("Canvas Color", GameUI_Constants.PROPERTY_CANVAS_BACKGROUND_COLOR);
+
         addCheckBox("Font Smoothing", GameUI_Constants.PROPERTY_CANVAS_FONT_SMOOTHING);
         addCheckBox("Show Debug Info", GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE);
-        addCheckBox("Time Measured", ui.access().gameClock().timeMeasuredProperty());
+        addCheckBox("Time Measured", gameClock.timeMeasuredProperty());
     }
 }

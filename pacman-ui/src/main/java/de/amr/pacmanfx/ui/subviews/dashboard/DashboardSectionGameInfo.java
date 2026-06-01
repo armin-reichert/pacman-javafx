@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.world.MapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_ServicesAccess;
 import javafx.scene.paint.Color;
 
 import java.net.URLDecoder;
@@ -32,10 +33,11 @@ public class DashboardSectionGameInfo extends DashboardSection {
     }
 
     @Override
-    public void init(GameUI ui) {
-        final Supplier<Game> gameSupplier = ui.access().gameContext()::game;
+    public void connect(GameUI ui) {
+        final GameUI_ServicesAccess access = ui.access();
+        final Supplier<Game> gameSupplier = access::currentGame;
 
-        addDynamicLabeledValue("Game State",  () -> "%s".formatted(ui.access().currentGameState().name()));
+        addDynamicLabeledValue("Game State",  () -> "%s".formatted(access.currentGameState().name()));
         addDynamicLabeledValue("State Timer", () -> stateTimerInfo(gameSupplier.get()));
         addDynamicLabeledValue("Game Scene", ifGameScenePresent(ui, gameScene -> gameScene.getClass().getSimpleName()));
 
@@ -56,13 +58,13 @@ public class DashboardSectionGameInfo extends DashboardSection {
                 colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
             }
             else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX)) {
-                colorScheme = ui.access().currentUIConfig().colorScheme(worldMap);
+                colorScheme = access.currentUIConfig().colorScheme(worldMap);
             }
             if (colorScheme != null) {
-                final Color fillColor = Color.valueOf(colorScheme.wallFill());
-                final Color strokeColor = Color.valueOf(colorScheme.wallStroke());
-                final Color pelletColor = Color.valueOf(colorScheme.pellet());
-                return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
+                return "%s / %s / %s".formatted(
+                    formatColorHex(Color.valueOf(colorScheme.wallFill())),
+                    formatColorHex(Color.valueOf(colorScheme.wallStroke())),
+                    formatColorHex(Color.valueOf(colorScheme.pellet())));
             }
             return NO_INFO;
         }));

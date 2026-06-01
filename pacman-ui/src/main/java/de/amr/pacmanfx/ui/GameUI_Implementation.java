@@ -188,8 +188,8 @@ public final class GameUI_Implementation implements GameUI {
 
     private void initSubViews() {
         access().subViews().connect(this);
-        access().subViews().gamePlayView().configurePropertyBindings(this);
-        access().subViews().gamePlayView().dashboard().sections().forEach(section -> section.init(this));
+        access().subViews().gamePlayView().connect(this);
+        access().subViews().gamePlayView().dashboard().connect(this);
     }
 
     private void initView() {
@@ -224,7 +224,7 @@ public final class GameUI_Implementation implements GameUI {
             step.printLog();
             access().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });
-        clock.setPermanentAction(() -> access().subViews().currentSelection().render());
+        clock.setPermanentAction(() -> access().subViews().currentView().render());
         clock.setErrorHandler(this::ka_tas_tro_phe);
     }
 

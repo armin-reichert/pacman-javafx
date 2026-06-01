@@ -130,14 +130,14 @@ public final class SubViewManager {
     }
 
     public boolean isSelected(GameUI_SubView view) {
-        return view != null && currentSelection() == view;
+        return view != null && currentView() == view;
     }
 
     public ObjectProperty<GameUI_SubView> selectedSubViewProperty() {
         return selectedSubView;
     }
 
-    public GameUI_SubView currentSelection() {
+    public GameUI_SubView currentView() {
         return selectedSubView.get();
     }
 }

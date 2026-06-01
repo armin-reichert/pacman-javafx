@@ -5,9 +5,9 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.GameAction;
+import de.amr.pacmanfx.ui.gamescene.GameScene;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -77,9 +77,9 @@ public abstract class DashboardSection extends TitledPane {
         });
     }
 
-    public void init(GameUI ui) {}
+    public abstract void connect(GameUI ui);
 
-    public void update(GameUI ui) {
+    public void update() {
         infoTexts.forEach(DynamicInfoText::update);
     }
 
@@ -99,7 +99,7 @@ public abstract class DashboardSection extends TitledPane {
         return () -> gameSupplier.get().optGameLevel().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected void clearGrid() {
+    protected void clearSection() {
         grid.getChildren().clear();
         rowIndex = 0;
     }

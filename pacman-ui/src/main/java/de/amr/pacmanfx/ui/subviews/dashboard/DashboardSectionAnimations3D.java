@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
-import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
@@ -32,16 +32,17 @@ public class DashboardSectionAnimations3D extends DashboardSection {
     private static final float RELATIVE_TABLE_HEIGHT = 0.80f;
     private static final float REFRESH_PERIOD_SECONDS = 0.5f;
 
-    public static final String NO_3_D_ANIMATIONS = "No 3D animations";
-    public static final String ANIMATION_NAME = "Animation Name";
-    public static final String STATUS = "Status";
-    public static final String UNKNOWN = "unknown";
+    public static final String COLUMN_ANIMATION_NAME = "Animation Name";
+    public static final String COLUMN_STATUS = "Status";
+
+    public static final String NO_ANIMATIONS = "No 3D animations";
+    public static final String STATUS_UNKNOWN = "unknown";
 
     public static class TableRow {
         private final StringProperty labelProperty;
         private final ObjectProperty<Animation> animationProperty;
 
-        TableRow(ManagedAnimation managedAnimation) {
+        public TableRow(ManagedAnimation managedAnimation) {
             labelProperty = new SimpleStringProperty(managedAnimation.label());
             animationProperty = new SimpleObjectProperty<>(managedAnimation.optAnimationFX().orElse(null));
         }
@@ -50,30 +51,31 @@ public class DashboardSectionAnimations3D extends DashboardSection {
         public ObjectProperty<Animation> animationProperty() { return animationProperty; }
     }
 
+    private final TableView<TableRow> tableView = new TableView<>();
     private final ObservableList<TableRow> tableRows = FXCollections.observableArrayList();
     private final Timeline refreshTimer;
-    private final TableView<TableRow> tableView = new TableView<>();
 
-    private final ObjectProperty<AnimationRegistry> currentAnimations = new SimpleObjectProperty<>();
+    private final ObjectProperty<AnimationRegistry> currentAnimationSet = new SimpleObjectProperty<>();
 
     public DashboardSectionAnimations3D(Dashboard dashboard) {
         super(dashboard);
 
+
         tableView.setItems(tableRows);
-        tableView.setPlaceholder(new Text(NO_3_D_ANIMATIONS));
+        tableView.setPlaceholder(new Text(NO_ANIMATIONS));
         tableView.setFocusTraversable(false);
         tableView.setPrefWidth(dashboard.config().width());
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
-        final var labelColumn = new TableColumn<TableRow, String>(ANIMATION_NAME);
+        final var labelColumn = new TableColumn<TableRow, String>(COLUMN_ANIMATION_NAME);
         labelColumn.setCellValueFactory(data -> data.getValue().labelProperty());
         labelColumn.setSortable(false);
         labelColumn.setMinWidth(0.66 * dashboard.config().width());
         tableView.getColumns().add(labelColumn);
 
-        final var statusColumn = new TableColumn<TableRow, String>(STATUS);
+        final var statusColumn = new TableColumn<TableRow, String>(COLUMN_STATUS);
         statusColumn.setCellValueFactory(data -> data.getValue().animationProperty()
-                .map(animation -> animation == null ? UNKNOWN : animation.getStatus().name()));
+                .map(animation -> animation == null ? STATUS_UNKNOWN : animation.getStatus().name()));
         statusColumn.setSortable(false);
         tableView.getColumns().add(statusColumn);
 
@@ -86,40 +88,44 @@ public class DashboardSectionAnimations3D extends DashboardSection {
                 }
             }));
         refreshTimer.setCycleCount(Animation.INDEFINITE);
+
+        currentAnimationSet.addListener((_,_, animationSet) -> {
+            if (animationSet == null) {
+                tableRows.clear();
+                refreshTimer.pause();
+            } else {
+                refreshTimer.play();
+            }
+        });
     }
 
     @Override
-    public void init(GameUI ui) {
-        super.init(ui);
-        tableView.prefHeightProperty()
-            .bind(ui.view().stage().heightProperty().map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
+    public void connect(GameUI ui) {
+        tableView.prefHeightProperty().bind(ui.view().stage().heightProperty()
+            .map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
     }
 
     @Override
-    public void update(GameUI ui) {
-        super.update(ui);
+    public void update() {
+        super.update();
 
-        //TODO use data binding
-        ui.access().gameScenes().optCurrentGameScene().ifPresent(gameScene -> currentAnimations.set(observedAnimations(gameScene)));
-        if (currentAnimations.get() == null) {
-            tableRows.clear();
-            refreshTimer.pause();
-        } else {
-            refreshTimer.play();
-        }
-    }
+        if (dashboard.ui() != null) {
+            final AnimationRegistry animationSet =
+                dashboard.ui().access().gameScenes().optCurrentGameScene()
+                    .filter(PlayScene3D.class::isInstance)
+                    .map(PlayScene3D.class::cast)
+                    .flatMap(PlayScene3D::optGameLevel3D)
+                    .map(GameLevel3D::animationRegistry)
+                    .orElse(null);
 
-    private AnimationRegistry observedAnimations(GameScene gameScene) {
-        if (gameScene instanceof PlayScene3D playScene3D) {
-            return playScene3D.optGameLevel3D().map(GameLevel3D::animationRegistry).orElse(null);
+            currentAnimationSet.set(animationSet);
         }
-        return null;
     }
 
     private void updateTableData() {
         tableRows.clear();
-        if (currentAnimations.get() != null) {
-            final Collection<ManagedAnimation> animations = currentAnimations.get().animations();
+        if (currentAnimationSet.get() != null) {
+            final Collection<ManagedAnimation> animations = currentAnimationSet.get().animations();
             tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.RUNNING));
             tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.PAUSED));
             tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.STOPPED));

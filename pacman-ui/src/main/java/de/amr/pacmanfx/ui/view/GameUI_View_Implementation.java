@@ -87,7 +87,7 @@ public class GameUI_View_Implementation implements GameUI_View {
     }
 
     private String computeStageTitle(GameUI_ServicesAccess services) {
-        final GameUI_SubView view = services.subViews().currentSelection();
+        final GameUI_SubView view = services.subViews().currentView();
         return view == null
             ? services.translations().translate("view.missing") // Should never happen
             : view.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(services));

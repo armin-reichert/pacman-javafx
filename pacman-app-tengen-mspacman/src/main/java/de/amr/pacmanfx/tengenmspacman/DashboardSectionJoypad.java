@@ -4,41 +4,47 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_Implementation;
-import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
-import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSection;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.JoypadButton;
+import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
+import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSection;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class DashboardSectionJoypad extends DashboardSection {
-
-    private static final ResourceManager LOCAL_RESOURCES = () -> GameUI_Implementation.class;
 
     public DashboardSectionJoypad(Dashboard dashboard) {
         super(dashboard);
     }
 
-    public void init(GameUI ui) {
-        final var imageNesController = new ImageView(LOCAL_RESOURCES.loadImage("graphics/nes-controller.jpg"));
+    @Override
+    public void connect(GameUI ui) {
 
-        addRow(imageNesController);
-        addDynamicLabeledValue("[SELECT]", () -> "%s".formatted(
-            Input.instance().joypad.keyForButton(JoypadButton.SELECT).getDisplayText())
+        // NES controller image is located in "pacman-ui" module, use a class from that module to load it
+        final ResourceManager resourceManager = () -> GameUI.class;
+
+        final ImageView nesControllerimage = new ImageView(
+            resourceManager.loadImage("/de/amr/pacmanfx/ui/graphics/nes-controller.jpg"));
+        addRow(nesControllerimage);
+
+        addDynamicLabeledValue("[SELECT]",
+            () -> buttonKey(JoypadButton.SELECT));
+
+        addDynamicLabeledValue("[START]",
+            () -> buttonKey(JoypadButton.START));
+
+        addDynamicLabeledValue("[B]  [A]",
+            () -> "%s   %s".formatted(
+                buttonKey(JoypadButton.B), buttonKey(JoypadButton.A)));
+
+        addDynamicLabeledValue("UP/DOWN/LEFT/RIGHT",
+            () -> "%s  %s  %s  %s".formatted(
+                buttonKey(JoypadButton.UP), buttonKey(JoypadButton.DOWN), buttonKey(JoypadButton.LEFT), buttonKey(JoypadButton.RIGHT))
         );
-        addDynamicLabeledValue("[START]", () -> "%s".formatted(
-            Input.instance().joypad.keyForButton(JoypadButton.START).getDisplayText())
-        );
-        addDynamicLabeledValue("[B]  [A]", () -> "%s   %s".formatted(
-            Input.instance().joypad.keyForButton(JoypadButton.B).getDisplayText(),
-            Input.instance().joypad.keyForButton(JoypadButton.A).getDisplayText())
-        );
-        addDynamicLabeledValue("UP/DOWN/LEFT/RIGHT", () -> "%s  %s  %s  %s".formatted(
-            Input.instance().joypad.keyForButton(JoypadButton.UP).getDisplayText(),
-            Input.instance().joypad.keyForButton(JoypadButton.DOWN).getDisplayText(),
-            Input.instance().joypad.keyForButton(JoypadButton.LEFT).getDisplayText(),
-            Input.instance().joypad.keyForButton(JoypadButton.RIGHT).getDisplayText())
-        );
+    }
+
+    private static String buttonKey(JoypadButton button) {
+        return Input.instance().joypad.keyForButton(button).getDisplayText();
     }
 }

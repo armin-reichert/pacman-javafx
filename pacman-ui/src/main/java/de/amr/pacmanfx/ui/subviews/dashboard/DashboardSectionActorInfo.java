@@ -26,11 +26,12 @@ public class DashboardSectionActorInfo extends DashboardSection {
         super(dashboard);
     }
 
-    public void init(GameUI ui) {
-        final Supplier<Game> gameSupplier = ui.access().gameContext()::game;
+    @Override
+    public void connect(GameUI ui) {
+        final Supplier<Game> gameSupplier = ui.access()::currentGame;
 
         addDynamicLabeledValue("Pac Name", supplyPacInfo(gameSupplier, (_, pac) -> pac.name()));
-        addDynamicLabeledValue("Lives",    ifGameLevel(gameSupplier, _ -> "%d".formatted(ui.access().currentGame().lifeCount())));
+        addDynamicLabeledValue("Lives",    ifGameLevel(gameSupplier, _ -> "%d".formatted(gameSupplier.get().lifeCount())));
         addDynamicLabeledValue("Movement", supplyPacInfo(gameSupplier, this::actorMovementInfo));
         addDynamicLabeledValue("Tile",     supplyPacInfo(gameSupplier, this::actorLocationInfo));
         addDynamicLabeledValue("Power",    ifGameLevel(gameSupplier, gameLevel -> {

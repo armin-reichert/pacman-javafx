@@ -5,6 +5,7 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.ui.GameUI;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -60,6 +61,10 @@ public class DashboardSectionCustomMaps extends DashboardSection {
         tableView.setItems(customMaps);
 
         addRow(tableView);
+    }
+
+    @Override
+    public void connect(GameUI ui) {
     }
 
     public void setCustomDirWatchDog(DirectoryWatchdog watchdog) {

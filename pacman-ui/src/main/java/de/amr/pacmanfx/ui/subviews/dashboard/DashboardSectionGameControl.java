@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_ServicesAccess;
 import de.amr.pacmanfx.ui.action.TestActions;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -41,7 +42,7 @@ public class DashboardSectionGameControl extends DashboardSection {
     }
 
     @Override
-    public void init(GameUI ui) {
+    public void connect(GameUI ui) {
         final CoinMechanism coinMechanism = ui.access().gameContext().coinMechanism();
         spinnerCredit            = addIntSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
@@ -65,40 +66,48 @@ public class DashboardSectionGameControl extends DashboardSection {
     }
 
     @Override
-    public void update(GameUI ui) {
-        super.update(ui);
+    public void update() {
+        super.update();
 
-        final AbstractGameModel game = ui.access().currentGame();
-        final State<Game> state = ui.access().currentGameState();
+        if (dashboard.ui() != null) {
+            final GameUI_ServicesAccess access = dashboard.ui().access();
+            final AbstractGameModel game = access.currentGame();
+            final State<Game> state = access.currentGameState();
 
-        //TODO use binding
-        choiceBoxInitialLives.setValue(game.initialLifeCount());
+            choiceBoxInitialLives.setValue(game.initialLifeCount());
+            choiceBoxInitialLives.setDisable(!state.matchesByName(CanonicalGameState.INTRO.name()));
 
-        boolean creditDisabled = !state.matchesByName(CanonicalGameState.INTRO.name(), CanonicalGameState.PREPARING_GAME_START.name());
-        spinnerCredit.setDisable(creditDisabled);
-        choiceBoxInitialLives.setDisable(!state.matchesByName(CanonicalGameState.INTRO.name()));
+            final boolean creditDisabled = !state.matchesByName(
+                CanonicalGameState.INTRO.name(),
+                CanonicalGameState.PREPARING_GAME_START.name()
+            );
+            spinnerCredit.setDisable(creditDisabled);
 
-        boolean booting = isBooting(state);
-        buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(game, state));
-        buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || ui.access().currentGame().optGameLevel().isEmpty());
-        buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(game, state));
+            final boolean booting = isBooting(state);
+            buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(game, state));
+            buttonGroupLevelActions[GAME_LEVEL_QUIT].setDisable(booting || game.optGameLevel().isEmpty());
+            buttonGroupLevelActions[GAME_LEVEL_NEXT].setDisable(booting || !canEnterNextLevel(game, state));
 
-        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !state.matchesByName(CanonicalGameState.INTRO.name()));
-        buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT] .setDisable(booting || !(state instanceof CutScenesTestState));
+            buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !state.matchesByName(CanonicalGameState.INTRO.name()));
+            buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(state instanceof CutScenesTestState));
 
-        cbCollisionCheckedTwice.setSelected(game.isCollisionDoubleChecked());
+            cbCollisionCheckedTwice.setSelected(game.isCollisionDoubleChecked());
+        }
     }
 
-    private boolean isBooting(State<?> state) {
+    private boolean isBooting(State<Game> state) {
         return state.matchesByName(CanonicalGameState.BOOT.name());
     }
 
-    private boolean canStartLevel(Game game, State<?> state) {
+    private boolean canStartLevel(Game game, State<Game> state) {
         return game.canStartNewGame()
-            && state.matchesByName(CanonicalGameState.INTRO.name(), CanonicalGameState.PREPARING_GAME_START.name());
+            && state.matchesByName(
+                CanonicalGameState.INTRO.name(),
+                CanonicalGameState.PREPARING_GAME_START.name()
+        );
     }
 
-    private boolean canEnterNextLevel(Game game, State<?> state) {
+    private boolean canEnterNextLevel(Game game, State<Game> state) {
         return game.isPlayingLevel() && state.matchesByName(CanonicalGameState.LEVEL_PLAYING.name());
     }
 }
