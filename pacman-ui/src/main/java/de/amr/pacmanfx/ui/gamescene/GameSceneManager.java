@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.GameUI_Services;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -189,18 +189,18 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     // Scene embedding
 
-    public void removeFromPlayView(GameUI_Services services, GameScene gameScene) {
-        requireNonNull(services);
+    public void removeFromPlayView(GameUI ui, GameScene gameScene) {
+        requireNonNull(ui);
         requireNonNull(gameScene);
 
-        services.subViews().gamePlayView().contextMenu().hide();
+        ui.subViews().gamePlayView().contextMenu().hide();
 
         gameScene.optSubSceneFX().ifPresent(subSceneFX -> {
             subSceneFX.widthProperty().unbind();
             subSceneFX.heightProperty().unbind();
         });
         if (gameScene instanceof GameScene2D gameScene2D) {
-            final DecorationPane frame = services.subViews().gamePlayView().gameSceneFrame();
+            final DecorationPane frame = ui.subViews().gamePlayView().gameSceneFrame();
             frame.canvas().widthProperty().unbind();
             frame.canvas().heightProperty().unbind();
             frame.unscaledWidthProperty().unbind();

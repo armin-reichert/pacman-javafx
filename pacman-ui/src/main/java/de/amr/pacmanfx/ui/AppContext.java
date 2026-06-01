@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.GameFlow;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.ui.view.GameUI_View;
 import javafx.util.Duration;
 
 import java.util.Optional;
@@ -21,7 +20,7 @@ import static java.util.Objects.requireNonNull;
 
 public interface AppContext extends GameUI_Life {
 
-    GameUI_Services ui();
+    GameUI ui();
 
     GameContext gameContext();
 

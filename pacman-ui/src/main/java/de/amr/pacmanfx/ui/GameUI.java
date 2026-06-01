@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.view.GameUI_View;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 
-public record GameUI_Services(
+public record GameUI(
     GameClock gameClock,
     DirectoryWatchdog customDirWatchdog,
     ConfigurationsManager configurations,

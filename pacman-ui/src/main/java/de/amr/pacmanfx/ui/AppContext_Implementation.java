@@ -50,7 +50,7 @@ public final class AppContext_Implementation implements AppContext {
     // All games in a box (only 1,99 €!)
     private final GameBox gameBox;
 
-    private final GameUI_Services access;
+    private final GameUI ui;
 
     private final GameUI_View_Implementation view;
 
@@ -58,7 +58,7 @@ public final class AppContext_Implementation implements AppContext {
         this.gameBox = requireNonNull(gameBox);
         this.view = requireNonNull(view);
 
-        this.access = new GameUI_Services(
+        this.ui = new GameUI(
             new GameClockFX(),
             new DirectoryWatchdog(gameBox.customMapDir()),
             new ConfigurationsManager(),
@@ -81,15 +81,15 @@ public final class AppContext_Implementation implements AppContext {
     }
 
     @Override
-    public GameUI_Services ui() {
-        return access;
+    public GameUI ui() {
+        return ui;
     }
 
     // GameUI_Life interface
 
     @Override
     public void openWorldMapFileInEditor(File worldMapFile) {
-        final SubViewManager subViewManager = ui().subViews();
+        final SubViewManager subViewManager = ui.subViews();
         subViewManager.ensureEditorViewCreated();
         subViewManager.optEditorView().map(Editor_SubView::editor).ifPresent(editor -> {
             editor.init(gameBox.customMapDir());
@@ -116,7 +116,7 @@ public final class AppContext_Implementation implements AppContext {
     public void restart() {
         stopGame();
         currentGameFlow().restartStateWithName(CanonicalGameState.BOOT.name());
-        Platform.runLater(ui().gameClock()::start);
+        Platform.runLater(ui.gameClock()::start);
     }
 
     @Override
@@ -130,7 +130,7 @@ public final class AppContext_Implementation implements AppContext {
         initSubViews();
         initView();
         view.show();
-        ui().subViews().selectStartView();
+        ui.subViews().selectStartView();
         startServices();
     }
 
@@ -138,15 +138,15 @@ public final class AppContext_Implementation implements AppContext {
     public void stopGame() {
         currentGame().prepareNewGame();
 
-        ui().gameClock().stop();
-        ui().gameClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        ui.gameClock().stop();
+        ui.gameClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
 
-        ui().sounds().stopAll();
+        ui.sounds().stopAll();
 
-        ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
+        ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             gameScene.deactivate();
-            ui().gameScenes().removeFromPlayView(access, gameScene);
-            ui().gameScenes().gameSceneProperty().set(null);
+            ui.gameScenes().removeFromPlayView(ui, gameScene);
+            ui.gameScenes().gameSceneProperty().set(null);
         });
 
         Logger.info("Game STOPPED!");
@@ -156,10 +156,10 @@ public final class AppContext_Implementation implements AppContext {
     public void terminate() {
         Logger.info("Application is terminated now. There is no way back!");
         stopGame();
-        ui().sprites().stopAnimationTimer();
-        ui().sprites().animationSet().clear();
-        ui().flashMessages().stopTimer();
-        ui().customDirWatchdog().dispose();
+        ui.sprites().stopAnimationTimer();
+        ui.sprites().animationSet().clear();
+        ui.flashMessages().stopTimer();
+        ui.customDirWatchdog().dispose();
     }
 
     // private stuff
@@ -170,7 +170,7 @@ public final class AppContext_Implementation implements AppContext {
     }
 
     private void createSubViews() {
-        final SubViewManager subViewManager = ui().subViews();
+        final SubViewManager subViewManager = ui.subViews();
 
         final StartPages_SubView startView = new StartPages_SubView(this);
         subViewManager.setStartView(startView);
@@ -182,9 +182,9 @@ public final class AppContext_Implementation implements AppContext {
     }
 
     private void initSubViews() {
-        ui().subViews().connect(this);
-        ui().subViews().gamePlayView().connect(this);
-        ui().subViews().gamePlayView().dashboard().connect(this);
+        ui.subViews().connect(this);
+        ui.subViews().gamePlayView().connect(this);
+        ui.subViews().gamePlayView().dashboard().connect(this);
     }
 
     private void initView() {
@@ -205,21 +205,21 @@ public final class AppContext_Implementation implements AppContext {
             // restore title (editor changed it)
             stage.titleProperty().unbind();
             stage.titleProperty().bind(view.stageTitleBindingProperty());
-            ui().subViews().selectStartView();
+            ui.subViews().selectStartView();
         });
         return editorView;
     }
 
     private void initGameClock() {
-        final GameClock clock = ui().gameClock();
+        final GameClock clock = ui.gameClock();
         clock.setUpdateAction(() -> {
             final SimulationStep step = currentGame().doSimulationStep();
             step.clearInfo(clock.tickCount());
             currentGameFlow().update();
             step.printLog();
-            ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
+            ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });
-        clock.setPermanentAction(() -> ui().subViews().currentView().render());
+        clock.setPermanentAction(() -> ui.subViews().currentView().render());
         clock.setErrorHandler(this::ka_tas_tro_phe);
     }
 
@@ -229,7 +229,7 @@ public final class AppContext_Implementation implements AppContext {
         view.mainScene().rootPane().getChildren().addAll(
             new Region(), // placeholder, will be replaced by current view (start, play, edit)
             view.statusIconBox().rootPane(),
-            ui().flashMessages().messageView().rootPane(),
+            ui.flashMessages().messageView().rootPane(),
             keyboardInfo.rootPane());
 
         StackPane.setAlignment(view.statusIconBox().rootPane(), Pos.BOTTOM_LEFT);
@@ -247,27 +247,27 @@ public final class AppContext_Implementation implements AppContext {
         GameUI_Constants.PROPERTY_3D_WALL_HEIGHT .set(mazeConfig3D.obstacleBaseHeight());
         GameUI_Constants.PROPERTY_3D_WALL_OPACITY.set(mazeConfig3D.obstacleOpacity());
 
-        ui().sounds().muteProperty().bind(GameUI_Constants.PROPERTY_MUTED);
+        ui.sounds().muteProperty().bind(GameUI_Constants.PROPERTY_MUTED);
 
         view.statusIconBox().rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> ui().subViews().isSelected(ui().subViews().gamePlayView())
-                || ui().subViews().isSelected(ui().subViews().startView()),
-            ui().subViews().selectedSubViewProperty()));
+            () -> ui.subViews().isSelected(ui.subViews().gamePlayView())
+                || ui.subViews().isSelected(ui.subViews().startView()),
+            ui.subViews().selectedSubViewProperty()));
 
         view.mainScene().rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> ui().gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
+            () -> ui.gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
                 ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
                 : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER,
-            ui().subViews().selectedSubViewProperty(),
-            ui().gameScenes().gameSceneProperty()
+            ui.subViews().selectedSubViewProperty(),
+            ui.gameScenes().gameSceneProperty()
         ));
     }
 
     private void startServices() {
         Platform.runLater(() -> {
-            ui().customDirWatchdog().startWatching();
-            ui().flashMessages().startTimer();
-            ui().sprites().startAnimationTimer();
+            ui.customDirWatchdog().startWatching();
+            ui.flashMessages().startTimer();
+            ui.sprites().startAnimationTimer();
         });
     }
 
@@ -282,7 +282,7 @@ public final class AppContext_Implementation implements AppContext {
      */
     private void ka_tas_tro_phe(Throwable reason) {
         Platform.runLater(() -> {
-            final String errorMessage = ui().translations().translate("error.oh_no_my_program");
+            final String errorMessage = ui.translations().translate("error.oh_no_my_program");
             shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
             stopGame();
             Logger.error("*** SOMETHING VERY BAD HAPPENED:");
