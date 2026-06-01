@@ -66,7 +66,7 @@ public interface AppContext extends GameUI_Life {
      * @param message  message text (supports {@link String#format})
      * @param args     formatting arguments
      */
-    default void flashMessage(Duration duration, String message, Object... args) {
+    default void shortMessage(Duration duration, String message, Object... args) {
         requireNonNull(duration);
         requireNonNull(message);
         ui().flashMessages().showMessage(message.formatted(args), duration.toSeconds());
@@ -78,8 +78,8 @@ public interface AppContext extends GameUI_Life {
      * @param message message text
      * @param args    formatting arguments
      */
-    default void flashMessage(String message, Object... args) {
-        flashMessage(GameUI_Constants.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
+    default void shortMessage(String message, Object... args) {
+        shortMessage(GameUI_Constants.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
 
 }

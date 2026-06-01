@@ -29,7 +29,7 @@ public final class CheatActions {
                 game.addLives(3);
                 game.cheats().cheatUsedProperty().set(true);
                 final String message = context.ui().translations().translate("message.cheat_add_lives", game.lifeCount());
-                context.flashMessage(message);
+                context.shortMessage(message);
             });
         }
 
@@ -140,7 +140,7 @@ public final class CheatActions {
         final Game game = context.currentGame();
         game.cheats().usingAutopilotProperty().set(auto);
         context.ui().sounds().playVoice(auto ? GameUI_Constants.VOICE_AUTOPILOT_ON : GameUI_Constants.VOICE_AUTOPILOT_OFF);
-        context.flashMessage(context.ui().translations().translate(auto ? "autopilot_on" : "autopilot_off"));
+        context.shortMessage(context.ui().translations().translate(auto ? "autopilot_on" : "autopilot_off"));
     }
 
     public static final GameAction ACTION_ACTIVATE_IMMUNITY = new GameAction("activate_immunity") {
@@ -184,7 +184,7 @@ public final class CheatActions {
         final Game game = context.currentGame();
         game.cheats().immuneProperty().set(immune);
         context.ui().sounds().playVoice(immune ? GameUI_Constants.VOICE_IMMUNITY_ON : GameUI_Constants.VOICE_IMMUNITY_OFF);
-        context.flashMessage(context.ui().translations().translate(immune ? "player_immunity_on" : "player_immunity_off"));
+        context.shortMessage(context.ui().translations().translate(immune ? "player_immunity_on" : "player_immunity_off"));
     }
 
     private static Optional<GameLevel> realLevel(AppContext context) {

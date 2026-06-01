@@ -73,7 +73,7 @@ public final class CommonActions {
             GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.set(id);
             String msgKey = context.ui().translations().translate("camera_perspective",
                 context.ui().translations().translate("perspective_id_" + id.name()));
-            context.flashMessage(msgKey);
+            context.shortMessage(msgKey);
         }
     };
 
@@ -84,7 +84,7 @@ public final class CommonActions {
             GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.set(id);
             String msgKey = context.ui().translations().translate("camera_perspective",
                 context.ui().translations().translate("perspective_id_" + id.name()));
-            context.flashMessage(msgKey);
+            context.shortMessage(msgKey);
         }
     };
 
@@ -136,7 +136,7 @@ public final class CommonActions {
             clock.setTargetFrameRate(newRate);
 
             final String message = newRate == SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
-            context.flashMessage(Duration.seconds(0.75), message.formatted(newRate));
+            context.shortMessage(Duration.seconds(0.75), message.formatted(newRate));
         }
     };
 
@@ -144,7 +144,7 @@ public final class CommonActions {
         @Override
         protected void doAction(AppContext context) {
             context.ui().gameClock().setTargetFrameRate(SIM_SPEED_MAX);
-            context.flashMessage(Duration.seconds(0.75), "At maximum speed: %d Hz", SIM_SPEED_MAX);
+            context.shortMessage(Duration.seconds(0.75), "At maximum speed: %d Hz", SIM_SPEED_MAX);
         }
     };
 
@@ -156,7 +156,7 @@ public final class CommonActions {
             clock.setTargetFrameRate(newRate);
 
             final String message = newRate == SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
-            context.flashMessage(Duration.seconds(0.75), message.formatted(newRate));
+            context.shortMessage(Duration.seconds(0.75), message.formatted(newRate));
         }
     };
 
@@ -164,7 +164,7 @@ public final class CommonActions {
         @Override
         protected void doAction(AppContext context) {
             context.gameClock().setTargetFrameRate(SIM_SPEED_MIN);
-            context.flashMessage(Duration.seconds(0.75), "At minimum speed: %d Hz", SIM_SPEED_MIN);
+            context.shortMessage(Duration.seconds(0.75), "At minimum speed: %d Hz", SIM_SPEED_MIN);
         }
     };
 
@@ -173,7 +173,7 @@ public final class CommonActions {
         protected void doAction(AppContext context) {
             boolean success = context.gameClock().makeOneStep(true);
             if (!success) {
-                context.flashMessage("Simulation step error, clock stopped!");
+                context.shortMessage("Simulation step error, clock stopped!");
             }
         }
 
@@ -186,7 +186,7 @@ public final class CommonActions {
         protected void doAction(AppContext context) {
             boolean success = context.gameClock().makeSteps(10, true);
             if (!success) {
-                context.flashMessage("Simulation step error, clock stopped!");
+                context.shortMessage("Simulation step error, clock stopped!");
             }
         }
 
@@ -198,7 +198,7 @@ public final class CommonActions {
         @Override
         protected void doAction(AppContext context) {
             context.gameClock().setTargetFrameRate(NUM_TICKS_PER_SEC);
-            context.flashMessage(Duration.seconds(0.75), context.gameClock().targetFrameRate() + "Hz");
+            context.shortMessage(Duration.seconds(0.75), context.gameClock().targetFrameRate() + "Hz");
         }
     };
 
@@ -218,9 +218,9 @@ public final class CommonActions {
                 game.setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
             }
             if (game.collisionStrategy() == CollisionStrategy.SAME_TILE) {
-                context.flashMessage("Using original Arcade collision strategy"); //TODO localize
+                context.shortMessage("Using original Arcade collision strategy"); //TODO localize
             } else {
-                context.flashMessage("Using improved collision strategy"); //TODO localize
+                context.shortMessage("Using improved collision strategy"); //TODO localize
             }
         }
     };
@@ -263,7 +263,7 @@ public final class CommonActions {
         protected void doAction(AppContext context) {
             toggleBooleanProperty(GameUI_Constants.PROPERTY_MINI_VIEW_ON);
             if (!context.ui().gameScenes().currentGameSceneHasID(context, CommonSceneID.PLAY_SCENE_3D)) {
-                context.flashMessage(context.ui().translations().translate(GameUI_Constants.PROPERTY_MINI_VIEW_ON.get()
+                context.shortMessage(context.ui().translations().translate(GameUI_Constants.PROPERTY_MINI_VIEW_ON.get()
                     ? "pip_on" : "pip_off"));
             }
         }
@@ -300,7 +300,7 @@ public final class CommonActions {
             toggleBooleanProperty(GameUI_Constants.PROPERTY_3D_ENABLED);
             final boolean is3DEnabled = GameUI_Constants.PROPERTY_3D_ENABLED.get();
             if (!inPlayScene(context)) {
-                context.flashMessage(context.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
+                context.shortMessage(context.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
             }
             if (isLevelPlaying(context)) {
                 context.ui().gameScenes().forceGameSceneUpdate(context);

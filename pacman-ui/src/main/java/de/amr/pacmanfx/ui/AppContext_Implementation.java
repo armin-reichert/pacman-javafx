@@ -108,11 +108,11 @@ public final class AppContext_Implementation implements AppContext {
                 }
             } catch (IOException x) {
                 Logger.error(x, "Could not open map file {}", worldMapFile);
-                flashMessage("Cannot open world map file");
+                shortMessage("Cannot open world map file");
             }
             catch (WorldMapParseException x) {
                 Logger.error(x, "Error reading map file data from {}", worldMapFile);
-                flashMessage("Cannot read world map file data");
+                shortMessage("Cannot read world map file data");
             }
         });
     }
@@ -288,7 +288,7 @@ public final class AppContext_Implementation implements AppContext {
     private void ka_tas_tro_phe(Throwable reason) {
         Platform.runLater(() -> {
             final String errorMessage = ui().translations().translate("error.oh_no_my_program");
-            flashMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
+            shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
             stopGame();
             Logger.error("*** SOMETHING VERY BAD HAPPENED:");
             Logger.error(reason);

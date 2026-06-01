@@ -156,7 +156,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     public void showRandomGameOverMessage() {
-        context().flashMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
+        context().shortMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
     }
 
     @Override
