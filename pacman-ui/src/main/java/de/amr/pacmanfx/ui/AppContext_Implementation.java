@@ -173,7 +173,7 @@ public final class AppContext_Implementation implements AppContext {
         ui.sprites().stopAnimationTimer();
         ui.sprites().animationSet().clear();
         ui.flashMessages().stopTimer();
-        customDirWatchdog().dispose();
+        directoryWatchdog.dispose();
     }
 
     // private stuff
@@ -278,7 +278,7 @@ public final class AppContext_Implementation implements AppContext {
 
     private void startServices() {
         Platform.runLater(() -> {
-            customDirWatchdog().startWatching();
+            directoryWatchdog.startWatching();
             ui.flashMessages().startTimer();
             ui.sprites().startAnimationTimer();
         });
