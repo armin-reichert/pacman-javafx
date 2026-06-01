@@ -26,7 +26,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.AppContext_Implementation;
+import de.amr.pacmanfx.ui.AppContextImplementation;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.config.UIConfigurationsManager;
@@ -140,7 +140,7 @@ public class PacManGames3dApp extends Application {
             }
             else {
                 registerGames();
-                context = new AppContext_Implementation(gameBox,
+                context = new AppContextImplementation(gameBox,
                     createViewImplementation(stage, sceneSize.x(), sceneSize.y())
                 );
                 addConfigFactories();

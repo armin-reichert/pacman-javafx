@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.AppContext_Implementation;
+import de.amr.pacmanfx.ui.AppContextImplementation;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
@@ -86,7 +86,7 @@ public class ArcadePacMan_App extends Application {
 
         gameBox.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
 
-        context = new AppContext_Implementation(gameBox,
+        context = new AppContextImplementation(gameBox,
             createViewImplementation(stage, sceneSize.x(), sceneSize.y())
         );
         context.ui().configurations().addConfigFactory(

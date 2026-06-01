@@ -132,7 +132,7 @@ public class GameUI_Builder {
     public AppContext build() {
         validateConfigurationData();
 
-        final var ui = new AppContext_Implementation(
+        final var ui = new AppContextImplementation(
             gameBox,
             createViewImplementation(windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight())
         );

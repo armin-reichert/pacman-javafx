@@ -45,7 +45,7 @@ import java.io.IOException;
 
 import static java.util.Objects.requireNonNull;
 
-public final class AppContext_Implementation implements AppContext {
+public final class AppContextImplementation implements AppContext {
 
     // All games in a box (only 1,99 €!)
     private final GameBox gameBox;
@@ -60,7 +60,7 @@ public final class AppContext_Implementation implements AppContext {
 
     private final GameViewImplementation view;
 
-    public AppContext_Implementation(GameBox gameBox, GameViewImplementation view) {
+    public AppContextImplementation(GameBox gameBox, GameViewImplementation view) {
         this.gameBox = requireNonNull(gameBox);
         this.view = requireNonNull(view);
 
