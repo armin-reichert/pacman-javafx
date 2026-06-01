@@ -20,7 +20,10 @@ import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.util.Duration;
 
+import java.util.Objects;
 import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
 
 public record GameUI_ServicesAccess(
     GameContext gameContext,
@@ -42,7 +45,7 @@ public record GameUI_ServicesAccess(
     }
 
     public State<Game> currentGameState() {
-        return gameContext.game().flow().state();
+        return currentGame().flow().state();
     }
 
     // UI facade
@@ -56,18 +59,20 @@ public record GameUI_ServicesAccess(
     }
 
     /**
-     * Displays a fading flash message on screen.
+     * Displays a flash message.
      *
      * @param duration how long the message remains visible before fading
      * @param message  message text (supports {@link String#format})
      * @param args     formatting arguments
      */
     public void flashMessage(Duration duration, String message, Object... args) {
-        flashMessages.showMessage(String.format(message, args), duration.toSeconds());
+        requireNonNull(duration);
+        requireNonNull(message);
+        flashMessages.showMessage(message.formatted(args), duration.toSeconds());
     }
 
     /**
-     * Displays a fading flash message using the default duration.
+     * Displays a flash message using the default duration.
      *
      * @param message message text
      * @param args    formatting arguments

@@ -169,7 +169,7 @@ public class GamePlay_SubView implements GameUI_SubView {
         // Render current 2D game scene
         final GameScene gameScene = ui.access().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene instanceof GameScene2D gameScene2D) {
-            final Game game = ui.access().gameContext().game();
+            final Game game = ui.access().currentGame();
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D);
             }

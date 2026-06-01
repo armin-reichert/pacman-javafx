@@ -131,7 +131,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             if (slot.isFull()) {
                 return false;
             }
-            final Game game = ui.access().gameContext().game();
+            final Game game = ui.access().currentGame();
             // In demo level, coin can always be inserted
             if (game.isDemoLevelRunning()) {
                 return true;
@@ -145,7 +145,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         @Override
         public void doAction(GameUI ui) {
             ui.access().sounds().stopAndDisposeVoice();
-            ui.access().gameContext().game().flow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
+            ui.access().currentGame().flow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override
@@ -154,7 +154,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             if (slot.isEmpty()) {
                 return false;
             }
-            final Game game = ui.access().gameContext().game();
+            final Game game = ui.access().currentGame();
             final State<Game> gameState = game.flow().state();
             return (gameState == INTRO || gameState == PREPARING_GAME_START)
                 && game.canStartNewGame();

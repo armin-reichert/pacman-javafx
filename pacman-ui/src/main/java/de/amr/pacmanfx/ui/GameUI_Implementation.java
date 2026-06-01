@@ -120,7 +120,7 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void restart() {
         stopGame();
-        access().gameContext().game().flow().restartStateWithName(CanonicalGameState.BOOT.name());
+        access().currentGame().flow().restartStateWithName(CanonicalGameState.BOOT.name());
         Platform.runLater(access().gameClock()::start);
     }
 
@@ -218,9 +218,9 @@ public final class GameUI_Implementation implements GameUI {
     private void initGameClock() {
         final GameClock clock = access().gameClock();
         clock.setUpdateAction(() -> {
-            final SimulationStep step = access().gameContext().game().doSimulationStep();
+            final SimulationStep step = access().currentGame().doSimulationStep();
             step.clearInfo(clock.tickCount());
-            access().gameContext().game().flow().update();
+            access().currentGame().flow().update();
             step.printLog();
             access().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });

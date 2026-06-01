@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
 
@@ -25,14 +24,12 @@ public class SteeringAction extends GameAction {
 
     @Override
     public void doAction(GameUI ui) {
-        ui.access().gameContext().game().optGameLevel().ifPresent(
-            level -> level.entities().pac().setWishDir(dir));
+        ui.access().currentGame().optGameLevel().ifPresent(level -> level.entities().pac().setWishDir(dir));
     }
 
     @Override
     public boolean isEnabled(GameUI ui) {
-        final Game game = ui.access().gameContext().game();
-        final GameLevel level = game.optGameLevel().orElse(null);
+        final GameLevel level = ui.access().currentGame().optGameLevel().orElse(null);
         return level != null && !level.isDemoLevel() && !level.entities().pac().isUsingAutopilot();
     }
 }
