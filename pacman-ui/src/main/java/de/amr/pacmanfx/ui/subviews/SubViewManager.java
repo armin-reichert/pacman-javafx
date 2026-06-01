@@ -55,6 +55,8 @@ public final class SubViewManager {
 
             return false;
         });
+
+        gamePlayView.connect(context);
     }
 
     public void setGamePlayView(GamePlayView newGamePlayView) {

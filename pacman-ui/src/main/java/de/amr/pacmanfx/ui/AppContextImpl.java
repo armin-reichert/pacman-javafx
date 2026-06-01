@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
-import de.amr.pacmanfx.ui.config.UIConfigurationManager;
+import de.amr.pacmanfx.ui.config.UIConfigManager;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
@@ -68,7 +68,7 @@ public final class AppContextImpl implements AppContext {
         watchdog = new DirectoryWatchdog(gameBox.customMapDir());
 
         ui = new GameUI(
-            new UIConfigurationManager(),
+            new UIConfigManager(),
             new FlashMessageManager(),
             new GameSceneManager(this),
             new SoundManager(),
@@ -146,8 +146,8 @@ public final class AppContextImpl implements AppContext {
         view.setAppContext(this);
         initProperties();
         initGameClock();
-        initSubViews();
-        initView();
+        ui.subViews().connect(this);
+        view.setIcon(currentUIConfig().assets().image("app_icon"));
         view.show();
         ui.subViews().selectStartView();
         startServices();
@@ -164,7 +164,7 @@ public final class AppContextImpl implements AppContext {
 
         ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             gameScene.deactivate();
-            ui.gameScenes().removeFromPlayView(ui, gameScene);
+            ui.gameScenes().removeFromPlayView(this, gameScene);
             ui.gameScenes().gameSceneProperty().set(null);
         });
 
@@ -198,16 +198,6 @@ public final class AppContextImpl implements AppContext {
         subViewManager.setGamePlayView(playView);
 
         subViewManager.setEditorViewFactory(() -> createEditorSubView(view.stage()));
-    }
-
-    private void initSubViews() {
-        ui.subViews().connect(this);
-        ui.subViews().gamePlayView().connect(this);
-        ui.subViews().gamePlayView().dashboard().connect(this);
-    }
-
-    private void initView() {
-        view.setIcon(currentUIConfig().assets().image("app_icon"));
     }
 
     private GamePlayView createGamePlaySubView() {

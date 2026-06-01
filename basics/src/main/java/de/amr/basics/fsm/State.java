@@ -20,7 +20,7 @@ public interface State<C> {
         return getClass().getSimpleName();
     }
 
-    default boolean matchesByName(Object... names) {
+    default boolean matchesByName(String... names) {
         if (names.length == 0) return false;
         return Stream.of(names).anyMatch(name -> name().equals(name));
     }

@@ -256,6 +256,8 @@ public class GamePlayView implements SubView {
             AppConstants.PROPERTY_MINI_VIEW_ON,
             context.ui().gameScenes().gameSceneProperty()
         ));
+
+        dashboard.connect(context);
     }
 
     private void setFontSmoothing(boolean smoothing) {

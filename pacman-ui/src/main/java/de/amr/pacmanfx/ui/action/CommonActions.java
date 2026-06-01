@@ -93,8 +93,9 @@ public final class CommonActions {
         protected void doAction(AppContext context) {
             final Game game = context.currentGame();
             game.cheats().clear(); //TODO needed?
-            context.ui().gameScenes().quitCurrentGameScene(context);
             context.stopGame();
+            context.ui().gameScenes().quitCurrentGameScene(context);
+            context.ui().subViews().selectStartView();
         }
     };
 

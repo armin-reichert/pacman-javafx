@@ -5,11 +5,11 @@
 package de.amr.pacmanfx.ui.gamescene;
 
 import de.amr.pacmanfx.core.CoinMechanism;
+import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.AppConstants;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
@@ -19,6 +19,7 @@ import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.playview.DecorationPane;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.ui.view.GameView;
+import de.amr.pacmanfx.ui.view.GameViewMainScene;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import javafx.beans.property.ObjectProperty;
@@ -74,7 +75,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
         if (prevGameScene != null) {
             prevGameScene.deactivate();
-            removeFromPlayView(context.ui(), prevGameScene);
+            removeFromPlayView(context, prevGameScene);
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
@@ -88,21 +89,16 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     public void quitCurrentGameScene(AppContext context) {
-        optCurrentGameScene().ifPresent(_ -> {
-            final CoinMechanism coinMechanism = context.gameContext().coinMechanism();
-
+        optCurrentGameScene().ifPresent(scene -> {
             //TODO Rethink this
-            final Game game = context.currentGame();
-            boolean shouldConsumeCoin = game.flow().state().name().equals("STARTING_GAME_OR_LEVEL")
-                || game.isPlayingLevel();
+            final CoinMechanism coinMechanism = context.gameContext().coinMechanism();
+            boolean shouldConsumeCoin = context.currentGameState().matchesByName(CanonicalGameState.STARTING_GAME_OR_LEVEL.name())
+                || context.currentGame().isPlayingLevel();
             if (shouldConsumeCoin && !coinMechanism.isEmpty()) {
                 coinMechanism.consumeCoin();
             }
-
-            Logger.info("Quit game scene ({}), returning to start view", gameScene.getClass().getSimpleName());
-
+            Logger.info("Quit game scene ({}), returning to start view", scene.getClass().getSimpleName());
         });
-        context.ui().subViews().selectStartView();
     }
 
     /**
@@ -189,18 +185,18 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     // Scene embedding
 
-    public void removeFromPlayView(GameUI ui, GameScene gameScene) {
-        requireNonNull(ui);
+    public void removeFromPlayView(AppContext context, GameScene gameScene) {
+        requireNonNull(context);
         requireNonNull(gameScene);
 
-        ui.subViews().gamePlayView().contextMenu().hide();
+        context.ui().subViews().gamePlayView().contextMenu().hide();
 
         gameScene.optSubSceneFX().ifPresent(subSceneFX -> {
             subSceneFX.widthProperty().unbind();
             subSceneFX.heightProperty().unbind();
         });
         if (gameScene instanceof GameScene2D gameScene2D) {
-            final DecorationPane frame = ui.subViews().gamePlayView().gameSceneFrame();
+            final DecorationPane frame = context.ui().subViews().gamePlayView().gameSceneFrame();
             frame.canvas().widthProperty().unbind();
             frame.canvas().heightProperty().unbind();
             frame.unscaledWidthProperty().unbind();
@@ -220,7 +216,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         subViews.gamePlayView().contextMenu().hide();
 
         if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameSceneWithSubSceneFX(context.ui().view(), subViews.gamePlayView(), gameScene, gameScene.optSubSceneFX().get());
+            embedGameSceneWithSubSceneFX(context, subViews.gamePlayView(), gameScene, gameScene.optSubSceneFX().get());
         } else if (gameScene instanceof GameScene2D gameScene2D) {
             embedGameScene2D(context.ui().view(), subViews.gamePlayView(), currentConfig.gameSceneConfig(), gameScene2D);
         } else {
@@ -229,10 +225,11 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     // 3D scenes or 2D scenes with camera
-    private void embedGameSceneWithSubSceneFX(GameView gameUIView, GamePlayView playView, GameScene gameScene, SubScene subSceneFX) {
+    private void embedGameSceneWithSubSceneFX(AppContext context, GamePlayView playView, GameScene gameScene, SubScene subSceneFX) {
+        final GameViewMainScene mainScene = context.ui().view().mainScene();
         // stretch sub scene to available space
-        subSceneFX.widthProperty().bind(gameUIView.mainScene().widthProperty());
-        subSceneFX.heightProperty().bind(gameUIView.mainScene().heightProperty());
+        subSceneFX.widthProperty().bind(mainScene.widthProperty());
+        subSceneFX.heightProperty().bind(mainScene.heightProperty());
 
         if (gameScene instanceof GameScene2D gameScene2D) {
             // use the canvas of the decorated pane for 2D scene even though the decoration is not used
