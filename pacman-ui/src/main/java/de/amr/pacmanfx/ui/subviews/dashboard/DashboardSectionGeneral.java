@@ -47,8 +47,8 @@ public class DashboardSectionGeneral extends DashboardSection {
         final Button btnPlayPause = buttonsSimulationControl[0];
         btnPlayPause.setText(null);
         btnPlayPause.setStyle("-fx-background-color: transparent");
-        btnPlayPause.graphicProperty().bind(context.ui().gameClock().updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
-        btnPlayPause.tooltipProperty().bind(context.ui().gameClock().updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
+        btnPlayPause.graphicProperty().bind(context.gameClock().updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
+        btnPlayPause.tooltipProperty().bind(context.gameClock().updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
         setAction(context, btnPlayPause, CommonActions.ACTION_TOGGLE_PAUSED);
 
         final Button btnStep = buttonsSimulationControl[1];
@@ -56,15 +56,15 @@ public class DashboardSectionGeneral extends DashboardSection {
         btnStep.setStyle("-fx-background-color: transparent");
         btnStep.setText(null);
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
-        btnStep.disableProperty().bind(context.ui().gameClock().updatesDisabledProperty().not());
-        setAction(btnStep, () -> context.ui().gameClock().makeSteps(GameUI_Constants.PROPERTY_SIMULATION_STEPS.get(), true));
+        btnStep.disableProperty().bind(context.gameClock().updatesDisabledProperty().not());
+        setAction(btnStep, () -> context.gameClock().makeSteps(GameUI_Constants.PROPERTY_SIMULATION_STEPS.get(), true));
 
         addIntSpinner("Num Steps", 1, 50, GameUI_Constants.PROPERTY_SIMULATION_STEPS);
 
         final var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
-        setEditor(sliderTargetFPS, context.ui().gameClock().targetFrameRateProperty());
+        setEditor(sliderTargetFPS, context.gameClock().targetFrameRateProperty());
 
-        final GameClock gameClock = context.ui().gameClock();
+        final GameClock gameClock = context.gameClock();
         addDynamicLabeledValue("", () -> "FPS: %.1f (Target: %d)".formatted(
             gameClock.fps(),
             gameClock.targetFrameRate()));

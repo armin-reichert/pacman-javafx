@@ -110,7 +110,7 @@ public final class CommonActions {
                 gameState.onExit(game); //TODO exit other states too?
             }
             game.flow().restartStateWithName(CanonicalGameState.INTRO.name());
-            context.ui().gameClock().start();
+            context.gameClock().start();
         }
     };
 
@@ -131,7 +131,7 @@ public final class CommonActions {
     public static final GameAction ACTION_SIMULATION_FASTER = new GameAction("simulation_faster") {
         @Override
         protected void doAction(AppContext context) {
-            final GameClock clock = context.ui().gameClock();
+            final GameClock clock = context.gameClock();
             final int newRate = Math.clamp(clock.targetFrameRate() + SIM_SPEED_DELTA, SIM_SPEED_MIN, SIM_SPEED_MAX);
             clock.setTargetFrameRate(newRate);
 
@@ -143,7 +143,7 @@ public final class CommonActions {
     public static final GameAction ACTION_SIMULATION_FASTEST = new GameAction("simulation_fastest") {
         @Override
         protected void doAction(AppContext context) {
-            context.ui().gameClock().setTargetFrameRate(SIM_SPEED_MAX);
+            context.gameClock().setTargetFrameRate(SIM_SPEED_MAX);
             context.shortMessage(Duration.seconds(0.75), "At maximum speed: %d Hz", SIM_SPEED_MAX);
         }
     };

@@ -24,9 +24,7 @@ public interface AppContext extends GameUI_Life {
 
     GameContext gameContext();
 
-    default GameClock gameClock() {
-        return ui().gameClock(); //TODO move into context implementation
-    }
+    GameClock gameClock();
 
     default String currentGameVariant() {
         return gameContext().gameVariantName();

@@ -50,6 +50,8 @@ public final class AppContext_Implementation implements AppContext {
     // All games in a box (only 1,99 €!)
     private final GameBox gameBox;
 
+    private final GameClock gameClock = new GameClockFX();
+
     private final GameUI ui;
 
     private final GameUI_View_Implementation view;
@@ -59,7 +61,6 @@ public final class AppContext_Implementation implements AppContext {
         this.view = requireNonNull(view);
 
         this.ui = new GameUI(
-            new GameClockFX(),
             new DirectoryWatchdog(gameBox.customMapDir()),
             new ConfigurationsManager(),
             new FlashMessageManager(),
@@ -78,6 +79,10 @@ public final class AppContext_Implementation implements AppContext {
     @Override
     public GameContext gameContext() {
         return gameBox;
+    }
+
+    public GameClock gameClock() {
+        return gameClock;
     }
 
     @Override
@@ -116,7 +121,7 @@ public final class AppContext_Implementation implements AppContext {
     public void restart() {
         stopGame();
         currentGameFlow().restartStateWithName(CanonicalGameState.BOOT.name());
-        Platform.runLater(ui.gameClock()::start);
+        Platform.runLater(gameClock::start);
     }
 
     @Override
@@ -138,8 +143,8 @@ public final class AppContext_Implementation implements AppContext {
     public void stopGame() {
         currentGame().prepareNewGame();
 
-        ui.gameClock().stop();
-        ui.gameClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        gameClock.stop();
+        gameClock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
 
         ui.sounds().stopAll();
 
@@ -211,16 +216,15 @@ public final class AppContext_Implementation implements AppContext {
     }
 
     private void initGameClock() {
-        final GameClock clock = ui.gameClock();
-        clock.setUpdateAction(() -> {
+        gameClock.setUpdateAction(() -> {
             final SimulationStep step = currentGame().doSimulationStep();
-            step.clearInfo(clock.tickCount());
+            step.clearInfo(gameClock.tickCount());
             currentGameFlow().update();
             step.printLog();
-            ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
+            ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(gameClock));
         });
-        clock.setPermanentAction(() -> ui.subViews().currentView().render());
-        clock.setErrorHandler(this::ka_tas_tro_phe);
+        gameClock.setPermanentAction(() -> ui.subViews().currentView().render());
+        gameClock.setErrorHandler(this::ka_tas_tro_phe);
     }
 
     private void initMainScene() {

@@ -239,7 +239,7 @@ public class GamePlay_SubView implements GameUI_SubView {
     }
 
     public void connect(AppContext context) {
-        pausedIcon.visibleProperty().bind(context.ui().gameClock().updatesDisabledProperty());
+        pausedIcon.visibleProperty().bind(context.gameClock().updatesDisabledProperty());
 
         GameUI_Constants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 
