@@ -70,9 +70,8 @@ public interface TengenMsPacMan_Actions {
     GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction("toggle_pac_booster") {
         @Override
         public void doAction(AppContext context) {
-            final Game game = context.currentGame();
-            game.optGameLevel().ifPresent(gameLevel -> {
-                final var tengenGame = (TengenMsPacMan_GameModel) game;
+            context.optCurrentGameLevel().ifPresent(gameLevel -> {
+                final var tengenGame = context.<TengenMsPacMan_GameModel>currentGame();
                 tengenGame.activatePacBooster(gameLevel.entities().pac(), !tengenGame.isBoosterActive());
                 if (tengenGame.isBoosterActive()) {
                     context.shortMessage("Booster!"); //TODO localize

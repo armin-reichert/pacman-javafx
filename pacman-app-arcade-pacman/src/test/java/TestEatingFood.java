@@ -37,18 +37,18 @@ public class TestEatingFood {
         gameBox.gameModel().buildNormalLevel(1);
     }
 
-    private GameLevel theGameLevel() {
+    private GameLevel currentGameLevel() {
         return gameBox.gameModel().optGameLevel().orElseThrow();
     }
 
     private void eatNextPellet() {
-        final FoodLayer foodLayer = theGameLevel().worldMap().foodLayer();
+        final FoodLayer foodLayer = currentGameLevel().worldMap().foodLayer();
         foodLayer.tiles()
             .filter(foodLayer::hasFoodAtTile)
             .filter(not(foodLayer::isEnergizerTile))
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                gameBox.gameModel().eatPellet(theGameLevel(), tile);
+                gameBox.gameModel().eatPellet(currentGameLevel(), tile);
             });
     }
 
@@ -65,7 +65,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Food Counting")
     public void testFoodCounting() {
-        final FoodLayer foodLayer = theGameLevel().worldMap().foodLayer();
+        final FoodLayer foodLayer = currentGameLevel().worldMap().foodLayer();
 
         int eaten = foodLayer.eatenFoodCount();
         int uneaten = foodLayer.remainingFoodCount();
@@ -75,7 +75,7 @@ public class TestEatingFood {
 
         eaten = foodLayer.eatenFoodCount();
         uneaten = foodLayer.remainingFoodCount();
-        eatNextEnergizer(theGameLevel());
+        eatNextEnergizer(currentGameLevel());
         assertEquals(eaten + 1, foodLayer.eatenFoodCount());
         assertEquals(uneaten - 1, foodLayer.remainingFoodCount());
     }
@@ -83,7 +83,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Level Completion")
     public void testLevelCompletion() {
-        final GameLevel level = theGameLevel();
+        final GameLevel level = currentGameLevel();
         while (level.worldMap().foodLayer().remainingFoodCount() > 0) {
             assertFalse(gameBox.gameModel().isLevelCompleted());
             eatNextPellet();
@@ -95,9 +95,9 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Cruise Elroy Mode")
     public void testCruiseElroyMode() {
-        final Ghost blinky = theGameLevel().ghost(RED_GHOST_SHADOW);
-        final FoodLayer foodLayer = theGameLevel().worldMap().foodLayer();
-        final LevelData data = ArcadePacMan_GameModel.levelData(theGameLevel().number());
+        final Ghost blinky = currentGameLevel().ghost(RED_GHOST_SHADOW);
+        final FoodLayer foodLayer = currentGameLevel().worldMap().foodLayer();
+        final LevelData data = ArcadePacMan_GameModel.levelData(currentGameLevel().number());
         while (foodLayer.remainingFoodCount() > data.numDotsLeftElroy1()) {
             assertEquals(ElroyState.Mode.ZERO, blinky.elroyState().mode());
             eatNextPellet();
@@ -115,7 +115,7 @@ public class TestEatingFood {
         assertEquals(ElroyState.Mode.TWO, blinky.elroyState().mode());
         while (foodLayer.remainingFoodCount() > 0) {
             assertEquals(ElroyState.Mode.TWO, blinky.elroyState().mode());
-            eatNextEnergizer(theGameLevel());
+            eatNextEnergizer(currentGameLevel());
         }
         assertEquals(ElroyState.Mode.TWO, blinky.elroyState().mode());
     }
@@ -124,8 +124,8 @@ public class TestEatingFood {
     @DisplayName("Test Resting")
     public void testResting() {
         eatNextPellet();
-        assertEquals(1, theGameLevel().entities().pac().restingTicks());
-        eatNextEnergizer(theGameLevel());
-        assertEquals(3, theGameLevel().entities().pac().restingTicks());
+        assertEquals(1, currentGameLevel().entities().pac().restingTicks());
+        eatNextEnergizer(currentGameLevel());
+        assertEquals(3, currentGameLevel().entities().pac().restingTicks());
     }
 }

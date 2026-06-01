@@ -90,7 +90,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
         subScene.heightProperty().addListener((_, _, _) -> updateScaling());
 
-        scalingProperty().addListener((_, _, _) -> context().currentGame().optGameLevel().ifPresent(level ->
+        scalingProperty().addListener((_, _, _) -> context().optCurrentGameLevel().ifPresent(level ->
             dynamicCamera.updateRange(level.worldMap())));
     }
 

@@ -46,7 +46,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
                 .formatted(game.getClass().getSimpleName()));
         }
         // If any of the default level settings has been changed, display the level info
-        tengenGame.optGameLevel().ifPresent(level -> {
+        context.optCurrentGameLevel().ifPresent(level -> {
             if (!tengenGame.allOptionsDefault()) {
                 final ImageView levelInfo = new ImageView();
                 final double infoWidth = TS(level.worldMap().numCols());

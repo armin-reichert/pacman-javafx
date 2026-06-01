@@ -45,8 +45,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onTick(GameClock clock) {
-        final Arcade_GameModel game = context().currentGame();
-        game.optGameLevel().ifPresent(level -> {
+        context.optCurrentGameLevel().ifPresent(level -> {
             updateLivesCounter(level);
             context().currentSoundEffects().ifPresent(sfx -> {
                 sfx.setEnabled(!level.isDemoLevel());
@@ -85,7 +84,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onEnteredFrom3DScene() {
-        context().currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
+        context().optCurrentGameLevel().ifPresent(this::acceptGameLevel);
     }
 
     // Others

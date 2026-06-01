@@ -181,13 +181,12 @@ public final class CheatActions {
     };
 
     public static void setPacImmune(AppContext context, boolean immune) {
-        final Game game = context.currentGame();
-        game.cheats().immuneProperty().set(immune);
+        context.currentGame().cheats().immuneProperty().set(immune);
         context.ui().sounds().playVoice(immune ? AppConstants.VOICE_IMMUNITY_ON : AppConstants.VOICE_IMMUNITY_OFF);
         context.shortMessage(context.ui().translations().translate(immune ? "player_immunity_on" : "player_immunity_off"));
     }
 
     private static Optional<GameLevel> realLevel(AppContext context) {
-        return context.currentGame().optGameLevel().filter(level -> !level.isDemoLevel());
+        return context.optCurrentGameLevel().filter(level -> !level.isDemoLevel());
     }
 }
